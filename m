@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10358C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EFBC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D540E2467A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C25F21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056191;
-	bh=cBSZwUoeZg2M9ZZiJYr7n9YyDhNS7A7CyrgCYxfwhys=;
+	s=default; t=1582056196;
+	bh=vnKENgL2erzlXMxnhaMBf4SD/3+ntQcfdelWp6Lmqck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wHC0dwCLa5lGaK3tr1Sluz8pvn1XmxsOIvVSSZ1pFeSDpMAz3Jh5dYlI+IAd6RPn+
-	 X1EM5X1J/0Bdk/rVihgliWilY45DT1ScIthU6dB9s/CNcsVh8tnW7Kro4noDRTHzlg
-	 UbVVdPJc/8xSolSSK3WMmqTap0lKxo9aKxk1bRwY=
+	b=npxQ6RTmVPIritZv5wmXX+FsLg8+zNYgCk6EfD1KY/9iaXcqWnqZfMcNm7Zo+WeZy
+	 ZCSkSr4fdu/IgdPouYSK7JgddtSETvyHjtWIlb7cT9TSFkeM4Knf6lx+/MSPLm5tzm
+	 rsk5Bp/OSnWE+9IGlskOGqSEQqeEf+7Tu723tlcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgBRUDK (ORCPT
+        id S1729094AbgBRUDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:03:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44220 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:03:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbgBRUDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:08 -0500
+        id S1729075AbgBRUDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DA3A24672;
-        Tue, 18 Feb 2020 20:03:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FD1424673;
+        Tue, 18 Feb 2020 20:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056187;
-        bh=cBSZwUoeZg2M9ZZiJYr7n9YyDhNS7A7CyrgCYxfwhys=;
+        s=default; t=1582056190;
+        bh=vnKENgL2erzlXMxnhaMBf4SD/3+ntQcfdelWp6Lmqck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsVVOF+Mi0/qc4HR9sQNlgMM+kPetOVNBtoyS6dDUg4cJIzsEwrG+YWD4FjxYpusw
-         9wh2epJjc8sfg+xvQRqrkoFguoQEDqdwLLj+htpJ8S1XWY+EiL+J01y1tJ0/+LIpxj
-         fSVK/J/fjFN2stWyTlonu4dmNicJ7xTvKa0yT4BM=
+        b=UUAxgdGH/T18pTpSFOWb574lAhIMrIVY6YOgOOO2vBBGKrUWYPGqrJRQikNeCvk5U
+         7ba4uaXQnrGX6Mu/gMJmhke8LwXdTeent5+TRbyH597bb1fAQ/27IBjsFTKlJ7/kFv
+         qD9eS/ueQD7vbO9KuXGw44opJX1NCVZRLks1r4do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.5 67/80] ceph: noacl mount option is effectively ignored
-Date:   Tue, 18 Feb 2020 20:55:28 +0100
-Message-Id: <20200218190438.385837347@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 5.5 68/80] arm64: dts: fast models: Fix FVP PCI interrupt-map property
+Date:   Tue, 18 Feb 2020 20:55:29 +0100
+Message-Id: <20200218190438.456542324@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -59,51 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 3b20bc2fe4c0cfd82d35838965dc7ff0b93415c6 upstream.
+commit 3543d7ddd55fe12c37e8a9db846216c51846015b upstream.
 
-For the old mount API, the module parameters parseing function will
-be called in ceph_mount() and also just after the default posix acl
-flag set, so we can control to enable/disable it via the mount option.
+The interrupt map for the FVP's PCI node is missing the
+parent-unit-address cells for each of the INTx entries, leading to the
+kernel code failing to parse the entries correctly.
 
-But for the new mount API, it will call the module parameters
-parseing function before ceph_get_tree(), so the posix acl will always
-be enabled.
+Add the missing zero cells, which are pretty useless as far as the GIC
+is concerned, but that the spec requires. This allows INTx to be usable
+on the model, and VFIO to work correctly.
 
-Fixes: 82995cc6c5ae ("libceph, rbd, ceph: convert to use the new mount API")
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: fa083b99eb28 ("arm64: dts: fast models: Add DTS fo Base RevC FVP")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/super.c |    8 ++++----
+ arch/arm64/boot/dts/arm/fvp-base-revc.dts |    8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -1020,10 +1020,6 @@ static int ceph_get_tree(struct fs_conte
- 	if (!fc->source)
- 		return invalf(fc, "ceph: No source");
- 
--#ifdef CONFIG_CEPH_FS_POSIX_ACL
--	fc->sb_flags |= SB_POSIXACL;
--#endif
--
- 	/* create client (which we may/may not use) */
- 	fsc = create_fs_client(pctx->opts, pctx->copts);
- 	pctx->opts = NULL;
-@@ -1141,6 +1137,10 @@ static int ceph_init_fs_context(struct f
- 	fsopt->max_readdir_bytes = CEPH_MAX_READDIR_BYTES_DEFAULT;
- 	fsopt->congestion_kb = default_congestion_kb();
- 
-+#ifdef CONFIG_CEPH_FS_POSIX_ACL
-+	fc->sb_flags |= SB_POSIXACL;
-+#endif
-+
- 	fc->fs_private = pctx;
- 	fc->ops = &ceph_context_ops;
- 	return 0;
+--- a/arch/arm64/boot/dts/arm/fvp-base-revc.dts
++++ b/arch/arm64/boot/dts/arm/fvp-base-revc.dts
+@@ -161,10 +161,10 @@
+ 		bus-range = <0x0 0x1>;
+ 		reg = <0x0 0x40000000 0x0 0x10000000>;
+ 		ranges = <0x2000000 0x0 0x50000000 0x0 0x50000000 0x0 0x10000000>;
+-		interrupt-map = <0 0 0 1 &gic GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 0 2 &gic GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 0 3 &gic GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
+-				<0 0 0 4 &gic GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-map = <0 0 0 1 &gic 0 0 GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 2 &gic 0 0 GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 3 &gic 0 0 GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
++				<0 0 0 4 &gic 0 0 GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+ 		msi-map = <0x0 &its 0x0 0x10000>;
+ 		iommu-map = <0x0 &smmu 0x0 0x10000>;
 
 
