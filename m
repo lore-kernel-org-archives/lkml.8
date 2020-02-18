@@ -5,70 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C41C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B0EC3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 082A42176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C44E24125
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:17:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRUEd5Ys"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gv2OvzIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgBRUQ7 (ORCPT
+        id S1727815AbgBRURI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:16:59 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39906 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgBRUQU (ORCPT
+        Tue, 18 Feb 2020 15:17:08 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52411 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbgBRUQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:16:20 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c84so4322051wme.4;
-        Tue, 18 Feb 2020 12:16:19 -0800 (PST)
+        Tue, 18 Feb 2020 15:16:18 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so4102462wmc.2;
+        Tue, 18 Feb 2020 12:16:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KO1P8TdhCF+ETf7N0G7DCO6PDxSuep8oXUSJME3PY5U=;
-        b=rRUEd5Ys244cV+9+fCeybZ3/qRaIGZIc7ZgqLnxKXfVDeSOycb7xNY9gHTVqdy4PxD
-         sjiStvp9luDgLGIrPuR5Y8BZk27Bmpl3UXL9DIXo60G1YPQtITRxt7BIDoNQoB22dHqS
-         xf9ObloDWjAPR7C2GU9UZj8o+LWZbq/4GuQP3mzaWy0s/jxnVMUlVHTe3W/bZzvMBnXX
-         7kvVmPCcjjWP+U+NqhHMAjQcxVs66vXFjJHnUnCKY9Yt1uNWrrK2LusEaUar+Wazcx9k
-         v1BK/lgU8oy2Uh5zN6tUfg4hEKSq+0gtXisPxzZpPAgXLOB9YgCQUCSpJjFaYVwtCjvB
-         G8CA==
+        bh=faBVqPTcYPP2mJjHh2h8k1eNwReQK/o/MeBiESpq7Co=;
+        b=Gv2OvzIvDKL8C1oLMCAExLfw7s1uXTT3LNrkPFqKMKXwvGKdHVIT1c8O/JqoX2e1jL
+         FbvEgOprTF3QVHY59MVQOeXD2JY0nN6946HVq4Ie9YSLpI0YPyThjHdbtvW5bPeoEoIB
+         feodXJDktTZAzvJ02ibilJ/Idf5sb3RGSNTC9NP63HePr80rz66jEbnM31tPDRBlZ609
+         GZbJcqJsLoC7qsHSpZmoj87W0l7xSOYXnUbWQP7JsKoKta0cFJvNmQi+3veWQMSMCZ0Y
+         SRa9oi92JkhNm6KJ8W8sjcSd6aTOPnJG0p8NxMJXc7A3pxEZz10vrDlxCaZ+foWwKz2Y
+         7OfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=KO1P8TdhCF+ETf7N0G7DCO6PDxSuep8oXUSJME3PY5U=;
-        b=h0IJSaBh2t+MqqqzWU/MWitaQ7qwDdslPSwGHELRQD5eqAC2VFgaQjMhoDFlT+O3C+
-         PP0H8e6vKOHge549ZSeS2zr45q/yH5K0eMaCCAC/J+oU9qdpp/CMT0jZiN3YVNUezBJ5
-         fQEPDuEjGlrYEO6bdcfw9JaBxEYVm7JXFgAqSHAGZdmAFMoenRkaRVqHS1TYY24elaCj
-         fhtBazmn/cwa11AhxFmezyhst5Z84eoe60enwNE1s5Z/Lm3PPKREPxODMYeTCsUH88P8
-         B7dbLtoS1WP+RDgJWh02NF2rWInss/Enxr6vQrvDD1KGCUSdS5vtzspuyeuVzY5Ic24t
-         oE9w==
-X-Gm-Message-State: APjAAAUgNUJjCRikZXU8gMEZYz++dtFNIshWaIDHzfX0B0ArGmiZ5Vtd
-        sU8tNmIpRK/duxXvLm/xEOOBbAw0
-X-Google-Smtp-Source: APXvYqxFvQJshXF+hlst3EZZ7WhubwUoRajwaHk+PuguQm/0lfFRnmjnP3Y7G2aeGeyOP/0tRzQHvw==
-X-Received: by 2002:a05:600c:10d2:: with SMTP id l18mr4855422wmd.122.1582056978481;
-        Tue, 18 Feb 2020 12:16:18 -0800 (PST)
+        bh=faBVqPTcYPP2mJjHh2h8k1eNwReQK/o/MeBiESpq7Co=;
+        b=L0CZrZ++7Qy645IqXkg8WjAo0JjgLCOpAVFppOGNjgLmFUEtWXrUKBtcn+JeaOE2Qg
+         2l+DBVn/VKncnFi+DuMsBNzYZgYg7l4E9EeGxW1s3d56S17BRyodnyMo0TI/aL63pjik
+         dRKhh1RfYSXgKWd4Xpcvlz2MH17hDRsmxKeAN7WNGRJmBZwAp499FG+mSLyPtSqGkyEe
+         NhA64oXAjIMjUtWc2blCjZWSeblhrZWrqOj9yQuIwBNHfmKVIYDeMIDcScd3qFphtQpL
+         auCwOH1ovbzrQeMP7VI/WyJMAmD+VC7vNM/M5FvIU2/FgxC/4NkCegT6AdBwoy8TSKS7
+         r5jg==
+X-Gm-Message-State: APjAAAWwRvNwaL92TS127FVl7Q9O3/QvQomSWKy3baBremoJBmn5YPjQ
+        kpIOYwh4NV5lAgRFJ2S49YawN61b
+X-Google-Smtp-Source: APXvYqwj9n0AWyFCf7wlztQVh7m87fwQMuFHKD3sMCvi3AvICoXSkgax7knIe2MzB3xz8/JcsHTpvw==
+X-Received: by 2002:a1c:ded7:: with SMTP id v206mr5112438wmg.106.1582056976440;
+        Tue, 18 Feb 2020 12:16:16 -0800 (PST)
 Received: from ?IPv6:2003:ea:8f29:6000:5cb0:582f:968:ec00? (p200300EA8F2960005CB0582F0968EC00.dip0.t-ipconnect.de. [2003:ea:8f29:6000:5cb0:582f:968:ec00])
-        by smtp.googlemail.com with ESMTPSA id p5sm7485636wrt.79.2020.02.18.12.16.17
+        by smtp.googlemail.com with ESMTPSA id h128sm5112270wmh.33.2020.02.18.12.16.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 12:16:18 -0800 (PST)
-Subject: [PATCH net-next v2 10/13] net: socionext: use new helper
- tcp_v6_gso_csum_prep
+        Tue, 18 Feb 2020 12:16:16 -0800 (PST)
+Subject: [PATCH net-next v2 08/13] ionic: use new helper tcp_v6_gso_csum_prep
 From:   Heiner Kallweit <hkallweit1@gmail.com>
 To:     David Miller <davem@davemloft.net>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+        Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>
 Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
-Message-ID: <6f02ce1c-aef7-6127-1724-72f7eee56810@gmail.com>
-Date:   Tue, 18 Feb 2020 21:09:17 +0100
+Message-ID: <6960380e-cee3-b65c-010f-551635cb3988@gmail.com>
+Date:   Tue, 18 Feb 2020 21:07:16 +0100
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
@@ -85,26 +84,25 @@ Use new helper tcp_v6_gso_csum_prep in additional network drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 ---
- drivers/net/ethernet/socionext/netsec.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/socionext/netsec.c b/drivers/net/ethernet/socionext/netsec.c
-index e8224b543..6266926fe 100644
---- a/drivers/net/ethernet/socionext/netsec.c
-+++ b/drivers/net/ethernet/socionext/netsec.c
-@@ -1148,11 +1148,7 @@ static netdev_tx_t netsec_netdev_start_xmit(struct sk_buff *skb,
- 				~tcp_v4_check(0, ip_hdr(skb)->saddr,
- 					      ip_hdr(skb)->daddr, 0);
- 		} else {
--			ipv6_hdr(skb)->payload_len = 0;
--			tcp_hdr(skb)->check =
--				~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
--						 &ipv6_hdr(skb)->daddr,
--						 0, IPPROTO_TCP, 0);
-+			tcp_v6_gso_csum_prep(skb);
- 		}
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+index e452f4242..020acc300 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+@@ -632,10 +632,7 @@ static int ionic_tx_tcp_pseudo_csum(struct sk_buff *skb)
+ 					   ip_hdr(skb)->daddr,
+ 					   0, IPPROTO_TCP, 0);
+ 	} else if (skb->protocol == cpu_to_be16(ETH_P_IPV6)) {
+-		tcp_hdr(skb)->check =
+-			~csum_ipv6_magic(&ipv6_hdr(skb)->saddr,
+-					 &ipv6_hdr(skb)->daddr,
+-					 0, IPPROTO_TCP, 0);
++		tcp_v6_gso_csum_prep(skb);
+ 	}
  
- 		tx_ctrl.tcp_seg_offload_flag = true;
+ 	return 0;
 -- 
 2.25.1
 
