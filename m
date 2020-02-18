@@ -2,80 +2,99 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 824F0C34034
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B435C34034
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B832176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6123722527
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 07:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qvXPwFFr"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gV+vQumo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgBRH25 (ORCPT
+        id S1726246AbgBRHlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 02:28:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38816 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgBRH24 (ORCPT
+        Tue, 18 Feb 2020 02:41:25 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:60387 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726104AbgBRHlY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 02:28:56 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w1so21716821ljh.5;
-        Mon, 17 Feb 2020 23:28:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2ecO73Tz4R3BzjxpGeijJ+hbGI3X2WrncLno2Gd5yhc=;
-        b=qvXPwFFrAD/ykGjO85luJE3kU77HQXUWu8f4slCNgNL8zyJDGMdLGg4PAlXA/DQAzl
-         WmhWIx3s3e9LKVudJlmMBEb/nh0DlDsExif6opzL9sNHX4eUz0lSTSIibX0pegnra0B1
-         YoJL9Sc6y9lO605QB1ckz4BlCOzKMFy9CA+RWRBJNEWJfuehXUSBd5IWdPcwgR0XiFL+
-         an95vxEta88S/rXaKQ20GRhq5AIq5k6OTQfnFt/O4mH+ogGeRh5p8ykc/p7qpOKlJtUY
-         TdOKvEU/5KjRVInPBKtkRKdCEJaaVmMEDuMDFhrT6v1E+2d/ebzPX1inrloJ73KO2McT
-         ojLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2ecO73Tz4R3BzjxpGeijJ+hbGI3X2WrncLno2Gd5yhc=;
-        b=OiP1i5DluENm4sf3zTc5Jnw4RadiOosApz9miMX1qUKozU/LEFCSQ38bL0P50tvmCs
-         3KPgDUg3F2imqUKv0VOFilgSqMPphAaWoGtEdlDsG6sY1AqO4jFk2hhDy08MqK6sgE83
-         qmblSpiXQQ5F6nuTBM7SltdYHMm5hXuWvYlHYwafgj2Pb6fT0wckpoQ8FQjgUE5fRmeq
-         +NHuMIB5f11KZfYTBStAW3Bx3ETzKygDR+1fTOOXwZ7R+X8YeKOEZ9ScHh7vfmqb/MfJ
-         VoxqLS+mp5Da945C0zWLujuxhkBCo4Sj4He4h5BewKEMqj8gnDYI+zvE2pzgPb0f1gmP
-         eW3w==
-X-Gm-Message-State: APjAAAVnKVZv5ksbzdB4xPB9CSltLnzPoNhi1qTBIXsjcFAGdcTtJiEd
-        t+8sNg3APC9SaiwL2WZDLphH23T+KWbaXZsAQkk=
-X-Google-Smtp-Source: APXvYqzXF4qXUVGsYrNpcGaWpWuysDCxSYh9b0+WaFhTVbWD6IqzhOWe7wbQAi54Arggdc3xJEfAbyjZgbh42rkngzc=
-X-Received: by 2002:a2e:9618:: with SMTP id v24mr11955147ljh.181.1582010934474;
- Mon, 17 Feb 2020 23:28:54 -0800 (PST)
+        Tue, 18 Feb 2020 02:41:24 -0500
+X-UUID: d408accb050345269bf4092c32b8eabd-20200218
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=R5o8h58rYOA1fQLNSXIwPhnCU0xALWjQ5mRQdByDjFk=;
+        b=gV+vQumofRgeHZQLi18ZL0fXI0cOe/m8m9jHQK1lAAwIwiikMv2ILEXat/eyhU0IKRcshFL0QWupA8xNmwG/j707T7GFs7L/sAdvYuq6fi0fCOzpXQSn9nB2mR/p9Wky/ggJ7CRWDs0fdL5mb+PPO+/bq/uHzSDFyXvILobmlKU=;
+X-UUID: d408accb050345269bf4092c32b8eabd-20200218
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <macpaul.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1173835655; Tue, 18 Feb 2020 15:41:16 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 18 Feb 2020 15:42:30 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 18 Feb 2020 15:40:51 +0800
+From:   Macpaul Lin <macpaul.lin@mediatek.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Macpaul Lin <macpaul.lin@mediatek.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Jerry Zhang <zhangjerry@google.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+CC:     Mediatek WSD Upstream <wsd_upstream@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>
+Subject: [PATCH] lib: iov_iter.c: fix a possible calculation error on remaining bytes
+Date:   Tue, 18 Feb 2020 15:41:12 +0800
+Message-ID: <1582011672-17189-1-git-send-email-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-References: <20200125221410.8022-1-pthomas8589@gmail.com> <CACRpkdZjFpyp=fySNRfMCnm6-JJ0xY-sGU4deDc6i6iPOuAG+w@mail.gmail.com>
-In-Reply-To: <CACRpkdZjFpyp=fySNRfMCnm6-JJ0xY-sGU4deDc6i6iPOuAG+w@mail.gmail.com>
-From:   Paul Thomas <pthomas8589@gmail.com>
-Date:   Tue, 18 Feb 2020 02:28:45 -0500
-Message-ID: <CAD56B7fNkP9oLD=+G8YSL+KBsdVG0Dk8X-mwr9F=EosUDpSC_g@mail.gmail.com>
-Subject: Re: [PATCH] GPIO, Fix bug where the wrong GPIO register is written to
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Fixed up the subject and applied, added a tag for stable.
->
-> Thanks!
-> Linus Walleij
+VGhpcyBpc3N1ZSB3YXMgZm91bmQgd2hlbiBhZGJkIHRyeWluZyB0byBvcGVuIGZ1bmN0aW9uZnMg
+d2l0aCBBSU8gbW9kZS4NClVzdWFsbHksIHdlIG5lZWQgdG8gc2V0ICJzZXRwcm9wIHN5cy51c2Iu
+ZmZzLmFpb19jb21wYXQgMCIgdG8gZW5hYmxlDQphZGJkIHdpdGggQUlPIG1vZGUgb24gQW5kcm9p
+ZC4NCg0KV2hlbiBhZGJkIGlzIG9wZW5pbmcgZnVuY3Rpb25mcywgaXQgd2lsbCB0cnkgdG8gcmVh
+ZCAyNCBieXRlcyBhdCB0aGUNCmZpc3J0IHJlYWQgSS9PIGNvbnRyb2wuIElmIHRoaXMgcmVhZGlu
+ZyBoYXMgYmVlbiBmYWlsZWQsIGFkYmQgd2lsbA0KdHJ5IHRvIHNlbmQgRlVOQ1RJT05GU19DTEVB
+Ul9IQUxUIHRvIGZ1bmN0aW9uZnMuIFdoZW4gYWRiZCBpcyBpbiBBSU8NCm1vZGUsIGZ1bmN0aW9u
+ZnMgd2lsbCBiZSBhY3RlZCB3aXRoIGFzeW5jcm9uaXplZCBJL08gcGF0aC4gQWZ0ZXIgdGhlDQpz
+dWNjZXNzZnVsIHJlYWQgdHJhbnNmZXIgaGFzIGJlZW4gY29tcGxldGVkIGJ5IGdhZGdldCBoYXJk
+d2FyZSwgdGhlDQpmb2xsb3dpbmcgc2VyaWVzIG9mIGZ1bmN0aW9ucyB3aWxsIGJlIGNhbGxlZC4N
+CiAgZmZzX2VwZmlsZV9hc3luY19pb19jb21wbGV0ZSgpIC0+IGZmc191c2VyX2NvcHlfd29ya2Vy
+KCkgLT4NCiAgICBjb3B5X3RvX2l0ZXIoKSAtPiBfY29weV90b19pdGVyKCkgLT4gY29weW91dCgp
+IC0+DQogICAgaXRlcmF0ZV9hbmRfYWR2YW5jZSgpIC0+IGl0ZXJhdGVfaW92ZWMoKQ0KDQpBZGRp
+bmcgZGVidWcgdHJhY2UgdG8gdGhlc2UgZnVuY3Rpb25zLCBpdCBoYXMgYmVlbiBmb3VuZCB0aGF0
+IGluDQppdGVyYXRlX2lvdmVjKCksIHRoZSBjYWxjdWxhdGlvbiByZXN1bHQgb2YgbiB3aWxsIGJl
+IHR1cm5lZCBpbnRvIHplcm8uDQogICBuID0gd2FudGVkIC0gbjsgLyogMCA9PSBuID0gMjQgLSAy
+NDsgKi8NCldoaWNoIGNhdXNlcyBjb3B5b3V0KCkgd29uJ3QgY29weSBkYXRhIHRvIHVzZXJzcGFj
+ZSBzaW5jZSB0aGUgbGVuZ3RoDQp0byBiZSBjb3BpZWQgInYuaW92X2xlbiIgd2lsbCBiZSB6ZXJv
+LCB3aGljaCBpc24ndCBjb3JyZWN0LiBUaGlzIGFsc28NCmxlYWRzIGZmc19jb3B5X3RvX2l0ZXIo
+KSBhbHdheXMgcmV0dXJuIC1FRkFVTFQuIEZpbmFsbHkgYWRiZCBjYW5ub3QNCm9wZW4gZnVuY3Rp
+b25mcyBhbmQgc2VuZCBGVU5DVElPTkZTX0NMRUFSX0hBTFQuDQoNClNpZ25lZC1vZmYtYnk6IE1h
+Y3BhdWwgTGluIDxtYWNwYXVsLmxpbkBtZWRpYXRlay5jb20+DQotLS0NCiBsaWIvaW92X2l0ZXIu
+YyB8IDMgKystDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
+KQ0KDQpkaWZmIC0tZ2l0IGEvbGliL2lvdl9pdGVyLmMgYi9saWIvaW92X2l0ZXIuYw0KaW5kZXgg
+ZmIyOWMwMmM2YTNjLi5mOTMzNDE0NGUyNTkgMTAwNjQ0DQotLS0gYS9saWIvaW92X2l0ZXIuYw0K
+KysrIGIvbGliL2lvdl9pdGVyLmMNCkBAIC0zNiw3ICszNiw4IEBADQogCQlza2lwID0gX192Lmlv
+dl9sZW47CQkJXA0KIAkJbiAtPSBfX3YuaW92X2xlbjsJCQlcDQogCX0JCQkJCQlcDQotCW4gPSB3
+YW50ZWQgLSBuOwkJCQkJXA0KKwlpZiAobiAhPSB3YW50ZWQpCQkJCVwNCisJCW4gPSB3YW50ZWQg
+LSBuOwkJCQlcDQogfQ0KIA0KICNkZWZpbmUgaXRlcmF0ZV9rdmVjKGksIG4sIF9fdiwgX19wLCBz
+a2lwLCBTVEVQKSB7CVwNCi0tIA0KMi4xOC4wDQo=
 
-Thanks everyone, next time I'll do the subject better.
-
--Paul
