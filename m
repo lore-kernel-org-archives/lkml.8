@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86634C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36FBC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61AF42464E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F7320659
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582055905;
-	bh=sxy4tI9unjHyXjtMuYgOqv37W4y7fCByf7CdtlFP7pI=;
+	s=default; t=1582055910;
+	bh=E/CjsNhoRB3Jo/2R9C3EkvwCVeD17nzH6g1tRVZtoyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=un7w90gmGcwyBpTYcva2Eadw/NwoTPSBJ/GDEJ7iYq0RnyfAUhLwCPOOceUWf01lK
-	 K4YkKwazQmg1MGz5KZCkp7/s5ojslNw52z1w4/pIY+B7ilVFlYNfBfOP29LNc9c+ZO
-	 OXrIMhZJgWFYuPfmDdux4kX9d0tV8V2RKvuyTdgM=
+	b=bumLxYY9J5+Z1zWd+CfoAL0q0542fHxLzxpl/n/siHtGosPKUwzB1yJ0tr80SxaXU
+	 is85BJSHoGEFd5B96QGxqvqfjg/7wgLWJboH5AP29rKU2UaM74Njmb92klcwMbycIL
+	 ENQGFVz/EMO5l5LaNV1+fj4Jm4onHK+ECaOObVFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgBRT6Y (ORCPT
+        id S1728199AbgBRT63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 14:58:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35950 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:58:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbgBRT6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:58:19 -0500
+        id S1728179AbgBRT6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:58:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E02E24686;
-        Tue, 18 Feb 2020 19:58:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F7C024125;
+        Tue, 18 Feb 2020 19:58:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055899;
-        bh=sxy4tI9unjHyXjtMuYgOqv37W4y7fCByf7CdtlFP7pI=;
+        s=default; t=1582055904;
+        bh=E/CjsNhoRB3Jo/2R9C3EkvwCVeD17nzH6g1tRVZtoyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=19DAutQqNRs3kFdRzGHEw631WIBIq5nbSuyUhj8Hk57Q7iaBR2pg3KYmmP/6Xxwoi
-         psBdWNqjuwhNhEtgn4uSZHkfpL5lf1V3RpDMughlDUOdRcCdoNpezVlKi4o1DnHxLZ
-         UtQ/zNVpbIeqC+H8wfaLgWEBEZ281HamfXusGASE=
+        b=VUVqdbHM/1fc9XeLnf0eySF/CKT/t6nSLZFK2i4ATIZW+Lt+HX7j37oE2ubGvq1bF
+         XQE2vYoXMTWofKTMD9uPfgIABHow4pyLINHHQBdzp8Syut05F26/NfNq21Dmy0o6WW
+         bKgtgyxV5c6PTuvaW6B9M0i2rPQZTPnzFW8WLnuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Thomas <pthomas8589@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 24/66] gpio: xilinx: Fix bug where the wrong GPIO register is written to
-Date:   Tue, 18 Feb 2020 20:54:51 +0100
-Message-Id: <20200218190430.318532041@linuxfoundation.org>
+        stable@vger.kernel.org, Andre Tomt <andre@tomt.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.4 26/66] xprtrdma: Fix DMA scatter-gather list mapping imbalance
+Date:   Tue, 18 Feb 2020 20:54:53 +0100
+Message-Id: <20200218190430.488655256@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
 References: <20200218190428.035153861@linuxfoundation.org>
@@ -59,48 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Thomas <pthomas8589@gmail.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-commit c3afa804c58e5c30ac63858b527fffadc88bce82 upstream.
+commit ca1c671302825182629d3c1a60363cee6f5455bb upstream.
 
-Care is taken with "index", however with the current version
-the actual xgpio_writereg is using index for data but
-xgpio_regoffset(chip, i) for the offset. And since i is already
-incremented it is incorrect. This patch fixes it so that index
-is used for the offset too.
+The @nents value that was passed to ib_dma_map_sg() has to be passed
+to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
+concatenate sg entries, it will return a different nents value than
+it was passed.
 
+The bug was exposed by recent changes to the AMD IOMMU driver, which
+enabled sg entry concatenation.
+
+Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
+new memory registration API") and reviewing other kernel ULPs, it's
+not clear that the frwr_map() logic was ever correct for this case.
+
+Reported-by: Andre Tomt <andre@tomt.net>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
-Link: https://lore.kernel.org/r/20200125221410.8022-1-pthomas8589@gmail.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-xilinx.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -147,9 +147,10 @@ static void xgpio_set_multiple(struct gp
- 	for (i = 0; i < gc->ngpio; i++) {
- 		if (*mask == 0)
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -326,8 +326,8 @@ struct rpcrdma_mr_seg *frwr_map(struct r
+ {
+ 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
+ 	struct ib_reg_wr *reg_wr;
++	int i, n, dma_nents;
+ 	struct ib_mr *ibmr;
+-	int i, n;
+ 	u8 key;
+ 
+ 	if (nsegs > ia->ri_max_frwr_depth)
+@@ -351,15 +351,16 @@ struct rpcrdma_mr_seg *frwr_map(struct r
  			break;
-+		/* Once finished with an index write it out to the register */
- 		if (index !=  xgpio_index(chip, i)) {
- 			xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--				       xgpio_regoffset(chip, i),
-+				       index * XGPIO_CHANNEL_OFFSET,
- 				       chip->gpio_state[index]);
- 			spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
- 			index =  xgpio_index(chip, i);
-@@ -165,7 +166,7 @@ static void xgpio_set_multiple(struct gp
  	}
+ 	mr->mr_dir = rpcrdma_data_dir(writing);
++	mr->mr_nents = i;
  
- 	xgpio_writereg(chip->regs + XGPIO_DATA_OFFSET +
--		       xgpio_regoffset(chip, i), chip->gpio_state[index]);
-+		       index * XGPIO_CHANNEL_OFFSET, chip->gpio_state[index]);
+-	mr->mr_nents =
+-		ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir);
+-	if (!mr->mr_nents)
++	dma_nents = ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, mr->mr_nents,
++				  mr->mr_dir);
++	if (!dma_nents)
+ 		goto out_dmamap_err;
  
- 	spin_unlock_irqrestore(&chip->gpio_lock[index], flags);
- }
+ 	ibmr = mr->frwr.fr_mr;
+-	n = ib_map_mr_sg(ibmr, mr->mr_sg, mr->mr_nents, NULL, PAGE_SIZE);
+-	if (unlikely(n != mr->mr_nents))
++	n = ib_map_mr_sg(ibmr, mr->mr_sg, dma_nents, NULL, PAGE_SIZE);
++	if (n != dma_nents)
+ 		goto out_mapmr_err;
+ 
+ 	ibmr->iova &= 0x00000000ffffffff;
 
 
