@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1168C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13588C34048
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F132176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D007A208C4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 17:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582046057;
-	bh=ok1xiAZ7WXj+mbnCKpDrCgz5JGz9ZCZABjFXb9dYyNM=;
+	s=default; t=1582046065;
+	bh=nbHREpyg9JimnwnI/nPcT90CEwrvNVBdPizgOJxL6kE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iI4DvERrbUxschcwK8SuVgRCTZvlfF/T/+UlOSH3JVq6F9L2usLKQftZ6ePSAHBnZ
-	 Dg4dqfvEOfE1rvm/fwUB90LUK4fknbtkzU1q/P4q756xbUPQ026a/xtrC1nsYAxO1X
-	 bJEQic/3NJo8iP+gEYDAl/9ckAKKjg3dyucAQrVc=
+	b=d4Mz8l3VnmJ0nu96InWpaSfnVE2PvXaFXCx/yYOl761biVD1eSoib0kkeBBpVq/2k
+	 rJGE4yOsdlREYfSGEoQr3TfGftylaCB65regkgcWiEIjHo6RhBoRfiL29n64rjcYt8
+	 NB7jslWcyEkvWj5Ei7XByKp8BrgNb1r5MYGYJZT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgBRRNj (ORCPT
+        id S1727930AbgBRROY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 12:13:39 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39880 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgBRRNe (ORCPT
+        Tue, 18 Feb 2020 12:14:24 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40361 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbgBRRNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 12:13:34 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z2so20835228oih.6;
-        Tue, 18 Feb 2020 09:13:32 -0800 (PST)
+        Tue, 18 Feb 2020 12:13:38 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i6so20247025otr.7;
+        Tue, 18 Feb 2020 09:13:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v0Vl76UEuxsk5yg9Po+ygPtGTaEk/mhPYQr81MGY08w=;
-        b=Oc1p5IkhFbSD7nyEpRUNxjrbtupY5OMRnXbUqBraJiMzOpIFdybAtdJB7yOtyb7/mV
-         uYllS6jCktnGrzaAMJMwJDWheweSzWV1H3A7Um2FQVUmeb0ytJL6yYEasWtMN3tTQkLc
-         AbVQ8JEGF2SOGKUoqytXCJ/JW2ULp2/WsHiSP3komFUhTMsirNQFFkfNhSdLDNfRcAAi
-         Uh/kLv9aTUd+JTWSO+xz+UpiD0ZpLn2OF0TdB4yUTXsccX1WKZh5WEgwzLRROA7t3VEG
-         096sZDcYweCfGK9sBJO7QP9wgNrvEfSb5bX92Tkk0xhBRhRJayJmIEUtAGkESxdIGbpO
-         46Lw==
-X-Gm-Message-State: APjAAAX9bsBkqsPeJnyDtC6TyuzPKdA8UvSAIr5XE5sBxaVoXLJWyamv
-        7/yecvUCGPHtEVXIMyD6Bg==
-X-Google-Smtp-Source: APXvYqwUc3inMoCdecbdUuNsMDgvDcrJjhj8ChMk19cWCZkyZjwjeXollkDMysGYw5kJtCo1GqwvHQ==
-X-Received: by 2002:a54:4791:: with SMTP id o17mr1818618oic.70.1582046011959;
-        Tue, 18 Feb 2020 09:13:31 -0800 (PST)
+        bh=u8D2FPtNZ0VMBn5UkeqSg7CSDs/wZAjBSTTCQDmiSkY=;
+        b=eyn6Ia268py7xlpLA8tqbDqJJSSLK5C60VrqcXGDlAbKlm31cTS2Qv6bB5Jk3gSO00
+         XAeAxlrXmJTtbq3xnxOrexH4sS8b2aynAiSRLsGvvCQLDTr/vAJsmOdpBnZuH/UvKstq
+         JdHjXbpL1BhNuqYpsScd8nBLgjciEXsUnkQ1esdkgwSm1qYLSMkPXNFMf61jGBLdxP/a
+         968TK4URNPOXPP038wET6ShZ1+uvrihBvA8DacKgUWcjdNTQJvLqH6ZhGKtmxq7DhuWu
+         AWPW1ZULxnuntUDqhBrWuFouj2poa5YMUiYn3A2VcZiI/8F3rY2unUejlxaLsSclwcMA
+         +TrA==
+X-Gm-Message-State: APjAAAW8ExL+sPFYv+ek2ABsN6y2Db8CsNxHYl2j2lkIa9JlUvZDy+pK
+        3mCb7psTmDzgWGbcZa7kmA==
+X-Google-Smtp-Source: APXvYqw6TNQhn8784qV+7u3WFCDSuqFfYxpVsfN96SobcjyzzV4x9MxcI5ZxKLnqYBrEuZO3mSlkJg==
+X-Received: by 2002:a9d:7386:: with SMTP id j6mr16115366otk.336.1582046016817;
+        Tue, 18 Feb 2020 09:13:36 -0800 (PST)
 Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.30
+        by smtp.googlemail.com with ESMTPSA id y25sm1545755oto.27.2020.02.18.09.13.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 09:13:31 -0800 (PST)
+        Tue, 18 Feb 2020 09:13:36 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
@@ -76,9 +76,9 @@ Cc:     Alex Williamson <alex.williamson@redhat.com>,
         Tony Luck <tony.luck@intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Will Deacon <will@kernel.org>
-Subject: [RFC PATCH 05/11] EDAC: Remove Calxeda drivers
-Date:   Tue, 18 Feb 2020 11:13:15 -0600
-Message-Id: <20200218171321.30990-6-robh@kernel.org>
+Subject: [RFC PATCH 08/11] clk: Remove Calxeda driver
+Date:   Tue, 18 Feb 2020 11:13:18 -0600
+Message-Id: <20200218171321.30990-9-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200218171321.30990-1-robh@kernel.org>
 References: <20200218171321.30990-1-robh@kernel.org>
@@ -89,506 +89,363 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Robert Richter <rrichter@marvell.com>
-Cc: linux-edac@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: linux-clk@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Do not apply yet.
 
- MAINTAINERS                     |   6 -
- drivers/edac/Kconfig            |  14 --
- drivers/edac/Makefile           |   3 -
- drivers/edac/highbank_l2_edac.c | 142 -----------------
- drivers/edac/highbank_mc_edac.c | 272 --------------------------------
- 5 files changed, 437 deletions(-)
- delete mode 100644 drivers/edac/highbank_l2_edac.c
- delete mode 100644 drivers/edac/highbank_mc_edac.c
+ drivers/clk/Makefile       |   1 -
+ drivers/clk/clk-highbank.c | 329 -------------------------------------
+ 2 files changed, 330 deletions(-)
+ delete mode 100644 drivers/clk/clk-highbank.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a0d86490c2c6..4732bb268299 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5964,12 +5964,6 @@ M:	Shravan Kumar Ramani <sramani@mellanox.com>
- S:	Supported
- F:	drivers/edac/bluefield_edac.c
-
--EDAC-CALXEDA
--M:	Robert Richter <rric@kernel.org>
--L:	linux-edac@vger.kernel.org
--S:	Maintained
--F:	drivers/edac/highbank*
--
- EDAC-CAVIUM OCTEON
- M:	Ralf Baechle <ralf@linux-mips.org>
- M:	Robert Richter <rrichter@marvell.com>
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index b3c99bb5fe77..f3ff75e5ed9b 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -334,20 +334,6 @@ config EDAC_CPC925
- 	  a companion chip to the PowerPC 970 family of
- 	  processors.
-
--config EDAC_HIGHBANK_MC
--	tristate "Highbank Memory Controller"
--	depends on ARCH_HIGHBANK
--	help
--	  Support for error detection and correction on the
--	  Calxeda Highbank memory controller.
--
--config EDAC_HIGHBANK_L2
--	tristate "Highbank L2 Cache"
--	depends on ARCH_HIGHBANK
--	help
--	  Support for error detection and correction on the
--	  Calxeda Highbank memory controller.
--
- config EDAC_OCTEON_PC
- 	tristate "Cavium Octeon Primary Caches"
- 	depends on CPU_CAVIUM_OCTEON
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index d77200c9680b..9a563db39bc3 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -69,9 +69,6 @@ obj-$(CONFIG_EDAC_PPC4XX)		+= ppc4xx_edac.o
- obj-$(CONFIG_EDAC_AMD8111)		+= amd8111_edac.o
- obj-$(CONFIG_EDAC_AMD8131)		+= amd8131_edac.o
-
--obj-$(CONFIG_EDAC_HIGHBANK_MC)		+= highbank_mc_edac.o
--obj-$(CONFIG_EDAC_HIGHBANK_L2)		+= highbank_l2_edac.o
--
- obj-$(CONFIG_EDAC_OCTEON_PC)		+= octeon_edac-pc.o
- obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
- obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
-diff --git a/drivers/edac/highbank_l2_edac.c b/drivers/edac/highbank_l2_edac.c
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index f4169cc2fd31..cb71dfaf1ac7 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -33,7 +33,6 @@ obj-$(CONFIG_COMMON_CLK_FSL_SAI)	+= clk-fsl-sai.o
+ obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
+ obj-$(CONFIG_COMMON_CLK_ASPEED)		+= clk-aspeed.o
+ obj-$(CONFIG_MACH_ASPEED_G6)		+= clk-ast2600.o
+-obj-$(CONFIG_ARCH_HIGHBANK)		+= clk-highbank.o
+ obj-$(CONFIG_CLK_HSDK)			+= clk-hsdk-pll.o
+ obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
+ obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
+diff --git a/drivers/clk/clk-highbank.c b/drivers/clk/clk-highbank.c
 deleted file mode 100644
-index c4549cec788b..000000000000
---- a/drivers/edac/highbank_l2_edac.c
+index 2a0cea2946f9..000000000000
+--- a/drivers/clk/clk-highbank.c
 +++ /dev/null
-@@ -1,142 +0,0 @@
+@@ -1,329 +0,0 @@
 -// SPDX-License-Identifier: GPL-2.0-only
 -/*
 - * Copyright 2011-2012 Calxeda, Inc.
 - */
--#include <linux/types.h>
+-
 -#include <linux/kernel.h>
--#include <linux/ctype.h>
--#include <linux/edac.h>
--#include <linux/interrupt.h>
--#include <linux/platform_device.h>
--#include <linux/of_platform.h>
+-#include <linux/slab.h>
+-#include <linux/err.h>
+-#include <linux/clk-provider.h>
+-#include <linux/io.h>
+-#include <linux/of.h>
+-#include <linux/of_address.h>
 -
--#include "edac_module.h"
+-#define HB_PLL_LOCK_500		0x20000000
+-#define HB_PLL_LOCK		0x10000000
+-#define HB_PLL_DIVF_SHIFT	20
+-#define HB_PLL_DIVF_MASK	0x0ff00000
+-#define HB_PLL_DIVQ_SHIFT	16
+-#define HB_PLL_DIVQ_MASK	0x00070000
+-#define HB_PLL_DIVR_SHIFT	8
+-#define HB_PLL_DIVR_MASK	0x00001f00
+-#define HB_PLL_RANGE_SHIFT	4
+-#define HB_PLL_RANGE_MASK	0x00000070
+-#define HB_PLL_BYPASS		0x00000008
+-#define HB_PLL_RESET		0x00000004
+-#define HB_PLL_EXT_BYPASS	0x00000002
+-#define HB_PLL_EXT_ENA		0x00000001
 -
--#define SR_CLR_SB_ECC_INTR	0x0
--#define SR_CLR_DB_ECC_INTR	0x4
+-#define HB_PLL_VCO_MIN_FREQ	2133000000
+-#define HB_PLL_MAX_FREQ		HB_PLL_VCO_MIN_FREQ
+-#define HB_PLL_MIN_FREQ		(HB_PLL_VCO_MIN_FREQ / 64)
 -
--struct hb_l2_drvdata {
--	void __iomem *base;
--	int sb_irq;
--	int db_irq;
+-#define HB_A9_BCLK_DIV_MASK	0x00000006
+-#define HB_A9_BCLK_DIV_SHIFT	1
+-#define HB_A9_PCLK_DIV		0x00000001
+-
+-struct hb_clk {
+-        struct clk_hw	hw;
+-	void __iomem	*reg;
+-	char *parent_name;
 -};
+-#define to_hb_clk(p) container_of(p, struct hb_clk, hw)
 -
--static irqreturn_t highbank_l2_err_handler(int irq, void *dev_id)
--{
--	struct edac_device_ctl_info *dci = dev_id;
--	struct hb_l2_drvdata *drvdata = dci->pvt_info;
--
--	if (irq == drvdata->sb_irq) {
--		writel(1, drvdata->base + SR_CLR_SB_ECC_INTR);
--		edac_device_handle_ce(dci, 0, 0, dci->ctl_name);
--	}
--	if (irq == drvdata->db_irq) {
--		writel(1, drvdata->base + SR_CLR_DB_ECC_INTR);
--		edac_device_handle_ue(dci, 0, 0, dci->ctl_name);
--	}
--
--	return IRQ_HANDLED;
--}
--
--static const struct of_device_id hb_l2_err_of_match[] = {
--	{ .compatible = "calxeda,hb-sregs-l2-ecc", },
--	{},
--};
--MODULE_DEVICE_TABLE(of, hb_l2_err_of_match);
--
--static int highbank_l2_err_probe(struct platform_device *pdev)
--{
--	const struct of_device_id *id;
--	struct edac_device_ctl_info *dci;
--	struct hb_l2_drvdata *drvdata;
--	struct resource *r;
--	int res = 0;
--
--	dci = edac_device_alloc_ctl_info(sizeof(*drvdata), "cpu",
--		1, "L", 1, 2, NULL, 0, 0);
--	if (!dci)
--		return -ENOMEM;
--
--	drvdata = dci->pvt_info;
--	dci->dev = &pdev->dev;
--	platform_set_drvdata(pdev, dci);
--
--	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
--		return -ENOMEM;
--
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!r) {
--		dev_err(&pdev->dev, "Unable to get mem resource\n");
--		res = -ENODEV;
--		goto err;
--	}
--
--	if (!devm_request_mem_region(&pdev->dev, r->start,
--				     resource_size(r), dev_name(&pdev->dev))) {
--		dev_err(&pdev->dev, "Error while requesting mem region\n");
--		res = -EBUSY;
--		goto err;
--	}
--
--	drvdata->base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
--	if (!drvdata->base) {
--		dev_err(&pdev->dev, "Unable to map regs\n");
--		res = -ENOMEM;
--		goto err;
--	}
--
--	id = of_match_device(hb_l2_err_of_match, &pdev->dev);
--	dci->mod_name = pdev->dev.driver->name;
--	dci->ctl_name = id ? id->compatible : "unknown";
--	dci->dev_name = dev_name(&pdev->dev);
--
--	if (edac_device_add_device(dci))
--		goto err;
--
--	drvdata->db_irq = platform_get_irq(pdev, 0);
--	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
--			       highbank_l2_err_handler,
--			       0, dev_name(&pdev->dev), dci);
--	if (res < 0)
--		goto err2;
--
--	drvdata->sb_irq = platform_get_irq(pdev, 1);
--	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
--			       highbank_l2_err_handler,
--			       0, dev_name(&pdev->dev), dci);
--	if (res < 0)
--		goto err2;
--
--	devres_close_group(&pdev->dev, NULL);
--	return 0;
--err2:
--	edac_device_del_device(&pdev->dev);
--err:
--	devres_release_group(&pdev->dev, NULL);
--	edac_device_free_ctl_info(dci);
--	return res;
--}
--
--static int highbank_l2_err_remove(struct platform_device *pdev)
--{
--	struct edac_device_ctl_info *dci = platform_get_drvdata(pdev);
--
--	edac_device_del_device(&pdev->dev);
--	edac_device_free_ctl_info(dci);
--	return 0;
--}
--
--static struct platform_driver highbank_l2_edac_driver = {
--	.probe = highbank_l2_err_probe,
--	.remove = highbank_l2_err_remove,
--	.driver = {
--		.name = "hb_l2_edac",
--		.of_match_table = hb_l2_err_of_match,
--	},
--};
--
--module_platform_driver(highbank_l2_edac_driver);
--
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Calxeda, Inc.");
--MODULE_DESCRIPTION("EDAC Driver for Calxeda Highbank L2 Cache");
-diff --git a/drivers/edac/highbank_mc_edac.c b/drivers/edac/highbank_mc_edac.c
-deleted file mode 100644
-index 61b76ec226af..000000000000
---- a/drivers/edac/highbank_mc_edac.c
-+++ /dev/null
-@@ -1,272 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright 2011-2012 Calxeda, Inc.
-- */
--#include <linux/types.h>
--#include <linux/kernel.h>
--#include <linux/ctype.h>
--#include <linux/edac.h>
--#include <linux/interrupt.h>
--#include <linux/platform_device.h>
--#include <linux/of_platform.h>
--#include <linux/uaccess.h>
--
--#include "edac_module.h"
--
--/* DDR Ctrlr Error Registers */
--
--#define HB_DDR_ECC_ERR_BASE		0x128
--#define MW_DDR_ECC_ERR_BASE		0x1b4
--
--#define HB_DDR_ECC_OPT			0x00
--#define HB_DDR_ECC_U_ERR_ADDR		0x08
--#define HB_DDR_ECC_U_ERR_STAT		0x0c
--#define HB_DDR_ECC_U_ERR_DATAL		0x10
--#define HB_DDR_ECC_U_ERR_DATAH		0x14
--#define HB_DDR_ECC_C_ERR_ADDR		0x18
--#define HB_DDR_ECC_C_ERR_STAT		0x1c
--#define HB_DDR_ECC_C_ERR_DATAL		0x20
--#define HB_DDR_ECC_C_ERR_DATAH		0x24
--
--#define HB_DDR_ECC_OPT_MODE_MASK	0x3
--#define HB_DDR_ECC_OPT_FWC		0x100
--#define HB_DDR_ECC_OPT_XOR_SHIFT	16
--
--/* DDR Ctrlr Interrupt Registers */
--
--#define HB_DDR_ECC_INT_BASE		0x180
--#define MW_DDR_ECC_INT_BASE		0x218
--
--#define HB_DDR_ECC_INT_STATUS		0x00
--#define HB_DDR_ECC_INT_ACK		0x04
--
--#define HB_DDR_ECC_INT_STAT_CE		0x8
--#define HB_DDR_ECC_INT_STAT_DOUBLE_CE	0x10
--#define HB_DDR_ECC_INT_STAT_UE		0x20
--#define HB_DDR_ECC_INT_STAT_DOUBLE_UE	0x40
--
--struct hb_mc_drvdata {
--	void __iomem *mc_err_base;
--	void __iomem *mc_int_base;
--};
--
--static irqreturn_t highbank_mc_err_handler(int irq, void *dev_id)
--{
--	struct mem_ctl_info *mci = dev_id;
--	struct hb_mc_drvdata *drvdata = mci->pvt_info;
--	u32 status, err_addr;
--
--	/* Read the interrupt status register */
--	status = readl(drvdata->mc_int_base + HB_DDR_ECC_INT_STATUS);
--
--	if (status & HB_DDR_ECC_INT_STAT_UE) {
--		err_addr = readl(drvdata->mc_err_base + HB_DDR_ECC_U_ERR_ADDR);
--		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, 1,
--				     err_addr >> PAGE_SHIFT,
--				     err_addr & ~PAGE_MASK, 0,
--				     0, 0, -1,
--				     mci->ctl_name, "");
--	}
--	if (status & HB_DDR_ECC_INT_STAT_CE) {
--		u32 syndrome = readl(drvdata->mc_err_base + HB_DDR_ECC_C_ERR_STAT);
--		syndrome = (syndrome >> 8) & 0xff;
--		err_addr = readl(drvdata->mc_err_base + HB_DDR_ECC_C_ERR_ADDR);
--		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, mci, 1,
--				     err_addr >> PAGE_SHIFT,
--				     err_addr & ~PAGE_MASK, syndrome,
--				     0, 0, -1,
--				     mci->ctl_name, "");
--	}
--
--	/* clear the error, clears the interrupt */
--	writel(status, drvdata->mc_int_base + HB_DDR_ECC_INT_ACK);
--	return IRQ_HANDLED;
--}
--
--static void highbank_mc_err_inject(struct mem_ctl_info *mci, u8 synd)
--{
--	struct hb_mc_drvdata *pdata = mci->pvt_info;
+-static int clk_pll_prepare(struct clk_hw *hwclk)
+-	{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
 -	u32 reg;
 -
--	reg = readl(pdata->mc_err_base + HB_DDR_ECC_OPT);
--	reg &= HB_DDR_ECC_OPT_MODE_MASK;
--	reg |= (synd << HB_DDR_ECC_OPT_XOR_SHIFT) | HB_DDR_ECC_OPT_FWC;
--	writel(reg, pdata->mc_err_base + HB_DDR_ECC_OPT);
+-	reg = readl(hbclk->reg);
+-	reg &= ~HB_PLL_RESET;
+-	writel(reg, hbclk->reg);
+-
+-	while ((readl(hbclk->reg) & HB_PLL_LOCK) == 0)
+-		;
+-	while ((readl(hbclk->reg) & HB_PLL_LOCK_500) == 0)
+-		;
+-
+-	return 0;
 -}
 -
--#define to_mci(k) container_of(k, struct mem_ctl_info, dev)
--
--static ssize_t highbank_mc_inject_ctrl(struct device *dev,
--	struct device_attribute *attr, const char *buf, size_t count)
+-static void clk_pll_unprepare(struct clk_hw *hwclk)
 -{
--	struct mem_ctl_info *mci = to_mci(dev);
--	u8 synd;
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 reg;
 -
--	if (kstrtou8(buf, 16, &synd))
+-	reg = readl(hbclk->reg);
+-	reg |= HB_PLL_RESET;
+-	writel(reg, hbclk->reg);
+-}
+-
+-static int clk_pll_enable(struct clk_hw *hwclk)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 reg;
+-
+-	reg = readl(hbclk->reg);
+-	reg |= HB_PLL_EXT_ENA;
+-	writel(reg, hbclk->reg);
+-
+-	return 0;
+-}
+-
+-static void clk_pll_disable(struct clk_hw *hwclk)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 reg;
+-
+-	reg = readl(hbclk->reg);
+-	reg &= ~HB_PLL_EXT_ENA;
+-	writel(reg, hbclk->reg);
+-}
+-
+-static unsigned long clk_pll_recalc_rate(struct clk_hw *hwclk,
+-					 unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	unsigned long divf, divq, vco_freq, reg;
+-
+-	reg = readl(hbclk->reg);
+-	if (reg & HB_PLL_EXT_BYPASS)
+-		return parent_rate;
+-
+-	divf = (reg & HB_PLL_DIVF_MASK) >> HB_PLL_DIVF_SHIFT;
+-	divq = (reg & HB_PLL_DIVQ_MASK) >> HB_PLL_DIVQ_SHIFT;
+-	vco_freq = parent_rate * (divf + 1);
+-
+-	return vco_freq / (1 << divq);
+-}
+-
+-static void clk_pll_calc(unsigned long rate, unsigned long ref_freq,
+-			u32 *pdivq, u32 *pdivf)
+-{
+-	u32 divq, divf;
+-	unsigned long vco_freq;
+-
+-	if (rate < HB_PLL_MIN_FREQ)
+-		rate = HB_PLL_MIN_FREQ;
+-	if (rate > HB_PLL_MAX_FREQ)
+-		rate = HB_PLL_MAX_FREQ;
+-
+-	for (divq = 1; divq <= 6; divq++) {
+-		if ((rate * (1 << divq)) >= HB_PLL_VCO_MIN_FREQ)
+-			break;
+-	}
+-
+-	vco_freq = rate * (1 << divq);
+-	divf = (vco_freq + (ref_freq / 2)) / ref_freq;
+-	divf--;
+-
+-	*pdivq = divq;
+-	*pdivf = divf;
+-}
+-
+-static long clk_pll_round_rate(struct clk_hw *hwclk, unsigned long rate,
+-			       unsigned long *parent_rate)
+-{
+-	u32 divq, divf;
+-	unsigned long ref_freq = *parent_rate;
+-
+-	clk_pll_calc(rate, ref_freq, &divq, &divf);
+-
+-	return (ref_freq * (divf + 1)) / (1 << divq);
+-}
+-
+-static int clk_pll_set_rate(struct clk_hw *hwclk, unsigned long rate,
+-			    unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 divq, divf;
+-	u32 reg;
+-
+-	clk_pll_calc(rate, parent_rate, &divq, &divf);
+-
+-	reg = readl(hbclk->reg);
+-	if (divf != ((reg & HB_PLL_DIVF_MASK) >> HB_PLL_DIVF_SHIFT)) {
+-		/* Need to re-lock PLL, so put it into bypass mode */
+-		reg |= HB_PLL_EXT_BYPASS;
+-		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
+-
+-		writel(reg | HB_PLL_RESET, hbclk->reg);
+-		reg &= ~(HB_PLL_DIVF_MASK | HB_PLL_DIVQ_MASK);
+-		reg |= (divf << HB_PLL_DIVF_SHIFT) | (divq << HB_PLL_DIVQ_SHIFT);
+-		writel(reg | HB_PLL_RESET, hbclk->reg);
+-		writel(reg, hbclk->reg);
+-
+-		while ((readl(hbclk->reg) & HB_PLL_LOCK) == 0)
+-			;
+-		while ((readl(hbclk->reg) & HB_PLL_LOCK_500) == 0)
+-			;
+-		reg |= HB_PLL_EXT_ENA;
+-		reg &= ~HB_PLL_EXT_BYPASS;
+-	} else {
+-		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
+-		reg &= ~HB_PLL_DIVQ_MASK;
+-		reg |= divq << HB_PLL_DIVQ_SHIFT;
+-		writel(reg | HB_PLL_EXT_BYPASS, hbclk->reg);
+-	}
+-	writel(reg, hbclk->reg);
+-
+-	return 0;
+-}
+-
+-static const struct clk_ops clk_pll_ops = {
+-	.prepare = clk_pll_prepare,
+-	.unprepare = clk_pll_unprepare,
+-	.enable = clk_pll_enable,
+-	.disable = clk_pll_disable,
+-	.recalc_rate = clk_pll_recalc_rate,
+-	.round_rate = clk_pll_round_rate,
+-	.set_rate = clk_pll_set_rate,
+-};
+-
+-static unsigned long clk_cpu_periphclk_recalc_rate(struct clk_hw *hwclk,
+-						   unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 div = (readl(hbclk->reg) & HB_A9_PCLK_DIV) ? 8 : 4;
+-	return parent_rate / div;
+-}
+-
+-static const struct clk_ops a9periphclk_ops = {
+-	.recalc_rate = clk_cpu_periphclk_recalc_rate,
+-};
+-
+-static unsigned long clk_cpu_a9bclk_recalc_rate(struct clk_hw *hwclk,
+-						unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 div = (readl(hbclk->reg) & HB_A9_BCLK_DIV_MASK) >> HB_A9_BCLK_DIV_SHIFT;
+-
+-	return parent_rate / (div + 2);
+-}
+-
+-static const struct clk_ops a9bclk_ops = {
+-	.recalc_rate = clk_cpu_a9bclk_recalc_rate,
+-};
+-
+-static unsigned long clk_periclk_recalc_rate(struct clk_hw *hwclk,
+-					     unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 div;
+-
+-	div = readl(hbclk->reg) & 0x1f;
+-	div++;
+-	div *= 2;
+-
+-	return parent_rate / div;
+-}
+-
+-static long clk_periclk_round_rate(struct clk_hw *hwclk, unsigned long rate,
+-				   unsigned long *parent_rate)
+-{
+-	u32 div;
+-
+-	div = *parent_rate / rate;
+-	div++;
+-	div &= ~0x1;
+-
+-	return *parent_rate / div;
+-}
+-
+-static int clk_periclk_set_rate(struct clk_hw *hwclk, unsigned long rate,
+-				unsigned long parent_rate)
+-{
+-	struct hb_clk *hbclk = to_hb_clk(hwclk);
+-	u32 div;
+-
+-	div = parent_rate / rate;
+-	if (div & 0x1)
 -		return -EINVAL;
 -
--	highbank_mc_err_inject(mci, synd);
--
--	return count;
--}
--
--static DEVICE_ATTR(inject_ctrl, S_IWUSR, NULL, highbank_mc_inject_ctrl);
--
--static struct attribute *highbank_dev_attrs[] = {
--	&dev_attr_inject_ctrl.attr,
--	NULL
--};
--
--ATTRIBUTE_GROUPS(highbank_dev);
--
--struct hb_mc_settings {
--	int	err_offset;
--	int	int_offset;
--};
--
--static struct hb_mc_settings hb_settings = {
--	.err_offset = HB_DDR_ECC_ERR_BASE,
--	.int_offset = HB_DDR_ECC_INT_BASE,
--};
--
--static struct hb_mc_settings mw_settings = {
--	.err_offset = MW_DDR_ECC_ERR_BASE,
--	.int_offset = MW_DDR_ECC_INT_BASE,
--};
--
--static const struct of_device_id hb_ddr_ctrl_of_match[] = {
--	{ .compatible = "calxeda,hb-ddr-ctrl",		.data = &hb_settings },
--	{ .compatible = "calxeda,ecx-2000-ddr-ctrl",	.data = &mw_settings },
--	{},
--};
--MODULE_DEVICE_TABLE(of, hb_ddr_ctrl_of_match);
--
--static int highbank_mc_probe(struct platform_device *pdev)
--{
--	const struct of_device_id *id;
--	const struct hb_mc_settings *settings;
--	struct edac_mc_layer layers[2];
--	struct mem_ctl_info *mci;
--	struct hb_mc_drvdata *drvdata;
--	struct dimm_info *dimm;
--	struct resource *r;
--	void __iomem *base;
--	u32 control;
--	int irq;
--	int res = 0;
--
--	id = of_match_device(hb_ddr_ctrl_of_match, &pdev->dev);
--	if (!id)
--		return -ENODEV;
--
--	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
--	layers[0].size = 1;
--	layers[0].is_virt_csrow = true;
--	layers[1].type = EDAC_MC_LAYER_CHANNEL;
--	layers[1].size = 1;
--	layers[1].is_virt_csrow = false;
--	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers,
--			    sizeof(struct hb_mc_drvdata));
--	if (!mci)
--		return -ENOMEM;
--
--	mci->pdev = &pdev->dev;
--	drvdata = mci->pvt_info;
--	platform_set_drvdata(pdev, mci);
--
--	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL))
--		return -ENOMEM;
--
--	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!r) {
--		dev_err(&pdev->dev, "Unable to get mem resource\n");
--		res = -ENODEV;
--		goto err;
--	}
--
--	if (!devm_request_mem_region(&pdev->dev, r->start,
--				     resource_size(r), dev_name(&pdev->dev))) {
--		dev_err(&pdev->dev, "Error while requesting mem region\n");
--		res = -EBUSY;
--		goto err;
--	}
--
--	base = devm_ioremap(&pdev->dev, r->start, resource_size(r));
--	if (!base) {
--		dev_err(&pdev->dev, "Unable to map regs\n");
--		res = -ENOMEM;
--		goto err;
--	}
--
--	settings = id->data;
--	drvdata->mc_err_base = base + settings->err_offset;
--	drvdata->mc_int_base = base + settings->int_offset;
--
--	control = readl(drvdata->mc_err_base + HB_DDR_ECC_OPT) & 0x3;
--	if (!control || (control == 0x2)) {
--		dev_err(&pdev->dev, "No ECC present, or ECC disabled\n");
--		res = -ENODEV;
--		goto err;
--	}
--
--	mci->mtype_cap = MEM_FLAG_DDR3;
--	mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
--	mci->edac_cap = EDAC_FLAG_SECDED;
--	mci->mod_name = pdev->dev.driver->name;
--	mci->ctl_name = id->compatible;
--	mci->dev_name = dev_name(&pdev->dev);
--	mci->scrub_mode = SCRUB_SW_SRC;
--
--	/* Only a single 4GB DIMM is supported */
--	dimm = *mci->dimms;
--	dimm->nr_pages = (~0UL >> PAGE_SHIFT) + 1;
--	dimm->grain = 8;
--	dimm->dtype = DEV_X8;
--	dimm->mtype = MEM_DDR3;
--	dimm->edac_mode = EDAC_SECDED;
--
--	res = edac_mc_add_mc_with_groups(mci, highbank_dev_groups);
--	if (res < 0)
--		goto err;
--
--	irq = platform_get_irq(pdev, 0);
--	res = devm_request_irq(&pdev->dev, irq, highbank_mc_err_handler,
--			       0, dev_name(&pdev->dev), mci);
--	if (res < 0) {
--		dev_err(&pdev->dev, "Unable to request irq %d\n", irq);
--		goto err2;
--	}
--
--	devres_close_group(&pdev->dev, NULL);
--	return 0;
--err2:
--	edac_mc_del_mc(&pdev->dev);
--err:
--	devres_release_group(&pdev->dev, NULL);
--	edac_mc_free(mci);
--	return res;
--}
--
--static int highbank_mc_remove(struct platform_device *pdev)
--{
--	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
--
--	edac_mc_del_mc(&pdev->dev);
--	edac_mc_free(mci);
+-	writel(div >> 1, hbclk->reg);
 -	return 0;
 -}
 -
--static struct platform_driver highbank_mc_edac_driver = {
--	.probe = highbank_mc_probe,
--	.remove = highbank_mc_remove,
--	.driver = {
--		.name = "hb_mc_edac",
--		.of_match_table = hb_ddr_ctrl_of_match,
--	},
+-static const struct clk_ops periclk_ops = {
+-	.recalc_rate = clk_periclk_recalc_rate,
+-	.round_rate = clk_periclk_round_rate,
+-	.set_rate = clk_periclk_set_rate,
 -};
 -
--module_platform_driver(highbank_mc_edac_driver);
+-static void __init hb_clk_init(struct device_node *node, const struct clk_ops *ops, unsigned long clkflags)
+-{
+-	u32 reg;
+-	struct hb_clk *hb_clk;
+-	const char *clk_name = node->name;
+-	const char *parent_name;
+-	struct clk_init_data init;
+-	struct device_node *srnp;
+-	int rc;
 -
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Calxeda, Inc.");
--MODULE_DESCRIPTION("EDAC Driver for Calxeda Highbank");
+-	rc = of_property_read_u32(node, "reg", &reg);
+-	if (WARN_ON(rc))
+-		return;
+-
+-	hb_clk = kzalloc(sizeof(*hb_clk), GFP_KERNEL);
+-	if (WARN_ON(!hb_clk))
+-		return;
+-
+-	/* Map system registers */
+-	srnp = of_find_compatible_node(NULL, NULL, "calxeda,hb-sregs");
+-	hb_clk->reg = of_iomap(srnp, 0);
+-	of_node_put(srnp);
+-	BUG_ON(!hb_clk->reg);
+-	hb_clk->reg += reg;
+-
+-	of_property_read_string(node, "clock-output-names", &clk_name);
+-
+-	init.name = clk_name;
+-	init.ops = ops;
+-	init.flags = clkflags;
+-	parent_name = of_clk_get_parent_name(node, 0);
+-	init.parent_names = &parent_name;
+-	init.num_parents = 1;
+-
+-	hb_clk->hw.init = &init;
+-
+-	rc = clk_hw_register(NULL, &hb_clk->hw);
+-	if (WARN_ON(rc)) {
+-		kfree(hb_clk);
+-		return;
+-	}
+-	of_clk_add_hw_provider(node, of_clk_hw_simple_get, &hb_clk->hw);
+-}
+-
+-static void __init hb_pll_init(struct device_node *node)
+-{
+-	hb_clk_init(node, &clk_pll_ops, 0);
+-}
+-CLK_OF_DECLARE(hb_pll, "calxeda,hb-pll-clock", hb_pll_init);
+-
+-static void __init hb_a9periph_init(struct device_node *node)
+-{
+-	hb_clk_init(node, &a9periphclk_ops, 0);
+-}
+-CLK_OF_DECLARE(hb_a9periph, "calxeda,hb-a9periph-clock", hb_a9periph_init);
+-
+-static void __init hb_a9bus_init(struct device_node *node)
+-{
+-	hb_clk_init(node, &a9bclk_ops, CLK_IS_CRITICAL);
+-}
+-CLK_OF_DECLARE(hb_a9bus, "calxeda,hb-a9bus-clock", hb_a9bus_init);
+-
+-static void __init hb_emmc_init(struct device_node *node)
+-{
+-	hb_clk_init(node, &periclk_ops, 0);
+-}
+-CLK_OF_DECLARE(hb_emmc, "calxeda,hb-emmc-clock", hb_emmc_init);
 --
 2.20.1
