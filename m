@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93203C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D0CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66080208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5693D21D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:12:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UcY2Oprh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cZf5qStk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgBRSMs (ORCPT
+        id S1726795AbgBRSMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:12:48 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44308 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgBRSMp (ORCPT
+        Tue, 18 Feb 2020 13:12:52 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37263 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgBRSMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:12:45 -0500
-Received: by mail-pl1-f196.google.com with SMTP id d9so8387760plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:12:45 -0800 (PST)
+        Tue, 18 Feb 2020 13:12:50 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so11351339pgl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:12:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SW0vgULHscZsJ8p0egFrW5FyLS48DpnKhbm4QSHmznE=;
-        b=UcY2OprhVlroXXa6CER9wxZ8cJb9sNJdYZLnuwHUPRHRQ/JuMuDsP28riO6YKooiWo
-         9La7wP+4HKIM9cWOY81aJLkep3qCd9rkW8BFu8sHmPs0Z6AURoXa/nCLykMlt5htYMht
-         6P89PsrMjzjvJwfpSkrdVUKs0GgGem8Nwo5gD22NQAYiUWWMqVTZ2m+QCMQDV9crLnou
-         g64+LUHWBBBEPj6izTqVOuEWEtwq+x1tJDc5LYJHThWtOZUA1uXnSnwdftcpJQLDfRZ3
-         /YYnrgAUf//XVqmoQmUBq1E/haJwhBEdb2OwsH7yPX55bPQnQIaUOVUv6aAn5G0NG84x
-         9g7w==
+        bh=tzP6DDxjNOEcRZc6aP2dcvH1CJqWKtefu5asJA+DstU=;
+        b=cZf5qStkhDbF+2285LVwTF25BVh9UjH/fnLeRooy56tUNVAhSwMt3dFT7KK5QHfbKn
+         YOa5d7141qV+nMVIFog2MWchsku1UWXSC14D8Z7+Zt9t+EBvT9fytkk/dcq9kegDWOi6
+         G5kiHKRudS09kb7+8HVKHOSvnTemXYK4JBUwdnuTBosulCv1XxM9dRcqTKuI4f9BAGnb
+         3cn7d5GHivpsGz4GZdP+jtxsV06IKzBiGEmuRob0eDLeeWJkvIpqjEpE+qbhZEpgVxCC
+         v6vjaZzp3/XALSSX2zxRJvS/139lii4oiJGEn8XFs9blYtIuhqVShVLBKpcu5/ZvlcH/
+         zguw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SW0vgULHscZsJ8p0egFrW5FyLS48DpnKhbm4QSHmznE=;
-        b=soFXGxCw0XSosJybJ6c5kg2ytV4zUvsoWqHjKfnt+BFYUGYFJjU3ZI6R8DnDHV4yUw
-         AB/WDMZHZ4TcA+vmBUVMHEsHlIerwM7l8KZHF1N0y0OydBXwUQqBJz5HBOZIYpKgyOwW
-         YDqaSILlPoZw3nd7md1b0pU8v8xrxINDJfQQYM6XIe/P35xLFgIz3FFDPXbxgbyTe28t
-         XMv2Is/ZfFTh9hPRitBSqtOWRkHqwl+YH1aGfbxDshqgs5r1qkimPX/e29y2B8C7au4R
-         2oI8o8rsa174s32KsjySKSjMtUivaTDFBTJv9xClXRX9rsIV1jCchIT05uSAuKQvX3G4
-         akJw==
-X-Gm-Message-State: APjAAAVLcjZk0T4fhKFXOCZUPBl6r24JTxO8/7NetxYO3uZZKGCg3mou
-        GZ5MvmueuIcqgXfM5bxUHujbyIS+TTg=
-X-Google-Smtp-Source: APXvYqwauDSPnNJdc/Rm3pO+rtR3pHW8zahL/mAGwc7MTDkJoZgBIw3WqWuDP2JSzWt0eQ7d/hleRw==
-X-Received: by 2002:a17:90a:c20d:: with SMTP id e13mr4133784pjt.95.1582049564555;
-        Tue, 18 Feb 2020 10:12:44 -0800 (PST)
+        bh=tzP6DDxjNOEcRZc6aP2dcvH1CJqWKtefu5asJA+DstU=;
+        b=SLimhkSQ+hr6AlSuqpX5usXC5I/C2VTU1UhZ7sxv2U1dRTbBOe3hY/KTEnHECPJuTL
+         nSuMnWQ9LzgPjJCzbzQjAqZnRmBr8hzzD39Cn6kk+SQEvUAz95C29fuMCjMXu1Xa3rwu
+         LzoP0DGgKQcq8cqg3bzu/LliYbZ+SIYlM3/UthbjNqUqBHNx481mIw+GHDQEpbOiWPkX
+         E4fViTfDMAoDbfyBM+3W/Un0pLA9sZMkzb6PJOGJWaQoSwM3e4EwhwH4HrQ/8Kirq9n1
+         CSw7MHa2BerPLjrkvvFVU+Amnq7He890sgNqua7+AAmiB2+heGeRpTMJl5ww2jhYTcHX
+         sJZw==
+X-Gm-Message-State: APjAAAVQnHxcs3ks/dQxdhRP9EIxPjTGyNd9/qTZ0MQTjLuSDiMd/lzo
+        FiWzwt+mKXDViICYGVMzj62kA3nBEQs=
+X-Google-Smtp-Source: APXvYqzRmHIQixHL/dT3g9+URkrEvbTD1662LCKASj2k0uJ6uY3NugxAdfAfz04HmHTeYWl0Y6pjGA==
+X-Received: by 2002:a62:1402:: with SMTP id 2mr22863254pfu.126.1582049568452;
+        Tue, 18 Feb 2020 10:12:48 -0800 (PST)
 Received: from localhost ([103.195.202.120])
-        by smtp.gmail.com with ESMTPSA id b18sm5005713pfd.63.2020.02.18.10.12.43
+        by smtp.gmail.com with ESMTPSA id j17sm4952292pfa.16.2020.02.18.10.12.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 10:12:43 -0800 (PST)
+        Tue, 18 Feb 2020 10:12:47 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         daniel.lezcano@linaro.org, bjorn.andersson@linaro.org,
@@ -63,9 +63,9 @@ To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Andy Gross <agross@kernel.org>
 Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org
-Subject: [PATCH v5 6/8] drivers: thermal: tsens: Add watchdog support
-Date:   Tue, 18 Feb 2020 23:42:10 +0530
-Message-Id: <eb967cd5a374fa32d93e486b1c9fd7e56796629a.1582048155.git.amit.kucheria@linaro.org>
+Subject: [PATCH v5 7/8] drivers: thermal: tsens: kernel-doc fixup
+Date:   Tue, 18 Feb 2020 23:42:11 +0530
+Message-Id: <8990f5cd5ec2bc2aa0f13c0ad5cd41b8d1a5632e.1582048155.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1582048155.git.amit.kucheria@linaro.org>
 References: <cover.1582048155.git.amit.kucheria@linaro.org>
@@ -76,169 +76,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
-HW FSM is stuck. Add support to detect and restart the FSM in the
-driver. The watchdog is configured by the bootloader, we just enable the
-watchdog bark as a debug feature in the kernel.
+Document ul_lock, threshold and control structure members and make
+the following kernel-doc invocation happy:
+
+$ scripts/kernel-doc -v -none drivers/thermal/qcom/*
+
+drivers/thermal/qcom/qcom-spmi-temp-alarm.c:105: info: Scanning doc for qpnp_tm_get_temp_stage
+drivers/thermal/qcom/tsens-common.c:18: info: Scanning doc for struct tsens_irq_data
+drivers/thermal/qcom/tsens-common.c:130: info: Scanning doc for tsens_hw_to_mC
+drivers/thermal/qcom/tsens-common.c:163: info: Scanning doc for tsens_mC_to_hw
+drivers/thermal/qcom/tsens-common.c:245: info: Scanning doc for tsens_set_interrupt
+drivers/thermal/qcom/tsens-common.c:268: info: Scanning doc for tsens_threshold_violated
+drivers/thermal/qcom/tsens-common.c:362: info: Scanning doc for tsens_critical_irq_thread
+drivers/thermal/qcom/tsens-common.c:438: info: Scanning doc for tsens_irq_thread
+drivers/thermal/qcom/tsens.h:41: info: Scanning doc for struct tsens_sensor
+drivers/thermal/qcom/tsens.h:59: info: Scanning doc for struct tsens_ops
+drivers/thermal/qcom/tsens.h:494: info: Scanning doc for struct tsens_features
+drivers/thermal/qcom/tsens.h:513: info: Scanning doc for struct tsens_plat_data
+drivers/thermal/qcom/tsens.h:529: info: Scanning doc for struct tsens_context
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/thermal/qcom/tsens-common.c | 44 +++++++++++++++++++++++++++++
- drivers/thermal/qcom/tsens-v2.c     | 10 +++++++
- drivers/thermal/qcom/tsens.h        | 14 +++++++++
- 3 files changed, 68 insertions(+)
+ drivers/thermal/qcom/tsens.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-index 6f1b9186770d..9de724ab6627 100644
---- a/drivers/thermal/qcom/tsens-common.c
-+++ b/drivers/thermal/qcom/tsens-common.c
-@@ -362,6 +362,7 @@ static inline u32 masked_irq(u32 hw_id, u32 mask, enum tsens_ver ver)
-  * @irq: irq number
-  * @data: tsens controller private data
-  *
-+ * Check FSM watchdog bark status and clear if needed.
-  * Check all sensors to find ones that violated their critical threshold limits.
-  * Clear and then re-enable the interrupt.
-  *
-@@ -376,6 +377,26 @@ irqreturn_t tsens_critical_irq_thread(int irq, void *data)
- 	struct tsens_priv *priv = data;
- 	struct tsens_irq_data d;
- 	int temp, ret, i;
-+	u32 wdog_status, wdog_count;
-+
-+	if (priv->feat->has_watchdog) {
-+		ret = regmap_field_read(priv->rf[WDOG_BARK_STATUS], &wdog_status);
-+		if (ret)
-+			return ret;
-+
-+		if (wdog_status) {
-+			/* Clear WDOG interrupt */
-+			regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 1);
-+			regmap_field_write(priv->rf[WDOG_BARK_CLEAR], 0);
-+			ret = regmap_field_read(priv->rf[WDOG_BARK_COUNT], &wdog_count);
-+			if (ret)
-+				return ret;
-+			if (wdog_count)
-+				dev_dbg(priv->dev, "%s: watchdog count: %d\n", __func__, wdog_count);
-+
-+			/* Fall through to handle critical interrupts if any */
-+		}
-+	}
- 
- 	for (i = 0; i < priv->num_sensors; i++) {
- 		const struct tsens_sensor *s = &priv->sensor[i];
-@@ -671,6 +692,7 @@ int __init init_common(struct tsens_priv *priv)
- {
- 	void __iomem *tm_base, *srot_base;
- 	struct device *dev = priv->dev;
-+	u32 ver_minor;
- 	struct resource *res;
- 	u32 enabled;
- 	int ret, i, j;
-@@ -720,6 +742,9 @@ int __init init_common(struct tsens_priv *priv)
- 			if (IS_ERR(priv->rf[i]))
- 				return PTR_ERR(priv->rf[i]);
- 		}
-+		ret = regmap_field_read(priv->rf[VER_MINOR], &ver_minor);
-+		if (ret)
-+			goto err_put_device;
- 	}
- 
- 	priv->rf[TSENS_EN] = devm_regmap_field_alloc(dev, priv->srot_map,
-@@ -780,6 +805,25 @@ int __init init_common(struct tsens_priv *priv)
- 		}
- 	}
- 
-+	if (tsens_version(priv) > VER_1_X &&  ver_minor > 2) {
-+		/* Watchdog is present only on v2.3+ */
-+		priv->feat->has_watchdog = 1;
-+		for (i = WDOG_BARK_STATUS; i <= CC_MON_MASK; i++) {
-+			priv->rf[i] = devm_regmap_field_alloc(dev, priv->tm_map,
-+							      priv->fields[i]);
-+			if (IS_ERR(priv->rf[i])) {
-+				ret = PTR_ERR(priv->rf[i]);
-+				goto err_put_device;
-+			}
-+		}
-+		/*
-+		 * Watchdog is already enabled, unmask the bark.
-+		 * Disable cycle completion monitoring
-+		 */
-+		regmap_field_write(priv->rf[WDOG_BARK_MASK], 0);
-+		regmap_field_write(priv->rf[CC_MON_MASK], 1);
-+	}
-+
- 	spin_lock_init(&priv->ul_lock);
- 	tsens_enable_irq(priv);
- 	tsens_debug_init(op);
-diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-index ce5ef0055d13..b293ed32174b 100644
---- a/drivers/thermal/qcom/tsens-v2.c
-+++ b/drivers/thermal/qcom/tsens-v2.c
-@@ -24,6 +24,7 @@
- #define TM_Sn_CRITICAL_THRESHOLD_OFF	0x0060
- #define TM_Sn_STATUS_OFF		0x00a0
- #define TM_TRDY_OFF			0x00e4
-+#define TM_WDOG_LOG_OFF		0x013c
- 
- /* v2.x: 8996, 8998, sdm845 */
- 
-@@ -66,6 +67,15 @@ static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
- 	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_CLEAR,  TM_CRITICAL_INT_CLEAR_OFF),
- 	REG_FIELD_SPLIT_BITS_0_15(CRIT_INT_MASK,   TM_CRITICAL_INT_MASK_OFF),
- 
-+	/* WATCHDOG on v2.3 or later */
-+	[WDOG_BARK_STATUS] = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 31, 31),
-+	[WDOG_BARK_CLEAR]  = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  31, 31),
-+	[WDOG_BARK_MASK]   = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   31, 31),
-+	[CC_MON_STATUS]    = REG_FIELD(TM_CRITICAL_INT_STATUS_OFF, 30, 30),
-+	[CC_MON_CLEAR]     = REG_FIELD(TM_CRITICAL_INT_CLEAR_OFF,  30, 30),
-+	[CC_MON_MASK]      = REG_FIELD(TM_CRITICAL_INT_MASK_OFF,   30, 30),
-+	[WDOG_BARK_COUNT]  = REG_FIELD(TM_WDOG_LOG_OFF,             0,  7),
-+
- 	/* Sn_STATUS */
- 	REG_FIELD_FOR_EACH_SENSOR16(LAST_TEMP,       TM_Sn_STATUS_OFF,  0,  11),
- 	REG_FIELD_FOR_EACH_SENSOR16(VALID,           TM_Sn_STATUS_OFF, 21,  21),
 diff --git a/drivers/thermal/qcom/tsens.h b/drivers/thermal/qcom/tsens.h
-index 2466115a9881..ad7574fe0811 100644
+index ad7574fe0811..f49e516b3458 100644
 --- a/drivers/thermal/qcom/tsens.h
 +++ b/drivers/thermal/qcom/tsens.h
-@@ -440,6 +440,18 @@ enum regfield_ids {
- 	CRIT_THRESH_13,
- 	CRIT_THRESH_14,
- 	CRIT_THRESH_15,
-+
-+	/* WATCHDOG */
-+	WDOG_BARK_STATUS,
-+	WDOG_BARK_CLEAR,
-+	WDOG_BARK_MASK,
-+	WDOG_BARK_COUNT,
-+
-+	/* CYCLE COMPLETION MONITOR */
-+	CC_MON_STATUS,
-+	CC_MON_CLEAR,
-+	CC_MON_MASK,
-+
- 	MIN_STATUS_0,		/* MIN threshold violated */
- 	MIN_STATUS_1,
- 	MIN_STATUS_2,
-@@ -484,6 +496,7 @@ enum regfield_ids {
-  * @adc:      do the sensors only output adc code (instead of temperature)?
-  * @srot_split: does the IP neatly splits the register space into SROT and TM,
-  *              with SROT only being available to secure boot firmware?
-+ * @has_watchdog: does this IP support watchdog functionality?
-  * @max_sensors: maximum sensors supported by this version of the IP
-  */
- struct tsens_features {
-@@ -491,6 +504,7 @@ struct tsens_features {
- 	unsigned int crit_int:1;
- 	unsigned int adc:1;
- 	unsigned int srot_split:1;
-+	unsigned int has_watchdog:1;
- 	unsigned int max_sensors;
- };
+@@ -526,6 +526,8 @@ struct tsens_plat_data {
  
+ /**
+  * struct tsens_context - Registers to be saved/restored across a context loss
++ * @threshold: Threshold register value
++ * @control: Control register value
+  */
+ struct tsens_context {
+ 	int	threshold;
+@@ -540,6 +542,7 @@ struct tsens_context {
+  * @srot_map: pointer to SROT register address space
+  * @tm_offset: deal with old device trees that don't address TM and SROT
+  *             address space separately
++ * @ul_lock: lock while processing upper/lower threshold interrupts
+  * @crit_lock: lock while processing critical threshold interrupts
+  * @rf: array of regmap_fields used to store value of the field
+  * @ctx: registers to be saved and restored during suspend/resume
 -- 
 2.20.1
 
