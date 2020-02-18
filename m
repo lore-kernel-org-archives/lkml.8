@@ -2,110 +2,98 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA7C3403B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C784C3403B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DCF2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3D620801
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 13:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="NsCAGbcs"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="T8GRwcZJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBRNJv (ORCPT
+        id S1726594AbgBRNNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 08:09:51 -0500
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:20704 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726623AbgBRNJu (ORCPT
+        Tue, 18 Feb 2020 08:13:00 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41464 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbgBRNNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 08:09:50 -0500
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ID9UNt031732;
-        Tue, 18 Feb 2020 07:09:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=oDcx9+nhLtRKd/7eK4F56Q9mkdC8+Ult+qCe6UIxF9s=;
- b=NsCAGbcsw+md0TtFXe9kWes3YmvZFfcZgPP7KR/NsxiVmjwa2j/TPV96ErN5zgQvmMqB
- jE3ZW+VNL7zyV5M5OHiFfpR1l0rbt6M+tq9a+/vpEnmbJUpzR1Wv0Qe48E3PRS0w/3r4
- ujHXOCh2LYbC7lv9p8KSmzuWe/2ntWpwbfGHOUalU2/yZAFB5MIgUofbAXrzuZ7ILsRs
- bUGJ8HosMA4hmNcwmCwXX9s0J1Cf2zglX87HrBSJ+VVWHRRZvGWItCVUdauEMw5ttQiU
- 0RoSLANukDTLibLcV+1+Rw6sFC0GoxbamC0MNspKK4UTiZZXJFVBqESkkv2KD0aS38jD DQ== 
-Authentication-Results: ppops.net;
-        spf=pass smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from ediex02.ad.cirrus.com ([5.172.152.52])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2y6ex9c1uc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 18 Feb 2020 07:09:30 -0600
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 18 Feb
- 2020 13:09:25 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Tue, 18 Feb 2020 13:09:25 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 401F72DC;
-        Tue, 18 Feb 2020 13:09:25 +0000 (UTC)
-Date:   Tue, 18 Feb 2020 13:09:25 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        moderated for non-subscribers <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, <geert@linux-m68k.org>
-Subject: Re: linux-next: Tree for Feb 18 (sound/soc/codecs/wm5110.c)
-Message-ID: <20200218130925.GG108283@ediswmail.ad.cirrus.com>
-References: <20200218152853.67e2482a@canb.auug.org.au>
- <89ef264f-12c9-ccb0-5cdd-ee5f70a469dd@infradead.org>
- <c2273472-18af-e206-c942-fd460e0d192c@infradead.org>
- <20200218100959.GD108283@ediswmail.ad.cirrus.com>
- <20200218113116.GA4232@sirena.org.uk>
+        Tue, 18 Feb 2020 08:13:00 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IDCelT012136;
+        Tue, 18 Feb 2020 14:12:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=xh9StjrKQoi3YqvG7gzxeBKNMD5vor0HeJJ1DoKwiHw=;
+ b=T8GRwcZJzVefAS7Ng8ytr4ydei06en/eP6yA8pNMfv0B6UbSgG7YrLfLFy3HquF+Dg3G
+ aOeK+igIp3NYltnHLzwHuTvjjhZ45WPSsXHnnpdJzPg5fC3IOj+O1CNnwML/v6n/G1xO
+ CwjRs011+YOxA8+51xD2dP1oxzocAwNFyEct+scLOuUQ39kwABnZSwF6Rfp7wEu7ngB4
+ TwM79/qQKi0vN/x73Mpc1kkgMM9Bqe3ZkSA89lBUP4sO/UH/arZhB7cTDVXXxzGfsGSR
+ nrD9Z3/whL4HxB5xDGupGdaG6SCft0M+ojXACy/INTuRitJD/ZEy4sF5ZCVj4iC+tjIh Bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y68dp97uk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 14:12:43 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7698510002A;
+        Tue, 18 Feb 2020 14:12:37 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3F6C72B12F3;
+        Tue, 18 Feb 2020 14:12:37 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 18 Feb 2020 14:12:36
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <marex@denx.de>
+Subject: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+Date:   Tue, 18 Feb 2020 14:12:16 +0100
+Message-ID: <20200218131218.10789-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200218113116.GA4232@sirena.org.uk>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf-001ae601.pphosted.com include:spf.protection.outlook.com
- ip4:5.172.152.52 -all
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0
- adultscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 mlxscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002180105
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 11:31:16AM +0000, Mark Brown wrote:
-> On Tue, Feb 18, 2020 at 10:09:59AM +0000, Charles Keepax wrote:
-> > 2) We could update the machine drivers to a depends on and make
-> > the CODEC symbols manually selectable. I guess this also has the
-> > advantages that it would be necessary for the simple card stuff
-> > that seems to be everyones first choice for machine drivers these
-> > days.
-> 
-> That's not good, it means people have to know exactly what CODECs and
-> DAIs are on their board to even see the config option.
-> 
-> > Mark do you have any strong feelings on this I am leaning towards
-> > 2?
-> 
-> Why not just continue adding the relevant dependencies to the machine
-> drivers like we've always done?
+This series adds the possibility to handle gpio interrupts on level.
 
-Hmm... a good point. The machine drivers are already depending
-on MFD_ARIZONA, if we swapped that for the actual CODECs
-involved I guess that should fix the situation as well.
+GPIO hardware block is directly linked to EXTI block but EXTI handles
+external interrupts only on edge. To be able to handle GPIO interrupt on
+level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+is retriggered following interrupt type and gpio line value.
 
-I will fire out a patch shortly.
+In exti irq chip, retrigger ops function is added.
 
-Thanks,
-Charles
+Changes since v1:
+ - Fix issue reported by Marek: return statment in "stm32_gpio_set_type"
+   function.
+
+Regards
+Alex
+
+Alexandre Torgue (2):
+  irqchip/stm32: Add irq retrigger support
+  pinctrl: stm32: Add level interrupt support to gpio irq chip
+
+ drivers/irqchip/irq-stm32-exti.c      | 14 ++++++++-
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 45 +++++++++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
