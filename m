@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C51C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B49C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588F72465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ADF72465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056097;
-	bh=jdgZpNdjBCoaVi1w16uWteitn7yXv88bqs3xbtmdmL0=;
+	s=default; t=1582056100;
+	bh=e1dBmmMww1C+qKOs6uo1vHTZzaE6xVBRPGYe8JnNguo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1k3oGVYdYgEjIc3peMBdhpUelVazjSBiaW6zIdpt1QU9xpuOZEuKCSqFH7ZsqfNZU
-	 YxTiJYCa5m80ak9Y4jlJxblk3uDdFgT5BtFZGPOhE54v2lAc/D22we8Q5pE56bG9bk
-	 Tmb5Yxhsvv8PU/dKjGLh2hxtOM5dhARVKycBv9fg=
+	b=JlCI+tS+87rDK2AIvlF2im28lFePd8Wxal5y94zgODDJxxnwlSRGXKIL1T16s2kxO
+	 TKEAcewJnpXCGe24r/NTn7LdVqbwPKtmehKKHkIaMthl0Hqu7+5Wx8PsBfijqo+WcN
+	 +y1PUUXFKPU7MHuYz+yoUAlohQg8f0tERo6SGNtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgBRUBf (ORCPT
+        id S1728800AbgBRUBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:01:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:01:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbgBRUB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:01:27 -0500
+        id S1728792AbgBRUBf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:01:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B351424672;
-        Tue, 18 Feb 2020 20:01:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4248A2464E;
+        Tue, 18 Feb 2020 20:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056086;
-        bh=jdgZpNdjBCoaVi1w16uWteitn7yXv88bqs3xbtmdmL0=;
+        s=default; t=1582056094;
+        bh=e1dBmmMww1C+qKOs6uo1vHTZzaE6xVBRPGYe8JnNguo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+qserRSk2YiE6KIbSJng7wjz+ntHDf5nGEjsioiMTHWCf+vhxYugsixj467NjwL/
-         1vclIYWq/X09nu2lLboofKky7XzEO1D2j+3nqe8+teNq7iCheDPiGGDX+EJsaWrY5Y
-         dhPuHhkBRO+i9Hl0Zu6AM5sEYWQUEfEcRJxJmMzU=
+        b=CVfP6DzAGaGL4WFJk1NqYGLkFbRjVtSd28GX8bhKzpWK1V1+8MT23gHOspoSEv56y
+         fhHMDRTfA0nKc1YE+R6jRNdOPC2bdiv+bbelnzy2newhzNhv8+b69i3i+4sNcy8co3
+         4FlJ841QToMlisz5VqQ0YIJFMGVEH0aZB7c2ff/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Tomt <andre@tomt.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.5 29/80] xprtrdma: Fix DMA scatter-gather list mapping imbalance
-Date:   Tue, 18 Feb 2020 20:54:50 +0100
-Message-Id: <20200218190435.228070609@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Tso <tytso@mit.edu>,
+        stable@kernel.org
+Subject: [PATCH 5.5 31/80] jbd2: move the clearing of b_modified flag to the journal_unmap_buffer()
+Date:   Tue, 18 Feb 2020 20:54:52 +0100
+Message-Id: <20200218190435.434210658@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -62,67 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit ca1c671302825182629d3c1a60363cee6f5455bb upstream.
+commit 6a66a7ded12baa6ebbb2e3e82f8cb91382814839 upstream.
 
-The @nents value that was passed to ib_dma_map_sg() has to be passed
-to the matching ib_dma_unmap_sg() call. If ib_dma_map_sg() choses to
-concatenate sg entries, it will return a different nents value than
-it was passed.
+There is no need to delay the clearing of b_modified flag to the
+transaction committing time when unmapping the journalled buffer, so
+just move it to the journal_unmap_buffer().
 
-The bug was exposed by recent changes to the AMD IOMMU driver, which
-enabled sg entry concatenation.
-
-Looking all the way back to commit 4143f34e01e9 ("xprtrdma: Port to
-new memory registration API") and reviewing other kernel ULPs, it's
-not clear that the frwr_map() logic was ever correct for this case.
-
-Reported-by: Andre Tomt <andre@tomt.net>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: https://lore.kernel.org/r/20200213063821.30455-2-yi.zhang@huawei.com
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/xprtrdma/frwr_ops.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ fs/jbd2/commit.c      |   43 +++++++++++++++----------------------------
+ fs/jbd2/transaction.c |   10 ++++++----
+ 2 files changed, 21 insertions(+), 32 deletions(-)
 
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -298,8 +298,8 @@ struct rpcrdma_mr_seg *frwr_map(struct r
- {
- 	struct rpcrdma_ia *ia = &r_xprt->rx_ia;
- 	struct ib_reg_wr *reg_wr;
-+	int i, n, dma_nents;
- 	struct ib_mr *ibmr;
--	int i, n;
- 	u8 key;
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -976,34 +976,21 @@ restart_loop:
+ 		 * it. */
  
- 	if (nsegs > ia->ri_max_frwr_depth)
-@@ -323,15 +323,16 @@ struct rpcrdma_mr_seg *frwr_map(struct r
- 			break;
- 	}
- 	mr->mr_dir = rpcrdma_data_dir(writing);
-+	mr->mr_nents = i;
+ 		/*
+-		* A buffer which has been freed while still being journaled by
+-		* a previous transaction.
+-		*/
+-		if (buffer_freed(bh)) {
+-			/*
+-			 * If the running transaction is the one containing
+-			 * "add to orphan" operation (b_next_transaction !=
+-			 * NULL), we have to wait for that transaction to
+-			 * commit before we can really get rid of the buffer.
+-			 * So just clear b_modified to not confuse transaction
+-			 * credit accounting and refile the buffer to
+-			 * BJ_Forget of the running transaction. If the just
+-			 * committed transaction contains "add to orphan"
+-			 * operation, we can completely invalidate the buffer
+-			 * now. We are rather through in that since the
+-			 * buffer may be still accessible when blocksize <
+-			 * pagesize and it is attached to the last partial
+-			 * page.
+-			 */
+-			jh->b_modified = 0;
+-			if (!jh->b_next_transaction) {
+-				clear_buffer_freed(bh);
+-				clear_buffer_jbddirty(bh);
+-				clear_buffer_mapped(bh);
+-				clear_buffer_new(bh);
+-				clear_buffer_req(bh);
+-				bh->b_bdev = NULL;
+-			}
++		 * A buffer which has been freed while still being journaled
++		 * by a previous transaction, refile the buffer to BJ_Forget of
++		 * the running transaction. If the just committed transaction
++		 * contains "add to orphan" operation, we can completely
++		 * invalidate the buffer now. We are rather through in that
++		 * since the buffer may be still accessible when blocksize <
++		 * pagesize and it is attached to the last partial page.
++		 */
++		if (buffer_freed(bh) && !jh->b_next_transaction) {
++			clear_buffer_freed(bh);
++			clear_buffer_jbddirty(bh);
++			clear_buffer_mapped(bh);
++			clear_buffer_new(bh);
++			clear_buffer_req(bh);
++			bh->b_bdev = NULL;
+ 		}
  
--	mr->mr_nents =
--		ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, i, mr->mr_dir);
--	if (!mr->mr_nents)
-+	dma_nents = ib_dma_map_sg(ia->ri_id->device, mr->mr_sg, mr->mr_nents,
-+				  mr->mr_dir);
-+	if (!dma_nents)
- 		goto out_dmamap_err;
- 
- 	ibmr = mr->frwr.fr_mr;
--	n = ib_map_mr_sg(ibmr, mr->mr_sg, mr->mr_nents, NULL, PAGE_SIZE);
--	if (unlikely(n != mr->mr_nents))
-+	n = ib_map_mr_sg(ibmr, mr->mr_sg, dma_nents, NULL, PAGE_SIZE);
-+	if (n != dma_nents)
- 		goto out_mapmr_err;
- 
- 	ibmr->iova &= 0x00000000ffffffff;
+ 		if (buffer_jbddirty(bh)) {
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2329,14 +2329,16 @@ static int journal_unmap_buffer(journal_
+ 			return -EBUSY;
+ 		}
+ 		/*
+-		 * OK, buffer won't be reachable after truncate. We just set
+-		 * j_next_transaction to the running transaction (if there is
+-		 * one) and mark buffer as freed so that commit code knows it
+-		 * should clear dirty bits when it is done with the buffer.
++		 * OK, buffer won't be reachable after truncate. We just clear
++		 * b_modified to not confuse transaction credit accounting, and
++		 * set j_next_transaction to the running transaction (if there
++		 * is one) and mark buffer as freed so that commit code knows
++		 * it should clear dirty bits when it is done with the buffer.
+ 		 */
+ 		set_buffer_freed(bh);
+ 		if (journal->j_running_transaction && buffer_jbddirty(bh))
+ 			jh->b_next_transaction = journal->j_running_transaction;
++		jh->b_modified = 0;
+ 		spin_unlock(&journal->j_list_lock);
+ 		spin_unlock(&jh->b_state_lock);
+ 		write_unlock(&journal->j_state_lock);
 
 
