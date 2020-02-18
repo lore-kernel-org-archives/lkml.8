@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50435C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFB2C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3782067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB3B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:09:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056582;
-	bh=VRa34IfViZroycYjGfVtmgTTnuPf/AMVcnWpiULlePE=;
+	s=default; t=1582056587;
+	bh=PN70iUaMI2vVCsiu0IR/4OKL5dOUbpqzS8SEM07qHbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vIuak87Px1IZksC/2j1Xw/6DsiR8xZCqpX1QjAr58oke9P8xfP3QZmjQSQNDGiWT5
-	 dCiHSTZ5luX1EgALiYOV94fZYUKJwO8NFiQ2nh82SKMktokEKu3h3rKbP0Z9QRVBp3
-	 DCT80TaE5VAW5UyfRYbNUnRQmlUDEMJRdD+tAZ2A=
+	b=CiVykAvIz3NSb8R9Zgrh//kn7m2pp8sSjfIRisXLqPwXUGgb7A0fS0tfvLilBMmp7
+	 +hMgtbgQjFDOohRYD84j/6C2EPeOdOlYCbOa1KweNC125E3MNcBSplq+XcNZSw3yYA
+	 OWiPBMGojE5UHMW81bQCFGeRfk6FNcbnVp+cf+MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgBRUJk (ORCPT
+        id S1726891AbgBRT4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:09:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 14:56:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727283AbgBRT4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:56:33 -0500
+        id S1726840AbgBRT4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 14:56:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E649E24654;
-        Tue, 18 Feb 2020 19:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB88524125;
+        Tue, 18 Feb 2020 19:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055793;
-        bh=VRa34IfViZroycYjGfVtmgTTnuPf/AMVcnWpiULlePE=;
+        s=default; t=1582055773;
+        bh=PN70iUaMI2vVCsiu0IR/4OKL5dOUbpqzS8SEM07qHbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dBJkH/pskqrTDBhtiB/olY+Jv/hsFcdTFuo7befvn4uaJ3k2HJtQyKFWyeNIz5BKZ
-         pImlvvBxayFBx5qu+2hdeFP8hPMrE3cnmT88qYafdRwZyMrSHSwYeon28bhm9yyc0O
-         jhokq+XSVTyT6Xei0Ce9WRK5VDe4TqlF1YwM0VHY=
+        b=rx8YaVFwzW+yqEsYB5D3acO2pWMs/Q92KUoftXAGsrK8zypVwDz13fxwwqtXxmCot
+         CVwJcErZ1esdbAtJ0MTWpbTOpvTf1eYIFZPa9MKi/8f/wwXKe1OG8t/pVAovJImp3G
+         sAjdN6WQMRMlZBKwL34a3ZwrqpPZaNv4JKAZq1eQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 23/38] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
-Date:   Tue, 18 Feb 2020 20:55:09 +0100
-Message-Id: <20200218190421.419685653@linuxfoundation.org>
+        stable@vger.kernel.org, ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>,
+        Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 16/38] Btrfs: fix race between using extent maps and merging them
+Date:   Tue, 18 Feb 2020 20:55:02 +0100
+Message-Id: <20200218190420.490991421@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
 References: <20200218190418.536430858@linuxfoundation.org>
@@ -61,74 +62,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
+commit ac05ca913e9f3871126d61da275bfe8516ff01ca upstream.
 
-Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
-claimed L2 misses were unsupported, due to them not being found in its
-referenced documentation, whose link has now moved [1].
+We have a few cases where we allow an extent map that is in an extent map
+tree to be merged with other extents in the tree. Such cases include the
+unpinning of an extent after the respective ordered extent completed or
+after logging an extent during a fast fsync. This can lead to subtle and
+dangerous problems because when doing the merge some other task might be
+using the same extent map and as consequence see an inconsistent state of
+the extent map - for example sees the new length but has seen the old start
+offset.
 
-That old documentation listed PMCx064 unit mask bit 3 as:
+With luck this triggers a BUG_ON(), and not some silent bug, such as the
+following one in __do_readpage():
 
-    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
+  $ cat -n fs/btrfs/extent_io.c
+  3061  static int __do_readpage(struct extent_io_tree *tree,
+  3062                           struct page *page,
+  (...)
+  3127                  em = __get_extent_map(inode, page, pg_offset, cur,
+  3128                                        end - cur + 1, get_extent, em_cached);
+  3129                  if (IS_ERR_OR_NULL(em)) {
+  3130                          SetPageError(page);
+  3131                          unlock_extent(tree, cur, end);
+  3132                          break;
+  3133                  }
+  3134                  extent_offset = cur - em->start;
+  3135                  BUG_ON(extent_map_end(em) <= cur);
+  (...)
 
-and bit 0 as:
+Consider the following example scenario, where we end up hitting the
+BUG_ON() in __do_readpage().
 
-    "IcFillMiss: IC Fill Miss"
+We have an inode with a size of 8KiB and 2 extent maps:
 
-We now have new public documentation [2] with improved descriptions, that
-clearly indicate what events those unit mask bits represent:
+  extent A: file offset 0, length 4KiB, disk_bytenr = X, persisted on disk by
+            a previous transaction
 
-Bit 3 now clearly states:
+  extent B: file offset 4KiB, length 4KiB, disk_bytenr = X + 4KiB, not yet
+            persisted but writeback started for it already. The extent map
+	    is pinned since there's writeback and an ordered extent in
+	    progress, so it can not be merged with extent map A yet
 
-    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
+The following sequence of steps leads to the BUG_ON():
 
-and bit 0 is:
+1) The ordered extent for extent B completes, the respective page gets its
+   writeback bit cleared and the extent map is unpinned, at that point it
+   is not yet merged with extent map A because it's in the list of modified
+   extents;
 
-    "IcFillMiss: Instruction Cache Req Miss in L2."
+2) Due to memory pressure, or some other reason, the MM subsystem releases
+   the page corresponding to extent B - btrfs_releasepage() is called and
+   returns 1, meaning the page can be released as it's not dirty, not under
+   writeback anymore and the extent range is not locked in the inode's
+   iotree. However the extent map is not released, either because we are
+   not in a context that allows memory allocations to block or because the
+   inode's size is smaller than 16MiB - in this case our inode has a size
+   of 8KiB;
 
-So we can now add support for L2 misses in perf's genericised events as
-PMCx064 with both the above unit masks.
+3) Task B needs to read extent B and ends up __do_readpage() through the
+   btrfs_readpage() callback. At __do_readpage() it gets a reference to
+   extent map B;
 
-[1] The commit's original documentation reference, "Processor Programming
-    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
-    originally available here:
+4) Task A, doing a fast fsync, calls clear_em_loggin() against extent map B
+   while holding the write lock on the inode's extent map tree - this
+   results in try_merge_map() being called and since it's possible to merge
+   extent map B with extent map A now (the extent map B was removed from
+   the list of modified extents), the merging begins - it sets extent map
+   B's start offset to 0 (was 4KiB), but before it increments the map's
+   length to 8KiB (4kb + 4KiB), task A is at:
 
-        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+   BUG_ON(extent_map_end(em) <= cur);
 
-    is now available here:
+   The call to extent_map_end() sees the extent map has a start of 0
+   and a length still at 4KiB, so it returns 4KiB and 'cur' is 4KiB, so
+   the BUG_ON() is triggered.
 
-        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+So it's dangerous to modify an extent map that is in the tree, because some
+other task might have got a reference to it before and still using it, and
+needs to see a consistent map while using it. Generally this is very rare
+since most paths that lookup and use extent maps also have the file range
+locked in the inode's iotree. The fsync path is pretty much the only
+exception where we don't do it to avoid serialization with concurrent
+reads.
 
-[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
-    Revision B0 Processors", available here:
+Fix this by not allowing an extent map do be merged if if it's being used
+by tasks other then the one attempting to merge the extent map (when the
+reference count of the extent map is greater than 2).
 
-	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
-
-Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
-Reported-by: Babu Moger <babu.moger@amd.com>
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Babu Moger <babu.moger@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
+Reported-by: ryusuke1925 <st13s20@gm.ibaraki-ct.ac.jp>
+Reported-by: Koki Mitani <koki.mitani.xg@hco.ntt.co.jp>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206211
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/core.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/extent_map.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -245,6 +245,7 @@ static const u64 amd_f17h_perfmon_event_
- 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
- 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
- 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
-+	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
- 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
- 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
- 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
+--- a/fs/btrfs/extent_map.c
++++ b/fs/btrfs/extent_map.c
+@@ -228,6 +228,17 @@ static void try_merge_map(struct extent_
+ 	struct extent_map *merge = NULL;
+ 	struct rb_node *rb;
+ 
++	/*
++	 * We can't modify an extent map that is in the tree and that is being
++	 * used by another task, as it can cause that other task to see it in
++	 * inconsistent state during the merging. We always have 1 reference for
++	 * the tree and 1 for this task (which is unpinning the extent map or
++	 * clearing the logging flag), so anything > 2 means it's being used by
++	 * other tasks too.
++	 */
++	if (refcount_read(&em->refs) > 2)
++		return;
++
+ 	if (em->start != 0) {
+ 		rb = rb_prev(&em->rb_node);
+ 		if (rb)
 
 
