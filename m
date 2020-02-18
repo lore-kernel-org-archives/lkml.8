@@ -2,134 +2,108 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C84C34047
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1BAC34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D04208C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0B424649
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SH/AM7by"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Sb5mUHF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgBRSI5 (ORCPT
+        id S1726482AbgBRSKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:08:57 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:35056 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgBRSI5 (ORCPT
+        Tue, 18 Feb 2020 13:10:36 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7280 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726246AbgBRSKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:08:57 -0500
-Received: by mail-ua1-f67.google.com with SMTP id y23so7816053ual.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:08:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R/hUNGk4SRM6kiHXV6o5gYzyAFxdFqq5txQCPei9mDM=;
-        b=SH/AM7byq+GGZQOujD7y/pc9Z/jCNs8xRbvT3Xe26n4ObiDBca0/M1TL3iIp78G/R+
-         KTx5VvRBK5p3StKKpsfLEm7H9wE343y6/5WBtpFIGos4DhvLfuVWpvX4GedZjL1+HaEc
-         iJvH2r5Ftd+73Z/Pgaxa5yIH+MbzUINwlk1QetcQ2LojEZk8ZRig72UJrtiPm3RwCyO3
-         sG7Bw8J0HX5+wDbWGKnHBCLC7AyVJAFKy5RAyYxDGpHixEcvDasdB20bLWeK3RlfFvXG
-         19TGixZqnpV+mbILDmiWJHexNORo89AoO5/5humbXk7aszT1lJuRUya08rorJChwDm7k
-         qKZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R/hUNGk4SRM6kiHXV6o5gYzyAFxdFqq5txQCPei9mDM=;
-        b=oG+fh46i+kpUYy0JrKFLEocW40b5P4Ct0ZFDwKLr+v/NBRQ6MEMUhv8aVc6ljXo3T+
-         P+FTllFE1h8QnKsrAXy4YA6pp5Fs4pBJibKKtt5yPElVuuZ0cCQKr1yoQ5R/EQ7nubWq
-         sF4K/uuAKy+5t7kdF37zm/vxsbPlh1T8lwH/NXurT/vG9XuwZxdvIqqAPqKsmVpeg3+5
-         k972y1hJsB1CkkQ80fb3NpNFPd7PRVFd9PnnGMZiAbIdKjXlReBx5nuDUpzUJHsgPqcC
-         rnlpyrAvPRjeS+Ds5XX8Av0y/xUkJRwIGv5oqhnXVOgvTRY4U6WuH4vbHxd+EF3SdZ1O
-         EFLg==
-X-Gm-Message-State: APjAAAVzpWhjt9amLVrX1Ddc5M4/eFcSaZ3UfVYTNCsQtRSwaxAZDfo3
-        cJyJI5V1IYiX/6bv4nKvxXDmLFaQpFYbWcbEZzaqFg==
-X-Google-Smtp-Source: APXvYqyeUDwAdKkMhuDh2cUfhU3voe/Oj/lYB2U1rDCoNqf1S55cF1bQIpKWl5ZDtNg+HnjLQr+xWwKzvmFiPW+Dk2U=
-X-Received: by 2002:ab0:7653:: with SMTP id s19mr11019733uaq.94.1582049334828;
- Tue, 18 Feb 2020 10:08:54 -0800 (PST)
+        Tue, 18 Feb 2020 13:10:35 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IHrvve005912;
+        Tue, 18 Feb 2020 19:10:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=xNEAHaZmjG+dizQJ5LA4/u9LlslrrIeo9frKOjluLvE=;
+ b=Sb5mUHF4yAYaVeseQBJjLZ7YzajRiE1kCopcm9LPWaRW1xn61nDZjUAxa+gxxFs8rJea
+ tmxeol4PqiGdtrkiqPrSLHPntmKa33mJ/1T8V06KIH40z0WWtJitSKkYVPvaqC/DQbTV
+ yn/DbmpuTJQIQjQxVS1XqEUcU8ilAZAgwPARUhpcVe+523xRVD4XzDDVSvmY+E4wu/bj
+ RRqbo40k6/RZBeJ8yc2uPcpSU+MpaFuci7htgzh1/Sca3AxpGEMNIY+xQdGSxtbL5A/0
+ Vqxizj+wlSZw6kouhxziZq8fr2BLfS5XG3h7vOxgDv1ngzIHTZrSoisJ8cz4l/XwU8iC EQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y66ne2xwn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Feb 2020 19:10:18 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D8CFA10003D;
+        Tue, 18 Feb 2020 19:10:13 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A81F92BD50D;
+        Tue, 18 Feb 2020 19:10:13 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 18 Feb
+ 2020 19:10:12 +0100
+Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
+Date:   Tue, 18 Feb 2020 19:10:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1580390127.git.amit.kucheria@linaro.org>
- <932e07a83fed192678b8f718bbae37d0dc83590d.1580390127.git.amit.kucheria@linaro.org>
- <20200203181413.GF3948@builder>
-In-Reply-To: <20200203181413.GF3948@builder>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 18 Feb 2020 23:38:43 +0530
-Message-ID: <CAHLCerNi2kb-bU_xsmB4aGLtUKPXfUrqDMLJLU=XXTnk-Kk=+A@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] drivers: thermal: tsens: Add critical interrupt support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sivaa@codeaurora.org,
-        Andy Gross <agross@kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_05:2020-02-18,2020-02-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 11:44 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 30 Jan 05:27 PST 2020, Amit Kucheria wrote:
->
-> > TSENS IP v2.x adds critical threshold interrupt support for each sensor
-> > in addition to the upper/lower threshold interrupt. Add support in the
-> > driver.
-> >
-> > While the critical interrupts themselves aren't currently used by Linux,
-> > the HW line is also used by the TSENS watchdog. So this patch acts as
-> > infrastructure to enable watchdog functionality for the TSENS IP.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
->
-> Please do provide a changelog when respinning your patches.
->
-> >  drivers/thermal/qcom/tsens-common.c | 120 ++++++++++++++++++++++++++--
-> >  drivers/thermal/qcom/tsens-v2.c     |   8 +-
-> >  drivers/thermal/qcom/tsens.c        |  24 +++++-
-> >  drivers/thermal/qcom/tsens.h        |  71 ++++++++++++++++
-> >  4 files changed, 212 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/thermal/qcom/tsens-common.c b/drivers/thermal/qcom/tsens-common.c
-> [..]
-> > +irqreturn_t tsens_critical_irq_thread(int irq, void *data)
-> > +{
-> > +     struct tsens_priv *priv = data;
-> > +     struct tsens_irq_data d;
-> > +     unsigned long flags;
-> > +     int temp, ret, i;
-> > +
-> > +     for (i = 0; i < priv->num_sensors; i++) {
-> > +             const struct tsens_sensor *s = &priv->sensor[i];
-> > +             u32 hw_id = s->hw_id;
-> > +
-> > +             if (IS_ERR(s->tzd))
-> > +                     continue;
-> > +             if (!tsens_threshold_violated(priv, hw_id, &d))
-> > +                     continue;
-> > +             ret = get_temp_tsens_valid(s, &temp);
-> > +             if (ret) {
-> > +                     dev_err(priv->dev, "[%u] %s: error reading sensor\n", hw_id, __func__);
-> > +                     continue;
-> > +             }
-> > +
-> > +             spin_lock_irqsave(&priv->crit_lock, flags);
-> > +
->
-> I see that I failed to follow up on the discussion on the previous
-> revision. The handler is called from a single thread, so you don't need
-> a lock to protect the irq handler from itself.
+Hi Marek
 
-Makes sense now. Will fix.
+On 2/18/20 5:25 PM, Marek Vasut wrote:
+> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
+>> This series adds the possibility to handle gpio interrupts on level.
+>>
+>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>> external interrupts only on edge. To be able to handle GPIO interrupt on
+>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+>> is retriggered following interrupt type and gpio line value.
+>>
+>> In exti irq chip, retrigger ops function is added.
+> 
+> btw. this might be unrelated, but is it possible to have e.g. gpioC2 set
+> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
+> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux selection")
+> prevents that.
+> 
 
-Thanks for the review.
+No it's not possible. Each gpio line doesn't have a dedicated Exti line 
+Each Exti line is muxing between gpio banks.
 
-Regards,
-Amit
+Mapping is done as following:
+
+EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
+EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
+EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
+...
+
+regards
+Alexandre
