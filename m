@@ -4,57 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69899C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D5C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4040F21D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489B121D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056268;
-	bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
+	s=default; t=1582056274;
+	bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKTfGqM51Q9ltwk7WVnsRbOAzfL6aOE6UhMUYGu2DVt/c9imcxVpRthl1qCeD0p2P
-	 AdkEulHwOqvGoIK95bkhP40Oje86N0RpqVQgjW4u+pV25aGvH3Cxuc3frpwGJgnJJg
-	 b9MibS4i4lNwErJGr+9rl3NGIWvgrN7ykQ/Ba00w=
+	b=1eSZPCibd2zWVFshPHtbhMFIBSvi1QVl4gK/TDxaI/7hHH/ZWZG+mdxo1cSAGCbLm
+	 49hmK94s3nUAtAAaTAza4tc+FOOP/iK+KyeMZQuATNcYf85FkF1lKLYxH6p8bTloxC
+	 SqDra2bg7wr/ZgXPW4dnSS0sXJ93w8Hs2ZWo3+5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgBRUE1 (ORCPT
+        id S1728933AbgBRUEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:04:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44804 "EHLO mail.kernel.org"
+        Tue, 18 Feb 2020 15:04:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbgBRUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 15:03:31 -0500
+        id S1728262AbgBRUDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:03:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C61221D56;
-        Tue, 18 Feb 2020 20:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A40424670;
+        Tue, 18 Feb 2020 20:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582056210;
-        bh=lUIPdkq7OTx62a3ygJyQLftVTpwgspHMoLu7DyEpkQc=;
+        s=default; t=1582056202;
+        bh=nqHU8jXhun/Vp7ATeVmn5fPoMWew8sVRoYGpt1T47a4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RgA0LqaDN8xShlC0RI1UK7Mfj2WO94r+5j+3pmEmzQJWNTPxOQnR3oyB/fLiF6YZG
-         Z5xgUT7sajxloxNl6rtTqO4TrY2br/lHA0g9sonlekCPma9Uz3yoP3Q0+7Qd7meAS5
-         HE1dQXTPdvb1XMqWSQR0HMJQ4HhOjq9sk7AfCwE0=
+        b=Ui4i0N7XLvaUhS4WaRsk2INEp5bC2Vw02/ISVo2w+TzFHrHEcsT6YcTHCcy4w9yoL
+         giNEJWJTXYE8motqUzP9TnBk29MlsZQ/iPJDy+vPMSI4LUZ7urjS2fKDSpNm2nvLgX
+         eMS2YGAg8bYtRmjTSnXen3Ogfs4RGtK7hImmPED8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sean Paul <seanpaul@chromium.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Eric Anholt <eric@anholt.net>, Sam Ravnborg <sam@ravnborg.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.5 40/80] drm/vgem: Close use-after-free race in vgem_gem_create
-Date:   Tue, 18 Feb 2020 20:55:01 +0100
-Message-Id: <20200218190436.210849575@linuxfoundation.org>
+        stable@vger.kernel.org, Babu Moger <babu.moger@amd.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.5 37/80] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17hs event map
+Date:   Tue, 18 Feb 2020 20:54:58 +0100
+Message-Id: <20200218190435.970207368@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
 References: <20200218190432.043414522@linuxfoundation.org>
@@ -67,72 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Kim Phillips <kim.phillips@amd.com>
 
-commit 4b848f20eda5974020f043ca14bacf7a7e634fc8 upstream.
+commit 25d387287cf0330abf2aad761ce6eee67326a355 upstream.
 
-There's two references floating around here (for the object reference,
-not the handle_count reference, that's a different thing):
+Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+claimed L2 misses were unsupported, due to them not being found in its
+referenced documentation, whose link has now moved [1].
 
-- The temporary reference held by vgem_gem_create, acquired by
-  creating the object and released by calling
-  drm_gem_object_put_unlocked.
+That old documentation listed PMCx064 unit mask bit 3 as:
 
-- The reference held by the object handle, created by
-  drm_gem_handle_create. This one generally outlives the function,
-  except if a 2nd thread races with a GEM_CLOSE ioctl call.
+    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
 
-So usually everything is correct, except in that race case, where the
-access to gem_object->size could be looking at freed data already.
-Which again isn't a real problem (userspace shot its feet off already
-with the race, we could return garbage), but maybe someone can exploit
-this as an information leak.
+and bit 0 as:
 
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Hillf Danton <hdanton@sina.com>
-Reported-by: syzbot+0dc4444774d419e916c8@syzkaller.appspotmail.com
+    "IcFillMiss: IC Fill Miss"
+
+We now have new public documentation [2] with improved descriptions, that
+clearly indicate what events those unit mask bits represent:
+
+Bit 3 now clearly states:
+
+    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
+
+and bit 0 is:
+
+    "IcFillMiss: Instruction Cache Req Miss in L2."
+
+So we can now add support for L2 misses in perf's genericised events as
+PMCx064 with both the above unit masks.
+
+[1] The commit's original documentation reference, "Processor Programming
+    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
+    originally available here:
+
+        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+    is now available here:
+
+        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
+    Revision B0 Processors", available here:
+
+	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
+
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
+Reported-by: Babu Moger <babu.moger@amd.com>
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Babu Moger <babu.moger@amd.com>
 Cc: stable@vger.kernel.org
-Cc: Emil Velikov <emil.velikov@collabora.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sean Paul <seanpaul@chromium.org>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Eric Anholt <eric@anholt.net>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200202132133.1891846-1-daniel.vetter@ffwll.ch
+Link: https://lkml.kernel.org/r/20200121171232.28839-1-kim.phillips@amd.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/vgem/vgem_drv.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/core.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -196,9 +196,10 @@ static struct drm_gem_object *vgem_gem_c
- 		return ERR_CAST(obj);
- 
- 	ret = drm_gem_handle_create(file, &obj->base, handle);
--	drm_gem_object_put_unlocked(&obj->base);
--	if (ret)
-+	if (ret) {
-+		drm_gem_object_put_unlocked(&obj->base);
- 		return ERR_PTR(ret);
-+	}
- 
- 	return &obj->base;
- }
-@@ -221,7 +222,9 @@ static int vgem_gem_dumb_create(struct d
- 	args->size = gem_object->size;
- 	args->pitch = pitch;
- 
--	DRM_DEBUG("Created object of size %lld\n", size);
-+	drm_gem_object_put_unlocked(gem_object);
-+
-+	DRM_DEBUG("Created object of size %llu\n", args->size);
- 
- 	return 0;
- }
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -246,6 +246,7 @@ static const u64 amd_f17h_perfmon_event_
+ 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
+ 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
 
 
