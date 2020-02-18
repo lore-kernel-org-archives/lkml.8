@@ -2,163 +2,140 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BCDC3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A16C3404B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A1C2176D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B42A2465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 22:36:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPmZ2aJ1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ihx4EYf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBRWdb (ORCPT
+        id S1726739AbgBRWgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 17:33:31 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:35935 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726735AbgBRWda (ORCPT
+        Tue, 18 Feb 2020 17:36:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22836 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726427AbgBRWgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 17:33:30 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so1629186pjb.1;
-        Tue, 18 Feb 2020 14:33:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ao1rrYj1H0zRksEUEqAme5C6lEjb904ensDRNheQK20=;
-        b=vPmZ2aJ18jzSVQ8YIoEAysedZOU82k34+gaeB7WykgbG2teu7j+joqZllEOkppWT5i
-         VFLVIRqlIwMK/fIGvbqTns/mHxwTxY7a9+PTIlWpSS6JzCU2EcYO0G1FT9+6rQ/ybtsQ
-         T6sB4qLRVc2qoI/a2p0X8HHx8Smujml+K3fIL+fqzIqfTyx/mXQHtrjTqzihCVu9Te2Q
-         +rcquj6uDJbQloNRyKSfNcfw7prEgGvEW4YiydcqCrliXLQn2eXfFsMkmaWpl7mx4/uu
-         IF6LTK3YzgRp3tKgDu5VIkNRH168Wjlkxf+a+m2dEdLlIHX8MCamP8b8oruy0fDH6JWt
-         bwuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ao1rrYj1H0zRksEUEqAme5C6lEjb904ensDRNheQK20=;
-        b=VQ88NdvKdKEiFBx3Q+eJi3nHemW4wlgiH+qxnKVrpPOH6arPTPVRtkoUOwLNTk60tP
-         uuaCBZkKKBIP/azJzmN5KMjuzC3KN9gBlk0wkwz3CpaE6P5cop0Qso9ddOd9Q1x34ogR
-         b+1lYFpI/ayilzR88jt4doz2cLoyGwSMGNs6ck3aZFZ987YR3jFocqF/f7tKFDjNUlhj
-         b2D28xBhECzY9Tv5n7/uuMWD8sXcsODBx0fiVMXTfSkwyF3V2pr9ZK1n3x05gBiTCuOE
-         Vuz9sMqvaQBO7Ipi4z0ndbwbdGcZjShijpir05j+YST0z07VHXEf/R2nBuhSYMi9izlE
-         VXWw==
-X-Gm-Message-State: APjAAAXGWewLg7yjH1zbCGAyF0CH8nHokb3ac8b/YD0lR5EjqxvdJvYj
-        S6svpzKa72yH6E7JRX3Yodc=
-X-Google-Smtp-Source: APXvYqx5Gf+hUMerX5qr+HlwdoEd+NvK/lpti4mRRuvDUzSNfzI14C1R1JMMJQAkkA6yDdtkN6SPoQ==
-X-Received: by 2002:a17:902:7c88:: with SMTP id y8mr23321086pll.321.1582065208792;
-        Tue, 18 Feb 2020 14:33:28 -0800 (PST)
-Received: from gmail.com ([2620:0:1008:fd00:25a6:3140:768c:a64d])
-        by smtp.gmail.com with ESMTPSA id l26sm5686616pgn.46.2020.02.18.14.33.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 14:33:27 -0800 (PST)
-Date:   Tue, 18 Feb 2020 14:33:25 -0800
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
+        Tue, 18 Feb 2020 17:36:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582065359;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6XYHKylbYwWbwgVI0oUf0RytWHiUiJpTboStfvZsvNo=;
+        b=Ihx4EYf/U2zxBAUisdA4HErCki/POnF9CEsfH4dEiBa5AYhU0fuPpEfIAGy2aquD727xcq
+        Q4J8M4InLCQIOn71rBaSj8eSJ4K2ogj4mqU/IRfdbyBPGxBm7WC0ffL/8rEAdMwls9chkA
+        PZUHgxGUIN2z0Ekq0Mz/z5wnzUtUXpw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-4PVG-_cgM5azTwe8uV8i-A-1; Tue, 18 Feb 2020 17:35:53 -0500
+X-MC-Unique: 4PVG-_cgM5azTwe8uV8i-A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF18A18A8C80;
+        Tue, 18 Feb 2020 22:35:51 +0000 (UTC)
+Received: from madcap2.tricolour.ca (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C0D785735;
+        Tue, 18 Feb 2020 22:35:43 +0000 (UTC)
+Date:   Tue, 18 Feb 2020 17:35:40 -0500
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH AUTOSEL 5.5 542/542] pipe: use exclusive waits when
- reading or writing
-Message-ID: <20200218223325.GA143300@gmail.com>
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-542-sashal@kernel.org>
- <CANaxB-zjYecWpjMoX6dXY3B5HtVu8+G9npRnaX2FnTvp9XucTw@mail.gmail.com>
- <CAHk-=wjd6BKXEpU0MfEaHuOEK-StRToEcYuu6NpVfR0tR5d6xw@mail.gmail.com>
- <CAHk-=wgs8E4JYVJHaRV2hMn3dxUnM8i0Kn2mA1SjzJdsbB9tXw@mail.gmail.com>
- <CAHk-=wiaDvYHBt8oyZGOp2XwJW4wNXVAchqTFuVBvASTFx_KfA@mail.gmail.com>
- <20200218182041.GB24185@bombadil.infradead.org>
- <CAHk-=wi8Q8xtZt1iKcqSaV1demDnyixXT+GyDZi-Lk61K3+9rw@mail.gmail.com>
+        netfilter-devel@vger.kernel.org, sgrubb@redhat.com,
+        omosnace@redhat.com, fw@strlen.de, twoerner@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        tgraf@infradead.org
+Subject: Re: [PATCH ghak25 v2 7/9] netfilter: ebtables audit table
+ registration
+Message-ID: <20200218223540.2apm7spat3z3yyif@madcap2.tricolour.ca>
+References: <cover.1577830902.git.rgb@redhat.com>
+ <9f16dee52bac9a3068939283a0122a632ee0438d.1577830902.git.rgb@redhat.com>
+ <CAHC9VhS4Cz1T=hycPVz3aCzOpPX-EDzwh284YQ2V5rUM7BJkzg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi8Q8xtZt1iKcqSaV1demDnyixXT+GyDZi-Lk61K3+9rw@mail.gmail.com>
+In-Reply-To: <CAHC9VhS4Cz1T=hycPVz3aCzOpPX-EDzwh284YQ2V5rUM7BJkzg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:28:23AM -0800, Linus Torvalds wrote:
-> On Tue, Feb 18, 2020 at 10:20 AM Matthew Wilcox <willy@infradead.org> wrote:
+On 2020-01-30 22:18, Paul Moore wrote:
+> On Mon, Jan 6, 2020 at 1:56 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 > >
-> > You don't want to move wake_up_partner() up and call it from pipe_release()?
+> > Generate audit NETFILTER_CFG records on ebtables table registration.
+> >
+> > Previously this was only being done for all x_tables operations and
+> > ebtables table replacement.
+> >
+> > Call new audit_nf_cfg() to store table parameters for later use with
+> > syscall records.
+> >
+> > Here is a sample accompanied record:
+> >   type=NETFILTER_CFG msg=audit(1494907217.558:5403): table=filter family=7 entries=0
 > 
-> I was actually thinking of going the other way - two of three users of
-> wake_up_partner() are redundantly waking up the wrong side, and the
-> third user is pointlessly written too.
-> 
-> So I was _thinking_ of a patch like the appended (which is on top of
-> the previous patch), but ended up not doing it. Until you brought it
-> up.
-> 
-> But I won't bother committing this, since it shouldn't really matter.
+> Wait a minute ... in patch 4 you have code that explicitly checks for
+> "entries=0" and doesn't generate a record in that case; is the example
+> a lie or is the code a lie? ;)
 
-I run CRIU tests on the kernel with both these patches. Everything work
-as expected. Thank you for the fix.
+The example was stale once the entries check was added.  The entries
+check has now been removed due to the source of registration records
+being orphanned from their syscall record being found and solved in the
+ghak120 (norule missing accompanying) issue.
 
-> 
->                  Linus
+However, there are ebtables nat and filter tables being added that are
+being automatically reaped if there are no entries and there is no
+syscall accompanying them.  I don't yet know if it is being reaped by
+userspace with an async drop, or if it is the kernel that is deciding to
+garbage collect that table after a period of disuse.
 
->  fs/pipe.c | 18 ++++++------------
->  1 file changed, 6 insertions(+), 12 deletions(-)
+Some quick instrumentation says it is kernel thread [kworker/u4:2-events_unbound]
+
+pid=153 uid=0 auid=4294967295 tty=(none) ses=4294967295 subj=system_u:system_r:kernel_t:s0 comm="kworker/u4:2" exe=(null)
+
+> > See: https://github.com/linux-audit/audit-kernel/issues/43
+> > Signed-off-by: Richard Guy Briggs <rgb@redhat.com>
+> > ---
+> >  net/bridge/netfilter/ebtables.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+> > index 57dc11c0f349..58126547b175 100644
+> > --- a/net/bridge/netfilter/ebtables.c
+> > +++ b/net/bridge/netfilter/ebtables.c
+> > @@ -1219,6 +1219,8 @@ int ebt_register_table(struct net *net, const struct ebt_table *input_table,
+> >                 *res = NULL;
+> >         }
+> >
+> > +       if (audit_enabled)
+> > +               audit_nf_cfg(repl->name, AF_BRIDGE, repl->nentries);
+> >         return ret;
+> >  free_unlock:
+> >         mutex_unlock(&ebt_mutex);
+> > --
+> > 1.8.3.1
 > 
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 2144507447c5..79ba61430f9c 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -1025,12 +1025,6 @@ static int wait_for_partner(struct pipe_inode_info *pipe, unsigned int *cnt)
->  	return cur == *cnt ? -ERESTARTSYS : 0;
->  }
->  
-> -static void wake_up_partner(struct pipe_inode_info *pipe)
-> -{
-> -	wake_up_interruptible_all(&pipe->rd_wait);
-> -	wake_up_interruptible_all(&pipe->wr_wait);
-> -}
-> -
->  static int fifo_open(struct inode *inode, struct file *filp)
->  {
->  	struct pipe_inode_info *pipe;
-> @@ -1078,7 +1072,7 @@ static int fifo_open(struct inode *inode, struct file *filp)
->  	 */
->  		pipe->r_counter++;
->  		if (pipe->readers++ == 0)
-> -			wake_up_partner(pipe);
-> +			wake_up_interruptible_all(&pipe->wr_wait);
->  
->  		if (!is_pipe && !pipe->writers) {
->  			if ((filp->f_flags & O_NONBLOCK)) {
-> @@ -1104,7 +1098,7 @@ static int fifo_open(struct inode *inode, struct file *filp)
->  
->  		pipe->w_counter++;
->  		if (!pipe->writers++)
-> -			wake_up_partner(pipe);
-> +			wake_up_interruptible_all(&pipe->rd_wait);
->  
->  		if (!is_pipe && !pipe->readers) {
->  			if (wait_for_partner(pipe, &pipe->r_counter))
-> @@ -1120,12 +1114,12 @@ static int fifo_open(struct inode *inode, struct file *filp)
->  	 *  the process can at least talk to itself.
->  	 */
->  
-> -		pipe->readers++;
-> -		pipe->writers++;
-> +		if (pipe->readers++ == 0)
-> +			wake_up_interruptible_all(&pipe->wr_wait);
-> +		if (pipe->writers++ == 0)
-> +			wake_up_interruptible_all(&pipe->rd_wait);
->  		pipe->r_counter++;
->  		pipe->w_counter++;
-> -		if (pipe->readers == 1 || pipe->writers == 1)
-> -			wake_up_partner(pipe);
->  		break;
->  
->  	default:
+> --
+> paul moore
+> www.paul-moore.com
+> 
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
 
