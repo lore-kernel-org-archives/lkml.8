@@ -2,146 +2,137 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3B2C3404C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0329C3404C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7642173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E872173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XtjY32mo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgBRXvB (ORCPT
+        id S1727656AbgBRXvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:51:01 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:40390 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgBRXvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:51:00 -0500
-Received: from utente-Aspire-V3-572G (wireless-130-133.net.uniroma2.it [160.80.133.130])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with SMTP id 01INo6DF032331;
-        Wed, 19 Feb 2020 00:50:11 +0100
-Date:   Wed, 19 Feb 2020 00:50:07 +0100
-From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
-        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
-        paolo.lungaroni@cnit.it
-Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB
- table
-Message-Id: <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
-In-Reply-To: <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
-References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
-        <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
-        <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        Tue, 18 Feb 2020 18:51:12 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34826 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbgBRXvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 18:51:12 -0500
+Received: by mail-pj1-f68.google.com with SMTP id q39so1709473pjc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 15:51:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=H9Vy91VcgS2dfjojUgyTLRgs44OJ1u3F7tZb9F/g2s4=;
+        b=XtjY32moCVDQQioAXHxahEf5oYVhgz+Ms4AFWGGTaFP4778HtoUNBVCZbW/C2qLolT
+         kDIi0JZqXC7NMPPKTviR9qMq/uEd/2YzpTjSe9IaITXu8Pl4JEDP9qbdg7sIIRVZ//1i
+         KtiroPgJmXpywPRGIY+tRmnl8PQ6+OMwaraP1VH0SOJ5WbBohMTNLRPRezZYc2qxq/sa
+         2W6kvsh9Fs6Fpve+mm0yDRQIeZ7choax1gRTSiFCOkog4mfLEzJV9OH+KkcYvUUFNjHX
+         S+Hc+3xvGjLdqBzUhHT2TzNGdEjWroRfLHHYpwd/TbZj2sO/pVmhcBrNVgTGZQBeSp5j
+         XUIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H9Vy91VcgS2dfjojUgyTLRgs44OJ1u3F7tZb9F/g2s4=;
+        b=t5r86UabGsFBt1GT/lDXCtWtR5L7mjN/SM5GkJ6C6LNSsAyFhvZgzWnnagaVdagqNJ
+         4bM35RGiGJRnP9oXPWEnaiPAJW9fmDpLAZH9Ifl0A/f+i4sXyGRvEshAcgk9EK8lXFqm
+         G7WqkHPoN9HpzaWkd02Q5fuA9gjtLVXAEbCdyVyi2C3Rjaearu0f4J9j7UZCLYCGaEO/
+         cYoG4JiPQYBktnWlzms07H+9ntKKUfCzmLya5dCpzSRz7Wjg4NgIGKGps6oemOIaVguk
+         S0X1rCXZrlqcolzixgTkDiHTURgP2oUl9f0JHZUO64WAjU8TfLn+hzX7ZEmRLygKomOJ
+         rK7w==
+X-Gm-Message-State: APjAAAWN6ju81e/K7oiII+YOX1kEz6zkJuNejPvbmlSrr4Lt4ruzA+N3
+        AlvlCwTBHTRATLPFI3CW9b+Z6Rpf9e4=
+X-Google-Smtp-Source: APXvYqxZ65WQ76i7D3Y4yE+ieYshnEw5upVN5/4FZ5xFsoWgY9MsPSPIm9vhiPRL+clNxV3M8q/PVw==
+X-Received: by 2002:a17:90b:1256:: with SMTP id gx22mr5711887pjb.94.1582069871497;
+        Tue, 18 Feb 2020 15:51:11 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id b1sm88455pgs.27.2020.02.18.15.51.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 15:51:10 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     Pratham Pratap <prathampratap@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jack Pham <jackp@codeaurora.org>, Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] usb: dwc3: gadget: Update chain bit correctly when using sg list
+Date:   Tue, 18 Feb 2020 23:51:04 +0000
+Message-Id: <20200218235104.112323-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, 
-Thanks for the review and sorry for the late reply 
+From: Pratham Pratap <prathampratap@codeaurora.org>
 
-Indeed both call fib_table_lookup and rt_dst_alloc are exported for modules. 
-However, several functions defined in route.c are not exported:
-- the two functions rt_cache_valid and rt_cache_route required to handle the routing cache
-- find_exception, required to support fib exceptions.
-This would require duplicating a lot of the IPv4 routing code. 
-The reason behind this change is really to reuse the IPv4 routing code instead of doing a duplication. 
+If scatter-gather operation is allowed, a large USB request is split
+into multiple TRBs. For preparing TRBs for sg list, driver iterates
+over the list and creates TRB for each sg and mark the chain bit to
+false for the last sg. The current IOMMU driver is clubbing the list
+of sgs which shares a page boundary into one and giving it to USB driver.
+With this the number of sgs mapped it not equal to the the number of sgs
+passed. Because of this USB driver is not marking the chain bit to false
+since it couldn't iterate to the last sg. This patch addresses this issue
+by marking the chain bit to false if it is the last mapped sg.
 
-For the fi member of the struct fib_result, we will fix it by initializing before "if (!tbl_known)"
+At a practical level, this patch resolves USB transfer stalls
+seen with adb on dwc3 based db845c, pixel3 and other qcom
+hardware after functionfs gadget added scatter-gather support
+around v4.20.
 
-Thanks, 
-Carmine 
+Credit also to Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+who implemented a very similar fix to this issue.
 
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: Yang Fei <fei.yang@intel.com>
+Cc: Thinh Nguyen <thinhn@synopsys.com>
+Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Jack Pham <jackp@codeaurora.org>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linux USB List <linux-usb@vger.kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Pratham Pratap <prathampratap@codeaurora.org>
+[jstultz: Slight tweak to remove sg_is_last() usage, reworked
+          commit message, minor comment tweak]
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/usb/dwc3/gadget.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-On Sat, 15 Feb 2020 11:06:43 -0700
-David Ahern <dsahern@gmail.com> wrote:
-
-> On 2/12/20 6:09 PM, Carmine Scarpitta wrote:
-> > In IPv4, the routing subsystem is invoked by calling ip_route_input_rcu()
-> > which performs the recognition logic and calls ip_route_input_slow().
-> > 
-> > ip_route_input_slow() initialises both "fi" and "table" members
-> > of the fib_result structure to null before calling fib_lookup().
-> > 
-> > fib_lookup() performs fib lookup in the routing table configured
-> > by the policy routing rules.
-> > 
-> > In this patch, we allow invoking the ip4 routing subsystem
-> > with known routing table. This is useful for use-cases implementing
-> > a separate routing table per tenant.
-> > 
-> > The patch introduces a new flag named "tbl_known" to the definition of
-> > ip_route_input_rcu() and ip_route_input_slow().
-> > 
-> > When the flag is set, ip_route_input_slow() will call fib_table_lookup()
-> > using the defined table instead of using fib_lookup().
-> 
-> I do not like this change. If you want a specific table lookup, then why
-> just call fib_table_lookup directly? Both it and rt_dst_alloc are
-> exported for modules. Your next patch already does a fib table lookup.
-> 
-> 
-> > 
-> > Signed-off-by: Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-> > Acked-by: Ahmed Abdelsalam <ahmed.abdelsalam@gssi.it>
-> > Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-> > Acked-by: Paolo Lungaroni <paolo.lungaroni@cnit.it>
-> > ---
-> >  include/net/route.h |  2 +-
-> >  net/ipv4/route.c    | 22 ++++++++++++++--------
-> >  2 files changed, 15 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/include/net/route.h b/include/net/route.h
-> > index a9c60fc68e36..4ff977bd7029 100644
-> > --- a/include/net/route.h
-> > +++ b/include/net/route.h
-> > @@ -183,7 +183,7 @@ int ip_route_input_noref(struct sk_buff *skb, __be32 dst, __be32 src,
-> >  			 u8 tos, struct net_device *devin);
-> >  int ip_route_input_rcu(struct sk_buff *skb, __be32 dst, __be32 src,
-> >  		       u8 tos, struct net_device *devin,
-> > -		       struct fib_result *res);
-> > +		       struct fib_result *res, bool tbl_known);
-> >  
-> >  int ip_route_use_hint(struct sk_buff *skb, __be32 dst, __be32 src,
-> >  		      u8 tos, struct net_device *devin,
-> > diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-> > index d5c57b3f77d5..39cec9883d6f 100644
-> > --- a/net/ipv4/route.c
-> > +++ b/net/ipv4/route.c
-> > @@ -2077,7 +2077,7 @@ int ip_route_use_hint(struct sk_buff *skb, __be32 daddr, __be32 saddr,
-> >  
-> >  static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
-> >  			       u8 tos, struct net_device *dev,
-> > -			       struct fib_result *res)
-> > +			       struct fib_result *res, bool tbl_known)
-> >  {
-> >  	struct in_device *in_dev = __in_dev_get_rcu(dev);
-> >  	struct flow_keys *flkeys = NULL, _flkeys;
-> > @@ -2109,8 +2109,6 @@ static int ip_route_input_slow(struct sk_buff *skb, __be32 daddr, __be32 saddr,
-> >  	if (ipv4_is_multicast(saddr) || ipv4_is_lbcast(saddr))
-> >  		goto martian_source;
-> >  
-> > -	res->fi = NULL;
-> > -	res->table = NULL;
-> >  	if (ipv4_is_lbcast(daddr) || (saddr == 0 && daddr == 0))
-> >  		goto brd_input;
-> 
-> I believe this also introduces a potential bug. You remove the fi
-> initialization yet do not cover the goto case.
-> 
-> 
-
-
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 1b8014ab0b25..10aa511051e8 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1071,7 +1071,14 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 		unsigned int rem = length % maxp;
+ 		unsigned chain = true;
+ 
+-		if (sg_is_last(s))
++		/*
++		 * IOMMU driver is coalescing the list of sgs which shares a
++		 * page boundary into one and giving it to USB driver. With
++		 * this the number of sgs mapped it not equal to the the number
++		 * of sgs passed. Mark the chain bit to false if it is the last
++		 * mapped sg.
++		 */
++		if ((i == remaining - 1))
+ 			chain = false;
+ 
+ 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
 -- 
-Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+2.17.1
+
