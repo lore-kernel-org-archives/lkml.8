@@ -2,79 +2,104 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5FFC3403B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E389CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3332173E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88F820659
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 12:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582030567;
+	bh=xKyP8NoOxgChUudL/jyG/REWXfqdH+OzVfNdN1v4MBc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yZV0ZHZ4GiOQT8WIDD03HXhxvzY/3YiaM6joFnFED8U13cxzP+YryBdLuYR0w2/BR
+	 SLbp+q9J9nLZdyTZFrnRlBgb4Qiq8eMmEH7ecDhWOeZIUSXMf3hBqFl5BibSIQQ1zW
+	 mDqUPxB1cO8HStaanMtJYZLO7dSBVsKBEuBk1qJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbgBRMth (ORCPT
+        id S1726640AbgBRM4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 07:49:37 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51672 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbgBRMtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 07:49:36 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 4EB2A292BAE
-Subject: Re: linux-next: Tree for Feb 18 (drivers/staging/media/rkisp1/)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-References: <20200218152853.67e2482a@canb.auug.org.au>
- <e9a420e2-992e-c358-5524-567a10955536@infradead.org>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <ad73d63c-1a33-7e47-ba88-1877cc106359@collabora.com>
-Date:   Tue, 18 Feb 2020 09:49:29 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Tue, 18 Feb 2020 07:56:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:51652 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgBRMz7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 07:55:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 316511FB;
+        Tue, 18 Feb 2020 04:55:59 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A616F3F703;
+        Tue, 18 Feb 2020 04:55:58 -0800 (PST)
+Date:   Tue, 18 Feb 2020 12:55:57 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chuanhong Guo <gch981213@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] rewrite mtk-quadspi spi-nor driver with spi-mem
+Message-ID: <20200218125557.GD4232@sirena.org.uk>
+References: <20200215065826.739102-1-gch981213@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <e9a420e2-992e-c358-5524-567a10955536@infradead.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/3yNEOqWowh/8j+e"
+Content-Disposition: inline
+In-Reply-To: <20200215065826.739102-1-gch981213@gmail.com>
+X-Cookie: No alcohol, dogs or horses.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 2/18/20 3:31 AM, Randy Dunlap wrote:
-> On 2/17/20 8:28 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> Changes since 20200217:
->>
-> 
-> on i386:
-> 
-> when CONFIG_OF is not set/enabled:
-> 
-> WARNING: unmet direct dependencies detected for PHY_ROCKCHIP_DPHY_RX0
->   Depends on [n]: STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && (ARCH_ROCKCHIP || COMPILE_TEST [=y]) && OF [=n]
->   Selected by [y]:
->   - VIDEO_ROCKCHIP_ISP1 [=y] && STAGING [=y] && STAGING_MEDIA [=y] && MEDIA_SUPPORT [=y] && VIDEO_V4L2 [=y] && VIDEO_V4L2_SUBDEV_API [=y] && (ARCH_ROCKCHIP || COMPILE_TEST [=y])
-> 
-> 
-> Full randconfig file is attached.
-> 
+--/3yNEOqWowh/8j+e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for reporting.
+On Sat, Feb 15, 2020 at 02:58:24PM +0800, Chuanhong Guo wrote:
 
-There is a patch on the mailing list fixing this already https://patchwork.linuxtv.org/patch/61175/
-Changes were requested (+Zhang Xiaoxu).
+> To keep patchset small for easier reviewing, there will be 3 patchsets
+> including this one.
+> 1. add the new driver, which is this patchset.
+> 2. update existing dts for the new driver:
+>    spi-max-frequency is missing in current mtk-quadspi binding. Old
+>    driver parses child node manually so it doesn't need this, but
+>    new spi-mem driver is probed via spi subsystem which requires the
+>    presence of spi-max-frequency. Since this doesn't break old driver
+>    support, I'll send this separately as a standalone patch.
 
-Zhang, could you send another version of the patch? Or let me know if I can continue your work.
+This is an ABI break so you shouldn't be doing this, if the existing
+binding works it should continue to work.
 
-Thanks
-Helen
+> 3. removing the old driver. I'll create this commit after 1 and 2 are
+>    applied to avoid possible rebasing due to any changes in the old
+>    driver.
+
+This isn't great as it means we have a period with two drivers for the
+same thing in tree which is at best going to be confusing.  There's no
+advantage to splitting this out.
+
+--/3yNEOqWowh/8j+e
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5L3twACgkQJNaLcl1U
+h9CQ0Af/bCSGtGQh9O/SezBLGjZ59DSJjcG/kJ2CB/e5Ub3WkveUKq3prcIpbWRZ
+j7LZ1+3P0+IQJC2b4wWFTf6xOOoucP4Qb1qVBc1HyBt9SrqrrZ3SdEXzhbsYJ1Zq
+tLGrQ37qdRhfSpspLm1N3FN+EBZuVW3tYPclxUjkHTE50mu0wmMAk4OXtrbyBKp7
+H046klgqVPBXzTlP8mFTtp0/E/hYhrBUTqcEcUBTAw3nCMBMiVxUjdxRx+tB41CR
+TBBlM9+VwbxRbrzZC9IL5S+l+Bi9EW2axbZ2zFG7vOTc+AoCIT/PxwyZBshr8Xoh
+A7hM2b6D+BSbpRcPwjpZLi3E11d0ug==
+=CyQ7
+-----END PGP SIGNATURE-----
+
+--/3yNEOqWowh/8j+e--
