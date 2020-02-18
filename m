@@ -2,325 +2,91 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D9C34049
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604E9C34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D908721D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582056443;
-	bh=l5lJEZkz51E19LU9MHHTVA8iChaAYWOmUBGzBZnmP/c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJNIdqDQ/KS0n+cjo7D7H4v26KdnLvTwCrlp51lHldBPlELaQx40RappHh0lLqNeM
-	 HkOEYAllzOHAGMJMmqbZkd/Jnz1XJzQZMGhIxVz5zXr6N9FuSOZG3Zg+P1GkrVE4BA
-	 USlASXdJtqLDhk80RRuoXqvPKb323cmvab5Hpt0M=
+	by mail.kernel.org (Postfix) with ESMTP id 32D0E2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 20:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YDEakFwS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgBRUHX (ORCPT
+        id S1726734AbgBRUH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 15:07:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgBRT7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 14:59:04 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15B824125;
-        Tue, 18 Feb 2020 19:59:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582055943;
-        bh=l5lJEZkz51E19LU9MHHTVA8iChaAYWOmUBGzBZnmP/c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZJkaTzN51sx/xH2vQ+l+UsdUUtRHL7FLv75K+uUbSzxjkebTdydGdkMwQL7+Scye
-         GkW7zUxv6er/RpbqsibawxlsBoeYVnsyAtIs/5jcFFwq7q2TC6/PHtrmoldqPgeP12
-         1Ccplq7HdHXgh+hP8Yh/FqjVjuArpvr5I7+pGPeo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tobias Oszlanyi <toszlanyi@yahoo.de>,
-        Alexander Tsoy <alexander@tsoy.me>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 13/66] ALSA: usb-audio: Add clock validity quirk for Denon MC7000/MCX8000
-Date:   Tue, 18 Feb 2020 20:54:40 +0100
-Message-Id: <20200218190429.330836789@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200218190428.035153861@linuxfoundation.org>
-References: <20200218190428.035153861@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Feb 2020 15:07:28 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42382 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgBRUHZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 15:07:25 -0500
+Received: by mail-wr1-f68.google.com with SMTP id k11so25480577wrd.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 12:07:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=4cyBnsbCp8K2dn/otOwt/zGstBiNP7FQVjJ9JQxVYLE=;
+        b=YDEakFwS6rx6Yuo1qVqHilKpZwkpVTSJrXWNBeXgJM77Lu7v3HNEQfmmphSYGWpMee
+         NRh7b3NKjTgOAEdBMne5KxfZzsInfjIfRCtosemivDHWrdCq9MFDDw50wuRWa7d3HoBK
+         K71JzLvjubtSpjOJgJYKD/1DLuMeGEPOEl7LVb8hcf+cy5uUz6M3v5z0zuGnUezIjzYQ
+         YAEDuJK2A83PKRn2ZJ/JaNOgD2WhKzUbcsia5M7vGXW3vbdtdSu6+U6MElOuqcsS0m9/
+         s+d3Y2tPjhIUuTSGAW9Q7CuSRkz/m7aXEVevsm381tXXX6hniDdmsqZnJp3k/fCi2hD9
+         59YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4cyBnsbCp8K2dn/otOwt/zGstBiNP7FQVjJ9JQxVYLE=;
+        b=fCi8yIc9n8nOLFJ2m9VpU9GNbgMh+vgEfZk1QU4gJJRz4sqca4h+tglDb3P9orExla
+         YKUWCthtmslvpCSHZyqs2JV+PUTeLX1XSnoxJmm9Vfcv2npj47R+mS9HGwwak+QRlmpK
+         r6RmLWd0j1OgIzCIvksub9j9FEhA/t16k1nAO8XdvIoIfmUpPa+xoVqA0X9db1tH+WQK
+         FpynN+YPrItZ/vCcsPhi0dnC9a27S9hSOLCDDgQEvPJJ0xwPCXVlJStuIgN0XzMCyFKs
+         ycpnNpmCdl9DCWO/Iong1OtJpLFldecS4sZuOQUHGjxKirsV6F4LeTn75FQRnBL/paVX
+         qgxg==
+X-Gm-Message-State: APjAAAXuBldXHVWJRQ0cXJ8nrv9sDMWZkRmNF4fsoVdXaA1nAtMcmxxr
+        oTrty3gMWqs7mI59izu9Ml56JQ==
+X-Google-Smtp-Source: APXvYqw7Iu6rNwB0fChV/KT1WXBuRYh6hKrG/zUYDS6v7xZhRgdxSSH7TL6Jasof0jfX5poJDsy7Pw==
+X-Received: by 2002:a5d:4746:: with SMTP id o6mr4379632wrs.70.1582056442773;
+        Tue, 18 Feb 2020 12:07:22 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id a9sm4576598wmm.15.2020.02.18.12.07.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 18 Feb 2020 12:07:22 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     linux@dominikbrodowski.net
+Cc:     linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] pcmcia: omap: remove useless cast for driver.name
+Date:   Tue, 18 Feb 2020 20:07:16 +0000
+Message-Id: <1582056436-15775-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Tsoy <alexander@tsoy.me>
+device_driver name is const char pointer, so it not useful to cast
+driver_name (which is already const char).
 
-commit 9f35a31283775e6f6af73fb2c95c686a4c0acac7 upstream.
-
-It should be safe to ignore clock validity check result if the following
-conditions are met:
- - only one single sample rate is supported;
- - the terminal is directly connected to the clock source;
- - the clock type is internal.
-
-This is to deal with some Denon DJ controllers that always reports that
-clock is invalid.
-
-Tested-by: Tobias Oszlanyi <toszlanyi@yahoo.de>
-Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200212235450.697348-1-alexander@tsoy.me
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- sound/usb/clock.c  |   91 ++++++++++++++++++++++++++++++++++++-----------------
- sound/usb/clock.h  |    4 +-
- sound/usb/format.c |    3 -
- 3 files changed, 66 insertions(+), 32 deletions(-)
+ drivers/pcmcia/omap_cf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/clock.c
-+++ b/sound/usb/clock.c
-@@ -151,8 +151,34 @@ static int uac_clock_selector_set_val(st
- 	return ret;
- }
+diff --git a/drivers/pcmcia/omap_cf.c b/drivers/pcmcia/omap_cf.c
+index 0a04eb04f3a2..d3ef5534991e 100644
+--- a/drivers/pcmcia/omap_cf.c
++++ b/drivers/pcmcia/omap_cf.c
+@@ -329,7 +329,7 @@ static int __exit omap_cf_remove(struct platform_device *pdev)
  
-+/*
-+ * Assume the clock is valid if clock source supports only one single sample
-+ * rate, the terminal is connected directly to it (there is no clock selector)
-+ * and clock type is internal. This is to deal with some Denon DJ controllers
-+ * that always reports that clock is invalid.
-+ */
-+static bool uac_clock_source_is_valid_quirk(struct snd_usb_audio *chip,
-+					    struct audioformat *fmt,
-+					    int source_id)
-+{
-+	if (fmt->protocol == UAC_VERSION_2) {
-+		struct uac_clock_source_descriptor *cs_desc =
-+			snd_usb_find_clock_source(chip->ctrl_intf, source_id);
-+
-+		if (!cs_desc)
-+			return false;
-+
-+		return (fmt->nr_rates == 1 &&
-+			(fmt->clock & 0xff) == cs_desc->bClockID &&
-+			(cs_desc->bmAttributes & 0x3) !=
-+				UAC_CLOCK_SOURCE_TYPE_EXT);
-+	}
-+
-+	return false;
-+}
-+
- static bool uac_clock_source_is_valid(struct snd_usb_audio *chip,
--				      int protocol,
-+				      struct audioformat *fmt,
- 				      int source_id)
- {
- 	int err;
-@@ -160,7 +186,7 @@ static bool uac_clock_source_is_valid(st
- 	struct usb_device *dev = chip->dev;
- 	u32 bmControls;
- 
--	if (protocol == UAC_VERSION_3) {
-+	if (fmt->protocol == UAC_VERSION_3) {
- 		struct uac3_clock_source_descriptor *cs_desc =
- 			snd_usb_find_clock_source_v3(chip->ctrl_intf, source_id);
- 
-@@ -194,10 +220,14 @@ static bool uac_clock_source_is_valid(st
- 		return false;
- 	}
- 
--	return data ? true :  false;
-+	if (data)
-+		return true;
-+	else
-+		return uac_clock_source_is_valid_quirk(chip, fmt, source_id);
- }
- 
--static int __uac_clock_find_source(struct snd_usb_audio *chip, int entity_id,
-+static int __uac_clock_find_source(struct snd_usb_audio *chip,
-+				   struct audioformat *fmt, int entity_id,
- 				   unsigned long *visited, bool validate)
- {
- 	struct uac_clock_source_descriptor *source;
-@@ -217,7 +247,7 @@ static int __uac_clock_find_source(struc
- 	source = snd_usb_find_clock_source(chip->ctrl_intf, entity_id);
- 	if (source) {
- 		entity_id = source->bClockID;
--		if (validate && !uac_clock_source_is_valid(chip, UAC_VERSION_2,
-+		if (validate && !uac_clock_source_is_valid(chip, fmt,
- 								entity_id)) {
- 			usb_audio_err(chip,
- 				"clock source %d is not valid, cannot use\n",
-@@ -248,8 +278,9 @@ static int __uac_clock_find_source(struc
- 		}
- 
- 		cur = ret;
--		ret = __uac_clock_find_source(chip, selector->baCSourceID[ret - 1],
--					       visited, validate);
-+		ret = __uac_clock_find_source(chip, fmt,
-+					      selector->baCSourceID[ret - 1],
-+					      visited, validate);
- 		if (!validate || ret > 0 || !chip->autoclock)
- 			return ret;
- 
-@@ -260,8 +291,9 @@ static int __uac_clock_find_source(struc
- 			if (i == cur)
- 				continue;
- 
--			ret = __uac_clock_find_source(chip, selector->baCSourceID[i - 1],
--				visited, true);
-+			ret = __uac_clock_find_source(chip, fmt,
-+						      selector->baCSourceID[i - 1],
-+						      visited, true);
- 			if (ret < 0)
- 				continue;
- 
-@@ -281,14 +313,16 @@ static int __uac_clock_find_source(struc
- 	/* FIXME: multipliers only act as pass-thru element for now */
- 	multiplier = snd_usb_find_clock_multiplier(chip->ctrl_intf, entity_id);
- 	if (multiplier)
--		return __uac_clock_find_source(chip, multiplier->bCSourceID,
--						visited, validate);
-+		return __uac_clock_find_source(chip, fmt,
-+					       multiplier->bCSourceID,
-+					       visited, validate);
- 
- 	return -EINVAL;
- }
- 
--static int __uac3_clock_find_source(struct snd_usb_audio *chip, int entity_id,
--				   unsigned long *visited, bool validate)
-+static int __uac3_clock_find_source(struct snd_usb_audio *chip,
-+				    struct audioformat *fmt, int entity_id,
-+				    unsigned long *visited, bool validate)
- {
- 	struct uac3_clock_source_descriptor *source;
- 	struct uac3_clock_selector_descriptor *selector;
-@@ -307,7 +341,7 @@ static int __uac3_clock_find_source(stru
- 	source = snd_usb_find_clock_source_v3(chip->ctrl_intf, entity_id);
- 	if (source) {
- 		entity_id = source->bClockID;
--		if (validate && !uac_clock_source_is_valid(chip, UAC_VERSION_3,
-+		if (validate && !uac_clock_source_is_valid(chip, fmt,
- 								entity_id)) {
- 			usb_audio_err(chip,
- 				"clock source %d is not valid, cannot use\n",
-@@ -338,7 +372,8 @@ static int __uac3_clock_find_source(stru
- 		}
- 
- 		cur = ret;
--		ret = __uac3_clock_find_source(chip, selector->baCSourceID[ret - 1],
-+		ret = __uac3_clock_find_source(chip, fmt,
-+					       selector->baCSourceID[ret - 1],
- 					       visited, validate);
- 		if (!validate || ret > 0 || !chip->autoclock)
- 			return ret;
-@@ -350,8 +385,9 @@ static int __uac3_clock_find_source(stru
- 			if (i == cur)
- 				continue;
- 
--			ret = __uac3_clock_find_source(chip, selector->baCSourceID[i - 1],
--				visited, true);
-+			ret = __uac3_clock_find_source(chip, fmt,
-+						       selector->baCSourceID[i - 1],
-+						       visited, true);
- 			if (ret < 0)
- 				continue;
- 
-@@ -372,7 +408,8 @@ static int __uac3_clock_find_source(stru
- 	multiplier = snd_usb_find_clock_multiplier_v3(chip->ctrl_intf,
- 						      entity_id);
- 	if (multiplier)
--		return __uac3_clock_find_source(chip, multiplier->bCSourceID,
-+		return __uac3_clock_find_source(chip, fmt,
-+						multiplier->bCSourceID,
- 						visited, validate);
- 
- 	return -EINVAL;
-@@ -389,18 +426,18 @@ static int __uac3_clock_find_source(stru
-  *
-  * Returns the clock source UnitID (>=0) on success, or an error.
-  */
--int snd_usb_clock_find_source(struct snd_usb_audio *chip, int protocol,
--			      int entity_id, bool validate)
-+int snd_usb_clock_find_source(struct snd_usb_audio *chip,
-+			      struct audioformat *fmt, bool validate)
- {
- 	DECLARE_BITMAP(visited, 256);
- 	memset(visited, 0, sizeof(visited));
- 
--	switch (protocol) {
-+	switch (fmt->protocol) {
- 	case UAC_VERSION_2:
--		return __uac_clock_find_source(chip, entity_id, visited,
-+		return __uac_clock_find_source(chip, fmt, fmt->clock, visited,
- 					       validate);
- 	case UAC_VERSION_3:
--		return __uac3_clock_find_source(chip, entity_id, visited,
-+		return __uac3_clock_find_source(chip, fmt, fmt->clock, visited,
- 					       validate);
- 	default:
- 		return -EINVAL;
-@@ -501,8 +538,7 @@ static int set_sample_rate_v2v3(struct s
- 	 * automatic clock selection if the current clock is not
- 	 * valid.
- 	 */
--	clock = snd_usb_clock_find_source(chip, fmt->protocol,
--					  fmt->clock, true);
-+	clock = snd_usb_clock_find_source(chip, fmt, true);
- 	if (clock < 0) {
- 		/* We did not find a valid clock, but that might be
- 		 * because the current sample rate does not match an
-@@ -510,8 +546,7 @@ static int set_sample_rate_v2v3(struct s
- 		 * and we will do another validation after setting the
- 		 * rate.
- 		 */
--		clock = snd_usb_clock_find_source(chip, fmt->protocol,
--						  fmt->clock, false);
-+		clock = snd_usb_clock_find_source(chip, fmt, false);
- 		if (clock < 0)
- 			return clock;
- 	}
-@@ -577,7 +612,7 @@ static int set_sample_rate_v2v3(struct s
- 
- validation:
- 	/* validate clock after rate change */
--	if (!uac_clock_source_is_valid(chip, fmt->protocol, clock))
-+	if (!uac_clock_source_is_valid(chip, fmt, clock))
- 		return -ENXIO;
- 	return 0;
- }
---- a/sound/usb/clock.h
-+++ b/sound/usb/clock.h
-@@ -6,7 +6,7 @@ int snd_usb_init_sample_rate(struct snd_
- 			     struct usb_host_interface *alts,
- 			     struct audioformat *fmt, int rate);
- 
--int snd_usb_clock_find_source(struct snd_usb_audio *chip, int protocol,
--			     int entity_id, bool validate);
-+int snd_usb_clock_find_source(struct snd_usb_audio *chip,
-+			      struct audioformat *fmt, bool validate);
- 
- #endif /* __USBAUDIO_CLOCK_H */
---- a/sound/usb/format.c
-+++ b/sound/usb/format.c
-@@ -322,8 +322,7 @@ static int parse_audio_format_rates_v2v3
- 	struct usb_device *dev = chip->dev;
- 	unsigned char tmp[2], *data;
- 	int nr_triplets, data_size, ret = 0, ret_l6;
--	int clock = snd_usb_clock_find_source(chip, fp->protocol,
--					      fp->clock, false);
-+	int clock = snd_usb_clock_find_source(chip, fp, false);
- 
- 	if (clock < 0) {
- 		dev_err(&dev->dev,
-
+ static struct platform_driver omap_cf_driver = {
+ 	.driver = {
+-		.name	= (char *) driver_name,
++		.name	= driver_name,
+ 	},
+ 	.remove		= __exit_p(omap_cf_remove),
+ };
+-- 
+2.24.1
 
