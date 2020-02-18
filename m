@@ -2,133 +2,113 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 673DCC34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D175C34047
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCAF246BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 18:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C4122B48
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 19:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RXtXrgDu"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EZwGBR7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBRS7H (ORCPT
+        id S1726427AbgBRTAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 13:59:07 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41551 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgBRS7G (ORCPT
+        Tue, 18 Feb 2020 14:00:43 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45056 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726291AbgBRTAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 13:59:06 -0500
-Received: by mail-oi1-f196.google.com with SMTP id i1so21166019oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 10:59:06 -0800 (PST)
+        Tue, 18 Feb 2020 14:00:43 -0500
+Received: by mail-oi1-f195.google.com with SMTP id v19so21180606oic.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 11:00:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WZFvoNuat14DefXi3vC+e4qmKLvk+S8JScj25aPSjJM=;
-        b=RXtXrgDuvdnL5sCqfStcIcksH2FbUwtj3cgM6nLEKhgSNXkXrcUMffZk6UldfpqpMG
-         X6dh/gjt88bBu4+jBnuobt1v8D2N4tLZeLUjKr4WEUTxePmfxQ3neGT+mn0nUdnLNK5o
-         9Jut24B90o864Pp7Xjs5gL/IozPfu/Rp0O+FFh8ztNqkQO/ZNx2SqLTFu6YNgO7r6GVs
-         FBhMpai3M7D+zRzuhqGr9Ty2NLoujyfdLdmTXnwyjtBrOh5tTLyRhNrq15Sj1JFoJNiZ
-         6RBAYTOui7DFY2bim6bgI7GQQIudoc7j2qirGJO2qcAWK/BIVqKIeYLgX1r/1bW0yv05
-         B7Pg==
+        bh=vVon9MCR2eKlk3dtcH82oPxf8ZW6p7b6JHgOz9jQlJ8=;
+        b=EZwGBR7wltaso7KhEh5dfSJbjAp4uSZHWmBk/Y+mD4q9cTqryM6/WOKaX6tY5jqXyZ
+         uLqXtUPtOlgsxM5z7Au9JuQbFew4H2vmEZFtsqH6qZzC2WL00Snld3cL6E+pGUhqs9Jc
+         11g1hFBfNlSpwjlDkVO1lpcQxQhXZGPmeqcJI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WZFvoNuat14DefXi3vC+e4qmKLvk+S8JScj25aPSjJM=;
-        b=pHihBuTHfBwq5IQ/L0D+D+WDP2K+BMEZSq+fsxIqKKyEVqYaIJQ7SspU6EpjuUGQWR
-         9suG/fgbHH60yAeiJbhbdFp4T55pb5lzroRhl5kGTLdNcISna2UjlKnoDTFc5nr1v9tY
-         DeJDJWDvE9FCV8zowaaoxcKXIhCbjy0fixDesjUlw5qVo/+5CyVdnSL6hCk+hFsIq3Rk
-         h9BMn70D0jM5ApqnWl+dms+Gpo4zHSxiW0RO08zSCjwooChl2OvWtAAVkwiGXUn9D/F7
-         i7PQbYj4bK4Ew+vQubKWk8PkL2tEQwY97ONwrVKhvmvkIgME2oUKe7JYmYq9sBO+/d5k
-         hM4Q==
-X-Gm-Message-State: APjAAAVzg97BNZvVCcYXpLtltTyh3A2C8NQfyULn9zVmAXtUQ9AyA1fn
-        PZzo/S8azArgeBlSSTnnCLC3V9HQp4+uJsU1/IhiOQ==
-X-Google-Smtp-Source: APXvYqylpO5JT+CurUke29eYbKzZ/jRMwJkbZDTpcSIntjBC4fek57WNX05I0F0OMeYPrhF7xnCa0VuzpBDAMOXPJIQ=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr2306419oig.103.1582052345973;
- Tue, 18 Feb 2020 10:59:05 -0800 (PST)
+        bh=vVon9MCR2eKlk3dtcH82oPxf8ZW6p7b6JHgOz9jQlJ8=;
+        b=QwMyvBm2pXj3zsTUS2RB6hzO842tGU17/n3Rse+4GRnYblPIxBqG/B5a0cso9OvUhC
+         QyEC4cP7JLcB3krq9DmWfUMFG+WPtIuHeRUtwcIBoodqe+Y226CXwY90fK6FIoPG8XXn
+         TVf0Hy2nyqrgJMZU/LzhicCMt3E88t5/YGFojxETrj9CSW/P9asOiziX+3q43i0H/pOh
+         VMuxdVxhWVXGkJFl5RSAJOFThU8KnBAacBZKKCeAEVGspsQF8Vrgf7mbBZMJZJxv4fok
+         dECBpHW1buZFtWcXRoE6cP8USb57ZU9vfyKSbpfVub/ocP8volJyo1sliYZ9kqfCR8aR
+         gcHw==
+X-Gm-Message-State: APjAAAWVULOopgMagw1PjgL4PQddqwXktHL57G1/oXcTTLEitZdNeY6E
+        RHdb38islUHT2xKcPfNL77FiO97PlZuekntT02Mvcg==
+X-Google-Smtp-Source: APXvYqwFFnV1mL2xMZPIBgZloQiK9LP4j3LCKSgLL4kBiHdrCnQ/AeAqqg7MVL9ZKN98b//hq7cvNGKRbvdJqFGadB4=
+X-Received: by 2002:a05:6808:10b:: with SMTP id b11mr2254105oie.110.1582052441303;
+ Tue, 18 Feb 2020 11:00:41 -0800 (PST)
 MIME-Version: 1.0
-References: <1581953454-10671-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1581953454-10671-1-git-send-email-cai@lca.pw>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Tue, 18 Feb 2020 10:58:54 -0800
-Message-ID: <CAHS8izMrJ3CNB_6W7VJ8+8TXZw0bnUsA5et7jF4iFn8T4QH=4A@mail.gmail.com>
-Subject: Re: [PATCH -next] mm/hugetlb_cgroup: fix a -Wunused-but-set-variable
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        open list <linux-kernel@vger.kernel.org>
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+In-Reply-To: <20200218172821.18378-1-wambui.karugax@gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 18 Feb 2020 20:00:30 +0100
+Message-ID: <CAKMK7uHeSW-sFCZK09n89mJ66J3sb0EtxYU9Ojfi-adM7czTug@mail.gmail.com>
+Subject: Re: [PATCH] drm/arc: make arcpgu_debugfs_init return 0
+To:     Wambui Karuga <wambui.karugax@gmail.com>
+Cc:     Alexey Brodkin <abrodkin@synopsys.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 7:31 AM Qian Cai <cai@lca.pw> wrote:
+On Tue, Feb 18, 2020 at 6:28 PM Wambui Karuga <wambui.karugax@gmail.com> wrote:
 >
-> The commit c32300516047 ("hugetlb_cgroup: add interface for
-> charge/uncharge hugetlb reservations") forgot to remove an unused
-> variable,
+> As drm_debugfs_create_files should return void, remove its use as the
+> return value of arcpgu_debugfs_init and have the latter function
+> return 0 directly.
 >
-> mm/hugetlb_cgroup.c: In function 'hugetlb_cgroup_migrate':
-> mm/hugetlb_cgroup.c:777:25: warning: variable 'h_cg' set but not used
-> [-Wunused-but-set-variable]
->   struct hugetlb_cgroup *h_cg;
->                          ^~~~
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 > ---
->  mm/hugetlb_cgroup.c | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/gpu/drm/arc/arcpgu_drv.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 >
-> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-> index ad777fecad28..8a86a2b62bef 100644
-> --- a/mm/hugetlb_cgroup.c
-> +++ b/mm/hugetlb_cgroup.c
-> @@ -774,7 +774,6 @@ void __init hugetlb_cgroup_file_init(void)
->   */
->  void hugetlb_cgroup_migrate(struct page *oldhpage, struct page *newhpage)
+> diff --git a/drivers/gpu/drm/arc/arcpgu_drv.c b/drivers/gpu/drm/arc/arcpgu_drv.c
+> index d6a6692db0ac..660b25f9588e 100644
+> --- a/drivers/gpu/drm/arc/arcpgu_drv.c
+> +++ b/drivers/gpu/drm/arc/arcpgu_drv.c
+> @@ -139,8 +139,10 @@ static struct drm_info_list arcpgu_debugfs_list[] = {
+>
+>  static int arcpgu_debugfs_init(struct drm_minor *minor)
 >  {
-> -       struct hugetlb_cgroup *h_cg;
->         struct hugetlb_cgroup *h_cg_rsvd;
->         struct hstate *h = page_hstate(oldhpage);
->
-> @@ -783,7 +782,6 @@ void hugetlb_cgroup_migrate(struct page *oldhpage, struct page *newhpage)
->
->         VM_BUG_ON_PAGE(!PageHuge(oldhpage), oldhpage);
->         spin_lock(&hugetlb_lock);
-> -       h_cg = hugetlb_cgroup_from_page(oldhpage);
->         h_cg_rsvd = hugetlb_cgroup_from_page_rsvd(oldhpage);
->         set_hugetlb_cgroup(oldhpage, NULL);
+> -       return drm_debugfs_create_files(arcpgu_debugfs_list,
+> -               ARRAY_SIZE(arcpgu_debugfs_list), minor->debugfs_root, minor);
+> +       drm_debugfs_create_files(arcpgu_debugfs_list,
+> +                                ARRAY_SIZE(arcpgu_debugfs_list),
+> +                                minor->debugfs_root, minor);
+> +       return 0;
+
+For cases like these I think we should go a step further and also
+remove the return value from the driver wrapper. And that all the way
+up until there's something that actually needs to return a value for
+some other reason than debugfs.
+-Daniel
+
+>  }
+>  #endif
 >
 > --
-> 1.8.3.1
+> 2.25.0
 >
 
-Hi Qian,
 
-Thank you very much for the fix to remove the warning, but actually
-the real fix is I'm missing a 'set_hugetlb_cgroup(newhpage, h_cg);'
-which will use the variable and set the cgroup on newhpage which is
-needed. I'll submit the proper fix.
-
-What bothers me though is that locally when I checkout the broken
-patch and try to build I don't see the warning:
-
-make -j80 mm/hugetlb_cgroup.o
-no warning.
-make -j80 mm/hugetlb_cgroup.o CFLAGS_KERNEL="-Wall"
-no warning
-make -j80 mm/hugetlb_cgroup.o CFLAGS_KERNEL="-Wunused-but-set-variable"
-I see the warning.
-
-So it seems there is a bunch of warnings I need to explicitly turn on
-otherwise I will continually submit patches that introduce warnings in
-your build. Any idea why I'm running into this? Do you also have to
-turn on these warnings manually on your make line? Is it related to
-gcc version? My gcc version is:
-gcc version 9.2.1 20190909 (Debian 9.2.1-8)
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
