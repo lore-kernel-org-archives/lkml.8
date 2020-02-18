@@ -2,136 +2,157 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82173C3404B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD880C34031
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56B0222B48
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4592173E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 21:35:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="f5Iuo6bl"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VuOEkLcx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgBRVdV (ORCPT
+        id S1727811AbgBRVfc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 16:33:21 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15423 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726481AbgBRVdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 16:33:21 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4c57d90000>; Tue, 18 Feb 2020 13:32:09 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 13:33:20 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 13:33:20 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Feb
- 2020 21:33:19 +0000
-Subject: Re: [PATCH v6 02/19] mm: Ignore return value of ->readpages
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>, Christoph Hellwig <hch@lst.de>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-3-willy@infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <ed5b3635-be1b-c290-0e19-b516e7af2aca@nvidia.com>
-Date:   Tue, 18 Feb 2020 13:33:19 -0800
+        Tue, 18 Feb 2020 16:35:32 -0500
+Received: from mail-dm6nam11on2086.outbound.protection.outlook.com ([40.107.223.86]:14432
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726634AbgBRVfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 16:35:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K7Hh9iVRPP9RLxy0f/g/4cba/ngM7HADfPLySNKJOcqeN91C1FvHR8L7DBI6oIlQ4t/LSLifbWjGau9/iZC4Iv5CtWoWYBVcPt58UBQml/OxTXi7TrLC8OEKY1Tg49W0p1QC4lYG77+g2xlcAUgDS5zagtEJWbxjCe/PRxcXCUvcsz89VdSoBXNUEibR47WP6yEufcGzz6/FQ8lZq/bs1lXRJjpWyXn+dI4GKRC0F/oBEzXmvT257hf0W3qrJqQVATQXlEWfj9ZcJqwRaezFGWpTMhz5f4zLrn1lI6k0GoDLAEdp4Rr1wfjg87o5UnNXrR5SH/y3efcidYZZi4mNFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+S8wZ/ftY8WNhKnbKcd4mYoQTIzxGj7dLTm7d0tAts=;
+ b=nqd/IAC2qyqQ55PBjaCazZXhAv+MSbphyLezHXB6nNhEcNKpbVLu/Sl2JLH7C0oRAlgrrdfi0qGm/In5xU0S4Mhb3PJNKom64Q0y/j9pqMaQ1G2sbd6PRZv0yiZH6hQRIJmwPbDOHa+45EklaiScnKOjIInhKGkIJJa6JjkOd7jHM3ZzyCGHfBnTIt/+oIIo8Hqhp04YjAXSiu+/z0rtP0kFjqWu87PdVPDPeWhiX00Dn64u4TevvReHsjgHtrB92+ghNUIHYtIDLHkJosDeBgKQZ73/p23NP4+EHI/x5tgRKqwABP3hAp/XoXcEzZ1Oanzz+ooIB5flEFW6qe21tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V+S8wZ/ftY8WNhKnbKcd4mYoQTIzxGj7dLTm7d0tAts=;
+ b=VuOEkLcxd7Y+r++NDs700hmpxzf9443j7cV597pVQfykg8mmyAFs1E5/EjGPzAYNcDyP9zITTOS0xZAlUq0cFMjNTnKSZ0kfP7B96uq+u1RMlRu60hwSny+zc9w/3iP2OZ+00Lo5cM42KRgKuXYeWJtinphzxe5XSMDO7eAFnk0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2686.namprd12.prod.outlook.com (52.135.104.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.30; Tue, 18 Feb 2020 21:35:29 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2729.032; Tue, 18 Feb 2020
+ 21:35:29 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH v3] x86/cpu/amd: Enable the fixed Instructions Retired
+ counter IRPERF
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Babu Moger <babu.moger@amd.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luwei Kang <luwei.kang@intel.com>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20200214201805.13830-1-kim.phillips@amd.com>
+ <20200218112035.GB14449@zn.tnic>
+Message-ID: <15f0ff78-1a94-cfa7-297b-c226cb98d10f@amd.com>
+Date:   Tue, 18 Feb 2020 15:35:25 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200217184613.19668-3-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+ Thunderbird/68.4.1
+In-Reply-To: <20200218112035.GB14449@zn.tnic>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582061529; bh=RXve5/fUA3oBILhUm8o+y+17c7pBmRijpBQPJAnmP80=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=f5Iuo6blIXbcDZrM05UIgCY8ANT5xW9HB6FXMMGQCfaHMfBnR1DfaWLTMAYIE7XBP
-         B9QOW8wSO4ij5j+4bCfhLlUR2LpeSTGJV0y8tnLGhP+d4at2LBMPXmcd1007q6GV+V
-         F6nXmc1d8pgAlmrCaaR8bklkj+n7DiCZH8Mj9XZsOl6SUYvt06XEAlqdCtbjrJAqsO
-         JEKRbCwBCkx6iNbCJyyfXN8/DDeOTx/qKgkY7yedkT+Pn0V+QFJNvk6ybzosDhS50D
-         pgn5lvAGlEV280+lBsRM1YfSDahNeoARNWUSdQ6PSTGWm5OdOjiCPRr9K7h5I26KXq
-         jvW6k1ji+T2MA==
+X-ClientProxiedBy: SN4PR0501CA0109.namprd05.prod.outlook.com
+ (2603:10b6:803:42::26) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
+MIME-Version: 1.0
+Received: from [10.236.136.247] (165.204.77.1) by SN4PR0501CA0109.namprd05.prod.outlook.com (2603:10b6:803:42::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.6 via Frontend Transport; Tue, 18 Feb 2020 21:35:26 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 7153cd2c-2d87-485b-86f5-08d7b4ba78a9
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2686:|SN6PR12MB2686:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB26868080463D9A72AFDEB51A87110@SN6PR12MB2686.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 031763BCAF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(366004)(189003)(199004)(8676002)(8936002)(44832011)(54906003)(7416002)(81156014)(81166006)(316002)(2616005)(16576012)(956004)(53546011)(16526019)(52116002)(478600001)(6486002)(31696002)(31686004)(4326008)(2906002)(6916009)(5660300002)(66946007)(36756003)(26005)(66556008)(66476007)(86362001)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2686;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: +i2dtM1MxwOUZMgoEPv/42q5KqfrL9OclwexdNROaZ+5m2ACfSpY9IE604I5h39jeqUUJeOnMFxsnWTvhoaGoN5m7Amsy3O350OJEQRo2c8LVt6VPbshzeWVgy/uTDFSnPHcP46hltA2UifZL4uULy4HZ1vHV9gD+Y060gI2cX9wg9gwCSJ3YUM63q7ThUv8LNkM8XPhQt1bap6iTZzh78r/sW/Of5OhTijDHXcDhwxPnitts+nx3t3Qp8cyyBlVgB1bavyqIFnJIAb93b6SrPKFNsgYfj0c3EYp3pCFBg0m6WS/OuCMITyrK+2HeHiN5pdMKIm4flBLkZ3AmHoIxH70UE1wYDREEF8PzBgYswovncoPuGBo1CGkL2vge5iNRer/ECV4Bikp3qDUwzyAASoFVT6VBeGPBc4KL8VvrabHbaqClCVRhW7y81pA5ptO
+X-MS-Exchange-AntiSpam-MessageData: fye5WnUlqkJLsCP6L5HQ0LQ3XJetH/laujszLhnGwwY4+sYbG78nODhJfZ7/1m/v71fe6D5c4pcqFDYlfGpX/ZusQ+WFrfYXtGNl6Sx5NiDJnSPpG3kOEye8eZ0KSW+qrXkQMREQ7toCqDicXQbbWg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7153cd2c-2d87-485b-86f5-08d7b4ba78a9
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2020 21:35:29.1239
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wpMHILqZW6UW1fSIXBSnSCJH+ZKJajfAzQogdGlLZ61H4QqmDTklXNHZ92BK9PoDrUFg2GBSBDK2bL1y8BbHtQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2686
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 10:45 AM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> We used to assign the return value to a variable, which we then ignored.
-> Remove the pretence of caring.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> ---
->  mm/readahead.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
+Hi Borislav,
 
-Looks good,
-
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
+On 2/18/20 5:20 AM, Borislav Petkov wrote:
+> On Fri, Feb 14, 2020 at 02:18:05PM -0600, Kim Phillips wrote:
+>> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+>> index f3327cb56edf..8979d6fcc79c 100644
+>> --- a/arch/x86/include/asm/cpufeatures.h
+>> +++ b/arch/x86/include/asm/cpufeatures.h
+>> @@ -404,5 +404,6 @@
+>>  #define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
+>>  #define X86_BUG_TAA			X86_BUG(22) /* CPU is affected by TSX Async Abort(TAA) */
+>>  #define X86_BUG_ITLB_MULTIHIT		X86_BUG(23) /* CPU may incur MCE during certain page attribute changes */
+>> +#define X86_BUG_IRPERF			X86_BUG(24) /* CPU is affected by Instructions Retired counter Erratum 1054 */
 > 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 8ce46d69e6ae..12d13b7792da 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -113,17 +113,16 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
->  
->  EXPORT_SYMBOL(read_cache_pages);
->  
-> -static int read_pages(struct address_space *mapping, struct file *filp,
-> +static void read_pages(struct address_space *mapping, struct file *filp,
->  		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
->  {
->  	struct blk_plug plug;
->  	unsigned page_idx;
-> -	int ret;
->  
->  	blk_start_plug(&plug);
->  
->  	if (mapping->a_ops->readpages) {
-> -		ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-> +		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
->  		/* Clean up the remaining pages */
->  		put_pages_list(pages);
->  		goto out;
-> @@ -136,12 +135,9 @@ static int read_pages(struct address_space *mapping, struct file *filp,
->  			mapping->a_ops->readpage(filp, page);
->  		put_page(page);
->  	}
-> -	ret = 0;
->  
->  out:
->  	blk_finish_plug(&plug);
-> -
-> -	return ret;
->  }
->  
->  /*
+> Do you need this bug flag at all?
 > 
+> If the only reason for its existence is to check it before setting
+> the MSR bit enabling IRPERF, then you don't need it. Or is there any
+> particular reason why it should show in /proc/cpuinfo?
+> 
+> IOW, does this work too?
+
+Yes, that works quite nicely, and saves us a bug bit.
+
+The only reason to have it show in /proc/cpuinfo is for userspace,
+but they can check for a nonzero count prior to using, instead.
+
+Let me know if you'd like me to send a v4, or if you will just apply
+this version of yours.
+
+Thanks,
+
+Kim
