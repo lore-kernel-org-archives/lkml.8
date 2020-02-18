@@ -2,115 +2,152 @@ Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D4C34026
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7506CC34026
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8E721D56
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4504521D56
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 16:10:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wgikwh8/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ipLlBOxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgBRQIp (ORCPT
+        id S1726648AbgBRQKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 11:08:45 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43183 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbgBRQIp (ORCPT
+        Tue, 18 Feb 2020 11:10:06 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44246 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbgBRQKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 11:08:45 -0500
-Received: by mail-pl1-f196.google.com with SMTP id p11so8243720plq.10;
-        Tue, 18 Feb 2020 08:08:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/PWlIRrux36Z8YXu1c6rYJDQ0dR+HkQHRAcmTGfpRHA=;
-        b=Wgikwh8/fq9qwIWTMaJkaQThHgvxfDWhHENraP0DiIzzSAj35YjR+DZaMV2WEQg67v
-         JCmyiY4bh+10crmZGGwVT5CgYfpW190885U7uL6UAmLbwDC2Zm9vY7wNHnsryOZN/zop
-         2k/831O1h3NE7MgvJb2DqelTL//+p6B3dNlyrTN0mIrcaceW0MjdSYroz8zc9FeIJMoV
-         oCpyOf3f4asPzYEWn1RxRcGajYYQ09A8mb3hT9wkqIDHwnVWTJybmnh+WdXwf3TTqxxz
-         9ibr0nmuoeQdvagcy8IKje9E6lBy75/n34mv2YVmchT75KVwkmU/SIfI2s+3nRMRuEZ0
-         c3lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/PWlIRrux36Z8YXu1c6rYJDQ0dR+HkQHRAcmTGfpRHA=;
-        b=Kdi331CMS1AH087jAuTjky9Njjlkr8NvbYx9vSXapNb1j8FpCzl0UNNf0fmc8QEWBu
-         P7MArz5AA5VIsiOCApXc6svppbbCAqDcSJwEap47CEwpf1F6m5f1c4O3yfdB2a2eggbQ
-         +DdHq5Usafr/9NO1Pyn19qXjIRG+hBD2vIYJoHOi2OtHYUtV1hPDMPuwcMVQoPrKwVxL
-         L48IhzRmQ1/MRdQWe/jEfN8jtwTtSHgGqRQPLcAe7JoKuK+/39/zwPcc5EZX9/6o5Y2D
-         HDeDdaC1yx0cAaM+/lU3XT16z9nkPrkh27uoUqAe6VHyB48pPLmdUTauWnM4mWrySvU2
-         6b/g==
-X-Gm-Message-State: APjAAAX86Qpb5crh4LYaBJHj5EEJuosCDZ9rR6swHEsBjGmbs/tXAbdf
-        39m1yOzdk4qt7Ct9d9cESZ4=
-X-Google-Smtp-Source: APXvYqwq30136YrcBJPF6QwgqCw02zX8wuOYcx6L1EtvZLWymcIhi+ooZhvqNMzsFO3Arf/VYTO5VA==
-X-Received: by 2002:a17:902:bc88:: with SMTP id bb8mr20297850plb.274.1582042123021;
-        Tue, 18 Feb 2020 08:08:43 -0800 (PST)
-Received: from localhost.localdomain ([1.39.134.248])
-        by smtp.gmail.com with ESMTPSA id 7sm4866755pfc.21.2020.02.18.08.08.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Feb 2020 08:08:41 -0800 (PST)
-From:   Souptick Joarder <jrdr.linux@gmail.com>
-To:     benh@kernel.crashing.org, b.zolnierkie@samsung.com
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [PATCH] video: fbdev: radeon: Remove dead code
-Date:   Tue, 18 Feb 2020 21:45:56 +0530
-Message-Id: <1582042556-21555-1-git-send-email-jrdr.linux@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 18 Feb 2020 11:10:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5KDaFTW+pz8VfJMmd/150jcSlwmVWcMm/3HMnI/xfvg=; b=ipLlBOxgYKVfRZo7Sgo48aXcMn
+        g+YvOK1M9fWayNYCWbwGsZLPH92YapUqcU3V5/r6tbkb9ft/cqAo3wSGowvvZcx4rWcc7/FZqrjgU
+        C3Fut73k2NJ3qoka036sCPRkrwE5zKTESvinIrwcv+q0cgEnEAW9BFRIcBy7P/qW64o6xFymjBnd6
+        8c5ms/UIfeyFwZwXVtAUiNakXaQvESAYSksXwpI8XKuUP0K9NptGJs83qh5VWlLhzAz7zqZR5fA4t
+        Wop5PUNx/CWSP8yDQssgxeF8hMUqj5MF3HuUkauFwvDvTC8SaXnbvBgLZnpTizJzcd+E709oxa5QK
+        FdKMzcpg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j45Rk-0001Tm-Vv; Tue, 18 Feb 2020 16:10:04 +0000
+Date:   Tue, 18 Feb 2020 08:10:04 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
+Message-ID: <20200218161004.GR7778@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-14-willy@infradead.org>
+ <20200218062147.GN10776@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218062147.GN10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is dead code since 3.15 and can be removed if not
-going to be useful further.
+On Tue, Feb 18, 2020 at 05:21:47PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:45:54AM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > This replaces ->readpages with a saner interface:
+> >  - Return void instead of an ignored error code.
+> >  - Pages are already in the page cache when ->readahead is called.
+> 
+> Might read better as:
+> 
+>  - Page cache is already populates with locked pages when
+>    ->readahead is called.
 
-Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
----
- drivers/video/fbdev/aty/radeon_base.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+Will do.
 
-diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-index 3af00e3..ccf888e 100644
---- a/drivers/video/fbdev/aty/radeon_base.c
-+++ b/drivers/video/fbdev/aty/radeon_base.c
-@@ -849,12 +849,6 @@ static int radeonfb_check_var (struct fb_var_screeninfo *var, struct fb_info *in
- 		case 9 ... 16:
- 			v.bits_per_pixel = 16;
- 			break;
--		case 17 ... 24:
--#if 0 /* Doesn't seem to work */
--			v.bits_per_pixel = 24;
--			break;
--#endif			
--			return -EINVAL;
- 		case 25 ... 32:
- 			v.bits_per_pixel = 32;
- 			break;
-@@ -2548,16 +2542,6 @@ static void radeonfb_pci_unregister(struct pci_dev *pdev)
- 	if (rinfo->mon2_EDID)
- 		sysfs_remove_bin_file(&rinfo->pdev->dev.kobj, &edid2_attr);
- 
--#if 0
--	/* restore original state
--	 * 
--	 * Doesn't quite work yet, I suspect if we come from a legacy
--	 * VGA mode (or worse, text mode), we need to do some VGA black
--	 * magic here that I know nothing about. --BenH
--	 */
--        radeon_write_mode (rinfo, &rinfo->init_state, 1);
-- #endif
--
- 	del_timer_sync(&rinfo->lvds_timer);
- 	arch_phys_wc_del(rinfo->wc_cookie);
-         unregister_framebuffer(info);
--- 
-1.9.1
+> >  - Implementation looks up the pages in the page cache instead of
+> >    having them passed in a linked list.
+> 
+> Add:
+> 
+>  - cleanup of unused readahead handled by ->readahead caller, not
+>    the method implementation.
 
+The readpages caller does that cleanup too, so it's not an advantage
+to the readahead interface.
+
+        if (mapping->a_ops->readpages) {
+                ret = mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
+                /* Clean up the remaining pages */
+                put_pages_list(pages);
+                goto out;
+        }
+
+> >  ``readpages``
+> >  	called by the VM to read pages associated with the address_space
+> >  	object.  This is essentially just a vector version of readpage.
+> >  	Instead of just one page, several pages are requested.
+> >  	readpages is only used for read-ahead, so read errors are
+> >  	ignored.  If anything goes wrong, feel free to give up.
+> > +	This interface is deprecated; implement readahead instead.
+> 
+> What is the removal schedule for the deprecated interface? 
+
+I mentioned that in the cover letter; once Dave Howells has the fscache
+branch merged, I'll do the remaining filesystems.  Should be within the
+next couple of merge windows.
+
+> > +/* The byte offset into the file of this readahead block */
+> > +static inline loff_t readahead_offset(struct readahead_control *rac)
+> > +{
+> > +	return (loff_t)rac->_start * PAGE_SIZE;
+> > +}
+> 
+> Urk. Didn't an early page use "offset" for the page index? That
+> was was "mm: Remove 'page_offset' from readahead loop" did, right?
+> 
+> That's just going to cause confusion to have different units for
+> readahead "offsets"....
+
+We are ... not consistent anywhere in the VM/VFS with our naming.
+Unfortunately.
+
+$ grep -n offset mm/filemap.c 
+391: * @start:	offset in bytes where the range starts
+...
+815:	pgoff_t offset = old->index;
+...
+2020:	unsigned long offset;      /* offset into pagecache page */
+...
+2257:	*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+
+That last one's my favourite.  Not to mention the fine distinction you
+and I discussed recently between offset_in_page() and page_offset().
+
+Best of all, even our types encode the ambiguity of an 'offset'.  We have
+pgoff_t and loff_t (replacing the earlier off_t).
+
+So, new rule.  'pos' is the number of bytes into a file.  'index' is the
+number of PAGE_SIZE pages into a file.  We don't use the word 'offset'
+at all.  'length' as a byte count and 'count' as a page count seem like
+fine names to me.
+
+> > -	if (aops->readpages) {
+> > +	if (aops->readahead) {
+> > +		aops->readahead(rac);
+> > +		readahead_for_each(rac, page) {
+> > +			unlock_page(page);
+> > +			put_page(page);
+> > +		}
+> 
+> This needs a comment to explain the unwinding that needs to be done
+> here. I'm not going to remember in a year's time that this is just
+> for the pages that weren't submitted by ->readahead....
+
+ACK.
