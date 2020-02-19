@@ -2,115 +2,94 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DD3C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F74C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8CF20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B9220801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IAFwokmE"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rpuXHCGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbgBSNEC (ORCPT
+        id S1727400AbgBSNEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:04:02 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:49948 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgBSNEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:04:01 -0500
-Received: from zn.tnic (p200300EC2F095500AC4EBF6CAFE7BFD1.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:ac4e:bf6c:afe7:bfd1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B9201EC0216;
-        Wed, 19 Feb 2020 14:03:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582117439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rvGK9TWc5VQzzfElldcN9WbR6raRibrDQlfQVR2ux0U=;
-        b=IAFwokmEabnjoZRjjrIL2p1e19VOt69CshgSD0FL+9iSI4y8Oh0HdeBKIrLAlaXv99hlW9
-        PuCWBdk9EQFG8p5BWhUYnkbvVFNwkFpIwov3UlI9y4l2skXGC180p8FdDWpaghq8FxswUf
-        /aQvWNZr3cHpbXmYwElgfOO8Rc1sezc=
-Date:   Wed, 19 Feb 2020 14:03:53 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
-Message-ID: <20200219130353.GC30966@zn.tnic>
-References: <20200217130659.15895-1-prarit@redhat.com>
- <20200218161319.GG14449@zn.tnic>
- <894a39cb-21e7-3e43-1907-cae390537ccf@redhat.com>
+        Wed, 19 Feb 2020 08:04:41 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:47684 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgBSNEl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:04:41 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JD4R81119667;
+        Wed, 19 Feb 2020 07:04:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582117467;
+        bh=QYfk/0tLN4Oql6dXwlH5d6evBQcLGicLwy72d29I5bM=;
+        h=From:To:CC:Subject:Date;
+        b=rpuXHCGNdzmZFyvV91ah83UrwHMlI2xoau9rC8bKyOTb0aZerrOwq7D3lF3wh55gq
+         4qUFQszANHZ6kPUSg1hh9Pp+zR5pXpE6u3U3n3KBLKCuAgZM4wncKzFYkYvFJeTRrp
+         Wbl29MmHiNKSTte1OoKoYFK/uLe477Ytox06pFzY=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JD4Q39130488
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 07:04:27 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 07:04:26 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 07:04:26 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JD4QHi062569;
+        Wed, 19 Feb 2020 07:04:26 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3 0/2] Introduce the TLV320ADCx140 codec family
+Date:   Wed, 19 Feb 2020 06:59:40 -0600
+Message-ID: <20200219125942.22013-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <894a39cb-21e7-3e43-1907-cae390537ccf@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 07:25:59AM -0500, Prarit Bhargava wrote:
-> When I submitted this patch I looked at other commits in the kernel near
-> top-of-tree and they have Signed-off-by followed by Co-developed-by, and also
-> took your suggestion of not using a Signed-off-by for Alexander.  That's why I
+Hello
 
-I said:
+Introducing the Texas Instruments TLV320ADCx140 quad channel audio ADC.
+This device supports 4 analog inputs, 8 digital inputs or a combination of
+analog and digital microphones.
 
-"This is not how this is expressed. Either you write that in free text in
-the commit message or you use Co-developed-by. More details in
+TLV320ADC3140 - http://www.ti.com/lit/gpn/tlv320adc3140
+TLV320ADC5140 - http://www.ti.com/lit/gpn/tlv320adc5140
+TLV320ADC6140 - http://www.ti.com/lit/gpn/tlv320adc6140
 
-Documentation/process/submitting-patches.rst"
+Dan Murphy (2):
+  dt-bindings: sound: Add TLV320ADCx140 dt bindings
+  ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family
 
-> I'm now thoroughly confused as to what the correct format is.  It seems like
-> checkpatch.py is telling me to include a Signed-off-by in addition to the
-> Co-developed-by for Alexander but you explicitly told me not to.
->
-> > See Documentation/process/submitting-patches.rst for more detail.
-
-You need to start reading my replies in their entirety and finally read that
-document I've pointed to twice:
-
-"Co-developed-by: states that the patch was co-created by multiple developers;
-it is a used to give attribution to co-authors (in addition to the author
-attributed by the From: tag) when several people work on a single patch.  Since
-									  ^^^^^
-Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-followed by a Signed-off-by: of the associated co-author."
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-I.e., basically what checkpatch is saying.
-
-So you either
-
-a) write in free text in the commit message something like
-
-"This is based on a patch submitted to RH bugzilla by Alexander Krupp
-<centos@akr.yagii.de>"
-
-OR
-
-b) use
-
-Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
-Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
-
-Either a) XOR b).
+ .../bindings/sound/tlv320adcx140.yaml         |  83 ++
+ sound/soc/codecs/Kconfig                      |   9 +
+ sound/soc/codecs/Makefile                     |   2 +
+ sound/soc/codecs/tlv320adcx140.c              | 849 ++++++++++++++++++
+ sound/soc/codecs/tlv320adcx140.h              | 130 +++
+ 5 files changed, 1073 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tlv320adcx140.yaml
+ create mode 100644 sound/soc/codecs/tlv320adcx140.c
+ create mode 100644 sound/soc/codecs/tlv320adcx140.h
 
 -- 
-Regards/Gruss,
-    Boris.
+2.25.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
