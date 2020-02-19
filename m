@@ -2,92 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E35C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13751C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E7424670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582124744;
-	bh=KLCNhehFoLS2QtbJ8R1nLapFTT9x/0GfRUKaDGhtdf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=V73nhxib55O3kh6jaAN7+18L0CPDtHN4ZvV+VYLm4ZRbWImJVrUc4GisjovHE3psY
-	 THWkOMKr6Z6G3LgsyE+vxd+MUJrkN9zlnKf2KXhl/il7KDbxYEPZJQPSUlM0dgV5O8
-	 zyd8VqQX7UdKQnVStgIgFSmeobSyHfwzKPmKMzxM=
+	by mail.kernel.org (Postfix) with ESMTP id E61A624656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgBSPFn (ORCPT
+        id S1726804AbgBSPG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:05:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40051 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726663AbgBSPFn (ORCPT
+        Wed, 19 Feb 2020 10:06:56 -0500
+Received: from outbound-smtp33.blacknight.com ([81.17.249.66]:46458 "EHLO
+        outbound-smtp33.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726672AbgBSPG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:05:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so416207otr.7;
-        Wed, 19 Feb 2020 07:05:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SBKr6SKoCafYNmFC5MjIcmPvtNTyDNU/puwE+3je3yw=;
-        b=IAnoSWehFEL7vMivpe+ZE1ANDz7gZ/bdBTA04+nX9+Rl6F9sO5SWVt+BUnbARhwM2p
-         tnVLpIU9E6I9UIpXQSWj4yUPnsgaGii+WYOZ1VENO4QypcCK4uO2pbDGc9ejst2BcyTo
-         LAdwly7gNbCQKHvnyQyihxP8HnVnUItJFgb4NbSDFCJAvhhS/uda0g+TtS1ImpzEasLg
-         QNNjhjZNnXOgtaB43akoPHVI08PtHPj+8TlyXZ2t/mLpXr771/DeowLPdgwddLuTr8oa
-         pckvKx2AKuzl7KQFKUkB6uXUOadUcwwgLyl0kCA7LbEFL+eQU1drHR5kbtDEOiDDGAaP
-         CMJw==
-X-Gm-Message-State: APjAAAUqHAdeElqJTE7XHontWhQOGz8wUwJxYdT959tjHVeuZAZtP5Xe
-        wOacm3hf+smUQC0qJspXtQ==
-X-Google-Smtp-Source: APXvYqzQfbs3yejJP7JC1NIdQfNXPIqC6m0QklCphdJhvqRhtoYtKQhsaQx+0uOvCILhD83U6NqKKQ==
-X-Received: by 2002:a9d:7357:: with SMTP id l23mr19144503otk.10.1582124742732;
-        Wed, 19 Feb 2020 07:05:42 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g5sm3046otp.10.2020.02.19.07.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:05:41 -0800 (PST)
-Received: (nullmailer pid 22736 invoked by uid 1000);
-        Wed, 19 Feb 2020 15:05:41 -0000
-Date:   Wed, 19 Feb 2020 09:05:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com
-Subject: Re: [PATCH v2] ASoC: dt-bindings: stm32: convert i2s to json-schema
-Message-ID: <20200219150541.GA22679@bogus>
-References: <20200207120345.24672-1-olivier.moysan@st.com>
+        Wed, 19 Feb 2020 10:06:56 -0500
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp33.blacknight.com (Postfix) with ESMTPS id 09682BA9DF
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 15:06:55 +0000 (GMT)
+Received: (qmail 25951 invoked from network); 19 Feb 2020 15:06:54 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 15:06:54 -0000
+Date:   Wed, 19 Feb 2020 15:06:52 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
+ reporting
+Message-ID: <20200219150652.GV3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+ <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+ <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+ <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
+ <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200207120345.24672-1-olivier.moysan@st.com>
+In-Reply-To: <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 13:03:45 +0100, Olivier Moysan wrote:
-> Convert the STM32 I2S bindings to DT schema format using json-schema.
+On Tue, Feb 18, 2020 at 08:37:46AM -0800, Alexander Duyck wrote:
+> On Tue, 2020-02-11 at 16:19 -0800, Andrew Morton wrote:
+> > On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+> > 
+> > > On the host I just have to monitor /proc/meminfo and I can see the
+> > > difference. I get the following results on the host, in the enabled case
+> > > it takes about 30 seconds for it to settle into the final state since I
+> > > only report page a bit at a time:
+> > > Baseline/Applied
+> > >   MemTotal:    131963012 kB
+> > >   MemFree:      95189740 kB
+> > > 
+> > > Enabled:
+> > >   MemTotal:    131963012 kB
+> > >   MemFree:     126459472 kB
+> > > 
+> > > This is what I was referring to with the comment above. I had a test I was
+> > > running back around the first RFC that consisted of bringing up enough VMs
+> > > so that there was a bit of memory overcommit and then having the VMs in
+> > > turn run memhog. As I recall the difference between the two was  something
+> > > like a couple minutes to run through all the VMs as the memhog would take
+> > > up to 40+ seconds for one that was having to pull from swap while it took
+> > > only 5 to 7 seconds for the VMs that were all running the page hinting.
+> > > 
+> > > I had referenced it here in the RFC:
+> > > https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
+> > > 
+> > > I have been verifying the memory has been getting freed but didn't feel
+> > > like the test added much value so I haven't added it to the cover page for
+> > > a while since the time could vary widely and is dependent on things like
+> > > the disk type used for the host swap since my SSD is likely faster than
+> > > spinning rust, but may not be as fast as other SSDs on the market. Since
+> > > the disk speed can play such a huge role I wasn't comfortable posting
+> > > numbers since the benefits could vary so widely.
+> > 
+> > OK, thanks.  I'll add the patches to the mm pile.  The new
+> > mm/page_reporting.c is unreviewed afaict, so I guess you own that for
+> > now ;)
+> > 
+> > It would be very nice to get some feedback from testers asserting "yes,
+> > this really helped my workload" but I understand this sort of testing
+> > is hard to obtain at this stage.
+> > 
 > 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> Changes in v2:
-> - Define items order for clock and dma properties
-> ---
->  .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
->  .../bindings/sound/st,stm32-i2s.yaml          | 87 +++++++++++++++++++
->  2 files changed, 87 insertions(+), 62 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+> Mel,
+> 
+> Any ETA on when you would be available to review these patches? They are
+> now in Andrew's tree and in linux-next. I am hoping to get any remaining
+> review from the community sorted out in the next few weeks so I can move
+> onto focusing on how best to exert pressure on the page cache so that we
+> can keep the guest memory footprint small.
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sorry for the delay but I got through most of the patches -- I ignored
+the qemu ones. Overall I think it's fine, while I made a suggestion on
+how one section can be a bit more defensive, I don't consider it
+mandatory to update the series.
+
+Last time I got upset by the use of zone lock, premature optimisation and
+some potential page allocator overhead. Now how you use the zone lock is
+justified and I think the state managed by atomics is ok. The optimisations
+are split out and so if there is a bug lurking in there, they can be
+backed out relatively easily and it was easier to review the series in
+this way. Finally, the overhead to the page allocator when the feature
+is disabled should be non-existent as it's protected by a static branch
+so I have no further objections.
+
+Thanks!
+
+-- 
+Mel Gorman
+SUSE Labs
