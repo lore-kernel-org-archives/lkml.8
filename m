@@ -2,29 +2,28 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2A9C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE9CC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17AD2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCEC24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgBSIaw (ORCPT
+        id S1726648AbgBSIbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:30:52 -0500
-Received: from out28-219.mail.aliyun.com ([115.124.28.219]:59149 "EHLO
-        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbgBSIaw (ORCPT
+        Wed, 19 Feb 2020 03:31:16 -0500
+Received: from out28-148.mail.aliyun.com ([115.124.28.148]:37433 "EHLO
+        out28-148.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgBSIbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:30:52 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1408996|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.658155-0.00392559-0.337919;DS=CONTINUE|ham_system_inform|0.00908082-0.000152978-0.990766;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03299;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gpe8RV3_1582100997;
+        Wed, 19 Feb 2020 03:31:15 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2394622|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0443572-0.00237967-0.953263;DS=CONTINUE|ham_system_inform|0.00593159-0.000181337-0.993887;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03309;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gpe8RV3_1582100997;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gpe8RV3_1582100997)
           by smtp.aliyun-inc.com(10.147.40.2);
-          Wed, 19 Feb 2020 16:30:16 +0800
+          Wed, 19 Feb 2020 16:30:12 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -35,9 +34,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         daniel.lezcano@linaro.org, paul@crapouillou.net,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
         dongsheng.qiu@ingenic.com
-Subject: [PATCH 3/4] clocksource: Ingenic: Add support for TCU of X1000.
-Date:   Wed, 19 Feb 2020 16:29:33 +0800
-Message-Id: <1582100974-129559-5-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH 0/4] Add support for TCU of X1000
+Date:   Wed, 19 Feb 2020 16:29:30 +0800
+Message-Id: <1582100974-129559-2-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -49,35 +48,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-X1000 has a different TCU containing OST, since X1000, OST has been
-independent of TCU. This patch is prepare for later OST driver.
+Add support for TCU of X1000 from Ingenic. X1000 has
+a different TCU containing OST, since X1000, OST has
+been independent of TCU. This patch is prepare for
+later OST driver.
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
- drivers/clocksource/ingenic-timer.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+周琰杰 (Zhou Yanjie) (4):
+  dt-bindings: timer: Add X1000 bindings.
+  clk: Ingenic: Add support for TCU of X1000.
+  clocksource: Ingenic: Add support for TCU of X1000.
+  irqchip: Ingenic: Add support for TCU of X1000.
 
-diff --git a/drivers/clocksource/ingenic-timer.c b/drivers/clocksource/ingenic-timer.c
-index 4bbdb3d..4963336 100644
---- a/drivers/clocksource/ingenic-timer.c
-+++ b/drivers/clocksource/ingenic-timer.c
-@@ -230,6 +230,7 @@ static const struct of_device_id ingenic_tcu_of_match[] = {
- 	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
- 	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
- 	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4740_soc_info, },
-+	{ .compatible = "ingenic,x1000-tcu", .data = &jz4740_soc_info, },
- 	{ /* sentinel */ }
- };
- 
-@@ -302,7 +303,7 @@ static int __init ingenic_tcu_init(struct device_node *np)
- TIMER_OF_DECLARE(jz4740_tcu_intc,  "ingenic,jz4740-tcu",  ingenic_tcu_init);
- TIMER_OF_DECLARE(jz4725b_tcu_intc, "ingenic,jz4725b-tcu", ingenic_tcu_init);
- TIMER_OF_DECLARE(jz4770_tcu_intc,  "ingenic,jz4770-tcu",  ingenic_tcu_init);
--
-+TIMER_OF_DECLARE(x1000_tcu_intc,  "ingenic,x1000-tcu",  ingenic_tcu_init);
- 
- static int __init ingenic_tcu_probe(struct platform_device *pdev)
- {
+ Documentation/devicetree/bindings/timer/ingenic,tcu.txt | 1 +
+ drivers/clk/ingenic/tcu.c                               | 8 ++++++++
+ drivers/clocksource/ingenic-timer.c                     | 3 ++-
+ drivers/irqchip/irq-ingenic-tcu.c                       | 1 +
+ 4 files changed, 12 insertions(+), 1 deletion(-)
+
 -- 
 2.7.4
 
