@@ -2,156 +2,142 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E6C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9290C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA50208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808A721D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lita4j8V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q3HPkrlI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgBSKdq (ORCPT
+        id S1726648AbgBSKhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:33:46 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:54681 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726514AbgBSKdq (ORCPT
+        Wed, 19 Feb 2020 05:37:09 -0500
+Received: from mail-wm1-f48.google.com ([209.85.128.48]:54617 "EHLO
+        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBSKhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:33:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582108425; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=rw6UHf0KTPLkHoH94qTywzRb5mw/2w3OWlPPBjvpPNw=;
- b=Lita4j8Vo+12yohtKUda38CRGo4YiaVYzSNZoQr1muQKs2rqct7K7PEzHmgEML0VHW1/kePF
- 1X5eiT+YKfWfwmuXH5KeLvhQe7RH+h9DXRjIkERHYvobZnmU+60JENE8t/eetP7Ud1XWj474
- rWkHxQSQ6y2AXIc9djTI1UDdyQk=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d0eff.7f3c98b57f80-smtp-out-n01;
- Wed, 19 Feb 2020 10:33:35 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 40509C4479C; Wed, 19 Feb 2020 10:33:35 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75BA6C43383;
-        Wed, 19 Feb 2020 10:33:34 +0000 (UTC)
+        Wed, 19 Feb 2020 05:37:09 -0500
+Received: by mail-wm1-f48.google.com with SMTP id n3so17621wmk.4;
+        Wed, 19 Feb 2020 02:37:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YR8HyDW/1JEJwc8Sq5lAsfNmZdjey8txPG9y+rKXtEo=;
+        b=Q3HPkrlIVqTM5/ph1qsmWRZI8SRyEQ4JRj7tXLmq4B548T01sn2x6P9Rw6eneQW2MI
+         o3xauSlYv17dtcUAuY/Me0JncmDhAUgtFPsXWfaT1pgYc2Zn5IAzoxoRbYitXLn02OAm
+         InoxsdZPJcS7FrJHFrKOEaJM/mzWhSRUXQ/QF9X4yoUAGMECT/vapvXYJPegg9SLfCN8
+         DOfjHO1/5r4aDELgQY2z21kZAZX1+UmK9oQBS2g4RIzEHmAxyx5CR3vvunaEn6MgXtfR
+         h/LsSvB+WcjP1hJBj7MQJ2AieSKcufViVILUsWZVyFBnD5cT1m6w+NPzXUegVOlt6LdE
+         2gQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YR8HyDW/1JEJwc8Sq5lAsfNmZdjey8txPG9y+rKXtEo=;
+        b=Gk9qFRB0RD9mYxNqxoPKu8wWsoqsDh/dsf2vSwjfCKn3U/rlIYL1nXeracaBo1zJna
+         YSYt1SHWh4jbtlpjURXccXijIXFC7KqEON4FZqjLzRN/SdLGOsx8CihC6heSxU5XqRI6
+         ubZOyGuOeqO3TNq2mrpmAoKUsq8shxJZGPYaDT4hE8ISyUNJZp68NEAB+tkhNb+YD26T
+         xNgugnYPzmgevNR6D5k86W4ulrH3L0jDRS7G3sGVVUgAlxTBGOvQVRoAzHgr2XPMIiH3
+         OpIJet3RspQWnOijdRPvbT94hA5n591PjWPLMC+jGI+BIgLFgPl2Hehs09U8NeAbyzCg
+         P2QA==
+X-Gm-Message-State: APjAAAUtAsyWcPAD0gx1YYNDHEaTnmCTf7iYMLX+5bZeGLAT+FVldyIV
+        UXr896OdapXbmOo9KQIiyO/KY+olQcE=
+X-Google-Smtp-Source: APXvYqxzNgICRLz31TuNCbiNHXiNhH0Lyu27oebKWdTKttePk1LwZrftmpiEAUwwZ9dt0dR5LM8CXQ==
+X-Received: by 2002:a7b:c778:: with SMTP id x24mr3735887wmk.115.1582108626841;
+        Wed, 19 Feb 2020 02:37:06 -0800 (PST)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id d22sm2297956wmd.39.2020.02.19.02.37.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 02:37:05 -0800 (PST)
+Date:   Wed, 19 Feb 2020 10:37:04 +0000
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Avi Kivity <avi@scylladb.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Davide Libenzi <davidel@xmailserver.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [RFC] eventfd: add EFD_AUTORESET flag
+Message-ID: <20200219103704.GA1076032@stefanha-x1.localdomain>
+References: <20200129172010.162215-1-stefanha@redhat.com>
+ <66566792-58a4-bf65-6723-7d2887c84160@redhat.com>
+ <20200212102912.GA464050@stefanha-x1.localdomain>
+ <156cb709-282a-ddb6-6f34-82b4bb211f73@redhat.com>
+ <cadb4320-4717-1a41-dfb5-bb782fd0a5da@scylladb.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Feb 2020 18:33:34 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        Asutosh Das <asutoshd@codeaurora.org>, hongwus@codeaurora.org,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
- reference clock
-In-Reply-To: <1582103495.26304.42.camel@mtksdccf07>
-References: <20200217093559.16830-1-stanley.chu@mediatek.com>
- <20200217093559.16830-2-stanley.chu@mediatek.com>
- <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
- <1581945168.26304.4.camel@mtksdccf07>
- <e518c4d1d94ec15e9c4c31c34a9e42d1@codeaurora.org>
- <1581946449.26304.15.camel@mtksdccf07>
- <56c1fc80919491d058d904fcc7301835@codeaurora.org>
- <a8cd5beee0a1e12a40da752c6cd9b5de@codeaurora.org>
- <1582103495.26304.42.camel@mtksdccf07>
-Message-ID: <bbb0b0637d9667d4691a9a28f9988dea@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
+Content-Disposition: inline
+In-Reply-To: <cadb4320-4717-1a41-dfb5-bb782fd0a5da@scylladb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
 
-On 2020-02-19 17:11, Stanley Chu wrote:
-> Hi Can,
-> 
-> On Wed, 2020-02-19 at 10:35 +0800, Can Guo wrote:
-> 
->> Since we all need this delay here, how about put the delay in the
->> entrence of ufshcd_setup_clocks(), before vops_setup_clocks()?
->> If so, we can remove all the delays we added in our vops since the
->> delay anyways delays everything inside ufshcd_setup_clocks().
->> 
-> 
-> Always putting the delay in the entrance of ufshcd_setup_clocks() may
-> add unwanted delay for vendors, just like your current implementation,
-> or some other vendors who do not want to disable the reference clock.
-> 
-> I think current patch is more reasonable because the delay is applied 
-> to
-> clock only named as "ref_clk" specifically.
-> 
-> If you needs to keep "ref_clk" in DT, would you consider to remove the
-> delay in your ufs_qcom_dev_ref_clk_ctrl() and let the delay happens via
-> common ufshcd_setup_clocks() only? However you may still need delay if
-> call path comes from ufs_qcom_pwr_change_notify().
-> 
-> What do you think?
-> 
+--bp/iNruPH9dso1Pn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree current change is more reasonable from what it looks, but the 
-fact
-is that I canont remove the delay in ufs_qcom_dev_ref_clk_ctrl() even 
-with
-this change. On our platforms, ref_clk in DT serves multipule purposes,
-the ref_clk provided to UFS device is actually controlled in
-ufs_qcom_dev_ref_clk_ctrl(), which comes before where this change kicks 
-start,
-so if I remove the delay in ufs_qcom_dev_ref_clk_ctrl(), this change 
-cannot
-provide us the correct delay before gate the ref_clk provided to UFS 
-device.
+On Wed, Feb 12, 2020 at 12:54:30PM +0200, Avi Kivity wrote:
+>=20
+> On 12/02/2020 12.47, Paolo Bonzini wrote:
+> > On 12/02/20 11:29, Stefan Hajnoczi wrote:
+> > > On Wed, Feb 12, 2020 at 09:31:32AM +0100, Paolo Bonzini wrote:
+> > > > On 29/01/20 18:20, Stefan Hajnoczi wrote:
+> > > > > +	/* Semaphore semantics don't make sense when autoreset is enabl=
+ed */
+> > > > > +	if ((flags & EFD_SEMAPHORE) && (flags & EFD_AUTORESET))
+> > > > > +		return -EINVAL;
+> > > > > +
+> > > > I think they do, you just want to subtract 1 instead of setting the
+> > > > count to 0.  This way, writing 1 would be the post operation on the
+> > > > semaphore, while poll() would be the wait operation.
+> > > True!  Then EFD_AUTORESET is not a fitting name.  EFD_AUTOREAD or
+> > > EFD_POLL_READS?
+> > Avi's suggestion also makes sense.  Switching the event loop from poll()
+> > to IORING_OP_POLL_ADD would be good on its own, and then you could make
+> > it use IORING_OP_READV for eventfds.
+> >=20
+> > In QEMU parlance, perhaps you need a different abstraction than
+> > EventNotifier (let's call it WakeupNotifier) which would also use
+> > eventfd but it would provide a smaller API.  Thanks to the smaller API,
+> > it would not need EFD_NONBLOCK, unlike the regular EventNotifier, and it
+> > could either set up a poll() handler calling read(), or use
+> > IORING_OP_READV when io_uring is in use.
+> >=20
+>=20
+> Just to be clear, for best performance don't use IORING_OP_POLL_ADD, just
+> IORING_OP_READ. That's what you say in the second paragraph but the first
+> can be misleading.
 
-> Always putting the delay in the entrance of ufshcd_setup_clocks() may
-> add unwanted delay for vendors, just like your current implementation,
-> or some other vendors who do not want to disable the reference clock.
+Thanks, that's a nice idea!  I already have experimental io_uring fd
+monitoring code written for QEMU and will extend it to use IORING_OP_READ.
 
-I meant if we put the delay in the entrance, I will be able to remove
-the delay in ufs_qcom_dev_ref_clk_ctrl(). Meanwhile, we can add proper
-checks before the delay to make sure it is initiated only if ref_clk 
-needs
-to be disabled, i.e:
+Stefan
 
-if(!on && !skip_ref_clk && hba->dev_info.clk_gating_wait_us)
-     usleep_range();
+--bp/iNruPH9dso1Pn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Does this look better to you?
+-----BEGIN PGP SIGNATURE-----
 
-Anyways, we will see regressions with this change on our platforms, can 
-we
-have more discussions before get it merged? It should be OK if you go 
-with
-patch #2 alone first, right? Thanks.
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5ND9AACgkQnKSrs4Gr
+c8gMHAf/f9UuwAwjiMV/pwZZbwcYseAmnQ2FPZYE5HhiWScgJAg19otfE4JxYwR5
+/NhXUNyYhp7sa0+fB+/aHJF/0mpIY70Mn1PX2umT7kb4ZpP6Qel0ZyVRuNOSp+k5
+Wm19LAvKD4AyVu2Kxd4RJpibSu+UYelAT3Nh1d/c8Grrf0zHdcAj4Y4YwfTao1Xo
+kPgrIWGOPS7qxvS+fyg9ifT13LfhwFhpP3679AlOhUozQUrxnM77G8ehAOJQV8mS
+Ae+//m8fs/RVH2SRNgy7uRIr/v8pWdGt241pW8507oFHJChsRLFhNXJIWHP0dlUU
+xHILARbPURoXO+KG1YPtyO2Y+16cZQ==
+=5mbR
+-----END PGP SIGNATURE-----
 
-Best regards,
-Can Guo.
-
->> Meanwhile, if you want to modify the delay
->> (hba->dev_info.clk_gating_wait_us) for some reasons, say for specific
->> UFS devices, you still can do it in vops_apply_dev_quirks().
->> 
->> What do you say?
->> 
->> Thanks,
->> Can Guo.
-> 
-> Thanks,
-> Stanley Chu
+--bp/iNruPH9dso1Pn--
