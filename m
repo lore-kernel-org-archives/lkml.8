@@ -2,110 +2,113 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAE1C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7614C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746B72465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9199A24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KrWlKhRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgBSLDP (ORCPT
+        id S1726830AbgBSLDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:03:15 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42763 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbgBSLDP (ORCPT
+        Wed, 19 Feb 2020 06:03:34 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51594 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgBSLDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:03:15 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j4N8H-0004mY-1p; Wed, 19 Feb 2020 12:03:09 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1j4N8E-0001EF-SZ; Wed, 19 Feb 2020 12:03:06 +0100
-Date:   Wed, 19 Feb 2020 12:03:06 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] leds: trigger: implement a tty trigger
-Message-ID: <20200219110306.k5jndutalll64esu@pengutronix.de>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-5-uwe@kleine-koenig.org>
- <20200219105239.GA32540@localhost>
+        Wed, 19 Feb 2020 06:03:33 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t23so138905wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:03:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QEtkVcpAx2ZxZ7MNrwEk5ZXQVDjVyr4qMG0Q4ZOigv8=;
+        b=KrWlKhROLZIy3bJnBVo4CIWz1+wEm9gg/DIDymbgshyTSayyAANCPllz2NTx5w9Dwk
+         kPLMZqC+oIGhMMc1wbI3ILv6JOPAU6UNCoXalanUyo9APblN2mAN9zPdL9NemJrMnD39
+         Cj/WIVoasNvwy/Wdb1L5RBh/8zUHDwFg963nOLTKBqE5kDtl/paLVThsMXA+ZNjhwEhT
+         +CoHtd5Gcl2l6mmakUiayttZHeKnZUMVswPyFDF+6U2olTYN8RRqUyzDDWsL+a+YBfUR
+         DjWaalyQEdd7OOcijc03fsHiY6d9QOq4fesN1UOB/VyTiob9T6iBgiUABOR7GXu35bg2
+         qxDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QEtkVcpAx2ZxZ7MNrwEk5ZXQVDjVyr4qMG0Q4ZOigv8=;
+        b=dTHeW/l5uU7txsXCjrJ7xE0ZBTPfsyhrZadCR7ZHUK19dyNBRfHMdl6dHIZlit/Hos
+         lqr8FlRapmPJ7rwW3vDwAHl4shrstuEK5c6vhC+/I7Rlivlg3RlzvCFZNPNrXxiSkfPD
+         M5ettEuFFmGSRy1mcdtSSkKW+ziELQuZt64LFqnt7GENBYeoY5yc6UQXjN/jKUrBD7oQ
+         SVbEkxQSMpp/5QjXA/B0yrHHQiKtKkP41sKmh1YnWsL1m5Ii2EmzUGLk6aalStp/JpYp
+         oApe5+mB8KXNK47JPesfT2MSajyj2ljeFinEg74luxKynYdYj3H7lO81Gg+esiVznCPx
+         9B/Q==
+X-Gm-Message-State: APjAAAV3FN4cjSljFrZU2WPNnpjFUxKf3xrcx2sblmQwcj2QxdO/KqsL
+        /D8Px3SnTXDMvqavxU20hjGA8StpgUU=
+X-Google-Smtp-Source: APXvYqwMYdIZmVFNmnf4n71hcbHMl8eANkLs0zLtqltq13EUmBO7zQTwOMEWFsLz2iu0S51pTyVCJg==
+X-Received: by 2002:a1c:9849:: with SMTP id a70mr9156494wme.76.1582110211601;
+        Wed, 19 Feb 2020 03:03:31 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id u14sm2468306wrm.51.2020.02.19.03.03.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 03:03:30 -0800 (PST)
+Subject: Re: [RFC v4 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+References: <cover.1581958529.git.hns@goldelico.com>
+ <86b78db4d607e0bdda6def018bc7f73207ce82e8.1581958529.git.hns@goldelico.com>
+ <20200218212609.GA30081@bogus>
+ <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <86f21eb8-b3f8-747f-c894-bd2a603562f3@linaro.org>
+Date:   Wed, 19 Feb 2020 11:03:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219105239.GA32540@localhost>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:52:39AM +0100, Johan Hovold wrote:
-> On Thu, Feb 13, 2020 at 10:16:00AM +0100, Uwe Kleine-König wrote:
-> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > 
-> > Usage is as follows:
-> > 
-> > 	myled=ledname
-> > 	tty=ttyS0
-> > 
-> > 	echo tty > /sys/class/leds/$myled/trigger
-> > 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
-> > 
-> > . When this new trigger is active it periodically checks the tty's
-> > statistics and when it changed since the last check the led is flashed
-> > once.
-> > 
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > ---
+
+
+On 19/02/2020 05:48, H. Nikolaus Schaller wrote:
+>>> .../bindings/nvmem/ingenic,jz4780-efuse.txt     | 17 +++++++++++++++++
+>>> 1 file changed, 17 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>> Please convert to a DT schema.
+> Is there someone of you who can help to do that?
 > 
-> > +static ssize_t dev_store(struct device *dev,
-> > +			 struct device_attribute *attr, const char *buf,
-> > +			 size_t size)
-> > +{
-> > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> > +	struct tty_struct *tty;
-> > +	dev_t d;
-> > +	int ret;
-> > +
-> > +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
-> > +		tty = NULL;
-> > +	} else {
-> > +		ret = kstrtodev_t(buf, &d);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +
-> > +		tty = tty_kopen_shared(d);
+> DT schemas are still like a Chinese dialect for me (i.e. I can decipher with help but neither speak nor write).
+
+
+Have a look at an example here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml?h=v5.6-rc2
+
+Some documentation:
+https://lwn.net/Articles/771621/
+
+
+--srini
+
 > 
-> I really don't have time to look at this, but having the led-trigger
-> keep the port open looks fundamentally broken (consider modem-control
-> signals, power, etc).
-
-If I understand correctly calling tty_kopen_shared() doesn't open the
-device, just keep it referenced which prevents it to disappear. Unless I
-miss something it doesn't result in the tty's .open() being called.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> BR and thanks,
+> Nikolaus
+> 
