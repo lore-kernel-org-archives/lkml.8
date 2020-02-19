@@ -2,85 +2,78 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C1C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD37DC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07301208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 836B2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DuVHuymB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgBSFfU (ORCPT
+        id S1726539AbgBSFfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:35:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56398 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbgBSFfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:35:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4DC33AE24;
-        Wed, 19 Feb 2020 05:35:17 +0000 (UTC)
-Subject: Re: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-References: <20200218154712.25490-1-jgross@suse.com>
- <87mu9fr4ky.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
-Date:   Wed, 19 Feb 2020 06:35:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 00:35:46 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44192 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgBSFfq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 00:35:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=i5jjRMxpChRQy+2J/xRxaZpOqmFrFWQR+xd6cg6u2PI=; b=DuVHuymBPWn5wDST1aeEelhfNM
+        /bXL88FT9MFQnHGtbK4rSNZ+luoUIXATKSnNmq0w0g+oFVWjyKpy66W6FFgRGnswoBOWQpscJbJQP
+        4VedcAPQbAlzmDR4kFU3J0Di3kgpR1We770va4VzU0v+3uU5Psu/vRRzwnfoiQqbwdrygPBoB0Acc
+        Kj/viayLIFCgDZTYuGeW41k0nXnLmWVc48ZXm+FRjozkqV+sHubRee661ywX49PCOT/E1uqhfX2Ny
+        D9csTE5YF0U7xa7/EP5Jtkli2RRKOHF+UMVo8N/d71C108g1DAP7O0iiHuaezDNJcoHL5lnGSyTJU
+        QRfWManA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4I1Q-0004Jt-TF; Wed, 19 Feb 2020 05:35:44 +0000
+Date:   Tue, 18 Feb 2020 21:35:44 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200219053544.GN24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-31-willy@infradead.org>
+ <d4803ef9-7a2f-965f-8f0f-c5e15396d892@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <87mu9fr4ky.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4803ef9-7a2f-965f-8f0f-c5e15396d892@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.02.20 22:03, Thomas Gleixner wrote:
-> Juergen Gross <jgross@suse.com> writes:
->> Commit 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control
->> ioperm() as well") reworked the iopl syscall to use I/O bitmaps.
->>
->> Unfortunately this broke Xen PV domains using that syscall as there
->> is currently no I/O bitmap support in PV domains.
->>
->> Add I/O bitmap support via a new paravirt function update_io_bitmap
->> which Xen PV domains can use to update their I/O bitmaps via a
->> hypercall.
->>
->> Fixes: 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control ioperm() as well")
->> Reported-by: Jan Beulich <jbeulich@suse.com>
->> Cc: <stable@vger.kernel.org> # 5.5
->> Signed-off-by: Juergen Gross <jgross@suse.com>
->> Reviewed-by: Jan Beulich <jbeulich@suse.com>
->> Tested-by: Jan Beulich <jbeulich@suse.com>
+On Tue, Feb 18, 2020 at 07:17:18PM -0800, John Hubbard wrote:
+> > -	for (done = 0; done < length; done += ret) {
 > 
-> Duh, sorry about that and thanks for fixing it.
+> nit: this "for" loop was perfect just the way it was. :) I'd vote here for reverting
+> the change to a "while" loop. Because with this change, now the code has to 
+> separately initialize "done", separately increment "done", and the beauty of a
+> for loop is that the loop init and control is all clearly in one place. For things
+> that follow that model (as in this case!), that's a Good Thing.
 > 
-> BTW, why isn't stuff like this not catched during next or at least
-> before the final release? Is nothing running CI on upstream with all
-> that XEN muck active?
+> And I don't see any technical reason (even in the following patch) that requires 
+> this change.
 
-This problem showed up by not being able to start the X server (probably
-not the freshest one) in dom0 on a moderate aged AMD system.
+It's doing the increment in the wrong place.  We want the increment done in
+the middle of the loop, before we check whether we've got to the end of
+the page.  Not at the end of the loop.
 
-Our CI tests tend do be more text console based for dom0.
+> > +	BUG_ON(ctx.cur_page);
+> 
+> Is a full BUG_ON() definitely called for here? Seems like a WARN might suffice...
 
-
-Juergen
+Dave made a similar comment; I'll pick this up there.
