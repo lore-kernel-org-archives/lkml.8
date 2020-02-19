@@ -2,113 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A566C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5984DC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3055221D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iuoJJ18K"
+	by mail.kernel.org (Postfix) with ESMTP id 3D70821D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgBSMbG (ORCPT
+        id S1727285AbgBSMdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:31:06 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46457 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgBSMbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:31:06 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so258535wrl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 04:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=xWzztMTzhqfpMp/oxkFfq6/jzPcps3NnPgi8EJQA1qU=;
-        b=iuoJJ18K2W1MdBJOFUOoIv+RAmQbMi1/+2amFZ68XZzhA2ydvwyWzwb3cnyMs6M0nq
-         EjQ0bJ8Kd6VFpN7T47eKHwNEWG9koVSDNuSH0E3DOxl4wUBlPxhEDbxGHxTeQ/y2cr7u
-         Qhl/A1h35CdccaG6txx1HTzPH3/RnYnMazrYlauKJn4k0Qarn4mancJIq5VhPbdhjJJg
-         mstJdE39eCWKzohs0cxiiy5dFAEdzQs/SYX9AuDTKyVDnWxbiswelBeYN2mE/qi25YPK
-         6uGgF8Lw/8dUSrwY/za/FTs16IbHTD9oD+z90ZE0rJZvLEwrhALHlaNd75C6eN6iMqAM
-         X0wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=xWzztMTzhqfpMp/oxkFfq6/jzPcps3NnPgi8EJQA1qU=;
-        b=Ekn6xOWtDZYv4KbUX87FSl77BNu0+DwDQItrFodLk4eTv4K03FKFkTQtTFJYHlt/Ox
-         AzosO8kEAVWGvA0+2VChyJ4kvdO3+7wp3RkOeB8stH4Bs87PiMyPgcgb4KoD+dSVS3kO
-         dgutXRwqWePURQKg/hi1mfKhtGWLc83khCQozrQ1/yo/lxJXvsyt1GMir+Rd0xHTXxlu
-         mTjnHsDnlDj+JdUWTxBXm/APtYcxCZz2oVZFYq6TqAiEbulhclAqLjo30+/5903Zk1tt
-         Pfsv/swI4GD77YHkFdizrukrQmESvdnQMYakTNEoMCBQ4R/NkKavNvD3WWIBjOv9ahrK
-         niPQ==
-X-Gm-Message-State: APjAAAVnrKKlPcLH98IbwHpeK25+ZzQRZOkP6oTGkoNFOGkTbyL2IvOD
-        JAQ2+extD2vngi+xhKya6eIpGQ==
-X-Google-Smtp-Source: APXvYqw2N0uh7U0WFn+dX6qGxFk0SOMqL1r7sW2kuNzsK6krw72sZejr4NG0O/o50wMY7lQjMEbaew==
-X-Received: by 2002:a5d:4052:: with SMTP id w18mr35221069wrp.112.1582115464128;
-        Wed, 19 Feb 2020 04:31:04 -0800 (PST)
-Received: from dell ([2.31.163.122])
-        by smtp.gmail.com with ESMTPSA id k10sm2736543wrd.68.2020.02.19.04.31.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 04:31:03 -0800 (PST)
-Date:   Wed, 19 Feb 2020 12:31:30 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
- regulator unbinding
-Message-ID: <20200219123130.GE3494@dell>
-References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
- <20200122131149.GE3833@sirena.org.uk>
- <20200123092639.GC4098@ediswmail.ad.cirrus.com>
- <20200123114805.GA5440@sirena.org.uk>
- <20200123120240.GD4098@ediswmail.ad.cirrus.com>
+        Wed, 19 Feb 2020 07:33:06 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47544 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726491AbgBSMdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:33:05 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 347DFC08C;
+        Wed, 19 Feb 2020 12:33:02 +0000 (UTC)
+Subject: Re: [PATCH bpf-next 0/6] bpftool: Allow to select sections and filter
+ probes
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200218190224.22508-1-mrostecki@opensuse.org>
+ <CAADnVQJm_tvMGjhHyVn66feA3rHLSXTdzqCCABu+9tKer89LVA@mail.gmail.com>
+From:   Michal Rostecki <mrostecki@opensuse.org>
+Autocrypt: addr=mrostecki@opensuse.org; keydata=
+ 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
+ ZURUUA==
+Message-ID: <06ae3070-0d35-df49-9310-d1fb7bfb3e67@opensuse.org>
+Date:   Wed, 19 Feb 2020 13:33:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
+In-Reply-To: <CAADnVQJm_tvMGjhHyVn66feA3rHLSXTdzqCCABu+9tKer89LVA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200123120240.GD4098@ediswmail.ad.cirrus.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 Jan 2020, Charles Keepax wrote:
+On 2/19/20 4:02 AM, Alexei Starovoitov wrote:
+> The motivation is clear, but I think the users shouldn't be made
+> aware of such implementation details. I think instead of filter_in/out
+> it's better to do 'full or safe' mode of probing.
+> By default it can do all the probing that doesn't cause
+> extra dmesgs and in 'full' mode it can probe everything.
 
-> On Thu, Jan 23, 2020 at 11:48:05AM +0000, Mark Brown wrote:
-> > On Thu, Jan 23, 2020 at 09:26:39AM +0000, Charles Keepax wrote:
-> > 
-> > > 3) We could look at doing something in regmap IRQ to change when
-> > > it does PM runtime calls, it is regmap doing runtime gets when
-> > > drivers remove IRQs that causes the issue. But my accessment was
-> > > that what regmap is doing makes perfect sense, so I don't think
-> > > this is a good approach.
-> > 
-> > Why do you even care about the errors?  It's not like this device is
-> > going to get removed in a production system and the primary IRQ will be
-> > disabled when the core is removed, this is just something that happens
-> > during development isn't it?
-> 
-> I am more than happy to do the leg work if we really don't like
-> this solution. Do either you or Lee have any thoughts on my
-> selective MFD remove helpers? That seemed like the most promising
-> alternative solution to me.
-
-It's hard to say without seeing your implementation, but it sounds
-okay in principle.  Depends how messy it all ends up getting.  Sounds
-like a scenario where a reverse -EDEFER_PROBE could be useful.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Alright, then I will send later v2 where the "internal" implementation
+(filtering out based on regex) stays similar (filter_out will stay in
+the code without being exposed to users, filter_in will be removed). And
+the exposed option of "safe" probing will just apply the
+"(trace|write_user)" filter_out pattern. Does it sound good?
