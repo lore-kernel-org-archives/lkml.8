@@ -2,155 +2,178 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BFCC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E4FC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93AD20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3AE20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:58:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="DIyxlmhM"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="dwSV9A7N";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="XRvH903F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgBSL5S (ORCPT
+        id S1727233AbgBSL6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:57:18 -0500
-Received: from mail-eopbgr130117.outbound.protection.outlook.com ([40.107.13.117]:32093
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726558AbgBSL5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:57:17 -0500
+        Wed, 19 Feb 2020 06:58:35 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:3806 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726558AbgBSL6e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:58:34 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBuXu8008228;
+        Wed, 19 Feb 2020 03:57:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pfpt0818; bh=hVSYXq9QOrcLi3i8lVmT22lO2OcEHbVGSR8MrLGiwsU=;
+ b=dwSV9A7NLj6iYOkcIyHZjim503SXuDNKBmYBrk09Z9jadKyTDEzEKrQC55c96FcK4Rs4
+ QAHM9fT1BCaAs3ZiAmWSMAcpq1q57SV2WW2EmbBKOBZB42l0F1yBc3rYAbYyJ1w7g0BC
+ 6mm8+YywEivro2v7D78yYfU6xtQC8PHq72fbn4YIenDSq0n8UI8/odLz1yQSLVu6LQUW
+ 6ScKU3l3Wc/CVyZqBvJGwP/yeUw88pSC6QvzdlIyw7273oLCwvcVcSGlgCGVdkdMjmBL
+ rIdfl7QW6kOA6ieYK90IWJOIG62+/3rGitxzinYKvfGXfECDo8//r2h+TdsSD+hc/3L1 vg== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2y8ubv1wpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 19 Feb 2020 03:57:51 -0800
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Feb
+ 2020 03:57:49 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Feb
+ 2020 03:57:49 -0800
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.51) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2 via Frontend Transport; Wed, 19 Feb 2020 03:57:48 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gypDhe/vfxWsUoertfApfMgjXbD99qCVEOfkK7Dyi9SLthHo1AjZq+b8JMq3X9aEyc2ISYbzVu8euU8dkHH0wQ5xv8M7phxTWWmAz/C/JBtYi93eP2FI4JzeSuipu9fUtGRu9FIhi9kfxB6lXtTGpM7RB3cvlLGbGt7R9btX1dGtr0EUY6ZxJSI1zkP8vUGP+K2ZJrOakA+CSs0sEj38cSvi6221NtxGdb/XNAnPuV8p9nIn7OpB/UvOfhUGOYywoF/e8N9QQGY5bbxpaR2QRqQjCYKn7VK+IaDm3qgFiVUy8mY6zYz3EY7Nox2zsC5hct0rnodalUHCQ7YGHbbNvA==
+ b=KJmk45N0JG6u/q/dRrfz4kjQy+Mbr5vy6HZcs5Q6ua1XFVfjXoifI1WvIOjkPsWn8WIEgB0/njD3Ij7ry/E67QZD6SBZGwyxdQEx31cfeNugjr81CtMIiv+SLF7DB1pKBnEC3BFS4DKMIZR1a8lpXpgFhfrnUDIsWC0B9XYpTLZ2Mo//PveZEw8GnK6mZ/RoNOrecOZWTpRQWdRbRZVD7NQAt8u25H9gnCJYA8rgb1CQHnPzDqz42U1tmijF1QvEVBYj9TZ/YST5N80GAnclkCcTfvagYBxORVvB9ngKLAneCAvYe2YFLOhSnmJDt/nI/HaJnmnTMkOLqCEBcfTHYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DbaRyFI+AQayIqXPg9EJfANGjleTwZMkFamRErvfBjE=;
- b=mblr4sSPhP9bwHZGcXtvS8JYL39Onx6v1u4SzGsjOJ2hnbBppwu7F2Ab5AO1Du1LwSdfSDUw/0h3MdhWBIF7KLyV6cKDy4oB23Y774XBpe0U8l0YJatfeHO3hHRIDE4Gu+MrFb8/eRPzdH8296wxx2x0ipx5YTfkgVlTNLZaMoi3AwGkh34Pz9HyrPLeLEG8dUy8l4z7/fxemIeSy58b3uNUTPcxgIvDVdA0eGAf2GMrCSBs1YyT/ttaBv0qjg09OeCQ29j+MV8TwoJVi3LUwtYQo2srtiggNUPM9oIyQsRDqsAE02wWCN/2reoGDrt5PwNw3hgLC1nwJjKNDIUOFQ==
+ bh=hVSYXq9QOrcLi3i8lVmT22lO2OcEHbVGSR8MrLGiwsU=;
+ b=MJzZ8YEJsDP7GBlFMhZHEfpcP6TrwtUhFGuE7rzI28Mr7vsgbK2poUotvhBYr6bTp98s8V7SYr1ScYb5JOeaxCOLhA/0dUJLP/9wVsk/f7z7HH1sDrn7Lq7N1/6zkbSpfDmOH29g/BCLt5ZyVB9WDCvb0iHIgadPUMn+UIqXHBeXhG8uEFCs/BqbLp8MHysFx+aYiFhUecIo3osrSM6pRog4QVunYRPNEE5zIghETpzjxX2TZUWGD/q00yT5sLYndMlHnysUq8BlXEjTocdAV7ULl1nJVf6En8P4wUSA+TD+5oF+gDprJK3sQnxCRC0viJKbpz0BBnschlahOxZsOA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DbaRyFI+AQayIqXPg9EJfANGjleTwZMkFamRErvfBjE=;
- b=DIyxlmhMwNKDn6t0oSOaqjRPr2DcgCn8C9e8mtH71gfKkLXIHZkY3r3o154hs4dw0jpBIksoxp+Yu8l3y6MSE72H7qvDqTiOepHV4m2PjKzWbwjXXre7j10WKUYyzrYn7kNln+VdPMb1DKcSBwN6gJK1Y8lKXkcKh/od1kyaIeE=
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
- VI1PR05MB5197.eurprd05.prod.outlook.com (20.178.11.151) with Microsoft SMTP
+ bh=hVSYXq9QOrcLi3i8lVmT22lO2OcEHbVGSR8MrLGiwsU=;
+ b=XRvH903FZc19KWXmHX4gi2jtQImddIqRwsXhsgVsdmy5UfD+Fq5Q+i09LzMtyQmfUQpoaUag7M8Y+hbXOj+M9wmFbECM7NhqWOOhP3l5Ew+GYkdr3SraOp5qYZ0GoxSe9m5t4xdtl1QVhDL90FeBnAAjWXBqBErFoO3KGAR/l1E=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2766.namprd18.prod.outlook.com (20.178.255.217) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.24; Wed, 19 Feb 2020 11:57:13 +0000
-Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
- ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 11:57:13 +0000
-Received: from localhost (194.105.145.90) by PR3P191CA0037.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:55::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 19 Feb 2020 11:57:12 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Igor Opanyuk <igor.opanyuk@toradex.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
-Thread-Topic: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
-Thread-Index: AQHV5xu5UD2HW6jXL0+gmbn3erTUlg==
-Date:   Wed, 19 Feb 2020 11:57:13 +0000
-Message-ID: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: PR3P191CA0037.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:102:55::12) To VI1PR05MB3279.eurprd05.prod.outlook.com
- (2603:10a6:802:1c::24)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.24.1
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3eac186d-e322-48a2-8875-08d7b532db69
-x-ms-traffictypediagnostic: VI1PR05MB5197:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB5197CE9F548774E0864DA21EF9100@VI1PR05MB5197.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 0318501FAE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(66946007)(66556008)(64756008)(54906003)(66446008)(66476007)(5660300002)(316002)(6486002)(6496006)(36756003)(86362001)(4326008)(52116002)(8936002)(7416002)(6916009)(44832011)(71200400001)(478600001)(81166006)(16526019)(2616005)(186003)(26005)(2906002)(1076003)(8676002)(81156014)(956004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5197;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Y9BXsWtMKDKT0SmEmjpulPfa7Myg586sUnsLhrSGcU3epTS4014uiSm7D0Qe1/byEjYtBG64eUqH7wAQJgbuzvu4KAod0sNoVUIT4deBtTUwGAT/CQdbL68LH3MXvs2aU0xwwfPrhtXBB5mWowpeI2VduEohkhj1MPLWZMHOtLBnTclmfLMihGJF6gQ/1yd7/hl5CxxV7pAPXpFK3RLcT6q5v/DG5DZoq4P2kl7ohJq7+Lk/UYT574HWAMWmtsW5SyfNOBxRcVl7Biyq5Yh0Eg32GrOYn36DdG5K42Ep9xakvPvjJvmPzWH2MHLmLmksBU2ZX91HyY+4NudAO7eapID6/5FILwdQOH3Zo/cN9CRn46uJTlAvi1JC2tXjakZCNroE8R58F8rDwwflO4uYEoFk/3tPNy0gQw6jWXAYZxG5NR/wKaeBh8t/IGLRf5jh
-x-ms-exchange-antispam-messagedata: 5yfbRxDH2RDwlqVyjE8EZZsliMJ7IEaTeaSiAmywh/aKEj0qYHhurnSBl3iXCA6Etg42OK6X5hbi7TfmMAZaqBwQddAX1tH/GhBl8iuoa/yfVz0V6odwQDtS7o5k7LHNDyOUlMEk0CsrOeR7z+06Rg==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+ 15.20.2729.29; Wed, 19 Feb 2020 11:57:46 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::30c4:52fe:fdf8:faff%7]) with mapi id 15.20.2729.033; Wed, 19 Feb 2020
+ 11:57:46 +0000
+Date:   Wed, 19 Feb 2020 12:57:36 +0100
+From:   Robert Richter <rrichter@marvell.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <soc@kernel.org>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        <devicetree@vger.kernel.org>, Eric Auger <eric.auger@redhat.com>,
+        <iommu@lists.linux-foundation.org>,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        <kvm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <linux-ide@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        <netdev@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Robin Murphy" <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC PATCH 05/11] EDAC: Remove Calxeda drivers
+Message-ID: <20200219115736.tiussdepepqj2jtf@rric.localdomain>
+References: <20200218171321.30990-1-robh@kernel.org>
+ <20200218171321.30990-6-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218171321.30990-6-robh@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-ClientProxiedBy: HE1PR05CA0296.eurprd05.prod.outlook.com
+ (2603:10a6:7:93::27) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eac186d-e322-48a2-8875-08d7b532db69
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 11:57:13.2242
+Received: from rric.localdomain (31.208.96.227) by HE1PR05CA0296.eurprd05.prod.outlook.com (2603:10a6:7:93::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Wed, 19 Feb 2020 11:57:42 +0000
+X-Originating-IP: [31.208.96.227]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c0016273-6367-4ee4-ff14-08d7b532ef4d
+X-MS-TrafficTypeDiagnostic: MN2PR18MB2766:
+X-Microsoft-Antispam-PRVS: <MN2PR18MB2766A11793F4AC81A7F3A88ED9100@MN2PR18MB2766.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-Forefront-PRVS: 0318501FAE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(376002)(39860400002)(396003)(136003)(199004)(189003)(7696005)(316002)(956004)(52116002)(2906002)(6666004)(4744005)(8936002)(478600001)(4326008)(7416002)(16526019)(54906003)(7406005)(186003)(6506007)(53546011)(5660300002)(26005)(55016002)(81156014)(81166006)(6916009)(86362001)(66476007)(66946007)(9686003)(1076003)(8676002)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2766;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J6Wj/XBr5++dQdwABbQqaKSkbsdO+0osP8bTZH9ijEX5ayw4fWZ5wstnRp6XL/qjJEBTTMxNNQ1W5gORvM6dGMlNu1KM0XOoLIy0KuI7/X48QdR62Nr9h9zVeCeEcvbyAfwZLK+unsq8flT4Ja2gP9g/HpbFgZcYVd2V6SDEGeABiAGYBUXIdTEYOih8pdhlNCzNpes3znC5EVHIKJ3EnPz9/B+EhlmHkaki29E87v1LAzae+RB6ue61pcqC48eEoff5nWfasoTrsDPOkG2lxFT580583pPdhzLsgrOQjWhucignr2KhQI3/IAs/WKzWK+ZkbXhu0i/XUQQtP5DBKB4gHsIq5tfbh6F0cFyAJqdYP7KbvjY5W3PjQ92jSI1cCK8o1P7YZ+NwSWYYM6hJ/J3VZBfi268ayDeyNnjPcP0oPFcsFiUTzJmX6xWPvjWL
+X-MS-Exchange-AntiSpam-MessageData: iLbix4Tt12DsgbwXFE1wBpRypSb188b3KAARX+qlgxt/MQbqsSlFlHU9qvAL+pizl5GEku86usfY9gVgsVFWY0P1E0aRCvDTKzkkeNKAIs7naFyH+d4Cvb2ByO+bvFZcOYOSDiWvCSCcVssdn1JPLw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0016273-6367-4ee4-ff14-08d7b532ef4d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 11:57:46.6401
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NIVkYFd7VPy3XY+Mf2P63x6Vg+IGmaQB2ZNRXzfOE18FzMpUySqDWojidCKECiGKwmfvXyatx9eQsfBoamfVFIyZTfeZvieGBeX61pZAfl0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5197
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fKW7SCYVI9hUYCT9RFjp3gDDIndFWJJiYmDjeLQciNIKTypnY0UCcehmKtFOGvCh/p6eUSJllrbU5Aca/KqPqA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2766
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SD/MMC on Colibri iMX7S/D modules successfully support
-200Mhz frequency in HS200 mode.
+On 18.02.20 11:13:15, Rob Herring wrote:
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Robert Richter <rrichter@marvell.com>
+> Cc: linux-edac@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Do not apply yet.
+> 
+>  MAINTAINERS                     |   6 -
+>  drivers/edac/Kconfig            |  14 --
+>  drivers/edac/Makefile           |   3 -
+>  drivers/edac/highbank_l2_edac.c | 142 -----------------
+>  drivers/edac/highbank_mc_edac.c | 272 --------------------------------
+>  5 files changed, 437 deletions(-)
+>  delete mode 100644 drivers/edac/highbank_l2_edac.c
+>  delete mode 100644 drivers/edac/highbank_mc_edac.c
 
-Removing the unnecessary max-frequency limit significantly
-increases the performance:
+> -EDAC-CALXEDA
+> -M:	Robert Richter <rric@kernel.org>
+> -L:	linux-edac@vger.kernel.org
+> -S:	Maintained
+> -F:	drivers/edac/highbank*
 
-=3D=3D before fix =3D=3D=3D=3D
-root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
-/dev/mmcblk0:
- Timing buffered disk reads: 252 MB in  3.02 seconds =3D  83.54 MB/sec
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+Once upon a time in Texas...
 
-=3D=3D=3D after fix =3D=3D=3D=3D
-root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
-/dev/mmcblk0:
- Timing buffered disk reads: 408 MB in  3.00 seconds =3D 135.94 MB/sec
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+If Andre wants to keep it, let's keep it.
 
-Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D
-                      1GB (eMMC) support")
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
----
+Otherwise:
 
- arch/arm/boot/dts/imx7-colibri.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Acked-by: Robert Richter <rric@kernel.org>
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
-olibri.dtsi
-index d05be3f0e2a7..04717cf69db0 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -336,7 +336,6 @@ &usdhc3 {
- 	assigned-clock-rates =3D <400000000>;
- 	bus-width =3D <8>;
- 	fsl,tuning-step =3D <2>;
--	max-frequency =3D <100000000>;
- 	vmmc-supply =3D <&reg_module_3v3>;
- 	vqmmc-supply =3D <&reg_DCDC3>;
- 	non-removable;
---=20
-2.24.1
-
+Goodbye Calxeda...
