@@ -2,240 +2,177 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547FC7114E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28ACC7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20FE24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150009;
-	bh=EBrYs+yq3Y3IgDkDMpRFMtEXCjYHbxS6mXBDsELyYe0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Wg2y2F0SYoTZM2QP4v1lMXTiqpsFJCKoP+L2Kbo2kPpMcLA+uJNxqXnkRdXIfkVc
-	 irEhGT6nBLbzeAxlQjH9u/JARSpwO6sChRiSWv5VH7Zn9ZVTaSGZXNjZpLdA5GulU8
-	 qiarUyvMCgrXjZiZ6vGa1JUX4g/0ILlQlqRuUlSY=
+	by mail.kernel.org (Postfix) with ESMTP id 78ABE24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:09:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KNCHQ7Ch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBSWGs (ORCPT
+        id S1727525AbgBSWJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:06:48 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39991 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSWGs (ORCPT
+        Wed, 19 Feb 2020 17:09:03 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37734 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgBSWJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:06:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i6so1722296otr.7;
-        Wed, 19 Feb 2020 14:06:45 -0800 (PST)
+        Wed, 19 Feb 2020 17:09:03 -0500
+Received: by mail-qk1-f194.google.com with SMTP id c188so1719049qkg.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:09:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VnF5DCQHVLUnfSmn+1ERWkaSX6Vm56uQOFXrLzOaRr8=;
+        b=KNCHQ7ChkERIcb/bdTd8hqb6netRcNVRd1DLmtBvs7LPPDhPPJ6M3is5PKZe9vNoT6
+         Frcn3LOhDntoI0kybkgkdCbpb+X0b87pjt/TZLvRr0ypZe7gyIVM3Nn5bMohRaUGp922
+         Rn/LmqIJFt2RPPl2OaTV1Sc4h1mRx/vJRLZP2Nfz49ehWSQl2TqXGnC4jfnTbte5Tvso
+         w9kI50aIGRQgal37qMd3VBetpnqu0/191gyevyDlrqlsbUp96TWb3DO5FlvqatPEhKxJ
+         n4NmHFp38ROakzQcUqixDZtBPRs4VY+EiWATwuQ8CsLRUf4hTThSgu1Tcy8jOB1dHmpG
+         0QYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nX8xqwF3vuVz6SMuQkjOYa0QQbZHhMZp1SMRDtGWins=;
-        b=ZvSU1+Az2K0yb/QUM2TLLYc660LhCLj9uCqfwnmOP6862jjfu7RO06BqVQusJwouUA
-         inGJ6JE7oYcCaoI8kSine2m5wgKbyFeHUT6qlMuSHiY4Nj8Qtvm5vLGziHgsUR480X3m
-         /eOzSVU5szMocfIN8vQ7GA//7B/8/mbrRzF/VI6EaRqsTdl0PE3mnNND62OGS0+IrVhG
-         O72qr4UGTM/egoolcMm4dJuPt8phIc2yPF8U8eR4Hp+ECugRpX2X86Y5MSE+8CaGCQp8
-         +TrOlKON1z3ZLq9QB2kpXfNgP4/FzYfZ0XqmH/zkYevrP/9o5sF5g2eaq3++LfFGSpan
-         pixw==
-X-Gm-Message-State: APjAAAWC1dIG59hysRTOb8BU3SU0Xx28ruTWo8cVspD7u9PytxuImgOi
-        hovEKnOO5sOqBWE7y1xM38OmhJaIKg==
-X-Google-Smtp-Source: APXvYqyzDpAsYbjMChkiOsp8vQqnGzBRtPAhURMvfp0Uf1xlLNMzHvlqRbrPr1aAJf+7mljlZu6F6g==
-X-Received: by 2002:a9d:6548:: with SMTP id q8mr19241216otl.356.1582150005300;
-        Wed, 19 Feb 2020 14:06:45 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z10sm406828oih.1.2020.02.19.14.06.43
+         :mime-version:content-disposition:in-reply-to;
+        bh=VnF5DCQHVLUnfSmn+1ERWkaSX6Vm56uQOFXrLzOaRr8=;
+        b=t7zI6sGU0OPmRC6TbuFlejZlbl7h0jB8j7cwN7an1vj2QSQqt2Gu1Y8EyDoYxgdWTi
+         PFGkR3hkmiefSUihF3dsxXJr1qPLYWfCegErReFzw4IFrC85xD088jnnLLs5srp/ir2C
+         bpwEbWC0BZCYB9DiEp3dC+CHy3WloH+sz1Ay4dTHRzYGeochg3L/1NG5X1du6AHxUGNG
+         Cl0zW0hwup8yT/5C87O245JHAA6y2Qdu0V6cwCmjNLa1hnUafD7G7XpuH3xq7o76cgMr
+         aR8Tair2OjndKXDWuaWNI3VVq+wPzxNABVe0xXan5UREWT5jL9eapBKC9L/d8wdrhygF
+         V81g==
+X-Gm-Message-State: APjAAAXfLa0OWr85kYCgrskyUC3Xl2uDEB06xQs4o0mjPM7KlzowU9Bs
+        swl3Gtq/KOITwSK/tO/zAFbEgf0nCh4=
+X-Google-Smtp-Source: APXvYqyaLpldaJ86llXEnYR6FKWl4mdZMXj9zC1eE7A4+pcGVzseUVLTy6IAoZDQ/GLLuC2vd35A2A==
+X-Received: by 2002:a37:6690:: with SMTP id a138mr23459032qkc.475.1582150141425;
+        Wed, 19 Feb 2020 14:09:01 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3bde])
+        by smtp.gmail.com with ESMTPSA id p135sm588862qke.2.2020.02.19.14.09.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:06:44 -0800 (PST)
-Received: (nullmailer pid 21809 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:06:43 -0000
-Date:   Wed, 19 Feb 2020 16:06:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
-        <nfraprado@protonmail.com>
-Cc:     devicetree@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-crypto@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: rng: Convert BCM2835 to DT schema
-Message-ID: <20200219220643.GA14392@bogus>
-References: <20200207231347.2908737-1-nfraprado@protonmail.com>
+        Wed, 19 Feb 2020 14:09:00 -0800 (PST)
+Date:   Wed, 19 Feb 2020 17:08:59 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200219220859.GF54486@cmpxchg.org>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
+ <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200207231347.2908737-1-nfraprado@protonmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:14:12PM +0000, Nícolas F. R. A. Prado wrote:
-> Convert BCM2835/6368 Random number generator bindings to DT schema.
+On Wed, Feb 19, 2020 at 04:41:12PM -0500, Daniel Jordan wrote:
+> On Wed, Feb 19, 2020 at 08:53:32PM +0100, Michal Hocko wrote:
+> > On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
+> > > On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
+> > > > On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
+> > > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
+> > > > > while keeping direct reclaim as a fallback. In our testing, this
+> > > > > eliminated all direct reclaim from the affected workload.
+> > > > 
+> > > > Who is accounted for all the work? Unless I am missing something this
+> > > > just gets hidden in the system activity and that might hurt the
+> > > > isolation. I do see how moving the work to a different context is
+> > > > desirable but this work has to be accounted properly when it is going to
+> > > > become a normal mode of operation (rather than a rare exception like the
+> > > > existing irq context handling).
+> > > 
+> > > Yes, the plan is to account it to the cgroup on whose behalf we're
+> > > doing the work.
 > 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
-> ---
+> How are you planning to do that?
 > 
-> Hi,
-> wasn't really clear to me who to add as maintainer for this dt-binding.
-> The three names added here as maintainers were based on the get_maintainer
-> script and on previous commits on this file.
-> Please tell me whether these are the right maintainers for this file or not.
-
-Whoever knows the h/w ideally, not who is going to apply patches.
-
+> I've been thinking about how to account a kernel thread's CPU usage to a cgroup
+> on and off while working on the parallelizing Michal mentions below.  A few
+> approaches are described here:
 > 
-> This patch was tested with:
-> make ARCH=arm DT_SCHEMA_FILES=Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml dt_binding_check
+> https://lore.kernel.org/linux-mm/20200212224731.kmss6o6agekkg3mw@ca-dmjordan1.us.oracle.com/
 
-You also need to make sure without DT_SCHEMA_FILES set everything is 
-fine. That tests the example against all schemas.
+What we do for the IO controller is execute the work unthrottled but
+charge the cgroup on whose behalf we are executing with whatever cost
+or time or bandwith that was incurred. The cgroup will pay off this
+debt when it requests more of that resource.
 
-> make ARCH=arm DT_SCHEMA_FILES=Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml dtbs_check
+This is from blk-iocost.c:
+
+	/*
+	 * We're over budget.  If @bio has to be issued regardless,
+	 * remember the abs_cost instead of advancing vtime.
+	 * iocg_kick_waitq() will pay off the debt before waking more IOs.
+	 * This way, the debt is continuously paid off each period with the
+	 * actual budget available to the cgroup.  If we just wound vtime,
+	 * we would incorrectly use the current hw_inuse for the entire
+	 * amount which, for example, can lead to the cgroup staying
+	 * blocked for a long time even with substantially raised hw_inuse.
+	 */
+	if (bio_issue_as_root_blkg(bio) || fatal_signal_pending(current)) {
+		atomic64_add(abs_cost, &iocg->abs_vdebt);
+		iocg_kick_delay(iocg, &now, cost);
+		return;
+	}
+
+blk-iolatency.c has similar provisions. bio_issue_as_root_blkg() says this:
+
+/**
+ * bio_issue_as_root_blkg - see if this bio needs to be issued as root blkg
+ * @return: true if this bio needs to be submitted with the root blkg context.
+ *
+ * In order to avoid priority inversions we sometimes need to issue a bio as if
+ * it were attached to the root blkg, and then backcharge to the actual owning
+ * blkg.  The idea is we do bio_blkcg() to look up the actual context for the
+ * bio and attach the appropriate blkg to the bio.  Then we call this helper and
+ * if it is true run with the root blkg for that queue and then do any
+ * backcharging to the originating cgroup once the io is complete.
+ */
+static inline bool bio_issue_as_root_blkg(struct bio *bio)
+{
+        return (bio->bi_opf & (REQ_META | REQ_SWAP)) != 0;
+}
+
+The plan for the CPU controller is similar. When a remote execution
+begins, flush the current runtime accumulated (update_curr) and
+associate the current thread with another cgroup (similar to
+current->active_memcg); when remote execution is done, flush the
+runtime delta to that cgroup and unset the remote context.
+
+For async reclaim, whether that's kswapd or the work item that I'm
+adding here, we'd want the cycles to go to the cgroup whose memory is
+being reclaimed.
+
+> > > The problem is that we have a general lack of usable CPU control right
+> > > now - see Rik's work on this: https://lkml.org/lkml/2019/8/21/1208.
+> > > For workloads that are contended on CPU, we cannot enable the CPU
+> > > controller because the scheduling latencies are too high. And for
+> > > workloads that aren't CPU contended, well, it doesn't really matter
+> > > where the reclaim cycles are accounted to.
+> > > 
+> > > Once we have the CPU controller up to speed, we can add annotations
+> > > like these to account stretches of execution to specific
+> > > cgroups. There just isn't much point to do it before we can actually
+> > > enable CPU control on the real workloads where it would matter.
 > 
-> Thanks,
-> Nícolas
-> 
->  .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 ------------
->  .../devicetree/bindings/rng/brcm,bcm2835.yaml | 61 +++++++++++++++++++
->  2 files changed, 61 insertions(+), 40 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
->  create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt b/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
-> deleted file mode 100644
-> index aaac7975f61c..000000000000
-> --- a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
-> +++ /dev/null
-> @@ -1,40 +0,0 @@
-> -BCM2835/6368 Random number generator
-> -
-> -Required properties:
-> -
-> -- compatible : should be one of
-> -	"brcm,bcm2835-rng"
-> -	"brcm,bcm-nsp-rng"
-> -	"brcm,bcm5301x-rng" or
-> -	"brcm,bcm6368-rng"
-> -- reg : Specifies base physical address and size of the registers.
-> -
-> -Optional properties:
-> -
-> -- clocks : phandle to clock-controller plus clock-specifier pair
-> -- clock-names : "ipsec" as a clock name
-> -
-> -Optional properties:
-> -
-> -- interrupts: specify the interrupt for the RNG block
-> -
-> -Example:
-> -
-> -rng {
-> -	compatible = "brcm,bcm2835-rng";
-> -	reg = <0x7e104000 0x10>;
-> -	interrupts = <2 29>;
-> -};
-> -
-> -rng@18033000 {
-> -	compatible = "brcm,bcm-nsp-rng";
-> -	reg = <0x18033000 0x14>;
-> -};
-> -
-> -random: rng@10004180 {
-> -	compatible = "brcm,bcm6368-rng";
-> -	reg = <0x10004180 0x14>;
-> -
-> -	clocks = <&periph_clk 18>;
-> -	clock-names = "ipsec";
-> -};
-> diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
-> new file mode 100644
-> index 000000000000..b1621031721e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rng/brcm,bcm2835.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: BCM2835/6368 Random number generator
-> +
-> +maintainers:
-> +  - Stefan Wahren <stefan.wahren@i2se.com>
-> +  - Florian Fainelli <f.fainelli@gmail.com>
-> +  - Herbert Xu <herbert@gondor.apana.org.au>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm2835-rng
-> +      - brcm,bcm-nsp-rng
-> +      - brcm,bcm5301x-rng
-> +      - brcm,bcm6368-rng
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    description: phandle to clock-controller plus clock-specifier pair
+> Which annotations do you mean?  I didn't see them when skimming through Rik's
+> work or in this patch.
 
-No need to redefine a common property.
-
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: ipsec
-> +
-> +  interrupts:
-> +    description: specify the interrupt for the RNG block
-
-Same here.
-
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    rng {
-> +        compatible = "brcm,bcm2835-rng";
-> +        reg = <0x7e104000 0x10>;
-> +        interrupts = <2 29>;
-> +    };
-> +
-> +  - |
-> +    rng@18033000 {
-> +        compatible = "brcm,bcm-nsp-rng";
-> +        reg = <0x18033000 0x14>;
-> +    };
-> +
-> +  - |
-> +    random: rng@10004180 {
-
-Drop the label.
-
-> +        compatible = "brcm,bcm6368-rng";
-> +        reg = <0x10004180 0x14>;
-> +
-> +        clocks = <&periph_clk 18>;
-> +        clock-names = "ipsec";
-> +    };
-> -- 
-> 2.25.0
-> 
-> 
+Sorry, they're not in Rik's patch. My point was that we haven't gotten
+to making such fine-grained annotations because the CPU isolation as a
+whole isn't something we have working in practice right now. It's not
+relevant who is spending the cycles if we cannot enable CPU control.
