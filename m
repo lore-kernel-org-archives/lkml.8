@@ -2,146 +2,100 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A6BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA2CC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B05206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="ipVAdUY6"
+	by mail.kernel.org (Postfix) with ESMTP id 3A69221D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbgBSLUb (ORCPT
+        id S1726821AbgBSLXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:20:31 -0500
-Received: from mail-eopbgr60121.outbound.protection.outlook.com ([40.107.6.121]:51978
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Wed, 19 Feb 2020 06:23:05 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10218 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726514AbgBSLUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:20:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aUUp52KxfSK4kJHsaeRgyFIwebhVKEzNY3MNJ3NzvaawOnHSGqWtN7lJ5gnlPlUVTa0k327EIFS236k6HC5Ron0ClNcCX0B/i2v+rLNuxFmQ/mZPjuZBsS/5nHcfQ9oFCNcXlNwGSKjVNZzNNQ8hQB6UD+fILPER3wLc/k6JgPqkBKC5tCGIrR4bKXwQH17ic+RhMj7Hes3O/lPdt7J7stUqPZ7/Fuh2NFKIwe2/bLMjqYD0/H1O83vByixhGWEWZ+K0nqBRYUJUUo4oWW/eeGLsPASe5TayA3uq9KAqmWY5O8EcpWNyzlQrR1RqdvA/scgDrFLR7uleZRl+gGAjBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qRqHHu/PwHfTszKwYrk3C9YVOSR4sMfgAqyS5YRtsYg=;
- b=bSA0jBif9tCzfTfoFFJgupWGJTEd8dOOd+J860Qetb+XQPZT1KAY5cKi5Q5/e0mE0fKTtUocMSri8yDFvwzTUloSZU/VrEdHwQavZqJguorItM0rFZWgla2OXDAYVyeRhJhlf7hJ/+XT7BmkA1ely2VcZFp9JL+z7YHRujnvXBDk7iKmP/QjEtmn7uErOTufDqJo/WC3doeXwu9+fcD7HFhaHD0HkyO4/FzMMH4MSfRySIm/EuXBnfCOVwL9wja4L+17d+KEmmEiwELaGekexEpA/u6YUqpwqXV3dYdhTTTvA8VzHpuEJi7Qttt6S8tu5cBxds/EdoP929h4742UMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
- dkim=pass header.d=criteo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qRqHHu/PwHfTszKwYrk3C9YVOSR4sMfgAqyS5YRtsYg=;
- b=ipVAdUY6jefmr1B2Rd0GKwTCiYfdP2GmMRBbgtwdcgheGVrQCbzVmohU4OMxi3TnqZX+oyH6+RWxN84o59nk6gWVtdNCJ9UfStEzYUaA+q2y+nFZYZbr7GdHhv5GqKJR6Yr+pbTjafQ1xxagGHU8DsmLGOc58IU/ViB1reKCVzo=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=e.velu@criteo.com; 
-Received: from VI1PR04MB4926.eurprd04.prod.outlook.com (20.177.48.80) by
- VI1PR04MB4112.eurprd04.prod.outlook.com (52.133.14.153) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.18; Wed, 19 Feb 2020 11:20:27 +0000
-Received: from VI1PR04MB4926.eurprd04.prod.outlook.com
- ([fe80::99f4:5892:158f:5ae4]) by VI1PR04MB4926.eurprd04.prod.outlook.com
- ([fe80::99f4:5892:158f:5ae4%5]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 11:20:27 +0000
-Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200214143035.607115-1-e.velu@criteo.com>
- <20200214170508.GB20690@linux.intel.com>
- <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
- <20200218184802.GC28156@linux.intel.com>
-From:   Erwan Velu <e.velu@criteo.com>
-Message-ID: <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
-Date:   Wed, 19 Feb 2020 12:19:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <20200218184802.GC28156@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: LNXP265CA0069.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5d::33) To VI1PR04MB4926.eurprd04.prod.outlook.com
- (2603:10a6:803:51::16)
+        id S1726484AbgBSLXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:23:04 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 37FF2B07EE7D5F7B7DE1;
+        Wed, 19 Feb 2020 19:22:57 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
+ 19:22:48 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
+CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH 1/3] btrfs: remove set but not used variable 'root_owner'
+Date:   Wed, 19 Feb 2020 19:21:48 +0800
+Message-ID: <20200219112148.16914-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Received: from [192.168.4.193] (91.199.242.236) by LNXP265CA0069.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5d::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 19 Feb 2020 11:20:26 +0000
-X-Originating-IP: [91.199.242.236]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: abba21ef-3c38-4858-0607-08d7b52db867
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4112:
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4112623275E239C0F36EF79CF2100@VI1PR04MB4112.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(53546011)(4326008)(5660300002)(86362001)(31696002)(66476007)(36756003)(54906003)(316002)(956004)(66556008)(2906002)(16576012)(66946007)(478600001)(2616005)(81166006)(31686004)(7416002)(81156014)(186003)(16526019)(8676002)(52116002)(26005)(8936002)(6666004)(6486002)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB4112;H:VI1PR04MB4926.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: criteo.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: f5H7+0/gn7OYIfKTJ3PQyIe0SgvtoE3t+1FC/3QEsVuHgnsYudpcGS6C3/XcZR2REUAnvLqXCes7LNO4omDJqEikBpucg6lnPUrClrQmaqU33S0OeDKNgoUwox05FMxrBf/1IqNvibu5qjXZVJBwXsn6I+EyBip514IvHaRSLyz5z2zGSI6OHGZDDKnrvW0wAxWpdUkOK+v+SA3+rqnVK+v4qSSGYBgxb6TQbLBEm5+4QN8Khzwz02HWo6zf2CcIbNYrg4G8fI+RgG5OKdGSeRX0CnSko95BZJFBDs7xWUioUnYE5cEtkYd8n8WOmaXqfSpJKMqZnxI7+JCWs4w3Trlueygi/bmahTGMNfI1Vh0ZmfgXR8PnpWKHVfEoWMQbJd+vDnoZSzfR/N2r2bDw64nfMOZDpAkhUqXlE4YVeF0gP4YRw4TyOXISx8MmErlI
-X-MS-Exchange-AntiSpam-MessageData: SIBKJv/EiQnkF6oqLYgfzFlyIOeNrKo8c8NqfTbulQWRk2wjyLINEGxWRQnZG6L3ta2HVuiwK0xHdwE5bEkTCAMzi0Nfa8r0hLSl5TBC3z6t7yCEF0MfIPJCe5KPZIaUp6G1MB+copy91Ip076p/Hw==
-X-OriginatorOrg: criteo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: abba21ef-3c38-4858-0607-08d7b52db867
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 11:20:27.0728
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2a35d8fd-574d-48e3-927c-8c398e225a01
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: temZXt3YHMuxhuec/Aa2voDcpkwSBNWzSdjS7R4zC95/uzV9WrE6gyWWSOwAiuBysJirOqsLk6FYjt21mjPK/w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4112
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/02/2020 19:48, Sean Christopherson wrote:
-[...]
-> Fix userspace to only do the "add" on one CPU.
->
-> Changing kvm_arch_init() to use pr_err_once() for the disabled_by_bios()
-> case "works", but it's effectively a hack to workaround a flawed userspace.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-I'll see with the user space tool to sort this out.
+fs/btrfs/tree-log.c: In function ‘walk_down_log_tree’:
+fs/btrfs/tree-log.c:2698:6: warning: variable ‘root_owner’
+set but not used [-Wunused-but-set-variable]
+fs/btrfs/tree-log.c: In function ‘walk_up_log_tree’:
+fs/btrfs/tree-log.c:2793:6: warning: variable ‘root_owner’
+set but not used [-Wunused-but-set-variable]
 
-I'm also considering how "wrong" is what they do: udevadm trigger is 
-generating 3500  "uevent add" on my system and I only noticed kvm to 
-print this noisy message.
+They are never used, and so can be removed.
 
-So as the print once isn't that "wrong" neither, this simple patch would 
-avoid polluting the kernel logs.
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/btrfs/tree-log.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-
-So my proposal would be
-
-- have this simple patch on the kernel side to avoid having userspace 
-apps polluting logs
-
-- contacting the udev people to see the rational & fix it too : I'll do that
-
-
-As you said, once probed, there is no need reprinting the same message 
-again as the situation cannot have changed.
-
-As we are on the preliminary return code path (to make a EOPNOTSUPP), I 
-would vote for protecting the print against multiple calls/prints.
-
-The kernel patch isn't impacting anyone (in a regular case) and just 
-avoid pollution.
-
-
-Would you agree on that ?
-
-Erwan,
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 5e6b18924e00..156beda01b18 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -2695,7 +2695,6 @@ static noinline int walk_down_log_tree(struct btrfs_trans_handle *trans,
+ 				   struct walk_control *wc)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+-	u64 root_owner;
+ 	u64 bytenr;
+ 	u64 ptr_gen;
+ 	struct extent_buffer *next;
+@@ -2721,7 +2720,6 @@ static noinline int walk_down_log_tree(struct btrfs_trans_handle *trans,
+ 		blocksize = fs_info->nodesize;
+ 
+ 		parent = path->nodes[*level];
+-		root_owner = btrfs_header_owner(parent);
+ 
+ 		next = btrfs_find_create_tree_block(fs_info, bytenr);
+ 		if (IS_ERR(next))
+@@ -2790,7 +2788,6 @@ static noinline int walk_up_log_tree(struct btrfs_trans_handle *trans,
+ 				 struct walk_control *wc)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+-	u64 root_owner;
+ 	int i;
+ 	int slot;
+ 	int ret;
+@@ -2809,7 +2806,6 @@ static noinline int walk_up_log_tree(struct btrfs_trans_handle *trans,
+ 			else
+ 				parent = path->nodes[*level + 1];
+ 
+-			root_owner = btrfs_header_owner(parent);
+ 			ret = wc->process_func(root, path->nodes[*level], wc,
+ 				 btrfs_header_generation(path->nodes[*level]),
+ 				 *level);
+-- 
+2.17.2
 
