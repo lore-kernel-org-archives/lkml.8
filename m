@@ -2,191 +2,205 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C34BAC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E63C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A119724670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582135317;
-	bh=yicJpUKBY2lCa9DYQFX7OM+15TFASg4m1KjhxR4TRrg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=FMUcn0rB2zqOelhJ8ltlvyquuJsP0q9jW1aF8uCGQRM9LOYgtgXTu+S+iLoY78hQ5
-	 tCSBEuv3faqYKLYhViTSY4z1Qiz6SGBgjDVV189YU2wmUvFEtUWVtr5+WG/tPLNHnd
-	 /9YRMjfgLvq9ae4HobA+tb8KLicUkcbMqyuJVGa0=
+	by mail.kernel.org (Postfix) with ESMTP id F150C206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="oqMj2W+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBSSB4 (ORCPT
+        id S1726722AbgBSSEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:01:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgBSSB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:01:56 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55DE924656;
-        Wed, 19 Feb 2020 18:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582135315;
-        bh=yicJpUKBY2lCa9DYQFX7OM+15TFASg4m1KjhxR4TRrg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=PC5SIEBReGWN148eb6cKbeEnEH8xCSoQLAR4zMnI7g8CMFnTHpY5MTzTD9vvKt0u2
-         6Xp1txu9xJjZ60zf7UuDW7tef7+0WSiyZPUaYB9Wh/EyalgypJ97aEqhtBa7Uixhy6
-         GpjopJBrcLEV0y6zMVkAgpg3BKT6wavjwTCy1YXc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2AFF335209B0; Wed, 19 Feb 2020 10:01:55 -0800 (PST)
-Date:   Wed, 19 Feb 2020 10:01:55 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     andreyknvl@google.com, glider@google.com, dvyukov@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH] kcsan: Add option for verbose reporting
-Message-ID: <20200219180155.GM2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200219151531.161515-1-elver@google.com>
+        Wed, 19 Feb 2020 13:04:45 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:6594 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSSEp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:04:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582135485; x=1613671485;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3Zqh9Z5ArCKT5eh3kytqNR+atJTyGLoFKV/QsPjClkg=;
+  b=oqMj2W+qDZkw2Dp39HVx5C4B1C7VumFPWUfHdx8b4Q7df7y3V3tVG+2u
+   DBLkOj4GXqIoKyZ0UDXhKSCjnW+xcjN7H/yH1EKmd0dg2I19n+IFGRLqw
+   +eRKjGRs5QUIx/W75ME+xiICZNYLdp0ESbhdmZWprHlMA9Kph9vfqJc+8
+   8=;
+IronPort-SDR: SWoQO1RFkW7rgd2CL4S62O3VarDPqWQrz58ohCj8J+VHKH9cgFWDywhjXDZn2lMphuLg99bCok
+ LxZKOSkF49jw==
+X-IronPort-AV: E=Sophos;i="5.70,461,1574121600"; 
+   d="scan'208";a="27530192"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 19 Feb 2020 18:04:42 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id 170F4A268C;
+        Wed, 19 Feb 2020 18:04:40 +0000 (UTC)
+Received: from EX13D08UEE003.ant.amazon.com (10.43.62.118) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 19 Feb 2020 18:04:25 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D08UEE003.ant.amazon.com (10.43.62.118) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 19 Feb 2020 18:04:25 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1367.3 via Frontend Transport; Wed, 19 Feb 2020 18:04:24 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id DFEB5403C0; Wed, 19 Feb 2020 18:04:24 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 18:04:24 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>, <anchalag@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
+        <benh@kernel.crashing.org>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
+        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
+        <linux-mm@kvack.org>, <kamatam@amazon.com>,
+        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
+        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
+        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
+        <eduval@amazon.com>, <sblbir@amazon.com>,
+        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
+        <benh@kernel.crashing.org>
+Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
+ and hibernation
+Message-ID: <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <cover.1581721799.git.anchalag@amazon.com>
+ <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
+ <20200217100509.GE4679@Air-de-Roger>
+ <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200218091611.GN4679@Air-de-Roger>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Disposition: inline
-In-Reply-To: <20200219151531.161515-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218091611.GN4679@Air-de-Roger>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 04:15:31PM +0100, Marco Elver wrote:
-> Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-> Currently information about the reporting task's held locks and IRQ
-> trace events are shown, if they are enabled.
+On Tue, Feb 18, 2020 at 10:16:11AM +0100, Roger Pau Monné wrote:
+> On Mon, Feb 17, 2020 at 11:05:53PM +0000, Anchal Agarwal wrote:
+> > On Mon, Feb 17, 2020 at 11:05:09AM +0100, Roger Pau Monné wrote:
+> > > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
+> > > > From: Munehisa Kamata <kamatam@amazon.com
+> > > > 
+> > > > Add freeze, thaw and restore callbacks for PM suspend and hibernation
+> > > > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
+> > > > events, need to implement these xenbus_driver callbacks.
+> > > > The freeze handler stops a block-layer queue and disconnect the
+> > > > frontend from the backend while freeing ring_info and associated resources.
+> > > > The restore handler re-allocates ring_info and re-connect to the
+> > > > backend, so the rest of the kernel can continue to use the block device
+> > > > transparently. Also, the handlers are used for both PM suspend and
+> > > > hibernation so that we can keep the existing suspend/resume callbacks for
+> > > > Xen suspend without modification. Before disconnecting from backend,
+> > > > we need to prevent any new IO from being queued and wait for existing
+> > > > IO to complete.
+> > > 
+> > > This is different from Xen (xenstore) initiated suspension, as in that
+> > > case Linux doesn't flush the rings or disconnects from the backend.
+> > Yes, AFAIK in xen initiated suspension backend takes care of it. 
 > 
-> Signed-off-by: Marco Elver <elver@google.com>
-> Suggested-by: Qian Cai <cai@lca.pw>
-
-Queued for testing and review, thank you!
-
-							Thanx, Paul
-
-> ---
->  kernel/kcsan/report.c | 48 +++++++++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.kcsan     | 13 ++++++++++++
->  2 files changed, 61 insertions(+)
+> No, in Xen initiated suspension backend doesn't take care of flushing
+> the rings, the frontend has a shadow copy of the ring contents and it
+> re-issues the requests on resume.
 > 
-> diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> index 11c791b886f3c..f14becb6f1537 100644
-> --- a/kernel/kcsan/report.c
-> +++ b/kernel/kcsan/report.c
-> @@ -1,10 +1,12 @@
->  // SPDX-License-Identifier: GPL-2.0
->  
-> +#include <linux/debug_locks.h>
->  #include <linux/jiffies.h>
->  #include <linux/kernel.h>
->  #include <linux/lockdep.h>
->  #include <linux/preempt.h>
->  #include <linux/printk.h>
-> +#include <linux/rcupdate.h>
->  #include <linux/sched.h>
->  #include <linux/spinlock.h>
->  #include <linux/stacktrace.h>
-> @@ -245,6 +247,29 @@ static int sym_strcmp(void *addr1, void *addr2)
->  	return strncmp(buf1, buf2, sizeof(buf1));
->  }
->  
-> +static void print_verbose_info(struct task_struct *task)
-> +{
-> +	if (!task)
-> +		return;
-> +
-> +	if (task != current && task->state == TASK_RUNNING)
-> +		/*
-> +		 * Showing held locks for a running task is unreliable, so just
-> +		 * skip this. The printed locks are very likely inconsistent,
-> +		 * since the stack trace was obtained when the actual race
-> +		 * occurred and the task has since continued execution. Since we
-> +		 * cannot display the below information from the racing thread,
-> +		 * but must print it all from the watcher thread, bail out.
-> +		 * Note: Even if the task is not running, there is a chance that
-> +		 * the locks held may be inconsistent.
-> +		 */
-> +		return;
-> +
-> +	pr_err("\n");
-> +	debug_show_held_locks(task);
-> +	print_irqtrace_events(task);
-> +}
-> +
->  /*
->   * Returns true if a report was generated, false otherwise.
->   */
-> @@ -319,6 +344,26 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  				  other_info.num_stack_entries - other_skipnr,
->  				  0);
->  
-> +		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE) && other_info.task_pid != -1) {
-> +			struct task_struct *other_task;
-> +
-> +			/*
-> +			 * Rather than passing @current from the other task via
-> +			 * @other_info, obtain task_struct here. The problem
-> +			 * with passing @current via @other_info is that, we
-> +			 * would have to get_task_struct/put_task_struct, and if
-> +			 * we race with a task being released, we would have to
-> +			 * release it in release_report(). This may result in
-> +			 * deadlock if we want to use KCSAN on the allocators.
-> +			 * Instead, make this best-effort, and if the task was
-> +			 * already released, we just do not print anything here.
-> +			 */
-> +			rcu_read_lock();
-> +			other_task = find_task_by_pid_ns(other_info.task_pid, &init_pid_ns);
-> +			print_verbose_info(other_task);
-> +			rcu_read_unlock();
-> +		}
-> +
->  		pr_err("\n");
->  		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
->  		       get_access_type(access_type), ptr, size,
-> @@ -340,6 +385,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
->  	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
->  			  0);
->  
-> +	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-> +		print_verbose_info(current);
-> +
->  	/* Print report footer. */
->  	pr_err("\n");
->  	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> index f0b791143c6ab..ba9268076cfbc 100644
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -20,6 +20,19 @@ menuconfig KCSAN
->  
->  if KCSAN
->  
-> +config KCSAN_VERBOSE
-> +	bool "Show verbose reports with more information about system state"
-> +	depends on PROVE_LOCKING
-> +	help
-> +	  If enabled, reports show more information about the system state that
-> +	  may help better analyze and debug races. This includes held locks and
-> +	  IRQ trace events.
-> +
-> +	  While this option should generally be benign, we call into more
-> +	  external functions on report generation; if a race report is
-> +	  generated from any one of them, system stability may suffer due to
-> +	  deadlocks or recursion.  If in doubt, say N.
-> +
->  config KCSAN_DEBUG
->  	bool "Debugging of KCSAN internals"
->  
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
+Yes, I meant suspension in general where both xenstore and backend knows
+system is going under suspension and not flushing of rings. That happens
+in frontend when backend indicates that state is closing and so on.
+I may have written it in wrong context.
+> > > > +static int blkfront_freeze(struct xenbus_device *dev)
+> > > > +{
+> > > > +	unsigned int i;
+> > > > +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
+> > > > +	struct blkfront_ring_info *rinfo;
+> > > > +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
+> > > > +	unsigned int timeout = 5 * HZ;
+> > > > +	int err = 0;
+> > > > +
+> > > > +	info->connected = BLKIF_STATE_FREEZING;
+> > > > +
+> > > > +	blk_mq_freeze_queue(info->rq);
+> > > > +	blk_mq_quiesce_queue(info->rq);
+> > > > +
+> > > > +	for (i = 0; i < info->nr_rings; i++) {
+> > > > +		rinfo = &info->rinfo[i];
+> > > > +
+> > > > +		gnttab_cancel_free_callback(&rinfo->callback);
+> > > > +		flush_work(&rinfo->work);
+> > > > +	}
+> > > > +
+> > > > +	/* Kick the backend to disconnect */
+> > > > +	xenbus_switch_state(dev, XenbusStateClosing);
+> > > 
+> > > Are you sure this is safe?
+> > > 
+> > In my testing running multiple fio jobs, other test scenarios running
+> > a memory loader works fine. I did not came across a scenario that would
+> > have failed resume due to blkfront issues unless you can sugest some?
 > 
+> AFAICT you don't wait for the in-flight requests to be finished, and
+> just rely on blkback to finish processing those. I'm not sure all
+> blkback implementations out there can guarantee that.
+> 
+> The approach used by Xen initiated suspension is to re-issue the
+> in-flight requests when resuming. I have to admit I don't think this
+> is the best approach, but I would like to keep both the Xen and the PM
+> initiated suspension using the same logic, and hence I would request
+> that you try to re-use the existing resume logic (blkfront_resume).
+> 
+> > > I don't think you wait for all requests pending on the ring to be
+> > > finished by the backend, and hence you might loose requests as the
+> > > ones on the ring would not be re-issued by blkfront_restore AFAICT.
+> > > 
+> > AFAIU, blk_mq_freeze_queue/blk_mq_quiesce_queue should take care of no used
+> > request on the shared ring. Also, we I want to pause the queue and flush all
+> > the pending requests in the shared ring before disconnecting from backend.
+> 
+> Oh, so blk_mq_freeze_queue does wait for in-flight requests to be
+> finished. I guess it's fine then.
+> 
+Ok.
+> > Quiescing the queue seemed a better option here as we want to make sure ongoing
+> > requests dispatches are totally drained.
+> > I should accept that some of these notion is borrowed from how nvme freeze/unfreeze 
+> > is done although its not apple to apple comparison.
+> 
+> That's fine, but I would still like to requests that you use the same
+> logic (as much as possible) for both the Xen and the PM initiated
+> suspension.
+> 
+> So you either apply this freeze/unfreeze to the Xen suspension (and
+> drop the re-issuing of requests on resume) or adapt the same approach
+> as the Xen initiated suspension. Keeping two completely different
+> approaches to suspension / resume on blkfront is not suitable long
+> term.
+> 
+I agree with you on overhaul of xen suspend/resume wrt blkfront is a good
+idea however, IMO that is a work for future and this patch series should 
+not be blocked for it. What do you think?
+> Thanks, Roger.
+> 
+Thanks,
+Anchal
