@@ -2,125 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4C2C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50208C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B2921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jGsQCxqd"
+	by mail.kernel.org (Postfix) with ESMTP id 33BE321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgBSNHl (ORCPT
+        id S1727545AbgBSNI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:07:41 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:33376 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726558AbgBSNHk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:07:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JD3oYT005776;
-        Wed, 19 Feb 2020 14:07:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=l/B3KaEv2Jvj0I5nAEs7f8vFAJgLMsUxBXAa1hAOuA4=;
- b=jGsQCxqd5C6Dz0am6OYuV40mCFaFg2SA/u4pdvfonZvOL3L/WfWZrsXlHjKwsV45rvHY
- RK+iInIFU1/I6jktLK2xXr6MdAdz+5cZb8cq0gQeRL4OJnb5MiVuxN0r4siuocm6vb5W
- MG3hHz5nTHVuwMumfAetokeVW+oxdoMYnX12Lm9X33pFtdGXWmU5HIT0JHFw/gLrnwa4
- BifVIDuDD1NAkrurCuQj0eSBe1Sm0JIWeDEQGgN7JFH5FmLUSKB/DcyTPGIkW7HbXagX
- DNtiH4Kau2QswwlMPmY/hoI8wEEtKpIkrKtYJbnZE7kctabFDMN9rWv+dxxIBrL/JFZd qQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub033wj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 14:07:24 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CE32D10002A;
-        Wed, 19 Feb 2020 14:07:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BC2132B739B;
-        Wed, 19 Feb 2020 14:07:23 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
- 2020 14:07:23 +0100
-Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>, <marex@denx.de>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-2-alexandre.torgue@st.com>
- <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
- <608d9c84813323ee3839f6ac21aa8f4e@kernel.org>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <ae69e38a-78f9-ca68-c48c-86275e41b3bb@st.com>
-Date:   Wed, 19 Feb 2020 14:07:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <608d9c84813323ee3839f6ac21aa8f4e@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Wed, 19 Feb 2020 08:08:58 -0500
+Received: from gate.crashing.org ([63.228.1.57]:38973 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726558AbgBSNI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:08:57 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 01JD8ATq027345;
+        Wed, 19 Feb 2020 07:08:10 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 01JD88xt027342;
+        Wed, 19 Feb 2020 07:08:08 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 19 Feb 2020 07:08:08 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>
+Subject: Re: Surprising code generated for vdso_read_begin()
+Message-ID: <20200219130808.GU22482@gate.crashing.org>
+References: <cover.1577111363.git.christophe.leroy@c-s.fr> <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr> <20200109200733.GS3191@gate.crashing.org> <77a8bf25-6615-6c0a-56d4-eae7aa8a8f09@c-s.fr> <20200111113328.GX3191@gate.crashing.org> <CAK8P3a11wX1zJ+TAacDTkYsrzvfdVmNrcB6OC23aFvCxF57opQ@mail.gmail.com> <305fcee5-2e1b-ea4d-9a2a-a0e8034d40a8@c-s.fr> <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+In-Reply-To: <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/19/20 12:43 PM, Marc Zyngier wrote:
-> On 2020-02-19 11:33, Alexandre Torgue wrote:
->> Fix Marc email address
->>
->> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
->>> This commit introduces retrigger support for stm32_ext_h chip.
->>> It consists to rise the GIC interrupt mapped to an EXTI line.
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>
->>> diff --git a/drivers/irqchip/irq-stm32-exti.c 
->>> b/drivers/irqchip/irq-stm32-exti.c
->>> index e00f2fa27f00..c971d115edb4 100644
->>> --- a/drivers/irqchip/irq-stm32-exti.c
->>> +++ b/drivers/irqchip/irq-stm32-exti.c
->>> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
->>>       unregister_syscore_ops(&stm32_exti_h_syscore_ops);
->>>   }
->>>   +static int stm32_exti_h_retrigger(struct irq_data *d)
->>> +{
->>> +    struct stm32_exti_chip_data *chip_data = 
->>> irq_data_get_irq_chip_data(d);
->>> +    const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
->>> +    void __iomem *base = chip_data->host_data->base;
->>> +    u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
->>> +
->>> +    writel_relaxed(mask, base + stm32_bank->swier_ofst);
->>> +
->>> +    return irq_chip_retrigger_hierarchy(d);
+On Wed, Feb 19, 2020 at 10:52:16AM +0100, Arnd Bergmann wrote:
+> On Wed, Feb 19, 2020 at 9:45 AM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+> > Le 16/02/2020 � 19:10, Arnd Bergmann a �crit :
+> > > On Sat, Jan 11, 2020 at 12:33 PM Segher Boessenkool
+> > > <segher@kernel.crashing.org> wrote:
+> > >>
+> > >> On Fri, Jan 10, 2020 at 07:45:44AM +0100, Christophe Leroy wrote:
+> > >>> Le 09/01/2020 � 21:07, Segher Boessenkool a �crit :
+> > >>>> It looks like the compiler did loop peeling.  What GCC version is this?
+> > >>>> Please try current trunk (to become GCC 10), or at least GCC 9?
+> > >>>
+> > >>> It is with GCC 5.5
+> > >>>
+> > >>> https://mirrors.edge.kernel.org/pub/tools/crosstool/ doesn't have more
+> > >>> recent than 8.1
+> > >>
+> > >> Arnd, can you update the tools?  We are at 8.3 and 9.2 now :-)  Or is
+> > >> this hard and/or painful to do?
+> > >
+> > > To follow up on this older thread, I have now uploaded 6.5, 7.5, 8.3 and 9.2
+> > > binaries, as well as a recent 10.0 snapshot.
+> > >
+> >
+> > Thanks Arnd,
+> >
+> > I have built the VDSO with 9.2, I get less performant result than with
+> > 8.2 (same performance as with 5.5).
+> >
+> > After a quick look, I see:
+> > - Irrelevant NOPs to align loops and stuff, allthough -mpcu=860 should
+> > avoid that.
+> > - A stack frame is set for saving r31 in __c_kernel_clock_gettime. GCC
+> > 8.1 don't need that, all VDSO functions are frameless with 8.1
 > 
-> Calling irq_chip_retrigger_hierarchy here is really odd. If the write
-> above has the effect of making the interrupt pending again, why do you
-> need to force the retrigger any further?
+> If you think it should be fixed in gcc, maybe try to reproduce it in
+> https://godbolt.org/
 
-To be honest, as we use hierarchical irq_chip, I thought it was the way 
-to follow (to retrigger parent irq_chip). It makes maybe no sens here.
-The most important to regenerate gic interrupt (associate to the exti 
-line) is to write in SWIER register.
+(Feel free to skip this step; and don't put links to godbolt (or anything
+else external) in our bugzilla, please; such links go stale before you
+know it.)
 
-Alex
+> and open a gcc bug against that.
 
-> 
->              M.
+Yes please :-)
+
+> Also, please try the gcc-10 snapshot, which has the highest chance
+> of getting fixes if it shows the same issue (or worse).
+
+If it is a regression, chances are it will be backported.  (But not to
+9.3, which is due in just a few weeks, just like 8.4).  If it is just a
+side effect of some other change, it will probably *not* be undone, not
+on trunk (GCC 10) either.  It depends.
+
+But sure, always test trunk if you can.
+
+
+Segher
