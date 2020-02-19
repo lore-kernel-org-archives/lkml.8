@@ -2,100 +2,108 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F043C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F58C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E62AB2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B24B2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UKrpwvRq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hzQWWTsx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgBSIQB (ORCPT
+        id S1726638AbgBSIQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:16:01 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:46068 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSIQB (ORCPT
+        Wed, 19 Feb 2020 03:16:42 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36299 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgBSIQl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:16:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fz8LT+4esfX6yBhrJ0QEH4biUnsulpI1jbUWNtcaXug=; b=UKrpwvRqPUrThLBLzWAaJMaHt1
-        95+P+1Gfr0p2/Jddo4PzxuvJadJcvHwlgv6hewmQMjs7kziZ10dxHZH7pFSVfTtfvDx4AXy4egGY2
-        0DKJb2W+kyzOAA7iRXrTbnAvW5vdBa2w/D9pszwZc2KAKBT4GiqvLjxzQN/UyTIgwcru4k7lAh1xe
-        Na0pPEYKr5jv3jiY0JtqfKatTpulfvTdKnzrVIzGJ2RIy9E7svOGiURcM9aDVEslFmwpvdDGKl1iN
-        a3pqJVFvA+/UGcHDTHBshNY8rtNQr1DnOMalyYBpm6CE0BKMyzEqpdL5SPhI02DL4oa5S7OQawfq4
-        wxx7qAWg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4KWG-0000lW-J5; Wed, 19 Feb 2020 08:15:44 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8045F30414E;
-        Wed, 19 Feb 2020 09:13:49 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C732120206D9B; Wed, 19 Feb 2020 09:15:41 +0100 (CET)
-Date:   Wed, 19 Feb 2020 09:15:41 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200219081541.GG14914@hirez.programming.kicks-ass.net>
-References: <20200218173150.GK14449@zn.tnic>
- <CALCETrXbitwGKcEbCF84y0aEGz+B4LL_bj-_njgyXBJA74abOA@mail.gmail.com>
+        Wed, 19 Feb 2020 03:16:41 -0500
+Received: by mail-pj1-f65.google.com with SMTP id gv17so2212403pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:16:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v3O1z61UvArVytMUXoRlXAZVh2DnhKK0P9ahcjLWA5k=;
+        b=hzQWWTsx+VBLfoV3esj8tam3Kvc099iWAPDDfO7kgY1+oVBTK1EMtP7GrlZ9dcFlXV
+         KHam5I3mh7AgqgVfGScUfU9iqaWG6EGXH/xAFOZpCN8YHZEV4SOnu5Ow6KqBVAroJAIN
+         TtjDlgBQ4qgkJcGErAHX4lOicUmxquPRiYdm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v3O1z61UvArVytMUXoRlXAZVh2DnhKK0P9ahcjLWA5k=;
+        b=CT2hjp9lJGLz8v5X+E6ujy4HrL44Mz6r/M7ANmAhvPNbRR+WPiEBh7I2N75pX2qo/Z
+         +CP9270U9Zv3KJbm1x/WRLSu1s/fZ3/vZFOJf5nEVn0VRHzVghE0R58yOwmwVPUpfEsC
+         cYWQCBExPJFyC5IVnbzYDCUmWywdxWPX0wwfTge7jxJGxKj3VT+EY6Yf9uHRkIiNQ7xY
+         KQmvH1UbidKvWr07wg+5XBEUtNtCpRgNJDzSS4weMFQo0SA+gET5g+FQnbNhqDZ/24mn
+         Ox0zbttsz9oVI3u6P3058FUP/0MnvuL2MQoRJpubPbe/sWzkYvRRs+AHpPNv5JqU/3F5
+         ODHQ==
+X-Gm-Message-State: APjAAAWIxvta3wti/RW0sGSwQxB60lm+tOpmHR0dSzFVgEF8IA2QucIs
+        gfpHehirsst+6S3GAWrIbC7gKg==
+X-Google-Smtp-Source: APXvYqx51bWBjGv4rYr+8LsDLU/bH5VBjUsq/fMDVigYR/Iz+/x6iuRGG2jeKoAiO1U9UUwzxDfgAg==
+X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr7687893pjb.49.1582100201064;
+        Wed, 19 Feb 2020 00:16:41 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id 13sm1669232pfi.78.2020.02.19.00.16.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 00:16:40 -0800 (PST)
+Date:   Wed, 19 Feb 2020 17:16:38 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCHv2 01/12] videobuf2: add cache management members
+Message-ID: <20200219081638.GB122464@google.com>
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+ <20200204025641.218376-2-senozhatsky@chromium.org>
+ <964aeb73-1474-032f-b2a6-b317cc15f7cb@xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrXbitwGKcEbCF84y0aEGz+B4LL_bj-_njgyXBJA74abOA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <964aeb73-1474-032f-b2a6-b317cc15f7cb@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:15:57PM -0800, Andy Lutomirski wrote:
-> On Tue, Feb 18, 2020 at 9:31 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > Ok,
-> >
-> > so Peter raised this question on IRC today, that the #MC handler needs
-> > to disable all kinds of tracing/kprobing and etc exceptions happening
-> > while handling an #MC. And I guess we can talk about supporting some
-> > exceptions but #MC is usually nasty enough to not care about tracing
-> > when former happens.
-> >
-> 
-> It's worth noting that MCE is utterly, terminally screwed under high
-> load.  In particular:
-> 
-> Step 1: NMI (due to perf).
-> 
-> immediately thereafter (before any of the entry asm runs)
-> 
-> Step 2: MCE (due to recoverable memory failure or remote CPU MCE)
-> 
-> Step 3: MCE does its thing and does IRET
-> 
-> Step 4: NMI
-> 
-> We are toast.
-> 
-> Tony, etc, can you ask your Intel contacts who care about this kind of
-> thing to stop twiddling their thumbs and FIX IT?  The easy fix is
-> utterly trivial.  Add a new instruction IRET_NON_NMI.  It does
-> *exactly* the same thing as IRET except that it does not unmask NMIs.
-> (It also doesn't unmask NMIs if it faults.)  No fancy design work.
-> Future improvements can still happen on top of this.
+On (20/02/19 09:05), Hans Verkuil wrote:
+> On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
 
-Yes please! Of course, we're stuck with the existing NMI entry crap
-forever because legacy, but it would make all things NMI so much saner.
+[..]
+
+> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> > index a2b2208b02da..026004180440 100644
+> > --- a/include/media/videobuf2-core.h
+> > +++ b/include/media/videobuf2-core.h
+> > @@ -263,6 +263,10 @@ struct vb2_buffer {
+> >  	 *			after the 'buf_finish' op is called.
+> >  	 * copied_timestamp:	the timestamp of this capture buffer was copied
+> >  	 *			from an output buffer.
+> > +	 * need_cache_sync_on_prepare: do not sync/invalidate cache from
+> > +	 * 			buffer's ->prepare() callback.
+> > +	 * need_cache_sync_on_finish: do not sync/invalidate cache from buffer's
+> > +	 * 			->finish() callback.
+> 
+> Shouldn't 'do not' be deleted from the flag descriptions? If the flag is set,
+> then you need to sync/validate, right?
+
+Hmm, kind of work both ways. Maybe the wording can be more specific,
+e.g. "Do/skip cache sync/invalidation" even more detailed "When set
+perform cache sync/invalidation from ..."
+
+	-ss
