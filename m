@@ -2,139 +2,198 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB2C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACD8C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616772176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C031C2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgBSJBj (ORCPT
+        id S1726659AbgBSJBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:01:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37615 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbgBSJBi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:01:38 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4LE1-0000bh-BZ; Wed, 19 Feb 2020 10:00:57 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6083A100F56; Wed, 19 Feb 2020 10:00:56 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple call sites.
-In-Reply-To: <87a75ftkwu.fsf@linux.intel.com>
-References: <20200214133917.304937432@linutronix.de> <20200214161503.804093748@linutronix.de> <87a75ftkwu.fsf@linux.intel.com>
-Date:   Wed, 19 Feb 2020 10:00:56 +0100
-Message-ID: <875zg3q7cn.fsf@nanos.tec.linutronix.de>
+        Wed, 19 Feb 2020 04:01:48 -0500
+Received: from mga09.intel.com ([134.134.136.24]:35860 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgBSJBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:01:48 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 01:01:47 -0800
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="229051702"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.165]) ([10.249.174.165])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 19 Feb 2020 01:01:44 -0800
+Subject: Re: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is
+ triggered by a page fault
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
+ <20200218230310.29410-2-sean.j.christopherson@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
+Date:   Wed, 19 Feb 2020 17:01:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200218230310.29410-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+On 2/19/2020 7:03 AM, Sean Christopherson wrote:
+> Add a new emulation type flag to explicitly mark emulation related to a
+> page fault.  Move the propation of the GPA into the emulator from the
+> page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
+> indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
+> exception.address when it's *not* valid.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   arch/x86/include/asm/kvm_host.h | 12 +++++++++---
+>   arch/x86/kvm/mmu/mmu.c          | 10 ++--------
+>   arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
+>   3 files changed, 30 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 4dffbc10d3f8..10c1e8f472b6 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
+>    *		   decode the instruction length.  For use *only* by
+>    *		   kvm_x86_ops->skip_emulated_instruction() implementations.
+>    *
+> - * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
+> - *			  retry native execution under certain conditions.
+> + * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
+> + *			     retry native execution under certain conditions,
+> + *			     Can only be set in conjunction with EMULTYPE_PF.
+>    *
+>    * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
+>    *			     triggered by KVM's magic "force emulation" prefix,
+> @@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
+>    *			backdoor emulation, which is opt in via module param.
+>    *			VMware backoor emulation handles select instructions
+>    *			and reinjects the #GP for all other cases.
+> + *
+> + * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
+> + *		 case the CR2/GPA value pass on the stack is valid.
+>    */
+>   #define EMULTYPE_NO_DECODE	    (1 << 0)
+>   #define EMULTYPE_TRAP_UD	    (1 << 1)
+>   #define EMULTYPE_SKIP		    (1 << 2)
+> -#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
+> +#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
 
-Cc+: seccomp folks 
+How about naming it as EMULTYPE_PF_ALLOW_RETRY and exchanging the bit 
+position with EMULTYPE_PF ?
 
-> Thomas Gleixner <tglx@linutronix.de> writes:
->
->> From: David Miller <davem@davemloft.net>
+>   #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
+>   #define EMULTYPE_VMWARE_GP	    (1 << 5)
+> +#define EMULTYPE_PF		    (1 << 6)
+> +
+>   int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
+>   int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
+>   					void *insn, int insn_len);
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 7011a4e54866..258624d46588 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
+>   int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+>   		       void *insn, int insn_len)
+>   {
+> -	int r, emulation_type = 0;
+> +	int r, emulation_type = EMULTYPE_PF;
+>   	bool direct = vcpu->arch.mmu->direct_map;
+>   
+>   	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
+>   		return RET_PF_RETRY;
+>   
+> -	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
+> -	if (vcpu->arch.mmu->direct_map) {
+> -		vcpu->arch.gpa_available = true;
+> -		vcpu->arch.gpa_val = cr2_or_gpa;
+> -	}
+> -
+>   	r = RET_PF_INVALID;
+>   	if (unlikely(error_code & PFERR_RSVD_MASK)) {
+>   		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+> @@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+>   	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
+>   	 */
+>   	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
+> -		emulation_type = EMULTYPE_ALLOW_RETRY;
+> +		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
+>   emulate:
+>   	/*
+>   	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..92af6c5a69e3 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>   	gpa_t gpa = cr2_or_gpa;
+>   	kvm_pfn_t pfn;
+>   
+> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
+> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
+>   		return false;
+>   
+> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
+> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
+> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
+>   		return false;
+>   
+>   	if (!vcpu->arch.mmu->direct_map) {
+> @@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
+>   	 */
+>   	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
+>   
+> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
+> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
+>   		return false;
+>   
+> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
+> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
+> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
+>   		return false;
+>   
+>   	if (x86_page_table_writing_insn(ctxt))
+> @@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>   	}
+>   
+>   restart:
+> -	/* Save the faulting GPA (cr2) in the address field */
+> -	ctxt->exception.address = cr2_or_gpa;
+> +	if (emulation_type & EMULTYPE_PF) {
+> +		/* Save the faulting GPA (cr2) in the address field */
+> +		ctxt->exception.address = cr2_or_gpa;
+> +
+> +		/* With shadow page tables, cr2 contains a GVA or nGPA. */
+> +		if (vcpu->arch.mmu->direct_map) {
+> +			vcpu->arch.gpa_available = true;
+> +			vcpu->arch.gpa_val = cr2_or_gpa;
+> +		}
+> +	} else {
+> +		/* Sanitize the address out of an abundance of paranoia. */
+> +		ctxt->exception.address = 0;
+> +	}
+>   
+>   	r = x86_emulate_insn(ctxt);
+>   
+> 
 
-Leaving content for reference
-
->> All of these cases are strictly of the form:
->>
->> 	preempt_disable();
->> 	BPF_PROG_RUN(...);
->> 	preempt_enable();
->>
->> Replace this with BPF_PROG_RUN_PIN_ON_CPU() which wraps BPF_PROG_RUN()
->> with:
->>
->> 	migrate_disable();
->> 	BPF_PROG_RUN(...);
->> 	migrate_enable();
->>
->> On non RT enabled kernels this maps to preempt_disable/enable() and on RT
->> enabled kernels this solely prevents migration, which is sufficient as
->> there is no requirement to prevent reentrancy to any BPF program from a
->> preempting task. The only requirement is that the program stays on the same
->> CPU.
->>
->> Therefore, this is a trivially correct transformation.
->>
->> [ tglx: Converted to BPF_PROG_RUN_PIN_ON_CPU() ]
->>
->> Signed-off-by: David S. Miller <davem@davemloft.net>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->>
->> ---
->>  include/linux/filter.h    |    4 +---
->>  kernel/seccomp.c          |    4 +---
->>  net/core/flow_dissector.c |    4 +---
->>  net/core/skmsg.c          |    8 ++------
->>  net/kcm/kcmsock.c         |    4 +---
->>  5 files changed, 6 insertions(+), 18 deletions(-)
->>
->> --- a/include/linux/filter.h
->> +++ b/include/linux/filter.h
->> @@ -713,9 +713,7 @@ static inline u32 bpf_prog_run_clear_cb(
->>  	if (unlikely(prog->cb_access))
->>  		memset(cb_data, 0, BPF_SKB_CB_LEN);
->>  
->> -	preempt_disable();
->> -	res = BPF_PROG_RUN(prog, skb);
->> -	preempt_enable();
->> +	res = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
->>  	return res;
->>  }
->>  
->> --- a/kernel/seccomp.c
->> +++ b/kernel/seccomp.c
->> @@ -268,16 +268,14 @@ static u32 seccomp_run_filters(const str
->>  	 * All filters in the list are evaluated and the lowest BPF return
->>  	 * value always takes priority (ignoring the DATA).
->>  	 */
->> -	preempt_disable();
->>  	for (; f; f = f->prev) {
->> -		u32 cur_ret = BPF_PROG_RUN(f->prog, sd);
->> +		u32 cur_ret = BPF_PROG_RUN_PIN_ON_CPU(f->prog, sd);
->>
->
-> More a question really, isn't the behavior changing here? i.e. shouldn't
-> migrate_disable()/migrate_enable() be moved to outside the loop? Or is
-> running seccomp filters on different cpus not a problem?
-
-In my understanding this is a list of filters and they are independent
-of each other.
-
-Kees, Will. Andy?
-
-Thanks,
-
-        tglx
