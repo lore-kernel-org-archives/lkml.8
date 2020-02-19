@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E839C7619D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F5C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D72206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5638206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bCKtFioU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9RxT6F0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBSWu6 (ORCPT
+        id S1727922AbgBSWvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:50:58 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36891 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgBSWu5 (ORCPT
+        Wed, 19 Feb 2020 17:51:15 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35451 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbgBSWvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:50:57 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so839482pfn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:50:57 -0800 (PST)
+        Wed, 19 Feb 2020 17:51:15 -0500
+Received: by mail-pj1-f67.google.com with SMTP id q39so10676pjc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:51:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=Xh6W34n9HHMOfDliHp3g0le7ud4E+I3txQ2gklhzxOk=;
-        b=bCKtFioU0ZNVBpVC7nZcSTqgaaNvHvJ2QpHQdlE/GfbNy3c8wRephuuBq75QqGh0/6
-         q8ZQGdTPtH1u1buLb4yZl4C/QP5LjT6cKqdK4IXTqAIcq/fItfJfWEKIWJMwXwIb0d8s
-         WDs77G8E3jiZbo17nQcU+jse967+Fp52qjunk=
+        bh=/C/96K5oLYn6X+y/FSyD1yv4KOr+6D8nD+8tPOB3y0Q=;
+        b=L9RxT6F05R55DW31tM4Z5gEB7dV+9AOuoO5r5z9ceAqqDfiSEL/104dEWIO1iraFNT
+         089InYs24GWN+iGki+xKDf1BTG0dSNtUruxPvMiJrcIwPvDHxtP43v9EyTIvZdcrcuUu
+         HRRYVWm7Ddkt5nek6SrdQonpS/rCmeNVXpdUY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=Xh6W34n9HHMOfDliHp3g0le7ud4E+I3txQ2gklhzxOk=;
-        b=RFpLHhyVVLwQNOSnlXeM+6wDQPELGezUYieCriGWHAyKy85DwcyzlLeyillAsBMDus
-         Fwwt7E/kBTjxFByn0ZRnJ5P2lobOWaOwlJCCdrBcZfHIbxnFsNDXIxCECirF1jmnozzZ
-         gyBONEf/QyL6A7GLuA4G4mJJ5goMa/iarX3JgdNi7Zq6WNoY+Oi4UExh9oYf42g7Hbvw
-         R9dJ3UCba3rk0ttqHQcd+7+2ZI+0mLz8zuCnKGJ3DApMfG3J9lHIwBQF8sdNWsWDh7VX
-         VPLf6Bs2wS+opY6zsm/OqjxDElsGfxqlQ+avN6oXEmSrRgHlM9AElbBmaUkVrHKP5sAQ
-         5raA==
-X-Gm-Message-State: APjAAAU1oQhRJlv0D2GaKPsjSLGSk6XCTL8Oso2XVrSCQq9v/9tiqU8j
-        2T5Or7ZDMXxmj1v+ZQYkOmvJaw==
-X-Google-Smtp-Source: APXvYqzC8A31lbSt2qHC9NJ+UENq9WfFlFJtzZY4ubDomuJM3gpEnKkV0tUtyrvaFFnQZZ2ZEjwOMg==
-X-Received: by 2002:a62:7b93:: with SMTP id w141mr29774758pfc.226.1582152656638;
-        Wed, 19 Feb 2020 14:50:56 -0800 (PST)
+        bh=/C/96K5oLYn6X+y/FSyD1yv4KOr+6D8nD+8tPOB3y0Q=;
+        b=b2HEXndifxnAZDWbaxWY8Idmbrnw+nu8OuIDBWNe/x9CJWrvkP6PjoNt7q5Dez7Xri
+         EW9u1UAocQXH+3Qnz99/XWl3Txffoakv26ZOc0YoYH1B9X5ux5vxic2dcugQFSC9QDXu
+         +3LcoNiLiJeHrYvZP7PIiHCkTEPsDeLTUxOnuyTuEReITEkemJHQu7hTa3bfilM6m11L
+         +j/5brjbJZeUVznxnUKZFV7gcbwiTlmfrjZHC1LVyXBc7BilqXnvkItXrwwLgDhQXgo5
+         73Nf/uQBggxiNGWgQXhaEgoy2ecqlzdr7vp49UP9RpeGSVCxVPeobrvF8HAgr1+qdDz4
+         Y/Gw==
+X-Gm-Message-State: APjAAAWyR2r1W5G2QmuAMytoBK1lsvbZqiFYTHolLCxKAyNVeVTPdI9F
+        1JyD8AyzRT8lqW8pPl05hJz8yQ==
+X-Google-Smtp-Source: APXvYqya2k/fNH0PCv1YhT7xUIMf025rMaROJHmjvNV8yKGJHvlsVKCJayU+6UxVpnujNIsc/SR0KA==
+X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr10935860pjb.99.1582152673231;
+        Wed, 19 Feb 2020 14:51:13 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q187sm642475pfq.185.2020.02.19.14.50.55
+        by smtp.gmail.com with ESMTPSA id k9sm808496pjo.19.2020.02.19.14.51.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:50:56 -0800 (PST)
+        Wed, 19 Feb 2020 14:51:12 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <d3e1c0f148d46e395a0886d9028df0faf8e9f9bb.1582048155.git.amit.kucheria@linaro.org>
-References: <cover.1582048155.git.amit.kucheria@linaro.org> <d3e1c0f148d46e395a0886d9028df0faf8e9f9bb.1582048155.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH v5 8/8] drivers: thermal: tsens: Remove unnecessary irq flag
+In-Reply-To: <8990f5cd5ec2bc2aa0f13c0ad5cd41b8d1a5632e.1582048155.git.amit.kucheria@linaro.org>
+References: <cover.1582048155.git.amit.kucheria@linaro.org> <8990f5cd5ec2bc2aa0f13c0ad5cd41b8d1a5632e.1582048155.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH v5 7/8] drivers: thermal: tsens: kernel-doc fixup
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org
@@ -67,17 +67,45 @@ To:     Amit Kucheria <amit.kucheria@linaro.org>,
         Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
         daniel.lezcano@linaro.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, sivaa@codeaurora.org
-Date:   Wed, 19 Feb 2020 14:50:55 -0800
-Message-ID: <158215265508.184098.6650576617736440661@swboyd.mtv.corp.google.com>
+Date:   Wed, 19 Feb 2020 14:51:12 -0800
+Message-ID: <158215267200.184098.11619305318344159345@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2020-02-18 10:12:12)
-> IRQF_TRIGGER_HIGH is already specified through devicetree interrupts
-> property. Remove it from code.
+Quoting Amit Kucheria (2020-02-18 10:12:11)
+> Document ul_lock, threshold and control structure members and make
+> the following kernel-doc invocation happy:
+>=20
+> $ scripts/kernel-doc -v -none drivers/thermal/qcom/*
+>=20
+> drivers/thermal/qcom/qcom-spmi-temp-alarm.c:105: info: Scanning doc for q=
+pnp_tm_get_temp_stage
+> drivers/thermal/qcom/tsens-common.c:18: info: Scanning doc for struct tse=
+ns_irq_data
+> drivers/thermal/qcom/tsens-common.c:130: info: Scanning doc for tsens_hw_=
+to_mC
+> drivers/thermal/qcom/tsens-common.c:163: info: Scanning doc for tsens_mC_=
+to_hw
+> drivers/thermal/qcom/tsens-common.c:245: info: Scanning doc for tsens_set=
+_interrupt
+> drivers/thermal/qcom/tsens-common.c:268: info: Scanning doc for tsens_thr=
+eshold_violated
+> drivers/thermal/qcom/tsens-common.c:362: info: Scanning doc for tsens_cri=
+tical_irq_thread
+> drivers/thermal/qcom/tsens-common.c:438: info: Scanning doc for tsens_irq=
+_thread
+> drivers/thermal/qcom/tsens.h:41: info: Scanning doc for struct tsens_sens=
+or
+> drivers/thermal/qcom/tsens.h:59: info: Scanning doc for struct tsens_ops
+> drivers/thermal/qcom/tsens.h:494: info: Scanning doc for struct tsens_fea=
+tures
+> drivers/thermal/qcom/tsens.h:513: info: Scanning doc for struct tsens_pla=
+t_data
+> drivers/thermal/qcom/tsens.h:529: info: Scanning doc for struct tsens_con=
+text
 >=20
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
