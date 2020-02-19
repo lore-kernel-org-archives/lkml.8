@@ -2,181 +2,94 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A54CC18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29358C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAA8206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F9F24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582139097;
-	bh=witjqTYAnAVOmMzC51fiWL+WZGBZFYYv95mxRShPbCE=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	s=default; t=1582139124;
+	bh=a8v8o/RLgXbtSPWW2aaagFCiOmMgfZKdTuyS8Lp1V+8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=0qPX3zBK4+eXcFiZZ8I8GCI8gRJTAes1P5oTcJFqHjYXrGZhZo9O3qf3XcPrf9GQo
-	 1GpXJMZVTh0XODZkD/1/B+r1H7wsxrBVYtuJZfWSiGlxGM9j2egzo9psx7VsvJqNLt
-	 rv6vqb57p0DmFlV1XhIIWEges14KJ7Ir4SFz6VZs=
+	b=jEdXsrNAutzlfUXQH20uxMUNqywaxo6OLRdLDmUj8TZdbTmgDfomFCBKXTTcpI2S9
+	 xtnSq4p8z4e5FbUP68e7cbQreVCadqlsn6MpKEowA83IpkK5bky8WuL7vj0TJ1GJe0
+	 KeMzLRW3U/iua6uyJZhVN5YgCghlWYaR/237DypQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgBSTE4 (ORCPT
+        id S1726750AbgBSTFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:04:56 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45555 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSTEz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:04:55 -0500
-Received: by mail-pg1-f193.google.com with SMTP id b9so546583pgk.12;
-        Wed, 19 Feb 2020 11:04:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=kocwF+O1vACVeOoTXVC1r2xPM1rk+Pt4gRCOCoHb59E=;
-        b=cYPO+iWTtuyAskWSnsdw8ExnxgEA0l+N6EIMo8b7KvOe99+vxvWTuEaETkVe+E3uP6
-         uygDfsdu6iBlwmV8xXUQVnDQhuHcVaT+Dcw4hqjLCV6sx+PqTPDmkOOCR/EQFWTuAkZm
-         76mXlDxznUXUSwJ42oiyQhFJMcLwl2XMkYSXBmA39Jj2Wd0GP5LcvbQYZhnSQ9Y8WlCH
-         YbjG8doOpyZUJ5vzQTLgRTBajvgrHPEkmW6moxiGhNeFIQc7w73h7h38aSimOp0FVjbm
-         oRoJUruZQhylrfZiV2D++3z52s3I04hezvhZCnZaAS1ESyffufF9AYHtKMtudRKF5yHB
-         gKbg==
-X-Gm-Message-State: APjAAAWOmYPiHmjJttpJ/1ddB6yLjRFNpsPcJ1p+6CLqspAd2ueL4Qi5
-        NANZZP3xWdK5ShNT9xJF6ts=
-X-Google-Smtp-Source: APXvYqxILDyWPG2jl5KZXH15mkHqxLILbJsULM1VSWJlyw8FlDzdNiR5dyq43yKarParaxT6eqFZpA==
-X-Received: by 2002:a65:420c:: with SMTP id c12mr28177977pgq.270.1582139094170;
-        Wed, 19 Feb 2020 11:04:54 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id a13sm385320pfg.65.2020.02.19.11.04.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:04:53 -0800 (PST)
-Message-ID: <5e4d86d5.1c69fb81.85d93.1371@mx.google.com>
-Date:   Wed, 19 Feb 2020 11:04:48 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        James Hartley <james.hartley@sondrel.com>,
-        John Crispin <john@phrozen.org>
-CC:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH 0/7] MIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-References:  <20200212101544.8793-1-geert+renesas@glider.be>
-In-Reply-To:  <20200212101544.8793-1-geert+renesas@glider.be>
+        Wed, 19 Feb 2020 14:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726613AbgBSTFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:05:22 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 025C624654;
+        Wed, 19 Feb 2020 19:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582139122;
+        bh=a8v8o/RLgXbtSPWW2aaagFCiOmMgfZKdTuyS8Lp1V+8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=aoKhVjpyyOdq2W0Mcocjnqb+Ff8EeI0eZ2hOC84yrZTmvSpFNnA6UWbKVu2QtjC48
+         xcm/bJycVQnY8Yewh/mwYYPiiXBF6eCgEfdgrAepABeWgp8/BosEa+FVsTAorMv/4p
+         9i8cE787xpfvfTYv29SzApEvz0/xZah1hbKFDT5Y=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D2D903520BB6; Wed, 19 Feb 2020 11:05:21 -0800 (PST)
+Date:   Wed, 19 Feb 2020 11:05:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 13/22] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200219190521.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200219144724.800607165@infradead.org>
+ <20200219150745.125119627@infradead.org>
+ <20200219164356.GB2935@paulmck-ThinkPad-P72>
+ <20200219164736.GL18400@hirez.programming.kicks-ass.net>
+ <20200219170507.GH14946@hirez.programming.kicks-ass.net>
+ <20200219122116.7aeaf230@gandalf.local.home>
+ <20200219174025.GJ2935@paulmck-ThinkPad-P72>
+ <20200219130012.116670fd@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219130012.116670fd@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Feb 19, 2020 at 01:00:12PM -0500, Steven Rostedt wrote:
+> On Wed, 19 Feb 2020 09:40:25 -0800
+> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> 
+> > > Correct, and if rcuidle is not set, and this is a macro, the SRCU
+> > > portion is compiled out.  
+> > 
+> > Sigh!  Apologies for the noise!
+> > 
+> > If we are using SRCU, we don't care whether or not RCU is watching.  OK,
+> > maybe finally catching up -- the whole point was use of RCU in other
+> > tracing code, wasn't it?
+> 
+> Some callbacks (namely perf) might use RCU, but then the callbacks
+> need to make sure rcu is watching.
 
-Geert Uytterhoeven wrote:
-> Hi all,
-> 
-> The OF clock helpers were moved to <linux/of_clk.h> a while ago.
-> Hence code that is not a clock provider, but just needs to call
-> of_clk_init(), can (and should) include <linux/of_clk.h> instead of
-> <linux/clk-provider.h>.
-> 
-> All these patches are independent of each others, and thus can be
-> applied by the corresponding subsystem maintainers.
-> 
-> Thanks!
-> 
-> Geert Uytterhoeven (7):
->   MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
-> 
->  arch/mips/ath79/setup.c          | 2 +-
->  arch/mips/bmips/setup.c          | 2 +-
->  arch/mips/generic/init.c         | 2 +-
->  arch/mips/jz4740/time.c          | 2 +-
->  arch/mips/pic32/pic32mzda/time.c | 2 +-
->  arch/mips/pistachio/time.c       | 2 +-
->  arch/mips/ralink/timer-gic.c     | 2 +-
->  7 files changed, 7 insertions(+), 7 deletions(-)
+Got it, thank you!
 
-Series applied to mips-next.
-
-> MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit d2936bd02b19
->   https://git.kernel.org/mips/c/d2936bd02b19
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit e40b3deff7af
->   https://git.kernel.org/mips/c/e40b3deff7af
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Acked-by: Florian Fainelli <f.fainelli@gmail.com>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit 089a792c750d
->   https://git.kernel.org/mips/c/089a792c750d
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit 3a94afc68947
->   https://git.kernel.org/mips/c/3a94afc68947
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Reviewed-by: Paul Cercueil <paul@crapouillou.net>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit 071cec1bfe1f
->   https://git.kernel.org/mips/c/071cec1bfe1f
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit 97e04ea15fd5
->   https://git.kernel.org/mips/c/97e04ea15fd5
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Acked-by: James Hartley <james.hartley@sondrel.com>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-> 
-> MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
->   commit 9926108f799a
->   https://git.kernel.org/mips/c/9926108f799a
->   
->   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
->   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
->   Acked-by: John Crispin <john@phrozen.org>
->   Signed-off-by: Paul Burton <paulburton@kernel.org>
-
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+							Thanx, Paul
