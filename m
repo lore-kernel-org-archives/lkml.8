@@ -2,151 +2,200 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F121DC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28FF4C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C251721D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEC921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AdkOxge9"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lf5ibYvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBSJzn (ORCPT
+        id S1726605AbgBSJ5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:55:43 -0500
-Received: from mail-eopbgr20070.outbound.protection.outlook.com ([40.107.2.70]:37298
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726385AbgBSJzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:55:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MhPIkTGq/DmZKGTO55vrBn9jnfaQ7tycRCS9yw/UiHVDp/11CAuG1aaY6NP91s6BXFL0oRzxaB47v3kXZkX6/EkgBC/rOpSSh3d1FEEfG65fJI4F6rVny0L/gFdbKfQGaLoBo0eXbsOI9Dg3CSMZ3C0epp0Lg68D6EQGZb9ufTfBKny/BP0Pm1aFh9bwudbi0JhPCriy4cAyJ2FXp/6+OnM7bOwfDDJEMpnw6GMDERuNSt0YjS1pC9UZO2MFVmJl7/1lsEs4iX4EGLOjxJYfTDWfWi1Ll3nX1JBlg56m4FBQ7ADEQln86wxJgJgtZxKgklrGpQRpgxUQVF/b7f9EfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JqD83DZNrnn/o8j0K6PwZLQEadzOVt1Lxc7Jw432W0o=;
- b=GhbioS6N+a2dP7k0BKImypSiI3pyisxMyG9F0nXubViudONfEAxFu92XVSG6Uzi3+UcSTU1U2wRuBO1zgKF/eEWGnD99O5yyD22KHlWjG3Eh5h6mc/qSvmigiUkcIsNn5B+N7X3xAfTQZASYNjZx4I11D39Wkpcvut+8QmfcmnMnjTJofaOXyUMacfUcXqvWiQjgZuu0QJyebBWZPyuF46VVIveoiZgdbwTYGqq9pw8qcl7c6Qz0KQVM4+R81fIqbJBP+J9NS4YavzchRILaw7okAUYJ2JSOK6mJP+pGbEo6cQgPoIkH2zghv0pyi5bwW9vyFz3X+DnnJC6I9ZlweQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JqD83DZNrnn/o8j0K6PwZLQEadzOVt1Lxc7Jw432W0o=;
- b=AdkOxge9SqQM7ofmHw0WA271sfEG13bR91/OIOGoUR5Aj3oVu1o98q5s5+yLj+dQexpxZugZ2XPDgaDgSn/pfIgSKxHyDWHtR7YoODL1Xk11P61FiySDUUAN5ww5hlrmQrp/jwp6ysyRXIQ1KISfk/NRG6pbX6xGxYHKg5OBme0=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4979.eurprd04.prod.outlook.com (20.177.40.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Wed, 19 Feb 2020 09:55:39 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 09:55:39 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Abel Vesa <abel.vesa@nxp.com>
-Subject: RE: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
- intermediate callbacks
-Thread-Topic: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
- intermediate callbacks
-Thread-Index: AQHV5vuGM17dCu5aOkOrNUFZCKyD1qgiRNWAgAAAzHA=
-Date:   Wed, 19 Feb 2020 09:55:39 +0000
-Message-ID: <AM0PR04MB4481BE7EB99F6D3E198A4D7088100@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
- <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
- <20200219094603.2yfat5xxyabunlja@vireshk-i7>
-In-Reply-To: <20200219094603.2yfat5xxyabunlja@vireshk-i7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8f30c23a-0281-4a2f-89e5-08d7b521e03e
-x-ms-traffictypediagnostic: AM0PR04MB4979:|AM0PR04MB4979:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB49793C215A9151F5918A837588100@AM0PR04MB4979.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0318501FAE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(2906002)(53546011)(6506007)(8936002)(26005)(81156014)(52536014)(66476007)(66446008)(66556008)(64756008)(5660300002)(186003)(8676002)(81166006)(66946007)(76116006)(86362001)(71200400001)(6916009)(316002)(4326008)(54906003)(7696005)(33656002)(7416002)(478600001)(9686003)(55016002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4979;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Zzjx40BdPqviYtovZr+0yorcMGqlPSXwtFfwvd42CwWaHOXKdduvPHffQ8h/zB0Tb0DKxYZqNT0DRtv0vD+eFDprIkYuCvXlrGhNVhXDTNpndSOJXXro5ba4KFaZQMWiPqTPy8RoK49Ywk2SXfDTTcgoi5OWE5wtkLub2NMRmKYBv5NpEeJ5k2bLmAzqlOpkmec+YVQOvoMST6fUbSY9PyJC/idIuBIqfvMcfRMUFU+syhlASQ98lgD8BWbLJGsxZtt04VZfa2n9AdEnFc8Seb8PJdWW8I2Lq9jJtOHd0y7taBbVxgy73xWaYNIpKn/yDXWBKLkBEVzwF9tFTnLmsVHiNpVTtOKNd8KGe8JXoMXa6aixvAPbgRBFG5dPg/QssEhQyRmZJRr65L0nxyxuroCwL/wdd6m4O9kco53DO9sRyuszfbmsKOxTIKC1gu2v
-x-ms-exchange-antispam-messagedata: w3Yb/n1Gz6lNZxgCCkbHk9VUm4xYMFiAswrwU/ltHkq5nTRJybvgFIBQeM1X41xur8Lk9OIcJ5iCAYr13yTa3lD6MFP7jH7GrXkghtfC/8ZvLOczT0tRq7PMkkhIGu9jMHE6QcEMM0GJWMCpRHS8SA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 19 Feb 2020 04:57:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47672 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgBSJ5E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:57:04 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9rCWD044660;
+        Wed, 19 Feb 2020 09:56:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=D5hLOhK+GwF+BHLftwyGI3jpHA8NKMUvdykJgyA5MOk=;
+ b=lf5ibYvDYUmPr2XOSNp0IjnjNNgWAjWMoEajAWWOzQ46+/7PKCrhlGkre4ZboWORXEOC
+ P6AEGwWsLXC2L6ShAhBO9yzeIKS8eLfSyWieETMEi/+anXtqShzowgSUukB5mfJD0O5n
+ kLyHH8rgbfOVOfd/LXqtJlsuGeVuQOa0PhCsUiAJZKGUlXxRiUGFkLF2Lssqk72MF2hB
+ IM5RbJrQGBCjikIPW20PV8D7KCK6Y9XNHTkOVXGrE4hdw4UgDDBj+JbBkI/DYdZodzWu
+ hclpGVwvMojLOc4dsdHlYeJFGB8jsiq9PSICNE+Pj/kOCT0BorX4tP6S/zkNqTIC3E4w Tg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2y8udk9w4f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 09:56:31 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9pvBv133766;
+        Wed, 19 Feb 2020 09:56:30 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y8ud4hmb7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 09:56:30 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J9uSNI015234;
+        Wed, 19 Feb 2020 09:56:28 GMT
+Received: from dhcp-10-175-189-86.vpn.oracle.com (/10.175.189.86)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 01:55:43 -0800
+Date:   Wed, 19 Feb 2020 09:55:35 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-189-86.vpn.oracle.com
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, rostedt@goodmis.org,
+        shuah@kernel.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
+Subject: Re: [PATCH 2/2] ftrace/selftest: absence of modules/programs should
+ trigger unsupported errors
+In-Reply-To: <20200207175011.5312fcb9be04c83ec9eb548c@kernel.org>
+Message-ID: <alpine.LRH.2.20.2002190937030.13023@dhcp-10-175-189-86.vpn.oracle.com>
+References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com> <1581001760-29831-3-git-send-email-alan.maguire@oracle.com> <20200207134316.54cfa16707e72e50cb320f8f@kernel.org> <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
+ <20200207175011.5312fcb9be04c83ec9eb548c@kernel.org>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f30c23a-0281-4a2f-89e5-08d7b521e03e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 09:55:39.6178
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZxrmUlPCZ0k2t2PRXK6nGA0SHG+Jb9ZuxWgEVMHXSFNI9AhM7qsKGvMMDFpxkDxGAv9AJFbp7Eunj9hKV7U2Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4979
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190073
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+On Fri, 7 Feb 2020, Masami Hiramatsu wrote:
 
-> Subject: Re: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
-> intermediate callbacks
->=20
-> On 19-02-20, 15:59, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Platforms may need to implement platform specific get_intermediate and
-> > target_intermediate hooks.
-> >
-> > Update cpufreq-dt driver's platform data to contain those for such
-> > platforms.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/cpufreq/cpufreq-dt.c | 4 ++++  drivers/cpufreq/cpufreq-dt.h |
-> > 4 ++++
-> >  2 files changed, 8 insertions(+)
->=20
-> Looks fine to me, please lemme know the patches you want me to apply to
-> the cpufreq tree.
+> On Fri, 7 Feb 2020 08:27:13 +0000 (GMT)
+> Alan Maguire <alan.maguire@oracle.com> wrote:
+> 
+> > On Fri, 7 Feb 2020, Masami Hiramatsu wrote:
+> > 
+> > > Hi Alan,
+> > > 
+> > > On Thu,  6 Feb 2020 15:09:20 +0000
+> > > Alan Maguire <alan.maguire@oracle.com> wrote:
+> > > 
+> > > > In a number of cases, the ftrace tests check for the presence of
+> > > > ftrace testing-related modules (ftrace-direct, trace-printk) and
+> > > > programs (checkbashisms), returning exit_unresolved if these
+> > > > are not found.  The problem is, exit_unresolved causes execution
+> > > > of ftracetest to return an error, when really our tests are
+> > > > failing due to not having the requisite kernel configuration/tools
+> > > > present, which is I think more of an unsupported error condition.
+> > > > With these fixed, we see no unresolved test cases and ftracetest
+> > > > returns success ("ok" when run via kselftest).
+> > > 
+> > > If your problem is to pass the test even if you don't test the
+> > > feature, please change the ftracetest itself instead of replacing
+> > > unresolved with unsupported. Those notice different situation.
+> > > 
+> > > unresolved - Testcase can not find some tools or helper drivers
+> > >              which are required for this testcase.
+> > > 
+> > > unsupported - Kernel does not have tested feature because of
+> > >               the version or the configuration.
+> > > 
+> > > Obviously the unresolved is a test environment issue. No test-module
+> > > doesn't mean no feature to be tested.
+> > > Could you tell me the reason why you can't install those required
+> > > tools and modules on the test environment?
+> > > 
+> > 
+> > Sure! In my case, I'm testing a distro production kernel,
+> > where I can't control the CONFIG variable settings.  In
+> > this case, ideally I'd like the tests to return success
+> > if no problems with ftrace were detected, even if some
+> > of the tests could not be run due to missing modules
+> > and programs.
+> 
+> OK, for modules, we need to find another way to solve the issue.
+> But how about checkbashisms? you can download and build it.
+> 
+> https://sources.debian.org/src/devscripts/2.20.2/
+>
 
-Thanks for quick reply.
+Yep, I should have said that this one isn't a big issue, it's
+also packaged in some distros in rpmdevtools.
+ 
+> For the modules, you might be able to build it from kernel
+> source code as out-of-tree modules, or not?
+> (hmm, how do the other test handle it...?)
+>
 
-Patch 1-9,13 needs to go into i.MX tree. Patch 10-12 needs to go into your =
-tree.
+Ideally (from my perspective at least) the tests would
+build the modules if needed, but I think the constraints
+on kselftests are  that sometimes the kselftests are packaged
+and  installed without the rest of the source tree, so I
+_think_ given that the module source is in other parts of the
+tree (that may not be present) we're probably stuck.  It'd be
+great to have have a solution to this though, as I have a
+feeling there may be more and more cases like this with the
+growth of kunit.
 
-But patch 11,12 depends on patch 3-9 to make i.MX7ULP cpufreq work. So
-for now, only patch 10 could be directly taken into your tree.
+Looks like the official way to do this sort of thing is
+described in Documentation/dev-tools/kselftest.rst:
 
-Will let you know after CLK and i.MX maintainer agree on the clk part, then
-you could take patches 10-12 in a whole.
+   # Assumes you have booted a fresh build of this kernel tree
+   cd /path/to/linux/tree
+   make kselftest-merge
+   make modules
+   sudo make modules_install
+   make TARGETS=lib kselftest
 
-Thanks,
-Peng.=20
+It seems to merge existing config with the config files in the
+kselftest dirs and rebuild modules; I'll give this a try.
 
->=20
-> --
-> viresh
+I was hoping for a lightweight version of the above which
+just builds the modules needed without rebuilding everything.
+
+> >  As you suggest above (unless I'm
+> > misunderstanding), this could be accomplished by modifying
+> > ftracetest itself.  Would doing something like what is done
+> > for UNSUPPORTED_RESULT (defaults to 0, but can be set to
+> > 1 via --fail-unsupported, such that ftracetest returns
+> > 1 if we encounter unsupported results) make sense for
+> > the unresolved case too?
+> 
+> Yes, but at first could you try to setup your testing environment?
+> If you are officially testing your distro kernel, the distro
+> might need to be tested with full-set of testcases.
+>
+
+Absolutely! I'll see if I can convince the modules to
+build using the above scheme.
+
+Thanks for the review and advice!
+
+Alan
+
+> If not (like you are testing kernel for fun :)), you can just
+> make your custom set of testcases. (just remove those test files)
+> 
+> Thank you,
+> 
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
+> 
