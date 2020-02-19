@@ -2,107 +2,168 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBB4C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DB1C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F6224670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:55:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F6C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:56:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XepYboAf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fFR5/roP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBSRzq (ORCPT
+        id S1726691AbgBSR4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:55:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27080 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726659AbgBSRzp (ORCPT
+        Wed, 19 Feb 2020 12:56:35 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51142 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSR4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:55:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582134944;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=woJrYBQ5G1rIzUoBIxisrRt/fHuFNb6jWX81Ut30+Bc=;
-        b=XepYboAfsQQNWtCx50VGEyzOfnRussqI55aiEJLCIQoTbXH/A4+DO9cuY7zKEfrg59NDwz
-        8R0pIs4iH2CM8+DG1WWzKdFgmr0BqASAIZz9G3Fzl2Y8fq6RhJc+opDkAy1sPD4fK+fKbm
-        eNhMkdgnTas7RhkhjGNRfn7WFeAQMrE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-c4VgchpyOW2sfzE38trctg-1; Wed, 19 Feb 2020 12:55:36 -0500
-X-MC-Unique: c4VgchpyOW2sfzE38trctg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DBF413F9;
-        Wed, 19 Feb 2020 17:55:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 64AC21001920;
-        Wed, 19 Feb 2020 17:55:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
-References: <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com> <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk> <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com> <227117.1582124888@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+        Wed, 19 Feb 2020 12:56:35 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JHuSU5009210;
+        Wed, 19 Feb 2020 11:56:28 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582134988;
+        bh=NjuzcmoUHTvYL3VcoNva3wXzFr/w550bjZ+AIRaeHME=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fFR5/roPr0Pknb3A9oO9aBcZxFv/fRlCxD2m9UNOqsJl++s2nnNvuWke/C9MzJUnU
+         z7Z2B0pvVAc6o0dGyrJYcE08nPG2Cp1k6drBP0uedSdK3G/ziA8HJ3texPbkQjXWSI
+         VRIA1Tsno45So7vafDmgmb2IzmQpp9AT3hDcJzog=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JHuStL012258;
+        Wed, 19 Feb 2020 11:56:28 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 11:56:28 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 11:56:28 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JHuSlR093961;
+        Wed, 19 Feb 2020 11:56:28 -0600
+Subject: Re: [PATCH v3] leds: add SGI IP30 led support
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
+CC:     <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
+References: <20200219160504.27555-1-tbogendoerfer@suse.de>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <93666bdf-dc53-e091-157e-e5b988ede97c@ti.com>
+Date:   Wed, 19 Feb 2020 11:51:24 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <241567.1582134931.1@warthog.procyon.org.uk>
-Date:   Wed, 19 Feb 2020 17:55:31 +0000
-Message-ID: <241568.1582134931@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200219160504.27555-1-tbogendoerfer@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+Thomas
 
-> What are the insane pioctl semantics you want?
+On 2/19/20 10:05 AM, Thomas Bogendoerfer wrote:
+> This patch implemenets a driver to support the front panel LEDs of
+> SGI Octane (IP30) workstations.
+>
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+> ---
 
-There's a file type beyond file, dir and symlink that AFS supports:
-mountpoint.  It appears as a directory with no lookup op in Linux - though it
-does support readlink.  When a client walks over it, it causes an automount of
-the volume named by the content of the mountpoint "file" on that point.  NFS
-and CIFS have similar things.
+Sorry for the delay in review I had to go back and review v1 and v2 
+comments
 
-AFS allows the user to create them and remove them:
 
-	http://docs.openafs.org/Reference/1/fs_mkmount.html
-	http://docs.openafs.org/Reference/1/fs_rmmount.html
+> Changes in v3:
+>    - rebased to 5.6-rc2
+>
+> Changes in v2:
+>    - use led names conforming to include/dt-bindings/leds/common.h
+>    - read LED state from firmware
+>    - leave setting up to user
+>
+>   drivers/leds/Kconfig     | 11 ++++++
+>   drivers/leds/Makefile    |  1 +
+>   drivers/leds/leds-ip30.c | 80 ++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 92 insertions(+)
+>   create mode 100644 drivers/leds/leds-ip30.c
+>
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index d82f1dea3711..c664d84e1667 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -846,6 +846,17 @@ config LEDS_TPS6105X
+>   	  It is a single boost converter primarily for white LEDs and
+>   	  audio amplifiers.
+>   
+> +config LEDS_IP30
+> +	tristate "LED support for SGI Octane machines"
+> +	depends on LEDS_CLASS
+> +	depends on SGI_MFD_IOC3
+> +	help
+> +	  This option enables support for the Red and White LEDs of
+> +	  SGI Octane machines.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called leds-ip30.
+> +
+>   comment "LED Triggers"
+>   source "drivers/leds/trigger/Kconfig"
+>   
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index d7e1107753fb..46bd611a03a9 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+>   obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+>   obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
+>   obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+> +obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
+>   
+>   # LED SPI Drivers
+>   obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+> diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
+> new file mode 100644
+> index 000000000000..82453a216f81
+> --- /dev/null
+> +++ b/drivers/leds/leds-ip30.c
+> @@ -0,0 +1,80 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * LED Driver for SGI Octane machines
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/leds.h>
+> +
+> +struct ip30_led {
+> +	struct led_classdev cdev;
+> +	u32 __iomem *reg;
+> +};
+> +
+> +static void ip30led_set(struct led_classdev *led_cdev,
+> +			enum led_brightness value)
+> +{
+> +	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
+> +
 
-provided the server grants permission to do so.
+With max_brightness set to 1 then value will only be either 1 or 0.  The 
+LED framework takes care of gating the values.
 
-OpenAFS, Coda, etc. do this by means of a pair of pioctl() functions (at
-least, I think Coda does - it ships the pioctl parameters off to userspace to
-handle, so the handling is not actually in the kernel).
+So this can be writel(value, led->reg);
 
-> If you can't even open a file on the filesystem, you damn well
-> shouldn't be able to to "pioctl" on it.
-> 
-> And if you *can* open a file on the filesystem, why can't you just use
-> ioctl on it?
+Otherwise
 
-Directory, not file.  You can do mkdir (requiring write and execute), for
-example, in a directory you cannot open (which would require read).  If you
-cannot open it, you cannot do ioctl on it.
+Reviewed-by: Dan Murphy <dmurphy@ti.com>
 
-open(O_PATH) doesn't help because that doesn't let you do ioctl.
-
-David
 
