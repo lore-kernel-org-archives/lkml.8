@@ -2,148 +2,117 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5774AC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA8CC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 352A524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582134773;
-	bh=p4+U61rOL8UqXw+zdGS8TsO+9JmLa5Y9WBdlRelZRu8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kADuWYoxOnP2fY3pjlRlMAXptYWdp6YhDzk2GD0eJdz547v8ipCAYSFwjJMbmIFe4
-	 h8ToiTBqQC6PoVLY/pYC1ijav6DG/FhnTFjcdb4nZSPLDQNTwqrmbfY7BqBSPNr0Rb
-	 whok/7eZSm1rKO3LTN9whb6t5cibwjxAlFGm7pAc=
+	by mail.kernel.org (Postfix) with ESMTP id 6B96D24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:54:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjlV42MR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgBSRwu (ORCPT
+        id S1726652AbgBSRyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:52:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52088 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgBSRwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:52:49 -0500
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB78B2467A;
-        Wed, 19 Feb 2020 17:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582134768;
-        bh=p4+U61rOL8UqXw+zdGS8TsO+9JmLa5Y9WBdlRelZRu8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O8OazZxyMRidM7JJBXHHLPQaABxyydxjwKdDR5AfvFme3mNglX8t8m7XQbcjO7Q80
-         fuLH1inydzj4U4OQuJz8BKePXKeLovvgITXtVLPQwS8S3JtPQlrzu0nrehc1XwUIv9
-         FR3oL176lbNuZt7akF7YTj7Kw+33X2n8/AiGORiM=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jiri Slaby <jirislaby@gmail.com>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH v2 9/9] ath5k: Constify ioreadX() iomem argument (as in generic implementation)
-Date:   Wed, 19 Feb 2020 18:50:07 +0100
-Message-Id: <20200219175007.13627-10-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200219175007.13627-1-krzk@kernel.org>
-References: <20200219175007.13627-1-krzk@kernel.org>
+        Wed, 19 Feb 2020 12:54:45 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:42715 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSRyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:54:44 -0500
+Received: by mail-io1-f68.google.com with SMTP id z1so1513748iom.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pVM5w8pWHIZ/EotHHbfztVooGI8DcUzurZWsF1GVlv8=;
+        b=DjlV42MRt2LwvsGMIDSNfx2AlWBIF4tJPASkfQu/VLpaQu1yL754QGU09InNr6NAgu
+         8g5fJpIsH7COZk6EB0zw9/ige/4dde1ABsmKYLgBVu/sSXqHOe+gja1sJDFqOpL9WNFv
+         526qHK1l63cPNl2V1Nu/KQqfb2fSFZhFc7uAd7yb116KZFlpmb3P3fHT/jxuUtzSavc/
+         sKbiVxVfwUbPfYuxoX7dGZfaWG6ZGVSzyoUD6b1+cmHdDgfzJVqHfuOEUqzSPU6M4gm1
+         Ln42OI5fF0o8b5vsQpoESRmVpSwuIBs95MtyHTVicm5IeehmlyEC5ip8PQjf2Wwh6zuK
+         /C3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pVM5w8pWHIZ/EotHHbfztVooGI8DcUzurZWsF1GVlv8=;
+        b=TxljV1qLU9LmEAWJkU3uwn5PAU6Exd7acX1B5vua4jWllFuYKChTI/oWLeiG4PQ2yJ
+         x8xy8mcS5BEaUzgizzhZdibbL3CmJJy4zUHF/BZhcfx42z2arQz5FCXGa2GoZLyZxsC1
+         silZXotE6xRRvGeXzSO5ex1WWc0+qd4uPE4Xxek/PysthIgMMYisvW1BZp4JxkH8CB/p
+         Gi5Fi3Fcv2VA+FZF9pR8yexnuoETaqY9DdbwygfkEr2/vk0+SFHhEDej82LCblXVMNJB
+         LncpkS6cz0YlqorGRARkdPfu/HLPmZG4t5kUFBLLbg3fdazm9yC0skQFHfSurlzwKgUj
+         Rnwg==
+X-Gm-Message-State: APjAAAVETZvjzvODk5hjwAdjJnzTpbk1x1jc9Cb+SCFyLXg68os7hdoY
+        PZgRWEAGFSjRWSv5Iu3+hpYz1QfMsHKtMBw7A7kVwA==
+X-Google-Smtp-Source: APXvYqyEGn6UgaT8QtFCfYkVsiskjTsIBKforpsX1D9r0PUsg1QeeVDhcVZuIx+0X0pl880b5xsgT9bsErLOym9p26Q=
+X-Received: by 2002:a02:a48e:: with SMTP id d14mr21577724jam.30.1582134882789;
+ Wed, 19 Feb 2020 09:54:42 -0800 (PST)
+MIME-Version: 1.0
+References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
+ <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
+ <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
+ <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org> <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
+ <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com>
+ <20200215034652.GA19867@ming.t460p> <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
+ <20200219025456.GD31488@ming.t460p>
+In-Reply-To: <20200219025456.GD31488@ming.t460p>
+From:   Salman Qazi <sqazi@google.com>
+Date:   Wed, 19 Feb 2020 09:54:31 -0800
+Message-ID: <CAKUOC8UceQ_cDQC8ckvUio0AZHhasi7Np-PQ09e-dQ3fechKoA@mail.gmail.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Ming Lei <tom.leiming@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ioreadX() helpers have inconsistent interface.  On some architectures
-void *__iomem address argument is a pointer to const, on some not.
+On Tue, Feb 18, 2020 at 6:55 PM Ming Lei <ming.lei@redhat.com> wrote:
+>
+> On Tue, Feb 18, 2020 at 08:11:53AM -0800, Jesse Barnes wrote:
+> > On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > > What are the 'other operations'? Are they block IOs?
+> > >
+> > > If yes, that is why I suggest to fix submit_bio_wait(), which should cover
+> > > most of sync bio submission.
+> > >
+> > > Anyway, the fix is simple & generic enough, I'd plan to post a formal
+> > > patch if no one figures out better doable approaches.
+> >
+> > Yeah I think any block I/O operation that occurs after the
+> > BLKSECDISCARD is submitted will also potentially be affected by the
+> > hung task timeouts, and I think your patch will address that.  My only
+> > concern with it is that it might hide some other I/O "hangs" that are
+> > due to device misbehavior instead.  Yes driver and device timeouts
+> > should generally catch those, but with this in place we might miss a
+> > few bugs.
+> >
+> > Given the nature of these types of storage devices though, I think
+> > that's a minor issue and not worth blocking the patch on, given that
+> > it should prevent a lot of false positive hang reports as Salman
+> > demonstrated.
+>
+> Hello Jesse and Salman,
+>
+> One more question about this issue, do you enable BLK_WBT on your test
+> kernel?
 
-Implementations of ioreadX() do not modify the memory under the address
-so they can be converted to a "const" version for const-safety and
-consistency among architectures.
+It doesn't exist on the original 4.4-based kernel where we reproduced
+this bug.  I am curious how this interacts with this bug.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
----
- drivers/net/wireless/ath/ath5k/ahb.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath5k/ahb.c b/drivers/net/wireless/ath/ath5k/ahb.c
-index 2c9cec8b53d9..8bd01df369fb 100644
---- a/drivers/net/wireless/ath/ath5k/ahb.c
-+++ b/drivers/net/wireless/ath/ath5k/ahb.c
-@@ -138,18 +138,18 @@ static int ath_ahb_probe(struct platform_device *pdev)
- 
- 	if (bcfg->devid >= AR5K_SREV_AR2315_R6) {
- 		/* Enable WMAC AHB arbitration */
--		reg = ioread32((void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
-+		reg = ioread32((const void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
- 		reg |= AR5K_AR2315_AHB_ARB_CTL_WLAN;
- 		iowrite32(reg, (void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
- 
- 		/* Enable global WMAC swapping */
--		reg = ioread32((void __iomem *) AR5K_AR2315_BYTESWAP);
-+		reg = ioread32((const void __iomem *) AR5K_AR2315_BYTESWAP);
- 		reg |= AR5K_AR2315_BYTESWAP_WMAC;
- 		iowrite32(reg, (void __iomem *) AR5K_AR2315_BYTESWAP);
- 	} else {
- 		/* Enable WMAC DMA access (assuming 5312 or 231x*/
- 		/* TODO: check other platforms */
--		reg = ioread32((void __iomem *) AR5K_AR5312_ENABLE);
-+		reg = ioread32((const void __iomem *) AR5K_AR5312_ENABLE);
- 		if (to_platform_device(ah->dev)->id == 0)
- 			reg |= AR5K_AR5312_ENABLE_WLAN0;
- 		else
-@@ -202,12 +202,12 @@ static int ath_ahb_remove(struct platform_device *pdev)
- 
- 	if (bcfg->devid >= AR5K_SREV_AR2315_R6) {
- 		/* Disable WMAC AHB arbitration */
--		reg = ioread32((void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
-+		reg = ioread32((const void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
- 		reg &= ~AR5K_AR2315_AHB_ARB_CTL_WLAN;
- 		iowrite32(reg, (void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
- 	} else {
- 		/*Stop DMA access */
--		reg = ioread32((void __iomem *) AR5K_AR5312_ENABLE);
-+		reg = ioread32((const void __iomem *) AR5K_AR5312_ENABLE);
- 		if (to_platform_device(ah->dev)->id == 0)
- 			reg &= ~AR5K_AR5312_ENABLE_WLAN0;
- 		else
--- 
-2.17.1
-
+>
+> Thanks,
+> Ming
+>
