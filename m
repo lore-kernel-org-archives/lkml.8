@@ -2,93 +2,291 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B2EC7619D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF773C5ACC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46092207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GvcrZW/C"
+	by mail.kernel.org (Postfix) with ESMTP id B0E1624656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgBSXbJ (ORCPT
+        id S1726777AbgBSXc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:31:09 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43971 "EHLO ozlabs.org"
+        Wed, 19 Feb 2020 18:32:59 -0500
+Received: from mga09.intel.com ([134.134.136.24]:54129 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgBSXbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:31:09 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48NDVy4CtVz9sRG;
-        Thu, 20 Feb 2020 10:31:06 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582155066;
-        bh=bUdzaiogwTAzLgUj0GMde/X5/Yifm/ZX+t0QgWEoyJU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GvcrZW/Ch3xIYgXHIQntolRuOH7q+FOErdLyUIAe+Rxzan8rVHZf/EFD7NyGa2edX
-         rgeQB3c2rdP66ca58dLl0DXtlM3ze3TKixLDSYQcAPFu1Va078ylXTLXzUiNiv4pmy
-         MS0/kyVRdIBlgwWM9ER8wr5nDhgNxo2PsHhKRfYwSFLGAcRCklU36HAAKCCS9R6vT/
-         mtPLiKSlGJV5u5+KUB0BX0WdBInddFz9qqV4FxNbMuwK08JZ2wDKGGgHnVe1l69vs5
-         BI1Y8+aYDNd9YCRokEh5IfP8NpTOA7uEt7QkXu8QZMhmnwkKnqRXe8CTLFwGZy5yvm
-         afO8W3bbMCx7A==
-Date:   Thu, 20 Feb 2020 10:31:05 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: linux-next: build warning after merge of the mmc tree
-Message-ID: <20200220103105.01d7c0c1@canb.auug.org.au>
+        id S1726680AbgBSXc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 18:32:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 15:32:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
+   d="scan'208";a="382956888"
+Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.209.152]) ([10.254.209.152])
+  by orsmga004.jf.intel.com with ESMTP; 19 Feb 2020 15:32:54 -0800
+Subject: Re: [PATCH] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for
+ huge page
+To:     Yonghyun Hwang <yonghyun@google.com>,
+        Moritz Fischer <mdf@kernel.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Deepa Dinamani <deepadinamani@google.com>,
+        Moritz Fischer <moritzf@google.com>
+References: <20200218222324.231915-1-yonghyun@google.com>
+ <8efc6ea2-d51e-624c-5cc2-4049bb224122@linux.intel.com>
+ <20200219044235.GA1397@epycbox.lan>
+ <CAEauFbw_FGWuQJMpr7PgyyCAefKChXoszKAz-ykBKgxFc-aa4g@mail.gmail.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <9e3f1bb8-bbfd-174c-b7a7-617dea7c2c9a@linux.intel.com>
+Date:   Thu, 20 Feb 2020 07:32:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JMRbqRM4ln7rc4sIn3d.xF2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <CAEauFbw_FGWuQJMpr7PgyyCAefKChXoszKAz-ykBKgxFc-aa4g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JMRbqRM4ln7rc4sIn3d.xF2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+On 2020/2/20 2:51, Yonghyun Hwang wrote:
+> Hello Lu and Moritz,
+> 
+> I think it's better to keep "if (level > 1)" because 
+> level_to_offset_bits() returns (unsigned int) -1 * LEVEL_STRIDE if level 
+> becomes 0.
 
-After merging the mmc tree, today's linux-next build (x86_64 allmodconfig)
-produced this warning:
+@level will never be 0 in this case.
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o
-see include/linux/module.h for more information
+Best regards,
+baolu
 
-Introduced by commit
-
-  eb1814dd49d5 ("mmc: Add MMC host software queue support")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/JMRbqRM4ln7rc4sIn3d.xF2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5NxTkACgkQAVBC80lX
-0GyJKQf/Q+Vr4XyBdQgKKL3aiGpQANu7hw6YtQPXRFm/r3ECmOHCm56/6zSMgN5d
-gDrQN2agT5xkM+kEp15RkQ1wTXSFxNfjN6MaQlIB6Q4KYc4DnTAcGZzyZXVPM94f
-1e3bCGlbLwYSARUO6iIQ2K0yvgecLvtnnmgrX/Xnh1d3X05eIOOqKy9hupPPpxKB
-RJiFUrkk1bG9U4cYJgFYAkIYmthvLWtvJsfn8gw5MxIc/+Oc+RfXTQRWhL7R+jg0
-XvlGFjJ48jvZ8j3Uo+1KE09mL4yfB1L2KAR4qt7NVk4Y8rOsXGijsWPGZLnA6VtM
-8qPiKYlAfovD7nPdnLdWwROR0PeDqQ==
-=aan5
------END PGP SIGNATURE-----
-
---Sig_/JMRbqRM4ln7rc4sIn3d.xF2--
+> 
+> static inline unsigned int level_to_offset_bits(int level)
+> {
+>    return (level - 1) * LEVEL_STRIDE;
+> }
+> 
+> On Tue, Feb 18, 2020 at 8:42 PM Moritz Fischer <mdf@kernel.org 
+> <mailto:mdf@kernel.org>> wrote:
+> 
+>     Hi Baolu, Yonghyun
+> 
+>     On Wed, Feb 19, 2020 at 11:15:36AM +0800, Lu Baolu wrote:
+>      > Hi Yonghyun,
+>      >
+>      > Thanks for the patch.
+>      >
+>      > On 2020/2/19 6:23, Yonghyun Hwang wrote:
+>      > > intel_iommu_iova_to_phys() has a bug when it translates an IOVA
+>     for a huge
+>      > > page onto its corresponding physical address. This commit fixes
+>     the bug by
+>      > > accomodating the level of page entry for the IOVA and adds
+>     IOVA's lower
+>      > > address to the physical address. >
+>      > > Signed-off-by: Yonghyun Hwang <yonghyun@google.com
+>     <mailto:yonghyun@google.com>>
+>      > > ---
+>      > >   drivers/iommu/intel-iommu.c | 11 +++++++++--
+>      > >   1 file changed, 9 insertions(+), 2 deletions(-)
+>      > >
+>      > > diff --git a/drivers/iommu/intel-iommu.c
+>     b/drivers/iommu/intel-iommu.c
+>      > > index 0c8d81f56a30..ed6e69adb578 100644
+>      > > --- a/drivers/iommu/intel-iommu.c
+>      > > +++ b/drivers/iommu/intel-iommu.c
+>      > > @@ -5555,13 +5555,20 @@ static phys_addr_t
+>     intel_iommu_iova_to_phys(struct iommu_domain *domain,
+>      > >     struct dma_pte *pte;
+>      > >     int level = 0;
+>      > >     u64 phys = 0;
+>      > > +   const unsigned long pfn = iova >> VTD_PAGE_SHIFT;
+>      >
+>      > Why do you need a "const unsigned long" here?
+> 
+> 
+> 
+> It's because pfn_to_dma_pte() takes pfn for its second parameter as 
+> "unsigned int" type and pfn is not changed in intel_iommu_iova_to_phys().
+> 
+>      >
+>      > >     if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>      > >             return 0;
+>      > > -   pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT,
+>     &level);
+>      > > -   if (pte)
+>      > > +   pte = pfn_to_dma_pte(dmar_domain, pfn, &level);
+>      > > +   if (pte) {
+>      > >             phys = dma_pte_addr(pte);
+>      > > +           if (level > 1)
+>      > > +                   phys += (pfn &
+>      > > +                           ((1UL <<
+>     level_to_offset_bits(level)) - 1))
+>      > > +                           << VTD_PAGE_SHIFT;
+>      > > +           phys += iova & (VTD_PAGE_SIZE - 1);
+>      >
+>      > How about
+> 
+>      >
+>      > diff --git a/drivers/iommu/intel-iommu.c
+>     b/drivers/iommu/intel-iommu.c
+>      > index 9dc37672bf89..bd17c2510bb2 100644
+>      > --- a/drivers/iommu/intel-iommu.c
+>      > +++ b/drivers/iommu/intel-iommu.c
+>      > @@ -5693,8 +5693,14 @@ static phys_addr_t
+>     intel_iommu_iova_to_phys(struct
+>      > iommu_domain *domain,
+>      >         u64 phys = 0;
+>      >
+>      >         pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT,
+>     &level);
+>      > -       if (pte)
+>      > +       if (pte) {
+>      > +               unsigned long offset_mask;
+>      > +
+>      > +               offset_mask = BIT_MASK(level_to_offset_bits(level) +
+>      > +                                      VTD_PAGE_SHIFT) - 1;
+>      >                 phys = dma_pte_addr(pte);
+>      > +               phys += iova & (bitmask - 1);
+>     Did you mean:
+> 
+>     phys += iova & (offset_mask - 1);
+> 
+>      > +       }
+> 
+>     At that point why not define a helper:
+> 
+>     static inline unsigned long offset_mask(int level)
+>     {
+>              return BIT_MASK(level_to_offset_bits(level) +
+>     VTD_PAGE_SHIFT) - 1;
+>     }
+> 
+>     At which point the above would reduce to:
+> 
+>     if (pte)
+>              phys = dma_pte_addr(pte) + iova & offset_mask(level) - 1;
+> 
+> 
+> 
+> Let me introduce the helper function and upstream the patch again. Thank 
+> you Lu and Moritz.
+> 
+> 
+>     I might've fatfingered something here, but you get the idea :)
+> 
+>     Cheers,
+>     Moritz
+> 
+> 
+> On Tue, Feb 18, 2020 at 8:42 PM Moritz Fischer <mdf@kernel.org 
+> <mailto:mdf@kernel.org>> wrote:
+> 
+>     Hi Baolu, Yonghyun
+> 
+>     On Wed, Feb 19, 2020 at 11:15:36AM +0800, Lu Baolu wrote:
+>      > Hi Yonghyun,
+>      >
+>      > Thanks for the patch.
+>      >
+>      > On 2020/2/19 6:23, Yonghyun Hwang wrote:
+>      > > intel_iommu_iova_to_phys() has a bug when it translates an IOVA
+>     for a huge
+>      > > page onto its corresponding physical address. This commit fixes
+>     the bug by
+>      > > accomodating the level of page entry for the IOVA and adds
+>     IOVA's lower
+>      > > address to the physical address. >
+>      > > Signed-off-by: Yonghyun Hwang <yonghyun@google.com
+>     <mailto:yonghyun@google.com>>
+>      > > ---
+>      > >   drivers/iommu/intel-iommu.c | 11 +++++++++--
+>      > >   1 file changed, 9 insertions(+), 2 deletions(-)
+>      > >
+>      > > diff --git a/drivers/iommu/intel-iommu.c
+>     b/drivers/iommu/intel-iommu.c
+>      > > index 0c8d81f56a30..ed6e69adb578 100644
+>      > > --- a/drivers/iommu/intel-iommu.c
+>      > > +++ b/drivers/iommu/intel-iommu.c
+>      > > @@ -5555,13 +5555,20 @@ static phys_addr_t
+>     intel_iommu_iova_to_phys(struct iommu_domain *domain,
+>      > >     struct dma_pte *pte;
+>      > >     int level = 0;
+>      > >     u64 phys = 0;
+>      > > +   const unsigned long pfn = iova >> VTD_PAGE_SHIFT;
+>      >
+>      > Why do you need a "const unsigned long" here?
+>      >
+>      > >     if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
+>      > >             return 0;
+>      > > -   pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT,
+>     &level);
+>      > > -   if (pte)
+>      > > +   pte = pfn_to_dma_pte(dmar_domain, pfn, &level);
+>      > > +   if (pte) {
+>      > >             phys = dma_pte_addr(pte);
+>      > > +           if (level > 1)
+>      > > +                   phys += (pfn &
+>      > > +                           ((1UL <<
+>     level_to_offset_bits(level)) - 1))
+>      > > +                           << VTD_PAGE_SHIFT;
+>      > > +           phys += iova & (VTD_PAGE_SIZE - 1);
+>      >
+>      > How about
+> 
+>      >
+>      > diff --git a/drivers/iommu/intel-iommu.c
+>     b/drivers/iommu/intel-iommu.c
+>      > index 9dc37672bf89..bd17c2510bb2 100644
+>      > --- a/drivers/iommu/intel-iommu.c
+>      > +++ b/drivers/iommu/intel-iommu.c
+>      > @@ -5693,8 +5693,14 @@ static phys_addr_t
+>     intel_iommu_iova_to_phys(struct
+>      > iommu_domain *domain,
+>      >         u64 phys = 0;
+>      >
+>      >         pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT,
+>     &level);
+>      > -       if (pte)
+>      > +       if (pte) {
+>      > +               unsigned long offset_mask;
+>      > +
+>      > +               offset_mask = BIT_MASK(level_to_offset_bits(level) +
+>      > +                                      VTD_PAGE_SHIFT) - 1;
+>      >                 phys = dma_pte_addr(pte);
+>      > +               phys += iova & (bitmask - 1);
+>     Did you mean:
+> 
+>     phys += iova & (offset_mask - 1);
+> 
+>      > +       }
+> 
+>     At that point why not define a helper:
+> 
+>     static inline unsigned long offset_mask(int level)
+>     {
+>              return BIT_MASK(level_to_offset_bits(level) +
+>     VTD_PAGE_SHIFT) - 1;
+>     }
+> 
+>     At which point the above would reduce to:
+> 
+>     if (pte)
+>              phys = dma_pte_addr(pte) + iova & offset_mask(level) - 1;
+> 
+>     I might've fatfingered something here, but you get the idea :)
+> 
+>     Cheers,
+>     Moritz
+> 
