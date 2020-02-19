@@ -2,87 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528CC34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379C9C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3A02465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582108817;
-	bh=8JYFzGZHQl9Mlj4BlcdpdXsjdg+HCV5duko0Ww+/3ts=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZCZPDhezGmfhtVU7/CBIqpknjsTHnTmsg+kTyzdyd2SQHoEdo06iLf8FUB5Qon4s7
-	 tPMwDYmuec9MdmMYPUHbpapQ23o8bQaRudoeQj7B9IkBFHFNOqtpju9zn0QC/xaaCw
-	 ZUvDVAi1Jae0lge1VOp8PpsgDoHk+YLMt+WUhHwI=
+	by mail.kernel.org (Postfix) with ESMTP id 10A202465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="XvXz+wAF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgBSKkQ (ORCPT
+        id S1726713AbgBSKk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgBSKkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:40:15 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Feb 2020 05:40:29 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55550 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726484AbgBSKk3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:40:29 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582108828; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Yh387kKXHacTs+of14jK5UgoLbmjSoxNzBRJ83+pSig=; b=XvXz+wAFB9Enz2WdyjT7GzwqK2pWqxwB0Ert1TD9zK+uTr3Og2DEQ9PXHQ9kOPpZvq2ojHxP
+ hT+FUYaSVl/VUVxyvcO6Faw/p7nUqv1ljX5bQGWyQcPEn+FjIdEXS8KlGln/psH20hBDAGjh
+ bAlImqarRqJWYv03RregVJ56kRc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4d109b.7fb06f19e030-smtp-out-n01;
+ Wed, 19 Feb 2020 10:40:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A4706C433A2; Wed, 19 Feb 2020 10:40:27 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A68B321D56;
-        Wed, 19 Feb 2020 10:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582108815;
-        bh=8JYFzGZHQl9Mlj4BlcdpdXsjdg+HCV5duko0Ww+/3ts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D+fmuPcnBwAiKMYnQrNvzuGYOjb2KTjyX5HfTG0lNs3In6g0cemEDq808Ew9cEW4k
-         ByqighL55iGXWuJat2cl6WrbwVQJ4wOiXP5/u8Ea8AeB8aaWFB+0M3WKQGb9X8jAcN
-         TQS56FeVzpSYqk586vJhfvbluu0CEb7qtB2yhsas=
-Date:   Wed, 19 Feb 2020 11:40:12 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] leds: trigger: implement a tty trigger
-Message-ID: <20200219104012.GA2814125@kroah.com>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213091600.554-1-uwe@kleine-koenig.org>
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86A37C43383;
+        Wed, 19 Feb 2020 10:40:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86A37C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v5 0/7] Add RSC power domain support
+Date:   Wed, 19 Feb 2020 16:10:03 +0530
+Message-Id: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:15:56AM +0100, Uwe Kleine-König wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Hello,
-> 
-> This is v6 of my quest to introduce ledtriggers for UARTs. The previous
-> series is available at
-> 
-> 	http://lore.kernel.org/r/20191219093947.15502-1-u.kleine-koenig@pengutronix.de
-> 
-> The changes compared to that are that parsing of the dev parameter is
-> more strict and that I set brightness directly from the kworker instead
-> of using led_blink_set_oneshot which makes use of another kworker. (Both
-> requested by Pavel Machek.)
-> 
-> For the former I introduced a new helper kstrtodev_t() in the spirit of
-> kstrtoul() to implement the stricter parsing (instead of the lax one
-> using plain sscanf() in v5).
+Changes in v5:
+- Add Rob's Acked by on dt-bindings change
+- Drop firmware psci change
+- Update cpuidle stats in dtsi to follow PC mode
+- Include change to update dirty flag when data is updated from [4]
+- Add change to invoke rpmh_flush when caches are dirty
 
-Looks good to me, Pavel, any objection to me merging this through the
-tty tree?
+Changes in v4:
+- Add change to allow hierarchical topology in PC mode
+- Drop hierarchical domain idle states converter from v3
+- Address Merge sc7180 dtsi change to add low power modes
 
-thanks,
+Changes in v3:
+- Address Rob's comment on dt property value
+- Address Stephen's comments on rpmh-rsc driver change
+- Include sc7180 cpuidle low power mode changes from [1]
+- Include hierarchical domain idle states converter change from [2]
 
-greg k-h
+Changes in v2:
+- Add Stephen's Reviewed-By to the first three patches
+- Addressed Stephen's comments on fourth patch
+- Include changes to connect rpmh domain to cpuidle and genpds
+
+Resource State Coordinator (RSC) is responsible for powering off/lowering
+the requirements from CPU subsystem for the associated hardware like buses,
+clocks, and regulators when all CPUs and cluster is powered down.
+
+RSC power domain uses last-man activities provided by genpd framework based
+on Ulf Hansoon's patch series[3], when the cluster of CPUs enter deepest
+idle states. As a part of domain poweroff, RSC can lower resource state
+requirements by flushing the cached sleep and wake state votes for various
+resources.
+
+[1] https://patchwork.kernel.org/patch/11218965
+[2] https://patchwork.kernel.org/patch/10941671
+[3] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=222355
+[4] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=236503
+
+Maulik Shah (7):
+  drivers: qcom: rpmh: fix macro to accept NULL argument
+  drivers: qcom: rpmh: remove rpmh_flush export
+  dt-bindings: soc: qcom: Add RSC power domain specifier
+  drivers: qcom: rpmh-rsc: Add RSC power domain support
+  arm64: dts: qcom: sc7180: Add cpuidle low power states
+  soc: qcom: rpmh: Update dirty flag only when data changes
+  soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
+
+ .../devicetree/bindings/soc/qcom/rpmh-rsc.txt      |  9 +++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi               | 78 +++++++++++++++++++++
+ drivers/soc/qcom/rpmh-internal.h                   |  3 +
+ drivers/soc/qcom/rpmh-rsc.c                        | 81 ++++++++++++++++++++++
+ drivers/soc/qcom/rpmh.c                            | 49 ++++++++-----
+ include/soc/qcom/rpmh.h                            |  5 --
+ 6 files changed, 203 insertions(+), 22 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
