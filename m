@@ -2,73 +2,70 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ABCC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC90BC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2129624656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DD1524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mm4oywX2"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="GkTPctej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgBSSKQ (ORCPT
+        id S1726681AbgBSSMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:10:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46304 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgBSSKG (ORCPT
+        Wed, 19 Feb 2020 13:12:25 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34085 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbgBSSMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:10:06 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x14so1307346ljd.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:10:04 -0800 (PST)
+        Wed, 19 Feb 2020 13:12:24 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c20so1032931qkm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:12:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=w8AByD+ELp+U0fkzTE0l2V9pOyhi/BIhszCAehVAQ1E=;
-        b=mm4oywX2Nv0gEUy5q5BvavEnr/9cwOu5HwoESNSpYK9r5qLMd3qpGpucotlo0pJcKC
-         bHsU5KbAYFVhaQRRgPJx6Cdn6diDXHkl5KsHi062Tp48Sz9XJaH5qpshjYYP9OvgTtPh
-         vz+mVfsRNZZ4D86DoWA2h/RUpqhboXlxuYEJpXJfeXPuPmAP8MQzfqBR4fkF91h76dJ7
-         XfCOSzF+gF7Ww7kbsxqJU+p+Ahq5oqM79Mym4v2xpMotE4w2iaxTzC1Ecd5UIRlXxAvf
-         dZJUhriRCRKhcbEHYvnjaPXRTki6XPCvezD3RMJ6baXq/Im1N432midsBFMY/6muy9JH
-         QtFw==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nyHLiC8XkwcyLqR3rLu/BwGv+w1mXfzRj/lTpFIDBKk=;
+        b=GkTPctej1MwDF6qrQTa6Bd5b3GEMii0/4ZyyoxUUxSVK4yrAFiTPNUkV9khKirjNjO
+         lFDwLo4wsvoC6/B1DDUizFlvfN1+WWtaqgWi/dqZJ9Z8CZveyMpxwBLgytas4Yn+2Uc3
+         Zuurs21A/VIiEmkLD9OohUUj/FiGGL+hG1hnIdL9AoWmoc/gil5ltV68GjMX+g1fnDq+
+         i/8uY7ZU3xANLsmzcJI/zwX+vq8svSYZikeiMmC/vdmpTR2gYM5p/7jvug5Ciks+H39r
+         O1M7vDcsrpHuOqOaZuNZINoAIhGcM6fltA2fDVsAeeAxuAIvKOxGrtQ4FgMm+OFKpFWL
+         P3Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=w8AByD+ELp+U0fkzTE0l2V9pOyhi/BIhszCAehVAQ1E=;
-        b=ARUPLDKVxt0XLvMVopeKIzbDOpvMCPoCp2bFB2iADwYrS92QoaGTl5X4vfxHHYC3nd
-         wuAohbxJXCOJeEEXNcwlraVxIjiBQw9sgTUtzQpRT9o41S0JlLzx/zWGFoExFGrsMS4H
-         qW8tEC/ice8IIybexwWnNiVcH0t1bst+vhDhdElmodA+r5z8cib9i/8qtiFtHCyJfW9E
-         cP1MxWaZ3TZRMBj53giYbupTbNb6TvpBdX2JJ2QSWF8YndwQbGviHMvbXq5Ka/OBtti8
-         AeQlODisCqsfcQP6+7oBx/usTkPLKViQVCBq+Bv99cmSD9rF9cuJPEUhPfjMKK1Hm9d2
-         ymBA==
-X-Gm-Message-State: APjAAAVizDolhlb+fi85awZ7MwhRa2T6Xxo/9aCAfLdqbvC2ppfXkXm6
-        y2+nqGRQLcWMDN2apZK28kA=
-X-Google-Smtp-Source: APXvYqyoVOZJlYrqDiLelfLZ1O5stc2hez55EF10msHTP4C74OoJ7WA8VlAgqemf1FjjzI2fqSOVRA==
-X-Received: by 2002:a2e:8702:: with SMTP id m2mr16967294lji.278.1582135804086;
-        Wed, 19 Feb 2020 10:10:04 -0800 (PST)
-Received: from localhost.localdomain ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id 14sm183942lfz.47.2020.02.19.10.10.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nyHLiC8XkwcyLqR3rLu/BwGv+w1mXfzRj/lTpFIDBKk=;
+        b=l5JK8hrkc4Ffr8ApZrXTbWP+4n1hDWDxCNJWbDnfCulHqwr0hDzf1NIRxY3wLKZq7r
+         TDSTPxXQNQh7tE3Rank0x9pu5L8ptV+y00g+GZlThTD5AztdAQF6I10iGSfItAMdwzcE
+         QOCVuV0H8G1Yi6kCOhUtKWRj2XQ7j/gujjh92pEnwyWL+zPEm6ZvMeB7KQYLASAj2bMT
+         FfhZcNH26IBPNsqTRNhL3yBayOwBBINzPc9ct+KKiV6SqpT2nqAGeH3FHvLnq63xLe7M
+         z/zB/gz+JBxGs+0ySyZkhqtXweTUF6vkjf/++VZSA366EVYrOvuck0U4inC0l7GQI1qL
+         YtSw==
+X-Gm-Message-State: APjAAAVCfwk3zRQ1sreGWIIOwlApdyI6BJSOMK3mNUzrDf45JLxuUJAc
+        klmkJlmnEiMAeF+1oM5TfeSnzg==
+X-Google-Smtp-Source: APXvYqxQP+2JZAwmgpbQaOmHN+mZFY9huQzZ0AFJMd+VQkazsqk7kclEYBq/LhoeD2GTcppz0tsQvw==
+X-Received: by 2002:a05:620a:222d:: with SMTP id n13mr24920245qkh.268.1582135940510;
+        Wed, 19 Feb 2020 10:12:20 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3bde])
+        by smtp.gmail.com with ESMTPSA id t23sm361021qto.88.2020.02.19.10.12.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 10:10:03 -0800 (PST)
-From:   Andrey Lebedev <andrey.lebedev@gmail.com>
-To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
-        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: [PATCH 5/5] drm/sun4i: tcon: Support LVDS output on Allwinner A20
-Date:   Wed, 19 Feb 2020 20:08:58 +0200
-Message-Id: <20200219180858.4806-6-andrey.lebedev@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200219180858.4806-1-andrey.lebedev@gmail.com>
-References: <20200210195633.GA21832@kedthinkpad>
- <20200219180858.4806-1-andrey.lebedev@gmail.com>
+        Wed, 19 Feb 2020 10:12:19 -0800 (PST)
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Date:   Wed, 19 Feb 2020 13:12:19 -0500
+Message-Id: <20200219181219.54356-1-hannes@cmpxchg.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,110 +73,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Lebedev <andrey@lebedev.lt>
+We have received regression reports from users whose workloads moved
+into containers and subsequently encountered new latencies. For some
+users these were a nuisance, but for some it meant missing their SLA
+response times. We tracked those delays down to cgroup limits, which
+inject direct reclaim stalls into the workload where previously all
+reclaim was handled my kswapd.
 
-A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
-up procedure than A33. Timing controller (tcon) driver only implements
-sun6i-style procedure, that doesn't work on A20 (sun7i).
+This patch adds asynchronous reclaim to the memory.high cgroup limit
+while keeping direct reclaim as a fallback. In our testing, this
+eliminated all direct reclaim from the affected workload.
 
-Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+memory.high has a grace buffer of about 4% between when it becomes
+exceeded and when allocating threads get throttled. We can use the
+same buffer for the async reclaimer to operate in. If the worker
+cannot keep up and the grace buffer is exceeded, allocating threads
+will fall back to direct reclaim before getting throttled.
+
+For irq-context, there's already async memory.high enforcement. Re-use
+that work item for all allocating contexts, but switch it to the
+unbound workqueue so reclaim work doesn't compete with the workload.
+The work item is per cgroup, which means the workqueue infrastructure
+will create at maximum one worker thread per reclaiming cgroup.
+
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 37 +++++++++++++++++++++++++++++-
- drivers/gpu/drm/sun4i/sun4i_tcon.h | 11 +++++++++
- 2 files changed, 47 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 60 +++++++++++++++++++++++++++++++++++++------------
+ mm/vmscan.c     | 10 +++++++--
+ 2 files changed, 54 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index b7234eef3c7b..09ee6e8c6914 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -114,6 +114,30 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
- 	}
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index cf02e3ef3ed9..bad838d9c2bb 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1446,6 +1446,10 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
+ 	seq_buf_printf(&s, "pgsteal %lu\n",
+ 		       memcg_events(memcg, PGSTEAL_KSWAPD) +
+ 		       memcg_events(memcg, PGSTEAL_DIRECT));
++	seq_buf_printf(&s, "pgscan_direct %lu\n",
++		       memcg_events(memcg, PGSCAN_DIRECT));
++	seq_buf_printf(&s, "pgsteal_direct %lu\n",
++		       memcg_events(memcg, PGSTEAL_DIRECT));
+ 	seq_buf_printf(&s, "%s %lu\n", vm_event_name(PGACTIVATE),
+ 		       memcg_events(memcg, PGACTIVATE));
+ 	seq_buf_printf(&s, "%s %lu\n", vm_event_name(PGDEACTIVATE),
+@@ -2235,10 +2239,19 @@ static void reclaim_high(struct mem_cgroup *memcg,
+ 
+ static void high_work_func(struct work_struct *work)
+ {
++	unsigned long high, usage;
+ 	struct mem_cgroup *memcg;
+ 
+ 	memcg = container_of(work, struct mem_cgroup, high_work);
+-	reclaim_high(memcg, MEMCG_CHARGE_BATCH, GFP_KERNEL);
++
++	high = READ_ONCE(memcg->high);
++	usage = page_counter_read(&memcg->memory);
++
++	if (usage <= high)
++		return;
++
++	set_worker_desc("cswapd/%llx", cgroup_id(memcg->css.cgroup));
++	reclaim_high(memcg, usage - high, GFP_KERNEL);
  }
  
-+static void sun4i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
-+				      const struct drm_encoder *encoder)
-+{
-+	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
-+		     SUN4I_TCON0_LVDS_ANA0_REG_V |
-+		     SUN4I_TCON0_LVDS_ANA0_REG_C |
-+		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
-+		     SUN4I_TCON0_LVDS_ANA0_PD |
-+		     SUN4I_TCON0_LVDS_ANA0_DCHS);
-+
-+	udelay(2); /* delay at least 1200 ns */
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
-+			   SUN4I_TCON0_LVDS_ANA1_INIT,
-+			   SUN4I_TCON0_LVDS_ANA1_INIT);
-+	udelay(1); /* delay at least 120 ns */
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
-+			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
-+			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
-+	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
-+			   SUN4I_TCON0_LVDS_ANA0_EN_MB,
-+			   SUN4I_TCON0_LVDS_ANA0_EN_MB);
-+}
-+
- static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
- 				      const struct drm_encoder *encoder)
- {
-@@ -1455,7 +1479,18 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
- 	.dclk_min_div		= 1,
- };
+ /*
+@@ -2304,15 +2317,22 @@ void mem_cgroup_handle_over_high(void)
+ 	unsigned long pflags;
+ 	unsigned long penalty_jiffies, overage;
+ 	unsigned int nr_pages = current->memcg_nr_pages_over_high;
++	bool tried_direct_reclaim = false;
+ 	struct mem_cgroup *memcg;
  
-+static const struct sun4i_tcon_quirks sun7i_a20_tcon0_quirks = {
-+	.supports_lvds		= true,
-+	.has_channel_0		= true,
-+	.has_channel_1		= true,
-+	.dclk_min_div		= 4,
-+	/* Same display pipeline structure as A10 */
-+	.set_mux		= sun4i_a10_tcon_set_mux,
-+	.setup_lvds_phy		= sun4i_tcon_setup_lvds_phy,
-+};
-+
- static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
-+	.supports_lvds		= false,
- 	.has_channel_0		= true,
- 	.has_channel_1		= true,
- 	.dclk_min_div		= 4,
-@@ -1508,7 +1543,7 @@ const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
- 	{ .compatible = "allwinner,sun6i-a31-tcon", .data = &sun6i_a31_quirks },
- 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
--	{ .compatible = "allwinner,sun7i-a20-tcon0", .data = &sun7i_a20_quirks },
-+	{ .compatible = "allwinner,sun7i-a20-tcon0", .data = &sun7i_a20_tcon0_quirks },
- 	{ .compatible = "allwinner,sun7i-a20-tcon1", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun8i-a23-tcon", .data = &sun8i_a33_quirks },
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index 2974e59ef9f2..cfbf4e6c1679 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -193,6 +193,13 @@
- #define SUN4I_TCON_MUX_CTRL_REG			0x200
+ 	if (likely(!nr_pages))
+ 		return;
  
- #define SUN4I_TCON0_LVDS_ANA0_REG		0x220
-+#define SUN4I_TCON0_LVDS_ANA0_DCHS			BIT(16)
-+#define SUN4I_TCON0_LVDS_ANA0_PD			(BIT(20) | BIT(21))
-+#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(22)
-+#define SUN4I_TCON0_LVDS_ANA0_REG_C			(BIT(24) | BIT(25))
-+#define SUN4I_TCON0_LVDS_ANA0_REG_V			(BIT(26) | BIT(27))
-+#define SUN4I_TCON0_LVDS_ANA0_CK_EN			(BIT(29) | BIT(28))
-+
- #define SUN6I_TCON0_LVDS_ANA0_EN_MB			BIT(31)
- #define SUN6I_TCON0_LVDS_ANA0_EN_LDO			BIT(30)
- #define SUN6I_TCON0_LVDS_ANA0_EN_DRVC			BIT(24)
-@@ -201,6 +208,10 @@
- #define SUN6I_TCON0_LVDS_ANA0_V(x)			(((x) & 3) << 8)
- #define SUN6I_TCON0_LVDS_ANA0_PD(x)			(((x) & 3) << 4)
+-	memcg = get_mem_cgroup_from_mm(current->mm);
+-	reclaim_high(memcg, nr_pages, GFP_KERNEL);
+ 	current->memcg_nr_pages_over_high = 0;
  
-+#define SUN4I_TCON0_LVDS_ANA1_REG		0x224
-+#define SUN4I_TCON0_LVDS_ANA1_INIT			(0x1f << 26 | 0x1f << 10)
-+#define SUN4I_TCON0_LVDS_ANA1_UPDATE			(0x1f << 16 | 0x1f << 00)
++	memcg = get_mem_cgroup_from_mm(current->mm);
++	high = READ_ONCE(memcg->high);
++recheck:
++	usage = page_counter_read(&memcg->memory);
 +
- #define SUN4I_TCON1_FILL_CTL_REG		0x300
- #define SUN4I_TCON1_FILL_BEG0_REG		0x304
- #define SUN4I_TCON1_FILL_END0_REG		0x308
++	if (usage <= high)
++		goto out;
++
+ 	/*
+ 	 * memory.high is breached and reclaim is unable to keep up. Throttle
+ 	 * allocators proactively to slow down excessive growth.
+@@ -2325,12 +2345,6 @@ void mem_cgroup_handle_over_high(void)
+ 	 * overage amount.
+ 	 */
+ 
+-	usage = page_counter_read(&memcg->memory);
+-	high = READ_ONCE(memcg->high);
+-
+-	if (usage <= high)
+-		goto out;
+-
+ 	/*
+ 	 * Prevent division by 0 in overage calculation by acting as if it was a
+ 	 * threshold of 1 page
+@@ -2369,6 +2383,16 @@ void mem_cgroup_handle_over_high(void)
+ 	if (penalty_jiffies <= HZ / 100)
+ 		goto out;
+ 
++	/*
++	 * It's possible async reclaim just isn't able to keep
++	 * up. Before we go to sleep, try direct reclaim.
++	 */
++	if (!tried_direct_reclaim) {
++		reclaim_high(memcg, nr_pages, GFP_KERNEL);
++		tried_direct_reclaim = true;
++		goto recheck;
++	}
++
+ 	/*
+ 	 * If we exit early, we're guaranteed to die (since
+ 	 * schedule_timeout_killable sets TASK_KILLABLE). This means we don't
+@@ -2544,13 +2568,21 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 	 */
+ 	do {
+ 		if (page_counter_read(&memcg->memory) > memcg->high) {
++			/*
++			 * Kick off the async reclaimer, which should
++			 * be doing most of the work to avoid latency
++			 * in the workload. But also check in on its
++			 * progress before resuming to userspace, in
++			 * case we need to do direct reclaim, or even
++			 * throttle the allocating thread if reclaim
++			 * cannot keep up with allocation demand.
++			 */
++			queue_work(system_unbound_wq, &memcg->high_work);
+ 			/* Don't bother a random interrupted task */
+-			if (in_interrupt()) {
+-				schedule_work(&memcg->high_work);
+-				break;
++			if (!in_interrupt()) {
++				current->memcg_nr_pages_over_high += batch;
++				set_notify_resume(current);
+ 			}
+-			current->memcg_nr_pages_over_high += batch;
+-			set_notify_resume(current);
+ 			break;
+ 		}
+ 	} while ((memcg = parent_mem_cgroup(memcg)));
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 74e8edce83ca..d6085115c7f2 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1947,7 +1947,10 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 	__mod_node_page_state(pgdat, NR_ISOLATED_ANON + file, nr_taken);
+ 	reclaim_stat->recent_scanned[file] += nr_taken;
+ 
+-	item = current_is_kswapd() ? PGSCAN_KSWAPD : PGSCAN_DIRECT;
++	if (current_is_kswapd() || (cgroup_reclaim(sc) && current_work()))
++		item = PGSCAN_KSWAPD;
++	else
++		item = PGSCAN_DIRECT;
+ 	if (!cgroup_reclaim(sc))
+ 		__count_vm_events(item, nr_scanned);
+ 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_scanned);
+@@ -1961,7 +1964,10 @@ shrink_inactive_list(unsigned long nr_to_scan, struct lruvec *lruvec,
+ 
+ 	spin_lock_irq(&pgdat->lru_lock);
+ 
+-	item = current_is_kswapd() ? PGSTEAL_KSWAPD : PGSTEAL_DIRECT;
++	if (current_is_kswapd() || (cgroup_reclaim(sc) && current_work()))
++		item = PGSTEAL_KSWAPD;
++	else
++		item = PGSTEAL_DIRECT;
+ 	if (!cgroup_reclaim(sc))
+ 		__count_vm_events(item, nr_reclaimed);
+ 	__count_memcg_events(lruvec_memcg(lruvec), item, nr_reclaimed);
 -- 
-2.20.1
+2.24.1
 
