@@ -2,372 +2,93 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AEEC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF3BC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63A9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3377C222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbgBSErN (ORCPT
+        id S1726609AbgBSEwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:47:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31488 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726477AbgBSErN (ORCPT
+        Tue, 18 Feb 2020 23:52:38 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36514 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgBSEwi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:47:13 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J4j18N043865
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:47:12 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubuvetv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:47:11 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 19 Feb 2020 04:47:09 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 04:47:02 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J4l0AK55312638
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 04:47:01 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E428BAE045;
-        Wed, 19 Feb 2020 04:47:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3FBDEAE058;
-        Wed, 19 Feb 2020 04:47:00 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 04:47:00 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A33F1A00DF;
-        Wed, 19 Feb 2020 15:46:55 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 19 Feb 2020 15:46:58 +1100
-In-Reply-To: <20200203132351.00005281@Huawei.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-13-alastair@au1.ibm.com>
-         <20200203132351.00005281@Huawei.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 18 Feb 2020 23:52:38 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4HLY-00F4Ft-Q9; Wed, 19 Feb 2020 04:52:28 +0000
+Date:   Wed, 19 Feb 2020 04:52:28 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, elver@google.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: fix a data race in i_size_write/i_size_read
+Message-ID: <20200219045228.GO23230@ZenIV.linux.org.uk>
+References: <20200219040426.1140-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021904-0016-0000-0000-000002E8238E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021904-0017-0000-0000-0000334B3A2C
-Message-Id: <6c7e944c0370663a00aca33538957248f29e027d.camel@au1.ibm.com>
-Subject: RE: [PATCH v2 12/27] nvdimm/ocxl: Read the capability registers & wait for
- device ready
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190031
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219040426.1140-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 13:23 +0000, Jonathan Cameron wrote:
-> On Tue, 3 Dec 2019 14:46:40 +1100
-> Alastair D'Silva <alastair@au1.ibm.com> wrote:
+On Tue, Feb 18, 2020 at 11:04:26PM -0500, Qian Cai wrote:
+> inode::i_size could be accessed concurently as noticed by KCSAN,
 > 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > This patch reads timeouts & firmware version from the controller,
-> > and
-> > uses those timeouts to wait for the controller to report that it is
-> > ready
-> > before handing the memory over to libnvdimm.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/nvdimm/ocxl/Makefile       |  2 +-
-> >  drivers/nvdimm/ocxl/scm.c          | 84
-> > ++++++++++++++++++++++++++++++
-> >  drivers/nvdimm/ocxl/scm_internal.c | 19 +++++++
-> >  drivers/nvdimm/ocxl/scm_internal.h | 24 +++++++++
-> >  4 files changed, 128 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/nvdimm/ocxl/scm_internal.c
-> > 
-> > diff --git a/drivers/nvdimm/ocxl/Makefile
-> > b/drivers/nvdimm/ocxl/Makefile
-> > index 74a1bd98848e..9b6e31f0eb3e 100644
-> > --- a/drivers/nvdimm/ocxl/Makefile
-> > +++ b/drivers/nvdimm/ocxl/Makefile
-> > @@ -4,4 +4,4 @@ ccflags-$(CONFIG_PPC_WERROR)	+= -Werror
-> >  
-> >  obj-$(CONFIG_OCXL_SCM) += ocxlscm.o
-> >  
-> > -ocxlscm-y := scm.o
-> > +ocxlscm-y := scm.o scm_internal.o
-> > diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-> > index 571058a9e7b8..8088f65c289e 100644
-> > --- a/drivers/nvdimm/ocxl/scm.c
-> > +++ b/drivers/nvdimm/ocxl/scm.c
-> > @@ -7,6 +7,7 @@
-> >  
-> >  #include <linux/module.h>
-> >  #include <misc/ocxl.h>
-> > +#include <linux/delay.h>
-> >  #include <linux/ndctl.h>
-> >  #include <linux/mm_types.h>
-> >  #include <linux/memory_hotplug.h>
-> > @@ -266,6 +267,30 @@ static int scm_register_lpc_mem(struct
-> > scm_data *scm_data)
-> >  	return 0;
-> >  }
-> >  
-> > +/**
-> > + * scm_is_usable() - Is a controller usable?
-> > + * @scm_data: a pointer to the SCM device data
-> > + * Return: true if the controller is usable
-> > + */
-> > +static bool scm_is_usable(const struct scm_data *scm_data)
-> > +{
-> > +	u64 chi = 0;
-> > +	int rc = scm_chi(scm_data, &chi);
-> > +
-> > +	if (!(chi & GLOBAL_MMIO_CHI_CRDY)) {
-> > +		dev_err(&scm_data->dev, "SCM controller is not
-> > ready.\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	if (!(chi & GLOBAL_MMIO_CHI_MA)) {
-> > +		dev_err(&scm_data->dev,
-> > +			"SCM controller does not have memory
-> > available.\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> > +
-> >  /**
-> >   * allocate_scm_minor() - Allocate a minor number to use for an
-> > SCM device
-> >   * @scm_data: The SCM device to associate the minor with
-> > @@ -380,6 +405,48 @@ static void scm_remove(struct pci_dev *pdev)
-> >  	}
-> >  }
-> >  
-> > +/**
-> > + * read_device_metadata() - Retrieve config information from the
-> > AFU and save it for future use
-> > + * @scm_data: the SCM metadata
-> > + * Return: 0 on success, negative on failure
-> > + */
-> > +static int read_device_metadata(struct scm_data *scm_data)
-> > +{
-> > +	u64 val;
-> > +	int rc;
-> > +
-> > +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_CCAP0,
-> > +				     OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	scm_data->scm_revision = val & 0xFFFF;
-> > +	scm_data->read_latency = (val >> 32) & 0xFF;
-> > +	scm_data->readiness_timeout = (val >> 48) & 0xff;
-> > +	scm_data->memory_available_timeout = val >> 52;
+>  BUG: KCSAN: data-race in iomap_do_writepage / iomap_write_end
 > 
-> This overlaps with the masked region for readiness_timeout.  I'll
-> guess the maks
-> on that should be 0xF.
+>  write to 0xffff8bf68fc0cac0 of 8 bytes by task 7484 on cpu 71:
+>   iomap_write_end+0xea/0x530
+>   i_size_write at include/linux/fs.h:888
+>   (inlined by) iomap_write_end at fs/iomap/buffered-io.c:782
+>   iomap_write_actor+0x132/0x200
+>   iomap_apply+0x245/0x8a5
+>   iomap_file_buffered_write+0xbd/0xf0
+>   xfs_file_buffered_aio_write+0x1c2/0x790 [xfs]
+>   xfs_file_write_iter+0x232/0x2d0 [xfs]
+>   new_sync_write+0x29c/0x3b0
+>   __vfs_write+0x92/0xa0
+>   vfs_write+0x103/0x260
+>   ksys_write+0x9d/0x130
+>   __x64_sys_write+0x4c/0x60
+>   do_syscall_64+0x91/0xb05
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 > 
-Good catch, you're correct.
+>  read to 0xffff8bf68fc0cac0 of 8 bytes by task 5901 on cpu 70:
+>   iomap_do_writepage+0xf4/0x450
+>   i_size_read at include/linux/fs.h:866
+>   (inlined by) iomap_do_writepage at fs/iomap/buffered-io.c:1558
+>   write_cache_pages+0x523/0xb20
+>   iomap_writepages+0x47/0x80
+>   xfs_vm_writepages+0xc7/0x100 [xfs]
+>   do_writepages+0x5e/0x130
+>   __writeback_single_inode+0xd5/0xb20
+>   writeback_sb_inodes+0x429/0x910
+>   __writeback_inodes_wb+0xc4/0x150
+>   wb_writeback+0x47b/0x830
+>   wb_workfn+0x688/0x930
+>   process_one_work+0x54f/0xb90
+>   worker_thread+0x80/0x5f0
+>   kthread+0x1cd/0x1f0
+>   ret_from_fork+0x27/0x50
+> 
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 70 PID: 5901 Comm: kworker/u257:2 Tainted: G             L    5.6.0-rc2-next-20200218+ #2
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+>  Workqueue: writeback wb_workfn (flush-254:0)
+> 
+> The write is protected by exclusive inode::i_rwsem (in
+> xfs_file_buffered_aio_write()) but the read is not. A shattered value
+> could introduce a logic bug. Fixed it using a pair of WRITE/READ_ONCE().
 
-> > +
-> > +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_CCAP1,
-> > +				     OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	scm_data->max_controller_dump_size = val & 0xFFFFFFFF;
-> > +
-> > +	// Extract firmware version text
-> > +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_FWVER,
-> > +				     OCXL_HOST_ENDIAN, (u64 *)scm_data-
-> > >fw_version);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	scm_data->fw_version[8] = '\0';
-> > +
-> > +	dev_info(&scm_data->dev,
-> > +		 "Firmware version '%s' SCM revision %d:%d\n",
-> > scm_data->fw_version,
-> > +		 scm_data->scm_revision >> 4, scm_data->scm_revision &
-> > 0x0F);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> >  /**
-> >   * scm_probe_function_0 - Set up function 0 for an OpenCAPI
-> > Storage Class Memory device
-> >   * This is important as it enables templates higher than 0 across
-> > all other functions,
-> > @@ -420,6 +487,8 @@ static int scm_probe_function_0(struct pci_dev
-> > *pdev)
-> >  static int scm_probe(struct pci_dev *pdev, const struct
-> > pci_device_id *ent)
-> >  {
-> >  	struct scm_data *scm_data = NULL;
-> > +	int elapsed;
-> > +	u16 timeout;
-> >  
-> >  	if (PCI_FUNC(pdev->devfn) == 0)
-> >  		return scm_probe_function_0(pdev);
-> > @@ -469,6 +538,21 @@ static int scm_probe(struct pci_dev *pdev,
-> > const struct pci_device_id *ent)
-> >  		goto err;
-> >  	}
-> >  
-> > +	if (read_device_metadata(scm_data)) {
-> > +		dev_err(&pdev->dev, "Could not read SCM device
-> > metadata\n");
-> > +		goto err;
-> > +	}
-> > +
-> > +	elapsed = 0;
-> > +	timeout = scm_data->readiness_timeout + scm_data-
-> > >memory_available_timeout;
-> > +	while (!scm_is_usable(scm_data)) {
-> > +		if (elapsed++ > timeout) {
-> > +			dev_warn(&scm_data->dev, "SCM ready
-> > timeout.\n");
-> > +			goto err;
-> > +		}
-> > +
-> > +		msleep(1000);
-> > +	}
-> >  	if (scm_register_lpc_mem(scm_data)) {
-> >  		dev_err(&pdev->dev, "Could not register OCXL SCM memory
-> > with libnvdimm\n");
-> >  		goto err;
-> > diff --git a/drivers/nvdimm/ocxl/scm_internal.c
-> > b/drivers/nvdimm/ocxl/scm_internal.c
-> > new file mode 100644
-> > index 000000000000..72d3c0e7d846
-> > --- /dev/null
-> > +++ b/drivers/nvdimm/ocxl/scm_internal.c
-> > @@ -0,0 +1,19 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +// Copyright 2019 IBM Corp.
-> > +
-> > +#include <misc/ocxl.h>
-> > +#include <linux/delay.h>
-> > +#include "scm_internal.h"
-> > +
-> > +int scm_chi(const struct scm_data *scm_data, u64 *chi)
-> > +{
-> > +	u64 val;
-> > +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_CHI,
-> > +					 OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	*chi = val;
-> > +
-> > +	return 0;
-> > +}
-> > diff --git a/drivers/nvdimm/ocxl/scm_internal.h
-> > b/drivers/nvdimm/ocxl/scm_internal.h
-> > index d6ab361f5de9..584450f55e30 100644
-> > --- a/drivers/nvdimm/ocxl/scm_internal.h
-> > +++ b/drivers/nvdimm/ocxl/scm_internal.h
-> > @@ -97,4 +97,28 @@ struct scm_data {
-> >  	void *metadata_addr;
-> >  	struct resource scm_res;
-> >  	struct nd_region *nd_region;
-> > +	char fw_version[8+1];
-> > +
-> > +	u32 max_controller_dump_size;
-> > +	u16 scm_revision; // major/minor
-> > +	u8 readiness_timeout;  /* The worst case time (in seconds) that
-> > the host shall
-> > +				* wait for the controller to become
-> > operational following a reset (CHI.CRDY).
-> > +				*/
-> > +	u8 memory_available_timeout;   /* The worst case time (in
-> > seconds) that the host shall
-> > +					* wait for memory to become
-> > available following a reset (CHI.MA).
-> > +					*/
-> > +
-> > +	u16 read_latency; /* The nominal measure of latency (in
-> > nanoseconds)
-> > +			   * associated with an unassisted read of a
-> > memory block.
-> > +			   * This represents the capability of the raw
-> > media technology without assistance
-> > +			   */
-> >  };
-> > +
-> > +/**
-> > + * scm_chi() - Get the value of the CHI register
-> > + * @scm_data: The SCM metadata
-> > + * @chi: returns the CHI value
-> > + *
-> > + * Returns 0 on success, negative on error
-> > + */
-> > +int scm_chi(const struct scm_data *scm_data, u64 *chi);
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+If aligned 64bit stores on 64bit host (note the BITS_PER_LONG ifdefs) end up
+being split, the kernel is FUBAR anyway.  Details, please - how could that
+end up happening?
