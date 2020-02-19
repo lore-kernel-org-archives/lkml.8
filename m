@@ -2,160 +2,161 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A3EC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E71C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2B32176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4992E2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qRy1riiL"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EgNvAQKe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBSIRU (ORCPT
+        id S1726636AbgBSITw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:17:20 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38913 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgBSIRT (ORCPT
+        Wed, 19 Feb 2020 03:19:52 -0500
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:47245 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726539AbgBSITw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:17:19 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so27032624wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:17:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8DM5RbAjU3k/1x40w1mSb6mN+/6HvquZmqjXWrIELcc=;
-        b=qRy1riiLgt1ceFQQEtX/Sz3UC3PNnCeIdXmCUdimHAQfCCmTs85KIGGqv5g0XmsMfa
-         64ZGcHJGem+hhD2+iDnJMf6Q1WRVwyb/9jXn2rgK9VKehR4Ozvtm8D/JnDk5Op7uOIsu
-         BAyCbkThuOREEbJZdtNzgfaX+WEx8ZRQVkcfbcazqjr2eYy3X79cHtqYcU6UJ/BmdiEB
-         Hqjqe0FDfCdHt2GShxuYcUqxjK/YKLK5FNcIUHDF5EYJKt0d0ZfPXB5ClQNEmJ1SNOKT
-         jgZr9z6C663L3MZc8cVBtNuEVU1g0mdyGFc45JMvIY0pOEZ+NCCoIzrg8u496DKoK1yN
-         P44A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8DM5RbAjU3k/1x40w1mSb6mN+/6HvquZmqjXWrIELcc=;
-        b=W2o7abZwMBisah0sCOLsRzj1cl6rnmQFh5Q0VMJZVXeC5Z/BaXJhmqyV2zOzceXyeZ
-         uWjtzwHlHe2Jy9Ox8/sDdrAsy1TGQP4iXhALQWAQ0H3hj7+eZzBzTSZuc6pD6oTZv1fS
-         BnuYXvjl+LeEFv6egHqgK3QlERq2bRYtP3zsVE/CGTJXaEA7VlFqc+IrhdklEJ9zGxqj
-         c97L9weDgZVEDxAHgeStKbapEKSh9MxavmFT67mVlhm4ifEvhgD3UTXBg3turpSEMh/R
-         PHclkAVrfxlhnYjR9S2giSQpuUaq7Hni19Yilb1z53+q8KqhU81J7Ryx9XNCdymgv0NM
-         Hiew==
-X-Gm-Message-State: APjAAAVYNP/zgseBRWeJWiVaGwchvCDWCVV/dzi3FVYfq7ovXcGWwdQu
-        L44VLeH4CCHVPcD5Hbiz0rMAi7AN7CJbMg==
-X-Google-Smtp-Source: APXvYqwiY9NxzI3K6jCzx0KigmeEu/ij1ES5XFEFcxCL/1DkKLMsiU6js8UGvcul+SLKt5/UEmw9vg==
-X-Received: by 2002:adf:f802:: with SMTP id s2mr36323251wrp.201.1582100235730;
-        Wed, 19 Feb 2020 00:17:15 -0800 (PST)
-Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id p11sm1981998wrn.40.2020.02.19.00.17.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 00:17:14 -0800 (PST)
-Subject: Re: [PATCH v2 0/3] spi: meson-axg: add few enhanced features
-To:     Sunny Luo <sunny.luo@amlogic.com>, Mark Brown <broonie@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <carlo@caione.org>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1544690354-16409-1-git-send-email-sunny.luo@amlogic.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <cb4a7228-b75c-7b54-8228-14dbb370b19f@baylibre.com>
-Date:   Wed, 19 Feb 2020 09:17:14 +0100
+        Wed, 19 Feb 2020 03:19:52 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 4KaAjzEowP9a94KaEjnLlk; Wed, 19 Feb 2020 09:19:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582100390; bh=nfF8wMmiXD8n6wpKKTJOHRpwFi71Fz2zG1LZaP4lDVo=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=EgNvAQKeI195N08iqj121owBGpQz1h+ESmVg5R+imkIC3o8YQTT+9BTaVj0fGFEYH
+         6+JqWGrhfz0M1lvgKJlfE3A5Nf6c7LeybrbeifAlV8iu5jVdakyMljozU3gBv1md5T
+         YZ1Fz4vqPVfEOVSy/pcY7SeVr+nny9NR8IylKlx+nROJ+2CzJFnyuJE0//FvZWWw/Z
+         r92BUl0Rlm01RUh6zwbJIymcP/9zqtoUg2zCk6rO+w9oH24rkKS2pqfqo+h73a7Qr+
+         uzlgCHUgpcI2u99ejNbt8TwyQ5ncxBrN5XDZqjfGnXGLQJ811K8tTo4Tmc37yL+RAk
+         FVMB1lNr7dlMQ==
+Subject: Re: [RFC][PATCHv2 03/12] videobuf2: add
+ V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+ <20200204025641.218376-4-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <bc32cd42-6452-dba2-e98e-e757b9ffc6d4@xs4all.nl>
+Date:   Wed, 19 Feb 2020 09:19:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1544690354-16409-1-git-send-email-sunny.luo@amlogic.com>
+In-Reply-To: <20200204025641.218376-4-senozhatsky@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfHRKjqqrhjrAxguj1fFSS2HkyPrdNgyyQE1o7/yoUy9HTR6KV9bzpSgYBDS5JeS+476yAyR/gX0ymWe6aGHWfmx8ei6rKbDRPamxFXw6mk3KitOh04yU
+ D1x9D0nOCRtTzNIEQ8cpzNFeZ9ll5qY79sQF3Csdz4khdyHaU17Hv6fCAMyz4A8TR/KFF2DpgZtm3cZszNN9Dpym3WhOIpt6JI7VleLZG/zb0sMMJ5PPXGGf
+ vdsT4CJpmWqMBv5kno9l3DX/GH7smcD7i76wlSRSAbtc9+9QmFTLesP/0kpNg8Ss0KDlfNyEtLTr5JTGco073d+WOPZZquRgNsoQvXl2Uw8pC472AwbAbyfV
+ KNHoY6F39Vk/61/vbvvTop3qI2ELg3Y8cTcg38e2Br+aci4VAWeDfkomfHVKVT+EgIbTK9wES8HurJ8CKObqLwpfh7Z/DDHh1yb5Tdlya/EldRJT0z8C/VbS
+ vPUg84ckHuB+Avk2iEAz0zqLoDssz02DGipo8yoNvM+7z+iZ7U95OZTpf50ybEI2Zc694rS5YnkmXxUi
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sunny,
+On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
+> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+> user-space should be able to set or clear queue's NON_CONSISTENT
+> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
+> allocator in __vb2_buf_mem_alloc(), so thus user-space is able
+> to request vb2 buffer's memory to be either consistent (coherent)
+> or non-consistent.
+> 
+> Change-Id: Ib333081c482e23c9a89386078293e19c3fd59076
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  Documentation/media/uapi/v4l/buffer.rst | 27 +++++++++++++++++++++++++
+>  include/uapi/linux/videodev2.h          |  2 ++
+>  2 files changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
+> index 9149b57728e5..af007daf0591 100644
+> --- a/Documentation/media/uapi/v4l/buffer.rst
+> +++ b/Documentation/media/uapi/v4l/buffer.rst
+> @@ -705,6 +705,33 @@ Buffer Flags
+>  
+>  .. c:type:: v4l2_memory
+>  
+> +Memory Consistency Flags
 
-On 13/12/2018 09:39, Sunny Luo wrote:
-> add a few enhanced features for the SPICC controller of Meson-AXG SoC.
-> 
-> These patches are actually quite independent from each other, I send them
-> together in case to avoid the file conflicts.
-> 
-> Changes since v1 at [1]
-> - Add OF and COMMON_CLK dependence for SPICC in Kconfig to avoid compiling
->   error.
-> 
-> [1] https://lore.kernel.org/lkml/20180503213645.20694-1-yixun.lan@amlogic.com
-> 
-> Sunny Luo (3):
->   spi: meson-axg: support MAX 80M clock
->   spi: meson-axg: enhance output enable feature
->   spi: meson-axg: add a linear clock divider support
-> 
->  drivers/spi/Kconfig           |   2 +-
->  drivers/spi/spi-meson-spicc.c | 270 ++++++++++++++++++++++++++++++++++--------
->  2 files changed, 223 insertions(+), 49 deletions(-)
+This new part should be added *above* the '.. c:type:: v4l2_memory' line.
+
+You also need to add '.. _memory-flags:' just before this section so that
+you can link to it from the create_bufs and reqbufs ioctl descriptions.
+
+> +========================
+> +
+> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       3 1 4
+> +
+> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
+> +
+> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
+> +      - 0x00000001
+> +      - vb2 buffer is allocated either in consistent (it will be automatically
+> +	coherent between CPU and bus) or non-consistent memory. The latter
+> +	can provide performance gains, for instance CPU cache sync/flush
+> +	operations can be avoided if the buffer is accesed by the corresponding
+
+accesed -> accessed
+
+> +	device only and CPU does not read/write to/from that buffer. However,
+> +	this requires extra care from the driver -- it must guarantee memory
+> +	consistency by issuing cache flush/sync when consistency is needed.
+> +	If this flag is set V4L2 will attempt to allocate vb2 buffer in
+> +	non-consistent memory. This flag is ignored if queue does not report
+> +        :ret:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
+
+V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is not defined. Add that first in a separate
+patch.
+
+Also update the current description of the V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/CLEAN
+flags to indicate that they are only valid if V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
+is set (that should be done in the patch adding the V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
+capability).
+
+Regards,
+
+	Hans
+
+> +
+>  enum v4l2_memory
+>  ================
+>  
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 5f9357dcb060..72efc1c544cd 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -189,6 +189,8 @@ enum v4l2_memory {
+>  	V4L2_MEMORY_DMABUF           = 4,
+>  };
+>  
+> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT		(1 << 0)
+> +
+>  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
+>  enum v4l2_colorspace {
+>  	/*
 > 
 
-Is there still a plan to push an updated version for AXG and G12A ?
-
-Neil
