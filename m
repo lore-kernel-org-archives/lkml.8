@@ -2,343 +2,276 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC2C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CC8C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3517C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BF8208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CDXm5ZIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgBSABb (ORCPT
+        id S1727804AbgBSABp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:01:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18034 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbgBSABa (ORCPT
+        Tue, 18 Feb 2020 19:01:45 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17107 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbgBSABp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:01:30 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J009cc136962
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:01:29 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e2g37db-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:01:29 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 19 Feb 2020 00:01:26 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 00:01:20 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J00Nrl45678852
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 00:00:23 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 401114C050;
-        Wed, 19 Feb 2020 00:01:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9227D4C058;
-        Wed, 19 Feb 2020 00:01:18 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 00:01:18 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0499CA00DF;
-        Wed, 19 Feb 2020 11:01:14 +1100 (AEDT)
-Subject: Re: [PATCH v2 06/27] ocxl: Tally up the LPC memory on a link &
- allow it to be mapped
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 19 Feb 2020 11:01:17 +1100
-In-Reply-To: <20200203123712.0000461a@Huawei.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-7-alastair@au1.ibm.com>
-         <20200203123712.0000461a@Huawei.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 18 Feb 2020 19:01:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c7ac80000>; Tue, 18 Feb 2020 16:01:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 16:01:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 16:01:44 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 00:01:43 +0000
+Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-12-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
+Date:   Tue, 18 Feb 2020 16:01:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200217184613.19668-12-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021900-0028-0000-0000-000003DC407C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021900-0029-0000-0000-000024A14B74
-Message-Id: <81d1d7c914614ca0b6aac7d02ce07a76b19757c5.camel@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 suspectscore=2 clxscore=1015 lowpriorityscore=0
- impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180164
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582070472; bh=z3Bzj/5bgrV9fPnuzsXFxX0FOV0H+b7fZfF2f3wUJhE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CDXm5ZINDvSMkAMnjJBonRkzIb7iakoxvVztr5ii0adNdeG78Anh8llJWS1Oc3ute
+         ciu9+xmTJ9a50yl/a+pixD46BgV6xF+09QnP10UJd4Zpp0lWUdTmM7aBiLhSZDw6Hf
+         wCP/rAeJW8P45k+lakQ0Jakmz74bgXZE1S//J77o6oOO3+7Jggx7PzOpoJM5AKYTOZ
+         KfIQU7OmVVxsb6VxM6AEe7fCrs6vPu0hc+FYSwUN2mgoONMaQPVhKQI/fdMA+wED9M
+         GVdeSW/kF97kpNzr8blN78Wpo/oC7ggjF0inN752QvrA2QkM3LFiAvFbOOfAivj44D
+         cOxpPLMH8VOBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 12:37 +0000, Jonathan Cameron wrote:
-> On Tue, 3 Dec 2019 14:46:34 +1100
-> Alastair D'Silva <alastair@au1.ibm.com> wrote:
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Hi Alastair,
-> 
-> A few trivial comments inline.
-> 
-> Jonathan
-> 
-> > ---
-> >  drivers/misc/ocxl/core.c          | 10 ++++++
-> >  drivers/misc/ocxl/link.c          | 60
-> > +++++++++++++++++++++++++++++++
-> >  drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++
-> >  3 files changed, 103 insertions(+)
-> > 
-> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> > index b7a09b21ab36..2531c6cf19a0 100644
-> > --- a/drivers/misc/ocxl/core.c
-> > +++ b/drivers/misc/ocxl/core.c
-> > @@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu,
-> > u8 afu_idx, struct pci_dev *dev)
-> >  	if (rc)
-> >  		goto err_free_pasid;
-> >  
-> > +	if (afu->config.lpc_mem_size || afu-
-> > >config.special_purpose_mem_size) {
-> > +		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu-
-> > >config.lpc_mem_offset,
-> > +					   afu->config.lpc_mem_size +
-> > +					   afu-
-> > >config.special_purpose_mem_size);
-> > +		if (rc)
-> > +			goto err_free_mmio;
-> > +	}
-> > +
-> >  	return 0;
-> >  
-> > +err_free_mmio:
-> > +	unmap_mmio_areas(afu);
-> >  err_free_pasid:
-> >  	reclaim_afu_pasid(afu);
-> >  err_free_actag:
-> > diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> > index 58d111afd9f6..d8503f0dc6ec 100644
-> > --- a/drivers/misc/ocxl/link.c
-> > +++ b/drivers/misc/ocxl/link.c
-> > @@ -84,6 +84,11 @@ struct ocxl_link {
-> >  	int dev;
-> >  	atomic_t irq_available;
-> >  	struct spa *spa;
-> > +	struct mutex lpc_mem_lock;
-> 
-> Always a good idea to explicitly document what a lock is intended to
-> protect.
-> 
-Ok
-
-> > +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the
-> > link */
-> > +	u64 lpc_mem;
-> > +	int lpc_consumers;
-> > +
-> >  	void *platform_data;
-> >  };
-> >  static struct list_head links_list = LIST_HEAD_INIT(links_list);
-> > @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int
-> > PE_mask, struct ocxl_link **out_l
-> >  	if (rc)
-> >  		goto err_spa;
-> >  
-> > +	mutex_init(&link->lpc_mem_lock);
-> > +
-> >  	/* platform specific hook */
-> >  	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
-> >  				&link->platform_data);
-> > @@ -711,3 +718,56 @@ void ocxl_link_free_irq(void *link_handle, int
-> > hw_irq)
-> >  	atomic_inc(&link->irq_available);
-> >  }
-> >  EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
-> > +
-> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +
-> > +	// Check for overflow
-> 
-> Stray c++ style comment.
-> 
-This is permitted in powerpc.
-
-> > +	if (offset > (offset + size))
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
-> > +
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +	u64 lpc_mem;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +	if (link->lpc_mem) {
-> 
-> If you don't modify this later in the series (I haven't read it all
-> yet :),
-> it rather feels like it would be more compact and just as readable as
-> something like...
-> 
-> 	if (!link->lpc_mem)
-> 		link->lpc_mem = pnv_ocxl...
-> 
-> 	if (link->lpc_mem)
-> 		link->lpc_consumers++;
-> 	mutex_unlock(&link->lpc_mem_lock);
-> 		
-> 	return link->lpc_mem;
+> At allocation time, put the pages in the cache unless we're using
+> ->readpages.  Add the readahead_for_each() iterator for the benefit of
+> the ->readpage fallback.  This iterator supports huge pages, even though
+> none of the filesystems to be converted do yet.
 > 
 
-Agreed, thanks.
 
-> > +		lpc_mem = link->lpc_mem;
-> > +
-> > +		link->lpc_consumers++;
-> > +		mutex_unlock(&link->lpc_mem_lock);
-> > +		return lpc_mem;
-> > +	}
-> > +
-> > +	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link-
-> > >lpc_mem_sz);
-> > +	if (link->lpc_mem)
-> > +		link->lpc_consumers++;
-> > +	lpc_mem = link->lpc_mem;
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +
-> > +	return lpc_mem;
-> > +}
-> > +
-> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
-> > *pdev)
-> > +{
-> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
-> > +
-> > +	mutex_lock(&link->lpc_mem_lock);
-> > +	WARN_ON(--link->lpc_consumers < 0);
-> > +	if (link->lpc_consumers == 0) {
-> > +		pnv_ocxl_platform_lpc_release(pdev);
-> > +		link->lpc_mem = 0;
-> > +	}
-> > +
-> > +	mutex_unlock(&link->lpc_mem_lock);
-> > +}
-> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
-> > b/drivers/misc/ocxl/ocxl_internal.h
-> > index 97415afd79f3..20b417e00949 100644
-> > --- a/drivers/misc/ocxl/ocxl_internal.h
-> > +++ b/drivers/misc/ocxl/ocxl_internal.h
-> > @@ -141,4 +141,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context
-> > *ctx, u64 offset);
-> >  u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
-> >  void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> >  
-> > +/**
-> > + * ocxl_link_add_lpc_mem() - Increment the amount of memory
-> > required by an OpenCAPI link
-> > + *
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @offset: The offset of the memory to add
-> > + * @size: The amount of memory to increment by
-> > + *
-> > + * Return 0 on success, negative on overflow
-> > + */
-> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64
-> > size);
-> > +
-> > +/**
-> > + * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
-> > + *
-> > + * Since LPC memory belongs to a link, the whole LPC memory
-> > available
-> > + * on the link bust be mapped in order to make it accessible to a
-> > device.
+"Also, remove the gfp argument from read_pages(), now that read_pages()
+no longer does allocation."
+
+Generally looks accurate, just a few notes below:
+
+
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  include/linux/pagemap.h | 24 ++++++++++++++++++++++++
+>  mm/readahead.c          | 34 +++++++++++++++++-----------------
+>  2 files changed, 41 insertions(+), 17 deletions(-)
 > 
-> must
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 982ecda2d4a2..3613154e79e4 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -639,8 +639,32 @@ struct readahead_control {
+>  /* private: use the readahead_* accessors instead */
+>  	pgoff_t _start;
+>  	unsigned int _nr_pages;
+> +	unsigned int _batch_count;
+>  };
+>  
+> +static inline struct page *readahead_page(struct readahead_control *rac)
+> +{
+> +	struct page *page;
+> +
+> +	if (!rac->_nr_pages)
+> +		return NULL;
+> +
+> +	page = xa_load(&rac->mapping->i_pages, rac->_start);
+> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> +	rac->_batch_count = hpage_nr_pages(page);
+> +
+> +	return page;
+> +}
+> +
+> +static inline void readahead_next(struct readahead_control *rac)
+> +{
+> +	rac->_nr_pages -= rac->_batch_count;
+> +	rac->_start += rac->_batch_count;
+> +}
+> +
+> +#define readahead_for_each(rac, page)					\
+> +	for (; (page = readahead_page(rac)); readahead_next(rac))
+> +
 
-Whoops :)
+
+How about this instead? It uses the "for" loop fully and more naturally,
+and is easier to read. And it does the same thing:
+
+static inline struct page *readahead_page(struct readahead_control *rac)
+{
+	struct page *page;
+
+	if (!rac->_nr_pages)
+		return NULL;
+
+	page = xa_load(&rac->mapping->i_pages, rac->_start);
+	VM_BUG_ON_PAGE(!PageLocked(page), page);
+	rac->_batch_count = hpage_nr_pages(page);
+
+	return page;
+}
+
+static inline struct page *readahead_next(struct readahead_control *rac)
+{
+	rac->_nr_pages -= rac->_batch_count;
+	rac->_start += rac->_batch_count;
+
+	return readahead_page(rac);
+}
+
+#define readahead_for_each(rac, page)			\
+	for (page = readahead_page(rac); page != NULL;	\
+	     page = readahead_page(rac))
+
+
+
+
+>  /* The number of pages in this readahead block */
+>  static inline unsigned int readahead_count(struct readahead_control *rac)
+>  {
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index bdc5759000d3..9e430daae42f 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -113,12 +113,11 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
+>  
+>  EXPORT_SYMBOL(read_cache_pages);
+>  
+> -static void read_pages(struct readahead_control *rac, struct list_head *pages,
+> -		gfp_t gfp)
+> +static void read_pages(struct readahead_control *rac, struct list_head *pages)
+>  {
+>  	const struct address_space_operations *aops = rac->mapping->a_ops;
+> +	struct page *page;
+>  	struct blk_plug plug;
+> -	unsigned page_idx;
+>  
+>  	blk_start_plug(&plug);
+>  
+> @@ -127,19 +126,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+>  				readahead_count(rac));
+>  		/* Clean up the remaining pages */
+>  		put_pages_list(pages);
+> -		goto out;
+> -	}
+> -
+> -	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
+> -		struct page *page = lru_to_page(pages);
+> -		list_del(&page->lru);
+> -		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
+> -				gfp))
+> +	} else {
+> +		readahead_for_each(rac, page) {
+>  			aops->readpage(rac->file, page);
+> -		put_page(page);
+> +			put_page(page);
+> +		}
+>  	}
+>  
+> -out:
+>  	blk_finish_plug(&plug);
+>  }
+>  
+> @@ -159,6 +152,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	unsigned long i;
+>  	loff_t isize = i_size_read(inode);
+>  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+> +	bool use_list = mapping->a_ops->readpages;
+
+
+fwiw, "bool have_readpages" seems like a better name (after all, that's how read_pages() 
+effectively is written: "if you have .readpages, then..."), but I can see both sides 
+of that bikeshed. :)
+
+
+>  	struct readahead_control rac = {
+>  		.mapping = mapping,
+>  		.file = filp,
+> @@ -196,8 +190,14 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		page = __page_cache_alloc(gfp_mask);
+>  		if (!page)
+>  			break;
+> -		page->index = offset;
+> -		list_add(&page->lru, &page_pool);
+> +		if (use_list) {
+> +			page->index = offset;
+> +			list_add(&page->lru, &page_pool);
+> +		} else if (add_to_page_cache_lru(page, mapping, offset,
+> +					gfp_mask) < 0) {
+
+
+It would be a little safer from a maintenance point of view, to check for !=0, rather
+than checking for < 0.  Most (all?) existing callers check that way, and it's good
+to stay with the pack there.
+
+
+> +			put_page(page);
+> +			goto read;
+> +		}
+>  		if (i == nr_to_read - lookahead_size)
+>  			SetPageReadahead(page);
+>  		rac._nr_pages++;
+> @@ -205,7 +205,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  		continue;
+>  read:
+>  		if (readahead_count(&rac))
+> -			read_pages(&rac, &page_pool, gfp_mask);
+> +			read_pages(&rac, &page_pool);
+>  		rac._nr_pages = 0;
+>  		rac._start = ++offset;
+>  	}
+> @@ -216,7 +216,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+>  	 * will then handle the error.
+>  	 */
+>  	if (readahead_count(&rac))
+> -		read_pages(&rac, &page_pool, gfp_mask);
+> +		read_pages(&rac, &page_pool);
+>  	BUG_ON(!list_empty(&page_pool));
+>  }
+>  
 > 
-> > + *
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @pdev: A device that is on the link
-> > + */
-> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
-> > +
-> > +/**
-> > + * ocxl_link_lpc_release() - Release the LPC memory device for an
-> > OpenCAPI device
-> > + *
-> > + * Offlines LPC memory on an OpenCAPI link for a device. If this
-> > is the
-> > + * last device on the link to release the memory, unmap it from
-> > the link.
-> > + *
-> > + * @link_handle: The OpenCAPI link handle
-> > + * @pdev: A device that is on the link
-> > + */
-> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
-> > *pdev);
-> > +
-> >  #endif /* _OCXL_INTERNAL_H_ */
 
+
+thanks,
 -- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
-
+John Hubbard
+NVIDIA
