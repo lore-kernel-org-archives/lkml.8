@@ -2,140 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D46DC3405F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98D4C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5734020801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582132686;
-	bh=Lwos0NapstCzYp5htZVkGyszVmu1Rmhyxs3LpIQ5A+k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aNZ5tht1TpxHH9cLEub96Y8CY4+8+IDnRmGOB5Bclyx3xPmb8esoCb8wCUupziVvA
-	 X8xTe3Cwc1jyTf6gUdp10iRM+eMNM8wREFHTehZch+5+RU5Gj1DIYrF0bQ3ueetjFK
-	 LM0Lzs+l5hx/kPAsZZU+yiJ+ZgCjJYkqtifpNs2s=
+	by mail.kernel.org (Postfix) with ESMTP id 7CB0C20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MabFU/LN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSRSF (ORCPT
+        id S1726717AbgBSRTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:18:05 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33317 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbgBSRSF (ORCPT
+        Wed, 19 Feb 2020 12:19:00 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33495 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgBSRTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:18:05 -0500
-Received: by mail-lj1-f193.google.com with SMTP id y6so1217886lji.0;
-        Wed, 19 Feb 2020 09:18:03 -0800 (PST)
+        Wed, 19 Feb 2020 12:19:00 -0500
+Received: by mail-io1-f66.google.com with SMTP id z8so1437419ioh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:18:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eFFLbtKV1wHoHpSbO1vGKr55xKiOdJlHlqvO+VL5miQ=;
+        b=MabFU/LNJ6iK5i7PFe+0avSvRodkDyxJVTzJwbnwlmFp8ec7HckrwZ5WxlPngA3Lbu
+         m0uacrHQ6Ij6wWXzRbWXh9cb9byO2GB+jpP06/CxTTIdI31eSIVpKXB5U9enJNcfLFxw
+         Dq67E9Hxga7B00YTYr/Eq/p6Cz8AihY8xCBwk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RofHi9gYU0MfSmZMufurAFlHepEM01ZEtiwTgi9BGrA=;
-        b=LZOh66VA37oObxEP7Ty5P7kX6pRSh/kdOQ7xpWeqAUCmucbf0VP/c0eKCd4ReTTppo
-         JZqjvTRaroW0x4nvkBmbgs8UyJwRmmycGXxLCDU6kuFCnZGxaMeU3eAkvMXItwSz18/5
-         adR/Hf+QDmlLeKUOL/pMR8AwqhCMeKaXhEocy0Vp6qYCUWSdcdHDBBiTfaw1lPiw9C/k
-         0ALoif7cWH+6mhiFqG8wHhyLVjE+Dv/twYKLNjpDpPRYNFx/Gv1WAxXNn25phx4WBj1V
-         HFmxmDzTEZGG14UrtRfLUI+RdmmupuWfy8TkCUB0or8VJrZWQL6ipj1hTRMfVS2yTZQJ
-         zd6A==
-X-Gm-Message-State: APjAAAW3hY995mX7NBwmDfCLWScEHms7jWlODXn7asNmInJOb0FqKK5b
-        vM96TkV/nao1HeOG/FfCLfk=
-X-Google-Smtp-Source: APXvYqx8WEW5DwJYqFalOQFg6QSc95CJr9EXAk5YvFEl1v88/LWr6FJofLuta2Vnn9pg+0MFg7u5zQ==
-X-Received: by 2002:a05:651c:40c:: with SMTP id 12mr16592063lja.147.1582132682705;
-        Wed, 19 Feb 2020 09:18:02 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id b30sm116917lfc.39.2020.02.19.09.18.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 09:18:01 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j4Sz1-0003WC-KQ; Wed, 19 Feb 2020 18:17:59 +0100
-Date:   Wed, 19 Feb 2020 18:17:59 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] tty: rename tty_kopen() and add new function
- tty_kopen_shared()
-Message-ID: <20200219171759.GE32540@localhost>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-3-uwe@kleine-koenig.org>
- <20200219132113.GD32540@localhost>
- <20200219163758.5rypsol4n6ucost4@pengutronix.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eFFLbtKV1wHoHpSbO1vGKr55xKiOdJlHlqvO+VL5miQ=;
+        b=tng1EtcxiV/x8thSRA+bJBwbuevfDxcWdB7VFPBKUIwTrcCuDyll5LfuArhbQJOokT
+         m0s6hvFEI3fZDY294Lr1TF/wL/vJjqQAqgrE0/42rGCgKm/sjapAjn/xB76gZeX4YXKA
+         71m3Iu/ab5jELKFDC6VQs+5zP++lv9cUVa5D7CpIQaKI2IkFZNulxNI2B7DnZ+vQck2e
+         WtedjctLFQ6tgcmbxk8z5aFo7fkFMDKDcLx3TA5Xzf/4GHADd2xVK3YCY+yJJp0H5KF5
+         Jk4nY7VTsV5+SWI0gw7RX2kCfCGukvasjfNbdnogK1tYcfLGaDqw3BcZdwHHAQzOVFJI
+         mUmQ==
+X-Gm-Message-State: APjAAAUWNgNzcwmA8wrwyT0/psVcyiGPnGxH9BYCm57Wii83IY90ARsL
+        FgdBjzvqkjojALR1qvD3MOJMCzoyr9wakNzgqGXJ9Q==
+X-Google-Smtp-Source: APXvYqxB0l8/vhLc9U7gaSNF9v5Zi7hFO2pFY075Vik0MUlviJ4M/JnZkM7hLnjg1q0jDOD2pAvydSBAEchSKICMsEY=
+X-Received: by 2002:a6b:db0d:: with SMTP id t13mr20864493ioc.171.1582132739221;
+ Wed, 19 Feb 2020 09:18:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219163758.5rypsol4n6ucost4@pengutronix.de>
+References: <20200219144724.800607165@infradead.org> <20200219150744.661923520@infradead.org>
+ <20200219163156.GY2935@paulmck-ThinkPad-P72> <20200219121609.45548925@gandalf.local.home>
+In-Reply-To: <20200219121609.45548925@gandalf.local.home>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 19 Feb 2020 12:18:48 -0500
+Message-ID: <CAEXW_YT1W4ctSt8xc2ErWwRucp2BTdV3FhB3F3iVdGogWAqELg@mail.gmail.com>
+Subject: Re: [PATCH] rcu/kprobes: Comment why rcu_nmi_enter() is marked NOKPROBE
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Glexiner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 05:37:58PM +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 19, 2020 at 02:21:13PM +0100, Johan Hovold wrote:
-> > On Thu, Feb 13, 2020 at 10:15:58AM +0100, Uwe Kleine-König wrote:
-> > > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > 
-> > > Introduce a new function tty_kopen_shared() that yields a struct
-> > > tty_struct. The semantic difference to tty_kopen() is that the tty is
-> > > expected to be used already. So rename tty_kopen() to
-> > > tty_kopen_exclusive() for clearness, adapt the single user and put the
-> > > common code in a new static helper function.
-> > > 
-> > > tty_kopen_shared is to be used to implement an LED trigger for tty
-> > > devices in one of the next patches.
-> > > 
-> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> >  
-> > > -/**
-> > > - *	tty_kopen	-	open a tty device for kernel
-> > > - *	@device: dev_t of device to open
-> > > - *
-> > > - *	Opens tty exclusively for kernel. Performs the driver lookup,
-> > > - *	makes sure it's not already opened and performs the first-time
-> > > - *	tty initialization.
-> > > - *
-> > > - *	Returns the locked initialized &tty_struct
-> > > - *
-> > > - *	Claims the global tty_mutex to serialize:
-> > > - *	  - concurrent first-time tty initialization
-> > > - *	  - concurrent tty driver removal w/ lookup
-> > > - *	  - concurrent tty removal from driver table
-> > > - */
-> > > -struct tty_struct *tty_kopen(dev_t device)
-> > > +static struct tty_struct *tty_kopen(dev_t device, int shared)
-> > >  {
-> > >  	struct tty_struct *tty;
-> > >  	struct tty_driver *driver;
-> > > @@ -1905,7 +1890,7 @@ struct tty_struct *tty_kopen(dev_t device)
-> > >  
-> > >  	/* check whether we're reopening an existing tty */
-> > >  	tty = tty_driver_lookup_tty(driver, NULL, index);
-> > > -	if (IS_ERR(tty))
-> > > +	if (IS_ERR(tty) || shared)
-> > 
-> > So here you skip initialisation and return NULL if the tty isn't already
-> > in use (e.g. is open) when shared is set.
-> 
-> Which is good, right? If I remember my tests correctly this even works
-> if the tty isn't opened but just "exists".
+On Wed, Feb 19, 2020 at 12:16 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>
+> It's confusing that rcu_nmi_enter() is marked NOKPROBE and
+> rcu_nmi_exit() is not. One may think that the exit needs to be marked
+> for the same reason the enter is, as rcu_nmi_exit() reverts the RCU
+> state back to what it was before rcu_nmi_enter(). But the reason has
+> nothing to do with the state of RCU.
+>
+> The breakpoint handler (int3 on x86) must not have any kprobe on it
+> until the kprobe handler is called. Otherwise, it can cause an infinite
+> recursion and crash the machine. It just so happens that
+> rcu_nmi_enter() is called by the int3 handler before the kprobe handler
+> can run, and therefore needs to be marked as NOKPROBE.
+>
+> Comment this to remove the confusion to why rcu_nmi_enter() is marked
+> NOKPROBE but rcu_nmi_exit() is not.
+>
+> Link: https://lore.kernel.org/r/20200213163800.5c51a5f1@gandalf.local.home
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-No, this means that your trigger will never be installed unless the port
-is already open, yet the sysfs interface still returns success (see
-patch 4/4 dev_store()).
+Reported-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Note that the struct tty doesn't exist until the port is opened; it's
-allocated in tty_init_dev() that you skip above when "shared" is set.
+thanks,
 
-Johan
+ - Joel
+
+
+> ---
+> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> index 1694a6b57ad8..ada7b2b638fb 100644
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -846,6 +846,14 @@ void rcu_nmi_enter(void)
+>  {
+>         rcu_nmi_enter_common(false);
+>  }
+> +/*
+> + * All functions called in the breakpoint trap handler (e.g. do_int3()
+> + * on x86), must not allow kprobes until the kprobe breakpoint handler
+> + * is called, otherwise it can cause an infinite recursion.
+> + * On some archs, rcu_nmi_enter() is called in the breakpoint handler
+> + * before the kprobe breakpoint handler is called, thus it must be
+> + * marked as NOKPROBE.
+> + */
+>  NOKPROBE_SYMBOL(rcu_nmi_enter);
+>
+>  /**
