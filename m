@@ -2,153 +2,86 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A30C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C395BC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FB521D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QUPCQbS4"
+	by mail.kernel.org (Postfix) with ESMTP id 96A1321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBSIGT (ORCPT
+        id S1726777AbgBSIGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:06:19 -0500
-Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:6244
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        Wed, 19 Feb 2020 03:06:24 -0500
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2584 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726163AbgBSIGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:06:19 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iwEBGpsata10dXBjU3KtgaE6Um061XlmgN/eHykXEEpV4prFTovTDF9sw8I38aRXaQwCO0fCh6MVYMiBSgs/e+L55mfgoP1xxjyEROUILtgR1/iWiZlO51h+kPa26wfz7nZjEI5NwBhAKI+4IG+h2JeGRxk+OMI+pO3NjbTcZGQuOfMvt6r/DTfWiqBbfuT66Oy/MNJkLiZ8jIdhJSlBemxlA/73BzWLM1Xrm92D7Ph74n26duu3V8kdj34e8V2g8DPsYSbautuOsdXEEaftAV2mN+Ud31u3RsvtedRRiWtEXWK5GJvsqkbq62Lshr8SD11gidM6yphFj9gpudr/Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mfZ44Kb0NxQ+7sVLy7y6S4fCrQNN8UZjk8uRJkhLVhU=;
- b=iABrxMPLmLm/D2q1UnaAx1ED7P6WUs4JhS1JDhm4TITj7CBWX0fiX1jTUXu5zibtSwk1WUbltgA2PUkwsqYDhMaGwROQ84hcWr3fNicOPB4RwLyAwUeMcvb++ORw2s9F5t2kBXx8olCwZVpbpVvVg8TI3yilB7ekU99xevzMO4mSNhpFft6loQasNzKyfrwVsDtUIjhaYOmfgrHTz7TP8iNQ/QISJYqUILzXmFennFWXdLDquGijiRNkF8X7BJTmOIqIbyy6W7AE34WWNFsR1hDsjvPMTVUtlofRMyEHN7VaOg1SqwcYcjqqXYgV9TOTo9WumA4ohCpqCAlmFosK2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mfZ44Kb0NxQ+7sVLy7y6S4fCrQNN8UZjk8uRJkhLVhU=;
- b=QUPCQbS4zsoBRKA9jQlgaviO0qiijY0c28ghLLb8lySdIMxZRtSn1tiVsZwadYVIYNo9KL5tizFfAFtRxBTyrsHGN05EOVmIoqu6rRhS0ke+eOJIi4xHHBUAeGSEF15k3I7dHhcRTp+Cg2VuVX8zPPVX0s8ecJd57IBmRkN2ay8=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6401.eurprd04.prod.outlook.com (20.179.254.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Wed, 19 Feb 2020 08:06:15 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 08:06:15 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
-        robh+dt@kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 03/14] clk: imx: Fix division by zero warning on pfdv2
-Date:   Wed, 19 Feb 2020 15:59:46 +0800
-Message-Id: <1582099197-20327-4-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
-References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: HKAPR04CA0013.apcprd04.prod.outlook.com
- (2603:1096:203:d0::23) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        id S1726163AbgBSIGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:06:23 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 9B368CBC75E280C9FAF4;
+        Wed, 19 Feb 2020 16:06:16 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Feb 2020 16:06:15 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 19 Feb 2020 16:06:15 +0800
+Date:   Wed, 19 Feb 2020 16:04:57 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>
+CC:     <linux-erofs@lists.ozlabs.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>
+Subject: Re: [PATCH v2] erofs: convert workstn to XArray
+Message-ID: <20200219080456.GA126843@architecture4>
+References: <20200217033042.137855-1-gaoxiang25@huawei.com>
+ <58f1ff26-e1f8-96a4-fa7b-ee86f972b0aa@huawei.com>
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HKAPR04CA0013.apcprd04.prod.outlook.com (2603:1096:203:d0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2729.23 via Frontend Transport; Wed, 19 Feb 2020 08:06:11 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: adb08bd2-b481-4437-8f60-08d7b51297af
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6401:|AM0PR04MB6401:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB6401583C5669AB7637FD166288100@AM0PR04MB6401.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:113;
-X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(199004)(189003)(2616005)(81166006)(8676002)(9686003)(4326008)(66476007)(8936002)(478600001)(52116002)(6512007)(6506007)(66556008)(69590400006)(81156014)(316002)(86362001)(66946007)(956004)(6666004)(186003)(5660300002)(26005)(6486002)(36756003)(16526019)(2906002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6401;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Oy4D1aBDjTOuUG8rQLnbWZmF8iOtTe8mHkURoLn6/SGV6Z5ZQ01C0b1tjGRhw+9DoL5/UTE8ZrodjLKdHn2rA9wqeskGAYeSIvkIDtl1CxHAekX073tiNVPIfA8z0p08iQHIQ8Jg9q6183T6psOO2gMCdVjNG7N6x9QLnul+GKO5bqn1OKpzcoN+3WM4rKr9qnoPIbD+AdcN2v5tkcZx5SztmlI13jXBe9ok8+HGUDsnCqFfV1v6KNSi0CaIW71ryRAp0UUix2YwSTff+Z3LGpNAULvKDXTY6x7w1A7A1Y20rKHc9YW/3YW24EQKe+/stXs7nw+z/32IC2vEnRMx+wa8Bmaf5oRN0BfRRTTckQBUdNxbu1g3H37RBiQl2AHyC4102ywvrrElHadPcreOq2YK10wOZY5eVGI2VEEi/SQF50rBL5JSySwvtTsVYWTLDQSFSxIsCCjb+Pry9kQo/x/hWfLz4vsXXl3f8V/xsL5+meIDJ2VYRXJxm41q/VOByakAI0/8qbPwQ32Df5fv7QmXswV32Rj+Vh8GoWAjhR8=
-X-MS-Exchange-AntiSpam-MessageData: Rl2c8KgxMQkj+rG3cyzCHSrWOFPQBx5nY5OCeVR7iF+9Fm1ZAtMGcRhEocDKNBjN+c3PoWy63vG8MdnIcz4iZ5gxNixpYKMmLAK1GWXo+8ql6MbXhFAYXQEVF56jJgzzOPQgYls2YrqteCStkR0SpA==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: adb08bd2-b481-4437-8f60-08d7b51297af
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 08:06:15.6977
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QShsE56VSHv0m3Aio3+kE4Gik1Hw80XM7cr1v6sV3ROA0sjVQr3cOVXFwP1VZbnelCVArpyBYHcJXn/C4wR4Qw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6401
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <58f1ff26-e1f8-96a4-fa7b-ee86f972b0aa@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+Hi Chao,
 
-Fix below division by zero warning:
+On Wed, Feb 19, 2020 at 03:46:16PM +0800, Chao Yu wrote:
+> On 2020/2/17 11:30, Gao Xiang wrote:
 
-[    3.176443] Division by zero in kernel.
-[    3.181809] CPU: 0 PID: 88 Comm: kworker/0:2 Not tainted 5.3.0-rc2-next-20190730-63758-ge08da51-dirty #124
-[    3.191817] Hardware name: Freescale i.MX7ULP (Device Tree)
-[    3.197821] Workqueue: events dbs_work_handler
-[    3.202849] [<c01127d8>] (unwind_backtrace) from [<c010cd80>] (show_stack+0x10/0x14)
-[    3.211058] [<c010cd80>] (show_stack) from [<c0c77e68>] (dump_stack+0xd8/0x110)
-[    3.218820] [<c0c77e68>] (dump_stack) from [<c0c753c0>] (Ldiv0_64+0x8/0x18)
-[    3.226263] [<c0c753c0>] (Ldiv0_64) from [<c05984b4>] (clk_pfdv2_set_rate+0x54/0xac)
-[    3.234487] [<c05984b4>] (clk_pfdv2_set_rate) from [<c059192c>] (clk_change_rate+0x1a4/0x698)
-[    3.243468] [<c059192c>] (clk_change_rate) from [<c0591a08>] (clk_change_rate+0x280/0x698)
-[    3.252180] [<c0591a08>] (clk_change_rate) from [<c0591fc0>] (clk_core_set_rate_nolock+0x1a0/0x278)
-[    3.261679] [<c0591fc0>] (clk_core_set_rate_nolock) from [<c05920c8>] (clk_set_rate+0x30/0x64)
-[    3.270743] [<c05920c8>] (clk_set_rate) from [<c089cb88>] (imx7ulp_set_target+0x184/0x2a4)
-[    3.279501] [<c089cb88>] (imx7ulp_set_target) from [<c0896358>] (__cpufreq_driver_target+0x188/0x514)
-[    3.289196] [<c0896358>] (__cpufreq_driver_target) from [<c0899b0c>] (od_dbs_update+0x130/0x15c)
-[    3.298438] [<c0899b0c>] (od_dbs_update) from [<c089a5d0>] (dbs_work_handler+0x2c/0x5c)
-[    3.306914] [<c089a5d0>] (dbs_work_handler) from [<c0156858>] (process_one_work+0x2ac/0x704)
-[    3.315826] [<c0156858>] (process_one_work) from [<c0156cdc>] (worker_thread+0x2c/0x574)
-[    3.324404] [<c0156cdc>] (worker_thread) from [<c015cfe8>] (kthread+0x134/0x148)
-[    3.332278] [<c015cfe8>] (kthread) from [<c01010b4>] (ret_from_fork+0x14/0x20)
-[    3.339858] Exception stack(0xe82d5fb0 to 0xe82d5ff8)
-[    3.345314] 5fa0:                                     00000000 00000000 00000000 00000000
-[    3.353926] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-[    3.362519] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[]
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/clk/imx/clk-pfdv2.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> > -	return err;
+> > +	sbi = EROFS_SB(sb);
+> > +repeat:
+> > +	xa_lock(&sbi->managed_pslots);
+> > +	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
+> > +			   NULL, grp, GFP_NOFS);
+> > +	if (pre) {
+> 
+> It looks __xa_cmpxchg() could return negative value in case of failure, e.g.
+> no memory case. We'd better handle that case and old valid workgroup separately?
 
-diff --git a/drivers/clk/imx/clk-pfdv2.c b/drivers/clk/imx/clk-pfdv2.c
-index de93ce73101b..f8707278aad9 100644
---- a/drivers/clk/imx/clk-pfdv2.c
-+++ b/drivers/clk/imx/clk-pfdv2.c
-@@ -139,6 +139,12 @@ static int clk_pfdv2_set_rate(struct clk_hw *hw, unsigned long rate,
- 	u32 val;
- 	u8 frac;
- 
-+	if (!rate)
-+		return -EINVAL;
-+
-+	/* PFD can NOT change rate without gating */
-+	WARN_ON(clk_pfdv2_is_enabled(hw));
-+
- 	tmp = tmp * 18 + rate / 2;
- 	do_div(tmp, rate);
- 	frac = tmp;
--- 
-2.16.4
+Thanks, that is a quite good catch!
+
+To be honest, I'm not quite sure whether __xa_cmpxchg
+could fail due to no memory here (as a quick scan, it
+will do __xas_nomem loop interally.)
+
+But anyway, it needs bailing out all potential errors
+by using xa_is_err(). Will do some research and send
+v3 then.
+
+Thanks,
+Gao Xiang
 
