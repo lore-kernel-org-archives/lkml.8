@@ -2,116 +2,192 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86E4C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A0C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4582464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF01921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:07:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PEl5zJNP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwnW4WNh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbgBSJFv (ORCPT
+        id S1726551AbgBSJHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:05:51 -0500
-Received: from mail-pj1-f51.google.com ([209.85.216.51]:52623 "EHLO
-        mail-pj1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgBSJFv (ORCPT
+        Wed, 19 Feb 2020 04:07:13 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44358 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgBSJHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:05:51 -0500
-Received: by mail-pj1-f51.google.com with SMTP id ep11so2299050pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:05:50 -0800 (PST)
+        Wed, 19 Feb 2020 04:07:13 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so22384661otj.11;
+        Wed, 19 Feb 2020 01:07:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MHb/19gJYPsAg71KRRWbuzDnz+m/m3K8W3L6MyDMF70=;
-        b=PEl5zJNPTZ13sh03vuG3STMRi7yYdWvxlSO9I6m9T7ca225tueehBwEzPvdWyTLf2c
-         6GLBPw9n6bXaRHgrc3gHz9+N53a7dDq7MUxrRXociwiVomLYcBF0m92XNKkw8IGBKg+x
-         +9yYIHshuaTpCTfOyXzjuKxpbVWr38aNboCzE=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hl9R42S7bTmTIImSyFBNArkLnawsxqytbv3I5jer4iE=;
+        b=XwnW4WNhvn8JGvbdWoY7h4s3J9zIhVUWIk9heioPvbq/FxrffWd1t6dLCIQSjYfwps
+         SBSwawhTSiUw5UEU0m4jchppkrSpXXRgSDXT84Brg5JQg0XZbUWhvnLkAidZSr+beN7D
+         Dv1TjI6UmRs1GjZE2LaBCmoWAZVdPHTrEwoKM0k9vyRI1Avn+zIO+EF3ulIvlpqHw479
+         F2m/agZ1clfz1bpokaCGjmvVI+Tih4XM+li1o/gG0o/WiDoMBarpoP9Vm7EICL9mVaGg
+         +fmatW0lJPsQPnyHwIwyoGswfjj3TxNOV4c1OPY1PC36OyMuSDDGzdhoJt1n+ije6i7h
+         ilew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MHb/19gJYPsAg71KRRWbuzDnz+m/m3K8W3L6MyDMF70=;
-        b=KHSRGoBi+3nG2iJg4f+kn3CWQTOikFxnfIaQ8WRWqUGhd/BOpaGArFXsKD+/7HX7Fi
-         cJenBd2qPF++qtsESgcWNWJhzzerRl1zvRnlwjSLFEwYL4qf0FHmFD4f1wbK0X9MV8q8
-         fOWlLpgKto3QPmQlkbzc2GL4F7fqHhO7TFiNFufCfA97KWDyJL+qMu1LnUTKBBzfOlnK
-         5AfNSsaJ4SIf+RlOeHJNlFrpXa74YqeRV/Et76+vgo+2snxZaLg6fdRVYsayNsF7yyd+
-         R7NJ5joN6RmwIQCE5Go3tffRl0TuDRYk2LKGLHelplF5R6rRAKO1zZsGbP3+omT3WvQ/
-         l/8Q==
-X-Gm-Message-State: APjAAAWuaYv64FoI8UkZmJUF+JsrInIh6RxfdIJ4QzomhgIVq2woHxSb
-        HQltagDRCrsNkRYltQNB7y4KBQ==
-X-Google-Smtp-Source: APXvYqx0/1JHBp144TCle6IzSZivX4OKQsKGWeZ3go60rD3jWKdHuDQSJTlnR7UxVoCqaQLvXDiW3A==
-X-Received: by 2002:a17:902:7442:: with SMTP id e2mr25802611plt.158.1582103150121;
-        Wed, 19 Feb 2020 01:05:50 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id a69sm1984743pfa.129.2020.02.19.01.05.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 01:05:49 -0800 (PST)
-Date:   Wed, 19 Feb 2020 18:05:47 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCHv2 05/12] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-Message-ID: <20200219090547.GF122464@google.com>
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-6-senozhatsky@chromium.org>
- <83147032-25a4-9450-d455-437e82e09dc8@xs4all.nl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hl9R42S7bTmTIImSyFBNArkLnawsxqytbv3I5jer4iE=;
+        b=UUnRQMKMVzKVE1+6nAtS+Atl9SPTjdBBWGkGlLWYZZITry6iWqdYFuyfvAp1EqqBF3
+         P+Op8mFhArK9TgkLR6zQ12hNystynDxEtpjM9pZI+wHnHbpmGf/s51hUZ+Ism8q932IX
+         cX6SoNwlokjogPxr/MeYkYBUZtR9JfmMg6qCqylVPL0iwmmi+Ia7PNirhrQS92szviUY
+         BY3SctepMmvqpf0rnJt0htx4pk0mXKINUGollX9JcofLGCgjCPX9Zv6nFydH8iGhErEZ
+         6IXxCyVveSk53k9Rkkb1Lwuy1t6w964h5ehdd+GXzVQwLDguMCbycuHpQwPRH+9CjCs9
+         Jv8g==
+X-Gm-Message-State: APjAAAXK1Ln6o8IAdvShk2WlDYEFdM55wQKADJNCL5AA3qWKzNmQ7o9D
+        yjyFP0dMKlsB8BOA9dyS4yipc1/Fn2HYkyBACkk=
+X-Google-Smtp-Source: APXvYqxHKoYOKLSVj2I0oZVyHx/701r0aK9W1LUqkpwYs0YWVF09ezzLoeZkXL7bRk/YGzWf/TnmQEwIspJzwjO/ZWo=
+X-Received: by 2002:a9d:d06:: with SMTP id 6mr19535224oti.176.1582103232048;
+ Wed, 19 Feb 2020 01:07:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <83147032-25a4-9450-d455-437e82e09dc8@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200208183641.6674-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200212140127.GA127398@google.com>
+In-Reply-To: <20200212140127.GA127398@google.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 19 Feb 2020 09:06:45 +0000
+Message-ID: <CA+V-a8sBPT-RLvzRFFFwbNghD9X26P5qPntoUvgNHQ6_eUzQBg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] PCI: rcar: Preparation for adding endpoint support
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/19 09:48), Hans Verkuil wrote:
-[..]
-> >  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
-> >  {
-> >  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
-> > +	bool consistent = true;
-> > +
-> > +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> > +		consistent = false;
-> 
-> There is no check against allow_cache_hints: if that's 0, then
-> the V4L2_FLAG_MEMORY_NON_CONSISTENT flag should be cleared since it is
-> not supported.
+Hi Bjorn,
 
-The check is in set_queue_consistency()
+Thank you for the review.
 
-static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-{
-	if (!q->allow_cache_hints)
-		return;
+On Wed, Feb 12, 2020 at 2:01 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> To make the changelog from "git log --oneline" read nicely, the
+> subject should begin with a verb, e.g.,
+>
+>   PCI: rcar: Move shareable code to a common file
+>
+> On Sat, Feb 08, 2020 at 06:36:36PM +0000, Lad Prabhakar wrote:
+> > Prepare for adding endpoint support to rcar controller, there are no
+> > functional changes with this patch, a common file is created so that
+> > it can be shared with endpoint driver.
+>
+> This commit log doesn't tell us what this patch does.  "Prepare"
+> conveys no real information.  It's a giant patch and it's difficult
+> to verify that there's no functional change.
+>
+> I *think* what you did was move most of the #defines from pcie-rcar.c
+> to pcie-rcar.h and most of the code from pcie-rcar.c to
+> pcie-rcar-host.c.  And in both case, these were strict *moves* without
+> any changes.  If that's the case, please say that explicitly in the
+> commit log.
+>
+> That's good; thanks for making this a separate patch so it's not
+> mingled with real changes.
+>
+Agreed I shall split this patch further more, first patch just
+renaming the file from
+pcie-rcar.c to pcie-rcar-host.c along with Makefile/Kconfig/defconfig
+changes and
+the second patch pulling out common code that shall be share between
+two drivers.
+This shall make it more easier to review.
 
-	if (consistent_mem)
-		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-	else
-		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-}
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  arch/arm64/configs/defconfig            |    2 +-
+> >  drivers/pci/controller/Kconfig          |    4 +-
+> >  drivers/pci/controller/Makefile         |    2 +-
+> >  drivers/pci/controller/pcie-rcar-host.c | 1044 ++++++++++++++++++++++++++
+> >  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
+> >  drivers/pci/controller/pcie-rcar.h      |  126 ++++
+> >  6 files changed, 1227 insertions(+), 1180 deletions(-)
+> >  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+> >  create mode 100644 drivers/pci/controller/pcie-rcar.h
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index b2f6673..8a1f51d 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -182,7 +182,7 @@ CONFIG_HOTPLUG_PCI=y
+> >  CONFIG_HOTPLUG_PCI_ACPI=y
+> >  CONFIG_PCI_AARDVARK=y
+> >  CONFIG_PCI_TEGRA=y
+> > -CONFIG_PCIE_RCAR=y
+> > +CONFIG_PCIE_RCAR_HOST=y
+> >  CONFIG_PCI_HOST_GENERIC=y
+> >  CONFIG_PCI_XGENE=y
+> >  CONFIG_PCIE_ALTERA=y
+> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> > index f84e5ff..94bb5e9 100644
+> > --- a/drivers/pci/controller/Kconfig
+> > +++ b/drivers/pci/controller/Kconfig
+> > @@ -54,12 +54,12 @@ config PCI_RCAR_GEN2
+> >         There are 3 internal PCI controllers available with a single
+> >         built-in EHCI/OHCI host controller present on each one.
+> >
+> > -config PCIE_RCAR
+> > +config PCIE_RCAR_HOST
+>
+> The config symbol change should be mentioned in the commit log.  In
+> general we try to avoid changing config symbols because it's likely to
+> confuse people who keep their .config and update their kernel.  But I
+> guess your audience is probably pretty small.
+>
+I shall mention it in my commit message.
 
-I don't explicitly clear DMA_ATTR_NON_CONSISTENT attr for
-!->allow_cache_hints queues just in case if the driver for
-some reason sets that flag. ->allow_cache_hints is, thus,
-only for cases when user-space asks us to set or clear it.
+> >       bool "Renesas R-Car PCIe controller"
+>
+> The description needs to be updated, too.  This is what people will
+> see in menuconfig.
+>
+I shall update it accordingly.
 
-	-ss
+> >       depends on ARCH_RENESAS || COMPILE_TEST
+> >       depends on PCI_MSI_IRQ_DOMAIN
+> >       help
+> > -       Say Y here if you want PCIe controller support on R-Car SoCs.
+> > +       Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
+>
+> Wrap this so it fits in 80 columns like the rest of the file.
+>
+Will fix that.
+
+Cheers,
+--Prabhakar Lad
+
+> Bjorn
