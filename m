@@ -2,212 +2,213 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F1EC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A11324658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSRiWyqv"
+	by mail.kernel.org (Postfix) with ESMTP id 4BAA224658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBSDbR (ORCPT
+        id S1726739AbgBSDbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:31:17 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35724 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSDbQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:31:16 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w12so26455545wrt.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:31:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=RUMuVs1svRgomvUT7C8h2abvo8cNrgy2pES+6QXQSIY=;
-        b=lSRiWyqvirwdh3sajPv4FCUQufn+NzX52afEcKKM8leoF1H3MtRqEsLmku+C8Ze+H2
-         lfA6n+jce+2xW1ffSpoXfiq8fGq3xDI8PoHIQZGEWksh7H9iV/+v1VJT5DRYwyQ6s48X
-         xNhtOdMuzESoS7XgzRa0/shNra7lMx/a2ghJ0HMbG7zU1nXfy5oYL1KMBT49kubqULED
-         e6ct6ku1vJGfh8g/9vM9fYX0VTURNyR+3AnmY36q7vvui76YT3mQFUga7sGVUsZ6FgU5
-         sdmHfp8/gPXOJR1CMKRIAybRUrNdMkN+VZWfQTV2qSQEFds+GgqARfnR9ifm7LY6Xvnw
-         fJMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=RUMuVs1svRgomvUT7C8h2abvo8cNrgy2pES+6QXQSIY=;
-        b=UdgmLwpUJxMv79ASr8dsh//sXuLHpCD90bMWhs40fCPnFPlkleM2INynTpDdXnF06T
-         D9sGuiNNtwTuACH6cmlT3rFL5pDmdL2w4sd/o66ZXEEk0gjwFuF3Qb/r5DGBMUrWgu+H
-         41ZID+/9QshFnQSDdBcMo9KJhk2xrJUIJKKK4D7CN1giw8rwAA94JDL6uD8OH+jHWsEk
-         QbmaN69pcQNpn7rvQdPJJzmorXnbpXFrhZNz7XxurIblzBSxThK1TC54rIhhCgT53rBd
-         1I8NHsaRlqSBq186sT/p7wVGI5/SghZW/UsybPZmnl9dbZRQIAKd+WbVN7mzLH2CVDAV
-         chEA==
-X-Gm-Message-State: APjAAAUnmTUcVyOF96upiOxl0xak3MpSbhSd7ovfk+qPwgl3vkpHdrot
-        VXpjErc/ls0BqewR4Sa9w6giRgiMn0DfSjhqtC2wBcHQ
-X-Google-Smtp-Source: APXvYqyKCQZKKzXdetohYhko115KDmC7T9isKLnFTdyUP/gReDXBrkiAUTbFnxl49QnS6a9b+AbhgdiM8+UgzIOLRWM=
-X-Received: by 2002:a5d:4384:: with SMTP id i4mr5444781wrq.215.1582083074227;
- Tue, 18 Feb 2020 19:31:14 -0800 (PST)
-MIME-Version: 1.0
-References: <CAHVeOW-TgaUctUE71jDSofBCM_O3dxrSvbCYLPRKm_eRpmY_MQ@mail.gmail.com>
-In-Reply-To: <CAHVeOW-TgaUctUE71jDSofBCM_O3dxrSvbCYLPRKm_eRpmY_MQ@mail.gmail.com>
-From:   Chris Gorman <chrisjohgorman@gmail.com>
-Date:   Tue, 18 Feb 2020 22:31:02 -0500
-Message-ID: <CAHVeOW8+5o51aY58dGd9Qz8wOMa2pvzN0Sz53eSQ+hgso9RiGA@mail.gmail.com>
-Subject: Re: digital microphone on google chromebook code name banon
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Feb 2020 22:31:40 -0500
+Received: from mga11.intel.com ([192.55.52.93]:8520 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgBSDbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:31:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 19:31:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="382667731"
+Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
+  by orsmga004.jf.intel.com with ESMTP; 18 Feb 2020 19:31:36 -0800
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel Combophy
+Date:   Wed, 19 Feb 2020 11:31:29 +0800
+Message-Id: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello All,
+Combophy subsystem provides PHY support to various
+controllers, viz. PCIe, SATA and EMAC.
+Adding YAML schemas for the same.
 
-I have been doing some more research into my problem microphone and
-came up with some kernel error messages.  The dmesg output from my
-machine follows with a few bits cut out.  Everything below after
-19.828677 shows an error. I am particularly interested in 723.334601
-and 723.334661 which show up during running aplay.  It seems that
-there is something wrong with my intel_sst_acpi driver?  It
-initializes, but then errors due to wait timeouts.  The last two error
-messages 1867.44593 and 1867.446002, are from an arecord.
-Interestingly no further wait timeout messages occur after the record
-attempt.  I will try git bisect tomorrow to see if I can isolate when
-the error messages start showing up.  I don't believe they existed in
-5.5-rc6, but I will find out.  If anyone has ideas on how to fix
-either my error messages or my dmic, please let me know.  I am not on
-the mailing list due to the high volume of messages, so if you respond
-please cc me directly.  Thanks for your time.
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+---
+Changes on v2:
 
-Chris
+ Add custom 'select'
+ Pass hardware instance entries with phandles and
+   remove cell-index and bid entries
+ Clock, register address space, are same for the children.
+   So move them to parent node.
+ Two PHY instances cannot run in different modes,
+   so move the phy-mode entry to parent node.
+ Add second child entry in the DT example.
 
-[    1.050358] rt5645 i2c-10EC5650:00: Detected Google Chrome platform
----snip---
-[    1.477956] intel_sst_acpi 808622A8:00: LPE base: 0xd1000000 size:0x200000
-[    1.477962] intel_sst_acpi 808622A8:00: IRAM base: 0xd10c0000
-[    1.477994] intel_sst_acpi 808622A8:00: DRAM base: 0xd1100000
-[    1.478010] intel_sst_acpi 808622A8:00: SHIM base: 0xd1140000
-[    1.478023] intel_sst_acpi 808622A8:00: Mailbox base: 0xd1144000
-[    1.478034] intel_sst_acpi 808622A8:00: DDR base: 0x20000000
-[    1.478544] intel_sst_acpi 808622A8:00: Got drv data max stream 25
-[    1.478938] cht-bsw-rt5645 cht-bsw-rt5645: quirk PMC_PLT_CLK_0 enabled
-[    1.484286] cht-bsw-rt5645 cht-bsw-rt5645: snd-soc-dummy-dai <->
-media-cpu-dai mapping ok
-[    1.484364] cht-bsw-rt5645 cht-bsw-rt5645: snd-soc-dummy-dai <->
-deepbuffer-cpu-dai mapping ok
-[    1.485720] cht-bsw-rt5645 cht-bsw-rt5645: rt5645-aif1 <->
-ssp2-port mapping ok
----snip---
-[   19.828677] intel_sst_acpi 808622A8:00: FW Version 01.0b.02.02
----errors from here on---
-[   31.278276] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[   31.278287] intel_sst_acpi 808622A8:00: fw returned err -16
-[   31.278299] sst-mfld-platform sst-mfld-platform: ASoC: PRE_PMD:
-pcm0_in event failed: -16
-[   32.300753] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[   32.300761] intel_sst_acpi 808622A8:00: fw returned err -16
-[   32.300770] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-media0_out event failed: -16
-[   33.324565] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[   33.324593] intel_sst_acpi 808622A8:00: fw returned err -16
-[   33.324623] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-codec_out0 mix 0 event failed: -16
-[   34.347757] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[   34.347766] intel_sst_acpi 808622A8:00: fw returned err -16
-[   34.347779] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-media0_out mix 0 event failed: -16
-[  723.334601] intel_sst_acpi 808622A8:00: FW sent error response 0x40015
-[  723.334661] intel_sst_acpi 808622A8:00: FW sent error response 0x40006
-[  768.479671] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[  768.479702] intel_sst_acpi 808622A8:00: fw returned err -16
-[  768.479739] sst-mfld-platform sst-mfld-platform: ASoC: PRE_PMD:
-pcm0_in event failed: -16
-[  769.503586] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[  769.503614] intel_sst_acpi 808622A8:00: fw returned err -16
-[  769.503643] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-media0_out event failed: -16
-[  770.527829] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[  770.527837] intel_sst_acpi 808622A8:00: fw returned err -16
-[  770.527846] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-codec_out0 mix 0 event failed: -16
-[  771.552544] intel_sst_acpi 808622A8:00: Wait timed-out
-condition:0x0, msg_id:0x1 fw_state 0x3
-[  771.552575] intel_sst_acpi 808622A8:00: fw returned err -16
-[  771.552613] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
-media0_out mix 0 event failed: -16
----snip---
-[ 1867.445943] intel_sst_acpi 808622A8:00: FW sent error response 0x40015
-[ 1867.446002] intel_sst_acpi 808622A8:00: FW sent error response 0x40006
+ .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
+ 1 file changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
 
-On Fri, Feb 14, 2020 at 2:26 PM Chris Gorman <chrisjohgorman@gmail.com> wrote:
->
-> Hello All,
->
-> I have a problem with my laptop recording via the digital microphone.
-> I did try to explain the problem on
-> https://bugzilla.kernel.org/show_bug.cgi?id=95681, but I have heard no
-> response on the issue, so I am bugging the mailing list in hopes that
-> someone will have a magic fix for me. ;)
->
-> My laptop is a google chromebook, braswell, banon.  It is of the intel
-> strago family.  When I try to record all I get is white noise.  I can
-> reduce the level of noise via alsamixer, but I have to reduce all the
-> capture levels to 5 or lower.
->
-> I reached out to Sam McNally (thank you sam) from chromium regarding
-> his patch to cht_bsw_rt5645.c
-> adebb11139029ddf1fba6f796c4a476f17eacddc.  He was quite nice and
-> helpful.  According to Sam, the banon chromebooks dmic works with
-> their chromeos 4.9 and chromeos 5.4 kernels.  Unfortunately the dmic
-> still failed on my system when I tried the chromeos 5.4 kernel.
-> Perhaps the problem is my new coreboot 4.11 bios, whereas chrome uses
-> an older bios? I don't know.
->
-> Sam also pointed me to checking /sys/kernel/debug/clk/clk_summary.
-> While recording I get..
->
-> pmc_plt_clk_0                     0        0        0    19200000
->        0     0  50000
->
-> and while playing everything's fine and I get...
->
-> pmc_plt_clk_0                     1        1        0    19200000
->        0     0  50000
->
-> This is clearly the problem.  I don't know how to get the clock
-> working with the capture function though.
->
-> My kernel configs are ...
->
-> SOUND = y
-> SND = y
-> SND_SOC = y
-> SND_SOC_INTEL_MACH = y
-> SND_SST_ATOM_HIFI2_PLATFORM = y
-> SND_SST_ATOM_HIFI2_PLATFORM_ACPI = y
-> I2C = y
-> ACPI = y
-> X86_INTEL_LPSS = y
-> SND_SOC_ACPI = y
-> SND_SOC_INTEL_CHT_BSW_RT5645_MACH = y
-> SND_SOC_RT5645 = y
-> SND_SOC_DMIC = y
->
-> and I am running linux 5.5.0.  I welcome patches and suggestions, but
-> have not subscribed to the mailing list because of the volume of
-> emails, so please cc me with any response.
->
-> Thanks in advance.
->
-> Chris Gorman
+diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+new file mode 100644
+index 000000000000..8e65a2a71e7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
+@@ -0,0 +1,138 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Intel Combophy Subsystem
++
++maintainers:
++  - Dilip Kota <eswara.kota@linux.intel.com>
++
++description: |
++  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
++  controllers. A single Combophy provides two PHY instances.
++
++# We need a select here so we don't match all nodes with 'simple-bus'
++select:
++  properties:
++    compatible:
++      contains:
++        const: intel,combo-phy
++  required:
++    - compatible
++
++properties:
++  $nodename:
++    pattern: "^combophy@[0-9]+$"
++
++  compatible:
++    items:
++      - const: intel,combo-phy
++      - const: simple-bus
++
++  clocks:
++    description: |
++      List of phandle and clock specifier pairs as listed
++      in clock-names property. Configure the clocks according
++      to the PHY mode.
++
++  reg:
++    items:
++      - description: ComboPhy core registers
++      - description: PCIe app core control registers
++
++  reg-names:
++    items:
++      - const: core
++      - const: app
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: phy
++      - const: core
++
++  intel,syscfg:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Chip configuration registers handle and ComboPhy instance id
++
++  intel,hsio:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: HSIO registers handle and ComboPhy instance id on NOC
++
++  intel,aggregation:
++    description: |
++      Specify the flag to confiure ComboPHY in dual lane mode.
++    type: boolean
++
++  intel,phy-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 0
++    maximum: 2
++    description: |
++      Configure the mode of the PHY.
++        0 - PCIe
++        1 - xpcs
++        2 - sata
++
++patternProperties:
++  "^cb[0-9]phy@[0-9]+$":
++    type: object
++
++    properties:
++      compatible:
++        const: intel,phydev
++
++      "#phy-cells":
++        const: 0
++
++      resets:
++        description: |
++          reset handle according to the PHY mode.
++          See ../reset/reset.txt for details.
++
++    required:
++      - compatible
++      - "#phy-cells"
++
++required:
++  - compatible
++  - clocks
++  - reg
++  - reg-names
++  - intel,syscfg
++  - intel,hsio
++  - intel,phy-mode
++
++additionalProperties: false
++
++examples:
++  - |
++    combophy@0 {
++        compatible = "intel,combo-phy", "simple-bus";
++        clocks = <&cgu0 1>;
++        reg = <0xd0a00000 0x40000>,
++              <0xd0a40000 0x1000>;
++        reg-names = "core", "app";
++        resets = <&rcu0 0x50 6>,
++        	 <&rcu0 0x50 17>;
++        reset-names = "phy", "core";
++        intel,syscfg = <&sysconf 0>;
++        intel,hsio = <&hsiol 0>;
++        intel,phy-mode = <0>;
++
++        cb0phy0:cb0phy@0 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 23>;
++        };
++
++        cb0phy1:cb0phy@1 {
++            compatible = "intel,phydev";
++            #phy-cells = <0>;
++            resets = <&rcu0 0x50 24>;
++        };
++    };
+-- 
+2.11.0
+
