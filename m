@@ -2,55 +2,123 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E246C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA4C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67952207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4D4207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN10sBd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgBSKQQ (ORCPT
+        id S1726450AbgBSKRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:16:16 -0500
-Received: from 8bytes.org ([81.169.241.247]:54864 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726210AbgBSKQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:16:15 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1661936A; Wed, 19 Feb 2020 11:16:14 +0100 (CET)
-Date:   Wed, 19 Feb 2020 11:16:12 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     iommu@lists.linux-foundation.org, gustavo@embeddedor.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu: Use C99 flexible array in fwspec
-Message-ID: <20200219101612.GC1961@8bytes.org>
-References: <7364595699c37d2ef53636c8af6dcefa6602529b.1581601149.git.robin.murphy@arm.com>
+        Wed, 19 Feb 2020 05:17:05 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46409 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSKRF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:17:05 -0500
+Received: by mail-pg1-f193.google.com with SMTP id y30so855916pga.13;
+        Wed, 19 Feb 2020 02:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wx3cl/ju+y18z95mSB4X4cdRQQ7rCw0DISRZpgvl858=;
+        b=mN10sBd/GXiQoJR3Ywfsm0PgOHnA0dVmNF3IgQ8Ktyp7fHFx4uXm9z6AnSYjILHEIV
+         BAZuo/Qzdzixq8W+e9q65H8A0nw4EeI4VW8DpBfebiI8ju0TWNS5j6aH+EUlou6AYQnO
+         QowgF8dWYECxBSGNFRbDdqgiNPb4ggGYLCHRw6x4N1s+H7Y8VoinygwuqrYU9UI08Mkn
+         1jdpPlct9uT3eS4Hyp281UiuPQ8R9RCNUENIsaUMvOdmPRsrzEPB6R3V2VvWEQzELr9T
+         dXuxcP4YxroyUstNofwTQhh6Yk+wv4ttKWd+yjJf0swaUFO3aBClYJpFbl4F8ctGX/Bf
+         ZVdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wx3cl/ju+y18z95mSB4X4cdRQQ7rCw0DISRZpgvl858=;
+        b=R+uQYR//jDMLz6rW5FgeVsvM6NUNgcDU1EpL38UnDCrGyT/D/mBn06c4KF4ZTdsprJ
+         Kko+OMVZ4muJ87CV7lV3o0RUR+ee7Gk3GsKD0JB+hIXLl048gr2bPJP8MiESSsFjtRgZ
+         K1mxcE+BiEyS93bb45w8aSo/H+Yz6LT2LZt2HnDZM8iYAQbum2M/KZlXrUSRwoVPo1Ih
+         7oGZONIKAtOcNJfo1vN+36f0vD8Hku3MQl619Db7KAdT96irQFsG+6Op68H0PCbr6z8C
+         qYdY60HCpzuPaPoGAMhoFFVJvqw0+5rFv5Ya8OQUPOCuF2pM84vHPEx1QCkyz2I1i2uG
+         H4YQ==
+X-Gm-Message-State: APjAAAXECzoHvUUIDoqxUyOVTLYR9Of/LoL7ZoHSmkLDQkvmaMN45Ws/
+        /6W1VdEw77kdUvivlwLkrKM=
+X-Google-Smtp-Source: APXvYqy6NiIl+ebEVWdcRWivE8SiuoiFsCnaSaA8epCJyhv6rxlKttT+lXy/ebF12zJfvlcSy/d+Bw==
+X-Received: by 2002:a63:6d0b:: with SMTP id i11mr26437592pgc.266.1582107424607;
+        Wed, 19 Feb 2020 02:17:04 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.220])
+        by smtp.googlemail.com with ESMTPSA id a2sm2400885pfi.30.2020.02.19.02.16.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 02:17:04 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] netfilter: ipt_CLUSTERIP: Pass lockdep expression to RCU lists
+Date:   Wed, 19 Feb 2020 15:46:27 +0530
+Message-Id: <20200219101626.31943-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7364595699c37d2ef53636c8af6dcefa6602529b.1581601149.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:00:21PM +0000, Robin Murphy wrote:
-> Although the 1-element array was a typical pre-C99 way to implement
-> variable-length structures, and indeed is a fundamental construct in the
-> APIs of certain other popular platforms, there's no good reason for it
-> here (and in particular the sizeof() trick is far too "clever" for its
-> own good). We can just as easily implement iommu_fwspec's preallocation
-> behaviour using a standard flexible array member, so let's make it look
-> the way most readers would expect.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> 
-> Before the Coccinelle police catch up with me... :)
+cn->configs is traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of cn->lock.
 
-Applied, thanks. You should be safe now :)
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/ipv4/netfilter/ipt_CLUSTERIP.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv4/netfilter/ipt_CLUSTERIP.c b/net/ipv4/netfilter/ipt_CLUSTERIP.c
+index 6bdb1ab8af61..df856ff835b7 100644
+--- a/net/ipv4/netfilter/ipt_CLUSTERIP.c
++++ b/net/ipv4/netfilter/ipt_CLUSTERIP.c
+@@ -139,7 +139,8 @@ __clusterip_config_find(struct net *net, __be32 clusterip)
+ 	struct clusterip_config *c;
+ 	struct clusterip_net *cn = clusterip_pernet(net);
+ 
+-	list_for_each_entry_rcu(c, &cn->configs, list) {
++	list_for_each_entry_rcu(c, &cn->configs, list,
++				lockdep_is_held(&cn->lock)) {
+ 		if (c->clusterip == clusterip)
+ 			return c;
+ 	}
+@@ -194,7 +195,8 @@ clusterip_netdev_event(struct notifier_block *this, unsigned long event,
+ 	struct clusterip_config *c;
+ 
+ 	spin_lock_bh(&cn->lock);
+-	list_for_each_entry_rcu(c, &cn->configs, list) {
++	list_for_each_entry_rcu(c, &cn->configs, list,
++				lockdep_is_held(&cn->lock)) {
+ 		switch (event) {
+ 		case NETDEV_REGISTER:
+ 			if (!strcmp(dev->name, c->ifname)) {
+-- 
+2.24.1
+
