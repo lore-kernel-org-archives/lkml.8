@@ -2,75 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B047C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDDEC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F080208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D79A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:44:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBSIlV (ORCPT
+        id S1726523AbgBSIoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:41:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44230 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgBSIlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:41:21 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 4A0F0AD88;
-        Wed, 19 Feb 2020 08:41:19 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 02/24] n_hdlc: remove unused macros
-Date:   Wed, 19 Feb 2020 09:40:56 +0100
-Message-Id: <20200219084118.26491-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200219084118.26491-1-jslaby@suse.cz>
-References: <20200219084118.26491-1-jslaby@suse.cz>
+        Wed, 19 Feb 2020 03:44:15 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2442 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726297AbgBSIoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:44:15 -0500
+Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id C88BB11341989E321FC8;
+        Wed, 19 Feb 2020 08:44:13 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 19 Feb 2020 08:44:13 +0000
+Received: from [127.0.0.1] (10.210.170.116) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 19 Feb
+ 2020 08:44:11 +0000
+Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
+ system PMUs
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Will Deacon" <will@kernel.org>, Linuxarm <linuxarm@huawei.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "james.clark@arm.com" <james.clark@arm.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
+ <20200218125707.GB20212@willie-the-truck>
+ <a40903fe-d52f-96c6-a06a-fe834d71d625@huawei.com>
+ <20200218133943.GF20212@willie-the-truck>
+ <627cbc50-4b36-7f7f-179d-3d27d9e0215a@huawei.com>
+ <20200218170803.GA9968@lakrids.cambridge.arm.com>
+ <cb004f43-b2a4-ae23-9fd3-0f70bd69701b@huawei.com>
+ <20200218181331.GB9968@lakrids.cambridge.arm.com>
+ <DB7PR04MB46188F06D6CEA1430712E648E6100@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <b6781341-3d28-bda8-621b-aeca413dc8ae@huawei.com>
+Date:   Wed, 19 Feb 2020 08:44:10 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <DB7PR04MB46188F06D6CEA1430712E648E6100@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.210.170.116]
+X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VERSION and bset are unused. Remove them.
+On 19/02/2020 01:55, Joakim Zhang wrote:
+> 
+>> -----Original Message-----
+>> From: Mark Rutland <mark.rutland@arm.com>
+>> Sent: 2020Äê2ÔÂ19ÈÕ 2:14
+>> To: John Garry <john.garry@huawei.com>
+>> Cc: ak@linux.intel.com; Joakim Zhang <qiangqing.zhang@nxp.com>;
+>> suzuki.poulose@arm.com; peterz@infradead.org; Will Deacon
+>> <will@kernel.org>; Linuxarm <linuxarm@huawei.com>; acme@kernel.org;
+>> linux-kernel@vger.kernel.org; Zhangshaokun <zhangshaokun@hisilicon.com>;
+>> alexander.shishkin@linux.intel.com; mingo@redhat.com;
+>> james.clark@arm.com; namhyung@kernel.org; jolsa@redhat.com;
+>> linux-arm-kernel@lists.infradead.org; robin.murphy@arm.com; Sudeep Holla
+>> <sudeep.holla@arm.com>
+>> Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
+>> system PMUs
+> 
+> [...]
+>>> And typically most PMU HW would have no ID reg, so where to even get
+>>> this identification info? Joakim Zhang seems to have this problem for
+>>> the imx8 DDRC PMU driver.
+>>
+>> For imx8, the DT compat string or additional properties on the DDRC node
+>> could be used to imply the id.
+> 
+> Hi Mark,
+> 
+> Yes, actually we can expose something like DDRC_ID to indicate each specific DDR controller, to point out the filter feature.
+> But, even the SoCs integrated the same DDRC_ID, just say that they have the same DDRC controller.
+> 
+>  From user space, the usage is different, for example:
+> 
+> i.MX8MM and i.MX8MN, they use the same driver(DDRC_ID) and cortex-a53 integrated.
+> 
+> If we want to monitor VPU, their *master id* is different from SoCs.
+> On i.MX8MM, event is imx8_ddr0/axid-read,axi_id=0x08/
+> On i.MX8MN, event is imx8_ddr0/axid-read,axi_id=0x12/
+> 
+> I try to write a JSON file to use these events, for now, I only can locate the file at the directory: tools/perf/pmu-events/arch/arm64/arm/cortex-a53/
+> 
+> Perf tool loads all events when CPUID matched, which is now unreasonable, we want related events are loaded for specific SoC.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- drivers/tty/n_hdlc.c | 5 -----
- 1 file changed, 5 deletions(-)
+so we could have a folder like .../arch/arm64/nxp/system for these 
+JSONs. The perf tool can be updated to handle CPU and system events in 
+separate folders.
 
-diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index 9e115ecf920d..881da4d440c8 100644
---- a/drivers/tty/n_hdlc.c
-+++ b/drivers/tty/n_hdlc.c
-@@ -87,9 +87,6 @@
- #include <linux/interrupt.h>
- #include <linux/ptrace.h>
- 
--#undef VERSION
--#define VERSION(major,minor,patch) (((((major)<<8)+(minor))<<8)+(patch))
--
- #include <linux/poll.h>
- #include <linux/in.h>
- #include <linux/ioctl.h>
-@@ -186,8 +183,6 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *cp,
- 			       char *fp, int count);
- static void n_hdlc_tty_wakeup(struct tty_struct *tty);
- 
--#define bset(p,b)	((p)[(b) >> 5] |= (1 << ((b) & 0x1f)))
--
- #define tty2n_hdlc(tty)	((struct n_hdlc *) ((tty)->disc_data))
- #define n_hdlc2tty(n_hdlc)	((n_hdlc)->tty)
- 
--- 
-2.25.0
+> 
+> All events will also be loaded if we use DDRC_ID to match in the future, this seems to not be a good ideal.
 
+The important part is knowing which events are supported per 
+implementation. Is there any method in the driver of knowing the 
+specific implementation, like any DT compat string? Least preferred 
+option would be DT machine ID.
+
+> 
+
+John
