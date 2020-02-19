@@ -2,91 +2,155 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613AFC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594AFC34053
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405B62464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D2420675
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:16:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="A8qbss13";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="XjVUwBq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgBSQPg (ORCPT
+        id S1726799AbgBSQQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:15:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbgBSQPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:15:35 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        Wed, 19 Feb 2020 11:16:06 -0500
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:56037 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgBSQQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:16:05 -0500
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 8A923C3D6B;
+        Wed, 19 Feb 2020 11:16:02 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=XtMU/4b5IGSfpYkZCGu5uzpv9so=; b=A8qbss
+        13zDDHQnllBhRUStKjdBhjG42y4BdLYd3zfE8x1c4GnTnmbAESYHedrpLZFkObOZ
+        u9dW0ZWY913qGaVl11sWPaCZkC0sGalwZGpbDBZuD6HtuAdzUAZ1YVoxoE5OdS52
+        V8CrxmDNSgRILwM7+x8MSPXE+Rokl9mrToE9E=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id 82969C3D6A;
+        Wed, 19 Feb 2020 11:16:02 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=Pd52co5mLcPM8CNVJEjnyKKtge8+vEpzfcY4NUuaImw=; b=XjVUwBq4gU1kuQh3xuy1rbq0RW9fP8wTQa5Jwow7zjC6ptzC0o8Ta9cc9VzySvsICTvf6ZRekv6M9gJb24DQ872/8Zk7nognGX/xuQOQLjf6Jk2kB6vQBUBckDHEoAiawi2bvaQkbVB+QJFyMeffogIyDbC6hg2dyx8dH1hrRCY=
+Received: from yoda.home (unknown [24.203.50.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F8820675;
-        Wed, 19 Feb 2020 16:15:33 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 11:15:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v3 08/22] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200219111532.719c0a6b@gandalf.local.home>
-In-Reply-To: <20200219155828.GF18400@hirez.programming.kicks-ass.net>
-References: <20200219144724.800607165@infradead.org>
-        <20200219150744.832297480@infradead.org>
-        <20200219104903.46686b81@gandalf.local.home>
-        <20200219155828.GF18400@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id 5E1AEC3D67;
+        Wed, 19 Feb 2020 11:15:59 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id 8007A2DA08DE;
+        Wed, 19 Feb 2020 11:15:57 -0500 (EST)
+Date:   Wed, 19 Feb 2020 11:15:57 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+cc:     linux-kbuild@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kconfig: make 'imply' obey the direct dependency
+In-Reply-To: <20200219074950.23344-1-masahiroy@kernel.org>
+Message-ID: <nycvar.YSQ.7.76.2002191046520.1559@knanqh.ubzr>
+References: <20200219074950.23344-1-masahiroy@kernel.org>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Pobox-Relay-ID: 1DA55B42-5333-11EA-A2D4-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 16:58:28 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, 19 Feb 2020, Masahiro Yamada wrote:
 
-> On Wed, Feb 19, 2020 at 10:49:03AM -0500, Steven Rostedt wrote:
-> > On Wed, 19 Feb 2020 15:47:32 +0100
-> > Peter Zijlstra <peterz@infradead.org> wrote:  
+> The 'imply' statement may create unmet direct dependency when the
+> implied symbol depends on m.
 > 
-> > > These helpers are macros because of header-hell; they're placed here
-> > > because of the proximity to nmi_{enter,exit{().  
+> [Test Code]
 > 
-> ^^^^
-
-Bah I can't read, because I even went looking for this!
-
+>   config FOO
+>           tristate "foo"
+>           imply BAZ
 > 
-> > > +#define trace_rcu_enter()					\
-> > > +({								\
-> > > +	unsigned long state = 0;				\
-> > > +	if (!rcu_is_watching())	{				\
-> > > +		rcu_irq_enter_irqsave();			\
-> > > +		state = 1;					\
-> > > +	}							\
-> > > +	state;							\
-> > > +})
-> > > +
-> > > +#define trace_rcu_exit(state)					\
-> > > +do {								\
-> > > +	if (state)						\
-> > > +		rcu_irq_exit_irqsave();				\
-> > > +} while (0)
-> > > +  
-> > 
-> > Is there a reason that these can't be static __always_inline functions?  
+>   config BAZ
+>           tristate "baz"
+>           depends on BAR
 > 
-> It can be done, but then we need fwd declarations of those RCU functions
-> somewhere outside of rcupdate.h. It's all a bit of a mess.
+>   config BAR
+>           def_tristate m
+> 
+>   config MODULES
+>           def_bool y
+>           option modules
+> 
+> If you set FOO=y, BAZ is also promoted to y, which results in the
+> following .config file:
+> 
+>   CONFIG_FOO=y
+>   CONFIG_BAZ=y
+>   CONFIG_BAR=m
+>   CONFIG_MODULES=y
+> 
+> This ignores the dependency "BAZ depends on BAR".
+> 
+> Unlike 'select', what is worse, Kconfig never shows the
+> "WARNING: unmet direct dependencies detected for ..." for this case.
+> 
+> Because 'imply' should be weaker than 'depends on', Kconfig should
+> take the direct dependency into account.
+> 
+> Describe this case in Documentation/kbuild/kconfig-language.rst for
+> clarification.
+> 
+> Commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword") says that
+> a symbol implied by y is restricted to y or n, excluding m.
+> 
+> As for the combination of FOO=y and BAR=m, the case of BAZ=m is excluded
+> by the 'imply', and BAZ=y is also excluded by 'depends on'. So, only the
+> possible value is BAZ=n.
 
-Maybe this belongs in the rcupdate.h file then?
+I don't think this is right. The imply keyword provide influence over 
+another symbol but it should not impose any restrictions. If BAR=m then 
+BAZ should still be allowed to be m or n.
 
--- Steve
+> @@ -174,6 +174,9 @@ applicable everywhere (see syntax).
+>  	n		y		n		N/m/y
+>  	m		y		m		M/y/n
+>  	y		y		y		Y/n
+> +	n		m		n		N/m
+> +	m		m		m		M/n
+> +	y		m		n		N
+
+Here the last line shoule be y m n N/m.
+
+Generally speaking, the code enabled by FOO may rely on functionalities 
+provided by BAZ only when BAZ >= FOO. This is accomplished with 
+IS_REACHABLE():
+
+	foo_init()
+	{
+		if (IS_REACHABLE(CONFIG_BAZ))
+			baz_register(&foo);
+		...
+	}
+
+So if FOO=y and BAZ=m then IS_REACHABLE(CONFIG_BAZ) will be false. Maybe 
+adding a note to that effect linked to the "y m n N/m" line in the table 
+would be a good idea.
+
+
+Nicolas
