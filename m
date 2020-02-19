@@ -2,112 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C42C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF62C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28922464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7472F2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PHJLdRAO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pvzzGA1t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBSJg1 (ORCPT
+        id S1726671AbgBSJgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:36:27 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50276 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgBSJg1 (ORCPT
+        Wed, 19 Feb 2020 04:36:36 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48000 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSJgf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:36:27 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9XHFa006568;
-        Wed, 19 Feb 2020 09:35:55 GMT
+        Wed, 19 Feb 2020 04:36:35 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9Xft5072800;
+        Wed, 19 Feb 2020 09:36:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=9rfqPcoS6V4Kfp93WA9G++pHoTv0A+Yp1wS/x30l2eQ=;
- b=PHJLdRAOWRaUIlGZ//fcyFcx/mLwvAziwjs3AdXF+qFp78sFzYri34snttxw/PnEYkId
- j8exOnZbQX95HEm1GhXTvoSsX8M2IIoEq0B/Gv3eYF7GtrJn8ucs4HygiA8wHbBpEWv5
- mH/PpPPdrH+d6xF2oUXZeTDkdmLs9TZd49WJIZd85Njnd2PswF6WvnlFr/kPJwv2jZv3
- 8caZCY9VGyLFa6AxXEa+eGdkR1nTbu4l40E6qi/inZRC+969bgY/oO342ecerAjDFsl6
- mCwcQDbPNknxCbG4101KHoRF105vPGsSjRPqDDgMtz/8C2OnFGihZwy6nQIuSmg1y5Bx Uw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y8udd1r0d-1
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=uJNUKa7+i4uMJlknFqHIMwrQla43Db9REwAVDDYod6o=;
+ b=pvzzGA1t4QPaFT9ZhLui1iqmgUuOBuiOssZUHfIBqS1eNcFsmzGl1Cic/x0BB55Pfj3H
+ YyfdJaiwkhT+boi+KYbyPHl9uDLmDmBgDXDQ+C4kXoGD4eCRcrGdnMusYlXEtt9x3GZq
+ OUWfMSLwAlsa35GUd79ii78r3gODxA2PLzy2Gcr3cB/6JXZU2J3+7iYHETkJb61MZdgC
+ g/51DnVBkqarNTPH//kvQ8sBCjvsfqq0YTqxsoOnhHFC/J2408e9X1/06EgrDa5ngc1R
+ jwkMqATSpw/JaJVIFlcma0Dlse5aWyRTwnrexRnCwFO77oREbF2snAoYJpl0aHRpfSby 7w== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udk9qfb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 09:35:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9WhrE176762;
-        Wed, 19 Feb 2020 09:35:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2y8ud2rtxd-1
+        Wed, 19 Feb 2020 09:36:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9X1gS034527;
+        Wed, 19 Feb 2020 09:36:00 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2y8uda4stm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 09:35:55 +0000
+        Wed, 19 Feb 2020 09:36:00 +0000
 Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J9ZsWG004025;
-        Wed, 19 Feb 2020 09:35:54 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J9Zx9T016679;
+        Wed, 19 Feb 2020 09:35:59 GMT
 Received: from dhcp-10-175-189-86.vpn.oracle.com (/10.175.189.86)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Feb 2020 01:33:56 -0800
+        with ESMTP ; Wed, 19 Feb 2020 01:34:02 -0800
 From:   Alan Maguire <alan.maguire@oracle.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     mingo@redhat.com, shuah@kernel.org,
         linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 0/2] ftrace/selftest: clean up failure cases
-Date:   Wed, 19 Feb 2020 09:33:28 +0000
-Message-Id: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
+Subject: [PATCH v2 2/2] ftrace/selftest: make unresolved cases cause failure if --fail-unresolved set
+Date:   Wed, 19 Feb 2020 09:33:30 +0000
+Message-Id: <1582104810-12983-3-git-send-email-alan.maguire@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
+References: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=646 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=3 malwarescore=0 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=3 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
  definitions=main-2002190070
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=706 malwarescore=0 mlxscore=0 suspectscore=3
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190070
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=3
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running the ftrace selftests, 2 failures and 6 unresolved
-cases were observed.  The failures can be avoided by setting
-a sysctl prior to test execution (fixed in patch 1) and by
-having unresolved cases not return 0 from ftracetest by default
-since they indicate an absence of testing modules/programs
-rather than ftrace issues (patch 2).
+Currently, ftracetest will return 1 (failure) if any unresolved cases
+are encountered.  The unresolved status results from modules and
+programs not being available, and as such does not indicate any
+issues with ftrace itself.  As such, change the behaviour of
+ftracetest in line with unsupported cases; if unsupported cases
+happen, ftracetest still returns 0 unless --fail-unsupported.  Here
+--fail-unresolved is added and the default is to return 0 if
+unresolved results occur.
 
-The latter are classified as "unresolved" tests, which operate
-differently from "unsupported" tests.  For unsupported tests,
-we note the unsupported count but do not consider the tests
-as having failed, whereas with unresolved the test run is
-considered to have failed so returns "not ok" when run via
-kselftest ("make -C tools/testing/selftest/ftrace run_tests").
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+---
+ tools/testing/selftests/ftrace/ftracetest | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Patch 2 aligns the unresolved behaviour with the unsupported;
-by default, unresolved outcomes do not trigger overall failure,
-but they can if --fail-unresolved is specified.
-
-Changes since v1:
-
-- updated patch 1 to use /proc path instead of sysctl (Masami)
-- updated patch 2 to modify unresolved handling in ftracetest
-  rather than change individual unresolved -> unsupported (Masami)
-
-Alan Maguire (2):
-  ftrace/selftests: workaround cgroup RT scheduling issues
-  ftrace/selftest: make unresolved cases cause failure if
-    --fail-unresolved set
-
- tools/testing/selftests/ftrace/ftracetest | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index 144308a..19e9236 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -17,6 +17,7 @@ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+ echo "		--fail-unsupported Treat UNSUPPORTED as a failure"
++echo "		--fail-unresolved Treat UNRESOLVED as a failure"
+ echo "		-d|--debug Debug mode (trace all shell commands)"
+ echo "		-l|--logdir <dir> Save logs on the <dir>"
+ echo "		            If <dir> is -, all logs output in console only"
+@@ -112,6 +113,10 @@ parse_opts() { # opts
+       UNSUPPORTED_RESULT=1
+       shift 1
+     ;;
++    --fail-unresolved)
++      UNRESOLVED_RESULT=1
++      shift 1
++    ;;
+     --logdir|-l)
+       LOG_DIR=$2
+       shift 2
+@@ -176,6 +181,7 @@ KEEP_LOG=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
++UNRESOLVED_RESULT=0
+ STOP_FAILURE=0
+ # Parse command-line options
+ parse_opts $*
+@@ -280,7 +286,7 @@ eval_result() { # sigval
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+-      return 1 # this is a kind of bug.. something happened.
++      return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
 -- 
 1.8.3.1
 
