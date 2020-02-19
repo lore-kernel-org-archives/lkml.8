@@ -2,386 +2,138 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9EEC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A22EC3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2079E222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43729208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:31:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjeBbZQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBSG1x (ORCPT
+        id S1726469AbgBSGb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:27:53 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:7671 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbgBSG1x (ORCPT
+        Wed, 19 Feb 2020 01:31:57 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39633 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgBSGb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:27:53 -0500
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 18 Feb 2020 22:27:51 -0800
-Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 18 Feb 2020 22:27:48 -0800
-Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
-        id 7FC7221495; Wed, 19 Feb 2020 11:57:46 +0530 (IST)
-From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sivaprak@codeaurora.org
-Subject: [PATCH] arm64: dts: ipq6018: Add a few device nodes
-Date:   Wed, 19 Feb 2020 11:57:35 +0530
-Message-Id: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Wed, 19 Feb 2020 01:31:56 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so9143631plp.6;
+        Tue, 18 Feb 2020 22:31:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=yHHgpBANwrMB3jhs9hI0b1CDaiyJ2Cjlf5IBS/MPeGo=;
+        b=IjeBbZQUFOdhM9b+UyK5lJqf3gDoZ0Zhe707jyNovSSDOez8X/Tu/7asUcWC5tvBxX
+         eC9+ShCPTZGQGNIins6XiE5JMLC8urRb+cPNn2mpk52UgzFZe2dMdAcTJsaX8v5/vQYf
+         s9uHUYJXWcgDUkPAy4ukI8ViP/9q+32cK69loQqb8iPrrhMBld/3i5Jlo2pLDbnUcW7f
+         +W5sB6gwuPQk2PexwdCdWSvjNt7xsHyP9p7F4DOgfmT67iiqpUAFM7Beig1HcXrDoxKc
+         u5cuolfzhLiDi1UjAxcFVO8bq7dY76O8UI1lZUUaBNbuhetz7zHP5w8YMd70UqxSixJ5
+         U6lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=yHHgpBANwrMB3jhs9hI0b1CDaiyJ2Cjlf5IBS/MPeGo=;
+        b=uf1PpzQ6Ky3E4TyEVtS8qKp1TUkly9vVs5lHiRJ4FJfo8+LdBpy4rIf6/JbQc0WIxm
+         5dMy8uLvc+U1EfofqgpZLWqp8QSuh8GXkKlVrA0Gu9NyRCeGMBvmnO3HQ0cMjwke2sqM
+         Jp3xFfmK7ziYwzf6TerwKyHBzk5KUYR0Gn8VYLwkP2JKSccj39Qoezn7vI/jBKJG0VvZ
+         CqmsIfdpC4yXTWIC9PhmsncexlMqVm29majHx9KpUs51HXvtfNgVXbrdVFy47HtH/h+8
+         WBOGff6IPSD3n6iii0bfr2SCfXfMBCGFmjbQ3r6RJEmC//31zeLCK710NTPyKkFw7NGN
+         3OkQ==
+X-Gm-Message-State: APjAAAWE/42qWfrH2rUuRrHg5bTaBTmB4oW4oHHeaxBL+KyV0vIhmTC+
+        k7QpNGdU4GrUoEG6NuGB/6hIWHSJ
+X-Google-Smtp-Source: APXvYqzds47dr4tLMQlbJAHaKvXWG2xLrP8jOwn9XRTGCXyf6gKnsxD15JrWb4ks/Qj5UazhHoX/1A==
+X-Received: by 2002:a17:90a:ec10:: with SMTP id l16mr7158975pjy.19.1582093915829;
+        Tue, 18 Feb 2020 22:31:55 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id w17sm1169047pfi.56.2020.02.18.22.31.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 22:31:55 -0800 (PST)
+Date:   Tue, 18 Feb 2020 22:31:46 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Message-ID: <5e4cd6527bf96_404b2ac01efba5b491@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200217200111.GA5283@embeddedor>
+References: <20200217200111.GA5283@embeddedor>
+Subject: RE: [PATCH][next] bpf, sockmap: Replace zero-length array with
+ flexible-array member
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add i2c, spi, crypto, rng, watchdog, peripheral nodes, also add
-support for wcss Q6 remoteproc driver and enable hw mutex, smem,
-mailbox, smp2p and rpmsg drivers
+Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+> 
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+> 
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  net/core/sock_map.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 085cef5857bb..3a7a96ab088a 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -518,7 +518,7 @@ struct bpf_htab_elem {
+>  	u32 hash;
+>  	struct sock *sk;
+>  	struct hlist_node node;
+> -	u8 key[0];
+> +	u8 key[];
+>  };
+>  
+>  struct bpf_htab_bucket {
+> -- 
+> 2.25.0
+> 
 
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
----
-This patch depends on Sricharan's ipq60xx dts patch
-https://patchwork.kernel.org/patch/11340681/
- arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  34 ++++
- arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 228 +++++++++++++++++++++++++++
- 2 files changed, 262 insertions(+)
+The same pattern is in ./kernel/bpf/hashtab.c can you also change
+it here then if this is the case so sockmap is aligned with bpf
+coding style.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
-index 897b4b2..b31117a 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
-@@ -28,3 +28,37 @@
- 	pinctrl-names = "default";
- 	status = "ok";
- };
-+
-+&i2c_1 {
-+	pinctrl-0 = <&i2c_1_pins>;
-+	pinctrl-names = "default";
-+	status = "ok";
-+};
-+
-+&spi_0 {
-+	cs-select = <0>;
-+	status = "ok";
-+
-+	m25p80@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0>;
-+		compatible = "n25q128a11";
-+		spi-max-frequency = <50000000>;
-+	};
-+};
-+
-+&tlmm {
-+	i2c_1_pins: i2c-1-pins {
-+		pins = "gpio42", "gpio43";
-+		function = "blsp2_i2c";
-+		drive-strength = <8>;
-+	};
-+
-+	spi_0_pins: spi-0-pins {
-+		pins = "gpio38", "gpio39", "gpio40", "gpio41";
-+		function = "blsp0_spi";
-+		drive-strength = <8>;
-+		bias-pull-down;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-index 0fb44e5..5d4dfb8 100644
---- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
-@@ -7,6 +7,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
-+#include <dt-bindings/reset/qcom,gcc-ipq6018.h>
- 
- / {
- 	#address-cells = <2>;
-@@ -69,6 +70,12 @@
- 		};
- 	};
- 
-+	firmware {
-+		scm {
-+			compatible = "qcom,scm";
-+		};
-+	};
-+
- 	pmuv8: pmu {
- 		compatible = "arm,cortex-a53-pmu";
- 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
-@@ -89,6 +96,22 @@
- 			reg = <0x0 0x48500000 0x0 0x00200000>;
- 			no-map;
- 		};
-+
-+		smem_region: memory@4aa00000 {
-+			reg = <0x0 0x4aa00000 0x0 0x00100000>;
-+			no-map;
-+		};
-+
-+		q6_region: memory@4ab00000 {
-+			reg = <0x0 0x4ab00000 0x0 0x02800000>;
-+			no-map;
-+		};
-+	};
-+
-+	smem {
-+		compatible = "qcom,smem";
-+		memory-region = <&smem_region>;
-+		hwlocks = <&tcsr_mutex 0>;
- 	};
- 
- 	soc: soc {
-@@ -98,6 +121,36 @@
- 		dma-ranges;
- 		compatible = "simple-bus";
- 
-+		rng: qrng@e1000 {
-+			compatible = "qcom,prng-ee";
-+			reg = <0xe3000 0x1000>;
-+			clocks = <&gcc GCC_PRNG_AHB_CLK>;
-+			clock-names = "core";
-+		};
-+
-+		cryptobam: dma@704000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x00704000 0x20000>;
-+			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <1>;
-+			qcom,controlled-remotely = <1>;
-+			qcom,config-pipe-trust-reg = <0>;
-+		};
-+
-+		crypto: crypto@73a000 {
-+			compatible = "qcom,crypto-v5.1";
-+			reg = <0x0073a000 0x6000>;
-+			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
-+				<&gcc GCC_CRYPTO_AXI_CLK>,
-+				<&gcc GCC_CRYPTO_CLK>;
-+			clock-names = "iface", "bus", "core";
-+			dmas = <&cryptobam 2>, <&cryptobam 3>;
-+			dma-names = "rx", "tx";
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq6018-pinctrl";
- 			reg = <0x01000000 0x300000>;
-@@ -125,6 +178,26 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		tcsr_mutex_regs: syscon@1905000 {
-+			compatible = "syscon";
-+			reg = <0x01905000 0x8000>;
-+		};
-+
-+		tcsr_q6: syscon@1945000 {
-+			compatible = "syscon";
-+			reg = <0x01945000 0xe000>;
-+		};
-+
-+		blsp_dma: dma@7884000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x07884000 0x2b000>;
-+			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+		};
-+
- 		blsp1_uart3: serial@78b1000 {
- 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
- 			reg = <0x078b1000 0x200>;
-@@ -135,6 +208,66 @@
- 			status = "disabled";
- 		};
- 
-+		spi_0: spi@78b5000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x078b5000 0x600>;
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+			spi-max-frequency = <50000000>;
-+			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
-+		};
-+
-+		spi_1: spi@78b6000 {
-+			compatible = "qcom,spi-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x078b6000 0x600>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			spi-max-frequency = <50000000>;
-+			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
-+				<&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 14>, <&blsp_dma 15>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
-+		};
-+
-+		i2c_0: i2c@78b6000 {
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x078b6000 0x600>;
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency  = <400000>;
-+			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
-+		i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
-+			compatible = "qcom,i2c-qup-v2.2.1";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x078b7000 0x600>;
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
-+				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
-+			clock-names = "iface", "core";
-+			clock-frequency  = <400000>;
-+			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
-@@ -146,6 +279,21 @@
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
-+		watchdog@b017000 {
-+			compatible = "qcom,kpss-wdt";
-+			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x0b017000 0x40>;
-+			clocks = <&sleep_clk>;
-+			timeout-sec = <10>;
-+		};
-+
-+		apcs_glb: mailbox@b111000 {
-+			compatible = "qcom,ipq8074-apcs-apps-global";
-+			reg = <0x0b111000 0xc>;
-+
-+			#mbox-cells = <1>;
-+		};
-+
- 		timer {
- 			compatible = "arm,armv8-timer";
- 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-@@ -213,5 +361,85 @@
- 			};
- 		};
- 
-+		q6v5_wcss: q6v5_wcss@cd00000 {
-+			compatible = "qcom,ipq8074-wcss-pil";
-+			reg = <0x0cd00000 0x4040>,
-+				<0x004ab000 0x20>;
-+			reg-names = "qdsp6",
-+				    "rmb";
-+			qca,auto-restart;
-+			qca,extended-intc;
-+			interrupts-extended = <&intc GIC_SPI 325 IRQ_TYPE_EDGE_RISING>,
-+					      <&wcss_smp2p_in 0 0>,
-+					      <&wcss_smp2p_in 1 0>,
-+					      <&wcss_smp2p_in 2 0>,
-+					      <&wcss_smp2p_in 3 0>;
-+			interrupt-names = "wdog",
-+					  "fatal",
-+					  "ready",
-+					  "handover",
-+					  "stop-ack";
-+
-+			resets = <&gcc GCC_WCSSAON_RESET>,
-+				 <&gcc GCC_WCSS_BCR>,
-+				 <&gcc GCC_WCSS_Q6_BCR>;
-+
-+			reset-names = "wcss_aon_reset",
-+				      "wcss_reset",
-+				      "wcss_q6_reset";
-+
-+			clocks = <&gcc GCC_PRNG_AHB_CLK>;
-+			clock-names = "prng";
-+
-+			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
-+
-+			qcom,smem-states = <&wcss_smp2p_out 0>,
-+					   <&wcss_smp2p_out 1>;
-+			qcom,smem-state-names = "shutdown",
-+						"stop";
-+
-+			memory-region = <&q6_region>;
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apcs_glb 8>;
-+
-+				rpm_requests {
-+					qcom,glink-channels = "IPCRTR";
-+				};
-+			};
-+		};
-+
-+	};
-+
-+	tcsr_mutex: tcsr-mutex {
-+		compatible = "qcom,tcsr-mutex";
-+		syscon = <&tcsr_mutex_regs 0 0x80>;
-+		#hwlock-cells = <1>;
-+	};
-+
-+	wcss: wcss-smp2p {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <435>, <428>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <GIC_SPI 322 IRQ_TYPE_EDGE_RISING>;
-+
-+		mboxes = <&apcs_glb 9>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <1>;
-+
-+		wcss_smp2p_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		wcss_smp2p_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
- 	};
- };
--- 
-2.7.4
-
+.John
