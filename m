@@ -2,122 +2,328 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915B7C18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D168C18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 662B924654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304EC2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="si77ZFwn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LLVJjnUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgBSUGf (ORCPT
+        id S1727082AbgBSUHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:06:35 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:19141 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726651AbgBSUGd (ORCPT
+        Wed, 19 Feb 2020 15:07:40 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40130 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSUHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:06:33 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582142793; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=//g+fSyDRPG/v+45Xg82m3qHmJx/MoVeSp+8QT8ucjw=;
- b=si77ZFwnUQ0gY0knaxtK/Do0i0YKkYdA1Wqm7kyqJwRKqQUjZSgPqu5ubIfNxZ1W/vYCC15n
- BjDIM66XO97jKA1Tb+ffKm/od9/0c8ccmrxUQcj1BTqvgWt4yX3XvZVoVTDsyPKwsoV42+4K
- EF2BvOYnKN8GB0NBa5vql45S2ok=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d9545.7f0d07d515a8-smtp-out-n03;
- Wed, 19 Feb 2020 20:06:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6FADC447A3; Wed, 19 Feb 2020 20:06:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D272C43383;
-        Wed, 19 Feb 2020 20:06:28 +0000 (UTC)
+        Wed, 19 Feb 2020 15:07:39 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a142so25082952oii.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zsjzchhhyvUFJIy0oLPVbK5OuRfi6cC0og4QlfYyVOo=;
+        b=LLVJjnUF5S8Fi2UI4Zxvt9/e4fgVq0mM80LYhvtmacBI1WnRfWwwdP/Uc34ENCIVjm
+         VBrcCZy/vWhJaiTSFE7XN6lywqznBDKiJLrcjsTSqXMzHxz6yvmp0eGdE3DK1JwzqbID
+         jKCn+0alTN1JNanidXo7TrdAThlm3zcM2sBna4Rjg6qGDNaxzx6PRyphsYaHHm/IALf0
+         u+iMrDbUNPODuypJgN1LMnAXSl+DlBAD0kYtDRixMD611l01qh57H6eT7D9tzxwkBbTp
+         phO6QkaLdrdok29LrYViPR12E41Y0GHczvjfVEP2oHtx0Ip1tzQMNhV8y3iXMLIdEu5o
+         zlzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zsjzchhhyvUFJIy0oLPVbK5OuRfi6cC0og4QlfYyVOo=;
+        b=oHXimObPHC/sOlN2tGtMm47s61KxvFXdJYXrvUIWGQ9ZKnDG3CeGQgbMe6uw3sy+NX
+         SiMgDBD/AEmHq1TQsn0xIZg3HkyMLzytfRGBbC7+BhFNL4E9IM9TSxnsTMCLk3HPw47X
+         qCyNfHPYUJMgwACGad+ytWO+lC8fp+EGy9YqAQhrcm+yTl0H/FXsN/ORJ9rjQDl3LgyP
+         I3TaqFDW9+wg1d6sWCF3cVWFEc6CEh7mGnMptAJVd2Va2hJCdzAxWAoi5J5mqZ0qy9QP
+         b2Y06O+XUMekO4PvGQr4FNgOw/tkgNzpDsqC43hXcDIeQKuOoYrust8L8AS0MkXU7Tgr
+         6sYw==
+X-Gm-Message-State: APjAAAXeiwxUWlXTX2zC/YkmrodqC+5n82aWw5QvdEXOjdk9+3+KoV0z
+        qcoEfykKQd1rWJkEzxZWizJEchCvZYudyq/L/9YuU4WpQv1ZXw==
+X-Google-Smtp-Source: APXvYqxGb14AZDfGn28Et5c7WU6/PV82oaP46pOorUlMz1aXLbjCmOn8TpEelTga3JSRn8xT+enzbxwYr2tp8IQ5bQc=
+X-Received: by 2002:a05:6808:8d0:: with SMTP id k16mr5750652oij.68.1582142858222;
+ Wed, 19 Feb 2020 12:07:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Feb 2020 12:06:28 -0800
-From:   isaacm@codeaurora.org
-To:     Will Deacon <will@kernel.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@infradead.org>, pratikp@codeaurora.org,
-        linux-kernel@vger.kernel.org, Liam Mark <lmark@codeaurora.org>,
-        iommu@lists.linux-foundation.org, kernel-team@android.com
-Subject: Re: [RFC PATCH] iommu/dma: Allow drivers to reserve an iova range
-In-Reply-To: <20200219111501.GA19400@willie-the-truck>
-References: <1581721096-16235-1-git-send-email-isaacm@codeaurora.org>
- <20200217080138.GB10342@infradead.org>
- <c58fd502-52a4-cb0f-6e7f-e9cc00627313@arm.com>
- <fc6e1b6689bca7a00e6b12d2bc877d20@codeaurora.org>
- <20200219111501.GA19400@willie-the-truck>
-Message-ID: <d8b70a579f07c688b264e83a0ec0b6d6@codeaurora.org>
-X-Sender: isaacm@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204550281.3299825.6344518327575765653.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158204550281.3299825.6344518327575765653.stgit@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 19 Feb 2020 21:07:11 +0100
+Message-ID: <CAG48ez0o3iHjQJNvh8V2Ao77g0CqfqGsv6caMCOFDy7w-VdtkQ@mail.gmail.com>
+Subject: Re: [PATCH 01/19] vfs: syscall: Add fsinfo() to query filesystem
+ information [ver #16]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-19 03:15, Will Deacon wrote:
-> On Tue, Feb 18, 2020 at 05:57:18PM -0800, isaacm@codeaurora.org wrote:
->> On 2020-02-17 07:50, Robin Murphy wrote:
->> > On 17/02/2020 8:01 am, Christoph Hellwig wrote:
->> > > On Fri, Feb 14, 2020 at 02:58:16PM -0800, Isaac J. Manjarres wrote:
->> > > > From: Liam Mark <lmark@codeaurora.org>
->> > > >
->> > > > Some devices have a memory map which contains gaps or holes.
->> > > > In order for the device to have as much IOVA space as possible,
->> > > > allow its driver to inform the DMA-IOMMU layer that it should
->> > > > not allocate addresses from these holes.
->> > >
->> > > Layering violation.  dma-iommu is the translation layer between the
->> > > DMA API and the IOMMU API.  And calls into it from drivers performing
->> > > DMA mappings need to go through the DMA API (and be documented there).
->> >
->> > +1
->> >
->> > More than that, though, we already have "holes in the address space"
->> > support for the sake of PCI host bridge windows - assuming this is the
->> > same kind of thing (i.e. the holes are between memory regions and
->> > other resources in PA space, so are only relevant once address
->> > translation comes into the picture), then this is IOMMU API level
->> To make sure that we're on the same page, this support alludes to the
->> handling in
->> dma-iommu.c that reserves portions of the IOVA space for the PCI host 
->> bridge
->> windows,
->> correct? If so, then yes, this is similar.
->> > stuff, so even a DMA API level interface would be inappropriate.
->> Does this mean that the driver should be managing the IOVA space and
->> mappings for this device using the IOMMU API? If so, is the rationale 
->> for
->> this because the device driver can have the information of what IOVA 
->> ranges
->> can and cannot be used? Shouldn't there be a generic way of informing 
->> an
->> IOMMU driver about these reserved ranges? Perhaps through a device 
->> tree
->> property, instead of deferring this type of management to the driver?
-> 
-> Before we dive into designing that, can you please clarify whether the
-> reserved IOVA range applies to all DMA masters mastering through a
-> particular SMMU, or whether it's just about one specific master? I was
-> assuming the former, but wanted to be sure.
-> 
-This situation currently applies to one master.
-> Thanks,
-> 
-> Will
+On Tue, Feb 18, 2020 at 6:05 PM David Howells <dhowells@redhat.com> wrote:
+> Add a system call to allow filesystem information to be queried.  A request
+> value can be given to indicate the desired attribute.  Support is provided
+> for enumerating multi-value attributes.
+[...]
+> +static const struct fsinfo_attribute fsinfo_common_attributes[];
+> +
+> +/**
+> + * fsinfo_string - Store a string as an fsinfo attribute value.
+> + * @s: The string to store (may be NULL)
+> + * @ctx: The parameter context
+> + */
+> +int fsinfo_string(const char *s, struct fsinfo_context *ctx)
+> +{
+> +       int ret = 0;
+> +
+> +       if (s) {
+> +               ret = strlen(s);
+> +               memcpy(ctx->buffer, s, ret);
+> +       }
+> +
+> +       return ret;
+> +}
 
-Thanks,
-Isaac
+Please add a check here to ensure that "ret" actually fits into the
+buffer (and use WARN_ON() if you think the check should never fire).
+Otherwise I think this is too fragile.
+
+[...]
+> +static int fsinfo_generic_ids(struct path *path, struct fsinfo_context *ctx)
+> +{
+> +       struct fsinfo_ids *p = ctx->buffer;
+> +       struct super_block *sb;
+> +       struct kstatfs buf;
+> +       int ret;
+> +
+> +       ret = vfs_statfs(path, &buf);
+> +       if (ret < 0 && ret != -ENOSYS)
+> +               return ret;
+
+What's going on here? If vfs_statfs() returns -ENOSYS, we just use the
+(AFAICS uninitialized) buf.f_fsid anyway in the memcpy() below and
+return it to userspace?
+
+> +       sb = path->dentry->d_sb;
+> +       p->f_fstype     = sb->s_magic;
+> +       p->f_dev_major  = MAJOR(sb->s_dev);
+> +       p->f_dev_minor  = MINOR(sb->s_dev);
+> +
+> +       memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
+> +       strlcpy(p->f_fs_name, path->dentry->d_sb->s_type->name,
+> +               sizeof(p->f_fs_name));
+> +       return sizeof(*p);
+> +}
+[...]
+> +static int fsinfo_attribute_info(struct path *path, struct fsinfo_context *ctx)
+> +{
+> +       const struct fsinfo_attribute *attr;
+> +       struct fsinfo_attribute_info *info = ctx->buffer;
+> +       struct dentry *dentry = path->dentry;
+> +
+> +       if (dentry->d_sb->s_op->fsinfo_attributes)
+> +               for (attr = dentry->d_sb->s_op->fsinfo_attributes; attr->get; attr++)
+> +                       if (attr->attr_id == ctx->Nth)
+> +                               goto found;
+> +       for (attr = fsinfo_common_attributes; attr->get; attr++)
+> +               if (attr->attr_id == ctx->Nth)
+> +                       goto found;
+> +       return -ENODATA;
+> +
+> +found:
+> +       info->attr_id           = attr->attr_id;
+> +       info->type              = attr->type;
+> +       info->flags             = attr->flags;
+> +       info->size              = attr->size;
+> +       info->element_size      = attr->element_size;
+> +       return sizeof(*attr);
+
+I think you meant sizeof(*info).
+
+[...]
+> +static int fsinfo_attributes(struct path *path, struct fsinfo_context *ctx)
+> +{
+> +       const struct fsinfo_attribute *attr;
+> +       struct super_block *sb = path->dentry->d_sb;
+> +
+> +       if (sb->s_op->fsinfo_attributes)
+> +               for (attr = sb->s_op->fsinfo_attributes; attr->get; attr++)
+> +                       fsinfo_attributes_insert(ctx, attr);
+> +       for (attr = fsinfo_common_attributes; attr->get; attr++)
+> +               fsinfo_attributes_insert(ctx, attr);
+> +       return ctx->usage;
+
+It is kind of weird that you have to return the ctx->usage everywhere
+even though the caller already has ctx...
+
+> +}
+> +
+> +static const struct fsinfo_attribute fsinfo_common_attributes[] = {
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_STATFS,            fsinfo_generic_statfs),
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_IDS,               fsinfo_generic_ids),
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_LIMITS,            fsinfo_generic_limits),
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_SUPPORTS,          fsinfo_generic_supports),
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_TIMESTAMP_INFO,    fsinfo_generic_timestamp_info),
+> +       FSINFO_STRING   (FSINFO_ATTR_VOLUME_ID,         fsinfo_generic_volume_id),
+> +       FSINFO_VSTRUCT  (FSINFO_ATTR_VOLUME_UUID,       fsinfo_generic_volume_uuid),
+> +       FSINFO_VSTRUCT_N(FSINFO_ATTR_FSINFO_ATTRIBUTE_INFO, fsinfo_attribute_info),
+> +       FSINFO_LIST     (FSINFO_ATTR_FSINFO_ATTRIBUTES, fsinfo_attributes),
+> +       {}
+> +};
+> +
+> +/*
+> + * Retrieve large filesystem information, such as an opaque blob or array of
+> + * struct elements where the value isn't limited to the size of a page.
+> + */
+> +static int vfs_fsinfo_large(struct path *path, struct fsinfo_context *ctx,
+> +                           const struct fsinfo_attribute *attr)
+> +{
+> +       int ret;
+> +
+> +       while (!signal_pending(current)) {
+> +               ctx->usage = 0;
+> +               ret = attr->get(path, ctx);
+> +               if (IS_ERR_VALUE((long)ret))
+> +                       return ret; /* Error */
+> +               if ((unsigned int)ret <= ctx->buf_size)
+> +                       return ret; /* It fitted */
+> +
+> +               /* We need to resize the buffer */
+> +               kvfree(ctx->buffer);
+> +               ctx->buffer = NULL;
+> +               ctx->buf_size = roundup(ret, PAGE_SIZE);
+> +               if (ctx->buf_size > INT_MAX)
+> +                       return -EMSGSIZE;
+> +               ctx->buffer = kvmalloc(ctx->buf_size, GFP_KERNEL);
+
+ctx->buffer is _almost_ always pre-zeroed (see vfs_do_fsinfo() below),
+except if we have FSINFO_TYPE_OPAQUE or FSINFO_TYPE_LIST with a size
+bigger than what the attribute's ->size field said? Is that
+intentional?
+
+> +               if (!ctx->buffer)
+> +                       return -ENOMEM;
+> +       }
+> +
+> +       return -ERESTARTSYS;
+> +}
+> +
+> +static int vfs_do_fsinfo(struct path *path, struct fsinfo_context *ctx,
+> +                        const struct fsinfo_attribute *attr)
+> +{
+> +       if (ctx->Nth != 0 && !(attr->flags & (FSINFO_FLAGS_N | FSINFO_FLAGS_NM)))
+> +               return -ENODATA;
+> +       if (ctx->Mth != 0 && !(attr->flags & FSINFO_FLAGS_NM))
+> +               return -ENODATA;
+> +
+> +       ctx->buf_size = attr->size;
+> +       if (ctx->want_size_only && attr->type == FSINFO_TYPE_VSTRUCT)
+> +               return attr->size;
+> +
+> +       ctx->buffer = kvzalloc(ctx->buf_size, GFP_KERNEL);
+> +       if (!ctx->buffer)
+> +               return -ENOMEM;
+> +
+> +       switch (attr->type) {
+> +       case FSINFO_TYPE_VSTRUCT:
+> +               ctx->clear_tail = true;
+> +               /* Fall through */
+> +       case FSINFO_TYPE_STRING:
+> +               return attr->get(path, ctx);
+> +
+> +       case FSINFO_TYPE_OPAQUE:
+> +       case FSINFO_TYPE_LIST:
+> +               return vfs_fsinfo_large(path, ctx, attr);
+> +
+> +       default:
+> +               return -ENOPKG;
+> +       }
+> +}
+[...]
+> +SYSCALL_DEFINE5(fsinfo,
+> +               int, dfd, const char __user *, pathname,
+> +               struct fsinfo_params __user *, params,
+> +               void __user *, user_buffer, size_t, user_buf_size)
+> +{
+[...]
+> +       if (ret < 0)
+> +               goto error;
+> +
+> +       result_size = ret;
+> +       if (result_size > user_buf_size)
+> +               result_size = user_buf_size;
+
+This is "result_size = min_t(size_t, ret, user_buf_size)".
+
+[...]
+> +/*
+> + * A filesystem information attribute definition.
+> + */
+> +struct fsinfo_attribute {
+> +       unsigned int            attr_id;        /* The ID of the attribute */
+> +       enum fsinfo_value_type  type:8;         /* The type of the attribute's value(s) */
+> +       unsigned int            flags:8;
+> +       unsigned int            size:16;        /* - Value size (FSINFO_STRUCT) */
+> +       unsigned int            element_size:16; /* - Element size (FSINFO_LIST) */
+> +       int (*get)(struct path *path, struct fsinfo_context *params);
+> +};
+
+Why the bitfields? It doesn't look like that's going to help you much,
+you'll just end up with 6 bytes of holes on x86-64:
+
+$ cat fsinfo_attribute_layout.c
+enum fsinfo_value_type {
+  FSINFO_TYPE_VSTRUCT     = 0,    /* Version-lengthed struct (up to
+4096 bytes) */
+  FSINFO_TYPE_STRING      = 1,    /* NUL-term var-length string (up to
+4095 chars) */
+  FSINFO_TYPE_OPAQUE      = 2,    /* Opaque blob (unlimited size) */
+  FSINFO_TYPE_LIST        = 3,    /* List of ints/structs (unlimited size) */
+};
+
+struct fsinfo_attribute {
+  unsigned int            attr_id;        /* The ID of the attribute */
+  enum fsinfo_value_type  type:8;         /* The type of the
+attribute's value(s) */
+  unsigned int            flags:8;
+  unsigned int            size:16;        /* - Value size (FSINFO_STRUCT) */
+  unsigned int            element_size:16; /* - Element size (FSINFO_LIST) */
+  void *get;
+};
+void *blah(struct fsinfo_attribute *p) {
+  return p->get;
+}
+$ gcc -c -o fsinfo_attribute_layout.o fsinfo_attribute_layout.c -ggdb
+$ pahole -C fsinfo_attribute -E --hex fsinfo_attribute_layout.o
+struct fsinfo_attribute {
+        unsigned int               attr_id;          /*     0   0x4 */
+        enum fsinfo_value_type type:8;               /*   0x4: 0 0x4 */
+        unsigned int               flags:8;          /*   0x4:0x8 0x4 */
+        unsigned int               size:16;          /*   0x4:0x10 0x4 */
+        unsigned int               element_size:16;  /*   0x8: 0 0x4 */
+
+        /* XXX 16 bits hole, try to pack */
+        /* XXX 4 bytes hole, try to pack */
+
+        void *                     get;              /*  0x10   0x8 */
+
+        /* size: 24, cachelines: 1, members: 6 */
+        /* sum members: 12, holes: 1, sum holes: 4 */
+        /* sum bitfield members: 48 bits, bit holes: 1, sum bit holes:
+16 bits */
+        /* last cacheline: 24 bytes */
+};
