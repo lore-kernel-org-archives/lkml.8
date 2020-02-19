@@ -2,113 +2,275 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 499ADC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE094C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E68620801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582121370;
-	bh=HFaXUgtzxw+7x9hkLBxzw5x+uzRjCqlLOOAm22GwX88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N3uhz5dB/wmr5J3bKpXRx49zo7JwTioF0FmHio9qU+dgecVUS+hAL6n9YvuoS6iXO
-	 kx5kDOkoJ5CxLDMkDx/LdGKm6myEWtlR9nKHrh0Lu7nxOeXoCYx/GlbU95kSLMGMum
-	 wj4VintNxi08QaRqiUqWIBzSl3Uvo/9M3tzGHhOg=
+	by mail.kernel.org (Postfix) with ESMTP id 946C520801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:09:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBSOJ2 (ORCPT
+        id S1728097AbgBSOJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:09:28 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42816 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728063AbgBSOJY (ORCPT
+        Wed, 19 Feb 2020 09:09:35 -0500
+Received: from outbound-smtp62.blacknight.com ([46.22.136.251]:59051 "EHLO
+        outbound-smtp62.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727786AbgBSOJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:09:24 -0500
-Received: by mail-oi1-f196.google.com with SMTP id j132so23886923oih.9;
-        Wed, 19 Feb 2020 06:09:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w0+iwQxqNl/u797DK+0XyoBMJz+IIdj3rSrLkc2+kbs=;
-        b=QBOx2ZSEXrHbCmd8jU0LL/Exg7ryyHYwI4/suzaq+OGmsUro4i5bCrnSOSjqJR+qDN
-         ZaQcD2pLccnf6mBQnuYXri5F25tzTu07bfcuyjw0fxJwpNrni7kacSTbJIvBnSKCBF0z
-         uO1taak8+ritB2SxiBtGFhFubz8kBuasEsQ+hTf3PVNUbDffylA/+BEN//y/EZAyvJl5
-         LYr8ItwyOZp+Vx3sNp2xK5cV8uERzhz7oNA05wiCH/P9zMmPB/ckvqdvsfere4/JXMfx
-         Fd2xQiLfymEtcTs5tu+XyG+I5lpju0Z8T/30Mu+rDkYQtdrhBGU0tk/WXKDvv57v5zJt
-         Aj2A==
-X-Gm-Message-State: APjAAAVAQE+CuIYZn4ha6ljkouBtLL3QDJFzrYEBK7aamyJm4yPV7yi8
-        ch/ThXBqnk4DI6f1Czk9ww==
-X-Google-Smtp-Source: APXvYqyBzFjf4VEjf1EoLRQ0uCruPnwDHxFaEDDuZ7gw9XftwRfkd4+9xnhC8HJN5lU4jCtbEAB0lw==
-X-Received: by 2002:aca:3f8b:: with SMTP id m133mr4540584oia.51.1582121363283;
-        Wed, 19 Feb 2020 06:09:23 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c10sm647696otl.77.2020.02.19.06.09.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 06:09:22 -0800 (PST)
-Received: (nullmailer pid 8118 invoked by uid 1000);
-        Wed, 19 Feb 2020 14:09:21 -0000
-Date:   Wed, 19 Feb 2020 08:09:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     peng.fan@nxp.com
-Cc:     ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
- json-schema
-Message-ID: <20200219140921.GA7031@bogus>
-References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
- <1582097265-20170-2-git-send-email-peng.fan@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582097265-20170-2-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Feb 2020 09:09:35 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp62.blacknight.com (Postfix) with ESMTPS id AF9DEFB1DC
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:09:32 +0000 (GMT)
+Received: (qmail 32453 invoked from network); 19 Feb 2020 14:09:32 -0000
+Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPA; 19 Feb 2020 14:09:32 -0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: [PATCH 10/13] sched/numa: Prefer using an idle cpu as a migration target instead of comparing tasks
+Date:   Wed, 19 Feb 2020 14:07:33 +0000
+Message-Id: <20200219140736.20499-11-mgorman@techsingularity.net>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20200219140736.20499-1-mgorman@techsingularity.net>
+References: <20200219140736.20499-1-mgorman@techsingularity.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 15:27:37 +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Convert the i.MX remoteproc binding to DT schema format
-> using json-schema
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ------------
->  .../devicetree/bindings/remoteproc/imx-rproc.yaml  | 61 ++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 33 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
-> 
+task_numa_find_cpu can scan a node multiple times. Minimally it scans to
+gather statistics and later to find a suitable target. In some cases, the
+second scan will simply pick an idle CPU if the load is not imbalanced.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+This patch caches information on an idle core while gathering statistics
+and uses it immediately if load is not imbalanced to avoid a second scan
+of the node runqueues. Preference is given to an idle core rather than an
+idle SMT sibling to avoid packing HT siblings due to linearly scanning the
+node cpumask.
 
-warning: no schema found in file: Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: ignoring, error in schema: properties: clocks: items
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: Additional properties are not allowed ('Clock for co-processor (See' was unexpected)
+As a side-effect, even when the second scan is necessary, the importance
+of using select_idle_sibling is much reduced because information on idle
+CPUs is cached and can be reused.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks: {'items': {'Clock for co-processor (See': '../clock/clock-bindings.txt)'}} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks: 'maxItems' is a required property
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not valid under any of the given schemas (Possible causes of the failure):
-		/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml: properties:clocks:items: {'Clock for co-processor (See': '../clock/clock-bindings.txt)'} is not of type 'array'
+Note that this patch actually makes is harder to move to an idle CPU
+as multiple tasks can race for the same idle CPU due to a race checking
+numa_migrate_on. This is addressed in the next patch.
 
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ kernel/sched/fair.c | 119 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 102 insertions(+), 17 deletions(-)
 
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1e515ebe277d..b5c612f82de0 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1500,8 +1500,29 @@ struct numa_stats {
+ 	unsigned int nr_running;
+ 	unsigned int weight;
+ 	enum numa_type node_type;
++	int idle_cpu;
+ };
+ 
++static inline bool is_core_idle(int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	int sibling;
++
++	for_each_cpu(sibling, cpu_smt_mask(cpu)) {
++		if (cpu == sibling)
++			continue;
++
++		if (!idle_cpu(cpu))
++			return false;
++	}
++#endif
++
++	return true;
++}
++
++/* Forward declarations of select_idle_sibling helpers */
++static inline bool test_idle_cores(int cpu, bool def);
++
+ struct task_numa_env {
+ 	struct task_struct *p;
+ 
+@@ -1537,15 +1558,39 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ 	return node_fully_busy;
+ }
+ 
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++#ifdef CONFIG_SCHED_SMT
++	if (!static_branch_likely(&sched_smt_present) ||
++	    idle_core >= 0 || !test_idle_cores(cpu, false))
++		return idle_core;
++
++	/*
++	 * Prefer cores instead of packing HT siblings
++	 * and triggering future load balancing.
++	 */
++	if (is_core_idle(cpu))
++		idle_core = cpu;
++#endif
++
++	return idle_core;
++}
++
+ /*
+- * XXX borrowed from update_sg_lb_stats
++ * Gather all necessary information to make NUMA balancing placement
++ * decisions that are compatible with standard load balancer. This
++ * borrows code and logic from update_sg_lb_stats but sharing a
++ * common implementation is impractical.
+  */
+ static void update_numa_stats(struct task_numa_env *env,
+-			      struct numa_stats *ns, int nid)
++			      struct numa_stats *ns, int nid,
++			      bool find_idle)
+ {
+-	int cpu;
++	int cpu, idle_core = -1;
+ 
+ 	memset(ns, 0, sizeof(*ns));
++	ns->idle_cpu = -1;
++
+ 	for_each_cpu(cpu, cpumask_of_node(nid)) {
+ 		struct rq *rq = cpu_rq(cpu);
+ 
+@@ -1553,11 +1598,25 @@ static void update_numa_stats(struct task_numa_env *env,
+ 		ns->util += cpu_util(cpu);
+ 		ns->nr_running += rq->cfs.h_nr_running;
+ 		ns->compute_capacity += capacity_of(cpu);
++
++		if (find_idle && !rq->nr_running && idle_cpu(cpu)) {
++			if (READ_ONCE(rq->numa_migrate_on) ||
++			    !cpumask_test_cpu(cpu, env->p->cpus_ptr))
++				continue;
++
++			if (ns->idle_cpu == -1)
++				ns->idle_cpu = cpu;
++
++			idle_core = numa_idle_core(idle_core, cpu);
++		}
+ 	}
+ 
+ 	ns->weight = cpumask_weight(cpumask_of_node(nid));
+ 
+ 	ns->node_type = numa_classify(env->imbalance_pct, ns);
++
++	if (idle_core >= 0)
++		ns->idle_cpu = idle_core;
+ }
+ 
+ static void task_numa_assign(struct task_numa_env *env,
+@@ -1566,7 +1625,7 @@ static void task_numa_assign(struct task_numa_env *env,
+ 	struct rq *rq = cpu_rq(env->dst_cpu);
+ 
+ 	/* Bail out if run-queue part of active NUMA balance. */
+-	if (xchg(&rq->numa_migrate_on, 1))
++	if (env->best_cpu != env->dst_cpu && xchg(&rq->numa_migrate_on, 1))
+ 		return;
+ 
+ 	/*
+@@ -1730,19 +1789,39 @@ static void task_numa_compare(struct task_numa_env *env,
+ 		goto unlock;
+ 
+ assign:
+-	/*
+-	 * One idle CPU per node is evaluated for a task numa move.
+-	 * Call select_idle_sibling to maybe find a better one.
+-	 */
++	/* Evaluate an idle CPU for a task numa move. */
+ 	if (!cur) {
++		int cpu = env->dst_stats.idle_cpu;
++
++		/* Nothing cached so current CPU went idle since the search. */
++		if (cpu < 0)
++			cpu = env->dst_cpu;
++
+ 		/*
+-		 * select_idle_siblings() uses an per-CPU cpumask that
+-		 * can be used from IRQ context.
++		 * If the CPU is no longer truly idle and the previous best CPU
++		 * is, keep using it.
+ 		 */
+-		local_irq_disable();
+-		env->dst_cpu = select_idle_sibling(env->p, env->src_cpu,
++		if (!idle_cpu(cpu) && env->best_cpu >= 0 &&
++		    idle_cpu(env->best_cpu)) {
++			cpu = env->best_cpu;
++		}
++
++		/*
++		 * Use select_idle_sibling if the previously found idle CPU is
++		 * not idle any more.
++		 */
++		if (!idle_cpu(cpu)) {
++			/*
++			 * select_idle_siblings() uses an per-CPU cpumask that
++			 * can be used from IRQ context.
++			 */
++			local_irq_disable();
++			cpu = select_idle_sibling(env->p, env->src_cpu,
+ 						   env->dst_cpu);
+-		local_irq_enable();
++			local_irq_enable();
++		}
++
++		env->dst_cpu = cpu;
+ 	}
+ 
+ 	task_numa_assign(env, cur, imp);
+@@ -1776,8 +1855,14 @@ static void task_numa_find_cpu(struct task_numa_env *env,
+ 		imbalance = adjust_numa_imbalance(imbalance, src_running);
+ 
+ 		/* Use idle CPU if there is no imbalance */
+-		if (!imbalance)
++		if (!imbalance) {
+ 			maymove = true;
++			if (env->dst_stats.idle_cpu >= 0) {
++				env->dst_cpu = env->dst_stats.idle_cpu;
++				task_numa_assign(env, NULL, 0);
++				return;
++			}
++		}
+ 	} else {
+ 		long src_load, dst_load, load;
+ 		/*
+@@ -1850,10 +1935,10 @@ static int task_numa_migrate(struct task_struct *p)
+ 	dist = env.dist = node_distance(env.src_nid, env.dst_nid);
+ 	taskweight = task_weight(p, env.src_nid, dist);
+ 	groupweight = group_weight(p, env.src_nid, dist);
+-	update_numa_stats(&env, &env.src_stats, env.src_nid);
++	update_numa_stats(&env, &env.src_stats, env.src_nid, false);
+ 	taskimp = task_weight(p, env.dst_nid, dist) - taskweight;
+ 	groupimp = group_weight(p, env.dst_nid, dist) - groupweight;
+-	update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++	update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+ 
+ 	/* Try to find a spot on the preferred nid. */
+ 	task_numa_find_cpu(&env, taskimp, groupimp);
+@@ -1886,7 +1971,7 @@ static int task_numa_migrate(struct task_struct *p)
+ 
+ 			env.dist = dist;
+ 			env.dst_nid = nid;
+-			update_numa_stats(&env, &env.dst_stats, env.dst_nid);
++			update_numa_stats(&env, &env.dst_stats, env.dst_nid, true);
+ 			task_numa_find_cpu(&env, taskimp, groupimp);
+ 		}
+ 	}
+-- 
+2.16.4
 
-See https://patchwork.ozlabs.org/patch/1240544
-Please check and re-submit.
