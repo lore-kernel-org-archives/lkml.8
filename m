@@ -2,175 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5276EC18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C37CC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33EB7208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5574A2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582141846;
+	bh=eiT46h6cjs5cGRD8Py4ELAq6/mSDHNGSWtuhwdPFC68=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YiSYcCw8ilXRkAWAbqzz8EbHy0d7SKINETvPv29Ac25FNqdIM9/NbO+UH2qe1l0pZ
+	 HXsQ4u0Zgd5GMTi3lZGqsICEYVdOCQNLLXn7pmL/AftUxywt6bEkvw17nv/LrxQDGG
+	 hjmP5xSBu72um5j8lyyYSyuNdTZGb6NMlKDNVsdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgBSTpp (ORCPT
+        id S1726766AbgBSTup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:45:45 -0500
-Received: from muru.com ([72.249.23.125]:56154 "EHLO muru.com"
+        Wed, 19 Feb 2020 14:50:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgBSTpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:45:45 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id CC44580F3;
-        Wed, 19 Feb 2020 19:46:27 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 11:45:40 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com
-Subject: Re: [PATCH] backlight: add led-backlight driver
-Message-ID: <20200219194540.GD37466@atomide.com>
-References: <20200219191412.GA15905@amd>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219191412.GA15905@amd>
+        id S1726645AbgBSTuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:50:44 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15A98207FD;
+        Wed, 19 Feb 2020 19:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582141843;
+        bh=eiT46h6cjs5cGRD8Py4ELAq6/mSDHNGSWtuhwdPFC68=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=j0Q2SNNJu/5La8erWI6ydWvVV+EQ2a5xDQQhRl6IGSx6/S4BBCC7/lnXBc6gAkn15
+         TlW1RyJOGfEytCYaWwF2apo+9I4u9DMgUsLN6C/j0xC+K4O87bjU9Cu9gX5DhuF3Ix
+         KFA0A53ZRcG/hTnqnfzya0RQF+eDqvR2SRhoFiXc=
+Date:   Wed, 19 Feb 2020 11:50:42 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        richardw.yang@linux.intel.com, david@redhat.com, osalvador@suse.de,
+        dan.j.williams@intel.com, mhocko@suse.com
+Subject: Re: [PATCH v2 RESEND] mm/sparsemem: pfn_to_page is not valid yet on
+ SPARSEMEM
+Message-Id: <20200219115042.e8738272455292d3a6a6e498@linux-foundation.org>
+In-Reply-To: <20200219030454.4844-1-bhe@redhat.com>
+References: <20200219030454.4844-1-bhe@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [200219 19:15]:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Wed, 19 Feb 2020 11:04:54 +0800 Baoquan He <bhe@redhat.com> wrote:
+
+> From: Wei Yang <richardw.yang@linux.intel.com>
 > 
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
+> When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+> doesn't work before sparse_init_one_section() is called. This leads to a
+> crash when hotplug memory:
 > 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> ---
->  drivers/video/backlight/Kconfig  |   7 ++
->  drivers/video/backlight/Makefile |   1 +
->  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 268 insertions(+)
->  create mode 100644 drivers/video/backlight/led_bl.c
+> [   41.839170] BUG: unable to handle page fault for address: 0000000006400000
+> [   41.840663] #PF: supervisor write access in kernel mode
+> [   41.841822] #PF: error_code(0x0002) - not-present page
+> [   41.842970] PGD 0 P4D 0
+> [   41.843538] Oops: 0002 [#1] SMP PTI
+> [   41.844125] CPU: 3 PID: 221 Comm: kworker/u16:1 Tainted: G        W         5.5.0-next-20200205+ #343
+> [   41.845659] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> [   41.846977] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+> [   41.847904] RIP: 0010:__memset+0x24/0x30
+> [   41.848660] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
+> [   41.851836] RSP: 0018:ffffb43ac0373c80 EFLAGS: 00010a87
+> [   41.852686] RAX: ffffffffffffffff RBX: ffff8a1518800000 RCX: 0000000000050000
+> [   41.853824] RDX: 0000000000000000 RSI: 00000000000000ff RDI: 0000000006400000
+> [   41.854967] RBP: 0000000000140000 R08: 0000000000100000 R09: 0000000006400000
+> [   41.856107] R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
+> [   41.857255] R13: 0000000000000028 R14: 0000000000000000 R15: ffff8a153ffd9280
+> [   41.858414] FS:  0000000000000000(0000) GS:ffff8a153ab00000(0000) knlGS:0000000000000000
+> [   41.859703] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   41.860627] CR2: 0000000006400000 CR3: 0000000136fca000 CR4: 00000000000006e0
+> [   41.861716] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   41.862680] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   41.863628] Call Trace:
+> [   41.863983]  sparse_add_section+0x1c9/0x26a
+> [   41.864570]  __add_pages+0xbf/0x150
+> [   41.865057]  add_pages+0x12/0x60
+> [   41.865489]  add_memory_resource+0xc8/0x210
+> [   41.866017]  ? wake_up_q+0xa0/0xa0
+> [   41.866416]  __add_memory+0x62/0xb0
+> [   41.866825]  acpi_memory_device_add+0x13f/0x300
+> [   41.867410]  acpi_bus_attach+0xf6/0x200
+> [   41.867890]  acpi_bus_scan+0x43/0x90
+> [   41.868448]  acpi_device_hotplug+0x275/0x3d0
+> [   41.868972]  acpi_hotplug_work_fn+0x1a/0x30
+> [   41.869473]  process_one_work+0x1a7/0x370
+> [   41.869953]  worker_thread+0x30/0x380
+> [   41.870396]  ? flush_rcu_work+0x30/0x30
+> [   41.870846]  kthread+0x112/0x130
+> [   41.871236]  ? kthread_create_on_node+0x60/0x60
+> [   41.871770]  ret_from_fork+0x35/0x40
 > 
-> Hi!
+> We should use memmap as it did.
 > 
-> Here's the version of the driver I have. AFAICT
-> default-brightness-level handling is ok, so does not need to be
-> changed.
-> 
-> Lee, it would be easiest for me if you could apply it to your tree and
-> push, but given enough time I can push it to Linus, too.
+> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> CC: Dan Williams <dan.j.williams@intel.com>
 
-Oh you're using quoted-printable for patches.. Got it applied now,
-and it still works. Below is also the related dts change that
-I tested with.
+This should have included your signed-off-by, as you were on the patch
+delivery path.  I have made that change to my copy of the patch - is
+that OK?
 
-Feel free to pick the dts change too, naturally that should
-not be applied before the driver.
+I also added a cc:stable.  Do we agree this is appropriate?
 
-If you guys instead want me to pick these both into my fixes
-branch, just let me know and I'll do the explaining why these
-are needed as fixes. Basically we no longer have a way to enable
-the LCD backlight for droid4 manually starting with v5.6-rc1
-unlike earlier.
-
-Regards,
-
-Tony
-
-8< ------------------
-From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony@atomide.com>
-Date: Wed, 19 Feb 2020 11:25:27 -0800
-Subject: [PATCH] ARM: dts: droid4: Configure LED backlight for lm3532
-
-With the LED backlight changes merged, we still need the dts configured
-to have backlight working for droid4. Based on an earlier patch from
-Pavel Machek <pavel@ucw.cz>, let's configure the backlight but update
-the value range to be more usable.
-
-We have a range of 256 register values split into 8 steps, so we can
-generate the brightness levels backwards with:
-
-$ for i in 0 1 2 3 4 5 6 7; do echo "255 - ${i} * (256 / 8)" | bc; done
-
-To avoid more confusion why the LCD backlight is still not on, let's
-also enable LED backlight as a loadable module for omap2plus_defconfig.
-
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 13 +++++++++++--
- arch/arm/configs/omap2plus_defconfig            |  1 +
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -182,6 +182,14 @@ vibrator {
- 		pwm-names = "enable", "direction";
- 		direction-duty-cycle-ns = <10000000>;
- 	};
-+
-+	backlight: backlight {
-+		compatible = "led-backlight";
-+
-+		leds = <&backlight_led>;
-+		brightness-levels = <31 63 95 127 159 191 223 255>;
-+		default-brightness-level = <6>;
-+	};
- };
- 
- &dss {
-@@ -205,6 +213,8 @@ lcd0: display {
- 		vddi-supply = <&lcd_regulator>;
- 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>;	/* gpio101 */
- 
-+		backlight = <&backlight>;
-+
- 		width-mm = <50>;
- 		height-mm = <89>;
- 
-@@ -393,12 +403,11 @@ led-controller@38 {
- 		ramp-up-us = <1024>;
- 		ramp-down-us = <8193>;
- 
--		led@0 {
-+		backlight_led: led@0 {
- 			reg = <0>;
- 			led-sources = <2>;
- 			ti,led-mode = <0>;
- 			label = ":backlight";
--			linux,default-trigger = "backlight";
- 		};
- 
- 		led@1 {
-diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
---- a/arch/arm/configs/omap2plus_defconfig
-+++ b/arch/arm/configs/omap2plus_defconfig
-@@ -375,6 +375,7 @@ CONFIG_BACKLIGHT_GENERIC=m
- CONFIG_BACKLIGHT_PWM=m
- CONFIG_BACKLIGHT_PANDORA=m
- CONFIG_BACKLIGHT_GPIO=m
-+CONFIG_BACKLIGHT_LED=m
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
- CONFIG_LOGO=y
--- 
-2.25.1
+I added Dan's "On x86 the impact is limited to x86_32 builds, or x86_64
+configurations that override the default setting for
+SPARSEMEM_VMEMMAP." to the changelog.
