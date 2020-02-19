@@ -2,65 +2,92 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6201FC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DA3C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3478A2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF8B2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582097945;
-	bh=B2GzMBy13MmC/psvGtTK6OGFCy/sz5GHNIfzC5kBVcE=;
+	s=default; t=1582097978;
+	bh=KIEXxX4jEJNPFYhU5xWr7O+78iRlS7JsDPszV/HDTEg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oTJgHPJEQrOSZMsJ49+M54B4V5PgoSTpmQ7RzJh1av6XcsKx3mfAfKe0dzXAw6CLz
-	 5ZdO65fU9L3LVkvvvA9qL/ttGjqjDAU5Pb7HVHt+latbjf9aRFHfQKClJH5y8kDL00
-	 XgEieHY+nSDAEGvJNqvhq8PGRwelQ8vAYqPtj8YM=
+	b=1K1yzQsMlnVRNGcGfHVTGEH43qnNRB1WTxZPIoquvsqQJE/qBtj+97wpDHBPR8WNz
+	 g/vYP/AcWWzKHo2cQ0g588T0a0ubTPHGh2QtzMovFG7eCV+l2yfF4UKV2ayteQ5Jif
+	 azN/tOVSCvdbeECqeICijEkGEwQI6GODdJR7A8Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSHjE (ORCPT
+        id S1726768AbgBSHjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54036 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 02:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgBSHjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:39:03 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726163AbgBSHjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:39:36 -0500
+Received: from localhost (unknown [106.201.32.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB125208E4;
-        Wed, 19 Feb 2020 07:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76E46208E4;
+        Wed, 19 Feb 2020 07:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582097943;
-        bh=B2GzMBy13MmC/psvGtTK6OGFCy/sz5GHNIfzC5kBVcE=;
+        s=default; t=1582097975;
+        bh=KIEXxX4jEJNPFYhU5xWr7O+78iRlS7JsDPszV/HDTEg=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XFKQy5flpgd/sQRMjCKY2AnM32grrfL+k8RvSpHce+jGMvOPG3b557sahZGcoXBRL
-         aFTNUr00zzWi0Ur70ZpL5WkWckB0IWFerF+lSVSHWt0bUffttEfpw7BzGrUqqyAugI
-         r2tLpQts92YL67LrGalmw6Q3q31t5zGIOPegBAww=
-Date:   Wed, 19 Feb 2020 08:39:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Joao.Pinto@synopsys.com, Jose.Abreu@synopsys.com,
-        bbrezillon@kernel.org, wsa@the-dreams.de, arnd@arndb.de,
-        broonie@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH v3 4/5] i3c: add i3cdev module to expose i3c dev in /dev
-Message-ID: <20200219073901.GC2728338@kroah.com>
-References: <cover.1582069402.git.vitor.soares@synopsys.com>
- <e093ae9da81e7702c188a20d1e8b9d7f8024bfeb.1582069402.git.vitor.soares@synopsys.com>
+        b=WsZ+BCR82tcyYc4ynfONnsUmrFGHOqTp+kYKtG2Tc4RMtjWj4+egICQcQKhPZUXBl
+         yWGt+REwNyTuwH57j7D97TIZ61cQknHNl+cscexYGXg+Dj2ePE/M5m+n5EWR4qDu39
+         JrRdJY1qO3wozgWOM6lF8XfvFflvqE/BIxT3L2l4=
+Date:   Wed, 19 Feb 2020 13:09:30 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dan.j.williams@intel.com, grygorii.strashko@ti.com, vigneshr@ti.com
+Subject: Re: [PATCH v2 0/6] dmaengine: ti: k3-udma: Fixes for 5.6
+Message-ID: <20200219073930.GD2618@vkoul-mobl>
+References: <20200214091441.27535-1-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e093ae9da81e7702c188a20d1e8b9d7f8024bfeb.1582069402.git.vitor.soares@synopsys.com>
+In-Reply-To: <20200214091441.27535-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:20:42AM +0100, Vitor Soares wrote:
-> +
-> +static DEFINE_IDA(i3cdev_ida);
+On 14-02-20, 11:14, Peter Ujfalusi wrote:
+> Hi Vinod,
+> 
+> Recently we have uncovered silicon and driver issues which was not addressed in
+> the initial driver:
+> 
+> 1. RX channel teardown will lock up the channel if we have stale data
+> in the DMA FIFOs and we don't have active transfer (no descriptor for UDMA).
+> The workaround is to use a dummy drain packet in these cases.
+> 
+> 2. Early TX completion handling
+> The delayed work approach was not working efficiently causing the UART, SPI
+> performance to degrade, with the patch from Vignesh we see 10x performance
+> increase
+> 
+> 3. TR setup for slave_sg
+> It was possible that the sg_len() was not multiple of 'burst * dev_width' and
+> because of this we ended up with incorrect TR setups.
+> Using a single function for TR setup makes things simpler and error prone among
+> slave_sg, cyclic and memcpy
+> 
+> 4. Pause/Resume causes kernel crash
+> if it was called when we did not had active transfer the uc->desc was NULL.
+> 
+> 5. The terminated cookie was never marked as completed
+> client will think that it is still in progress, which is not the case.
+> Also adding back the check for running channel in tx_status since if the channel
+> is not running then it implies that it has been terminated, so no transfer is
+> running.
 
-You never destroy this when the code is unloaded :(
+Applied to fixes
 
+Thanks
+
+-- 
+~Vinod
