@@ -2,133 +2,101 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B0FC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B0C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B622464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Dn2LM6/I"
+	by mail.kernel.org (Postfix) with ESMTP id 7A04524654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:44:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582127069;
+	bh=dMrXMbrs9gNU7fLzRfLtwAolv6etgSudzWhW2W2FRn8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IFumII8YAU9hH0FHNJIPdR4JdN3eV1O4bvU/ItJ1mqukZDNMYtk8lKH91+TOB6WiU
+	 Ct2ftwGaIpfcW05bFRH7CdHgeikxoEe/Ur9sNtmIav8HD9JyY6W4FWpgNUsVnonpgu
+	 mnB5EzjV206/FIM2FU6tNndYDIYNjTHsJKr3vXv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgBSPnH (ORCPT
+        id S1726717AbgBSPo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:43:07 -0500
-Received: from mail.efficios.com ([167.114.26.124]:34226 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgBSPnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:43:07 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 22FC92493D0;
-        Wed, 19 Feb 2020 10:43:06 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id qqBOxOztdkJl; Wed, 19 Feb 2020 10:43:05 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id DB6D92492E5;
-        Wed, 19 Feb 2020 10:43:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com DB6D92492E5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582126985;
-        bh=F+/vdu5pAZWzqj4UTYnyy130uOCt0HluNqHg8+kURaY=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Dn2LM6/Ip3rOfbochDsUS8wZ5WDY0vgo8z2AYSbk/UEtRPEdKAKNZalD9xkxRRKGG
-         xIebRmZTqKeFBhD85KZF1HIZiyhw8M1zvsluupHf9evznni7VJGHnht76y6JiVzKBw
-         aVeHKq0QBG3vlSIr135Dxuw2yJ9NWPZGdyQHVrhEkbzkPtmlTDJvv1oST5+iqQmeJG
-         rLerfJviGIxtX950z4ZjIIpnXx+FmMvnrM681XsDw8GjLPtPdqVbKDwlJskZzxmSHX
-         B2eVbOHejv+y3bffPOgPUo5mG3tpIfgTsGybTSCitYBycMIYwRWulrVAimntrIU3qP
-         MiiBdphPSe9bA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id T1ZgeZhYgiln; Wed, 19 Feb 2020 10:43:05 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id D09DF2490F7;
-        Wed, 19 Feb 2020 10:43:05 -0500 (EST)
-Date:   Wed, 19 Feb 2020 10:43:05 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200219151922.GB698990@mtj.thefacebook.com>
-References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com> <1317969050.4131.1581955387909.JavaMail.zimbra@efficios.com> <20200219151922.GB698990@mtj.thefacebook.com>
-Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+        Wed, 19 Feb 2020 10:44:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:51514 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbgBSPo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:44:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D0061FB;
+        Wed, 19 Feb 2020 07:44:27 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5C233F68F;
+        Wed, 19 Feb 2020 07:44:26 -0800 (PST)
+Date:   Wed, 19 Feb 2020 15:44:25 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/2] ASoC: meson: add t9015 internal DAC driver
+Message-ID: <20200219154425.GD4488@sirena.org.uk>
+References: <20200219133646.1035506-1-jbrunet@baylibre.com>
+ <20200219133646.1035506-3-jbrunet@baylibre.com>
+ <20200219145500.GC4488@sirena.org.uk>
+ <1ja75ey4vj.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: cpuset: offlined CPUs removed from affinity masks
-Thread-Index: 8hu3vhHS2xBMmIYziNvdsmK+FYUi6Q==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
+Content-Disposition: inline
+In-Reply-To: <1ja75ey4vj.fsf@starbuckisacylon.baylibre.com>
+X-Cookie: FORTH IF HONK THEN
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 19, 2020, at 10:19 AM, Tejun Heo tj@kernel.org wrote:
 
-> Hello,
-> 
-> On Mon, Feb 17, 2020 at 11:03:07AM -0500, Mathieu Desnoyers wrote:
->> Hi,
->> 
->> Adding Tejun and the cgroups mailing list in CC for this cpuset regression I
->> reported last month.
->> 
->> Thanks,
->> 
->> Mathieu
->> 
->> ----- On Jan 16, 2020, at 12:41 PM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->> 
->> > Hi,
->> > 
->> > I noticed the following regression with CONFIG_CPUSET=y. Note that
->> > I am not using cpusets at all (only using the root cpuset I'm given
->> > at boot), it's just configured in. I am currently working on a 5.2.5
->> > kernel. I am simply combining use of taskset(1) (setting the affinity
->> > mask of a process) and cpu hotplug. The result is that with
->> > CONFIG_CPUSET=y, setting the affinity mask including an offline CPU number
->> > don't keep that CPU in the affinity mask, and it is never put back when the
->> > CPU comes back online. CONFIG_CPUSET=n behaves as expected, and puts back
->> > the CPU into the affinity mask reported to user-space when it comes back
->> > online.
-> 
-> Because cpuset operations irreversibly change task affinity masks
-> rather than masking them dynamically, the interaction has always been
-> kinda broken. Hmm... Are there older kernel vesions which behave
-> differently? Off the top of my head, I can't think of sth which could
-> have changed that behavior recently but I could easily be missing
-> something.
+--JwB53PgKC5A7+0Ej
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Tejun,
+On Wed, Feb 19, 2020 at 04:27:12PM +0100, Jerome Brunet wrote:
+> On Wed 19 Feb 2020 at 15:55, Mark Brown <broonie@kernel.org> wrote:
 
-The regression I'm talking about here is that CONFIG_CPUSET=y changes the
-behavior of the sched_setaffinify system call, which existed prior to
-cpusets.
+> >> +	/* Channel Src */
+> >> +	SOC_ENUM("Right DAC Source", dacr_in_enum),
+> >> +	SOC_ENUM("Left DAC Source",  dacl_in_enum),
 
-sched_setaffinity should behave in the same way for kernels configured with
-CONFIG_CPUSET=y or CONFIG_CPUSET=n.
+> > Ideally these would be moved into DAPM (using an AIF_IN widget for the
+> > DAI).
 
-The fact that cpuset decides to irreversibly change the task affinity mask
-may not be considered a regression if it has always done that, but changing
-the behavior of sched_setaffinity seems to fit the definition of a regression.
+> I can (I initially did) but I don't think it is worth it.
 
-Thanks,
+> I would split Playback into 2 AIF for Left and Right, then add a mux to
+> select one them if front of both DAC. It will had 4 widgets and 6 routes
+> but it won't allow turn anything on or off. There is no PM improvement.
 
-Mathieu
+> Do you still want me to change this ?
 
+It can help us track things like external amps connected to the DACs,
+especially when we manage to get to the point of tracking individual
+audio streams over DAI links.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+--JwB53PgKC5A7+0Ej
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NV9gACgkQJNaLcl1U
+h9B1bggAg2Hke5eWreSl3h32yjHnSqSd3PP0FGDmBKiB8wwIidEnFIVCpcMesE/D
+a6aM9T+fI+H0uiiAhroMreYDklRU+cJaTcDHBfEHMiTB7p8WPTUiGjUz8ZwqbmTM
+rn93VmzRm+hGQj9oj6QGxUxpXQ2j3UKh/iXEa/SItvNP7/cGs/mPjpFZ5PLJjSvO
+2glHbvcvqLgm54cNrHsC/Wx4LbpVMznw1dXRXNkzi4sWgcpBNwVm6Rph32EijKuE
+W4klrGqOa2Oj0ha5e97b+cZbTONpIPgVrDfegcbcPf+EHsYevSyPS4Pzdk0mGNXI
+36fS/u8fbsdVLyq3L89UxhOXP6vvMw==
+=bIhx
+-----END PGP SIGNATURE-----
+
+--JwB53PgKC5A7+0Ej--
