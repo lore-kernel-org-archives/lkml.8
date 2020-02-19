@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486F8C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8796DC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187A624671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BBD824671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTtZpZ6o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzK2azsU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgBSPNN (ORCPT
+        id S1727187AbgBSPNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:13:13 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38744 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726791AbgBSPNL (ORCPT
+        Wed, 19 Feb 2020 10:13:16 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53439 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgBSPNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:13:11 -0500
-Received: by mail-wr1-f68.google.com with SMTP id e8so973916wrm.5;
-        Wed, 19 Feb 2020 07:13:09 -0800 (PST)
+        Wed, 19 Feb 2020 10:13:13 -0500
+Received: by mail-wm1-f65.google.com with SMTP id s10so1043740wmh.3;
+        Wed, 19 Feb 2020 07:13:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wmYxNZlHmk+e/dR3BUF4sjOLDFYl6cCNjL/czQpAEHY=;
-        b=YTtZpZ6oy/nsZrV+oEs9qIqANrUNBLoY3fNJwoQ7b0fRU/vn6XpyMR7P2jGrkeD+8o
-         GMNFgg3OcidBxMOlll/feM2ZtBWXB67Ajc0m2I5g9QpCQoaOstj2QCZ3L2ujGbXGyVCq
-         da7bIUcHoZ6NJP8nxXdn3cV6na0RHRXHa7sqFirrJIhDSuLnh15FGLz0MOg4Gegbt7Po
-         UBjwfMbPPXw5iQ9/78gSnVo9J6UeV1uXUY0CDyhzhOY8mLgd1ZmcCmkYe9Ai0sq71PUW
-         hk/spFNokYtRsAFxBSed6vNTWZIB4HviwccocUNc1pUL1qlpSw9M44GJBAom5mcokLIw
-         PtRA==
+        bh=1siZHdXNaBkFw2rS9GSsHRiEk1ELAmyftewPvXED4Ls=;
+        b=TzK2azsUyUxFfoF3HlF7nIMC7bJ/FXVouyxM17lSbHna89caQmxbe3YWkhGmpHCaam
+         Vya2jCyzfrsEx/G2NI6mqXcbhABH7xIGBqME7OV6641tAiPItALbLtpSaFUmSvgb6QVz
+         UWoksRXDGnX8sik9RP4VQCZw755YoXTQH2TyrycOtB69+LqLg7XRs5wyfgCQ00j7W/lj
+         /FLzb0yEeyVDp+4PHnd4g68e378qck3xcnRcEPGRSJwtAJpl9ldMw0DGH+CzEARGcn0m
+         tMe9t7tRGPQT9db2SdUlIDo7RxfOPrwGeJ8bwPGnvfNXmj4H47pQLDcFqsUB0uJrhvDb
+         KQMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=wmYxNZlHmk+e/dR3BUF4sjOLDFYl6cCNjL/czQpAEHY=;
-        b=ZPiuh8SDcaFzhdZnYQskxs3c4zx9ekIhWDxIwPBjnc5Te9q42VraSbVHeqOZxftHpq
-         d+A29JdGZAXAGBjxbVKETWMCjNy2lNo2lZp8rJcwT7OVXzoYlFEHnR3Uy4FVnFfq+Zmm
-         PsjPg3ULiBW8ddLxxkATp91kqPHTR6iv7P2pPhdbW8ZwwUqYEYAueNJFUISNUe61k7mo
-         zT5ZPKtzn36dVnqd3L46/vGw0RPxiCnqPJtDqx5QmlDfnuz1h6WJhwck0hkm/DxUNFEp
-         UT4PIW7t4wZqiJ/MoDbnBF91PTUdUZbujRs70Kper8XMKSEmU6icDCic0koTtCn/3KBy
-         OHFA==
-X-Gm-Message-State: APjAAAWK33XCkaVXkjJUOiQl0KeBl8YbqTBPm35bCCdNQWYToi6ZSWTw
-        9VYTdV/Z+PkBAgHCXthaIdM=
-X-Google-Smtp-Source: APXvYqwTMicfTcnQyclJDgkOo0qALGCtCrf/+mQ3VmUwi69x1NiIwaCvVgiHxmAZqCAtEHTOqSGpEA==
-X-Received: by 2002:a5d:6a07:: with SMTP id m7mr8852655wru.332.1582125188893;
-        Wed, 19 Feb 2020 07:13:08 -0800 (PST)
+        bh=1siZHdXNaBkFw2rS9GSsHRiEk1ELAmyftewPvXED4Ls=;
+        b=P3qDMBUaQIcRxwgRjYU3KlWH3Plh8Ro4w3pFDshKXF0Z3e5vvvDpVjVWiPQRbHvl3R
+         2gOeh9Dx9pEpuOWr1zpzf6mUyQRR1WrMOmR59dNC98Z3tPeeUyPIW3l2uJKS4HVi3xuf
+         XVhv4Bv7Dm2Wd+bwQL+ZchTOTjGrngxJ00LeiWb1YXYLfuDWfDtJQsqf2XIK7hxORQbB
+         j4Rgc/ffBZnpU8SNU1tKj42eaibisy3Lh495FEv1x16iqw2XGbclUMkDVbuOAQuY8NP+
+         w6XITMJqlYw5h+i2eZ69NVIjty0/xc/yhJSsdc52+R3OPpV4Tuc6sOtzCoMRVYNnuiZx
+         RS7A==
+X-Gm-Message-State: APjAAAWMb+ZiCHX4PMvprTJhCvJjKDBgjwcbTu6ns2fEWmbvMZRMnadf
+        547Du6fifqFFzlNtomFTivs=
+X-Google-Smtp-Source: APXvYqwdCwAzCaozbkbv6ha96uV1jT92Ce4KkcBwQ9jzEwI6Fe9SA/aL23M2V/VyvgeGUnrFiGL4Qg==
+X-Received: by 2002:a1c:5f06:: with SMTP id t6mr10819075wmb.32.1582125191399;
+        Wed, 19 Feb 2020 07:13:11 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.07
+        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:13:08 -0800 (PST)
+        Wed, 19 Feb 2020 07:13:10 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, davem@davemloft.net,
         netdev@vger.kernel.org
 Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot: document the vsc9959 core
-Date:   Wed, 19 Feb 2020 17:12:57 +0200
-Message-Id: <20200219151259.14273-4-olteanv@gmail.com>
+Subject: [PATCH v2 net-next/devicetree 5/5] arm64: dts: fsl: ls1028a: enable switch PHYs on RDB
+Date:   Wed, 19 Feb 2020 17:12:59 +0200
+Message-Id: <20200219151259.14273-6-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200219151259.14273-1-olteanv@gmail.com>
 References: <20200219151259.14273-1-olteanv@gmail.com>
@@ -73,126 +73,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-This patch adds the required documentation for the embedded L2 switch
-inside the NXP LS1028A chip.
+Link the switch PHY nodes to the central MDIO controller PCIe endpoint
+node on LS1028A (implemented as PF3) so that PHYs are accessible via
+MDIO.
 
-I've submitted it in the legacy format instead of yaml schema, because
-DSA itself has not yet been converted to yaml, and this driver defines
-no custom bindings.
+Enable SGMII AN on the Felix PCS by telling PHYLINK that the VSC8514
+quad PHY is capable of in-band-status.
 
+The PHYs are used in poll mode due to an issue with the interrupt line
+on current revisions of the LS1028A-RDB board.
+
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
 Changes in v2:
-Adapted phy-mode = "gmii" to phy-mode = "internal".
+None.
 
- .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
+ .../boot/dts/freescale/fsl-ls1028a-rdb.dts    | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
-new file mode 100644
-index 000000000000..a9d86e09dafa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
-@@ -0,0 +1,96 @@
-+Microchip Ocelot switch driver family
-+=====================================
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index afb55653850d..9353c00e46a7 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -194,6 +194,57 @@
+ 	status = "disabled";
+ };
+ 
++&enetc_mdio_pf3 {
++	/* VSC8514 QSGMII quad PHY */
++	qsgmii_phy0: ethernet-phy@10 {
++		reg = <0x10>;
++	};
 +
-+Felix
-+-----
++	qsgmii_phy1: ethernet-phy@11 {
++		reg = <0x11>;
++	};
 +
-+The VSC9959 core is currently the only switch supported by the driver, and is
-+found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
-+complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
-+complex node and its "reg" property conforms to the parent node bindings:
++	qsgmii_phy2: ethernet-phy@12 {
++		reg = <0x12>;
++	};
 +
-+* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
-+  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
-+
-+It does not require a "compatible" string.
-+
-+The interrupt line is used to signal availability of PTP TX timestamps and for
-+TSN frame preemption.
-+
-+For the external switch ports, depending on board configuration, "phy-mode" and
-+"phy-handle" are populated by board specific device tree instances. Ports 4 and
-+5 are fixed as internal ports in the NXP LS1028A instantiation.
-+
-+Any port can be disabled, but the CPU port should be kept enabled.
-+
-+The CPU port property ("ethernet"), which is assigned by default to the 2.5Gbps
-+port@4, can be moved to the 1Gbps port@5, depending on the specific use case.
-+DSA tagging is supported on a single port at a time.
-+
-+For the rest of the device tree binding definitions, which are standard DSA and
-+PCI, refer to the following documents:
-+
-+Documentation/devicetree/bindings/net/dsa/dsa.txt
-+Documentation/devicetree/bindings/pci/pci.txt
-+
-+Example:
-+
-+&soc {
-+	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
-+		ethernet-switch@0,5 {
-+			reg = <0x000500 0 0 0 0>;
-+			/* IEP INT_B */
-+			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				/* External ports */
-+				port@0 {
-+					reg = <0>;
-+					label = "swp0";
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "swp1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "swp2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "swp3";
-+				};
-+
-+				/* Tagging CPU port */
-+				port@4 {
-+					reg = <4>;
-+					ethernet = <&enetc_port2>;
-+					phy-mode = "internal";
-+
-+					fixed-link {
-+						speed = <2500>;
-+						full-duplex;
-+					};
-+				};
-+
-+				/* Non-tagging CPU port */
-+				port@5 {
-+					reg = <5>;
-+					phy-mode = "internal";
-+					status = "disabled";
-+
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+			};
-+		};
++	qsgmii_phy3: ethernet-phy@13 {
++		reg = <0x13>;
 +	};
 +};
++
++&mscc_felix_port0 {
++	status = "okay";
++	label = "swp0";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy0>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port1 {
++	status = "okay";
++	label = "swp1";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy1>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port2 {
++	status = "okay";
++	label = "swp2";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy2>;
++	phy-mode = "qsgmii";
++};
++
++&mscc_felix_port3 {
++	status = "okay";
++	label = "swp3";
++	managed = "in-band-status";
++	phy-handle = <&qsgmii_phy3>;
++	phy-mode = "qsgmii";
++};
++
+ &sai4 {
+ 	status = "okay";
+ };
 -- 
 2.17.1
 
