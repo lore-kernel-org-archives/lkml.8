@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1EFFC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF90C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C29524654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55CD24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582114783;
-	bh=3qlQaNnljrjKc6kTfdEHEH7GOaqiJKE0UHCyGlk27r0=;
+	s=default; t=1582114810;
+	bh=umQ4SKOLayJpADzjnV+3+JTUjA7J2bacWdC3K1bXCVY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XYAxVqSqx9JcL5ylFdIQBynL2UtcE2ZIMTt/2if8zceKLcWMRB0UJvHGCgjt2mZgm
-	 eiXpVI7+IydFG+PlWakF+YbTA1OZ1WpWvqZgjEcH+pG4KizsXy08gnLipqepxQr/x+
-	 JIkk/nFlzPVAHQ3pF1IKX6MghWJsXQK/R4+NtRnk=
+	b=fDPzTd7QEoF2cMy6GqdaQ7zh1xwBB332QaxJ8HYwDSySG3Xc7cowlZSMpF0MmK7kx
+	 2ebsj2ddprgt4N/CkGhWnRBy867Z+r0+Cnh+1n/NG24aZIXQLz7yhV+zXQxKjoWIgw
+	 5mhwmlozWmjFZvcDSLHwSAA61MMix4XtQNxC/FYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgBSMTm (ORCPT
+        id S1727485AbgBSMUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:19:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42766 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 07:20:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgBSMTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:19:42 -0500
+        id S1726514AbgBSMUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:20:09 -0500
 Received: from localhost (unknown [106.201.32.165])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4A46206EF;
-        Wed, 19 Feb 2020 12:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F30206EF;
+        Wed, 19 Feb 2020 12:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582114781;
-        bh=3qlQaNnljrjKc6kTfdEHEH7GOaqiJKE0UHCyGlk27r0=;
+        s=default; t=1582114808;
+        bh=umQ4SKOLayJpADzjnV+3+JTUjA7J2bacWdC3K1bXCVY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hzAw6yKdrIeP2fvdG7r+0HFXbf3YyAJkINJj5eDwB5yzQZuZkbh/7IqefsLnvf5u3
-         /F7fEQLZiZHEVUj7RbAIbNpdpN7wjrs3AgQHHghWPRp00TvJEKQU3PZsSf4bGOF7pw
-         eLxuuS7qC/lCftaiBw+oHi31FMz7qZrM7iGIRtBc=
-Date:   Wed, 19 Feb 2020 17:49:37 +0530
+        b=yzrGPBd+oMrtgzLBfcPKULQ5GZHRdw8nM1eaeupegNNel9F025wXmSXdahGxb3xHf
+         7i2nrECYzAWc66Be6Uf6gBiUoiqB800uOlP7Y9p2MbX/8qwlLLda8jCHUwn2Kar+Z4
+         PG2LG1DZasQaLIuQKw0lEcLD6cnCVyb0iNbCfmf0=
+Date:   Wed, 19 Feb 2020 17:50:04 +0530
 From:   Vinod Koul <vkoul@kernel.org>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: tegra210-adma: Replace zero-length array with
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: sprd: Replace zero-length array with
  flexible-array member
-Message-ID: <20200219121937.GK2618@vkoul-mobl>
-References: <20200214171657.GA25663@embeddedor>
+Message-ID: <20200219122004.GL2618@vkoul-mobl>
+References: <20200214171536.GA24077@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200214171657.GA25663@embeddedor>
+In-Reply-To: <20200214171536.GA24077@embeddedor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14-02-20, 11:16, Gustavo A. R. Silva wrote:
+On 14-02-20, 11:15, Gustavo A. R. Silva wrote:
 > The current codebase makes use of the zero-length array language
 > extension to the C90 standard, but the preferred mechanism to declare
 > variable-length types such as these ones is a flexible array member[1][2],
