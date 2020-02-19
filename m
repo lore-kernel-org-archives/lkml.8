@@ -2,98 +2,143 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74445C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC0EC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 477A92176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582098623;
-	bh=n9/IYLfWjgkCKFVGCPxr4KX26RCkPAV8w7mDru6LtEM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ZeuMh7lgBHok4h2g52CntpPAFHHPPuYZsFNd02JEXg8Gzkk3eu0mdb9dK8D5D35c1
-	 JfPLbo4JfidOOgox3i2vkjgI7tF+6KskvzFBKSpuNxIMtIsFO/7TXUhqvRxJzHOSo0
-	 dYRPkUtHn2erT8ldvk6ainOtzoqL6B7WyLQGOkoY=
+	by mail.kernel.org (Postfix) with ESMTP id E811121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vDd3UE8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBSHuW (ORCPT
+        id S1727291AbgBSHub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgBSHuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:50:21 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46494208E4;
-        Wed, 19 Feb 2020 07:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582098621;
-        bh=n9/IYLfWjgkCKFVGCPxr4KX26RCkPAV8w7mDru6LtEM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vDMncoWz6cyx/LEWprHHL1KKF8u2M0zVhoV3U7QW96vnLDpV9SpUz/C8WhZ/F6KQ9
-         YncQJYbHErBSsNhGEwfBpLM0CHztjSaRJpeHZxAq+YnK2huwndGdG3vj4fJlNo7pip
-         GuGWPMKe8h+xvf5GvRLEulvNK6ibg/YYZE7740ro=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4K7f-006RxB-Dt; Wed, 19 Feb 2020 07:50:19 +0000
-Date:   Wed, 19 Feb 2020 07:50:17 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 09/12] arm64: disable SCS for hypervisor code
-Message-ID: <20200219075017.41e17f08@why>
-In-Reply-To: <20200219000817.195049-10-samitolvanen@google.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
-        <20200219000817.195049-1-samitolvanen@google.com>
-        <20200219000817.195049-10-samitolvanen@google.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 19 Feb 2020 02:50:31 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42458 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgBSHua (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:50:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=8mFw61Czqg56/JxSmBKdUElYWIaIMTtisEbvrwNrP2k=; b=vDd3UE8R4dQygKI901pT7mIRLT
+        idFLmDlF/QiEq0wgvfbAD1gc9ivo1jGIjMKt3jONTogs+pWxEfvC6JN/gfmiLzyJ4bfCD8ufAIMiq
+        MYaebz1SFBThc64yw1bd5sP/m0EAHVXvi++NXX8sqylLQqo2R22QSdXPY4MBENp67jwJ1RHwfWuKv
+        WtEAT9w3xuQ7QEcDpU6HzzMF+BoHhI5H+OBM/+tdNi+CGqGd81YK71vRb6NG7QSKyDsm73PcqD0q1
+        2X3ipwMefMUaNNDeUxXOg7pYYMAo8LKz2L9rRqocTaG5G7lxa3sVz9qs318H5mChwfQr/M2XE/wrV
+        sElu2zAg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4K7q-0003cQ-2R; Wed, 19 Feb 2020 07:50:30 +0000
+Subject: Re: [PATCH v3 2/4] thermal: k3: Add support for bandgap sensors
+To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com,
+        robh+dt@kernel.org, daniel.lezcano@linaro.org
+Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        mark.rutland@arm.com
+References: <20200219074314.22829-1-j-keerthy@ti.com>
+ <20200219074314.22829-3-j-keerthy@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
+Date:   Tue, 18 Feb 2020 23:50:29 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200219074314.22829-3-j-keerthy@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: samitolvanen@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, mhiramat@kernel.org, ard.biesheuvel@linaro.org, mark.rutland@arm.com, james.morse@arm.com, Dave.Martin@arm.com, keescook@chromium.org, labbott@redhat.com, ndesaulniers@google.com, jannh@google.com, miguel.ojeda.sandonis@gmail.com, yamada.masahiro@socionext.com, clang-built-linux@googlegroups.com, kernel-hardening@lists.openwall.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 16:08:14 -0800
-Sami Tolvanen <samitolvanen@google.com> wrote:
-
-> Disable SCS for code that runs at a different exception level by
-> adding __noscs to __hyp_text.
+On 2/18/20 11:43 PM, Keerthy wrote:
+> The bandgap provides current and voltage reference for its internal
+> circuits and other analog IP blocks. The analog-to-digital
+> converter (ADC) produces an output value that is proportional
+> to the silicon temperature.
 > 
-> Suggested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Currently reading temperatures and trend computing is supported
+> as there are no active/passive cooling agent supported.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  drivers/thermal/Kconfig      |  12 ++
+>  drivers/thermal/Makefile     |   1 +
+>  drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 355 insertions(+)
+>  create mode 100644 drivers/thermal/k3_bandgap.c
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 5a05db5438d6..fa598eddc7ac 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -251,6 +251,18 @@ config IMX_THERMAL
+>  	  cpufreq is used as the cooling device to throttle CPUs when the
+>  	  passive trip is crossed.
+>  
+> +config K3_THERMAL
+> +	bool "Texas Instruments K3 thermal support"
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Hi,
+Why is this bool and not tristate?
 
-	M.
+> +	depends on THERMAL
+> +	depends on ARCH_K3 || COMPILE_TEST
+> +	help
+> +	  If you say yes here you get thermal support for the Texas Instruments
+> +	  K3 SoC family. The current chip supported is:
+> +	   - AM654
+> +
+> +	  This includes temperature reading functionality and also trend
+> +	  computation.
+> +
+>  config MAX77620_THERMAL
+>  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
+>  	depends on MFD_MAX77620
+
+> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
+> new file mode 100644
+> index 000000000000..35d904eb9857
+> --- /dev/null
+> +++ b/drivers/thermal/k3_bandgap.c
+> @@ -0,0 +1,342 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * TI Bandgap temperature sensor driver for K3 SoC Family
+> + *
+> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
+> + */
+
+> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
+> +			    int *temp)
+> +{
+> +	struct k3_bandgap *bgp;
+> +	unsigned int dtemp, s0, s1, s2;
+> +
+> +	bgp = devdata->bgp;
+> +	/**
+
+"/**" is used to indicate kernel-doc notation in the Linux kernel source files,
+but this comment is not kernel-doc notation, so please just use "/*".
+
+> +	 * Errata is applicable for am654 pg 1.0 silicon. There
+> +	 * is a variation of the order for 8-10 degree centigrade.
+> +	 * Work around that by getting the average of two closest
+> +	 * readings out of three readings everytime we want to
+> +	 * report temperatures.
+> +	 *
+> +	 * Errata workaround.
+> +	 */
+thanks.
 -- 
-Jazz is not dead. It just smells funny...
+~Randy
+
