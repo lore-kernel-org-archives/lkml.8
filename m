@@ -2,111 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19F1C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFDEC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A536924654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E74724654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FE/HzTIW"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="b+UsIt9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgBSQha (ORCPT
+        id S1727224AbgBSQhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:37:30 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33404 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgBSQh3 (ORCPT
+        Wed, 19 Feb 2020 11:37:37 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45859 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgBSQhh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:37:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ATFMy7Dum3060ZAyi2NRjS1WAIXLYlwbWtyija4Q0rE=; b=FE/HzTIWk+zXHj0cI9IFhC+X4j
-        IWC0J0zgnd27I6HNEbSnLSVnyRGZZmkiIstwRTUQdEmwu/Olwq8Ut9Tjv0o4+mGJgISsdPs3RNWgB
-        SrrZkpyhB2ODFlBFMF6J0PUXmb8R7hPNzndre4+tYSXElbn4CEMYes4KLwvdBZxRyFm4+EPNk8A3N
-        X/9yJEvPajo9IUhrsYFmglojOZrHjlYAP4aBv0XFK4IdgyFoSMQZKKBGEq4Pp6Ctvc4+CvXI5uQlz
-        FLGuU/IUWFenkzx0S8dp+rsqyK9lK0kMY9swJlN3T9U4RsbCuA9CUOxV7GUQUsyEToyC0Gq/ehXob
-        96+qymlw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4SLO-0000zm-CI; Wed, 19 Feb 2020 16:37:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7D7F3300606;
-        Wed, 19 Feb 2020 17:35:08 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E51122B9553C1; Wed, 19 Feb 2020 17:37:00 +0100 (CET)
-Date:   Wed, 19 Feb 2020 17:37:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v3 05/22] rcu: Make RCU IRQ enter/exit functions rely on
- in_nmi()
-Message-ID: <20200219163700.GK18400@hirez.programming.kicks-ass.net>
-References: <20200219144724.800607165@infradead.org>
- <20200219150744.661923520@infradead.org>
- <20200219163156.GY2935@paulmck-ThinkPad-P72>
+        Wed, 19 Feb 2020 11:37:37 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so694270otp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:37:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iSsfOBW1rnJ26Vr6Y/Sa9MI6os2MsKzLmHRcdZqPPC0=;
+        b=b+UsIt9fkyZ8iGryZtZyohqg6R/VATs/6iMW6i+XQK4N741jwE+n2AxK3dUsh/6+K5
+         eIXmCJbSkd+LUj3iTJWRNAoUVUC5Tu1X4c4Ki8zsO9y3sMxr7U/9dSxyh3C1p5sNHi0N
+         SYGQvadeUGkkREFLoJJmmXVn8Og9pU/vFCDSai+QYtX1CoxYoZ4J2oefAAAI2jDnmp4f
+         ofBrFqRdVSYxa4nW8Hfr8WaXxsxpK4+hlQU8YmsHgAjjYASEkKJyyo2KarfXQjGSf5Ot
+         vOAVan65Ipr039hQ7zjiwohZ65MislEBrHxR4J12En4Gvncpct4/+pVgSqAuWrPJX47O
+         likg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iSsfOBW1rnJ26Vr6Y/Sa9MI6os2MsKzLmHRcdZqPPC0=;
+        b=UiJ2P3zAZdgCvMfQI9b+kz35td+iIIz89ac4NIX4yIlOUfiOoP+CtCjqNcqJQaDnZt
+         hGJfNg2JeEvP1HAdXPhxX6rk3/LmpNGFPdwl1mrVDWh+uD88Sd/5WhxZmYVyDdO1TV6f
+         cVV5PAbv552Zw1AC8w3b5AjIDTHx/nodH/DMMUG5EABYpaqGTYEP5EzWN2dHlugzvAG1
+         1oKDovxAOaSX0MxouVC7SBkmN3WG3rZyzX6OiNJ4WtX+4kqDcNSZ2LsyPFtAM5wwuE0R
+         SgMCHGhgzhbrWm80n6HmE9t2KYG2qCgNq+g5ZSh6XmqtHPReEvFLrqad3anbkBF3kHjS
+         uOXQ==
+X-Gm-Message-State: APjAAAWABR7Fk27XVMrpzZTF/7KT4WScncTbvCr8JufqpQDr61b082vX
+        wF6xw35klzEfgTi31RRQlVHhquplo/sXqYI7Ot+YnQ==
+X-Google-Smtp-Source: APXvYqwlpfAoafRtm4MF7B/l/TtM6lSjeomq1oF/grFfaR6O1EaCjOchOyx7IWgEAjiqs1obxb+eI0nE9T+m5Tre94c=
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr20935125otk.363.1582130256442;
+ Wed, 19 Feb 2020 08:37:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219163156.GY2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200219030454.4844-1-bhe@redhat.com> <CAPcyv4iZCnSpypshYpXCL35yT4KZfgXqDqS8cFDGpXC-A72Utg@mail.gmail.com>
+ <20200219085700.GB32242@linux.ibm.com>
+In-Reply-To: <20200219085700.GB32242@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 19 Feb 2020 08:37:25 -0800
+Message-ID: <CAPcyv4isoKSo2TtP3_VzdPQwdfc2O=KAv44LkqSSTccP7Cnh7A@mail.gmail.com>
+Subject: Re: [PATCH v2 RESEND] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 08:31:56AM -0800, Paul E. McKenney wrote:
-> On Wed, Feb 19, 2020 at 03:47:29PM +0100, Peter Zijlstra wrote:
-> > From: Paul E. McKenney <paulmck@kernel.org>
-> > 
-> > The rcu_nmi_enter_common() and rcu_nmi_exit_common() functions take an
-> > "irq" parameter that indicates whether these functions are invoked from
-> > an irq handler (irq==true) or an NMI handler (irq==false).  However,
-> > recent changes have applied notrace to a few critical functions such
-> > that rcu_nmi_enter_common() and rcu_nmi_exit_common() many now rely
-> > on in_nmi().  Note that in_nmi() works no differently than before,
-> > but rather that tracing is now prohibited in code regions where in_nmi()
-> > would incorrectly report NMI state.
-> > 
-> > This commit therefore removes the "irq" parameter and inlines
-> > rcu_nmi_enter_common() and rcu_nmi_exit_common() into rcu_nmi_enter()
-> > and rcu_nmi_exit(), respectively.
-> > 
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Again, thank you.
-> 
-> Would you like to also take the added comment for NOKPROBE_SYMBOL(),
-> or would you prefer that I carry that separately?  (I dropped it for
-> now to avoid the conflict with the patch below.)
-> 
-> Here is the latest version of that comment, posted by Steve Rostedt.
-> 
-> 							Thanx, Paul
-> 
-> /*
->  * All functions called in the breakpoint trap handler (e.g. do_int3()
->  * on x86), must not allow kprobes until the kprobe breakpoint handler
->  * is called, otherwise it can cause an infinite recursion.
->  * On some archs, rcu_nmi_enter() is called in the breakpoint handler
->  * before the kprobe breakpoint handler is called, thus it must be
->  * marked as NOKPROBE.
->  */
+On Wed, Feb 19, 2020 at 12:57 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Tue, Feb 18, 2020 at 07:25:15PM -0800, Dan Williams wrote:
+> > On Tue, Feb 18, 2020 at 7:05 PM Baoquan He <bhe@redhat.com> wrote:
+> > >
+> > > From: Wei Yang <richardw.yang@linux.intel.com>
+> > >
+> > > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+> > > doesn't work before sparse_init_one_section() is called. This leads to a
+> > > crash when hotplug memory:
+> >
+> > I'd also add:
+> >
+> > "On x86 the impact is limited to x86_32 builds, or x86_64
+> > configurations that override the default setting for
+> > SPARSEMEM_VMEMMAP".
+>
+> Do we also want to check how it affects, say, arm64, ia64 and ppc? ;-)
 
-Oh right, let me stick that in a separate patch. Best we not loose that
-I suppose ;-)
+Sure, I just did not take the time to look up their respective default
+stances on SPARSEMEM_VMEMMAP. For a distro looking to backport this
+commit I think it's helpful for them to understand if they are exposed
+or not.
