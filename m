@@ -2,119 +2,280 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2928C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4735C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C805720801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41A820801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nZo1hfcm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBSSbs (ORCPT
+        id S1726701AbgBSScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:31:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32648 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726609AbgBSSbs (ORCPT
+        Wed, 19 Feb 2020 13:32:36 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:51108 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgBSScg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:31:48 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JIMMO5125013
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:31:46 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubsfvqq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:31:46 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 19 Feb 2020 18:31:44 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 18:31:41 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JIVemN28770560
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 18:31:40 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 906E2AE051;
-        Wed, 19 Feb 2020 18:31:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4AE03AE045;
-        Wed, 19 Feb 2020 18:31:38 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.205.46])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 19 Feb 2020 18:31:38 +0000 (GMT)
-Date:   Wed, 19 Feb 2020 19:31:35 +0100
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Baoquan He <bhe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v2 RESEND] mm/sparsemem: pfn_to_page is not valid yet on
- SPARSEMEM
-References: <20200219030454.4844-1-bhe@redhat.com>
- <CAPcyv4iZCnSpypshYpXCL35yT4KZfgXqDqS8cFDGpXC-A72Utg@mail.gmail.com>
- <20200219085700.GB32242@linux.ibm.com>
- <CAPcyv4isoKSo2TtP3_VzdPQwdfc2O=KAv44LkqSSTccP7Cnh7A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4isoKSo2TtP3_VzdPQwdfc2O=KAv44LkqSSTccP7Cnh7A@mail.gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20021918-0020-0000-0000-000003ABB057
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021918-0021-0000-0000-00002203B29E
-Message-Id: <20200219183135.GA10266@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_05:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=1 spamscore=0
- mlxlogscore=665 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002190140
+        Wed, 19 Feb 2020 13:32:36 -0500
+Received: by mail-pj1-f73.google.com with SMTP id z12so676019pju.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:32:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zFruNTKZBAM8RkLpTspdsuM2wT5ff3lBQN6EhMK/Qfs=;
+        b=nZo1hfcm/opYasop1hhcJdvlI7Hd58D/ghHgn6ziaB7sOH5bRpIcqSxkKEAiSQBr2L
+         rXeKmlDaDHIOo7qmdUez3nIJdpiOMWZ4F1Zk4kK2toKh0dyCr4BaYArxc1MQ7YNnr9Vt
+         t6xNia7JOHOyr88t3SAudJtU/OaXuGX+FADLu2SDEcD6AIesqTXQuPuLtw+s4GVluJk6
+         FV7f5eY6SbC+zRBGB2lUvUB/4pHwGjnvjaa+jklZ5S3qWgBel8XccGjLA2jpQqTIAuQ7
+         UGxu7jfJ5Zpp7/FpQh/7h+7WMevcjeNEq5nNbzdnZhBFRStGiD6XNk2anBdaUo5Stdbz
+         Pj3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zFruNTKZBAM8RkLpTspdsuM2wT5ff3lBQN6EhMK/Qfs=;
+        b=HBouY3T7iQjB7Fr+XRuAaD8ZnNqt49C2BW2nTu8RoJ+WDsc2doaxxFm9r4XVC1HHnD
+         gYZl61qcvc4ArFXuaQKFdleaqOGgC7+hSrMuDdnc5qbwde/tL12N8AH3AfiaTvlI7zqi
+         R0eCk/jApGrd2QP5dnitcLOtB0U7rri1psFKRfYe4zheK58sQwaheICqTQ1Ek2IqiLrK
+         s7JJ4JSLqoztuo27q65KG/SbB+3Cu4JrgAi8xdfuLiWh+hB0hsOYUoU5LKTIaL7be1/d
+         KQcMYOIi5wj6G1LPNdL3AnmN2fhYkt+hUM7iHlwVF1TVs0fuVKOhvVvwkoaeJpwDWbmU
+         tcNw==
+X-Gm-Message-State: APjAAAXjfWUbPAyNwFurxyZJQ0GruwRcIH2qbUZK+OcZCvZN0jrKFlvr
+        cDBNa51/lhEC0C5SjGUlCbGKITDubvE=
+X-Google-Smtp-Source: APXvYqxhvcKVw/diJCynlqB2lru85+53G3ZpgZcqbCpYVEhha2J9sASo3WL4GOAjY/i8V+Vj8zO6KgdEM0A=
+X-Received: by 2002:a65:67c5:: with SMTP id b5mr5600943pgs.138.1582137155236;
+ Wed, 19 Feb 2020 10:32:35 -0800 (PST)
+Date:   Wed, 19 Feb 2020 10:32:31 -0800
+Message-Id: <20200219183231.50985-1-balejs@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH] cgroup-v1: freezer: optionally killable freezer
+From:   Marco Ballesio <balejs@google.com>
+To:     tj@kernel.org, guro@fb.com, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org, corbet@lwn.net, rjw@rjwysocki.net,
+        pavel@ucw.cz, len.brown@intel.com, linux-doc@vger.kernel.org,
+        linux-pm@vger.kernel.org, minchan@google.com, surenb@google.com,
+        dancol@google.com
+Cc:     Marco Ballesio <balejs@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 08:37:25AM -0800, Dan Williams wrote:
-> On Wed, Feb 19, 2020 at 12:57 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > On Tue, Feb 18, 2020 at 07:25:15PM -0800, Dan Williams wrote:
-> > > On Tue, Feb 18, 2020 at 7:05 PM Baoquan He <bhe@redhat.com> wrote:
-> > > >
-> > > > From: Wei Yang <richardw.yang@linux.intel.com>
-> > > >
-> > > > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
-> > > > doesn't work before sparse_init_one_section() is called. This leads to a
-> > > > crash when hotplug memory:
-> > >
-> > > I'd also add:
-> > >
-> > > "On x86 the impact is limited to x86_32 builds, or x86_64
-> > > configurations that override the default setting for
-> > > SPARSEMEM_VMEMMAP".
-> >
-> > Do we also want to check how it affects, say, arm64, ia64 and ppc? ;-)
-> 
-> Sure, I just did not take the time to look up their respective default
-> stances on SPARSEMEM_VMEMMAP. For a distro looking to backport this
-> commit I think it's helpful for them to understand if they are exposed
-> or not.
+The cgroup v2 freezer allows killing frozen processes without the need
+to unfreeze them first. This is not possible with the v1 freezer, where
+processes are to be unfrozen prior any pending kill signals to take effect.
 
-Looks like only i386_defconfig does not enable SPARSEMEM_VMEMMAP. All the
-rest may have it disabled only with manual override.
+Add a configurable option to allow killing frozen tasks in a way similar to
+cgroups v2. Change the status of frozen tasks to TASK_INTERRUPTIBLE and reset
+their PF_FROZEN flag on pending fatal signals.
 
+Use the run-time configurable option freezer.killable to enable killability,
+preserve the pre-existing behavior by default.
+
+Signed-off-by: Marco Ballesio <balejs@google.com>
+---
+ .../cgroup-v1/freezer-subsystem.rst           | 12 ++++
+ include/linux/freezer.h                       |  1 +
+ kernel/cgroup/legacy_freezer.c                | 69 ++++++++++++++++++-
+ kernel/freezer.c                              | 20 +++++-
+ 4 files changed, 98 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst b/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
+index 582d3427de3f..06485ae9dccd 100644
+--- a/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
++++ b/Documentation/admin-guide/cgroup-v1/freezer-subsystem.rst
+@@ -94,6 +94,18 @@ The following cgroupfs files are created by cgroup freezer.
+   Shows the parent-state.  0 if none of the cgroup's ancestors is
+   frozen; otherwise, 1.
+ 
++* freezer.killable: Read-write
++
++  When read, returns the killable state of a cgroup - "1" if frozen
++  tasks will respond to fatal signals, or "0" if they won't.
++
++  When written, this property sets the killable state of the cgroup.
++  A value equal to "1" will switch the state of all frozen tasks in
++  the cgroup to TASK_INTERRUPTIBLE (similarly to cgroup v2) and will
++  make them react to fatal signals. A value of "0" will switch the
++  state of frozen tasks to TASK_UNINTERRUPTIBLE and they won't respond
++  to signals unless thawed or unfrozen.
++
+ The root cgroup is non-freezable and the above interface files don't
+ exist.
+ 
+diff --git a/include/linux/freezer.h b/include/linux/freezer.h
+index 21f5aa0b217f..1443810ac2bf 100644
+--- a/include/linux/freezer.h
++++ b/include/linux/freezer.h
+@@ -72,6 +72,7 @@ extern bool set_freezable(void);
+ 
+ #ifdef CONFIG_CGROUP_FREEZER
+ extern bool cgroup_freezing(struct task_struct *task);
++extern bool cgroup_freezer_killable(struct task_struct *task);
+ #else /* !CONFIG_CGROUP_FREEZER */
+ static inline bool cgroup_freezing(struct task_struct *task)
+ {
+diff --git a/kernel/cgroup/legacy_freezer.c b/kernel/cgroup/legacy_freezer.c
+index 08236798d173..5bbc26c4b822 100644
+--- a/kernel/cgroup/legacy_freezer.c
++++ b/kernel/cgroup/legacy_freezer.c
+@@ -35,6 +35,7 @@ enum freezer_state_flags {
+ 	CGROUP_FREEZING_SELF	= (1 << 1), /* this freezer is freezing */
+ 	CGROUP_FREEZING_PARENT	= (1 << 2), /* the parent freezer is freezing */
+ 	CGROUP_FROZEN		= (1 << 3), /* this and its descendants frozen */
++	CGROUP_FREEZER_KILLABLE = (1 << 4), /* frozen pocesses can be killed */
+ 
+ 	/* mask for all FREEZING flags */
+ 	CGROUP_FREEZING		= CGROUP_FREEZING_SELF | CGROUP_FREEZING_PARENT,
+@@ -73,6 +74,17 @@ bool cgroup_freezing(struct task_struct *task)
+ 	return ret;
+ }
+ 
++bool cgroup_freezer_killable(struct task_struct *task)
++{
++	bool ret;
++
++	rcu_read_lock();
++	ret = task_freezer(task)->state & CGROUP_FREEZER_KILLABLE;
++	rcu_read_unlock();
++
++	return ret;
++}
++
+ static const char *freezer_state_strs(unsigned int state)
+ {
+ 	if (state & CGROUP_FROZEN)
+@@ -111,9 +123,15 @@ static int freezer_css_online(struct cgroup_subsys_state *css)
+ 
+ 	freezer->state |= CGROUP_FREEZER_ONLINE;
+ 
+-	if (parent && (parent->state & CGROUP_FREEZING)) {
+-		freezer->state |= CGROUP_FREEZING_PARENT | CGROUP_FROZEN;
+-		atomic_inc(&system_freezing_cnt);
++	if (parent) {
++		if (parent->state & CGROUP_FREEZER_KILLABLE)
++			freezer->state |= CGROUP_FREEZER_KILLABLE;
++
++		if (parent->state & CGROUP_FREEZING) {
++			freezer->state |= CGROUP_FREEZING_PARENT |
++					CGROUP_FROZEN;
++			atomic_inc(&system_freezing_cnt);
++		}
+ 	}
+ 
+ 	mutex_unlock(&freezer_mutex);
+@@ -450,6 +468,45 @@ static u64 freezer_parent_freezing_read(struct cgroup_subsys_state *css,
+ 	return (bool)(freezer->state & CGROUP_FREEZING_PARENT);
+ }
+ 
++static u64 freezer_killable_read(struct cgroup_subsys_state *css,
++				     struct cftype *cft)
++{
++	struct freezer *freezer = css_freezer(css);
++
++	return (bool)(freezer->state & CGROUP_FREEZER_KILLABLE);
++}
++
++static int freezer_killable_write(struct cgroup_subsys_state *css,
++				      struct cftype *cft, u64 val)
++{
++	struct freezer *freezer = css_freezer(css);
++
++	if (val > 1)
++		return -EINVAL;
++
++	mutex_lock(&freezer_mutex);
++
++	if (val == !!(freezer->state & CGROUP_FREEZER_KILLABLE))
++		goto out;
++
++	if (val)
++		freezer->state |= CGROUP_FREEZER_KILLABLE;
++	else
++		freezer->state &= ~CGROUP_FREEZER_KILLABLE;
++
++
++	/*
++	 * Let __refrigerator spin once for each task to set it into the
++	 * appropriate state.
++	 */
++	unfreeze_cgroup(freezer);
++
++out:
++	mutex_unlock(&freezer_mutex);
++
++	return 0;
++}
++
+ static struct cftype files[] = {
+ 	{
+ 		.name = "state",
+@@ -467,6 +524,12 @@ static struct cftype files[] = {
+ 		.flags = CFTYPE_NOT_ON_ROOT,
+ 		.read_u64 = freezer_parent_freezing_read,
+ 	},
++	{
++		.name = "killable",
++		.flags = CFTYPE_NOT_ON_ROOT,
++		.write_u64 = freezer_killable_write,
++		.read_u64 = freezer_killable_read,
++	},
+ 	{ }	/* terminate */
+ };
+ 
+diff --git a/kernel/freezer.c b/kernel/freezer.c
+index dc520f01f99d..92de1bfe62cf 100644
+--- a/kernel/freezer.c
++++ b/kernel/freezer.c
+@@ -42,6 +42,9 @@ bool freezing_slow_path(struct task_struct *p)
+ 	if (test_tsk_thread_flag(p, TIF_MEMDIE))
+ 		return false;
+ 
++	if (cgroup_freezer_killable(p) && fatal_signal_pending(p))
++		return false;
++
+ 	if (pm_nosig_freezing || cgroup_freezing(p))
+ 		return true;
+ 
+@@ -63,7 +66,12 @@ bool __refrigerator(bool check_kthr_stop)
+ 	pr_debug("%s entered refrigerator\n", current->comm);
+ 
+ 	for (;;) {
+-		set_current_state(TASK_UNINTERRUPTIBLE);
++		bool killable = cgroup_freezer_killable(current);
++
++		if (killable)
++			set_current_state(TASK_INTERRUPTIBLE);
++		else
++			set_current_state(TASK_UNINTERRUPTIBLE);
+ 
+ 		spin_lock_irq(&freezer_lock);
+ 		current->flags |= PF_FROZEN;
+@@ -75,6 +83,16 @@ bool __refrigerator(bool check_kthr_stop)
+ 		if (!(current->flags & PF_FROZEN))
+ 			break;
+ 		was_frozen = true;
++
++		/*
++		 * Now we're sure that there is no pending fatal signal.
++		 * Clear TIF_SIGPENDING to not get out of schedule()
++		 * immediately (if there is a non-fatal signal pending), and
++		 * put the task into sleep.
++		 */
++		if (killable)
++			clear_thread_flag(TIF_SIGPENDING);
++
+ 		schedule();
+ 	}
+ 
 -- 
-Sincerely yours,
-Mike.
+2.25.0.265.gbab2e86ba0-goog
 
