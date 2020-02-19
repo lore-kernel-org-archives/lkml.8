@@ -2,139 +2,111 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C1AC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CE5C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F41E24673
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582103513;
-	bh=QCvgFW+jje9yRaAt1NfJVzEVNG0lPbPPQv2SFoSGdiQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFX5p5Sur+ECxH9PO5zgaPPHWG3CW4CMFS21f4AzcvYvVNUps45CUfeONuHzs+/9e
-	 gAnFGx5QKHw6Ucz35UIXyFKWJ0TGbO8dXBgTQ0+dhEfNfVQkpU2v72s5rjRYr1SGd3
-	 Jen8jq3q34XG38UB4Avax/OyR9klJuBlcfuDu2d8=
+	by mail.kernel.org (Postfix) with ESMTP id BBCD52465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:12:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6gHGceS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgBSJLv (ORCPT
+        id S1726710AbgBSJMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:11:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49488 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgBSJLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:11:47 -0500
-Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5568E2465D;
-        Wed, 19 Feb 2020 09:11:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582103506;
-        bh=QCvgFW+jje9yRaAt1NfJVzEVNG0lPbPPQv2SFoSGdiQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xbeSCwsbekmtynqP4aaaVxyYrIPZSG/r77Cu0pb57sc/W83msL+MuTXIdMD65wILM
-         Lxjn733f1xxww5TnjaWMcn0AhixWbvJAezZ8p9tYu9uMrzKp2xhmJ4HHJblvgEK6d4
-         9/27hQJWnAZa+NPqoKTsBxaDjfrCu3pgmQk4Uye4=
-Date:   Wed, 19 Feb 2020 17:11:39 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tony Lindgren <tony@atomide.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
-Message-ID: <20200219091138.GA12803@dragon>
-References: <20200124084359.16817-1-christian.gmeiner@gmail.com>
- <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
- <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
- <CAH9NwWdg5r1T9TkXAe4=3Zui2vMcnOc2UJ=e02NFbiPhb5n48w@mail.gmail.com>
- <20200217041936.GH5395@dragon>
- <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
- <20200218091409.GA6075@dragon>
- <CAH9NwWcNZzKt9gwYRRbgppeL9xqcK38z0ZP-5eGF9vXmg7T_=g@mail.gmail.com>
+        Wed, 19 Feb 2020 04:12:33 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33578 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbgBSJMd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:12:33 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 6so12419478pgk.0;
+        Wed, 19 Feb 2020 01:12:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mn4zsjlzynntfOs5YFb07oY3dWpb5D0zaBJYwASVQWY=;
+        b=G6gHGceS0yAmiHRQ/TMZbsluyMQ1XzeYXax7LBY7adHSvicxi2bo/GVfPp7ucUV/TS
+         LyMb5uocPPTHdhXzuKMCff0rZI8EupnzAxxLE8h/rrp/k7yaj6Wl0WOA9pnVuBuW6vp4
+         aNJ/sEFRM5pTwAlDWEcwnD8935Eupw7rX2OXFD1XOaZQsxliVpzCfUzSgZGrghz9uYOb
+         +Gqgkll4YMjV9s8GQQAtbnxLrj2kaRdYec4FTp8H4hN49EYjKtjIneSIxvCqAzEyVWQV
+         VU5TxIj93vH1Q4l5DWndMunaR1aWkNIBzz0sCRk9B+n4AozUTdy72qyCXUpXaWODLbcS
+         ZPTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Mn4zsjlzynntfOs5YFb07oY3dWpb5D0zaBJYwASVQWY=;
+        b=aCyrPmvHV9hcN56TYWKqdBIhaHxT52+50eoju82wfGHvYAsFeKbr9E+okEpOktng1U
+         t9g3Qy1A67N9gzwLBDytPh9qnHBix7HxYFMAo5Hgl1JpbswPDaafhKU7b3C7vfqznQnj
+         SdfIrN24u3J760///MLtofXu0uVQAQTDdb0S/0+zgRx1MS9NFjXiLtJQNv4lzMxGeccm
+         poJAhEX135nrPzG7dmdiJsi2oa2JNo8wGXBhM5p5fBxzeBNpHlA6Tglr0WZ+VKhSWh1Q
+         cMsuZtoaLWFmreDcVgeCN9ANjhZ+b/slZupxqld7+tFTPU8j9Hpb0N20TPXm7TZduVF4
+         C8oQ==
+X-Gm-Message-State: APjAAAX4rg72YVasKgh7u/hDNpmDyJDBHKi/xqZvHDbsMKmFfUOl7wUC
+        geKBIDZuXQxCyr/5qDWN5+0=
+X-Google-Smtp-Source: APXvYqysCxVXMoTrskLDknj6A+zYSggTxDmnhSSnVmwhyNIO6fwm//kfNy0Yb6rVqHQj9Fsr5aKc2Q==
+X-Received: by 2002:a65:5281:: with SMTP id y1mr26294515pgp.327.1582103552650;
+        Wed, 19 Feb 2020 01:12:32 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.220])
+        by smtp.googlemail.com with ESMTPSA id b18sm2074688pfb.116.2020.02.19.01.12.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 01:12:32 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] cfg80211: Pass lockdep expression to RCU lists
+Date:   Wed, 19 Feb 2020 14:41:04 +0530
+Message-Id: <20200219091102.10709-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH9NwWcNZzKt9gwYRRbgppeL9xqcK38z0ZP-5eGF9vXmg7T_=g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:48:23AM +0100, Christian Gmeiner wrote:
-> Am Di., 18. Feb. 2020 um 10:14 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
-> >
-> > On Mon, Feb 17, 2020 at 01:09:32PM +0100, Christian Gmeiner wrote:
-> > > Am Mo., 17. Feb. 2020 um 05:19 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
-> > > >
-> > > > On Mon, Feb 10, 2020 at 02:30:12PM +0100, Christian Gmeiner wrote:
-> > > > > Am Mo., 10. Feb. 2020 um 11:58 Uhr schrieb Krzysztof Kozlowski
-> > > > > <krzk@kernel.org>:
-> > > > > >
-> > > > > > On Mon, 10 Feb 2020 at 11:54, Christian Gmeiner
-> > > > > > <christian.gmeiner@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Am Fr., 24. Jan. 2020 um 09:44 Uhr schrieb Christian Gmeiner
-> > > > > > > <christian.gmeiner@gmail.com>:
-> > > > > > > >
-> > > > > > > > Makes it possible to multi v7 defconfig for stm32 and imx based devices with
-> > > >
-> > > > What do you mean by stm32 based devices here?
-> > > >
-> > >
-> > > CONFIG_ARCH_STM32 - I have a STM32MP157C-DK2 in my board farm and
-> > > would love to use
-> > > multi_v7 for imx6 and stm32.
-> >
-> > The patch is all about enabling drm-imx driver support.  The commit log
-> > gives the impression that drm-imx driver also works on stm32 devices.
-> > Is that the case?
-> >
-> 
-> No - the common thing both share is etnaviv.
+rdev->sched_scan_req_list maybe traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of rtnl_mutex.
 
-I did not know that before, and thanks for the information.  But looking
-at the code change, there is nothing about etnaviv driver, and it's all
-about drm-imx driver.  So I'm still questioning why stm32 needs to be
-mentioned in the commit log at all.
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
 
-> The patch subject "ARM:
-> multi_v7_defconfig: enable drm imx support" is fine
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/wireless/scan.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Agreed.  It's perfect.
+diff --git a/net/wireless/scan.c b/net/wireless/scan.c
+index aef240fdf8df..7f1af8f347b1 100644
+--- a/net/wireless/scan.c
++++ b/net/wireless/scan.c
+@@ -556,9 +556,8 @@ cfg80211_find_sched_scan_req(struct cfg80211_registered_device *rdev, u64 reqid)
+ {
+ 	struct cfg80211_sched_scan_request *pos;
+ 
+-	WARN_ON_ONCE(!rcu_read_lock_held() && !lockdep_rtnl_is_held());
+-
+-	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list) {
++	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list,
++				lockdep_rtnl_is_held()) {
+ 		if (pos->reqid == reqid)
+ 			return pos;
+ 	}
+-- 
+2.24.1
 
-> I think but in the commit message I missed the verb so this should be
-> a better one:
-> 
-> --->8---
-> ARM: multi_v7_defconfig: enable drm imx support
-> 
-> Makes it possible to use multi v7 defconfig for stm32 and imx based devices with
-> full drm support.
-> --->8---
-
-I don't think 'stm32' should be there, as the code change in this commit
-has nothing to do with stm32, if I understand it correctly.
-
-> How shall I proceed to get this change in?
-
-I can edit the commit log when applying.  But we need to agree on what
-it should be first.
-
-Shawn
