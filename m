@@ -2,70 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE9DC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A2C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C327124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0036C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="CCiBJDOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBSJXA convert rfc822-to-8bit (ORCPT
+        id S1726927AbgBSJXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:23:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37697 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSJW7 (ORCPT
+        Wed, 19 Feb 2020 04:23:23 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45048 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgBSJXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:22:59 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4LZ7-00015z-GQ; Wed, 19 Feb 2020 10:22:45 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1EF39103A05; Wed, 19 Feb 2020 10:22:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware\, Inc." <pv-drivers@vmware.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
-In-Reply-To: <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
-References: <20200218154712.25490-1-jgross@suse.com> <87mu9fr4ky.fsf@nanos.tec.linutronix.de> <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
-Date:   Wed, 19 Feb 2020 10:22:45 +0100
-Message-ID: <8736b7q6ca.fsf@nanos.tec.linutronix.de>
+        Wed, 19 Feb 2020 04:23:23 -0500
+Received: by mail-lj1-f196.google.com with SMTP id q8so26201306ljj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VYACtOJzFbdHHzYAV0uoJeRPRBCCx7IkeDn63MpNOyk=;
+        b=CCiBJDOQ5P0k1bJLD9sFKDMpZF6oQoNIKRBF2hY/zXle6ThFUJbx+Uw8FDu0XhSKfM
+         OuqwMUedhFw6kO9+gKhw/6icCcP+A1cD3RRqIU+Ltyo+5MXfiNboB6NEenFFQkECXJSw
+         HlqWyXSXGIYk7hjq0bEsC0KfXWoorwMeFCYx5lS9L+O2m1PrE/Mxpv9BiEvaaYuzmkCO
+         7KkriufHpAT98/br77i3qzpcE9ZZG4qN3h5EIF9lJTl/9rGRYzUQHtq41R/8I0ruZ9VH
+         WItNmhMtbZVQ9Byk+iw+zfqs7wj3lJgUVGnUyEJC4J7jpW874hnI2f7thaU/GlZFqFVm
+         rVTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VYACtOJzFbdHHzYAV0uoJeRPRBCCx7IkeDn63MpNOyk=;
+        b=th5RTAYoJW1GRx3nRBZG3hAXSvLADDppVFJg18dYGznPVbymsxB9x7sNureqg9oun1
+         qgM79AvnWxUTWAVULt2QZUgpAARtZbtnuCHLZly85KWaOcT+iskydOmGOQKyn8MBex3i
+         8YDSjOXyUe63mufA2RQzWpSKTtgbl7BedHLaCpXHOQ6FGMN8Ym/uY+Oa2iuJdWXfx+5F
+         fQxIlY/0Smn+lHbp9iKQyvrntC7JO/mmmWsIkb6PQ7pv9zlil3x54DSzdFSkrtnM/51l
+         QWF3fWG5Q5/94cNtllmXQWEWYJQYdR/q1UvC1AlNUTT1WAulUArSOMYnZmxC9BhV9vfG
+         uhBA==
+X-Gm-Message-State: APjAAAV59M1ot69HT4Wj4t6R6GTsftHfgkKSDL8Jp6ov4Qf5olHZef3K
+        EellQaEgSN1yh0EmuUMK7qpfRw==
+X-Google-Smtp-Source: APXvYqwYpw0gDCHzJar4JQhf+hD+uQHtynXxiIGrOaO+rkxoRcCGQ2R/zdsyaYtZedMgWq+L5SluAA==
+X-Received: by 2002:a2e:b044:: with SMTP id d4mr14981358ljl.159.1582104201028;
+        Wed, 19 Feb 2020 01:23:21 -0800 (PST)
+Received: from ?IPv6:2a00:1fa0:26e:a51f:ed1d:2717:41f:4f76? ([2a00:1fa0:26e:a51f:ed1d:2717:41f:4f76])
+        by smtp.gmail.com with ESMTPSA id q26sm843539lfp.85.2020.02.19.01.23.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 01:23:20 -0800 (PST)
+Subject: Re: [PATCH v6 21/22] KVM: x86/mmu: Use ranged-based TLB flush for
+ dirty log memslot flush
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Peter Xu <peterx@redhat.com>,
+        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
+ <20200218210736.16432-22-sean.j.christopherson@intel.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <fdb72ab9-18d4-5719-2863-78cde4e97fae@cogentembedded.com>
+Date:   Wed, 19 Feb 2020 12:22:58 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200218210736.16432-22-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jürgen Groß <jgross@suse.com> writes:
-> On 18.02.20 22:03, Thomas Gleixner wrote:
->> BTW, why isn't stuff like this not catched during next or at least
->> before the final release? Is nothing running CI on upstream with all
->> that XEN muck active?
->
-> This problem showed up by not being able to start the X server (probably
-> not the freshest one) in dom0 on a moderate aged AMD system.
->
-> Our CI tests tend do be more text console based for dom0.
+Hello!
 
-tools/testing/selftests/x86/io[perm|pl] should have caught that as well,
-right? If not, we need to fix the selftests.
+On 19.02.2020 0:07, Sean Christopherson wrote:
 
-Thanks,
+> Use the with_address() variant to when performing a TLB flush for a
+                                  ^^ is it really needed here?
 
-        tglx
+> specific memslot via kvm_arch_flush_remote_tlbs_memslot(), i.e. when
+> flushing after clearing dirty bits during KVM_{GET,CLEAR}_DIRTY_LOG.
+> This aligns all dirty log memslot-specific TLB flushes to use the
+> with_address() variant and paves the way for consolidating the relevant
+> code.
+> 
+> Note, moving to the with_address() variant only affects functionality
+> when running as a HyperV guest.
+> 
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+[...]
+
+MBR, Sergei
