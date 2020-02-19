@@ -2,178 +2,232 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C81BC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE818C7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90ED21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rn+clfMA"
+	by mail.kernel.org (Postfix) with ESMTP id 7998E2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582155883;
+	bh=7Jwhbeg3NW/b7zKtfeleuO14hiDLfK4BEl3N5Su5gl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rQWRiFn/c37mpPaNUo5oNT/rrU2qnbF4SIm/Ajcbg0+qI8/xP4xwUXNawdkgcCkRL
+	 lOXqN/OzaDkxZLXjtejXaz56TTpuk7y+I8mAYc0AbnE5Cth6HFDzKM87skPZ4Rh83S
+	 KFAPBTPXiWebInWhMWirODpqMWLpxC87ewNcaTOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgBSXnf (ORCPT
+        id S1726799AbgBSXom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:43:35 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33261 "EHLO ozlabs.org"
+        Wed, 19 Feb 2020 18:44:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726680AbgBSXne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:43:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726680AbgBSXol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 18:44:41 -0500
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48NDnJ6Sh1z9sR4;
-        Thu, 20 Feb 2020 10:43:32 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582155812;
-        bh=J1MT0vnVy3FqSG8y1+q5/HB5wtrtdwp2BWYleYRHkb4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=rn+clfMAT41tJ5eYT+PCmbb08y8h+QVP8nhwDZV4m4cRk/m+DJdTYwj01/64bP05c
-         OTYS0SRP3iTGmiXsI4lrqFfRUSXZvInPhhIA/0WTEFtmyF5Wp9O250yv6nG/4ZRhri
-         kU1U1CCc9AzPgznjzSEwyXmQMrGu77zIKhYaTMZvZJRD1D/1/Xh/zSzSA4v2tAMQ4A
-         jjPNkSGLLv6LZoaoxN+X9zqejtRSDeM0RUBmHY7NFMwRrXmB4QvDPvmOaZxyxSZ/rD
-         uk7tmTr0t+cks7WOARu5dwyhszRhcSZecMon57BJkOWM4csXYCqc6/6j0uJz0kbXxj
-         HODrlVQ1iESvw==
-Date:   Thu, 20 Feb 2020 10:43:32 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the keys tree with Linus' tree
-Message-ID: <20200220104332.138b83f6@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D9C121D56;
+        Wed, 19 Feb 2020 23:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582155880;
+        bh=7Jwhbeg3NW/b7zKtfeleuO14hiDLfK4BEl3N5Su5gl0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YkgX4bsYvHWMHYmBlyWxpFjKPR5cu4hbzmx05i0+WxrgHrLwOqK2Pj/2gdcEAE/2s
+         hH9P/IYxdRmjObD7kcM/CQGwLQGobex69sien3T4gjCaKZT7rQ0tIpUUffIlvYz3lq
+         N4taBPjSJ+DWFu6LgL/rN5LuZICRM1PbvtWuhz/o=
+Received: by earth.universe (Postfix, from userid 1000)
+        id A16013C0C83; Thu, 20 Feb 2020 00:44:37 +0100 (CET)
+Date:   Thu, 20 Feb 2020 00:44:37 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, nekit1000@gmail.com, mpartap@gmx.net,
+        merlijn@wizzup.org, martin_rysavy@centrum.cz, agx@sigxcpu.org,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: [PATCH] backlight: add led-backlight driver
+Message-ID: <20200219234437.l6ac7usebu7rnzsy@earth.universe>
+References: <20200219191412.GA15905@amd>
+ <20200219194540.GD37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Pjr+kxwCU2muUzxVJaFTYYv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="n6ehadolgogdw3bm"
+Content-Disposition: inline
+In-Reply-To: <20200219194540.GD37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Pjr+kxwCU2muUzxVJaFTYYv
-Content-Type: text/plain; charset=US-ASCII
+
+--n6ehadolgogdw3bm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, Feb 19, 2020 at 11:45:40AM -0800, Tony Lindgren wrote:
+> * Pavel Machek <pavel@ucw.cz> [200219 19:15]:
+> > From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> >=20
+> > This patch adds a led-backlight driver (led_bl), which is similar to
+> > pwm_bl except the driver uses a LED class driver to adjust the
+> > brightness in the HW. Multiple LEDs can be used for a single backlight.
+> >=20
+> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > Tested-by: Tony Lindgren <tony@atomide.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> > ---
+> >  drivers/video/backlight/Kconfig  |   7 ++
+> >  drivers/video/backlight/Makefile |   1 +
+> >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 268 insertions(+)
+> >  create mode 100644 drivers/video/backlight/led_bl.c
+> >=20
+> > Hi!
+> >=20
+> > Here's the version of the driver I have. AFAICT
+> > default-brightness-level handling is ok, so does not need to be
+> > changed.
+> >=20
+> > Lee, it would be easiest for me if you could apply it to your tree and
+> > push, but given enough time I can push it to Linus, too.
+>=20
+> Oh you're using quoted-printable for patches.. Got it applied now,
+> and it still works. Below is also the related dts change that
+> I tested with.
+>=20
+> Feel free to pick the dts change too, naturally that should
+> not be applied before the driver.
+>=20
+> If you guys instead want me to pick these both into my fixes
+> branch, just let me know and I'll do the explaining why these
+> are needed as fixes. Basically we no longer have a way to enable
+> the LCD backlight for droid4 manually starting with v5.6-rc1
+> unlike earlier.
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+> 8< ------------------
+> From tony Mon Sep 17 00:00:00 2001
+> From: Tony Lindgren <tony@atomide.com>
+> Date: Wed, 19 Feb 2020 11:25:27 -0800
+> Subject: [PATCH] ARM: dts: droid4: Configure LED backlight for lm3532
+>=20
+> With the LED backlight changes merged, we still need the dts configured
+> to have backlight working for droid4. Based on an earlier patch from
+> Pavel Machek <pavel@ucw.cz>, let's configure the backlight but update
+> the value range to be more usable.
+>=20
+> We have a range of 256 register values split into 8 steps, so we can
+> generate the brightness levels backwards with:
+>=20
+> $ for i in 0 1 2 3 4 5 6 7; do echo "255 - ${i} * (256 / 8)" | bc; done
+>=20
+> To avoid more confusion why the LCD backlight is still not on, let's
+> also enable LED backlight as a loadable module for omap2plus_defconfig.
+>=20
+> Cc: Merlijn Wajer <merlijn@wizzup.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  arch/arm/boot/dts/motorola-mapphone-common.dtsi | 13 +++++++++++--
+>  arch/arm/configs/omap2plus_defconfig            |  1 +
+>  2 files changed, 12 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/b=
+oot/dts/motorola-mapphone-common.dtsi
+> --- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+> +++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+> @@ -182,6 +182,14 @@ vibrator {
+>  		pwm-names =3D "enable", "direction";
+>  		direction-duty-cycle-ns =3D <10000000>;
+>  	};
+> +
+> +	backlight: backlight {
+> +		compatible =3D "led-backlight";
+> +
+> +		leds =3D <&backlight_led>;
+> +		brightness-levels =3D <31 63 95 127 159 191 223 255>;
+> +		default-brightness-level =3D <6>;
+> +	};
+>  };
+> =20
+>  &dss {
+> @@ -205,6 +213,8 @@ lcd0: display {
+>  		vddi-supply =3D <&lcd_regulator>;
+>  		reset-gpios =3D <&gpio4 5 GPIO_ACTIVE_HIGH>;	/* gpio101 */
+> =20
+> +		backlight =3D <&backlight>;
+> +
+>  		width-mm =3D <50>;
+>  		height-mm =3D <89>;
+> =20
+> @@ -393,12 +403,11 @@ led-controller@38 {
+>  		ramp-up-us =3D <1024>;
+>  		ramp-down-us =3D <8193>;
+> =20
+> -		led@0 {
+> +		backlight_led: led@0 {
+>  			reg =3D <0>;
+>  			led-sources =3D <2>;
+>  			ti,led-mode =3D <0>;
+>  			label =3D ":backlight";
+> -			linux,default-trigger =3D "backlight";
+>  		};
+> =20
+>  		led@1 {
+> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap=
+2plus_defconfig
+> --- a/arch/arm/configs/omap2plus_defconfig
+> +++ b/arch/arm/configs/omap2plus_defconfig
+> @@ -375,6 +375,7 @@ CONFIG_BACKLIGHT_GENERIC=3Dm
+>  CONFIG_BACKLIGHT_PWM=3Dm
+>  CONFIG_BACKLIGHT_PANDORA=3Dm
+>  CONFIG_BACKLIGHT_GPIO=3Dm
+> +CONFIG_BACKLIGHT_LED=3Dm
+>  CONFIG_FRAMEBUFFER_CONSOLE=3Dy
+>  CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=3Dy
+>  CONFIG_LOGO=3Dy
 
-Today's linux-next merge of the keys tree got a conflict in:
+Finally :)
 
-  fs/pipe.c
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-between commit:
+-- Sebastian
 
-  6551d5c56eb0 ("pipe: make sure to wake up everybody when the last reader/=
-writer closes")
-
-from Linus' tree and commit:
-
-  549d46d3827d ("pipe: Add general notification queue support")
-
-from the keys tree.
-
-I fixed it up (I think - see below) and can carry the fix as necessary.
-This is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc fs/pipe.c
-index 2144507447c5,238601a7ab24..000000000000
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@@ -1269,12 -1310,63 +1311,64 @@@ int pipe_resize_ring(struct pipe_inode_
-  	kfree(pipe->bufs);
-  	pipe->bufs =3D bufs;
-  	pipe->ring_size =3D nr_slots;
-- 	pipe->max_usage =3D nr_slots;
-+ 	if (pipe->max_usage > nr_slots)
-+ 		pipe->max_usage =3D nr_slots;
-  	pipe->tail =3D tail;
-  	pipe->head =3D head;
- -	wake_up_interruptible_all(&pipe->rd_wait);
- -	wake_up_interruptible_all(&pipe->wr_wait);
- +
- +	/* This might have made more room for writers */
- +	wake_up_interruptible(&pipe->wr_wait);
-+ 	return 0;
-+ }
-+=20
-+ /*
-+  * Allocate a new array of pipe buffers and copy the info over. Returns t=
-he
-+  * pipe size if successful, or return -ERROR on error.
-+  */
-+ static long pipe_set_size(struct pipe_inode_info *pipe, unsigned long arg)
-+ {
-+ 	unsigned long user_bufs;
-+ 	unsigned int nr_slots, size;
-+ 	long ret =3D 0;
-+=20
-+ #ifdef CONFIG_WATCH_QUEUE
-+ 	if (pipe->watch_queue)
-+ 		return -EBUSY;
-+ #endif
-+=20
-+ 	size =3D round_pipe_size(arg);
-+ 	nr_slots =3D size >> PAGE_SHIFT;
-+=20
-+ 	if (!nr_slots)
-+ 		return -EINVAL;
-+=20
-+ 	/*
-+ 	 * If trying to increase the pipe capacity, check that an
-+ 	 * unprivileged user is not trying to exceed various limits
-+ 	 * (soft limit check here, hard limit check just below).
-+ 	 * Decreasing the pipe capacity is always permitted, even
-+ 	 * if the user is currently over a limit.
-+ 	 */
-+ 	if (nr_slots > pipe->max_usage &&
-+ 			size > pipe_max_size && !capable(CAP_SYS_RESOURCE))
-+ 		return -EPERM;
-+=20
-+ 	user_bufs =3D account_pipe_buffers(pipe->user, pipe->nr_accounted, nr_sl=
-ots);
-+=20
-+ 	if (nr_slots > pipe->max_usage &&
-+ 			(too_many_pipe_buffers_hard(user_bufs) ||
-+ 			 too_many_pipe_buffers_soft(user_bufs)) &&
-+ 			pipe_is_unprivileged_user()) {
-+ 		ret =3D -EPERM;
-+ 		goto out_revert_acct;
-+ 	}
-+=20
-+ 	ret =3D pipe_resize_ring(pipe, nr_slots);
-+ 	if (ret < 0)
-+ 		goto out_revert_acct;
-+=20
-+ 	pipe->max_usage =3D nr_slots;
-+ 	pipe->nr_accounted =3D nr_slots;
-  	return pipe->max_usage * PAGE_SIZE;
- =20
-  out_revert_acct:
-
---Sig_/Pjr+kxwCU2muUzxVJaFTYYv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--n6ehadolgogdw3bm
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5NyCQACgkQAVBC80lX
-0GyNMwf/Yh5fhQ8AdjDbKLjjhx/+fcET+DN2uoi0yttGNs6Kn214Nqfgvo2ZkgCu
-XWcCthPLnN0Gj6SWc5uD6OprwEQ2sJ7RgnOGdrITFv8Ln+oUyVUMAbVgRvFl2hB1
-C7/7+4WXGv50Uq99GfuooEy14B6l105dko/QP5Rsrb5Wh0wbdT4uEe7pdr8qw+l9
-W3n6JTPzoSDKgNU+oIk23SbkE2nEqeosGpGR0yTD/yzim4+C9NCobE4fpukxfcHB
-E5P3THhghmfvjyLyObtuVLpU0rQg5P/NMYEOu3fjiWRHUGxrh2GLzF3cvPDIeeHU
-cqibqE2aG3vDKfOZbHranmagtYabdA==
-=E+hk
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5NyFcACgkQ2O7X88g7
++pr98Q/+JkurT+hW4mT1GQB8xFAJUfN0+tfx9gqKE2NeSjDY+IsZL0qQZOueskzl
+k139MC29XV8DRDjX2xjOXhitc24UeCyoqwCKQsECpZ1ihpJtZyl985HVndgTwCC4
+kA6FCjp1Pb4VY0gUwheILkGFZSEMJzQK7++mgeOy1xUsKx8iZhrvTfkkG3dNoTck
+3dC6HgheQkr6QxL6yyF1yQqyaqwJPqo5zpkNTlyNgjoj8nynRnUfFx84Y2OYDBBM
+8bdmMi1hlPQQttBHbQiO0ztkaZQy8QJFKoiTf5bIn5Kus9NJSZiSQjSzoR3L9ltD
+U588aumKE7WKO9qClZh0f/CV1FFBH6eewN9wMFk977q9mj1+O2vf4ljvic8+qLMz
+6hK+Di9WpBvK8YEpu+4f4vtJyafzugoi/+xPQa/M2au0Ifs3tXqstyZ6MxbpYCPs
+wYMD8c8rcynS6KXhMZLTKdVSS20DnOXMYM7+4o7nq++kE8Pq6hHy0mJdy1YXvfij
+YDWFovSU+5E2/4i5+v/r3VuCpfL8EY/49kXU/UsDVPTTEbZlysCWoPeJMrmgIBGo
+OXLHVaY4KjJLxaMQ1/ixiiiYU/3X+d4eiDjN6P/L5cesP1O5FMePAYNPUX/FP5Xo
+XRqBsnAyQtmADxHklBlbGMmgyb37MYi/Z5QSa1sS1Up0a9JMiZ0=
+=ErQY
 -----END PGP SIGNATURE-----
 
---Sig_/Pjr+kxwCU2muUzxVJaFTYYv--
+--n6ehadolgogdw3bm--
