@@ -2,242 +2,140 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D44AC11D81
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FBBC7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22ED1207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB0E207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582151568;
+	bh=kaStYfEGtFLaRY6RzFlvy5r8/hH6/CI/CLuW0R0/49U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nxCAf7DpX4HQqMZOuDYH5hcacn79wonS7fhMU2U7biuKdi4nAphgW3Xpcrncm8I53
+	 wI5JC6zHFosswZN5aif4ia7JDYK6NKF4K6ddLf0IEX2G/ZIUUdc+Gen5swPhVi6di/
+	 FHYXAts4OAnf84QUojN1AAjUSUqand5QFHRDKXDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbgBSWbi (ORCPT
+        id S1727787AbgBSWcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:31:38 -0500
-Received: from mga14.intel.com ([192.55.52.115]:18607 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbgBSWbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:31:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 14:31:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="408587016"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 19 Feb 2020 14:31:36 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j4XsV-000I6o-QC; Thu, 20 Feb 2020 06:31:35 +0800
-Date:   Thu, 20 Feb 2020 06:31:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- cba6437a1854fde5934098ec3bd0ee83af3129f5
-Message-ID: <5e4db72c.QV4TV/Bbyo62oU/J%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 19 Feb 2020 17:32:46 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43923 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727163AbgBSWcq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 17:32:46 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p11so673739plq.10;
+        Wed, 19 Feb 2020 14:32:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1DsO1OncDrfIH8uK7Ow93e+y96FrmwbGrgT/pjgHroM=;
+        b=fmalR7DkpBPObdMLyBmcd9JlCI2mgTpDX90EGmJHKSD3R5eiLHhNx6KlnQpeodoe8j
+         rnYgEeiFYVOHRut3iPwkmhxwohdhWJrkn0r1fVx5MeA1PimUeVH3irP/ICpDhmUJyj92
+         8lfE8BUujxzwfnUAb5GHA2LlwmoyuXZYXvJwK0eg+ZNC0PW03dNMlDHZxhUOmweFeKye
+         xgT8A/7bnBi+1c12fAzSAOL4erQM2hyvQ3F0uqvFORKoBBTeOFhoM53V/dU6tj5YwPb7
+         XH8Ujt0zZ2fdph1mQZZanQ21+oNS0iPnHvEwqQ5wYSIUxpCf+Je57HnvnsN6xq0caOhG
+         avsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1DsO1OncDrfIH8uK7Ow93e+y96FrmwbGrgT/pjgHroM=;
+        b=slHfraLhGIAlU84j9hSKZO7O3Zlssr+Cq+ZU8lC8ISg6eIm6jAdc4r56zyB4GkAgo1
+         1P3RWijPAFMz9Ood67eabSQPtAFTzAEAftfGKcadhBlv334nfvei1bGML30PAhOiISqt
+         OywcMblxCtGZ88L6rXyHizfiz4J9R6xCKAL2oNDbmKPhpOzzL/W0IhiHaxDL5/ahcNIJ
+         90KljiAzcaeoSsBC+QRpgcd09qy6UNcmh1QGYjAOgpXx1qkD1kn8n0tLMFWqWPD5oMyr
+         p6PHO7+2sGsk0YOoglviKtE7t9SDco++OUZxwBfD4ahi+JDkT/mBbJ8jxKXOOSvxV5XP
+         7Thg==
+X-Gm-Message-State: APjAAAV5pmgh6zp5ssDuOkROn4KnKtrTjFFMNtC7XLBEFBsoJye6OHyF
+        9afMVLujDdVB5YNr7G6WsLk9W825
+X-Google-Smtp-Source: APXvYqxlZYooOZVZFUvzpT9sR0gVV4abtAmJBaIgGs5GpYxSSi0c5wgtvi6j5OYW51sqJcNMpcl8Xw==
+X-Received: by 2002:a17:902:d688:: with SMTP id v8mr28891544ply.238.1582151565494;
+        Wed, 19 Feb 2020 14:32:45 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id x190sm630390pfb.96.2020.02.19.14.32.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 14:32:43 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:32:41 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v6 0/7] introduce memory hinting API for external process
+Message-ID: <20200219223241.GA148976@google.com>
+References: <20200219014433.88424-1-minchan@kernel.org>
+ <20200219120123.07dda51c29006a892059ccde@linux-foundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200219120123.07dda51c29006a892059ccde@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
-branch HEAD: cba6437a1854fde5934098ec3bd0ee83af3129f5  genirq/proc: Reject invalid affinity masks (again)
+Hi Andrew,
 
-elapsed time: 7826m
+On Wed, Feb 19, 2020 at 12:01:23PM -0800, Andrew Morton wrote:
+> On Tue, 18 Feb 2020 17:44:26 -0800 Minchan Kim <minchan@kernel.org> wrote:
+> 
+> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> > application could give hints to kernel what memory range are preferred to be
+> > reclaimed. However, in some platform(e.g., Android), the information
+> > required to make the hinting decision is not known to the app.
+> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without any app
+> > involvement.
+> > 
+> 
+> This patchset doesn't seem to be getting a lot of interest from other
+> potential users?  It seems very specialized.  Are there or will there
+> ever be any users of this apart from one Android daemon?
 
-configs tested: 179
-configs skipped: 0
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Quote from http://lkml.kernel.org/r/20190531064313.193437-1-minchan@kernel.org
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-sparc64                           allnoconfig
-openrisc                 simple_smp_defconfig
-s390                             allmodconfig
-sparc64                             defconfig
-parisc                            allnoconfig
-ia64                                defconfig
-sh                               allmodconfig
-mips                      malta_kvm_defconfig
-alpha                               defconfig
-riscv                               defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-csky                                defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200219
-x86_64               randconfig-a002-20200219
-x86_64               randconfig-a003-20200219
-i386                 randconfig-a001-20200219
-i386                 randconfig-a002-20200219
-i386                 randconfig-a003-20200219
-alpha                randconfig-a001-20200219
-m68k                 randconfig-a001-20200219
-nds32                randconfig-a001-20200219
-parisc               randconfig-a001-20200219
-riscv                randconfig-a001-20200219
-c6x                  randconfig-a001-20200219
-h8300                randconfig-a001-20200219
-microblaze           randconfig-a001-20200219
-nios2                randconfig-a001-20200219
-sparc64              randconfig-a001-20200219
-csky                 randconfig-a001-20200219
-openrisc             randconfig-a001-20200219
-s390                 randconfig-a001-20200219
-xtensa               randconfig-a001-20200219
-x86_64               randconfig-b001-20200219
-x86_64               randconfig-b002-20200219
-x86_64               randconfig-b003-20200219
-i386                 randconfig-b001-20200219
-i386                 randconfig-b002-20200219
-i386                 randconfig-b003-20200219
-x86_64               randconfig-c001-20200219
-x86_64               randconfig-c002-20200219
-x86_64               randconfig-c003-20200219
-i386                 randconfig-c001-20200219
-i386                 randconfig-c002-20200219
-i386                 randconfig-c003-20200219
-x86_64               randconfig-c001-20200220
-x86_64               randconfig-c002-20200220
-x86_64               randconfig-c003-20200220
-i386                 randconfig-c001-20200220
-i386                 randconfig-c002-20200220
-i386                 randconfig-c003-20200220
-x86_64               randconfig-d001-20200219
-x86_64               randconfig-d002-20200219
-x86_64               randconfig-d003-20200219
-i386                 randconfig-d001-20200219
-i386                 randconfig-d002-20200219
-i386                 randconfig-d003-20200219
-x86_64               randconfig-e001-20200219
-x86_64               randconfig-e002-20200219
-x86_64               randconfig-e003-20200219
-i386                 randconfig-e001-20200219
-i386                 randconfig-e002-20200219
-i386                 randconfig-e003-20200219
-x86_64               randconfig-f001-20200219
-x86_64               randconfig-f002-20200219
-x86_64               randconfig-f003-20200219
-i386                 randconfig-f001-20200219
-i386                 randconfig-f002-20200219
-i386                 randconfig-f003-20200219
-x86_64               randconfig-f001-20200220
-x86_64               randconfig-f002-20200220
-x86_64               randconfig-f003-20200220
-i386                 randconfig-f001-20200220
-i386                 randconfig-f002-20200220
-i386                 randconfig-f003-20200220
-x86_64               randconfig-g001-20200219
-x86_64               randconfig-g002-20200219
-x86_64               randconfig-g003-20200219
-i386                 randconfig-g001-20200219
-i386                 randconfig-g002-20200219
-i386                 randconfig-g003-20200219
-x86_64               randconfig-h001-20200219
-x86_64               randconfig-h002-20200219
-x86_64               randconfig-h003-20200219
-i386                 randconfig-h001-20200219
-i386                 randconfig-h002-20200219
-i386                 randconfig-h003-20200219
-arc                  randconfig-a001-20200214
-sparc                randconfig-a001-20200214
-ia64                 randconfig-a001-20200214
-arm                  randconfig-a001-20200214
-arm64                randconfig-a001-20200214
-arc                  randconfig-a001-20200219
-arm                  randconfig-a001-20200219
-arm64                randconfig-a001-20200219
-ia64                 randconfig-a001-20200219
-powerpc              randconfig-a001-20200219
-sparc                randconfig-a001-20200219
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                       zfcpdump_defconfig
-s390                             alldefconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+"
+Brian Geffon in ChromeOS team had an experiment with process_madvise(2)
+Quote form him:
+"What I found is that by using process_madvise after a tab has been back
+grounded for more than 45 seconds reduced the average tab switch times by
+25%! This is a huge result and very obvious validation that process_madvise
+hints works well for the ChromeOS use case."
+"
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
+> Also, it doesn't terribly hard for ActivityManagerService to tell
+> another process "now run madvise with these arguments".  Please explain
+> why this is not practical in ActivityManagerService and also within
+> other potential users of this syscall.
+
+I think that's the almost a same question why ptrace doesn't work so
+I summarizes the part in [2/7]:
+
+* makes target task runnable creates memory layout change window so
+ hiniting a wrong vma
+
+* target task(e.g., background task) could live in little core with
+  cpuset/group limited environment so we couldn't react quick enough,
+  which causes more killing.
+
+
+Thanks.
