@@ -2,203 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8D7C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8340EC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A53208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A44208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNuqnwZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgBSXTw (ORCPT
+        id S1726784AbgBSXUI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:19:52 -0500
-Received: from lists.gateworks.com ([108.161.130.12]:47800 "EHLO
-        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXTv (ORCPT
+        Wed, 19 Feb 2020 18:20:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40120 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:19:51 -0500
-Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
-        by lists.gateworks.com with esmtp (Exim 4.82)
-        (envelope-from <rjones@gateworks.com>)
-        id 1j4Ydv-0005r2-FZ; Wed, 19 Feb 2020 23:20:35 +0000
-From:   Robert Jones <rjones@gateworks.com>
-To:     Sunil Goutham <sgoutham@marvell.com>,
-        Robert Richter <rrichter@marvell.com>,
-        David Miller <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Robert Jones <rjones@gateworks.com>
-Subject: [PATCH net v3] net: thunderx: workaround BGX TX Underflow issue
-Date:   Wed, 19 Feb 2020 15:19:36 -0800
-Message-Id: <20200219231936.5531-1-rjones@gateworks.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 18:20:07 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z7so886644pgk.7;
+        Wed, 19 Feb 2020 15:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zTjU5dQLnIByh50nZjXZubn4ZLHJkYRWG/8ptJLiRjw=;
+        b=ZNuqnwZQz4FPhaySnryBa1KYuR9FGehK5Ds+5qdR/Mxbf/TNvxEG6gCMYJpY95YbGu
+         tDgSoBOnqu3J+MOmT3Oni8Oaa7G6kpcPeG8tLgTCPew/qXaDN1kBcEen5q87vMU3mUDT
+         MEY+lzdNqwZW1NXv3qfo/ks6Jrh3K+/RVo5fu2LvTc74nnhH9W7hu6sOjDtnw+BfoGoZ
+         wFj66S2w2RPqIFPoc3rF5M/PrgzforO1gMj8U+cgkywv4sCN2XM6vwJaiMWjPnw6gDJA
+         1HFW2mr8MX2G8mfnDhKGvCp8T10c5H4EtG1xeIQb7IfptUjhyrvWSg2rnD3+ACXcPKaL
+         SqBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zTjU5dQLnIByh50nZjXZubn4ZLHJkYRWG/8ptJLiRjw=;
+        b=ab3+CnO63Eu6h9RbkVl5Pf96K1EDPWbMe3DVyawJOtFt+1/yaesDm//057XpGHYnzt
+         IZ7V/p0lPE6ea73bkmY1G505yawDcWvg8lPnPq2t0+XmEUGbbgWEcxTA0rc49qODMF8f
+         F1YX9gYSxVbwYTjCDmfZF8ulw4vOeKHH0qQWVAzYNQ+jlX4GnBpPUV7kNdAGx7QaHjA1
+         WQBzH/msjpw3+MbjRIar26thr/Ya6iCFcF+Q/aNsxoqmuxMpJHmJGxqUyrcFFid8M/wr
+         a5Dr/93BeiA6ltWd2AkGixPnVE4thjLtE5kLvwbxL6DWCCUivGYXOg1zXGmEAus7765m
+         vBUw==
+X-Gm-Message-State: APjAAAW2I8pWfrsntcOcwVo/yACl/lAc7QqkKWjo/Advb5loew6zRw1M
+        9JSDtDRbJZIA4Jokey/nx6c=
+X-Google-Smtp-Source: APXvYqxz0n6zqalLUF3s6QqBodmosHFcUuuBe1/KTM20rWHdJjKmvRZx4tgia2eFo1BcWdur6hHGEQ==
+X-Received: by 2002:a63:354b:: with SMTP id c72mr26575153pga.99.1582154406970;
+        Wed, 19 Feb 2020 15:20:06 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d2sm832488pjv.18.2020.02.19.15.20.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 15:20:06 -0800 (PST)
+Date:   Wed, 19 Feb 2020 15:20:05 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Julius Werner <jwerner@chromium.org>
+Cc:     Rob Herring <robh@kernel.org>, Evan Benn <evanbenn@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
+ arm,smc-wdt compatible
+Message-ID: <20200219232005.GA9737@roeck-us.net>
+References: <20200214062637.216209-1-evanbenn@chromium.org>
+ <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+ <20200219223046.GA16537@bogus>
+ <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
+> > You are not the first 'watchdog in firmware accessed via an SMC call'.
+> > Is there some more detail about what implementation this is? Part of
+> > TF-A? Defined by some spec (I can dream)?
+> 
+> This is just some random implementation written by me because we
+> needed one. I would like it to be the new generic implementation, but
+> it sounds like people here prefer the naming to be MediaTek specific
+> (at least for now). The other SMC watchdog we're aware of is
+> imx_sc_wdt but unfortunately that seems to hardcode platform-specific
 
-While it is not yet understood why a TX underflow can easily occur
-for SGMII interfaces resulting in a TX wedge. It has been found that
-disabling/re-enabling the LMAC resolves the issue.
+There is one more pending, for Meson SMC.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Reviewed-by: Robert Jones <rjones@gateworks.com>
----
-Changes in v2:
- - Changed bgx_register_intr() to a void return
- - Added pci_free_irq_vectors() calls to free irq if named/allocated
- - Use snprintf instead of sprintf for irq names
+https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
 
-Changes in v3:
- - Use pci_err() instead of dev_err() calls
- - Use pci_alloc_irq_vectors() for minimum vectors with PCI_IRQ_ALL_TYPES
- - Use pci_request_irq() instead of request_irq() with stored name
- - Move interrupt enable (and add disable) to bgx_lmac_rx_tx_enable()
- - Add pcim_enable_device(), pci_free_irq() calls and remove vector free calls
+Unfortunately it uses Meson firmware API functions, though it has pretty
+much the same functionality since those ultimately end up calling
+arm_smccc_smc().
 
- .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
- .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
- 2 files changed, 68 insertions(+), 3 deletions(-)
+Guenter
 
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-index c4f6ec0cd183..00751771f662 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
-@@ -410,10 +410,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
- 	lmac = &bgx->lmac[lmacid];
- 
- 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
--	if (enable)
-+	if (enable) {
- 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
--	else
-+
-+		/* enable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
-+			       GMI_TXX_INT_UNDFLW);
-+	} else {
- 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
-+
-+		/* Disable TX FIFO Underflow interrupt */
-+		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
-+			       GMI_TXX_INT_UNDFLW);
-+	}
- 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
- 
- 	if (bgx->is_rgx)
-@@ -1535,6 +1544,48 @@ static int bgx_init_phy(struct bgx *bgx)
- 	return bgx_init_of_phy(bgx);
- }
- 
-+static irqreturn_t bgx_intr_handler(int irq, void *data)
-+{
-+	struct bgx *bgx = (struct bgx *)data;
-+	u64 status, val;
-+	int lmac;
-+
-+	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
-+		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
-+		if (status & GMI_TXX_INT_UNDFLW) {
-+			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
-+				bgx->bgx_id, lmac);
-+			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
-+			val &= ~CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+			val |= CMR_EN;
-+			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
-+		}
-+		/* clear interrupts */
-+		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void bgx_register_intr(struct pci_dev *pdev)
-+{
-+	struct bgx *bgx = pci_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
-+				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
-+	if (ret < 0) {
-+		pci_err(pdev, "Req for #%d msix vectors failed\n",
-+			BGX_LMAC_VEC_OFFSET);
-+		return;
-+	}
-+	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
-+			      bgx, "BGX%d", bgx->bgx_id);
-+	if (ret)
-+		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+}
-+
- static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	int err;
-@@ -1550,7 +1601,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	pci_set_drvdata(pdev, bgx);
- 
--	err = pci_enable_device(pdev);
-+	err = pcim_enable_device(pdev);
- 	if (err) {
- 		dev_err(dev, "Failed to enable PCI device\n");
- 		pci_set_drvdata(pdev, NULL);
-@@ -1604,6 +1655,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	bgx_init_hw(bgx);
- 
-+	bgx_register_intr(pdev);
-+
- 	/* Enable all LMACs */
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
- 		err = bgx_lmac_enable(bgx, lmac);
-@@ -1620,6 +1673,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- err_enable:
- 	bgx_vnic[bgx->bgx_id] = NULL;
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
- err_release_regions:
- 	pci_release_regions(pdev);
- err_disable_device:
-@@ -1637,6 +1691,8 @@ static void bgx_remove(struct pci_dev *pdev)
- 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
- 		bgx_lmac_disable(bgx, lmac);
- 
-+	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
-+
- 	bgx_vnic[bgx->bgx_id] = NULL;
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-index 25888706bdcd..cdea49392185 100644
---- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-+++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
-@@ -180,6 +180,15 @@
- #define BGX_GMP_GMI_TXX_BURST		0x38228
- #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
- #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
-+#define BGX_GMP_GMI_TXX_INT		0x38500
-+#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
-+#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
-+#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
-+#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
-+#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
-+#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
-+#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
- 
- #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
- #define BGX_MSIX_VEC_0_29_CTL		0x400008
--- 
-2.25.0
-
+> details in the interface (at least in the pretimeout SMC) so we can't
+> just expand that. With this driver I tried to directly wrap the kernel
+> watchdog interface so it should be platform-agnostic and possible to
+> expand this driver to other platforms later if desired. The SMC
+> function ID would still always have to be platform-specific,
+> unfortunately (but we could pass it in through the device tree), since
+> the Arm SMC spec doesn't really leave any room for OS-generic SMCs
+> like this.
