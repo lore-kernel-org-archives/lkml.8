@@ -2,171 +2,122 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED88C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C5DC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D578207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E46E2207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:02:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgBSGAJ (ORCPT
+        id S1726260AbgBSGCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:00:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33130 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 01:02:06 -0500
+Received: from mga11.intel.com ([192.55.52.93]:45551 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbgBSGAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:00:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 541D3AE0F;
-        Wed, 19 Feb 2020 06:00:06 +0000 (UTC)
-Subject: Re: [PATCH] drm/vram-helper: make drm_vram_mm_debugfs_init return 0
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org
-References: <20200218172821.18378-1-wambui.karugax@gmail.com>
- <20200218172821.18378-9-wambui.karugax@gmail.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <30ad58ad-bc1c-bcbb-ef82-0308f5e2594d@suse.de>
-Date:   Wed, 19 Feb 2020 07:00:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726038AbgBSGCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 01:02:06 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 22:02:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="269047072"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.41])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Feb 2020 22:02:03 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Feng Tang <feng.tang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Michal Hocko" <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC -V2 2/8] autonuma, memory tiering: Rate limit NUMA migration throughput
+References: <20200218082634.1596727-1-ying.huang@intel.com>
+        <20200218082634.1596727-3-ying.huang@intel.com>
+        <20200218085721.GC3420@suse.de>
+Date:   Wed, 19 Feb 2020 14:01:57 +0800
+In-Reply-To: <20200218085721.GC3420@suse.de> (Mel Gorman's message of "Tue, 18
+        Feb 2020 08:57:21 +0000")
+Message-ID: <87sgj7glnu.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200218172821.18378-9-wambui.karugax@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi"
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi
-Content-Type: multipart/mixed; boundary="lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Wambui Karuga <wambui.karugax@gmail.com>,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@linux.ie,
- daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org
-Message-ID: <30ad58ad-bc1c-bcbb-ef82-0308f5e2594d@suse.de>
-Subject: Re: [PATCH] drm/vram-helper: make drm_vram_mm_debugfs_init return 0
-References: <20200218172821.18378-1-wambui.karugax@gmail.com>
- <20200218172821.18378-9-wambui.karugax@gmail.com>
-In-Reply-To: <20200218172821.18378-9-wambui.karugax@gmail.com>
+Hi, Mel,
 
---lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Thanks a lot for your review!
 
+Mel Gorman <mgorman@suse.de> writes:
 
+> On Tue, Feb 18, 2020 at 04:26:28PM +0800, Huang, Ying wrote:
+>> From: Huang Ying <ying.huang@intel.com>
+>> 
+>> In autonuma memory tiering mode, the hot PMEM (persistent memory)
+>> pages could be migrated to DRAM via autonuma.  But this incurs some
+>> overhead too.  So that sometimes the workload performance may be hurt.
+>> To avoid too much disturbing to the workload, the migration throughput
+>> should be rate-limited.
+>> 
+>> At the other hand, in some situation, for example, some workloads
+>> exits, many DRAM pages become free, so that some pages of the other
+>> workloads can be migrated to DRAM.  To respond to the workloads
+>> changing quickly, it's better to migrate pages faster.
+>> 
+>> To address the above 2 requirements, a rate limit algorithm as follows
+>> is used,
+>> 
+>> - If there is enough free memory in DRAM node (that is, > high
+>>   watermark + 2 * rate limit pages), then NUMA migration throughput will
+>>   not be rate-limited to respond to the workload changing quickly.
+>> 
+>> - Otherwise, counting the number of pages to try to migrate to a DRAM
+>>   node via autonuma, if the count exceeds the limit specified by the
+>>   users, stop NUMA migration until the next second.
+>> 
+>> A new sysctl knob kernel.numa_balancing_rate_limit_mbps is added for
+>> the users to specify the limit.  If its value is 0, the default
+>> value (high watermark) will be used.
+>> 
+>> TODO: Add ABI document for new sysctl knob.
+>> 
+>
+> I very strongly suggest that this only be done as a last resort and with
+> supporting data as to why it is necessary. NUMA balancing did have rate
+> limiting at one point and it was removed when balancing was smart enough
+> to mostly do the right thing without rate limiting. I posted a series
+> that reconciled NUMA balancing with the CPU load balancer recently which
+> further reduced spurious and unnecessary migrations. I would not like
+> to see rate limiting reintroduced unless there is no other way of fixing
+> saturation of memory bandwidth due to NUMA balancing. Even if it's
+> needed as a stopgap while the feature is finalised, it should be
+> introduced late in the series explaining why it's temporarily necessary.
 
-Am 18.02.20 um 18:28 schrieb Wambui Karuga:
-> As drm_debugfs_create_files() should return 0, remove its use as the
-> return value of drm_vram_mm_debugfs_init(), and have the function retur=
-n
-> 0 directly.
->=20
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+This adds rate limit to NUMA migration between the different
+types of memory nodes only (e.g. from PMEM to DRAM), but not between the
+same types of memory nodes (e.g. from DRAM to DRAM).  Sorry for
+confusing patch subject.  I will change it in the next version.
 
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+And, rate limit is an inherent part of the algorithm used in the
+patchset.  Because we just use LRU algorithm to find the cold pages on
+the fast memory node (e.g. DRAM), and use NUMA hint page fault latency
+to find the hot pages on the slow memory node (e.g. PMEM).  But we don't
+compare the temperature between the cold DRAM pages and the hot PMEM
+pages.  Instead, we just try to exchange some cold DRAM pages and some
+hot PMEM pages, even if the cold DRAM pages is hotter than the hot PMEM
+pages.  The rate limit is used to control how many pages to exchange
+between DRAM and PMEM per second.  This isn't perfect, but it works well
+in our testing.
 
-> ---
->  drivers/gpu/drm/drm_gem_vram_helper.c | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
-m_gem_vram_helper.c
-> index 92a11bb42365..77b36a2286f9 100644
-> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
-> @@ -1043,19 +1043,16 @@ static const struct drm_info_list drm_vram_mm_d=
-ebugfs_list[] =3D {
->   * @minor: drm minor device.
->   *
->   * Returns:
-> - * 0 on success, or
-> - * a negative error code otherwise.
-> + * 0
->   */
->  int drm_vram_mm_debugfs_init(struct drm_minor *minor)
->  {
-> -	int ret =3D 0;
-> -
->  #if defined(CONFIG_DEBUG_FS)
-> -	ret =3D drm_debugfs_create_files(drm_vram_mm_debugfs_list,
-> -				       ARRAY_SIZE(drm_vram_mm_debugfs_list),
-> -				       minor->debugfs_root, minor);
-> +	drm_debugfs_create_files(drm_vram_mm_debugfs_list,
-> +				 ARRAY_SIZE(drm_vram_mm_debugfs_list),
-> +				 minor->debugfs_root, minor);
->  #endif
-> -	return ret;
-> +	return 0;
->  }
->  EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
-> =20
->=20
+Best Regards,
+Huang, Ying
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
-
-
---lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM--
-
---neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5MzuQACgkQaA3BHVML
-eiO2mAgAlF6b2VDAr15WInESQxTDVelSgxblRxPgN4GtsPvNuNk54xkNqnLsBgUL
-wqQBSf+eb6R7CCllltpEBv7cwhvzMQRYakODpDjJ1VFUcMGCJQFwC1yCYQh5hrWy
-A1Vm2pKaxatR4gZ00SWKW7Qo2KavfjXmmpQ82VrMhJ4ewqXxt9n3lrE0xZmWoMfw
-rxfB8zIkY7P1shJe6O3Gj24OUQY1moEmA/7I3MP/7EvzjNXCdxJvuSL1TxiZfC4D
-Ho4DeJmSgQDPWAOixFGA44DKROu2tlw5LZWrHvtwHj3i9xr2WEN1mbBe84KaYm2H
-h2q3B2ZXuTF68bvjllmMWHqHI00GnQ==
-=7nlY
------END PGP SIGNATURE-----
-
---neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi--
