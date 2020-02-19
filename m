@@ -2,95 +2,174 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075B4C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FC2C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A034624655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:19:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="si75TmNC"
+	by mail.kernel.org (Postfix) with ESMTP id C6480207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgBSBTn (ORCPT
+        id S1727936AbgBSBXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:19:43 -0500
-Received: from forward500o.mail.yandex.net ([37.140.190.195]:43267 "EHLO
-        forward500o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726939AbgBSBTm (ORCPT
+        Tue, 18 Feb 2020 20:23:24 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:43320 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726795AbgBSBXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:19:42 -0500
-Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
-        by forward500o.mail.yandex.net (Yandex) with ESMTP id 140CD60197;
-        Wed, 19 Feb 2020 04:19:37 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback1j.mail.yandex.net (mxback/Yandex) with ESMTP id YL0iA9Gz0m-JaSGc8gP;
-        Wed, 19 Feb 2020 04:19:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1582075176;
-        bh=dhzg+9rEG0nYcIh4AOwylZPaZZyNGN2eZQsA5FMtWoE=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=si75TmNCnigp1gijVvAyW6PptfGedGlHvhQvaznvclILqwVmsEXMjhsvM8pOngavb
-         Awj/YjLvQWi/LfWq1YiF/eSwIPvCjX62UR+pjVc7UqIixpYJCGoPfgNbc5M/RU/MFQ
-         cFJqE+n49y9mC7oNMfz74gz5sg5jpfPbDHN2AUX4=
-Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@yandex.ru
-Received: by myt2-508c8f44300a.qloud-c.yandex.net with HTTP;
-        Wed, 19 Feb 2020 04:19:36 +0300
-From:   Evgeniy Polyakov <zbr@ioremap.net>
-Envelope-From: drustafa@yandex.ru
-To:     "Daniel Walker (danielwa)" <danielwa@cisco.com>,
-        David Miller <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200218205441.GA24043@zorba>
-References: <20200217175209.GM24152@zorba>
-         <20200217.185235.495219494110132658.davem@davemloft.net>
-         <20200218163030.GR24152@zorba>
-         <20200218.123546.666027846950664712.davem@davemloft.net> <20200218205441.GA24043@zorba>
-Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain messages
+        Tue, 18 Feb 2020 20:23:24 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 36F4A3A325B;
+        Wed, 19 Feb 2020 12:23:20 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4E58-0004eU-Jt; Wed, 19 Feb 2020 12:23:18 +1100
+Date:   Wed, 19 Feb 2020 12:23:18 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 11/19] btrfs: Convert from readpages to readahead
+Message-ID: <20200219012318.GY10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-19-willy@infradead.org>
+ <20200218065758.GQ10776@dread.disaster.area>
+ <20200218211228.GF24185@bombadil.infradead.org>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Wed, 19 Feb 2020 04:19:36 +0300
-Message-Id: <17008791582075176@myt2-508c8f44300a.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218211228.GF24185@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=14rPMwcjc7DfypWj1-kA:9
+        a=AEfJ2Jny-4_AqVfN:21 a=ibXzlZxNEIkIBOHq:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.02.2020, 23:55, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
->>  > I think I would agree with you if this was unicast, and each listener could tailor
->>  > what messages they want to get. However, this interface isn't that, and it would
->>  > be considerable work to convert to that.
->>
->>  You filter at recvmsg() on the specific socket, multicast or not, I
->>  don't understand what the issue is.
->
-> Cisco tried something like this (I don't know if it was exactly what your referring to),
-> and it was messy and fairly complicated for a simple interface. In fact it was
-> the first thing I suggested for Cisco.
->
-> I'm not sure why Connector has to supply an exact set of messages, one could
-> just make a whole new kernel module hooked into netlink sending a different
-> subset of connector messages. The interface eats up CPU and slows the
-> system if it's sending messages your just going to ignore. I'm sure the
-> filtering would also slows down the system.
+On Tue, Feb 18, 2020 at 01:12:28PM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:57:58PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:45:59AM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+....
+> > >  
+> > > -		if (nr) {
+> > > -			u64 contig_start = page_offset(pagepool[0]);
+> > > +		ASSERT(contig_start + nr * PAGE_SIZE - 1 == contig_end);
+> > 
+> > Ok, yes it does. :)
+> > 
+> > I don't see how readahead_for_each_batch() guarantees that, though.
+> 
+> I ... don't see how it doesn't?  We start at rac->_start and iterate
+> through the consecutive pages in the page cache.  readahead_for_each_batch()
+> does assume that __do_page_cache_readahead() has its current behaviour
+> of putting the pages in the page cache in order, and kicks off a new
+> call to ->readahead() every time it has to skip an index for whatever
+> reason (eg page already in page cache).
 
-Connector has unicast interface and multicast-like 'subscription', but sending system-wide messages
-implies using broadcast interface, since you can not hold per-user/per-socket information about particular
-event mask, instead you have channels in connector each one could have been used for specific message type,
-but it looks overkill for simple process mask changes.
+And there is the comment I was looking for while reading
+readahead_for_each_batch() :)
 
-And in fact, now I do not understand your point.
-I thought you have been concerned about receiving too many messages from particular connector module because
-there are, for example, too many 'fork/signal' events. And now you want to limit them to 'fork' events only.
-Even if there could be other users who wanted to receive 'signal' and other events.
+> 
+> > > -	if (bio)
+> > > -		return submit_one_bio(bio, 0, bio_flags);
+> > > -	return 0;
+> > > +	if (bio) {
+> > > +		if (submit_one_bio(bio, 0, bio_flags))
+> > > +			return;
+> > > +	}
+> > >  }
+> > 
+> > Shouldn't that just be
+> > 
+> > 	if (bio)
+> > 		submit_one_bio(bio, 0, bio_flags);
+> 
+> It should, but some overzealous person decided to mark submit_one_bio()
+> as __must_check, so I have to work around that.
 
-And you blame connector - basically a network media, call it TCP if you like - for not filtering this for you?
-And after you have been told to use connector channels - let's call them TCP ports -
-which requires quite a bit of work - you do not want to do this (also, this will break backward compatibility for everyone
-else including (!) Cisco (!!)). I'm a little bit lost here.
+/me looks at code
 
-As a side and more practical way - do we want to have a global switch for particular process state changes broadcasting?
+Ngggh.
+
+I rather dislike functions that are named in a way that look like
+they belong to core kernel APIs but in reality are local static
+functions.
+
+I'd ask for this to be fixed if it was generic code, but it's btrfs
+specific code so they can deal with the ugliness of their own
+creation. :/
+
+> > Confusing when put alongside rac->_batch_count counting the number
+> > of pages in the batch, and "batch" being the index into the page
+> > array, and they aren't the same counts....
+> 
+> Yes.  Renamed to 'i'.
+> 
+> > > +	XA_STATE(xas, &rac->mapping->i_pages, rac->_start);
+> > > +	struct page *page;
+> > > +
+> > > +	rac->_batch_count = 0;
+> > > +	xas_for_each(&xas, page, rac->_start + rac->_nr_pages - 1) {
+> > 
+> > That just iterates pages in the start,end doesn't it? What
+> > guarantees that this fills the array with a contiguous page range?
+> 
+> The behaviour of __do_page_cache_readahead().  Dave Howells also has a
+> usecase for xas_for_each_contig(), so I'm going to add that soon.
+> 
+> > > +		VM_BUG_ON_PAGE(!PageLocked(page), page);
+> > > +		VM_BUG_ON_PAGE(PageTail(page), page);
+> > > +		array[batch++] = page;
+> > > +		rac->_batch_count += hpage_nr_pages(page);
+> > > +		if (PageHead(page))
+> > > +			xas_set(&xas, rac->_start + rac->_batch_count);
+> > 
+> > What on earth does this do? Comments please!
+> 
+> 		/*
+> 		 * The page cache isn't using multi-index entries yet,
+> 		 * so xas_for_each() won't do the right thing for
+> 		 * large pages.  This can be removed once the page cache
+> 		 * is converted.
+> 		 */
+
+Oh, it's changing the internal xarray lookup cursor position to
+point at the correct next page index? Perhaps it's better to say
+that instead of "won't do the right thing"?
+
+> > > +#define readahead_for_each_batch(rac, array, size, nr)			\
+> > > +	for (; (nr = readahead_page_batch(rac, array, size));		\
+> > > +			readahead_next(rac))
+> > 
+> > I had to go look at the caller to work out what "size" refered to
+> > here.
+> > 
+> > This is complex enough that it needs proper API documentation.
+> 
+> How about just:
+> 
+> -#define readahead_for_each_batch(rac, array, size, nr)                 \
+> -       for (; (nr = readahead_page_batch(rac, array, size));           \
+> +#define readahead_for_each_batch(rac, array, array_sz, nr)             \
+> +       for (; (nr = readahead_page_batch(rac, array, array_sz));       \
+
+Yup, that's fine - now the macro documents itself.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
