@@ -2,117 +2,158 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C51C3402F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FEBC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A518E24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6672C20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:44:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3IBW1bj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgBSDn2 (ORCPT
+        id S1726634AbgBSDoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:43:28 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:45778 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbgBSDn2 (ORCPT
+        Tue, 18 Feb 2020 22:44:13 -0500
+Received: from mail-pl1-f177.google.com ([209.85.214.177]:36370 "EHLO
+        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSDoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:43:28 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 880BB3A1C09;
-        Wed, 19 Feb 2020 14:43:25 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4GGi-0005Z3-WB; Wed, 19 Feb 2020 14:43:25 +1100
-Date:   Wed, 19 Feb 2020 14:43:24 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michal Hocko <mhocko@suse.com>
-Subject: Re: [PATCH v6 19/19] mm: Use memalloc_nofs_save in readahead path
-Message-ID: <20200219034324.GG10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-33-willy@infradead.org>
+        Tue, 18 Feb 2020 22:44:12 -0500
+Received: by mail-pl1-f177.google.com with SMTP id a6so8976769plm.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=8yMk1rmENYxZ4Ak7kdDvWY8wqNcb6ofqoMJvwOVdmAo=;
+        b=Q3IBW1bjFwvi4HtS64zNZH7Vt2aIPBvcJXYNnGvmm62rWgxJ36Taj6dctGqf8Wz8h1
+         j3ze+JJsU6etxCHyjski5b/JNc0WfoWywTJ6m0s/zMV0MtUpw+DcBJDEA3gyxRe6kVCD
+         PBu+DUcP9c3O2IFscEsVK3IOf+w1tk2/NTSEmaxAAia5hnZLoHOOuYivCQRX8uor5ej5
+         YylpAn59Mvv4AnHpurfuc5Io3tHVUf4Xl+NoEA4oBhhCV9gT0Our0OEEXvF05DvW79Bg
+         11AEsC04tkucDZ+2vHN4w1RlrvZW382oONkuLKTlt9C0fctyNvBq22NU8CUDZCG4k5nY
+         b6wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=8yMk1rmENYxZ4Ak7kdDvWY8wqNcb6ofqoMJvwOVdmAo=;
+        b=HC/oxePF/hV9xY42pDqE39iOSHqMdJBenabd9N2cwhSbXx/IX0zjbwv9tl0k3ZfKTA
+         YKPP5FJ+HDEvgNYhEoK0Th1+yryjimjCo0mH5sRM64ospD9XfqP6PcMu9kKlqmGRJvBy
+         PgRpt3Gx2NUa1gwcKayTEHQ/WzRmCiVhv9XPPargpzqFJY8Y1U0zocqjJZ1vpaul065Q
+         MMAce0WSKjyWoL3qFzhnyHwWPILTZHo2Yn9v5KiAQsSd1I8EA2OR/xlDvzo1u4Ndsanz
+         JhBu5R4JeZ1+7ucI3bfV+/HcwAFHxSK6OK1K7LYHp4v7M+/ox7543X7z2JcntexdZQqG
+         fgrQ==
+X-Gm-Message-State: APjAAAWDRKgBorLvaK3xl0XfTvHBorTGgJ15IF/qEJRik+3uXUnLy3bc
+        BGn5C5ndDtscSz/YwbcalKiVkw==
+X-Google-Smtp-Source: APXvYqywKJqSY/QsUSapcxVOLx/1D3vm3NcKxSmir1lWiX699L2XwwlfE4rTvVAMfeqTPD0Mh3AgKw==
+X-Received: by 2002:a17:90a:8547:: with SMTP id a7mr7037628pjw.0.1582083851875;
+        Tue, 18 Feb 2020 19:44:11 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id g2sm414891pgn.59.2020.02.18.19.44.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 19:44:11 -0800 (PST)
+Date:   Tue, 18 Feb 2020 19:44:10 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Yang Shi <shy828301@gmail.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [patch 1/2] mm, shmem: add thp fault alloc and fallback stats
+In-Reply-To: <CAHbLzkrJ_=8f8STvZ2GPGH6Arup8cKgGqigj4FQXWpmD-C5wNQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.2002181942460.155180@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.2002172139310.152060@chino.kir.corp.google.com> <alpine.DEB.2.21.2002181828070.108053@chino.kir.corp.google.com> <CAHbLzkrJ_=8f8STvZ2GPGH6Arup8cKgGqigj4FQXWpmD-C5wNQ@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-33-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=pGLkceISAAAA:8 a=iox4zFpeAAAA:8 a=7-415B0cAAAA:8
-        a=EUu7BJ-CshYY2WUz2RUA:9 a=Ins956pMss7IOATM:21 a=TqZTP-Om_uFHSJHF:21
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=WzC6qhA0u3u7Ye7llzcV:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:46:13AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Tue, 18 Feb 2020, Yang Shi wrote:
+
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+> > @@ -1502,9 +1502,8 @@ static struct page *shmem_alloc_page(gfp_t gfp,
+> >         return page;
+> >  }
+> >
+> > -static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
+> > -               struct inode *inode,
+> > -               pgoff_t index, bool huge)
+> > +static struct page *shmem_alloc_and_acct_page(gfp_t gfp, struct inode *inode,
+> > +               pgoff_t index, bool fault, bool huge)
+> >  {
+> >         struct shmem_inode_info *info = SHMEM_I(inode);
+> >         struct page *page;
+> > @@ -1518,9 +1517,11 @@ static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
+> >         if (!shmem_inode_acct_block(inode, nr))
+> >                 goto failed;
+> >
+> > -       if (huge)
+> > +       if (huge) {
+> >                 page = shmem_alloc_hugepage(gfp, info, index);
+> > -       else
+> > +               if (!page && fault)
+> > +                       count_vm_event(THP_FAULT_FALLBACK);
+> > +       } else
+> >                 page = shmem_alloc_page(gfp, info, index);
+> >         if (page) {
+> >                 __SetPageLocked(page);
+> > @@ -1832,11 +1833,10 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> >         }
+> >
+> >  alloc_huge:
+> > -       page = shmem_alloc_and_acct_page(gfp, inode, index, true);
+> > +       page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, true);
+> >         if (IS_ERR(page)) {
+> >  alloc_nohuge:
+> > -               page = shmem_alloc_and_acct_page(gfp, inode,
+> > -                                                index, false);
+> > +               page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, false);
+> >         }
+> >         if (IS_ERR(page)) {
+> >                 int retry = 5;
+> > @@ -1871,8 +1871,11 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> >
+> >         error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg,
+> >                                             PageTransHuge(page));
+> > -       if (error)
+> > +       if (error) {
+> > +               if (vmf && PageTransHuge(page))
+> > +                       count_vm_event(THP_FAULT_FALLBACK);
+> >                 goto unacct;
+> > +       }
+> >         error = shmem_add_to_page_cache(page, mapping, hindex,
+> >                                         NULL, gfp & GFP_RECLAIM_MASK);
+> >         if (error) {
+> > @@ -1883,6 +1886,8 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> >         mem_cgroup_commit_charge(page, memcg, false,
+> >                                  PageTransHuge(page));
+> >         lru_cache_add_anon(page);
+> > +       if (vmf && PageTransHuge(page))
+> > +               count_vm_event(THP_FAULT_ALLOC);
 > 
-> Ensure that memory allocations in the readahead path do not attempt to
-> reclaim file-backed pages, which could lead to a deadlock.  It is
-> possible, though unlikely this is the root cause of a problem observed
-> by Cong Wang.
+> I think shmem THP alloc is accounted to THP_FILE_ALLOC. And it has
+> been accounted by shmem_add_to_page_cache(). So, it sounds like a
+> double count.
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-> Suggested-by: Michal Hocko <mhocko@suse.com>
-> ---
->  mm/readahead.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+
+I think we can choose to either include file allocations into both 
+thp_fault_alloc and thp_fault_fallback or we can exclude them from both of 
+them.  I don't think we can account for only one of them.
+
+> >
+> >         spin_lock_irq(&info->lock);
+> >         info->alloced += compound_nr(page);
+> >
 > 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 94d499cfb657..8f9c0dba24e7 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -22,6 +22,7 @@
->  #include <linux/mm_inline.h>
->  #include <linux/blk-cgroup.h>
->  #include <linux/fadvise.h>
-> +#include <linux/sched/mm.h>
->  
->  #include "internal.h"
->  
-> @@ -174,6 +175,18 @@ void page_cache_readahead_limit(struct address_space *mapping,
->  		._nr_pages = 0,
->  	};
->  
-> +	/*
-> +	 * Partway through the readahead operation, we will have added
-> +	 * locked pages to the page cache, but will not yet have submitted
-> +	 * them for I/O.  Adding another page may need to allocate memory,
-> +	 * which can trigger memory reclaim.  Telling the VM we're in
-> +	 * the middle of a filesystem operation will cause it to not
-> +	 * touch file-backed pages, preventing a deadlock.  Most (all?)
-> +	 * filesystems already specify __GFP_NOFS in their mapping's
-> +	 * gfp_mask, but let's be explicit here.
-> +	 */
-> +	unsigned int nofs = memalloc_nofs_save();
-> +
-
-So doesn't this largely remove the need for all the gfp flag futzing
-in the readahead path? i.e. almost all readahead allocations are now
-going to be GFP_NOFS | GFP_NORETRY | GFP_NOWARN ?
-
-If so, shouldn't we just strip all the gfp flags and masking out of
-the readahead path altogether?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
