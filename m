@@ -7,54 +7,57 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD54EC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F72C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B083524672
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A8D24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MNHdszyi"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EUfXc2dj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbgBSVdR (ORCPT
+        id S1727794AbgBSVdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:33:17 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:18877 "EHLO
+        Wed, 19 Feb 2020 16:33:19 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:58403 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727614AbgBSVdQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727648AbgBSVdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:33:16 -0500
+        Wed, 19 Feb 2020 16:33:18 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582147995; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1582147997; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=FNc3ciCRQ3MW3zYHSCJZEO99ElwwHxEZQHD1BF08YYw=; b=MNHdszyik7gM9UW57dXnMap1IdBUC9YrfL4AkizmF80QMYEKFh6fusWitS/Fm3+paQphIQAb
- /wxHW5yfAaeNR9WmObvi4U9H9eEemedkCN4FRsER3nW2Zt3zuJBw09/oUJnrnTvL/ZkeW1gN
- 9/LyZhrz4p8Rm1J/PTQpBEPJ8L8=
+ bh=czO2p/B2uggnsY629WYpUQFeKB4TZChcSP7Dbrrg8vo=; b=EUfXc2djjbazwLoO8prhdEZuMWn5koZBCx3bNlnCNeTqa59R4X5C7SBM2rpsP5kk2yTLhq+s
+ qETQEtCTuVAuLpuhARfK1L3QC2cNJVEHZkL3GWqdyS6U277BxRV251oy/c1ULvbwb6jV859K
+ hWmbtUVPQsp1EEQPN9NCfxk0UrE=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4da993.7fb5ee1ab8f0-smtp-out-n01;
- Wed, 19 Feb 2020 21:33:07 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4da995.7fdbd5dfa378-smtp-out-n01;
+ Wed, 19 Feb 2020 21:33:09 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 80BB8C447A2; Wed, 19 Feb 2020 21:33:07 +0000 (UTC)
+        id 7D656C447A4; Wed, 19 Feb 2020 21:33:09 +0000 (UTC)
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 78C33C43383;
-        Wed, 19 Feb 2020 21:33:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 78C33C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BA99C4479D;
+        Wed, 19 Feb 2020 21:33:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7BA99C4479D
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     linux-arm-msm@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>, devicetree@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v1 3/4] arm64: dts: sdm845: Set the virtual address range for GMU allocations
-Date:   Wed, 19 Feb 2020 14:32:57 -0700
-Message-Id: <1582147978-31475-4-git-send-email-jcrouse@codeaurora.org>
+Cc:     John Stultz <john.stultz@linaro.org>, Sean Paul <sean@poorly.run>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v1 4/4] drm/msm/a6xx: Use the DMA API for GMU memory objects
+Date:   Wed, 19 Feb 2020 14:32:58 -0700
+Message-Id: <1582147978-31475-5-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
 References: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
@@ -63,28 +66,208 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GMU DMA allocations need to be mapped between 0x60000000 and 0x80000000 in
-the GMU virtual address space. Specify the dma-range so the iova allocator
-does the right thing.
+The GMU has very few memory allocations and uses a flat memory space so
+there is no good reason to go out of our way to bypass the DMA APIs which
+were basically designed for this exact secnario.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 107 ++--------------------------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   5 +-
+ 2 files changed, 7 insertions(+), 105 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d42302b..3c766423 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2911,6 +2911,8 @@
- 					<&gpucc GPU_GX_GDSC>;
- 			power-domain-names = "cx", "gx";
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 983afea..97c9ddf 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -2,6 +2,7 @@
+ /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
  
-+			dma-ranges = <0 0x60000000 0 0x60000000 0 0x20000000>;
-+
- 			iommus = <&adreno_smmu 5>;
+ #include <linux/clk.h>
++#include <linux/dma-mapping.h>
+ #include <linux/interconnect.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_opp.h>
+@@ -895,21 +896,10 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
  
- 			operating-points-v2 = <&gmu_opp_table>;
+ static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
+ {
+-	int count, i;
+-	u64 iova;
+-
+ 	if (IS_ERR_OR_NULL(bo))
+ 		return;
+ 
+-	count = bo->size >> PAGE_SHIFT;
+-	iova = bo->iova;
+-
+-	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
+-		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
+-		__free_pages(bo->pages[i], 0);
+-	}
+-
+-	kfree(bo->pages);
++	dma_free_attrs(gmu->dev, bo->size, bo->virt, bo->iova, bo->attrs);
+ 	kfree(bo);
+ }
+ 
+@@ -917,94 +907,23 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
+ 		size_t size)
+ {
+ 	struct a6xx_gmu_bo *bo;
+-	int ret, count, i;
+ 
+ 	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
+ 	if (!bo)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	bo->size = PAGE_ALIGN(size);
++	bo->attrs = DMA_ATTR_WRITE_COMBINE;
+ 
+-	count = bo->size >> PAGE_SHIFT;
++	bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
++		bo->attrs);
+ 
+-	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
+-	if (!bo->pages) {
++	if (!bo->virt) {
+ 		kfree(bo);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	for (i = 0; i < count; i++) {
+-		bo->pages[i] = alloc_page(GFP_KERNEL);
+-		if (!bo->pages[i])
+-			goto err;
+-	}
+-
+-	bo->iova = gmu->uncached_iova_base;
+-
+-	for (i = 0; i < count; i++) {
+-		ret = iommu_map(gmu->domain,
+-			bo->iova + (PAGE_SIZE * i),
+-			page_to_phys(bo->pages[i]), PAGE_SIZE,
+-			IOMMU_READ | IOMMU_WRITE);
+-
+-		if (ret) {
+-			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU buffer object\n");
+-
+-			for (i = i - 1 ; i >= 0; i--)
+-				iommu_unmap(gmu->domain,
+-					bo->iova + (PAGE_SIZE * i),
+-					PAGE_SIZE);
+-
+-			goto err;
+-		}
+-	}
+-
+-	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
+-		pgprot_writecombine(PAGE_KERNEL));
+-	if (!bo->virt)
+-		goto err;
+-
+-	/* Align future IOVA addresses on 1MB boundaries */
+-	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
+-
+ 	return bo;
+-
+-err:
+-	for (i = 0; i < count; i++) {
+-		if (bo->pages[i])
+-			__free_pages(bo->pages[i], 0);
+-	}
+-
+-	kfree(bo->pages);
+-	kfree(bo);
+-
+-	return ERR_PTR(-ENOMEM);
+-}
+-
+-static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
+-{
+-	int ret;
+-
+-	/*
+-	 * The GMU address space is hardcoded to treat the range
+-	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
+-	 * between the GMU and the CPU will live in this space
+-	 */
+-	gmu->uncached_iova_base = 0x60000000;
+-
+-
+-	gmu->domain = iommu_domain_alloc(&platform_bus_type);
+-	if (!gmu->domain)
+-		return -ENODEV;
+-
+-	ret = iommu_attach_device(gmu->domain, gmu->dev);
+-
+-	if (ret) {
+-		iommu_domain_free(gmu->domain);
+-		gmu->domain = NULL;
+-	}
+-
+-	return ret;
+ }
+ 
+ /* Return the 'arc-level' for the given frequency */
+@@ -1264,10 +1183,6 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
+ 
+ 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+ 
+-	iommu_detach_device(gmu->domain, gmu->dev);
+-
+-	iommu_domain_free(gmu->domain);
+-
+ 	free_irq(gmu->gmu_irq, gmu);
+ 	free_irq(gmu->hfi_irq, gmu);
+ 
+@@ -1300,11 +1215,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	if (ret)
+ 		goto err_put_device;
+ 
+-	/* Set up the IOMMU context bank */
+-	ret = a6xx_gmu_memory_probe(gmu);
+-	if (ret)
+-		goto err_put_device;
+-
+ 	/* Allocate memory for for the HFI queues */
+ 	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
+ 	if (IS_ERR(gmu->hfi))
+@@ -1350,11 +1260,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ err_memory:
+ 	a6xx_gmu_memory_free(gmu, gmu->hfi);
+ 
+-	if (gmu->domain) {
+-		iommu_detach_device(gmu->domain, gmu->dev);
+-
+-		iommu_domain_free(gmu->domain);
+-	}
+ 	ret = -ENODEV;
+ 
+ err_put_device:
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+index 2af91ed..31bd1987 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+@@ -13,7 +13,7 @@ struct a6xx_gmu_bo {
+ 	void *virt;
+ 	size_t size;
+ 	u64 iova;
+-	struct page **pages;
++	unsigned long attrs;
+ };
+ 
+ /*
+@@ -49,9 +49,6 @@ struct a6xx_gmu {
+ 	int hfi_irq;
+ 	int gmu_irq;
+ 
+-	struct iommu_domain *domain;
+-	u64 uncached_iova_base;
+-
+ 	struct device *gxpd;
+ 
+ 	int idle_level;
 -- 
 2.7.4
