@@ -2,110 +2,149 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1A6C3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1005FC3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BA424655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582074176;
-	bh=rgSO5TPjLfT2TEUFBXHL2W3SlEgq8MY7tlPnnbQs4W8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r+dzKP10YI0d6xzWwILCgUuRI0Mu8I+rHrnVBx0m5Kqiiqh/O6id02lGQfBPzfo6x
-	 6suV5Vjo/FL8xhZMq66orY+8rGLRAKy/mpLns3oBXWb2/MWM0vSeMj/L/TXoZO26cz
-	 053rvB4MxMH1mqs0yNx0o6tKINvJZ+8uCb8rci50=
+	by mail.kernel.org (Postfix) with ESMTP id E644F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:04:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgBSBCz (ORCPT
+        id S1727545AbgBSBEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:02:55 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:39850 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBSBCz (ORCPT
+        Tue, 18 Feb 2020 20:04:38 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33068 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726422AbgBSBEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:02:55 -0500
-Received: by mail-pj1-f65.google.com with SMTP id e9so1787091pjr.4;
-        Tue, 18 Feb 2020 17:02:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XjAe17WwACXa462Lft2fmmYSSdsBuO8CjnLHnDQfA9o=;
-        b=N/mnf1Er4IIWBp/vNkC29mKZ4xdYtar5T1k0lCH0ra0Gvg4QEsfodG4yfbYjbIIVsA
-         Ebxt5L+ceOQDzzgQ6ss86xHtREFi/atw695bOLYoGADEvvUHZWQrOn3GjpxgtI80l4nf
-         dgcEwaDoUjgD8cKwpn2DT7SP55f/ZpeuEi9PesGyEYi75Cwkm8OrHffgemLfc21yIrJa
-         aoXB10/qxrB2kTMZWy0pY/5Y9GD7DPniS0kC7A0ckCJxB0JvfOXv6RgEuMZymEVkCP3m
-         VLplNEJHE/x8lhuA06ehV5xEjMvN7tIlS668+bwte2sjl1f4i9vAGiQlw7iV8BvcOPMa
-         B0Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XjAe17WwACXa462Lft2fmmYSSdsBuO8CjnLHnDQfA9o=;
-        b=IjqTQpagTIHZ8IBpUYnaYhpwn2a8Sr9U2tXcyDyPiYxocO/MZlJY2ARdJ9KRDgvvPO
-         yoCucKtljjeYeWtIHLIpPofch6cX0wG+vu3RiiJ2FVdPKJP0TIMCyYMUphmtqwVopUj9
-         d8XEopFYCiQqomKj/NZiOdJwlH8DwHyuvZjTwbAeIfYTrMMAUxjN2FYJ+VQxpKqB6WrA
-         CO8+Cya4KsXUd13l4CvlM/hKwFyuq8V5qQycfYkM2LtFGXU4hZdEvpSCRqryd0DdkmMg
-         GseBH7LRWFIoxrDNAc3TlPxQUElObxRv179Ny0wD7NKzCZbpKE+rFopE8hkcDgorZdLm
-         kxXw==
-X-Gm-Message-State: APjAAAVEpfikGysjUkFto0NOAa7FNaFomBdlKhdcGpN/WP7g1wnQF6ie
-        mT0KOxxn6fLRiV5b2tMI+9c=
-X-Google-Smtp-Source: APXvYqw/93b9ec12Bht0Doaq2TFiyyatxu8H8/vw+iAKm+7XIR1dpiYwJce2oS3meL+K6eTrysEwfQ==
-X-Received: by 2002:a17:902:b110:: with SMTP id q16mr23061828plr.289.1582074174075;
-        Tue, 18 Feb 2020 17:02:54 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id r9sm208768pfl.136.2020.02.18.17.02.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 17:02:52 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:02:50 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v5 4/7] pid: export pidfd_get_pid
-Message-ID: <20200219010250.GB126504@google.com>
-References: <20200214170520.160271-1-minchan@kernel.org>
- <20200214170520.160271-5-minchan@kernel.org>
- <20200217075940.GA10342@infradead.org>
+        Tue, 18 Feb 2020 20:04:38 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 832B83A331C;
+        Wed, 19 Feb 2020 12:04:32 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4Dmx-0004dF-Ul; Wed, 19 Feb 2020 12:04:31 +1100
+Date:   Wed, 19 Feb 2020 12:04:31 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
+Message-ID: <20200219010431.GW10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-14-willy@infradead.org>
+ <20200218062147.GN10776@dread.disaster.area>
+ <20200218161004.GR7778@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200217075940.GA10342@infradead.org>
+In-Reply-To: <20200218161004.GR7778@bombadil.infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=J8tHrh_ofsGOLyDWh6kA:9
+        a=ffwTswad_GV-5CZc:21 a=o0rOaByW-dbbsVyy:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 16, 2020 at 11:59:40PM -0800, Christoph Hellwig wrote:
-> On Fri, Feb 14, 2020 at 09:05:17AM -0800, Minchan Kim wrote:
-> > process_madvise syscall needs pidfd_get_pid function to translate
-> > pidfd to pid so this patch exports the function.
+On Tue, Feb 18, 2020 at 08:10:04AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:21:47PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:45:54AM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > This replaces ->readpages with a saner interface:
+> > >  - Return void instead of an ignored error code.
+> > >  - Pages are already in the page cache when ->readahead is called.
+> > 
+> > Might read better as:
+> > 
+> >  - Page cache is already populates with locked pages when
+> >    ->readahead is called.
 > 
-> For that it should not need to exported, but then again the actual
-> patch doesn't export it anyway, so this is just a commit log issue.
+> Will do.
 > 
-> >  extern struct pid *pidfd_pid(const struct file *file);
-> > +extern struct pid *pidfd_get_pid(unsigned int fd);
+> > >  - Implementation looks up the pages in the page cache instead of
+> > >    having them passed in a linked list.
+> > 
+> > Add:
+> > 
+> >  - cleanup of unused readahead handled by ->readahead caller, not
+> >    the method implementation.
 > 
-> ... and there is no need for the extern keyword on prototypes in
-> headers.
+> The readpages caller does that cleanup too, so it's not an advantage
+> to the readahead interface.
 
-Will fix new version. Thanks for the review!
+Right. I kinda of read the list as "the reasons the new API is sane"
+not as "how readahead is different to readpages"....
+
+> > >  ``readpages``
+> > >  	called by the VM to read pages associated with the address_space
+> > >  	object.  This is essentially just a vector version of readpage.
+> > >  	Instead of just one page, several pages are requested.
+> > >  	readpages is only used for read-ahead, so read errors are
+> > >  	ignored.  If anything goes wrong, feel free to give up.
+> > > +	This interface is deprecated; implement readahead instead.
+> > 
+> > What is the removal schedule for the deprecated interface? 
+> 
+> I mentioned that in the cover letter; once Dave Howells has the fscache
+> branch merged, I'll do the remaining filesystems.  Should be within the
+> next couple of merge windows.
+
+Sure, but I like to see actual release tags with the deprecation
+notice so that it's obvious to the reader as to whether this is
+something new and/or when they can expect it to go away.
+
+> > > +/* The byte offset into the file of this readahead block */
+> > > +static inline loff_t readahead_offset(struct readahead_control *rac)
+> > > +{
+> > > +	return (loff_t)rac->_start * PAGE_SIZE;
+> > > +}
+> > 
+> > Urk. Didn't an early page use "offset" for the page index? That
+> > was was "mm: Remove 'page_offset' from readahead loop" did, right?
+> > 
+> > That's just going to cause confusion to have different units for
+> > readahead "offsets"....
+> 
+> We are ... not consistent anywhere in the VM/VFS with our naming.
+> Unfortunately.
+> 
+> $ grep -n offset mm/filemap.c 
+> 391: * @start:	offset in bytes where the range starts
+> ...
+> 815:	pgoff_t offset = old->index;
+> ...
+> 2020:	unsigned long offset;      /* offset into pagecache page */
+> ...
+> 2257:	*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
+> 
+> That last one's my favourite.  Not to mention the fine distinction you
+> and I discussed recently between offset_in_page() and page_offset().
+> 
+> Best of all, even our types encode the ambiguity of an 'offset'.  We have
+> pgoff_t and loff_t (replacing the earlier off_t).
+> 
+> So, new rule.  'pos' is the number of bytes into a file.  'index' is the
+> number of PAGE_SIZE pages into a file.  We don't use the word 'offset'
+> at all.  'length' as a byte count and 'count' as a page count seem like
+> fine names to me.
+
+That sounds very reasonable to me. Another patchset in the making? :)
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
