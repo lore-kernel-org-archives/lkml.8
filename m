@@ -2,191 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDD5C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2230FC3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5070021D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1DA24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:56:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9VOqdRe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBSH43 (ORCPT
+        id S1726643AbgBSH4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:56:29 -0500
-Received: from out28-146.mail.aliyun.com ([115.124.28.146]:35067 "EHLO
-        out28-146.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSH42 (ORCPT
+        Wed, 19 Feb 2020 02:56:32 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37592 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgBSH4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:56:28 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07446616|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.182606-0.00178675-0.815607;DS=CONTINUE|ham_system_inform|0.277137-0.000238632-0.722624;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03291;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.Gpdxgpx_1582098977;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gpdxgpx_1582098977)
-          by smtp.aliyun-inc.com(10.147.42.135);
-          Wed, 19 Feb 2020 15:56:19 +0800
-Subject: Re: [PATCH v5 1/7] clk: JZ4780: Add function for enable the second
- core.
-To:     Paul Cercueil <paul@crapouillou.net>
-References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1581792932-108032-3-git-send-email-zhouyanjie@wanyeetech.com>
- <1581864796.3.2@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
-        tglx@linutronix.de, daniel.lezcano@linaro.org,
-        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
-        ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        paul@boddie.org.uk, hns@goldelico.com,
-        mips-creator-ci20-dev@googlegroups.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E4CEA17.4070009@wanyeetech.com>
-Date:   Wed, 19 Feb 2020 15:56:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 19 Feb 2020 02:56:32 -0500
+Received: by mail-ed1-f66.google.com with SMTP id t7so16404869edr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Q3+DgOutnfX7SsA3bKGScs4wmPyXe9VReVvuWS0M6eg=;
+        b=B9VOqdReReZ1UeU791Rw1WlZRkQMxOMH6TE0rvZjCfwjN+5+ngZKvK/2vWeKPsgu1H
+         WresiCidvXZl/lPZ3JAHrOVFjVeEVJgAg0DRYc5zt6o8PsAzA5tFX6WkErNRD2yX4SLB
+         4uAaPOMgTexnB1rhFyLRX014eJi1auuXLhhMfMou7yd2UwKjZ6Uf1JVJiQJkm3HJD0HY
+         A+v3aoFgp6011VlLTNW47C0ebBYxxZ90iLj86hn+EAGee2LEfaUMGIUlUnGeqnOAHEqs
+         3nANbPVRpgxZokwGanYa2uaA8BX0zdb96rGRENEnAd0NpFcRNg9hRQbtLxCXcbjWvbnw
+         EK9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Q3+DgOutnfX7SsA3bKGScs4wmPyXe9VReVvuWS0M6eg=;
+        b=n73DHZRRsju1KagHiJavLxvx/PY61GsCoU/OysnvndFhDWmiQvFmHrtiqSs0pvvrSP
+         P+d9q501myS4UmbMhM+yc6ZN204m4HDIfFXLAWNbO6qL7qXzmG1RowMkAQFwtvitPhYD
+         rUf73Y4VDzyEnrDId1FbJz4saJ/RhiWohqjl7yA1XGxqL3u0NGCdh0dHT6jDzV2Dj/rn
+         75RFtYZTFQB+mK3bpZ8/7m3FXwmapQV54XWXItBgS3K4Q3Vh5mJKsS1sRTn8vKcm90XJ
+         3ztSxQRuuyRNq4cAp3AIT3hBa/64djSA3rTlTgVqOMQRSg9uFrCPa/iUurP6MUjBfpJD
+         gUyg==
+X-Gm-Message-State: APjAAAURfUQwjVNXXO6IX5p/N1LDe6vwlDzy8wATjgzlu1nvjco4jX+9
+        kYjVNd55W2VLxn1IGykii9srA7CxKo4=
+X-Google-Smtp-Source: APXvYqzY1Ka4YmzayW0U4GzuX30KYCpJuQ7CVEnrnpvxHGnfC9YVDEwp3qO0A8Qn44H3AwHFDmYMjQ==
+X-Received: by 2002:a17:906:e296:: with SMTP id gg22mr23367427ejb.7.1582098989740;
+        Tue, 18 Feb 2020 23:56:29 -0800 (PST)
+Received: from [192.168.27.209] ([94.155.124.210])
+        by smtp.googlemail.com with ESMTPSA id qh18sm35942ejb.23.2020.02.18.23.56.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 23:56:28 -0800 (PST)
+Subject: Re: [PATCH] media: venus: support frame rate control
+To:     Jeffrey Kardatzke <jkardatzke@google.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        "Mauro Carvalho Chehab )" <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200213213007.17023-1-jkardatzke@google.com>
+ <b471217a-1877-eaed-55c2-084f4b126bb4@linaro.org>
+ <CA+ddPcPjtv_9s4+t_1jkoGSZihVu2cVLyW102WuoLMy-RGkKPw@mail.gmail.com>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <b0c8653a-314e-bab9-9dc8-8c33b8d1efc9@linaro.org>
+Date:   Wed, 19 Feb 2020 09:56:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <1581864796.3.2@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+ddPcPjtv_9s4+t_1jkoGSZihVu2cVLyW102WuoLMy-RGkKPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Jeff,
 
-On 2020年02月16日 22:53, Paul Cercueil wrote:
-> Hi Zhou,
->
-> Le dim., févr. 16, 2020 at 02:55, 周琰杰 (Zhou Yanjie) 
-> <zhouyanjie@wanyeetech.com> a écrit :
->> Add "jz4780_core1_enable()" for enable the second core of JZ4780,
->> prepare for later commits.
+On 2/18/20 9:09 PM, Jeffrey Kardatzke wrote:
+> Sorry for the duplicate, accidentally used HTML format and it got
+> bounced from the mailing lists so resending.
+> 
+> On Mon, Feb 17, 2020 at 2:15 AM Stanimir Varbanov
+> <stanimir.varbanov@linaro.org> wrote:
 >>
->> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Tested-by: Paul Boddie <paul@boddie.org.uk>
->> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
->> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
+>> Hi Jeff,
 >>
->> Notes:
->>     v5:
->>     New patch, split from [1/6] in v4.
+>> Thanks for the patch!
 >>
->>  drivers/clk/ingenic/jz4780-cgu.c | 58 
->> ++++++++++++++++++++++++++++++++++++----
->>  1 file changed, 53 insertions(+), 5 deletions(-)
+>> On 2/13/20 11:30 PM, Jeffrey Kardatzke wrote:
+>>> Frame rate control is always enabled in this driver, so make it silently
+>>> support the V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE.
+>>>
+>>> Signed-off-by: Jeffrey Kardatzke <jkardatzke@google.com>
+>>> ---
+>>>  drivers/media/platform/qcom/venus/venc_ctrls.c | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/venus/venc_ctrls.c b/drivers/media/platform/qcom/venus/venc_ctrls.c
+>>> index 877c0b3299e9..9ede692f77c5 100644
+>>> --- a/drivers/media/platform/qcom/venus/venc_ctrls.c
+>>> +++ b/drivers/media/platform/qcom/venus/venc_ctrls.c
+>>> @@ -199,6 +199,9 @@ static int venc_op_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>               }
+>>>               mutex_unlock(&inst->lock);
+>>>               break;
+>>> +     case V4L2_CID_MPEG_VIDEO_FRAME_RC_ENABLE:
+>>> +             // Silently ignore, it's always enabled.
 >>
->> diff --git a/drivers/clk/ingenic/jz4780-cgu.c 
->> b/drivers/clk/ingenic/jz4780-cgu.c
->> index d07fff1..4f81819 100644
->> --- a/drivers/clk/ingenic/jz4780-cgu.c
->> +++ b/drivers/clk/ingenic/jz4780-cgu.c
->> @@ -16,7 +16,7 @@
+>> Please, use C comments and follow the kernel coding style.
+> 
+> OK, hopefully I've got that now. I didn't see any issues aside from
+> the comment style though.
+> I'll upload a new patch shortly.
 >>
->>  /* CGU register offsets */
->>  #define CGU_REG_CLOCKCONTROL    0x00
->> -#define CGU_REG_PLLCONTROL    0x0c
->> +#define CGU_REG_LCR            0x04
->>  #define CGU_REG_APLL        0x10
->>  #define CGU_REG_MPLL        0x14
->>  #define CGU_REG_EPLL        0x18
->> @@ -46,8 +46,8 @@
->>  #define CGU_REG_CLOCKSTATUS    0xd4
 >>
->>  /* bits within the OPCR register */
->> -#define OPCR_SPENDN0        (1 << 7)
->> -#define OPCR_SPENDN1        (1 << 6)
->> +#define OPCR_SPENDN0        BIT(7)
->> +#define OPCR_SPENDN1        BIT(6)
+>> I wonder shouldn't it be better to add rc_enable field in struct
+>> venc_controls and give the user choice to disable the rate control? We
+>> can keep the default to be "enabled".
 >>
->>  /* bits within the USBPCR register */
->>  #define USBPCR_USB_MODE        BIT(31)
->> @@ -88,6 +88,13 @@
->>  #define USBVBFIL_IDDIGFIL_MASK    (0xffff << USBVBFIL_IDDIGFIL_SHIFT)
->>  #define USBVBFIL_USBVBFIL_MASK    (0xffff)
->>
->> +/* bits within the LCR register */
->> +#define LCR_PD_SCPU            BIT(31)
->> +#define LCR_SCPUS            BIT(27)
->> +
->> +/* bits within the CLKGR1 register */
->> +#define CLKGR1_CORE1        BIT(15)
->> +
->>  static struct ingenic_cgu *cgu;
->>
->>  static u8 jz4780_otg_phy_get_parent(struct clk_hw *hw)
->> @@ -205,6 +212,47 @@ static const struct clk_ops jz4780_otg_phy_ops = {
->>      .set_rate = jz4780_otg_phy_set_rate,
->>  };
->>
->> +static int jz4780_core1_enable(struct clk_hw *hw)
->> +{
->> +    struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
->> +    struct ingenic_cgu *cgu = ingenic_clk->cgu;
->> +    const unsigned int timeout = 100;
->> +    unsigned long flags;
->> +    unsigned int i;
->> +    u32 lcr, clkgr1;
->> +
->> +    spin_lock_irqsave(&cgu->lock, flags);
->> +
->> +    lcr = readl(cgu->base + CGU_REG_LCR);
->> +    lcr &= ~LCR_PD_SCPU;
->> +    writel(lcr, cgu->base + CGU_REG_LCR);
->> +
->> +    clkgr1 = readl(cgu->base + CGU_REG_CLKGR1);
->> +    clkgr1 &= ~CLKGR1_CORE1;
->> +    writel(clkgr1, cgu->base + CGU_REG_CLKGR1);
->> +
->> +    spin_unlock_irqrestore(&cgu->lock, flags);
->> +
->> +    /* wait for the CPU to be powered up */
->> +    for (i = 0; i < timeout; i++) {
->> +        lcr = readl(cgu->base + CGU_REG_LCR);
->> +        if (!(lcr & LCR_SCPUS))
->> +            break;
->> +        mdelay(1);
->> +    }
->
-> You can use readl_poll_timeout() from <linux/iopoll.h>.
+> That'd be fine. Is there a way to actually disable the rate control though?
 
-Sure.
+The rate control property values are here [1], and [2] is where we set
+the control.
 
->
->> +
->> +    if (i == timeout) {
->> +        pr_err("%s: Wait for power up core1 timeout\n", __func__);
->> +        return -EBUSY;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct clk_ops jz4780_core1_ops = {
->> +    .enable = jz4780_core1_enable,
->> +};
->> +
->>  static const s8 pll_od_encoding[16] = {
->>      0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
->>      0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
->> @@ -701,9 +749,9 @@ static const struct ingenic_cgu_clk_info 
->> jz4780_cgu_clocks[] = {
->>      },
->>
->>      [JZ4780_CLK_CORE1] = {
->> -        "core1", CGU_CLK_GATE,
->> +        "core1", CGU_CLK_CUSTOM,
->>          .parents = { JZ4780_CLK_CPU, -1, -1, -1 },
->> -        .gate = { CGU_REG_CLKGR1, 15 },
->> +        .custom = { &jz4780_core1_ops },
->>      },
->>
->>  };
->> -- 
->> 2.7.4
->>
->
+-- 
+regards,
+Stan
 
+[1]
+https://elixir.bootlin.com/linux/v5.6-rc2/source/drivers/media/platform/qcom/venus/hfi_helper.h#L229
+[2]
+https://elixir.bootlin.com/linux/v5.6-rc2/source/drivers/media/platform/qcom/venus/venc.c#L734
