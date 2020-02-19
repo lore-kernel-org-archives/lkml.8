@@ -2,90 +2,101 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963B8C35254
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B3AC3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB82208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582146411;
-	bh=We7qiHyZF1+0bxnalw+B0B6unBvDDpo3FZ3UilP54wo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=m8QK/wv6eeFDZdAJSuvWEt/w5Vn2Kq/y1eAfT1e64Io2nGQHeUBChH+iv7sXNQp97
-	 67EJu1w8cdhYoSKTmFOLBm9RjSZeMvQwura2N6JoBNhYhj10KAdaX1O6Kp2KbmYElF
-	 uD+iwSi7XO/Yewkpm7xt/i5FvqRsr/tZpo5O4BhM=
+	by mail.kernel.org (Postfix) with ESMTP id 37448208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgBSVGu (ORCPT
+        id S1727525AbgBSVPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:06:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39090 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 16:15:19 -0500
+Received: from muru.com ([72.249.23.125]:56186 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727592AbgBSVGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:06:50 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27675207FD;
-        Wed, 19 Feb 2020 21:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582146409;
-        bh=We7qiHyZF1+0bxnalw+B0B6unBvDDpo3FZ3UilP54wo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ukHYLZC7569bA3jMgJUE4Me0eScdonEH4QsdinQzJLb/YmaJEH255Pbk2YXN3mr++
-         8Wg+cUdQTDSNrybE0lLFSy2X/bFPK8Dj5fyqLpxDt9xuTdPnYxpJKwIX5E0LNZZBZp
-         gfmu61lnSEqsTfX2wTnJ6qyaDxsrEdO8My8VKDao=
-Date:   Wed, 19 Feb 2020 13:06:48 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Subject: Re: [PATCH v12 1/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
- counter
-Message-Id: <20200219130648.83e6810848774c6fd649c445@linux-foundation.org>
-In-Reply-To: <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com>
-References: <20200211213128.73302-1-almasrymina@google.com>
-        <20200211151906.637d1703e4756066583b89da@linux-foundation.org>
-        <CAHS8izPUFQWq3PzhhRzp7u11173_-cmRkNuQWEswS51Xz6ZM0Q@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726645AbgBSVPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:15:18 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 09A4980F3;
+        Wed, 19 Feb 2020 21:16:00 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 13:15:13 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: [PATCH] backlight: add led-backlight driver
+Message-ID: <20200219211513.GE37466@atomide.com>
+References: <20200219191412.GA15905@amd>
+ <20200219194540.GD37466@atomide.com>
+ <20200219205322.GA1227@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219205322.GA1227@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 11:05:41 -0800 Mina Almasry <almasrymina@google.com> wrote:
-
-> On Tue, Feb 11, 2020 at 3:19 PM Andrew Morton <akpm@linux-foundation.org> wrote:
-> >
-> > On Tue, 11 Feb 2020 13:31:20 -0800 Mina Almasry <almasrymina@google.com> wrote:
-> >
-> > > These counters will track hugetlb reservations rather than hugetlb
-> > > memory faulted in. This patch only adds the counter, following patches
-> > > add the charging and uncharging of the counter.
-> >
-> > We're still pretty thin on review here, but as it's v12 and Mike
-> > appears to be signed up to look at this work, I'll add them to -next to
-> > help move things forward.
-> >
+* Pavel Machek <pavel@ucw.cz> [200219 20:54]:
+> Hi!
 > 
-> Hi Andrew,
+> > > This patch adds a led-backlight driver (led_bl), which is similar to
+> > > pwm_bl except the driver uses a LED class driver to adjust the
+> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
+> > > 
+> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > > Acked-by: Tony Lindgren <tony@atomide.com>
+> > > Tested-by: Tony Lindgren <tony@atomide.com>
+> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> > > ---
+> > >  drivers/video/backlight/Kconfig  |   7 ++
+> > >  drivers/video/backlight/Makefile |   1 +
+> > >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 268 insertions(+)
+> > >  create mode 100644 drivers/video/backlight/led_bl.c
 > 
-> Since the patches were merged into -next there have been build fixes
-> and test fixes and some review comments. Would you like me to submit
-> *new* patches to address these, or would you like me to squash the
-> fixes into my existing patch series and submit another iteration of
-> the patch series?
+> > > Here's the version of the driver I have. AFAICT
+> > > default-brightness-level handling is ok, so does not need to be
+> > > changed.
+> > > 
+> > > Lee, it would be easiest for me if you could apply it to your tree and
+> > > push, but given enough time I can push it to Linus, too.
+> > 
+> > Oh you're using quoted-printable for patches.. Got it applied now,
+> > and it still works. Below is also the related dts change that
+> > I tested with.
+> > 
+> > Feel free to pick the dts change too, naturally that should
+> > not be applied before the driver.
+> > 
+> > If you guys instead want me to pick these both into my fixes
+> > branch, just let me know and I'll do the explaining why these
+> > are needed as fixes. Basically we no longer have a way to enable
+> > the LCD backlight for droid4 manually starting with v5.6-rc1
+> > unlike earlier.
+> 
+> If you are willing to do that, it looks like good solution from my
+> point of view.
 
-What you did worked OK ;)
+OK. I'll apply them but won't push out yet in case Lee is already
+applying the driver change..
 
-Please check the end result next time I release a kernel.
+Pavel, care to ack the dts patch?
+
+Regards,
+
+Tony
