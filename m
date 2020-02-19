@@ -2,50 +2,100 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1661C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F012EC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1DB724654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C629624654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgBSMkL (ORCPT
+        id S1727778AbgBSMj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:40:11 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48433 "EHLO ozlabs.org"
+        Wed, 19 Feb 2020 07:39:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52870 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727804AbgBSMkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:40:04 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 48My3k49Kkz9sSg; Wed, 19 Feb 2020 23:40:01 +1100 (AEDT)
-X-powerpc-patch-notification: thanks
-X-powerpc-patch-commit: 5a528eb67908bcf493f3583cb4726fbd8e129605
-In-Reply-To: <d2330584f8c42d3039896e2b56f5d39676dc919c.1581669558.git.christophe.leroy@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-From:   Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND with Fixes: tag] powerpc/chrp: Fix enter_rtas() with CONFIG_VMAP_STACK
-Message-Id: <48My3k49Kkz9sSg@ozlabs.org>
-Date:   Wed, 19 Feb 2020 23:40:01 +1100 (AEDT)
+        id S1726530AbgBSMjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:39:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 69A2CB9C6;
+        Wed, 19 Feb 2020 12:39:44 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware when present
+Date:   Wed, 19 Feb 2020 13:39:32 +0100
+Message-Id: <20200219123933.2792-4-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200219123933.2792-1-nsaenzjulienne@suse.de>
+References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-14 at 08:39:50 UTC, Christophe Leroy wrote:
-> With CONFIG_VMAP_STACK, data MMU has to be enabled
-> to read data on the stack.
-> 
-> Fixes: cd08f109e262 ("powerpc/32s: Enable CONFIG_VMAP_STACK")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+RPi4's VideoCore firmware interface to be up and running. It's possible
+for both initializations to race, so make sure it's available prior
+starting.
 
-Applied to powerpc fixes, thanks.
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-https://git.kernel.org/powerpc/c/5a528eb67908bcf493f3583cb4726fbd8e129605
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index d20aabc26273..9600052f768c 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -28,6 +28,8 @@
+ #include <linux/string.h>
+ #include <linux/types.h>
+ 
++#include <soc/bcm2835/raspberrypi-firmware.h>
++
+ #include "../pci.h"
+ 
+ /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
+@@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node, *msi_np;
+ 	struct pci_host_bridge *bridge;
++	struct device_node *fw_np;
+ 	struct brcm_pcie *pcie;
+ 	struct pci_bus *child;
+ 	struct resource *res;
+ 	int ret;
+ 
++	/*
++	 * We have to wait for the Raspberry Pi's firmware interface to be up
++	 * as some PCI fixups depend on it.
++	 */
++	fw_np = of_find_compatible_node(NULL, NULL,
++					"raspberrypi,bcm2835-firmware");
++	if (fw_np && !rpi_firmware_get(fw_np)) {
++		of_node_put(fw_np);
++		return -EPROBE_DEFER;
++	}
++	of_node_put(fw_np);
++
+ 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
+ 	if (!bridge)
+ 		return -ENOMEM;
+-- 
+2.25.0
 
-cheers
