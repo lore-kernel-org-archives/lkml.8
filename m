@@ -2,97 +2,126 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2C3C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E6CC34053
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7293A24677
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582127526;
-	bh=UzytP5h7XI//G66FxJ+l+hVO3ytWFlxi1K2bmNH76Jk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i1l3WtDxuy5cj4qtOzP1HZjUlRoMqI63tzcqRFoBBD/HcPLgJyzxEIaqWFODjxwvC
-	 ZN+mp3KGN1Q5mdjEJ9aEq+mRr6evvo3xMMpxYN43Ak9Qd26MXcPMvTYyfpwQ8XigNT
-	 CMFO4BJfV0NhcE7OHcMJjqawo3seSaj1jVzIHA64=
+	by mail.kernel.org (Postfix) with ESMTP id 6AFA92465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cg1bMIXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgBSPwF (ORCPT
+        id S1726882AbgBSPwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:52:05 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39835 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgBSPwF (ORCPT
+        Wed, 19 Feb 2020 10:52:25 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:40788 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSPwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:52:05 -0500
-Received: by mail-qt1-f194.google.com with SMTP id c5so529740qtj.6;
-        Wed, 19 Feb 2020 07:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fFVDMYCiG2Jj7QSlhcVZE7ZVXQws5yCHBTafyc8gAf0=;
-        b=Qkf7uJ1c4rV5Qm1v9FuRvQTyPOE0LdHlD1+++LZmhiqhFLAYLJCJQYulwn5mGbVQSQ
-         b93pgugYT/+zQWagehceyEAvjfr1/EXp/YZpqn3v0IJ1ru89mZ3VSjJS6GRX/FI9LJCe
-         XB0ajQwGjX/snUDFYuq61rJEPhUPxutyuiw8s3DOs6i/EgCsMkd4HnJsxkztYM9Me6sx
-         9o5BLcIFLyBJNWmV3BNFtO7yrg1L1MEmQ31pETajfSjjFWOV9MPZ54G3lgfVDbpSuNWK
-         DqTsVYB/R3ez5ZLWy+GAX7MGLOc4sP/o+7xmXydKDgRpRW3B24yugdxMlZlSWMa/UEEc
-         BdOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=fFVDMYCiG2Jj7QSlhcVZE7ZVXQws5yCHBTafyc8gAf0=;
-        b=EVPpXADiSU17GnrSF9wqICCl5gO2Jo43CqQ788plpVa0QWZxfU4z1H2nW7FUx5jEnj
-         OFd7HCx+DjZMx71JynIWUxdH3wiDmQC3YvG5AK0xQPZYgxfKbi4ic+OwkZWP9atXRYFK
-         MIAxTwczsbguX5/lenVsWD4bJy3BoTaAWgu9bn7Kn5JweUgxXVilAz7o/UXV4K3VEa6l
-         NOcYAQSst8tGEsAeUajKMnjQUKz+K0s+wbaqFw97wvWrBnCN/VRWUGfTOcFWcfUjcKA5
-         LqHwIJH7DKEKAUq/lq9fqbnRmMN6G1/fe7G7RZdaYOLQ0N+vW9iKGqAj86TJGmGwSfd6
-         ecfQ==
-X-Gm-Message-State: APjAAAUMr7JiayCnuc9fjHlISyQqwqoBFH+PH7J+6ss7YqAAhTDJ1JxD
-        l18OQXE+VUg6D0JxlyE1++I=
-X-Google-Smtp-Source: APXvYqxggCQfBsIJiialGvH6QEFJhXGEsvlvNLXoHwPOUf5pBk2TNNO+hRO+6MpcmvMYFZn6dKUAow==
-X-Received: by 2002:ac8:4410:: with SMTP id j16mr22707290qtn.261.1582127523849;
-        Wed, 19 Feb 2020 07:52:03 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:e7ce])
-        by smtp.gmail.com with ESMTPSA id c52sm197292qtb.16.2020.02.19.07.52.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:52:03 -0800 (PST)
-Date:   Wed, 19 Feb 2020 10:52:02 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
-Message-ID: <20200219155202.GE698990@mtj.thefacebook.com>
-References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
- <1317969050.4131.1581955387909.JavaMail.zimbra@efficios.com>
- <20200219151922.GB698990@mtj.thefacebook.com>
- <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com>
- <20200219154740.GD698990@mtj.thefacebook.com>
- <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
+        Wed, 19 Feb 2020 10:52:25 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JFlKkn165283;
+        Wed, 19 Feb 2020 15:52:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=+0MKjwYS6o56kZOWus6xPspoxgNogY35LPaujONId3I=;
+ b=cg1bMIXWVeTVesVIC7DolETYE7jLDNBF2KZx3Fx8KiAQ4s5MTyUO4dubtOBMrzBmPfVL
+ o/rTNkUZGCuIftPwlV1cmEug8HP0B5A1SuFJUiAkaJ6KYMgNKXf9jrCEoVRjyK33VVH6
+ kbSCfrqZIJoxaLpm+6EIrXFCyU4gXfLo4+TdOduNQgUou96FKH5CPWVFEU+xX/xzB20X
+ tmyhzf1YTMZKZ3lOqsDJ+EtpqgpIXTi4PVUQ13z1/ky0nKmmK23wJnMazIgYVSjUer82
+ o2R/92rS67TxO+d5gGzwVuUzKwIK/NxaBmemDyVdawPP7gR53LFzGxbRJ7KLB1X+djoC 7g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udkc083-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 15:52:17 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JFmEOF030012;
+        Wed, 19 Feb 2020 15:50:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2y8udargwy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 15:50:16 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01JFoF96031867;
+        Wed, 19 Feb 2020 15:50:15 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 07:50:15 -0800
+Date:   Wed, 19 Feb 2020 07:50:12 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications [ver
+ #16]
+Message-ID: <20200219155012.GA9496@magnolia>
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <20200219144613.lc5y2jgzipynas5l@wittgenstein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200219144613.lc5y2jgzipynas5l@wittgenstein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:50:35AM -0500, Mathieu Desnoyers wrote:
-> I can look into figuring out the commit introducing this issue, which I
-> suspect will be close to the introduction of CONFIG_CPUSET into the
-> kernel (which was ages ago). I'll check and let you know.
+On Wed, Feb 19, 2020 at 03:46:13PM +0100, Christian Brauner wrote:
+> On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
+> > 
+> > Here are a set of patches that adds system calls, that (a) allow
+> > information about the VFS, mount topology, superblock and files to be
+> > retrieved and (b) allow for notifications of mount topology rearrangement
+> > events, mount and superblock attribute changes and other superblock events,
+> > such as errors.
+> > 
+> > ============================
+> > FILESYSTEM INFORMATION QUERY
+> > ============================
+> > 
+> > The first system call, fsinfo(), allows information about the filesystem at
+> > a particular path point to be queried as a set of attributes, some of which
+> > may have more than one value.
+> > 
+> > Attribute values are of four basic types:
+> > 
+> >  (1) Version dependent-length structure (size defined by type).
+> > 
+> >  (2) Variable-length string (up to 4096, including NUL).
+> > 
+> >  (3) List of structures (up to INT_MAX size).
+> > 
+> >  (4) Opaque blob (up to INT_MAX size).
+> 
+> I mainly have an organizational question. :) This is a huge patchset
+> with lots and lots of (good) features. Wouldn't it make sense to make
+> the fsinfo() syscall a completely separate patchset from the
+> watch_mount() and watch_sb() syscalls? It seems that they don't need to
+> depend on each other at all. This would make reviewing this so much
+> nicer and likely would mean that fsinfo() could proceed a little faster.
 
-Oh, yeah, I'm pretty sure it goes way back. I don't think tracking
-that down would be necessary. I was just wondering whether it was a
-recent change because you said it was a regression.
+Agreed; I was also wondering why it was necessary to have three new
+features in the same large(ish) patchset.
 
--- 
-tejun
+--D
+
+> Christian
