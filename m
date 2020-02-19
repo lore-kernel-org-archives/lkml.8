@@ -2,65 +2,120 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21EAC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A50C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDDCD2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D78BB2064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582138575;
+	bh=RO+SxjwCSx2/qFP/8QJ2kYpYtpfH4O8dJvv2BSr0Efg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BPU3nl6rAaCRGGoZmAbmx74b8u1bNgqqEAGdJOP7SdYCoFwuruNcZSjdcnLM7U5eV
+	 2NFQ1yzP/jGOZ83u31v440ksEEv44s6kMFqqKuE9dE0FVPMaXAiPFc9iIyESXGgW8A
+	 lZkqEWAMVm+iXGi/GshlL5VUre3ZtnRwqOEXL31Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBSS4A (ORCPT
+        id S1726945AbgBSS4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:56:00 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46324 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSS4A (ORCPT
+        Wed, 19 Feb 2020 13:56:14 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44361 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbgBSS4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:56:00 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5FE7A15ADF43E;
-        Wed, 19 Feb 2020 10:55:59 -0800 (PST)
-Date:   Wed, 19 Feb 2020 10:55:58 -0800 (PST)
-Message-Id: <20200219.105558.92909916426467093.davem@davemloft.net>
-To:     frextrite@gmail.com
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        joel@joelfernandes.org, madhuparnabhowmik10@gmail.com,
-        paulmck@kernel.org
-Subject: Re: [PATCH RESEND] net: hsr: Pass lockdep expression to RCU lists
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200219100010.23264-1-frextrite@gmail.com>
-References: <20200219100010.23264-1-frextrite@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Feb 2020 10:55:59 -0800 (PST)
+        Wed, 19 Feb 2020 13:56:12 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v201so943070lfa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:56:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4/btNie2yJSHTlvtkEMVrzLJ5p+2iau4ZxcsT8Kh+V8=;
+        b=OANlOLlls14aKMkL1WjVjo8f/tVbYdtb8Nt9MCvon8MWsZkBp2wf0M4h4HkivP25SY
+         Lor+Pn5WeqeFiam04EJmGY4IF6tW7qKCzkRZwxbdgjj0f2w6R9Z2iIpFLl/G1lsUeweh
+         z+TQEaepT45ebjzQ5n9r3U+GEMxGXZG+BGf8c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4/btNie2yJSHTlvtkEMVrzLJ5p+2iau4ZxcsT8Kh+V8=;
+        b=MUkHB9qX6rTRlFa3+pLuUL+LQcURgWEGhr07DH56Jg2VMiwZQUncJLxqQisccvqwW1
+         A10MwKBiqwM2yAnYnoltF2msnHgxJjq6L32tzqVAJxaAkryp6f0vQgAAJGdQGf3dBP1u
+         GTKI9apowk3i9Th1wg9u6MadXOi52FMf6yQrt/fybnhxozeZn15QG6zA6TVonavDx8wO
+         oHmOggSK1cnw3KGoyt4B+xCpi5T8L2HGtyaHh/dGcbN80VP5w1PIIew7Ya342OoDxoPF
+         faIusMTVcD63wsRFm53vhI8U4Hg26EsUhc43FzQ3iY9BqoSZKvJoQUapaR9x59vdEQh9
+         lNZg==
+X-Gm-Message-State: APjAAAWFQcWkoYuo77D3shl61aRcBIQrNyvlV2fr0KyD6sUwapbNa3HW
+        QVnF+jVd9cVDozF+kcSbJKJ9xI0Xn6Q=
+X-Google-Smtp-Source: APXvYqyreObVDgUP0qKmEbckqat24SPOdz0RaBn7pPDBhUzETH7qngW9Pn6vNY+eN3PIEl9VsDZ82g==
+X-Received: by 2002:a19:4884:: with SMTP id v126mr2919742lfa.112.1582138568759;
+        Wed, 19 Feb 2020 10:56:08 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id c27sm253428lfh.62.2020.02.19.10.56.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 10:56:08 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id a13so1468749ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:56:07 -0800 (PST)
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr16927004ljk.201.1582138567368;
+ Wed, 19 Feb 2020 10:56:07 -0800 (PST)
+MIME-Version: 1.0
+References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+ <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
+ <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
+ <241568.1582134931@warthog.procyon.org.uk>
+In-Reply-To: <241568.1582134931@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Feb 2020 10:55:51 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+Message-ID: <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
-Date: Wed, 19 Feb 2020 15:30:11 +0530
+On Wed, Feb 19, 2020 at 9:55 AM David Howells <dhowells@redhat.com> wrote:
+>
+> There's a file type beyond file, dir and symlink that AFS supports:
+> mountpoint.  It appears as a directory with no lookup op in Linux - though it
+> does support readlink.  When a client walks over it, it causes an automount of
+> the volume named by the content of the mountpoint "file" on that point.  NFS
+> and CIFS have similar things.
 
-> node_db is traversed using list_for_each_entry_rcu
-> outside an RCU read-side critical section but under the protection
-> of hsr->list_lock.
-> 
-> Hence, add corresponding lockdep expression to silence false-positive
-> warnings, and harden RCU lists.
-> 
-> Signed-off-by: Amol Grover <frextrite@gmail.com>
-> ---
-> Resend:
-> - Remove failed delivery recipients
+Honestly, AFS isn't common or relevant enough to make this worth a new
+special system call etc.
 
-Applied.
+Why don't you just use mkdir with S_ISVTX set, or something like that?
+Maybe we can even add a new mode bit and allow you to set that one.
+
+And why would removal be any different from rmdir()?
+
+Or just do a perfectly regular mkdir(), followed by a ioctl().
+
+> Directory, not file.  You can do mkdir (requiring write and execute), for
+> example, in a directory you cannot open (which would require read).  If you
+> cannot open it, you cannot do ioctl on it.
+
+Honestly, who cares?
+
+Seriously. Just make the rule be that you need read permission on the
+directory too in order to do that ioctl() that is your magical "make
+special node".
+
+What makes this all *SO* special, and *SO* important that you need to
+follow somebody elses rules that absolutely nobody cares about?
+
+              Linus
