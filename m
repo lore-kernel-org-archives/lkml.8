@@ -2,95 +2,97 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E1FC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2C3C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487C22465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WG8TvWG6"
+	by mail.kernel.org (Postfix) with ESMTP id 7293A24677
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582127526;
+	bh=UzytP5h7XI//G66FxJ+l+hVO3ytWFlxi1K2bmNH76Jk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i1l3WtDxuy5cj4qtOzP1HZjUlRoMqI63tzcqRFoBBD/HcPLgJyzxEIaqWFODjxwvC
+	 ZN+mp3KGN1Q5mdjEJ9aEq+mRr6evvo3xMMpxYN43Ak9Qd26MXcPMvTYyfpwQ8XigNT
+	 CMFO4BJfV0NhcE7OHcMJjqawo3seSaj1jVzIHA64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgBSPvo (ORCPT
+        id S1726856AbgBSPwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:51:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39921 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgBSPvo (ORCPT
+        Wed, 19 Feb 2020 10:52:05 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39835 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726710AbgBSPwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:51:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y11so1118602wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:51:42 -0800 (PST)
+        Wed, 19 Feb 2020 10:52:05 -0500
+Received: by mail-qt1-f194.google.com with SMTP id c5so529740qtj.6;
+        Wed, 19 Feb 2020 07:52:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=SxdCCnMLPzc1gk7NOaHqgh6xVdTLhPkejBZ7rXFt8JI=;
-        b=WG8TvWG6SdqvPlkWHu1tYyS7atYkUmQ/2T6OOrqhei+src9ixS/dp2nmlmUYrtZCI8
-         GLCnPV/T2pKb3b4s0yDajOrcgHppSLyWquybj2IubK6tZKOBL9M3ILbfgrwK+QP72rX6
-         ODlII/frYI2Euy3C72TyeU41rjM72CuRpGym7Y4rKNwAvMIfKe8g1i9atC9G0urqTp13
-         XMvK/O69EqeHhp7SgIM9AzPxCvVtsr8aC+E3IvE0MYznloVlLeQWduKwPzLesBjizm3I
-         cYUseZdWTeI31GLYxXDar3dTlaGBOg+CeUUviX/CJjj0DGtXJdufE6v7GifjbvqhrxAS
-         zxBw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fFVDMYCiG2Jj7QSlhcVZE7ZVXQws5yCHBTafyc8gAf0=;
+        b=Qkf7uJ1c4rV5Qm1v9FuRvQTyPOE0LdHlD1+++LZmhiqhFLAYLJCJQYulwn5mGbVQSQ
+         b93pgugYT/+zQWagehceyEAvjfr1/EXp/YZpqn3v0IJ1ru89mZ3VSjJS6GRX/FI9LJCe
+         XB0ajQwGjX/snUDFYuq61rJEPhUPxutyuiw8s3DOs6i/EgCsMkd4HnJsxkztYM9Me6sx
+         9o5BLcIFLyBJNWmV3BNFtO7yrg1L1MEmQ31pETajfSjjFWOV9MPZ54G3lgfVDbpSuNWK
+         DqTsVYB/R3ez5ZLWy+GAX7MGLOc4sP/o+7xmXydKDgRpRW3B24yugdxMlZlSWMa/UEEc
+         BdOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SxdCCnMLPzc1gk7NOaHqgh6xVdTLhPkejBZ7rXFt8JI=;
-        b=umjzT6k8QWZLWuYPKzuuRzWYGZCoE12axWHKFsIJsxkoxWrgaCK7ztaHMUUiXAsewE
-         zFedJOy956M4ClLzsn+9heOsEUnagiaZ35xe0rrYTn46urZxie1J0L7Hlkdv7MC+P2WY
-         wn+UNUDM3SdEXsj6rBiwwCCYZS5aJ6fc6gojWUlaBoxg3SFufT4AV3VcfBpOORMDLdWp
-         1alAGluyuTpqM7cT1IbByZ/JBKko//3rbPdL4wAp9xadAZqphT8Q3i6Muc/6pbJYG6Fc
-         hmZYEcMrbPzFqx4dfrA8NAd3VT1L0fScssBEIawJsXSRyTK3hDdNFN8n8QKEM9SAoZ5Y
-         1psQ==
-X-Gm-Message-State: APjAAAXCpklS+wcgjLIC0nVnCdAWAU4GWa1+0MsLh4hNvmFs3NB6qUxv
-        pv7p1fYBsroW2ZU5Mxa5XI5Y+Q==
-X-Google-Smtp-Source: APXvYqziXIqHYoIbx4t7/2B41O3tOH3T9OGsND8i6paWUysLrcMOXobTmO7+GXjQuKBFQQiBYqNH5g==
-X-Received: by 2002:a05:6000:145:: with SMTP id r5mr10522854wrx.325.1582127501532;
-        Wed, 19 Feb 2020 07:51:41 -0800 (PST)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id d4sm251578wra.14.2020.02.19.07.51.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Feb 2020 07:51:40 -0800 (PST)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH 1/2] crypto: drbg: DRBG should select SHA512
-Date:   Wed, 19 Feb 2020 15:51:34 +0000
-Message-Id: <1582127495-5871-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=fFVDMYCiG2Jj7QSlhcVZE7ZVXQws5yCHBTafyc8gAf0=;
+        b=EVPpXADiSU17GnrSF9wqICCl5gO2Jo43CqQ788plpVa0QWZxfU4z1H2nW7FUx5jEnj
+         OFd7HCx+DjZMx71JynIWUxdH3wiDmQC3YvG5AK0xQPZYgxfKbi4ic+OwkZWP9atXRYFK
+         MIAxTwczsbguX5/lenVsWD4bJy3BoTaAWgu9bn7Kn5JweUgxXVilAz7o/UXV4K3VEa6l
+         NOcYAQSst8tGEsAeUajKMnjQUKz+K0s+wbaqFw97wvWrBnCN/VRWUGfTOcFWcfUjcKA5
+         LqHwIJH7DKEKAUq/lq9fqbnRmMN6G1/fe7G7RZdaYOLQ0N+vW9iKGqAj86TJGmGwSfd6
+         ecfQ==
+X-Gm-Message-State: APjAAAUMr7JiayCnuc9fjHlISyQqwqoBFH+PH7J+6ss7YqAAhTDJ1JxD
+        l18OQXE+VUg6D0JxlyE1++I=
+X-Google-Smtp-Source: APXvYqxggCQfBsIJiialGvH6QEFJhXGEsvlvNLXoHwPOUf5pBk2TNNO+hRO+6MpcmvMYFZn6dKUAow==
+X-Received: by 2002:ac8:4410:: with SMTP id j16mr22707290qtn.261.1582127523849;
+        Wed, 19 Feb 2020 07:52:03 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:e7ce])
+        by smtp.gmail.com with ESMTPSA id c52sm197292qtb.16.2020.02.19.07.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:52:03 -0800 (PST)
+Date:   Wed, 19 Feb 2020 10:52:02 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+Message-ID: <20200219155202.GE698990@mtj.thefacebook.com>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+ <1317969050.4131.1581955387909.JavaMail.zimbra@efficios.com>
+ <20200219151922.GB698990@mtj.thefacebook.com>
+ <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com>
+ <20200219154740.GD698990@mtj.thefacebook.com>
+ <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since DRBG could use SHA384/SHA512, it should select it.
+On Wed, Feb 19, 2020 at 10:50:35AM -0500, Mathieu Desnoyers wrote:
+> I can look into figuring out the commit introducing this issue, which I
+> suspect will be close to the introduction of CONFIG_CPUSET into the
+> kernel (which was ages ago). I'll check and let you know.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- crypto/Kconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Oh, yeah, I'm pretty sure it goes way back. I don't think tracking
+that down would be necessary. I was just wondering whether it was a
+recent change because you said it was a regression.
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index c24a47406f8f..6d27fc6a7bf5 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -1810,10 +1810,12 @@ config CRYPTO_DRBG_HMAC
- 	default y
- 	select CRYPTO_HMAC
- 	select CRYPTO_SHA256
-+	select CRYPTO_SHA512
- 
- config CRYPTO_DRBG_HASH
- 	bool "Enable Hash DRBG"
- 	select CRYPTO_SHA256
-+	select CRYPTO_SHA512
- 	help
- 	  Enable the Hash DRBG variant as defined in NIST SP800-90A.
- 
 -- 
-2.24.1
-
+tejun
