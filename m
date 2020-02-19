@@ -1,155 +1,344 @@
-Return-Path: <SRS0=52rg=4G=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D28C3404D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC2C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7803E2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Feb 2020 23:58:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHKRx/Bf"
+	by mail.kernel.org (Postfix) with ESMTP id 3517C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgBRX6n (ORCPT
+        id S1727597AbgBSABb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 18:58:43 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41554 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgBRX6m (ORCPT
+        Tue, 18 Feb 2020 19:01:31 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18034 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726641AbgBSABa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 18:58:42 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so21999696oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 15:58:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BYrqyCEJwlM1H84f5pK3yPeUzz0eyZbQZCpRWLIo3KE=;
-        b=qHKRx/BfxY4lRyCCYkG76kGDxYDMR8ijpBdAzI1ItmvWQdEbzda2VltX//GfyqMGVf
-         /AOzGJJTixCWMBhxSGjaQGkCIFUtcFqyd7fPAzTSuZKZcOkKbcu7LwpeLKzgRq2+eG2L
-         /ZlBkw7W1xXkjOj5i4UO7Wsq3VQ1Zbuur89DU4RP1d2XfuvlvwiUmiosiJ3lzpoC7VFz
-         GSBlrQtpNya65OYl7JDB4TUftNJmmbudyNiF6OHhNINcImdFPWP502KocCoapr8djI+x
-         ERr4DafsOzjSVQpFuXmtrliGW83njYIO/LeU+o9LkNYNitVF7poWToOljUBQTnLhgETm
-         vaig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BYrqyCEJwlM1H84f5pK3yPeUzz0eyZbQZCpRWLIo3KE=;
-        b=DOhUY5U375f2bHlQ/Omp7D7OhOIpY5tp3UqSQErurgs3TeM6fcoXIOnhs1yWGkm4bK
-         aGwxj7tz5NWuyOFNHQJCbgXgq9dk/wnHAIG/t+sQaLpQIb67ror+0d3ahDhF0q3zAjKM
-         g1NI0pgAVJOhLlc7/cMTsbx0qQzrOMKiHjyUmeLR7XUWTnu6L5TphVHR+jZKejM6lUKN
-         FF21JY2kOFYiZpSNzjyYyg9hngmk5qW8wPw3XSFnmUoSy6z69TlxwGDXURt6juVy3hEf
-         u29DOSD3KaQY9J7ED6qDKDLovMtnlOZfFljQ9ubxrZGK+BL3wM5KlhZnxFDNNBk2IM78
-         Ou3w==
-X-Gm-Message-State: APjAAAUwDl7sVbEdDS0yOM62+h09hau2TKvbMp5YAOOghoJcBQiGUIj6
-        HegCwoRHBt5FaZorabpvaOSta25VM8s0iHUsrCxJ6Q==
-X-Google-Smtp-Source: APXvYqwoBWUossAPCMCNSpCQ8wSY14d6wpUe/NjKuJFsdFy8DJahI96MiWo6F1ASc3ciEOZr8twY6/KNbKM+lKxkzh4=
-X-Received: by 2002:aca:1a05:: with SMTP id a5mr2990340oia.97.1582070321416;
- Tue, 18 Feb 2020 15:58:41 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <CAL_JsqK5eVCuKiy2R_=5cyEBFM=YvMODqDYrmJxLPyN-Em-++g@mail.gmail.com>
- <CALAqxLUTNq-Dg5Nd4PozCUx3K0hnVEJYmNnkpnGWGhph8vNr8w@mail.gmail.com> <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJuG7ABaZSg=7mr0jHRruoAiWf6vJRD_Ev3DH6BrtpUtg@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Feb 2020 15:58:30 -0800
-Message-ID: <CALAqxLWVCshaPnHR3U0mZLna6zbac-RKC3ZcqvqEK8f446=0sA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     Rob Herring <robh@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        Tue, 18 Feb 2020 19:01:30 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J009cc136962
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:01:29 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e2g37db-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:01:29 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 19 Feb 2020 00:01:26 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 00:01:20 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J00Nrl45678852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 00:00:23 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 401114C050;
+        Wed, 19 Feb 2020 00:01:19 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9227D4C058;
+        Wed, 19 Feb 2020 00:01:18 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Feb 2020 00:01:18 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0499CA00DF;
+        Wed, 19 Feb 2020 11:01:14 +1100 (AEDT)
+Subject: Re: [PATCH v2 06/27] ocxl: Tally up the LPC memory on a link &
+ allow it to be mapped
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 19 Feb 2020 11:01:17 +1100
+In-Reply-To: <20200203123712.0000461a@Huawei.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-7-alastair@au1.ibm.com>
+         <20200203123712.0000461a@Huawei.com>
+Organization: IBM Australia
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021900-0028-0000-0000-000003DC407C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021900-0029-0000-0000-000024A14B74
+Message-Id: <81d1d7c914614ca0b6aac7d02ce07a76b19757c5.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 suspectscore=2 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 3:53 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Feb 18, 2020 at 5:21 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Tue, Feb 18, 2020 at 2:51 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Tue, Feb 18, 2020 at 4:07 PM John Stultz <john.stultz@linaro.org> wrote:
-> > > >
-> > > > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> > > > at the end of initcall"), along with commit 25b4e70dcce9
-> > > > ("driver core: allow stopping deferred probe after init") after
-> > > > late_initcall, drivers will stop getting EPROBE_DEFER, and
-> > > > instead see an error causing the driver to fail to load.
-> > > >
-> > > > That change causes trouble when trying to use many clk drivers
-> > > > as modules, as the clk modules may not load until much later
-> > > > after init has started. If a dependent driver loads and gets an
-> > > > error instead of EPROBE_DEFER, it won't try to reload later when
-> > > > the dependency is met, and will thus fail to load.
-> > > >
-> > > > This patch reworks some of the logic in
-> > > > __driver_deferred_probe_check_state() so that if the
-> > > > deferred_probe_timeout value is set, we will return EPROBE_DEFER
-> > > > until that timeout expires, which may be after initcalls_done
-> > > > is set to true.
-> > > >
-> > > > Specifically, on db845c, this change (when combined with booting
-> > > > using deferred_probe_timeout=30) allows us to set SDM_GPUCC_845,
-> > > > QCOM_CLK_RPMH and COMMON_CLK_QCOM as modules and get a working
-> > > > system, where as without it the display will fail to load.
-> > >
-> > > I would change the default for deferred_probe_timeout to 30 and then
-> > > regulator code can rely on that.
-> >
-> > That is exactly what I do in the following patch! Let me know if you
-> > have further suggestions for it.
->
-> Indeed.
->
-> Between the above comment and this comment in patch 2:
-> /* preserve 30 second interval if deferred_probe_timeout=-1 */
->
-> ...I was confused.
->
+On Mon, 2020-02-03 at 12:37 +0000, Jonathan Cameron wrote:
+> On Tue, 3 Dec 2019 14:46:34 +1100
+> Alastair D'Silva <alastair@au1.ibm.com> wrote:
+> 
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Hi Alastair,
+> 
+> A few trivial comments inline.
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/misc/ocxl/core.c          | 10 ++++++
+> >  drivers/misc/ocxl/link.c          | 60
+> > +++++++++++++++++++++++++++++++
+> >  drivers/misc/ocxl/ocxl_internal.h | 33 +++++++++++++++++
+> >  3 files changed, 103 insertions(+)
+> > 
+> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> > index b7a09b21ab36..2531c6cf19a0 100644
+> > --- a/drivers/misc/ocxl/core.c
+> > +++ b/drivers/misc/ocxl/core.c
+> > @@ -230,8 +230,18 @@ static int configure_afu(struct ocxl_afu *afu,
+> > u8 afu_idx, struct pci_dev *dev)
+> >  	if (rc)
+> >  		goto err_free_pasid;
+> >  
+> > +	if (afu->config.lpc_mem_size || afu-
+> > >config.special_purpose_mem_size) {
+> > +		rc = ocxl_link_add_lpc_mem(afu->fn->link, afu-
+> > >config.lpc_mem_offset,
+> > +					   afu->config.lpc_mem_size +
+> > +					   afu-
+> > >config.special_purpose_mem_size);
+> > +		if (rc)
+> > +			goto err_free_mmio;
+> > +	}
+> > +
+> >  	return 0;
+> >  
+> > +err_free_mmio:
+> > +	unmap_mmio_areas(afu);
+> >  err_free_pasid:
+> >  	reclaim_afu_pasid(afu);
+> >  err_free_actag:
+> > diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> > index 58d111afd9f6..d8503f0dc6ec 100644
+> > --- a/drivers/misc/ocxl/link.c
+> > +++ b/drivers/misc/ocxl/link.c
+> > @@ -84,6 +84,11 @@ struct ocxl_link {
+> >  	int dev;
+> >  	atomic_t irq_available;
+> >  	struct spa *spa;
+> > +	struct mutex lpc_mem_lock;
+> 
+> Always a good idea to explicitly document what a lock is intended to
+> protect.
+> 
+Ok
 
-Sorry. I added that out of an abundance of caution to avoid breaking
-things if someone booted specifying deferred_probe_timeout=-1 as a
-boot argument, since that would cause the regulator timeout to likely
-never expire.
+> > +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the
+> > link */
+> > +	u64 lpc_mem;
+> > +	int lpc_consumers;
+> > +
+> >  	void *platform_data;
+> >  };
+> >  static struct list_head links_list = LIST_HEAD_INIT(links_list);
+> > @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int
+> > PE_mask, struct ocxl_link **out_l
+> >  	if (rc)
+> >  		goto err_spa;
+> >  
+> > +	mutex_init(&link->lpc_mem_lock);
+> > +
+> >  	/* platform specific hook */
+> >  	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
+> >  				&link->platform_data);
+> > @@ -711,3 +718,56 @@ void ocxl_link_free_irq(void *link_handle, int
+> > hw_irq)
+> >  	atomic_inc(&link->irq_available);
+> >  }
+> >  EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
+> > +
+> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64 size)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +
+> > +	// Check for overflow
+> 
+> Stray c++ style comment.
+> 
+This is permitted in powerpc.
 
-> > > Curious, why 30 sec is fine now when
-> > > you originally had 2 min? I'd just pick what you think is best. I
-> > > doubt Mark had any extensive experiments to come up with 30sec.
-> >
-> > I had two minutes initially as, due to other delays I still have to
-> > chase, booting all the way to UI on the db845c can sometimes take
-> > almost a minute. So it was just a rough safety estimate. But in v2, I
-> > tested with the 30 second time used by the regulator code, and that
-> > seemed to work ok.
-> >
-> > As long as 30 seconds is working well, I'm ok with it for now (and it
-> > can be overrided via boot arg). Though from past experience with
-> > enterprise distros running on servers with tons of disks (which might
-> > take many minutes to initialize), I'd suspect its likely some
-> > environments may need much longer.
->
-> Those systems aren't going to have a pinctrl or clock driver sitting
-> in an encrypted RAID partition either. :)
+> > +	if (offset > (offset + size))
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	link->lpc_mem_sz = max(link->lpc_mem_sz, offset + size);
+> > +
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +	u64 lpc_mem;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	if (link->lpc_mem) {
+> 
+> If you don't modify this later in the series (I haven't read it all
+> yet :),
+> it rather feels like it would be more compact and just as readable as
+> something like...
+> 
+> 	if (!link->lpc_mem)
+> 		link->lpc_mem = pnv_ocxl...
+> 
+> 	if (link->lpc_mem)
+> 		link->lpc_consumers++;
+> 	mutex_unlock(&link->lpc_mem_lock);
+> 		
+> 	return link->lpc_mem;
+> 
 
-Fair enough. Not today.. but it's always only a matter of time between
-"that's ridiculous!" and "oh, we need that!" :)
+Agreed, thanks.
 
-thanks
--john
+> > +		lpc_mem = link->lpc_mem;
+> > +
+> > +		link->lpc_consumers++;
+> > +		mutex_unlock(&link->lpc_mem_lock);
+> > +		return lpc_mem;
+> > +	}
+> > +
+> > +	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link-
+> > >lpc_mem_sz);
+> > +	if (link->lpc_mem)
+> > +		link->lpc_consumers++;
+> > +	lpc_mem = link->lpc_mem;
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +
+> > +	return lpc_mem;
+> > +}
+> > +
+> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+> > *pdev)
+> > +{
+> > +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+> > +
+> > +	mutex_lock(&link->lpc_mem_lock);
+> > +	WARN_ON(--link->lpc_consumers < 0);
+> > +	if (link->lpc_consumers == 0) {
+> > +		pnv_ocxl_platform_lpc_release(pdev);
+> > +		link->lpc_mem = 0;
+> > +	}
+> > +
+> > +	mutex_unlock(&link->lpc_mem_lock);
+> > +}
+> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
+> > b/drivers/misc/ocxl/ocxl_internal.h
+> > index 97415afd79f3..20b417e00949 100644
+> > --- a/drivers/misc/ocxl/ocxl_internal.h
+> > +++ b/drivers/misc/ocxl/ocxl_internal.h
+> > @@ -141,4 +141,37 @@ int ocxl_irq_offset_to_id(struct ocxl_context
+> > *ctx, u64 offset);
+> >  u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+> >  void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> >  
+> > +/**
+> > + * ocxl_link_add_lpc_mem() - Increment the amount of memory
+> > required by an OpenCAPI link
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @offset: The offset of the memory to add
+> > + * @size: The amount of memory to increment by
+> > + *
+> > + * Return 0 on success, negative on overflow
+> > + */
+> > +int ocxl_link_add_lpc_mem(void *link_handle, u64 offset, u64
+> > size);
+> > +
+> > +/**
+> > + * ocxl_link_lpc_map() - Map the LPC memory for an OpenCAPI device
+> > + *
+> > + * Since LPC memory belongs to a link, the whole LPC memory
+> > available
+> > + * on the link bust be mapped in order to make it accessible to a
+> > device.
+> 
+> must
+
+Whoops :)
+> 
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @pdev: A device that is on the link
+> > + */
+> > +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
+> > +
+> > +/**
+> > + * ocxl_link_lpc_release() - Release the LPC memory device for an
+> > OpenCAPI device
+> > + *
+> > + * Offlines LPC memory on an OpenCAPI link for a device. If this
+> > is the
+> > + * last device on the link to release the memory, unmap it from
+> > the link.
+> > + *
+> > + * @link_handle: The OpenCAPI link handle
+> > + * @pdev: A device that is on the link
+> > + */
+> > +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+> > *pdev);
+> > +
+> >  #endif /* _OCXL_INTERNAL_H_ */
+
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
