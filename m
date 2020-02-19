@@ -2,138 +2,115 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C466FC3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F196C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F29D24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582081096;
-	bh=zLZw1qR/XpXYBmvugwhE5yh5SqRSUw18nixQc8D5mtY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EkxKl8QT/76trNXvEVjOnpV9HDn0cC4Ks6DaxDKj/r+aWxq9hvhADKStkcJRSyhIG
-	 It8kYJCMuJVYSHo9D4kLVDwhbiREWjg69yeIa8LTZO+bz3YD1I56IqCL0dUpVo/RO/
-	 N23iBT9Kw/gCkKLpYCfHkW12nqUAn6mAMXswP5/M=
+	by mail.kernel.org (Postfix) with ESMTP id EAE6522B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgBSC6Q (ORCPT
+        id S1728295AbgBSDAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:58:16 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35256 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728175AbgBSC6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:58:15 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so21761087otd.2;
-        Tue, 18 Feb 2020 18:58:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xTGQmxUmNRth+yRhSKHtoUgcE+23rlmrBG/UqSF57C4=;
-        b=XNA29+YmzuxvM/slxw06R+9X+34E8Xau2m71G2+s1ko/IUXtCj7yhIvKr8gom8XrzA
-         LwpFydzHmiwzLNNb7UjGmYl4idD0+kMVz7Wn6m73Tr1+4pMi3P11Zip9UHc+/zxrPK5u
-         J4fNJXu0hqkAdj2hjzXkOyklszD2G5kcm6QBIF1jPr9PSQFAw6qdalmRRqgfaF2B7GQ+
-         P8VE0kdyAxdiclF98DEIceFEnqjrLci/CsK/Dorugef4BpPilYhd2m4V0JW6Qe+f2Htk
-         nSc0Zu7XKjZJyHr13Ldw3/Ky2FV31hK0QpUEkLnSZeSNIxNzn0yjNjnc4Z32qvBthkCa
-         fP5w==
-X-Gm-Message-State: APjAAAVuMWQ7rJhj+rbwsP82FC0POvKTDeTv5lnRzTQal4JG5SNcDuNF
-        Ld8rAo/AeeSZrVH+NJ04aA==
-X-Google-Smtp-Source: APXvYqw1L6GCZna8YMWf4yMNAkVw7UgscE3jBjEI1Do4b3teVIqY+vAlfCJe0QT1lA33JTK7rqs3sA==
-X-Received: by 2002:a9d:69ce:: with SMTP id v14mr18336960oto.248.1582081093490;
-        Tue, 18 Feb 2020 18:58:13 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r2sm204259otk.22.2020.02.18.18.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 18:58:12 -0800 (PST)
-Received: (nullmailer pid 8516 invoked by uid 1000);
-        Wed, 19 Feb 2020 02:58:11 -0000
-Date:   Tue, 18 Feb 2020 20:58:11 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: clock: Add binding documentation for
- TI syscon gate clock
-Message-ID: <20200219025811.GA20054@bogus>
-References: <20200215141724.32291-1-vigneshr@ti.com>
- <20200215141724.32291-2-vigneshr@ti.com>
+        Tue, 18 Feb 2020 22:00:04 -0500
+Received: from mga11.intel.com ([192.55.52.93]:6619 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728196AbgBSDAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:00:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 19:00:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
+   d="scan'208";a="348830245"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Feb 2020 18:59:58 -0800
+Date:   Wed, 19 Feb 2020 10:59:48 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200219025948.GA972742@___>
+References: <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
+ <20200212125108.GS4271@mellanox.com>
+ <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
+ <20200213134128.GV4271@mellanox.com>
+ <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
+ <20200213150542.GW4271@mellanox.com>
+ <8b3e6a9c-8bfd-fb3c-12a8-2d6a3879f1ae@redhat.com>
+ <20200214135232.GB4271@mellanox.com>
+ <01c86ebb-cf4b-691f-e682-2d6f93ddbcf7@redhat.com>
+ <20200218135608.GS4271@mellanox.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200215141724.32291-2-vigneshr@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200218135608.GS4271@mellanox.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 07:47:23PM +0530, Vignesh Raghavendra wrote:
-> Add dt bindings for TI syscon gate clock driver that is used to control
-> EHRPWM's TimeBase clock (TBCLK) on TI's AM654 SoC.
+On Tue, Feb 18, 2020 at 01:56:12PM +0000, Jason Gunthorpe wrote:
+> On Mon, Feb 17, 2020 at 02:08:03PM +0800, Jason Wang wrote:
 > 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
->  .../bindings/clock/ti,am654-ehrpwm-tbclk.yaml | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+> > I thought you were copied in the patch [1], maybe we can move vhost related
+> > discussion there to avoid confusion.
+> >
+> > [1] https://lwn.net/Articles/811210/
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
-> new file mode 100644
-> index 000000000000..3bf954ecb803
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
-> @@ -0,0 +1,35 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TI syscon gate clock driver
-
-Bindings are for h/w blocks, not drivers.
-
-> +
-> +maintainers:
-> +  - Vignesh Raghavendra <vigneshr@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ti,am654-ehrpwm-tbclk
-> +      - const: syscon
-
-Why is this a syscon? Are there other functions or it's just the easy 
-way to get a regmap.
-
-> +
-> +  "#clock-cells":
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    ehrpwm_tbclk: syscon@4140 {
-> +        compatible = "ti,am654-ehrpwm-tbclk", "syscon";
-> +        reg = <0x4140 0x18>;
-> +        #clock-cells = <1>;
-> +    };
-> -- 
-> 2.25.0
+> Wow, that is .. confusing.
 > 
+> So this is supposed to duplicate the uAPI of vhost-user? But it is
+> open coded and duplicated because .. vdpa?
+
+Do you mean the vhost-user in DPDK? There is no vhost-user
+in Linux kernel.
+
+Thanks,
+Tiwei
+
+> 
+> > So it's cheaper and simpler to introduce a new bus instead of refactoring a
+> > well known bus and API where brunches of drivers and devices had been
+> > implemented for years.
+> 
+> If you reason for this approach is to ease the implementation then you
+> should talk about it in the cover letters/etc
+> 
+> Maybe it is reasonable to do this because the rework is too great, I
+> don't know, but to me this whole thing looks rather messy. 
+> 
+> Remember this stuff is all uAPI as it shows up in sysfs, so you can
+> easilly get stuck with it forever.
+> 
+> Jason
