@@ -2,70 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC2FC3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBC3C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343E9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B13E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yaW/aMLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgBSTgB (ORCPT
+        id S1726865AbgBSThR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:36:01 -0500
-Received: from mail.hallyn.com ([178.63.66.53]:39468 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgBSTgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:36:00 -0500
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id B6255B4F; Wed, 19 Feb 2020 13:35:58 -0600 (CST)
-Date:   Wed, 19 Feb 2020 13:35:58 -0600
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-Message-ID: <20200219193558.GA27641@mail.hallyn.com>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+        Wed, 19 Feb 2020 14:37:17 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:45780 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbgBSThQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:37:16 -0500
+Received: by mail-qv1-f66.google.com with SMTP id l14so727856qvu.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:37:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DFD/PBmG0P7U1KLcfwxQ00ort/KIczMCNrbTAdH0j9g=;
+        b=yaW/aMLvoyD72gqf9JCZfvj8P+9plgT82zxsbaIugjOxyXEvghFgPPkSW1TqZoFdOz
+         4tr15KFItwTQfQhiWTeY+8Srat3gbX/RQ6Hgm8rIjfZHfqUEOtVpm0Q0y6F6cxJPlxus
+         aT1ZO43r5M7YLtCgzwbt1D8ZnTuATju1/2pg5HZAfLmHpY1Yh/Z7A5oBPM+qsrjhzFYg
+         06X+pEaoT5XF8PuErVI1qHsDU1VgFW1ysvMlUiI/+N+tGsYUStvrmG0W7bnou7gueZLc
+         ihBEHv0EAdrzu6j9rSD6n8XlF0kXuGg2ShChO3x4tSekiZ9F5qExxRVGGzQojLOTDfO1
+         jLJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DFD/PBmG0P7U1KLcfwxQ00ort/KIczMCNrbTAdH0j9g=;
+        b=K5U2l8QUGAF/aeR28vjcODg+yXTmqYQa1/nEMJ8h1eT3ZbBWqZnA6cmrc4a31Fh6by
+         3sWiZ0nudtx2igVfF4UdBfBQaBt8snXZ3nbqMo0w8WFYIyUcuRYycH7VZBbJtO+hXlsA
+         ZCKE2goLXQAPVdlBa9gF761M5ZYqOKX0X9S5W3H7fzGW0HR8SXqjPMlCZWqfa/x3LEvm
+         8ESs+GB9XRDgs3onwR+GiR+FnQW1GuNiHMjMWfokd8WlH+lnTVtemMaNK7Z8r7vNaSrV
+         2NlHM6MIebgGgI6lsuflFYUqyylG0dGmfeF47fXkARWM2S11PrX00ZKxEI0hv716BxQ1
+         N18Q==
+X-Gm-Message-State: APjAAAW5s435Xa4OnCTuYSeRti88M18wGmOcg3YcX99yY2MSXyYwUb8Y
+        Uf3rcqcj29LN2c707bhkoaaGWg==
+X-Google-Smtp-Source: APXvYqyfbQYqHz8jNbpOiu+R9QyUIIq8WOjAeGKUtgBcTkoS963BuB06JV4msDsxj+JkbPRZevPQmg==
+X-Received: by 2002:a05:6214:50f:: with SMTP id v15mr22688159qvw.42.1582141032641;
+        Wed, 19 Feb 2020 11:37:12 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3bde])
+        by smtp.gmail.com with ESMTPSA id p2sm344987qkg.102.2020.02.19.11.37.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 11:37:12 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:37:11 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Dan Schatzberg <dschatzberg@fb.com>, Jens Axboe <axboe@kernel.dk>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 2/3] mm: Charge active memcg when no mm is set
+Message-ID: <20200219193711.GC54486@cmpxchg.org>
+References: <cover.1581088326.git.dschatzberg@fb.com>
+ <8e41630b9d1c5d00f92a00f998285fa6003af5eb.1581088326.git.dschatzberg@fb.com>
+ <20200207211807.GA138184@chrisdown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200207211807.GA138184@chrisdown.name>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 03:33:46PM +0100, Christian Brauner wrote:
-> With fsid mappings we can solve this by writing an id mapping of 0
-> 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
-> access the kernel will now lookup the mapping for 300000 in the fsid
-> mapping tables of the user namespace. And since such a mapping exists,
-> the corresponding files will have correct ownership.
+On Fri, Feb 07, 2020 at 09:18:07PM +0000, Chris Down wrote:
+> > @@ -6856,8 +6857,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+> > 		}
+> > 	}
+> > 
+> > -	if (!memcg)
+> > -		memcg = get_mem_cgroup_from_mm(mm);
+> > +	if (!memcg) {
+> > +		if (!mm)
+> > +			memcg = get_mem_cgroup_from_current();
+> > +		else
+> > +			memcg = get_mem_cgroup_from_mm(mm);
+> > +	}
+> 
+> Just to do due diligence, did we double check whether this results in any
+> unintentional shift in accounting for those passing in both mm and memcg as
+> NULL with no current->active_memcg set, since previously we never even tried
+> to consult current->mm and always used root_mem_cgroup in
+> get_mem_cgroup_from_mm?
 
-So if I have
+Excellent question on a subtle issue.
 
-/proc/self/uid_map: 0 100000 100000
-/proc/self/fsid_map: 1000 1000 1
+But nobody actually passes NULL. They either pass current->mm (or a
+destination mm) in syscalls, or vma->vm_mm in page faults.
 
-1. If I read files from the rootfs which have host uid 101000, they
-will appear as uid 100 to me?
+The only times we end up with NULL is when kernel threads do something
+and have !current->mm. We redirect those to root_mem_cgroup.
 
-2. If I read host files with uid 1000, they will appear as uid 1000 to me?
-
-3. If I create a new file, as uid 1000, what will be the inode owning uid?
+So this patch doesn't change those semantics.
