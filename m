@@ -2,381 +2,554 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34C3C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14EBDC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C16824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:55:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDiZMLUM"
+	by mail.kernel.org (Postfix) with ESMTP id CF0FE24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:01:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgBSEzm (ORCPT
+        id S1726038AbgBSFBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:55:42 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43380 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgBSEzm (ORCPT
+        Wed, 19 Feb 2020 00:01:15 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725306AbgBSFBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:55:42 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a13so25599703ljm.10;
-        Tue, 18 Feb 2020 20:55:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YBSVt/C1uERwOBCw6Tfd2ihfw4ttURW20stCOCuUeeY=;
-        b=hDiZMLUM827hnvN23kSWhwtokR+qs7BHdQeFo/iXV/Opgeito5PofamrpAHQ7MmvQu
-         rJ+9tvLCfZ7bRJvCDAqiCjAJwwP57r4Xt2Ted1hOQpqRUw1s87ObyAu0dxGG14dcZ8o+
-         +VbWSlCgdOASpSlFmU7498F4XmInMG4twKZ7GuqqPjUekHPg/RG5xHbAAz+d8EKA+tXg
-         g0peKf2VdKHc22b2cFr+H9OAJYX6gDerduPlUWZsv7a8BjgFQkraDPpUQxAg9JPkHs4J
-         /PcLcl2e4k2TxSf3DI58ni34oUr4fqNTe8lqIZCP0z/u5BR3tW+QeCkmfEqwrCfWnncv
-         7IyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YBSVt/C1uERwOBCw6Tfd2ihfw4ttURW20stCOCuUeeY=;
-        b=T4BSb92InAsxpjJusETSxCw2XvJiVU4ef5ocn1y09PpljkkSwylfv7CwBmT3kSgSXt
-         rnKOzQLs2zC/rERnHd0PAJq50q095yFD2mnNByk0NwwalJT/zxkqHMS+UARJRYoyZIto
-         o13cXPOkrt/wq9Jk7yxNxBD1R7WsD+wQ8DLFJKdFhXknmQvLIw0M/elZVGG2Zn/SAsy9
-         68LxLJQxGZgUnmG1k6K2XUoGZlFfQIyOV2ay1axVkzzy9dg309K6NraJ37MPJj61/NRu
-         QRf97PoLt+aB8YO8Bmhbr4zn09csJhCrkUUUurw96oatusPsfkpRFgDNFPWgImlNbQ4q
-         dN5Q==
-X-Gm-Message-State: APjAAAXtoVShzy1YBiP6U0HrFW/oVb2EG18xZYQaxeJaCXUCA1Y4sRF+
-        NsbZW74baoYZL2DSZN0c1IVU5iQuoKy8Mjp6xN8Rvw==
-X-Google-Smtp-Source: APXvYqwKSLnMPDyiQXuhjfM2GMJ5AmECyzht+ieGjN5O7mUjvLmgkVi4EWU1Fr2we6RSMPyvukVruvmOmgJge7Q4554=
-X-Received: by 2002:a2e:a490:: with SMTP id h16mr15019961lji.115.1582088139638;
- Tue, 18 Feb 2020 20:55:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217052336.5556-1-hdanton@sina.com> <dca36c4b-bbf5-b215-faa9-1992240f2b69@fb.com>
- <d7ec13dc-a7e7-9381-9728-9157454cadc9@fb.com>
-In-Reply-To: <d7ec13dc-a7e7-9381-9728-9157454cadc9@fb.com>
-From:   Brian Vazquez <brianvv.kernel@gmail.com>
-Date:   Tue, 18 Feb 2020 20:55:28 -0800
-Message-ID: <CABCgpaWD8HdD29B5nJqHczoJW2zXVK-So7jdHGQmLgc5OxqUUA@mail.gmail.com>
-Subject: Re: possible deadlock in bpf_lru_push_free
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>,
-        andriin@fb.com, Alexei Starovoitov <ast@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com
+        Wed, 19 Feb 2020 00:01:14 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J4x2C5076524
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:01:10 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubuvtr3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:01:10 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 19 Feb 2020 05:01:08 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 05:01:01 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J510nh55443556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 05:01:00 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01EF84C040;
+        Wed, 19 Feb 2020 05:01:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09CDF4C058;
+        Wed, 19 Feb 2020 05:00:59 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Feb 2020 05:00:58 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6DB61A00DF;
+        Wed, 19 Feb 2020 16:00:54 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 19 Feb 2020 16:00:57 +1100
+In-Reply-To: <20200203141846.00004981@Huawei.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-14-alastair@au1.ibm.com>
+         <20200203141846.00004981@Huawei.com>
+Organization: IBM Australia
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021905-4275-0000-0000-000003A353F3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021905-4276-0000-0000-000038B75CB4
+Message-Id: <6d41f1e365960f3b3f8779ca117868c4d8508489.camel@au1.ibm.com>
+Subject: RE: [PATCH v2 13/27] nvdimm/ocxl: Add support for Admin commands
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 3:56 PM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 2/18/20 9:44 AM, Yonghong Song wrote:
-> >
-> >
-> > On 2/16/20 9:23 PM, Hillf Danton wrote:
-> >>
-> >> On Sun, 16 Feb 2020 04:17:09 -0800
-> >>> syzbot has found a reproducer for the following crash on:
-> >>>
-> >>> HEAD commit:    2019fc96 Merge
-> >>> git://git.kernel.org/pub/scm/linux/kernel/g..
-> >>> git tree:       net
-> >>> console output:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.apps=
-pot.com_x_log.txt-3Fx-3D1358bb11e00000&d=3DDwIDAg&c=3D5VD0RTtNlTh3ycd41b3MU=
-w&r=3DDA8e1B5r073vIqRrFz7MRA&m=3Dnpe_gMkFnfxt6F5dGLs6zsNHWkYM30LkMFOk1_ZR1w=
-8&s=3DzrgWcBnddWkMWG2zm-9nC8EwvHMsuqw_-EEXwl23XLg&e=3D
-> >>>
-> >>> kernel config:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.apps=
-pot.com_x_.config-3Fx-3D735296e4dd620b10&d=3DDwIDAg&c=3D5VD0RTtNlTh3ycd41b3=
-MUw&r=3DDA8e1B5r073vIqRrFz7MRA&m=3Dnpe_gMkFnfxt6F5dGLs6zsNHWkYM30LkMFOk1_ZR=
-1w8&s=3DkbT6Yw89JDoIWSQtlLJ7sjyNoP2Ulud27GNorna1zQk&e=3D
-> >>>
-> >>> dashboard link:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.apps=
-pot.com_bug-3Fextid-3D122b5421d14e68f29cd1&d=3DDwIDAg&c=3D5VD0RTtNlTh3ycd41=
-b3MUw&r=3DDA8e1B5r073vIqRrFz7MRA&m=3Dnpe_gMkFnfxt6F5dGLs6zsNHWkYM30LkMFOk1_=
-ZR1w8&s=3DU3pdUmrcroaeNsJ9DgFbTlvftQUCUcJ1CW_0NxS8yGA&e=3D
-> >>>
-> >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >>> syz repro:
-> >>> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__syzkaller.apps=
-pot.com_x_repro.syz-3Fx-3D14b67d6ee00000&d=3DDwIDAg&c=3D5VD0RTtNlTh3ycd41b3=
-MUw&r=3DDA8e1B5r073vIqRrFz7MRA&m=3Dnpe_gMkFnfxt6F5dGLs6zsNHWkYM30LkMFOk1_ZR=
-1w8&s=3DTuSfjosRFQW3ArpQwikTtx-dgLLBSMgJfVKtUltqQBM&e=3D
-> >>>
-> >>>
-> >>> IMPORTANT: if you fix the bug, please add the following tag to the
-> >>> commit:
-> >>> Reported-by: syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com
-> >>>
-> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >>> WARNING: possible circular locking dependency detected
-> >>> 5.6.0-rc1-syzkaller #0 Not tainted
-> >>> ------------------------------------------------------
-> >>> syz-executor.4/13544 is trying to acquire lock:
-> >>> ffffe8ffffcba0b8 (&loc_l->lock){....}, at: bpf_common_lru_push_free
-> >>> kernel/bpf/bpf_lru_list.c:516 [inline]
-> >>> ffffe8ffffcba0b8 (&loc_l->lock){....}, at:
-> >>> bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
-> >>>
-> >>> but task is already holding lock:
-> >>> ffff888094985960 (&htab->buckets[i].lock){....}, at:
-> >>> __htab_map_lookup_and_delete_batch+0x617/0x1540
-> >>> kernel/bpf/hashtab.c:1322
-> >>>
-> >>> which lock already depends on the new lock.
-> >>>
-> >>>
-> >>> the existing dependency chain (in reverse order) is:
-> >>>
-> >>> -> #2 (&htab->buckets[i].lock){....}:
-> >>>         __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110
-> >>> [inline]
-> >>>         _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:15=
-9
-> >>>         htab_lru_map_delete_node+0xce/0x2f0 kernel/bpf/hashtab.c:593
-> >>>         __bpf_lru_list_shrink_inactive kernel/bpf/bpf_lru_list.c:220
-> >>> [inline]
-> >>>         __bpf_lru_list_shrink+0xf9/0x470 kernel/bpf/bpf_lru_list.c:26=
-6
-> >>>         bpf_lru_list_pop_free_to_local kernel/bpf/bpf_lru_list.c:340
-> >>> [inline]
-> >>>         bpf_common_lru_pop_free kernel/bpf/bpf_lru_list.c:447 [inline=
-]
-> >>>         bpf_lru_pop_free+0x87c/0x1670 kernel/bpf/bpf_lru_list.c:499
-> >>>         prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
-> >>>         __htab_lru_percpu_map_update_elem+0x67e/0xa90
-> >>> kernel/bpf/hashtab.c:1069
-> >>>         bpf_percpu_hash_update+0x16e/0x210 kernel/bpf/hashtab.c:1585
-> >>>         bpf_map_update_value.isra.0+0x2d7/0x8e0 kernel/bpf/syscall.c:=
-181
-> >>>         generic_map_update_batch+0x41f/0x610 kernel/bpf/syscall.c:131=
-9
-> >>>         bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-> >>>         __do_sys_bpf+0x9b7/0x41e0 kernel/bpf/syscall.c:3460
-> >>>         __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-> >>>         __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-> >>>         do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >>>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>> -> #1 (&l->lock){....}:
-> >>>         __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-> >>>         _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-> >>>         bpf_lru_list_pop_free_to_local kernel/bpf/bpf_lru_list.c:325
-> >>> [inline]
-> >>>         bpf_common_lru_pop_free kernel/bpf/bpf_lru_list.c:447 [inline=
-]
-> >>>         bpf_lru_pop_free+0x67f/0x1670 kernel/bpf/bpf_lru_list.c:499
-> >>>         prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
-> >>>         __htab_lru_percpu_map_update_elem+0x67e/0xa90
-> >>> kernel/bpf/hashtab.c:1069
-> >>>         bpf_percpu_hash_update+0x16e/0x210 kernel/bpf/hashtab.c:1585
-> >>>         bpf_map_update_value.isra.0+0x2d7/0x8e0 kernel/bpf/syscall.c:=
-181
-> >>>         generic_map_update_batch+0x41f/0x610 kernel/bpf/syscall.c:131=
-9
-> >>>         bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-> >>>         __do_sys_bpf+0x9b7/0x41e0 kernel/bpf/syscall.c:3460
-> >>>         __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-> >>>         __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-> >>>         do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >>>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>> -> #0 (&loc_l->lock){....}:
-> >>>         check_prev_add kernel/locking/lockdep.c:2475 [inline]
-> >>>         check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-> >>>         validate_chain kernel/locking/lockdep.c:2970 [inline]
-> >>>         __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
-> >>>         lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-> >>>         __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110
-> >>> [inline]
-> >>>         _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:15=
-9
-> >>>         bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:516 [inlin=
-e]
-> >>>         bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
-> >>>         __htab_map_lookup_and_delete_batch+0x8d4/0x1540
-> >>> kernel/bpf/hashtab.c:1374
-> >>>         htab_lru_map_lookup_and_delete_batch+0x34/0x40
-> >>> kernel/bpf/hashtab.c:1491
-> >>>         bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-> >>>         __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
-> >>>         __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-> >>>         __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-> >>>         do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >>>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>> other info that might help us debug this:
-> >>>
-> >>> Chain exists of:
-> >>>    &loc_l->lock --> &l->lock --> &htab->buckets[i].lock
-> >>>
-> >>>   Possible unsafe locking scenario:
-> >>>
-> >>>         CPU0                    CPU1
-> >>>         ----                    ----
-> >>>    lock(&htab->buckets[i].lock);
-> >>>                                 lock(&l->lock);
-> >>>                                 lock(&htab->buckets[i].lock);
-> >>>    lock(&loc_l->lock);
-> >>>
-> >>>   *** DEADLOCK ***
-> >>>
-> >>> 2 locks held by syz-executor.4/13544:
-> >>>   #0: ffffffff89bac240 (rcu_read_lock){....}, at:
-> >>> __htab_map_lookup_and_delete_batch+0x54b/0x1540
-> >>> kernel/bpf/hashtab.c:1308
-> >>>   #1: ffff888094985960 (&htab->buckets[i].lock){....}, at:
-> >>> __htab_map_lookup_and_delete_batch+0x617/0x1540
-> >>> kernel/bpf/hashtab.c:1322
-> >>>
-> >>> stack backtrace:
-> >>> CPU: 0 PID: 13544 Comm: syz-executor.4 Not tainted
-> >>> 5.6.0-rc1-syzkaller #0
-> >>> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> >>> BIOS Google 01/01/2011
-> >>> Call Trace:
-> >>>   __dump_stack lib/dump_stack.c:77 [inline]
-> >>>   dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >>>   print_circular_bug.isra.0.cold+0x163/0x172
-> >>> kernel/locking/lockdep.c:1684
-> >>>   check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
-> >>>   check_prev_add kernel/locking/lockdep.c:2475 [inline]
-> >>>   check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-> >>>   validate_chain kernel/locking/lockdep.c:2970 [inline]
-> >>>   __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
-> >>>   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-> >>>   __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inlin=
-e]
-> >>>   _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-> >>>   bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:516 [inline]
-> >>>   bpf_lru_push_free+0x250/0x5b0 kernel/bpf/bpf_lru_list.c:555
-> >>>   __htab_map_lookup_and_delete_batch+0x8d4/0x1540
-> >>> kernel/bpf/hashtab.c:1374
-> >>>   htab_lru_map_lookup_and_delete_batch+0x34/0x40
-> >>> kernel/bpf/hashtab.c:1491
-> >>>   bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-> >>>   __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
-> >>>   __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-> >>>   __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-> >>>   do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >>>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>
-> >> Reclaim hash table elememt outside bucket lock.
-> >
-> > Thanks for the following patch. Yes, we do have an potential issue
-> > with the above deadlock if LRU hash map is not preallocated.
-> >
-> > I am not a RCU expert, but maybe you could you help clarify
-> > one thing below?
-> >
-> >>
-> >> --- a/kernel/bpf/hashtab.c
-> >> +++ b/kernel/bpf/hashtab.c
-> >> @@ -1259,6 +1259,7 @@ __htab_map_lookup_and_delete_batch(struc
-> >>       u64 elem_map_flags, map_flags;
-> >>       struct hlist_nulls_head *head;
-> >>       struct hlist_nulls_node *n;
-> >> +    struct hlist_nulls_node *node_to_free =3D NULL;
-> >>       unsigned long flags;
-> >>       struct htab_elem *l;
-> >>       struct bucket *b;
-> >> @@ -1370,9 +1371,10 @@ again_nocopy:
-> >>           }
-> >>           if (do_delete) {
-> >>               hlist_nulls_del_rcu(&l->hash_node);
-> >> -            if (is_lru_map)
-> >> -                bpf_lru_push_free(&htab->lru, &l->lru_node);
-> >> -            else
-> >> +            if (is_lru_map) {
-> >> +                l->hash_node.next =3D node_to_free;
-> >> +                node_to_free =3D &l->hash_node;
-> >
-> > Here, we change "next" pointer. How does this may impact the existing
-> > parallel map lookup which does not need to take bucket pointer?
->
-> Thanks for Martin for explanation! I think changing l->hash_node.next is
-> unsafe here as another thread may execute on a different cpu and
-> traverse the same list. It will see hash_node.next =3D NULL and it is
-> unexpected.
->
-> How about the following patch?
+On Mon, 2020-02-03 at 14:18 +0000, Jonathan Cameron wrote:
+> On Tue, 3 Dec 2019 14:46:41 +1100
+> Alastair D'Silva <alastair@au1.ibm.com> wrote:
+> 
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch requests the metadata required to issue admin commands,
+> > as well
+> > as some helper functions to construct and check the completion of
+> > the
+> > commands.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> 
+> A few trivial bits inline.
+> 
+> Jonathan
+> 
+> > ---
+> >  drivers/nvdimm/ocxl/scm.c          |  67 +++++++++++++
+> >  drivers/nvdimm/ocxl/scm_internal.c | 152
+> > +++++++++++++++++++++++++++++
+> >  drivers/nvdimm/ocxl/scm_internal.h |  62 ++++++++++++
+> >  3 files changed, 281 insertions(+)
+> > 
+> > diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
+> > index 8088f65c289e..1e175f3c3cf2 100644
+> > --- a/drivers/nvdimm/ocxl/scm.c
+> > +++ b/drivers/nvdimm/ocxl/scm.c
+> > @@ -267,6 +267,58 @@ static int scm_register_lpc_mem(struct
+> > scm_data *scm_data)
+> >  	return 0;
+> >  }
+> >  
+> > +/**
+> > + * scm_extract_command_metadata() - Extract command data from MMIO
+> > & save it for further use
+> > + * @scm_data: a pointer to the SCM device data
+> > + * @offset: The base address of the command data structures
+> > (address of CREQO)
+> > + * @command_metadata: A pointer to the command metadata to
+> > populate
+> > + * Return: 0 on success, negative on failure
+> > + */
+> > +static int scm_extract_command_metadata(struct scm_data *scm_data,
+> > u32 offset,
+> > +					struct command_metadata
+> > *command_metadata)
+> > +{
+> > +	int rc;
+> > +	u64 tmp;
+> > +
+> > +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset,
+> > OCXL_LITTLE_ENDIAN,
+> > +				     &tmp);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	command_metadata->request_offset = tmp >> 32;
+> > +	command_metadata->response_offset = tmp & 0xFFFFFFFF;
+> > +
+> > +	rc = ocxl_global_mmio_read64(scm_data->ocxl_afu, offset + 8,
+> > OCXL_LITTLE_ENDIAN,
+> > +				     &tmp);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	command_metadata->data_offset = tmp >> 32;
+> > +	command_metadata->data_size = tmp & 0xFFFFFFFF;
+> > +
+> > +	command_metadata->id = 0;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * scm_setup_command_metadata() - Set up the command metadata
+> > + * @scm_data: a pointer to the SCM device data
+> > + */
+> > +static int scm_setup_command_metadata(struct scm_data *scm_data)
+> > +{
+> > +	int rc;
+> > +
+> > +	mutex_init(&scm_data->admin_command.lock);
+> > +
+> > +	rc = scm_extract_command_metadata(scm_data,
+> > GLOBAL_MMIO_ACMA_CREQO,
+> > +					  &scm_data->admin_command);
+> > +	if (rc)
+> > +		return rc;
+> 
+> Unless you are adding to this later in the series.
+> 
 
-I think I'm missing some emails here, but overall the patch looks good to m=
-e.
->
-> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-> index 2d182c4ee9d9..246ef0f2e985 100644
-> --- a/kernel/bpf/hashtab.c
-> +++ b/kernel/bpf/hashtab.c
-> @@ -56,6 +56,7 @@ struct htab_elem {
->                          union {
->                                  struct bpf_htab *htab;
->                                  struct pcpu_freelist_node fnode;
-> +                               struct htab_elem *link;
->                          };
->                  };
->          };
-> @@ -1256,6 +1257,7 @@ __htab_map_lookup_and_delete_batch(struct bpf_map
-> *map,
->          void __user *ukeys =3D u64_to_user_ptr(attr->batch.keys);
->          void *ubatch =3D u64_to_user_ptr(attr->batch.in_batch);
->          u32 batch, max_count, size, bucket_size;
-> +       struct htab_elem *node_to_free =3D NULL;
->          u64 elem_map_flags, map_flags;
->          struct hlist_nulls_head *head;
->          struct hlist_nulls_node *n;
-> @@ -1370,9 +1372,14 @@ __htab_map_lookup_and_delete_batch(struct bpf_map
-> *map,
->                  }
->                  if (do_delete) {
->                          hlist_nulls_del_rcu(&l->hash_node);
-> -                       if (is_lru_map)
-> -                               bpf_lru_push_free(&htab->lru, &l->lru_nod=
-e);
-> -                       else
-> +                       if (is_lru_map) {
-> +                               /* l->hnode overlaps with *
-> l->hash_node.pprev
-> +                                * in memory. l->hash_node.pprev has been
-> +                                * poisoned and nobody should access it.
-> +                                */
-> +                               l->link =3D node_to_free;
-> +                               node_to_free =3D l;
-> +                       } else
->                                  free_htab_elem(htab, l);
->                  }
->                  dst_key +=3D key_size;
-> @@ -1380,6 +1387,13 @@ __htab_map_lookup_and_delete_batch(struct bpf_map
-> *map,
->          }
->
->          raw_spin_unlock_irqrestore(&b->lock, flags);
-> +
-> +       while (node_to_free) {
-> +               l =3D node_to_free;
-> +               node_to_free =3D node_to_free->link;
-> +               bpf_lru_push_free(&htab->lru, &l->lru_node);
-> +       }
-> +
->          /* If we are not copying data, we can go to next bucket and avoi=
-d
->           * unlocking the rcu.
->           */
->
->
+Ignored
+
+> 	return scm_extract_command_metadata(scm_data,...)
+> 
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * scm_is_usable() - Is a controller usable?
+> >   * @scm_data: a pointer to the SCM device data
+> > @@ -276,6 +328,8 @@ static bool scm_is_usable(const struct scm_data
+> > *scm_data)
+> >  {
+> >  	u64 chi = 0;
+> >  	int rc = scm_chi(scm_data, &chi);
+> > +	if (rc)
+> > +		return false;
+> >  
+> >  	if (!(chi & GLOBAL_MMIO_CHI_CRDY)) {
+> >  		dev_err(&scm_data->dev, "SCM controller is not
+> > ready.\n");
+> > @@ -502,6 +556,14 @@ static int scm_probe(struct pci_dev *pdev,
+> > const struct pci_device_id *ent)
+> >  	}
+> >  	scm_data->pdev = pdev;
+> >  
+> > +	scm_data->timeouts[ADMIN_COMMAND_ERRLOG] = 2000; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_HEARTBEAT] = 100; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_SMART] = 100; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_CONTROLLER_DUMP] = 1000; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_CONTROLLER_STATS] = 100; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_SHUTDOWN] = 1000; // ms
+> > +	scm_data->timeouts[ADMIN_COMMAND_FW_UPDATE] = 16000; // ms
+> > +
+> >  	pci_set_drvdata(pdev, scm_data);
+> >  
+> >  	scm_data->ocxl_fn = ocxl_function_open(pdev);
+> > @@ -543,6 +605,11 @@ static int scm_probe(struct pci_dev *pdev,
+> > const struct pci_device_id *ent)
+> >  		goto err;
+> >  	}
+> >  
+> > +	if (scm_setup_command_metadata(scm_data)) {
+> > +		dev_err(&pdev->dev, "Could not read OCXL command
+> > matada\n");
+> > +		goto err;
+> > +	}
+> > +
+> >  	elapsed = 0;
+> >  	timeout = scm_data->readiness_timeout + scm_data-
+> > >memory_available_timeout;
+> >  	while (!scm_is_usable(scm_data)) {
+> > diff --git a/drivers/nvdimm/ocxl/scm_internal.c
+> > b/drivers/nvdimm/ocxl/scm_internal.c
+> > index 72d3c0e7d846..7b11b56863fb 100644
+> > --- a/drivers/nvdimm/ocxl/scm_internal.c
+> > +++ b/drivers/nvdimm/ocxl/scm_internal.c
+> > @@ -17,3 +17,155 @@ int scm_chi(const struct scm_data *scm_data,
+> > u64 *chi)
+> >  
+> >  	return 0;
+> >  }
+> > +
+> > +static int scm_command_request(const struct scm_data *scm_data,
+> > +			       struct command_metadata *cmd, u8
+> > op_code)
+> > +{
+> > +	u64 val = op_code;
+> > +	int rc;
+> > +	u8 i;
+> > +
+> > +	cmd->op_code = op_code;
+> > +	cmd->id++;
+> > +
+> > +	val |= ((u64)cmd->id) << 16;
+> > +
+> > +	rc = ocxl_global_mmio_write64(scm_data->ocxl_afu, cmd-
+> > >request_offset,
+> > +				      OCXL_LITTLE_ENDIAN, val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	for (i = 0x08; i <= 0x38; i += 0x08) {
+> 
+> perhaps use sizeof(u64) to explain where the 0x08s come from.
+> For the 0x38, might be worth a define.
+
+Ok
+> 
+> > +		rc = ocxl_global_mmio_write64(scm_data->ocxl_afu,
+> > +					      cmd->request_offset + i,
+> > +					      OCXL_LITTLE_ENDIAN, 0);
+> > +		if (rc)
+> > +			return rc;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int scm_admin_command_request(struct scm_data *scm_data, u8
+> > op_code)
+> > +{
+> > +	u64 val;
+> > +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> > GLOBAL_MMIO_CHI,
+> > +					 OCXL_LITTLE_ENDIAN, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	return scm_command_request(scm_data, &scm_data->admin_command,
+> > op_code);
+> > +}
+> > +
+> > +static int scm_command_response(const struct scm_data *scm_data,
+> > +			 const struct command_metadata *cmd)
+> > +{
+> > +	u64 val;
+> > +	u16 id;
+> > +	u8 status;
+> > +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
+> > +					 cmd->response_offset,
+> > +					 OCXL_LITTLE_ENDIAN, &val);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	status = val & 0xff;
+> > +	id = (val >> 16) & 0xffff;
+> > +
+> > +	if (id != cmd->id) {
+> > +		dev_warn(&scm_data->dev,
+> > +			 "Expected response for command %d, but
+> > received response for command %d instead.\n",
+> > +			 cmd->id, id);
+> > +	}
+> > +
+> > +	return status;
+> > +}
+> > +
+> > +int scm_admin_response(const struct scm_data *scm_data)
+> > +{
+> > +	return scm_command_response(scm_data, &scm_data-
+> > >admin_command);
+> > +}
+> > +
+> > +
+> > +int scm_admin_command_execute(const struct scm_data *scm_data)
+> > +{
+> > +	return ocxl_global_mmio_set64(scm_data->ocxl_afu,
+> > GLOBAL_MMIO_HCI,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > GLOBAL_MMIO_HCI_ACRW);
+> > +}
+> > +
+> > +static bool scm_admin_command_complete(const struct scm_data
+> > *scm_data)
+> > +{
+> > +	u64 val = 0;
+> > +
+> > +	int rc = scm_chi(scm_data, &val);
+> > +
+> > +	WARN_ON(rc);
+> > +
+> > +	return (val & GLOBAL_MMIO_CHI_ACRA) != 0;
+> > +}
+> > +
+> > +int scm_admin_command_complete_timeout(const struct scm_data
+> > *scm_data,
+> > +				       int command)
+> > +{
+> > +	u32 timeout = scm_data->timeouts[command];
+> > +	// 32 is the next power of 2 greater than the 20ms minimum for
+> > msleep
+> > +#define TIMEOUT_SLEEP_MILLIS 32
+> > +	timeout /= TIMEOUT_SLEEP_MILLIS;
+> > +	if (!timeout)
+> > +		timeout = SCM_DEFAULT_TIMEOUT / TIMEOUT_SLEEP_MILLIS;
+> > +
+> > +	while (timeout-- > 0) {
+> > +		if (scm_admin_command_complete(scm_data))
+> > +			return 0;
+> > +		msleep(TIMEOUT_SLEEP_MILLIS);
+> > +	}
+> > +
+> > +	if (scm_admin_command_complete(scm_data))
+> > +		return 0;
+> > +
+> > +	return -EBUSY;
+> > +}
+> > +
+> > +int scm_admin_response_handled(const struct scm_data *scm_data)
+> > +{
+> > +	return ocxl_global_mmio_set64(scm_data->ocxl_afu,
+> > GLOBAL_MMIO_CHIC,
+> > +				      OCXL_LITTLE_ENDIAN,
+> > GLOBAL_MMIO_CHI_ACRA);
+> > +}
+> > +
+> > +void scm_warn_status(const struct scm_data *scm_data, const char
+> > *message,
+> > +		     u8 status)
+> > +{
+> > +	const char *text = "Unknown";
+> > +
+> > +	switch (status) {
+> > +	case STATUS_SUCCESS:
+> > +		text = "Success";
+> > +		break;
+> > +
+> > +	case STATUS_MEM_UNAVAILABLE:
+> > +		text = "Persistent memory unavailable";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_OPCODE:
+> > +		text = "Bad opcode";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_REQUEST_PARM:
+> > +		text = "Bad request parameter";
+> > +		break;
+> > +
+> > +	case STATUS_BAD_DATA_PARM:
+> > +		text = "Bad data parameter";
+> > +		break;
+> > +
+> > +	case STATUS_DEBUG_BLOCKED:
+> > +		text = "Debug action blocked";
+> > +		break;
+> > +
+> > +	case STATUS_FAIL:
+> > +		text = "Failed";
+> > +		break;
+> > +	}
+> > +
+> > +	dev_warn(&scm_data->dev, "%s: %s (%x)\n", message, text,
+> > status);
+> > +}
+> > diff --git a/drivers/nvdimm/ocxl/scm_internal.h
+> > b/drivers/nvdimm/ocxl/scm_internal.h
+> > index 584450f55e30..9bff684cd069 100644
+> > --- a/drivers/nvdimm/ocxl/scm_internal.h
+> > +++ b/drivers/nvdimm/ocxl/scm_internal.h
+> > @@ -6,6 +6,8 @@
+> >  #include <linux/libnvdimm.h>
+> >  #include <linux/mm.h>
+> >  
+> > +#define SCM_DEFAULT_TIMEOUT 100
+> > +
+> >  #define GLOBAL_MMIO_CHI		0x000
+> >  #define GLOBAL_MMIO_CHIC	0x008
+> >  #define GLOBAL_MMIO_CHIE	0x010
+> > @@ -80,6 +82,16 @@
+> >  
+> >  #define SCM_LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
+> >  
+> > +struct command_metadata {
+> > +	u32 request_offset;
+> > +	u32 response_offset;
+> > +	u32 data_offset;
+> > +	u32 data_size;
+> > +	struct mutex lock;
+> > +	u16 id;
+> > +	u8 op_code;
+> > +};
+> > +
+> >  struct scm_function_0 {
+> >  	struct pci_dev *pdev;
+> >  	struct ocxl_fn *ocxl_fn;
+> > @@ -95,9 +107,11 @@ struct scm_data {
+> >  	struct ocxl_afu *ocxl_afu;
+> >  	struct ocxl_context *ocxl_context;
+> >  	void *metadata_addr;
+> > +	struct command_metadata admin_command;
+> >  	struct resource scm_res;
+> >  	struct nd_region *nd_region;
+> >  	char fw_version[8+1];
+> > +	u32 timeouts[ADMIN_COMMAND_MAX+1];
+> >  
+> >  	u32 max_controller_dump_size;
+> >  	u16 scm_revision; // major/minor
+> > @@ -122,3 +136,51 @@ struct scm_data {
+> >   * Returns 0 on success, negative on error
+> >   */
+> >  int scm_chi(const struct scm_data *scm_data, u64 *chi);
+> > +
+> > +/**
+> > + * scm_admin_command_request() - Issue an admin command request
+> > + * @scm_data: a pointer to the SCM device data
+> > + * @op_code: The op-code for the command
+> > + *
+> > + * Returns an identifier for the command, or negative on error
+> > + */
+> > +int scm_admin_command_request(struct scm_data *scm_data, u8
+> > op_code);
+> > +
+> > +/**
+> > + * scm_admin_response() - Validate an admin response
+> > + * @scm_data: a pointer to the SCM device data
+> > + * Returns the status code of the command, or negative on error
+> > + */
+> > +int scm_admin_response(const struct scm_data *scm_data);
+> > +
+> > +/**
+> > + * scm_admin_command_execute() - Notify the controller to start
+> > processing a pending admin command
+> > + * @scm_data: a pointer to the SCM device data
+> > + * Returns 0 on success, negative on error
+> > + */
+> > +int scm_admin_command_execute(const struct scm_data *scm_data);
+> > +
+> > +/**
+> > + * scm_admin_command_complete_timeout() - Wait for an admin
+> > command to finish executing
+> > + * @scm_data: a pointer to the SCM device data
+> > + * @command: the admin command to wait for completion (determines
+> > the timeout)
+> > + * Returns 0 on success, -EBUSY on timeout
+> > + */
+> > +int scm_admin_command_complete_timeout(const struct scm_data
+> > *scm_data,
+> > +				       int command);
+> > +
+> > +/**
+> > + * scm_admin_response_handled() - Notify the controller that the
+> > admin response has been handled
+> > + * @scm_data: a pointer to the SCM device data
+> > + * Returns 0 on success, negative on failure
+> > + */
+> > +int scm_admin_response_handled(const struct scm_data *scm_data);
+> > +
+> > +/**
+> > + * scm_warn_status() - Emit a kernel warning showing a command
+> > status.
+> > + * @scm_data: a pointer to the SCM device data
+> > + * @message: A message to accompany the warning
+> > + * @status: The command status
+> > + */
+> > +void scm_warn_status(const struct scm_data *scm_data, const char
+> > *message,
+> > +		     u8 status);
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
