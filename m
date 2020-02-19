@@ -2,77 +2,90 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B58C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6766EC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB3F207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:58:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UiyNhl2L"
+	by mail.kernel.org (Postfix) with ESMTP id 45DD5207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgBSO6L (ORCPT
+        id S1726722AbgBSO7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:58:11 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46374 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSO6K (ORCPT
+        Wed, 19 Feb 2020 09:59:14 -0500
+Received: from outbound-smtp25.blacknight.com ([81.17.249.193]:44767 "EHLO
+        outbound-smtp25.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726613AbgBSO7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:58:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=P7AWjEqJ/Ak9OsdtY3HMO+qukuBO/5fEV2Q8xzme/CY=; b=UiyNhl2LZhx2iAyLOzuKE9FY58
-        87ApTFxh6+WvqaGjHcWTAbGaOUo2o4XJWIU9+md8Df1IOcHEgIMG9GmoLXnR+WZzOjkL0roG/hlq6
-        wWhLp6yomuY43c7bDr8RQQH6iXXeAZuWE33KyoA4X9gNwXQgv/0RTj/L/mQQZjc1C6QUidJs5lJY5
-        juVvfTghtQzXBGuZj98AJu5RhUDbLDhqWOJKblhKPVa1sA15g6I82cJqGZ71vxIczdcTqHGQrEQRb
-        wzNO6rO3g1PdNeOpjWrzafhEmp7slL1irqcteKAZm8MuNqSht72KzvMdIbAM24MfbE7rradLrOnwd
-        62h4ufdw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4Qnh-0001OK-0H; Wed, 19 Feb 2020 14:58:09 +0000
-Date:   Wed, 19 Feb 2020 06:58:08 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Edmund Merrow-Smith <edmund@sucs.org>,
-        linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH] drivers: NVME: host: core.c: Fixed some coding style
- issues.
-Message-ID: <20200219145808.GA5147@infradead.org>
-References: <20200218230131.12135-1-edmund@sucs.org>
- <20200219000519.GB18306@redsun51.ssa.fujisawa.hgst.com>
+        Wed, 19 Feb 2020 09:59:13 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp25.blacknight.com (Postfix) with ESMTPS id 6F4FBCAADF
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:59:11 +0000 (GMT)
+Received: (qmail 18112 invoked from network); 19 Feb 2020 14:59:10 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 14:59:10 -0000
+Date:   Wed, 19 Feb 2020 14:59:08 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
+        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
+        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 7/9] mm/page_reporting: Rotate reported pages to the
+ tail of the list
+Message-ID: <20200219145908.GT3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+ <20200211224708.29318.16862.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200219000519.GB18306@redsun51.ssa.fujisawa.hgst.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200211224708.29318.16862.stgit@localhost.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:05:19AM +0900, Keith Busch wrote:
-> On Tue, Feb 18, 2020 at 11:01:31PM +0000, Edmund Merrow-Smith wrote:
-> > Fixed a number of style issues highlighted by scripts/checkpatch.pl.
-> > Mostly whitespace issues, implied int warnings,
-> > trailing semicolons and line length issues.
+On Tue, Feb 11, 2020 at 02:47:08PM -0800, Alexander Duyck wrote:
+> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 > 
-> But checkpatch.pl is on the wrong side of the 'unsigned'/'unsigned int'
-> debate! The C standard defined unsigned since forever ago, its usage is
-> not at all confusing.
-
-Nevermind all the style issues with the patch itself.  Also while I'm
-all for clean code - pure cleanup patches are a complete waste of time.
-Everyone feel free to clean up obvious warts arounds code that your
-are touching for a real fix or feature.  But please stop sending random
-cleanup patches.
-
+> Rather than walking over the same pages again and again to get to the pages
+> that have yet to be reported we can save ourselves a significant amount of
+> time by simply rotating the list so that when we have a full list of
+> reported pages the head of the list is pointing to the next non-reported
+> page. Doing this should save us some significant time when processing each
+> free list.
 > 
-> _______________________________________________
-> linux-nvme mailing list
-> linux-nvme@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-nvme
----end quoted text---
+> This doesn't gain us much in the standard case as all of the non-reported
+> pages should be near the top of the list already. However in the case of
+> page shuffling this results in a noticeable improvement. Below are the
+> will-it-scale page_fault1 w/ THP numbers for 16 tasks with and without
+> this patch.
+> 
+> Without:
+> tasks   processes       processes_idle  threads         threads_idle
+> 16      8093776.25      0.17            5393242.00      38.20
+> 
+> With:
+> tasks   processes       processes_idle  threads         threads_idle
+> 16      8283274.75      0.17            5594261.00      38.15
+> 
+> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+Thanks for pulling this patch out and noting its impact. I think the
+rotation is ok and if it turns out I missed something, it'll be
+relatively easy to back out just the optimisation and leave the rest of
+the feature intact.
+
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
+
+-- 
+Mel Gorman
+SUSE Labs
