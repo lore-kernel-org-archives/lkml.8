@@ -2,276 +2,180 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CC8C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0E4C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BF8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28FD2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CDXm5ZIN"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M4Jm/WVI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgBSABp (ORCPT
+        id S1727890AbgBSABv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:01:45 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17107 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbgBSABp (ORCPT
+        Tue, 18 Feb 2020 19:01:51 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39200 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727822AbgBSABs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:01:45 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4c7ac80000>; Tue, 18 Feb 2020 16:01:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 16:01:44 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 16:01:44 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 00:01:43 +0000
-Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-12-willy@infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
-Date:   Tue, 18 Feb 2020 16:01:43 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 19:01:48 -0500
+Received: by mail-qk1-f195.google.com with SMTP id a141so11534755qkg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:01:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZncEIyYi8WuUORtwhrTXqb5H8wAtob9Qk+8uAaIjx1I=;
+        b=M4Jm/WVIOOrdqqA9r3dqNIkZ65s5JPx/OaYA/Z1C9ZmIbbyR1IAgkVtXwFEpy7YOr8
+         EDVyq0AWtnB/yInsz1kCPJeBIOx7GDOKgLBdM8XwY2k2e40ALUw3/F4Gc7KHG9HmzA/s
+         /SRNBeyRSUYejg2W9qPrnqTqNz/yzVhBbP+f4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZncEIyYi8WuUORtwhrTXqb5H8wAtob9Qk+8uAaIjx1I=;
+        b=KxTvU4+ROJ7XkNi6KfJV3TswIGoyx/KxyrEVJ/6qlreYFLXJjXtRm5S18UDIf9UqMw
+         q6QS3jrnJS5YDRbnFB30I/7knBM0E9i2m/+1iIYFAYQf6GFp3FhcmuU+ysBNb+8NZVSM
+         XX8o/Lm/tqSlU7CXm1VXva/8qsUm9ImNjod+SS3tSu0q5KjWSofPaPW+NpGYjAwWsGzY
+         W808KIU6GfOD8HTGbHV0r/MazlBiz94NhK8LL/Wd0J+iWf+zj/3MGyj3xIkfdk7Um5Bc
+         RUSZgpKzX+6TS99TVyBR5KPeSLBk7ZVU4juavhd4aJJ4me0MeUl0/2yNidDVbIRzo0oJ
+         Ouig==
+X-Gm-Message-State: APjAAAV3Reug3FW0gpM7z904Uiqh06F7ryd6c8s8MytdVbYrdGvWh5rP
+        xpz7WK5TYrfWgpAT0OWEkMkp3g==
+X-Google-Smtp-Source: APXvYqw5t12g1wrtXskMvVyIqVO0btZ865Lf7DT68CyUl5rJs5IExjWAcjNd1r2JD94XwKTu2thuLQ==
+X-Received: by 2002:ae9:f016:: with SMTP id l22mr21209557qkg.101.1582070506240;
+        Tue, 18 Feb 2020 16:01:46 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y28sm142559qkj.44.2020.02.18.16.01.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 16:01:45 -0800 (PST)
+Date:   Tue, 18 Feb 2020 19:01:44 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
+        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com
+Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
+ rcu_tasks_cbs_head
+Message-ID: <20200219000144.GA26663@google.com>
+References: <20200215002446.GA15663@paulmck-ThinkPad-P72>
+ <20200215002520.15746-1-paulmck@kernel.org>
+ <20200217123851.GR14914@hirez.programming.kicks-ass.net>
+ <20200217181615.GP2935@paulmck-ThinkPad-P72>
+ <20200218075648.GW14914@hirez.programming.kicks-ass.net>
+ <20200218162719.GE2935@paulmck-ThinkPad-P72>
+ <20200218201142.GF11457@worktop.programming.kicks-ass.net>
+ <20200218202226.GJ2935@paulmck-ThinkPad-P72>
+ <20200218174503.3d4e4750@gandalf.local.home>
+ <20200218225455.GN2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <20200217184613.19668-12-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582070472; bh=z3Bzj/5bgrV9fPnuzsXFxX0FOV0H+b7fZfF2f3wUJhE=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=CDXm5ZINDvSMkAMnjJBonRkzIb7iakoxvVztr5ii0adNdeG78Anh8llJWS1Oc3ute
-         ciu9+xmTJ9a50yl/a+pixD46BgV6xF+09QnP10UJd4Zpp0lWUdTmM7aBiLhSZDw6Hf
-         wCP/rAeJW8P45k+lakQ0Jakmz74bgXZE1S//J77o6oOO3+7Jggx7PzOpoJM5AKYTOZ
-         KfIQU7OmVVxsb6VxM6AEe7fCrs6vPu0hc+FYSwUN2mgoONMaQPVhKQI/fdMA+wED9M
-         GVdeSW/kF97kpNzr8blN78Wpo/oC7ggjF0inN752QvrA2QkM3LFiAvFbOOfAivj44D
-         cOxpPLMH8VOBg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218225455.GN2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/17/20 10:45 AM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Tue, Feb 18, 2020 at 02:54:55PM -0800, Paul E. McKenney wrote:
+> On Tue, Feb 18, 2020 at 05:45:03PM -0500, Steven Rostedt wrote:
+> > On Tue, 18 Feb 2020 12:22:26 -0800
+> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > 
+> > > On Tue, Feb 18, 2020 at 09:11:42PM +0100, Peter Zijlstra wrote:
+> > > > On Tue, Feb 18, 2020 at 08:27:19AM -0800, Paul E. McKenney wrote:  
+> > > > > On Tue, Feb 18, 2020 at 08:56:48AM +0100, Peter Zijlstra wrote:  
+> > > >   
+> > > > > > I just took offence at the Changelog wording. It seems to suggest there
+> > > > > > actually is a problem, there is not.  
+> > > > > 
+> > > > > Quoting the changelog: "Not appropriate for backporting due to failure
+> > > > > being unlikely."  
+> > > > 
+> > > > That implies there is failure, however unlikely.
+> > > > 
+> > > > In this particular case there is absolutely no failure, except perhaps
+> > > > in KCSAN. This patch is a pure annotation such that KCSAN can understand
+> > > > the code.
+> > > > 
+> > > > Like said, I don't object to the actual patch, but I do think it is
+> > > > important to call out false negatives or to describe the actual problem
+> > > > found.  
+> > > 
+> > > I don't feel at all comfortable declaring that there is absolutely
+> > > no possibility of failure.
+> > 
+> > Perhaps wording it like so:
+> > 
+> > "There's know known issue with the current code, but the *_ONCE()
+> > annotations here makes KCSAN happy, allowing us to focus on KCSAN
+> > warnings that can help bring about known issues in other code that we
+> > can fix, without being distracted by KCSAN warnings that we do not see
+> > a problem with."
+> > 
+> > ?
 > 
-> At allocation time, put the pages in the cache unless we're using
-> ->readpages.  Add the readahead_for_each() iterator for the benefit of
-> the ->readpage fallback.  This iterator supports huge pages, even though
-> none of the filesystems to be converted do yet.
+> That sounds more like something I might put in rcutodo.html as a statement
+> of the RCU approach to KCSAN reports.
 > 
-
-
-"Also, remove the gfp argument from read_pages(), now that read_pages()
-no longer does allocation."
-
-Generally looks accurate, just a few notes below:
-
-
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  include/linux/pagemap.h | 24 ++++++++++++++++++++++++
->  mm/readahead.c          | 34 +++++++++++++++++-----------------
->  2 files changed, 41 insertions(+), 17 deletions(-)
+> But switching to a different situation (for variety, if nothing else),
+> what about the commit shown below?
 > 
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index 982ecda2d4a2..3613154e79e4 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -639,8 +639,32 @@ struct readahead_control {
->  /* private: use the readahead_* accessors instead */
->  	pgoff_t _start;
->  	unsigned int _nr_pages;
-> +	unsigned int _batch_count;
->  };
->  
-> +static inline struct page *readahead_page(struct readahead_control *rac)
-> +{
-> +	struct page *page;
-> +
-> +	if (!rac->_nr_pages)
-> +		return NULL;
-> +
-> +	page = xa_load(&rac->mapping->i_pages, rac->_start);
-> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +	rac->_batch_count = hpage_nr_pages(page);
-> +
-> +	return page;
-> +}
-> +
-> +static inline void readahead_next(struct readahead_control *rac)
-> +{
-> +	rac->_nr_pages -= rac->_batch_count;
-> +	rac->_start += rac->_batch_count;
-> +}
-> +
-> +#define readahead_for_each(rac, page)					\
-> +	for (; (page = readahead_page(rac)); readahead_next(rac))
-> +
-
-
-How about this instead? It uses the "for" loop fully and more naturally,
-and is easier to read. And it does the same thing:
-
-static inline struct page *readahead_page(struct readahead_control *rac)
-{
-	struct page *page;
-
-	if (!rac->_nr_pages)
-		return NULL;
-
-	page = xa_load(&rac->mapping->i_pages, rac->_start);
-	VM_BUG_ON_PAGE(!PageLocked(page), page);
-	rac->_batch_count = hpage_nr_pages(page);
-
-	return page;
-}
-
-static inline struct page *readahead_next(struct readahead_control *rac)
-{
-	rac->_nr_pages -= rac->_batch_count;
-	rac->_start += rac->_batch_count;
-
-	return readahead_page(rac);
-}
-
-#define readahead_for_each(rac, page)			\
-	for (page = readahead_page(rac); page != NULL;	\
-	     page = readahead_page(rac))
-
-
-
-
->  /* The number of pages in this readahead block */
->  static inline unsigned int readahead_count(struct readahead_control *rac)
->  {
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index bdc5759000d3..9e430daae42f 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -113,12 +113,11 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
->  
->  EXPORT_SYMBOL(read_cache_pages);
->  
-> -static void read_pages(struct readahead_control *rac, struct list_head *pages,
-> -		gfp_t gfp)
-> +static void read_pages(struct readahead_control *rac, struct list_head *pages)
->  {
->  	const struct address_space_operations *aops = rac->mapping->a_ops;
-> +	struct page *page;
->  	struct blk_plug plug;
-> -	unsigned page_idx;
->  
->  	blk_start_plug(&plug);
->  
-> @@ -127,19 +126,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
->  				readahead_count(rac));
->  		/* Clean up the remaining pages */
->  		put_pages_list(pages);
-> -		goto out;
-> -	}
-> -
-> -	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
-> -		struct page *page = lru_to_page(pages);
-> -		list_del(&page->lru);
-> -		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
-> -				gfp))
-> +	} else {
-> +		readahead_for_each(rac, page) {
->  			aops->readpage(rac->file, page);
-> -		put_page(page);
-> +			put_page(page);
-> +		}
->  	}
->  
-> -out:
->  	blk_finish_plug(&plug);
->  }
->  
-> @@ -159,6 +152,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	unsigned long i;
->  	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-> +	bool use_list = mapping->a_ops->readpages;
-
-
-fwiw, "bool have_readpages" seems like a better name (after all, that's how read_pages() 
-effectively is written: "if you have .readpages, then..."), but I can see both sides 
-of that bikeshed. :)
-
-
->  	struct readahead_control rac = {
->  		.mapping = mapping,
->  		.file = filp,
-> @@ -196,8 +190,14 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		page = __page_cache_alloc(gfp_mask);
->  		if (!page)
->  			break;
-> -		page->index = offset;
-> -		list_add(&page->lru, &page_pool);
-> +		if (use_list) {
-> +			page->index = offset;
-> +			list_add(&page->lru, &page_pool);
-> +		} else if (add_to_page_cache_lru(page, mapping, offset,
-> +					gfp_mask) < 0) {
-
-
-It would be a little safer from a maintenance point of view, to check for !=0, rather
-than checking for < 0.  Most (all?) existing callers check that way, and it's good
-to stay with the pack there.
-
-
-> +			put_page(page);
-> +			goto read;
-> +		}
->  		if (i == nr_to_read - lookahead_size)
->  			SetPageReadahead(page);
->  		rac._nr_pages++;
-> @@ -205,7 +205,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		continue;
->  read:
->  		if (readahead_count(&rac))
-> -			read_pages(&rac, &page_pool, gfp_mask);
-> +			read_pages(&rac, &page_pool);
->  		rac._nr_pages = 0;
->  		rac._start = ++offset;
->  	}
-> @@ -216,7 +216,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  	 * will then handle the error.
->  	 */
->  	if (readahead_count(&rac))
-> -		read_pages(&rac, &page_pool, gfp_mask);
-> +		read_pages(&rac, &page_pool);
->  	BUG_ON(!list_empty(&page_pool));
->  }
->  
+> 							Thanx, Paul
 > 
+> ------------------------------------------------------------------------
+> 
+> commit 35bc02b04a041f32470ae6d959c549bcce8483db
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Tue Feb 18 13:41:02 2020 -0800
+> 
+>     rcutorture: Mark data-race potential for rcu_barrier() test statistics
+>     
+>     The n_barrier_successes, n_barrier_attempts, and
+>     n_rcu_torture_barrier_error variables are updated (without access
+>     markings) by the main rcu_barrier() test kthread, and accessed (also
+>     without access markings) by the rcu_torture_stats() kthread.  This of
+>     course can result in KCSAN complaints.
+>     
+>     Because the accesses are in diagnostic prints, this commit uses
+>     data_race() to excuse the diagnostic prints from the data race.  If this
+>     were to ever cause bogus statistics prints (for example, due to store
+>     tearing), any misleading information would be disambiguated by the
+>     presence or absence of an rcutorture splat.
+>     
+>     This data race was reported by KCSAN.  Not appropriate for backporting
+>     due to failure being unlikely and due to the mild consequences of the
+>     failure, namely a confusing rcutorture console message.
+>     
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index 5453bd5..b3301f3 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -1444,9 +1444,9 @@ rcu_torture_stats_print(void)
+>  		atomic_long_read(&n_rcu_torture_timers));
+>  	torture_onoff_stats();
+>  	pr_cont("barrier: %ld/%ld:%ld\n",
+> -		n_barrier_successes,
+> -		n_barrier_attempts,
+> -		n_rcu_torture_barrier_error);
+> +		data_race(n_barrier_successes),
+> +		data_race(n_barrier_attempts),
+> +		data_race(n_rcu_torture_barrier_error));
 
+Would it be not worth just fixing the data-race within rcutorture itself?
 
 thanks,
--- 
-John Hubbard
-NVIDIA
+
+ - Joel
+
