@@ -2,117 +2,199 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C4BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1130C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C3A24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:09:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6B224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:14:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="FAs1em3y"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dvGcwYJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgBSMJp (ORCPT
+        id S1726734AbgBSMO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:09:45 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:42532 "EHLO mail.skyhub.de"
+        Wed, 19 Feb 2020 07:14:27 -0500
+Received: from vps.xff.cz ([195.181.215.36]:36372 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgBSMJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:09:45 -0500
-Received: from zn.tnic (p200300EC2F095500D4116BB2785F22F7.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:d411:6bb2:785f:22f7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E9EDC1EC026F;
-        Wed, 19 Feb 2020 13:09:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582114183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=tuqPEu/tbXFvguWL1KtLykJwGQRo1OKr9KYZRZEmfcI=;
-        b=FAs1em3yPn+Jl66driUC8qgDm3SC9ltDWfBGeQuO7e2BxK6yOWuggYw7CoB0pGtut6lYHn
-        N0OU4q3YSRQuQdGSYFXRYwh3AeoaZksJv42D8wAvuEcQsVHN8bjVxAaUSHy/o4xxGY8mvO
-        58oJaR8x7BWBu5wTYTAepJjNBuaCZa0=
-Date:   Wed, 19 Feb 2020 13:09:38 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
- bzImage
-Message-ID: <20200219120938.GB30966@zn.tnic>
-References: <20200109150218.16544-1-nivedita@alum.mit.edu>
- <20200205162921.GA318609@rani.riverdale.lan>
- <20200218180353.GA930230@rani.riverdale.lan>
+        id S1726495AbgBSMO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:14:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1582114465; bh=LBA0OH0LGSn5q2o3L6sg17qe8iS+vJij63Yj2IJHsB0=;
+        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
+        b=dvGcwYJJZLS/xFu1ybo56J0BAjHKnrYfVUk3M+k4oXa0oOJ+vK/r+mmexvgN/O3+7
+         V4ZYYZ970DFyi3RfWCLmndM3lhr8HDwymiDHyO/HXJP9xib7xnnjK77E0/9tpT9p1T
+         T7QrfHCKnH+F5eHduStJqxSTxzYMELJI1oPd1y24=
+Date:   Wed, 19 Feb 2020 13:14:24 +0100
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bus: sunxi-rsb: Return correct data when mixing 16-bit
+ and 8-bit reads
+Message-ID: <20200219121424.dfvrwfcavupmwbvw@core.my.home>
+Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200219010951.395599-1-megous@megous.com>
+ <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200218180353.GA930230@rani.riverdale.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
+X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
+ <https://xff.cz/key.txt>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:03:54PM -0500, Arvind Sankar wrote:
-> On Wed, Feb 05, 2020 at 11:29:21AM -0500, Arvind Sankar wrote:
-> > On Thu, Jan 09, 2020 at 10:02:17AM -0500, Arvind Sankar wrote:
-> > > Commit 5b11f1cee579 ("x86, boot: straighten out ranges to copy/zero in
-> > > compressed/head*.S") introduced a separate .pgtable section, splitting
-> > > it out from the rest of .bss. This section was added without the
-> > > writeable flag, marking it as read-only. This results in the linker
-> > > putting the .rela.dyn section (containing bogus dynamic relocations from
-> > > head_64.o) after the .bss and .pgtable sections.
-> > > 
-> > > When we use objcopy to convert compressed/vmlinux into a binary for the
-> > > bzImage, the .bss and .pgtable sections get materialized as ~176KiB of
-> > > zero bytes in the binary in order to place .rela.dyn at the correct
-> > > location.
-> > > 
-> > > Fix this by marking .pgtable as writeable. This moves the .rela.dyn
-> > > section earlier so that .bss and .pgtable are the last allocated
-> > > sections and so don't appear in bzImage.
-> > > 
-> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > > ---
-> > >  arch/x86/boot/compressed/head_64.S | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-> > > index 58a512e33d8d..6eb30f8a3ce7 100644
-> > > --- a/arch/x86/boot/compressed/head_64.S
-> > > +++ b/arch/x86/boot/compressed/head_64.S
-> > > @@ -709,7 +709,7 @@ SYM_DATA_END_LABEL(boot_stack, SYM_L_LOCAL, boot_stack_end)
-> > >  /*
-> > >   * Space for page tables (not in .bss so not zeroed)
-> > >   */
-> > > -	.section ".pgtable","a",@nobits
-> > > +	.section ".pgtable","aw",@nobits
-> > >  	.balign 4096
-> > >  SYM_DATA_LOCAL(pgtable,		.fill BOOT_PGT_SIZE, 1, 0)
-> > >  
-> > > -- 
-> > > 2.24.1
-> > > 
-> > 
-> > Gentle reminder.
-> > 
-> > https://lore.kernel.org/lkml/20200109150218.16544-1-nivedita@alum.mit.edu
+On Wed, Feb 19, 2020 at 10:49:18AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Feb 19, 2020 at 9:10 AM Ondrej Jirman <megous@megous.com> wrote:
+> >
+> > When doing a 16-bit read that returns data in the MSB byte, the
+> > RSB_DATA register will keep the MSB byte unchanged when doing
+> > the following 8-bit read. sunxi_rsb_read() will then return
+> > a result that contains high byte from 16-bit read mixed with
+> > the 8-bit result.
+> >
+> > The consequence is that after this happens the PMIC's regmap will
+> > look like this: (0x33 is the high byte from the 16-bit read)
+> >
+> > % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+> > 00: 33
+> > 01: 33
+> > 02: 33
+> > 03: 33
+> > 04: 33
+> > 05: 33
+> > 06: 33
+> > 07: 33
+> > 08: 33
+> > 09: 33
+> > 0a: 33
+> > 0b: 33
+> > 0c: 33
+> > 0d: 33
+> > 0e: 33
+> > [snip]
+> >
+> > Fix this by masking the result of the read with the correct mask
+> > based on the size of the read. There are no 16-bit users in the
+> > mainline kernel, so this doesn't need to get into the stable tree.
+> >
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
 > 
-> Ping.
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> 
+> for the fix, however it's not entirely clear to me how the MSB 0x33
+> value got into the regmap. Looks like I expected the regmap core to
+> handle any overflows, or didn't expect the lingering MSB from 16-bit
+> reads, as I didn't have any 16-bit register devices back when I wrote
+> this.
 
-You keep pinging. Why? Is it a showstopper or what is the urgency here?
+Now I feel like I masked some other bug. Though explanation may be quite simple.
 
-This is shaving off some 100 - 200 KiB from the final bzImage, AFAICT. Or
-is there something more broken this is fixing?
+For example when AXP core does regmap_read on some values for showing charging
+current or battery voltage, because regmap_read works with unsigned int, it
+will simply get a number that's too big. And that was the major symptom
+I observed. I got readings from sysfs that my tablet is consuming 600A or 200A,
+etc. And this value was jumping around based on AC100 activity (as the MSB
+byte got changed).
 
--- 
-Regards/Gruss,
-    Boris.
+In other places where the driver does regmap_update_bits, I think nothing bad
+happened. The write after the read would simply discard the MSB byte.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+And for the debugfs/regmap/*/registers, those are printed such:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L256
+
+	snprintf(buf + buf_pos, count - buf_pos,
+		"%.*x", map->debugfs_val_len, val);
+	
+This doesn't truncate values, so the larger number gets printed to (for example):
+
+        33fe
+
+But regmap debugfs code truncates this by cutting off the formatted string to
+this length:
+
+  https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L189
+
+So in the end, only:
+
+        00: 33
+
+remains, instead of the correct value of:
+
+        00: fe
+
+So in the case of debugfs this is just a cosmetic/formatting issue, that didn't
+affect anything else.
+
+I think regmap_bus->reg_read API simply expects the returned value to not exceed
+the sensible range.
+
+regards,
+	o.
+
+
+> ChenYu
+> 
+> 
+> > ---
+> >  drivers/bus/sunxi-rsb.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+> > index b8043b58568ac..8ab6a3865f569 100644
+> > --- a/drivers/bus/sunxi-rsb.c
+> > +++ b/drivers/bus/sunxi-rsb.c
+> > @@ -316,6 +316,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> >  {
+> >         u32 cmd;
+> >         int ret;
+> > +       u32 mask;
+> >
+> >         if (!buf)
+> >                 return -EINVAL;
+> > @@ -323,12 +324,15 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> >         switch (len) {
+> >         case 1:
+> >                 cmd = RSB_CMD_RD8;
+> > +               mask = 0xffu;
+> >                 break;
+> >         case 2:
+> >                 cmd = RSB_CMD_RD16;
+> > +               mask = 0xffffu;
+> >                 break;
+> >         case 4:
+> >                 cmd = RSB_CMD_RD32;
+> > +               mask = 0xffffffffu;
+> >                 break;
+> >         default:
+> >                 dev_err(rsb->dev, "Invalid access width: %zd\n", len);
+> > @@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+> >         if (ret)
+> >                 goto unlock;
+> >
+> > -       *buf = readl(rsb->regs + RSB_DATA);
+> > +       *buf = readl(rsb->regs + RSB_DATA) & mask;
+> >
+> >  unlock:
+> >         mutex_unlock(&rsb->lock);
+> > --
+> > 2.25.1
+> >
