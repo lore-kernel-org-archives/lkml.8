@@ -2,110 +2,58 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1BFC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339C9C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:06:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B56208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a6hwOTAi"
+	by mail.kernel.org (Postfix) with ESMTP id 17107208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:06:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBSLGc (ORCPT
+        id S1727086AbgBSLGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:06:32 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:19261 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbgBSLGb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:06:31 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4d16960000>; Wed, 19 Feb 2020 03:05:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Feb 2020 03:06:30 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Feb 2020 03:06:30 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 11:06:28 +0000
-Subject: Re: [PATCH 5.5 00/80] 5.5.5-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200218190432.043414522@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <67cf2b44-666d-c573-0e99-8f433444f84f@nvidia.com>
-Date:   Wed, 19 Feb 2020 11:06:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 06:06:37 -0500
+Received: from ms.lwn.net ([45.79.88.28]:33892 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgBSLGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:06:37 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D35222E5;
+        Wed, 19 Feb 2020 11:06:35 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 04:06:29 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH] Documentation: sort _SPHINXDIRS for 'make help'
+Message-ID: <20200219040629.16648a09@lwn.net>
+In-Reply-To: <f2f47689-6a59-1d5e-6eda-ee24fe2a8fc7@infradead.org>
+References: <f2f47689-6a59-1d5e-6eda-ee24fe2a8fc7@infradead.org>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582110358; bh=xfC3i+m8dfK/zLtPwLz+39tlDVROf4cN95K9PQ4QhCg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=a6hwOTAiiM66jQWkeFyJ1mRV+G4HKlaJOR5cr5g5haRkh6VCbEwkPc5nXtqhb1Fwn
-         zuCX4fn95ZIkO100NzMd2uICXuqNt7j5BFxf0Atj4fZz3cPfyxIEeHqa2edJ5SMwmx
-         p28N4h4agdg7L6RITnVZ5FihMxplEEoWvQ/itphajRvkc2PnUdQcMbyD9Qh0LNZga2
-         dkBtVHTZR8cmRZzDBjjbAAw/VcEeqaYOhe1SCTKz9YN9wP+82wgul+4iIXaQpP9d/n
-         R/3sRnmZmj7fMTQZvh+S3GotvEOekyiS5FGFEz8eb56SwcGqvzoCmD7Dzl0ibfdo3s
-         ujz3LCygYOSBg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 15 Feb 2020 23:26:06 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-On 18/02/2020 19:54, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.5 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Sort the _SPHINXDIRS so that the 'make help' output is easier to read &
+> search and in a predictable order instead of some unknown pseudo-random
+> order.
 > 
-> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-All tests are passing for Tegra ...
+But...that takes the challenge out of it!
 
-Test results for stable-v5.5:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    40 tests:	40 pass, 0 fail
+Applied, thanks.
 
-Linux version:	5.5.5-rc1-g8aa3a43b129c
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+jon
