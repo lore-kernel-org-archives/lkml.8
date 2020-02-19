@@ -2,579 +2,171 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F529C3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED88C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086832176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D578207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgBSF5p (ORCPT
+        id S1726495AbgBSGAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:57:45 -0500
-Received: from mx06.melco.co.jp ([192.218.140.146]:52926 "EHLO
-        mx06.melco.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgBSF5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:57:44 -0500
-Received: from mr06.melco.co.jp (mr06 [133.141.98.164])
-        by mx06.melco.co.jp (Postfix) with ESMTP id 151DE3A34B9;
-        Wed, 19 Feb 2020 14:57:42 +0900 (JST)
-Received: from mr06.melco.co.jp (unknown [127.0.0.1])
-        by mr06.imss (Postfix) with ESMTP id 48Mn7V05j2zRjx3;
-        Wed, 19 Feb 2020 14:57:42 +0900 (JST)
-Received: from mf04_second.melco.co.jp (unknown [192.168.20.184])
-        by mr06.melco.co.jp (Postfix) with ESMTP id 48Mn7T6vD5zRjsk;
-        Wed, 19 Feb 2020 14:57:41 +0900 (JST)
-Received: from mf04.melco.co.jp (unknown [133.141.98.184])
-        by mf04_second.melco.co.jp (Postfix) with ESMTP id 48Mn7V01r7zRkG2;
-        Wed, 19 Feb 2020 14:57:42 +0900 (JST)
-Received: from tux532.tad.melco.co.jp (unknown [133.141.243.226])
-        by mf04.melco.co.jp (Postfix) with ESMTP id 48Mn7T6ScJzRkFt;
-        Wed, 19 Feb 2020 14:57:41 +0900 (JST)
-Received:  from tux532.tad.melco.co.jp
-        by tux532.tad.melco.co.jp (unknown) with ESMTP id 01J5vfcO013950;
-        Wed, 19 Feb 2020 14:57:41 +0900
-Received: from tux390.tad.melco.co.jp (tux390.tad.melco.co.jp [127.0.0.1])
-        by postfix.imss70 (Postfix) with ESMTP id A026617E075;
-        Wed, 19 Feb 2020 14:57:41 +0900 (JST)
-Received: from tux554.tad.melco.co.jp (tadpost1.tad.melco.co.jp [10.168.7.223])
-        by tux390.tad.melco.co.jp (Postfix) with ESMTP id 938A717E073;
-        Wed, 19 Feb 2020 14:57:41 +0900 (JST)
-Received: from tux554.tad.melco.co.jp
-        by tux554.tad.melco.co.jp (unknown) with ESMTP id 01J5vfbi017445;
-        Wed, 19 Feb 2020 14:57:41 +0900
-From:   Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-To:     Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp
-Cc:     Mori.Takahiro@ab.MitsubishiElectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] staging: exfat: remove symlink feature.
-Date:   Wed, 19 Feb 2020 14:57:27 +0900
-Message-Id: <20200219055727.12867-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 01:00:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33130 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726055AbgBSGAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 01:00:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 541D3AE0F;
+        Wed, 19 Feb 2020 06:00:06 +0000 (UTC)
+Subject: Re: [PATCH] drm/vram-helper: make drm_vram_mm_debugfs_init return 0
+To:     Wambui Karuga <wambui.karugax@gmail.com>,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        airlied@linux.ie, daniel@ffwll.ch
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+ <20200218172821.18378-9-wambui.karugax@gmail.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <30ad58ad-bc1c-bcbb-ef82-0308f5e2594d@suse.de>
+Date:   Wed, 19 Feb 2020 07:00:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218172821.18378-9-wambui.karugax@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove symlink feature completely.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi
+Content-Type: multipart/mixed; boundary="lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Wambui Karuga <wambui.karugax@gmail.com>,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, airlied@linux.ie,
+ daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ gregkh@linuxfoundation.org
+Message-ID: <30ad58ad-bc1c-bcbb-ef82-0308f5e2594d@suse.de>
+Subject: Re: [PATCH] drm/vram-helper: make drm_vram_mm_debugfs_init return 0
+References: <20200218172821.18378-1-wambui.karugax@gmail.com>
+ <20200218172821.18378-9-wambui.karugax@gmail.com>
+In-Reply-To: <20200218172821.18378-9-wambui.karugax@gmail.com>
 
-Becouse
--Uses reserved areas(defined in the Microsoft exfat specification), causing future incompatibilities.
--Not described in Microsoft exfat specifications or SD standards.
--For REMOVABLE media, causes incompatibility with other implementations.
--Not supported by other major exfat drivers.
--Not implemented symlink feature in linux FAT/VFAT.
+--lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Remove this feature completely because of serious media compatibility issues.
-(Can't enable even with CONFIG)
 
-If you have any questions about this patch, please let me know.
 
-Reviewed-by: Takahiro Mori <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
-Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
----
- drivers/staging/exfat/exfat_super.c | 450 ----------------------------
- 1 file changed, 450 deletions(-)
+Am 18.02.20 um 18:28 schrieb Wambui Karuga:
+> As drm_debugfs_create_files() should return 0, remove its use as the
+> return value of drm_vram_mm_debugfs_init(), and have the function retur=
+n
+> 0 directly.
+>=20
+> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index b398114c2604..c7bc07e91c45 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -660,375 +660,6 @@ static int ffsCreateFile(struct inode *inode, char *path, u8 mode,
- 	return ret;
- }
- 
--static int ffsReadFile(struct inode *inode, struct file_id_t *fid, void *buffer,
--		       u64 count, u64 *rcount)
--{
--	s32 offset, sec_offset, clu_offset;
--	u32 clu;
--	int ret = 0;
--	sector_t LogSector;
--	u64 oneblkread, read_bytes;
--	struct buffer_head *tmp_bh = NULL;
--	struct super_block *sb = inode->i_sb;
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--
--	/* check the validity of the given file id */
--	if (!fid)
--		return -EINVAL;
--
--	/* check the validity of pointer parameters */
--	if (!buffer)
--		return -EINVAL;
--
--	/* acquire the lock for file system critical section */
--	mutex_lock(&p_fs->v_mutex);
--
--	/* check if the given file ID is opened */
--	if (fid->type != TYPE_FILE) {
--		ret = -EPERM;
--		goto out;
--	}
--
--	if (fid->rwoffset > fid->size)
--		fid->rwoffset = fid->size;
--
--	if (count > (fid->size - fid->rwoffset))
--		count = fid->size - fid->rwoffset;
--
--	if (count == 0) {
--		if (rcount)
--			*rcount = 0;
--		ret = 0;
--		goto out;
--	}
--
--	read_bytes = 0;
--
--	while (count > 0) {
--		clu_offset = (s32)(fid->rwoffset >> p_fs->cluster_size_bits);
--		clu = fid->start_clu;
--
--		if (fid->flags == 0x03) {
--			clu += clu_offset;
--		} else {
--			/* hint information */
--			if ((clu_offset > 0) && (fid->hint_last_off > 0) &&
--			    (clu_offset >= fid->hint_last_off)) {
--				clu_offset -= fid->hint_last_off;
--				clu = fid->hint_last_clu;
--			}
--
--			while (clu_offset > 0) {
--				/* clu = exfat_fat_read(sb, clu); */
--				if (exfat_fat_read(sb, clu, &clu) == -1) {
--					ret = -EIO;
--					goto out;
--				}
--
--				clu_offset--;
--			}
--		}
--
--		/* hint information */
--		fid->hint_last_off = (s32)(fid->rwoffset >>
--					   p_fs->cluster_size_bits);
--		fid->hint_last_clu = clu;
--
--		/* byte offset in cluster */
--		offset = (s32)(fid->rwoffset & (p_fs->cluster_size - 1));
--
--		/* sector offset in cluster */
--		sec_offset = offset >> p_bd->sector_size_bits;
--
--		/* byte offset in sector */
--		offset &= p_bd->sector_size_mask;
--
--		LogSector = START_SECTOR(clu) + sec_offset;
--
--		oneblkread = (u64)(p_bd->sector_size - offset);
--		if (oneblkread > count)
--			oneblkread = count;
--
--		if ((offset == 0) && (oneblkread == p_bd->sector_size)) {
--			if (sector_read(sb, LogSector, &tmp_bh, 1) !=
--			    0)
--				goto err_out;
--			memcpy((char *)buffer + read_bytes,
--			       (char *)tmp_bh->b_data, (s32)oneblkread);
--		} else {
--			if (sector_read(sb, LogSector, &tmp_bh, 1) !=
--			    0)
--				goto err_out;
--			memcpy((char *)buffer + read_bytes,
--			       (char *)tmp_bh->b_data + offset,
--			       (s32)oneblkread);
--		}
--		count -= oneblkread;
--		read_bytes += oneblkread;
--		fid->rwoffset += oneblkread;
--	}
--	brelse(tmp_bh);
--
--/* How did this ever work and not leak a brlse()?? */
--err_out:
--	/* set the size of read bytes */
--	if (rcount)
--		*rcount = read_bytes;
--
--	if (p_fs->dev_ejected)
--		ret = -EIO;
--
--out:
--	/* release the lock for file system critical section */
--	mutex_unlock(&p_fs->v_mutex);
--
--	return ret;
--}
--
--static int ffsWriteFile(struct inode *inode, struct file_id_t *fid,
--			void *buffer, u64 count, u64 *wcount)
--{
--	bool modified = false;
--	s32 offset, sec_offset, clu_offset;
--	s32 num_clusters, num_alloc, num_alloced = (s32)~0;
--	int ret = 0;
--	u32 clu, last_clu;
--	sector_t LogSector;
--	u64 oneblkwrite, write_bytes;
--	struct chain_t new_clu;
--	struct timestamp_t tm;
--	struct dentry_t *ep, *ep2;
--	struct entry_set_cache_t *es = NULL;
--	struct buffer_head *tmp_bh = NULL;
--	struct super_block *sb = inode->i_sb;
--	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
--	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
--
--	/* check the validity of the given file id */
--	if (!fid)
--		return -EINVAL;
--
--	/* check the validity of pointer parameters */
--	if (!buffer)
--		return -EINVAL;
--
--	/* acquire the lock for file system critical section */
--	mutex_lock(&p_fs->v_mutex);
--
--	/* check if the given file ID is opened */
--	if (fid->type != TYPE_FILE) {
--		ret = -EPERM;
--		goto out;
--	}
--
--	if (fid->rwoffset > fid->size)
--		fid->rwoffset = fid->size;
--
--	if (count == 0) {
--		if (wcount)
--			*wcount = 0;
--		ret = 0;
--		goto out;
--	}
--
--	fs_set_vol_flags(sb, VOL_DIRTY);
--
--	if (fid->size == 0)
--		num_clusters = 0;
--	else
--		num_clusters = (s32)((fid->size - 1) >>
--				     p_fs->cluster_size_bits) + 1;
--
--	write_bytes = 0;
--
--	while (count > 0) {
--		clu_offset = (s32)(fid->rwoffset >> p_fs->cluster_size_bits);
--		clu = fid->start_clu;
--		last_clu = fid->start_clu;
--
--		if (fid->flags == 0x03) {
--			if ((clu_offset > 0) && (clu != CLUSTER_32(~0))) {
--				last_clu += clu_offset - 1;
--
--				if (clu_offset == num_clusters)
--					clu = CLUSTER_32(~0);
--				else
--					clu += clu_offset;
--			}
--		} else {
--			/* hint information */
--			if ((clu_offset > 0) && (fid->hint_last_off > 0) &&
--			    (clu_offset >= fid->hint_last_off)) {
--				clu_offset -= fid->hint_last_off;
--				clu = fid->hint_last_clu;
--			}
--
--			while ((clu_offset > 0) && (clu != CLUSTER_32(~0))) {
--				last_clu = clu;
--				/* clu = exfat_fat_read(sb, clu); */
--				if (exfat_fat_read(sb, clu, &clu) == -1) {
--					ret = -EIO;
--					goto out;
--				}
--				clu_offset--;
--			}
--		}
--
--		if (clu == CLUSTER_32(~0)) {
--			num_alloc = (s32)((count - 1) >>
--					  p_fs->cluster_size_bits) + 1;
--			new_clu.dir = (last_clu == CLUSTER_32(~0)) ?
--					CLUSTER_32(~0) : last_clu + 1;
--			new_clu.size = 0;
--			new_clu.flags = fid->flags;
--
--			/* (1) allocate a chain of clusters */
--			num_alloced = exfat_alloc_cluster(sb,
--							  num_alloc,
--							  &new_clu);
--			if (num_alloced == 0)
--				break;
--			if (num_alloced < 0) {
--				ret = num_alloced;
--				goto out;
--			}
--
--			/* (2) append to the FAT chain */
--			if (last_clu == CLUSTER_32(~0)) {
--				if (new_clu.flags == 0x01)
--					fid->flags = 0x01;
--				fid->start_clu = new_clu.dir;
--				modified = true;
--			} else {
--				if (new_clu.flags != fid->flags) {
--					exfat_chain_cont_cluster(sb,
--								 fid->start_clu,
--								 num_clusters);
--					fid->flags = 0x01;
--					modified = true;
--				}
--				if (new_clu.flags == 0x01)
--					exfat_fat_write(sb, last_clu, new_clu.dir);
--			}
--
--			num_clusters += num_alloced;
--			clu = new_clu.dir;
--		}
--
--		/* hint information */
--		fid->hint_last_off = (s32)(fid->rwoffset >>
--					   p_fs->cluster_size_bits);
--		fid->hint_last_clu = clu;
--
--		/* byte offset in cluster   */
--		offset = (s32)(fid->rwoffset & (p_fs->cluster_size - 1));
--
--		/* sector offset in cluster */
--		sec_offset = offset >> p_bd->sector_size_bits;
--
--		/* byte offset in sector    */
--		offset &= p_bd->sector_size_mask;
--
--		LogSector = START_SECTOR(clu) + sec_offset;
--
--		oneblkwrite = (u64)(p_bd->sector_size - offset);
--		if (oneblkwrite > count)
--			oneblkwrite = count;
--
--		if ((offset == 0) && (oneblkwrite == p_bd->sector_size)) {
--			if (sector_read(sb, LogSector, &tmp_bh, 0) !=
--			    0)
--				goto err_out;
--			memcpy((char *)tmp_bh->b_data,
--			       (char *)buffer + write_bytes, (s32)oneblkwrite);
--			if (sector_write(sb, LogSector, tmp_bh, 0) !=
--			    0) {
--				brelse(tmp_bh);
--				goto err_out;
--			}
--		} else {
--			if ((offset > 0) ||
--			    ((fid->rwoffset + oneblkwrite) < fid->size)) {
--				if (sector_read(sb, LogSector, &tmp_bh, 1) !=
--				    0)
--					goto err_out;
--			} else {
--				if (sector_read(sb, LogSector, &tmp_bh, 0) !=
--				    0)
--					goto err_out;
--			}
--
--			memcpy((char *)tmp_bh->b_data + offset,
--			       (char *)buffer + write_bytes, (s32)oneblkwrite);
--			if (sector_write(sb, LogSector, tmp_bh, 0) !=
--			    0) {
--				brelse(tmp_bh);
--				goto err_out;
--			}
--		}
--
--		count -= oneblkwrite;
--		write_bytes += oneblkwrite;
--		fid->rwoffset += oneblkwrite;
--
--		fid->attr |= ATTR_ARCHIVE;
--
--		if (fid->size < fid->rwoffset) {
--			fid->size = fid->rwoffset;
--			modified = true;
--		}
--	}
--
--	brelse(tmp_bh);
--
--	/* (3) update the direcoty entry */
--	es = get_entry_set_in_dir(sb, &fid->dir, fid->entry,
--				  ES_ALL_ENTRIES, &ep);
--	if (!es)
--		goto err_out;
--	ep2 = ep + 1;
--
--	exfat_set_entry_time(ep, tm_current(&tm), TM_MODIFY);
--	exfat_set_entry_attr(ep, fid->attr);
--
--	if (modified) {
--		if (exfat_get_entry_flag(ep2) != fid->flags)
--			exfat_set_entry_flag(ep2, fid->flags);
--
--		if (exfat_get_entry_size(ep2) != fid->size)
--			exfat_set_entry_size(ep2, fid->size);
--
--		if (exfat_get_entry_clu0(ep2) != fid->start_clu)
--			exfat_set_entry_clu0(ep2, fid->start_clu);
--	}
--
--	update_dir_checksum_with_entry_set(sb, es);
--	release_entry_set(es);
--
--#ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
--	fs_sync(sb, true);
--	fs_set_vol_flags(sb, VOL_CLEAN);
--#endif
--
--err_out:
--	/* set the size of written bytes */
--	if (wcount)
--		*wcount = write_bytes;
--
--	if (num_alloced == 0)
--		ret = -ENOSPC;
--
--	else if (p_fs->dev_ejected)
--		ret = -EIO;
--
--out:
--	/* release the lock for file system critical section */
--	mutex_unlock(&p_fs->v_mutex);
--
--	return ret;
--}
--
- static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
- {
- 	s32 num_clusters;
-@@ -2273,7 +1904,6 @@ static struct dentry *exfat_lookup(struct inode *dir, struct dentry *dentry,
- 	int err;
- 	struct file_id_t fid;
- 	loff_t i_pos;
--	u64 ret;
- 	mode_t i_mode;
- 
- 	__lock_super(sb);
-@@ -2295,18 +1925,6 @@ static struct dentry *exfat_lookup(struct inode *dir, struct dentry *dentry,
- 	}
- 
- 	i_mode = inode->i_mode;
--	if (S_ISLNK(i_mode) && !EXFAT_I(inode)->target) {
--		EXFAT_I(inode)->target = kmalloc(i_size_read(inode) + 1,
--						 GFP_KERNEL);
--		if (!EXFAT_I(inode)->target) {
--			err = -ENOMEM;
--			goto error;
--		}
--		ffsReadFile(dir, &fid, EXFAT_I(inode)->target,
--			    i_size_read(inode), &ret);
--		*(EXFAT_I(inode)->target + i_size_read(inode)) = '\0';
--	}
--
- 	alias = d_find_alias(inode);
- 	if (alias && !exfat_d_anon_disconn(alias)) {
- 		BUG_ON(d_unhashed(alias));
-@@ -2398,73 +2016,6 @@ static int exfat_unlink(struct inode *dir, struct dentry *dentry)
- 	return err;
- }
- 
--static int exfat_symlink(struct inode *dir, struct dentry *dentry,
--			 const char *target)
--{
--	struct super_block *sb = dir->i_sb;
--	struct timespec64 curtime;
--	struct inode *inode;
--	struct file_id_t fid;
--	loff_t i_pos;
--	int err;
--	u64 len = (u64)strlen(target);
--	u64 ret;
--
--	__lock_super(sb);
--
--	pr_debug("%s entered\n", __func__);
--
--	err = ffsCreateFile(dir, (u8 *)dentry->d_name.name, FM_SYMLINK, &fid);
--	if (err)
--		goto out;
--
--
--	err = ffsWriteFile(dir, &fid, (char *)target, len, &ret);
--
--	if (err) {
--		ffsRemoveFile(dir, &fid);
--		goto out;
--	}
--
--	INC_IVERSION(dir);
--	curtime = current_time(dir);
--	dir->i_ctime = curtime;
--	dir->i_mtime = curtime;
--	dir->i_atime = curtime;
--	if (IS_DIRSYNC(dir))
--		(void)exfat_sync_inode(dir);
--	else
--		mark_inode_dirty(dir);
--
--	i_pos = ((loff_t)fid.dir.dir << 32) | (fid.entry & 0xffffffff);
--
--	inode = exfat_build_inode(sb, &fid, i_pos);
--	if (IS_ERR(inode)) {
--		err = PTR_ERR(inode);
--		goto out;
--	}
--	INC_IVERSION(inode);
--	curtime = current_time(inode);
--	inode->i_mtime = curtime;
--	inode->i_atime = curtime;
--	inode->i_ctime = curtime;
--	/* timestamp is already written, so mark_inode_dirty() is unneeded. */
--
--	EXFAT_I(inode)->target = kmemdup(target, len + 1, GFP_KERNEL);
--	if (!EXFAT_I(inode)->target) {
--		err = -ENOMEM;
--		goto out;
--	}
--
--	dentry->d_time = GET_IVERSION(dentry->d_parent->d_inode);
--	d_instantiate(dentry, inode);
--
--out:
--	__unlock_super(sb);
--	pr_debug("%s exited\n", __func__);
--	return err;
--}
--
- static int exfat_mkdir(struct inode *dir, struct dentry *dentry, umode_t mode)
- {
- 	struct super_block *sb = dir->i_sb;
-@@ -2838,7 +2389,6 @@ static const struct inode_operations exfat_dir_inode_operations = {
- 	.create        = exfat_create,
- 	.lookup        = exfat_lookup,
- 	.unlink        = exfat_unlink,
--	.symlink       = exfat_symlink,
- 	.mkdir         = exfat_mkdir,
- 	.rmdir         = exfat_rmdir,
- 	.rename        = exfat_rename,
--- 
-2.25.0
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 
+> ---
+>  drivers/gpu/drm/drm_gem_vram_helper.c | 13 +++++--------
+>  1 file changed, 5 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_gem_vram_helper.c b/drivers/gpu/drm/dr=
+m_gem_vram_helper.c
+> index 92a11bb42365..77b36a2286f9 100644
+> --- a/drivers/gpu/drm/drm_gem_vram_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_vram_helper.c
+> @@ -1043,19 +1043,16 @@ static const struct drm_info_list drm_vram_mm_d=
+ebugfs_list[] =3D {
+>   * @minor: drm minor device.
+>   *
+>   * Returns:
+> - * 0 on success, or
+> - * a negative error code otherwise.
+> + * 0
+>   */
+>  int drm_vram_mm_debugfs_init(struct drm_minor *minor)
+>  {
+> -	int ret =3D 0;
+> -
+>  #if defined(CONFIG_DEBUG_FS)
+> -	ret =3D drm_debugfs_create_files(drm_vram_mm_debugfs_list,
+> -				       ARRAY_SIZE(drm_vram_mm_debugfs_list),
+> -				       minor->debugfs_root, minor);
+> +	drm_debugfs_create_files(drm_vram_mm_debugfs_list,
+> +				 ARRAY_SIZE(drm_vram_mm_debugfs_list),
+> +				 minor->debugfs_root, minor);
+>  #endif
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(drm_vram_mm_debugfs_init);
+> =20
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--lEUoRsUYxFmFKhlCCP1VdqGmLZM6cyXlM--
+
+--neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl5MzuQACgkQaA3BHVML
+eiO2mAgAlF6b2VDAr15WInESQxTDVelSgxblRxPgN4GtsPvNuNk54xkNqnLsBgUL
+wqQBSf+eb6R7CCllltpEBv7cwhvzMQRYakODpDjJ1VFUcMGCJQFwC1yCYQh5hrWy
+A1Vm2pKaxatR4gZ00SWKW7Qo2KavfjXmmpQ82VrMhJ4ewqXxt9n3lrE0xZmWoMfw
+rxfB8zIkY7P1shJe6O3Gj24OUQY1moEmA/7I3MP/7EvzjNXCdxJvuSL1TxiZfC4D
+Ho4DeJmSgQDPWAOixFGA44DKROu2tlw5LZWrHvtwHj3i9xr2WEN1mbBe84KaYm2H
+h2q3B2ZXuTF68bvjllmMWHqHI00GnQ==
+=7nlY
+-----END PGP SIGNATURE-----
+
+--neiXT7A2TQh7Yba93ieRLenJs3LBBQsRi--
