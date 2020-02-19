@@ -2,205 +2,97 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51416C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D51C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E00121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UE54qS9E"
+	by mail.kernel.org (Postfix) with ESMTP id 97A1E21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgBSM0O (ORCPT
+        id S1727463AbgBSM01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:26:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41369 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726530AbgBSM0O (ORCPT
+        Wed, 19 Feb 2020 07:26:27 -0500
+Received: from atl4mhfb04.myregisteredsite.com ([209.17.115.120]:41206 "EHLO
+        atl4mhfb04.myregisteredsite.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726530AbgBSM01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:26:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582115172;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aU/Kb9yyQfFq/B4zFRzH8ISmhlDlgLRWQwirtVr5slw=;
-        b=UE54qS9EII++lIIDvmCQ2gry6Zb33wf3llS2HNlhVLM/sb8tEYe7a40tRPo+yOnWc5zbpj
-        QD0W/FBhBR8A6x13LUq9W43DkBJr5NefuzxaiR/g5kCINTtkHgB7zlTSpiCu0BZkBl/nkf
-        kVBO+DjZ0aiZfAuBnZwCOQsOsyVF1/c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-b9pysub7Opy2xssPrJfx3Q-1; Wed, 19 Feb 2020 07:26:03 -0500
-X-MC-Unique: b9pysub7Opy2xssPrJfx3Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A18A5107ACC5;
-        Wed, 19 Feb 2020 12:26:01 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5767C5C112;
-        Wed, 19 Feb 2020 12:26:00 +0000 (UTC)
-Subject: Re: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Krupp <centos@akr.yagii.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-edac@vger.kernel.org
-References: <20200217130659.15895-1-prarit@redhat.com>
- <20200218161319.GG14449@zn.tnic>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <894a39cb-21e7-3e43-1907-cae390537ccf@redhat.com>
-Date:   Wed, 19 Feb 2020 07:25:59 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200218161319.GG14449@zn.tnic>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Wed, 19 Feb 2020 07:26:27 -0500
+X-Greylist: delayed 334 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 07:26:26 EST
+Received: from atl4mhob25.registeredsite.com (atl4mhob25.registeredsite.com [209.17.115.122])
+        by atl4mhfb04.myregisteredsite.com (8.14.4/8.14.4) with ESMTP id 01JCKq9u032131
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:20:52 -0500
+Received: from mailpod.hostingplatform.com ([10.30.71.204])
+        by atl4mhob25.registeredsite.com (8.14.4/8.14.4) with ESMTP id 01JCKoga042903
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:20:51 -0500
+Received: (qmail 9089 invoked by uid 0); 19 Feb 2020 12:20:50 -0000
+X-TCPREMOTEIP: 81.173.50.109
+X-Authenticated-UID: mike@milosoftware.com
+Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
+  by 0 with ESMTPA; 19 Feb 2020 12:20:50 -0000
+From:   Mike Looijmans <mike.looijmans@topic.nl>
+To:     robh+dt@kernel.org, michal.simek@xilinx.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     m.tretter@pengutronix.de, nava.manne@xilinx.com,
+        rajan.vaja@xilinx.com, manish.narani@xilinx.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Looijmans <mike.looijmans@topic.nl>
+Subject: [PATCH] devicetree: zynqmp.dtsi: Add bootmode selection support
+Date:   Wed, 19 Feb 2020 13:20:36 +0100
+Message-Id: <20200219122036.24575-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add bootmode override support for ZynqMP devices. Allows one to select
+a boot device by running "reboot qspi32" for example. Activate config
+item CONFIG_SYSCON_REBOOT_MODE to make this work.
 
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-On 2/18/20 11:13 AM, Borislav Petkov wrote:
-> On Mon, Feb 17, 2020 at 08:06:59AM -0500, Prarit Bhargava wrote:
->> A user has reported that they are seeing spurious corrected errors on
->> their hardware.
->>
->> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
->> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
->> with the valid field (bit 63) set, the uncorrected error field (bit 61)
->> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
->> an MCA Error Code (bits [15:0]) of 0x0005."
->>
->> Block these spurious errors from the console and logs.
->>
->> Links to Intel Specification updates:
->> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
->> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
->> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
->> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
-> 
-> My previous review comment still holds:
-> 
-> Those links tend to get stale with time. If you really want to refer to
-> the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
-> them there as an attachment and add the link to the entry to the commit
-> message.
-> 
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
-> 
-> WARNING: Co-developed-by: must be immediately followed by Signed-off-by:
-> #36:
-
-Borislav, when I've been using your Co-developed-by & not using a Signed-off-by
-process but when I run checkpatch.py I get the following warning:
-
-WARNING: Co-developed-by and Signed-off-by: name/email do not match
-#21:
-Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-
-When I submitted this patch I looked at other commits in the kernel near
-top-of-tree and they have Signed-off-by followed by Co-developed-by, and also
-took your suggestion of not using a Signed-off-by for Alexander.  That's why I
-chose to display them this way in v2.
-
-Examples:
-
-126196100063 ("lib/zlib: add s390 hardware support for kernel zlib_inflate")
-40ca1bf580ef ("PCI: brcmstb: Add MSI support")
-
-I'm now thoroughly confused as to what the correct format is.  It seems like
-checkpatch.py is telling me to include a Signed-off-by in addition to the
-Co-developed-by for Alexander but you explicitly told me not to.
-
-P.
-
-> 
-> See Documentation/process/submitting-patches.rst for more detail.
-> 
->> Cc: Tony Luck <tony.luck@intel.com>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: "H. Peter Anvin" <hpa@zytor.com>
->> Cc: x86@kernel.org
->> Cc: linux-edac@vger.kernel.org
->> ---
->>  arch/x86/kernel/cpu/mce/core.c     |  2 ++
->>  arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
->>  arch/x86/kernel/cpu/mce/internal.h |  1 +
->>  3 files changed, 20 insertions(+)
->>
->> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
->> index 2c4f949611e4..fe3983d551cc 100644
->> --- a/arch/x86/kernel/cpu/mce/core.c
->> +++ b/arch/x86/kernel/cpu/mce/core.c
->> @@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
->>  {
->>  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
->>  		return amd_filter_mce(m);
->> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
->> +		return intel_filter_mce(m);
->>  
->>  	return false;
->>  }
->> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
->> index 5627b1091b85..989148e6746c 100644
->> --- a/arch/x86/kernel/cpu/mce/intel.c
->> +++ b/arch/x86/kernel/cpu/mce/intel.c
->> @@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
->>  {
->>  	intel_clear_lmce();
->>  }
->> +
->> +bool intel_filter_mce(struct mce *m)
->> +{
->> +	struct cpuinfo_x86 *c = &boot_cpu_data;
->> +
->> +	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
->> +	if ((c->x86 == 6) &&
->> +	    ((c->x86_model == INTEL_FAM6_HASWELL) ||
->> +	     (c->x86_model == INTEL_FAM6_HASWELL_L) ||
->> +	     (c->x86_model == INTEL_FAM6_BROADWELL) ||
->> +	     (c->x86_model == INTEL_FAM6_HASWELL_G)) &&
->> +	    (m->bank == 0) &&
->> +	    ((m->status & 0xa0000000ffffffff) == 0x80000000000f0005))
->> +		return true;
->> +
->> +	return false;
->> +}
->> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
->> index b785c0d0b590..821faba5b05d 100644
->> --- a/arch/x86/kernel/cpu/mce/internal.h
->> +++ b/arch/x86/kernel/cpu/mce/internal.h
->> @@ -175,5 +175,6 @@ extern bool amd_filter_mce(struct mce *m);
->>  #else
->>  static inline bool amd_filter_mce(struct mce *m)			{ return false; };
->>  #endif
->> +extern bool intel_filter_mce(struct mce *m);
-> 
-> It doesn't even build:
-> 
-> ld: arch/x86/kernel/cpu/mce/core.o: in function `filter_mce':
-> /home/boris/kernel/linux/arch/x86/kernel/cpu/mce/core.c:1881: undefined reference to `intel_filter_mce'
-> make: *** [Makefile:1077: vmlinux] Error 1
-> 
-> Hint: do it like it is done for amd_filter_mce() but in the respective
-> #ifdef CONFIG_X86_MCE_INTEL place.
-> 
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 26d926eb1431..4c38d77ecbba 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -246,6 +246,30 @@
+ 			};
+ 		};
+ 
++		/* Clock and Reset control registers for LPD */
++		lpd_apb: apb@ff5e0000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x0 0xff5e0000 0x0 0x400>;
++			reboot-mode {
++				compatible = "syscon-reboot-mode";
++				offset = <0x200>;
++				mask = <0xf100>;
++				/* Bit(8) is the "force user" bit */
++				mode-normal = <0x0000>;
++				mode-psjtag = <0x0100>;
++				mode-qspi24 = <0x1100>;
++				mode-qspi32 = <0x2100>;
++				mode-sd0    = <0x3100>;
++				mode-nand   = <0x4100>;
++				mode-sd1    = <0x6100>;
++				mode-emmc   = <0x6100>;
++				mode-usb0   = <0x7100>;
++				mode-pjtag0 = <0x8100>;
++				mode-pjtag1 = <0x9100>;
++				mode-sd1ls  = <0xe100>;
++			};
++		};
++
+ 		/* GDMA */
+ 		fpd_dma_chan1: dma@fd500000 {
+ 			status = "disabled";
+-- 
+2.17.1
 
