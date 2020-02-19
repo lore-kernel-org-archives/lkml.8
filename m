@@ -2,139 +2,165 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F863C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF84C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DC224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+oniFco"
+	by mail.kernel.org (Postfix) with ESMTP id DDA112064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582104278;
+	bh=iTP3x6vEprYutbkTyFGnFfyvngn3Bw24niNqLaYA43U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Huzf5lLQAwd8D+lzllg3+iVNO2Y5Zlf7ApblDLVK3YHn4IjxeAlub/GoW4X8lCyGM
+	 9lgZ53BZJHkr1HaD4vm17R1SzYyzIwsWa3729D2cCMmdU+eXkNB433/dkhF/kkcerh
+	 TMggenHIw2RxHFXCx/RgTG7YSKHl7xc39YssPurg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgBSJXf (ORCPT
+        id S1726677AbgBSJYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:23:35 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35822 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSJXe (ORCPT
+        Wed, 19 Feb 2020 04:24:37 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:32638 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgBSJYh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:23:34 -0500
-Received: by mail-pg1-f196.google.com with SMTP id v23so9019981pgk.2;
-        Wed, 19 Feb 2020 01:23:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Htpt6hc+U4jo4mvJTHmuoosdO86KCt7hpmhoJ1OllKc=;
-        b=A+oniFcopSeS7/z7U8aO7Kzd+s5dqq3cODDtSQatqjv2wnCdJaoUvD+6myGsB/RJbe
-         hUxktseNgkTOtHJAAiH7/yLdPeXsQ+7rH0PehbIQkuysv/b/0xovFdw+zJl0qxRrZ1Ff
-         jtBLSrSM5Q1fYFCJT3lsti6sbNKZnEr4vjAaU9t5y/QgbgqbKyox/3vXNpc4XS/0HMFj
-         ykaCNJGzHOY64OzvjQMw2tGV9fSKcHELOAsMgndF/lkqBrq5pnNrqWZQO/zFMt4PyTDy
-         5o9bfCShHs9ncMRDmC/Iwns5PmDGoHGPSs54wjldlp4IDOSOEMKVnEea7bTI7vvjEJLe
-         w3Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Htpt6hc+U4jo4mvJTHmuoosdO86KCt7hpmhoJ1OllKc=;
-        b=AM4yWwsfUUt2XSHb/ldaTgU7ulnXU2AdlTb+OSoxDQa9kZ1/oLB4Oe7TB686Ox8wMH
-         1Y5n1U8IGoYiBqgZgGxzV76RAK3a4AJmkuebL0o2MsXwOIacczUCRkZumP1yM/VVr8Rq
-         gYovhkYhZE6T3iDi5e0xZKuHzyzCsQ18rs5xAlj2DX3tmHd1E1Dz0cc1VkV8KyUu0UPh
-         Lnuxyro86K2vo9SKJrzg9Lo3QrKTWAGc0lfTz4NR64hHJwVZN/m6Oa8Cdod/UntJAUF8
-         I5E9/+3/cifr2wqEK0lOs7ciFov5J4PCEzXNimBzCaOS6hvbYZtPJOCtT/5yxKezhgHm
-         8p9A==
-X-Gm-Message-State: APjAAAXJ6sL+oxVJmAW1pfg4wTlQqaac33OmDRadJ3ccvU+7mljd1RHf
-        HamY7A59o63H+x2oiGDyx1ALY9EhNY+jYIIv/RLPG8bYArI=
-X-Google-Smtp-Source: APXvYqyZB8y/PoR6EyWvk2I2q3P6m+Qxy2sBfmbxGBYaiQKh8j/+PEjxZUkjgviLMNTrR7qlh4S3/ToK8sJu4Tu82FM=
-X-Received: by 2002:a62:52d0:: with SMTP id g199mr25153719pfb.241.1582104213420;
- Wed, 19 Feb 2020 01:23:33 -0800 (PST)
+        Wed, 19 Feb 2020 04:24:37 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 01J9ODcc024014;
+        Wed, 19 Feb 2020 18:24:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 01J9ODcc024014
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582104254;
+        bh=DF+/evkLClqtfnRvGjBml/csN+45+NlnkxxMv7DJLo8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UyoUnKbo+w6EdQGG5oAobMsEyzSwFO61oBEYLdBUsXnUXVaaEEuWhWnpzWI7QSi7l
+         1qWbTufAyZqG9nWVta90KSitwnNwPYCksFaKQGrFsEvkdmhsGlYQWPkuV3xKXNM9lg
+         csC6/h1FBEdt3tepDh5L5GIOret/no3ZJn/SP9RpFxP2YfTCJN/5W8f+ZW+fluzQ/a
+         awepQt4yyAaD4oILvhWNT2rXTX+DI/VU1zCEUA0OgfPl4HD+WFNTKDITkGzRYguFD4
+         azVXqFIrhopIHTFzr9/ix7g4CvWYEERLIRAPEAQLE3nhUo9Nzt/5udMTrKdnPj69uV
+         WAPbJjjs1ByBw==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id r18so14969537vso.5;
+        Wed, 19 Feb 2020 01:24:14 -0800 (PST)
+X-Gm-Message-State: APjAAAW0DEJ395PVAQo9sNgPHjgvFONImvq63fGM5g/4NIwvi8+WJmRT
+        w7dxyLgVigTM1SqcLJsisYLCtzSOZz1/2PE5Bj4=
+X-Google-Smtp-Source: APXvYqyeXY+yDTz5fVQ/i3trWzuurgasd9/7mE2NxciVsAyJ4GwudLgazC3Yja9jl5t4/CoTN8jYVeOUtSFg4iKCrbM=
+X-Received: by 2002:a67:6485:: with SMTP id y127mr14029090vsb.54.1582104252914;
+ Wed, 19 Feb 2020 01:24:12 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYtnwFVPQxgHOU2Bi9y5+q4sSsww47yxK+_3ZAQ9=kyhUg@mail.gmail.com>
- <20200219013824.GB8602@b29397-desktop> <20200219024534.GB10078@jackp-linux.qualcomm.com>
-In-Reply-To: <20200219024534.GB10078@jackp-linux.qualcomm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Feb 2020 11:23:25 +0200
-Message-ID: <CAHp75VfY1Y-jNr=YTfAO+eUOy3xUy9+AgtyJuhEk2ngrxMg5JA@mail.gmail.com>
-Subject: Re: msm_hsusb 78d9000.usb: failed to create device link to ci_hdrc.0.ulpi
-To:     Jack Pham <jackp@codeaurora.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
+References: <20200219074950.23344-1-masahiroy@kernel.org> <CAMuHMdU7=jRNCWvtiFhJwUM6P4xNmqwXdPX14qvE=6by1V7APA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU7=jRNCWvtiFhJwUM6P4xNmqwXdPX14qvE=6by1V7APA@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 19 Feb 2020 18:23:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATKh9Y_QmO19iPw+zXT8RG-HfXBFY5bvpX0YSyOO-=NGA@mail.gmail.com>
+Message-ID: <CAK7LNATKh9Y_QmO19iPw+zXT8RG-HfXBFY5bvpX0YSyOO-=NGA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: make 'imply' obey the direct dependency
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 4:46 AM Jack Pham <jackp@codeaurora.org> wrote:
+On Wed, Feb 19, 2020 at 5:42 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> On Wed, Feb 19, 2020 at 01:38:22AM +0000, Peter Chen wrote:
-> > On 20-02-17 14:02:57, Naresh Kamboju wrote:
-> > > arm64 APQ 8016 SBC ( Dragonboard 410c)  device running Linux next boot
-> > > failed due to below error.
-> > >
-> > > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> > > [    0.000000] Linux version 5.6.0-rc2-next-20200217 (oe-user@oe-host)
-> > > (gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Mon Feb 17 04:27:31 UTC 2020
-> > > [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> > > <>
-> > > [    4.439291] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.448891] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.457879] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.467331] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.475636] mmc0: new HS200 MMC card at address 0001
-> > > [    4.478895] mmcblk0: mmc0:0001 DS2008 7.28 GiB
-> > > [    4.480629] mmcblk0boot0: mmc0:0001 DS2008 partition 1 4.00 MiB
-> > > [    4.484719] mmcblk0boot1: mmc0:0001 DS2008 partition 2 4.00 MiB
-> > > [    4.492247] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.502611] mmcblk0rpmb: mmc0:0001 DS2008 partition 3 4.00 MiB,
-> > > chardev (234:0)
-> > > [    4.506949] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.517901] random: fast init done
-> > > [    4.521420] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
-> > > [    4.523400] mmcblk1: mmc1:aaaa SL16G 14.8 GiB
-> > > [    4.532843] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.539131]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14
-> > > [    4.542309]  mmcblk1: p1
-> > > [    4.561843] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.573481] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.585283] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.592622] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.600074] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.607204] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
-> > > [    4.614679] msm_hsusb 78d9000.usb: failed to create device link to
-> > > ci_hdrc.0.ulpi
+> Hi Yamada-san,
+>
+> On Wed, Feb 19, 2020 at 8:51 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > The 'imply' statement may create unmet direct dependency when the
+> > implied symbol depends on m.
 > >
-> > The chipidea USB code hasn't changed recently. Would you please bisect
-> > which commit affect it?
+> > [Test Code]
+> >
+> >   config FOO
+> >           tristate "foo"
+> >           imply BAZ
+> >
+> >   config BAZ
+> >           tristate "baz"
+> >           depends on BAR
+> >
+> >   config BAR
+> >           def_tristate m
+> >
+> >   config MODULES
+> >           def_bool y
+> >           option modules
+> >
+> > If you set FOO=y, BAZ is also promoted to y, which results in the
+> > following .config file:
+> >
+> >   CONFIG_FOO=y
+> >   CONFIG_BAZ=y
+> >   CONFIG_BAR=m
+> >   CONFIG_MODULES=y
+> >
+> > This ignores the dependency "BAZ depends on BAR".
+> >
+> > Unlike 'select', what is worse, Kconfig never shows the
+> > "WARNING: unmet direct dependencies detected for ..." for this case.
+> >
+> > Because 'imply' should be weaker than 'depends on', Kconfig should
+> > take the direct dependency into account.
+> >
+> > Describe this case in Documentation/kbuild/kconfig-language.rst for
+> > clarification.
+> >
+> > Commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword") says that
+> > a symbol implied by y is restricted to y or n, excluding m.
+> >
+> > As for the combination of FOO=y and BAR=m, the case of BAZ=m is excluded
+> > by the 'imply', and BAZ=y is also excluded by 'depends on'. So, only the
+> > possible value is BAZ=n.
+> >
+> > Having said that, this case was probably "We don't care" at that time
+> > because Kconfig did not handle 'depends on m' correctly until
+> > commit f622f8279581 ("kconfig: warn unmet direct dependency of tristate
+> > symbols selected by y") fixed it.
+> >
+> > Backporting this to 4.19+ will probably be fine. If you care this
+> > problem on 4.14.x, you need to backport f622f8279581 as well.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 >
-> Probably same cause as for this:
-> https://bugzilla.kernel.org/show_bug.cgi?id=206435
+> Thanks a lot! This fixes the build issues in
+> https://lore.kernel.org/alsa-devel/CAMuHMdW8SvDgQJyenTtEm4Xn2Ma6PK9pfwKR2_gn60t2AqNWXg@mail.gmail.com/
+>
+> Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>
 
-Yes, it's the same. I dunno why no fix yet available.
+Even if this patch fixes the build issues,
+the result may not be what you expect.
+
+The very subtle part of 'imply' is that
+symbols implied by 'y' cannot be 'm'.
+
+When CONFIG_SND_SOC_ALL_CODECS=y,
+the select'ed drivers were previously able to be 'm'.
+
+After ea00d95200d02, drivers that were previously
+'m' are now 'n'.
+
+Probably, it shrunk the test-coverage.
+
+I'd recommend to compare the .config file.
+
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Best Regards
+Masahiro Yamada
