@@ -2,96 +2,101 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F0CC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 021FAC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE03A22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB65622B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582081350;
+	bh=6J4gvmOrNVM4xpdjbyq9vV77jRckHXg7aBDMpUrixmU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Yg10vX2lQ7Sjxf/QmQNJWXI2otEve4yxNZ2VnFXsdUGy9+Ithv9m8SJRLmw7M1ykx
+	 cqICDqDfRQ1vJUlDOIKsx8lICb9++mJS4KQfNHsLPPTy7rGZQjPFiayxY8IfVrWZXs
+	 yCk45To3O4XSwRz+JBWax9RkbGmpJyj6zAYBp1Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgBSDB2 (ORCPT
+        id S1728304AbgBSDC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:01:28 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:36894 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728187AbgBSDB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:01:28 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 580147073D7EF8328B36;
-        Wed, 19 Feb 2020 11:01:23 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
- 2020 11:01:21 +0800
-Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
- called
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200214185855.217360-1-jaegeuk@kernel.org>
- <20200214185855.217360-3-jaegeuk@kernel.org>
- <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
- <20200218232714.GB10213@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
-Date:   Wed, 19 Feb 2020 11:01:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 18 Feb 2020 22:02:29 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38938 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728196AbgBSDC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:02:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 77so21716155oty.6;
+        Tue, 18 Feb 2020 19:02:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wM36jiU/uEy31IzeR1mb5iKzvzrpChL40oT2SOGRUi0=;
+        b=qzskkf1RXfl7KmjISWu0PLlSrs2kIyEPEHbiHpF3eLRENVEvhyfxeKgDBWx1ZUvbYz
+         Shve/mgNLvkGEEdMsIJE4fjgQewaSooGPXqmyalV7CXRgOhEWyFmdEktaoTF2/aM1uuY
+         uVpRcFCobrVdaGfdQMJkbXzL60byL5G5P2f16HvzvnSNvnSAn3vbzLrtp65cSUDMFItl
+         FS4AbYXl8FqbeFqzVctYyfcXgGb9OeN0Psb1vQXn+2EVPh5JNM44CZGtu5EvK4SHY/bh
+         TFuS6wr3EFy+GPdbcAI1c84Yowb7TTx9JkeYNrilXlA2hixBUh2KgaKIkmpQXRjA2LFT
+         GXKw==
+X-Gm-Message-State: APjAAAVhCqStcEPGrJftglz/4k16poa2JDve43k6ufUc+Ls/lV1193Vv
+        qdzco7FDRk06NQvbYKPVVQ==
+X-Google-Smtp-Source: APXvYqyK+6EWyXhC3a/7xDZK0yFV9OL48vn100QsFjIeQ8ddy37zTQgKDMZU5KOrzSI/ZG374IuWig==
+X-Received: by 2002:a9d:4c8e:: with SMTP id m14mr17131477otf.245.1582081348149;
+        Tue, 18 Feb 2020 19:02:28 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b15sm199703otl.60.2020.02.18.19.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 19:02:27 -0800 (PST)
+Received: (nullmailer pid 14862 invoked by uid 1000);
+        Wed, 19 Feb 2020 03:02:25 -0000
+Date:   Tue, 18 Feb 2020 21:02:25 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com,
+        linux-arm-kernel@lists.infradead.org,
+        Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Subject: Re: [PATCH v3 4/4] dt-bindings: mmc: mediatek: Add document for
+ mt6779
+Message-ID: <20200219030225.GA14824@bogus>
+References: <1581922564-24914-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1581922564-24914-5-git-send-email-chun-hung.wu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218232714.GB10213@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581922564-24914-5-git-send-email-chun-hung.wu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/19 7:27, Jaegeuk Kim wrote:
-> On 02/17, Chao Yu wrote:
->> On 2020/2/15 2:58, Jaegeuk Kim wrote:
->>> FG_GC needs to move entire section more quickly.
->>>
->>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>> ---
->>>  fs/f2fs/gc.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>> index bbf4db3f6bb4..1676eebc8c8b 100644
->>> --- a/fs/f2fs/gc.c
->>> +++ b/fs/f2fs/gc.c
->>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
->>>  
->>>  		if (get_valid_blocks(sbi, segno, false) == 0)
->>>  			goto freed;
->>> -		if (__is_large_section(sbi) &&
->>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
->>>  				migrated >= sbi->migration_granularity)
->>
->> I knew migrating one large section is a more efficient way, but this can
->> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
->> extreme fragmented space.
+On Mon, 17 Feb 2020 14:56:04 +0800, Chun-Hung Wu wrote:
+> Add compatible node for mt6779 mmc
 > 
-> FG_GC requires to wait for whole section migration which shows the entire
-> latency.
-
-That will cause long-tail latency for single f2fs_balance_fs() procedure,
-which it looks a very long hang when userspace call f2fs syscall, so why
-not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
-
-Thanks,
-
+> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->>
->> Thanks,
->>
->>>  			goto skip;
->>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
->>>
-> .
-> 
+
+Acked-by: Rob Herring <robh@kernel.org>
