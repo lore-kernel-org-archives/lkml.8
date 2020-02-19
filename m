@@ -2,92 +2,110 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACB78C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F1A6C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E14C24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eAZdgCeC"
+	by mail.kernel.org (Postfix) with ESMTP id D7BA424655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582074176;
+	bh=rgSO5TPjLfT2TEUFBXHL2W3SlEgq8MY7tlPnnbQs4W8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r+dzKP10YI0d6xzWwILCgUuRI0Mu8I+rHrnVBx0m5Kqiiqh/O6id02lGQfBPzfo6x
+	 6suV5Vjo/FL8xhZMq66orY+8rGLRAKy/mpLns3oBXWb2/MWM0vSeMj/L/TXoZO26cz
+	 053rvB4MxMH1mqs0yNx0o6tKINvJZ+8uCb8rci50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgBSBCK (ORCPT
+        id S1727211AbgBSBCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:02:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39080 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBSBCK (ORCPT
+        Tue, 18 Feb 2020 20:02:55 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:39850 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgBSBCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:02:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dmgQq76s5htd6QK1djoTrZsBDESqx9Po29KnZ84sMso=; b=eAZdgCeC8YnlA9szfqlWljjWDh
-        UQdArvzLM0oiT5XqIC/Q7h5+HeHL9h7cGk8uQK7lBmcw6zYNiJPBANRy3Kwp44uDdtkV2GwprxPbm
-        2qK75Ii01IRiWR/ENG9UpNAtQ6GGFmxoDicA6zhQykS1pxRxOwf5Iqo0m6NjHXkdBzku6LESIgg13
-        MNO5VqW3ruk/ciL+0+OSHHUM0uvKmDauMYS1h6HQC5+eUgS66IZUqnL5ZBn4iPhOROjAMtOQnLmUp
-        r0l8D5tGUQYLIWt9/cYhYmOOb/1dYr6JEJYp93FoEhbgXTOlcGKNkDzg1ltXOO9ME1PREkt7eWceP
-        c68pLuUA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4Dkf-0005UF-KW; Wed, 19 Feb 2020 01:02:09 +0000
-Date:   Tue, 18 Feb 2020 17:02:09 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
-Message-ID: <20200219010209.GI24185@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-12-willy@infradead.org>
- <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
+        Tue, 18 Feb 2020 20:02:55 -0500
+Received: by mail-pj1-f65.google.com with SMTP id e9so1787091pjr.4;
+        Tue, 18 Feb 2020 17:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XjAe17WwACXa462Lft2fmmYSSdsBuO8CjnLHnDQfA9o=;
+        b=N/mnf1Er4IIWBp/vNkC29mKZ4xdYtar5T1k0lCH0ra0Gvg4QEsfodG4yfbYjbIIVsA
+         Ebxt5L+ceOQDzzgQ6ss86xHtREFi/atw695bOLYoGADEvvUHZWQrOn3GjpxgtI80l4nf
+         dgcEwaDoUjgD8cKwpn2DT7SP55f/ZpeuEi9PesGyEYi75Cwkm8OrHffgemLfc21yIrJa
+         aoXB10/qxrB2kTMZWy0pY/5Y9GD7DPniS0kC7A0ckCJxB0JvfOXv6RgEuMZymEVkCP3m
+         VLplNEJHE/x8lhuA06ehV5xEjMvN7tIlS668+bwte2sjl1f4i9vAGiQlw7iV8BvcOPMa
+         B0Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XjAe17WwACXa462Lft2fmmYSSdsBuO8CjnLHnDQfA9o=;
+        b=IjqTQpagTIHZ8IBpUYnaYhpwn2a8Sr9U2tXcyDyPiYxocO/MZlJY2ARdJ9KRDgvvPO
+         yoCucKtljjeYeWtIHLIpPofch6cX0wG+vu3RiiJ2FVdPKJP0TIMCyYMUphmtqwVopUj9
+         d8XEopFYCiQqomKj/NZiOdJwlH8DwHyuvZjTwbAeIfYTrMMAUxjN2FYJ+VQxpKqB6WrA
+         CO8+Cya4KsXUd13l4CvlM/hKwFyuq8V5qQycfYkM2LtFGXU4hZdEvpSCRqryd0DdkmMg
+         GseBH7LRWFIoxrDNAc3TlPxQUElObxRv179Ny0wD7NKzCZbpKE+rFopE8hkcDgorZdLm
+         kxXw==
+X-Gm-Message-State: APjAAAVEpfikGysjUkFto0NOAa7FNaFomBdlKhdcGpN/WP7g1wnQF6ie
+        mT0KOxxn6fLRiV5b2tMI+9c=
+X-Google-Smtp-Source: APXvYqw/93b9ec12Bht0Doaq2TFiyyatxu8H8/vw+iAKm+7XIR1dpiYwJce2oS3meL+K6eTrysEwfQ==
+X-Received: by 2002:a17:902:b110:: with SMTP id q16mr23061828plr.289.1582074174075;
+        Tue, 18 Feb 2020 17:02:54 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id r9sm208768pfl.136.2020.02.18.17.02.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 17:02:52 -0800 (PST)
+Date:   Tue, 18 Feb 2020 17:02:50 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH v5 4/7] pid: export pidfd_get_pid
+Message-ID: <20200219010250.GB126504@google.com>
+References: <20200214170520.160271-1-minchan@kernel.org>
+ <20200214170520.160271-5-minchan@kernel.org>
+ <20200217075940.GA10342@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
+In-Reply-To: <20200217075940.GA10342@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:01:43PM -0800, John Hubbard wrote:
-> How about this instead? It uses the "for" loop fully and more naturally,
-> and is easier to read. And it does the same thing:
+On Sun, Feb 16, 2020 at 11:59:40PM -0800, Christoph Hellwig wrote:
+> On Fri, Feb 14, 2020 at 09:05:17AM -0800, Minchan Kim wrote:
+> > process_madvise syscall needs pidfd_get_pid function to translate
+> > pidfd to pid so this patch exports the function.
 > 
-> static inline struct page *readahead_page(struct readahead_control *rac)
-> {
-> 	struct page *page;
+> For that it should not need to exported, but then again the actual
+> patch doesn't export it anyway, so this is just a commit log issue.
 > 
-> 	if (!rac->_nr_pages)
-> 		return NULL;
+> >  extern struct pid *pidfd_pid(const struct file *file);
+> > +extern struct pid *pidfd_get_pid(unsigned int fd);
 > 
-> 	page = xa_load(&rac->mapping->i_pages, rac->_start);
-> 	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> 	rac->_batch_count = hpage_nr_pages(page);
-> 
-> 	return page;
-> }
-> 
-> static inline struct page *readahead_next(struct readahead_control *rac)
-> {
-> 	rac->_nr_pages -= rac->_batch_count;
-> 	rac->_start += rac->_batch_count;
-> 
-> 	return readahead_page(rac);
-> }
-> 
-> #define readahead_for_each(rac, page)			\
-> 	for (page = readahead_page(rac); page != NULL;	\
-> 	     page = readahead_page(rac))
+> ... and there is no need for the extern keyword on prototypes in
+> headers.
 
-I'm assuming you mean 'page = readahead_next(rac)' on that second line.
-
-If you keep reading all the way to the penultimate patch, it won't work
-for iomap ... at least not in the same way.
-
+Will fix new version. Thanks for the review!
