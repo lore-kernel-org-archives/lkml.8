@@ -2,144 +2,85 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBA7C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1EEC34053
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952D72067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274B92067D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RxIsPImK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aBSVx+8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbgBSQSF (ORCPT
+        id S1726871AbgBSQSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:18:05 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60278 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbgBSQR4 (ORCPT
+        Wed, 19 Feb 2020 11:18:11 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42048 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBSQSI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:17:56 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JGE34L020290;
-        Wed, 19 Feb 2020 16:17:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=BabazQ5yP//ASrPjsFgmGIuh28CWLBs/R03HwSSNcmU=;
- b=RxIsPImK5cTvv3+Ld5Cjc8mJHvCjyKkH9PZJGO67oCu5v6M0nLHAGN4N94cDPT+PA9kH
- MXsuaGi2jl9+5mTl2RC8focBsaSdkxdxDk9CLGt1OlC6wv9l5E4PV5xdKna4Fh5CZzXw
- H2d/NHNFZaJWliQpQcpp8j4U/VAYHS0r5n40OrInOPi2I5lWBPH9ql1WzB/pRFjx9wYq
- e624qs8aospfhv5cYTDsVxp7Dym5OMgYxDhwjkbFZd23QJxMhSyl7sSOBTakyJI0crum
- JK/U4gF2ICMsG7Cq/wPwZBLIB2w/Pe1183w3/AZ5o6Riqvz4dLciIrw/A09kb976f8mZ 0g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2y8ud146kj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 16:17:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JGHmja004901;
-        Wed, 19 Feb 2020 16:17:48 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y8ud665ad-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 16:17:47 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01JGHge2009501;
-        Wed, 19 Feb 2020 16:17:43 GMT
-Received: from dhcp-10-175-189-86.vpn.oracle.com (/10.175.189.86)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Feb 2020 08:17:42 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v5 kunit-next 2/4] kunit: add log test
-Date:   Wed, 19 Feb 2020 16:17:08 +0000
-Message-Id: <1582129030-22282-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1582129030-22282-1-git-send-email-alan.maguire@oracle.com>
-References: <1582129030-22282-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 suspectscore=3 mlxscore=0 malwarescore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190123
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=3 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190122
+        Wed, 19 Feb 2020 11:18:08 -0500
+Received: by mail-lj1-f193.google.com with SMTP id d10so955526ljl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:18:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FNIeeJsk5kS+/MNQiQBqWzPS8Hc6Zxgn+ktiCE+t/lw=;
+        b=aBSVx+8CRkbeLq8O0iXiBkO3p/l/2sIBUrlpB4EZuNuT794r8Cky2bj3/mLP0o7NIS
+         t/GNOUwYKG7SQqJfmMyOIODB4SVZwBWdaW9mb3hZ6Srj/mWOGa/M76b219nt+ofWdnnz
+         l8YoS6J9OAzKBUPte8XoLiVAUwfYiH/Ybme6CmKM/fQloZCg1BCBSS1hxbo5vt94wYDF
+         wi0lsZTkHc4CxlUSjQEAAHGk4WXxigdfP+E8YPreaG8pIZD1OgoOeZ6z+OFiOUIlR2sq
+         aKrNjvjgJmzQgu652ErrkkNmpNN4hy84IYrGAJbCTvvw7HmFg55X4aNgWUq3fQSVFT5l
+         NHxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FNIeeJsk5kS+/MNQiQBqWzPS8Hc6Zxgn+ktiCE+t/lw=;
+        b=c8FF7ay7CEWbuh9LeNceGvXmwK24kbrlpQaFOHv90CmN/iz8pTEFSfzpuyiL9lu2st
+         l7rLO6L6J+zeRMh6zkTb8vrqdwPo9MOIK61xcf/dNKzm95lFHGoITjbeseSicRpXx+YF
+         JPXs+dSZQYiGFEhfanBzfZJUoWgeH0ReBwPcuk3w2HPS7VtCmqIvrh4couZsTqintfWU
+         0/ysHLHd3esMKoo7XfkIFzbYOJ51wD6y6kFrCUvUzoYjQI5wCOuY92Vl00ayk9HCQbug
+         6dZB1llJpt8ju9v0hwipyDp1NYTcD5p2UpNp3TNJwGD+BECNcSMMl6thpsd/VHQhLgZD
+         SH8w==
+X-Gm-Message-State: APjAAAUXCja33ZOJ4OPlPTYGROVK3h55wHtczccBwnuE8DnKQPyr1vJr
+        O813/PNkbi8FsCqgsllvgCvYOIEBHgpU+LFbI0IuHw==
+X-Google-Smtp-Source: APXvYqz5+N8/IcBMuJha1sjwR5W6tlYYD0yG0sdk9Zg5a202hQT2/SIsxkI/6w5AHuyFS6gous52gqNq9cvuBXJcR+0=
+X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr17031085ljc.39.1582129086032;
+ Wed, 19 Feb 2020 08:18:06 -0800 (PST)
+MIME-Version: 1.0
+References: <20200108104746.1765-1-m.felsch@pengutronix.de>
+ <20200108104746.1765-4-m.felsch@pengutronix.de> <AM6PR10MB2263733CA8E02F39A647258D80310@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <20200218110712.7wllleu2w5myphyb@pengutronix.de>
+In-Reply-To: <20200218110712.7wllleu2w5myphyb@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 19 Feb 2020 17:17:55 +0100
+Message-ID: <CACRpkda94cDdDuuJE+j6-d=TcwyqQV6Ey+26oHM2TT06Rhxj8Q@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] pinctrl: da9062: add driver support
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the logging test ensures multiple strings logged appear in the
-log string associated with the test when CONFIG_KUNIT_DEBUGFS is
-enabled.
+On Tue, Feb 18, 2020 at 12:07 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
----
- lib/kunit/kunit-test.c | 41 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+> gentle ping. The mfd-code and the dt-bindings are landed in 5.6-rc1 but
+> this patch is missing.
 
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index aceb5bf..359bc26 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -329,6 +329,45 @@ static void kunit_resource_test_exit(struct kunit *test)
- 	.exit = kunit_resource_test_exit,
- 	.test_cases = kunit_resource_test_cases,
- };
--kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
-+
-+static void kunit_log_test(struct kunit *test);
-+
-+static struct kunit_case kunit_log_test_cases[] = {
-+	KUNIT_CASE(kunit_log_test),
-+	{}
-+};
-+
-+static struct kunit_suite kunit_log_test_suite = {
-+	.name = "kunit-log-test",
-+	.test_cases = kunit_log_test_cases,
-+};
-+
-+
-+static void kunit_log_test(struct kunit *test)
-+{
-+	struct kunit_suite *suite = &kunit_log_test_suite;
-+
-+	kunit_log(KERN_INFO, test, "put this in log.");
-+	kunit_log(KERN_INFO, test, "this too.");
-+	kunit_log(KERN_INFO, suite, "add to suite log.");
-+	kunit_log(KERN_INFO, suite, "along with this.");
-+
-+#ifdef CONFIG_KUNIT_DEBUGFS
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "put this in log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "this too."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "add to suite log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "along with this."));
-+#else
-+	KUNIT_EXPECT_PTR_EQ(test, test->log, (char *)NULL);
-+	KUNIT_EXPECT_PTR_EQ(test, suite->log, (char *)NULL);
-+#endif
-+}
-+
-+kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
-+		  &kunit_log_test_suite);
- 
- MODULE_LICENSE("GPL v2");
--- 
-1.8.3.1
+Patch applied for v5.7.
 
+Yours,
+Linus Walleij
