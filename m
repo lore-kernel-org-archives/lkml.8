@@ -2,92 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44533C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DC7C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1022722B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E856224655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582081427;
-	bh=mVR+NZQneoCo48GbuZCZUtB9WfA6V/1A87KPT/VW/Ag=;
+	s=default; t=1582081468;
+	bh=DP/qxwF6iAUNhhTZiDV7zdMbqJqUcrKE5bdIhYfJA54=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IkPfwuLHZO29APWG/+Iv1qyFxtX1ZlAaeseew/kpkqqFI9nBIYQqLWflqlRkru2zr
-	 MvaUUvZcBqYzYzb0jrkcIv6lI+TQMsa4ZBJag6sEx+c3PdqVwCT0yTgCrZKwEDcG7v
-	 ouCrmjZub8GI3VGU+F+BMSaSYhoJtUvodo1t5n4c=
+	b=UegJ8qyTwmck11T1JlddWQTmQVCPDrFsERpOXSzbMhRPGyhW3/lYF340tebQWgiM0
+	 2On6x3eEkYs9psM99DXSYB5TIptX7RtBtjtlnvJSjURK8OW+8tzNflGhAEWaV2QtFA
+	 S7FEOtx6kTDRAWREUeewW/F1ODuAeOCYJmXmVxGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgBSDDp (ORCPT
+        id S1728318AbgBSDE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:03:45 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42686 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727999AbgBSDDp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:03:45 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so21734742otd.9;
-        Tue, 18 Feb 2020 19:03:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3ww9jD9BZoI0pj8Fh4zqJj/5ENJzlS5CiCEh5EfEMME=;
-        b=RjtHgSawD+scBXOI9PMJe6xpfQvwRUKvXw7aPcr57p8lKoyK11jGlQbDrp6hlA0cpE
-         QVbLSuhrIb8OlhhiwkEe6pFY6Rb2Jt6jDEUToMHHLT3THkk2We7Fl25DxE7tQIN6eRDC
-         nPhfaGLmo3sGMYCwOkAzHWLtMpYasUW+Z+DsKhlMVwVgZYe55tuH4Aj1BS8OnUK47X2O
-         mDB8h5JXb/YAKFHvdargGEm3IgUBgmLdiQxLwLLHCObRgq32JXPuWs+dwiR7p15qDlcm
-         sOpmJ2YfwOdQN6++s21RJv2NSmf066bZDyDTuseLA8wl6rRR4NvAy4WYi34BIZMFDgs8
-         Gb4w==
-X-Gm-Message-State: APjAAAXjSlAl++gcZW60MxfJ3M0oTcDfeEJma0n1BOW4EilUwZfsJlrD
-        h+pu3n1+/hzKoZ3TcMn1OQ==
-X-Google-Smtp-Source: APXvYqzTdqeuboLoLPJb+yflZq5A5EEQsO0iTNPuA/QcWSn7buqxIsiMpRFFdj7EAa+AdIsqcpxByw==
-X-Received: by 2002:a9d:48d:: with SMTP id 13mr16994562otm.249.1582081423252;
-        Tue, 18 Feb 2020 19:03:43 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u18sm211383otq.26.2020.02.18.19.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 19:03:42 -0800 (PST)
-Received: (nullmailer pid 16790 invoked by uid 1000);
-        Wed, 19 Feb 2020 03:03:41 -0000
-Date:   Tue, 18 Feb 2020 21:03:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, u.kleine-koenig@pengutronix.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH V3 RESEND 2/7] ARM: dts: imx6sx: Add missing UART RTS/CTS
- pins mux
-Message-ID: <20200219030341.GA16734@bogus>
-References: <1581938021-16259-1-git-send-email-Anson.Huang@nxp.com>
- <1581938021-16259-2-git-send-email-Anson.Huang@nxp.com>
+        Tue, 18 Feb 2020 22:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727999AbgBSDE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:04:26 -0500
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8900922B48;
+        Wed, 19 Feb 2020 03:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582081465;
+        bh=DP/qxwF6iAUNhhTZiDV7zdMbqJqUcrKE5bdIhYfJA54=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KIysn+oagpaBb+AHuGgZhZhrqZcEQaF08vrhLBy6xj0C06c1F2Jebp2DRmUlirUxQ
+         dNN+D5EmdaVhGtm0iKUtXaQXpbD64a5LjhElZbGtO2GLQZwvdSNH3VGB9U4SSKi5kb
+         BRAvRxSitohp/AKScApFzKGtbozpq2qqKQjejc6U=
+Date:   Tue, 18 Feb 2020 19:04:25 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
+ called
+Message-ID: <20200219030425.GA102063@google.com>
+References: <20200214185855.217360-1-jaegeuk@kernel.org>
+ <20200214185855.217360-3-jaegeuk@kernel.org>
+ <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
+ <20200218232714.GB10213@google.com>
+ <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1581938021-16259-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 19:13:36 +0800, Anson Huang wrote:
-> Some of UART RTS/CTS pins' DCE/DTE mux function are missing,
-> add them.
+On 02/19, Chao Yu wrote:
+> On 2020/2/19 7:27, Jaegeuk Kim wrote:
+> > On 02/17, Chao Yu wrote:
+> >> On 2020/2/15 2:58, Jaegeuk Kim wrote:
+> >>> FG_GC needs to move entire section more quickly.
+> >>>
+> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> >>> ---
+> >>>  fs/f2fs/gc.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >>> index bbf4db3f6bb4..1676eebc8c8b 100644
+> >>> --- a/fs/f2fs/gc.c
+> >>> +++ b/fs/f2fs/gc.c
+> >>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
+> >>>  
+> >>>  		if (get_valid_blocks(sbi, segno, false) == 0)
+> >>>  			goto freed;
+> >>> -		if (__is_large_section(sbi) &&
+> >>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
+> >>>  				migrated >= sbi->migration_granularity)
+> >>
+> >> I knew migrating one large section is a more efficient way, but this can
+> >> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
+> >> extreme fragmented space.
+> > 
+> > FG_GC requires to wait for whole section migration which shows the entire
+> > latency.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
-> No change.
-> ---
->  arch/arm/boot/dts/imx6sx-pinfunc.h | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
+> That will cause long-tail latency for single f2fs_balance_fs() procedure,
+> which it looks a very long hang when userspace call f2fs syscall, so why
+> not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Then, other ops can easily make more dirty segments. The intention of FG_GC is
+to block everything and make min. free segments as a best shot.
+
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>  			goto skip;
+> >>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
+> >>>
+> > .
+> > 
