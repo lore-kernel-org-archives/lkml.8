@@ -2,98 +2,172 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A1AC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA89C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04DDB2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3682465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:00:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sMvDR2y8"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="i8sh2k09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgBSP6t (ORCPT
+        id S1726764AbgBSQAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:58:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44750 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSP6t (ORCPT
+        Wed, 19 Feb 2020 11:00:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36396 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSQAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:58:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lF60vD/VbwV6dlhUvIYdXfu8tD3bK6PgeF8jmlh4ohI=; b=sMvDR2y8CaJhITjdfjfneGqJX6
-        yCnvmM/T5PWkVlXFZzoaIiNRg7BL7hRXPrMT/C768pnh0w9P0ZXINsGdE9NKny3sc6AAHh8ftq1A4
-        UjYqn72Vj262L/wZP7R+sdGd1AB5Kcwvm5kw5Slz5/o4Pzh5wPTYDsfd/DkDZ28kwyti7rXLMj+Tc
-        EfZf6IjA0bYWmUNiPJL5KlbdrtgnGzTuoTozsfZfWxDXBdOIxOyUjjnMkHm47sAuF7yu1U5TtBalg
-        tDDUBO17qGrBSL6cLlyaleyiIwh7mj4zfyDvXFUtlku213hNpHXX2tgURnkVDla5LjBWGnDyUWYOy
-        sxpRjHJw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4Rk6-0006gM-7c; Wed, 19 Feb 2020 15:58:30 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 02690306151;
-        Wed, 19 Feb 2020 16:56:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6AC1A201E47AE; Wed, 19 Feb 2020 16:58:28 +0100 (CET)
-Date:   Wed, 19 Feb 2020 16:58:28 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v3 08/22] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200219155828.GF18400@hirez.programming.kicks-ass.net>
-References: <20200219144724.800607165@infradead.org>
- <20200219150744.832297480@infradead.org>
- <20200219104903.46686b81@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219104903.46686b81@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Feb 2020 11:00:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so1180376wru.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:00:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=oOz4MXPPY4nwvxNiM5TAeaZ5xNN9V5e9W7QtMDUB25U=;
+        b=i8sh2k09ezvG04DhkRH2eRpBJXwPHBMPzRvXtwE8VZUIgaPBEFmW5sWPdFcfrnDKSY
+         nzLK5SmE2DvFD5RH+oM33WeM1FCtA+EelnJr6VlPyqst0gAsxAMud+JDUb/w1TAOKOoT
+         lYPzjPd56VIatBt2RSvdZta318UzJBdJykCplqK6lZ8A1doixFkAbcgwmV2YT8jzH0AO
+         7nPDVy7M0tg6EDAYzTD73ODmFHbwnz0SWcyJYUkhoMtf+Uan56XLsj2iWwYHhQ5wx/dd
+         cQq0qWAoDaPlk04P3rBGes4Oh2/nxWWFzTMastrc+RAgQb2nxI8vD6GdC7bKSLBqpY/p
+         pSRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oOz4MXPPY4nwvxNiM5TAeaZ5xNN9V5e9W7QtMDUB25U=;
+        b=GCpExH/1EYsDOHqJJyXA0udhNJ4u7h+26meY3N/CEk5p4oH1xg9w1zggUcqTa5sA/c
+         UZPTCTKiAzDcEWnbBa1874mJ6V9gXEslx5C+nt1koiLLu0BcD/wNi4+wR0lYOz9PN1L7
+         DAeEg+ucgy9TfGg8c6S/zBQMsExIoA0tYsMOMb3EBcq/S3aGW7Ptt40Hm/LykMPfJR1O
+         wP7eIot2awJ2tKByExl8KZvqXvPjbu6bVkA/NdAtxsGDGURxJSrxsS7MRwwQ1pq8gud8
+         d111nAbC3lIQ+5c8SEBDOf8jBM37ctxHByf9ZZzwnWkXTVlPOgcPQntt0qzai0rb2+tW
+         ggfA==
+X-Gm-Message-State: APjAAAVrMHmZgftVZY0jQWlG5iNZ0TsOhKcIDLnngeHZHT14vlpXiJDS
+        3uw4jC9QAcdoUrJSvio33YZPTg==
+X-Google-Smtp-Source: APXvYqyAzmVr0iYvKTKSsd5W5HUczeQN5XhXF8zmcFRGDub01v7kzAK40uKhqE+JM1xZJ3K4XOSCEQ==
+X-Received: by 2002:a5d:6087:: with SMTP id w7mr35938544wrt.36.1582128042486;
+        Wed, 19 Feb 2020 08:00:42 -0800 (PST)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id t13sm277027wrw.19.2020.02.19.08.00.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 19 Feb 2020 08:00:41 -0800 (PST)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     catalin.marinas@arm.com, davem@davemloft.net,
+        herbert@gondor.apana.org.au, will@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] crypto: arm64: CE: implement export/import
+Date:   Wed, 19 Feb 2020 16:00:37 +0000
+Message-Id: <1582128037-18644-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:49:03AM -0500, Steven Rostedt wrote:
-> On Wed, 19 Feb 2020 15:47:32 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+When an ahash algorithm fallback to another ahash and that fallback is
+shaXXX-CE, doing export/import lead to error like this:
+alg: ahash: sha1-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\"
 
-> > These helpers are macros because of header-hell; they're placed here
-> > because of the proximity to nmi_{enter,exit{().
+This is due to the descsize of shaxxx-ce larger than struct shaxxx_state off by an u32.
+For fixing this, let's implement export/import which rip the finalize
+variant instead of using generic export/import.
 
-^^^^
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ arch/arm64/crypto/sha1-ce-glue.c | 20 ++++++++++++++++++++
+ arch/arm64/crypto/sha2-ce-glue.c | 23 +++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-> > +#define trace_rcu_enter()					\
-> > +({								\
-> > +	unsigned long state = 0;				\
-> > +	if (!rcu_is_watching())	{				\
-> > +		rcu_irq_enter_irqsave();			\
-> > +		state = 1;					\
-> > +	}							\
-> > +	state;							\
-> > +})
-> > +
-> > +#define trace_rcu_exit(state)					\
-> > +do {								\
-> > +	if (state)						\
-> > +		rcu_irq_exit_irqsave();				\
-> > +} while (0)
-> > +
-> 
-> Is there a reason that these can't be static __always_inline functions?
+diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
+index 63c875d3314b..dc44d48415cd 100644
+--- a/arch/arm64/crypto/sha1-ce-glue.c
++++ b/arch/arm64/crypto/sha1-ce-glue.c
+@@ -91,12 +91,32 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
+ 	return sha1_base_finish(desc, out);
+ }
+ 
++static int sha1_ce_export(struct shash_desc *desc, void *out)
++{
++	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
++
++	memcpy(out, sctx, sizeof(struct sha1_state));
++	return 0;
++}
++
++static int sha1_ce_import(struct shash_desc *desc, const void *in)
++{
++	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
++
++	memcpy(sctx, in, sizeof(struct sha1_state));
++	sctx->finalize = 0;
++	return 0;
++}
++
+ static struct shash_alg alg = {
+ 	.init			= sha1_base_init,
+ 	.update			= sha1_ce_update,
+ 	.final			= sha1_ce_final,
+ 	.finup			= sha1_ce_finup,
++	.import			= sha1_ce_import,
++	.export			= sha1_ce_export,
+ 	.descsize		= sizeof(struct sha1_ce_state),
++	.statesize		= sizeof(struct sha1_state),
+ 	.digestsize		= SHA1_DIGEST_SIZE,
+ 	.base			= {
+ 		.cra_name		= "sha1",
+diff --git a/arch/arm64/crypto/sha2-ce-glue.c b/arch/arm64/crypto/sha2-ce-glue.c
+index a8e67bafba3d..f986d4a323b3 100644
+--- a/arch/arm64/crypto/sha2-ce-glue.c
++++ b/arch/arm64/crypto/sha2-ce-glue.c
+@@ -109,12 +109,32 @@ static int sha256_ce_final(struct shash_desc *desc, u8 *out)
+ 	return sha256_base_finish(desc, out);
+ }
+ 
++static int sha256_ce_export(struct shash_desc *desc, void *out)
++{
++	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
++
++	memcpy(out, sctx, sizeof(struct sha256_state));
++	return 0;
++}
++
++static int sha256_ce_import(struct shash_desc *desc, const void *in)
++{
++	struct sha256_ce_state *sctx = shash_desc_ctx(desc);
++
++	memcpy(sctx, in, sizeof(struct sha256_state));
++	sctx->finalize = 0;
++	return 0;
++}
++
+ static struct shash_alg algs[] = { {
+ 	.init			= sha224_base_init,
+ 	.update			= sha256_ce_update,
+ 	.final			= sha256_ce_final,
+ 	.finup			= sha256_ce_finup,
++	.export			= sha256_ce_export,
++	.import			= sha256_ce_import,
+ 	.descsize		= sizeof(struct sha256_ce_state),
++	.statesize		= sizeof(struct sha256_state),
+ 	.digestsize		= SHA224_DIGEST_SIZE,
+ 	.base			= {
+ 		.cra_name		= "sha224",
+@@ -128,7 +148,10 @@ static struct shash_alg algs[] = { {
+ 	.update			= sha256_ce_update,
+ 	.final			= sha256_ce_final,
+ 	.finup			= sha256_ce_finup,
++	.export			= sha256_ce_export,
++	.import			= sha256_ce_import,
+ 	.descsize		= sizeof(struct sha256_ce_state),
++	.statesize		= sizeof(struct sha256_state),
+ 	.digestsize		= SHA256_DIGEST_SIZE,
+ 	.base			= {
+ 		.cra_name		= "sha256",
+-- 
+2.24.1
 
-It can be done, but then we need fwd declarations of those RCU functions
-somewhere outside of rcupdate.h. It's all a bit of a mess.
