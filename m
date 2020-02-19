@@ -7,156 +7,169 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E71C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0A9C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4992E2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8184222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="EgNvAQKe"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lcwepjZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBSITw (ORCPT
+        id S1726659AbgBSIUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:19:52 -0500
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:47245 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726539AbgBSITw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:19:52 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4KaAjzEowP9a94KaEjnLlk; Wed, 19 Feb 2020 09:19:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582100390; bh=nfF8wMmiXD8n6wpKKTJOHRpwFi71Fz2zG1LZaP4lDVo=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=EgNvAQKeI195N08iqj121owBGpQz1h+ESmVg5R+imkIC3o8YQTT+9BTaVj0fGFEYH
-         6+JqWGrhfz0M1lvgKJlfE3A5Nf6c7LeybrbeifAlV8iu5jVdakyMljozU3gBv1md5T
-         YZ1Fz4vqPVfEOVSy/pcY7SeVr+nny9NR8IylKlx+nROJ+2CzJFnyuJE0//FvZWWw/Z
-         r92BUl0Rlm01RUh6zwbJIymcP/9zqtoUg2zCk6rO+w9oH24rkKS2pqfqo+h73a7Qr+
-         uzlgCHUgpcI2u99ejNbt8TwyQ5ncxBrN5XDZqjfGnXGLQJ811K8tTo4Tmc37yL+RAk
-         FVMB1lNr7dlMQ==
-Subject: Re: [RFC][PATCHv2 03/12] videobuf2: add
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-4-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bc32cd42-6452-dba2-e98e-e757b9ffc6d4@xs4all.nl>
-Date:   Wed, 19 Feb 2020 09:19:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 19 Feb 2020 03:20:49 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:46221 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726484AbgBSIUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:20:49 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48MqZw693hz9v6Tr;
+        Wed, 19 Feb 2020 08:48:08 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lcwepjZP; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 77g506B4pZUy; Wed, 19 Feb 2020 08:48:08 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48MqZw4QHkz9v6Tq;
+        Wed, 19 Feb 2020 08:48:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582098488; bh=qHw7HSs8FE767P6k4EsiiKkzlSU1+4y80L59F2qTuEQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lcwepjZP7ARYfzBVnUEm8aptYTOR/KMHXp3O7whzA41XCjgXWguuUyWf60KNGzYpj
+         oROaubwS61tyRrTr71vmEKAZwI/y+1ySOJG4BIV9P7PufstXX6b1dZlxinM9yoNGNy
+         pGNDrNmiSSKrtFpc1iZxsmSh/ohtWO6XlK4etj5o=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 685F58B827;
+        Wed, 19 Feb 2020 08:48:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 8fjtfNxb987m; Wed, 19 Feb 2020 08:48:09 +0100 (CET)
+Received: from [172.25.230.102] (unknown [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2EE6C8B756;
+        Wed, 19 Feb 2020 08:48:09 +0100 (CET)
+Subject: Re: [PATCH 1/2] powerpc/kprobes: Remove redundant code
+To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <642c8b4ca59e658be38d8dde00f994e183790a6a.1581687838.git.christophe.leroy@c-s.fr>
+ <1582036611.9hm2t8ijhz.naveen@linux.ibm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <0fc8e46e-968b-c779-0721-03bb0ba0c33c@c-s.fr>
+Date:   Wed, 19 Feb 2020 08:48:09 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200204025641.218376-4-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHRKjqqrhjrAxguj1fFSS2HkyPrdNgyyQE1o7/yoUy9HTR6KV9bzpSgYBDS5JeS+476yAyR/gX0ymWe6aGHWfmx8ei6rKbDRPamxFXw6mk3KitOh04yU
- D1x9D0nOCRtTzNIEQ8cpzNFeZ9ll5qY79sQF3Csdz4khdyHaU17Hv6fCAMyz4A8TR/KFF2DpgZtm3cZszNN9Dpym3WhOIpt6JI7VleLZG/zb0sMMJ5PPXGGf
- vdsT4CJpmWqMBv5kno9l3DX/GH7smcD7i76wlSRSAbtc9+9QmFTLesP/0kpNg8Ss0KDlfNyEtLTr5JTGco073d+WOPZZquRgNsoQvXl2Uw8pC472AwbAbyfV
- KNHoY6F39Vk/61/vbvvTop3qI2ELg3Y8cTcg38e2Br+aci4VAWeDfkomfHVKVT+EgIbTK9wES8HurJ8CKObqLwpfh7Z/DDHh1yb5Tdlya/EldRJT0z8C/VbS
- vPUg84ckHuB+Avk2iEAz0zqLoDssz02DGipo8yoNvM+7z+iZ7U95OZTpf50ybEI2Zc694rS5YnkmXxUi
+In-Reply-To: <1582036611.9hm2t8ijhz.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
-> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-> user-space should be able to set or clear queue's NON_CONSISTENT
-> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
-> allocator in __vb2_buf_mem_alloc(), so thus user-space is able
-> to request vb2 buffer's memory to be either consistent (coherent)
-> or non-consistent.
+
+
+Le 18/02/2020 à 15:39, Naveen N. Rao a écrit :
+> Christophe Leroy wrote:
+>> At the time being we have something like
+>>
+>>     if (something) {
+>>         p = get();
+>>         if (p) {
+>>             if (something_wrong)
+>>                 goto out;
+>>             ...
+>>             return;
+>>         } else if (a != b) {
+>>             if (some_error)
+>>                 goto out;
+>>             ...
+>>         }
+>>         goto out;
+>>     }
+>>     p = get();
+>>     if (!p) {
+>>         if (a != b) {
+>>             if (some_error)
+>>                 goto out;
+>>             ...
+>>         }
+>>         goto out;
+>>     }
+>>
+>> This is similar to
+>>
+>>     p = get();
+>>     if (something) {
+>>         if (p) {
+>>             if (something_wrong)
+>>                 goto out;
+>>             ...
+>>             return;
+>>         }
+>>     }
+>>     if (!p) {
+>>         if (a != b) {
+>>             if (some_error)
+>>                 goto out;
+>>             ...
+>>         }
+>>         goto out;
+>>     }
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>  arch/powerpc/kernel/kprobes.c | 15 +--------------
+>>  1 file changed, 1 insertion(+), 14 deletions(-)
 > 
-> Change-Id: Ib333081c482e23c9a89386078293e19c3fd59076
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  Documentation/media/uapi/v4l/buffer.rst | 27 +++++++++++++++++++++++++
->  include/uapi/linux/videodev2.h          |  2 ++
->  2 files changed, 29 insertions(+)
+> Good cleanup, thanks.
 > 
-> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
-> index 9149b57728e5..af007daf0591 100644
-> --- a/Documentation/media/uapi/v4l/buffer.rst
-> +++ b/Documentation/media/uapi/v4l/buffer.rst
-> @@ -705,6 +705,33 @@ Buffer Flags
->  
->  .. c:type:: v4l2_memory
->  
-> +Memory Consistency Flags
-
-This new part should be added *above* the '.. c:type:: v4l2_memory' line.
-
-You also need to add '.. _memory-flags:' just before this section so that
-you can link to it from the create_bufs and reqbufs ioctl descriptions.
-
-> +========================
-> +
-> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       3 1 4
-> +
-> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
-> +
-> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
-> +      - 0x00000001
-> +      - vb2 buffer is allocated either in consistent (it will be automatically
-> +	coherent between CPU and bus) or non-consistent memory. The latter
-> +	can provide performance gains, for instance CPU cache sync/flush
-> +	operations can be avoided if the buffer is accesed by the corresponding
-
-accesed -> accessed
-
-> +	device only and CPU does not read/write to/from that buffer. However,
-> +	this requires extra care from the driver -- it must guarantee memory
-> +	consistency by issuing cache flush/sync when consistency is needed.
-> +	If this flag is set V4L2 will attempt to allocate vb2 buffer in
-> +	non-consistent memory. This flag is ignored if queue does not report
-> +        :ret:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
-
-V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS is not defined. Add that first in a separate
-patch.
-
-Also update the current description of the V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/CLEAN
-flags to indicate that they are only valid if V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
-is set (that should be done in the patch adding the V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS
-capability).
-
-Regards,
-
-	Hans
-
-> +
->  enum v4l2_memory
->  ================
->  
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 5f9357dcb060..72efc1c544cd 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -189,6 +189,8 @@ enum v4l2_memory {
->  	V4L2_MEMORY_DMABUF           = 4,
->  };
->  
-> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT		(1 << 0)
-> +
->  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
->  enum v4l2_colorspace {
->  	/*
+>>
+>> diff --git a/arch/powerpc/kernel/kprobes.c 
+>> b/arch/powerpc/kernel/kprobes.c
+>> index f8b848aa65bd..7a925eb76ec0 100644
+>> --- a/arch/powerpc/kernel/kprobes.c
+>> +++ b/arch/powerpc/kernel/kprobes.c
+>> @@ -276,8 +276,8 @@ int kprobe_handler(struct pt_regs *regs)
+>>      kcb = get_kprobe_ctlblk();
+>>
+>>      /* Check we're not actually recursing */
+>> +    p = get_kprobe(addr);
+>>      if (kprobe_running()) {
+>> -        p = get_kprobe(addr);
+>>          if (p) {
+>>              kprobe_opcode_t insn = *p->ainsn.insn;
+>>              if (kcb->kprobe_status == KPROBE_HIT_SS &&
+>> @@ -308,22 +308,9 @@ int kprobe_handler(struct pt_regs *regs)
+>>              }
+>>              prepare_singlestep(p, regs);
+>>              return 1;
+>> -        } else if (*addr != BREAKPOINT_INSTRUCTION) {
+>> -            /* If trap variant, then it belongs not to us */
+>> -            kprobe_opcode_t cur_insn = *addr;
+>> -
+>> -            if (is_trap(cur_insn))
+>> -                goto no_kprobe;
+>> -            /* The breakpoint instruction was removed by
+>> -             * another cpu right after we hit, no further
+>> -             * handling of this interrupt is appropriate
+>> -             */
+>> -            ret = 1;
+>>          }
+>> -        goto no_kprobe;
 > 
+> A minot nit -- removing the above goto makes a slight change to the 
+> logic. But, see my comments for the next patch.
 
+All legs of the (p) case are have either a return or a goto, so that 
+goto no_kprobe is limited to the !p case, we have to fall_through now.
+
+Christophe
