@@ -2,118 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A5C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77858C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57A12465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="beCCWjxb"
+	by mail.kernel.org (Postfix) with ESMTP id 5A49C21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgBSLeC (ORCPT
+        id S1727171AbgBSLeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:34:02 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23656 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726270AbgBSLeB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:34:01 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBO4UN023951;
-        Wed, 19 Feb 2020 12:33:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=7rGcCAIJ1owBgJnQqs9fghPribnH6MLQt7KvBtj4rlU=;
- b=beCCWjxbEgVdPTO/oTEiGoMJE2z1U7oqaAWze4ZQJ3BM6EXShjbWtD8h1a6ACcpNmJl9
- 8hBbCDobb3eS8gKl2gD254uN1rDjiWOy7ZBh8V9vyzEXPlptxniqr1V3vAhJ6OP96y7B
- Yh3/trpblCtyDZiwcyxoo73F8pUv6YWIRPv7rN+hQYekkGgGJV7XYPxf8SpcQlr9C3Iy
- yHRue8YPJR1mS4nE2C7F+1htjGZhL4g6oJWVU5LcZhQAJSWYGCpLsoNi/T8mZqGPmavQ
- LaabaXCIyf+LJj+Othr1isoNkOiJxoG1grSgZ7qJGDvnoqyarPL1Yn4DZ8usjLAoOIAz PQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5jrch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 12:33:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B0E4100034;
-        Wed, 19 Feb 2020 12:33:32 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 88A4D2B2DE2;
-        Wed, 19 Feb 2020 12:33:32 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
- 2020 12:33:31 +0100
-Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Wed, 19 Feb 2020 06:34:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:46970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbgBSLeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:34:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7CD631B;
+        Wed, 19 Feb 2020 03:34:03 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AF023F6CF;
+        Wed, 19 Feb 2020 03:34:01 -0800 (PST)
+Date:   Wed, 19 Feb 2020 11:33:52 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        james.morse@arm.com, Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
         Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <marex@denx.de>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-2-alexandre.torgue@st.com>
-Message-ID: <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
-Date:   Wed, 19 Feb 2020 12:33:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 04/12] scs: disable when function graph tracing is
+ enabled
+Message-ID: <20200219113351.GA14462@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200219000817.195049-1-samitolvanen@google.com>
+ <20200219000817.195049-5-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218131218.10789-2-alexandre.torgue@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219000817.195049-5-samitolvanen@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Marc email address
+On Tue, Feb 18, 2020 at 04:08:09PM -0800, Sami Tolvanen wrote:
+> The graph tracer hooks returns by modifying frame records on the
+> (regular) stack, but with SCS the return address is taken from the
+> shadow stack, and the value in the frame record has no effect. As we
+> don't currently have a mechanism to determine the corresponding slot
+> on the shadow stack (and to pass this through the ftrace
+> infrastructure), for now let's disable SCS when the graph tracer is
+> enabled.
+> 
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 66b34fd0df54..4102b8e0eea9 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -535,6 +535,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
+>  
+>  config SHADOW_CALL_STACK
+>  	bool "Clang Shadow Call Stack"
+> +	depends on !FUNCTION_GRAPH_TRACER
 
-On 2/18/20 2:12 PM, Alexandre Torgue wrote:
-> This commit introduces retrigger support for stm32_ext_h chip.
-> It consists to rise the GIC interrupt mapped to an EXTI line.
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> 
-> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-> index e00f2fa27f00..c971d115edb4 100644
-> --- a/drivers/irqchip/irq-stm32-exti.c
-> +++ b/drivers/irqchip/irq-stm32-exti.c
-> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
->   	unregister_syscore_ops(&stm32_exti_h_syscore_ops);
->   }
->   
-> +static int stm32_exti_h_retrigger(struct irq_data *d)
-> +{
-> +	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-> +	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
-> +	void __iomem *base = chip_data->host_data->base;
-> +	u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
-> +
-> +	writel_relaxed(mask, base + stm32_bank->swier_ofst);
-> +
-> +	return irq_chip_retrigger_hierarchy(d);
-> +}
-> +
->   static struct irq_chip stm32_exti_h_chip = {
->   	.name			= "stm32-exti-h",
->   	.irq_eoi		= stm32_exti_h_eoi,
->   	.irq_mask		= stm32_exti_h_mask,
->   	.irq_unmask		= stm32_exti_h_unmask,
-> -	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_retrigger		= stm32_exti_h_retrigger,
->   	.irq_set_type		= stm32_exti_h_set_type,
->   	.irq_set_wake		= stm32_exti_h_set_wake,
->   	.flags			= IRQCHIP_MASK_ON_SUSPEND,
-> 
+Fangrui Song has implemented `-fpatchable-function-entry` in LLVM (for
+10.x onwards), so we can support this when DYNAMIC_FTRACE_WITH_REGS is
+selected.
+
+This can be:
+
+	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
+
+... and we can update the commit message to something like:
+
+| With SCS the return address is taken from the shadow stack and the
+| value in the frame record has no effect. The mcount based graph tracer
+| hooks returns by modifying frame records on the (regular) stack, and
+| thus is not compatible. The patchable-function-entry graph tracer
+| used for DYNAMIC_FTRACE_WITH_REGS modifies the LR before it is saved
+| to the shadow stack, and is compatible.
+|
+| Modifying the mcount based graph tracer to work with SCS would require
+| a mechanism to determine the corresponding slot on the shadow stack
+| (and to pass this through the ftrace infrastructure), and we expect
+| that everyone will eventually move to the patchable-function-entry
+| based graph tracer anyway, so for now let's disable SCS when the
+| mcount-based graph tracer is enabled.
+|
+| SCS and patchable-function-entry are both supported from LLVM 10.x.
+
+Assuming you're happy with that:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+Mark.
