@@ -2,153 +2,137 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50259C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B749C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29B55208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3CB208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZYDvn5yy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ldh03lco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgBSIsO (ORCPT
+        id S1726539AbgBSIsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:48:14 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41605 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgBSIsN (ORCPT
+        Wed, 19 Feb 2020 03:48:36 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36992 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgBSIsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:48:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r27so22343405otc.8;
-        Wed, 19 Feb 2020 00:48:13 -0800 (PST)
+        Wed, 19 Feb 2020 03:48:35 -0500
+Received: by mail-vs1-f66.google.com with SMTP id x18so14931609vsq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:48:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=R08prwaXuvTYAVVThubWpAvz2VPPRFnMx93j3J6DFWA=;
-        b=ZYDvn5yyYTUZAneLoxLh7tNN/BgyWo8q9Zz8A3QhxnB+c2kruqQe2yFxotIwq/UNMh
-         pCX9UQZ7f/8WP6GBXFTNl/rpeNW2cboFPXLL3SPMvTq24KjAt1NSBUiOwyGmU7bkn5w5
-         PyhJ/4m3EdSclk6A8bY7Z30e5cbYvRcpJ+pA06hZBbgmTJDggae1ejIOHxqPkyjDdZo1
-         H09h5m2NSoRKlpBBOlxt0NT1qFVrrM6qoM6hrZ5ytQxh6o2QGakAqC2WABvzZgay7eUx
-         YQ+V/YJk0myvKQTjayfxo95WPmZEaknEK6toa5xdgHgewiXXaYbX/4gOy6xH2JHIbaPS
-         AOjQ==
+        bh=2V6V8Tth/AEs59J+YGgMnXxzDIW957+lx2uHMjqQCr0=;
+        b=ldh03lcoR52qghNjM5H1Wivomk6M4SJSe2RNN6S/loI4EhRnlFP0DuKFKiDL12cCP0
+         +g87PsyqwJqXvMybSBXpUOsjaqzo6DE5ga2LY2p4LrjZMFkJoP4XXBdyMAo4huL920Le
+         Q8scHN4ZS8Or54BY/WIUXzVyBCH4xthQwueHxRybsNhYfi6NsXIOGpM/OmxR5P/5x/7T
+         qvVS4OgVAWkklQdixBq2lQavhcZzWLd31eSl5BBF7lAGkPL9ZFzoA9KaXxH1AnQ+A2mQ
+         Tvvx8YA6PiqBBv7qyXMYqzCWOeW7qWrfUwoRoiaRG/7Mzj4F6XwABlo36dPyxDn3BKAN
+         BAww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=R08prwaXuvTYAVVThubWpAvz2VPPRFnMx93j3J6DFWA=;
-        b=dTvHKvtmVpJhQS/etWanqZadLqq2EnT9O2i+HF5290RXxYAxx4cCEVPDs/GHYAuuBl
-         L1PsU2OKI75Z/9NHGl7aAYlf+Ih2I1SZiosvOTjvArn2F5YCBP/kdotlIhDraMyxJN09
-         bnxkibo47oKp+YLHfmfdnMPzBJiIwtLte1nXmoDmFNOcaUxv6QWpQlLK92hLxgxNWxGb
-         NRxP3mNWIJF06O9ZP+RZJUdFMIDWGKMw/ScB1suqZdOvsYYgCEO4F7TbylJQQ+e8Cxi3
-         Wbpxv+MDA6y2ZwKl9Qd/a3LE8VfUk0ameudIBKfycVQ+FhjxJhuUopZ/F2h6XyJa08+D
-         hPrA==
-X-Gm-Message-State: APjAAAXwIrZyubmobCHxTRMwhnKregtQQhW8+ebHxn8ZgwlG4JKpWUd8
-        rmKVcKwkTfxNrysPbe8VlAAD+BE7VUfkxMpJlIY=
-X-Google-Smtp-Source: APXvYqyJ+/2xM4/pRZqtjAw7TzJq3x97VyAVdB+hLIZ/Kwd+N1nBgR0qLGPwOHDKMHc8A7r6EXU6PhMoAtXdWTjZD4w=
-X-Received: by 2002:a9d:d06:: with SMTP id 6mr19490799oti.176.1582102092752;
- Wed, 19 Feb 2020 00:48:12 -0800 (PST)
+        bh=2V6V8Tth/AEs59J+YGgMnXxzDIW957+lx2uHMjqQCr0=;
+        b=XoaCl++Pb3u2YAOyhPL5L9XUbMwLYcxPopTn1u4osKCCmnbIghW9PgTwVKSLQ2lMM1
+         1ycVcQ1qv7l145wv3/zOWG57RYm8L5eLbl9VmQA5AcSZj0Y5XFAtZ3cGBqBppIJ+au3G
+         Meuco3navgPO/Ld5DhvCwUT0b4ZeRNLAhzQwkklEaN1H8BZohJeb6Z6rP23BPreYqOtJ
+         8BZ4VWKGYWjUpWCVvLpzp+vswUgtCyVpVHsd2aeuSIvAQEPkhKkUzpR3cimYtLolihhz
+         drSUaFSefkUzcPVnarRW14U92eJgb4M6CGBfmUSMEU++8GhwoN/aC804BxXuOS1Qs3Bp
+         q+jA==
+X-Gm-Message-State: APjAAAXOb6xMo/OcivmCJ2UobZAtaIftogkso4ZW7ZL8Fm3mvo2XRnYE
+        GVJy3k3Po+LcyD1tEi5JMW0oDlTfrTr2yntdwh8=
+X-Google-Smtp-Source: APXvYqzAOL/FPk+knGzR1eBqUMmLKf19+kA7wViHwNZxANl3QsdiVCUIz8Uq3dpnoys1j8gFeE32O0FATF6a71Zr3YI=
+X-Received: by 2002:a67:6341:: with SMTP id x62mr13158482vsb.88.1582102114853;
+ Wed, 19 Feb 2020 00:48:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20200208183641.6674-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200212140434.GA129189@google.com>
-In-Reply-To: <20200212140434.GA129189@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 19 Feb 2020 08:47:46 +0000
-Message-ID: <CA+V-a8vVaLpVofr=tp0AXwUzDMwCJ+Byc8VGtmmtOWVSs3GVvg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] PCI: rcar: Fix calculating mask for PCIEPAMR register
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+References: <20200124084359.16817-1-christian.gmeiner@gmail.com>
+ <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
+ <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
+ <CAH9NwWdg5r1T9TkXAe4=3Zui2vMcnOc2UJ=e02NFbiPhb5n48w@mail.gmail.com>
+ <20200217041936.GH5395@dragon> <CAH9NwWeT=h=hPzDbwRggNYNx-mSdQkjUypPWk2nmsLDOfw8Zqw@mail.gmail.com>
+ <20200218091409.GA6075@dragon>
+In-Reply-To: <20200218091409.GA6075@dragon>
+From:   Christian Gmeiner <christian.gmeiner@gmail.com>
+Date:   Wed, 19 Feb 2020 09:48:23 +0100
+Message-ID: <CAH9NwWcNZzKt9gwYRRbgppeL9xqcK38z0ZP-5eGF9vXmg7T_=g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Russell King <linux@armlinux.org.uk>,
+        Olof Johansson <olof@lixom.net>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Tony Lindgren <tony@atomide.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-
-Thank you for the review.
-
-On Wed, Feb 12, 2020 at 2:04 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+Am Di., 18. Feb. 2020 um 10:14 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
 >
-> On Sat, Feb 08, 2020 at 06:36:37PM +0000, Lad Prabhakar wrote:
-> > The mask value was calculated incorrectly for PCIEPAMR register if the
-> > size was less the 128bytes, this patch fixes the above by adding a check
-> > on size.
->
-> s/less the/less than/
-> s/128bytes,/128 bytes./
-> s/this patch fixes the above/Fix this issue/
->
-My bad will fix that.
-
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  drivers/pci/controller/pcie-rcar.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> On Mon, Feb 17, 2020 at 01:09:32PM +0100, Christian Gmeiner wrote:
+> > Am Mo., 17. Feb. 2020 um 05:19 Uhr schrieb Shawn Guo <shawnguo@kernel.org>:
+> > >
+> > > On Mon, Feb 10, 2020 at 02:30:12PM +0100, Christian Gmeiner wrote:
+> > > > Am Mo., 10. Feb. 2020 um 11:58 Uhr schrieb Krzysztof Kozlowski
+> > > > <krzk@kernel.org>:
+> > > > >
+> > > > > On Mon, 10 Feb 2020 at 11:54, Christian Gmeiner
+> > > > > <christian.gmeiner@gmail.com> wrote:
+> > > > > >
+> > > > > > Am Fr., 24. Jan. 2020 um 09:44 Uhr schrieb Christian Gmeiner
+> > > > > > <christian.gmeiner@gmail.com>:
+> > > > > > >
+> > > > > > > Makes it possible to multi v7 defconfig for stm32 and imx based devices with
+> > >
+> > > What do you mean by stm32 based devices here?
+> > >
 > >
-> > diff --git a/drivers/pci/controller/pcie-rcar.c b/drivers/pci/controller/pcie-rcar.c
-> > index d5568db..c76a92a 100644
-> > --- a/drivers/pci/controller/pcie-rcar.c
-> > +++ b/drivers/pci/controller/pcie-rcar.c
-> > @@ -71,7 +71,7 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
-> >       /* Setup PCIe address space mappings for each resource */
-> >       resource_size_t res_start;
-> >       resource_size_t size;
-> > -     u32 mask;
-> > +     u32 mask = 0x0;
-> >
-> >       rcar_pci_write_reg(base, 0x00000000, PCIEPTCTLR(win));
-> >
-> > @@ -80,7 +80,8 @@ void rcar_pcie_set_outbound(int win, void __iomem *base,
-> >        * keeps things pretty simple.
-> >        */
-> >       size = resource_size(res);
-> > -     mask = (roundup_pow_of_two(size) / SZ_128) - 1;
-> > +     if (size > 128)
-> > +             mask = (roundup_pow_of_two(size) / SZ_128) - 1;
+> > CONFIG_ARCH_STM32 - I have a STM32MP157C-DK2 in my board farm and
+> > would love to use
+> > multi_v7 for imx6 and stm32.
 >
-> I would put the "mask = 0x0" right here so it's all in one place,
-> i.e.,
+> The patch is all about enabling drm-imx driver support.  The commit log
+> gives the impression that drm-imx driver also works on stm32 devices.
+> Is that the case?
 >
->   if (size > 128)
->     mask = (roundup_pow_of_two(size) / SZ_128) - 1;
->   else
->     mask = 0x0;
->
-Sure will change that.
 
-Cheers,
---Prabhakar Lad
+No - the common thing both share is etnaviv. The patch subject "ARM:
+multi_v7_defconfig: enable drm imx support" is fine
+I think but in the commit message I missed the verb so this should be
+a better one:
 
-> >       rcar_pci_write_reg(base, mask << 7, PCIEPAMR(win));
-> >
-> >       if (!host) {
-> > --
-> > 2.7.4
-> >
+--->8---
+ARM: multi_v7_defconfig: enable drm imx support
+
+Makes it possible to use multi v7 defconfig for stm32 and imx based devices with
+full drm support.
+--->8---
+
+How shall I proceed to get this change in?
+
+-- 
+thanks
+--
+Christian Gmeiner, MSc
+
+https://christian-gmeiner.info/privacypolicy
