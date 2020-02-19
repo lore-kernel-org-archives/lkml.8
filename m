@@ -2,131 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6BFC3402F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63266C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA90520801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3151520801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mrPteIz9"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="S1RlRDFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgBSDtS (ORCPT
+        id S1726715AbgBSDt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:49:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:59640 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSDtS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:49:18 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3mvlY170771;
-        Wed, 19 Feb 2020 03:49:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=gHlccQ6ZZAYSbCQvUXMqxP/tdLBTjkConysTLhwg+LU=;
- b=mrPteIz90peuC/Duu4pivDaPAwnRfz3K39l4PuvHw0BdY/cSP9JmJf/d35otq0LcMyZE
- 33MVlSDUYXpjIzWjfjpNCfmKXg1hvVgee0/HrbWBuVhQAikeSu/eoMjYLlLWB9PfYlHD
- tPvlwGx4mQR3mW923jfRk38WVPWEjlBd94/A/yxakZnYz2167woPBfXBr4wwFDIaCd4X
- xyyYHFUKnym6k5rYcPhs9RH8QN5d+TuH3BW8jn7kA53u97zZgsOUDdmcYIVOJhrrsF5O
- o+hnAAC77o/IMqSK39hQBbR6xzYSwv96U9t5Nv516gEyfcOBb4tT2YohP4yQf6fjYDk8 6g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2y8ud10c72-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 03:49:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3lvE8149521;
-        Wed, 19 Feb 2020 03:49:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y8ud25fr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 03:49:04 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J3n2cC005269;
-        Wed, 19 Feb 2020 03:49:02 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 19:49:02 -0800
-Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
-To:     "Longpeng (Mike)" <longpeng2@huawei.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
-        weidong.huang@huawei.com, weifuqiang@huawei.com,
-        kvm@vger.kernel.org
-References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
- <20200218205239.GE24185@bombadil.infradead.org>
- <593d82a3-1d1e-d8f2-6b90-137f10441522@huawei.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <8292299c-4c5a-a8cb-22e2-d5c9051f122a@oracle.com>
-Date:   Tue, 18 Feb 2020 19:49:01 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 22:49:29 -0500
+Received: from mail-bn7nam10on2053.outbound.protection.outlook.com ([40.107.92.53]:6170
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726477AbgBSDt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:49:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mO6Z+kIeVlh8rh94rX8mEt4qo6mVZvaVfJ3nKzcxB2b8xg7jftMYzSLsr9tsLeIuSLLHqGdtzpfv2ISp2X0Bp7n+JAja/VEkgFTYGaDHjxbeO9lL9qebRsCXpVHnP9dO4kA7qw+leElWmNsI2qshShdcR8w+BhbwnCiICA7aU+YFXX1jBSr8AVe2v9XYFPSgZBNoOB7Vk1pUQ1CXFCoKjwK1c0szW4KvvePG72ceuAUALMmkchE+WL8PGHJDcyTN9Pdqd0A5MobGps8M6NZJHHenl4OxezJos+b3NEqfFur4Q0lco0Ge74z1YTRoN4kwLLpyq8xCQqK/IdlsbYBjjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ahr4tQbi/LZROCj5Y+IuRVr/GQUX/dF5s4CeWPm/90=;
+ b=V+ofTY90V7dyj/vJWVlqrVliCN2qlhGjQgH0cwRvlQfX77YH3tlCrzE9b1GwGtGN1/L7e/FKHAlIVwrSu/GCM2KdrIv/tA4xqWi0VBcUr2D/04hEtw/CUSgxMcVF7cQnZbD2utzAR7cNGVabEErBOHVakxBeTjSIi4UOxCTlXQK22Wwh8nnas7Lu/23JVAxyF/DLeZTcR9rpoKKZZilL6R+lCxmuiSUcJr/1XYUPBhmtHHQ/PMrDZMcxZ4r9QTKtX0Y9EoiQQ++8EbaxMIWKjGNAy12HWXiB7wsrcXgqAPljMb9qfLLeBRCVUwMXsdGJBeHOkqA0ATM2fZAF51Cb4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8ahr4tQbi/LZROCj5Y+IuRVr/GQUX/dF5s4CeWPm/90=;
+ b=S1RlRDFeo9bMaHcLhcncn/RCL2Ue3aYbI+Pf0cm9lqiAQcg0lti/d2uQaQ8aC+gWHAlkgr84kY4czZ26fhuIpo2Z07RMyYI5Sj80xvN/tjJ/UtjQpXk3Sj7vb/ZH1UqNzTle0lip9p/8Lw6/B21IPNxiDvxgC+jSuH8Cj5wy8bs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3704.namprd13.prod.outlook.com (20.180.15.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.9; Wed, 19 Feb 2020 03:49:24 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::55a5:5dab:67de:b5d8]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::55a5:5dab:67de:b5d8%5]) with mapi id 15.20.2750.016; Wed, 19 Feb 2020
+ 03:49:24 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com
+Cc:     aou@eecs.berkeley.edu, atish.patra@wdc.com,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH] riscv: dts: Add GPIO reboot method to HiFive Unleashed DTS file
+Date:   Wed, 19 Feb 2020 09:19:07 +0530
+Message-Id: <1582084147-24516-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR02CA0030.apcprd02.prod.outlook.com
+ (2603:1096:3:18::18) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-In-Reply-To: <593d82a3-1d1e-d8f2-6b90-137f10441522@huawei.com>
-Content-Type: text/plain; charset=gbk
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190026
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from osubuntu003.open-silicon.com (159.117.144.156) by SG2PR02CA0030.apcprd02.prod.outlook.com (2603:1096:3:18::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.17 via Frontend Transport; Wed, 19 Feb 2020 03:49:21 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: bd056562-d682-453f-84c2-08d7b4eeb5bc
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3704:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB37041D379B5AD2BC160803D88C100@CH2PR13MB3704.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-Forefront-PRVS: 0318501FAE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(396003)(376002)(346002)(136003)(39850400004)(199004)(189003)(81156014)(36756003)(81166006)(478600001)(8676002)(2906002)(66556008)(66476007)(6666004)(8936002)(66946007)(52116002)(6636002)(6512007)(86362001)(107886003)(4326008)(5660300002)(956004)(4744005)(316002)(6486002)(6506007)(186003)(26005)(16526019)(44832011)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3704;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gVKTZMsQcmnajmnRbKDu6EZLOcooU79AhgG3Lo37V+5XTdH5AP6VSyeY5zFZAzlXz8ibHJd/BDfzpXx+o/UsEQtoMYIhXxhrcEEkOCWnIeF/SGQrCSecqc1oAU9peFvqIny3xJ4QXy0zwAEs4NTvYm/RVB/OVFTMRarAp+YCs2V5nQ/jfyu4G9QBSkasgMJkhOiQo3v6mXUZBcYZtSPo3LStESN2ojJaPm8wBZAf9+awCtTNwwklUCLP0tVltbM5cNZhuDRo/YAHGLs4CdcY+0hTHug6l0Cg2VN+trtSeuUZMObwaIVrxy9bhxGW30Cb94YBd4T+OL5bUSzWWfZ8ydGFtT/ruEQP1LRwoeOaKNaZDVECg9vSnkpzLTY1Pe4XQYdoa/mMqBL9mlekBPEZdEJ9LCOPibznjKGHYFn8YFJBb2y4ZK4Fc59PlDJiGbOI
+X-MS-Exchange-AntiSpam-MessageData: rLn//ekM0RwrOyjTpZSApbqJVSKCGS8NZY8PQcsZN6z0pnPBc9ZyU0l8te8pF68Dm/CFWrnsJSLg/xI1nn7z6FUb/LcCUXWfmoSqiLjDwX8MmuTNstjPxcZvbnop3+B9TCyKEKZEVL3fTOes47V1kg==
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd056562-d682-453f-84c2-08d7b4eeb5bc
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 03:49:24.4859
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nPV4MC2VYmxDKuSODXS34wiLFYANryNvhXH3xrCjF+dHtdT1PbqcOEZeCV+jk/4cWd01PIGWuLFjg5k6uDgDYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3704
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 6:09 PM, Longpeng (Mike) wrote:
-> ÔÚ 2020/2/19 4:52, Matthew Wilcox Ð´µÀ:
->> On Tue, Feb 18, 2020 at 08:10:25PM +0800, Longpeng(Mike) wrote:
->>>  {
->>> -	pgd_t *pgd;
->>> -	p4d_t *p4d;
->>> -	pud_t *pud;
->>> -	pmd_t *pmd;
->>> +	pgd_t *pgdp;
->>> +	p4d_t *p4dp;
->>> +	pud_t *pudp, pud;
->>> +	pmd_t *pmdp, pmd;
->>
->> Renaming the variables as part of a fix is a really bad idea.  It obscures
->> the actual fix and makes everybody's life harder.  Plus, it's not even
->> renaming to follow the normal convention -- there are only two places
->> (migrate.c and gup.c) which follow this pattern in mm/ while there are
->> 33 that do not.
->>
-> Good suggestion, I've never noticed this, thanks.
-> By the way, could you give an example if we use this way to fix the bug?
+Add the ability to reboot the HiFive Unleashed board via GPIO.
 
-Matthew and others may have better suggestions for naming.  However, I would
-keep the existing names and add:
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-pud_t pud_entry;
-pmd_t pmd_entry;
-
-Then the *_entry variables are the target of the READ_ONCE()
-
-pud_entry = READ_ONCE(*pud);
-if (sz != PUD_SIZE && pud_none(pud_entry))
-...
-...
-pmd_entry = READ_ONCE(*pmd);
-if (sz != PMD_SIZE && pmd_none(pmd_entry))
-...
-...
-
-BTW, thank you for finding this issue!
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 609198c..4a2729f 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -2,6 +2,7 @@
+ /* Copyright (c) 2018-2019 SiFive, Inc */
+ 
+ #include "fu540-c000.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ /* Clock frequency (in Hz) of the PCB crystal for rtcclk */
+ #define RTCCLK_FREQ		1000000
+@@ -41,6 +42,10 @@
+ 		clock-frequency = <RTCCLK_FREQ>;
+ 		clock-output-names = "rtcclk";
+ 	};
++	gpio-restart {
++		compatible = "gpio-restart";
++		gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &uart0 {
 -- 
-Mike Kravetz
+2.7.4
+
