@@ -2,196 +2,151 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCDBC3402F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03ACC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F27F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6BB6208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mEerubVR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="c7buKpAE"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="knLDS9Ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBSEEL (ORCPT
+        id S1726659AbgBSEEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:04:11 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:20182 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726439AbgBSEEL (ORCPT
+        Tue, 18 Feb 2020 23:04:47 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42740 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSEEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:04:11 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J3vJxX002714;
-        Tue, 18 Feb 2020 20:03:30 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
- b=mEerubVRuO/0/buph9k0d7WOdv87S02Z6/6a14jWPby87J19NiLlN7rqeAwFL4o43pna
- nt/yiOFj5tdNZOfAJFp60al9waaW/ISba7PwPzlP1RATZy696vf2FD2tF/9wRXe/BJLI
- AnCDhIyoUTDsp3mCEJ+FzseiWo7Aph2124c= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2y8ud18ftq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 18 Feb 2020 20:03:30 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 18 Feb 2020 20:03:29 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CM53FOMDCrbifWFsUCz7360BvfWUNdz5ypbxjkogLfHhx3b55hEB5sgH3HsnZRI9mWU26LsNvogDnXSTNQQC37PhnxdlGAIwiwgS8lgfewKHtiKYRosOAu5A/g6ksT2QoUUqfZOcfDtDa/e1bfVTPv249kyoq0r+OegA7XaGivH35biVZo2yopqQ/SlC3djE/CoFj+hque9tA9PPMFN8G3sJd9HrMyTKpeGrr8ltlphxLqGT/opHk4Ge9Yd5RVK5wm/pUfqMin9OewlwhFNDG7stydAzVdOjwQBwV5nyXWPKom4veIkBtrNM5FPa55M4DbK2X7NWHmYk9latgcHwjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
- b=E6zSQYhJ90sx1vUrBhhPGovbW6b4liGlvTo4w53HTBJydW/PJi5OuPWlaMrjyHy08Yp85fFf2tW7yycCpejLa1sQe+2rYD/F2m9ayUvUFFWde6wjemQzzjmlqnEY+kk80BF76SV8ZOQGX2JPAs1UGTgB6EeTwiYRbJf1T/llNwk1BEOQLu99ZFj2OgLEOZTOx7WqP/TC1Z9L8afaX3Mx/GNoab0UlZPBBG81zlNHs4gJ9pZJUqqJouJzudKqUr3Sf2UYAnOKEMWGCpgGhcs53OwPLTJMAUNaI5TaAw53vUSBU1GeR1lmjYqcRlYIrSoH9FJ2u+SxppgsoY/wWQqH5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
- b=c7buKpAE7ZmDLSkqW9ih0BEwsNH1c+ZZBWJjIg1gXiwk67GwXBn23L0UguiKb/yMk1MWdEkIy7mCu4I8tBQWVhtCGIe5F4SqGxSxChq5x3hyBMbKI0uEOAZk/QzzDQo/rug1jLqkz3kkOSCC/O1wgMDSjw0Dn/l1qyZ5x5rEAwE=
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
- DM6PR15MB3912.namprd15.prod.outlook.com (20.181.5.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Wed, 19 Feb 2020 04:03:28 +0000
-Received: from DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::294e:884:76fd:743c]) by DM6PR15MB3001.namprd15.prod.outlook.com
- ([fe80::294e:884:76fd:743c%4]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 04:03:28 +0000
-Subject: Re: possible deadlock in bpf_lru_push_free
-To:     Hillf Danton <hdanton@sina.com>
-CC:     syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>,
-        <andriin@fb.com>, <ast@kernel.org>, <bpf@vger.kernel.org>,
-        <daniel@iogearbox.net>, <kafai@fb.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <songliubraving@fb.com>, <syzkaller-bugs@googlegroups.com>
-References: <20200217052336.5556-1-hdanton@sina.com>
- <dca36c4b-bbf5-b215-faa9-1992240f2b69@fb.com>
- <20200219021542.3304-1-hdanton@sina.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <7e8c1cf0-fccf-1ed9-40ed-3a13b2287cf8@fb.com>
-Date:   Tue, 18 Feb 2020 20:03:06 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-In-Reply-To: <20200219021542.3304-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO1PR15CA0085.namprd15.prod.outlook.com
- (2603:10b6:101:20::29) To DM6PR15MB3001.namprd15.prod.outlook.com
- (2603:10b6:5:13c::16)
+        Tue, 18 Feb 2020 23:04:47 -0500
+Received: by mail-qt1-f196.google.com with SMTP id r5so16235675qtt.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 20:04:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oP2MqxukizBRlPC9SfvqBAcpKQDQ39+MBV8Jn9d7IdU=;
+        b=knLDS9RoP4max5hfagxZux9hUSAX4uFXfIJOs4Pl2iD9XJS0gDytXhY535GWwyXKmN
+         GJGwl+8ma/bF3nRhUMOQSPTgsNO/7vN7ewM5h8CkBZnCKRxP101mDXAPZcn6FYdj448X
+         0inKFN/p2mRk2G19n6AB6ukXJyEI6j0DXLgym23pawd/vSoFtufYh7mTtUO6o+y/vjw2
+         e1USu3q3AkJyEWBUdYnDTdoEEfoz03ddfy9+SkuecdjATdIvFhRcOs1uXasqBzGjRHMR
+         vJ1UwDMKKfS0aJHfclnzQaWPADxOLlMObvWb9NCenfbbY11xlpkRGRjdmJZ2WfSEOgkl
+         6KFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oP2MqxukizBRlPC9SfvqBAcpKQDQ39+MBV8Jn9d7IdU=;
+        b=OPdH0UlMQM4SJV/eBzxvSbqljVDKXY8RUy3z22woyYzzqnxzBdCwo3UiaYzSL+bUWi
+         Fy64f8vFSeWcgRxrM5FiUiuk3oWMOvQErMMTWlVThgwvHvTQVop7Pdrop4s6+d3qRTji
+         fUHJ+UPK7zQksR7Zk9GNOJKSWjNIDq1hDUyCvD+3nEvoNT4FA9rcvpfhNOqe4cHLqaBd
+         1xbvFlET27xX3/Xy6IqZVNZBZEF2cYsWyDiKAKUz+I4dIxRnv2rmZscyIpQ6iAs0Iq5y
+         qhAONFrVq6cV1wPvveYmzp1jObCdVYzWR3jlDie9DRzL8bL4h6DI4KwFfWBz3Mm4lJ6B
+         9uow==
+X-Gm-Message-State: APjAAAWsGtxQKTJHVIQ6Gq7XdjCTzd+b2X6pGuU8po7Z0dLYnN82WC+O
+        AeCJh2avVPmstDXeeqUZ3VpWSA==
+X-Google-Smtp-Source: APXvYqyuVmcb2uQ0JQaLq7Vd7ocdcNzzYrdnVg8V+sqphizIq6oakYuSZVaek3e4KcMnvWva5NaWNA==
+X-Received: by 2002:ac8:1b18:: with SMTP id y24mr19970707qtj.158.1582085086153;
+        Tue, 18 Feb 2020 20:04:46 -0800 (PST)
+Received: from ovpn-121-44.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id r6sm323671qtm.63.2020.02.18.20.04.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 20:04:45 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     viro@zeniv.linux.org.uk
+Cc:     hch@infradead.org, darrick.wong@oracle.com, elver@google.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] fs: fix a data race in i_size_write/i_size_read
+Date:   Tue, 18 Feb 2020 23:04:26 -0500
+Message-Id: <20200219040426.1140-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Received: from marksan-mbp.DHCP.thefacebook.com (2620:10d:c090:400::5:982) by CO1PR15CA0085.namprd15.prod.outlook.com (2603:10b6:101:20::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Wed, 19 Feb 2020 04:03:26 +0000
-X-Originating-IP: [2620:10d:c090:400::5:982]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9f46ffc7-35e5-4cd3-fd05-08d7b4f0acbb
-X-MS-TrafficTypeDiagnostic: DM6PR15MB3912:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR15MB3912AF900235918EC72A9C11D3100@DM6PR15MB3912.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(66476007)(66556008)(5660300002)(31696002)(16526019)(186003)(2906002)(66946007)(316002)(4326008)(6666004)(6916009)(36756003)(6486002)(6512007)(31686004)(81166006)(81156014)(6506007)(53546011)(8936002)(52116002)(8676002)(478600001)(2616005)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3912;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 17O4NBg10BM+SdzluzwwDZKGBGd9RLflxKr5CYX04RSOkftMDQATc7Fy9I/Pf4VzAiXsO4Uf2HDjOw0kDXg1Fu5JZYVYScyeaxk3xYj3LipISk/wQEmQq3410Tu8JVZGYtKZGE0FB4MaG7uPfyVli8TDnd8s8LjxwAbWEMyhG4kScT+MB3KFbuTsM3aRH3T9RYionXOd+MDFy/ogT39SM3RibiqrcqMeblrn35/Daxuo6Wu6Ts1grdTkkwhxKzMR+31CzFf/5ZY3jV5QeyNc2BFOzAk0jcNXIFu4Ps+48b4SUD3Bvtf01h8rH1P2ss96RJhhkXEB12wS8k/RoZ67/MfpW4xhb7fF9NXenLRIrBx8OQFWCgxUKp0aFe+r0GK383H1qOwXeTA2yWs+qdmYYAq4T+VtbLhvMesEEOk/bMkc6fDIQ/ABiHS2gRjt5BWX
-X-MS-Exchange-AntiSpam-MessageData: OcTdcRVNy3W4QyLXP5Xhydx2Jq7W8FKCcA/eKjHZGlzy8kD+LwP4225V/qKx4qJ6ICj5PoOFZL+s6Jxd8zFyY14BrOofvEpjjzJXGKLPsNBkHen/W+9MIFNo/sFxF5owwFj/5BsX6SOfr9qphkPzBnpCs99eKpIXowSL7VLufbmLmwaVFvcOcEKAZA+Ib0eG
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f46ffc7-35e5-4cd3-fd05-08d7b4f0acbb
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 04:03:28.2014
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ncc4PglXqXvHac/KtZJwSdHBrvuGpoXPfeAIURjFdXGea66VtfcNzUW38fB9XqAf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3912
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=717
- mlxscore=0 suspectscore=2 lowpriorityscore=0 clxscore=1015 phishscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190028
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+inode::i_size could be accessed concurently as noticed by KCSAN,
 
+ BUG: KCSAN: data-race in iomap_do_writepage / iomap_write_end
 
-On 2/18/20 6:15 PM, Hillf Danton wrote:
-> 
-> Hey
-> 
-> On Tue, 18 Feb 2020 15:55:02 -0800 Yonghong Song wrote:
->>
->> Thanks for Martin for explanation! I think changing l->hash_node.next is
->> unsafe here as another thread may execute on a different cpu and
->> traverse the same list. It will see hash_node.next = NULL and it is
-> 
-> Good catch.
-> 
->> unexpected.
->>
->> How about the following patch?
->>
-> Looks nicer, thanks :P
-> 
->> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
->> index 2d182c4ee9d9..246ef0f2e985 100644
->> --- a/kernel/bpf/hashtab.c
->> +++ b/kernel/bpf/hashtab.c
->> @@ -56,6 +56,7 @@ struct htab_elem {
->>                           union {
->>                                   struct bpf_htab *htab;
->>                                   struct pcpu_freelist_node fnode;
->> +                               struct htab_elem *link;
->>                           };
->>                   };
->>           };
->> @@ -1256,6 +1257,7 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
->>           void __user *ukeys = u64_to_user_ptr(attr->batch.keys);
->>           void *ubatch = u64_to_user_ptr(attr->batch.in_batch);
->>           u32 batch, max_count, size, bucket_size;
->> +       struct htab_elem *node_to_free = NULL;
->>           u64 elem_map_flags, map_flags;
->>           struct hlist_nulls_head *head;
->>           struct hlist_nulls_node *n;
->> @@ -1370,9 +1372,14 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
->>                   }
->>                   if (do_delete) {
->>                           hlist_nulls_del_rcu(&l->hash_node);
->> -                       if (is_lru_map)
->> -                               bpf_lru_push_free(&htab->lru, &l->lru_node);
->> -                       else
->> +                       if (is_lru_map) {
->> +                               /* l->hnode overlaps with *l->hash_node.pprev
-> 
-> nit: looks like you mean l->link
+ write to 0xffff8bf68fc0cac0 of 8 bytes by task 7484 on cpu 71:
+  iomap_write_end+0xea/0x530
+  i_size_write at include/linux/fs.h:888
+  (inlined by) iomap_write_end at fs/iomap/buffered-io.c:782
+  iomap_write_actor+0x132/0x200
+  iomap_apply+0x245/0x8a5
+  iomap_file_buffered_write+0xbd/0xf0
+  xfs_file_buffered_aio_write+0x1c2/0x790 [xfs]
+  xfs_file_write_iter+0x232/0x2d0 [xfs]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb05
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Yes, my previous attempt uses "hnode" and later changed to "link" but 
-forget to change the comments.
+ read to 0xffff8bf68fc0cac0 of 8 bytes by task 5901 on cpu 70:
+  iomap_do_writepage+0xf4/0x450
+  i_size_read at include/linux/fs.h:866
+  (inlined by) iomap_do_writepage at fs/iomap/buffered-io.c:1558
+  write_cache_pages+0x523/0xb20
+  iomap_writepages+0x47/0x80
+  xfs_vm_writepages+0xc7/0x100 [xfs]
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xd5/0xb20
+  writeback_sb_inodes+0x429/0x910
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x47b/0x830
+  wb_workfn+0x688/0x930
+  process_one_work+0x54f/0xb90
+  worker_thread+0x80/0x5f0
+  kthread+0x1cd/0x1f0
+  ret_from_fork+0x27/0x50
 
-Will post a patch soon.
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 70 PID: 5901 Comm: kworker/u257:2 Tainted: G             L    5.6.0-rc2-next-20200218+ #2
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-254:0)
 
-> 
->> +                                * in memory. l->hash_node.pprev has been
->> +                                * poisoned and nobody should access it.
->> +                                */
->> +                               l->link = node_to_free;
->> +                               node_to_free = l;
->> +                       } else
->>                                   free_htab_elem(htab, l);
->>                   }
->>                   dst_key += key_size;
-> 
+The write is protected by exclusive inode::i_rwsem (in
+xfs_file_buffered_aio_write()) but the read is not. A shattered value
+could introduce a logic bug. Fixed it using a pair of WRITE/READ_ONCE().
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/fs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..25f98da90cf3 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -863,7 +863,7 @@ static inline loff_t i_size_read(const struct inode *inode)
+ 	preempt_enable();
+ 	return i_size;
+ #else
+-	return inode->i_size;
++	return READ_ONCE(inode->i_size);
+ #endif
+ }
+ 
+@@ -885,7 +885,7 @@ static inline void i_size_write(struct inode *inode, loff_t i_size)
+ 	inode->i_size = i_size;
+ 	preempt_enable();
+ #else
+-	inode->i_size = i_size;
++	WRITE_ONCE(inode->i_size, i_size);
+ #endif
+ }
+ 
+-- 
+2.21.0 (Apple Git-122.2)
+
