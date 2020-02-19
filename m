@@ -2,140 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A36C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89BE024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600A624672
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="udinrWQO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbgBSJI3 (ORCPT
+        id S1726530AbgBSJLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:08:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60612 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgBSJI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:08:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id DC0A8AF33;
-        Wed, 19 Feb 2020 09:08:25 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 09:08:22 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, hdanton@sina.com
-Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
-Message-ID: <20200219090822.GH3420@suse.de>
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-5-vincent.guittot@linaro.org>
- <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
+        Wed, 19 Feb 2020 04:11:45 -0500
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:48735 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726260AbgBSJLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:11:45 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 4LONjze0uP9a94LOQjnfLP; Wed, 19 Feb 2020 10:11:43 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582103503; bh=xsN8vhfHa7tW/G+6aX+0P4BNgzapyUwsBGOb49UIpYU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=udinrWQOgb62fcBFlTUaRKjgx4/5BXVbXBc0URjtyG0AazxHRKsVcmiXkrJYHWsAd
+         sd1iA8eHUhHmh0huM+aJGJ6gFNUp/sWnBvhjC7aXVImmnvoRGVP9huDG+1ujiU53QU
+         NzZEyDtSIfQW/5UTrfxOQXppJ8vi4/JkoAPxKDb9Gbb+YWtTD/Ovta0KSulMYbHJ0a
+         sqsO9NHhQGscck6tlVgaGMRxuQtiYwLBw5zU1icY8ltrM/ncbyxQsOlYwYAUFnWRgT
+         GqRbQI5wMkCdRZ8BvRkl25v0WQGLhvC734MIYLk4U8EQhln4I7xLLed/INo8jYOiWD
+         9XBO3t0xa0iUw==
+Subject: Re: [RFC][PATCHv2 05/12] videobuf2: handle
+ V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+ <20200204025641.218376-6-senozhatsky@chromium.org>
+ <83147032-25a4-9450-d455-437e82e09dc8@xs4all.nl>
+ <20200219090547.GF122464@google.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9bd88d23-9c4f-05dd-2514-b7c46f03a578@xs4all.nl>
+Date:   Wed, 19 Feb 2020 10:11:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200219090547.GF122464@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfNLD2qyH4WWBgDvGKIxeVc0YKijOhw/xXNM0IXvd+FD9r53kiC1OnbaA/pniGBduWa7/ZNwXVVZMK3ohTj75fe2FP/wA89cPd7km2yn79QqCRumHXpRS
+ 6PGtrwWptkDkSVqmuTfUeWLWOhmAmsqK6QaGRKFcgQcgmZAFuuwLLBBTo4RYC+xrWLAsIKHkhzzhFaFpyUOAXBDr4OPUAvpcW/haVl+EWfziSVXpSJdUO2+W
+ fQbRDpVq3N5tK3tm/g/0Cby0wY6yTvja2B4L6R8RpRDMbqMbvOfhzbq72N6mllfXUp6tG4aqoS+k3AZG4vB12m5dBBbnaqbJJtX5/stnqxYf/tg7Sk6QLmgt
+ eiRW+/dZ7W+0x22vr7FxEzkl4Fg/SENWrSCQoKKZ+YKzyTNQDYVcr0SQiPmh6fxZJNHxQYAX8wA0r2a0a5BBh7kZbZA+26UUyNGmbjXPWj1OuPZDd9St/8z2
+ NBm0hmc+c+bgSTdaw7QNL/nLyoLHEFDqrqCN4s6ISfKEz+0eFosRNva2zuImI7/4XoMdIdxBFpR9PAnN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 09:19:16PM +0000, Valentin Schneider wrote:
-> On 14/02/2020 15:27, Vincent Guittot wrote:
-> > Now that runnable_load_avg has been removed, we can replace it by a new
-> > signal that will highlight the runnable pressure on a cfs_rq. This signal
-> > track the waiting time of tasks on rq and can help to better define the
-> > state of rqs.
-> > 
-> > At now, only util_avg is used to define the state of a rq:
-> >   A rq with more that around 80% of utilization and more than 1 tasks is
-> >   considered as overloaded.
-> > 
-> > But the util_avg signal of a rq can become temporaly low after that a task
-> > migrated onto another rq which can bias the classification of the rq.
-> > 
-> > When tasks compete for the same rq, their runnable average signal will be
-> > higher than util_avg as it will include the waiting time and we can use
-> > this signal to better classify cfs_rqs.
-> > 
-> > The new runnable_avg will track the runnable time of a task which simply
-> > adds the waiting time to the running time. The runnable _avg of cfs_rq
-> > will be the /Sum of se's runnable_avg and the runnable_avg of group entity
-> > will follow the one of the rq similarly to util_avg.
-> > 
+On 2/19/20 10:05 AM, Sergey Senozhatsky wrote:
+> On (20/02/19 09:48), Hans Verkuil wrote:
+> [..]
+>>>  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
+>>>  {
+>>>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
+>>> +	bool consistent = true;
+>>> +
+>>> +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
+>>> +		consistent = false;
+>>
+>> There is no check against allow_cache_hints: if that's 0, then
+>> the V4L2_FLAG_MEMORY_NON_CONSISTENT flag should be cleared since it is
+>> not supported.
 > 
-> I did a bit of playing around with tracepoints and it seems to be behaving
-> fine. For instance, if I spawn 12 always runnable tasks (sysbench --test=cpu)
-> on my Juno (6 CPUs), I get to a system-wide runnable value (\Sum cpu_runnable())
-> of about 12K. I've only eyeballed them, but migration of the signal values
-> seem fine too.
-> 
-> I have a slight worry that the rq-wide runnable signal might be too easy to
-> inflate, since we aggregate for *all* runnable tasks, and that may not play
-> well with your group_is_overloaded() change (despite having the imbalance_pct
-> on the "right" side).
-> 
-> In any case I'll need to convince myself of it with some messing around, and
-> this concerns patch 5 more than patch 4. So FWIW for this one:
-> 
-> Tested-by: Valentin Schneider <valentin.schneider@arm.com>
-> 
-> I also have one (two) more nit(s) below.
-> 
+> The check is in set_queue_consistency()
 
-Thanks.
+That's the check against the functionality. I'm talking about the API level:
+if !q->allow_cache_hints, then clear V4L2_FLAG_MEMORY_NON_CONSISTENT from
+req->flags so that, when the ioctl returns to userspace, the application can
+tell that that flag was rejected.
 
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > ---
-> > diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
-> > @@ -227,14 +231,14 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
-> >  	 * Step 1: accumulate *_sum since last_update_time. If we haven't
-> >  	 * crossed period boundaries, finish.
-> >  	 */
-> > -	if (!accumulate_sum(delta, sa, load, running))
-> > +	if (!accumulate_sum(delta, sa, load, runnable, running))
-> >  		return 0;
-> >  
-> >  	return 1;
-> >  }
-> >  
-> >  static __always_inline void
-> > -___update_load_avg(struct sched_avg *sa, unsigned long load)
-> > +___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runnable)
-> >  {
-> >  	u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
-> >  
-> > @@ -242,6 +246,7 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load)
-> >  	 * Step 2: update *_avg.
-> >  	 */
-> >  	sa->load_avg = div_u64(load * sa->load_sum, divider);
-> > +	sa->runnable_avg =	div _u64(runnable * sa->runnable_sum, divider);
->                           ^^^^^^        ^^^^^^^^
->                             a)             b)
-> a) That's a tab
+Regards,
+
+	Hans
+
+> 
+> static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
+> {
+> 	if (!q->allow_cache_hints)
+> 		return;
+> 
+> 	if (consistent_mem)
+> 		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
+> 	else
+> 		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
+> }
+> 
+> I don't explicitly clear DMA_ATTR_NON_CONSISTENT attr for
+> !->allow_cache_hints queues just in case if the driver for
+> some reason sets that flag. ->allow_cache_hints is, thus,
+> only for cases when user-space asks us to set or clear it.
+> 
+> 	-ss
 > 
 
-Fixed and I'll post a v4 of my own series with Vincent's included.
-
-> b) The value being passed is always 1, do we really need it to expose it as a
->    parameter?
-
-This does appear to be an oversight but I'm not familiar enough with
-pelt to be sure.
-
-___update_load_avg() is called when sum of the load has changed because
-a pelt period has passed and it has lost sight and does not care if an
-individual sched entity is runnable or not. The parameter was added by
-this patch but I cannot find any useful meaning for it.
-
-Vincent, what was your thinking here? Should the parameter be removed?
-
--- 
-Mel Gorman
-SUSE Labs
