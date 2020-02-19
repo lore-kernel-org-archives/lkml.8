@@ -2,115 +2,101 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23018C3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF891C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89D22176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C1824654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142913;
-	bh=B+URaWUwbmhp2bgB4ltDeJRPJgbno5ec0TATawN0L78=;
+	s=default; t=1582142970;
+	bh=AztcshnCxUnp8DpcOWIHIAP7aw8oQ14fVfrm9ZaKZdk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LcLFQKSJmOJGE286pKbx6gz+x+caGBx5icBKIdl1YKCGBb1Rma1F9CC9sXesfyGaL
-	 p11RI5m39CRWAPQy1/OsUk3K2Bbrkt9bVt6kAOUsEX4P3vNcDSsY4oSnw2CutP1Ae5
-	 iT97ZV8HB1d3z5JhVSPdFR24Wym9fGBe+J7WlaH0=
+	b=jzGJE2lj/oWXIpeufjaiVsirHm2uAvHO0vDxIp7GTiDH+pcnUFD1K7SLIojkPD3vp
+	 HDr+g3VSBmMij053LuzSTIJ0wUjyNEcTwCLGN+7iE6PgbixL4j4E7eGPq8+57qUUXk
+	 3gDIfI5yhWWgMB5lQL5UZ8/WWMHKS+BTQkafiKZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgBSUIb (ORCPT
+        id S1727346AbgBSUJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:08:31 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45377 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727035AbgBSUIb (ORCPT
+        Wed, 19 Feb 2020 15:09:29 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44582 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726793AbgBSUJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:08:31 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 59so1368409otp.12;
-        Wed, 19 Feb 2020 12:08:29 -0800 (PST)
+        Wed, 19 Feb 2020 15:09:28 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so25054763oia.11;
+        Wed, 19 Feb 2020 12:09:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nXxtRM6f2jt8ayWG1c/acsbNLpFxWVreueJEPdmTXOo=;
-        b=HoX5TEXOyJef6vEvLY011bvOl/RQLcliPl5ZdJzR37bmX0HGHB3YxeNErAIMYayFHz
-         oLf9ZMkDRHqAnkNgtRYp83pQJ1eRmL67434gxV37HTg4hqyjY0YuELxBGBCebWgO26WT
-         3SzkOn2ITuugibAem/aClId2oJW2CgZGEUEMb0jaelLGNJH0fV/g9JmXW9KBIOWQgEJQ
-         P+3JAkQGkZQS+wlxozKalCu3qk2BTxRHbIELQC5MZiIUs+24Yl7cc+1UpNZpAcyhJ0l6
-         bM35fn92iiQ/osefNw1pFOmx37rywrix6EY93tZ7cEM9MaCKypNEGW2FrG9RCu6fx8U0
-         UwBw==
-X-Gm-Message-State: APjAAAWqlGw/ZbrvfM6DWKntuFD3WLtDqmeZC4IzsljPyhJDUiRZpDfW
-        NDabsSFCc8D39bRQeg0fUw==
-X-Google-Smtp-Source: APXvYqyoLoGDEXegS/LPzNhi25kf+RBpBzucu+O+846cQ9H0W1aDtu/TkotCfT99oMMTTJ6zWGpszA==
-X-Received: by 2002:a05:6830:139a:: with SMTP id d26mr21679753otq.75.1582142908897;
-        Wed, 19 Feb 2020 12:08:28 -0800 (PST)
+        bh=mbkzQqUjkxGy2kasJcyhjpJz1rKXG3oq8o4SsxcCO/g=;
+        b=Qg5spdiBWw0OuUZQ7wWM0VlyQ1nJwIxu9GOBmx6CJYRwIuw+bQJUqHQ7p0JjJVnoh4
+         axOKZqTbQyBIDWjTDLlqDjqYAscnXMnBK32d29/PyYLXF65otPErSiKfTNT7eEmiDDk1
+         Rb0dHCK87ay/YEmqMxpLVhRAlQJoB3FZlcYRZFcDm3gmBLn6vSh+UCaM4QTECDP4eiEO
+         STGqUK7yb+kikgeU1VUKQ5jiXa1hXRXYZNxnn5WYs9SRpUNcmf0dD7RdcSfgVIOfwZxp
+         T8lXPWdljrST9pGzPyaEXIyboqQYoQ5l3p22EKMjXCzaIdMXYqa3Y4Xoqyj8QoNd4/DT
+         vxgg==
+X-Gm-Message-State: APjAAAVBScGJmwC8/J+vG/JP6pC7Mc5beff086DR30StKQcmii3rKnSW
+        odI1WZ+L4WMwXLrOLMmX5g==
+X-Google-Smtp-Source: APXvYqx7craa94cySPkeWut3Mcv/WirXtJmPA1s1cNBhvO13jw3nlv/Dh0x4LuMM8fFg3C9iZlRbRg==
+X-Received: by 2002:a05:6808:a8e:: with SMTP id q14mr5549272oij.173.1582142967720;
+        Wed, 19 Feb 2020 12:09:27 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x22sm263707otk.23.2020.02.19.12.08.27
+        by smtp.gmail.com with ESMTPSA id 76sm258701otf.53.2020.02.19.12.09.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:08:28 -0800 (PST)
-Received: (nullmailer pid 20348 invoked by uid 1000);
-        Wed, 19 Feb 2020 20:08:27 -0000
-Date:   Wed, 19 Feb 2020 14:08:27 -0600
+        Wed, 19 Feb 2020 12:09:27 -0800 (PST)
+Received: (nullmailer pid 21822 invoked by uid 1000);
+        Wed, 19 Feb 2020 20:09:26 -0000
+Date:   Wed, 19 Feb 2020 14:09:26 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     ulf.hansson@linaro.org, asutoshd@codeaurora.org,
-        stummala@codeaurora.org, sayalil@codeaurora.org,
-        cang@codeaurora.org, rampraka@codeaurora.org, dianders@google.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Subject: Re: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
-Message-ID: <20200219200827.GA17094@bogus>
-References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
- <1581680753-9067-1-git-send-email-vbadigan@codeaurora.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Simon Horman <simon.horman@netronome.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        devicetree@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v2] dt-bindings: net: mdio: remove compatible string from
+ example
+Message-ID: <20200219200926.GA21759@bogus>
+References: <20200214194408.9308-1-grygorii.strashko@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581680753-9067-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <20200214194408.9308-1-grygorii.strashko@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 05:15:52PM +0530, Veerabhadrarao Badiganti wrote:
-> CQE feature has been enabled on sdhci-msm. Add CQE reg map
-> that needs to be supplied for supporting CQE feature.
+On Fri, 14 Feb 2020 21:44:08 +0200, Grygorii Strashko wrote:
+> Remove vendor specific compatible string from example, otherwise DT YAML
+> schemas validation may trigger warnings specific to TI ti,davinci_mdio
+> and not to the generic MDIO example.
 > 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> For example, the "bus_freq" is required for davinci_mdio, but not required for
+> generic mdio example. As result following warning will be produced:
+>  mdio.example.dt.yaml: mdio@5c030000: 'bus_freq' is a required property
+> 
+> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 > ---
+> Remove compatible string from example instead of changing it.
 > 
-> Changes since V1:
-> 	- Updated description for more clarity & Fixed typos.
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+> v1: https://patchwork.ozlabs.org/patch/1201674/
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 7ee639b..ad0ee83 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -26,7 +26,13 @@ Required properties:
->  
->  - reg: Base address and length of the register in the following order:
->  	- Host controller register map (required)
-> -	- SD Core register map (required for msm-v4 and below)
-> +	- SD Core register map (required for controllers earlier than msm-v5)
-> +	- CQE register map (Optional, CQE support is present on SDHC instance meant
-> +	                    for eMMC and version v4.2 and above)
-> +- reg-names: When CQE register map is supplied, below reg-names are required
-> +	- "hc_mem" for Host controller register map
-> +	- "core_mem" for SD core register map
-> +	- "cqhci_mem" for CQE register map
+>  Documentation/devicetree/bindings/net/mdio.yaml | 1 -
+>  1 file changed, 1 deletion(-)
+> 
 
-'_mem' is redundant, so drop.
+Applied, thanks.
 
->  - interrupts: Should contain an interrupt-specifiers for the interrupts:
->  	- Host controller interrupt (required)
->  - pinctrl-names: Should contain only one value - "default".
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
-> 
+Rob
