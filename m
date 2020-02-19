@@ -2,210 +2,96 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F8C3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E351C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7F1524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17272208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rtZ6DjLt"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="RgOjpyIf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgBSFD1 (ORCPT
+        id S1726197AbgBSFIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:03:27 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47768 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgBSFD1 (ORCPT
+        Wed, 19 Feb 2020 00:08:45 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36296 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgBSFIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:03:27 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J53Ccr008615;
-        Wed, 19 Feb 2020 05:03:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
- subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=4wb1PXrowO/bZ2zmYBNcI9KLy084JjW31QmqVq7Tmpk=;
- b=rtZ6DjLtAePl3u5vyRF4ewe6M6oT4TAPArEUztpLW2ghHOlQYqis+52Y0+rentyxiSM6
- mF84WCtOQNGIQt+QEscqC6w5woVZzhIB7vFPGdwSX13QVejcwA4DkvBq0TVShuYrAeX0
- ipIbyK10O+jFx1pbCmR2qLJZDvE8fUpKHaN6VKQgC8RlbA3NKYK5rnuosQuTw2hRmF9C
- +BNHwpPRQ30qs/fPK1AovGhVbwwZJF18m8U4FgvIURgQ/+j4LmhHn21CvKtv8KDr0Z66
- t4mbjWGCUcdoBkOHnUXv25FnHsjJlSeIbLFHrLi4gZGB6v5ykKRMI3avPX2ES1g28OWq 4A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2y8udk8j4y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 05:03:22 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J51mph078154;
-        Wed, 19 Feb 2020 05:03:22 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2y8ud08knm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 05:03:22 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J53F1m020548;
-        Wed, 19 Feb 2020 05:03:16 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 21:03:15 -0800
-Date:   Tue, 18 Feb 2020 21:03:14 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: Regression: hibernation is broken since
- e6bc9de714972cac34daa1dc1567ee48a47a9342
-Message-ID: <20200219050314.GA9504@magnolia>
-References: <20200213172351.GA6747@dumbo>
- <20200213175753.GS6874@magnolia>
- <20200213183515.GA8798@dumbo>
- <20200213193410.GB6868@magnolia>
- <20200213194135.GF6870@magnolia>
- <20200214211523.GA32637@dumbo>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200214211523.GA32637@dumbo>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190033
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
- malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190033
+        Wed, 19 Feb 2020 00:08:44 -0500
+Received: by mail-qt1-f195.google.com with SMTP id t13so16344635qto.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 21:08:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=vc6YlYlAOA1rjbOsb82NsogOb2ZpbnqN2uw8PfRTHEY=;
+        b=RgOjpyIfFjR6B0uA5D7zCDTmXyORi0w762l2y9wVQMniaUPR8ADbaN6wIVsjdtf5AE
+         7yMsZGFGNQ1tXXRpZAAOWcYhWyj6zYRrwC7Drxn23pkXSCI0ZS40HofwVn9a3RcgfBUr
+         rcSa/X6PjkllY/Lb2Fo5b66yOrLcldwJtu8bsxATXDPCnzNjb4mYgZsz7mzsrDJMJVva
+         MR7SJyTgQgBZ2l6B/3b8fWxTEQ7Tpk5qkOTYCGUpoxAiLVoXYKAtf3WnsYBI7xwNmiS5
+         cNqtQ05I/5HSP0JTPtk/yqOLuQcPjQ3jwD6woh+qV74hz9xqXPMcqy5q9h+eXyWzsgcG
+         ST+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=vc6YlYlAOA1rjbOsb82NsogOb2ZpbnqN2uw8PfRTHEY=;
+        b=ek+8Vf5Ozq65TBFLnodGrIoAyOuhIy8fLlNC61ge54z4VLW4WB6/QK/kJ3ajjIFnjF
+         RnqRmrcC3klp3uxnNjfMfDgu159gQP1D8pk3hcKGDe7FjKbMxSlPvS96RKn2/1wGO0Kp
+         cIf71d3SFJWNl9F2PkcT3GGRS/4E/bqgJPvJh4oaODc5DwrdCs8G5dPcu/nqKUBWVHmq
+         SvloJeZM1gkq8MLvP5jkzJZwmvRSUiaw+liI4IZUTffHrDZQco3RE6h1Gkt/y5IcRyHt
+         uBfkC8wJb8FyhgW32h9gz3tDX64Lc4IIGdwaE+ENGko6Qy2zShRGtCpe9hU+FXhPU8UT
+         9zRQ==
+X-Gm-Message-State: APjAAAWujbgfX7hK5sJEwwN3InTq/X72/Yba7HnC6szFHmcFl0E6sEtZ
+        YWEPSZzO/YpQ2Szux+bUqZQXfw==
+X-Google-Smtp-Source: APXvYqxCqNwfVCmC7sgampv6A9mG/doIeARVc33qlprpJA7If5awjnN8E9j3V1vBlbDoiUhAa+iT2A==
+X-Received: by 2002:aed:3f32:: with SMTP id p47mr20990813qtf.374.1582088922202;
+        Tue, 18 Feb 2020 21:08:42 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m17sm446719qki.128.2020.02.18.21.08.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 21:08:41 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] fs: fix a data race in i_size_write/i_size_read
+Date:   Wed, 19 Feb 2020 00:08:40 -0500
+Message-Id: <EDCBB5B9-DEE4-4D4B-B2F4-F63179977D6C@lca.pw>
+References: <20200219045228.GO23230@ZenIV.linux.org.uk>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, elver@google.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200219045228.GO23230@ZenIV.linux.org.uk>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 10:15:24PM +0100, Domenico Andreoli wrote:
-> [ added linux-pm ]
-> 
-> On Thu, Feb 13, 2020 at 11:41:35AM -0800, Darrick J. Wong wrote:
-> > On Thu, Feb 13, 2020 at 11:34:10AM -0800, Darrick J. Wong wrote:
-> > > 
-> > > Well ... you could try the in-kernel hibernate (which I think is what
-> > > 'systemctl hibernate' does), though you'd lose the nifty features of
-> > > µswsusp.
-> 
-> Indeed 'systemctl hibernate' works perfectly with v5.6-rc1 in my setup.
 
-As I suspected, the in-kernel hibernate can write the memory image to
-the swap file just fine...
 
-> > > In the end, though, I'll probably have to revert all those IS_SWAPFILE
-> > > checks (at least if CONFIG_HIBERNATION=y) since it's not fair to force
-> > > you to totally reconfigure your hibernation setup.
-> > 
-> > Also, does the following partial revert fix uswsusp for you?  It'll
-> > allow the direct writes that uswsusp wants to do, while leaving the rest
-> > (mmap writes) in place.
-> > 
-> > --D
-> > 
-> > diff --git a/fs/block_dev.c b/fs/block_dev.c
-> > index 69bf2fb6f7cd..077d9fa6b87d 100644
-> > --- a/fs/block_dev.c
-> > +++ b/fs/block_dev.c
-> > @@ -2001,8 +2001,10 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
-> >  	if (bdev_read_only(I_BDEV(bd_inode)))
-> >  		return -EPERM;
-> >  
-> > +#ifndef CONFIG_HIBERNATION
-> >  	if (IS_SWAPFILE(bd_inode))
-> >  		return -ETXTBSY;
-> > +#endif
-> 
-> This alone is enough to make uswsusp work again.
-> 
-> I propose this alternative:
-> 
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -2001,7 +2001,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
->         if (bdev_read_only(I_BDEV(bd_inode)))
->                 return -EPERM;
->  
-> -       if (IS_SWAPFILE(bd_inode))
-> +       /* Hibernation might happen via uswsusp, let it write to the swap */
-> +       if (IS_SWAPFILE(bd_inode) && !IS_ENABLED(CONFIG_HIBERNATION))
+> On Feb 18, 2020, at 11:52 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>=20
+> If aligned 64bit stores on 64bit host (note the BITS_PER_LONG ifdefs) end u=
+p
+> being split, the kernel is FUBAR anyway.  Details, please - how could that=
 
-...but maybe we could do something a little more targeted?
+> end up happening?
 
->                 return -ETXTBSY;
->  
->         if (!iov_iter_count(from))
-> 
-> I looked for a more selective way to enable writes to swap at runtime,
-> so I tried with system_entering_hibernation() but it's not yet armed
-> at the point in which uswsusp wants to write to the swap and therefore
-> it does not work.
+My understanding is the compiler might decide to split the load into saying t=
+wo 4-byte loads. Then, we might have,
 
-Hmm.  I was poking around in the uswsusp code and I /think/ it prepares
-the kernel for the userspace-driven hibernation by calling the ioctl
-SNAPSHOT_SET_SWAP_FILE on the device that it's going to use.  If that's
-true, we could have it clear S_SWAPFILE on the chosen device, though I'd
-have to do some more digging to figure out how to restore the flag after
-resuming from hibernation.
+Load1
+Store
+Load2
 
---D
+where the load value could be a garbage. Also, Marco (the KCSAN maintainer) w=
+ho knew more of compiler than me mentioned that there is no guarantee that t=
+he store will not be split either. Thus, the WRITE_ONCE().
 
-> 
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -34,6 +34,7 @@
->  #include <linux/task_io_accounting_ops.h>
->  #include <linux/falloc.h>
->  #include <linux/uaccess.h>
-> +#include <linux/suspend.h>
->  #include "internal.h"
-> 
->  struct bdev_inode {
-> @@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
->         if (bdev_read_only(I_BDEV(bd_inode)))
->                 return -EPERM;
-> 
-> -       if (IS_SWAPFILE(bd_inode))
-> +       /* Hibernation might happen via uswsusp, let it write to the swap */
-> +       if (IS_SWAPFILE(bd_inode) && !system_entering_hibernation())
->                 return -ETXTBSY;
-> 
->         if (!iov_iter_count(from))
-> 
-> >  	if (!iov_iter_count(from))
-> >  		return 0;
-> > diff --git a/mm/filemap.c b/mm/filemap.c
-> > index 1784478270e1..3df3211abe25 100644
-> > --- a/mm/filemap.c
-> > +++ b/mm/filemap.c
-> > @@ -2920,8 +2920,10 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
-> >  	loff_t count;
-> >  	int ret;
-> >  
-> > +#ifndef CONFIG_HIBERNATION
-> >  	if (IS_SWAPFILE(inode))
-> >  		return -ETXTBSY;
-> > +#endif
-> >  
-> >  	if (!iov_iter_count(from))
-> >  		return 0;
-> 
-> The above is not needed in my case but I'm not sure it would not be
-> needed in some other configuration of uswsusp.
-> 
-> Dom
-> 
-> -- 
-> rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
-> ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
