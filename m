@@ -2,118 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1294FC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A5C34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D097921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57A12465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="H9nusnNd"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="beCCWjxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBSLds (ORCPT
+        id S1726927AbgBSLeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:33:48 -0500
-Received: from mail-db8eur05on2113.outbound.protection.outlook.com ([40.107.20.113]:32576
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726270AbgBSLds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:33:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Byeniih9piagA7RrjbZnDH35RaPKNR2D5X5i4kvSUlvRQGgFAdT/4kgso+PSYRUOG8/l3I24ALDWZLveH1igxpoAwqLn+mSeXPEqcagd15nNHj4XRTbdAdnq5Q6u9Pa6SuH6nukyQ84e88VL+oR3W9KgoBioUhGwANmpjYcOfkk9XPmPs3IjG2N+k5z+lBtZvB/em7geE306XeUJ7GoOKaZAaWMB8bEdNx41Hbrs11THdRN2RblaEoCqYXlsBc+0rOXHTMvp0nXLjGF57SuL96Eiyk9Ybdn8rFg40ENKw9gellJSw5xUh3zksd8m3UwRLCGf7AEufBMdL5lB9w2Q3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OhORqGGEeidanHLd2dJLxLKztCPUKuB8xsZZx046zwA=;
- b=lo4praxBC2q8t4DGAlIwKt6gjk9U9+0UR6RvK+ztom9tg39nNPbSGcy8oyeN5Bo3oOIwScWHQyuogr27dLrj/Td86aTQ4A2vP11DhwJm4oB60JkeRbZXCEPE/59DU1+wQz5Dz7L6ULU3+nFuECsJaa9JnB5zgO4oWfk3M+usTEFKjPSnPU6z005A9QpGmtF/JxuR6TM/CPYaETR/K1qfrC6LFv5ov5RwKPgnUlhFElRIva/WPB2pJFK0vFxCg7zV9koTr+Xzx9IIaUuM6VRpOugU54RtFWjfhhjY3k5JirmkcKRf0ZQw5+1PBJTjApzZkrAALuHeFxGrDjoAcAihBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
- dkim=pass header.d=criteo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OhORqGGEeidanHLd2dJLxLKztCPUKuB8xsZZx046zwA=;
- b=H9nusnNdEECpDvggdu5dChIK1yiyAoH54Ozg06e2VVieOFI4j2CLay3dMRE750vRwSleTY836gKovZNJfTn8S5Zro/JIzmjV8HJ3bHneOay+he135VIEmaiG6cTytvH8eLFLi8Bo1fcY8a6s45d9nKIqTpMvGT2qXLczwyB9G48=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=e.velu@criteo.com; 
-Received: from VI1PR04MB4926.eurprd04.prod.outlook.com (20.177.48.80) by
- VI1PR04MB4094.eurprd04.prod.outlook.com (52.133.13.160) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Wed, 19 Feb 2020 11:33:44 +0000
-Received: from VI1PR04MB4926.eurprd04.prod.outlook.com
- ([fe80::99f4:5892:158f:5ae4]) by VI1PR04MB4926.eurprd04.prod.outlook.com
- ([fe80::99f4:5892:158f:5ae4%5]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 11:33:44 +0000
-Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-From:   Erwan Velu <e.velu@criteo.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200214143035.607115-1-e.velu@criteo.com>
- <20200214170508.GB20690@linux.intel.com>
- <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
- <20200218184802.GC28156@linux.intel.com>
- <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
-Message-ID: <416e20b6-8f21-5949-bf51-f02603793b49@criteo.com>
-Date:   Wed, 19 Feb 2020 12:32:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-In-Reply-To: <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: LO2P265CA0145.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::13) To VI1PR04MB4926.eurprd04.prod.outlook.com
- (2603:10a6:803:51::16)
+        Wed, 19 Feb 2020 06:34:02 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23656 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726270AbgBSLeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:34:01 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBO4UN023951;
+        Wed, 19 Feb 2020 12:33:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=7rGcCAIJ1owBgJnQqs9fghPribnH6MLQt7KvBtj4rlU=;
+ b=beCCWjxbEgVdPTO/oTEiGoMJE2z1U7oqaAWze4ZQJ3BM6EXShjbWtD8h1a6ACcpNmJl9
+ 8hBbCDobb3eS8gKl2gD254uN1rDjiWOy7ZBh8V9vyzEXPlptxniqr1V3vAhJ6OP96y7B
+ Yh3/trpblCtyDZiwcyxoo73F8pUv6YWIRPv7rN+hQYekkGgGJV7XYPxf8SpcQlr9C3Iy
+ yHRue8YPJR1mS4nE2C7F+1htjGZhL4g6oJWVU5LcZhQAJSWYGCpLsoNi/T8mZqGPmavQ
+ LaabaXCIyf+LJj+Othr1isoNkOiJxoG1grSgZ7qJGDvnoqyarPL1Yn4DZ8usjLAoOIAz PQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5jrch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Feb 2020 12:33:37 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9B0E4100034;
+        Wed, 19 Feb 2020 12:33:32 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 88A4D2B2DE2;
+        Wed, 19 Feb 2020 12:33:32 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
+ 2020 12:33:31 +0100
+Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <marex@denx.de>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <20200218131218.10789-2-alexandre.torgue@st.com>
+Message-ID: <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
+Date:   Wed, 19 Feb 2020 12:33:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Received: from [192.168.4.193] (91.199.242.236) by LO2P265CA0145.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:9::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Wed, 19 Feb 2020 11:33:44 +0000
-X-Originating-IP: [91.199.242.236]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1516dba4-aa3f-4a97-4845-08d7b52f93e1
-X-MS-TrafficTypeDiagnostic: VI1PR04MB4094:
-X-Microsoft-Antispam-PRVS: <VI1PR04MB4094D424B71DB08DF0CC14E8F2100@VI1PR04MB4094.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(956004)(81166006)(81156014)(53546011)(2906002)(8676002)(8936002)(86362001)(52116002)(5660300002)(26005)(36756003)(31686004)(31696002)(16526019)(7416002)(186003)(54906003)(16576012)(6916009)(2616005)(4326008)(66946007)(6486002)(66476007)(498600001)(558084003)(966005)(66556008)(6666004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB4094;H:VI1PR04MB4926.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: criteo.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qTRnLo2lXG7Tur0oBfXUYQXt8iOHk5Pfhh2G2J82yEH83n1udIrOF+jP42kk1icSIp0EoFHyELv0DPclDlXKj+2Z+OP7Ocnv5llYVi0zMVy/p1/hNGkEcwCs27hrTQk8J6m4NAvHvNyi/3ssb/rpLSRHP5gclV7sWYu3hp574Bm60+owELo1Oor0vvqKDrexRzMa7D178ClYXVbc4xDBeoKr3FNRxv+/wwqgkASQUzvxQYisR22zo4/vdWDq18JySmAbzN+LYseQgAj/l/2UkV4FHINL47S0rw0aj7ofRXClHk2j7X8V6AjHT38NZteE98rcMZemXaSWsHk+ptevcOyyNuvY7NEudumA2ndHJzuyT/dRfbRiV3nV9iSI9rgS2cJrB6/WXubKD/Gc5yUZRzUDbzuBY9sgmKectVhbxjhas+dGJl8esjspVLy6mpnpj3QluQ24CVDxsTBDJv5SKYqN5Hda6xW79gzhW0F+dPiKZnta15dE6P7AMEsuZnSu8D8BqlH9Huh2gXr9PTpjLA==
-X-MS-Exchange-AntiSpam-MessageData: fsE2UttsAyv9jIytySt8OjLszC8o7e+I3/sc9LGOOzw5FrZbF15hhGCh7tVg2K3udsko1SzWfRncgKSFtclRoyqxk/PdkDiUlzxim5fWIZQKmt3mhidijk93NVzEXRkXQtWlsUFk3aD8J0GLXXplAw==
-X-OriginatorOrg: criteo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1516dba4-aa3f-4a97-4845-08d7b52f93e1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 11:33:44.7268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2a35d8fd-574d-48e3-927c-8c398e225a01
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RBZ7RAVCRpLEeUNHulTIAhldZiuUvyX4NVAVq1HtcoXTmIOv96W/OpjFvHEB1F8ElPGaZ7u8dfZBswVn47DO0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4094
+In-Reply-To: <20200218131218.10789-2-alexandre.torgue@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 12:19, Erwan Velu wrote:
-[...]
-> - contacting the udev people to see the rational & fix it too : I'll 
-> do that 
+Fix Marc email address
 
-I created https://github.com/systemd/systemd/issues/14906, if some want 
-to participate/follow the discussions with systemd.
-
-Erwan,
-
+On 2/18/20 2:12 PM, Alexandre Torgue wrote:
+> This commit introduces retrigger support for stm32_ext_h chip.
+> It consists to rise the GIC interrupt mapped to an EXTI line.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+> index e00f2fa27f00..c971d115edb4 100644
+> --- a/drivers/irqchip/irq-stm32-exti.c
+> +++ b/drivers/irqchip/irq-stm32-exti.c
+> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
+>   	unregister_syscore_ops(&stm32_exti_h_syscore_ops);
+>   }
+>   
+> +static int stm32_exti_h_retrigger(struct irq_data *d)
+> +{
+> +	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
+> +	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
+> +	void __iomem *base = chip_data->host_data->base;
+> +	u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
+> +
+> +	writel_relaxed(mask, base + stm32_bank->swier_ofst);
+> +
+> +	return irq_chip_retrigger_hierarchy(d);
+> +}
+> +
+>   static struct irq_chip stm32_exti_h_chip = {
+>   	.name			= "stm32-exti-h",
+>   	.irq_eoi		= stm32_exti_h_eoi,
+>   	.irq_mask		= stm32_exti_h_mask,
+>   	.irq_unmask		= stm32_exti_h_unmask,
+> -	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> +	.irq_retrigger		= stm32_exti_h_retrigger,
+>   	.irq_set_type		= stm32_exti_h_set_type,
+>   	.irq_set_wake		= stm32_exti_h_set_wake,
+>   	.flags			= IRQCHIP_MASK_ON_SUSPEND,
+> 
