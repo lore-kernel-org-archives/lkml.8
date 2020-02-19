@@ -2,436 +2,242 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4DEC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20154C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7974722B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E2224654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iqFu9Coo"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="LZUXi8JQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgBSAJF (ORCPT
+        id S1726858AbgBSANE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:09:05 -0500
-Received: from mail-qv1-f73.google.com ([209.85.219.73]:54160 "EHLO
-        mail-qv1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728064AbgBSAJA (ORCPT
+        Tue, 18 Feb 2020 19:13:04 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18092 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgBSANE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:09:00 -0500
-Received: by mail-qv1-f73.google.com with SMTP id g9so1860069qvy.20
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=HxSYBdgam0Oo55tV66MssX9ym6F+6IzxUZWIIcNmGrg=;
-        b=iqFu9CooUnfLArYs7lr+dveP7tn4jA8hmHEoFNaLrcF1q0xSGkjA8NDv9xh012dArO
-         OGHh6SNCuMdMULICPKUnY3kqgK2s5plq3cdMFlZ+oroZZwTo7oUAzWKjLVU5zm/SQret
-         dcEJcPbKgRWYq8eENrXqaGEH1ZzVTfrDxtn2Fn7U3C7X3cW4R+pnbnoHraXPjaWkbZaX
-         QHq9zRLAri3d+j9PPFu4LPlVwzR0yVnYz49WelKDZ9Fj1JxeBBeSHdaoObysGf8WJSDR
-         iVBo/lJjOutxSetRHLtyAJF3RXaIqSn/vYULbI+fPZ7M0XUw6qfRzMsuDOi2sVQ58XLO
-         Gxqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=HxSYBdgam0Oo55tV66MssX9ym6F+6IzxUZWIIcNmGrg=;
-        b=eVNnjCKhyGsWEdcIrCgFVIYO0C7GU5fPS2zwgNf1AdfVRowlConD4uyaNUrshx6mhJ
-         fCIFya8IDS3OjFlZ4qKiaFxNI5Aq9/GmyaKpQ9fzeSA+pywIAWlZkU9SSwhA7MKv72Dn
-         6uMH1ccovA7sjHkewfdiq16vCTo9jiDvdWoGQAjteKG/mGVijYl4xsWJ9ZKAWF7Wd9My
-         6d5xuY44utS2bqAM+upF+dv9Cxj0aMpjQTxbCFoZqeHRkbaNBJrIkP1OzlqCNUgybzsJ
-         LD3iOrpeeJnr9iALBf1VT8NtxYJp1Ef6/rUaLoG/LCvqNxb0hOGBbuEnp0mwRMpBuU55
-         bw3Q==
-X-Gm-Message-State: APjAAAV3k7XOLIACVTj8njmYRBzkImxyo/332u46UpfwyKFBP+aMql/T
-        vmLUYJUU2wqyh5rD80AZqK+1MMqBwxHsu4YCPCY=
-X-Google-Smtp-Source: APXvYqxNR5Ky752e4R5eO8G3NKpwk/PIoAWuLwRPj4GBI9f/daXjqYVW+U928uYW3/V5py/PVaYozr9rWrjWTEXLiZc=
-X-Received: by 2002:a05:6214:1874:: with SMTP id eh20mr19345297qvb.122.1582070939036;
- Tue, 18 Feb 2020 16:08:59 -0800 (PST)
-Date:   Tue, 18 Feb 2020 16:08:15 -0800
-In-Reply-To: <20200219000817.195049-1-samitolvanen@google.com>
-Message-Id: <20200219000817.195049-11-samitolvanen@google.com>
-Mime-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com> <20200219000817.195049-1-samitolvanen@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v8 10/12] arm64: implement Shadow Call Stack
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sami Tolvanen <samitolvanen@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Feb 2020 19:13:04 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c7d6b0000>; Tue, 18 Feb 2020 16:12:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 16:12:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 16:12:59 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 00:12:59 +0000
+Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
+To:     Matthew Wilcox <willy@infradead.org>,
+        <linux-fsdevel@vger.kernel.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-14-willy@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <e6687fed-bbe9-005b-4fde-d888f3d9873f@nvidia.com>
+Date:   Tue, 18 Feb 2020 16:12:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200217184613.19668-14-willy@infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582071148; bh=XYyqV3UUSvdocn4sI3PrA/ovYe/qDo2rL7zzBYFMHHQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=LZUXi8JQOUsxM4MhkbKZoN+us77X32agHHEERvyhJFQIOA1HQvZOoIGniinVZGnwn
+         pZ2VcWEgxoh8iz45kjTzfdIeohxKJWjgA24H8/wDDP9a0/3dFwa4tJpxgpapBn1SP0
+         6/Wfm0vT02ejD0TSvYWlZdshSpOysFqkccwchWZ9fxvkGg5guUZEdfBxSiI/mMsYEp
+         FgymXJQ1zao4g21+WHoUfPhqNPoyrsbrhqpLdsNEHa/aoseWOTMxw940mhXVsqG1Ib
+         OHqwlrvjGtIuPOEVEUVsVzgkbxTMVawyEuM/R5wrTMKOe7ZmOR2cspeFnXDRI9uYLT
+         teYbgBQPqd3OA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change implements shadow stack switching, initial SCS set-up,
-and interrupt shadow stacks for arm64.
+On 2/17/20 10:45 AM, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> This replaces ->readpages with a saner interface:
+>  - Return void instead of an ignored error code.
+>  - Pages are already in the page cache when ->readahead is called.
+>  - Implementation looks up the pages in the page cache instead of
+>    having them passed in a linked list.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  Documentation/filesystems/locking.rst |  6 +++++-
+>  Documentation/filesystems/vfs.rst     | 13 +++++++++++++
+>  include/linux/fs.h                    |  2 ++
+>  include/linux/pagemap.h               | 18 ++++++++++++++++++
+>  mm/readahead.c                        |  8 +++++++-
+>  5 files changed, 45 insertions(+), 2 deletions(-)
+> 
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
- arch/arm64/Kconfig                   |  5 ++++
- arch/arm64/include/asm/scs.h         | 37 +++++++++++++++++++++++++
- arch/arm64/include/asm/thread_info.h |  3 +++
- arch/arm64/kernel/Makefile           |  1 +
- arch/arm64/kernel/asm-offsets.c      |  3 +++
- arch/arm64/kernel/entry.S            | 32 ++++++++++++++++++++--
- arch/arm64/kernel/head.S             |  9 +++++++
- arch/arm64/kernel/irq.c              |  2 ++
- arch/arm64/kernel/process.c          |  2 ++
- arch/arm64/kernel/scs.c              | 40 ++++++++++++++++++++++++++++
- arch/arm64/kernel/smp.c              |  4 +++
- 11 files changed, 136 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/include/asm/scs.h
- create mode 100644 arch/arm64/kernel/scs.c
+Looks nice,
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0b30e884e088..eae76686be77 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -65,6 +65,7 @@ config ARM64
- 	select ARCH_USE_QUEUED_RWLOCKS
- 	select ARCH_USE_QUEUED_SPINLOCKS
- 	select ARCH_SUPPORTS_MEMORY_FAILURE
-+	select ARCH_SUPPORTS_SHADOW_CALL_STACK if CC_HAVE_SHADOW_CALL_STACK
- 	select ARCH_SUPPORTS_ATOMIC_RMW
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128 && (GCC_VERSION >= 50000 || CC_IS_CLANG)
- 	select ARCH_SUPPORTS_NUMA_BALANCING
-@@ -1022,6 +1023,10 @@ config ARCH_HAS_CACHE_LINE_SIZE
- config ARCH_ENABLE_SPLIT_PMD_PTLOCK
- 	def_bool y if PGTABLE_LEVELS > 2
- 
-+# Supported by clang >= 7.0
-+config CC_HAVE_SHADOW_CALL_STACK
-+	def_bool $(cc-option, -fsanitize=shadow-call-stack -ffixed-x18)
-+
- config SECCOMP
- 	bool "Enable seccomp to safely compute untrusted bytecode"
- 	---help---
-diff --git a/arch/arm64/include/asm/scs.h b/arch/arm64/include/asm/scs.h
-new file mode 100644
-index 000000000000..c50d2b0c6c5f
---- /dev/null
-+++ b/arch/arm64/include/asm/scs.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_SCS_H
-+#define _ASM_SCS_H
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/scs.h>
-+
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+
-+extern void scs_init_irq(void);
-+
-+static __always_inline void scs_save(struct task_struct *tsk)
-+{
-+	void *s;
-+
-+	asm volatile("mov %0, x18" : "=r" (s));
-+	task_set_scs(tsk, s);
-+}
-+
-+static inline void scs_overflow_check(struct task_struct *tsk)
-+{
-+	if (unlikely(scs_corrupted(tsk)))
-+		panic("corrupted shadow stack detected inside scheduler\n");
-+}
-+
-+#else /* CONFIG_SHADOW_CALL_STACK */
-+
-+static inline void scs_init_irq(void) {}
-+static inline void scs_save(struct task_struct *tsk) {}
-+static inline void scs_overflow_check(struct task_struct *tsk) {}
-+
-+#endif /* CONFIG_SHADOW_CALL_STACK */
-+
-+#endif /* __ASSEMBLY __ */
-+
-+#endif /* _ASM_SCS_H */
-diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-index f0cec4160136..8c73764b9ed2 100644
---- a/arch/arm64/include/asm/thread_info.h
-+++ b/arch/arm64/include/asm/thread_info.h
-@@ -41,6 +41,9 @@ struct thread_info {
- #endif
- 		} preempt;
- 	};
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	void			*shadow_call_stack;
-+#endif
- };
- 
- #define thread_saved_pc(tsk)	\
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index fc6488660f64..08fafc4da2cf 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
- obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
- obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
- obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
-+obj-$(CONFIG_SHADOW_CALL_STACK)		+= scs.o
- 
- obj-y					+= vdso/ probes/
- obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index a5bdce8af65b..d485dc5cd196 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -33,6 +33,9 @@ int main(void)
-   DEFINE(TSK_TI_ADDR_LIMIT,	offsetof(struct task_struct, thread_info.addr_limit));
- #ifdef CONFIG_ARM64_SW_TTBR0_PAN
-   DEFINE(TSK_TI_TTBR0,		offsetof(struct task_struct, thread_info.ttbr0));
-+#endif
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+  DEFINE(TSK_TI_SCS,		offsetof(struct task_struct, thread_info.shadow_call_stack));
- #endif
-   DEFINE(TSK_STACK,		offsetof(struct task_struct, stack));
- #ifdef CONFIG_STACKPROTECTOR
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 9461d812ae27..4b18c3bbdea5 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -177,6 +177,10 @@ alternative_cb_end
- 
- 	apply_ssbd 1, x22, x23
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	ldr	x18, [tsk, #TSK_TI_SCS]		// Restore shadow call stack
-+	str	xzr, [tsk, #TSK_TI_SCS]		// Limit visibility of saved SCS
-+#endif
- 	.else
- 	add	x21, sp, #S_FRAME_SIZE
- 	get_current_task tsk
-@@ -278,6 +282,12 @@ alternative_else_nop_endif
- 	ct_user_enter
- 	.endif
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	.if	\el == 0
-+	str	x18, [tsk, #TSK_TI_SCS]		// Save shadow call stack
-+	.endif
-+#endif
-+
- #ifdef CONFIG_ARM64_SW_TTBR0_PAN
- 	/*
- 	 * Restore access to TTBR0_EL1. If returning to EL0, no need for SPSR
-@@ -383,6 +393,9 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
- 
- 	.macro	irq_stack_entry
- 	mov	x19, sp			// preserve the original sp
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	mov	x24, x18		// preserve the original shadow stack
-+#endif
- 
- 	/*
- 	 * Compare sp with the base of the task stack.
-@@ -400,15 +413,25 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
- 
- 	/* switch to the irq stack */
- 	mov	sp, x26
-+
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	/* also switch to the irq shadow stack */
-+	ldr_this_cpu x18, irq_shadow_call_stack_ptr, x26
-+#endif
-+
- 9998:
- 	.endm
- 
- 	/*
--	 * x19 should be preserved between irq_stack_entry and
--	 * irq_stack_exit.
-+	 * The callee-saved regs (x19-x29) should be preserved between
-+	 * irq_stack_entry and irq_stack_exit, but note that kernel_entry
-+	 * uses x20-x23 to store data for later use.
- 	 */
- 	.macro	irq_stack_exit
- 	mov	sp, x19
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	mov	x18, x24
-+#endif
- 	.endm
- 
- /* GPRs used by entry code */
-@@ -895,6 +918,11 @@ ENTRY(cpu_switch_to)
- 	ldr	lr, [x8]
- 	mov	sp, x9
- 	msr	sp_el0, x1
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	str	x18, [x0, #TSK_TI_SCS]
-+	ldr	x18, [x1, #TSK_TI_SCS]
-+	str	xzr, [x1, #TSK_TI_SCS]		// limit visibility of saved SCS
-+#endif
- 	ret
- ENDPROC(cpu_switch_to)
- NOKPROBE(cpu_switch_to)
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 989b1944cb71..ca561de903d4 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -27,6 +27,7 @@
- #include <asm/pgtable-hwdef.h>
- #include <asm/pgtable.h>
- #include <asm/page.h>
-+#include <asm/scs.h>
- #include <asm/smp.h>
- #include <asm/sysreg.h>
- #include <asm/thread_info.h>
-@@ -424,6 +425,10 @@ __primary_switched:
- 	stp	xzr, x30, [sp, #-16]!
- 	mov	x29, sp
- 
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	adr_l	x18, init_shadow_call_stack	// Set shadow call stack
-+#endif
-+
- 	str_l	x21, __fdt_pointer, x5		// Save FDT pointer
- 
- 	ldr_l	x4, kimage_vaddr		// Save the offset between
-@@ -731,6 +736,10 @@ __secondary_switched:
- 	ldr	x2, [x0, #CPU_BOOT_TASK]
- 	cbz	x2, __secondary_too_slow
- 	msr	sp_el0, x2
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	ldr	x18, [x2, #TSK_TI_SCS]		// set shadow call stack
-+	str	xzr, [x2, #TSK_TI_SCS]		// limit visibility of saved SCS
-+#endif
- 	mov	x29, #0
- 	mov	x30, #0
- 	b	secondary_start_kernel
-diff --git a/arch/arm64/kernel/irq.c b/arch/arm64/kernel/irq.c
-index 04a327ccf84d..fe0ca522ff60 100644
---- a/arch/arm64/kernel/irq.c
-+++ b/arch/arm64/kernel/irq.c
-@@ -21,6 +21,7 @@
- #include <linux/vmalloc.h>
- #include <asm/daifflags.h>
- #include <asm/vmap_stack.h>
-+#include <asm/scs.h>
- 
- unsigned long irq_err_count;
- 
-@@ -63,6 +64,7 @@ static void init_irq_stacks(void)
- void __init init_IRQ(void)
- {
- 	init_irq_stacks();
-+	scs_init_irq();
- 	irqchip_init();
- 	if (!handle_arch_irq)
- 		panic("No interrupt controller found.");
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 00626057a384..9151616c354c 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -52,6 +52,7 @@
- #include <asm/mmu_context.h>
- #include <asm/processor.h>
- #include <asm/pointer_auth.h>
-+#include <asm/scs.h>
- #include <asm/stacktrace.h>
- 
- #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
-@@ -514,6 +515,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	uao_thread_switch(next);
- 	ptrauth_thread_switch(next);
- 	ssbs_thread_switch(next);
-+	scs_overflow_check(next);
- 
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
-diff --git a/arch/arm64/kernel/scs.c b/arch/arm64/kernel/scs.c
-new file mode 100644
-index 000000000000..eaadf5430baa
---- /dev/null
-+++ b/arch/arm64/kernel/scs.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Shadow Call Stack support.
-+ *
-+ * Copyright (C) 2019 Google LLC
-+ */
-+
-+#include <linux/percpu.h>
-+#include <linux/vmalloc.h>
-+#include <asm/pgtable.h>
-+#include <asm/scs.h>
-+
-+DEFINE_PER_CPU(unsigned long *, irq_shadow_call_stack_ptr);
-+
-+#ifndef CONFIG_SHADOW_CALL_STACK_VMAP
-+DEFINE_PER_CPU(unsigned long [SCS_SIZE/sizeof(long)], irq_shadow_call_stack)
-+	__aligned(SCS_SIZE);
-+#endif
-+
-+void scs_init_irq(void)
-+{
-+	int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+#ifdef CONFIG_SHADOW_CALL_STACK_VMAP
-+		unsigned long *p;
-+
-+		p = __vmalloc_node_range(PAGE_SIZE, SCS_SIZE,
-+					 VMALLOC_START, VMALLOC_END,
-+					 GFP_SCS, PAGE_KERNEL,
-+					 0, cpu_to_node(cpu),
-+					 __builtin_return_address(0));
-+
-+		per_cpu(irq_shadow_call_stack_ptr, cpu) = p;
-+#else
-+		per_cpu(irq_shadow_call_stack_ptr, cpu) =
-+			per_cpu(irq_shadow_call_stack, cpu);
-+#endif /* CONFIG_SHADOW_CALL_STACK_VMAP */
-+	}
-+}
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index d4ed9a19d8fe..f2cb344f998c 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -46,6 +46,7 @@
- #include <asm/pgtable.h>
- #include <asm/pgalloc.h>
- #include <asm/processor.h>
-+#include <asm/scs.h>
- #include <asm/smp_plat.h>
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
-@@ -358,6 +359,9 @@ void cpu_die(void)
- {
- 	unsigned int cpu = smp_processor_id();
- 
-+	/* Save the shadow stack pointer before exiting the idle task */
-+	scs_save(current);
-+
- 	idle_task_exit();
- 
- 	local_daif_mask();
+    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+
+
+thanks,
 -- 
-2.25.0.265.gbab2e86ba0-goog
+John Hubbard
+NVIDIA
 
+> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+> index 5057e4d9dcd1..0ebc4491025a 100644
+> --- a/Documentation/filesystems/locking.rst
+> +++ b/Documentation/filesystems/locking.rst
+> @@ -239,6 +239,7 @@ prototypes::
+>  	int (*readpage)(struct file *, struct page *);
+>  	int (*writepages)(struct address_space *, struct writeback_control *);
+>  	int (*set_page_dirty)(struct page *page);
+> +	void (*readahead)(struct readahead_control *);
+>  	int (*readpages)(struct file *filp, struct address_space *mapping,
+>  			struct list_head *pages, unsigned nr_pages);
+>  	int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -271,7 +272,8 @@ writepage:		yes, unlocks (see below)
+>  readpage:		yes, unlocks
+>  writepages:
+>  set_page_dirty		no
+> -readpages:
+> +readahead:		yes, unlocks
+> +readpages:		no
+>  write_begin:		locks the page		 exclusive
+>  write_end:		yes, unlocks		 exclusive
+>  bmap:
+> @@ -295,6 +297,8 @@ the request handler (/dev/loop).
+>  ->readpage() unlocks the page, either synchronously or via I/O
+>  completion.
+>  
+> +->readahead() unlocks the pages like ->readpage().
+> +
+>  ->readpages() populates the pagecache with the passed pages and starts
+>  I/O against them.  They come unlocked upon I/O completion.
+>  
+> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+> index 7d4d09dd5e6d..81ab30fbe45c 100644
+> --- a/Documentation/filesystems/vfs.rst
+> +++ b/Documentation/filesystems/vfs.rst
+> @@ -706,6 +706,7 @@ cache in your filesystem.  The following members are defined:
+>  		int (*readpage)(struct file *, struct page *);
+>  		int (*writepages)(struct address_space *, struct writeback_control *);
+>  		int (*set_page_dirty)(struct page *page);
+> +		void (*readahead)(struct readahead_control *);
+>  		int (*readpages)(struct file *filp, struct address_space *mapping,
+>  				 struct list_head *pages, unsigned nr_pages);
+>  		int (*write_begin)(struct file *, struct address_space *mapping,
+> @@ -781,12 +782,24 @@ cache in your filesystem.  The following members are defined:
+>  	If defined, it should set the PageDirty flag, and the
+>  	PAGECACHE_TAG_DIRTY tag in the radix tree.
+>  
+> +``readahead``
+> +	Called by the VM to read pages associated with the address_space
+> +	object.  The pages are consecutive in the page cache and are
+> +	locked.  The implementation should decrement the page refcount
+> +	after starting I/O on each page.  Usually the page will be
+> +	unlocked by the I/O completion handler.  If the function does
+> +	not attempt I/O on some pages, the caller will decrement the page
+> +	refcount and unlock the pages for you.	Set PageUptodate if the
+> +	I/O completes successfully.  Setting PageError on any page will
+> +	be ignored; simply unlock the page if an I/O error occurs.
+> +
+>  ``readpages``
+>  	called by the VM to read pages associated with the address_space
+>  	object.  This is essentially just a vector version of readpage.
+>  	Instead of just one page, several pages are requested.
+>  	readpages is only used for read-ahead, so read errors are
+>  	ignored.  If anything goes wrong, feel free to give up.
+> +	This interface is deprecated; implement readahead instead.
+>  
+>  ``write_begin``
+>  	Called by the generic buffered write code to ask the filesystem
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 3cd4fe6b845e..d4e2d2964346 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -292,6 +292,7 @@ enum positive_aop_returns {
+>  struct page;
+>  struct address_space;
+>  struct writeback_control;
+> +struct readahead_control;
+>  
+>  /*
+>   * Write life time hint values.
+> @@ -375,6 +376,7 @@ struct address_space_operations {
+>  	 */
+>  	int (*readpages)(struct file *filp, struct address_space *mapping,
+>  			struct list_head *pages, unsigned nr_pages);
+> +	void (*readahead)(struct readahead_control *);
+>  
+>  	int (*write_begin)(struct file *, struct address_space *mapping,
+>  				loff_t pos, unsigned len, unsigned flags,
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 3613154e79e4..bd4291f78f41 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -665,6 +665,24 @@ static inline void readahead_next(struct readahead_control *rac)
+>  #define readahead_for_each(rac, page)					\
+>  	for (; (page = readahead_page(rac)); readahead_next(rac))
+>  
+> +/* The byte offset into the file of this readahead block */
+> +static inline loff_t readahead_offset(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_start * PAGE_SIZE;
+> +}
+> +
+> +/* The number of bytes in this readahead block */
+> +static inline loff_t readahead_length(struct readahead_control *rac)
+> +{
+> +	return (loff_t)rac->_nr_pages * PAGE_SIZE;
+> +}
+> +
+> +/* The index of the first page in this readahead block */
+> +static inline unsigned int readahead_index(struct readahead_control *rac)
+> +{
+> +	return rac->_start;
+> +}
+> +
+>  /* The number of pages in this readahead block */
+>  static inline unsigned int readahead_count(struct readahead_control *rac)
+>  {
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 9e430daae42f..975ff5e387be 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -121,7 +121,13 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages)
+>  
+>  	blk_start_plug(&plug);
+>  
+> -	if (aops->readpages) {
+> +	if (aops->readahead) {
+> +		aops->readahead(rac);
+> +		readahead_for_each(rac, page) {
+> +			unlock_page(page);
+> +			put_page(page);
+> +		}
+> +	} else if (aops->readpages) {
+>  		aops->readpages(rac->file, rac->mapping, pages,
+>  				readahead_count(rac));
+>  		/* Clean up the remaining pages */
+> 
