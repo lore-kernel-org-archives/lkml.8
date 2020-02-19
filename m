@@ -2,147 +2,196 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA6C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCDBC3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD46024658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:03:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F27F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:04:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ptZwoVIx"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mEerubVR";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="c7buKpAE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSEDf (ORCPT
+        id S1726719AbgBSEEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:03:35 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:51618 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSEDf (ORCPT
+        Tue, 18 Feb 2020 23:04:11 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:20182 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726439AbgBSEEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:03:35 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J43Dro116100;
-        Wed, 19 Feb 2020 04:03:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=4a082+unim5sSZcSwTAMdgcw2O0kQMVZyf+PWBOP5+Y=;
- b=ptZwoVIxZwWZK+1uDUkiLEiSYuN7xdBgP2DccB4ZIFHLsQbSYushQ7mdFkhOB3djz5hv
- FMtNsv7JvbGEp9MC0Vt6ojqdpR3Da9DvbnURgb3+aFHh9Tjm3z39YSfLKh9EM26ycF7w
- +fu50BAmCNgOV9xzbHPGsw/AczaaagTUKKSdCE2MS31hs9Y3bvFT2GlzOFdsYQ4K7lQy
- d7RtSiwn44l44MC6QNKlQdHUC+J06bqGfEfnvkgyyEZhE0JisC6WbADmxLxIbGuWZkrs
- tO0DHDmPQ63JPhXyLP782udUWehrHHlZ+dqrnDpFA4ASBTEvPk53rTxZBAl6fiOtUG/t 5Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2y8udd0d6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 04:03:13 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J42KAJ075792;
-        Wed, 19 Feb 2020 04:03:12 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2y8ud9njdy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 04:03:12 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J42tKC019491;
-        Wed, 19 Feb 2020 04:02:55 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 20:02:55 -0800
-Date:   Wed, 19 Feb 2020 07:02:44 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: bcm2835-camera: call function instead of macro
-Message-ID: <20200219040244.GI7838@kadam>
-References: <20200218160727.GA17010@kaaira-HP-Pavilion-Notebook>
- <20200218183711.GE19641@kadam>
- <20200218191747.GA12782@kaaira-HP-Pavilion-Notebook>
+        Tue, 18 Feb 2020 23:04:11 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J3vJxX002714;
+        Tue, 18 Feb 2020 20:03:30 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
+ b=mEerubVRuO/0/buph9k0d7WOdv87S02Z6/6a14jWPby87J19NiLlN7rqeAwFL4o43pna
+ nt/yiOFj5tdNZOfAJFp60al9waaW/ISba7PwPzlP1RATZy696vf2FD2tF/9wRXe/BJLI
+ AnCDhIyoUTDsp3mCEJ+FzseiWo7Aph2124c= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2y8ud18ftq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 18 Feb 2020 20:03:30 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 18 Feb 2020 20:03:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CM53FOMDCrbifWFsUCz7360BvfWUNdz5ypbxjkogLfHhx3b55hEB5sgH3HsnZRI9mWU26LsNvogDnXSTNQQC37PhnxdlGAIwiwgS8lgfewKHtiKYRosOAu5A/g6ksT2QoUUqfZOcfDtDa/e1bfVTPv249kyoq0r+OegA7XaGivH35biVZo2yopqQ/SlC3djE/CoFj+hque9tA9PPMFN8G3sJd9HrMyTKpeGrr8ltlphxLqGT/opHk4Ge9Yd5RVK5wm/pUfqMin9OewlwhFNDG7stydAzVdOjwQBwV5nyXWPKom4veIkBtrNM5FPa55M4DbK2X7NWHmYk9latgcHwjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
+ b=E6zSQYhJ90sx1vUrBhhPGovbW6b4liGlvTo4w53HTBJydW/PJi5OuPWlaMrjyHy08Yp85fFf2tW7yycCpejLa1sQe+2rYD/F2m9ayUvUFFWde6wjemQzzjmlqnEY+kk80BF76SV8ZOQGX2JPAs1UGTgB6EeTwiYRbJf1T/llNwk1BEOQLu99ZFj2OgLEOZTOx7WqP/TC1Z9L8afaX3Mx/GNoab0UlZPBBG81zlNHs4gJ9pZJUqqJouJzudKqUr3Sf2UYAnOKEMWGCpgGhcs53OwPLTJMAUNaI5TaAw53vUSBU1GeR1lmjYqcRlYIrSoH9FJ2u+SxppgsoY/wWQqH5Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=78CLQtV3QFjxONi3GHvA+o6nUAYD+4y+JiRLaXQRRoY=;
+ b=c7buKpAE7ZmDLSkqW9ih0BEwsNH1c+ZZBWJjIg1gXiwk67GwXBn23L0UguiKb/yMk1MWdEkIy7mCu4I8tBQWVhtCGIe5F4SqGxSxChq5x3hyBMbKI0uEOAZk/QzzDQo/rug1jLqkz3kkOSCC/O1wgMDSjw0Dn/l1qyZ5x5rEAwE=
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com (20.178.231.16) by
+ DM6PR15MB3912.namprd15.prod.outlook.com (20.181.5.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.17; Wed, 19 Feb 2020 04:03:28 +0000
+Received: from DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c]) by DM6PR15MB3001.namprd15.prod.outlook.com
+ ([fe80::294e:884:76fd:743c%4]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 04:03:28 +0000
+Subject: Re: possible deadlock in bpf_lru_push_free
+To:     Hillf Danton <hdanton@sina.com>
+CC:     syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>,
+        <andriin@fb.com>, <ast@kernel.org>, <bpf@vger.kernel.org>,
+        <daniel@iogearbox.net>, <kafai@fb.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <songliubraving@fb.com>, <syzkaller-bugs@googlegroups.com>
+References: <20200217052336.5556-1-hdanton@sina.com>
+ <dca36c4b-bbf5-b215-faa9-1992240f2b69@fb.com>
+ <20200219021542.3304-1-hdanton@sina.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <7e8c1cf0-fccf-1ed9-40ed-3a13b2287cf8@fb.com>
+Date:   Tue, 18 Feb 2020 20:03:06 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
+In-Reply-To: <20200219021542.3304-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CO1PR15CA0085.namprd15.prod.outlook.com
+ (2603:10b6:101:20::29) To DM6PR15MB3001.namprd15.prod.outlook.com
+ (2603:10b6:5:13c::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218191747.GA12782@kaaira-HP-Pavilion-Notebook>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=9 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190028
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=9
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+Received: from marksan-mbp.DHCP.thefacebook.com (2620:10d:c090:400::5:982) by CO1PR15CA0085.namprd15.prod.outlook.com (2603:10b6:101:20::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Wed, 19 Feb 2020 04:03:26 +0000
+X-Originating-IP: [2620:10d:c090:400::5:982]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9f46ffc7-35e5-4cd3-fd05-08d7b4f0acbb
+X-MS-TrafficTypeDiagnostic: DM6PR15MB3912:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR15MB3912AF900235918EC72A9C11D3100@DM6PR15MB3912.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0318501FAE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(39860400002)(136003)(346002)(189003)(199004)(66476007)(66556008)(5660300002)(31696002)(16526019)(186003)(2906002)(66946007)(316002)(4326008)(6666004)(6916009)(36756003)(6486002)(6512007)(31686004)(81166006)(81156014)(6506007)(53546011)(8936002)(52116002)(8676002)(478600001)(2616005)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR15MB3912;H:DM6PR15MB3001.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 17O4NBg10BM+SdzluzwwDZKGBGd9RLflxKr5CYX04RSOkftMDQATc7Fy9I/Pf4VzAiXsO4Uf2HDjOw0kDXg1Fu5JZYVYScyeaxk3xYj3LipISk/wQEmQq3410Tu8JVZGYtKZGE0FB4MaG7uPfyVli8TDnd8s8LjxwAbWEMyhG4kScT+MB3KFbuTsM3aRH3T9RYionXOd+MDFy/ogT39SM3RibiqrcqMeblrn35/Daxuo6Wu6Ts1grdTkkwhxKzMR+31CzFf/5ZY3jV5QeyNc2BFOzAk0jcNXIFu4Ps+48b4SUD3Bvtf01h8rH1P2ss96RJhhkXEB12wS8k/RoZ67/MfpW4xhb7fF9NXenLRIrBx8OQFWCgxUKp0aFe+r0GK383H1qOwXeTA2yWs+qdmYYAq4T+VtbLhvMesEEOk/bMkc6fDIQ/ABiHS2gRjt5BWX
+X-MS-Exchange-AntiSpam-MessageData: OcTdcRVNy3W4QyLXP5Xhydx2Jq7W8FKCcA/eKjHZGlzy8kD+LwP4225V/qKx4qJ6ICj5PoOFZL+s6Jxd8zFyY14BrOofvEpjjzJXGKLPsNBkHen/W+9MIFNo/sFxF5owwFj/5BsX6SOfr9qphkPzBnpCs99eKpIXowSL7VLufbmLmwaVFvcOcEKAZA+Ib0eG
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f46ffc7-35e5-4cd3-fd05-08d7b4f0acbb
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 04:03:28.2014
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ncc4PglXqXvHac/KtZJwSdHBrvuGpoXPfeAIURjFdXGea66VtfcNzUW38fB9XqAf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR15MB3912
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=717
+ mlxscore=0 suspectscore=2 lowpriorityscore=0 clxscore=1015 phishscore=0
+ adultscore=0 priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002190028
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:47:47AM +0530, Kaaira Gupta wrote:
-> On Tue, Feb 18, 2020 at 09:37:11PM +0300, Dan Carpenter wrote:
-> > On Tue, Feb 18, 2020 at 09:37:28PM +0530, Kaaira Gupta wrote:
-> > > Fix checkpatch.pl warning of 'macro argument reuse' in bcm2835-camera.h
-> > > by removing the macro and calling the function, written in macro in
-> > > bcm2835-camera.h, directly in bcm2835-camera.c
-> > > 
-> > > Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> > > ---
-> > >  .../bcm2835-camera/bcm2835-camera.c           | 28 +++++++++++++++----
-> > >  .../bcm2835-camera/bcm2835-camera.h           | 10 -------
-> > >  2 files changed, 22 insertions(+), 16 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > > index 1ef31a984741..19b3ba80d0e7 100644
-> > > --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > > +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> > > @@ -919,9 +919,17 @@ static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-> > >  	else
-> > >  		f->fmt.pix.colorspace = V4L2_COLORSPACE_SMPTE170M;
-> > >  	f->fmt.pix.priv = 0;
-> > > -
-> > > -	v4l2_dump_pix_format(1, bcm2835_v4l2_debug, &dev->v4l2_dev, &f->fmt.pix,
-> > > -			     __func__);
-> > > +	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
-> > > +		 "%s: w %u h %u field %u pfmt 0x%x bpl %u sz_img %u colorspace 0x%x priv %u\n",
-> > > +		  __func__,
-> > > +		 (&f->fmt.pix)->width,
-> > > +		 (&f->fmt.pix)->height,
-> > > +		 (&f->fmt.pix)->field,
-> > > +		 (&f->fmt.pix)->pixelformat,
-> > > +		 (&f->fmt.pix)->bytesperline,
-> > > +		 (&f->fmt.pix)->sizeimage,
-> > > +		 (&f->fmt.pix)->colorspace,
-> > > +		 (&f->fmt.pix)->priv);
-> > 
-> > This is not as nice to look at as the original.  Just ignore the
-> > warning.
-> > 
-> > regards,
-> > dan carpenter
-> >
-> So, is this warning to be ignored from everywhere in every driver, as it
-> doesn't look good? And if yes, then why is it there in the first place?
 
-Obviously the reason for the warning is a good idea.  Do a google
-search for the dangers of c macros if you don't understand.
 
-But at the same time uniformity and clean code is nice so it's a matter
-of setting priorities.  Checkpatch is just a Perl script and not the
-King of The World.  We can ignore it if we want to.
+On 2/18/20 6:15 PM, Hillf Danton wrote:
+> 
+> Hey
+> 
+> On Tue, 18 Feb 2020 15:55:02 -0800 Yonghong Song wrote:
+>>
+>> Thanks for Martin for explanation! I think changing l->hash_node.next is
+>> unsafe here as another thread may execute on a different cpu and
+>> traverse the same list. It will see hash_node.next = NULL and it is
+> 
+> Good catch.
+> 
+>> unexpected.
+>>
+>> How about the following patch?
+>>
+> Looks nicer, thanks :P
+> 
+>> diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
+>> index 2d182c4ee9d9..246ef0f2e985 100644
+>> --- a/kernel/bpf/hashtab.c
+>> +++ b/kernel/bpf/hashtab.c
+>> @@ -56,6 +56,7 @@ struct htab_elem {
+>>                           union {
+>>                                   struct bpf_htab *htab;
+>>                                   struct pcpu_freelist_node fnode;
+>> +                               struct htab_elem *link;
+>>                           };
+>>                   };
+>>           };
+>> @@ -1256,6 +1257,7 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+>>           void __user *ukeys = u64_to_user_ptr(attr->batch.keys);
+>>           void *ubatch = u64_to_user_ptr(attr->batch.in_batch);
+>>           u32 batch, max_count, size, bucket_size;
+>> +       struct htab_elem *node_to_free = NULL;
+>>           u64 elem_map_flags, map_flags;
+>>           struct hlist_nulls_head *head;
+>>           struct hlist_nulls_node *n;
+>> @@ -1370,9 +1372,14 @@ __htab_map_lookup_and_delete_batch(struct bpf_map *map,
+>>                   }
+>>                   if (do_delete) {
+>>                           hlist_nulls_del_rcu(&l->hash_node);
+>> -                       if (is_lru_map)
+>> -                               bpf_lru_push_free(&htab->lru, &l->lru_node);
+>> -                       else
+>> +                       if (is_lru_map) {
+>> +                               /* l->hnode overlaps with *l->hash_node.pprev
+> 
+> nit: looks like you mean l->link
 
-regards,
-dan carpenter
+Yes, my previous attempt uses "hnode" and later changed to "link" but 
+forget to change the comments.
 
+Will post a patch soon.
+
+> 
+>> +                                * in memory. l->hash_node.pprev has been
+>> +                                * poisoned and nobody should access it.
+>> +                                */
+>> +                               l->link = node_to_free;
+>> +                               node_to_free = l;
+>> +                       } else
+>>                                   free_htab_elem(htab, l);
+>>                   }
+>>                   dst_key += key_size;
+> 
