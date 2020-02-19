@@ -2,118 +2,90 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08271C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F011C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5CB2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D990222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cL0AUTWK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgBSItR (ORCPT
+        id S1726668AbgBSIti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:49:17 -0500
-Received: from outbound-smtp62.blacknight.com ([46.22.136.251]:52275 "EHLO
-        outbound-smtp62.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726480AbgBSItR (ORCPT
+        Wed, 19 Feb 2020 03:49:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53148 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBSIti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:49:17 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp62.blacknight.com (Postfix) with ESMTPS id 94EFDFA897
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:49:15 +0000 (GMT)
-Received: (qmail 29501 invoked from network); 19 Feb 2020 08:49:15 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 08:49:15 -0000
-Date:   Wed, 19 Feb 2020 08:49:12 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
-        osalvador@suse.de
-Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
- reporting
-Message-ID: <20200219084912.GO3466@techsingularity.net>
-References: <20200211224416.29318.44077.stgit@localhost.localdomain>
- <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
- <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
- <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
- <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
+        Wed, 19 Feb 2020 03:49:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so5522939wmc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:49:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+OjifpqqKo8DYjh9Op+2jQZP+EdT+EofXUxP9wt2jCM=;
+        b=cL0AUTWKkL3rtprOF9RpLDm5fmboSeErTyBaUrZyTXIVwyjd2UZbhz7UXzd41KXKSu
+         GtzArdjwHOOlaTPmYly86hCsUAO6Kiuo4+qkiRbTbhiXW6L98n3m+KB4Ov2b8ZZ/W00t
+         tS1+dbs8cLorG4nJKCTUZE9NB6Zfv79l+EmzFTRSeO4gHTa8YaF2vuKVRwTtMvXZQGXw
+         NnbXs9vgvD9UcuqO+woNRCzj9Axf6ce7Qm1Ezd60IqfbNXGky78jEKUE0CkOiIcodjuk
+         yjSpSbGXIh8/W2H31lwVaVjGWQ+ABciWuEJJ7JWtBu1yIuE9wd+gbzEAjgIja/YR0Cl+
+         t+WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+OjifpqqKo8DYjh9Op+2jQZP+EdT+EofXUxP9wt2jCM=;
+        b=iq7wVCF9huAoFwLeT3cZBq5AsIuKtSm52+XXp4W8ipuYQDR1WoKiYfviqqk3tWMDNh
+         xxG5di/Mo681lG0yhdN5reu5WO+4Gstp5Fy7/wZDYt3h13tstyh6XCHFM4kQQxhEYT+T
+         U48Hxr9akw9ot6RA2t3hzP0QnsufIqT20tMGHTrwUTD1Qy3svRMJ/TyJKZSxwFoqJ9ME
+         qfi0wM12Wz7ABClANjC2VcTCVFyw2mKOG/QkoGSzwiNuHfh0E+NFEP3M96CyUjxy55AI
+         WGI3mSwSUfmaP1BXXYAG8gH+3c8BkKTtYbMdldewEkPMzZFS/94sNYZCFGwjH+0WesDX
+         VUgg==
+X-Gm-Message-State: APjAAAVTYDu6nV6KlVmLNbMkasun4r/h216fYPw3DgDh5MwHeSdK78wd
+        yVCsKJmJeHL0yiOHA3fVwNd4SrOckVjQDw==
+X-Google-Smtp-Source: APXvYqyL5YkCPYRHLJKYfuh+lPCFN7xEaXE4fRNEWpjsiEPxFXo/1CgZlKkY9CP7IToKY/NzXjDeCQ==
+X-Received: by 2002:a1c:dc85:: with SMTP id t127mr9278562wmg.16.1582102176198;
+        Wed, 19 Feb 2020 00:49:36 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id t13sm2021673wrw.19.2020.02.19.00.49.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 00:49:35 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] clk: meson: g12a: add support for the SPICC SCLK Source clocks
+Date:   Wed, 19 Feb 2020 09:49:26 +0100
+Message-Id: <20200219084928.28707-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:37:46AM -0800, Alexander Duyck wrote:
-> On Tue, 2020-02-11 at 16:19 -0800, Andrew Morton wrote:
-> > On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
-> > 
-> > > On the host I just have to monitor /proc/meminfo and I can see the
-> > > difference. I get the following results on the host, in the enabled case
-> > > it takes about 30 seconds for it to settle into the final state since I
-> > > only report page a bit at a time:
-> > > Baseline/Applied
-> > >   MemTotal:    131963012 kB
-> > >   MemFree:      95189740 kB
-> > > 
-> > > Enabled:
-> > >   MemTotal:    131963012 kB
-> > >   MemFree:     126459472 kB
-> > > 
-> > > This is what I was referring to with the comment above. I had a test I was
-> > > running back around the first RFC that consisted of bringing up enough VMs
-> > > so that there was a bit of memory overcommit and then having the VMs in
-> > > turn run memhog. As I recall the difference between the two was  something
-> > > like a couple minutes to run through all the VMs as the memhog would take
-> > > up to 40+ seconds for one that was having to pull from swap while it took
-> > > only 5 to 7 seconds for the VMs that were all running the page hinting.
-> > > 
-> > > I had referenced it here in the RFC:
-> > > https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
-> > > 
-> > > I have been verifying the memory has been getting freed but didn't feel
-> > > like the test added much value so I haven't added it to the cover page for
-> > > a while since the time could vary widely and is dependent on things like
-> > > the disk type used for the host swap since my SSD is likely faster than
-> > > spinning rust, but may not be as fast as other SSDs on the market. Since
-> > > the disk speed can play such a huge role I wasn't comfortable posting
-> > > numbers since the benefits could vary so widely.
-> > 
-> > OK, thanks.  I'll add the patches to the mm pile.  The new
-> > mm/page_reporting.c is unreviewed afaict, so I guess you own that for
-> > now ;)
-> > 
-> > It would be very nice to get some feedback from testers asserting "yes,
-> > this really helped my workload" but I understand this sort of testing
-> > is hard to obtain at this stage.
-> > 
-> 
-> Mel,
-> 
-> Any ETA on when you would be available to review these patches? They are
-> now in Andrew's tree and in linux-next. I am hoping to get any remaining
-> review from the community sorted out in the next few weeks so I can move
-> onto focusing on how best to exert pressure on the page cache so that we
-> can keep the guest memory footprint small.
-> 
+Like on the AXG SoCs, the SPICC controllers can make use of an external clock
+source instead of it's internal divider over xtal to provide a better SCLK
+clock frequency.
 
-I hope to get to it soon. I'm trying to finalise a scheduler-related
-series that reconciles NUMA and CPU balancing and it's occupying much of
-my attention available for mainline development :(
+This serie adds the new clock IDs and the associated clocks in the g12a driver.
+
+Neil Armstrong (2):
+  dt-bindings: clk: g12a-clkc: add SPICC SCLK Source clock IDs
+  clk: meson: g12a: add support for the SPICC SCLK Source clocks
+
+ drivers/clk/meson/g12a.c              | 129 ++++++++++++++++++++++++++
+ drivers/clk/meson/g12a.h              |   6 +-
+ include/dt-bindings/clock/g12a-clkc.h |   2 +
+ 3 files changed, 136 insertions(+), 1 deletion(-)
 
 -- 
-Mel Gorman
-SUSE Labs
+2.22.0
+
