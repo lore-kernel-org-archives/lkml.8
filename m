@@ -2,118 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F7C3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6212C35254
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A91E24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F7624654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dl7RHlWF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBSUx0 (ORCPT
+        id S1727656AbgBSUyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:53:26 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52942 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSUxZ (ORCPT
+        Wed, 19 Feb 2020 15:54:08 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42222 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSUyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:53:25 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 804FC1C013C; Wed, 19 Feb 2020 21:53:23 +0100 (CET)
-Date:   Wed, 19 Feb 2020 21:53:23 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com
-Subject: Re: [PATCH] backlight: add led-backlight driver
-Message-ID: <20200219205322.GA1227@duo.ucw.cz>
-References: <20200219191412.GA15905@amd>
- <20200219194540.GD37466@atomide.com>
+        Wed, 19 Feb 2020 15:54:07 -0500
+Received: by mail-qt1-f194.google.com with SMTP id r5so1271844qtt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:54:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YLaIAW0Lkknrx7pEhMD4u2gukgtf4c3eSrw1zC53+uM=;
+        b=dl7RHlWFHf6J5KKRNoP969BUk8w4nDMrtJ+aGdOUjYW3QHprh5gsqZq7QncqrqqZr4
+         m6xHh6c564ahAVkep43+wkQ3fgYwkM9YhVtI8bKgRnMO1oY2+WxxHXD35c5yDG6luu2v
+         3Zi+nX/FchZBVp9K50ol1q6HNC4IfwkJpH65jzk0BpYn1MsHmi6BdJgi/uy2mAIzULY6
+         OUGff6e7hKDgBwdhTQ7bXcqMRGD1OQMXD/Q8q+Vkh7enZFpvJDKOqY1s83i19hYagwG0
+         e8KK/pGgsBEvYSI2qH5gPpfdZtwlxuj7vERqBmO1RIadQsgaTdReUsE/4pUFSJY99yuM
+         XAGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YLaIAW0Lkknrx7pEhMD4u2gukgtf4c3eSrw1zC53+uM=;
+        b=U1OPMSt/oo4zE/5ZRfRy9oxkjWw1PNr15/fkA0O3JnyWpeMuZ/0Y87rNotEBiyCIko
+         T8iBZGlYMjODt0dHqEvmxGFm59V9ssOtEIo5e7sADYxEhqewVRD5PUjDM/yWMNENYQJn
+         gTdJz4Qxp9AJ9YaIpXV5p1ZBqU1PVqj6Nk/6UXyUtNN5IZr7S3rYQaY3WiDcDkMN04oj
+         ocz2EbwXVY/ujBaleX4jMFxvnr3GaLqbtxSewaP7FHImb4Bi6YvDBJ5zgd3lbGCezOmL
+         xSQrPSsGFiy5vSKe/rIHmAq6FEEI+/iYRQwF73qTUhrvNNyQt00x56YCl7lLJO55FqPq
+         UDAQ==
+X-Gm-Message-State: APjAAAXuClHpnXo9zhwi98DZfBfOVJ1fBD6plhUItLD9syMqtv2o8x7r
+        3o+4aaxyuyr0jVEj5+gW1ZKKiQ==
+X-Google-Smtp-Source: APXvYqyvdHHF5nHRsZfIaz28uyycqjYc6epPoIy4SsohMfvnnCgJwRmR5vxio4lrHBjarf5BLVSe3A==
+X-Received: by 2002:ac8:5513:: with SMTP id j19mr23959953qtq.143.1582145646469;
+        Wed, 19 Feb 2020 12:54:06 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 123sm458739qkj.113.2020.02.19.12.54.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 12:54:06 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j4WM9-0003ir-JE; Wed, 19 Feb 2020 16:54:05 -0400
+Date:   Wed, 19 Feb 2020 16:54:05 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] RDMA/core: Fix use of logical OR in get_new_pps
+Message-ID: <20200219205405.GX31668@ziepe.ca>
+References: <20200217204318.13609-1-natechancellor@gmail.com>
+ <20200219204625.GA12915@ziepe.ca>
+ <20200219205010.GA44941@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219194540.GD37466@atomide.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200219205010.GA44941@ubuntu-m2-xlarge-x86>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 19, 2020 at 01:50:10PM -0700, Nathan Chancellor wrote:
+> On Wed, Feb 19, 2020 at 04:46:25PM -0400, Jason Gunthorpe wrote:
+> > On Mon, Feb 17, 2020 at 01:43:18PM -0700, Nathan Chancellor wrote:
+> > > Clang warns:
+> > > 
+> > > ../drivers/infiniband/core/security.c:351:41: warning: converting the
+> > > enum constant to a boolean [-Wint-in-bool-context]
+> > >         if (!(qp_attr_mask & (IB_QP_PKEY_INDEX || IB_QP_PORT)) && qp_pps) {
+> > >                                                ^
+> > > 1 warning generated.
+> > > 
+> > > A bitwise OR should have been used instead.
+> > > 
+> > > Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/889
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
+> > >  drivers/infiniband/core/security.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Applied to for-next, thanks
+> > 
+> > Jason
+> 
+> Shouldn't this go into for-rc since the commit that introduced this was
+> merged in 5.6-rc2? I guess I should have added that after the PATCH in
+> the subject line, I always forget.
 
---UugvWAfsgieZRqgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Oops, that was a typo, it did go to -rc
 
-Hi!
+[each artisanal 'applied' message is uniquely hand crafted]
 
-> > This patch adds a led-backlight driver (led_bl), which is similar to
-> > pwm_bl except the driver uses a LED class driver to adjust the
-> > brightness in the HW. Multiple LEDs can be used for a single backlight.
-> >=20
-> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > Acked-by: Tony Lindgren <tony@atomide.com>
-> > Tested-by: Tony Lindgren <tony@atomide.com>
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > ---
-> >  drivers/video/backlight/Kconfig  |   7 ++
-> >  drivers/video/backlight/Makefile |   1 +
-> >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 268 insertions(+)
-> >  create mode 100644 drivers/video/backlight/led_bl.c
-
-> > Here's the version of the driver I have. AFAICT
-> > default-brightness-level handling is ok, so does not need to be
-> > changed.
-> >=20
-> > Lee, it would be easiest for me if you could apply it to your tree and
-> > push, but given enough time I can push it to Linus, too.
->=20
-> Oh you're using quoted-printable for patches.. Got it applied now,
-> and it still works. Below is also the related dts change that
-> I tested with.
->=20
-> Feel free to pick the dts change too, naturally that should
-> not be applied before the driver.
->=20
-> If you guys instead want me to pick these both into my fixes
-> branch, just let me know and I'll do the explaining why these
-> are needed as fixes. Basically we no longer have a way to enable
-> the LCD backlight for droid4 manually starting with v5.6-rc1
-> unlike earlier.
-
-If you are willing to do that, it looks like good solution from my
-point of view.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---UugvWAfsgieZRqgk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXk2gQgAKCRAw5/Bqldv6
-8r5AAKC+AwUw3ENNYRcBhsb1uvxfuPaG+QCeOluKPDkiJcP+0psjlCyM4oMe06k=
-=iDlU
------END PGP SIGNATURE-----
-
---UugvWAfsgieZRqgk--
+Jason
