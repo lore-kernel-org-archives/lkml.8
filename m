@@ -2,93 +2,152 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FADBC7619D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980E5C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F2F2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCA324673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:52:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="qE0lGCYE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PcUbOCPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBSWvu (ORCPT
+        id S1727958AbgBSWwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:51:50 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40857 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgBSWvt (ORCPT
+        Wed, 19 Feb 2020 17:52:22 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33814 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBSWwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:51:49 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n18so2126304ljo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:51:48 -0800 (PST)
+        Wed, 19 Feb 2020 17:52:22 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r18so31283436edl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qF+TpbZHrOUGgQZVKOV7JZekNV17t91t70D78UaeuV8=;
-        b=qE0lGCYEV/tXSremxFtO+b+1kn4LhCpKcL0pKd+sbzRFgl9GsEEDGGR2mBR7igtDgm
-         8hVsj9f55arrsH3V4lKT7BeGkN2EPQrMlGnp+oqflal0Nx2+apHfIwyohwS/RWfEAZyR
-         pYDsC2a0X2pJCRiiAOZPpnhbP8VG/bnBMxeVJOOZFHg3yUo1PKkkKAcOxfi5j5cslOk5
-         AU75vS7GFewOBoyz1/NNBPlXp2seG/oVoDbDJDWC2eduZ8U4MD3T4ptt/32u/p3gvk2+
-         fPemF52qrudx4/VNDAtZ9jDG8kYF5mlxjy7ySceAV0NUlXxM5WdvpTlDVlkM5yppHAeA
-         NT9w==
+        bh=4FX5hZLCPWe9TXE9QW2GtR6K9rNwkX1yJcBPCRG5Bqk=;
+        b=PcUbOCPznDsTd1uUy3g6aidkM7d0tqqur5WbsmxlcTY+nlyZ1Af+UWhbMKlJkJytm4
+         8fsXPlCWs1AKEaFZ7Ux2tSFs5WpV+2HksQY6tsT0vnFOnt4rvX5gOEfjpvsuAum+td0f
+         lZaXfYTKV/qwMIZRQeWPKhSXS6amhShfMgQSTbbJZvp3cZTuWAOY9qwblEdAjIlbzWMs
+         DI2tmAEtZWaYnP8KX0S/EwZwv9QIqwK4dSzYI+QOzBAI/fJsmMmnctj5mssKRHkRVgqe
+         lWS0XkC5IUhK/70DTcyP9ebbkiZ7p7bQ6GlZkUDhqaw4E0qc+nhtxBAlfd+EchWkH4ps
+         EjiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qF+TpbZHrOUGgQZVKOV7JZekNV17t91t70D78UaeuV8=;
-        b=FNpoGng7SIs08qQmej4vN2FCx3OfLOamo+ye3bq/CyIa7dOf8fyNOztikbDmpefB6o
-         N1G45aRcSGYXZ3A2v4MeFfkZ9/JmGkHacks25q8jjlzicJnngXfOtWfI/Phw04JmhOcJ
-         s4OHGMLKXmuJWLwwvWtkbOaKv3Q9nz0FsbWtUMA5rFt6FU5Hmk1yGtfk155wvkExKF0Q
-         Mz7J1sM5S4ZlH4g4yrdMZ7WQHxZaBsVnJhZuW9M6dXsVr2ME1rDH+0RCVPQwG5J0SiW1
-         suf47tZzYNj/9MJwsb87uWQI2HrurkCyIGLQ8splehpN28of7vLZB8D4w74rCXpqn8Sg
-         BxPQ==
-X-Gm-Message-State: APjAAAXtWXXThrg83iTMhTxSRJiUcWae5jyeZG1DehWCfuggcwOfjYKR
-        FIzZebi4Z+FFKOb9Ae9q2PuB54m/BFUQKhSiszHlzQ==
-X-Google-Smtp-Source: APXvYqxzBylDBrYSY6Fo3SoinIImzJQsM7dJ2yDo7/RG1hZiJWszXYIePRhb84fn6Fc+TKHWfSqdrs8ymxAOohv4gaQ=
-X-Received: by 2002:a2e:9a51:: with SMTP id k17mr16119136ljj.206.1582152708042;
- Wed, 19 Feb 2020 14:51:48 -0800 (PST)
+        bh=4FX5hZLCPWe9TXE9QW2GtR6K9rNwkX1yJcBPCRG5Bqk=;
+        b=Km6x0RQ2iTGOTvJTDogQQ0auIpFygRUKrdWc1pd958qUeDCV3YwtnjHsTKUOCuLbEW
+         qoABml1Dq68l7HQhhOUCuV5Q1KvKaQ65l3YWsrr/MFFMq4WpJ01M5T/d41cSRNMTEkex
+         jrPjpOhBMEjFeuf8WtwLeuHKzs1EC0hV4y3yELXBbpz61LWO/XLRn9m8+yPhbZ3k2UhJ
+         HWHyWpEiZaBUKwolRjVlC54XA2veFAJZemMvA0Prt5ogUbAYeo3HA2Ahxe/TCSOI6H/C
+         BPHBz4o7rdMsbLIt8Z/jNOimBByv9rgDldK2w1v6y7CeukV5heAtKjrbFZiaeKJ4qi6r
+         +GHA==
+X-Gm-Message-State: APjAAAXK1IudAB+VXnzmzNVDZXyjlRZNZE+e8RI5s8W01jCHNAdMQd0q
+        omJGXIpHbE5+OF884GFD9EMgFyWyF8XqPG9JPgGzDQ==
+X-Google-Smtp-Source: APXvYqx0+8EApKqslGjXjpM5Azv3t3MhoqMEF0b2EBiqIdz/10EUJ8xYiTg6j4DRMnQSSSoQLlMY7NlD++332yBh21o=
+X-Received: by 2002:a17:906:4e01:: with SMTP id z1mr26915118eju.46.1582152739691;
+ Wed, 19 Feb 2020 14:52:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217153145.13780-1-james.hughes@raspberrypi.com>
-In-Reply-To: <20200217153145.13780-1-james.hughes@raspberrypi.com>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 19 Feb 2020 14:51:37 -0800
-Message-ID: <CADaigPXfS4o-QQVPsp1axNz+hAATJqA-vzupC0VRWceJNEZNEg@mail.gmail.com>
-Subject: Re: [PATCH] GPU: DRM: VC4/V3D Replace wait_for macros in to remove
- use of msleep
-To:     James Hughes <james.hughes@raspberrypi.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org
+References: <20200219014433.88424-1-minchan@kernel.org> <20200219120123.07dda51c29006a892059ccde@linux-foundation.org>
+ <20200219223241.GA148976@google.com>
+In-Reply-To: <20200219223241.GA148976@google.com>
+From:   Brian Geffon <bgeffon@google.com>
+Date:   Wed, 19 Feb 2020 14:51:53 -0800
+Message-ID: <CADyq12wn-0ngnqf7WvAWBk+0jiju1_DXWs6LwiQoQ0dfAjzMRQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] introduce memory hinting API for external process
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 7:41 AM James Hughes
-<james.hughes@raspberrypi.com> wrote:
->
-> The wait_for macro's for Broadcom VC4 and V3D drivers used msleep
-> which is inappropriate due to its inaccuracy at low values (minimum
-> wait time is about 30ms on the Raspberry Pi).
->
-> This patch replaces the macro with the one from the Intel i915 version
-> which uses usleep_range to provide more accurate waits.
->
-> Signed-off-by: James Hughes <james.hughes@raspberrypi.com>
+To expand on how ChromeOS benefits from this, we've advanced far
+beyond the experimentation phase we've deployed an older version of
+this idea that was procfs based on several ChromeOS kernels. These are
+now rolled out to ChromeOS stable channel where we've been testing and
+the results have been amazing. To elaborate on the setup, Chrome is a
+multi process architecture where each tab is a separate process and
+sometimes a single tab can even represent multiple processes. The
+primary Chrome process has a lot of visibility into the amount of time
+a user has been spending interacting with a tab (process) and using
+this knowledge these hints provided to the kernel allow it to make
+much better swap decisions and amortize the cost of swap over
+different memory pressure levels meaning that we were better able to
+reclaim memory which allow us to avoid having to discard tabs or even
+worse oom.
 
-To apply this, we're going to want to split the patch up between v3d
-(with a fixes tag to the introduction of the driver, since it's a
-pretty critical fix) and vc4 (where it's used in KMS, and we're pretty
-sure we want it but changing timing like this in KMS paths is risky so
-we don't want to backport to stable).  And adjust the commit messages
-to have consistent prefixes to the rest of the commits to those
-drivers.
+I'd be happy to expand even more if anyone is interested.
 
-I've been fighting with the drm maintainer tools today to try to apply
-the patch, with no luck.   I'll keep trying, and if I succeed, I'll
-push it.
+Brian
+
+On Wed, Feb 19, 2020 at 2:32 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> Hi Andrew,
+>
+> On Wed, Feb 19, 2020 at 12:01:23PM -0800, Andrew Morton wrote:
+> > On Tue, 18 Feb 2020 17:44:26 -0800 Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> > > application could give hints to kernel what memory range are preferred to be
+> > > reclaimed. However, in some platform(e.g., Android), the information
+> > > required to make the hinting decision is not known to the app.
+> > > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> > > and that daemon must be able to initiate reclaim on its own without any app
+> > > involvement.
+> > >
+> >
+> > This patchset doesn't seem to be getting a lot of interest from other
+> > potential users?  It seems very specialized.  Are there or will there
+> > ever be any users of this apart from one Android daemon?
+>
+>
+> Quote from http://lkml.kernel.org/r/20190531064313.193437-1-minchan@kernel.org
+>
+> "
+> Brian Geffon in ChromeOS team had an experiment with process_madvise(2)
+> Quote form him:
+> "What I found is that by using process_madvise after a tab has been back
+> grounded for more than 45 seconds reduced the average tab switch times by
+> 25%! This is a huge result and very obvious validation that process_madvise
+> hints works well for the ChromeOS use case."
+> "
+>
+> >
+> > Also, it doesn't terribly hard for ActivityManagerService to tell
+> > another process "now run madvise with these arguments".  Please explain
+> > why this is not practical in ActivityManagerService and also within
+> > other potential users of this syscall.
+>
+> I think that's the almost a same question why ptrace doesn't work so
+> I summarizes the part in [2/7]:
+>
+> * makes target task runnable creates memory layout change window so
+>  hiniting a wrong vma
+>
+> * target task(e.g., background task) could live in little core with
+>   cpuset/group limited environment so we couldn't react quick enough,
+>   which causes more killing.
+>
+>
+> Thanks.
