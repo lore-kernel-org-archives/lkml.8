@@ -2,166 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B8A2C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02833C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAE724654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAD824654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:35:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rkWnytES"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/Po18yO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgBSPdb (ORCPT
+        id S1726761AbgBSPfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:33:31 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:32809 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgBSPda (ORCPT
+        Wed, 19 Feb 2020 10:35:51 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:47023 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSPfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:33:30 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w6so543869otk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:33:28 -0800 (PST)
+        Wed, 19 Feb 2020 10:35:51 -0500
+Received: by mail-lj1-f195.google.com with SMTP id x14so782235ljd.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:35:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=E1sKBvtd2cVQy85wDQQwaHFMe+BR9oZ60u87YmbbgsA=;
-        b=rkWnytES8w36IUEEtDRL8rezVYVLF3qfXgFjjxsq5fO+3E5345SKZme9Z180HRGxR8
-         eHiL95Ewyfc2QvDvpEY/AONZJWpcGQMcwYK0GODKdShdKRLuQoQJkaIM6OF3NS+qRd+P
-         BEjM7iwYtXIihoNMIf8HqHwZVpJtwyFfpr9tNWgUcIjZO6MxLWTAkA3NdhmyPa+V1tAE
-         jd2/P/S1EGHEw4HtlEWORJBXhpNs+qzm/sYdf+zoBY46UrEKvXU9ynWGwF2p+y+UGnME
-         1EOk8SseFzkw81fh2Kn10sLOz9pLTlLCr+xTG8u+No0GfUuweV59hOowE7GHzVUY4kJ8
-         OqTQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6tTYqiI2XE0FI71U+lA9HyQqoyVK3A/0rXuG1/SFCPQ=;
+        b=E/Po18yOEv6N41T9n8m7/Z5I/hAn0Hssaag999poMmOzS2DXFaMu2kp81CrAnNFvUy
+         lI6zZ8wd7W7VoCoMbGBOFS35CJOamIFSgfizXI9Dm7yZcLnt3VqeuoukkjTMcVNVy0KU
+         kQK2zjIa6IvviDBC7WXSr13M4H9AGRo9cgIQTZ14xfDIvANE8qhhPas4JpJ1qmCPncIK
+         bg8W3Mj+0prC3YzemQnGINJixRcBBkDo/j1o+9bGi4nniv0gH+c2aseu7sMGUJU639qj
+         nekGtfUWmxROFEJhGIpRgZ5VB/TwgaPVg0ld9C++rje8uyPR/RPIXamAUtv0O2O5b+oS
+         mTng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=E1sKBvtd2cVQy85wDQQwaHFMe+BR9oZ60u87YmbbgsA=;
-        b=lR/LCHSY+fc9A1tWlH9nBnVopXH2OIeQnodtdHRklEDTQ/PtWGgnr/iWpjD/IfRm4+
-         Na0ezj2pYv6H9X+LVR0WgHRLNOw+2zRxIauwSL7ncTOnReSNXwd9jyX4uXWy3m/iFJ04
-         XZp5fU0YntL4MhnczvPikc8j4S13PNQXdIG6owbAqOgYCYVoTpmEs8AyFCWgygt9BVii
-         ONP3y/cLwMGZHVLusV+yc4uy66WWMDiEe/n/X1BHvGjzytIYxYqzCA8BV6j5SN8j0oxr
-         O16WIotpqMjSgj3pQe6YV46hwEy8JUn1fuKVsItZwnclqyqRjJO49niQ6kACHPBaW3hX
-         X+gg==
-X-Gm-Message-State: APjAAAW5GUpgvHRTfSZEMDRRBKDabqGSahT/dBub3LZtFdnoaJA/z5Or
-        PtrH9l/D4Zd8zEyPuraDP7vHiNMhcIvfSXG3jVqkvw==
-X-Google-Smtp-Source: APXvYqzAPTgQ5P4aqucu1AcBe1mbzC38YJT9N/S1MOlBCev/cgDOUGz6H7VRarOAuw8VuUWRyxlBXSPgB2wK1I5CR9U=
-X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr19506704oti.32.1582126408054;
- Wed, 19 Feb 2020 07:33:28 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6tTYqiI2XE0FI71U+lA9HyQqoyVK3A/0rXuG1/SFCPQ=;
+        b=ha2JdlTPji9Yq544tGtbAcwtT/FwIKLQIpDBO0zkNcijPIWWJPPoskNkvJhMBrN57x
+         cliGg+Cz+YaSklwGSrD40y+g3uOG18B5iFYTZ6y5syoPI6KBgSGXTwxMDez6545oDLBS
+         OI8iqZrCcq3RxuDII6N8BjU6WdevzeEEOXS9F8YpvVvTrG10g0vFBo9T4mUKBdxOHrOa
+         GnsJkE4vz1f/WtduYMXemydY+NeATTAP9xSkAnpl8pwRzs07itfyEry+Y/jF25cKZLM/
+         OPfzDmWoQO2MpLbAlsJSdBkD4E+nGj2+pfJoRgM1MxkQ2izvTGXLPdmQjfoLOiBDhJ5k
+         ToaQ==
+X-Gm-Message-State: APjAAAVQVUdUX+BvlLtq8csDQCc2XShUCJSj5fO2ve/0Ci6+8LADjM6d
+        N0zmc01DSFcvplI2jPFRx46TPDDjOtI=
+X-Google-Smtp-Source: APXvYqzd7/6ZNc3I5nBZwwQWiZxslKBC6dtIIexCX7OraX2xnSM//30bm5Tt2XpNxBfNJpFX/1vbqQ==
+X-Received: by 2002:a2e:93c5:: with SMTP id p5mr16224498ljh.192.1582126549176;
+        Wed, 19 Feb 2020 07:35:49 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id z205sm1536587lfa.52.2020.02.19.07.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:35:48 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2] irqchip: vic: Support cascaded VIC in device tree
+Date:   Wed, 19 Feb 2020 16:35:43 +0100
+Message-Id: <20200219153543.137153-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-In-Reply-To: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Wed, 19 Feb 2020 16:33:00 +0100
-Message-ID: <CAG48ez0mKg-nvcvuU-=a3oi4MTs2eiTQiqtOi89wqUm7uzuSBg@mail.gmail.com>
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Stephen Barber <smbarber@chromium.org>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 3:35 PM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-[...]
-> - Let the keyctl infrastructure only operate on kfsid which are always
->   mapped/looked up in the id mappings similar to what we do for
->   filesystems that have the same superblock visible in multiple user
->   namespaces.
->
-> This version also comes with minimal tests which I intend to expand in
-> the future.
->
-> From pings and off-list questions and discussions at Google Container
-> Security Summit there seems to be quite a lot of interest in this
-> patchset with use-cases ranging from layer sharing for app containers
-> and k8s, as well as data sharing between containers with different id
-> mappings. I haven't Cced all people because I don't have all the email
-> adresses at hand but I've at least added Phil now. :)
->
-> This is the implementation of shiftfs which was cooked up during lunch at
-> Linux Plumbers 2019 the day after the container's microconference. The
-> idea is a design-stew from St=C3=A9phane, Aleksa, Eric, and myself (and b=
-y
-> now also Jann.
-> Back then we all were quite busy with other work and couldn't really sit
-> down and implement it. But I took a few days last week to do this work,
-> including demos and performance testing.
-> This implementation does not require us to touch the VFS substantially
-> at all. Instead, we implement shiftfs via fsid mappings.
-> With this patch, it took me 20 mins to port both LXD and LXC to support
-> shiftfs via fsid mappings.
-[...]
+When transitioning some elder platforms to device tree it
+becomes necessary to cascade VIC IRQ chips off another
+interrupt controller.
 
-Can you please grep through the kernel for all uses of ->fsuid and
-->fsgid and fix them up appropriately? Some cases I still see:
+Tested with the cascaded VIC on the Integrator/AP attached
+logic module IM-PD1.
 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Drop the default assignment of 0 as parent IRQ.
+- This is not tagged as fix: no regression.
+---
+ drivers/irqchip/irq-vic.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-The SafeSetID LSM wants to enforce that you can only use CAP_SETUID to
-gain the privileges of a specific set of IDs:
+diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
+index f3f20a3cff50..3c87d925f74c 100644
+--- a/drivers/irqchip/irq-vic.c
++++ b/drivers/irqchip/irq-vic.c
+@@ -509,9 +509,7 @@ static int __init vic_of_init(struct device_node *node,
+ 	void __iomem *regs;
+ 	u32 interrupt_mask = ~0;
+ 	u32 wakeup_mask = ~0;
+-
+-	if (WARN(parent, "non-root VICs are not supported"))
+-		return -EINVAL;
++	int parent_irq;
+ 
+ 	regs = of_iomap(node, 0);
+ 	if (WARN_ON(!regs))
+@@ -519,11 +517,14 @@ static int __init vic_of_init(struct device_node *node,
+ 
+ 	of_property_read_u32(node, "valid-mask", &interrupt_mask);
+ 	of_property_read_u32(node, "valid-wakeup-mask", &wakeup_mask);
++	parent_irq = of_irq_get(node, 0);
++	if (parent_irq < 0)
++		parent_irq = 0;
+ 
+ 	/*
+ 	 * Passing 0 as first IRQ makes the simple domain allocate descriptors
+ 	 */
+-	__vic_init(regs, 0, 0, interrupt_mask, wakeup_mask, node);
++	__vic_init(regs, parent_irq, 0, interrupt_mask, wakeup_mask, node);
+ 
+ 	return 0;
+ }
+-- 
+2.24.1
 
-static int safesetid_task_fix_setuid(struct cred *new,
-                                     const struct cred *old,
-                                     int flags)
-{
-
-        /* Do nothing if there are no setuid restrictions for our old RUID.=
- */
-        if (setuid_policy_lookup(old->uid, INVALID_UID) =3D=3D SIDPOL_DEFAU=
-LT)
-                return 0;
-
-        if (uid_permitted_for_cred(old, new->uid) &&
-            uid_permitted_for_cred(old, new->euid) &&
-            uid_permitted_for_cred(old, new->suid) &&
-            uid_permitted_for_cred(old, new->fsuid))
-                return 0;
-
-        /*
-         * Kill this process to avoid potential security vulnerabilities
-         * that could arise from a missing whitelist entry preventing a
-         * privileged process from dropping to a lesser-privileged one.
-         */
-        force_sig(SIGKILL);
-        return -EACCES;
-}
-
-This could theoretically be bypassed through setfsuid() if the kuid
-based on the fsuid mappings is permitted but the kuid based on the
-normal mappings is not.
-
-
-fs/coredump.c in suid dump mode uses "cred->fsuid =3D GLOBAL_ROOT_UID";
-this should probably also fix up the other uid, even if there is no
-scenario in which it would actually be used at the moment?
-
-
-The netfilter xt_owner stuff makes packet filtering decisions based on
-the ->fsuid; it might be better to filter on the ->kfsuid so that you
-can filter traffic from different user namespaces differently?
-
-
-audit_log_task_info() is doing "from_kuid(&init_user_ns, cred->fsuid)".
