@@ -4,32 +4,33 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760C7C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3949C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5644C208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F7D208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgBSIm7 (ORCPT
+        id S1726761AbgBSIm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:42:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44280 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 03:42:57 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44302 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgBSIlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726671AbgBSIlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Feb 2020 03:41:23 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EABA6AED8;
-        Wed, 19 Feb 2020 08:41:20 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id E4C47B031;
+        Wed, 19 Feb 2020 08:41:21 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 06/24] n_hdlc: use clamp() for maxframe
-Date:   Wed, 19 Feb 2020 09:41:00 +0100
-Message-Id: <20200219084118.26491-6-jslaby@suse.cz>
+Subject: [PATCH 09/24] n_hdlc: remove unused flags
+Date:   Wed, 19 Feb 2020 09:41:03 +0100
+Message-Id: <20200219084118.26491-9-jslaby@suse.cz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219084118.26491-1-jslaby@suse.cz>
 References: <20200219084118.26491-1-jslaby@suse.cz>
@@ -40,8 +41,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is easier to read. And use MAX_HDLC_FRAME_SIZE instead of magic
-constant.
+They are only set to 0 and never read.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
@@ -49,21 +49,35 @@ Signed-off-by: Jiri Slaby <jslaby@suse.cz>
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index 87f22e57e4f6..a713a98fea2e 100644
+index e40561caa450..d0e538ba51ea 100644
 --- a/drivers/tty/n_hdlc.c
 +++ b/drivers/tty/n_hdlc.c
-@@ -894,10 +894,7 @@ static int __init n_hdlc_init(void)
- 	int status;
- 
- 	/* range check maxframe arg */
--	if (maxframe < 4096)
--		maxframe = 4096;
--	else if (maxframe > 65535)
--		maxframe = 65535;
-+	maxframe = clamp(maxframe, 4096, MAX_HDLC_FRAME_SIZE);
- 
- 	status = tty_register_ldisc(N_HDLC, &n_hdlc_ldisc);
- 	if (!status)
+@@ -124,7 +124,6 @@ struct n_hdlc_buf_list {
+ /**
+  * struct n_hdlc - per device instance data structure
+  * @magic - magic value for structure
+- * @flags - miscellaneous control flags
+  * @tty - ptr to TTY structure
+  * @backup_tty - TTY to use if tty gets closed
+  * @tbusy - reentrancy flag for tx wakeup code
+@@ -136,7 +135,6 @@ struct n_hdlc_buf_list {
+  */
+ struct n_hdlc {
+ 	int			magic;
+-	__u32			flags;
+ 	struct tty_struct	*tty;
+ 	struct tty_struct	*backup_tty;
+ 	int			tbusy;
+@@ -808,8 +806,7 @@ static struct n_hdlc *n_hdlc_alloc(void)
+ 	
+ 	/* Initialize the control block */
+ 	n_hdlc->magic  = HDLC_MAGIC;
+-	n_hdlc->flags  = 0;
+-	
++
+ 	return n_hdlc;
+ 	
+ }	/* end of n_hdlc_alloc() */
 -- 
 2.25.0
 
