@@ -2,114 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382FBC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B3F7C3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063B924654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dmk2rLwJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5A91E24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBSUw6 (ORCPT
+        id S1727637AbgBSUx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:52:58 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30066 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbgBSUw6 (ORCPT
+        Wed, 19 Feb 2020 15:53:26 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52942 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgBSUxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:52:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582145577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A2RHU5VyNwtUUpMTMdrOWwP8lL7E1VPByJ14YfIWHKM=;
-        b=Dmk2rLwJDNcAHAGvzwroQ0dU5ykKmt5ZbyB7Z1RhhVFMQPXM0Sx370DUvn7nr6A7vWeStd
-        P7E2xwVdmPjR6IVH8e83n6ZebtPQS2s5douc5jiY4Iw5hLL2azEqhlN60aJL9usye4a4xb
-        WQ1PKmeBYYRfokNvGBohS0iGPWeZ5p8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-YsNOfG4pPY2GExLNYJMCqg-1; Wed, 19 Feb 2020 15:52:50 -0500
-X-MC-Unique: YsNOfG4pPY2GExLNYJMCqg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E0351937FC3;
-        Wed, 19 Feb 2020 20:52:49 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB8BC5C13C;
-        Wed, 19 Feb 2020 20:52:48 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 13:52:47 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/3] vfio/type1: Reduce vfio_iommu.lock contention
-Message-ID: <20200219135247.42d18bb2@w520.home>
-In-Reply-To: <20200219090417.GA30338@joy-OptiPlex-7040>
-References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
-        <20200117011050.GC1759@joy-OptiPlex-7040>
-        <20200219090417.GA30338@joy-OptiPlex-7040>
+        Wed, 19 Feb 2020 15:53:25 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 804FC1C013C; Wed, 19 Feb 2020 21:53:23 +0100 (CET)
+Date:   Wed, 19 Feb 2020 21:53:23 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: [PATCH] backlight: add led-backlight driver
+Message-ID: <20200219205322.GA1227@duo.ucw.cz>
+References: <20200219191412.GA15905@amd>
+ <20200219194540.GD37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Content-Disposition: inline
+In-Reply-To: <20200219194540.GD37466@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 04:04:17 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-> On Fri, Jan 17, 2020 at 09:10:51AM +0800, Yan Zhao wrote:
-> > Thank you, Alex!
-> > I'll try it and let you know the result soon. :)
-> > 
-> > On Fri, Jan 17, 2020 at 02:17:49AM +0800, Alex Williamson wrote:  
-> > > Hi Yan,
-> > > 
-> > > I wonder if this might reduce the lock contention you're seeing in the
-> > > vfio_dma_rw series.  These are only compile tested on my end, so I hope
-> > > they're not too broken to test.  Thanks,
-> > > 
-> > > Alex
-> > > 
-> > > ---
-> > > 
-> > > Alex Williamson (3):
-> > >       vfio/type1: Convert vfio_iommu.lock from mutex to rwsem
-> > >       vfio/type1: Replace obvious read lock instances
-> > >       vfio/type1: Introduce pfn_list mutex
-> > > 
-> > > 
-> > >  drivers/vfio/vfio_iommu_type1.c |   67 ++++++++++++++++++++++++---------------
-> > >  1 file changed, 41 insertions(+), 26 deletions(-)
-> > >  
-> 
-> hi Alex
-> I have finished testing of this series.
-> It's quite stable and passed our MTBF testing :)
-> 
-> However, after comparing the performance data obtained from several
-> benchmarks in guests (see below),
-> it seems that this series does not bring in obvious benefit.
-> (at least to cases we have tested, and though I cannot fully explain it yet).
-> So, do you think it's good for me not to include this series into my next
-> version of "use vfio_dma_rw to read/write IOVAs from CPU side"?
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I would not include it in your series.  No reason to bloat your
-series for a feature that doesn't clearly show an improvement.  Thanks
-for the additional testing, we can revive them if this lock ever
-resurfaces.  I'm was actually more hopeful that holding an external
-group reference might provide a better performance improvement, the
-lookup on every vfio_dma_rw is not very efficient.  Thanks,
+Hi!
 
-Alex
+> > This patch adds a led-backlight driver (led_bl), which is similar to
+> > pwm_bl except the driver uses a LED class driver to adjust the
+> > brightness in the HW. Multiple LEDs can be used for a single backlight.
+> >=20
+> > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > Tested-by: Tony Lindgren <tony@atomide.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> > ---
+> >  drivers/video/backlight/Kconfig  |   7 ++
+> >  drivers/video/backlight/Makefile |   1 +
+> >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 268 insertions(+)
+> >  create mode 100644 drivers/video/backlight/led_bl.c
 
+> > Here's the version of the driver I have. AFAICT
+> > default-brightness-level handling is ok, so does not need to be
+> > changed.
+> >=20
+> > Lee, it would be easiest for me if you could apply it to your tree and
+> > push, but given enough time I can push it to Linus, too.
+>=20
+> Oh you're using quoted-printable for patches.. Got it applied now,
+> and it still works. Below is also the related dts change that
+> I tested with.
+>=20
+> Feel free to pick the dts change too, naturally that should
+> not be applied before the driver.
+>=20
+> If you guys instead want me to pick these both into my fixes
+> branch, just let me know and I'll do the explaining why these
+> are needed as fixes. Basically we no longer have a way to enable
+> the LCD backlight for droid4 manually starting with v5.6-rc1
+> unlike earlier.
+
+If you are willing to do that, it looks like good solution from my
+point of view.
+
+Thanks,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXk2gQgAKCRAw5/Bqldv6
+8r5AAKC+AwUw3ENNYRcBhsb1uvxfuPaG+QCeOluKPDkiJcP+0psjlCyM4oMe06k=
+=iDlU
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
