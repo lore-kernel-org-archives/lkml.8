@@ -2,108 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6584DC3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382FBC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3954F207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063B924654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t/iI5eK3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dmk2rLwJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBSUuO (ORCPT
+        id S1727576AbgBSUw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:50:14 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34350 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSUuN (ORCPT
+        Wed, 19 Feb 2020 15:52:58 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30066 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726750AbgBSUw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:50:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so1548966otl.1;
-        Wed, 19 Feb 2020 12:50:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NID/u0S4YSnbZSmhzBcTOVCgZLrtIaXULpx1S3tMLhg=;
-        b=t/iI5eK3SoRwW28ZYoIuSkxdecJk337f+dZ+nWtWJUOO97LAjqI7We5LBWNtZAaXFj
-         vLdRZ5lnIL97SNYbVZ/ABsje+U9iPcPjq6qTxGL/qbTDEG5RavsRWDopYkktmz3TD8fN
-         MFeJiT60lE4f2bpRM9rNqtVDJ2kBHGA9s+dd40q3qsKvnmYgIKoFQ+pGmizK3ihc8utU
-         6hVYYlmJ4ebY7+ltiGYuVdlSnjYmwqpp1P/PkhylVwJYM5gdMNp0VNo680Tm1pR1nMeS
-         qC/FnbzIh4n+jNiTXlnkpjAyZ+LpvbBCH1TLJ80bSI+qYtM0jrnEfSSw6LaItQGFA/tm
-         ie1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NID/u0S4YSnbZSmhzBcTOVCgZLrtIaXULpx1S3tMLhg=;
-        b=QRM/iA0Y6GIS7sqrT4WcMZz3xdgSTUv7/uxvgr4Hw1o85Qa6ViNh6DuHZ/i4IyxS8U
-         b68oQss5UC073tT5SEfYj7m2Ymyw1dUy8TWnnexkfve+eMAMpKFQCNi8AtCfygdb5qWE
-         0N3jOO2aC5XMziAm8EcxrdRjvvB0LlDlMaIycLv9jy273SVptqAi4Y7CVv/eUPAkjcW4
-         j0Mbquc2fI3OwX0yqzNzrOAPS+Lsy3ME9AgWjN0w4fSRQq27lea6zzA4k4PMUlNg7iww
-         giyzxGZdxbGqmnhVIDfOEYstnGhwVnax1h1CyNGst1QWh2myp3j1ZVUfIGyASpyRyS2I
-         Ux7A==
-X-Gm-Message-State: APjAAAW4PgfUs8GoTa4s5Hw6Eslg1H20442Dsx77tr/Um2OI1O+lMgWe
-        GENcgNlbUwH+leodgcD/WW3vop5i
-X-Google-Smtp-Source: APXvYqxk08Kmq5SOz4sz8WC7zqLInpxFbiNuat1b8OPPCHT+wYu7xDK26I4cq3MhO4keGHdz2v5/pQ==
-X-Received: by 2002:a9d:4d17:: with SMTP id n23mr21219507otf.85.1582145412623;
-        Wed, 19 Feb 2020 12:50:12 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id b9sm289014otf.56.2020.02.19.12.50.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Feb 2020 12:50:11 -0800 (PST)
-Date:   Wed, 19 Feb 2020 13:50:10 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] RDMA/core: Fix use of logical OR in get_new_pps
-Message-ID: <20200219205010.GA44941@ubuntu-m2-xlarge-x86>
-References: <20200217204318.13609-1-natechancellor@gmail.com>
- <20200219204625.GA12915@ziepe.ca>
+        Wed, 19 Feb 2020 15:52:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582145577;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A2RHU5VyNwtUUpMTMdrOWwP8lL7E1VPByJ14YfIWHKM=;
+        b=Dmk2rLwJDNcAHAGvzwroQ0dU5ykKmt5ZbyB7Z1RhhVFMQPXM0Sx370DUvn7nr6A7vWeStd
+        P7E2xwVdmPjR6IVH8e83n6ZebtPQS2s5douc5jiY4Iw5hLL2azEqhlN60aJL9usye4a4xb
+        WQ1PKmeBYYRfokNvGBohS0iGPWeZ5p8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-323-YsNOfG4pPY2GExLNYJMCqg-1; Wed, 19 Feb 2020 15:52:50 -0500
+X-MC-Unique: YsNOfG4pPY2GExLNYJMCqg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E0351937FC3;
+        Wed, 19 Feb 2020 20:52:49 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB8BC5C13C;
+        Wed, 19 Feb 2020 20:52:48 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 13:52:47 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/3] vfio/type1: Reduce vfio_iommu.lock contention
+Message-ID: <20200219135247.42d18bb2@w520.home>
+In-Reply-To: <20200219090417.GA30338@joy-OptiPlex-7040>
+References: <157919849533.21002.4782774695733669879.stgit@gimli.home>
+        <20200117011050.GC1759@joy-OptiPlex-7040>
+        <20200219090417.GA30338@joy-OptiPlex-7040>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219204625.GA12915@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 04:46:25PM -0400, Jason Gunthorpe wrote:
-> On Mon, Feb 17, 2020 at 01:43:18PM -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > ../drivers/infiniband/core/security.c:351:41: warning: converting the
-> > enum constant to a boolean [-Wint-in-bool-context]
-> >         if (!(qp_attr_mask & (IB_QP_PKEY_INDEX || IB_QP_PORT)) && qp_pps) {
-> >                                                ^
-> > 1 warning generated.
-> > 
-> > A bitwise OR should have been used instead.
-> > 
-> > Fixes: 1dd017882e01 ("RDMA/core: Fix protection fault in get_pkey_idx_qp_list")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/889
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-> > ---
-> >  drivers/infiniband/core/security.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Applied to for-next, thanks
-> 
-> Jason
+On Wed, 19 Feb 2020 04:04:17 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Shouldn't this go into for-rc since the commit that introduced this was
-merged in 5.6-rc2? I guess I should have added that after the PATCH in
-the subject line, I always forget.
+> On Fri, Jan 17, 2020 at 09:10:51AM +0800, Yan Zhao wrote:
+> > Thank you, Alex!
+> > I'll try it and let you know the result soon. :)
+> > 
+> > On Fri, Jan 17, 2020 at 02:17:49AM +0800, Alex Williamson wrote:  
+> > > Hi Yan,
+> > > 
+> > > I wonder if this might reduce the lock contention you're seeing in the
+> > > vfio_dma_rw series.  These are only compile tested on my end, so I hope
+> > > they're not too broken to test.  Thanks,
+> > > 
+> > > Alex
+> > > 
+> > > ---
+> > > 
+> > > Alex Williamson (3):
+> > >       vfio/type1: Convert vfio_iommu.lock from mutex to rwsem
+> > >       vfio/type1: Replace obvious read lock instances
+> > >       vfio/type1: Introduce pfn_list mutex
+> > > 
+> > > 
+> > >  drivers/vfio/vfio_iommu_type1.c |   67 ++++++++++++++++++++++++---------------
+> > >  1 file changed, 41 insertions(+), 26 deletions(-)
+> > >  
+> 
+> hi Alex
+> I have finished testing of this series.
+> It's quite stable and passed our MTBF testing :)
+> 
+> However, after comparing the performance data obtained from several
+> benchmarks in guests (see below),
+> it seems that this series does not bring in obvious benefit.
+> (at least to cases we have tested, and though I cannot fully explain it yet).
+> So, do you think it's good for me not to include this series into my next
+> version of "use vfio_dma_rw to read/write IOVAs from CPU side"?
 
-Cheers,
-Nathan
+Yes, I would not include it in your series.  No reason to bloat your
+series for a feature that doesn't clearly show an improvement.  Thanks
+for the additional testing, we can revive them if this lock ever
+resurfaces.  I'm was actually more hopeful that holding an external
+group reference might provide a better performance improvement, the
+lookup on every vfio_dma_rw is not very efficient.  Thanks,
+
+Alex
+
