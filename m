@@ -2,78 +2,238 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CF8C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7DCC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBD9208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E5624656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbgBSECu (ORCPT
+        id S1726650AbgBSED0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:02:50 -0500
-Received: from cooldavid.org ([114.33.45.68]:42708 "EHLO cooldavid.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726439AbgBSECt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:02:49 -0500
-X-Greylist: delayed 539 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 23:02:48 EST
-Received: from cooldavid.org (localhost [127.0.0.1])
-        by cooldavid.org (Postfix) with ESMTP id ED22C670DB9;
-        Wed, 19 Feb 2020 11:53:48 +0800 (CST)
-From:   "Guo-Fu Tseng" <cooldavid@cooldavid.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        David Miller <davem@davemloft.net>
-Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v2 07/13] jme: use new helper tcp_v6_gso_csum_prep
-Date:   Wed, 19 Feb 2020 11:53:48 +0800
-Message-Id: <20200219034801.M31679@cooldavid.org>
-In-Reply-To: <f9f6897b-8dc8-2036-97d4-60e154b57356@gmail.com>
-References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com> <f9f6897b-8dc8-2036-97d4-60e154b57356@gmail.com>
-X-Mailer: OpenWebMail 2.53 
-X-OriginatingIP: 2001:b011:3813:5d60:21f:bcff:fe0d:975f (cooldavid)
+        Tue, 18 Feb 2020 23:03:26 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726439AbgBSED0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 23:03:26 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J40EL8040261
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:03:24 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubeu4u8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:03:24 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 19 Feb 2020 04:03:22 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 04:03:14 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J42Hom50069946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 04:02:17 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 603AC11C04A;
+        Wed, 19 Feb 2020 04:03:13 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B895011C054;
+        Wed, 19 Feb 2020 04:03:12 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Feb 2020 04:03:12 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 2BF59A00DF;
+        Wed, 19 Feb 2020 15:03:08 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 19 Feb 2020 15:03:11 +1100
+In-Reply-To: <20200203125346.0000503f@Huawei.com>
+References: <20191203034655.51561-1-alastair@au1.ibm.com>
+         <20191203034655.51561-9-alastair@au1.ibm.com>
+         <20200203125346.0000503f@Huawei.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021904-0012-0000-0000-000003882478
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021904-0013-0000-0000-000021C4B6B6
+Message-Id: <97c92496adec4c4b03ad634af030a0c1470ee099.camel@au1.ibm.com>
+Subject: RE: [PATCH v2 08/27] ocxl: Save the device serial number in ocxl_fn
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ mlxlogscore=578 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 21:06:11 +0100, Heiner Kallweit wrote
-> Use new helper tcp_v6_gso_csum_prep in additional network drivers.
+On Mon, 2020-02-03 at 12:53 +0000, Jonathan Cameron wrote:
+> On Tue, 3 Dec 2019 14:46:36 +1100
+> Alastair D'Silva <alastair@au1.ibm.com> wrote:
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  drivers/net/ethernet/jme.c | 7 +------
->  1 file changed, 1 insertion(+), 6 deletions(-)
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch retrieves the serial number of the card and makes it
+> > available
+> > to consumers of the ocxl driver via the ocxl_fn struct.
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> > Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> > ---
+> >  drivers/misc/ocxl/config.c | 46
+> > ++++++++++++++++++++++++++++++++++++++
+> >  include/misc/ocxl.h        |  1 +
+> >  2 files changed, 47 insertions(+)
+> > 
+> > diff --git a/drivers/misc/ocxl/config.c
+> > b/drivers/misc/ocxl/config.c
+> > index fb0c3b6f8312..a9203c309365 100644
+> > --- a/drivers/misc/ocxl/config.c
+> > +++ b/drivers/misc/ocxl/config.c
+> > @@ -71,6 +71,51 @@ static int find_dvsec_afu_ctrl(struct pci_dev
+> > *dev, u8 afu_idx)
+> >  	return 0;
+> >  }
+> >  
+> > +/**
 > 
-> diff --git a/drivers/net/ethernet/jme.c b/drivers/net/ethernet/jme.c
-> index 2e4975572..de3c7ce93 100644
-> --- a/drivers/net/ethernet/jme.c
-> +++ b/drivers/net/ethernet/jme.c
-> @@ -2077,12 +2077,7 @@ jme_tx_tso(struct sk_buff *skb, __le16 *mss, u8 *flags)
->  								IPPROTO_TCP,
->  								0);
->  		} else {
-> -			struct ipv6hdr *ip6h = ipv6_hdr(skb);
-> -
-> -			tcp_hdr(skb)->check = ~csum_ipv6_magic(&ip6h->saddr,
-> -								&ip6h->daddr, 0,
-> -								IPPROTO_TCP,
-> -								0);
-> +			tcp_v6_gso_csum_prep(skb);
->  		}
+> Make sure anything you mark as kernel doc with /** is valid
+> kernel-doc.
 > 
->  		return 0;
-> -- 
-> 2.25.1
-Kallweit:
 
-Looks good to me. Thank you.
+Ok
 
-Guo-Fu Tseng
+> > + * Find a related PCI device (function 0)
+> > + * @device: PCI device to match
+> > + *
+> > + * Returns a pointer to the related device, or null if not found
+> > + */
+> > +static struct pci_dev *get_function_0(struct pci_dev *dev)
+> > +{
+> > +	unsigned int devfn = PCI_DEVFN(PCI_SLOT(dev->devfn), 0); //
+> > Look for function 0
+> 
+> Not sure the trailing comment adds much.
+> 
+> I'd personally not bother with this wrapper at all and just call
+> the pci functions directly where needed.
+> 
+
+I'm not that familiar with the macros, so its not immediately obvious
+to me what it's doing, so my preference is to leave it.
+> > +
+> > +	return pci_get_domain_bus_and_slot(pci_domain_nr(dev->bus),
+> > +					dev->bus->number, devfn);
+> > +}
+> > +
+> > +static void read_serial(struct pci_dev *dev, struct ocxl_fn_config
+> > *fn)
+> > +{
+> > +	u32 low, high;
+> > +	int pos;
+> > +
+> > +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
+> > +	if (pos) {
+> > +		pci_read_config_dword(dev, pos + 0x04, &low);
+> > +		pci_read_config_dword(dev, pos + 0x08, &high);
+> > +
+> > +		fn->serial = low | ((u64)high) << 32;
+> > +
+> > +		return;
+> > +	}
+> > +
+> > +	if (PCI_FUNC(dev->devfn) != 0) {
+> > +		struct pci_dev *related = get_function_0(dev);
+> > +
+> > +		if (!related) {
+> > +			fn->serial = 0;
+> > +			return;
+> > +		}
+> > +
+> > +		read_serial(related, fn);
+> > +		pci_dev_put(related);
+> > +		return;
+> > +	}
+> > +
+> > +	fn->serial = 0;
+> > +}
+> > +
+> >  static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config
+> > *fn)
+> >  {
+> >  	u16 val;
+> > @@ -208,6 +253,7 @@ int ocxl_config_read_function(struct pci_dev
+> > *dev, struct ocxl_fn_config *fn)
+> >  	int rc;
+> >  
+> >  	read_pasid(dev, fn);
+> > +	read_serial(dev, fn);
+> >  
+> >  	rc = read_dvsec_tl(dev, fn);
+> >  	if (rc) {
+> > diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> > index 6f7c02f0d5e3..9843051c3c5b 100644
+> > --- a/include/misc/ocxl.h
+> > +++ b/include/misc/ocxl.h
+> > @@ -46,6 +46,7 @@ struct ocxl_fn_config {
+> >  	int dvsec_afu_info_pos; /* offset of the AFU information DVSEC
+> > */
+> >  	s8 max_pasid_log;
+> >  	s8 max_afu_index;
+> > +	u64 serial;
+> >  };
+> >  
+> >  enum ocxl_endian {
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
