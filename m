@@ -2,74 +2,110 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176BCC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAE1C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA8B206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 746B72465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:03:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgBSLBn (ORCPT
+        id S1726802AbgBSLDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:01:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37883 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbgBSLBn (ORCPT
+        Wed, 19 Feb 2020 06:03:15 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42763 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgBSLDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:01:43 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4N6k-0002oa-27; Wed, 19 Feb 2020 12:01:34 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BB84F103A05; Wed, 19 Feb 2020 12:01:33 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH] xen: Enable interrupts when calling _cond_resched()
-Date:   Wed, 19 Feb 2020 12:01:33 +0100
-Message-ID: <87tv3mq1rm.fsf@nanos.tec.linutronix.de>
+        Wed, 19 Feb 2020 06:03:15 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4N8H-0004mY-1p; Wed, 19 Feb 2020 12:03:09 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4N8E-0001EF-SZ; Wed, 19 Feb 2020 12:03:06 +0100
+Date:   Wed, 19 Feb 2020 12:03:06 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 4/4] leds: trigger: implement a tty trigger
+Message-ID: <20200219110306.k5jndutalll64esu@pengutronix.de>
+References: <20200213091600.554-1-uwe@kleine-koenig.org>
+ <20200213091600.554-5-uwe@kleine-koenig.org>
+ <20200219105239.GA32540@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219105239.GA32540@localhost>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xen_maybe_preempt_hcall() is called from the exception entry point
-xen_do_hypervisor_callback with interrupts disabled.
+On Wed, Feb 19, 2020 at 11:52:39AM +0100, Johan Hovold wrote:
+> On Thu, Feb 13, 2020 at 10:16:00AM +0100, Uwe Kleine-König wrote:
+> > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > 
+> > Usage is as follows:
+> > 
+> > 	myled=ledname
+> > 	tty=ttyS0
+> > 
+> > 	echo tty > /sys/class/leds/$myled/trigger
+> > 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
+> > 
+> > . When this new trigger is active it periodically checks the tty's
+> > statistics and when it changed since the last check the led is flashed
+> > once.
+> > 
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> 
+> > +static ssize_t dev_store(struct device *dev,
+> > +			 struct device_attribute *attr, const char *buf,
+> > +			 size_t size)
+> > +{
+> > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
+> > +	struct tty_struct *tty;
+> > +	dev_t d;
+> > +	int ret;
+> > +
+> > +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
+> > +		tty = NULL;
+> > +	} else {
+> > +		ret = kstrtodev_t(buf, &d);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +
+> > +		tty = tty_kopen_shared(d);
+> 
+> I really don't have time to look at this, but having the led-trigger
+> keep the port open looks fundamentally broken (consider modem-control
+> signals, power, etc).
 
-_cond_resched() evades the might_sleep() check in cond_resched() which
-would have caught that and schedule_debug() unfortunately lacks a check
-for irqs_disabled().
+If I understand correctly calling tty_kopen_shared() doesn't open the
+device, just keep it referenced which prevents it to disappear. Unless I
+miss something it doesn't result in the tty's .open() being called.
 
-Enable interrupts around the call and use cond_resched() to catch future
-issues.
+Best regards
+Uwe
 
-Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- drivers/xen/preempt.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -33,8 +33,10 @@ asmlinkage __visible void xen_maybe_pree
- 		 * cpu.
- 		 */
- 		__this_cpu_write(xen_in_preemptible_hcall, false);
--		_cond_resched();
-+		local_irq_enable();
-+		cond_resched();
- 		__this_cpu_write(xen_in_preemptible_hcall, true);
-+		local_irq_disable();
- 	}
- }
- #endif /* CONFIG_PREEMPTION */
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
