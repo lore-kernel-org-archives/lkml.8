@@ -2,120 +2,83 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F04BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6E1C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B886206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A22C5206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:15:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="Ao4P6aa+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBSOOh (ORCPT
+        id S1727877AbgBSOPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:14:37 -0500
-Received: from mga11.intel.com ([192.55.52.93]:4379 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbgBSOOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:14:36 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 06:14:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="348947661"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 19 Feb 2020 06:14:32 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 19 Feb 2020 16:14:32 +0200
-Date:   Wed, 19 Feb 2020 16:14:32 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bin Liu <b-liu@ti.com>, Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 5/9] usb: roles: Provide the switch drivers handle to the
- switch in the API
-Message-ID: <20200219141432.GJ28776@kuha.fi.intel.com>
-References: <20200213132428.53374-1-heikki.krogerus@linux.intel.com>
- <20200213132428.53374-6-heikki.krogerus@linux.intel.com>
- <20200213133239.GN1498@kuha.fi.intel.com>
- <20200218072341.GA30350@b29397-desktop>
- <20200218122545.GF28776@kuha.fi.intel.com>
- <20200219015840.GC8602@b29397-desktop>
- <20200219133815.GH28776@kuha.fi.intel.com>
- <20200219140955.GA15569@b29397-desktop>
+        Wed, 19 Feb 2020 09:15:16 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17853 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727280AbgBSOPP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:15:15 -0500
+X-Greylist: delayed 939 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 09:15:06 EST
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582120725;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=N2QbMOWOsgHlIL0+1XeUQl6yeERWT5IeVW5cvxRhqk4=;
+        b=Ao4P6aa+d+a5roISEio/aq8swJ2pMb1l3dNcrChYVajpKRXGgp68M8U/lEPdkeYM
+        SOFGE3h6C3QHuNrHvSPdS86V4/fwJ8W+9qWcOoe3KId85fyOTI0GvytdwHwdRpO3IL+
+        0FG0v6NodBHXd7wGgmLrewgYG7xEf20VC1A6FMgE=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 1582120723154112.79243865540991; Wed, 19 Feb 2020 21:58:43 +0800 (CST)
+Date:   Wed, 19 Feb 2020 21:58:43 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "yuanzhichang" <yuanzhichang@hisilicon.com>,
+        "johngarry" <john.garry@huawei.co>,
+        "xuwei5" <xuwei5@hisilicon.com>,
+        "gabrielepaoloni" <gabriele.paoloni@huawei.com>,
+        "bhelgaas" <bhelgaas@google.com>,
+        "andyshevchenko" <andy.shevchenko@gmail.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>
+Message-ID: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
+In-Reply-To: 
+Subject: Questions about logic_pio
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219140955.GA15569@b29397-desktop>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:09:54PM +0000, Peter Chen wrote:
-> On 20-02-19 15:38:15, Heikki Krogerus wrote:
-> > On Wed, Feb 19, 2020 at 01:58:38AM +0000, Peter Chen wrote:
-> > > On 20-02-18 14:25:45, Heikki Krogerus wrote:
-> > > > Hi,
-> > > > 
-> > > > On Tue, Feb 18, 2020 at 07:23:41AM +0000, Peter Chen wrote:
-> > > > > > > @@ -1118,6 +1119,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
-> > > > > > >  	}
-> > > > > > >  
-> > > > > > >  	if (ci_role_switch.fwnode) {
-> > > > > > > +		ci_role_switch.driver_data = ci;
-> > > > > > >  		ci->role_switch = usb_role_switch_register(dev,
-> > > > > > >  					&ci_role_switch);
-> > > > > 
-> > > > > Why the struct usb_role_switch_desc needs drvdata, the struct
-> > > > > usb_role_switch has already one?
-> > > > 
-> > > > I'm assuming that you are asking why not just register the switch,
-> > > > and then call usb_role_switch_set_drvdata(), right?
-> > > 
-> > > Yes.
-> > > 
-> > > > 
-> > > > That may create a race condition where the switch is accessed before
-> > > > the driver data is available. That can happen for example if the
-> > > > switch is exposed to the user space.
-> > > > 
-> > > > To play it safe, supplying the driver data as part of the descriptor.
-> > > > That way we can be sure that the driver data is always available
-> > > > the moment the switch is registered.
-> > > > 
-> > > 
-> > > Then, you may use the uniform way for the driver. Some may have
-> > > race condition like you said.
-> > 
-> > Uniform way for the driver?
-> > 
-> 
-> Sorry, unify way. Take chipidea and cdns3 as an example, at chipidea you
-> use struct usb_role_switch_desc
-> 
-> +               ci_role_switch.driver_data = ci;
->                 ci->role_switch = usb_role_switch_register(dev,
-> 			&ci_role_switch);
-> 
-> But at cdns3 side, you set usb_role_switch drvdata directly.
-> +       usb_role_switch_set_drvdata(cdns->role_sw, cdns);
-> 
-> But according to your comments, all the driver needs to use chipidea's
-> way to avoid race condition.
+Hi there,
 
-OK, I'll fix that.
+Logic PIO gives us a way to make indirect PIO access, however,
+the way it handles direct (MMIO) I/O access confused me.
 
-thanks,
+I was trying to create a PCI controller Driver and noticed that I/O range parsed
+from DeviceTree will be added to the Logic PIO range by logic_pio_register_range. 
+And than PCI subsystem will use the ioport obtained from `logic_pio_trans_cpuaddr`
+to allocate resources for the host bridge. In my case, the range added to the logic pio
+ was set as hw_start 0x4000, size 0x4000. Later, `logic_pio_trans_cpuaddr` called
+by `pci_address_to_pio` gives a ioport of 0x0, which is totally wrong.
 
--- 
-heikki
+After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
+for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
+cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
+equal to hw address, because there is no way to translate address from logic pio address
+to actual hw address in {in,out}{b,sb,w,sb,l,sl} operations.
+
+How this mechanism intends to work? What is the reason that we are trying to
+allocate a io_start for MMIO rather than take their hw_start ioport directly?
+
+Thanks. 
+
+--
+Jiaxun Yang
+
+
