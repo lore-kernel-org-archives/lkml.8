@@ -2,92 +2,81 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A84CC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43565C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E265A24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165022467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Swrz8HEM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUP4ZDsb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgBSSJ4 (ORCPT
+        id S1726760AbgBSSKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:09:56 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45935 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSSJ4 (ORCPT
+        Wed, 19 Feb 2020 13:10:00 -0500
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:38777 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSSJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:09:56 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so438743pfg.12;
-        Wed, 19 Feb 2020 10:09:56 -0800 (PST)
+        Wed, 19 Feb 2020 13:09:58 -0500
+Received: by mail-lf1-f48.google.com with SMTP id r14so860465lfm.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:09:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gUc6iYIu77GVSs+UtHNasOCjUTr8dlq5hQEQBI5NlhQ=;
-        b=Swrz8HEMPaydU4pD3iaNBxrYpyGjbEh9IVLjgYHtSjdepJEcwt2ElEwsEZAaU7UVCK
-         /LyNzRhfvrhBaGyzFHRlmd7PaQ7VKdWGh9cgoXCOEHqsX0mvjk946b8/ITR/N9ttaCiS
-         9BVMedNjTXVwS8XDypMsqVjgiaahK7aIQjr2JA6nrCiaASRcaBMMzZqj0YJJVfATYsbA
-         ueNX+P0KhlF7yl6h4yaXEVvcwYQ/Dm81RFzfwljfCqo7Q4VR8P1SCnxg07zEhkBlBdCH
-         ADab63L9LSCwk0qwOhvGkIMla2ozVbs7zFQfCOsSGXAlgoU1er9+rkhEG979XsegHah5
-         MRwQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BzO//zfGvvmDXWFrnnBIQSHTy0ns1CXRccR7GcbPRlo=;
+        b=JUP4ZDsbz/nmLgQNFKk7ZZas36mU5d/63thVdthtw/+JDzFZLmm9Vj+mqjzrSmschw
+         YeksJAFYmxokDcgysmGHTfXsO1dvAp4X3RkAM/LTau78Zl4JXaagptPoIM5sLuCnoR1/
+         6SVcUuwkb3URjB/vNyQs+ScYqRbjB5A3ZvCVU/WNFaQ6AZbCIuvu/d7zFsR+CHemuo/1
+         /J0m3A2dlLsN9LGRdWNnJLdcnekETD9HMfDuuRkUH/8KVdzir+9mXlGmaigPhZfexv3Q
+         kWqGXwKbEA1h1pOGvwi+PSsa885Ip0sRniQ8kS6jEBG7R1m3tD4vphMjWc3mC25hkdzu
+         /uhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gUc6iYIu77GVSs+UtHNasOCjUTr8dlq5hQEQBI5NlhQ=;
-        b=ia9Qp9cF89uGfB/SGO27b7Uis/V4YqreYFBVDV08LOyT9oMI5s6esYbko2I6Rf8RE2
-         UjDXD8o+2qOVPVYuAgqsXa0qbcnfj69jUVAS4IgrMmEpKe8Pu7RzRPfhBqV5I2A2KoVH
-         imenwJHra+gC3RLIvz3EFeqCI2zAIyMBHYTdK3Js+RYHn6aVt6qxlVUEKtKaonMZTelg
-         JqsjJXs2E42XVyylvje/F+YhhHRNjLNaN4eWjr5Bukk1ba75Sr04kgutYssaJeDthKaX
-         GZ5X/HmyPDO+N8DZicAvC2Ry2ZKvbdlkrnbbw/yBAqsqV/gx+/K1dpha5egmRSvsDKk/
-         jEgg==
-X-Gm-Message-State: APjAAAUJ7a4gYpSwacCWaNCBZhFey6s0nWuhMIuZ6tpX25qHbdlv8r8d
-        NDwlMWPvGc6SZacXMoMO2b0=
-X-Google-Smtp-Source: APXvYqy+W6yax+vaDQzK1opYCAm188MW+FPRGPCSop9w+xGOl1ftSD8ieYYtwzASs0xbXF/UwodmKg==
-X-Received: by 2002:a63:c304:: with SMTP id c4mr29775917pgd.85.1582135795851;
-        Wed, 19 Feb 2020 10:09:55 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x21sm290659pfq.76.2020.02.19.10.09.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Feb 2020 10:09:55 -0800 (PST)
-Date:   Wed, 19 Feb 2020 10:09:54 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 00/80] 5.5.5-stable review
-Message-ID: <20200219180954.GC26169@roeck-us.net>
-References: <20200218190432.043414522@linuxfoundation.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BzO//zfGvvmDXWFrnnBIQSHTy0ns1CXRccR7GcbPRlo=;
+        b=HOe2vD8Mly0u9jMDDHFbPYJ+194RK2Dnr1K6a5rb4KTuKhqeGZBrMViKyE2DB0hFJ7
+         Rcc4Bbu+RsV/EvhK1Q/9aADJzR68mFZd4mmMQb0HO4ez90EsCmu/hUXG3f3TxR2h/wyv
+         IVl/Qj7xQv1poCoNGW8cwfSrQ4Xd2GGscTP0fpuRpr07yeXZ/xvLxGfgdr1ucfyc3Euk
+         VX8CJruogegr7pxxuID2z9a9b7BJMQddfRFI5op0GToFYDytVyfLTJryAW7yfFeczb7v
+         EQCNWg6UxRG5KgnxKiiHv/QacoIqDP2gJJFq/uyrwIktwzwUJ9I/3LktS5rKTfL2FZJa
+         q3ew==
+X-Gm-Message-State: APjAAAVrdhEieJqbyNDAHIZGLq9KagR2t1jCoKKBuol6IGvmpxahz29l
+        wzTJqrDfpugpDyJd1Wq2rZ4=
+X-Google-Smtp-Source: APXvYqx/ns6qi730SvnAx7FkLa5GwKNXVqSyJ3M9ldEtC/E9MqH1QWbqSJudFSiqcFW6FXpQjYj21w==
+X-Received: by 2002:ac2:5596:: with SMTP id v22mr14129478lfg.200.1582135797136;
+        Wed, 19 Feb 2020 10:09:57 -0800 (PST)
+Received: from localhost.localdomain ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id 14sm183942lfz.47.2020.02.19.10.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 10:09:56 -0800 (PST)
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com
+Subject: PATCH v4
+Date:   Wed, 19 Feb 2020 20:08:53 +0200
+Message-Id: <20200219180858.4806-1-andrey.lebedev@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200210195633.GA21832@kedthinkpad>
+References: <20200210195633.GA21832@kedthinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218190432.043414522@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:54:21PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.5 release.
-> There are 80 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
-> Anything received after that time might be too late.
-> 
+Address all outstanding review comments.
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 412 pass: 412 fail: 0
+Maxime, please confirm I've got "document the new
+compatibles" part right.
 
-Guenter
+
