@@ -2,91 +2,175 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C9AC35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5276EC18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3346C24683
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33EB7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:45:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgBSTnh (ORCPT
+        id S1726734AbgBSTpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 14:45:45 -0500
+Received: from muru.com ([72.249.23.125]:56154 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgBSTnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:43:37 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42C84207FD;
-        Wed, 19 Feb 2020 19:43:35 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 14:43:33 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH 3/6] tracing: Wrap section comparison in
- tracer_alloc_buffers with COMPARE_SECTIONS
-Message-ID: <20200219144333.1ce3f9ea@gandalf.local.home>
-In-Reply-To: <20200219192249.GA8840@ubuntu-m2-xlarge-x86>
-References: <20200219045423.54190-1-natechancellor@gmail.com>
-        <20200219045423.54190-4-natechancellor@gmail.com>
-        <20200219093445.386f1c09@gandalf.local.home>
-        <CAKwvOdm-N1iX0SMxGDV5Vf=qS5uHPdH3S-TRs-065BuSOdKt1w@mail.gmail.com>
-        <20200219181619.GV31668@ziepe.ca>
-        <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
-        <20200219192249.GA8840@ubuntu-m2-xlarge-x86>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726634AbgBSTpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:45:45 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CC44580F3;
+        Wed, 19 Feb 2020 19:46:27 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 11:45:40 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: [PATCH] backlight: add led-backlight driver
+Message-ID: <20200219194540.GD37466@atomide.com>
+References: <20200219191412.GA15905@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219191412.GA15905@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 12:22:49 -0700
-Nathan Chancellor <natechancellor@gmail.com> wrote:
-
-> Yes, thank you for the analysis and further discussion! I have done some
-> rudimentary printk debugging in QEMU and it looks like these are produce
-> the same value:
+* Pavel Machek <pavel@ucw.cz> [200219 19:15]:
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > 
-> __stop___trace_bprintk_fmt
-> &__stop___trace_bprintk_fmt
-> &__start___trace_bprintk_fmt[0]
+> This patch adds a led-backlight driver (led_bl), which is similar to
+> pwm_bl except the driver uses a LED class driver to adjust the
+> brightness in the HW. Multiple LEDs can be used for a single backlight.
 > 
-> as well as
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> ---
+>  drivers/video/backlight/Kconfig  |   7 ++
+>  drivers/video/backlight/Makefile |   1 +
+>  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 268 insertions(+)
+>  create mode 100644 drivers/video/backlight/led_bl.c
 > 
-> __stop___trace_bprintk_fmt != __start___trace_bprintk_fmt
-> &__stop___trace_bprintk_fmt != &__start___trace_bprintk_fmt
-> &__stop___trace_bprintk_fmt[0] != &__start___trace_bprintk_fmt[0]
+> Hi!
 > 
-> I'll use the second one once I confirm this is true in all callspots
-> with both Clang and GCC, since it looks cleaner. Let me know if there
-> are any objections to that.
+> Here's the version of the driver I have. AFAICT
+> default-brightness-level handling is ok, so does not need to be
+> changed.
+> 
+> Lee, it would be easiest for me if you could apply it to your tree and
+> push, but given enough time I can push it to Linus, too.
 
-Myself and I'm sure others would be fine with this approach as it is
-still readable. I was just against the encapsulating the logic in a
-strange macro that killed readability.
+Oh you're using quoted-printable for patches.. Got it applied now,
+and it still works. Below is also the related dts change that
+I tested with.
 
-I haven't looked at the resulting assembly from these, and will
-currently take your word for it ;-)  Of course, I will thoroughly test
-any patches to this code to make sure it does not hurt functionality.
+Feel free to pick the dts change too, naturally that should
+not be applied before the driver.
 
--- Steve
+If you guys instead want me to pick these both into my fixes
+branch, just let me know and I'll do the explaining why these
+are needed as fixes. Basically we no longer have a way to enable
+the LCD backlight for droid4 manually starting with v5.6-rc1
+unlike earlier.
+
+Regards,
+
+Tony
+
+8< ------------------
+From tony Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony@atomide.com>
+Date: Wed, 19 Feb 2020 11:25:27 -0800
+Subject: [PATCH] ARM: dts: droid4: Configure LED backlight for lm3532
+
+With the LED backlight changes merged, we still need the dts configured
+to have backlight working for droid4. Based on an earlier patch from
+Pavel Machek <pavel@ucw.cz>, let's configure the backlight but update
+the value range to be more usable.
+
+We have a range of 256 register values split into 8 steps, so we can
+generate the brightness levels backwards with:
+
+$ for i in 0 1 2 3 4 5 6 7; do echo "255 - ${i} * (256 / 8)" | bc; done
+
+To avoid more confusion why the LCD backlight is still not on, let's
+also enable LED backlight as a loadable module for omap2plus_defconfig.
+
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/motorola-mapphone-common.dtsi | 13 +++++++++++--
+ arch/arm/configs/omap2plus_defconfig            |  1 +
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+--- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
++++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
+@@ -182,6 +182,14 @@ vibrator {
+ 		pwm-names = "enable", "direction";
+ 		direction-duty-cycle-ns = <10000000>;
+ 	};
++
++	backlight: backlight {
++		compatible = "led-backlight";
++
++		leds = <&backlight_led>;
++		brightness-levels = <31 63 95 127 159 191 223 255>;
++		default-brightness-level = <6>;
++	};
+ };
+ 
+ &dss {
+@@ -205,6 +213,8 @@ lcd0: display {
+ 		vddi-supply = <&lcd_regulator>;
+ 		reset-gpios = <&gpio4 5 GPIO_ACTIVE_HIGH>;	/* gpio101 */
+ 
++		backlight = <&backlight>;
++
+ 		width-mm = <50>;
+ 		height-mm = <89>;
+ 
+@@ -393,12 +403,11 @@ led-controller@38 {
+ 		ramp-up-us = <1024>;
+ 		ramp-down-us = <8193>;
+ 
+-		led@0 {
++		backlight_led: led@0 {
+ 			reg = <0>;
+ 			led-sources = <2>;
+ 			ti,led-mode = <0>;
+ 			label = ":backlight";
+-			linux,default-trigger = "backlight";
+ 		};
+ 
+ 		led@1 {
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -375,6 +375,7 @@ CONFIG_BACKLIGHT_GENERIC=m
+ CONFIG_BACKLIGHT_PWM=m
+ CONFIG_BACKLIGHT_PANDORA=m
+ CONFIG_BACKLIGHT_GPIO=m
++CONFIG_BACKLIGHT_LED=m
+ CONFIG_FRAMEBUFFER_CONSOLE=y
+ CONFIG_FRAMEBUFFER_CONSOLE_ROTATION=y
+ CONFIG_LOGO=y
+-- 
+2.25.1
