@@ -2,106 +2,87 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B349C18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58BBC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0225C207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:51:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYk0BubJ"
+	by mail.kernel.org (Postfix) with ESMTP id B7682208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBSTvG (ORCPT
+        id S1726760AbgBSTw6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:51:06 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43014 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSTvG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:51:06 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p11so489878plq.10;
-        Wed, 19 Feb 2020 11:51:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=M4zKKP2Q/R2OqgXmQC7JNNxIqu37zs1Y9dnrMmNhKok=;
-        b=kYk0BubJtysEMvnnNMFVM2IeGCr/Ru/1kfwbbHPBOBzi4yZrxwxByDP6WsdcN/Vx+O
-         L+WCpjbRy+2EKKAygOeHsRw/f6pdNP/RIvO3BeCvi+bP2TjPUZ7+GeMXjAvXQlICZoy/
-         OevfqzKOx6/eAovyMtu7G/oDqXc2UWTZb1mlsBNgTlTfPOM8udclGqbaVeXqeR6KhAyC
-         m8M5f5wPFgloka5Xu0Qop9wSSZtctnLXyxEFZXECtLslg9qYcj8dJuY2ghZZc+Fc2ay5
-         kChYlnafdEFyX0ptn61peDksV2Xh+QgWDN+z0XWbhmcfmbDJ+Eglc+yfSLJZxj4wa+nK
-         prNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=M4zKKP2Q/R2OqgXmQC7JNNxIqu37zs1Y9dnrMmNhKok=;
-        b=ow4Juqku5Xss4S8WiM/Jp5zg98FmJ/POirhNGYsjMeU81HvawVZcbcJr6lqzftV9qH
-         k0V7xuEuh/gB1vpFul8YDe0nDGRznjPCXDVxKoFgoUL1yURyLljnNI2kTdkmts6oZW2m
-         LdBlM1JD5GWGOpUIWAjbsC93Y/wRRXVngmvhLtIl/QU5XReDeHtuPl+u9Gk2arASKW+3
-         py81aPg1yoNjeh60S0MKlHgOVquBuJWB6kjcqqcNjlH1E9jYYGyjNg2QV7b+fKbpMXP4
-         F59bxJU7efbRWWvYcLFYzOGxLCZ0n4ktwWDswpqZtgX5EMAWBgoK2jRWzhXRoHGsp8Fg
-         9RJg==
-X-Gm-Message-State: APjAAAUaC6eZ1qn/p1lFhuFzjP6TfmyFR2ezF9ezsoF07hmpMmOUBAwZ
-        xWJQhCPVgJxRrmUqO4n5MTol9c7aUUHxq1vT5Hg=
-X-Google-Smtp-Source: APXvYqzWKZoMXWkNrbnA1iDHd6g69T2x4VPoAwG/SDYVlx1df4kBzSZPdGZCwUj1t8upq1pqlBurbpQO9aN3F7v2m8U=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr11000285pjq.132.1582141865462;
- Wed, 19 Feb 2020 11:51:05 -0800 (PST)
+        Wed, 19 Feb 2020 14:52:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbgBSTw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:52:58 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67EC4208C4;
+        Wed, 19 Feb 2020 19:52:57 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 14:52:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     <zhe.he@windriver.com>
+Cc:     <acme@redhat.com>, <tstoyanov@vmware.com>,
+        <hewenliang4@huawei.com>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tools lib traceevent: Take care of return value of
+ asprintf
+Message-ID: <20200219145256.02a92ad8@gandalf.local.home>
+In-Reply-To: <1581686481-180476-1-git-send-email-zhe.he@windriver.com>
+References: <1581686481-180476-1-git-send-email-zhe.he@windriver.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200213091600.554-1-uwe@kleine-koenig.org> <20200213091600.554-2-uwe@kleine-koenig.org>
-In-Reply-To: <20200213091600.554-2-uwe@kleine-koenig.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Feb 2020 21:50:54 +0200
-Message-ID: <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:27 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.o=
-rg> wrote:
->
-> This function is in the same spirit as the other kstrto* functions and
-> uses the same calling convention. It expects the input string to be in
-> the format %u:%u and implements stricter parsing than sscanf as it
-> returns an error on trailing data (other than the usual \n).
+On Fri, 14 Feb 2020 21:21:21 +0800
+<zhe.he@windriver.com> wrote:
 
-Can we first split the kstrotox* (and simple_strto*) to the separate
-header first?
+> From: He Zhe <zhe.he@windriver.com>
+> 
+> According to the API, if memory allocation wasn't possible, or some other
+> error occurs, asprintf will return -1, and the contents of strp below are
+> undefined.
+> 
+> int asprintf(char **strp, const char *fmt, ...);
+> 
+> This patch takes care of return value of asprintf to make it less error
+> prone and prevent the following build warning.
+> 
+> ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
+> 
+> Signed-off-by: He Zhe <zhe.he@windriver.com>
+> ---
+> v2: directly check the return value without saving to a variable
+> 
+>  tools/lib/traceevent/parse-filter.c | 35 +++++++++++++++++++++--------------
+>  1 file changed, 21 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+> index 20eed71..6cd0228 100644
+> --- a/tools/lib/traceevent/parse-filter.c
+> +++ b/tools/lib/traceevent/parse-filter.c
+> @@ -274,8 +274,7 @@ find_event(struct tep_handle *tep, struct event_list **events,
+>  		sys_name = NULL;
+>  	}
+>  
+> -	ret = asprintf(&reg, "^%s$", event_name);
+> -	if (ret < 0)
+> +	if (asprintf(&reg, "^%s$", event_name) < 0)
 
-On top of that, why kstrtodev_t is so important? How many users are
-already in the kernel to get an advantage out of it?
-What to do with all other possible variants ("%d:%d", "%dx%d" and its
-%u variant, etc)?
+I know Arnaldo said you don't need to save the return value for the
+check, but let's just modify the asprintf() that needs checking, and
+not remove those that already save it.
 
-Why simple_strto*() can't be used?
+Thanks!
 
->  #include <linux/export.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
+-- Steve
 
-> +#include <linux/kdev_t.h>
-
-Perhaps preserve order? (It's for the future, since I doubt we will
-get this in upstream anyway).
-
---=20
-With Best Regards,
-Andy Shevchenko
