@@ -2,99 +2,131 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBACC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 928EEC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EA220578
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:22:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582132923;
-	bh=Yn/+34fvZYH5l3fOZqUmD6Kr2SuPFwwBXj14MLQvIM8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZcrDntBK7qxbfro/++kh/uEPILs+kRGPLLSSZ+RTXLuxMHSf6IlfG6T1/xBDCeyD/
-	 7cHaA7NyFObKzdvZy2oIJPrILq8ZO5+ZTfgx+LZZXtWSkHlvu/1KEN76Ud3iopaLqW
-	 RbLTbsQWDKzASXy0DL4umnUamsUitUo5mlFxFZLs=
+	by mail.kernel.org (Postfix) with ESMTP id 76D2C20578
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBSRWC (ORCPT
+        id S1726754AbgBSRWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:22:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSRWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:22:02 -0500
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7589F24681
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 17:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582132921;
-        bh=Yn/+34fvZYH5l3fOZqUmD6Kr2SuPFwwBXj14MLQvIM8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JtJtTo8o0HAJsOZIdAMmqcvG/sAz9Ul5OsGboMOA0G+WddDrzl+XprSfsoneDg/85
-         TiHp1clAwU/AiBK3Fs4wUTh0Pog/C6lUOAVPsls+/p1Z07LLIEPLS2ltb46M7nFRop
-         ZAYDxkltDJswLXJXLadLMLAqrRBe1uE6lmGejnr0=
-Received: by mail-wm1-f41.google.com with SMTP id a5so1556846wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:22:01 -0800 (PST)
-X-Gm-Message-State: APjAAAU7hMDTrLkG0F6Wb4WuSFJGZnrQTiPX3tSk4gsaLnCd0YB/Tt5O
-        obdr2OKIyw+vjZ79fgJYCTh6lbMuyhQ1DK9kNeHONA==
-X-Google-Smtp-Source: APXvYqxaMCnOp9eEFB/pgZJKHCYo9pXwEVYibCsXO5wpOBypeyOO1/bfgd2YRs5gxUOPj25rw/PfQIj/zksmb0elXus=
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr11329215wml.138.1582132919822;
- Wed, 19 Feb 2020 09:21:59 -0800 (PST)
+        Wed, 19 Feb 2020 12:22:19 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39019 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSRWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:22:18 -0500
+X-Originating-IP: 93.34.114.233
+Received: from uno.localdomain (93-34-114-233.ip49.fastwebnet.it [93.34.114.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id C7D0DFF80A;
+        Wed, 19 Feb 2020 17:22:12 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 18:24:56 +0100
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Michael Rodin <mrodin@de.adit-jv.com>
+Cc:     niklas.soderlund@ragnatech.se, mchehab@kernel.org,
+        p.zabel@pengutronix.de, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
+        sudipi@jp.adit-jv.com, akiyama@nds-osk.co.jp
+Subject: Re: [PATCH] [RFC] media: rcar-vin: don't wait for stop state on
+ clock lane during start of CSI2
+Message-ID: <20200219172456.hyo2aksvubxpoqrn@uno.localdomain>
+References: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
 MIME-Version: 1.0
-References: <20200219144724.800607165@infradead.org> <20200219150744.488895196@infradead.org>
- <20200219171309.GC32346@zn.tnic>
-In-Reply-To: <20200219171309.GC32346@zn.tnic>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 19 Feb 2020 09:21:48 -0800
-X-Gmail-Original-Message-ID: <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
-Message-ID: <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
-Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jvjmcxubogualhde"
+Content-Disposition: inline
+In-Reply-To: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:13 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Feb 19, 2020 at 03:47:26PM +0100, Peter Zijlstra wrote:
-> > Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
->
-> x86/mce: ...
->
-> > It is an abomination; and in prepration of removing the whole
-> > ist_enter() thing, it needs to go.
-> >
-> > Convert #MC over to using task_work_add() instead; it will run the
-> > same code slightly later, on the return to user path of the same
-> > exception.
->
-> That's fine because the error happened in userspace.
 
-Unless there is a signal pending and the signal setup code is about to
-hit the same failed memory.  I suppose we can just treat cases like
-this as "oh well, time to kill the whole system".
+--jvjmcxubogualhde
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-But we should genuinely agree that we're okay with deferring this handling.
+Hello,
+
+On Tue, Feb 18, 2020 at 12:44:11PM +0100, Michael Rodin wrote:
+> The chapter 7.1 "D-PHY Physical Layer Option" of the CSI2 specification
+> states that non-continuous clock behavior is optional, i.e. the Clock Lane
+> can remain in high-speed mode between the transmission of data packets.
+> Therefore waiting for the stop state (LP-11) on the Clock Lane is wrong and
+> will cause timeouts when a CSI2 transmitter with continuous clock behavior
+> is attached to R-Car CSI2 receiver. So wait only for the stop state on the
+> Data Lanes.
+
+Am I wrong or the desired behaviour should depend on the presence of
+the clock-noncontinuous property in the CSI-2 input endpoint ?
+If clock-noncontinuous is set, then wait for the clock lane to
+enter stop state too, if not just wait for the data lanes to stop.
+
+If this is correct, it will also require a change to the bindings and
+that's the tricky part. So far the CSI-2 receiver behaved as the
+clock-noncontinuous property was set (wait for both data and clock
+lanes) and older dtb should continue to work under this assumption. If
+you want to support devices with continuous clock then you have to require
+the clock-noncontinuous property to be explicitly set to false, and
+assume it's true if not specified. BUT clock-noncontinuous is a
+boolean property, whose value depends on it's presence only. So I fear
+we need to add a 'clock-continuous' flag to video-interfaces.txt,
+parse it in the CSI-2 receiver driver, and then ignore the clock lane
+stop state if and only if said property is specified.
+
+Does this make sense ?
+
+Thanks
+   j
+
+>
+> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index faa9fb2..6d1992a 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -416,8 +416,7 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+>  	for (timeout = 0; timeout <= 20; timeout++) {
+>  		const u32 lane_mask = (1 << priv->lanes) - 1;
+>
+> -		if ((rcsi2_read(priv, PHCLM_REG) & PHCLM_STOPSTATECKL)  &&
+> -		    (rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
+> +		if ((rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
+>  			return 0;
+>
+>  		usleep_range(1000, 2000);
+> --
+> 2.7.4
+>
+
+--jvjmcxubogualhde
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl5Nb2gACgkQcjQGjxah
+VjxTwA/+M8267lFucyowW2LpnMiSjwueQTHQySaNv+2/1++rFkymfQFdYVRwmi1s
+aEEeArjKkyZg8GQYnbXIPD2GDJygStJ69nqFKhmxsTuNSufHUaHG5ejrVz0IkI8e
+pd+eqMOGPp29eHUESTLiIfNDiGM80Xhn+zs6w5Gf1bzybwOpWzMqaVBUiE2DC3Kd
+f4ETr/luVYtCbmzXdgh1TAQ4lPkz93pS3EBp2AS4wNXpA+G+JSok4qnj7B3noVBi
+RBeraL/Ca718dlnq5tZCd+eycIlERQTgSir+ZzDATmrzwN+q5WOCqlrmwaUMh9VF
+FAWQyRLfGWOT9bo+lcnQ2RjpVbF7OvmkesiY0DsR8+btENIhpjuMuuAvI3TSQEBX
+rC9hYyaPicd4V4hjeVfOGduadjIq8qJ/iOIzWmOemA4XhIv3KAySbOqNuA6ejVRM
+3JntotjuknCM3HyWEfwdIFnlV2r2keZ0gqhcwG9Sg4a2sXTAQnSiIz781uETE/AH
+gPS1xJsJ+pDvM3g7/WEYI/tad7roEWkHBROkudu0JUOcYzzYnIi6zaISsAWQeyGA
+x5/bYSKOyiVYWV/s2ckbAhiAK37YZXGFOKs1ByLgvKt13xmtSy9UmLkJBq3kCvXv
+fsE0WfNjkaFVFLM3H2w0wyzMfcmB+fK853U0lbyjtl4N1NbLBaU=
+=mPQD
+-----END PGP SIGNATURE-----
+
+--jvjmcxubogualhde--
