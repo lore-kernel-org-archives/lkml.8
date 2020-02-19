@@ -2,131 +2,72 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF46C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135E9C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 782CD24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUJdLC5h"
+	by mail.kernel.org (Postfix) with ESMTP id EB1FC24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgBSSAM (ORCPT
+        id S1726700AbgBSSAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:00:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37088 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSSAL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:00:11 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a6so1673128wme.2;
-        Wed, 19 Feb 2020 10:00:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wh9nIcj0w2M3FqQot+njucHn0Ra0ZI6Wx7pQ2i4JMoY=;
-        b=HUJdLC5hopKYknC4eZLjSnebhG/JcwdeTl3Xb5S6oKAqHmzxMjL00GkwJpHWhibfAS
-         5X//CwXj0lCgW2hszTgKl1wgOgNJqU8yRvBb+K0UPYC2XWghy31Ob/rzOxrm5SPIBZgK
-         rZuMJtRzlwEG2e/EsEforx/60C+nVb4BIjE1/zxhyyk7dcmoOLx9twQ2+dLv3ovAUDZk
-         XTwGCDrxKvTgivsXyU007uY7gNFao085ZI1nJZKNTuNOn+BEQ+voSgqF7LFwBn8ppgdB
-         4TsIaF/O4RLjAiLWr6jLtI7SonSaeqXpValX1FqtQZ8Iam46oaCY+aW4dsCFXLXdKeXL
-         LULQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wh9nIcj0w2M3FqQot+njucHn0Ra0ZI6Wx7pQ2i4JMoY=;
-        b=IwC/eeUgLD5uQHjmTzv9ELcN96yipgasmp0tfjcJLFTdAx+fKKxFa/okm0jttOuJgI
-         Vjb1S02I53Het5C4aQVjbq8EjFwRybGR1buLCYfWcRdhLNd+F+RlwQ4aqPFmvbr3Zw8I
-         xX5LXu2b5NHDUzHFTucF6ZaRB/p6X2HhlDT9lTA0v54ABgvS3MX4pXkJf2gqWZz2yp9X
-         1q7v2AOHMtHgIfk69m6u2dAvFlDlp6LP/fynxaD6ZUEZWnkdvkV+/9qFKsv5L5t5BSXW
-         cdIhR+RocnGPZeDpys9z0hD5O2vKb9p81G48SE816eDkzZ//56MfraP3xiRstisdTVHL
-         y+vg==
-X-Gm-Message-State: APjAAAXUL8NiCVdBQqTJxaMKhGgKGO+mcGN+vggzf3V4l+zYRNDMpQjO
-        O10gVCpFOxNolce3+m+j4S0=
-X-Google-Smtp-Source: APXvYqwWSiOJ5tvblLJlOInc5jk1+KI712XO9RsPsQ8tcWz2r4+JQJ9HYITKEe0Hd1mulV68sNDT6Q==
-X-Received: by 2002:a1c:7915:: with SMTP id l21mr10859413wme.112.1582135209882;
-        Wed, 19 Feb 2020 10:00:09 -0800 (PST)
-Received: from Ansuel-XPS.localdomain ([5.170.105.173])
-        by smtp.googlemail.com with ESMTPSA id v5sm674946wrv.86.2020.02.19.10.00.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 10:00:09 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Ram Chandra Jangir <rjangir@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ipq8064: pinctrl: Fixed missing RGMII pincontrol definitions
-Date:   Wed, 19 Feb 2020 18:59:39 +0100
-Message-Id: <20200219175940.744-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 13:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54892 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgBSSAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:00:15 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D502024656;
+        Wed, 19 Feb 2020 18:00:13 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 13:00:12 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 13/22] tracing: Remove regular RCU context for
+ _rcuidle tracepoints (again)
+Message-ID: <20200219130012.116670fd@gandalf.local.home>
+In-Reply-To: <20200219174025.GJ2935@paulmck-ThinkPad-P72>
+References: <20200219144724.800607165@infradead.org>
+        <20200219150745.125119627@infradead.org>
+        <20200219164356.GB2935@paulmck-ThinkPad-P72>
+        <20200219164736.GL18400@hirez.programming.kicks-ass.net>
+        <20200219170507.GH14946@hirez.programming.kicks-ass.net>
+        <20200219122116.7aeaf230@gandalf.local.home>
+        <20200219174025.GJ2935@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing gpio definition for mdio and rgmii2.
+On Wed, 19 Feb 2020 09:40:25 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Signed-off-by: Ram Chandra Jangir <rjangir@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- drivers/pinctrl/qcom/pinctrl-ipq8064.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> > Correct, and if rcuidle is not set, and this is a macro, the SRCU
+> > portion is compiled out.  
+> 
+> Sigh!  Apologies for the noise!
+> 
+> If we are using SRCU, we don't care whether or not RCU is watching.  OK,
+> maybe finally catching up -- the whole point was use of RCU in other
+> tracing code, wasn't it?
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-index c2fb1ddf2f22..ac717ee38416 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
-@@ -299,7 +299,7 @@ static const char * const gpio_groups[] = {
- };
- 
- static const char * const mdio_groups[] = {
--	"gpio0", "gpio1", "gpio10", "gpio11",
-+	"gpio0", "gpio1", "gpio2", "gpio10", "gpio11", "gpio66",
- };
- 
- static const char * const mi2s_groups[] = {
-@@ -403,8 +403,8 @@ static const char * const usb2_hsic_groups[] = {
- };
- 
- static const char * const rgmii2_groups[] = {
--	"gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
--	"gpio51", "gpio52", "gpio59", "gpio60", "gpio61", "gpio62",
-+	"gpio2", "gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
-+	"gpio51", "gpio52", "gpio59", "gpio60", "gpio61", "gpio62", "gpio66",
- };
- 
- static const char * const sata_groups[] = {
-@@ -539,7 +539,7 @@ static const struct msm_function ipq8064_functions[] = {
- static const struct msm_pingroup ipq8064_groups[] = {
- 	PINGROUP(0, mdio, NA, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(1, mdio, NA, NA, NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(2, gsbi5_spi_cs3, NA, NA, NA, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(2, gsbi5_spi_cs3, rgmii2, mdio, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(3, pcie1_rst, pcie1_prsnt, pdm, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(4, pcie1_pwren_n, pcie1_pwren, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(5, pcie1_clk_req, pcie1_pwrflt, NA, NA, NA, NA, NA, NA, NA, NA),
-@@ -603,7 +603,7 @@ static const struct msm_pingroup ipq8064_groups[] = {
- 	PINGROUP(63, pcie3_rst, NA, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(64, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(65, pcie3_clk_req, NA, NA, NA, NA, NA, NA, NA, NA, NA),
--	PINGROUP(66, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
-+	PINGROUP(66, rgmii2, mdio, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(67, usb2_hsic, NA, NA, NA, NA, NA, NA, NA, NA, NA),
- 	PINGROUP(68, usb2_hsic, NA, NA, NA, NA, NA, NA, NA, NA, NA),
- 	SDC_PINGROUP(sdc3_clk, 0x204a, 14, 6),
--- 
-2.25.0
+Some callbacks (namely perf) might use RCU, but then the callbacks
+need to make sure rcu is watching.
 
+-- Steve
