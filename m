@@ -2,121 +2,172 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11C4C3404C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE37DC34031
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96D1C2173E
+	by mail.kernel.org (Postfix) with ESMTP id BDF0E24655
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IzhUosfr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgBSA67 (ORCPT
+        id S1727762AbgBSA7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:58:59 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40420 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgBSA66 (ORCPT
+        Tue, 18 Feb 2020 19:59:23 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:53932 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726482AbgBSA7W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:58:58 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y1so8808611plp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:58:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gnHrGjs2d4rz7O5tZjdzLtL+/TxZSgxldIF3J/GkKZs=;
-        b=IzhUosfrcEGWqNX3mEcMBIr1zOOchilV9ewuFD+HoG5ciFAxqXbB4J+beO2BpkVdd2
-         SpEpavUmfa3Uu83TMZyvYqjzM1rYC38XzZ6PgxBVtweceDQ65TXzBQcjSOeXX0zJL559
-         DAcpGs9S0QzkDBHDXRYSuTfPTPAw54Oj19kC8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gnHrGjs2d4rz7O5tZjdzLtL+/TxZSgxldIF3J/GkKZs=;
-        b=RaQ9jMwkCVvQAUMWcLTxKMR2GeWgft/ne/T+FBm9X5PyQNBsRA4lM5kg84aFnghypS
-         TfPY5jbHTdlpZFgSKqRMmyr4vIeJoXjopbGIdt9bDEfhbVPKmwZyYvHI3+QfPraEezgR
-         0G41YiAlUlELnGXyYtZxUeJY8dCAo20L+iRf2VGJVeA4D3Us33G75tzrrt646EknCAHM
-         IChbW3Ny8iIaZk1yHxiNueD/j5iaXAOcIVCTSAqJRPzjTeY7JSdQ01wB0Z3QzwHG3NI0
-         z7PH+zx1z5aYkc0i20kOBgAxV7F36PLrpth5gWzAkObBPP8a0Eq+MkNv1rlYfl28KXY0
-         TH4Q==
-X-Gm-Message-State: APjAAAW4Dgipzh5qWYYVN2pdbgQzXFYCe+gV5XxJqPYgZw87FI1Mxr/R
-        2QucJMhdwAyT1aScNpueh5Hi1w==
-X-Google-Smtp-Source: APXvYqyyUVqi0udPEq0kk+xXnOiXAZrDL6nmRuPiWdSBtQVB+Zr5mfeTFPLXXkm6NSzwKNuLtifp4A==
-X-Received: by 2002:a17:902:7244:: with SMTP id c4mr21514780pll.49.1582073937923;
-        Tue, 18 Feb 2020 16:58:57 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m18sm155133pgd.39.2020.02.18.16.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 16:58:57 -0800 (PST)
-Date:   Tue, 18 Feb 2020 16:58:56 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com,
-        Dave Martin <Dave.Martin@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 12/12] efi/libstub: disable SCS
-Message-ID: <202002181658.45F66E21F@keescook>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200219000817.195049-1-samitolvanen@google.com>
- <20200219000817.195049-13-samitolvanen@google.com>
+        Tue, 18 Feb 2020 19:59:22 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 368A83A2380;
+        Wed, 19 Feb 2020 11:59:16 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4Dhr-0004cn-HF; Wed, 19 Feb 2020 11:59:15 +1100
+Date:   Wed, 19 Feb 2020 11:59:15 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
+Message-ID: <20200219005915.GV10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-12-willy@infradead.org>
+ <20200218061459.GM10776@dread.disaster.area>
+ <20200218154222.GQ7778@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219000817.195049-13-samitolvanen@google.com>
+In-Reply-To: <20200218154222.GQ7778@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=vUdR-S3ouboEXt6xVngA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:08:17PM -0800, Sami Tolvanen wrote:
-> Disable SCS for the EFI stub and allow x18 to be used.
+On Tue, Feb 18, 2020 at 07:42:22AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:14:59PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:45:52AM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > At allocation time, put the pages in the cache unless we're using
+> > > ->readpages.  Add the readahead_for_each() iterator for the benefit of
+> > > the ->readpage fallback.  This iterator supports huge pages, even though
+> > > none of the filesystems to be converted do yet.
+> > 
+> > This could be better written - took me some time to get my head
+> > around it and the code.
+> > 
+> > "When populating the page cache for readahead, mappings that don't
+> > use ->readpages need to have their pages added to the page cache
+> > before ->readpage is called. Do this insertion earlier so that the
+> > pages can be looked up immediately prior to ->readpage calls rather
+> > than passing them on a linked list. This early insert functionality
+> > is also required by the upcoming ->readahead method that will
+> > replace ->readpages.
+> > 
+> > Optimise and simplify the readpage loop by adding a
+> > readahead_for_each() iterator to provide the pages we need to read.
+> > This iterator also supports huge pages, even though none of the
+> > filesystems have been converted to use them yet."
 > 
-> Suggested-by: James Morse <james.morse@arm.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--Kees
-
-> ---
->  drivers/firmware/efi/libstub/Makefile | 3 +++
->  1 file changed, 3 insertions(+)
+> Thanks, I'll use that.
 > 
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 98a81576213d..dff9fa5a3f1c 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -30,6 +30,9 @@ KBUILD_CFLAGS			:= $(cflags-y) -DDISABLE_BRANCH_PROFILING \
->  				   $(call cc-option,-fno-stack-protector) \
->  				   -D__DISABLE_EXPORTS
->  
-> +#  remove SCS flags from all objects in this directory
-> +KBUILD_CFLAGS := $(filter-out -ffixed-x18 $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
-> +
->  GCOV_PROFILE			:= n
->  KASAN_SANITIZE			:= n
->  UBSAN_SANITIZE			:= n
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
+> > > +static inline struct page *readahead_page(struct readahead_control *rac)
+> > > +{
+> > > +	struct page *page;
+> > > +
+> > > +	if (!rac->_nr_pages)
+> > > +		return NULL;
+> > 
+> > Hmmmm.
+> > 
+> > > +
+> > > +	page = xa_load(&rac->mapping->i_pages, rac->_start);
+> > > +	VM_BUG_ON_PAGE(!PageLocked(page), page);
+> > > +	rac->_batch_count = hpage_nr_pages(page);
+> > 
+> > So we could have rac->_nr_pages = 2, and then we get an order 2
+> > large page returned, and so rac->_batch_count = 4.
 > 
+> Well, no, we couldn't.  rac->_nr_pages is incremented by 4 when we add
+> an order-2 page to the readahead.
 
+I don't see any code that does that. :)
+
+i.e. we aren't actually putting high order pages into the page
+cache here - page_alloc() allocates order-0 pages) - so there's
+nothing in the patch that tells me how rac->_nr_pages behaves
+when allocating large pages...
+
+IOWs, we have an undocumented assumption in the implementation...
+
+> I can put a
+> 	BUG_ON(rac->_batch_count > rac->_nr_pages)
+> in here to be sure to catch any logic error like that.
+
+Definitely necessary given that we don't insert large pages for
+readahead yet. A comment explaining the assumptions that the
+code makes for large pages is probably in order, too.
+
+> > > -		page->index = offset;
+> > > -		list_add(&page->lru, &page_pool);
+> > > +		if (use_list) {
+> > > +			page->index = offset;
+> > > +			list_add(&page->lru, &page_pool);
+> > > +		} else if (add_to_page_cache_lru(page, mapping, offset,
+> > > +					gfp_mask) < 0) {
+> > > +			put_page(page);
+> > > +			goto read;
+> > > +		}
+> > 
+> > Ok, so that's why you put read code at the end of the loop. To turn
+> > the code into spaghetti :/
+> > 
+> > How much does this simplify down when we get rid of ->readpages and
+> > can restructure the loop? This really seems like you're trying to
+> > flatten two nested loops into one by the use of goto....
+> 
+> I see it as having two failure cases in this loop.  One for "page is
+> already present" (which already existed) and one for "allocated a page,
+> but failed to add it to the page cache" (which used to be done later).
+> I didn't want to duplicate the "call read_pages()" code.  So I reshuffled
+> the code rather than add a nested loop.  I don't think the nested loop
+> is easier to read (we'll be at 5 levels of indentation for some statements).
+> Could do it this way ...
+
+Can we move the update of @rac inside read_pages()? The next
+start offset^Windex we start at is rac._start + rac._nr_pages, right?
+
+so read_pages() could do:
+
+{
+	if (readahead_count(rac)) {
+		/* do readahead */
+	}
+
+	/* advance the readahead cursor */
+	rac->_start += rac->_nr_pages;
+	rac._nr_pages = 0;
+}
+
+and then we only need to call read_pages() in these cases and so
+the requirement for avoiding duplicating code is avoided...
+
+Cheers,
+
+Dave.
 -- 
-Kees Cook
+Dave Chinner
+david@fromorbit.com
