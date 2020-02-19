@@ -2,77 +2,84 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D40C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C70D9C3405E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92D2320801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A098F20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0bVDSlA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wCVKJi1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBSRXP (ORCPT
+        id S1726647AbgBSRZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:23:15 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:36028 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgBSRXO (ORCPT
+        Wed, 19 Feb 2020 12:25:57 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34576 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSRZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:23:14 -0500
-Received: by mail-il1-f196.google.com with SMTP id b15so21224793iln.3;
-        Wed, 19 Feb 2020 09:23:14 -0800 (PST)
+        Wed, 19 Feb 2020 12:25:56 -0500
+Received: by mail-ua1-f68.google.com with SMTP id 1so507299uao.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:25:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zGngLDQbpsAufC+vN/662a3UH3A2uSByCjnMwkjEXbU=;
-        b=K0bVDSlAeZ+cV8BYIIlNBAokck4JA7othBQVjHjqgahBKM6hvMLrRxc8Pvp6HQogaE
-         p5LYexw+7R2VD14Z7tmNlG2asjlNh/tQArz1bDsvfYQX3f8z3fVqSDJBsSdD3cOrcm1q
-         JLNOn6NukaONTWjQtgYqMSx7lJS+cvsvcfo/OuM1WdS3UjY81/5PBes+O11p/ve9o114
-         CVZjR9eXjEDRKVSWW4xa3V/3gicfYeqLTckvdhAKPhaFIV/hmkwN/StbztV40KrzfrJW
-         ni3pvhrX95urbSUZfYcxUma4bO442+wjM6WSHHTJ4NgfRWgvEHcqSZBogR20Kz5t2oBx
-         zOtA==
+        bh=lOv0TJC8hMcQtpE5VWA57B/HblMF/rVC1OozLuYaMQ4=;
+        b=wCVKJi1wPos2aoe3r35P78Z+FSG1LznO9dOxVeXE0xdKHBduJWQSiBquqEYSJJEekN
+         yY2L0IZbsj9dlV7LpX0lkR6+uGJXfjz4aR31Qye5jkCHwWzR2UJ7t5Iu7fNK51fnvIq6
+         a46RzXx5I6pPrFY8wdnCPQWlVZaXc4VncX69Ar93mXAxIeneFKCcgvUgjkB+8UmaapxX
+         C5AxmUjVUKWLDtDoJV5sAMlPxU7Rn2Y66c9nq9icSa1tDUfbTJ8Gnqr5l2RIp6O5lbOG
+         1Jdh0a/rKTL7Pv9XiYDRJm7vPCpWne6JU2Zikx7hlaxaGKeNFsDElZMIzoxnGSRJKOMu
+         g/PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zGngLDQbpsAufC+vN/662a3UH3A2uSByCjnMwkjEXbU=;
-        b=i8QUCThf8gqVj0ns2qifGs2bkF/hM4Vhqog4xuHqsZJhJmdUELOJgKb8uRt5ZIGh4R
-         GhWcCUySB9/uj/Vg0sFqH5i+vnGhaAIwd6dYVx/k5R5i5uHOh6Cw1vEe4H/AQLC1No6W
-         1IplznVQXAp2v4UP3oW/uA0NbjsrbhwU7mIT7q/MLg3UK7WoPSv7mLlnifuAv3gWd6YF
-         hQSm1O2UROSyRgJc2cXs30LzNP960I72nScdhAsy2EVMvM+raEzhBsTXBsGWCGSIO4EC
-         zb020RzJKDDwuVRthD6Ze4E+S/GlC7orgrriD1HUzGppYaitnZ1Wocx+2gfNR599SMdC
-         vJcA==
-X-Gm-Message-State: APjAAAUd5uqyfhws6QUNPRTr9rC8WmQk9R/3tVpFDs6H2Artw4VHHivp
-        678kORvD94UasyqR0wnz+elwD+bqclBQ9PzB0gg=
-X-Google-Smtp-Source: APXvYqyLsL36ItksCPZerVnrn9TvANn/FrLVPPCRLzGXiUlqmZBEgfajic9eRskjLz2SvFSt1PJDWkre/W/BGTnY1ic=
-X-Received: by 2002:a92:3991:: with SMTP id h17mr18908735ilf.131.1582132994133;
- Wed, 19 Feb 2020 09:23:14 -0800 (PST)
+        bh=lOv0TJC8hMcQtpE5VWA57B/HblMF/rVC1OozLuYaMQ4=;
+        b=hPO7W2cFceWuzmhmT0JCTFCZjLuPxCjdME04Q4U44mYIT8BHBhJxEHe6KqoDdQ5uI1
+         k1FzvsKT2uSuoYc/+q/CIf5KTc3eNnvL+z59XbUdomk9qHuKp/8acIuhod1ZKalfXaP8
+         8M0iuaAw5vTqBzU01nwHxKrEdF7kjEHdvaVVRMz7B5fNh4PHXNariuwAK34LcuyL8Qbc
+         u0Z1dN5ja1U4jlHAaEIASzUflaYvKiGB5arrR+30yNCAvV9bcISO5pCJZwfwJ3J0YCvB
+         Q9PDcD+RHBQoL6jhOESDa3Q3xRalLuaChfZ8PlViP53cgejHQ2C1m6pYke+jml+bnyGg
+         JV7A==
+X-Gm-Message-State: APjAAAUMYpHpimSwmxX5nqINfP+kG/xhTdsRf74Ph1/g0DaaBBWZmIGF
+        Z/q1z2u254EirVa2q7S3se3mhhsQ1CrDNmo+ace3ug==
+X-Google-Smtp-Source: APXvYqwSo6GUilJ/FzOryvH4ZQvh+dOFRIWXmaH6WmAGeZIJvKZZbDWH/ybZ+0IbluDu6CE89M7poWhpL8t0ZLuEzsk=
+X-Received: by 2002:ab0:14a2:: with SMTP id d31mr13781595uae.106.1582133154592;
+ Wed, 19 Feb 2020 09:25:54 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
- <20200219082155.6787-1-linux@rasmusvillemoes.dk> <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
- <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk> <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
- <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk> <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
- <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
-In-Reply-To: <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 19 Feb 2020 18:23:40 +0100
-Message-ID: <CAOi1vP_n-29hPnbeZH7-sb6=_OCPgUgkz-GeWLJw_L1P-CvCww@mail.gmail.com>
-Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Petr Mladek <pmladek@suse.com>,
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200219000817.195049-1-samitolvanen@google.com> <20200219000817.195049-2-samitolvanen@google.com>
+ <60ec3a49-7b71-df31-f231-b48ff135b718@infradead.org>
+In-Reply-To: <60ec3a49-7b71-df31-f231-b48ff135b718@infradead.org>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Wed, 19 Feb 2020 09:25:43 -0800
+Message-ID: <CABCJKudVbSMEXWTPw+bzzMuEf_kNsrfYiY53S5ZhWqGB9ynFEA@mail.gmail.com>
+Subject: Re: [PATCH v8 01/12] add support for Clang's Shadow Call Stack (SCS)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
         Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Documentation List <linux-doc@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,120 +87,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 4:40 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On Tue, Feb 18, 2020 at 8:20 PM Randy Dunlap <rdunlap@infradead.org> wrote:
 >
-> On 19/02/2020 15.45, Petr Mladek wrote:
-> > On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
-> >> On 19/02/2020 14.48, Petr Mladek wrote:
-> >>> On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
-> >>>> --- a/lib/vsprintf.c
-> >>>> +++ b/lib/vsprintf.c
-> >>> The test should go into null_pointer() instead of errptr().
-> >>
-> >> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
-> >> way. But I should add a #else section that tests how %pe behaves without
-> >> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
+> Hi Sami,
+>
+> a couple of minor tweaks:
+>
+> On 2/18/20 4:08 PM, Sami Tolvanen wrote:
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index 98de654b79b3..66b34fd0df54 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -526,6 +526,40 @@ config STACKPROTECTOR_STRONG
+> >         about 20% of all kernel functions, which increases the kernel code
+> >         size by about 2%.
 > >
-> > OK, we should agree on some structure first.
-> >
-> > We already have two top level functions that test how a particular
-> > pointer is printed using different pointer modifiers:
-> >
-> >       null_pointer();     -> NULL with %p, %pX, %pE
-> >       invalid_pointer();  -> random pointer with %p, %pX, %pE
-> >
-> > Following this logic, errptr() should test how a pointer from IS_ERR() range
-> > is printed using different pointer formats.
+> > +config ARCH_SUPPORTS_SHADOW_CALL_STACK
+> > +     bool
+> > +     help
+> > +       An architecture should select this if it supports Clang's Shadow
+> > +       Call Stack, has asm/scs.h, and implements runtime support for shadow
+> > +       stack switching.
+> > +
+> > +config SHADOW_CALL_STACK
+> > +     bool "Clang Shadow Call Stack"
+> > +     depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+> > +     help
+> > +       This option enables Clang's Shadow Call Stack, which uses a
+> > +       shadow stack to protect function return addresses from being
+> > +       overwritten by an attacker. More information can be found from
 >
-> Oh please. I wrote test_printf.c originally and structured it with one
-> helper for each %p<whatever>. How are your additions null_pointer and
-> invalid_pointer good examples for what the existing style is?
+>                                                               found in
 >
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 649)
-> test_pointer(void)
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 650) {
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 651)  plain();
-> 3e5903eb9cff7 (Petr Mladek      2019-04-17 13:53:48 +0200 652)
-> null_pointer();
-> 3e5903eb9cff7 (Petr Mladek      2019-04-17 13:53:48 +0200 653)
-> invalid_pointer();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 654)
-> symbol_ptr();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 655)
-> kernel_ptr();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 656)
-> struct_resource();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 657)  addr();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 658)
-> escaped_str();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 659)
-> hex_string();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 660)  mac();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 661)  ip();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 662)  uuid();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 663)  dentry();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 664)
-> struct_va_format();
-> 4d42c44727a06 (Andy Shevchenko  2018-12-04 23:23:11 +0200 665)
-> struct_rtc_time();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 666)
-> struct_clk();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 667)  bitmap();
-> 707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 668)
-> netdev_features();
-> edf14cdbf9a0e (Vlastimil Babka  2016-03-15 14:55:56 -0700 669)  flags();
-> 57f5677e535ba (Rasmus Villemoes 2019-10-15 21:07:05 +0200 670)  errptr();
-> f1ce39df508de (Sakari Ailus     2019-10-03 15:32:19 +0300 671)
-> fwnode_pointer();
+> > +       Clang's documentation:
+> > +
+> > +         https://clang.llvm.org/docs/ShadowCallStack.html
+> > +
+> > +       Note that security guarantees in the kernel differ from the ones
+> > +       documented for user space. The kernel must store addresses of shadow
+> > +       stacks used by other tasks and interrupt handlers in memory, which
+> > +       means an attacker capable reading and writing arbitrary memory may
 >
->
-> > I am open to crate another logic but it must be consistent.
->
-> So yeah, I'm going to continue testing the behaviour of %pe in errptr, TYVM.
->
-> > If you want to check %pe with NULL in errptr(), you have to
-> > split the other two functions per-modifier. IMHO, it is not
-> > worth it.
->
-> Agreed, let's leave null_pointer and invalid_pointer alone.
->
-> >>>> BTW., your original patch for %p lacks corresponding update of
-> >>>> test_vsprintf.c. Please add appropriate test cases.
-> >>>
-> >>> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> >>> index 2d9f520d2f27..1726a678bccd 100644
-> >>> --- a/lib/test_printf.c
-> >>> +++ b/lib/test_printf.c
-> >>> @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
-> >>>  static void __init
-> >>>  null_pointer(void)
-> >>>  {
-> >>> -   test_hashed("%p", NULL);
-> >>> +   test(ZEROS "00000000", "%p", NULL);
-> >>
-> >> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
-> >> (where one of course has to use explicit integers and not E* constants).
-> >
-> > Yes, it would be great to add checks for %p, %px for IS_ERR() range.
-> > But it is different story. The above change is for the original patch
-> > and it was about NULL pointer handling.
->
-> Wrong. The original patch (i.e. Ilya's) had subject "vsprintf: don't
-> obfuscate NULL and error pointers" and did
->
-> +       if (IS_ERR_OR_NULL(ptr))
->
-> so the tests that should be part of that patch very much need to cover
-> both NULL and ERR_PTRs passed to plain %p.
+>                             capable of
 
-I sent v2 of my patch with the update to test_printf.c.
+Thanks, Randy! I'll fix these in the next version.
 
-I see your point about one function for each %p variant, but since
-it's already been disrupted with null_pointer() and invalid_pointer()
-and also because test_hashed() has a comment which implies that it
-must be called after plain(), I piled on by adding error_pointer().
-
-Thanks,
-
-                Ilya
+Sami
