@@ -2,156 +2,261 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F9DC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BFDC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE3A22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C55F22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wpMLy0VF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sv1LRMr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBSAHp (ORCPT
+        id S1726799AbgBSAIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:07:45 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:21279 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726482AbgBSAHo (ORCPT
+        Tue, 18 Feb 2020 19:08:25 -0500
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:32861 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBSAIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:07:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582070863; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=ix4I8HGZpni8gwUgc++/jUAdQuDMXvzl5RoCu8Kns8U=; b=wpMLy0VF4kXRrP5CKBxL3D3JUxbKquR+sipEvnOpu7/Dnh2s4ozSd2kaqGciVKtlaS3morQg
- tkHuGOIOYTWUGV+FCewIlDllx/PoaVHtEAqt98WWcWm06gG5j2Ffl9hdOfYPeXOtpH5LIsAW
- bNpgAdMU18lb03GxKTXAoK6wBaw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c7c4e.7f6364d45688-smtp-out-n03;
- Wed, 19 Feb 2020 00:07:42 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F0DBCC447A4; Wed, 19 Feb 2020 00:07:41 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 616A8C43383;
-        Wed, 19 Feb 2020 00:07:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 616A8C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Tue, 18 Feb 2020 16:07:36 -0800
-From:   Jack Pham <jackp@codeaurora.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Pratham Pratap <prathampratap@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] usb: dwc3: gadget: Update chain bit correctly when using
- sg list
-Message-ID: <20200219000736.GA5511@jackp-linux.qualcomm.com>
-References: <20200218235104.112323-1-john.stultz@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218235104.112323-1-john.stultz@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Tue, 18 Feb 2020 19:08:24 -0500
+Received: by mail-pl1-f202.google.com with SMTP id bd7so11066790plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=wI9MsagFq1grwrdVGJiVm+FDO/Y2AjN+jkbAVkowicc=;
+        b=Sv1LRMr204MA2NfkhTi349Dv9caE/nRG5GQKlGL0KenGeHpN4PcomR+ZytFOOSKRIL
+         syxU3RvEsIqwiYRhOePi/dYprwsonGLO+1LyqK4xo3S6tEiZDt/XN2bqZXz/g/gtHwqT
+         dsRTq5IEtR7zzVCKHQUWJMG/BC5mErBUsXpyHyvU4sFP8OctI8T5hOPiSXO4/ZaYrDfW
+         Xkyhhp6N9hZCZFth7GJlDnpOPtYjz8CtiVqPVQFKPw3uW+QhZj216XvbH2OmokWsBrXK
+         QKSiRoN3vmYiUb02C18A0gWzITZv7dUzHTIiYarpOikFXOGBY7wXtGo/1yYQxfZI8ADK
+         6Cvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=wI9MsagFq1grwrdVGJiVm+FDO/Y2AjN+jkbAVkowicc=;
+        b=E7+7tl/f4e2iLfh36MsjqYJQ6QS5LVcIBpMW0+gcmsiYV1b/ZQ+s2hfhWUjMgsKvay
+         olHm8ZSVlpWeBx5FJkcKtw5C6/BjVtT+8uEBnFvMQjl4vziroau8tIlfBP4RExBLBlwH
+         SQvWlmZB7Nu7mtm2x6h/MbS6ZPWQOXAoFAczc9B581QotpftTwO/tS/6gfC6jpc7BiTz
+         c78PsC1n8TtEf3IC3ppUUewQeTVQL9C9gSqa/NX4ELEQpCT84tnL/wmVOE6Cc7yWIJuF
+         zDBr3iwBxIoBICpIh/8x7d4abX1C5iu24vPTEKMeE5RsGIXyj6fm1LtTX88225GyVTLU
+         j4kQ==
+X-Gm-Message-State: APjAAAUKBWsMmDQ24JnxMMU+mcVdVHajVgrpWqiskucdDtxzMgABYW7U
+        s3pBn/xKS4yuw/MgduropKvE60f6w+a0wJaFm0o=
+X-Google-Smtp-Source: APXvYqwQuHa1FGzERWY2K5gerK5F2adNioRAKZjsfVpF8gt855LUpS/6Lr7Uyk9fcpzxAyVppb0eGAbPPxYLaoYmejc=
+X-Received: by 2002:a63:9251:: with SMTP id s17mr25013691pgn.127.1582070902440;
+ Tue, 18 Feb 2020 16:08:22 -0800 (PST)
+Date:   Tue, 18 Feb 2020 16:08:05 -0800
+In-Reply-To: <20191018161033.261971-1-samitolvanen@google.com>
+Message-Id: <20200219000817.195049-1-samitolvanen@google.com>
+Mime-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v8 00/12] add support for Clang's Shadow Call Stack
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+This patch series adds support for Clang's Shadow Call Stack
+(SCS) mitigation, which uses a separately allocated shadow stack
+to protect against return address overwrites. More information
+can be found here:
 
-Thanks for following-up with this! While you're doing minor tweaks
-anyway, I hope you don't mind me picking some nits below.
+  https://clang.llvm.org/docs/ShadowCallStack.html
 
-On Tue, Feb 18, 2020 at 11:51:04PM +0000, John Stultz wrote:
-> From: Pratham Pratap <prathampratap@codeaurora.org>
-> 
-> If scatter-gather operation is allowed, a large USB request is split
-> into multiple TRBs. For preparing TRBs for sg list, driver iterates
-> over the list and creates TRB for each sg and mark the chain bit to
-> false for the last sg. The current IOMMU driver is clubbing the list
-> of sgs which shares a page boundary into one and giving it to USB driver.
-> With this the number of sgs mapped it not equal to the the number of sgs
-> passed. Because of this USB driver is not marking the chain bit to false
-> since it couldn't iterate to the last sg. This patch addresses this issue
-> by marking the chain bit to false if it is the last mapped sg.
-> 
-> At a practical level, this patch resolves USB transfer stalls
-> seen with adb on dwc3 based db845c, pixel3 and other qcom
-> hardware after functionfs gadget added scatter-gather support
-> around v4.20.
-> 
-> Credit also to Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> who implemented a very similar fix to this issue.
-> 
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Yang Fei <fei.yang@intel.com>
-> Cc: Thinh Nguyen <thinhn@synopsys.com>
-> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> Cc: Jack Pham <jackp@codeaurora.org>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Linux USB List <linux-usb@vger.kernel.org>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Pratham Pratap <prathampratap@codeaurora.org>
-> [jstultz: Slight tweak to remove sg_is_last() usage, reworked
->           commit message, minor comment tweak]
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  drivers/usb/dwc3/gadget.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 1b8014ab0b25..10aa511051e8 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -1071,7 +1071,14 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
->  		unsigned int rem = length % maxp;
->  		unsigned chain = true;
->  
-> -		if (sg_is_last(s))
-> +		/*
-> +		 * IOMMU driver is coalescing the list of sgs which shares a
-> +		 * page boundary into one and giving it to USB driver. With
-> +		 * this the number of sgs mapped it not equal to the the number
-                                                 ^^ s/it/is/     ^^^ /d
+SCS provides better protection against traditional buffer
+overflows than CONFIG_STACKPROTECTOR_*, but it should be noted
+that SCS security guarantees in the kernel differ from the ones
+documented for user space. The kernel must store addresses of
+shadow stacks used by inactive tasks and interrupt handlers in
+memory, which means an attacker capable reading and writing
+arbitrary memory may be able to locate them and hijack control
+flow by modifying shadow stacks that are not currently in use.
 
-Or could we more specifically say "number of sgs mapped could be less
-than number passed"?
+SCS is currently supported only on arm64, where the compiler
+requires the x18 register to be reserved for holding the current
+task's shadow stack pointer.
 
-> +		 * of sgs passed. Mark the chain bit to false if it is the last
-> +		 * mapped sg.
-> +		 */
-> +		if ((i == remaining - 1))
+With -fsanitize=shadow-call-stack, the compiler injects
+instructions to all non-leaf C functions to store the return
+address to the shadow stack, and unconditionally load it again
+before returning. As a result, SCS is currently incompatible
+with features that rely on modifying function return addresses
+in the kernel stack to alter control flow, such as function
+graph tracing, although it may be possible to later change these
+features to modify the shadow stack instead. A copy of the return
+address is still kept in the kernel stack for compatibility with
+stack unwinding, for example.
 
-These outer parens are superfluous.
+SCS has a minimal performance overhead, but allocating
+shadow stacks increases kernel memory usage. The feature is
+therefore mostly useful on hardware that lacks support for PAC
+instructions.
 
-Also wondering if it would be more or less clear to just set the
-variable once (and awkwardly move the comment to appear above the
-local var declaration):
+Changes in v8:
+ - Added __noscs to __hyp_text instead of filtering SCS flags from
+   the entire arch/arm64/kvm/hyp directory.
+ - Added a patch to filter out -ffixed-x18 and SCS flags from the
+   EFI stub.
 
-		unsigned chain = (i < remaining - 1);
+Changes in v7:
+ - Changed irq_stack_entry/exit to store the shadow stack pointer
+   in x24 instead of x20 as kernel_entry uses x20-x23 to store
+   data that can be used later. Updated the comment as well.
+ - Changed the Makefile in arch/arm64/kvm/hyp to also filter out
+   -ffixed-x18.
+ - Changed SHADOW_CALL_STACK to depend on !FUNCTION_GRAPH_TRACER
+   instead of not selecting HAVE_FUNCTION_GRAPH_TRACER with SCS.
+ - Removed ifdefs from the EFI wrapper and updated the comment to
+   explain why we are restoring x18.
+ - Rebased as Ard's x18 patches that were part of this series have
+   already been merged.
 
->  			chain = false;
->  
->  		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
+Changes in v6:
+ - Updated comment in the EFI RT wrapper to include the
+   explanation from the commit message.
+ - Fixed the SHADOW_CALL_STACK_VMAP config option and the
+   compilation errors in scs_init_irq()
+ - Updated the comment in entry.S to Mark's suggestion
+ - Fixed the WARN_ON in scs_init() to trip only when the return
+   value for cpuhp_setup_state() is < 0.
+ - Removed ifdefs from the code in arch/arm64/kernel/scs.c and
+   added separate shadow stacks for the SDEI handler
 
-Jack
+Changes in v5:
+ - Updated the comment in __scs_base() to Mark's suggestion
+ - Changed all instances of uintptr_t to unsigned long
+ - Added allocation poisoning for KASAN to catch unintentional
+   shadow stack accesses; moved set_set_magic before poisoning
+   and switched scs_used() and scs_corrupted() to access the
+   buffer using READ_ONCE_NOCHECK() instead
+ - Changed scs_free() to check for NULL instead of zero
+ - Renamed SCS_CACHE_SIZE to NR_CACHED_SCS
+ - Added a warning if cpuhp_setup_state fails in scs_init()
+ - Dropped patches disabling kretprobes after confirming there's
+   no functional conflict with SCS instrumentation
+ - Added an explanation to the commit message why function graph
+   tracing and SCS are incompatible
+ - Removed the ifdefs from arch/arm64/mm/proc.S and added
+   comments explaining why we are saving and restoring x18
+ - Updated scs_check_usage format to include process information
+
+Changes in v4:
+ - Fixed authorship for Ard's patches
+ - Added missing commit messages
+ - Commented code that clears SCS from thread_info
+ - Added a comment about SCS_END_MAGIC being non-canonical
+
+Changes in v3:
+ - Switched to filter-out for removing SCS flags in Makefiles
+ - Changed the __noscs attribute to use __no_sanitize__("...")
+   instead of no_sanitize("...")
+ - Cleaned up inline function definitions and moved task_scs()
+   into a macro
+ - Cleaned up scs_free() and scs_magic()
+ - Moved SCS initialization into dup_task_struct() and removed
+   the now unused scs_task_init()
+ - Added comments to __scs_base() and scs_task_reset() to better
+   document design choices
+ - Changed copy_page to make the offset and bias explicit
+
+Changes in v2:
+ - Changed Ard's KVM patch to use x29 instead of x18 for the
+   guest context, which makes restore_callee_saved_regs cleaner
+ - Updated help text (and commit messages) to point out
+   differences in security properties compared to user space SCS
+ - Cleaned up config options: removed the ROP protection choice,
+   replaced the CC_IS_CLANG dependency with an arch-specific
+   cc-option test, and moved disabling of incompatible config
+   options to an arch-specific Kconfig
+ - Added CC_FLAGS_SCS, which are filtered out where needed
+   instead of using DISABLE_SCS
+ - Added a __has_feature guard around __noscs for older clang
+   versions
+
+Sami Tolvanen (12):
+  add support for Clang's Shadow Call Stack (SCS)
+  scs: add accounting
+  scs: add support for stack usage debugging
+  scs: disable when function graph tracing is enabled
+  arm64: reserve x18 from general allocation with SCS
+  arm64: preserve x18 when CPU is suspended
+  arm64: efi: restore x18 if it was corrupted
+  arm64: vdso: disable Shadow Call Stack
+  arm64: disable SCS for hypervisor code
+  arm64: implement Shadow Call Stack
+  arm64: scs: add shadow stacks for SDEI
+  efi/libstub: disable SCS
+
+ Makefile                              |   6 +
+ arch/Kconfig                          |  35 ++++
+ arch/arm64/Kconfig                    |   5 +
+ arch/arm64/Makefile                   |   4 +
+ arch/arm64/include/asm/kvm_hyp.h      |   2 +-
+ arch/arm64/include/asm/scs.h          |  39 ++++
+ arch/arm64/include/asm/suspend.h      |   2 +-
+ arch/arm64/include/asm/thread_info.h  |   3 +
+ arch/arm64/kernel/Makefile            |   1 +
+ arch/arm64/kernel/asm-offsets.c       |   3 +
+ arch/arm64/kernel/efi-rt-wrapper.S    |  11 +-
+ arch/arm64/kernel/entry.S             |  46 ++++-
+ arch/arm64/kernel/head.S              |   9 +
+ arch/arm64/kernel/irq.c               |   2 +
+ arch/arm64/kernel/process.c           |   2 +
+ arch/arm64/kernel/scs.c               | 114 ++++++++++++
+ arch/arm64/kernel/sdei.c              |   7 +
+ arch/arm64/kernel/smp.c               |   4 +
+ arch/arm64/kernel/vdso/Makefile       |   2 +-
+ arch/arm64/mm/proc.S                  |  14 ++
+ drivers/base/node.c                   |   6 +
+ drivers/firmware/efi/libstub/Makefile |   3 +
+ fs/proc/meminfo.c                     |   4 +
+ include/linux/compiler-clang.h        |   6 +
+ include/linux/compiler_types.h        |   4 +
+ include/linux/mmzone.h                |   3 +
+ include/linux/scs.h                   |  57 ++++++
+ init/init_task.c                      |   8 +
+ kernel/Makefile                       |   1 +
+ kernel/fork.c                         |   9 +
+ kernel/sched/core.c                   |   2 +
+ kernel/scs.c                          | 246 ++++++++++++++++++++++++++
+ mm/page_alloc.c                       |   6 +
+ mm/vmstat.c                           |   3 +
+ 34 files changed, 662 insertions(+), 7 deletions(-)
+ create mode 100644 arch/arm64/include/asm/scs.h
+ create mode 100644 arch/arm64/kernel/scs.c
+ create mode 100644 include/linux/scs.h
+ create mode 100644 kernel/scs.c
+
+
+base-commit: 2b72104b8c12504176fb5fc1442d6e54e31e338b
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.25.0.265.gbab2e86ba0-goog
+
