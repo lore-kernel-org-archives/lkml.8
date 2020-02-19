@@ -2,196 +2,161 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E5C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1EC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C8582465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7514D24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CdpmAVZE"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ZTcpg9Zv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgBSD2f (ORCPT
+        id S1726715AbgBSD2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:28:35 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10618 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgBSD2e (ORCPT
+        Tue, 18 Feb 2020 22:28:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36087 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbgBSD2v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:28:34 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4cab410000>; Tue, 18 Feb 2020 19:28:01 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Feb 2020 19:28:33 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 19:28:33 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
- 2020 03:28:32 +0000
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
- <20200218231503.GA19099@bogus>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
-Date:   Tue, 18 Feb 2020 19:28:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 22:28:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so5153080wma.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:28:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PFrPzzwmpyAD/udwXE359rvjJD5ZEgk+K9aOBrdRGe4=;
+        b=ZTcpg9Zvzm2Ac6+wAF372I1lGI//y+yRBrSU5kW2wA6VNPv3yptFR4gnP4NusurYX5
+         E0Cyoe8S7d6FO50mtLaC/cDuQY9YtxgAglsLaKO+DuxNfOuBfuWUTfpxOFZn4Cnc39dk
+         zlwhIpXITMnDYQuHmMuU5piaWl2f36nsUSq5cl6kr72sVhr4RZLDzsrHXidZCV9UrBYq
+         seqSSXu1TEksjZLUk2AKA6e7vl7vJL8cfJGP3xLCpsEg+hVjCS0RQczc3Yfot+LKTh96
+         p7p6ePUP+BwF2yl4uIDAY1g9zyOq1kn9ib/TbSTt1qSMHIgoqNWwT+93OKlkbsyKyqoq
+         WDmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PFrPzzwmpyAD/udwXE359rvjJD5ZEgk+K9aOBrdRGe4=;
+        b=PVt6F4s9/GDTe+/EoKJmA7rW0mUmMTzfPiib9L944vx/eHpEvyR2lndy4uYzmE48aj
+         gY67yRyoUTnVP7oJFkKr9aPgi+s4p+Z+zZIRJtQrwftmtJgVAhNiOqaQs/3VOmcuUdGU
+         bS8ctIStaGh4F743ECN/V1I21Uvhol1YHyC4sAPXRo8P9Yk6uq87jHEY9yQYcSScWyAf
+         6dR6+6z1FIHQdnjahcCvF+bKzZYZHBb8QLBWnANQgaTeznn1SeQt8yWE+WySFcKxxPsZ
+         xWXVWftNvYwmTrQTVBeNBK/AKck0uCI1+tUmnt8HJ7ISVxz0ZsZhfXt69O3Pk3xQQ5bW
+         Ok0w==
+X-Gm-Message-State: APjAAAUrmPlb/+jOoBy6RWGqKbW7Rv8XJVKKthZQWKOPZc0IIbc0p9L2
+        PclZiB131q8HRlrmq7afnbe3aBaSOJEbHO7yyaLUyg==
+X-Google-Smtp-Source: APXvYqxSVPM8kfU6Iae8q2VWGU/sIXjjlqOBO7h73TYwMqPDl2u3Q1WJfEz4BPOyClmmzeP2Q3AidC1kme6QlYOAk0c=
+X-Received: by 2002:a05:600c:285:: with SMTP id 5mr6773557wmk.120.1582082929545;
+ Tue, 18 Feb 2020 19:28:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218231503.GA19099@bogus>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582082881; bh=cyoNazDtmT/h6DgHu5pqneFWToIbbP0fvPs2dxTlGMQ=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=CdpmAVZEN1+rPUXrq9ZTWHWteIUNLSIzWrA/h8Q6AVwCh3Xe4Ldg0Ae3e+GxK7GcY
-         WacUUqIeiFWQEZwv0nLL99pvzd7yUg5NLPubTPS2AdWA9TN8XbQJ5bJzJhlHt8RWiJ
-         6TtgMMo7qUbLyfXy4x+CGr20WXD3ZKfZtjAwmfiJbSKnFl580R/kSRv7HVRDeRfjs+
-         DG1NxmOr8BuAAqNiKBcjMuDvb6+c8RLy2qK8dxdArj863jZSvKQewH3SZODclwBXVd
-         vmrRmSBURvYrfXz/xK9kY16Mw5IA3TJfGDN44vMmxj06JQg/J89pX6dCvGDarNLTJx
-         Ln17zs2CfuKFQ==
+References: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
+ <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Wed, 19 Feb 2020 08:58:38 +0530
+Message-ID: <CAAhSdy15mLGz3Xtu_Q7vOCP5Y2hQjWEosU1v8o8FxKfiLDx4qQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 19, 2020 at 12:06 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>
+> On Sun, 02 Feb 2020 03:48:18 PST (-0800), atishp@atishpatra.org wrote:
+> > On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
+> >>
+> >> Historically, we have been enabling all interrupts for each
+> >> HART in trap_init(). Ideally, we should only enable M-mode
+> >> interrupts for M-mode kernel and S-mode interrupts for S-mode
+> >> kernel in trap_init().
+> >>
+> >> Currently, we get suprious S-mode interrupts on Kendryte K210
+> >> board running M-mode NO-MMU kernel because we are enabling all
+> >> interrupts in trap_init(). To fix this, we only enable software
+> >> and external interrupt in trap_init(). In future, trap_init()
+> >> will only enable software interrupt and PLIC driver will enable
+> >> external interrupt using CPU notifiers.
+>
+> I think we should add a proper interrupt controller driver for the per-hart
+> interrupt controllers, as doing this within the other drivers is ugly -- for
+> example, there's no reason an MMIO timer or interrupt controller driver should
+> be toggling these bits.
 
-On 2/18/20 3:15 PM, Rob Herring wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
->> Tegra contains VI controller which can support up to 6 MIPI CSI
->> camera sensors.
->>
->> Each Tegra CSI port from CSI unit can be one-to-one mapper to
->> VI channel and can capture from an external camera sensor or
->> from built-in test pattern generator.
->>
->> This patch adds dt-bindings for Tegra VI and CSI.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
->>   1 file changed, 47 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> index 9999255ac5b6..3d0ed540a646 100644
->> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->> @@ -40,14 +40,24 @@ of the following host1x client modules:
->>
->>     Required properties:
->>     - compatible: "nvidia,tegra<chip>-vi"
->> -  - reg: Physical base address and length of the controller's registers.
->> +  - reg: Physical base address and length of the controller registers.
->>     - interrupts: The interrupt outputs from the controller.
->> -  - clocks: Must contain one entry, for the module clock.
->> +  - clocks: Must contain an entry for the module clock "vi"
->>       See ../clocks/clock-bindings.txt for details.
->>     - resets: Must contain an entry for each entry in reset-names.
->>       See ../reset/reset.txt for details.
->> -  - reset-names: Must include the following entries:
->> -    - vi
->> +  - reset-names: Must include the entry "vi"
->> +
->> +  Tegra210 has CSI part of VI sharing same host interface and register
->> +  space. So, VI device node should have CSI child node.
->> +
->> +  - csi: mipi csi interface to vi
->> +
->> +    Required properties:
->> +    - compatible: "nvidia,tegra<chip>-csi"
->> +    - reg: Physical base address and length of the controller registers.
->> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
->> +      See ../clocks/clock-bindings.txt for details.
->>
->>   - epp: encoder pre-processor
->>
->> @@ -310,12 +320,41 @@ Example:
->>                };
->>
->>                vi {
->> -                     compatible = "nvidia,tegra20-vi";
->> -                     reg = <0x54080000 0x00040000>;
->> +                     compatible = "nvidia,tegra210-vi";
->> +                     reg = <0x0 0x54080000 0x0 0x700>;
->>                        interrupts = <0 69 0x04>;
->> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
->> -                     resets = <&tegra_car 100>;
->> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
->> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
->> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
->> +                     clock-names = "vi";
->> +                     resets = <&tegra_car 20>;
->>                        reset-names = "vi";
->> +
->> +                     #address-cells = <2>;
->> +                     #size-cells = <2>;
->> +
->> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
->> +
->> +                     csi@0x54080838 {
-> Drop '0x'
-Will fix in v4
->
->> +                             compatible = "nvidia,tegra210-csi";
->> +                             reg = <0x0 0x54080838 0x0 0x2000>;
-> Kind of odd that this address and ranges address are not the same. And
-> also wrong that the size here exceeds the bounds of ranges.
->
-> Also, best practice is to make the child address 0 or relative to the
-> parent.
+I have always been in support of having per-hart interrupt controller driver.
 
-Actual CSI starts at offset 0x808 but we don't use couple of registers 
-at offset 0x808.
+I will rebase my RISC-V INTC driver upon latest kernel and send it again.
+Of course, now the situation has changed the RISC-V INTC driver will
+have to consider NOMMU kernel as well.
 
-Will update ranges in v4 to start from 0x838 offset and will make child 
-address relative to parent.
+The last version of RISC-V INTC driver can be found in riscv_intc_v2
+branch of https://github.com/avpatel/linux.git
 
 >
->> +                             status = "disabled";
-> Don't show status in examples.
-Will remove.
+> >> Cc: stable@vger.kernel.org
+> >> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
 >
->> +                             assigned-clocks = <&tegra_car TEGRA210_CLK_CILAB>,
->> +                                               <&tegra_car TEGRA210_CLK_CILCD>,
->> +                                               <&tegra_car TEGRA210_CLK_CILE>;
->> +                             assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_P>,
->> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>,
->> +                                                      <&tegra_car TEGRA210_CLK_PLL_P>;
->> +                             assigned-clock-rates = <102000000>,
->> +                                                    <102000000>,
->> +                                                    <102000000>;
->> +                             clocks = <&tegra_car TEGRA210_CLK_CSI>,
->> +                                      <&tegra_car TEGRA210_CLK_CILAB>,
->> +                                      <&tegra_car TEGRA210_CLK_CILCD>,
->> +                                      <&tegra_car TEGRA210_CLK_CILE>;
->> +                             clock-names = "csi", "cilab", "cilcd", "cile";
->> +                     };
->> +
->>                };
->>
->>                epp {
->> --
->> 2.7.4
->>
+> I'd argue this actually fixes the M-mode stuff, since that's the first place
+> this issue shows up.  I've queued this with
+>
+> Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
+>
+> instead, as that's the first commit that will actually write to MIE and
+> therefor the first commit that will actually exhibit bad behavior.  It also has
+> the advantage of making the patch apply on older trees, which should make life
+> easier for the stable folks.
+
+Sure, no problem.
+
+>
+> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
+> >> ---
+> >>  arch/riscv/kernel/traps.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> >> index f4cad5163bf2..ffb3d94bf0cc 100644
+> >> --- a/arch/riscv/kernel/traps.c
+> >> +++ b/arch/riscv/kernel/traps.c
+> >> @@ -156,6 +156,6 @@ void __init trap_init(void)
+> >>         csr_write(CSR_SCRATCH, 0);
+> >>         /* Set the exception vector address */
+> >>         csr_write(CSR_TVEC, &handle_exception);
+> >> -       /* Enable all interrupts */
+> >> -       csr_write(CSR_IE, -1);
+> >> +       /* Enable interrupts */
+> >> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
+> >>  }
+> >> --
+> >> 2.17.1
+> >>
+> >>
+> >
+> > Looks good.
+> > Reviewed-by: Atish Patra <atish.patra@wdc.com>
+>
+> Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
+> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+>
+> I consider this a bugfix, so I'm targeting it for RCs.  It's on fixes and
+> should go up this week.
+>
+> Thanks!
+
+Thanks,
+Anup
