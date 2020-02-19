@@ -2,91 +2,70 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABC0C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A09CC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF09920578
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D65124655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728308AbgBSDSW (ORCPT
+        id S1726548AbgBSDWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:18:22 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53424 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728260AbgBSDSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:18:22 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 092E8BD6156035A3226A;
-        Wed, 19 Feb 2020 11:18:20 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
- 2020 11:18:15 +0800
-Subject: Re: [PATCH 3/3] f2fs: avoid unneeded barrier in do_checkpoint()
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200218102136.32150-1-yuchao0@huawei.com>
- <20200218102136.32150-3-yuchao0@huawei.com>
- <20200219025154.GB96609@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <576f8389-ba27-b461-5466-cc62e84b5c92@huawei.com>
-Date:   Wed, 19 Feb 2020 11:18:15 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 18 Feb 2020 22:22:30 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:34285 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726346AbgBSDW3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:22:29 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 3E55E3A35A2;
+        Wed, 19 Feb 2020 14:22:27 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4FwP-0005Mo-TE; Wed, 19 Feb 2020 14:22:25 +1100
+Date:   Wed, 19 Feb 2020 14:22:25 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 16/19] fuse: Convert from readpages to readahead
+Message-ID: <20200219032225.GD10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-29-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200219025154.GB96609@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-29-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=x3J6VNESQafu8Wz7OnQA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/19 10:51, Jaegeuk Kim wrote:
-> On 02/18, Chao Yu wrote:
->> We don't need to wait all dirty page submitting IO twice,
->> remove unneeded wait step.
+On Mon, Feb 17, 2020 at 10:46:09AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> What happens if checkpoint and other meta writs are reordered?
-
-checkpoint can be done as following:
-
-1. All meta except last cp-park of checkpoint area.
-2. last cp-park of checkpoint area
-
-So we only need to keep barrier in between step 1 and 2, we don't need
-to care about the write order of meta in step 1, right?
-
-Thanks,
-
+> Use the new readahead operation in fuse.  Switching away from the
+> read_cache_pages() helper gets rid of an implicit call to put_page(),
+> so we can get rid of the get_page() call in fuse_readpages_fill().
 > 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/checkpoint.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->> index 751815cb4c2b..9c88fb3d255a 100644
->> --- a/fs/f2fs/checkpoint.c
->> +++ b/fs/f2fs/checkpoint.c
->> @@ -1384,8 +1384,6 @@ static int do_checkpoint(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->>  
->>  	/* Flush all the NAT/SIT pages */
->>  	f2fs_sync_meta_pages(sbi, META, LONG_MAX, FS_CP_META_IO);
->> -	/* Wait for all dirty meta pages to be submitted for IO */
->> -	f2fs_wait_on_all_pages(sbi, F2FS_DIRTY_META);
->>  
->>  	/*
->>  	 * modify checkpoint
->> -- 
->> 2.18.0.rc1
-> .
-> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+Looks OK.
+
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+-- 
+Dave Chinner
+david@fromorbit.com
