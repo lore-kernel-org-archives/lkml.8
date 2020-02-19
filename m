@@ -2,163 +2,85 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A5DC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C1C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64F1208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ITCEApkm"
+	by mail.kernel.org (Postfix) with ESMTP id 07301208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbgBSFbf (ORCPT
+        id S1726385AbgBSFfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:31:35 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:44754 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgBSFbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:31:35 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J5VHMn112939;
-        Wed, 19 Feb 2020 05:31:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=KgqFBVhXm0DLAhBnOcBKslL8VU948dAFh2h2NcXWn4w=;
- b=ITCEApkm+o2RKOO33pUDQ6SIA2cbmm2Z2FPabsmu5NzaoFoqf1qD5JrOszi/4GAmXYt1
- NHQeNPPmueToxUMlEf0wrGSUMk1H/MvgUGZGk/Grxb0CxhmoL0VCj6bs3TbxFSNpgIYI
- 1b7c2cCg9XzmYZL6jAeuLAQAAs/jnv+WEOIxy/EVzblSpuQiUG8DI4eAfFOJuHRkGcrB
- k6u631N9YTr6tt6fn+BtMHXg9mZVs1KAXTCNrkanolBrSAdPUAoxuhF/bhi6rkD+AnRD
- XIFKrnAzr7plW1B6upKjj3mgixk7NZd0V1ZpqYC0Qgfw+6//COMUjwewWKKRAEvuLGrB Pw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2y8udk8mq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 05:31:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J5RpSv156791;
-        Wed, 19 Feb 2020 05:29:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2y8ud3dvqn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 05:29:31 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J5TUHL005098;
-        Wed, 19 Feb 2020 05:29:30 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 21:29:30 -0800
-Date:   Wed, 19 Feb 2020 08:29:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     kbuild-all@lists.01.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] proc: faster open/read/close with "permanent" files
-Message-ID: <20200219052921.GF19641@kadam>
+        Wed, 19 Feb 2020 00:35:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56398 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbgBSFfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 00:35:19 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4DC33AE24;
+        Wed, 19 Feb 2020 05:35:17 +0000 (UTC)
+Subject: Re: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        xen-devel@lists.xenproject.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        stable@vger.kernel.org
+References: <20200218154712.25490-1-jgross@suse.com>
+ <87mu9fr4ky.fsf@nanos.tec.linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
+Date:   Wed, 19 Feb 2020 06:35:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200216152649.GA2693@avx2>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190037
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
- malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190037
+In-Reply-To: <87mu9fr4ky.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexey,
+On 18.02.20 22:03, Thomas Gleixner wrote:
+> Juergen Gross <jgross@suse.com> writes:
+>> Commit 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control
+>> ioperm() as well") reworked the iopl syscall to use I/O bitmaps.
+>>
+>> Unfortunately this broke Xen PV domains using that syscall as there
+>> is currently no I/O bitmap support in PV domains.
+>>
+>> Add I/O bitmap support via a new paravirt function update_io_bitmap
+>> which Xen PV domains can use to update their I/O bitmaps via a
+>> hypercall.
+>>
+>> Fixes: 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control ioperm() as well")
+>> Reported-by: Jan Beulich <jbeulich@suse.com>
+>> Cc: <stable@vger.kernel.org> # 5.5
+>> Signed-off-by: Juergen Gross <jgross@suse.com>
+>> Reviewed-by: Jan Beulich <jbeulich@suse.com>
+>> Tested-by: Jan Beulich <jbeulich@suse.com>
+> 
+> Duh, sorry about that and thanks for fixing it.
+> 
+> BTW, why isn't stuff like this not catched during next or at least
+> before the final release? Is nothing running CI on upstream with all
+> that XEN muck active?
+
+This problem showed up by not being able to start the X server (probably
+not the freshest one) in dom0 on a moderate aged AMD system.
+
+Our CI tests tend do be more text console based for dom0.
 
 
-url:    https://github.com/0day-ci/linux/commits/Alexey-Dobriyan/proc-faster-open-read-close-with-permanent-files/20200218-231203
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git modules-next
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-smatch warnings:
-fs/proc/generic.c:752 remove_proc_subtree() warn: inconsistent returns 'proc_subdir_lock'.
-
-# https://github.com/0day-ci/linux/commit/3cd4ad42ca7c52d1513e7ba9f08a06197a7380c8
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 3cd4ad42ca7c52d1513e7ba9f08a06197a7380c8
-vim +/proc_subdir_lock +752 fs/proc/generic.c
-
-8ce584c7416d8a Al Viro         2013-03-30  699  
-8ce584c7416d8a Al Viro         2013-03-30  700  int remove_proc_subtree(const char *name, struct proc_dir_entry *parent)
-8ce584c7416d8a Al Viro         2013-03-30  701  {
-8ce584c7416d8a Al Viro         2013-03-30  702  	struct proc_dir_entry *root = NULL, *de, *next;
-8ce584c7416d8a Al Viro         2013-03-30  703  	const char *fn = name;
-8ce584c7416d8a Al Viro         2013-03-30  704  	unsigned int len;
-8ce584c7416d8a Al Viro         2013-03-30  705  
-ecf1a3dfff22bd Waiman Long     2015-09-09  706  	write_lock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  707  	if (__xlate_proc_name(name, &parent, &fn) != 0) {
-ecf1a3dfff22bd Waiman Long     2015-09-09  708  		write_unlock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  709  		return -ENOENT;
-8ce584c7416d8a Al Viro         2013-03-30  710  	}
-8ce584c7416d8a Al Viro         2013-03-30  711  	len = strlen(fn);
-8ce584c7416d8a Al Viro         2013-03-30  712  
-710585d4922fd3 Nicolas Dichtel 2014-12-10  713  	root = pde_subdir_find(parent, fn, len);
-8ce584c7416d8a Al Viro         2013-03-30  714  	if (!root) {
-ecf1a3dfff22bd Waiman Long     2015-09-09  715  		write_unlock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  716  		return -ENOENT;
-8ce584c7416d8a Al Viro         2013-03-30  717  	}
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  718  	if (unlikely(pde_is_permanent(root))) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  719  		WARN(1, "removing permanent /proc entry '%s/%s'",
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  720  			root->parent->name, root->name);
-
-unlock?
-
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  721  		return -EINVAL;
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  722  	}
-4f1134370a29a5 Alexey Dobriyan 2018-04-10  723  	rb_erase(&root->subdir_node, &parent->subdir);
-710585d4922fd3 Nicolas Dichtel 2014-12-10  724  
-8ce584c7416d8a Al Viro         2013-03-30  725  	de = root;
-8ce584c7416d8a Al Viro         2013-03-30  726  	while (1) {
-710585d4922fd3 Nicolas Dichtel 2014-12-10  727  		next = pde_subdir_first(de);
-8ce584c7416d8a Al Viro         2013-03-30  728  		if (next) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  729  			if (unlikely(pde_is_permanent(root))) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  730  				WARN(1, "removing permanent /proc entry '%s/%s'",
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  731  					next->parent->name, next->name);
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  732  				return -EINVAL;
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  733  			}
-4f1134370a29a5 Alexey Dobriyan 2018-04-10  734  			rb_erase(&next->subdir_node, &de->subdir);
-8ce584c7416d8a Al Viro         2013-03-30  735  			de = next;
-8ce584c7416d8a Al Viro         2013-03-30  736  			continue;
-8ce584c7416d8a Al Viro         2013-03-30  737  		}
-8ce584c7416d8a Al Viro         2013-03-30  738  		next = de->parent;
-8ce584c7416d8a Al Viro         2013-03-30  739  		if (S_ISDIR(de->mode))
-8ce584c7416d8a Al Viro         2013-03-30  740  			next->nlink--;
-e06689bf57017a Alexey Dobriyan 2019-12-04  741  		write_unlock(&proc_subdir_lock);
-e06689bf57017a Alexey Dobriyan 2019-12-04  742  
-e06689bf57017a Alexey Dobriyan 2019-12-04  743  		proc_entry_rundown(de);
-8ce584c7416d8a Al Viro         2013-03-30  744  		if (de == root)
-8ce584c7416d8a Al Viro         2013-03-30  745  			break;
-8ce584c7416d8a Al Viro         2013-03-30  746  		pde_put(de);
-8ce584c7416d8a Al Viro         2013-03-30  747  
-ecf1a3dfff22bd Waiman Long     2015-09-09  748  		write_lock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  749  		de = next;
-8ce584c7416d8a Al Viro         2013-03-30  750  	}
-8ce584c7416d8a Al Viro         2013-03-30  751  	pde_put(root);
-8ce584c7416d8a Al Viro         2013-03-30 @752  	return 0;
-8ce584c7416d8a Al Viro         2013-03-30  753  }
-8ce584c7416d8a Al Viro         2013-03-30  754  EXPORT_SYMBOL(remove_proc_subtree);
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Juergen
