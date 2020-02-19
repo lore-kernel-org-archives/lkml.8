@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA2C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F6BC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 705BB208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84DD208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbgBSIty (ORCPT
+        id S1726803AbgBSItz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:49:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49718 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 03:49:55 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49770 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726195AbgBSItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:49:52 -0500
+        id S1726510AbgBSIty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:49:54 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D40BBABE7;
-        Wed, 19 Feb 2020 08:49:50 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id B4D30ACF2;
+        Wed, 19 Feb 2020 08:49:52 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 02/10] n_gsm: introduce enum gsm_dlci_state
-Date:   Wed, 19 Feb 2020 09:49:41 +0100
-Message-Id: <20200219084949.28074-2-jslaby@suse.cz>
+Subject: [PATCH 08/10] n_gsm: switch throttled to bool
+Date:   Wed, 19 Feb 2020 09:49:47 +0100
+Message-Id: <20200219084949.28074-8-jslaby@suse.cz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219084949.28074-1-jslaby@suse.cz>
 References: <20200219084949.28074-1-jslaby@suse.cz>
@@ -40,69 +40,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gsm_dlci->state is clearly an enumeration. So introduce one and use it
--- compiler now checks if valid values are assigned to the field.
-
-Note that a compiler warns about unhandled cases in switch. Add default
-cases with a pr_debug (which is not printed by default).
+gsm_dlci->throttled is used as a bool, so treat it as such.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/n_gsm.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/tty/n_gsm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 828c0c7babdd..1d0a140027ff 100644
+index 24ce46e4fb45..6bd51d309c32 100644
 --- a/drivers/tty/n_gsm.c
 +++ b/drivers/tty/n_gsm.c
-@@ -100,6 +100,13 @@ struct gsm_msg {
- 	unsigned char buffer[];
- };
- 
-+enum gsm_dlci_state {
-+	DLCI_CLOSED,
-+	DLCI_OPENING,		/* Sending SABM not seen UA */
-+	DLCI_OPEN,		/* SABM/UA complete */
-+	DLCI_CLOSING,		/* Sending DISC not seen UA/DM */
-+};
-+
- /*
-  *	Each active data link has a gsm_dlci structure associated which ties
-  *	the link layer to an optional tty (if the tty side is open). To avoid
-@@ -113,11 +120,7 @@ struct gsm_msg {
- struct gsm_dlci {
- 	struct gsm_mux *gsm;
- 	int addr;
--	int state;
--#define DLCI_CLOSED		0
--#define DLCI_OPENING		1	/* Sending SABM not seen UA */
--#define DLCI_OPEN		2	/* SABM/UA complete */
--#define DLCI_CLOSING		3	/* Sending DISC not seen UA/DM */
-+	enum gsm_dlci_state state;
- 	struct mutex mutex;
- 
- 	/* Link layer */
-@@ -1495,6 +1498,9 @@ static void gsm_dlci_t1(struct timer_list *t)
- 		} else
- 			gsm_dlci_close(dlci);
- 		break;
-+	default:
-+		pr_debug("%s: unhandled state: %d\n", __func__, dlci->state);
-+		break;
- 	}
+@@ -142,7 +142,7 @@ struct gsm_dlci {
+ 	u32 modem_tx;		/* Our outgoing modem lines */
+ 	bool dead;		/* Refuse re-open */
+ 	/* Flow control */
+-	int throttled;		/* Private copy of throttle state */
++	bool throttled;		/* Private copy of throttle state */
+ 	int constipated;	/* Throttle status for outgoing */
+ 	/* Packetised I/O */
+ 	struct sk_buff *skb;	/* Frame being sent */
+@@ -3172,7 +3172,7 @@ static void gsmtty_throttle(struct tty_struct *tty)
+ 		return;
+ 	if (C_CRTSCTS(tty))
+ 		dlci->modem_tx &= ~TIOCM_DTR;
+-	dlci->throttled = 1;
++	dlci->throttled = true;
+ 	/* Send an MSC with DTR cleared */
+ 	gsmtty_modem_update(dlci, 0);
  }
- 
-@@ -1808,6 +1814,10 @@ static void gsm_queue(struct gsm_mux *gsm)
- 		case DLCI_OPENING:
- 			gsm_dlci_open(dlci);
- 			break;
-+		default:
-+			pr_debug("%s: unhandled state: %d\n", __func__,
-+					dlci->state);
-+			break;
- 		}
- 		break;
- 	case DM:	/* DM can be valid unsolicited */
+@@ -3184,7 +3184,7 @@ static void gsmtty_unthrottle(struct tty_struct *tty)
+ 		return;
+ 	if (C_CRTSCTS(tty))
+ 		dlci->modem_tx |= TIOCM_DTR;
+-	dlci->throttled = 0;
++	dlci->throttled = false;
+ 	/* Send an MSC with DTR set */
+ 	gsmtty_modem_update(dlci, 0);
+ }
 -- 
 2.25.0
 
