@@ -2,158 +2,190 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C378EC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2192BC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9674D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:46:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="F+xgFFXF"
+	by mail.kernel.org (Postfix) with ESMTP id E6912222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:46:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582102013;
+	bh=FyYxiqQBTSfI8r6qT92R/vRz7GJKnKCv1ldA8gwPu1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zfFMPQ04NRRXlQofMk9rjQs3EhAACYSu7FRL471QWNtiJOVmOU7yYE1kgwaTZ2jJe
+	 csFEAgai9UAeThuUDz7gzjos8zzzmipkSZwrErg5aLZcaP12Rwno0EWkekYGQxa06j
+	 0WkzU9IBAFzvVOBkrOjQmapO0kdw1NuNNlpzT7Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBSIq1 (ORCPT
+        id S1726651AbgBSIqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:46:27 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:42627 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbgBSIq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:46:27 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4KzsjzRCCP9a94KzwjnUo7; Wed, 19 Feb 2020 09:46:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582101984; bh=PTKVwzVLQIQPSyqMNFpGkfySY5g8krHUvlfxMep32fU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=F+xgFFXFAZaqMbAP406e6nV+kfRI6nfbEU7zlXgTe4es9gSPlG5/5hrH0CrEl1ebg
-         9G3/ad4BLYwtzTbAEB7ls21iPcJQAi5Lla65W1V0YIVe3wWXaXgsKUVZBfuQlLEWSz
-         qMGHPbCCPQWdi/ahtk2mY+MFyPnQ6REBBp0vOE0T9ym/4b9oPwWpDrj/5B93SjjnK1
-         JxkwkmS2+bnsBuYB+U9TL73k13zODztbf5SbnIMhd0mScUlpO7DSZPxzgJZtPXD5P0
-         PPX9c1diKLiz2CSsspN1iSgujevzQ34MAx4yfnmcPNtv1R3p1JDwcJmYgG4pjvllYe
-         C+AD+9e3XAA4w==
-Subject: Re: [RFC][PATCHv2 02/12] videobuf2: handle V4L2 buffer cache flags
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-3-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b4fc938d-4eb9-40fd-7984-a4019b6a0de8@xs4all.nl>
-Date:   Wed, 19 Feb 2020 09:46:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 03:46:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbgBSIqv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:46:51 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1077208E4;
+        Wed, 19 Feb 2020 08:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582102010;
+        bh=FyYxiqQBTSfI8r6qT92R/vRz7GJKnKCv1ldA8gwPu1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GayTIAtwO4nHDBqLTJtfVUrlCE80sKZcvuoGg6SnICCIqzag81XyGoJP2QKnM03//
+         XT35/rs+VpNfQvSNtcqaTNAGrf2uytTAwGo54DBuwQAfr2HJ1j5E5wzXLYpunbW/pt
+         qn/uHKN4uBVuCsyMcNugsB6F8xYK9X1gNwsSRbRI=
+Date:   Wed, 19 Feb 2020 09:46:46 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@android.com>
+Subject: Re: [PATCH] modpost: return error if module is missing ns imports
+ and MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n
+Message-ID: <20200219084643.GA25067@linux-8ccs>
+References: <20200214143709.6490-1-jeyu@kernel.org>
+ <20200217145644.GA221719@google.com>
+ <20200218160553.GA18056@linux-8ccs>
+ <CAK7LNATBCE7j-FH3kFwHOjgjerjx8hziK9iWD5Av6wyweovewA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204025641.218376-3-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfH8hQYBAj6CYnYUzAlnh4X3n9TQ5wLesGlVBp/Z/zU0bWyibekn0RK3CUs3OBU81BBzza1HBSvNC9X9UW5vB9YYsuCJDV4Hnu2tDu38FssqLwbr3lkK7
- DkYzn4R/os6pirc9vpJ0hHZkTOkWa0VvWeMNcDDgIiADhESwbk9uwNZTGnvK0wspsWd0N20vtCb3N4Zjp+V1RqfHBMhBO2UNmtwhMErVtzfsQOI7NB607T18
- 38+lZX4OUlb5EcGxeztQLBZHUxXkhsHdAcHvjscpE9BobIJKlvGZYxL7AeTbvAnFB/Kahv1vzFG34yzla9OZm65Ob5Bb6B8+Hd0Rdq3usMVmXK03GJF79YIl
- QGqKj5D4c05jyS8DgOmWQHqDAaiB0TDnoH6LOtPbvKuQrpovcpmROx39KzRxwKQ2isx3TFWsigNN9nGUzikgAIQIUqTChchOLGBuqCfvBRk4NjwkxuPk27V4
- CEjN9bDE2KGKDhwQsnEMymCLyLMKxFYmDJDrlqQd7UNq2jdwrHsZIGuTbANayxF194bIKWrEV3xgZgiI
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATBCE7j-FH3kFwHOjgjerjx8hziK9iWD5Av6wyweovewA@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
-> Set video buffer cache management flags corresponding to V4L2 cache
-> flags.
-> 
-> Both ->prepare() and ->finish() cache management hints should be
-> passed during this stage (buffer preparation), because there is no
-> other way for user-space to skip ->finish() cache flush.
-> 
-> There are two possible alternative approaches:
-> - The first one is to move cache sync from ->finish() to dqbuf().
->   But this breaks some drivers, that need to fix-up buffers before
->   dequeueing them.
-> 
-> - The second one is to move ->finish() call from ->done() to dqbuf.
-> 
-> Change-Id: I3bef1d1fb93a5fba290ce760eaeecdc8e7d6885a
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  .../media/common/videobuf2/videobuf2-v4l2.c   | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index eb5d5db96552..2da06a2ad6c4 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -337,6 +337,41 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
->  	return 0;
->  }
->  
-> +static void set_buffer_cache_hints(struct vb2_queue *q,
-> +				   struct vb2_buffer *vb,
-> +				   struct v4l2_buffer *b)
-> +{
-> +	/*
-> +	 * DMA exporter should take care of cache syncs, so we can avoid
-> +	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-> +	 * we always need ->prepare() or/and ->finish() cache sync.
-> +	 */
-> +	if (q->memory == VB2_MEMORY_DMABUF) {
-> +		vb->need_cache_sync_on_finish = 0;
-> +		vb->need_cache_sync_on_prepare = 0;
-> +		return;
-> +	}
-> +
-> +	if (!q->allow_cache_hints)
++++ Masahiro Yamada [19/02/20 04:27 +0900]:
+>On Wed, Feb 19, 2020 at 1:06 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> +++ Matthias Maennich [17/02/20 14:56 +0000]:
+>> >Hi Jessica!
+>> >
+>> >On Fri, Feb 14, 2020 at 03:37:09PM +0100, Jessica Yu wrote:
+>> >>Currently when CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, modpost only warns
+>> >>when a module is missing namespace imports. Under this configuration, such a module
+>> >>cannot be loaded into the kernel anyway, as the module loader would reject it.
+>> >>We might as well return a build error when a module is missing namespace imports
+>> >>under CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=n, so that the build
+>> >>warning does not go ignored/unnoticed.
+>> >
+>> >I generally agree with the idea of the patch. Thanks for working on
+>> >this! I also can't remember any reason why I did not write it like this
+>> >initially. Probably just because I introduced this configuration option
+>> >quite late in the development process of the initial patches.
+>> >
+>> >>
+>> >>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>> >>---
+>> >>scripts/Makefile.modpost |  1 +
+>> >>scripts/mod/modpost.c    | 19 +++++++++++++++----
+>> >>2 files changed, 16 insertions(+), 4 deletions(-)
+>> >>
+>> >>diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>> >>index b4d3f2d122ac..a53660f910a9 100644
+>> >>--- a/scripts/Makefile.modpost
+>> >>+++ b/scripts/Makefile.modpost
+>> >>@@ -53,6 +53,7 @@ MODPOST = scripts/mod/modpost                                               \
+>> >>      $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+>> >>      $(if $(KBUILD_EXTMOD),-o $(modulesymfile))                      \
+>> >>      $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)                  \
+>> >>+     $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N)      \
+>> >>      $(if $(KBUILD_MODPOST_WARN),-w)
+>> >>
+>> >>ifdef MODPOST_VMLINUX
+>> >>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>> >>index 7edfdb2f4497..53e966f7d557 100644
+>> >>--- a/scripts/mod/modpost.c
+>> >>+++ b/scripts/mod/modpost.c
+>> >>@@ -39,6 +39,8 @@ static int sec_mismatch_count = 0;
+>> >>static int sec_mismatch_fatal = 0;
+>> >>/* ignore missing files */
+>> >>static int ignore_missing_files;
+>> >>+/* Return an error when there are missing namespace imports */
+>> >>+static int missing_ns_import_error = 0;
+>> >
+>> >A more suitable name is maybe missing_ns_import_is_error or follow the
+>> >naming of the config option: allow_missing_ns_imports (with default = 1).
+>> >
+>> >>
+>> >>enum export {
+>> >>      export_plain,      export_unused,     export_gpl,
+>> >>@@ -2216,9 +2218,15 @@ static int check_exports(struct module *mod)
+>> >>
+>> >>              if (exp->namespace &&
+>> >>                  !module_imports_namespace(mod, exp->namespace)) {
+>> >>-                     warn("module %s uses symbol %s from namespace %s, but does not import it.\n",
+>> >>-                          basename, exp->name, exp->namespace);
+>> >>-                     add_namespace(&mod->missing_namespaces, exp->namespace);
+>> >>+                     if (missing_ns_import_error) {
+>> >>+                             merror("module %s uses symbol %s from namespace %s, but does not import it.\n",
+>> >>+                                     basename, exp->name, exp->namespace);
+>> >
+>> >I would like to avoid the code duplication here. The string literal is
+>> >identical for both cases.
+>>
+>> Hm, but one is a call to merror() and the other to warn(). The
+>> previous if (warn_unresolved) block does the same thing. I am not sure
+>> how to simplify it to one call without introducing macro magic or
+>> overcomplicating things. Or were you thinking of something else?
+>
+>
+>I would not say this is a horrible duplication,
+>but if you avoid repeating the same string,
+>maybe you could do like this:
+>
+>PRINTF log(enum loglevel loglevel, const char *fmt, ...)
+>
+>
+>
+>BTW, you accidentally changed the indentation of
+>add_namespace(&mod->missing_namespaces, exp->namespace);
+>
+>
+>
+>> >>+                             err = 1;
+>> >
+>> >Also, if we fail here, we might as well help the user to fix it by
+>> >suggesting to run `make nsdeps` (once per failed modpost run). Speaking
+>> >of which, `make nsdeps` is currently broken by this patch as it relies
+>> >on a successful (yet warning-full) build of the modules. So, in case of
+>> >`make nsdeps`, we probably have to omit the -N flag again when invoking
+>> >modpost.
+>>
+>> Good catch! Since KBUILD_NSDEPS is set when running `make nsdeps`,
+>> maybe we can do something like:
+>>
+>> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>> index a53660f910a9..145703ef8d3a 100644
+>> --- a/scripts/Makefile.modpost
+>> +++ b/scripts/Makefile.modpost
+>> @@ -53,7 +53,7 @@ MODPOST = scripts/mod/modpost                                         \
+>>         $(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS))) \
+>>         $(if $(KBUILD_EXTMOD),-o $(modulesymfile))                      \
+>>         $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)                  \
+>> -       $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,-N)      \
+>> +       $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS),,$(if $(KBUILD_NSDEPS),,-N))      \
+>
+>
+>If you follow Matthias' suggestion
+>"follow the naming of the config option: allow_missing_ns_imports
+>(with default = 1)."
+>the option is inverted, and you can write it more simply:
+>
+>
+>      $(if $(CONFIG_MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS)$(KBUILD_NSDEPS),-n)
+>     \
 
-If q->allow_cache_hints is 0, then if userspace attempts to set these
-flags in v4l2_buffer, they should be cleared. That's to indicate to
-userspace that these flags won't work.
+Yeah, that looks much better. Thanks!
 
-That should be done in vb2_fill_vb2_v4l2_buffer().
+Jessica
 
-Regards,
-
-	Hans
-
-> +		return;
-> +
-> +	vb->need_cache_sync_on_prepare = 1;
-> +	/*
-> +	 * ->finish() cache sync can be avoided when queue direction is
-> +	 * TO_DEVICE.
-> +	 */
-> +	if (q->dma_dir != DMA_TO_DEVICE)
-> +		vb->need_cache_sync_on_finish = 1;
-> +	else
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> +		vb->need_cache_sync_on_prepare = 0;
-> +}
-> +
->  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
->  				    struct v4l2_buffer *b, bool is_prepare,
->  				    struct media_request **p_req)
-> @@ -381,6 +416,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
->  	}
->  
->  	if (!vb->prepared) {
-> +		set_buffer_cache_hints(q, vb, b);
->  		/* Copy relevant information provided by the userspace */
->  		memset(vbuf->planes, 0,
->  		       sizeof(vbuf->planes[0]) * vb->num_planes);
-> 
 
