@@ -2,133 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A1EC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E5AC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB56424656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42A624655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FwIDj/04"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="w1E4Gp6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBSBLN (ORCPT
+        id S1727910AbgBSBLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:11:13 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44978 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbgBSBLN (ORCPT
+        Tue, 18 Feb 2020 20:11:34 -0500
+Received: from gateway24.websitewelcome.com ([192.185.51.253]:49633 "EHLO
+        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726757AbgBSBLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:11:13 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so22132895oia.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 17:11:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/xGaWAJBKAec3kwhkj9dkQ9ZINCAIKOnyRVDiG9f8fk=;
-        b=FwIDj/04JR/IHzVMZB5/xQ9S8o8n2jNDqjW7qtQ9UwUU7ETx5J16nMwLS/hZTjMGJN
-         HDttozOQStUrVexFsduHFiyPZq+iFwkR4NDHwJADtSRRvWVGeNg7lrhjpsnuNEddiOSB
-         K44kDfz9U9+NK11sP9lrzJT8+yvrScu33H7Jgrxf8rI0rhPD85TEl5I0YQ/Cajl0TK3B
-         t8XPm2EiZ9zyvL7RY9DPZmbRXERil36UDZ/sCXTb4MWBzX0YH/h5xxErMIVkSJGLrt/N
-         9UhVRgrR1ewSmlwZrn3IgSeO2/4E3RNy9tHQjjvihGmG6xFJNXrnX9ssWcxkLc4PfPZJ
-         NPoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/xGaWAJBKAec3kwhkj9dkQ9ZINCAIKOnyRVDiG9f8fk=;
-        b=kqMvR/ITAD2483gcw9RIhCdsjh0kC3yDGok3Hz1hXHXB+iGF1tXr9o1zA8vtP0kxm9
-         agDLPuUk4v+4vjf0ByZEXMpRvrIFNDoe2RLJgHlIIEDodq6z7mfE9cR8SoMqupWDozC8
-         S6unF3IaFNM96yNLHPt4urukb+dE0kTMHSWrEVnpUPeA3t+MppUhWbS8f8nhsmu1hbzI
-         Zn4tdkq8d08SCkWmf2H14dHPC9xoyi+jwA+unQHSd3c3//6jhoSvGW5sU0cyJWeZUzQq
-         QbaWx0UIb8Yje81AhsjmNey6U5rvlrQCwO2qzYbm0Tl+J4S6ULuZV0Ed0xEV1xtJsdoq
-         h6AQ==
-X-Gm-Message-State: APjAAAUj/SfxLn0jop10D0O5cO+Dbn5w5QokC/2mAcbWvzIMhhRPFFKO
-        6OhL/uhWoOsrlQG+iO5G+j9ZVm7nD89DCSS26/VScw==
-X-Google-Smtp-Source: APXvYqzhuoDZ9i6YIqTSpgb4IL/NHaiNkH1/8VSm+1Ke2iHRloG51oG9IIJbDtZvYPe5e6bFQfHLhiNxJZBwAke81UM=
-X-Received: by 2002:a54:4396:: with SMTP id u22mr3143967oiv.128.1582074672294;
- Tue, 18 Feb 2020 17:11:12 -0800 (PST)
+        Tue, 18 Feb 2020 20:11:34 -0500
+X-Greylist: delayed 1393 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Feb 2020 20:11:33 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway24.websitewelcome.com (Postfix) with ESMTP id 0C3E53249
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:48:20 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id 4DXHjJ2qURP4z4DXHjjPhG; Tue, 18 Feb 2020 18:48:20 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=JoYnHBAG6Y5v6fA38lydAZysRIc6JyUc06Qk8jBvAUk=; b=w1E4Gp6D/9U2l7EaNAy00GX6Jg
+        17Xr4eHKch+rmlP/+VeQNFjzBvy8SfbIIsRnA1R7vPNk+ign0ZNg4cBqUa1Qh0WSIKbhS5woHIAYY
+        G4oexTma33sdm2XgXOg9I+3piUWcBU69QXNi0K1qEqprdB8A1mwcUNvyaB4KSB7UEdb2CDakCjxfo
+        Z5RNwe1fP8CP1rgwk5F8QsUTJmIxE2Xdm/2PczWq/bDdw6se6VjEwWM/PdfgBUNmYa1eeGysnmjut
+        XrVlPT6rQ91P7B/m6NzhNw9hHTd/vew785BKQUdKzi4gfVheSGv43gu3+GII0IlDXJotY7phCkFaA
+        Ar4Ym6tg==;
+Received: from [191.31.202.255] (port=52372 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1j4DXG-000PIC-8O; Tue, 18 Feb 2020 21:48:18 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     daniel.lezcano@linaro.org, tglx@linutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v2] clocksource: owl: Improve owl_timer_init fail messages
+Date:   Tue, 18 Feb 2020 21:48:10 -0300
+Message-Id: <20200219004810.411190-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <e3d851477d569ccb66294b2292495778a3a24c09.camel@suse.de>
+References: <e3d851477d569ccb66294b2292495778a3a24c09.camel@suse.de>
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <CAHp75VcPL7DYp9hjgMu+d=CE=g+V7ZxT9ZyXX-OjEW_JQ4m_nA@mail.gmail.com> <CALAqxLWtYfwCzDRVecWF8yRQSKQZh-N2g0SifageUaG0QhBGJg@mail.gmail.com>
-In-Reply-To: <CALAqxLWtYfwCzDRVecWF8yRQSKQZh-N2g0SifageUaG0QhBGJg@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Feb 2020 17:11:00 -0800
-Message-ID: <CALAqxLW-Z=sut+A5Ezg4PkZ0HzM-np3PY_gAn0r=Ef0+FDBQDA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.202.255
+X-Source-L: No
+X-Exim-ID: 1j4DXG-000PIC-8O
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.202.255]:52372
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 1
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 4:19 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, Feb 18, 2020 at 4:06 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Wednesday, February 19, 2020, John Stultz <john.stultz@linaro.org> wrote:
-> >> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> >> index b25bcab2a26b..9d916a7b56a6 100644
-> >> --- a/drivers/base/dd.c
-> >> +++ b/drivers/base/dd.c
-> >> @@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
-> >>
-> >>  static int __driver_deferred_probe_check_state(struct device *dev)
-> >>  {
-> >> -       if (!initcalls_done)
-> >> -               return -EPROBE_DEFER;
-> >
-> >
-> > Why to touch this? Can't you simple add a new condition here 'if (deferred_probe_timeout > 0)'... ?
->
-> I think that might work. I'll give it a spin later tonight and double check it.
->
-> The main thing I wanted to do is fix the logic hole in the current
-> code where after initcalls_done=true but before deferred_probe_timeout
-> has expired we just fall through and return 0, which results in an
-> ENODEV being returned from the calling function.
+Check the return from clocksource_mmio_init, add messages in case of
+an error and in case of not having a defined clock property.
 
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+---
 
-So on IRC Bjorn sort of clarified a point I think Rob was trying to
-make on the earlier iteration of this patch, that it seems like
-Thierry's patch here:
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=62a6bc3a1e4f4ee9ae0076fa295f9af1c3725ce3
-*seems* to be trying to address the exact same issue, and maybe we
-should just have the genpd code use that instead?
+Thanks Manivannan and Andreas for the review.
+Tested on my Caninos Labrador s500 based board.
 
-The main question though, is why do we need both?  As mentioned above,
-the existing logic in __driver_deferred_probe_check_state() seems
-wrong: Until late_initcall it returns EPROBE_DEFER, then after
-initcalls_done==true returns 0 (in which case the caller then
-translates to ENODEV), until the timeout expires which it then returns
-ETIMEDOUT.
+Changes since v1:
+(suggested by maintainers)
+- Maintains consistency output PTR_ERR(clk)
+- Returning in case of error on clocksource_mmio_init
+- Use parentheses between the error code
+- Remove OF mention
 
-I suspect what is really wanted is EPROBE_DEFER -> (0) ENODEV (when
-timeout is not set) or EPROBE_DEFER -> ETIMEOUT (when the timeout is
-set), instead of the two state transitions it currently makes.
+ drivers/clocksource/timer-owl.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-So I still think my patch is needed, but I also suspect a better fix
-would be to kill driver_deferred_probe_check_state() and just replace
-its usage with driver_deferred_probe_check_state_continue(). Or am I
-still missing something?
+diff --git a/drivers/clocksource/timer-owl.c b/drivers/clocksource/timer-owl.c
+index 900fe736145d..820fbcc05503 100644
+--- a/drivers/clocksource/timer-owl.c
++++ b/drivers/clocksource/timer-owl.c
+@@ -135,8 +135,11 @@ static int __init owl_timer_init(struct device_node *node)
+ 	}
 
-thanks
--john
+ 	clk = of_clk_get(node, 0);
+-	if (IS_ERR(clk))
+-		return PTR_ERR(clk);
++	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
++		pr_err("Failed to get clock for clocksource (%d)\n", ret);
++		return ret;
++	}
+
+ 	rate = clk_get_rate(clk);
+
+@@ -144,8 +147,12 @@ static int __init owl_timer_init(struct device_node *node)
+ 	owl_timer_set_enabled(owl_clksrc_base, true);
+
+ 	sched_clock_register(owl_timer_sched_read, 32, rate);
+-	clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
+-			      rate, 200, 32, clocksource_mmio_readl_up);
++	ret = clocksource_mmio_init(owl_clksrc_base + OWL_Tx_VAL, node->name,
++				    rate, 200, 32, clocksource_mmio_readl_up);
++	if (ret) {
++		pr_err("Failed to register clocksource (%d)\n", ret);
++		return ret;
++	}
+
+ 	owl_timer_reset(owl_clkevt_base);
+
+--
+2.25.0
+
