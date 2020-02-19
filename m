@@ -2,94 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53385C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A07C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BB420801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B02F20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:28:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBSR03 (ORCPT
+        id S1726638AbgBSR2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:26:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:38913 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbgBSR02 (ORCPT
+        Wed, 19 Feb 2020 12:28:54 -0500
+Received: from mail-out.m-online.net ([212.18.0.9]:38158 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgBSR2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:26:28 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4T6o-0000pA-OG; Wed, 19 Feb 2020 18:26:03 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id BF7A5103A01; Wed, 19 Feb 2020 18:26:01 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [RFC patch 04/19] bpf/tracing: Remove redundant preempt_disable() in __bpf_trace_run()
-In-Reply-To: <20200219115415.57ee6d3c@gandalf.local.home>
-References: <20200214133917.304937432@linutronix.de> <20200214161503.289763704@linutronix.de> <20200219115415.57ee6d3c@gandalf.local.home>
-Date:   Wed, 19 Feb 2020 18:26:01 +0100
-Message-ID: <87d0aapjyu.fsf@nanos.tec.linutronix.de>
+        Wed, 19 Feb 2020 12:28:54 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48N4Sy0XBmz1qrMV;
+        Wed, 19 Feb 2020 18:28:50 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48N4Sx6ZC6z1qx0K;
+        Wed, 19 Feb 2020 18:28:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 3JamWYMpJdr7; Wed, 19 Feb 2020 18:28:48 +0100 (CET)
+X-Auth-Info: +eqKCJ9/Kpkal2WS3YfV5JluqC+AvVPDD2Bszf4YLMU=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 19 Feb 2020 18:28:48 +0100 (CET)
+Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+ <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
+ <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
+ <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
+Date:   Wed, 19 Feb 2020 18:24:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+On 2/19/20 10:20 AM, Alexandre Torgue wrote:
+Hi,
+[...]
+>>>>> This series adds the possibility to handle gpio interrupts on level.
+>>>>>
+>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>>>>> external interrupts only on edge. To be able to handle GPIO
+>>>>> interrupt on
+>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>>>> chip)
+>>>>> is retriggered following interrupt type and gpio line value.
+>>>>>
+>>>>> In exti irq chip, retrigger ops function is added.
+>>>>
+>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
+>>>> set
+>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
+>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
+>>>> selection")
+>>>> prevents that.
+>>>>
+>>>
+>>> No it's not possible. Each gpio line doesn't have a dedicated Exti line
+>>> Each Exti line is muxing between gpio banks.
+>>
+>> OK, that confirms my assumption.
+>>
+>>> Mapping is done as following:
+>>>
+>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
+>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
+>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
+>>> ...
+>>
+>> Is it at least possible to have IRQs of the same type on the same exti
+>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
+>> trigger-edge-falling ?
+>>
+> 
+> Sorry I don't catch your point. If you already succeed to get gpioA2,
+> then you will failed to get gpioB2 but looking at function call stack we
+> could get an other issue.
 
-> On Fri, 14 Feb 2020 14:39:21 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->
->> __bpf_trace_run() disables preemption around the BPF_PROG_RUN() invocation.
->> 
->> This is redundant because __bpf_trace_run() is invoked from a trace point
->> via __DO_TRACE() which already disables preemption _before_ invoking any of
->> the functions which are attached to a trace point.
->> 
->> Remove it.
->> 
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>  kernel/trace/bpf_trace.c |    2 --
->>  1 file changed, 2 deletions(-)
->> 
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -1476,9 +1476,7 @@ static __always_inline
->>  void __bpf_trace_run(struct bpf_prog *prog, u64 *args)
->>  {
->
-> Should there be a "cant_migrate()" added here?
+Considering the EXTI line limitations, I'd like to know what kind of IRQ
+input configuration is allowed/valid and what kind of configuration is
+not valid.
 
-A cant_sleep() is the right thing to add as this really needs to stay
-non-preemptible. Hmm?
+> Lets take example where you succeed to get gpioa2 as interrupt (using
+> interrupt bindings) and now you try to do the same for gpiob2, you will
+> have (roughly):
+> 
+> stm32_gpio_irq_request_resources (for gpiob2) --> succeed
+> 
+> stm32_gpio_set_type
+>  |
+>  |--> stm32_exti_set_type type -> change exti line 2 trigger registers
+>                                   with gpiob2 binding.
+> 
+> stm32_gpio_domain_activate --> failed as exti line2 is already used
+>                    by gpioa2.
+> 
+> So as stm32_gpio_set_type is called before checking than exti line is
+> available, type could be changed and behavior of gpioa2 interrupt broken.
+> 
+> Solution would be to move the exti line mux check from
+> stm32_gpio_domain_activate to  stm32_gpio_irq_request_resources callback.
 
->>  	rcu_read_lock();
->> -	preempt_disable();
->>  	(void) BPF_PROG_RUN(prog, args);
->> -	preempt_enable();
->>  	rcu_read_unlock();
->>  }
+So the hardware does support using both gpioA2 and gpioB2 as an
+interrupt source, for different drivers, if they are of the same
+interrupt type. Except the current implementation does not permit that.
 
-Thanks,
+If the interrupt types are different, that is not supported by the hardware.
 
-        tglx
-
+Correct ?
