@@ -2,108 +2,129 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A89CC34053
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0CEC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE1120801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91EA624671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rDG9mDN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBSP51 (ORCPT
+        id S1726768AbgBSP5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:57:27 -0500
-Received: from bmailout3.hostsharing.net ([176.9.242.62]:58581 "EHLO
-        bmailout3.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSP50 (ORCPT
+        Wed, 19 Feb 2020 10:57:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43354 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSP5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:57:26 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        Wed, 19 Feb 2020 10:57:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6yvAidRA3TLHjv42gpCVRhqEW5bRveqFs50fMEoxkBk=; b=rDG9mDN12+rddoKEScWYeDl+pA
+        bOhmjFugOCtij8XkRrbJSrOPOdn/4DgBCYiGl8TG7Ua07+YAh4hfkuhtlVkP5finaxplqZL09vQG5
+        oK7AOEvWzGmy85Gqr+x2Xnr8Vf7/XfTePh9dGU9oGimW8VX1k52aTM+wZ+S5KY7bA2v9ck4WVPrg9
+        uXatpJ5pPEL9aXDZzYckeX3Y5abUQnuLLP2QDDIXVFPzfDFKeDBYsF/uJMD/8RttBfhCcaKhNm5T6
+        xh5t08skZGYJzhpXacP3zUfFHDFVOROjjfK9n+DSqJo2Q+7ykUM7OTkfqYFV/iF/mpcWVlatN85XT
+        C48B9vgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4Riw-0006Oc-1o; Wed, 19 Feb 2020 15:57:18 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6AE27101E694F;
-        Wed, 19 Feb 2020 16:57:24 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 16111ECCD0; Wed, 19 Feb 2020 16:57:24 +0100 (CET)
-Date:   Wed, 19 Feb 2020 16:57:24 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com,
-        Enzo Matsumiya <ematsumiya@suse.com>
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200219155724.4jm2yt75u4s2t3tn@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
- <20200209180722.ikuyjignnd7ddfp5@wunner.de>
- <20200209202512.rzaqoc7tydo2ouog@wunner.de>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ADFD03007F2;
+        Wed, 19 Feb 2020 16:55:23 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DD026201E47AE; Wed, 19 Feb 2020 16:57:15 +0100 (CET)
+Date:   Wed, 19 Feb 2020 16:57:15 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 04/22] x86/doublefault: Make memmove() notrace/NOKPROBE
+Message-ID: <20200219155715.GD14946@hirez.programming.kicks-ass.net>
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.604459293@infradead.org>
+ <20200219103614.2299ff61@gandalf.local.home>
+ <20200219154031.GE18400@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200209202512.rzaqoc7tydo2ouog@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200219154031.GE18400@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 09:25:12PM +0100, Lukas Wunner wrote:
-> Below is another attempt.  I'll have to take a look at this with a
-> fresh pair of eyeballs though to verify I haven't overlooked anything
-> else and also to determine if this is actually simpler than Stuart's
-> approach.  Again, the advantage here is that processing of the events
-> by the IRQ thread is sped up by not delaying it until the Slot Status
-> register has settled.
+On Wed, Feb 19, 2020 at 04:40:31PM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 19, 2020 at 10:36:14AM -0500, Steven Rostedt wrote:
+> > On Wed, 19 Feb 2020 15:47:28 +0100
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > --- a/arch/x86/lib/memcpy_32.c
+> > > +++ b/arch/x86/lib/memcpy_32.c
+> > > @@ -21,7 +21,7 @@ __visible void *memset(void *s, int c, s
+> > >  }
+> > >  EXPORT_SYMBOL(memset);
+> > >  
+> > > -__visible void *memmove(void *dest, const void *src, size_t n)
+> > > +__visible notrace void *memmove(void *dest, const void *src, size_t n)
+> > >  {
+> > >  	int d0,d1,d2,d3,d4,d5;
+> > >  	char *ret = dest;
+> > > @@ -207,3 +207,8 @@ __visible void *memmove(void *dest, cons
+> > >  
+> > >  }
+> > >  EXPORT_SYMBOL(memmove);
+> > 
+> > Hmm, for things like this, which is adding notrace because of a single
+> > instance of it (although it is fine to trace in any other instance), it
+> > would be nice to have a gcc helper that could call "memmove+5" which
+> > would skip the tracing portion.
+> 
+> Or just open-code the memmove() in do_double_fault() I suppose. I don't
+> think we care about super optimized code there. It's the bloody ESPFIX
+> trainwreck.
 
-After some deliberation I've come full circle and think that Stuart's
-approach is actually better than mine:
+Something like so, I suppose...
 
-I thought that my approach would speed up processing of events by
-waking the IRQ thread immediately after the first loop iteration.
-But I've realized that right at the beginning of the IRQ thread,
-synchronize_hardirq() is called, so the IRQ thread will wait for
-the hardirq handler to finish before actually processing the events.
-
-The rationale for the call to synchronize_hardirq() is that the
-IRQ thread was woken, but now sees that the hardirq handler is
-running (again) to collect more events.  In that situation it makes
-sense to wait for them to be collected before starting to process
-events.
-
-Is the synchronize_hardirq() absolutely necessary?  Not really,
-but I still think that it makes sense.  In reality, the latency
-for additional loop iterations is likely small, so it's probably
-not worth to optimize for immediate processing after the first
-loop iteration.
-
-Stuart's approach is also less intrusive and doesn't change the
-logic as much as my approach does.  His patch therefore lends
-itself better for backporting to stable.
-
-So I've just respun Stuart's v3 patch, taking into account the
-review comments I had sent for it.  I've taken the liberty to make
-some editorial changes to the commit message and code comment.
-Stuart & Bjorn, if you don't like these, please feel free to roll
-back my changes to them as you see fit.
-
-I realize now that I forgot to add the following tags,
-Bjorn, could you add them if/when applying?
-
-Fixes: 7b4ce26bcf69 ("PCI: pciehp: Convert to threaded IRQ")
-Cc: stable@vger.kernel.org # v4.19+
-
-Thanks!
-
-Lukas
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 6ef00eb6fbb9..543de932dc7c 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -350,14 +350,20 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code, unsign
+ 		regs->ip == (unsigned long)native_irq_return_iret)
+ 	{
+ 		struct pt_regs *gpregs = (struct pt_regs *)this_cpu_read(cpu_tss_rw.x86_tss.sp0) - 1;
++		unsigned long *dst = &gpregs->ip;
++		unsigned long *src = (void *)regs->dp;
++		int i, count = 5;
+ 
+ 		/*
+ 		 * regs->sp points to the failing IRET frame on the
+ 		 * ESPFIX64 stack.  Copy it to the entry stack.  This fills
+ 		 * in gpregs->ss through gpregs->ip.
+-		 *
+ 		 */
+-		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
++		for (i = 0; i < count; i++) {
++			int idx = (dst <= src) ? i : count - i;
++			dst[idx] = src[idx];
++		}
++
+ 		gpregs->orig_ax = 0;  /* Missing (lost) #GP error code */
+ 
+ 		/*
