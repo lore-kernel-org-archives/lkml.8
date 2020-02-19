@@ -2,439 +2,337 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4741EC3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE35C3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDF124670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7C824654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SnWvR2uL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmGex7Ew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBSU4X (ORCPT
+        id S1727691AbgBSU4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:56:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40423 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSU4W (ORCPT
+        Wed, 19 Feb 2020 15:56:40 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37384 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSU4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:56:22 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so2177244wmi.5;
-        Wed, 19 Feb 2020 12:56:19 -0800 (PST)
+        Wed, 19 Feb 2020 15:56:40 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so2158555ioc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:56:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sMk/Y7Fqu98LytrpnZeBf0vMkusEQQP/lCvCtTwXUs4=;
-        b=SnWvR2uLDPWet7/2PIuVvUdACeAf9w4tf8I4HzlAQTQlLQF+jcgy30Tq1+E7pia9gh
-         sica45qA6OJq1ISNn92a+TmCHsqkjqNhfKokg3RipXZy1coAlVgEPwdplQVtETwxirvy
-         jtqpnDf3LJ4EV2oaqudxyrIWf4SKkWb4GhOckvw7LOEoviG6gz7U8HVNV4mjUPkHF3Mi
-         FmnNqHICSMV8EjAjAIlHxB+hoqjWjlgvtFtR4LuimT/s/n1a+la2mPHqS46uzvt25OQR
-         txz9vDC/jtfA7ZfiXFEYBN6LlH5+mFCZvjkJW/8T6WHkzgmLUbsOz6J0xWCf5xHXmSL6
-         et+w==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BXtUYAMk2yypjpr2fiXAWRzmutEB5OJ96VfTvfe+/6c=;
+        b=AmGex7EwESJoGdxW/IK7RUt6DGyfpn9qvcWIBv9ejozvqo1awYekRr/sUSbXHAJZds
+         gvoKJSwsCWNdl18wq5WRb94mDmtvp47TpLG2/5Mala4om3G+9O4TvRx5UQXU+K7jaoxM
+         Un5HR8Yuzv3g17d1n3SfkNqqYZrWJQsH8AWJGebHrEB/vMcUoG5XPV1ohv1br3Hk9sXD
+         tSYamsf5SsI28O2RV6klxBb5vENMnfcLIOvGsuKRXVl4CPIgOJ4PpaSCTgBNb85ioQ3S
+         +RBsspW71MhyarciJf9fWRYrJ5jGP1nVXrVZ0pBI7XjzZGI+T88wHhNi7QGXTZi3QpTy
+         LGLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sMk/Y7Fqu98LytrpnZeBf0vMkusEQQP/lCvCtTwXUs4=;
-        b=nrzXw/PxZ+OBKP6SckER/zdcxgNtd77tVJJZIsUq330ChYKi8NI4kBBft1VsG3CVBn
-         v07XxySYSUgu//kT4EOC9U+7lN8M3vUynepfbJQ8TTj81rej1LZuwstwh/kTLD3MfUTA
-         k0DDvA2ga89rceZXHm1Mkpauasxg/81PtJ9I4y6eVOZHkgDGt8BltafMHREdd2V4hOPm
-         oyhrjwU6kl1Pjx0WgbvcJmbv/vxyxk2/4SStDGpHQSA+P6/NH67STSdntpK5DAeILgGQ
-         0cfj9RqrBEGiYh1Ae/+quv8Irkj54E8nzFCH6UEaO8VjCe3VYWJ6ISZd+irNVSoGy+iX
-         ooOQ==
-X-Gm-Message-State: APjAAAWe4/y+vW2QQceECE9F2wbKLu1B/Zjjl4+X1fLc0s/pmqoklNg+
-        SMCdQINmsGrjnt4b2pbcwhCvU5RlvO0=
-X-Google-Smtp-Source: APXvYqxfBKxU+0cLJYYZ4YvZ4KGKqVu8uWMSazJl/G4F1CmgKyg5eUtgqIK+6jG9VFrqiew9xXIt+g==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr12116795wml.138.1582145778806;
-        Wed, 19 Feb 2020 12:56:18 -0800 (PST)
-Received: from Ansuel-XPS.localdomain ([5.170.106.116])
-        by smtp.googlemail.com with ESMTPSA id v15sm1435093wrf.7.2020.02.19.12.56.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:56:17 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Sricharan R <sricharan@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilia Lin <ilia.lin@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BXtUYAMk2yypjpr2fiXAWRzmutEB5OJ96VfTvfe+/6c=;
+        b=jNPGKAhOaWa6wuz1zR2ZmNZ5VcS4ZHVCRdMIDMOR7OGC7/QWtghy4fGa2xosP5XXT1
+         /YiuxW9ug8sVLmpns7YpQQb7As2fis7q7IGnA5YfE8jTzwphzwXqkMwxrUPuA7Ho2sal
+         BRl7cY6/9/LOTZls6UC4SjSxF6I196padfE5kKnMwuFr8sq2f2JZQSgOr6ks47OgX2hC
+         GImGlgo9HIqcSQ4Cg1rljqKfWmkK86KkUHnLlT6aiVJCWCCw+mV8OzVjABwhWyw6iraH
+         juJzbKF+2RQRgngl2I0iTMpXKJPINACIngV94P4kXOs/puEfBXuIum0Qz78LI1CEHbFX
+         dVHg==
+X-Gm-Message-State: APjAAAWGn3D6rJoUbzxwr6j3k/6nb40Gr+TUMqVXaX94FTO6pDFiVHnz
+        bIu3k/9G20VQFJP1ZsZRleYJoFEpk5dpHNv13H0dkjWzYJA=
+X-Google-Smtp-Source: APXvYqyrfEJ75AkhgQEHrQ7440cuVEkH4ehytEjs4RWSvQcSM27eEcC9Sbt5xvxu/vjhwPrzEfjtBsP9MAIbTuE7ezI=
+X-Received: by 2002:a5e:d616:: with SMTP id w22mr20390545iom.57.1582145798058;
+ Wed, 19 Feb 2020 12:56:38 -0800 (PST)
+MIME-Version: 1.0
+References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+ <20200211174205.22247-2-arnaud.pouliquen@st.com> <20200213200813.GA14415@xps15>
+ <24947b31-bef6-cfb3-686e-80bef6f974e3@st.com> <CANLsYkxhWWgVFVe3=5WOYkYGQgV7g+3FvDKRDKi7y9kuk4_G8w@mail.gmail.com>
+ <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
+In-Reply-To: <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 19 Feb 2020 13:56:27 -0700
+Message-ID: <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
+ and booted before kernel
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: qcom: Add support for krait based socs
-Date:   Wed, 19 Feb 2020 21:55:45 +0100
-Message-Id: <20200219205546.6800-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
-that has KRAIT processors the voltage/current value of each OPP
-varies based on the silicon variant in use.
+Hey Arnaud,
 
-The required OPP related data is determined based on
-the efuse value. This is similar to the existing code for
-kryo cores. So adding support for krait cores here.
+On Tue, 18 Feb 2020 at 10:31, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>
+> Hi Mathieu, Bjorn,
+>
+> On 2/17/20 7:40 PM, Mathieu Poirier wrote:
+> > On Fri, 14 Feb 2020 at 09:33, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+> >>
+> >> Hi Mathieu,
+> >>
+> >> On 2/13/20 9:08 PM, Mathieu Poirier wrote:
+> >>> Good day,
+> >>>
+> >>> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
+> >>>> From: Loic Pallardy <loic.pallardy@st.com>
+> >>>>
+> >>>> Remote processor could boot independently or be loaded/started before
+> >>>> Linux kernel by bootloader or any firmware.
+> >>>> This patch introduces a new property in rproc core, named skip_fw_load,
+> >>>> to be able to allocate resources and sub-devices like vdev and to
+> >>>> synchronize with current state without loading firmware from file system.
+> >>>> It is platform driver responsibility to implement the right firmware
+> >>>> load ops according to HW specificities.
+> >>>>
+> >>>> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> >>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> >>>> ---
+> >>>>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
+> >>>>  include/linux/remoteproc.h           |  2 +
+> >>>>  2 files changed, 55 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> >>>> index 097f33e4f1f3..876b5420a32b 100644
+> >>>> --- a/drivers/remoteproc/remoteproc_core.c
+> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
+> >>>> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+> >>>>      return ret;
+> >>>>  }
+> >>>>
+> >>>> -/*
+> >>>> - * take a firmware and boot a remote processor with it.
+> >>>> +/**
+> >>>> + * rproc_fw_boot() - boot specified remote processor according to specified
+> >>>> + * firmware
+> >>>> + * @rproc: handle of a remote processor
+> >>>> + * @fw: pointer on firmware to handle
+> >>>> + *
+> >>>> + * Handle resources defined in resource table, load firmware and
+> >>>> + * start remote processor.
+> >>>> + *
+> >>>> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
+> >>>> + * core, but under the responsibility of platform driver.
+> >>>> + *
+> >>>> + * Returns 0 on success, and an appropriate error value otherwise.
+> >>>>   */
+> >>>>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> >>>>  {
+> >>>> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+> >>>>      if (ret)
+> >>>>              return ret;
+> >>>>
+> >>>> -    dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+> >>>> +    if (fw)
+> >>>> +            dev_info(dev, "Booting fw image %s, size %zd\n", name,
+> >>>> +                     fw->size);
+> >>>> +    else
+> >>>> +            dev_info(dev, "Synchronizing with preloaded co-processor\n");
+> >>>>
+> >>>>      /*
+> >>>>       * if enabling an IOMMU isn't relevant for this rproc, this is
+> >>>> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
+> >>>>   * rproc_boot() - boot a remote processor
+> >>>>   * @rproc: handle of a remote processor
+> >>>>   *
+> >>>> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
+> >>>> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
+> >>>> + * different contexts:
+> >>>> + * - power off
+> >>>> + * - preloaded firmware
+> >>>> + * - started before kernel execution
+> >>>> + * The different operations are selected thanks to properties defined by
+> >>>> + * platform driver.
+> >>>>   *
+> >>>> - * If the remote processor is already powered on, this function immediately
+> >>>> - * returns (successfully).
+> >>>> + * If the remote processor is already powered on at rproc level, this function
+> >>>> + * immediately returns (successfully).
+> >>>>   *
+> >>>>   * Returns 0 on success, and an appropriate error value otherwise.
+> >>>>   */
+> >>>>  int rproc_boot(struct rproc *rproc)
+> >>>>  {
+> >>>> -    const struct firmware *firmware_p;
+> >>>> +    const struct firmware *firmware_p = NULL;
+> >>>>      struct device *dev;
+> >>>>      int ret;
+> >>>>
+> >>>> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
+> >>>>
+> >>>>      dev_info(dev, "powering up %s\n", rproc->name);
+> >>>>
+> >>>> -    /* load firmware */
+> >>>> -    ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> >>>> -    if (ret < 0) {
+> >>>> -            dev_err(dev, "request_firmware failed: %d\n", ret);
+> >>>> -            goto downref_rproc;
+> >>>> +    if (!rproc->skip_fw_load) {
+> >>>> +            /* load firmware */
+> >>>> +            ret = request_firmware(&firmware_p, rproc->firmware, dev);
+> >>>> +            if (ret < 0) {
+> >>>> +                    dev_err(dev, "request_firmware failed: %d\n", ret);
+> >>>> +                    goto downref_rproc;
+> >>>> +            }
+> >>>> +    } else {
+> >>>> +            /*
+> >>>> +             * Set firmware name pointer to null as remoteproc core is not
+> >>>> +             * in charge of firmware loading
+> >>>> +             */
+> >>>> +            kfree(rproc->firmware);
+> >>>> +            rproc->firmware = NULL;
+> >>>
+> >>> If the MCU with pre-loaded FW crashes request_firmware() in
+> >>> rproc_trigger_recovery() will return an error and rproc_start()
+> >>> never called.
+> >>
+> >> Right, something is missing in the recovery function to prevent request_firmware call if skip_fw_load is set
+> >>
+> >> We also identify an issue if recovery fails:
+> >> In case of recovery issue the rproc state is RPROC_CRASHED, so that it is no more possible to load a new firmware from
+> >> user space.
+> >> This issue is not linked to this patchset. We have patches on our shelves for this.
+> >>
+> >>>>      }
+> >>>>
+> >>>>      ret = rproc_fw_boot(rproc, firmware_p);
+> >>>> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
+> >>>>      /* create debugfs entries */
+> >>>>      rproc_create_debug_dir(rproc);
+> >>>>
+> >>>> -    /* if rproc is marked always-on, request it to boot */
+> >>>> -    if (rproc->auto_boot) {
+> >>>> +    if (rproc->skip_fw_load) {
+> >>>> +            /*
+> >>>> +             * If rproc is marked already booted, no need to wait
+> >>>> +             * for firmware.
+> >>>> +             * Just handle associated resources and start sub devices
+> >>>> +             */
+> >>>> +            ret = rproc_boot(rproc);
+> >>>> +            if (ret < 0)
+> >>>> +                    return ret;
+> >>>> +    } else if (rproc->auto_boot) {
+> >>>> +            /* if rproc is marked always-on, request it to boot */
+> >>>
+> >>> I spent way too much time staring at this modification...  I can't decide if a
+> >>> system where the FW has been pre-loaded should be considered "auto_boot".
+> >>> Indeed the result is the same, i.e the MCU is started at boot time without user
+> >>> intervention.
+> >>
+> >> The main difference is that the firmware is loaded by the Linux remote proc in case of auto-boot.
+> >> In auto-boot mode the remoteproc loads a firmware, on probe, with a specified name without any request from user space.
+> >> One constraint of this mode is that the file system has to be accessible before the rproc probe.
+> >
+> > Indeed, but in both cases the MCU is booted automatically.  In one
+> > case the FW is loaded by the framework and in the other it is not.  As
+> > such both scenarios are "auto_boot", they simply have different
+> > flavours.
+> Regarding your concerns i would like to propose an alternative that will answer to following use cases:
+>
+> In term of use cases we can start the remote proc firmware in following modes:
+> - auto boot with FW loading, resource table parsing and FW start/stop
+> - auto boot without FW loading, with FW resource table parsing and FW start/stop
+> - auto boot with FW attachment and  resource table parsing
+> - boot on userspace request with FW loading, resource table parsing and FW start/stop
+> - boot on userspace request without FW loading, with FW resource table parsing and FW start/stop
+> - boot on userspace request with FW attachment and  resource table parsing
+>
+> I considered the recovery covered by these use cases...
+>
+> I tried to concatenate all use case to determine the behavior of the core and platform driver:
+> - "auto-boot" used to decide if boot is from driver or user space request (independently from fw loading and live cycle management)
+> - "skip_fw_load" allows to determine if a firmware has to be loaded or not.
+> - remote Firmware live cycle (start,stop,...) are managed by the platform driver, it would have to determine the manage the remote proc depending on the mode detected.
+>
+> If i apply this for stm32mp1 driver:
+> normal boot( FW started on user space request):
+>   - auto-boot = 0
+>   - skip_fw_load = 0
+> FW loaded and started by the bootloader
+>   - auto-boot = 1
+>   - skip_firmware = 1;
+>
+> => on a stop: the "auto-boot" and "skip_firmware flag will be reset by the stm32rproc driver, to allow user space to load a new firmware or reste the system.
+> this is considered as a ack by Bjorn today, if you have an alternative please share.
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- .../bindings/opp/qcom-nvmem-cpufreq.txt       |   3 +-
- drivers/cpufreq/Kconfig.arm                   |   2 +-
- drivers/cpufreq/cpufreq-dt-platdev.c          |   5 +
- drivers/cpufreq/qcom-cpufreq-nvmem.c          | 181 ++++++++++++++++--
- 4 files changed, 173 insertions(+), 18 deletions(-)
+I wonder if we can achieve the same results without needing
+rproc::skip_fw_load...  For cases where the FW would have been loaded
+and the MCU started by another entity we could simply set rproc->state
+= RPROC_RUNNING in the platform driver.  That way when the MCU is
+stopped or crashes, there is no flag to reset, rproc->state is simply
+set correctly by the current code.
 
-diff --git a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-index 4751029b9b74..64f07417ecfb 100644
---- a/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt
-@@ -19,7 +19,8 @@ In 'cpu' nodes:
- 
- In 'operating-points-v2' table:
- - compatible: Should be
--	- 'operating-points-v2-kryo-cpu' for apq8096 and msm8996.
-+	- 'operating-points-v2-kryo-cpu' for apq8096, msm8996, msm8974,
-+					     apq8064, ipq8064, msm8960 and ipq8074.
- 
- Optional properties:
- --------------------
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 3858d86cf409..15c1a1231516 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -128,7 +128,7 @@ config ARM_OMAP2PLUS_CPUFREQ
- 
- config ARM_QCOM_CPUFREQ_NVMEM
- 	tristate "Qualcomm nvmem based CPUFreq"
--	depends on ARM64
-+	depends on ARCH_QCOM
- 	depends on QCOM_QFPROM
- 	depends on QCOM_SMEM
- 	select PM_OPP
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index f2ae9cd455c1..cb9db16bea61 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -141,6 +141,11 @@ static const struct of_device_id blacklist[] __initconst = {
- 	{ .compatible = "ti,dra7", },
- 	{ .compatible = "ti,omap3", },
- 
-+	{ .compatible = "qcom,ipq8064", },
-+	{ .compatible = "qcom,apq8064", },
-+	{ .compatible = "qcom,msm8974", },
-+	{ .compatible = "qcom,msm8960", },
-+
- 	{ }
- };
- 
-diff --git a/drivers/cpufreq/qcom-cpufreq-nvmem.c b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-index f0d2d5035413..35a616189030 100644
---- a/drivers/cpufreq/qcom-cpufreq-nvmem.c
-+++ b/drivers/cpufreq/qcom-cpufreq-nvmem.c
-@@ -49,12 +49,14 @@ struct qcom_cpufreq_drv;
- struct qcom_cpufreq_match_data {
- 	int (*get_version)(struct device *cpu_dev,
- 			   struct nvmem_cell *speedbin_nvmem,
-+			   char **pvs_name,
- 			   struct qcom_cpufreq_drv *drv);
- 	const char **genpd_names;
- };
- 
- struct qcom_cpufreq_drv {
--	struct opp_table **opp_tables;
-+	struct opp_table **names_opp_tables;
-+	struct opp_table **hw_opp_tables;
- 	struct opp_table **genpd_opp_tables;
- 	u32 versions;
- 	const struct qcom_cpufreq_match_data *data;
-@@ -62,6 +64,81 @@ struct qcom_cpufreq_drv {
- 
- static struct platform_device *cpufreq_dt_pdev, *cpufreq_pdev;
- 
-+static void get_krait_bin_format_a(struct device *cpu_dev,
-+					  int *speed, int *pvs, int *pvs_ver,
-+					  struct nvmem_cell *pvs_nvmem, u8 *buf)
-+{
-+	u32 pte_efuse;
-+
-+	pte_efuse = *((u32 *)buf);
-+
-+	*speed = pte_efuse & 0xf;
-+	if (*speed == 0xf)
-+		*speed = (pte_efuse >> 4) & 0xf;
-+
-+	if (*speed == 0xf) {
-+		*speed = 0;
-+		dev_warn(cpu_dev, "Speed bin: Defaulting to %d\n", *speed);
-+	} else {
-+		dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
-+	}
-+
-+	*pvs = (pte_efuse >> 10) & 0x7;
-+	if (*pvs == 0x7)
-+		*pvs = (pte_efuse >> 13) & 0x7;
-+
-+	if (*pvs == 0x7) {
-+		*pvs = 0;
-+		dev_warn(cpu_dev, "PVS bin: Defaulting to %d\n", *pvs);
-+	} else {
-+		dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
-+	}
-+}
-+
-+static void get_krait_bin_format_b(struct device *cpu_dev,
-+					  int *speed, int *pvs, int *pvs_ver,
-+					  struct nvmem_cell *pvs_nvmem, u8 *buf)
-+{
-+	u32 pte_efuse, redundant_sel;
-+
-+	pte_efuse = *((u32 *)buf);
-+	redundant_sel = (pte_efuse >> 24) & 0x7;
-+	*speed = pte_efuse & 0x7;
-+
-+	/* 4 bits of PVS are in efuse register bits 31, 8-6. */
-+	*pvs = ((pte_efuse >> 28) & 0x8) | ((pte_efuse >> 6) & 0x7);
-+	*pvs_ver = (pte_efuse >> 4) & 0x3;
-+
-+	switch (redundant_sel) {
-+	case 1:
-+		*speed = (pte_efuse >> 27) & 0xf;
-+		break;
-+	case 2:
-+		*pvs = (pte_efuse >> 27) & 0xf;
-+		break;
-+	}
-+
-+	/* Check SPEED_BIN_BLOW_STATUS */
-+	if (pte_efuse & BIT(3)) {
-+		dev_dbg(cpu_dev, "Speed bin: %d\n", *speed);
-+	} else {
-+		dev_warn(cpu_dev, "Speed bin not set. Defaulting to 0!\n");
-+		*speed = 0;
-+	}
-+
-+	/* Check PVS_BLOW_STATUS */
-+	pte_efuse = *(((u32 *)buf) + 4);
-+	pte_efuse &= BIT(21);
-+	if (pte_efuse) {
-+		dev_dbg(cpu_dev, "PVS bin: %d\n", *pvs);
-+	} else {
-+		dev_warn(cpu_dev, "PVS bin not set. Defaulting to 0!\n");
-+		*pvs = 0;
-+	}
-+
-+	dev_dbg(cpu_dev, "PVS version: %d\n", *pvs_ver);
-+}
-+
- static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
- {
- 	size_t len;
-@@ -93,11 +170,13 @@ static enum _msm8996_version qcom_cpufreq_get_msm_id(void)
- 
- static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
- 					  struct nvmem_cell *speedbin_nvmem,
-+					  char **pvs_name,
- 					  struct qcom_cpufreq_drv *drv)
- {
- 	size_t len;
- 	u8 *speedbin;
- 	enum _msm8996_version msm8996_version;
-+	*pvs_name = NULL;
- 
- 	msm8996_version = qcom_cpufreq_get_msm_id();
- 	if (NUM_OF_MSM8996_VERSIONS == msm8996_version) {
-@@ -125,10 +204,44 @@ static int qcom_cpufreq_kryo_name_version(struct device *cpu_dev,
- 	return 0;
- }
- 
-+static int qcom_cpufreq_krait_name_version(struct device *cpu_dev,
-+					   struct nvmem_cell *speedbin_nvmem,
-+					   char **pvs_name,
-+					   struct qcom_cpufreq_drv *drv)
-+{
-+	int speed = 0, pvs = 0, pvs_ver = 0;
-+	u8 *speedbin;
-+	size_t len;
-+
-+	speedbin = nvmem_cell_read(speedbin_nvmem, &len);
-+	if (len == 4) {
-+		get_krait_bin_format_a(cpu_dev, &speed, &pvs, &pvs_ver,
-+				       speedbin_nvmem, speedbin);
-+	} else if (len == 8) {
-+		get_krait_bin_format_b(cpu_dev, &speed, &pvs, &pvs_ver,
-+				       speedbin_nvmem, speedbin);
-+	} else {
-+		dev_err(cpu_dev, "Unable to read nvmem data. Defaulting to 0!\n");
-+		return -ENODEV;
-+	}
-+
-+	snprintf(*pvs_name, sizeof("speedXX-pvsXX-vXX"), "speed%d-pvs%d-v%d",
-+		 speed, pvs, pvs_ver);
-+
-+	drv->versions = (1 << speed);
-+
-+	kfree(speedbin);
-+	return 0;
-+}
-+
- static const struct qcom_cpufreq_match_data match_data_kryo = {
- 	.get_version = qcom_cpufreq_kryo_name_version,
- };
- 
-+static const struct qcom_cpufreq_match_data match_data_krait = {
-+	.get_version = qcom_cpufreq_krait_name_version,
-+};
-+
- static const char *qcs404_genpd_names[] = { "cpr", NULL };
- 
- static const struct qcom_cpufreq_match_data match_data_qcs404 = {
-@@ -141,6 +254,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 	struct nvmem_cell *speedbin_nvmem;
- 	struct device_node *np;
- 	struct device *cpu_dev;
-+	char *pvs_name = "speedXX-pvsXX-vXX";
- 	unsigned cpu;
- 	const struct of_device_id *match;
- 	int ret;
-@@ -153,7 +267,7 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 	if (!np)
- 		return -ENOENT;
- 
--	ret = of_device_is_compatible(np, "operating-points-v2-kryo-cpu");
-+	ret = of_device_is_compatible(np, "operating-points-v2-qcom-cpu");
- 	if (!ret) {
- 		of_node_put(np);
- 		return -ENOENT;
-@@ -181,7 +295,8 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 			goto free_drv;
- 		}
- 
--		ret = drv->data->get_version(cpu_dev, speedbin_nvmem, drv);
-+		ret = drv->data->get_version(cpu_dev,
-+							speedbin_nvmem, &pvs_name, drv);
- 		if (ret) {
- 			nvmem_cell_put(speedbin_nvmem);
- 			goto free_drv;
-@@ -190,12 +305,20 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 	}
- 	of_node_put(np);
- 
--	drv->opp_tables = kcalloc(num_possible_cpus(), sizeof(*drv->opp_tables),
-+	drv->names_opp_tables = kcalloc(num_possible_cpus(),
-+				  sizeof(*drv->names_opp_tables),
- 				  GFP_KERNEL);
--	if (!drv->opp_tables) {
-+	if (!drv->names_opp_tables) {
- 		ret = -ENOMEM;
- 		goto free_drv;
- 	}
-+	drv->hw_opp_tables = kcalloc(num_possible_cpus(),
-+				  sizeof(*drv->hw_opp_tables),
-+				  GFP_KERNEL);
-+	if (!drv->hw_opp_tables) {
-+		ret = -ENOMEM;
-+		goto free_opp1;
-+	}
- 
- 	drv->genpd_opp_tables = kcalloc(num_possible_cpus(),
- 					sizeof(*drv->genpd_opp_tables),
-@@ -213,11 +336,23 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 		}
- 
- 		if (drv->data->get_version) {
--			drv->opp_tables[cpu] =
--				dev_pm_opp_set_supported_hw(cpu_dev,
--							    &drv->versions, 1);
--			if (IS_ERR(drv->opp_tables[cpu])) {
--				ret = PTR_ERR(drv->opp_tables[cpu]);
-+
-+			if (pvs_name) {
-+				drv->names_opp_tables[cpu] = dev_pm_opp_set_prop_name(
-+								     cpu_dev,
-+								     pvs_name);
-+				if (IS_ERR(drv->names_opp_tables[cpu])) {
-+					ret = PTR_ERR(drv->names_opp_tables[cpu]);
-+					dev_err(cpu_dev, "Failed to add OPP name %s\n",
-+						pvs_name);
-+					goto free_opp;
-+				}
-+			}
-+
-+			drv->hw_opp_tables[cpu] = dev_pm_opp_set_supported_hw(
-+									 cpu_dev, &drv->versions, 1);
-+			if (IS_ERR(drv->hw_opp_tables[cpu])) {
-+				ret = PTR_ERR(drv->hw_opp_tables[cpu]);
- 				dev_err(cpu_dev,
- 					"Failed to set supported hardware\n");
- 				goto free_genpd_opp;
-@@ -259,11 +394,18 @@ static int qcom_cpufreq_probe(struct platform_device *pdev)
- 	kfree(drv->genpd_opp_tables);
- free_opp:
- 	for_each_possible_cpu(cpu) {
--		if (IS_ERR_OR_NULL(drv->opp_tables[cpu]))
-+		if (IS_ERR_OR_NULL(drv->names_opp_tables[cpu]))
-+			break;
-+		dev_pm_opp_put_prop_name(drv->names_opp_tables[cpu]);
-+	}
-+	for_each_possible_cpu(cpu) {
-+		if (IS_ERR_OR_NULL(drv->hw_opp_tables[cpu]))
- 			break;
--		dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
-+		dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
- 	}
--	kfree(drv->opp_tables);
-+	kfree(drv->hw_opp_tables);
-+free_opp1:
-+	kfree(drv->names_opp_tables);
- free_drv:
- 	kfree(drv);
- 
-@@ -278,13 +420,16 @@ static int qcom_cpufreq_remove(struct platform_device *pdev)
- 	platform_device_unregister(cpufreq_dt_pdev);
- 
- 	for_each_possible_cpu(cpu) {
--		if (drv->opp_tables[cpu])
--			dev_pm_opp_put_supported_hw(drv->opp_tables[cpu]);
-+		if (drv->names_opp_tables[cpu])
-+			dev_pm_opp_put_supported_hw(drv->names_opp_tables[cpu]);
-+		if (drv->hw_opp_tables[cpu])
-+			dev_pm_opp_put_supported_hw(drv->hw_opp_tables[cpu]);
- 		if (drv->genpd_opp_tables[cpu])
- 			dev_pm_opp_detach_genpd(drv->genpd_opp_tables[cpu]);
- 	}
- 
--	kfree(drv->opp_tables);
-+	kfree(drv->names_opp_tables);
-+	kfree(drv->hw_opp_tables);
- 	kfree(drv->genpd_opp_tables);
- 	kfree(drv);
- 
-@@ -303,6 +448,10 @@ static const struct of_device_id qcom_cpufreq_match_list[] __initconst = {
- 	{ .compatible = "qcom,apq8096", .data = &match_data_kryo },
- 	{ .compatible = "qcom,msm8996", .data = &match_data_kryo },
- 	{ .compatible = "qcom,qcs404", .data = &match_data_qcs404 },
-+	{ .compatible = "qcom,ipq8064", .data = &match_data_krait },
-+	{ .compatible = "qcom,apq8064", .data = &match_data_krait },
-+	{ .compatible = "qcom,msm8974", .data = &match_data_krait },
-+	{ .compatible = "qcom,msm8960", .data = &match_data_krait },
- 	{},
- };
- 
--- 
-2.25.0
+I would also set auto_boot =1 in order to start the AP synchronisation
+as quickly as possible and add a check in rproc_trigger_auto_boot() to
+see if rproc->state == RPROC_RUNNING.  If so simply call rproc_boot()
+where platform specific rproc_ops would be tailored to handle a
+running processor.
 
+In my opinion the above would represent the state of the MCU rather
+than the state of the FW used by the MCU.  It would also provide an
+opening for supporting systems where the MCU is not the life cycle
+manager.
+
+Let me know what you think...
+
+>
+> I need to rework the patchset in consequence but i would appreciate your feedback on this proposal before, to be sure that i well interpreted your concerns...
+>
+> Regards,
+> Arnaud
+>
+> >
+> >> This is not necessary the case, even if EPROBE_DEFER is used. In this case the driver has to be build as kernel module.
+> >>
+> >> Thanks,
+> >> Arnaud
+> >>>
+> >>> I'd welcome other people's opinion on this.
+> >>>
+> >>>>              ret = rproc_trigger_auto_boot(rproc);
+> >>>>              if (ret < 0)
+> >>>>                      return ret;
+> >>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> >>>> index 16ad66683ad0..4fd5bedab4fa 100644
+> >>>> --- a/include/linux/remoteproc.h
+> >>>> +++ b/include/linux/remoteproc.h
+> >>>> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
+> >>>>   * @table_sz: size of @cached_table
+> >>>>   * @has_iommu: flag to indicate if remote processor is behind an MMU
+> >>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
+> >>>> + * @skip_fw_load: remote processor has been preloaded before start sequence
+> >>>>   * @dump_segments: list of segments in the firmware
+> >>>>   * @nb_vdev: number of vdev currently handled by rproc
+> >>>>   */
+> >>>> @@ -512,6 +513,7 @@ struct rproc {
+> >>>>      size_t table_sz;
+> >>>>      bool has_iommu;
+> >>>>      bool auto_boot;
+> >>>> +    bool skip_fw_load;
+> >>>>      struct list_head dump_segments;
+> >>>>      int nb_vdev;
+> >>>>  };
+> >>>> --
+> >>>> 2.17.1
+> >>>>
