@@ -2,121 +2,142 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2836C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D66BDC3404F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B002208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5C7208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="q9i5Ygiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgBSHkP (ORCPT
+        id S1727742AbgBSHkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:40:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41518 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbgBSHjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:39:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 30456AEA8;
-        Wed, 19 Feb 2020 07:39:52 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 2/9] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
-Date:   Wed, 19 Feb 2020 08:39:44 +0100
-Message-Id: <20200219073951.16151-2-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200219073951.16151-1-jslaby@suse.cz>
-References: <20200219073951.16151-1-jslaby@suse.cz>
+        Wed, 19 Feb 2020 02:40:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:42636 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgBSHkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:40:32 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01J7eCE9039727;
+        Wed, 19 Feb 2020 01:40:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582098012;
+        bh=VaG7B2bGbHNlAfHLv9Ip0v42uYVXRIDKNvFcIuScbYw=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=q9i5Ygiz8OfuCBFhUGMe5KWJiArr5HftFtDaiDyPd8HHxDwgKm72sQr0xugcN/br8
+         ps8KUzpV5mUHKnGTRgSx3FzpCJRLcRtGfWmCiikxWPp2LM0OfZq+DSMBfjubxPSH27
+         ql4N0DeM6myYiGZ/U4xofSz7POyS03Ap7TYflsUU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01J7eCWc120603
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 01:40:12 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 01:40:11 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 01:40:11 -0600
+Received: from [10.24.69.174] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01J7e8tQ093251;
+        Wed, 19 Feb 2020 01:40:08 -0600
+From:   Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: thermal: k3: Add VTM bindings
+ documentation
+To:     Rob Herring <robh@kernel.org>
+CC:     <rui.zhang@intel.com>, <robh+dt@kernel.org>,
+        <daniel.lezcano@linaro.org>, <amit.kucheria@verdurent.com>,
+        <t-kristo@ti.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>,
+        <mark.rutland@arm.com>
+References: <20200214063443.23589-1-j-keerthy@ti.com>
+ <20200214063443.23589-2-j-keerthy@ti.com> <20200218202048.GA32279@bogus>
+Message-ID: <6895cf5e-9195-c914-f4ce-a83f36027dbf@ti.com>
+Date:   Wed, 19 Feb 2020 13:10:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218202048.GA32279@bogus>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two were macros. Switch them to static inlines, so that it's more
-understandable what they are doing.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- drivers/tty/vt/vt_ioctl.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
-index bf4daa0c7930..693d9d7ffb68 100644
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -40,10 +40,25 @@
- #include <linux/selection.h>
- 
- char vt_dont_switch;
--extern struct tty_driver *console_driver;
- 
--#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
--#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
-+static inline bool vt_in_use(unsigned int i)
-+{
-+	extern struct tty_driver *console_driver;
-+
-+	return console_driver->ttys[i] && console_driver->ttys[i]->count;
-+}
-+
-+static inline bool vt_busy(int i)
-+{
-+	if (vt_in_use(i))
-+		return true;
-+	if (i == fg_console)
-+		return true;
-+	if (vc_is_sel(vc_cons[i].d))
-+		return true;
-+
-+	return false;
-+}
- 
- /*
-  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
-@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int vc_num)
- 	int ret = 0;
- 
- 	console_lock();
--	if (VT_BUSY(vc_num))
-+	if (vt_busy(vc_num))
- 		ret = -EBUSY;
- 	else if (vc_num)
- 		vc = vc_deallocate(vc_num);
-@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
- 
- 	console_lock();
- 	for (i = 1; i < MAX_NR_CONSOLES; i++)
--		if (!VT_BUSY(i))
-+		if (!vt_busy(i))
- 			vc[i] = vc_deallocate(i);
- 		else
- 			vc[i] = NULL;
-@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
- 			state = 1;	/* /dev/tty0 is always open */
- 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
- 							++i, mask <<= 1)
--				if (VT_IS_IN_USE(i))
-+				if (vt_in_use(i))
- 					state |= mask;
- 			ret = put_user(state, &vtstat->v_state);
- 		}
-@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
- 	case VT_OPENQRY:
- 		/* FIXME: locking ? - but then this is a stupid API */
- 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
--			if (! VT_IS_IN_USE(i))
-+			if (!vt_in_use(i))
- 				break;
- 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
- 		goto setint;		 
--- 
-2.25.0
+On 19/02/20 1:50 am, Rob Herring wrote:
+> On Fri, 14 Feb 2020 12:04:40 +0530, Keerthy wrote:
+>> Add VTM bindings documentation. In the Voltage Thermal
+>> Management Module(VTM), K3 AM654 supplies a voltage
+>> reference and a temperature sensor feature that are gathered in the band
+>> gap voltage and temperature sensor (VBGAPTS) module. The band
+>> gap provides current and voltage reference for its internal
+>> circuits and other analog IP blocks. The analog-to-digital
+>> converter (ADC) produces an output value that is proportional
+>> to the silicon temperature.
+>>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> ---
+>>
+>> Changes in v2:
+>>
+>>    * Fixed make dt_binding_check errors.
+>>
+>>   .../bindings/thermal/ti,am654-thermal.yaml    | 57 +++++++++++++++++++
+>>   1 file changed, 57 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Error: Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dts:21.41-42 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1237882
+> Please check and re-submit.
 
+Rob,
+
+I am using:
+
+Tree: https//github.com/devicetree-org/dt-schema.git
+branch: master
+
+I have make dt_binding_check working for 
+Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml
+
+Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dts
+is created without any errors :
+
+https://pastebin.ubuntu.com/p/6MkMbKPpbY/
+
+I did not see any errors as the other files erred out.
+
+Today i tried with DT_SCHEMA_FILES option and then finally reproduced 
+the errors. It is a bit confusing for the first time users.
+
+Now i have it compiled without any errors.
+
+Posting v3 in a bit.
+
+- Keerthy
+
+
+> 
