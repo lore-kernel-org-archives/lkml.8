@@ -2,158 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A78EC11D80
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C62C11D8F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64714207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582151450;
-	bh=vesDLVGlXUwE1oai6KHNqtXcj+7D1J3AGFQBiFx5e70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kF9RJMZFTl3t4p5c/72Ya/1i9X+DTqVMRGJJF/rjF1E+TGQeT0aLMmH1cC+Ryaz//
-	 DPKwpIECOO9rcu3m2hD+ZHEQiUrSmATQX7NOK590/PvKOPjeiCyVJhbm/mF9qtCIel
-	 9F1NPr54JfxGesChI9I0z16JN/7EBQFOcY24EJAs=
+	by mail.kernel.org (Postfix) with ESMTP id 81A1B24691
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MdBwteHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBSWat (ORCPT
+        id S1727858AbgBSWXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:30:49 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38727 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727163AbgBSWas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:30:48 -0500
-Received: by mail-oi1-f196.google.com with SMTP id r137so5942407oie.5;
-        Wed, 19 Feb 2020 14:30:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Wu4HYGBqerN4aCKCQ+E16577x7yAfinXWHH5tKYvb4E=;
-        b=QFDZAKnz/7G32hf3DnaG3qK9sjcepac6Y4A0eRA5f+NmnonRjEpAv/YfC50M/u3qDh
-         GPa9WVv3iymha8xmeJ7ItAhVXnrFLUawJMhKJezxZhdrC/tpuLjfveCvE+ys3tRXnPMO
-         yEvPGEEOBvCA/cHxj5Q1Trv3Ku3dn5/oztReCCKvlkVm36mV9w7Dff8ysYuujT0zk/YJ
-         xBBqYFZV5qtJnDfaBFIt6h6FqZOS/c2T+VN616lHshKanI07BK5yhAG0N03wW2obf59D
-         5lMdoxs4zohYyND8Nvk8MGiYLst+ztwBokb6OSL+9eIUk4/5lNIf0wDqK2GyLpjXALWx
-         TCXA==
-X-Gm-Message-State: APjAAAXVC2a9/PxxEokO5AkXlWTa0/FCxgvuKNrzshvtadGjG5rg6k7Y
-        Wn3FbJMlVcVmhcaXPb6eIw==
-X-Google-Smtp-Source: APXvYqxxCdgrCCY3ghBEaFroq2na5pXDTn1f9hNYcEgxilsTmVqO87VbZffaVp+gF7TyRfU+vpWBCA==
-X-Received: by 2002:aca:fc0c:: with SMTP id a12mr5913011oii.118.1582151447622;
-        Wed, 19 Feb 2020 14:30:47 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s12sm420688oic.31.2020.02.19.14.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:30:46 -0800 (PST)
-Received: (nullmailer pid 24235 invoked by uid 1000);
-        Wed, 19 Feb 2020 22:30:46 -0000
-Date:   Wed, 19 Feb 2020 16:30:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, jwerner@chromium.org,
-        devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-Message-ID: <20200219223046.GA16537@bogus>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
+        Wed, 19 Feb 2020 17:23:54 -0500
+Received: from ozlabs.org ([203.11.71.1]:53965 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727082AbgBSWXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 17:23:54 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48NC1L4Sm0z9sRG;
+        Thu, 20 Feb 2020 09:23:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582151031;
+        bh=LUDgvdSwYxLSm2ujH88YLkYz8f+r7X9YUZvj7psSYMw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=MdBwteHmzPo3JsgXveNOGoWTVkStnSrYU2WyiPZUaqRRhnZE+FXcXFE9T7qGBIpKo
+         RESFvzDSWiRv7miPSKAggjvJUVvMiXR4PvApMahxIgTiyE7bnF0IK26cwrs2WP+ZED
+         86/FSVgC5p5zUFo/UiVuGCjdJkIJOwVdBcIzAJ8DPsjstSQycZbXsrUyBfxzuMorOD
+         +yIhOEoe7uNucs5NecgQlp1FLUlw/tuwprJxTl+TKnOHgZhtaH6ad8iGdIp9c+2rj0
+         k0Yr8yEt63kWrJ2gttii9LJeL/AJXOg/SqfAJQRsJuPWac7/nuD1ka3+sp11gyKQth
+         jfAQP25J2X05A==
+Date:   Thu, 20 Feb 2020 09:23:44 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>
+Subject: linux-next: build failure after merge of the btrfs tree
+Message-ID: <20200220092344.2a738574@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/HhWZXL8A9/VOX789pJ1LhRS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 05:26:36PM +1100, Evan Benn wrote:
-> This watchdog can be used on ARM systems with a Secure
-> Monitor firmware to forward watchdog operations to
-> firmware via a Secure Monitor Call.
-> 
-> Signed-off-by: Evan Benn <evanbenn@chromium.org>
-> ---
-> 
->  .../bindings/watchdog/arm,smc-wdt.yaml        | 30 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml b/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-> new file mode 100644
-> index 000000000000..5170225b0c98
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/arm,smc-wdt.yaml
-> @@ -0,0 +1,30 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/watchdog/arm,smc-wdt.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ARM Secure Monitor Call based watchdog
+--Sig_/HhWZXL8A9/VOX789pJ1LhRS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-You are not the first 'watchdog in firmware accessed via an SMC call'. 
-Is there some more detail about what implementation this is? Part of 
-TF-A? Defined by some spec (I can dream)?
+Hi all,
 
-> +
-> +allOf:
-> +  - $ref: "watchdog.yaml#"
-> +
-> +maintainers:
-> +  - Julius Werner <jwerner@chromium.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - arm,smc-wdt
-> +
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  - |
-> +    watchdog {
+After merging the btrfs tree, today's linux-next build (powerpc
+ppc64_defconfig) failed like this:
 
-I'd expect this to be a child of whatever firmware implements this 
-function.
+fs/btrfs/extent-tree.c: In function 'btrfs_alloc_logged_file_extent':
+fs/btrfs/extent-tree.c:4425:20: error: passing argument 1 of 'btrfs_pin_ext=
+ent' from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
+ 4425 |   btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
+      |                    ^~~~~~~
+      |                    |
+      |                    struct btrfs_fs_info *
+fs/btrfs/extent-tree.c:2609:49: note: expected 'struct btrfs_trans_handle *=
+' but argument is of type 'struct btrfs_fs_info *'
+ 2609 | int btrfs_pin_extent(struct btrfs_trans_handle *trans,
+      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
 
-> +      compatible = "arm,smc-wdt";
-> +      timeout-sec = <15>;
-> +    };
-> +
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e48ab79879ac..5c45536e1177 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1421,6 +1421,12 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/interrupt-controller/amazon,al-fic.txt
->  F:	drivers/irqchip/irq-al-fic.c
->  
-> +ARM SMC WATCHDOG DRIVER
-> +M:	Julius Werner <jwerner@chromium.org>
-> +R:	Evan Benn <evanbenn@chromium.org>
-> +S:	Maintained
-> +F:	devicetree/bindings/watchdog/arm,smc-wdt.yaml
-> +
->  ARM SMMU DRIVERS
->  M:	Will Deacon <will@kernel.org>
->  R:	Robin Murphy <robin.murphy@arm.com>
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+Caused by commit
+
+  4e2c2f96e6a3 ("btrfs: Make btrfs_pin_extent take trans handle")
+
+interacting with commit
+
+  bd727173e443 ("btrfs: handle logged extent failure properly")
+
+from the btrfs-fixes tree.
+
+I have applied the following merge fix patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 20 Feb 2020 09:20:33 +1100
+Subject: [PATCH] btrfs: fix for btrfs_pin_extent() API change
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/btrfs/extent-tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 56ad0a4ff5ba..9dcd70cc3ca3 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -4422,7 +4422,7 @@ int btrfs_alloc_logged_file_extent(struct btrfs_trans=
+_handle *trans,
+ 	ret =3D alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
+ 					 offset, ins, 1);
+ 	if (ret)
+-		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
++		btrfs_pin_extent(trans, ins->objectid, ins->offset, 1);
+ 	btrfs_put_block_group(block_group);
+ 	return ret;
+ }
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/HhWZXL8A9/VOX789pJ1LhRS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5NtXAACgkQAVBC80lX
+0GxufQf/e3XdeaPJVdcDfX8oGy6W9crlHRnAli6kk/7TKllyFq0an9xB/7Rnq92d
+A/UKsx2N4nKnKcJ2Stj8hq2zOzb1WpXVsCLniPkVxjY608ih9hm+sF4li/kvW8Z8
+5xEPwNEm72AJn/iFt1WqefjNRI4p0QBfL8w/W2CWb5ZllN8wLjcF00rjb/Tjr5Yb
+niPPgCLjLk0YTmxxOdLuqZxMFRxvOhF+1PDncMByWRAIpCrP/Yfb+zUwzpHITSsJ
+zmJnR5R+PmRv6PxUwIhfBS75IQnGj/0o7WSD/OrXPV3tOa4YLMWTcYWu6S5T3VUv
+DjnvCfuDAk7SkbQtfOF4D3V7VLAfDg==
+=/xZK
+-----END PGP SIGNATURE-----
+
+--Sig_/HhWZXL8A9/VOX789pJ1LhRS--
