@@ -2,197 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7584C3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF047C3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CE6B208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:32:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582144329;
-	bh=khJL9ke5510kPd7HJ/zkFtAYnXiIuAWTW1hCC54p6lk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AHRcXN66Ok3HB5IDjKFNvDVfcS11QTaxky/p4BB0b9R7Gvdm+0bc5QyxW3eRexElP
-	 yH8dO6DEs8Mg0tPo6ADV7UgSqqmJsrKfgwRLrPBDtgxvFPAhD+tWTrFP/nFR8ISsG8
-	 HMJOSCPUNd9rm4exVbIn+inEPy/BH72MOfM4mGG8=
+	by mail.kernel.org (Postfix) with ESMTP id A1207208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:33:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aEotsfOW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgBSUcI (ORCPT
+        id S1727555AbgBSUdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:32:08 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35322 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSUcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:32:08 -0500
-Received: by mail-oi1-f196.google.com with SMTP id b18so25195956oie.2;
-        Wed, 19 Feb 2020 12:32:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/jt/ZzcjOheKJCVMsRBEe0Y481qhnTtTvnzWC5rkuAk=;
-        b=m6lR/LxGd0loyKR4haTY8csO6IDl9eCqEJCVn+OkbFApVIg+fC4k8wbee9sAAkGA4h
-         wy2Q9/NfDPlctjarUADb8SdaDJcneqvIGvGxGxYaUaQ/67UbUrtlw5OqQJzzYjtAYrRy
-         Px/sfG3MOF7e3UJId3kY50W1ZfZHPiWvt0JKA+OL/Ga5Rl7UwYf0M0XXELu4NENN/w0J
-         sOXEay51bcA2bkKqgNYwS6SJiB/twDBmc/uTZTogdMlV+DOSgJ9G1ypRmhqNmI3RCBc5
-         750cgEctsL4uYDkPGyjsdUgBF3p6uXrJSwrHJsBMWpz/g+NH/N0911wpaKoKYOGibHg3
-         aIIQ==
-X-Gm-Message-State: APjAAAVYs00cBdvLHlwzv9tCqSfEV7KDeWf5sMXsbCNdR1E2PQM0CuDn
-        fWflxtIGUUOMCSKwaeNXUA==
-X-Google-Smtp-Source: APXvYqyui6Qd/+Vh+bwUOgDyJrIxaU7VHbbv1A8fmWcxfPN+qZqp9/uJH+Sc07nwV/0kUr0BIOLEiQ==
-X-Received: by 2002:aca:33d5:: with SMTP id z204mr5542263oiz.120.1582144327187;
-        Wed, 19 Feb 2020 12:32:07 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g5sm290207otp.10.2020.02.19.12.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:32:06 -0800 (PST)
-Received: (nullmailer pid 20753 invoked by uid 1000);
-        Wed, 19 Feb 2020 20:32:05 -0000
-Date:   Wed, 19 Feb 2020 14:32:05 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] dt-bindings: PCI: Convert PCIe Host/Endpoint in
- Cadence platform to DT schema
-Message-ID: <20200219203205.GA14068@bogus>
-References: <20200217111519.29163-1-kishon@ti.com>
- <20200217111519.29163-3-kishon@ti.com>
+        Wed, 19 Feb 2020 15:33:40 -0500
+Received: from ozlabs.org ([203.11.71.1]:54833 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726645AbgBSUdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:33:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48N8Z956H2z9sRJ;
+        Thu, 20 Feb 2020 07:33:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582144417;
+        bh=wqc0NsuOgKKw5Yaq11ZuE9llhJvZG+QMshaTQ2z70uo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=aEotsfOWOGI1dMcDw+gbAABB/3qYei5wIi8KulvihlWrY6Dwacn394OoYmTiPkPc5
+         JtKnGjqROvAS0d6lGGgQJWUoRGLcTgs+5Em6tPXyNZg9K7tuKzAxgh9sIN/A2k9/fJ
+         U5Yogbluk0hfcYZPY48HWf2pZERN/waTd1DFqju3HOOrXNZ8D+iwzU8+kNQziQz45N
+         yB2osiRlNNeBR6kU9lFUvWv+2TLC6+M+RfB3lHXxO5MSUzojrRFZKXalGNCsOxK6/7
+         PlBoxxhgTM0m90pEnYW0kuTrvqRBcKD02vIXyqaL9bnA+YeISiCZqYZMtMowLQZZja
+         BcBP79GrNsAKw==
+Date:   Thu, 20 Feb 2020 07:33:25 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hamdan Igbaria <hamdani@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20200220073325.5bd5e8b5@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217111519.29163-3-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/oRzCdFXKEYQxFk8bjLWifWq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:45:19PM +0530, Kishon Vijay Abraham I wrote:
-> Include Cadence core DT schema and define the Cadence platform DT schema
-> for both Host and Endpoint mode. Note: The Cadence core DT schema could
-> be included for other platforms using Cadence PCIe core.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
->  .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
->  .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
->  .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
->  MAINTAINERS                                   |  2 +-
->  5 files changed, 125 insertions(+), 94 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
+--Sig_/oRzCdFXKEYQxFk8bjLWifWq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..2f605297f862
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/cdns,cdns-pcie-host.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Cadence PCIe host controller
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/pci-bus.yaml#
-> +  - $ref: "cdns-pcie-host.yaml#"
-> +
-> +properties:
-> +  compatible:
-> +    const: cdns,cdns-pcie-host
-> +
-> +  reg:
-> +    maxItems: 3
-> +
-> +  reg-names:
-> +    items:
-> +      - const: reg
-> +      - const: cfg
-> +      - const: mem
-> +
-> +  msi-parent: true
-> +
-> +required:
-> +  - reg
-> +  - reg-names
-> +
-> +examples:
-> +  - |
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie@fb000000 {
-> +            compatible = "cdns,cdns-pcie-host";
-> +            device_type = "pci";
-> +            #address-cells = <3>;
-> +            #size-cells = <2>;
-> +            bus-range = <0x0 0xff>;
-> +            linux,pci-domain = <0>;
-> +            cdns,max-outbound-regions = <16>;
-> +            cdns,no-bar-match-nbits = <32>;
+n commit
 
-> +            vendor-id = /bits/ 16 <0x17cd>;
-> +            device-id = /bits/ 16 <0x0200>;
+  52d214976d4f ("net/mlx5: DR, Fix matching on vport gvmi")
 
-Please make these 32-bit as that is what the spec says.
+Fixes tag
 
-> +
-> +            reg = <0x0 0xfb000000  0x0 0x01000000>,
-> +                  <0x0 0x41000000  0x0 0x00001000>,
-> +                  <0x0 0x40000000  0x0 0x04000000>;
-> +            reg-names = "reg", "cfg", "mem";
-> +
-> +            ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-> +                     <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-> +
-> +            #interrupt-cells = <0x1>;
-> +
-> +            interrupt-map = <0x0 0x0 0x0  0x1  &gic  0x0 0x0 0x0 14 0x1>,
-> +                 <0x0 0x0 0x0  0x2  &gic  0x0 0x0 0x0 15 0x1>,
-> +                 <0x0 0x0 0x0  0x3  &gic  0x0 0x0 0x0 16 0x1>,
-> +                 <0x0 0x0 0x0  0x4  &gic  0x0 0x0 0x0 17 0x1>;
-> +
-> +            interrupt-map-mask = <0x0 0x0 0x0  0x7>;
-> +
-> +            msi-parent = <&its_pci>;
-> +
-> +            phys = <&pcie_phy0>;
-> +            phy-names = "pcie-phy";
-> +        };
-> +    };
-> +...
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 38fe2f3f7b6f..e0402e001edd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12739,7 +12739,7 @@ PCI DRIVER FOR CADENCE PCIE IP
->  M:	Tom Joseph <tjoseph@cadence.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-> +F:	Documentation/devicetree/bindings/pci/cdns,*
->  F:	drivers/pci/controller/pcie-cadence*
->  
->  PCI DRIVER FOR FREESCALE LAYERSCAPE
-> -- 
-> 2.17.1
-> 
+  Fixes: 26d688e3 ("net/mlx5: DR, Add Steering entry (STE) utilities")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/oRzCdFXKEYQxFk8bjLWifWq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5Nm5UACgkQAVBC80lX
+0GxjWggAmdJyTwvtmS/0No9AVNUl2J+YV5CjujIDW7bkFzTAlFOirqP58FCXrm6P
+ySLZhLHYPHAnsEEStt1p5ONYV69T7W2VAT7SD8GpaT71csEYEECsKxnVZpAnZDSn
+Obu9j4YncXMVpsvf8uPIpakrfuGx7c/WtKl9O/AhHvfhI3x0LrTnGH2lm7xNxLGZ
+aamRDJhqq735G1/4PAKESdjsEidyhFX3BGc/hcaBmWfbV7LrzopJqwkkNx9rDVwZ
+wu4Y7FNyFMR/onhh4mS84v2tU46oVNoIcQRPalCFuIN72wRm7rbdLOJuIsQ6osoG
+eTT+n1qh1EhXt88EwlTfLpNvuhx/og==
+=AT51
+-----END PGP SIGNATURE-----
+
+--Sig_/oRzCdFXKEYQxFk8bjLWifWq--
