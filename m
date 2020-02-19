@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B799C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D018C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6638A222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE1FE2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aGW7FUGO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UH/m6Hkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgBSIGp (ORCPT
+        id S1726996AbgBSIGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:06:45 -0500
-Received: from mail-eopbgr60070.outbound.protection.outlook.com ([40.107.6.70]:58245
+        Wed, 19 Feb 2020 03:06:53 -0500
+Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:19013
         "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726484AbgBSIGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:06:43 -0500
+        id S1726484AbgBSIGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:06:53 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OqtsqoGaB4Yk5RYR5a9E87/ALk1QEPEUBYwLM/4GKq3tSV8eOupwXZIpZeYJdpdjn53CDh44Jo6pbSYf7i/QHFX9WfSWYPHNAW106+W3WpnYAwWXWbZNbLbRHT22S8Gai33r2i66axeDNu7mxy6vUBgUxJqIkxXfcKFJ2UuIY+EI0bTRjA9Fb9dHpUaNOjJ13vS2VR1/Dtx9r2uUizqdLplJ5VzKm5cx/Qdm0kHm7TOT7vWyeeLQhHiCHhBfGrd4iKXfnZ4L8QrsRCrE6rERjEDQNJigqSvK3252k7LFS7sRuoV3Is9LWCbRE9KxPNQw+r9B0c9HxNCLhdEfTHyWIw==
+ b=Sls1BjaDYpTjS4jLn5S4DNKDk3//061JBVCQG8yIQVTWRnw03tLeFO2GIWRiC3JrJ81KaMhLwhSb1bLWLn5f/BFFOW7xWNG/l+0PoqUmit6pzjqScfXe8wicH0bZ//TicrLyynjpRDx4GzewzAL3wtZ7LsaqexwFWMQdmn/TOTSuxo4gN89IKoI4nDjsoujKrlplYD+8DWJ+4WO47Ae8KaVJ3P3Moh7428legVP7c/z8fhhEUoyHuz6TcIhd1lEjlrp65cAj0IC7ROSmF0Fhmz9KUTWE9NOuK0LH8NMfs9AZXW6zEg9HJ6rorB7RVtabMRi0L4Vz3b0ynXb2amocKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/GhfP6seJSSyoKs3zhILEbAv/arENkWUq/uDfGf4Vxs=;
- b=OZemHSsvj3QdpYZonLAAEAJUe0GUxufDiYhZ59wKXPU14AerJSFS09lDQ7cZh6i30w2v2RBwexGlvf1weFrv/fdS36+2CEZ+VfDg9Wa97t09iiHDJWEfDc4dTXjAFrpuaQS9Ox5IVDKBVkAsXFy4TRxPg/K46oGVaxaXuQPEJpaSF+/qifhjpGFC392ussl/PkOyzAJE7ytNuo0ljbl7/QswSz85cKAawQ/cqUGAyA3P1nL0II9Wik5aCGXUntpbnUwnbhloTFs3Ld9uFIrR0SptFSkI7vGOqadFgnhmsRmtV3R+kZEbUEdZwN7TnUnWGqwdSwj2dzj3w699b5LAwg==
+ bh=3r7WCLHcLFoWwVpV/BiXpejvT75R7f1kQDkx6C1M2tg=;
+ b=LV26fxUnSfhBjBIHoInk10VAClcwHVRzQLPAGnz6QR0YIxyOQOrTO+hNe+FkYaCsahMdAhZrhHRKpDTnH03/Fyp3MFyPd+efWaNmPefARbsHtV6C/M55LAmJ93G00CRys14io03wtu5CinH2Xi90uqCBI/gQozALQ18JLPmojNkYYEXo6uNy3aaU5lh1p/RCbnntMgK4bjiT7jE2Qhah20vZuv0VuNd2tZ4dYFgBRs+zkW/6+MuX5sY14GFrvBUUwg6yFFZo7lCMYjMD2o8NtrPpam5yVjZERVCcKusC5uT3lViwkOA8Wf6ROwFt4JOXMYovrTwyMhhC2hZIXgCjWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/GhfP6seJSSyoKs3zhILEbAv/arENkWUq/uDfGf4Vxs=;
- b=aGW7FUGOsVZ+msgxTWao+k18FuJZAMRSYaV6ax048f9KRkFjId90aE8LLuCFSd2n12leAktjQz/jZ3Eac2VeJM/joQP6tpRtjGwILjLseB4vtaZOrNwGmAZ91aNmaqP2fSMBcv6iulojclU2zuhEUk6C/5QX5GVnCdRylxIjouU=
+ bh=3r7WCLHcLFoWwVpV/BiXpejvT75R7f1kQDkx6C1M2tg=;
+ b=UH/m6HkxqPNChT7oy7I/lP0OQSsKDjRwmiVa7IJM1naeLPdXxPH4wGXu37sePgTxl1dNMdBBQKH4a792llLtxt6J0aqOrt7Z69mPr6RIm2Qga4bSaqesqqtWCWjoYoofqWi1NF7Yz/tJhkSCnLOEir0g2v4aM3NeUOP/wUIamMI=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6401.eurprd04.prod.outlook.com (20.179.254.97) with Microsoft SMTP
+ AM0PR04MB4132.eurprd04.prod.outlook.com (52.134.94.25) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Wed, 19 Feb 2020 08:06:41 +0000
+ 15.20.2729.25; Wed, 19 Feb 2020 08:06:45 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 08:06:41 +0000
+ 08:06:45 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
         robh+dt@kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net
@@ -54,9 +54,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 09/14] ARM: imx: cpuidle-imx7ulp: Stop mode disallowed when HSRUN
-Date:   Wed, 19 Feb 2020 15:59:52 +0800
-Message-Id: <1582099197-20327-10-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH v2 10/14] cpufreq: dt: Allow platform specific intermediate callbacks
+Date:   Wed, 19 Feb 2020 15:59:53 +0800
+Message-Id: <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
 References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
@@ -65,33 +65,33 @@ X-ClientProxiedBy: HKAPR04CA0013.apcprd04.prod.outlook.com
  (2603:1096:203:d0::23) To AM0PR04MB4481.eurprd04.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HKAPR04CA0013.apcprd04.prod.outlook.com (2603:1096:203:d0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2729.23 via Frontend Transport; Wed, 19 Feb 2020 08:06:37 +0000
+Received: from localhost.localdomain (119.31.174.66) by HKAPR04CA0013.apcprd04.prod.outlook.com (2603:1096:203:d0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2729.23 via Frontend Transport; Wed, 19 Feb 2020 08:06:41 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e66de7f4-b9da-4e6c-db57-08d7b512a6d7
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6401:|AM0PR04MB6401:
+X-MS-Office365-Filtering-Correlation-Id: 5902c768-1b67-498f-3e68-08d7b512a95b
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4132:|AM0PR04MB4132:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB64014F2344AF80DB7297A96688100@AM0PR04MB6401.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:64;
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4132D27315568A9B5826BD1388100@AM0PR04MB4132.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
 X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(199004)(189003)(2616005)(81166006)(8676002)(9686003)(4326008)(66476007)(8936002)(478600001)(52116002)(6512007)(6506007)(66556008)(69590400006)(81156014)(316002)(86362001)(66946007)(956004)(6666004)(186003)(5660300002)(26005)(6486002)(36756003)(16526019)(2906002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6401;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(366004)(396003)(376002)(39860400002)(199004)(189003)(9686003)(6666004)(2906002)(6486002)(6512007)(316002)(478600001)(69590400006)(2616005)(66476007)(8936002)(86362001)(8676002)(36756003)(81156014)(186003)(7416002)(81166006)(52116002)(5660300002)(66946007)(4326008)(6506007)(16526019)(26005)(956004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4132;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: y45eD+JlTD1MigszjZ2MRcQKv3hj1f/8IGXAbOUz3tYf2cPs3/w7xXe2NHSZ6kuqF6jHNKP4+GdPZkuG5v0OmosOq08leMmbw5/eQY3wytYu0nRolZC1ksNibMJSq7YBXjH3Pz4VP853ecDndAONyHDCSz5dPvlGMi/UBcqxZzvj2jY/MQBTG9Bi92CiaAd6BHYIAacIK/aXGubObDlaHHZxCoW38l6/ZavHBKbADFot9XrXv+5EXIPQ7TEO39HwwRYuRBNPjGCG42eWrVu/NF9TCBsgTFBy/muWT9qx5quuhYqKSxXCWQ4dAXubAzFYTLJAPhNyheYJk07MUA8QAh6z1WS6GaNIuxDUlLhKvjWQcUpfL7Pb7yv+0kqWk3VgjwkG+qZeQRK25GslpXzoG+ZsbVI3XQNSlSEJKpAnNg9ylJiRuMcHbK9tjePqc4EWI9QmUZqqdzdtv15wNiOHdttpGg8YckOVIS9LsXStfMp5PW4IqvtPOjavCgTWyAtSGz7iDjlDnyqYrqaX5RkkqjzLOqU6B7q3j5HEimrcOnI=
-X-MS-Exchange-AntiSpam-MessageData: wbo+Z5MnxyQtXDks6KG+CdcOqXca7w8W/CniLnX+ud08lilt8ePYAsXR0ucEMs1Cl7p0SKfQBg6BRWEqEtuxvopta2MX+y5d/gXZXSURn5AhjZiDvw+HOcn6XQ5+GFfomIn6NN/pixnou6iNHgn0rg==
+X-Microsoft-Antispam-Message-Info: x1K7IRFX4w4fYMdwS1znpcJVk1Bl7ifCqzur54bBHl4h4VuLZSLNCKXGjGtMXSE+SMBmMsiX4xpOpJrjNKCAYCqBXV8mDfexvc3cRDggQsda8k4NdYVzLyxVBxOoQNhl5prZRKvYh/bZTmeZ+pAb2SLD9bQCW3nl5ZVwJMes+KIeWuAMFkU7tTtam1TvlwzKRgaTTNZZJZAI6gsnULIR6+2hUOCDKyiJI5congpnRnOE/aAeZle2ylZnVCOXzZkQ1OApQ+Cwr109bs49/6vnzxMLbLRqMOwtJ7WQfQPegoZ4agBiJgNq+eaOmEXre4BXxPCym0F+v83hYk435g+3hP55FmhW95oRZUhX7JVtjYxWxiXEWO2HIKCSWcMqMOhr9jdvIkpjdchJJBmAAaJq29z9yfcKYJuB372B7cEtky4ai2oJ/vozDz7dyUZEYbtzO+QUYq35/ug96ngy+ORo8yM37jmnJXGaxLCFQUIP72G45nGSxeHvXrU4WPG83bI7GNf2nvnfAqt+utMS41BfOiAreRZRQBq4yVKTLPD+TvQ=
+X-MS-Exchange-AntiSpam-MessageData: SpsyFl3uGQJx8LZxofr0nAuaFq0RgZvkF25ytLd347yPD6TAtqMdDatzN2HbfPfsVAfegizawR21JfNGiBb+C/k0bCC8ASmHiHZ7LPFKHh8GKzzjp1OFWDUfAAD3COA877mlvert2GVMYMeFPrIskg==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e66de7f4-b9da-4e6c-db57-08d7b512a6d7
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 08:06:41.1216
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5902c768-1b67-498f-3e68-08d7b512a95b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 08:06:45.3611
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uQ4pzeWZLINFH0YYfskFBJNq+f4UoRXyA8Q7j+5xjYJY/qSJkucEiBvNYcFxBkt4XBWUB/do8odHvAzzvTX9UQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6401
+X-MS-Exchange-CrossTenant-UserPrincipalName: wMmSl0QvVuUwQ8nMI4B0kTGdQhk7IKn+f+J5U9bYnaUNJn4644w8VWcGpA3Oma0yfWmHVuKP36n68MNV/DkwbQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -99,76 +99,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-When cpu runs in HSRUN mode, cpuidle is not allowed to run into
-Stop mode. So add imx7ulp_get_mode to get thr cpu run mode,
-and use WAIT mode instead, when cpu in HSRUN mode.
+Platforms may need to implement platform specific get_intermediate and
+target_intermediate hooks.
+
+Update cpufreq-dt driver's platform data to contain those for such
+platforms.
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- arch/arm/mach-imx/common.h          |  1 +
- arch/arm/mach-imx/cpuidle-imx7ulp.c | 14 +++++++++++---
- arch/arm/mach-imx/pm-imx7ulp.c      | 10 ++++++++++
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ drivers/cpufreq/cpufreq-dt.c | 4 ++++
+ drivers/cpufreq/cpufreq-dt.h | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 5aa5796cff0e..db542da4fe67 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -104,6 +104,7 @@ void imx6_set_int_mem_clk_lpm(bool enable);
- void imx6sl_set_wait_clk(bool enter);
- int imx_mmdc_get_ddr_type(void);
- int imx7ulp_set_lpm(enum ulp_cpu_pwr_mode mode);
-+u32 imx7ulp_get_mode(void);
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index d2b5f062a07b..26fe8dfb9ce6 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -363,6 +363,10 @@ static int dt_cpufreq_probe(struct platform_device *pdev)
+ 		dt_cpufreq_driver.resume = data->resume;
+ 		if (data->suspend)
+ 			dt_cpufreq_driver.suspend = data->suspend;
++		if (data->get_intermediate) {
++			dt_cpufreq_driver.target_intermediate = data->target_intermediate;
++			dt_cpufreq_driver.get_intermediate = data->get_intermediate;
++		}
+ 	}
  
- void imx_cpu_die(unsigned int cpu);
- int imx_cpu_kill(unsigned int cpu);
-diff --git a/arch/arm/mach-imx/cpuidle-imx7ulp.c b/arch/arm/mach-imx/cpuidle-imx7ulp.c
-index ca86c967d19e..e7009d10b331 100644
---- a/arch/arm/mach-imx/cpuidle-imx7ulp.c
-+++ b/arch/arm/mach-imx/cpuidle-imx7ulp.c
-@@ -15,10 +15,18 @@
- static int imx7ulp_enter_wait(struct cpuidle_device *dev,
- 			    struct cpuidle_driver *drv, int index)
- {
--	if (index == 1)
-+	u32 mode;
-+
-+	if (index == 1) {
- 		imx7ulp_set_lpm(ULP_PM_WAIT);
--	else
--		imx7ulp_set_lpm(ULP_PM_STOP);
-+	} else {
-+		mode = imx7ulp_get_mode();
-+
-+		if (mode == 3)
-+			imx7ulp_set_lpm(ULP_PM_WAIT);
-+		else
-+			imx7ulp_set_lpm(ULP_PM_STOP);
-+	}
+ 	ret = cpufreq_register_driver(&dt_cpufreq_driver);
+diff --git a/drivers/cpufreq/cpufreq-dt.h b/drivers/cpufreq/cpufreq-dt.h
+index a5a45b547d0b..28c8af7ec5ef 100644
+--- a/drivers/cpufreq/cpufreq-dt.h
++++ b/drivers/cpufreq/cpufreq-dt.h
+@@ -14,6 +14,10 @@ struct cpufreq_policy;
+ struct cpufreq_dt_platform_data {
+ 	bool have_governor_per_policy;
  
- 	cpu_do_idle();
- 
-diff --git a/arch/arm/mach-imx/pm-imx7ulp.c b/arch/arm/mach-imx/pm-imx7ulp.c
-index 393faf1e8382..1410ccfc71bd 100644
---- a/arch/arm/mach-imx/pm-imx7ulp.c
-+++ b/arch/arm/mach-imx/pm-imx7ulp.c
-@@ -63,6 +63,16 @@ int imx7ulp_set_lpm(enum ulp_cpu_pwr_mode mode)
- 	return 0;
- }
- 
-+u32 imx7ulp_get_mode(void)
-+{
-+	u32 mode;
-+
-+	mode = readl_relaxed(smc1_base + SMC_PMCTRL) & BM_PMCTRL_RUNM;
-+	mode >>= BP_PMCTRL_RUNM;
-+
-+	return mode;
-+}
-+
- void __init imx7ulp_pm_init(void)
- {
- 	struct device_node *np;
++	unsigned int	(*get_intermediate)(struct cpufreq_policy *policy,
++					    unsigned int index);
++	int		(*target_intermediate)(struct cpufreq_policy *policy,
++					       unsigned int index);
+ 	int (*suspend)(struct cpufreq_policy *policy);
+ 	int (*resume)(struct cpufreq_policy *policy);
+ };
 -- 
 2.16.4
 
