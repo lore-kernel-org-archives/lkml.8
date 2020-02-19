@@ -2,82 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8B3C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163BEC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3583F2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:47:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582116435;
-	bh=78L7q3X7/Zxk9esBo61a/shxQzMYU6nTCnPnkYfB+2E=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MdejMmLXvrBXzLsNY3lDtzWcWqGnolyWdPDcYxfrgRR+2/qICHgMJ0c3EGx9V1NeJ
-	 rwWlWChhjdz3fgXn8VrOgNoNyJUe2NmD0fOLtR6AqwtYG5z6N/H8Hg3G6Jp2VPo8+a
-	 SvD+AmDBDfHGzV2+zvRN0++0iEUlVQy8Tl+tpZsM=
+	by mail.kernel.org (Postfix) with ESMTP id E337C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0CCmFUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBSMrO (ORCPT
+        id S1727497AbgBSMst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:47:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgBSMrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:47:13 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 454C024654;
-        Wed, 19 Feb 2020 12:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582116433;
-        bh=78L7q3X7/Zxk9esBo61a/shxQzMYU6nTCnPnkYfB+2E=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=hdwT7jwDCL5ZqQeaRjVdSYu3jP9wC7ywHEszxyECjNhODNCOWO/jdTrdN/TGO8Kw/
-         iNKq3SBrMzxKe4QcElRQHoD8SJkqLj6UKXd0KzIZM+iwcWfLUOy2jOAHx9O46Ma8Ny
-         OcmmNN29hL1xJorshLjE+GHcL7gPtAHmxirgx1EY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1E9FE35229ED; Wed, 19 Feb 2020 04:47:13 -0800 (PST)
-Date:   Wed, 19 Feb 2020 04:47:13 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Amol Grover <frextrite@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: Re: [PATCH] cfg80211: Pass lockdep expression to RCU lists
-Message-ID: <20200219124713.GU2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200219091102.10709-1-frextrite@gmail.com>
- <ff8a005c68e512cb3f338b7381853e6b3a3ab293.camel@sipsolutions.net>
+        Wed, 19 Feb 2020 07:48:49 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37637 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgBSMst (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:48:49 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q23so240712ljm.4;
+        Wed, 19 Feb 2020 04:48:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dN5iCO8jDe/PtPLCP5+bsEVRnjfPHVQSbpy1yzeXeh8=;
+        b=j0CCmFUqCF0GipD0Gv123st5aD6tmNEimD2gqn5eu8O/YOpGEnsNoyT2C6cNcmEhgm
+         uFXj6wa9r6zJGDLJN/crPXOqyxipo5mvUWE583IfRlQS2skqxJnAs7QjMFXRIwmAEtjX
+         fs4UNS1T2AxJRUKRtOXNYCYeqp/v0QMRGmQaYsvZMUE+diO3XiT0lYiWPqr4+yKI9nrg
+         FE1YVcKcrJ9bTQtwCxWxaeZp95QGmytOs93FJ3qefk4q0OkWca2vRskIoZjdI0Que/bS
+         dM66EzF4nd93Lj0t6SqbdwwBcnjOvVW9yMQEsUbHk8rsXfPAkSctNxokZ3BRCsmqKl09
+         /GaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dN5iCO8jDe/PtPLCP5+bsEVRnjfPHVQSbpy1yzeXeh8=;
+        b=F7OGUbQRjjQQkUWCc5JRiTSfIeFawe6rZAKZYAFB5eB5tzLE9bqAx7qIcxR08EbU2y
+         IZrR7whiVn+4G6PxGZLVIsIf+ET6CT+HOJSUna5ImDgD6/dlBOFXEufHzxSxWHeHPJS8
+         eltt5XVe6to8xJ1bLype/kXRov6NSNRxqhqYugxXGIqhMK3WH91qDDC0DqDEeHj2zPew
+         WjGrbV9KK3oCYLfFuOgCZy9Z87IfF9mZTrVxmLdDRtxcGx1h2mBuIxtWbxed1txnYDf3
+         FE+CJYbhXSaEivmwVmPGhPS3+7b5fn504R4paCllB8O6Cdk2d3/24333UxhUrx6b56rW
+         hy1g==
+X-Gm-Message-State: APjAAAV+Wc6l56aHqQQcPsuAsimOnDt09lNB9PEX2n9a/PQJcWG+a7FE
+        Y8hPhRfoyhViX9Daqb4ftF6vG0ILZoSLFc0Rn/zlow==
+X-Google-Smtp-Source: APXvYqzHuSu+LmGKJcSnlYrT9QzvlCV+tLoHT5TpvGPcZeuRUnkxPmYQkKQ8fvmpb9gqs+zG7gLMzaZPLnlmuq9FBqI=
+X-Received: by 2002:a2e:5056:: with SMTP id v22mr15838180ljd.164.1582116527150;
+ Wed, 19 Feb 2020 04:48:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff8a005c68e512cb3f338b7381853e6b3a3ab293.camel@sipsolutions.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
+In-Reply-To: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Feb 2020 09:48:35 -0300
+Message-ID: <CAOMZO5AZrQmYmEZVC9kpbaPe+Kg71SnCsfkMj0-f+adW3dLnBg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:13:36AM +0100, Johannes Berg wrote:
-> On Wed, 2020-02-19 at 14:41 +0530, Amol Grover wrote:
-> >  
-> > -	WARN_ON_ONCE(!rcu_read_lock_held() && !lockdep_rtnl_is_held());
-> > -
-> > -	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list) {
-> > +	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list,
-> > +				lockdep_rtnl_is_held()) {
-> 
-> Huh, I didn't even know you _could_ do that :)
+Hi Oleksandr,
 
-It is a fairly recent addition, courtesy of Joel Fernandes.  ;-)
+On Wed, Feb 19, 2020 at 8:57 AM Oleksandr Suvorov
+<oleksandr.suvorov@toradex.com> wrote:
+>
+> SD/MMC on Colibri iMX7S/D modules successfully support
+> 200Mhz frequency in HS200 mode.
 
-							Thanx, Paul
+s/Mhz/MHz
+
+>
+> Removing the unnecessary max-frequency limit significantly
+> increases the performance:
+>
+> == before fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 252 MB in  3.02 seconds =  83.54 MB/sec
+> ==================
+>
+> === after fix ====
+> root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+> /dev/mmcblk0:
+>  Timing buffered disk reads: 408 MB in  3.00 seconds = 135.94 MB/sec
+> ==================
+
+Nice improvement :-)
+
+>
+> Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D
+>                       1GB (eMMC) support")
+
+Please keep the Fixes tag in a single line.
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
