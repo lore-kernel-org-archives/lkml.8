@@ -2,189 +2,121 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D8DC18DF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E0C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB4F420801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582134667;
-	bh=HVHQjGSEocd9AVyWevt6joEF+d2PPbwr8+8k6h+A34M=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QZHnrM3frkMdSy5z3pxvC4iCho+LIYmqx/64dSSHREwILdMR3vKTYC/FCUboXPSVA
-	 5PVg4MbBvFn2aTMikqQVtRPtvLzHvxsuIFQG2MpHKJCzGMNt3+2Yo3xEoa4DS0jcb3
-	 qoNzXdxU5Jg2Pjq/1WQQc0gzu+blrIuPxqFdF9Ew=
+	by mail.kernel.org (Postfix) with ESMTP id D16C524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1SUOGgc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgBSRvF (ORCPT
+        id S1726734AbgBSRvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:51:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgBSRvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:51:05 -0500
-Received: from localhost.localdomain (unknown [194.230.155.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A9F7206DB;
-        Wed, 19 Feb 2020 17:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582134663;
-        bh=HVHQjGSEocd9AVyWevt6joEF+d2PPbwr8+8k6h+A34M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=PxIaHkLn5XTar1EPyISd4vtwzk0Yb8ho6/2/5bpHXPVckPViPmh7xJy5CDKknCISe
-         aVweOki+hxup4Tb6Es9L3KhQ8BxFokAKuut29izMLGuhQbvVvdmhKIAJt21HDJ6Icz
-         WQ/bI2EQHItOjyTVPfGGfciGRDULmeQrq4s9rqPA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jiri Slaby <jirislaby@gmail.com>,
-        Nick Kossifidis <mickflemm@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Wed, 19 Feb 2020 12:51:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38563 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726539AbgBSRvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:51:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582134668;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rmu/eivGKnHsckZ9SlN4grVeY3oFFfk+D2Xi3Y537u0=;
+        b=f1SUOGgcXQCTD7ZZNlkOEUoTUPsEoUTJEtL+LpehPMoVUVaI3pnPIvkzROQtfZudP7jDLq
+        5QXZ9cx2Hezr6QUUcKb8JD04BblDhyPto8Sc5ypg1l5/N+I3EtHZdCKPC3La7u+/9OImll
+        aBVwltji2Y33/Jnt/S9MnOPwPfSp7KY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-207-aQ9Kx8tcPueq5YeFfbNgwg-1; Wed, 19 Feb 2020 12:51:04 -0500
+X-MC-Unique: aQ9Kx8tcPueq5YeFfbNgwg-1
+Received: by mail-wm1-f72.google.com with SMTP id u11so548733wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:51:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rmu/eivGKnHsckZ9SlN4grVeY3oFFfk+D2Xi3Y537u0=;
+        b=JJS5nvkJaLFQu3DOGgIzE/8WlLZQP2ZMZDzEPCB0m3cZDsSC1ck7nGLfgAElJkKPNs
+         LYb68oiyJbQtMc+dt9vde3sXBDDiTa4hKX36s0T4AVgcRGXAXzfumiyI63bshwdlUg/D
+         /juh2AB1SAuJi6TTrhc0UkkNl8wJQS6N4Ln0viXvdteHABpPuvC2Hxx65gB1/eZ/xe9M
+         9fa7tLRMlJ6Rbvwgtpgafn6/zRtxnwOW+Wa6rwIB8OuEMSCMvp4ILSV7mUbT3KY1QtJD
+         IG2Y1Lb4qRVXa1HWjwGpujnAuUk3zMr8a1tFKz4ck2DCtrhtWbduD87to6KEbWJgs/f+
+         +JqA==
+X-Gm-Message-State: APjAAAXKEjDGqiNiOIhR5dG2GWPNiCfMS6qnMGuQ0s2lhknfb7Fb76so
+        /ZrdYLHapPVJWdcejZFAEL2nxssiYTWdrhrqn0GmMDoAPtPfC77+ucR0HMMggMoMVMoQu0SapbR
+        pM+YtVBb/7z7dlucFOS8VuWty
+X-Received: by 2002:a1c:a382:: with SMTP id m124mr11290572wme.90.1582134663409;
+        Wed, 19 Feb 2020 09:51:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxjOrkRfd1hE1t7VmANmhu3DjJxXoMreSD+qGtuXhnlmKXNCZCyZyfbMbfvpQLPfT8+krtr1w==
+X-Received: by 2002:a1c:a382:: with SMTP id m124mr11290544wme.90.1582134663118;
+        Wed, 19 Feb 2020 09:51:03 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:ec41:5e57:ff4d:8e51? ([2001:b07:6468:f312:ec41:5e57:ff4d:8e51])
+        by smtp.gmail.com with ESMTPSA id l15sm639955wrv.39.2020.02.19.09.51.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 09:51:02 -0800 (PST)
+Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
+To:     Erwan Velu <e.velu@criteo.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        linux-arch@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND PATCH v2 0/9] iomap: Constify ioreadX() iomem argument
-Date:   Wed, 19 Feb 2020 18:49:58 +0100
-Message-Id: <20200219175007.13627-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200214143035.607115-1-e.velu@criteo.com>
+ <20200214170508.GB20690@linux.intel.com>
+ <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
+ <20200218184802.GC28156@linux.intel.com>
+ <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
+ <20200219161827.GD15888@linux.intel.com>
+ <646147a6-730b-0366-10db-ed74489ad11e@criteo.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <ea2800cf-4c23-9cb5-5904-08a709f6d594@redhat.com>
+Date:   Wed, 19 Feb 2020 18:51:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <646147a6-730b-0366-10db-ed74489ad11e@criteo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 19/02/20 17:53, Erwan Velu wrote:
+> 
+> 
+> I've been testing the ratelimited which is far better but still prints
+> 12 messages.
 
+12 is already much better than 256.  Someone else will have an even
+bigger system requiring a larger delay, so I'd go with the default.
 
-Changes since v1
-================
-https://lore.kernel.org/lkml/1578415992-24054-1-git-send-email-krzk@kernel.org/
-1. Constify also ioreadX_rep() and mmio_insX(),
-2. Squash lib+alpha+powerpc+parisc+sh into one patch for bisectability,
-3. Add acks and reviews,
-4. Re-order patches so all optional driver changes are at the end.
+Paolo
 
-
-Description
-===========
-The ioread8/16/32() and others have inconsistent interface among the
-architectures: some taking address as const, some not.
-
-It seems there is nothing really stopping all of them to take
-pointer to const.
-
-Patchset was only compile tested on affected architectures.  No real
-testing.
-
-
-volatile
-========
-There is still interface inconsistency between architectures around
-"volatile" qualifier:
- - include/asm-generic/io.h:static inline u32 ioread32(const volatile void __iomem *addr)
- - include/asm-generic/iomap.h:extern unsigned int ioread32(const void __iomem *);
-
-This is still discussed and out of scope of this patchset.
-
-
-Merging
-=======
-Multiple architectures are affected in first patch so acks are welcomed.
-
-1. All patches depend on first patch,
-2. Patches 2-4 unify the interface also in few drivers,
-3. PAtches 5-9 are optional cleanup, without actual impact.
-
-
-Best regards,
-Krzysztof
-
-
-Krzysztof Kozlowski (9):
-  iomap: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  rtl818x: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  ntb: intel: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  virtio: pci: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  arc: Constify ioreadX() iomem argument (as in generic implementation)
-  drm/mgag200: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  drm/nouveau: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  media: fsl-viu: Constify ioreadX() iomem argument (as in generic
-    implementation)
-  ath5k: Constify ioreadX() iomem argument (as in generic
-    implementation)
-
- arch/alpha/include/asm/core_apecs.h           |  6 +-
- arch/alpha/include/asm/core_cia.h             |  6 +-
- arch/alpha/include/asm/core_lca.h             |  6 +-
- arch/alpha/include/asm/core_marvel.h          |  4 +-
- arch/alpha/include/asm/core_mcpcia.h          |  6 +-
- arch/alpha/include/asm/core_t2.h              |  2 +-
- arch/alpha/include/asm/io.h                   | 12 ++--
- arch/alpha/include/asm/io_trivial.h           | 16 ++---
- arch/alpha/include/asm/jensen.h               |  2 +-
- arch/alpha/include/asm/machvec.h              |  6 +-
- arch/alpha/kernel/core_marvel.c               |  2 +-
- arch/alpha/kernel/io.c                        | 12 ++--
- arch/arc/plat-axs10x/axs10x.c                 |  4 +-
- arch/parisc/include/asm/io.h                  |  4 +-
- arch/parisc/lib/iomap.c                       | 72 +++++++++----------
- arch/powerpc/kernel/iomap.c                   | 28 ++++----
- arch/sh/kernel/iomap.c                        | 22 +++---
- drivers/gpu/drm/mgag200/mgag200_drv.h         |  4 +-
- drivers/gpu/drm/nouveau/nouveau_bo.c          |  2 +-
- drivers/media/platform/fsl-viu.c              |  2 +-
- drivers/net/wireless/ath/ath5k/ahb.c          | 10 +--
- .../realtek/rtl818x/rtl8180/rtl8180.h         |  6 +-
- drivers/ntb/hw/intel/ntb_hw_gen1.c            |  2 +-
- drivers/ntb/hw/intel/ntb_hw_gen3.h            |  2 +-
- drivers/ntb/hw/intel/ntb_hw_intel.h           |  2 +-
- drivers/virtio/virtio_pci_modern.c            |  6 +-
- include/asm-generic/iomap.h                   | 28 ++++----
- include/linux/io-64-nonatomic-hi-lo.h         |  4 +-
- include/linux/io-64-nonatomic-lo-hi.h         |  4 +-
- lib/iomap.c                                   | 30 ++++----
- 30 files changed, 156 insertions(+), 156 deletions(-)
-
--- 
-2.17.1
+> I saw the ratelimit is on about 5 sec, I wonder if we can explicit a
+> longer one for this one.
+> 
+> I searched around this but it doesn't seems that hacking the delay is a
+> common usage.
+> 
+> Do you have any insights/ideas around that ?
+> 
+> 
+> Switching to ratelimit could be done by replacing the actual call or add
+> a macro similar to  kvm_pr_unimpl() so it can be reused easily.
 
