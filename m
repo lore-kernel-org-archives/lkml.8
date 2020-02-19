@@ -2,81 +2,126 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 237E0C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D5DC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5BE206EF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528BB24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582080318;
+	bh=5uEBsRxClyuvVqGJzio9egBbCPvJMHgtyV3IoADzuMs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=gLUksaxKgKiq13FE33fIGAwsxzmmxeINW/th9Pro/MwzFZwfymK8VMpc5G2p7JyDC
+	 J2Hictc3O3icTjsguUJ6Nz6GTv6zx1qD2+hi+gz0vloMV3XLvXmk3WS2IEu2HiqnJz
+	 U5+xlorcKBZuQ1MwPsN5Jav7K6MPhJhGG6AlB6vI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgBSCoU (ORCPT
+        id S1728203AbgBSCpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:44:20 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10214 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727187AbgBSCoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:44:20 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id E49B176D5EFC7A29FE95;
-        Wed, 19 Feb 2020 10:44:18 +0800 (CST)
-Received: from huawei.com (10.175.105.18) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
- 10:44:13 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
-        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
-        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>
-CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH v2] KVM: VMX: replace "fall through" with "return" to indicate different case
-Date:   Wed, 19 Feb 2020 10:45:48 +0800
-Message-ID: <1582080348-20827-1-git-send-email-linmiaohe@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.105.18]
-X-CFilter-Loop: Reflected
+        Tue, 18 Feb 2020 21:45:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727187AbgBSCpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:45:17 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 221B624654;
+        Wed, 19 Feb 2020 02:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582080316;
+        bh=5uEBsRxClyuvVqGJzio9egBbCPvJMHgtyV3IoADzuMs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NWCPon5+OMi/0Ypox5wjReXfI94UJLME8bzLQrf1B8AAVbTpkXX/mbUwacXbYo58f
+         MEgBLK/qqo4PPxjRi3sWOkO+njPGKfTNBF457tpkLDzd3NwEojC1zic3JLIkY8F/J0
+         GMbFa+acEz94szuHDiqbstsd22rR/UZV2VD4SyrE=
+Date:   Wed, 19 Feb 2020 11:45:10 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     paulmck@kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-Id: <20200219114510.6f942b56868a97e06352738c@kernel.org>
+In-Reply-To: <20200218201806.GI2935@paulmck-ThinkPad-P72>
+References: <20200213163800.5c51a5f1@gandalf.local.home>
+        <20200213215004.GM2935@paulmck-ThinkPad-P72>
+        <20200213170451.690c4e5c@gandalf.local.home>
+        <20200213223918.GN2935@paulmck-ThinkPad-P72>
+        <20200214151906.b1354a7ed6b01fc3bf2de862@kernel.org>
+        <20200215145934.GD2935@paulmck-ThinkPad-P72>
+        <20200217175519.12a694a969c1a8fb2e49905e@kernel.org>
+        <20200217163112.GM2935@paulmck-ThinkPad-P72>
+        <20200218133335.c87d7b2399ee6532bf28b74a@kernel.org>
+        <20200218124609.1a33f868@gandalf.local.home>
+        <20200218201806.GI2935@paulmck-ThinkPad-P72>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+On Tue, 18 Feb 2020 12:18:06 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-The second "/* fall through */" in rmode_exception() makes code harder to
-read. Replace it with "return" to indicate they are different cases, only
-the #DB and #BP check vcpu->guest_debug, while others don't care. And this
-also improves the readability.
+> On Tue, Feb 18, 2020 at 12:46:09PM -0500, Steven Rostedt wrote:
+> > On Tue, 18 Feb 2020 13:33:35 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > On Mon, 17 Feb 2020 08:31:12 -0800
+> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > > >   
+> > > > > BTW, if you consider the x86 specific code is in the generic file,
+> > > > > we can move NOKPROBE_SYMBOL() in arch/x86/kernel/traps.c.
+> > > > > (Sorry, I've hit this idea right now)  
+> > > > 
+> > > > Might this affect other architectures with NMIs and probe-like things?
+> > > > If so, it might make sense to leave it where it is.  
+> > > 
+> > > Yes, git grep shows that arm64 is using rcu_nmi_enter() in
+> > > debug_exception_enter().
+> > > OK, let's keep it, but maybe it is good to update the comment for
+> > > arm64 too. What about following?
+> > > 
+> > > +/*
+> > > + * All functions in do_int3() on x86, do_debug_exception() on arm64 must be
+> > > + * marked NOKPROBE before kprobes handler is called.
+> > > + * ist_enter() on x86 and debug_exception_enter() on arm64 which is called
+> > > + * before kprobes handle happens to call rcu_nmi_enter() which means
+> > > + * that rcu_nmi_enter() must be marked NOKRPOBE.
+> > > + */
+> > > 
+> > 
+> > Ah, why don't we just say...
+> > 
+> > /*
+> >  * All functions called in the breakpoint trap handler (e.g. do_int3()
+> >  * on x86), must not allow kprobes until the kprobe breakpoint handler
+> >  * is called, otherwise it can cause an infinite recursion.
+> >  * On some archs, rcu_nmi_enter() is called in the breakpoint handler
+> >  * before the kprobe breakpoint handler is called, thus it must be
+> >  * marked as NOKPROBE.
+> >  */
+> > 
+> > And that way we don't make this an arch specific comment.
+> 
+> That looks good to me.  Masami, does this work for you?
 
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- arch/x86/kvm/vmx/vmx.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yes, that looks good to me too :)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a13368b2719c..5b8f024f06c2 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4492,10 +4492,8 @@ static bool rmode_exception(struct kvm_vcpu *vcpu, int vec)
- 			return false;
- 		/* fall through */
- 	case DB_VECTOR:
--		if (vcpu->guest_debug &
--			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP))
--			return false;
--		/* fall through */
-+		return !(vcpu->guest_debug &
-+			(KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP));
- 	case DE_VECTOR:
- 	case OF_VECTOR:
- 	case BR_VECTOR:
+Thank you!
+
+
 -- 
-2.19.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
