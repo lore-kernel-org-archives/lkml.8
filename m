@@ -2,95 +2,84 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA24C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE46C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B06B324655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D8624655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YY905mNC"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="RP35KWjm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgBSAGR (ORCPT
+        id S1727922AbgBSAGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:06:17 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33494 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbgBSAGR (ORCPT
+        Tue, 18 Feb 2020 19:06:23 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:44374 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726415AbgBSAGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:06:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EbptOgdB/q1QzORcIPJ5DSoP1e8Lu7kzA96imJ2Ki4I=; b=YY905mNCreZHRFwytkkcBOR9C
-        GWfEJkm/4PEdLwe0JeuK84wqXKFTk/+vOsgI4mHVv0LxxczS8NeCSDnK3W9IQ5b5R4zGCtxNsXVKx
-        u9WHgASuZHCch+mAX0n87UV0g7yaExw3ixYj/tVrgFxX9t8M2IThBnQTrFU/LutGZKi8nvb2Cpfl4
-        k5LpDLJ1zl2XShWaWHLrdGUx94jpLcRuZycWaK/wt1eGjfTGqrlGoEwJyeN1DYqmz4Gc2oqCft/2M
-        oQsVQEzK5s3LHITx8mkS37ZTKn56Hstip+Km4J2LTNfibHHQCGTVVMrCZWdSDbTYKjEEJEOaDuZVr
-        eWyp94KjA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:53866)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j4CsQ-00020o-Vg; Wed, 19 Feb 2020 00:06:10 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j4CsP-0000rn-3o; Wed, 19 Feb 2020 00:06:05 +0000
-Date:   Wed, 19 Feb 2020 00:06:05 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, andrew@lunn.ch,
-        davem@davemloft.net, netdev@vger.kernel.org,
+        Tue, 18 Feb 2020 19:06:22 -0500
+Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 74E4F20B9C02;
+        Tue, 18 Feb 2020 16:06:21 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 74E4F20B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1582070781;
+        bh=UT3TrhMzxCCip80EgbqalVA8034WZCrq8uLhLeB3VQg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RP35KWjmK2GFDkIyBlJLJs1+sHTDTHTyov/LsVHgK8HK9FySzcuetUOcXfqUEbRC4
+         DqnUF666iT69/ClpA3mLw0wBrEZA0fcl4LUxt/wsgdtterQETbkOL6wGai1epJ0072
+         E2PGxNMj/gAZMOJ0qkOSsY8WqPKWyv1uGZeAeA3s=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, joe@perches.com, skhan@linuxfoundation.org,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-Message-ID: <20200219000604.GO25745@shell.armlinux.org.uk>
-References: <7569617d-f69f-9190-1223-77d3be637753@gmail.com>
- <c7a7bd71-3a1c-1cf3-5faa-204b10ea8b78@ti.com>
- <44499cb2-ec72-75a1-195b-fbadd8463e1c@ti.com>
- <6f800f83-0008-c138-c33a-c00a95862463@ti.com>
- <20200218162522.GH25745@shell.armlinux.org.uk>
- <1346e6b0-1d20-593f-d994-37de87ede891@ti.com>
- <20200218164928.GJ25745@shell.armlinux.org.uk>
- <cba40adb-38b9-2e66-c083-3ca7b570b927@ti.com>
- <20200218173353.GM25745@shell.armlinux.org.uk>
- <f5c42936-98a6-8221-a244-ed61840c9c81@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f5c42936-98a6-8221-a244-ed61840c9c81@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Subject: [PATCH v5 0/3] integrity: improve log messages
+Date:   Tue, 18 Feb 2020 16:06:08 -0800
+Message-Id: <20200219000611.28141-1-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 11:38:33AM -0600, Dan Murphy wrote:
-> Russell
-> 
-> On 2/18/20 11:33 AM, Russell King - ARM Linux admin wrote:
-> > As I mentioned, the PHY on either end of the link can be the one
-> > which decides to downshift, and the partner PHY has no idea that
-> > a downshift has happened.
-> > 
-> Exactly so we can only report that if the PHY on our end caused the
-> downshift.  If this PHY does not cause the downshift then the message will
-> not be presented even though a downshift occurred. So what is the value in
-> presenting this message?
+The log messages from integrity subsystem should be consistent for better
+diagnosability and discoverability.
 
-I think we are in agreement over questioning the value of reporting
-the downshift!
+This patch set improves the logging by removing duplicate log formatting
+macros, adding a consistent prefix to the log messages, and adding new 
+log messages where necessary.
+
+Tushar Sugandhi (3):
+  add log prefix
+  add log message to process_buffer_measurement failure conditions
+  add module name prefix to log statements
+
+ security/integrity/digsig.c                  | 2 --
+ security/integrity/digsig_asymmetric.c       | 2 --
+ security/integrity/evm/evm_crypto.c          | 2 --
+ security/integrity/evm/evm_main.c            | 2 --
+ security/integrity/evm/evm_secfs.c           | 2 --
+ security/integrity/ima/Makefile              | 6 +++---
+ security/integrity/ima/ima_asymmetric_keys.c | 2 --
+ security/integrity/ima/ima_crypto.c          | 2 --
+ security/integrity/ima/ima_fs.c              | 2 --
+ security/integrity/ima/ima_init.c            | 2 --
+ security/integrity/ima/ima_kexec.c           | 1 -
+ security/integrity/ima/ima_main.c            | 5 +++--
+ security/integrity/ima/ima_policy.c          | 2 --
+ security/integrity/ima/ima_queue.c           | 2 --
+ security/integrity/ima/ima_queue_keys.c      | 2 --
+ security/integrity/ima/ima_template.c        | 2 --
+ security/integrity/ima/ima_template_lib.c    | 2 --
+ security/integrity/integrity.h               | 6 ++++++
+ 18 files changed, 12 insertions(+), 34 deletions(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.17.1
+
