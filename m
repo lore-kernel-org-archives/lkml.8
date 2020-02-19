@@ -2,117 +2,266 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C06C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59B8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99AD2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J7s5sJmP"
+	by mail.kernel.org (Postfix) with ESMTP id 8028220801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgBSNnL (ORCPT
+        id S1727721AbgBSNnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:43:11 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60016 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbgBSNnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:43:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582119790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ogUgNQHMZGphvFbHLWSXZKUdZldeedaIJcgIFpDuE+4=;
-        b=J7s5sJmPffvZw0EwOC7GX6nBp98FmgPHkvU/dXF5wxj0GX2xmABTyG9RqqXFTCVijI3zyO
-        VrmEzFkG2pCeiQY0qAKqNzUokgBZUTnVqoOFGJd+85CnCzbEXdR20cEe18JSz4pRIIdMJv
-        pSkjJSIV3b2mp2oUKuXRLasSEEaddWU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-1C0NK7uANj6M3v3QxALrfQ-1; Wed, 19 Feb 2020 08:43:06 -0500
-X-MC-Unique: 1C0NK7uANj6M3v3QxALrfQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C36288DE74D;
-        Wed, 19 Feb 2020 13:43:04 +0000 (UTC)
-Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D08A90F76;
-        Wed, 19 Feb 2020 13:42:55 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 14:42:54 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4?= =?UTF-8?B?cmdlbnNlbg==?= 
-        <toke@redhat.com>, brouer@redhat.com
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-Message-ID: <20200219144254.36c3921b@carbon>
-In-Reply-To: <20200219132856.GA2836367@kroah.com>
-References: <20200219133012.7cb6ac9e@carbon>
-        <20200219132856.GA2836367@kroah.com>
+        Wed, 19 Feb 2020 08:43:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:49234 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgBSNnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:43:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B98801FB;
+        Wed, 19 Feb 2020 05:43:11 -0800 (PST)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 697403F68F;
+        Wed, 19 Feb 2020 05:43:10 -0800 (PST)
+Date:   Wed, 19 Feb 2020 13:43:08 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] sched/rt: allow pulling unfitting task
+Message-ID: <20200219134306.4uvnlh4co3zwohzw@e107158-lin>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-3-qais.yousef@arm.com>
+ <20200217091042.GB28029@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200217091042.GB28029@codeaurora.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 14:28:56 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-
-> On Wed, Feb 19, 2020 at 01:30:12PM +0100, Jesper Dangaard Brouer wrote:
-> > Hi Andrii,
+On 02/17/20 14:40, Pavan Kondeti wrote:
+> Hi Qais,
+> 
+> On Fri, Feb 14, 2020 at 04:39:48PM +0000, Qais Yousef wrote:
+> > When implemented RT Capacity Awareness; the logic was done such that if
+> > a task was running on a fitting CPU, then it was sticky and we would try
+> > our best to keep it there.
 > > 
-> > Downloaded tarball for kernel release 5.5.4, and I cannot compile
-> > tools/testing/selftests/bpf/ with latest LLVM release version 9.  
+> > But as Steve suggested, to adhere to the strict priority rules of RT
+> > class; allow pulling an RT task to unfitting CPU to ensure it gets a
+> > chance to run ASAP. When doing so, mark the queue as overloaded to give
+> > the system a chance to push the task to a better fitting CPU when a
+> > chance arises.
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> > ---
+> >  kernel/sched/rt.c | 16 +++++++++++++---
+> >  1 file changed, 13 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> > index 4043abe45459..0c8bac134d3a 100644
+> > --- a/kernel/sched/rt.c
+> > +++ b/kernel/sched/rt.c
+> > @@ -1646,10 +1646,20 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+> >  
+> >  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+> >  {
+> > -	if (!task_running(rq, p) &&
+> > -	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+> > -	    rt_task_fits_capacity(p, cpu))
+> > +	if (!task_running(rq, p) && cpumask_test_cpu(cpu, p->cpus_ptr)) {
+> > +
+> > +		/*
+> > +		 * If the CPU doesn't fit the task, allow pulling but mark the
+> > +		 * rq as overloaded so that we can push it again to a more
+> > +		 * suitable CPU ASAP.
+> > +		 */
+> > +		if (!rt_task_fits_capacity(p, cpu)) {
+> > +			rt_set_overload(rq);
+> > +			rq->rt.overloaded = 1;
+> > +		}
+> > +
 > 
-> Is this something that recently broke?  If so, what commit caused it?
-
-Digging through, it seems several commits.
-
-> And has llvm 9 always worked here?
-
-Yes, llvm-9 used to work for tools/testing/selftests/bpf/.
-
-
-> > Looking closer at the build error messages, I can see that this is
-> > caused by using LLVM features that (I assume) will be avail in release
-> > 10. I find it very strange that we can release a kernel that have build
-> > dependencies on a unreleased version of LLVM.  
+> Here rq is source rq from which the task is being pulled. I can't understand
+> how marking overload condition on source_rq help. Because overload condition
+> gets cleared in the task dequeue path. i.e dec_rt_tasks->dec_rt_migration->
+> update_rt_migration().
 > 
-> Is this the first time you have tried using llvm to build a kernel?
-> This isn't a new thing :)
+> Also, the overload condition with nr_running=1 may not work as expected unless
+> we track this overload condition (due to unfit) separately. Because a task
+> can be pushed only when it is NOT running. So a task running on silver will
+> continue to run there until it wakes up next time or another high prio task
+> gets queued here (due to affinity).
+> 
+> btw, Are you testing this path by disabling RT_PUSH_IPI feature? I ask this
+> because, This feature gets turned on by default in our b.L platforms and
+> RT task migrations happens by the busy CPU pushing the tasks. Or are there
+> any cases where we can run into pick_rt_task() even when RT_PUSH_IPI is
+> enabled?
 
-LOL - we are talking past each-other... I'm not building the entire
-kernel with LLVM.  Notice I'm talking about the BPF-selftests located
-in directory tools/testing/selftests/bpf/.  Building the selftests
-programs are broken
+I changed the approach to set the overload at wake up now. I think I got away
+without having to encode the reason in rq->rt.overload.
 
-We always use LLVM to build BPF programs (both samples/bpf/ and selftests).
+Steve, Pavan, if you can scrutinize this approach I'd be appreciated. It seemed
+to work fine with my testing.
 
+I'll push an updated series if this turned out okay.
+
+Thanks
+
+--
+Qais Yousef
+
+-->8--
+
+
+When implemented RT Capacity Awareness; the logic was done such that if
+a task was running on a fitting CPU, then it was sticky and we would try
+our best to keep it there.
+
+But as Steve suggested, to adhere to the strict priority rules of RT
+class; allow pulling an RT task to unfitting CPU to ensure it gets a
+chance to run ASAP.
+
+To better handle the fact the task is running on unfit CPU, when it
+wakes up mark it as overloaded which will cause it to be pushed to
+a fitting CPU when it becomes available.
+
+The latter change requires teaching push_rt_task() how to handle pushing
+unfit task.
+
+If the unfit task is the only pushable task, then we only force the push
+if we find a fitting CPU. Otherwise we bail out.
+
+Else if the task is higher priorirty than current task, then we
+reschedule.
+
+Else if the rq has other pushable tasks, then we push the unfitting task
+anyway to reduce the pressure on the rq even if the target CPU is unfit
+too.
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+---
+ kernel/sched/rt.c | 52 +++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 48 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+index 6d959be4bba0..6d92219d5733 100644
+--- a/kernel/sched/rt.c
++++ b/kernel/sched/rt.c
+@@ -1658,8 +1658,7 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+ static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+ {
+ 	if (!task_running(rq, p) &&
+-	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+-	    rt_task_fits_capacity(p, cpu))
++	    cpumask_test_cpu(cpu, p->cpus_ptr))
+ 		return 1;
  
-> > I love the new LLVM BTF features, but we cannot break users/CI-systems
-> > that wants to run the BPF-selftests.  
-
+ 	return 0;
+@@ -1860,6 +1859,7 @@ static int push_rt_task(struct rq *rq)
+ 	struct task_struct *next_task;
+ 	struct rq *lowest_rq;
+ 	int ret = 0;
++	bool fit;
+ 
+ 	if (!rq->rt.overloaded)
+ 		return 0;
+@@ -1872,12 +1872,21 @@ static int push_rt_task(struct rq *rq)
+ 	if (WARN_ON(next_task == rq->curr))
+ 		return 0;
+ 
++	/*
++	 * The rq could be overloaded because it has unfitting task, if that's
++	 * the case they we need to try harder to find a better fitting CPU.
++	 */
++	fit = rt_task_fits_capacity(next_task, cpu_of(rq));
++
+ 	/*
+ 	 * It's possible that the next_task slipped in of
+ 	 * higher priority than current. If that's the case
+ 	 * just reschedule current.
++	 *
++	 * Unless next_task doesn't fit in this cpu, then continue with the
++	 * attempt to push it.
+ 	 */
+-	if (unlikely(next_task->prio < rq->curr->prio)) {
++	if (unlikely(next_task->prio < rq->curr->prio && fit)) {
+ 		resched_curr(rq);
+ 		return 0;
+ 	}
+@@ -1920,6 +1929,33 @@ static int push_rt_task(struct rq *rq)
+ 		goto retry;
+ 	}
+ 
++	/*
++	 * Bail out if the task doesn't fit on either CPUs.
++	 *
++	 * Unless..
++	 *
++	 * * The priority of next_task is higher than current, then we
++	 *   resched_curr(). We forced skipping this condition above.
++	 *
++	 * * The rq has more tasks to push, then we probably should push anyway
++	 *   reduce the load on this rq.
++	 */
++	if (!fit && !rt_task_fits_capacity(next_task, cpu_of(lowest_rq))) {
++
++		/* we forced skipping this condition, so re-evaluate it */
++		if (unlikely(next_task->prio < rq->curr->prio)) {
++			resched_curr(rq);
++			goto out_unlock;
++		}
++
++		/*
++		 * If there are more tasks to push, then the rq is overloaded
++		 * with more than just this task, so push anyway.
++		 */
++		if (has_pushable_tasks(rq))
++			goto out_unlock;
++	}
++
+ 	deactivate_task(rq, next_task, 0);
+ 	set_task_cpu(next_task, lowest_rq->cpu);
+ 	activate_task(lowest_rq, next_task, 0);
+@@ -1927,6 +1963,7 @@ static int push_rt_task(struct rq *rq)
+ 
+ 	resched_curr(lowest_rq);
+ 
++out_unlock:
+ 	double_unlock_balance(rq, lowest_rq);
+ 
+ out:
+@@ -2223,7 +2260,14 @@ static void task_woken_rt(struct rq *rq, struct task_struct *p)
+ 			    (rq->curr->nr_cpus_allowed < 2 ||
+ 			     rq->curr->prio <= p->prio);
+ 
+-	if (need_to_push || !rt_task_fits_capacity(p, cpu_of(rq)))
++	bool fit = rt_task_fits_capacity(p, cpu_of(rq));
++
++	if (!fit && !rq->rt.overloaded) {
++		rt_set_overload(rq);
++		rq->rt.overloaded = 1;
++	}
++
++	if (need_to_push || !fit)
+ 		push_rt_tasks(rq);
+ }
+ 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
+2.17.1
 
