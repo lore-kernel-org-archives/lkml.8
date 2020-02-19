@@ -2,110 +2,89 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 128CCC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7E7C3405E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F912465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:39:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9zvwLC9"
+	by mail.kernel.org (Postfix) with ESMTP id EA834206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgBSRjD (ORCPT
+        id S1727187AbgBSRjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:39:03 -0500
-Received: from mail-io1-f47.google.com ([209.85.166.47]:41986 "EHLO
-        mail-io1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbgBSRjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:39:02 -0500
-Received: by mail-io1-f47.google.com with SMTP id z1so1459162iom.9;
-        Wed, 19 Feb 2020 09:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NqZqDn5bC3qrX9T7zgEhb8g+GU/FvR/stsrD4iObuZQ=;
-        b=X9zvwLC9CcZHqgPIQ1bcvQT+Km6yEWdhEDcrdQxe+fm3rt5ZsyxEfnT7+2R40qx4XU
-         w4QZZdzt/Y2xlQG/WVC3oTtpWVEM1eOhepq/dcqB31fwn2TvXd5so/U4wOlSY8gX20cw
-         g2t35KwR7X6qEobOD/tUn+1PmV7lSp768CAY/ojMmEMQft6TYneX+a8x+Oy63XE356UQ
-         xe0XV7fn8G6EtubUBLCj+79p2bKp3GKYlhEdkbPMVrmW17rFEWCeccB6CY6hj1edXlLx
-         VbQaK/3yzdm9Je3omJDBxKMYNHu9E2dNfmhxJ+qNzm1xnSONUGlQtAWaB+dJ34+diT87
-         oeDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NqZqDn5bC3qrX9T7zgEhb8g+GU/FvR/stsrD4iObuZQ=;
-        b=f1cUiy2nQlQS2zVbzxjNYqmtu4LyWej+jq7ZCSLEqqL9JPuF5USLDLagRd+F7QYGQK
-         P5MfS3lTf2vVPlTq0STU048jMp4j6Mq55Pr4TyQQHzrA/PwuhfFaUoBetuNP3E6YsTkl
-         01saCz1XFflPP70SHmIe8G3FVFy2qJ63x/TteRAR7IMTOenevTZ10YWi69l0AZAf0w7K
-         7ym/HDYjsg65VVvGVUul60DxZSFNhgGAfbdaheo/UA5JRiedQR4oifwFN0iwVpHbeQub
-         rAfldTdrKOVh5bQ9XOTU/q2+nUxyZcIbSxOESTc8soG1k/Tp+5SyeXGhncruH2IscnOD
-         LGjA==
-X-Gm-Message-State: APjAAAUu2ORnuOwCPHLlPgjykZZGNo6Nh828EjbomrTR4tKR+/UT+J3V
-        WpFhfiTKOML4sqKhR+08GAbsep7zxN/eUccML8s=
-X-Google-Smtp-Source: APXvYqytcLP0/O6ZlyxJez2KhFIvkXe2f4moQl8SIVRyls4nKPmnebXa5UJbXseH8nkHQXBNd7lbw8Q3dUoDpxnAILc=
-X-Received: by 2002:a02:81cc:: with SMTP id r12mr21169261jag.93.1582133941816;
- Wed, 19 Feb 2020 09:39:01 -0800 (PST)
+        Wed, 19 Feb 2020 12:39:11 -0500
+Received: from muru.com ([72.249.23.125]:56066 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgBSRjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:39:11 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 9F75C80F3;
+        Wed, 19 Feb 2020 17:39:53 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 09:39:02 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+Message-ID: <20200219173902.GA37466@atomide.com>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+ <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+ <20200218153211.GI35972@atomide.com>
+ <20200218170628.r47xc3yydg6xx2yh@earth.universe>
+ <20200218174258.GK4232@sirena.org.uk>
 MIME-Version: 1.0
-References: <20200219133012.7cb6ac9e@carbon> <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
- <20200219180348.40393e28@carbon>
-In-Reply-To: <20200219180348.40393e28@carbon>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 19 Feb 2020 09:38:50 -0800
-Message-ID: <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-To:     Jesper Dangaard Brouer <brouer@redhat.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218174258.GK4232@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:04 AM Jesper Dangaard Brouer
-<brouer@redhat.com> wrote:
->
-> On Wed, 19 Feb 2020 08:41:27 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > On Wed, Feb 19, 2020 at 4:30 AM Jesper Dangaard Brouer
-> > <brouer@redhat.com> wrote:
-> > >
-> > > I'm willing to help out, such that we can do either version or feature
-> > > detection, to either skip compiling specific test programs or at least
-> > > give users a proper warning of they are using a too "old" LLVM version.
-> > ...
-> > > progs/test_core_reloc_bitfields_probed.c:47:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-> > >         out->ub1 = BPF_CORE_READ_BITFIELD_PROBED(in, ub1);
-> >
-> > imo this is proper warning message already.
->
-> This is an error, not a warning.  The build breaks as the make process stops.
->
+* Mark Brown <broonie@kernel.org> [200218 17:43]:
+> On Tue, Feb 18, 2020 at 06:06:28PM +0100, Sebastian Reichel wrote:
+> 
+> > simple-graph-card is the current machine driver. We might have to
+> > introduce a Droid 4 specific driver instead. I used simple(-graph)-card
+> > instead of introducing a new driver, since the setup was simple enough
+> > without modem and bluetooth. The simple card was perfect to test the CPCAP
+> > codec driver. The TDM things might be complex enough to create
+> > a new machine driver (as I mentioned in the original patchset
+> > adding CPCAP codec support).
+> 
+> I tend to agree here, phones are generally one of the most complicated
+> classes of system for clocking and interconnects and the CODECs they use
+> often the most complex too so they're really stretching the generic
+> cards.  It'd be nice to be able to handle things with generic cards but
+> it's likely you'll run into issues that it'd be unreasonable to force
+> you to address for system enablement.  OTOH if you manage to get one of
+> the generic cards working well that'd be excellent!
 
-Latest Clang was a requirement for building and running all selftests
-for a long time now. There were few previous discussions on mailing
-list about this and each time the conclusion was the same: latest
-Clang is a requirement for BPF selftests.
+Well to me it seems that we just already have all the data needed with
+the graph binding and snd-soc-audio-graph-card + codec2codec support.
 
-> --
-> Best regards,
->   Jesper Dangaard Brouer
->   MSc.CS, Principal Kernel Engineer at Red Hat
->   LinkedIn: http://www.linkedin.com/in/brouer
->
+I don't think we have cases where the cpcap codec is not the master,
+so as long as the cpcap codec knows what's going on then there
+may not be a need for machine driver.
+
+I guess the the bluetooth to modem path is the one to check to see
+what provides the clocks..
+
+Regards,
+
+Tony
