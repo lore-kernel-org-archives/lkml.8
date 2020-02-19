@@ -2,187 +2,200 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D2FC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FED3C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBCD24672
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582114039;
-	bh=G0d/jtalHOC6e6qLE9M5tzztTcx+kJ1uXsVu0TxH0zo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LkDWWVNSBFtRCVxN5elpaC1Co7up4v1L+nRSl7hPkKMcW8cVo4MPWJx+dgf8CG8kY
-	 a3pov+zCuhK0wSMkD5p2XrdCNxvvcpisD9iF10Xp3LGgg7WckD3DainbzA99ZdB/nK
-	 KOM9k+QvuaDlPQCXJ+nA+h4Vf3ACbVUap1EqLL0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 4DDA224654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:08:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="XonlV0Z+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbgBSMHS (ORCPT
+        id S1727405AbgBSMIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:07:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41260 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 07:08:00 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:63773 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgBSMHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:07:18 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D2E124654;
-        Wed, 19 Feb 2020 12:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582114037;
-        bh=G0d/jtalHOC6e6qLE9M5tzztTcx+kJ1uXsVu0TxH0zo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nVFTh6cNOma4kRqJuBbNUn2KLIvtLdxO3qDOQXtV8bi5u17SibOCQKEdW/QObO3jd
-         Fi6q9XZfOsrEsQuNvN/mtJHCpzswo5a6DTc6YxHRdYZLOZUUeTtyoBi36sHpoD1xQM
-         MJ6peMN7fzrYIgiY23VgoKZ1XpUA+CMqCaa8d3Jo=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4O8J-006Ut1-VU; Wed, 19 Feb 2020 12:07:16 +0000
+        id S1726495AbgBSMH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:07:59 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48MxLg3psQz9v9Dt;
+        Wed, 19 Feb 2020 13:07:55 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=XonlV0Z+; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id AFyfJZVf4xTO; Wed, 19 Feb 2020 13:07:55 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48MxLg2Kzcz9v9Ds;
+        Wed, 19 Feb 2020 13:07:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582114075; bh=SUPm/xbOXqzg/7rTrLgpDJn6K3q1CABhJDtHqKqTUfA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XonlV0Z+kSYp9DXtpHiZkNHEHxFMw6PZijdFfIFeuIK/K+RCtqkXv0VtzGY+2wuZu
+         xOicb9401xVMMs8rHDmTPmm6KlS2ffHsw+cSbAZdq3j0YAum02eQePHOFl9npiNl8S
+         akY+ce7GONPJifLUkacYEEGeIusgoWWVvfKmbJes=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8CDA98B83F;
+        Wed, 19 Feb 2020 13:07:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ix2R2LHOLPeo; Wed, 19 Feb 2020 13:07:56 +0100 (CET)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B4B6E8B837;
+        Wed, 19 Feb 2020 13:07:55 +0100 (CET)
+Subject: Re: [PATCH v2 07/13] powerpc: add support for folded p4d page tables
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <20200216081843.28670-1-rppt@kernel.org>
+ <20200216081843.28670-8-rppt@kernel.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5b7c3929-5833-8ceb-85c8-a8e92e6a138e@c-s.fr>
+Date:   Wed, 19 Feb 2020 13:07:55 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Feb 2020 12:07:15 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>, marex@denx.de,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-In-Reply-To: <f82caf02-5a47-ce3e-ec85-313712ef6de0@st.com>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-3-alexandre.torgue@st.com>
- <f82caf02-5a47-ce3e-ec85-313712ef6de0@st.com>
-Message-ID: <53f72a8b241da3032a42b80c86b7c6ab@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, marex@denx.de, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200216081843.28670-8-rppt@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-19 11:34, Alexandre Torgue wrote:
-> Fix Marc email address.
+
+
+Le 16/02/2020 à 09:18, Mike Rapoport a écrit :
+> From: Mike Rapoport <rppt@linux.ibm.com>
 > 
-> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
->> This patch adds level interrupt support to gpio irq chip.
+> Implement primitives necessary for the 4th level folding, add walks of p4d
+> level where appropriate and replace 5level-fixup.h with pgtable-nop4d.h.
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # 8xx and 83xx
+> ---
+>   arch/powerpc/include/asm/book3s/32/pgtable.h  |  1 -
+>   arch/powerpc/include/asm/book3s/64/hash.h     |  4 +-
+>   arch/powerpc/include/asm/book3s/64/pgalloc.h  |  4 +-
+>   arch/powerpc/include/asm/book3s/64/pgtable.h  | 58 ++++++++++--------
+>   arch/powerpc/include/asm/book3s/64/radix.h    |  6 +-
+>   arch/powerpc/include/asm/nohash/32/pgtable.h  |  1 -
+>   arch/powerpc/include/asm/nohash/64/pgalloc.h  |  2 +-
+>   .../include/asm/nohash/64/pgtable-4k.h        | 32 +++++-----
+>   arch/powerpc/include/asm/nohash/64/pgtable.h  |  6 +-
+>   arch/powerpc/include/asm/pgtable.h            |  8 +++
+>   arch/powerpc/kvm/book3s_64_mmu_radix.c        | 59 ++++++++++++++++---
+>   arch/powerpc/lib/code-patching.c              |  7 ++-
+>   arch/powerpc/mm/book3s32/mmu.c                |  2 +-
+>   arch/powerpc/mm/book3s32/tlb.c                |  4 +-
+>   arch/powerpc/mm/book3s64/hash_pgtable.c       |  4 +-
+>   arch/powerpc/mm/book3s64/radix_pgtable.c      | 19 ++++--
+>   arch/powerpc/mm/book3s64/subpage_prot.c       |  6 +-
+>   arch/powerpc/mm/hugetlbpage.c                 | 28 +++++----
+>   arch/powerpc/mm/kasan/kasan_init_32.c         |  8 +--
+>   arch/powerpc/mm/mem.c                         |  4 +-
+>   arch/powerpc/mm/nohash/40x.c                  |  4 +-
+>   arch/powerpc/mm/nohash/book3e_pgtable.c       | 15 +++--
+>   arch/powerpc/mm/pgtable.c                     | 25 +++++++-
+>   arch/powerpc/mm/pgtable_32.c                  | 28 +++++----
+>   arch/powerpc/mm/pgtable_64.c                  | 10 ++--
+>   arch/powerpc/mm/ptdump/hashpagetable.c        | 20 ++++++-
+>   arch/powerpc/mm/ptdump/ptdump.c               | 22 ++++++-
+>   arch/powerpc/xmon/xmon.c                      | 17 +++++-
+>   28 files changed, 284 insertions(+), 120 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+> index 206156255247..7bd4b81d5b5d 100644
+> --- a/arch/powerpc/mm/ptdump/ptdump.c
+> +++ b/arch/powerpc/mm/ptdump/ptdump.c
+> @@ -277,9 +277,9 @@ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
+>   	}
+>   }
+>   
+> -static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
+> +static void walk_pud(struct pg_state *st, p4d_t *p4d, unsigned long start)
+>   {
+> -	pud_t *pud = pud_offset(pgd, 0);
+> +	pud_t *pud = pud_offset(p4d, 0);
+>   	unsigned long addr;
+>   	unsigned int i;
+>   
+> @@ -293,6 +293,22 @@ static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
+>   	}
+>   }
+>   
+> +static void walk_p4d(struct pg_state *st, pgd_t *pgd, unsigned long start)
+> +{
+> +	p4d_t *p4d = p4d_offset(pgd, 0);
+> +	unsigned long addr;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < PTRS_PER_P4D; i++, p4d++) {
+> +		addr = start + i * P4D_SIZE;
+> +		if (!p4d_none(*p4d) && !p4d_is_leaf(*p4d))
+> +			/* p4d exists */
+> +			walk_pud(st, p4d, addr);
+> +		else
+> +			note_page(st, addr, 2, p4d_val(*p4d));
 
-A commit message should not contain "this patch".
+Level 2 is already used by walk_pud().
 
->> 
->> GPIO hardware block is directly linked to EXTI block but EXTI handles
->> external interrupts only on edge. To be able to handle GPIO interrupt 
->> on
->> level a "hack" is done in gpio irq chip: parent interrupt (exti irq 
->> chip)
->> is retriggered following interrupt type and gpio line value.
->> 
->> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->> Tested-by: Marek Vasut <marex@denx.de>
->> 
->> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c 
->> b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> index 2d5e0435af0a..dae236562543 100644
->> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
->> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
->> @@ -92,6 +92,7 @@ struct stm32_gpio_bank {
->>   	u32 bank_nr;
->>   	u32 bank_ioport_nr;
->>   	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
->> +	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
+I think you have to increment the level used in walk_pud() and 
+walk_pmd() and walk_pte()
 
-Do you really need a u32 here? an array of u8 seems enough. After all,
-you only need two bits of information per interrupts (level or not,
-low or high).
+> +	}
+> +}
+> +
+>   static void walk_pagetables(struct pg_state *st)
+>   {
+>   	unsigned int i;
+> @@ -306,7 +322,7 @@ static void walk_pagetables(struct pg_state *st)
+>   	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
+>   		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
+>   			/* pgd exists */
+> -			walk_pud(st, pgd, addr);
+> +			walk_p4d(st, pgd, addr);
+>   		else
+>   			note_page(st, addr, 1, pgd_val(*pgd));
+>   	}
 
->>   };
->>     struct stm32_pinctrl {
->> @@ -303,6 +304,46 @@ static const struct gpio_chip stm32_gpio_template 
->> = {
->>   	.get_direction		= stm32_gpio_get_direction,
->>   };
->>   +void stm32_gpio_irq_eoi(struct irq_data *d)
->> +{
->> +	struct stm32_gpio_bank *bank = d->domain->host_data;
->> +	int line;
->> +
->> +	irq_chip_eoi_parent(d);
->> +
->> +	/* If level interrupt type then retrig */
->> +	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
->> +	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
->> +	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
->> +		irq_chip_retrigger_hierarchy(d);
-
-s/line/level/
-
->> +};
->> +
->> +static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
->> +{
->> +	struct stm32_gpio_bank *bank = d->domain->host_data;
->> +	u32 parent_type;
->> +
->> +	bank->irq_type[d->hwirq] = type;
-
-It would make more sense if this this assignment was done *after*
-sanitizing the type value.
-
->> +
->> +	switch (type) {
->> +	case IRQ_TYPE_EDGE_RISING:
->> +	case IRQ_TYPE_EDGE_FALLING:
->> +	case IRQ_TYPE_EDGE_BOTH:
->> +		parent_type = type;
->> +		break;
->> +	case IRQ_TYPE_LEVEL_HIGH:
->> +		parent_type = IRQ_TYPE_EDGE_RISING;
->> +		break;
->> +	case IRQ_TYPE_LEVEL_LOW:
->> +		parent_type = IRQ_TYPE_EDGE_FALLING;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	return irq_chip_set_type_parent(d, parent_type);
->> +};
->> +
->>   static int stm32_gpio_irq_request_resources(struct irq_data 
->> *irq_data)
->>   {
->>   	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
->> @@ -332,11 +373,11 @@ static void 
->> stm32_gpio_irq_release_resources(struct irq_data *irq_data)
->>     static struct irq_chip stm32_gpio_irq_chip = {
->>   	.name		= "stm32gpio",
->> -	.irq_eoi	= irq_chip_eoi_parent,
->> +	.irq_eoi	= stm32_gpio_irq_eoi,
->>   	.irq_ack	= irq_chip_ack_parent,
->>   	.irq_mask	= irq_chip_mask_parent,
->>   	.irq_unmask	= irq_chip_unmask_parent,
->> -	.irq_set_type	= irq_chip_set_type_parent,
->> +	.irq_set_type	= stm32_gpio_set_type,
->>   	.irq_set_wake	= irq_chip_set_wake_parent,
->>   	.irq_request_resources = stm32_gpio_irq_request_resources,
->>   	.irq_release_resources = stm32_gpio_irq_release_resources,
->> 
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Christophe
