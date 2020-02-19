@@ -2,108 +2,143 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F58C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12DC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B24B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:16:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hzQWWTsx"
+	by mail.kernel.org (Postfix) with ESMTP id 5A0B62176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgBSIQm (ORCPT
+        id S1726717AbgBSIRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:16:42 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36299 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSIQl (ORCPT
+        Wed, 19 Feb 2020 03:17:05 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60918 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgBSIRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:16:41 -0500
-Received: by mail-pj1-f65.google.com with SMTP id gv17so2212403pjb.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:16:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v3O1z61UvArVytMUXoRlXAZVh2DnhKK0P9ahcjLWA5k=;
-        b=hzQWWTsx+VBLfoV3esj8tam3Kvc099iWAPDDfO7kgY1+oVBTK1EMtP7GrlZ9dcFlXV
-         KHam5I3mh7AgqgVfGScUfU9iqaWG6EGXH/xAFOZpCN8YHZEV4SOnu5Ow6KqBVAroJAIN
-         TtjDlgBQ4qgkJcGErAHX4lOicUmxquPRiYdm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v3O1z61UvArVytMUXoRlXAZVh2DnhKK0P9ahcjLWA5k=;
-        b=CT2hjp9lJGLz8v5X+E6ujy4HrL44Mz6r/M7ANmAhvPNbRR+WPiEBh7I2N75pX2qo/Z
-         +CP9270U9Zv3KJbm1x/WRLSu1s/fZ3/vZFOJf5nEVn0VRHzVghE0R58yOwmwVPUpfEsC
-         cYWQCBExPJFyC5IVnbzYDCUmWywdxWPX0wwfTge7jxJGxKj3VT+EY6Yf9uHRkIiNQ7xY
-         KQmvH1UbidKvWr07wg+5XBEUtNtCpRgNJDzSS4weMFQo0SA+gET5g+FQnbNhqDZ/24mn
-         Ox0zbttsz9oVI3u6P3058FUP/0MnvuL2MQoRJpubPbe/sWzkYvRRs+AHpPNv5JqU/3F5
-         ODHQ==
-X-Gm-Message-State: APjAAAWIxvta3wti/RW0sGSwQxB60lm+tOpmHR0dSzFVgEF8IA2QucIs
-        gfpHehirsst+6S3GAWrIbC7gKg==
-X-Google-Smtp-Source: APXvYqx51bWBjGv4rYr+8LsDLU/bH5VBjUsq/fMDVigYR/Iz+/x6iuRGG2jeKoAiO1U9UUwzxDfgAg==
-X-Received: by 2002:a17:90b:4004:: with SMTP id ie4mr7687893pjb.49.1582100201064;
-        Wed, 19 Feb 2020 00:16:41 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id 13sm1669232pfi.78.2020.02.19.00.16.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 00:16:40 -0800 (PST)
-Date:   Wed, 19 Feb 2020 17:16:38 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCHv2 01/12] videobuf2: add cache management members
-Message-ID: <20200219081638.GB122464@google.com>
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-2-senozhatsky@chromium.org>
- <964aeb73-1474-032f-b2a6-b317cc15f7cb@xs4all.nl>
+        Wed, 19 Feb 2020 03:17:04 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1EB82292F60;
+        Wed, 19 Feb 2020 08:17:02 +0000 (GMT)
+Date:   Wed, 19 Feb 2020 09:16:58 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: Re: [PATCH v3 0/5] Introduce i3c device userspace interface
+Message-ID: <20200219091658.7506e7bd@collabora.com>
+In-Reply-To: <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
+References: <cover.1582069402.git.vitor.soares@synopsys.com>
+        <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <964aeb73-1474-032f-b2a6-b317cc15f7cb@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/19 09:05), Hans Verkuil wrote:
-> On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
+On Wed, 19 Feb 2020 00:39:31 +0000
+Vitor Soares <Vitor.Soares@synopsys.com> wrote:
 
-[..]
-
-> > diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-> > index a2b2208b02da..026004180440 100644
-> > --- a/include/media/videobuf2-core.h
-> > +++ b/include/media/videobuf2-core.h
-> > @@ -263,6 +263,10 @@ struct vb2_buffer {
-> >  	 *			after the 'buf_finish' op is called.
-> >  	 * copied_timestamp:	the timestamp of this capture buffer was copied
-> >  	 *			from an output buffer.
-> > +	 * need_cache_sync_on_prepare: do not sync/invalidate cache from
-> > +	 * 			buffer's ->prepare() callback.
-> > +	 * need_cache_sync_on_finish: do not sync/invalidate cache from buffer's
-> > +	 * 			->finish() callback.
+> Hi Boris,
 > 
-> Shouldn't 'do not' be deleted from the flag descriptions? If the flag is set,
-> then you need to sync/validate, right?
+> From: Vitor Soares <vitor.soares@synopsys.com>
+> Date: Wed, Feb 19, 2020 at 00:20:38
+> 
+> > For today there is no way to use i3c devices from user space and
+> > the introduction of such API will help developers during the i3c device
+> > or i3c host controllers development.
+> > 
+> > The i3cdev module is highly based on i2c-dev and yet I tried to address
+> > the concerns raised in [1].
+> > 
+> > NOTES:
+> > - The i3cdev dynamically request an unused major number.
+> > 
+> > - The i3c devices are dynamically exposed/removed from dev/ folder based
+> >   on if they have a device driver bound to it.
+> > 
+> > - For now, the module exposes i3c devices without device driver on
+> >   dev/bus/i3c/<bus>-<pid>
+> > 
+> > - As in the i2c subsystem, here it is exposed the i3c_priv_xfer to
+> >   userspace. I tried to use a dedicated structure as in spidev but I don't
+> >   see any obvious advantage.
+> > 
+> > - Since the i3c API only exposes i3c_priv_xfer to devices, for now, the
+> >   module just makes use of one ioctl(). This can change in the future with
+> >   the introduction hdr commands or by the need of exposing some CCC
+> >   commands to the device API (private contract between master-slave).
+> >   Regarding the i3c device info, some information is already available
+> >   through sysfs. We can add more device attributes to expose more
+> >   information or add a dedicated ioctl() request for that purpose or both.
+> > 
+> > - Similar to i2c, I have also created a tool that you can find in [2]
+> >   for testing purposes. If you have some time available I would appreciate
+> >   your feedback about it as well.
+> > 
+> > [1] https://lkml.org/lkml/2018/11/15/853
+> > [2] https://github.com/vitor-soares-snps/i3c-tools.git
+> > 
+> > Changes in v3:
+> >   Use the xfer_lock to prevent device detach during ioctl call
+> >   Expose i3cdev under /dev/bus/i3c/ folder like usb does
+> >   Change NOTIFY_BOUND to NOTIFY_BIND, this allows the device detach occur
+> >   before driver->probe call
+> >   Avoid use of IS_ERR_OR_NULL
+> >   Use u64_to_user_ptr instead of (void __user *)(uintptr_t) cast
+> >   Allocate k_xfer and data_ptrs at once and eliminate double allocation
+> >   check
+> >   Pass i3cdev to dev->driver_data
+> >   Make all minors available
+> >   Add API documentation
+> > 
+> > Changes in v2:
+> >   Use IDR api for minor numbering
+> >   Modify ioctl struct
+> >   Fix SPDX license
+> > 
+> > Vitor Soares (5):
+> >   i3c: master: export i3c_masterdev_type
+> >   i3c: master: export i3c_bus_type symbol
+> >   i3c: master: add i3c_for_each_dev helper
+> >   i3c: add i3cdev module to expose i3c dev in /dev
+> >   userspace-api: add i3cdev documentation
+> > 
+> >  Documentation/userspace-api/i3c/i3cdev.rst | 116 ++++++++
+> >  drivers/i3c/Kconfig                        |  15 +
+> >  drivers/i3c/Makefile                       |   1 +
+> >  drivers/i3c/i3cdev.c                       | 429 +++++++++++++++++++++++++++++
+> >  drivers/i3c/internals.h                    |   2 +
+> >  drivers/i3c/master.c                       |  16 +-
+> >  include/uapi/linux/i3c/i3cdev.h            |  38 +++
+> >  7 files changed, 616 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/userspace-api/i3c/i3cdev.rst
+> >  create mode 100644 drivers/i3c/i3cdev.c
+> >  create mode 100644 include/uapi/linux/i3c/i3cdev.h
+> > 
+> > -- 
+> > 2.7.4  
+> 
+> I want to make you know that none of your previous comments was ignored 
+> and  I would like to start the discussion from this point.
 
-Hmm, kind of work both ways. Maybe the wording can be more specific,
-e.g. "Do/skip cache sync/invalidation" even more detailed "When set
-perform cache sync/invalidation from ..."
-
-	-ss
+Sure, np. I'll probably wait for a v4 exploring the option I proposed
+then.
