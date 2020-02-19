@@ -5,66 +5,66 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087E1C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486F8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE7E24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187A624671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWxKWAiN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTtZpZ6o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgBSPNK (ORCPT
+        id S1727046AbgBSPNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:13:10 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55965 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSPNI (ORCPT
+        Wed, 19 Feb 2020 10:13:13 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38744 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726791AbgBSPNL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:13:08 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so1028600wmj.5;
-        Wed, 19 Feb 2020 07:13:07 -0800 (PST)
+        Wed, 19 Feb 2020 10:13:11 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e8so973916wrm.5;
+        Wed, 19 Feb 2020 07:13:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DgQTawVnvOeaCy4fqOCxs8TdoBzrIHpG69q22QTtFfQ=;
-        b=YWxKWAiNq96mL1RZzLYuQNF2U9TcxkiZ+3R386Oq2M6ExArzIsAoQ+y5JSaVdP5hTp
-         GnEoyrRaySS0/SyUfTYawe2R4sPoPfN59Fuo7y0INHUwW+OTNqkKlS9im9nt22kzk3q/
-         lJTyJtngi+xpcosoWmw9Ot5SFrWKt3TxiYyLA/TKEZqLxsoMoNGolo7mjUAjayqp00k9
-         eXi2zfQ9RVtOV90fRi450NOUAXlGWcfAHv9SylEZMC/E3du12LAhcCxU1Ykdd2xr5m6/
-         QDdoN4iLgp426kZW7VQTO8qzc8UvqzmZnz/Q1ejyKmz6wpNn/ANdX6zubpuPtzVxZn/h
-         QJqA==
+        bh=wmYxNZlHmk+e/dR3BUF4sjOLDFYl6cCNjL/czQpAEHY=;
+        b=YTtZpZ6oy/nsZrV+oEs9qIqANrUNBLoY3fNJwoQ7b0fRU/vn6XpyMR7P2jGrkeD+8o
+         GMNFgg3OcidBxMOlll/feM2ZtBWXB67Ajc0m2I5g9QpCQoaOstj2QCZ3L2ujGbXGyVCq
+         da7bIUcHoZ6NJP8nxXdn3cV6na0RHRXHa7sqFirrJIhDSuLnh15FGLz0MOg4Gegbt7Po
+         UBjwfMbPPXw5iQ9/78gSnVo9J6UeV1uXUY0CDyhzhOY8mLgd1ZmcCmkYe9Ai0sq71PUW
+         hk/spFNokYtRsAFxBSed6vNTWZIB4HviwccocUNc1pUL1qlpSw9M44GJBAom5mcokLIw
+         PtRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=DgQTawVnvOeaCy4fqOCxs8TdoBzrIHpG69q22QTtFfQ=;
-        b=W7nsFimp3tm3D5OT2iF+7Bg+0GX/8cYeDuZ668bDcaeRC0y237QXBUq91p+cAaR3AK
-         j1Sxh8syaLh5Mi+7K9g39lTfcG8azO57HC4fAzx+qD099FnPBNx+tr3waHC14D2VNwCA
-         5BAo+FleRxPc5lnj3R0hPSFQzOi7bBrd5hOY+OJcGRBJxowH4SQb3899qbOLoLAY/tMn
-         k52ewUVLpFjTj9OQHLoJjptgs9uL1zly8lgzLie+jBJENOpdUgV4OD42KmOiHdBhvBv8
-         edQtTKgrCWemZXgulM3bL1+3EvUpl36dtB5F6yN34TFda2SCbQX5vc4NsnVhN/45qSSa
-         UOdA==
-X-Gm-Message-State: APjAAAXVYBc5kSHPdVXtYy1h4hOwgdiCuoUUSxHda8PL7xFDXev1TtAv
-        P0lJ1mxw4IYWznMZ2njy9iw=
-X-Google-Smtp-Source: APXvYqyJen7ypND9HZ0n9bQDfqMPUXHNPpk/nVe+cLHLkrjIQlU2PF4ssQ1e4Ptb0eed2zMPc4dGBQ==
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr11189202wmj.54.1582125186403;
-        Wed, 19 Feb 2020 07:13:06 -0800 (PST)
+        bh=wmYxNZlHmk+e/dR3BUF4sjOLDFYl6cCNjL/czQpAEHY=;
+        b=ZPiuh8SDcaFzhdZnYQskxs3c4zx9ekIhWDxIwPBjnc5Te9q42VraSbVHeqOZxftHpq
+         d+A29JdGZAXAGBjxbVKETWMCjNy2lNo2lZp8rJcwT7OVXzoYlFEHnR3Uy4FVnFfq+Zmm
+         PsjPg3ULiBW8ddLxxkATp91kqPHTR6iv7P2pPhdbW8ZwwUqYEYAueNJFUISNUe61k7mo
+         zT5ZPKtzn36dVnqd3L46/vGw0RPxiCnqPJtDqx5QmlDfnuz1h6WJhwck0hkm/DxUNFEp
+         UT4PIW7t4wZqiJ/MoDbnBF91PTUdUZbujRs70Kper8XMKSEmU6icDCic0koTtCn/3KBy
+         OHFA==
+X-Gm-Message-State: APjAAAWK33XCkaVXkjJUOiQl0KeBl8YbqTBPm35bCCdNQWYToi6ZSWTw
+        9VYTdV/Z+PkBAgHCXthaIdM=
+X-Google-Smtp-Source: APXvYqwTMicfTcnQyclJDgkOo0qALGCtCrf/+mQ3VmUwi69x1NiIwaCvVgiHxmAZqCAtEHTOqSGpEA==
+X-Received: by 2002:a5d:6a07:: with SMTP id m7mr8852655wru.332.1582125188893;
+        Wed, 19 Feb 2020 07:13:08 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.05
+        by smtp.gmail.com with ESMTPSA id b13sm83137wrq.48.2020.02.19.07.13.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:13:05 -0800 (PST)
+        Wed, 19 Feb 2020 07:13:08 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         devicetree@vger.kernel.org, davem@davemloft.net,
         netdev@vger.kernel.org
 Cc:     andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 net-next/devicetree 1/5] arm64: dts: fsl: ls1028a: delete extraneous #interrupt-cells for ENETC RCIE
-Date:   Wed, 19 Feb 2020 17:12:55 +0200
-Message-Id: <20200219151259.14273-2-olteanv@gmail.com>
+Subject: [PATCH v2 net-next/devicetree 3/5] dt-bindings: net: dsa: ocelot: document the vsc9959 core
+Date:   Wed, 19 Feb 2020 17:12:57 +0200
+Message-Id: <20200219151259.14273-4-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200219151259.14273-1-olteanv@gmail.com>
 References: <20200219151259.14273-1-olteanv@gmail.com>
@@ -75,37 +75,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This specifier overrides the interrupt specifier with 3 cells from gic
-(/interrupt-controller@6000000), but in fact ENETC is not an interrupt
-controller, so the property is bogus.
+This patch adds the required documentation for the embedded L2 switch
+inside the NXP LS1028A chip.
 
-Interrupts used by the children of the ENETC RCIE must use the full
-3-cell specifier required by the GIC.
+I've submitted it in the legacy format instead of yaml schema, because
+DSA itself has not yet been converted to yaml, and this driver defines
+no custom bindings.
 
-The issue has no functional consequence so there is no real reason to
-port the patch to stable trees.
-
-Fixes: 927d7f857542 ("arm64: dts: fsl: ls1028a: Add PCI IERC node and ENETC endpoints")
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes in v2:
-None.
+Adapted phy-mode = "gmii" to phy-mode = "internal".
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+ .../devicetree/bindings/net/dsa/ocelot.txt    | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/ocelot.txt
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 0bf375ec959b..dfead691e509 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -683,7 +683,6 @@
- 			reg = <0x01 0xf0000000 0x0 0x100000>;
- 			#address-cells = <3>;
- 			#size-cells = <2>;
--			#interrupt-cells = <1>;
- 			msi-parent = <&its>;
- 			device_type = "pci";
- 			bus-range = <0x0 0x0>;
+diff --git a/Documentation/devicetree/bindings/net/dsa/ocelot.txt b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+new file mode 100644
+index 000000000000..a9d86e09dafa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/ocelot.txt
+@@ -0,0 +1,96 @@
++Microchip Ocelot switch driver family
++=====================================
++
++Felix
++-----
++
++The VSC9959 core is currently the only switch supported by the driver, and is
++found in the NXP LS1028A. It is a PCI device, part of the larger ENETC root
++complex. As a result, the ethernet-switch node is a sub-node of the PCIe root
++complex node and its "reg" property conforms to the parent node bindings:
++
++* reg: Specifies PCIe Device Number and Function Number of the endpoint device,
++  in this case for the Ethernet L2Switch it is PF5 (of device 0, bus 0).
++
++It does not require a "compatible" string.
++
++The interrupt line is used to signal availability of PTP TX timestamps and for
++TSN frame preemption.
++
++For the external switch ports, depending on board configuration, "phy-mode" and
++"phy-handle" are populated by board specific device tree instances. Ports 4 and
++5 are fixed as internal ports in the NXP LS1028A instantiation.
++
++Any port can be disabled, but the CPU port should be kept enabled.
++
++The CPU port property ("ethernet"), which is assigned by default to the 2.5Gbps
++port@4, can be moved to the 1Gbps port@5, depending on the specific use case.
++DSA tagging is supported on a single port at a time.
++
++For the rest of the device tree binding definitions, which are standard DSA and
++PCI, refer to the following documents:
++
++Documentation/devicetree/bindings/net/dsa/dsa.txt
++Documentation/devicetree/bindings/pci/pci.txt
++
++Example:
++
++&soc {
++	pcie@1f0000000 { /* Integrated Endpoint Root Complex */
++		ethernet-switch@0,5 {
++			reg = <0x000500 0 0 0 0>;
++			/* IEP INT_B */
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* External ports */
++				port@0 {
++					reg = <0>;
++					label = "swp0";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "swp1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "swp2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "swp3";
++				};
++
++				/* Tagging CPU port */
++				port@4 {
++					reg = <4>;
++					ethernet = <&enetc_port2>;
++					phy-mode = "internal";
++
++					fixed-link {
++						speed = <2500>;
++						full-duplex;
++					};
++				};
++
++				/* Non-tagging CPU port */
++				port@5 {
++					reg = <5>;
++					phy-mode = "internal";
++					status = "disabled";
++
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++			};
++		};
++	};
++};
 -- 
 2.17.1
 
