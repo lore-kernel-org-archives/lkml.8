@@ -2,116 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7CC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E55C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D44224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3411E24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgBSOnh (ORCPT
+        id S1726663AbgBSOqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:43:37 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39487 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSOng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:43:36 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so343737oty.6;
-        Wed, 19 Feb 2020 06:43:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uI+CJ/G50gsVNVKzRUAej0N+x0HPvxzRhBEt0CmEOv4=;
-        b=O4kaAy7AIhR1NLc6+2vVsQ01doofABLF10YOp8B2IzClQuf2KeE/D8D1loW9kykCjO
-         fWIIx1a6vpgt9ZvnJ7mYe0+gHuK/WsmybGR4v1+ga2dQkesUhCLA9+NQPfOcz9M8wtE/
-         AQOIPIXOwzBXF0NAxY35aI9oHYRMHArwXpQRpc0cy6iq0KjEV99QKhTY68wutH5OphFt
-         WUgCHSnMuylxN5w6M10dyX0cyJmi8KKkspss3tgQHD9Q780qh7BgkkuC0aPy8Nd2yS0G
-         Xf9U/MXAlFttpTxz/qRTSp3Yrq/B9kDabvbPVCuP7QXdRS9L9as+UZbRJ0jBMx9OcJJb
-         tLwg==
-X-Gm-Message-State: APjAAAXt0ipIuVxNaAGU6oE6id8duxoa6mpiBcFd40S18CRjgv1i2n6i
-        kNTj0n5m5wCmCF59HaAzN/kXmsZM+dvWaF8Ji24=
-X-Google-Smtp-Source: APXvYqz6vvsBuRLR7XGtF/ZPU030W55DJK8XF7uQ8QaeNP2kBIMaRgUkAoRiWtPgZhb0bZcUYYMNnN6xisPOAfgtI0E=
-X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr5686997ota.107.1582123415662;
- Wed, 19 Feb 2020 06:43:35 -0800 (PST)
+        Wed, 19 Feb 2020 09:46:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54668 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbgBSOqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:46:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 03177ACD6;
+        Wed, 19 Feb 2020 14:45:59 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 15:45:58 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+Message-ID: <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk>
+ <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
+ <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
+ <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
 MIME-Version: 1.0
-References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 19 Feb 2020 15:43:24 +0100
-Message-ID: <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
+> On 19/02/2020 14.48, Petr Mladek wrote:
+> > On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
+> >> --- a/lib/vsprintf.c
+> >> +++ b/lib/vsprintf.c
+> > The test should go into null_pointer() instead of errptr().
+> 
+> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
+> way. But I should add a #else section that tests how %pe behaves without
+> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
 
-On Wed, Feb 19, 2020 at 3:36 PM David Howells <dhowells@redhat.com> wrote:
-> Add system calls to create and remove mountpoints().  These are modelled
-> after mkdir and rmdir inside the VFS.  Currently they use the same security
-> hooks which probably needs fixing.
->
-> The calls look like:
->
->  long create_mountpoint(int dfd, const char *path,
->                         const char *fstype, const char *source,
->                         const char *params);
->  long remove_mountpoint(int dfd, const char *path);
->
-> Creation takes an fstype, source and params which the filesystem that owns
-> the mountpoint gets to filter/interpret.  It is free to reject any
-> combination of fstype, source and params it cannot store.  source and
-> params are both optional.
->
-> Removal could probably be left to rmdir(), but this gives the option of
-> applying tighter security checks and also allows me to prevent rmdir from
-> removing them by accident.
->
-> The AFS filesystem is then altered to use these system calls to create and
-> remove persistent mountpoints in an AFS volume.  create_automount() is
-> something that AFS needs, but cannot be implemented with, say, symlink().
-> These substitute for the lack of pioctl() on Linux, supplying the
-> functionality of VIOC_AFS_CREATE_MT_PT and VIOC_AFS_DELETE_MT_PT.
->
-> Also make them usable with tmpfs for testing.  I'm not sure if this is
-> useful in practice, but I've made tmpfs store the three parameters and just
-> pass them to mount when triggered.  Note that it doesn't look up the target
-> filesystem until triggered so as not to load lots of modules until
-> necessary.
->
-> I suspect they're of little of use to NFS, CIFS and autofs, but probably
-> Coda and maybe Btrfs can make use of them.
->
-> Signed-off-by: David Howells <dhowells@redhat.com>
+OK, we should agree on some structure first.
 
-Thanks for your patch!
+We already have two top level functions that test how a particular
+pointer is printed using different pointer modifiers:
 
-The above nicely explains what the patch does.
-However, unless I'm missing something, this fails to explain the "why"
-(except for the vague "[...] is something that AFS needs ...".
+	null_pointer();     -> NULL with %p, %pX, %pE
+	invalid_pointer();  -> random pointer with %p, %pX, %pE
 
-Gr{oetje,eeting}s,
+Following this logic, errptr() should test how a pointer from IS_ERR() range
+is printed using different pointer formats.
 
-                        Geert
+I am open to crate another logic but it must be consistent.
+If you want to check %pe with NULL in errptr(), you have to
+split the other two functions per-modifier. IMHO, it is not
+worth it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Sigh, I should have been more strict[*]. The function should have been
+called err_ptr() and located right below null_pointer().
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[*] I am still trying to find a right balance between preventing
+nitpicking, bikeshedding, enforcing my style, and creating a mess.
+
+
+> > Could you send updated patch, please? ;-)
+> 
+> I'll wait a day or two for more comments. It doesn't seem very urgent.
+
+Sure.
+
+
+> >> BTW., your original patch for %p lacks corresponding update of
+> >> test_vsprintf.c. Please add appropriate test cases.
+> > 
+> > diff --git a/lib/test_printf.c b/lib/test_printf.c
+> > index 2d9f520d2f27..1726a678bccd 100644
+> > --- a/lib/test_printf.c
+> > +++ b/lib/test_printf.c
+> > @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
+> >  static void __init
+> >  null_pointer(void)
+> >  {
+> > -	test_hashed("%p", NULL);
+> > +	test(ZEROS "00000000", "%p", NULL);
+> 
+> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
+> (where one of course has to use explicit integers and not E* constants).
+
+Yes, it would be great to add checks for %p, %px for IS_ERR() range.
+But it is different story. The above change is for the original patch
+and it was about NULL pointer handling.
+
+Best Regards,
+Petr
