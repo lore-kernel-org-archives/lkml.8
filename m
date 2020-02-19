@@ -2,78 +2,181 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF65C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A54CC18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037A7206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAA8206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582139097;
+	bh=witjqTYAnAVOmMzC51fiWL+WZGBZFYYv95mxRShPbCE=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=0qPX3zBK4+eXcFiZZ8I8GCI8gRJTAes1P5oTcJFqHjYXrGZhZo9O3qf3XcPrf9GQo
+	 1GpXJMZVTh0XODZkD/1/B+r1H7wsxrBVYtuJZfWSiGlxGM9j2egzo9psx7VsvJqNLt
+	 rv6vqb57p0DmFlV1XhIIWEges14KJ7Ir4SFz6VZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgBSTEq (ORCPT
+        id S1726842AbgBSTE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:04:46 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46418 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSTEp (ORCPT
+        Wed, 19 Feb 2020 14:04:56 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45555 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgBSTEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:04:45 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id ECD4F15ADF45D;
-        Wed, 19 Feb 2020 11:04:44 -0800 (PST)
-Date:   Wed, 19 Feb 2020 11:04:44 -0800 (PST)
-Message-Id: <20200219.110444.1076444130408435728.davem@davemloft.net>
-To:     christian.brauner@ubuntu.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        haw.loeung@canonical.com
-Subject: Re: [PATCH net-next] net/ipv4/sysctl: show
- tcp_{allowed,available}_congestion_control in non-initial netns
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200219120253.2667548-1-christian.brauner@ubuntu.com>
-References: <20200219120253.2667548-1-christian.brauner@ubuntu.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Feb 2020 11:04:45 -0800 (PST)
+        Wed, 19 Feb 2020 14:04:55 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so546583pgk.12;
+        Wed, 19 Feb 2020 11:04:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=kocwF+O1vACVeOoTXVC1r2xPM1rk+Pt4gRCOCoHb59E=;
+        b=cYPO+iWTtuyAskWSnsdw8ExnxgEA0l+N6EIMo8b7KvOe99+vxvWTuEaETkVe+E3uP6
+         uygDfsdu6iBlwmV8xXUQVnDQhuHcVaT+Dcw4hqjLCV6sx+PqTPDmkOOCR/EQFWTuAkZm
+         76mXlDxznUXUSwJ42oiyQhFJMcLwl2XMkYSXBmA39Jj2Wd0GP5LcvbQYZhnSQ9Y8WlCH
+         YbjG8doOpyZUJ5vzQTLgRTBajvgrHPEkmW6moxiGhNeFIQc7w73h7h38aSimOp0FVjbm
+         oRoJUruZQhylrfZiV2D++3z52s3I04hezvhZCnZaAS1ESyffufF9AYHtKMtudRKF5yHB
+         gKbg==
+X-Gm-Message-State: APjAAAWOmYPiHmjJttpJ/1ddB6yLjRFNpsPcJ1p+6CLqspAd2ueL4Qi5
+        NANZZP3xWdK5ShNT9xJF6ts=
+X-Google-Smtp-Source: APXvYqxILDyWPG2jl5KZXH15mkHqxLILbJsULM1VSWJlyw8FlDzdNiR5dyq43yKarParaxT6eqFZpA==
+X-Received: by 2002:a65:420c:: with SMTP id c12mr28177977pgq.270.1582139094170;
+        Wed, 19 Feb 2020 11:04:54 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id a13sm385320pfg.65.2020.02.19.11.04.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 11:04:53 -0800 (PST)
+Message-ID: <5e4d86d5.1c69fb81.85d93.1371@mx.google.com>
+Date:   Wed, 19 Feb 2020 11:04:48 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        James Hartley <james.hartley@sondrel.com>,
+        John Crispin <john@phrozen.org>
+CC:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH 0/7] MIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+References:  <20200212101544.8793-1-geert+renesas@glider.be>
+In-Reply-To:  <20200212101544.8793-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Wed, 19 Feb 2020 13:02:53 +0100
+Hello,
 
-> It is currenty possible to switch the TCP congestion control algorithm
-> in non-initial network namespaces:
+Geert Uytterhoeven wrote:
+> Hi all,
 > 
-> unshare -U --map-root --net --fork --pid --mount-proc
-> echo "reno" > /proc/sys/net/ipv4/tcp_congestion_control
+> The OF clock helpers were moved to <linux/of_clk.h> a while ago.
+> Hence code that is not a clock provider, but just needs to call
+> of_clk_init(), can (and should) include <linux/of_clk.h> instead of
+> <linux/clk-provider.h>.
 > 
-> works just fine. But currently non-initial network namespaces have no
-> way of kowing which congestion algorithms are available or allowed other
-> than through trial and error by writing the names of the algorithms into
-> the aforementioned file.
-> Since we already allow changing the congestion algorithm in non-initial
-> network namespaces by exposing the tcp_congestion_control file there is
-> no reason to not also expose the
-> tcp_{allowed,available}_congestion_control files to non-initial network
-> namespaces. After this change a container with a separate network
-> namespace will show:
+> All these patches are independent of each others, and thus can be
+> applied by the corresponding subsystem maintainers.
 > 
-> root@f1:~# ls -al /proc/sys/net/ipv4/tcp_* | grep congestion
-> -rw-r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_allowed_congestion_control
-> -r--r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_available_congestion_control
-> -rw-r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_congestion_control
+> Thanks!
 > 
-> Link: https://github.com/lxc/lxc/issues/3267
-> Reported-by: Haw Loeung <haw.loeung@canonical.com>
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Geert Uytterhoeven (7):
+>   MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+> 
+>  arch/mips/ath79/setup.c          | 2 +-
+>  arch/mips/bmips/setup.c          | 2 +-
+>  arch/mips/generic/init.c         | 2 +-
+>  arch/mips/jz4740/time.c          | 2 +-
+>  arch/mips/pic32/pic32mzda/time.c | 2 +-
+>  arch/mips/pistachio/time.c       | 2 +-
+>  arch/mips/ralink/timer-gic.c     | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
 
-Applied, thank you.
+Series applied to mips-next.
+
+> MIPS: ath79: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit d2936bd02b19
+>   https://git.kernel.org/mips/c/d2936bd02b19
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: BMIPS: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit e40b3deff7af
+>   https://git.kernel.org/mips/c/e40b3deff7af
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: generic: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit 089a792c750d
+>   https://git.kernel.org/mips/c/089a792c750d
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: jz4740: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit 3a94afc68947
+>   https://git.kernel.org/mips/c/3a94afc68947
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: pic32mzda: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit 071cec1bfe1f
+>   https://git.kernel.org/mips/c/071cec1bfe1f
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: Pistachio: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit 97e04ea15fd5
+>   https://git.kernel.org/mips/c/97e04ea15fd5
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Acked-by: James Hartley <james.hartley@sondrel.com>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: ralink: Replace <linux/clk-provider.h> by <linux/of_clk.h>
+>   commit 9926108f799a
+>   https://git.kernel.org/mips/c/9926108f799a
+>   
+>   Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+>   Acked-by: John Crispin <john@phrozen.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
