@@ -2,102 +2,73 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F5AC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADF7C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47BF24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:47:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="g/hXqb8C"
+	by mail.kernel.org (Postfix) with ESMTP id F23762465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582138066;
+	bh=b+v2qMnCelv8wE+6aYkJtGvCkTQpcxJ6FRzLnIxCz3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y1tCq7RtYjyyrMtsFR0lAvEItNVCjF7sSwhV1K3CcFwwQ8pMtjXwS2eM0tNkWGxb3
+	 PMHXB9E6+P0WC1gll4pMdAU/ge0HonFObkmEWQ5LAzeuLCy/xl6lt8cV5yhh7rCJh3
+	 znAFLwfGgweBmPGvoCzcW6avLIiWuMp1RKaX2K5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgBSSrL (ORCPT
+        id S1726725AbgBSSro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:47:11 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34075 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSSrL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:47:11 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x7so1498771ljc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:47:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8qdBelafRS90mTJR0ZDhtL9NP9IOAcj+85dHIAJNr6Y=;
-        b=g/hXqb8CuIqhNgD9Aswj3CS8reUvchKD3YqrkSYdHc1XyfIaTm0iuYRJGW+4Hv2amW
-         U4jy2Pbu0q4W8wAf2jA6gK2MCum2ae1wu9MGDw+XOHopf5JhfEIekVcXwGY16IY06UfG
-         MJ+T9jeRz5aBpVE5xAkeWsdwp/C8mu3RDBkDhEplrfJi3F3Hfjir5Lz6AXWUDBbL2aN/
-         UcsGyxAx3lnoSwZq9Y9cEFTZLndcpbXeBTRxZ7lmubVxJRq2RVmpMeK3CUS2Ffl13Ren
-         Q5R6zf3ovrbbSa8n87WduWq9MaaD2B8AtXDhGgOZ3kPEPfpADXy7m/Vq0NHSEEbs+B7Q
-         lkfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8qdBelafRS90mTJR0ZDhtL9NP9IOAcj+85dHIAJNr6Y=;
-        b=BFVLny658UxWy+RSMt9RI7F0ReE+mj7ZswypmX7ObJs918hqxeouYAvOQ4kQ4+GN0f
-         P4LQCrJhS9GJNOIRQva6aB+jeeF+QbjTXYpHG0lwXcf0ofmM9vRaXma6GnvOSMqblWwf
-         mOQpxBX4UJFoNdrrmlHCuLSDM06mHEV4yRyeoYnVawco9cxTfy9BuRhYqp2pYH9loteV
-         Vh4RGbm/ewyPKpHj7TsNtqbXRy0FnR4oIFnPJ7caXyjSdBUeGDETG5a/KFBh9xY8vCYU
-         dDjVXcLMblxrXR6ku6DuXNyv/KsuPi49qCD/3BKCqaVb68yJ94DAeHpYxj+nPBVz/Mya
-         4D1A==
-X-Gm-Message-State: APjAAAXGeoCTEsOd0FT29sUZudmt68hNINyjzTzjEYubc2iLeqm8bH54
-        nDvslaeThB3uDnUNPt7gI3nRlQkjkwcU5aY9XzWvSQ==
-X-Google-Smtp-Source: APXvYqxA8uqB6LLhbUTY2CBVeT9BkI9HDujCxv9SmCmpPAjbCdsc2LCwJ4xqHohQStpPlOjiBLUjOuMxDy7AU78zpEY=
-X-Received: by 2002:a05:651c:327:: with SMTP id b7mr15305071ljp.22.1582138029452;
- Wed, 19 Feb 2020 10:47:09 -0800 (PST)
+        Wed, 19 Feb 2020 13:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbgBSSro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:47:44 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90853206DB;
+        Wed, 19 Feb 2020 18:47:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582138064;
+        bh=b+v2qMnCelv8wE+6aYkJtGvCkTQpcxJ6FRzLnIxCz3M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9SqhD3cfVIhc9cx2V2+rQtrHsh/uZ4ReAPLA0lVXeiK4RocD/0bxCl54w3lG1zVR
+         fr7m3GkIzFahdsHqw9NHQNCdlUr+FJskc6QjEKvWY/wqllcSB7pv1TtwIcS8knZACt
+         Izyk8Ol7gMz26GNvVx+lscqGn5iVCDjKH1T1708I=
+Date:   Wed, 19 Feb 2020 19:47:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: comedi: change CamelCase to CAPS
+Message-ID: <20200219184741.GB2854654@kroah.com>
+References: <20200219174646.GA27559@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-References: <20200218172821.18378-1-wambui.karugax@gmail.com> <20200218172821.18378-7-wambui.karugax@gmail.com>
-In-Reply-To: <20200218172821.18378-7-wambui.karugax@gmail.com>
-From:   Eric Anholt <eric@anholt.net>
-Date:   Wed, 19 Feb 2020 10:46:58 -0800
-Message-ID: <CADaigPXx=sT58fPabvBBMdopQ3Gz4=_r76dj0CY=y=8bNteVKA@mail.gmail.com>
-Subject: Re: [PATCH] drm/v3d: make v3d_debugfs_init return 0
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219174646.GA27559@kaaira-HP-Pavilion-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 9:28 AM Wambui Karuga <wambui.karugax@gmail.com> wrote:
->
-> As drm_debugfs_create_files should return void, remove its use as the
-> return value of v3d_debugfs_init and have the function return 0
-> directly.
-
-If we're going this route, then this function should be returning void, too.
-
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
+On Wed, Feb 19, 2020 at 11:16:46PM +0530, Kaaira Gupta wrote:
+> fix checkpatch.pl check of 'Avoid CamelCase' by changing NI_CtrSource to
+> NI_CTRSOURCE in all the files. Change it to CAPS because it is a MICRO
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 > ---
->  drivers/gpu/drm/v3d/v3d_debugfs.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/v3d/v3d_debugfs.c b/drivers/gpu/drm/v3d/v3d_debugfs.c
-> index 9e953ce64ef7..57dded6a3957 100644
-> --- a/drivers/gpu/drm/v3d/v3d_debugfs.c
-> +++ b/drivers/gpu/drm/v3d/v3d_debugfs.c
-> @@ -261,7 +261,8 @@ static const struct drm_info_list v3d_debugfs_list[] = {
->  int
->  v3d_debugfs_init(struct drm_minor *minor)
->  {
-> -       return drm_debugfs_create_files(v3d_debugfs_list,
-> -                                       ARRAY_SIZE(v3d_debugfs_list),
-> -                                       minor->debugfs_root, minor);
-> +       drm_debugfs_create_files(v3d_debugfs_list,
-> +                                ARRAY_SIZE(v3d_debugfs_list),
-> +                                minor->debugfs_root, minor);
-> +       return 0;
->  }
-> --
-> 2.25.0
->
+>  drivers/staging/comedi/comedi.h               |   4 +-
+>  .../staging/comedi/drivers/ni_routing/README  |   4 +-
+
+As proof of what I said in my previous email, see the changelog message
+for this README file, and read it to see whre the names came from.
+
+thanks,
+
+greg k-h
