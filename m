@@ -2,133 +2,176 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF32C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:02:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B0BC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA81D21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C0121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBpsLhyM"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="pIkSmqtU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSKCK (ORCPT
+        id S1726539AbgBSKFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:02:10 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:35444 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgBSKCK (ORCPT
+        Wed, 19 Feb 2020 05:05:12 -0500
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:35918 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726453AbgBSKFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:02:10 -0500
-Received: by mail-il1-f193.google.com with SMTP id g12so20065530ild.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 02:02:10 -0800 (PST)
+        Wed, 19 Feb 2020 05:05:12 -0500
+Received: from [100.113.6.75] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 43/CE-62111-4580D4E5; Wed, 19 Feb 2020 10:05:08 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJsWRWlGSWpSXmKPExsWSoc9lrhvC4Rt
+  ncGSmhMWVi4eYLNY0dzBZTH34hM3ixOFGZotvV4Dcy7vmsFns+LeJzeLX/2dMFvc2PGO2uLvu
+  L4vFhu9rGR24PTZ8bmLz2DnrLrvHgk2lHov3vGTy2LSqk81j3slAj/VbrrJ4fN4kF8ARxZqZl
+  5RfkcCa8fjPCvaC6QIVH+9fZWpg/MPfxcjFwSiwlFlic9sjRgjnGIvE7uNzmSCczYwSv3t/sn
+  UxcnKwCJxglti13RQkISQwgUlicsduJgjnLqPEthuLWECq2AQsJCafeMAGkhAROMMocfvUSxY
+  Qh1lgBbPE9FPtQA4Hh7BAsMTEFRwgDSICIRL/pjczQdj5EtMeHWSBWKcqsfPTYjCbVyBWYm3j
+  d6ht+1glNjQvA2vgFIiTuHvjA9h9jAKyEl8aVzOD2MwC4hK3nswHq5EQEJBYsuc8M4QtKvHy8
+  T9WiPpUiZNNNxgh4joSZ68/gbIVJfacWwjVKytxaX43VNxXYl7rajYIW0via88ZFgjbQmJJdy
+  vYXxICKhL/DlVChHMkDu1cBtWqJnHjTQfUCTISMz69hxr/g1li3uvgCYwGs5BcPQtoErOApsT
+  6XfoQYUWJKd0P2WeBQ0JQ4uTMJywLGFlWMVomFWWmZ5TkJmbm6BoaGOgaGhrrmugamZrqJVbp
+  Jumlluomp+aVFCUCZfUSy4v1iitzk3NS9PJSSzYxApNgSiHL/x2MW9a+1zvEKMnBpCTKa8nsG
+  yfEl5SfUpmRWJwRX1Sak1p8iFGGg0NJgvcxK1BOsCg1PbUiLTMHmJBh0hIcPEoivJm/feKEeI
+  sLEnOLM9MhUqcYjTkmvJy7iJnjyNyli5iFWPLy81KlxHnXsgFNEgApzSjNgxsEyxSXGGWlhHk
+  ZGRgYhHgKUotyM0tQ5V8xinMwKgnz7mAHmsKTmVcCt+8V0ClMQKe8FwY7pSQRISXVwORRfJrb
+  LffYn3q3dQnOSjs7aybK/1yfcPiLic6mJaVJ9/hyNG7l1p60mLTe/YpjfcXX+H2VrW3Pt4bUz
+  XU8uauEty9DpoB3ubyp/ixZL+YfD89lXbu4Irvz8Sv1iU+eH31pYmF35sgFtv0/l1xqOPouqz
+  2oxnn/x4/a0eGcmSZZ5RO2Hku+tyRh46OeX+Hfdp7l2fS8bGLLO08NKSnzffETGra7ZBV0vbz
+  8f+KnAMtIgyrmdRdcpDkWCm/8cyhsy4935fPm8R+/Fcqms/DT9VjrN9Ja5dOv5hSWbv/mYzVZ
+  29T1RGyrcyKvkG+ko7G68JagzzHWp01CnPfkBwXNvaqx0/jbnH3KnjZK5U2z2pVYijMSDbWYi
+  4oTAS8HrMuPBAAA
+X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
+X-Msg-Ref: server-3.tower-239.messagelabs.com!1582106707!2307183!1
+X-Originating-IP: [104.47.10.55]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 5845 invoked from network); 19 Feb 2020 10:05:08 -0000
+Received: from mail-db5eur03lp2055.outbound.protection.outlook.com (HELO EUR03-DB5-obe.outbound.protection.outlook.com) (104.47.10.55)
+  by server-3.tower-239.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 19 Feb 2020 10:05:08 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mbeYvTelu8NtpIZ0aD3Cvr+k2sBQ8IEfhQZeBUPeFfCEiW2uk5ZPdHEW1gp8d5Tda1ureh1uHqVG4XzK+jCWBBRv1lsUQQGVv04ySKIh1ycLnosSMZZ0AsyemxbGaWy3iDPT6kBIE8vqVcu8ohSTPNautEjX1BKWbhXG3vYZUenTmedy5Tol2n8O5ashw1VKtj83Te1BsbEw4nnlS/aASrJHXh+EG3m39e5DIOKbxFBTtbeDOFGtc6M8utNjug3gMIg+m8PxVNKA+ImDoSVagP1tvSF1qI/sfz73XLe2Fv0ORCS7koQ1+FAeQ2ktlIyWDIaIG5Qqb/RrPjtszPkyCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ravth+LkyJ+fveKHVBQ+bL8eB7JFvMwxR0pIxhvVgvE=;
+ b=FRHLa6V3Guoi9vuaKvW2n9iq1wP6+cXLgDp3ydVLQ8/RGcr41/XuspPBIEnaAGXIfEibXojLDHXEN30fAf3lT3PpBWtHGaNRV8P3+9A7/1cPw1GYOYWAWfx5NmOcmDncvoRf7Iz+jhxodwKGNNj8klX/YiWYlQ/PzmXgUtijaOy2t+cqDmh3AG/FoIdTa1wSPeLyWkFbQAuKamVtRYeHx67zuOCFU/VJbPAvViR4kpDVKScga4OlD8Lz70tXUko51mifu2LGZbxuyOSKsuFXPukB3KETnbegYDJOYvGbYPw5VIn4A59rpCu198moEfAR9NpmRUUkysIC96JYWvdWYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
+ dkim=pass header.d=diasemi.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZw/x7OOmWsRPs2KXXA49rjbloN6GS0ZFchRGCp2bD4=;
-        b=WBpsLhyM4d5bJ47VBArWknaQDsfmBfB06bUtLNlUIVsHn0Y+Qsq2QthZSzLhha2Av9
-         DiMAK9vHsY1+WRyf0aCdkRapBzvX9/3066/UFiSI+M52ES7nyJpfUf9fUO1vBHuNWbhp
-         X7UhN0QsDZOMi1gW3Kxo7IOQq1DhPwLPmWiSjU9MrqS+Plkm30b8NY63FuGTIbbtj4yI
-         C6X5oezrQPz7QiU6DZkPGk3v0JCg4AsTYIdUt0chJDxGl8E0sfdmJPqmSDslNwCRWXs3
-         fvLnfbqDmEV1/JJghpjF2pH/y0DGgRwqNw2u0m+kjjLRBGtkXktW49aUm/OYzL4Sy/T4
-         NVgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZw/x7OOmWsRPs2KXXA49rjbloN6GS0ZFchRGCp2bD4=;
-        b=K0SHwgL4ndpCX6g+4v9WDOsHCrlPRxrx0pYnpW2lm0yQhx8Gmh4/Yed4zpfZFOJBpI
-         IydfqTwX1+knmDW3XtKAlYfuWb083mdvsotamd/fnNtnUeqAMLFmJ9Rzljt56U1gZ7wa
-         qTn4dGv1GVjUTL/HCQQ8AiaaZiNNvLub5u1ivKBblEdyqsyZYQleFo9ogqHgKK/r6rCS
-         Rur45HUMXwE1jmGRa42hMWN7X1arvHvl7SPatnGmZWhDx7ekW8N2iUpKXx8ix246tl54
-         FdLonQCR0zojOTXoOBYuWajMF0SXGHu5GkH+zxP2Z2XhHt54p1dRUXNdPftlnCfnPFIT
-         0SLg==
-X-Gm-Message-State: APjAAAXb6FljL9i12DUdZEhqTGLppuX0DPHSlFtiZVWS7/qcsbX7XAMb
-        ZR8BtX//p32z9AdTsRkrg6uJ+QOT9a7QkVMm43M=
-X-Google-Smtp-Source: APXvYqw/oHjZVKNPCmgzq1xoxcw3r2PVM3NptIGwADTC6kugpd44yztDicEsxdDf1BAu3tJCKu40RRZAcnsLlDwoe74=
-X-Received: by 2002:a92:d7cd:: with SMTP id g13mr24384408ilq.300.1582106529867;
- Wed, 19 Feb 2020 02:02:09 -0800 (PST)
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ravth+LkyJ+fveKHVBQ+bL8eB7JFvMwxR0pIxhvVgvE=;
+ b=pIkSmqtUGLiz9rCxRVvPKrIvkn0uodPxEt9iH6w0CkoTmpyptiEURguSSQyQsJ42NLZpIpt1zzl6mAvdGoQR1vaQPRtl2T7/uCA7ZDz6kkrYAGTcrFIEdUlflNF8yt/VIrCAPmqYmy1aLtFN7hQeiY3j8sqLfylpecp+AUQ4zVg=
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
+ AM6PR10MB3432.EURPRD10.PROD.OUTLOOK.COM (10.255.34.97) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.17; Wed, 19 Feb 2020 10:05:04 +0000
+Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 10:05:04 +0000
+From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
+CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "cychiang@google.com" <cychiang@google.com>
+Subject: RE: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+Thread-Topic: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
+ callback
+Thread-Index: AQHV3+t05QGFzNuez06VZ5VdF8K2kqgUfAmAgAFKeYCAAGrTgIAARPoAgAAJp4CAAAclgIAAAzgAgADQubCACrf3gIAAPT6g
+Date:   Wed, 19 Feb 2020 10:05:04 +0000
+Message-ID: <AM6PR10MB2263A832CF4B0947091A0DB380100@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
+ <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
+ <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
+ <CAFQqKeWHDyyd_YBBaD6P2sCL5OCNEsiUU6B7eUwtiLv8GZU0yg@mail.gmail.com>
+ <2eeca7fe-aec9-c680-5d61-930de18b952b@linux.intel.com>
+ <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
+ <c9dbcdd8-b943-94a6-581f-7bbebe8c6d25@linux.intel.com>
+ <AM6PR10MB22630C79D08CE74878A6A096801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+ <SN6PR11MB2670FA720AB341183478A00B97100@SN6PR11MB2670.namprd11.prod.outlook.com>
+In-Reply-To: <SN6PR11MB2670FA720AB341183478A00B97100@SN6PR11MB2670.namprd11.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.225.80.85]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0e90fd2-4250-4428-eb60-08d7b52330bb
+x-ms-traffictypediagnostic: AM6PR10MB3432:
+x-ms-exchange-sharedmailbox-routingagent-processed: True
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR10MB34320B988377E57B471699FBA7100@AM6PR10MB3432.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(81156014)(86362001)(53546011)(55016002)(26005)(6506007)(7416002)(9686003)(71200400001)(110136005)(5660300002)(81166006)(498600001)(186003)(8676002)(54906003)(8936002)(2906002)(55236004)(4326008)(76116006)(52536014)(66556008)(66446008)(64756008)(66476007)(33656002)(66946007)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB3432;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Ni4udFefZWMiaXa71/ntN6w6EQtSRsUuqyx6ixZihVCvjC/9zPWzdq2UzA463oyRCWIxVv67sX+Y72hC7shmScnMxgx0ilST4pE7BE8295cqLnepBsAzYBkplWsKPV8f84NtnuQgtVPyhjOIlveC7xWyG9GPdziCqaBMItoeups12bLry6hQ8FWmhYYd+4jI5wHH9LzoFcc+p3VOOkTr2uBEqnAMY23ScslLmq4d8ATXX7Kp19d63CSWXXh08Za2I1WMyiM9ULMH7Vqj7cnURNrEi3PXsFPR94Qyg+gwyX0UrvA1cMtTiKLOZHTriM04AiKtmOKG1QSXR25Mg4UdukQPX56O7CNZ4s+bz8RojPrqtGVAm6M35tzBeh3atfFCY/GIRmwiaNiuekRHWOU0esifaymX/bpnkemA3VLbGByoop3i+UE1tYD30cheIWDd
+x-ms-exchange-antispam-messagedata: UgDodlp0h4nGNZM2bwpAaJVqUUjYo2uE9VtFClcJUberNq5sBsMIWLdIbkichxKdXj3K3+lwqBJyMgrWriGyZRwSJQVzUNl5q1siK1FkLTU8Y650Jr1QF5ixZt4mECpIJ5GGWlM34yBQJTEuSkhgSg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <CADjb_WQ0wFgZWBo0Xo1Q+NWS6vF0BSs5H0ho+5FM82Mu-JVYoQ@mail.gmail.com>
- <787302f0-670f-fadf-14e6-ea0a73603d77@arm.com> <60febadb-df21-a44b-d282-e43c104d2497@arm.com>
-In-Reply-To: <60febadb-df21-a44b-d282-e43c104d2497@arm.com>
-From:   Chen Yu <yu.chen.surf@gmail.com>
-Date:   Wed, 19 Feb 2020 18:01:58 +0800
-Message-ID: <CADjb_WRg-kbWCoPcds82SGFUfSpkvCQytfjvZV674NxOuTRE3Q@mail.gmail.com>
-Subject: Re: [RFC] Display the cpu of sched domain in procfs
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Valentin Schneider <valentin.schneider@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0e90fd2-4250-4428-eb60-08d7b52330bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 10:05:04.1349
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WpySvhoH9Feur8kw1Xw+DSYMchqyXatiiiyQuqnEd4UW/aSDVrbPWpxurxxm1G4d/AM4Kfsvu5PzNK4A4nnxKHmJvEg6/Aosxw2R2O6SIqQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB3432
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dietmar,
-
-On Wed, Feb 19, 2020 at 4:53 PM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 19/02/2020 09:13, Valentin Schneider wrote:
-> > Hi,
-> >
-> > On 19/02/2020 07:15, Chen Yu wrote:
-> >> Problem:
-> >> sched domain topology is not always consistent with the CPU topology exposed at
-> >> /sys/devices/system/cpu/cpuX/topology,  which makes it
-> >> hard for monitor tools to distinguish the CPUs among different sched domains.
-> >>
-> >> For example, on x86 if there are NUMA nodes within a package, say,
-> >> SNC(Sub-Numa-Cluster),
-> >> then there would be no die sched domain but only NUMA sched domains
-> >> created. As a result,
-> >> you don't know what the sched domain hierarchical is by only looking
-> >> at /sys/devices/system/cpu/cpuX/topology.
-> >>
-> >> Although by appending sched_debug in command line would show the sched
-> >> domain CPU topology,
-> >> it is only printed once during boot up, which makes it hard to track
-> >> at run-time.
->
-> What about /proc/schedstat?
->
-That's it!  I did not notice it before, this should work although the
-user space might
-need to parse the format.
-
-
--- 
-Thanks,
-Chenyu
-> E.g. on Intel Xeon CPU E5-2690 v2
->
-> $ cat /proc/schedstat | head
-> version 15
-> timestamp 4486170100
-> cpu0 0 0 0 0 0 0 59501267037720 16902762382193 1319621004
-> domain0 00,00100001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
->
->         ^^^^^^^^^^^
->
-> cpu1 0 0 0 0 0 0 56045879920164 16758983055410 1318489275
-> domain0 00,00200002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-> ...
->
+T24gMTkgRmVicnVhcnkgMjAyMCAwNTo1NywgTHUsIEJyZW50IHdyb3RlOg0KDQo+ID4gQW0gbm90
+IGdvaW5nIHRvIG1ha2UgbXlzZWxmIHBvcHVsYXIgaGVyZS4gSXQncyBNQ0xLIGFuZCBGU1lOQyAo
+b3IgV0NMSyBhcw0KPiA+IGl0J3MgdGVybWVkIGZvciBvdXIgZGV2aWNlKSB0aGF0IGlzIHJlcXVp
+cmVkIGZvciBTUk0gdG8gbG9jayBpbiB0aGUgUExMLg0KPiA+DQo+ID4gU28gZmFyIEkndmUgbm90
+IGZvdW5kIGEgd2F5IGluIHRoZSBjb2RlYyBkcml2ZXIgdG8gYmUgYWJsZSB0byBnZXQgYXJvdW5k
+IHRoaXMuDQo+ID4gSSBzcGVudCBhIHZlcnkgbG9uZyB0aW1lIHdpdGggU2F0aHlhIGluIHRoZSBl
+YXJseSBkYXlzIChBcG9sbG8gTGFrZSkgbG9va2luZyBhdA0KPiA+IG9wdGlvbnMgYnV0IG5vdGhp
+bmcgd291bGQgZml0IHdoaWNoIGlzIHdoeSBJIGhhdmUgdGhlIHNvbHV0aW9uIHRoYXQncyBpbiBw
+bGFjZQ0KPiA+IHJpZ2h0IG5vdy4gV2UgY291bGQgcHJvYmFibHkgcmVkdWNlIHRoZSBudW1iZXIg
+b2YgcmVjaGVja3MgYmVmb3JlDQo+ID4gdGltZW91dCBpbiB0aGUgZHJpdmVyIGJ1dCB0aGF0J3Mg
+cmVhbGx5IGp1c3QgcGFwZXJpbmcgb3ZlciB0aGUgY3JhY2sgYW5kIHRoZXJlJ3MNCj4gPiBzdGls
+bCB0aGUgcG9zc2liaWxpdHkgb2Ygbm9pc2UgbGF0ZXIgd2hlbiBTUk0gZmluYWxseSBkb2VzIGxv
+Y2suDQo+IA0KPiBIaSBBZGFtLA0KPiANCj4gRm9yIEdvb2dsZSBDVFMgcmVxdWlyZW1lbnQgKDIw
+MG1zIGNvbGQgb3V0cHV0IGxhdGVuY3kpLCB3ZSBwbGFuIHRvIHVwbG9hZCBhDQo+IHBhdGNoIHdo
+aWNoIHJlZHVjZXMgdGhlIHJlY2hlY2sgbnVtYmVyIHRvIDQgYW5kIGludGVydmFsIHRvIDIwbXMg
+c28gdGhlIHRvdGFsDQo+IGRlbGF5IGhlcmUgd291bGQgYmUgODBtcyBmb3Igb3VyIHBsYXRmb3Jt
+LiBXZSB0aGluayB0aGUgdGltZSBpcyBzdGlsbCBzdWZmaWNpZW50DQo+IGZvciBvdGhlciBwbGF0
+Zm9ybXMgdG8gZ2VuZXJhdGUgYSBzdGFibGUgV0NMSyBhbmQgZm9yIHRoZSBjb2RlYyBTUk0gdG8g
+bG9jayBidXQNCj4gc3RpbGwgbmVlZHMgeW91ciBjb25maXJtYXRpb24uIEhvdyBkbyB5b3UgdGhp
+bms/DQoNCkhpIEJyZW50LA0KDQpJJ20gY29uY2VybmVkIHRoYXQganVzdCBzZXR0aW5nIGEgdGlt
+ZW91dCB0byBzdWl0IHRoZSBHb29nbGUgQ1RTIHJlcXVpcmVtZW50DQppc24ndCBuZWNlc3Nhcmls
+eSBzdWl0YWJsZSBmb3IgYWxsIHRhcmdldHMsIGFuZCB0aGlzIGRvZXNuJ3QgYWN0dWFsbHkgZml4
+IHRoZQ0KcmVhbCBwcm9ibGVtIGhlcmUuDQoNCkhvdyBsb25nIGRvIHlvdSBkZXRlcm1pbmUgcGxh
+dGZvcm1zIHdpbGwgdGFrZSB0byBnZW5lcmF0ZSBhIHN0YWJsZSBXQ0xLPyBEbyB3ZQ0KaGF2ZSBh
+biBpZGVhIG9mIGhvdyBsb25nIHRoYXQgbWlnaHQgYmUgaW4gYSB3b3JzdCBjYXNlIHNjZW5hcmlv
+PyBJZiBzbyB0aGVuIHdlDQpjYW4gbG9vayBhdCBhZGp1c3RpbmcgdGhpcyBkb3duLCBidXQgSSdk
+IGxpa2UgdG8gYmUgY2xlYXIuDQoNCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBCcmVudA0K
