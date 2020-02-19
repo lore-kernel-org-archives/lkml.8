@@ -4,99 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8941BC34053
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4693C34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5DA2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2382176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582120428;
-	bh=SHGd66abWQdDXe+I6Qh0gjlEnxGm39OvW3AUUhNMfO0=;
+	s=default; t=1582120476;
+	bh=pZWh7elbnmiV7gJ/AjqZyG8cWHBS5zE3C38XtoAFYJo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qcbk8mA9gPU3af3LofkN1PHvbTHnBLp6KMAQw4FJXATNyzz5wYTjDHp1j6QYdcRVe
-	 KVukHBaJfhbOUmSKDuPsMeBF+q6BNxHS93lxQivoZ6VthYcQtBGW/+c4NdYZO2EFlb
-	 4Ll91HcatBLRTzGrQo78CAcjboj7i8UI8Ds0LtK8=
+	b=JyVpab1R2nykA4mrvYo/M6A67IjqDXKZ7kSQR0p9fUpH4PA8FF9r5Z+qjWg5XRPlM
+	 PhbrBpj6OBVFl0X1pWtK3V7vU5xTgTqtLOWOZ4VetqbmlK6bqzTWqwbvrMV48H30pk
+	 ULQV5D+XNKgtRGpsRlw39kqNWe3FzroIzSZhKOYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBSNxr (ORCPT
+        id S1727797AbgBSNyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:53:47 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35377 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726786AbgBSNxr (ORCPT
+        Wed, 19 Feb 2020 08:54:35 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39343 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbgBSNyf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:53:47 -0500
-Received: by mail-oi1-f195.google.com with SMTP id b18so23869384oie.2;
-        Wed, 19 Feb 2020 05:53:46 -0800 (PST)
+        Wed, 19 Feb 2020 08:54:35 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so23844606oih.6;
+        Wed, 19 Feb 2020 05:54:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E2rxf7SPwcgMTCE3K5oM6SSprAcPTnFFVvcz8mMphIc=;
-        b=pH2IMWZFMhEQ69Y3roSihvK6WyU0CmTYbFYZ6ixqw0rwkXYbnlGCcVyHbT6xQKCbr0
-         pBIApOVw1GQi0TTPZFtpL6/cxW6s0k6I1F+o5N/a2W7riTl+3QUQ4pCrJv62punRP1mz
-         tKqLwDhIcUWuepVwb8IK71DxATaAE3PX/+C25EC43IoC7h51aFP4QN2UUOADDmiX4YKO
-         CUAtwBO7MLVtMSvPurM6QSRxOCeUzApAwITCSRyWu6nlj/iba9GvkofkbJMQHRmqBJ1y
-         YvL7SGLYBumR/5aVdB0peXjrRIh5fxHXltS0vnQTQwcStYNqflu3x34abtOswRArMAo7
-         0rEw==
-X-Gm-Message-State: APjAAAXnXejKkf2CGG89u0ZsBHbSUdXIAi3Alp6IPWUXfM7mkD91dqmb
-        bDGMd1dNkooXQ8i6ZdW9aHLdbh0s1Q==
-X-Google-Smtp-Source: APXvYqwMJGVebJ0gKcE0QNmF2FJsBNguLXG/bpvWNsk6/5ZNGmKQ4j0O9Fd7bFZgKeFdrJCKWzJYdw==
-X-Received: by 2002:aca:ea43:: with SMTP id i64mr4733986oih.30.1582120426367;
-        Wed, 19 Feb 2020 05:53:46 -0800 (PST)
+        bh=9M75KITIRI2fIyzJ9QLJNNG7LlFCUvrsVp2MLwGj1Cw=;
+        b=LqkaPc/ypRNKhAuFQgXDYGzaDO+zdqP10HAkEodZLLlKG3SbzipeHqQJrCHNd27Q+9
+         nxskLQev761lzl42vhWXwiU0dmJQJApo13NYNnOmnSbWIacIAHltO0Casz/vDJ/aZOMa
+         4YW3dzsyoXMrmXOjrBH6tjYJo3xIesO4eMkUQNACFrND8qxAQCY3WKMVdhlcQ34Mm8OD
+         rQPlBB3r70pYtYphK8+eYOmXEl2CHm+BcBCCts2QY6VpqS0MYM5HgHBi/vvNnDCVwrJ9
+         dMfpFnBy78aA+vn+B5LvKbPtJnUbPQogZZIz5EejF9sumyLqu2rUzWU9azassVgJcRYX
+         Ai+g==
+X-Gm-Message-State: APjAAAWmzc9NMLcLnr3TUelpSZkQru4uxmtx1WzGTb+Cpxb3WJPH3SOF
+        /ilvq4QL/jtbHJS6c6ZIbw==
+X-Google-Smtp-Source: APXvYqxgkdnhXnfTH91w1CcgAgn8QY+egrxCu7nYqMzFGcTKbBJz8JhR7QEK1WiYhqYJ7Dht+Fql3g==
+X-Received: by 2002:a05:6808:18:: with SMTP id u24mr4722231oic.10.1582120472746;
+        Wed, 19 Feb 2020 05:54:32 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k17sm700771oic.45.2020.02.19.05.53.44
+        by smtp.gmail.com with ESMTPSA id p24sm644661otq.64.2020.02.19.05.54.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 05:53:45 -0800 (PST)
-Received: (nullmailer pid 17381 invoked by uid 1000);
-        Wed, 19 Feb 2020 13:53:44 -0000
-Date:   Wed, 19 Feb 2020 07:53:44 -0600
+        Wed, 19 Feb 2020 05:54:31 -0800 (PST)
+Received: (nullmailer pid 18549 invoked by uid 1000);
+        Wed, 19 Feb 2020 13:54:30 -0000
+Date:   Wed, 19 Feb 2020 07:54:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add UniPhier external DMA
- controller bindings
-Message-ID: <20200219135344.GA15319@bogus>
-References: <1582077141-16793-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1582077141-16793-2-git-send-email-hayashi.kunihiko@socionext.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com, yixin.zhu@intel.com,
+        Dilip Kota <eswara.kota@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel
+ Combophy
+Message-ID: <20200219135430.GA17628@bogus>
+References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582077141-16793-2-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 10:52:20 +0900, Kunihiko Hayashi wrote:
-> Add devicetree binding documentation for external DMA controller
-> implemented on Socionext UniPhier SOCs.
+On Wed, 19 Feb 2020 11:31:29 +0800, Dilip Kota wrote:
+> Combophy subsystem provides PHY support to various
+> controllers, viz. PCIe, SATA and EMAC.
+> Adding YAML schemas for the same.
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
 > ---
->  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> Changes on v2:
+> 
+>  Add custom 'select'
+>  Pass hardware instance entries with phandles and
+>    remove cell-index and bid entries
+>  Clock, register address space, are same for the children.
+>    So move them to parent node.
+>  Two PHY instances cannot run in different modes,
+>    so move the phy-mode entry to parent node.
+>  Add second child entry in the DT example.
+> 
+>  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
+>  1 file changed, 138 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts] Error 1
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml: properties:intel,phy-mode: {'$ref': '/schemas/types.yaml#/definitions/uint32', 'minimum': 0, 'maximum': 2, 'description': 'Configure the mode of the PHY.\n  0 - PCIe\n  1 - xpcs\n  2 - sata\n'} is not valid under any of the given schemas (Possible causes of the failure):
+	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml: properties:intel,phy-mode: 'not' is a required property
+
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/phy/intel,combo-phy.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/phy/intel,combo-phy.example.dts] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1240464
+See https://patchwork.ozlabs.org/patch/1240526
 Please check and re-submit.
