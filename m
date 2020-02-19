@@ -2,119 +2,103 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1609DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AA9C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA15824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A4C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aAobjYpF"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VuaRXuPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbgBSVcu (ORCPT
+        id S1727576AbgBSVdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:32:50 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34664 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSVcu (ORCPT
+        Wed, 19 Feb 2020 16:33:07 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49136 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726703AbgBSVdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:32:50 -0500
-Received: by mail-pf1-f193.google.com with SMTP id i6so739292pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:32:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EmqhwxfTOPH5Jwang1lE3QOy4zcv0gzG5lBl/plns9w=;
-        b=aAobjYpFklyAkqlSG70awWRHMtlHSvugns/9mnKxCnZbo5CBJsQf4GsGU2DC6SwVxM
-         PqCQwGEARKxeFBmbEdcjD4vQwtPfRz6yplo6lJvfbOvKffn7U//Av3nzUBjvTKIQA1SI
-         3rRlpdcbJ6/nTMZrkb86TdZfyolv0kDit/gwKe4Yw2DPTokH2zcFLvoCc46OIl/x/aHB
-         nLS5TEWP/iXmuWbKI4NopOwy54x337xvKNUJeEV6goeSU4DERoVDEYnQ6uruiyaODWt2
-         KjfY0l2/gfssEmO9emTMo66m1oaAYdh6bkuZvzRLFE9ZCl2+5QErp/rw6O16d+fE/Uim
-         MbIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EmqhwxfTOPH5Jwang1lE3QOy4zcv0gzG5lBl/plns9w=;
-        b=oG40ZwgmsUMhalcBT3/UeXbFwR9QaNzQr05tn9/k5rPpvVfthv+sB0V+PLkRvGgMiU
-         iZzabbg9a0J3F6t7PrtDmdAyYy3B3Ua5u/0PTVqZSS/a7iRJADb2hE1k89ogfDkwA7wp
-         PV9ZW1s5VLcaDJgI6AgvVqkY0LniI2byLG50YtXeC0tljYhyXSUteGT0Sz7xF95H2zCm
-         4Bdg4ayEMzFjaMFwMcTjEsbj58Q1nhQ+FDm1/fGIV3y7W82dgQ0O4o6q00uYLkUcMFRq
-         YN3giDUQ/W24BcpjgDCx9I9zL7+eOY6oLPUSXc/QPUfbhC/i070WiWkZpGuJXT3lVDRG
-         xyKw==
-X-Gm-Message-State: APjAAAUaxu1jj5HoaSARJux0Nmmmr1Q2A/LYeVmYGvyaktJJTzm4yVmI
-        iNUifOLA7KfNro0hfokSp32DFKVgSOqpB3y8uvM4ug==
-X-Google-Smtp-Source: APXvYqxQilzonYgGRhT+QA+AwfuB+IZ31TKJHQheCGHzsJIF3F3Ns2HplQu/HPC/eZCCe/ALDkwRksUMLFmdHy1Hrik=
-X-Received: by 2002:a63:af52:: with SMTP id s18mr30581478pgo.263.1582147969204;
- Wed, 19 Feb 2020 13:32:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20200219045423.54190-1-natechancellor@gmail.com>
- <20200219045423.54190-4-natechancellor@gmail.com> <20200219093445.386f1c09@gandalf.local.home>
- <CAKwvOdm-N1iX0SMxGDV5Vf=qS5uHPdH3S-TRs-065BuSOdKt1w@mail.gmail.com>
- <20200219181619.GV31668@ziepe.ca> <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
- <20200219195424.GW31668@ziepe.ca>
-In-Reply-To: <20200219195424.GW31668@ziepe.ca>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 19 Feb 2020 13:32:38 -0800
-Message-ID: <CAKwvOdktG0vZOZVtNJBk1COhOnLYv3MU5KNQ8Z40L4ph5QcnRg@mail.gmail.com>
-Subject: Re: [PATCH 3/6] tracing: Wrap section comparison in
- tracer_alloc_buffers with COMPARE_SECTIONS
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Feb 2020 16:33:07 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582147987; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=0JN/ehYDL0O2oEeVVUyuLdKga5FoJgnDhpfMUdo+78Q=; b=VuaRXuPGpB3RSG6sduYXFkSYvP6KAapH9dAHEDyASYOW+Sv2cE6CyudGcX1JsqDvuVaJ+lBS
+ veAZkn1HX6gAL35gCIdsF55kBurTqmFsjmNK/EkBKetpRK7gw2Roclm1cpumUpUvOrcHYjes
+ forsxlU3THu4r4DAb6A28hvDnHs=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4da990.7f0e10e61928-smtp-out-n03;
+ Wed, 19 Feb 2020 21:33:04 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 27E32C4479C; Wed, 19 Feb 2020 21:33:04 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC98DC43383;
+        Wed, 19 Feb 2020 21:33:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC98DC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v1 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+Date:   Wed, 19 Feb 2020 14:32:54 -0700
+Message-Id: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:54 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Feb 19, 2020 at 11:11:19AM -0800, Nick Desaulniers wrote:
-> > > Godbolt says clang is happy if it is written as:
-> > >
-> > >   if (&__stop___trace_bprintk_fmt[0] != &__start___trace_bprintk_fmt[0])
-> > >
-> > > Which is probably the best compromise. The type here is const char
-> > > *[], so it would be a shame to see it go.
-> >
-> > If the "address" is never dereferenced, but only used for arithmetic
-> > (in a way that the the pointed to type is irrelevant), does the
-> > pointed to type matter?
->
-> The type is used here:
->
->         if (*pos < start_index)
->                 return __start___trace_bprintk_fmt + *pos;
->
-> The return expression should be a const char **
->
-> Presumably the caller of find_next derferences it.
->
-> Jason
+When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+cache coherency issues because it is mapped as write-combine without clearing
+the cache after it was zeroed.
 
-And the callers of find_next just return the return value from
-find_next, but suddenly as `void*` (find_next()'s return type is
-`char**`).  So it doesn't seem like the pointed to type matters, hence
-the recommendation of `void` and then address-of (&) used in
-comparison+arithmetic.
+Rather than duplicate the hacky workaround we use in the GEM allocator for the
+same reason it turns out that we don't need to have a bespoke memory allocator
+for the GMU anyway. It uses a flat, global address space and there are only
+two relatively minor allocations anyway. In short, this is essentially what the
+DMA API was created for so replace a bunch of memory management code with two
+calls to allocate and free DMA memory and we're fine.
+
+The only wrinkle is that the memory allocations need to be in a very specific
+location in the GMU virtual address space so in order to get the iova allocator
+to do the right thing we need to specify the dma-ranges property in the device
+tree for the GMU node. Since we've not yet converted the GMU bindings over to
+YAML two patches quickly turn into four but at the end of it we have at least
+one bindings file converted to YAML and 99 less lines of code to worry about.
+
+Jordan Crouse (4):
+  dt-bindings: display: msm: Convert GMU bindings to YAML
+  dt-bindings: display: msm: Add required dma-range property
+  arm64: dts: sdm845: Set the virtual address range for GMU allocations
+  drm/msm/a6xx: Use the DMA API for GMU memory objects
+
+ .../devicetree/bindings/display/msm/gmu.txt        | 116 -----------------
+ .../devicetree/bindings/display/msm/gmu.yaml       | 140 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |   2 +
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c              | 107 +---------------
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h              |   5 +-
+ 5 files changed, 149 insertions(+), 221 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
 
 -- 
-Thanks,
-~Nick Desaulniers
+2.7.4
