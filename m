@@ -2,226 +2,95 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A9EC3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 075B4C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E98324656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A034624655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tuQ/QLWS"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="si75TmNC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgBSBSz (ORCPT
+        id S1727960AbgBSBTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:18:55 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36391 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgBSBSz (ORCPT
+        Tue, 18 Feb 2020 20:19:43 -0500
+Received: from forward500o.mail.yandex.net ([37.140.190.195]:43267 "EHLO
+        forward500o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726939AbgBSBTm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:18:55 -0500
-Received: by mail-yb1-f196.google.com with SMTP id u26so7986149ybd.3;
-        Tue, 18 Feb 2020 17:18:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j3P5cz57t37xwJenchSTYFOFaqISpD+NLl5dWuTR5us=;
-        b=tuQ/QLWSMTHNxnuMpdJSRv/XURC6oUM8Pjuua84ym07G7E7qlw+3cghRMcEATEwYGM
-         8IqfkwbFoSIcCT0pYfHrMgv3IELwIwY2bz30DnqmL49LEPhBzqgFixWCEVb7bIhCzS3J
-         JYSLUPk9E9S9aC4tDeMcPvWC4dSmCquHrM+Nz65YYKOt1Wof/DbEDjQKJc3EqwUBPPeK
-         odSg04UHK7N8b40lC+9p8s/JBvYoyQ9liEfLdRt8rglKKy0JPZ4/UBgHAmeDWgvbuGLh
-         +qHjP3jJu49Uzsr6fHQ5PGvYoCU/4OHxl3yXsiPNoKmdqTqYh+VeguR59ip2SVvdbo1L
-         9y2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j3P5cz57t37xwJenchSTYFOFaqISpD+NLl5dWuTR5us=;
-        b=N9QTwfSIPSHWadxKlhPST4uGeGA4PcG2B7nVp8I7GcIpr+s2jUktlfLf+usOOAUvbr
-         6mo7VxyznSsHoA02Qxrl9GGZ3qN76dsIHgfDJlqnn41B3H1taItTLYqtTUk4xl3lqok/
-         fvU/KkPL90LpJFB/ub77J97PEwfyFbFud86tytRd0FS1TLox7vT7GoZIWfzMaLDZRd3K
-         rLAjALRaWQXYmZf5Fn3jYg8V0MpUCnEWGYXdLNn5cooeRoLBc4a/7diBUEsYtB+G1h8q
-         lO+cs4v99GprEi0Kavnjd4hlAqV/Anx969V66aQerZpPPG8ezKfAAbAfH/rOmQMH6tBr
-         0n9g==
-X-Gm-Message-State: APjAAAU//lXJJisRMjG0CWKLeOgaXCI5LLxR/aaToYvpKtx55n4kV9/Y
-        Iwg5sHKv7FK+3BgDou6Q2uA=
-X-Google-Smtp-Source: APXvYqxal5g0abulMEnQ2qIUU7f2LwlhQja5hx62UdLp1BNno67EDTOWLZriKk9fSHISH+QDUVnmkw==
-X-Received: by 2002:a25:250c:: with SMTP id l12mr21156867ybl.162.1582075133872;
-        Tue, 18 Feb 2020 17:18:53 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id a202sm248553ywe.8.2020.02.18.17.18.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 17:18:53 -0800 (PST)
-Subject: Re: [PATCH v3 kunit-next 1/2] kunit: add debugfs
- /sys/kernel/debug/kunit/<suite>/results display
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>, shuah <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Gow <davidgow@google.com>
-References: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
- <1581094694-6513-2-git-send-email-alan.maguire@oracle.com>
- <c42ac237-476a-526f-b445-61e7a63bc101@gmail.com>
- <CAFd5g47p9wnbz=HrNh0U2bbc=0ZaJ7n0U+_=E8yp8yPMrqwzaA@mail.gmail.com>
- <MWHPR13MB0895A9AC64475539ECF99987FD110@MWHPR13MB0895.namprd13.prod.outlook.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <f0d102a8-6501-88d8-d47d-202fd36e55a5@gmail.com>
-Date:   Tue, 18 Feb 2020 19:18:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 18 Feb 2020 20:19:42 -0500
+Received: from mxback1j.mail.yandex.net (mxback1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10a])
+        by forward500o.mail.yandex.net (Yandex) with ESMTP id 140CD60197;
+        Wed, 19 Feb 2020 04:19:37 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback1j.mail.yandex.net (mxback/Yandex) with ESMTP id YL0iA9Gz0m-JaSGc8gP;
+        Wed, 19 Feb 2020 04:19:36 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1582075176;
+        bh=dhzg+9rEG0nYcIh4AOwylZPaZZyNGN2eZQsA5FMtWoE=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=si75TmNCnigp1gijVvAyW6PptfGedGlHvhQvaznvclILqwVmsEXMjhsvM8pOngavb
+         Awj/YjLvQWi/LfWq1YiF/eSwIPvCjX62UR+pjVc7UqIixpYJCGoPfgNbc5M/RU/MFQ
+         cFJqE+n49y9mC7oNMfz74gz5sg5jpfPbDHN2AUX4=
+Authentication-Results: mxback1j.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by myt2-508c8f44300a.qloud-c.yandex.net with HTTP;
+        Wed, 19 Feb 2020 04:19:36 +0300
+From:   Evgeniy Polyakov <zbr@ioremap.net>
+Envelope-From: drustafa@yandex.ru
+To:     "Daniel Walker (danielwa)" <danielwa@cisco.com>,
+        David Miller <davem@davemloft.net>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200218205441.GA24043@zorba>
+References: <20200217175209.GM24152@zorba>
+         <20200217.185235.495219494110132658.davem@davemloft.net>
+         <20200218163030.GR24152@zorba>
+         <20200218.123546.666027846950664712.davem@davemloft.net> <20200218205441.GA24043@zorba>
+Subject: Re: [PATCH] drivers: connector: cn_proc: allow limiting certain messages
 MIME-Version: 1.0
-In-Reply-To: <MWHPR13MB0895A9AC64475539ECF99987FD110@MWHPR13MB0895.namprd13.prod.outlook.com>
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Wed, 19 Feb 2020 04:19:36 +0300
+Message-Id: <17008791582075176@myt2-508c8f44300a.qloud-c.yandex.net>
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 2:49 PM, Bird, Tim wrote:
-> 
-> 
->> -----Original Message-----
->> From:  Brendan Higgins
+18.02.2020, 23:55, "Daniel Walker (danielwa)" <danielwa@cisco.com>:
+>>  > I think I would agree with you if this was unicast, and each listener could tailor
+>>  > what messages they want to get. However, this interface isn't that, and it would
+>>  > be considerable work to convert to that.
 >>
->> On Wed, Feb 12, 2020 at 7:25 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>>
->>> On 2/7/20 10:58 AM, Alan Maguire wrote:
-> 
-> ...
-> 
->>>> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
->>>> index 9242f93..aec607f 100644
->>>> --- a/lib/kunit/test.c
->>>> +++ b/lib/kunit/test.c
->>>> @@ -10,6 +10,7 @@
->>>>  #include <linux/kernel.h>
->>>>  #include <linux/sched/debug.h>
->>>>
->>>> +#include "debugfs.h"
->>>>  #include "string-stream.h"
->>>>  #include "try-catch-impl.h"
->>>>
->>>> @@ -28,73 +29,91 @@ static void kunit_print_tap_version(void)
->>>>       }
->>>>  }
->>>>
->>>> -static size_t kunit_test_cases_len(struct kunit_case *test_cases)
->>>> +size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
->>>>  {
->>>>       struct kunit_case *test_case;
->>>>       size_t len = 0;
->>>>
->>>> -     for (test_case = test_cases; test_case->run_case; test_case++)
->>>> +     kunit_suite_for_each_test_case(suite, test_case)
->>>>               len++;
->>>>
->>>>       return len;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
->>>>
->>>>  static void kunit_print_subtest_start(struct kunit_suite *suite)
->>>>  {
->>>>       kunit_print_tap_version();
->>>> -     pr_info("\t# Subtest: %s\n", suite->name);
->>>> -     pr_info("\t1..%zd\n", kunit_test_cases_len(suite->test_cases));
->>>> +     kunit_log(KERN_INFO, suite, "# Subtest: %s", suite->name);
->>>> +     kunit_log(KERN_INFO, suite, "1..%zd",
->>>> +               kunit_suite_num_test_cases(suite));
->>>
->>> The subtest 'is a TAP stream indented 4 spaces'.  (So the old code was
->>> also incorrect since it indented with a tab.)
->>
->> Whoops.
->>
->> I agree that fixing tabs to spaces is probably the easiest thing to do
->> here; nevertheless, I think this might be a good time to talk about
->> other deviations from the spec and what to do about it. This might
->> also be a good time to bring up Tim's comment at LPC last year about
->> forking TAP. Arguably I already have given that TAP14 is still under
->> review and is consequently subject to change.
->>
->> Additionally, the way I report expectation/assertion failures are my
->> own extension to the TAP spec. I did this because at the time I wasn't
->> ready to open the can of worms that was adding a YAML serializer to
->> the Linux kernel; I mentioned adding a YAML serializer at LPC and
->> people didn't seem super thrilled with the idea.
-> 
-> I'm not sure I follow.  Are you talking about writing YAML or interpreting
-> YAML.  You don't need a serializer to write YAML.  It can be done 
-> with straight text output.  I guess it depends on the scope of what you
-> envision.  Even if you want to do more than trivial structured output,
-> I don't think you'll need a full serializer.  (IOW, I think you could sneak
-> something in and just call it a test output formatter.  Just don't call it YAML
-> and most people won't notice. :-)
+>>  You filter at recvmsg() on the specific socket, multicast or not, I
+>>  don't understand what the issue is.
+>
+> Cisco tried something like this (I don't know if it was exactly what your referring to),
+> and it was messy and fairly complicated for a simple interface. In fact it was
+> the first thing I suggested for Cisco.
+>
+> I'm not sure why Connector has to supply an exact set of messages, one could
+> just make a whole new kernel module hooked into netlink sending a different
+> subset of connector messages. The interface eats up CPU and slows the
+> system if it's sending messages your just going to ignore. I'm sure the
+> filtering would also slows down the system.
 
-A serializer is a red herring.  Just drop the entire label and concept.
-What is already in KUnit is the equivalent, printing out (eg through
-printk() or however printk() is wrapped) simple text of the form (by
-example) of
+Connector has unicast interface and multicast-like 'subscription', but sending system-wide messages
+implies using broadcast interface, since you can not hold per-user/per-socket information about particular
+event mask, instead you have channels in connector each one could have been used for specific message type,
+but it looks overkill for simple process mask changes.
 
-  label: value
-  label: value
-  label:
-    label: value
-    label: value
-  label:
-     label:
-       label: value
-       label: value
+And in fact, now I do not understand your point.
+I thought you have been concerned about receiving too many messages from particular connector module because
+there are, for example, too many 'fork/signal' events. And now you want to limit them to 'fork' events only.
+Even if there could be other users who wanted to receive 'signal' and other events.
 
-So basically
-  - label/value pairs
-  - label without value indicating a node or block (another level)
-  - some rules about the format of value
-  - indentation indicating a node or block
+And you blame connector - basically a network media, call it TCP if you like - for not filtering this for you?
+And after you have been told to use connector channels - let's call them TCP ports -
+which requires quite a bit of work - you do not want to do this (also, this will break backward compatibility for everyone
+else including (!) Cisco (!!)). I'm a little bit lost here.
 
-That is something really simple.  No need for any fancy coding to
-encapsulate.
-
--Frank
-
-> 
->>
->> Further both the TAP implementation here as well as what is in
->> kselftest have arbitrary kernel output mixed in with TAP output, which
->> seems to be a further deviation from the spec.
-> Well that's a different kettle of worms, and really argues for staying
-> with something that is strictly line-based.
-> 
->>
->> In an effort to do this, and so that at the very least I could
->> document what I have done here, I have been looking into getting a
->> copy of TAP into the kernel. Unfortunately, TAP appears to have some
->> licensing issues. TAP says that it can be used/modified "under the
->> same terms as Perl itself" and then provides a dead link. I filed a
->> pull request to update the licence to the Perl Artistic Licence 1.0
->> since I believe that is what they are referencing; however, I have not
->> heard back from them yet.
-> 
-> When you say "getting a copy of TAP into the kernel", I presume you mean
-> an existing implementation to produce TAP output?  Or are you talking about
-> a TAP interpreter?  I'm not sure the former needs to use an existing implementation.
-> 
-> I previously volunteered (in Lisbon) to write up the TAP deviations,
-> and never got around to it.   Sorry about that. I can try to work on it now if
-> people are still interested.
->  -- Tim
-> 
-> [rest of patch omitted]
-> 
-> 
-
+As a side and more practical way - do we want to have a global switch for particular process state changes broadcasting?
