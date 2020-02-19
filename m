@@ -2,190 +2,122 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78C8C11D41
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87127C11D8B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768322469A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BAD24685
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:23:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFkBY2ol"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dBIJo1if"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgBSW0u (ORCPT
+        id S1727809AbgBSWXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:26:50 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41204 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbgBSW0t (ORCPT
+        Wed, 19 Feb 2020 17:23:23 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43665 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727291AbgBSWXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:26:49 -0500
-Received: by mail-qt1-f193.google.com with SMTP id l21so1468295qtr.8;
-        Wed, 19 Feb 2020 14:26:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=77QMWZNt2P60hLQ8k2WkobTZOYuQcji0wAgaq/fXtCM=;
-        b=KFkBY2olxZYCK+/8EzDemlFkDrs6pvRfKvSFrDMPzFEDUhPzJJ4aL+kFi6/ysz3K+Q
-         KwW8kGJ+wtfnCNFktmYryzjVLMZoq6okfL0dhySDfdWC8qccjisFZa6cbxyR0CbNU8v/
-         Vqgtk9s8lN5QP4z7BQL2+PXlRnUI+hzSUpn1jBa58sz3KvcjKUfAgm9OmbfK+L7SG36x
-         y7xeE4CFzb9mtkb5QebGDp7GBQtN5jZIkVrSyRvjNoKPWa79u/sVbVCR/rtbZn8SBdvt
-         S52dPpqRaUcCBlhzy8jVHVlpXhJCRoiUgO/PsKNr1qPu03+1iUvtKKUZ6V0GNxePHcJy
-         mTqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=77QMWZNt2P60hLQ8k2WkobTZOYuQcji0wAgaq/fXtCM=;
-        b=CcsEqrXCJpspqX8DiokqYWxIGdcqEzV8Js0Gz+uxpYERF7wqx/NFjrdmMYNP/NbxIF
-         OqE9h0mva18eg5UrCreAICioVRTTHAtq7d1KeLo4R0uQUH2ZH+/0/HxJt8xkU/O2OQyf
-         /GzO3+GWQs/Fi2GiGRkBXCkgNAaPq+RWVpqeEeLIdGr+Nz2K4Rz8lWRjqnRqJrh75F/u
-         tg7W7dhn04heILZ4d96AhWeSpW5jRTErHtyTOA++322PuLRUGkttKrvvUv4hyaO9ilPw
-         kk4GqlZ55A0cO0SgkgkYN70K9NilVGqXHqO6Hix6/39oc5LpL7NCWWPy24PL2Sn9I4Sl
-         +mvw==
-X-Gm-Message-State: APjAAAWM7+iEY+XTnpUT00vC60TtYsBIr507ePmqhu+ezmTiujN2beJV
-        xuz19Q77RO/Tcnop9ARwVApZJbAQ6SmS+0IJJGo=
-X-Google-Smtp-Source: APXvYqz3a4ETeSJ5fGaTDg5stUvGWjGnVZRnuL45qseQ2+wWXS+F973/E91acebkXk/T6RuR5NdcLVXrNcqB+TKtGQ8=
-X-Received: by 2002:ac8:4050:: with SMTP id j16mr23557464qtl.171.1582151207577;
- Wed, 19 Feb 2020 14:26:47 -0800 (PST)
+        Wed, 19 Feb 2020 17:23:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582151001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nHypu13CZF8UBHp6BjnFh3CpnVljadFwXikdU7QeLTM=;
+        b=dBIJo1ifiDhzl9lr5o/kbE6kBjhhISOnExVHOoKTb+v4qXkg36sM+IQSuXPamcsSNjRRjK
+        RFU2vZt4T3c3kh9+mf0g8ek8uYm/0G65MyEplMJumDUIJQdB4AxEoSlHTU5Wi6m+FSlkx2
+        doZax+QdiMsPMXyrwwvcsv6UxPUaI+I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-mkJHZndZOSGRlBopAdowcQ-1; Wed, 19 Feb 2020 17:23:17 -0500
+X-MC-Unique: mkJHZndZOSGRlBopAdowcQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 802A2800580;
+        Wed, 19 Feb 2020 22:23:15 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F2F0D92D00;
+        Wed, 19 Feb 2020 22:23:03 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 06:22:55 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Salman Qazi <sqazi@google.com>
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Ming Lei <tom.leiming@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Gwendal Grignou <gwendal@google.com>
+Subject: Re: BLKSECDISCARD ioctl and hung tasks
+Message-ID: <20200219222255.GB24522@ming.t460p>
+References: <20200213082643.GB9144@ming.t460p>
+ <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
+ <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
+ <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org>
+ <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
+ <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com>
+ <20200215034652.GA19867@ming.t460p>
+ <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
+ <20200219025456.GD31488@ming.t460p>
+ <CAKUOC8UceQ_cDQC8ckvUio0AZHhasi7Np-PQ09e-dQ3fechKoA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200219133012.7cb6ac9e@carbon> <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
- <20200219180348.40393e28@carbon> <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
- <20200219192854.6b05b807@carbon> <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
- <20200219210609.20a097fb@carbon> <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
-In-Reply-To: <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 19 Feb 2020 14:26:36 -0800
-Message-ID: <CAEf4BzZgjJjGLzcrzMhTLU8ESSCSxdAHuDPd52aQU1zVKxqBzg@mail.gmail.com>
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-To:     =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKUOC8UceQ_cDQC8ckvUio0AZHhasi7Np-PQ09e-dQ3fechKoA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 1:59 PM Daniel D=C3=ADaz <daniel.diaz@linaro.org> w=
-rote:
->
-> Hello!
->
-> On Wed, 19 Feb 2020 at 14:06, Jesper Dangaard Brouer <brouer@redhat.com> =
-wrote:
+On Wed, Feb 19, 2020 at 09:54:31AM -0800, Salman Qazi wrote:
+> On Tue, Feb 18, 2020 at 6:55 PM Ming Lei <ming.lei@redhat.com> wrote:
 > >
-> > On Wed, 19 Feb 2020 10:38:45 -0800
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > > On Wed, Feb 19, 2020 at 10:29 AM Jesper Dangaard Brouer
-> > > <brouer@redhat.com> wrote:
+> > On Tue, Feb 18, 2020 at 08:11:53AM -0800, Jesse Barnes wrote:
+> > > On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
+> > > > What are the 'other operations'? Are they block IOs?
 > > > >
-> > > > On Wed, 19 Feb 2020 09:38:50 -0800
-> > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > > If yes, that is why I suggest to fix submit_bio_wait(), which should cover
+> > > > most of sync bio submission.
 > > > >
-> > > > > On Wed, Feb 19, 2020 at 9:04 AM Jesper Dangaard Brouer
-> > > > > <brouer@redhat.com> wrote:
-> > > > > >
-> > > > > > On Wed, 19 Feb 2020 08:41:27 -0800
-> > > > > > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> > > > > >
-> > > > > > > On Wed, Feb 19, 2020 at 4:30 AM Jesper Dangaard Brouer
-> > > > > > > <brouer@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > I'm willing to help out, such that we can do either version=
- or feature
-> > > > > > > > detection, to either skip compiling specific test programs =
-or at least
-> > > > > > > > give users a proper warning of they are using a too "old" L=
-LVM version.
-> > > > > > > ...
-> > > > > > > > progs/test_core_reloc_bitfields_probed.c:47:13: error: use =
-of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-dec=
-laration]
-> > > > > > > >         out->ub1 =3D BPF_CORE_READ_BITFIELD_PROBED(in, ub1)=
-;
-> > > > > > >
-> > > > > > > imo this is proper warning message already.
-> > > > > >
-> > > > > > This is an error, not a warning.  The build breaks as the make =
-process stops.
-> > > > > >
-> > > > >
-> > > > > Latest Clang was a requirement for building and running all selft=
-ests
-> > > > > for a long time now. There were few previous discussions on maili=
-ng
-> > > > > list about this and each time the conclusion was the same: latest
-> > > > > Clang is a requirement for BPF selftests.
-> > > >
-> > > > The latest Clang is 9.0.1, and it doesn't build with that.
+> > > > Anyway, the fix is simple & generic enough, I'd plan to post a formal
+> > > > patch if no one figures out better doable approaches.
 > > >
-> > > Latest as in "latest built from sources".
+> > > Yeah I think any block I/O operation that occurs after the
+> > > BLKSECDISCARD is submitted will also potentially be affected by the
+> > > hung task timeouts, and I think your patch will address that.  My only
+> > > concern with it is that it might hide some other I/O "hangs" that are
+> > > due to device misbehavior instead.  Yes driver and device timeouts
+> > > should generally catch those, but with this in place we might miss a
+> > > few bugs.
+> > >
+> > > Given the nature of these types of storage devices though, I think
+> > > that's a minor issue and not worth blocking the patch on, given that
+> > > it should prevent a lot of false positive hang reports as Salman
+> > > demonstrated.
 > >
-> > When I download a specific kernel release, how can I know what LLVM
-> > git-hash or version I need (to use BPF-selftests)?
+> > Hello Jesse and Salman,
 > >
-> > Do you think it is reasonable to require end-users to compile their own
-> > bleeding edge version of LLVM, to use BPF-selftests?
-> >
-> > I do hope that some end-users of BPF-selftests will be CI-systems.
-> > That also implies that CI-system maintainers need to constantly do
-> > "latest built from sources" of LLVM git-tree to keep up.  Is that a
-> > reasonable requirement when buying a CI-system in the cloud?
->
-> We [1] are end users of kselftests and many other test suites [2]. We
-> run all of our testing on every git-push on linux-stable-rc, mainline,
-> and linux-next -- approximately 1 million tests per week. We have a
-> dedicated engineering team looking after this CI infrastructure and
-> test results, and as such, I can wholeheartedly echo Jesper's
-> sentiment here: We would really like to help kernel maintainers and
-> developers by automatically testing their code in real hardware, but
-> the BPF kselftests are difficult to work with from a CI perspective.
-> We have caught and reported [3] many [4] build [5] failures [6] in the
-> past for libbpf/Perf, but building is just one of the pieces. We are
-> unable to run the entire BPF kselftests because only a part of the
-> code builds, so our testing is very limited there.
->
-> We hope that this situation can be improved and that our and everyone
-> else's automated testing can help you guys too. For this to work out,
-> we need some help.
+> > One more question about this issue, do you enable BLK_WBT on your test
+> > kernel?
+> 
+> It doesn't exist on the original 4.4-based kernel where we reproduced
+> this bug.  I am curious how this interacts with this bug.
 
-Is it hard to make sure that your CIs install latest builds of Clang,
-though? See [0], Clang has even latest Clang 11 snapshots available
-(though BPF selftests need only Clang 10 right now). In fact, libbpf's
-Github repo just got a support for building latest kernel + building
-latest selftests + running selftests in QEMU, performed for each PR
-([1]), in Travis CI. Making selftests silently being not built/run if
-Clang is too old will just hide problems without anyone noticing.
+blk-wbt can throttle discard request and keep discard queue not too
+deep.
 
-  [0] http://apt.llvm.org/
-  [1] https://travis-ci.org/libbpf/libbpf/jobs/651838387?utm_medium=3Dnotif=
-ication&utm_source=3Dgithub_status
+However, given block erase is involved in BLKSECDISCARD, I guess blk-wbt
+may not avoid this task hung issue completely.
 
->
-> [1] https://lkft.linaro.org/
-> [2] https://www.youtube.com/watch?v=3DR3H9fPhPf54&t=3D1m26s
-> [3] https://lore.kernel.org/bpf/CA+G9fYtAQGwf=3DOoEvHwbJpitcfhpfhy-ar+6FR=
-rWC_-ti7sUTg@mail.gmail.com/
-> [4] https://lore.kernel.org/stable/CA+G9fYtxRoK6D1_oMf9zQj8MW0JtPdphDDO1N=
-HcYQcoFNL5pjw@mail.gmail.com/
-> [5] https://lore.kernel.org/bpf/CA+G9fYssgDcBkiNGSV7BmjE4Tj1j1_fa4VTJFv3N=
-=3D2FHzewQLg@mail.gmail.com/
-> [6] https://lore.kernel.org/bpf/CA+G9fYsK8zn3jqF=3DWz6=3D8BBx4i1JTkv2h-LC=
-bjE11UJkcz_NEA@mail.gmail.com/
+
+Thanks,
+Ming
+
