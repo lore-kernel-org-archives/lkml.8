@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E12C34022
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71731C3404D
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17756208C4
+	by mail.kernel.org (Postfix) with ESMTP id 4B72E2467D
 	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwTM2rKp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKJxhNv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbgBSG0n (ORCPT
+        id S1726505AbgBSG0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 19 Feb 2020 01:26:43 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45868 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbgBSG0m (ORCPT
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45689 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgBSG0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:26:42 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a2so21985321qko.12;
-        Tue, 18 Feb 2020 22:26:41 -0800 (PST)
+        Wed, 19 Feb 2020 01:26:43 -0500
+Received: by mail-qt1-f196.google.com with SMTP id d9so16404066qte.12;
+        Tue, 18 Feb 2020 22:26:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8HMg8C//Gc14csw0uJPav6rU/FNvPunllTjWyYZF7cs=;
-        b=BwTM2rKpbmRJBBxznI9VLrAlLa2aLq/X5Ul5iRpm6uXEVJ3eA4i62bLj5zXWVWhwk2
-         S+7TJiY60G6JkN7dfslcGmM6325/nE2H+J8zvs3JxpijXb4gWkMm8wOoCKkEDImoWn8d
-         Hi5g3PXKcmWZ2Rzbz7YVTtNp8vLjFbKMaORaE7wdzSVLSzGI61W5ySAZjEwfYzbHXGz+
-         W2FjMkJMrmOk+t6F39SYL0MW4tXlxf0v3esnp+4OMxws5zKG1AWcQh0EpYbgxvHUPJRC
-         qfJGhYPMdtCIUMFZkyjkxYOi76Cj+ywtv7Ufy+gyzcLBoBT9ZSHD03VbcbGbObrAbX/U
-         haug==
+        bh=xZ2H7GSAMnnXMQ7tQkUf2nC+EabJVUC+NrDmPk4E/8c=;
+        b=rKJxhNv5wGvJhsKnTBK4YtRp/YPepIxCZibTeVVJBsakRBUVYiE/RvvKM2SWoSiv6W
+         3rpgBtrigG316w1IRLPT9cKv6yhp5IhmOj4otpCaBUt0LxNryk+XP/LfFv3gRsa2iQQu
+         8xcNUrTjWB6N52Fycm5lSOVHLTU5fHz0FdrfTWdmHNk/N9aXIUHjLdl7nSJuVf//aAEX
+         xuLrkaLj1DxvafN6QEjRiiGNpBk2Q3PUsIgo1D9XMw/7H+hmT8hjjtKH3lorcbR51T0N
+         TR2CgkSPQ2M3qcp7owB2NVatDudLwvR2OCcezgNwdxjybPYORERA9/vlefem4e//seiL
+         lXkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8HMg8C//Gc14csw0uJPav6rU/FNvPunllTjWyYZF7cs=;
-        b=j1VvZoOL+4ni5G9o4dQz4xPVePCID1NN+lAQVvE5Sd8ipyW5X63EnG0KAG777A1TOF
-         6fxddua86IBYQpkWwlGyZhzOoTTwW+HAtw2Um1GAwiu8nkKlIxUxY8sg3Xb1QJ0ufgR6
-         o+PI4y0UF8nRRPOM8L+rhX+6cXDhRkQokHM0ZJTWi/9QKvl/SL2ARHv/cgnsB4vCLAzI
-         ApAqUXFAdmenBovJMO9mEAQXAB5zZh+aKUged0tfWurDWPx5LKHToKk+KvwBxiP+i2cb
-         McNRAMf8t392VRGfA4hYSpHG/2IzSgQHj11fHLkqcff/9w4EAIlVE5T+0TFChfu7yzAn
-         33cw==
-X-Gm-Message-State: APjAAAWAnljHnowEgF4d2RlaqCwX0v6OhILLJKu72xnQaa0HMThQuWjk
-        NIymcazJV4jVSNKZt5XK668=
-X-Google-Smtp-Source: APXvYqxif1JyhDWqZCyKF5l7TytfFOs+IG1mg2VnPW0A5QjnL+NDfKXjp22JVJUBD3EkrFlg/CpmvA==
-X-Received: by 2002:a05:620a:9d2:: with SMTP id y18mr20914420qky.98.1582093600631;
-        Tue, 18 Feb 2020 22:26:40 -0800 (PST)
+        bh=xZ2H7GSAMnnXMQ7tQkUf2nC+EabJVUC+NrDmPk4E/8c=;
+        b=PtrRbYgPJ8yITorQ1FOOwYCmv37SCAu86xL+WnBbWze/TGhauA1REXVdFiLpmlbHLM
+         7BqzU4dlpS3Acz6YRVrpY0oRIute9G+qHMC3F0B5/1izlKrXgMGvVIcneiME82G9F2lj
+         ZnzniEzVp/NwdBXYgyEF8QXfYNO4UHy4X1+gWm89Rxblpc05r9ztCXIzqlkF8lRlMbNV
+         /Sn3FnCqbggRnyEUnSasjyU2R6mrCorIEbwxauwdTzV06vE6hnAuKXSGjyHX5Lvzyt3c
+         PeeMAMEwz8siuAoaW7zFMYFIaCPfzLJ8PLjf9C7DU3p4wUOmTMtNaj41bXw2ve7KD2Sa
+         FKyg==
+X-Gm-Message-State: APjAAAUfOpL0Jbq85wT14kLIFtR0MndqSXDuK7B1RKmGHekowrqwUTj9
+        R0JSsVy8+uencokkfPow9M0=
+X-Google-Smtp-Source: APXvYqwfVzawCJrdissi9cmzdJabtwsuniKtGZBlaEuIVuZkbOCOlCZMIkYy6D2m6vTP8Os6GYqalA==
+X-Received: by 2002:aed:3344:: with SMTP id u62mr20250881qtd.73.1582093601653;
+        Tue, 18 Feb 2020 22:26:41 -0800 (PST)
 Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id y26sm478351qtc.94.2020.02.18.22.26.39
+        by smtp.gmail.com with ESMTPSA id y28sm547964qkj.44.2020.02.18.22.26.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Tue, 18 Feb 2020 22:26:39 -0800 (PST)
 Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7CFEA2206E;
+        by mailauth.nyi.internal (Postfix) with ESMTP id 7ECCA221BC;
         Wed, 19 Feb 2020 01:26:38 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
   by compute6.internal (MEProxy); Wed, 19 Feb 2020 01:26:38 -0500
-X-ME-Sender: <xms:HtVMXsKQZ7RtJVp6-LZqPQQ_TxmM5zPbI2OoBdLp3pddcFzGrNLKyg>
+X-ME-Sender: <xms:GtVMXrDm7Vx5VOCzDI3RoNAvRsI0Ueomuqg22faeDmcFjdspBpcnpA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeelgdelgecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
@@ -72,13 +72,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeelgdelgecutefuodetggdote
     ihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqd
     eiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhl
     rdgtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:HtVMXqqDX8mnsUWq_4MxORSs_0abbgoIZK6dexLEFaj0yNdV_OEpKw>
-    <xmx:HtVMXi4En_YNQcX6xibtsYmbypY00n9FdnPj62gzw6eyphc8bTkgmA>
-    <xmx:HtVMXuLHIpua12sk5q6kYmQWUgTGQ-SdovYsITP2iH_ufmFNrhZcjQ>
-    <xmx:HtVMXuMWtjPMr95Qncg_6zo6T1g7ZVdm6s5Ks_8S9rui9zTI-pDEJdsUeq4>
+X-ME-Proxy: <xmx:GtVMXnjQz3FM3-6rYtmdj67kEqpGWJZtJkZ2Pqcq5JqglgPnIp7mew>
+    <xmx:GtVMXhb8J_2C6ibBDNg6nOembC_ZG3KxJvpPwf6_WRlJtOWlhNJk9Q>
+    <xmx:GtVMXgkqPPH6ewkKC3jxHBilQX1c6kqvWKpZ2oh8ForIKxp7wGRoHQ>
+    <xmx:HtVMXvtq_GinbBygnVbgOqKTr6sfozOKADlbPAmSGVFMBt16_BJcxyVN1Qg>
 Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C75E63280064;
-        Wed, 19 Feb 2020 01:26:37 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 940D8328005A;
+        Wed, 19 Feb 2020 01:26:33 -0500 (EST)
 From:   Boqun Feng <boqun.feng@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Alan Stern <stern@rowland.harvard.edu>,
@@ -100,9 +100,9 @@ Cc:     Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [RFC v2 3/4] Documentation/locking/atomic: Add a litmus test for atomic_set()
-Date:   Wed, 19 Feb 2020 14:26:26 +0800
-Message-Id: <20200219062627.104736-4-boqun.feng@gmail.com>
+Subject: [RFC v2 1/4] Documentation/locking/atomic: Fix atomic-set litmus test
+Date:   Wed, 19 Feb 2020 14:26:24 +0800
+Message-Id: <20200219062627.104736-2-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219062627.104736-1-boqun.feng@gmail.com>
 References: <20200219062627.104736-1-boqun.feng@gmail.com>
@@ -113,85 +113,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already use a litmus test in atomic_t.txt to describe the behavior of
-an atomic_set() with the an atomic RMW, so add it into atomic-tests
-directory to make it easily accessible for anyone who cares about the
-semantics of our atomic APIs.
+Currently the litmus test "atomic-set" in atomic_t.txt has a few things
+to be improved:
 
-Additionally, change the sentences describing the test in atomic_t.txt
-with better wording.
+1)	The CPU/Processor numbers "P1,P2" are not only inconsistent with
+	the rest of the document, which uses "CPU0" and "CPU1", but also
+	unacceptable by the herd tool, which requires processors start
+	at "P0".
+
+2)	The initialization block uses a "atomic_set()", which is OK, but
+	it's better to use ATOMIC_INIT() to make clear this is an
+	initialization.
+
+3)	The return value of atomic_add_unless() is discarded
+	inexplicitly, which is OK for C language, but it will be helpful
+	to the herd tool if we use a void cast to make the discard
+	explicit.
+
+Therefore fix these and this is the preparation for adding the litmus
+test into memory-model litmus-tests directory so that people can
+understand better about our requirements of atomic APIs and klitmus tool
+can be used to generate tests.
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- ...c-RMW-ops-are-atomic-WRT-atomic_set.litmus | 24 +++++++++++++++++++
- Documentation/atomic-tests/README             |  7 ++++++
- Documentation/atomic_t.txt                    |  6 ++---
- 3 files changed, 34 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
+ Documentation/atomic_t.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-new file mode 100644
-index 000000000000..5dd7f04e504a
---- /dev/null
-+++ b/Documentation/atomic-tests/Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-@@ -0,0 +1,24 @@
-+C Atomic-set-observable-to-RMW
-+
-+(*
-+ * Result: Never
-+ *
-+ * Test that atomic_set() cannot break the atomicity of atomic RMWs.
-+ *)
-+
-+{
-+	atomic_t v = ATOMIC_INIT(1);
-+}
-+
-+P0(atomic_t *v)
-+{
-+	(void)atomic_add_unless(v,1,0);
-+}
-+
-+P1(atomic_t *v)
-+{
-+	atomic_set(v, 0);
-+}
-+
-+exists
-+(v=2)
-diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
-index ae61201a4271..a1b72410b539 100644
---- a/Documentation/atomic-tests/README
-+++ b/Documentation/atomic-tests/README
-@@ -2,3 +2,10 @@ This directory contains litmus tests that are typical to describe the semantics
- of our atomic APIs. For more information about how to "run" a litmus test or
- how to generate a kernel test module based on a litmus test, please see
- tools/memory-model/README.
-+
-+============
-+LITMUS TESTS
-+============
-+
-+Atomic-RMW-ops-are-atomic-WRT-atomic_set.litmus
-+	Test that atomic_set() cannot break the atomicity of atomic RMWs.
 diff --git a/Documentation/atomic_t.txt b/Documentation/atomic_t.txt
-index ceb85ada378e..d30cb3d87375 100644
+index 0ab747e0d5ac..ceb85ada378e 100644
 --- a/Documentation/atomic_t.txt
 +++ b/Documentation/atomic_t.txt
-@@ -85,10 +85,10 @@ smp_store_release() respectively. Therefore, if you find yourself only using
- the Non-RMW operations of atomic_t, you do not in fact need atomic_t at all
- and are doing it wrong.
- 
--A subtle detail of atomic_set{}() is that it should be observable to the RMW
--ops. That is:
-+A note for the implementation of atomic_set{}() is that it cannot break the
-+atomicity of the RMW ops. That is:
- 
--  C atomic-set
-+  C Atomic-RMW-ops-are-atomic-WRT-atomic_set
+@@ -91,15 +91,15 @@ ops. That is:
+   C atomic-set
  
    {
-     atomic_t v = ATOMIC_INIT(1);
+-    atomic_set(v, 1);
++    atomic_t v = ATOMIC_INIT(1);
+   }
+ 
+-  P1(atomic_t *v)
++  P0(atomic_t *v)
+   {
+-    atomic_add_unless(v, 1, 0);
++    (void)atomic_add_unless(v, 1, 0);
+   }
+ 
+-  P2(atomic_t *v)
++  P1(atomic_t *v)
+   {
+     atomic_set(v, 0);
+   }
 -- 
 2.25.0
 
