@@ -2,116 +2,285 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB00C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62615C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0348E2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C96A2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JNvMBzc+"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="K3Dkg28k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgBSKyH (ORCPT
+        id S1727277AbgBSKyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:54:07 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34955 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBSKyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:54:05 -0500
-Received: by mail-qk1-f193.google.com with SMTP id v2so22587219qkj.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 02:54:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=BC5JBxhf1L5HFeMhJ5aFhi6TWfttWOnbJEt9bKPTIJY=;
-        b=JNvMBzc+vlyBrHXzEGZKInLBhZLIMe9ePS7Kl50HX5bTTg61NpbrkQ38au/HO6YalS
-         4GUQv7RD4JbU/BGvQHaTm7AgZqFjoUkAcXKWgcOgbFmw3A72UKk+v5FURaJ+teqQvRxh
-         qHCfnNj2MhUZE18oWRHKBWNQ5CC9Qtk5nsyzcVJ7Q7ohvx1lx2u58kpoq6SlE39hIfYf
-         IlFMvgyDLu+oRLuwKdWFSsx0EkdAfwH8cuA00gdMVwmfg/5WricxnpOSX4kA2g3qzQxc
-         KgS8KijqLWcfSw4kiBo5g9xt8p9m4mpzoFhA5uoqUb27Lec530Q83Vpepwws8qn984+h
-         c4Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=BC5JBxhf1L5HFeMhJ5aFhi6TWfttWOnbJEt9bKPTIJY=;
-        b=IGwqXCAKCx2981n6+C8sniL5YwFFgdRKCTR7fDpQw6XwuzEHTMHpD932npjmB9+ENg
-         ee1bsac7T7LW8R5RnrCEbrXQ8gvI1UKofdorbqeV+nwoEpkfj+csXK2GwJ1phvPQdtFO
-         nBWxwS3K4/Zpa3bmDgyGgKBN1uRpCBjjFp5up6Jhdh9IiZaJwKDh+60W9xHUfmCaclv+
-         yZOBIfIkzPzms+MyBceuOUCwJIoQfvb9UVogdiEs4w+S41NHy2HHIZfUN6Vz9HH6wwe3
-         kuZSuygICAsseil4dyUlZOKqk1kt/gHOwVpszgCNGh60hjrcf1xqEx/579/1RfEeQmxM
-         bEVg==
-X-Gm-Message-State: APjAAAWaI0GnAvWw2vYfAJO8F9Bz1vZ8ME5R/jQ3imrQxRY4NqUAAyIJ
-        Z5iQWicBj2/6ZNJ3nj2ujSN4flgGt4JWrXAT0pKKyw==
-X-Google-Smtp-Source: APXvYqyOSZag9U2LFBEH5aKt58+Qbd/MrwtebHG/3tGR08Au59dSCg0QbOk1ucU5UNH8HPg4WDJbs09WBgrz9UtxPmI=
-X-Received: by 2002:a37:a488:: with SMTP id n130mr22380303qke.120.1582109644632;
- Wed, 19 Feb 2020 02:54:04 -0800 (PST)
+        Wed, 19 Feb 2020 05:54:17 -0500
+Received: from first.geanix.com ([116.203.34.67]:57148 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgBSKyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:54:16 -0500
+Received: from localhost (_gateway [172.20.0.1])
+        by first.geanix.com (Postfix) with ESMTPSA id 65E85C002E;
+        Wed, 19 Feb 2020 10:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582109652; bh=TlbQhp5X52jj3COJaFmu5KmYtaToyoYnQXvQ3ZgcdV8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=K3Dkg28k2oQj3Rj2fdOjqTWpKmozeg9DJgZz6X/jZgRIaQ4uLLMK5XQHFCf1u/9LX
+         jSFnjX9bdGZIl3Q5f5cFNzjw/pmzLvYGqraVsSdI8X1/XhcvNzXTnX4+hE0og9i/nJ
+         HQQ1NxiE7rcpntle599RNOaxrZzrWy0TIFPn5lFDucDSei6Z3UVrPw3lKiiYjp9DkR
+         IeUMNulBYIbSjlPc99pGYg8bY29ZmEwjG+vsnBzT+9Ho0V0Ml559G9fCrF+gHTRIuW
+         Q2cEhcwM0Ne52LlVH0K4Z/M1GaqUWDpvL6LKbHwYplPsFhQVTZOzdy8bfWLUnWi7fi
+         YDa3p5RGUX+SA==
+From:   Esben Haabendal <esben@geanix.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
+Subject: [PATCH net 3/4] net: ll_temac: Fix RX buffer descriptor handling on GFP_ATOMIC pressure
+Date:   Wed, 19 Feb 2020 11:54:11 +0100
+Message-Id: <a244978e682271bdbdeca315e1a733134155ec00.1582108989.git.esben@geanix.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <cover.1582108989.git.esben@geanix.com>
+References: <cover.1582108989.git.esben@geanix.com>
 MIME-Version: 1.0
-References: <20200219092218.18143-1-brgl@bgdev.pl> <20200219092218.18143-2-brgl@bgdev.pl>
- <e1882a57-5a54-b94e-aa0d-3515c671bc3f@linaro.org>
-In-Reply-To: <e1882a57-5a54-b94e-aa0d-3515c671bc3f@linaro.org>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 19 Feb 2020 11:53:53 +0100
-Message-ID: <CAMpxmJVPAhw3j==etjwCYVj_YVH7=hfr0Lr2AnTmdYuJLeQpow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] nvmem: fix memory leak in error path
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 19 lut 2020 o 11:52 Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
->
->
->
-> On 19/02/2020 09:22, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski<bgolaszewski@baylibre.com>
-> >
-> > We need to free the ida mapping and nvmem struct if the write-protect
-> > GPIO lookup fails.
-> >
-> > Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
-> > Signed-off-by: Bartosz Golaszewski<bgolaszewski@baylibre.com>
-> > ---
-> >   drivers/nvmem/core.c | 7 +++++--
-> >   1 file changed, 5 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> > index ef326f243f36..89974e40d250 100644
-> > --- a/drivers/nvmem/core.c
-> > +++ b/drivers/nvmem/core.c
-> > @@ -352,8 +352,11 @@ struct nvmem_device *nvmem_register(const struct n=
-vmem_config *config)
-> >       else
-> >               nvmem->wp_gpio =3D gpiod_get_optional(config->dev, "wp",
-> >                                                   GPIOD_OUT_HIGH);
-> > -     if (IS_ERR(nvmem->wp_gpio))
-> > -             return ERR_CAST(nvmem->wp_gpio);
-> > +     if (IS_ERR(nvmem->wp_gpio)) {
-> > +             ida_simple_remove(&nvmem_ida, nvmem->id);
-> > +             kfree(nvmem);
-> > +             return ERR_PTR(rval);
->
-> Why are you returning rval here?
-> This points return value of ida_simple_get and not the actual error code
-> from wp_gpio.
->
+Failures caused by GFP_ATOMIC memory pressure have been observed, and
+due to the missing error handling, results in kernel crash such as
 
-Duh! Thanks for catching this.
+[1876998.350133] kernel BUG at mm/slub.c:3952!
+[1876998.350141] invalid opcode: 0000 [#1] PREEMPT SMP PTI
+[1876998.350147] CPU: 2 PID: 0 Comm: swapper/2 Not tainted 5.3.0-scnxt #1
+[1876998.350150] Hardware name: N/A N/A/COMe-bIP2, BIOS CCR2R920 03/01/2017
+[1876998.350160] RIP: 0010:kfree+0x1ca/0x220
+[1876998.350164] Code: 85 db 74 49 48 8b 95 68 01 00 00 48 31 c2 48 89 10 e9 d7 fe ff ff 49 8b 04 24 a9 00 00 01 00 75 0b 49 8b 44 24 08 a8 01 75 02 <0f> 0b 49 8b 04 24 31 f6 a9 00 00 01 00 74 06 41 0f b6 74 24
+ 5b
+[1876998.350172] RSP: 0018:ffffc900000f0df0 EFLAGS: 00010246
+[1876998.350177] RAX: ffffea00027f0708 RBX: ffff888008d78000 RCX: 0000000000391372
+[1876998.350181] RDX: 0000000000000000 RSI: ffffe8ffffd01400 RDI: ffff888008d78000
+[1876998.350185] RBP: ffff8881185a5d00 R08: ffffc90000087dd8 R09: 000000000000280a
+[1876998.350189] R10: 0000000000000002 R11: 0000000000000000 R12: ffffea0000235e00
+[1876998.350193] R13: ffff8881185438a0 R14: 0000000000000000 R15: ffff888118543870
+[1876998.350198] FS:  0000000000000000(0000) GS:ffff88811f300000(0000) knlGS:0000000000000000
+[1876998.350203] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+s#1 Part1
+[1876998.350206] CR2: 00007f8dac7b09f0 CR3: 000000011e20a006 CR4: 00000000001606e0
+[1876998.350210] Call Trace:
+[1876998.350215]  <IRQ>
+[1876998.350224]  ? __netif_receive_skb_core+0x70a/0x920
+[1876998.350229]  kfree_skb+0x32/0xb0
+[1876998.350234]  __netif_receive_skb_core+0x70a/0x920
+[1876998.350240]  __netif_receive_skb_one_core+0x36/0x80
+[1876998.350245]  process_backlog+0x8b/0x150
+[1876998.350250]  net_rx_action+0xf7/0x340
+[1876998.350255]  __do_softirq+0x10f/0x353
+[1876998.350262]  irq_exit+0xb2/0xc0
+[1876998.350265]  do_IRQ+0x77/0xd0
+[1876998.350271]  common_interrupt+0xf/0xf
+[1876998.350274]  </IRQ>
 
-Bart
+In order to handle such failures more graceful, this change splits the
+receive loop into one for consuming the received buffers, and one for
+allocating new buffers.
+
+When GFP_ATOMIC allocations fail, the receive will continue with the
+buffers that is still there, and with the expectation that the allocations
+will succeed in a later call to receive.
+
+Fixes: 92744989533c ("net: add Xilinx ll_temac device driver")
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ drivers/net/ethernet/xilinx/ll_temac.h      |   1 +
+ drivers/net/ethernet/xilinx/ll_temac_main.c | 112 ++++++++++++++------
+ 2 files changed, 82 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/net/ethernet/xilinx/ll_temac.h b/drivers/net/ethernet/xilinx/ll_temac.h
+index 276292bca334..99fe059e5c7f 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac.h
++++ b/drivers/net/ethernet/xilinx/ll_temac.h
+@@ -375,6 +375,7 @@ struct temac_local {
+ 	int tx_bd_next;
+ 	int tx_bd_tail;
+ 	int rx_bd_ci;
++	int rx_bd_tail;
+ 
+ 	/* DMA channel control setup */
+ 	u32 tx_chnl_ctrl;
+diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+index c368c3914bda..255207f2fd27 100644
+--- a/drivers/net/ethernet/xilinx/ll_temac_main.c
++++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+@@ -389,12 +389,13 @@ static int temac_dma_bd_init(struct net_device *ndev)
+ 	lp->tx_bd_next = 0;
+ 	lp->tx_bd_tail = 0;
+ 	lp->rx_bd_ci = 0;
++	lp->rx_bd_tail = RX_BD_NUM - 1;
+ 
+ 	/* Enable RX DMA transfers */
+ 	wmb();
+ 	lp->dma_out(lp, RX_CURDESC_PTR,  lp->rx_bd_p);
+ 	lp->dma_out(lp, RX_TAILDESC_PTR,
+-		       lp->rx_bd_p + (sizeof(*lp->rx_bd_v) * (RX_BD_NUM - 1)));
++		       lp->rx_bd_p + (sizeof(*lp->rx_bd_v) * lp->rx_bd_tail));
+ 
+ 	/* Prepare for TX DMA transfer */
+ 	lp->dma_out(lp, TX_CURDESC_PTR, lp->tx_bd_p);
+@@ -923,27 +924,41 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ static void ll_temac_recv(struct net_device *ndev)
+ {
+ 	struct temac_local *lp = netdev_priv(ndev);
+-	struct sk_buff *skb, *new_skb;
+-	unsigned int bdstat;
+-	struct cdmac_bd *cur_p;
+-	dma_addr_t tail_p, skb_dma_addr;
+-	int length;
+ 	unsigned long flags;
++	int rx_bd;
++	bool update_tail = false;
+ 
+ 	spin_lock_irqsave(&lp->rx_lock, flags);
+ 
+-	tail_p = lp->rx_bd_p + sizeof(*lp->rx_bd_v) * lp->rx_bd_ci;
+-	cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
+-
+-	bdstat = be32_to_cpu(cur_p->app0);
+-	while ((bdstat & STS_CTRL_APP0_CMPLT)) {
++	/* Process all received buffers, passing them on network
++	 * stack.  After this, the buffer descriptors will be in an
++	 * un-allocated stage, where no skb is allocated for it, and
++	 * they are therefore not available for TEMAC/DMA.
++	 */
++	do {
++		struct cdmac_bd *bd = &lp->rx_bd_v[lp->rx_bd_ci];
++		struct sk_buff *skb = lp->rx_skb[lp->rx_bd_ci];
++		unsigned int bdstat = be32_to_cpu(bd->app0);
++		int length;
++
++		/* While this should not normally happen, we can end
++		 * here when GFP_ATOMIC allocations fail, and we
++		 * therefore have un-allocated buffers.
++		 */
++		if (!skb)
++			break;
+ 
+-		skb = lp->rx_skb[lp->rx_bd_ci];
+-		length = be32_to_cpu(cur_p->app4) & 0x3FFF;
++		/* Loop over all completed buffer descriptors */
++		if (!(bdstat & STS_CTRL_APP0_CMPLT))
++			break;
+ 
+-		dma_unmap_single(ndev->dev.parent, be32_to_cpu(cur_p->phys),
++		dma_unmap_single(ndev->dev.parent, be32_to_cpu(bd->phys),
+ 				 XTE_MAX_JUMBO_FRAME_SIZE, DMA_FROM_DEVICE);
++		/* The buffer is not valid for DMA anymore */
++		bd->phys = 0;
++		bd->len = 0;
+ 
++		length = be32_to_cpu(bd->app4) & 0x3FFF;
+ 		skb_put(skb, length);
+ 		skb->protocol = eth_type_trans(skb, ndev);
+ 		skb_checksum_none_assert(skb);
+@@ -958,39 +973,74 @@ static void ll_temac_recv(struct net_device *ndev)
+ 			 * (back) for proper IP checksum byte order
+ 			 * (be16).
+ 			 */
+-			skb->csum = htons(be32_to_cpu(cur_p->app3) & 0xFFFF);
++			skb->csum = htons(be32_to_cpu(bd->app3) & 0xFFFF);
+ 			skb->ip_summed = CHECKSUM_COMPLETE;
+ 		}
+ 
+ 		if (!skb_defer_rx_timestamp(skb))
+ 			netif_rx(skb);
++		/* The skb buffer is now owned by network stack above */
++		lp->rx_skb[lp->rx_bd_ci] = NULL;
+ 
+ 		ndev->stats.rx_packets++;
+ 		ndev->stats.rx_bytes += length;
+ 
+-		new_skb = netdev_alloc_skb_ip_align(ndev,
+-						XTE_MAX_JUMBO_FRAME_SIZE);
+-		if (!new_skb) {
+-			spin_unlock_irqrestore(&lp->rx_lock, flags);
+-			return;
++		rx_bd = lp->rx_bd_ci;
++		if (++lp->rx_bd_ci >= RX_BD_NUM)
++			lp->rx_bd_ci = 0;
++	} while (rx_bd != lp->rx_bd_tail);
++
++	/* Allocate new buffers for those buffer descriptors that were
++	 * passed to network stack.  Note that GFP_ATOMIC allocations
++	 * can fail (e.g. when a larger burst of GFP_ATOMIC
++	 * allocations occurs), so while we try to allocate all
++	 * buffers in the same interrupt where they were processed, we
++	 * continue with what we could get in case of allocation
++	 * failure.  Allocation of remaining buffers will be retried
++	 * in following calls.
++	 */
++	while (1) {
++		struct sk_buff *skb;
++		struct cdmac_bd *bd;
++		dma_addr_t skb_dma_addr;
++
++		rx_bd = lp->rx_bd_tail + 1;
++		if (rx_bd >= RX_BD_NUM)
++			rx_bd = 0;
++		bd = &lp->rx_bd_v[rx_bd];
++
++		if (bd->phys)
++			break;	/* All skb's allocated */
++
++		skb = netdev_alloc_skb_ip_align(ndev, XTE_MAX_JUMBO_FRAME_SIZE);
++		if (!skb) {
++			dev_warn(&ndev->dev, "skb alloc failed\n");
++			break;
+ 		}
+ 
+-		cur_p->app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
+-		skb_dma_addr = dma_map_single(ndev->dev.parent, new_skb->data,
++		skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+ 					      XTE_MAX_JUMBO_FRAME_SIZE,
+ 					      DMA_FROM_DEVICE);
+-		cur_p->phys = cpu_to_be32(skb_dma_addr);
+-		cur_p->len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
+-		lp->rx_skb[lp->rx_bd_ci] = new_skb;
++		if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent,
++						   skb_dma_addr))) {
++			dev_kfree_skb_any(skb);
++			break;
++		}
+ 
+-		lp->rx_bd_ci++;
+-		if (lp->rx_bd_ci >= RX_BD_NUM)
+-			lp->rx_bd_ci = 0;
++		bd->phys = cpu_to_be32(skb_dma_addr);
++		bd->len = cpu_to_be32(XTE_MAX_JUMBO_FRAME_SIZE);
++		bd->app0 = cpu_to_be32(STS_CTRL_APP0_IRQONEND);
++		lp->rx_skb[rx_bd] = skb;
++
++		lp->rx_bd_tail = rx_bd;
++		update_tail = true;
++	}
+ 
+-		cur_p = &lp->rx_bd_v[lp->rx_bd_ci];
+-		bdstat = be32_to_cpu(cur_p->app0);
++	/* Move tail pointer when buffers have been allocated */
++	if (update_tail) {
++		lp->dma_out(lp, RX_TAILDESC_PTR,
++			lp->rx_bd_p + sizeof(*lp->rx_bd_v) * lp->rx_bd_tail);
+ 	}
+-	lp->dma_out(lp, RX_TAILDESC_PTR, tail_p);
+ 
+ 	spin_unlock_irqrestore(&lp->rx_lock, flags);
+ }
+-- 
+2.25.0
+
