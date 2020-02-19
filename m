@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5131CC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52665C34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2810B24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203CA24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:14:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AB3UkHBv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uzDOXK0R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBSPO3 (ORCPT
+        id S1727683AbgBSPO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:14:29 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36008 "EHLO
+        Wed, 19 Feb 2020 10:14:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35970 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbgBSPO1 (ORCPT
+        with ESMTP id S1726682AbgBSPOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:14:27 -0500
+        Wed, 19 Feb 2020 10:14:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=eg1eQJ//SprCAwF+hza1bycJo6HO/QF3v0sPZ8+K7tU=; b=AB3UkHBv4jxJTjf4ebuLCqaJJu
-        Gwq824YHf2XWIWgNDSWUeHfWS/ws+dyvj196JS8sitvvfuPYgjLkOEWU77HOhPnOfcn9IIBeQJs/m
-        Bef8GUrIJY9xClyu46Qyyc5gWD6zGSoKKb7nlO2S9qXW3WsSzj9qbgNXsNj2fVJK2z+WX7dNvhJml
-        jgqz5VR+6gDG6aXxyoilDI4RPVeSDP6vPkFeGNVxYJ0uDsTps/V/+H3RSKGo/yXWMdG2gm0HjNcyg
-        nfe8KvZvhf9HjbgV7tpScL1V/MgJ+GSWcHdY4DlNLc6GmaY6gq5rtFVrhTAqxYM5WQWnnNtZa0ARp
-        7UpKEEIA==;
+        bh=QFHgOH6S3AfalQFNA2OtdJ+0cM9mrfqdqHGJCieOJmI=; b=uzDOXK0R63Q0+XXmw/54vt/IE8
+        Ss6kiCjtFferUkZf032zsLjRmS7+4axQJ+89AkghX/sS2ktxifaZUgtuCMrRRD+jhythP+ux/piwI
+        ZO3sBpEVtnEBPjlEGZ4XwploNriFjG1huOkAkYP280QEvRipjYFu10FbRP+kUNXaSPPhc0gjDYsYm
+        4bT9qaNP1nJ/iFU5sn+0cOGvdB8VvqS1UqPQnYgJcDWMITOfKg56QcADfgG3eeNOFqSYY5PnS97az
+        pLxdkF19KchlTOhvWVDktOMsoXoPDJI7hphWABFOOz8N5nhWPLVXGybxPzRDtPRNkNHJEn3Ep585+
+        6ORFarxQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4R39-000112-99; Wed, 19 Feb 2020 15:14:07 +0000
+        id 1j4R3A-000119-2K; Wed, 19 Feb 2020 15:14:08 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DB35030743A;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 29A383062BA;
         Wed, 19 Feb 2020 16:12:11 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 7785429E09C0A; Wed, 19 Feb 2020 16:14:03 +0100 (CET)
-Message-Id: <20200219150744.661923520@infradead.org>
+        id 6A15B20D96A35; Wed, 19 Feb 2020 16:14:03 +0100 (CET)
+Message-Id: <20200219150744.428764577@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 19 Feb 2020 15:47:29 +0100
+Date:   Wed, 19 Feb 2020 15:47:25 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -53,8 +53,11 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v3 05/22] rcu: Make RCU IRQ enter/exit functions rely on in_nmi()
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH v3 01/22] hardirq/nmi: Allow nested nmi_enter()
 References: <20200219144724.800607165@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,148 +66,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+Since there are already a number of sites (ARM64, PowerPC) that
+effectively nest nmi_enter(), lets make the primitive support this
+before adding even more.
 
-The rcu_nmi_enter_common() and rcu_nmi_exit_common() functions take an
-"irq" parameter that indicates whether these functions are invoked from
-an irq handler (irq==true) or an NMI handler (irq==false).  However,
-recent changes have applied notrace to a few critical functions such
-that rcu_nmi_enter_common() and rcu_nmi_exit_common() many now rely
-on in_nmi().  Note that in_nmi() works no differently than before,
-but rather that tracing is now prohibited in code regions where in_nmi()
-would incorrectly report NMI state.
-
-This commit therefore removes the "irq" parameter and inlines
-rcu_nmi_enter_common() and rcu_nmi_exit_common() into rcu_nmi_enter()
-and rcu_nmi_exit(), respectively.
-
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/rcu/tree.c |   45 ++++++++++++++-------------------------------
- 1 file changed, 14 insertions(+), 31 deletions(-)
+ arch/arm64/include/asm/hardirq.h |    4 ++--
+ arch/arm64/kernel/sdei.c         |   14 ++------------
+ arch/arm64/kernel/traps.c        |    8 ++------
+ arch/powerpc/kernel/traps.c      |   19 +++++--------------
+ include/linux/hardirq.h          |    2 +-
+ include/linux/preempt.h          |    4 ++--
+ kernel/printk/printk_safe.c      |    6 ++++--
+ 7 files changed, 18 insertions(+), 39 deletions(-)
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -614,16 +614,18 @@ void rcu_user_enter(void)
- }
- #endif /* CONFIG_NO_HZ_FULL */
+--- a/arch/arm64/include/asm/hardirq.h
++++ b/arch/arm64/include/asm/hardirq.h
+@@ -38,7 +38,7 @@ DECLARE_PER_CPU(struct nmi_ctx, nmi_cont
  
--/*
-+/**
-+ * rcu_nmi_exit - inform RCU of exit from NMI context
-+ *
-  * If we are returning from the outermost NMI handler that interrupted an
-  * RCU-idle period, update rdp->dynticks and rdp->dynticks_nmi_nesting
-  * to let the RCU grace-period handling know that the CPU is back to
-  * being RCU-idle.
-  *
-- * If you add or remove a call to rcu_nmi_exit_common(), be sure to test
-+ * If you add or remove a call to rcu_nmi_exit(), be sure to test
-  * with CONFIG_RCU_EQS_DEBUG=y.
-  */
--static __always_inline void rcu_nmi_exit_common(bool irq)
-+void rcu_nmi_exit(void)
+ #define arch_nmi_enter()							\
+ 	do {									\
+-		if (is_kernel_in_hyp_mode()) {					\
++		if (is_kernel_in_hyp_mode() && !in_nmi()) {			\
+ 			struct nmi_ctx *nmi_ctx = this_cpu_ptr(&nmi_contexts);	\
+ 			nmi_ctx->hcr = read_sysreg(hcr_el2);			\
+ 			if (!(nmi_ctx->hcr & HCR_TGE)) {			\
+@@ -50,7 +50,7 @@ DECLARE_PER_CPU(struct nmi_ctx, nmi_cont
+ 
+ #define arch_nmi_exit()								\
+ 	do {									\
+-		if (is_kernel_in_hyp_mode()) {					\
++		if (is_kernel_in_hyp_mode() && !in_nmi()) {			\
+ 			struct nmi_ctx *nmi_ctx = this_cpu_ptr(&nmi_contexts);	\
+ 			if (!(nmi_ctx->hcr & HCR_TGE))				\
+ 				write_sysreg(nmi_ctx->hcr, hcr_el2);		\
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -251,22 +251,12 @@ asmlinkage __kprobes notrace unsigned lo
+ __sdei_handler(struct pt_regs *regs, struct sdei_registered_event *arg)
  {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+ 	unsigned long ret;
+-	bool do_nmi_exit = false;
  
-@@ -651,27 +653,16 @@ static __always_inline void rcu_nmi_exit
- 	trace_rcu_dyntick(TPS("Startirq"), rdp->dynticks_nmi_nesting, 0, atomic_read(&rdp->dynticks));
- 	WRITE_ONCE(rdp->dynticks_nmi_nesting, 0); /* Avoid store tearing. */
+-	/*
+-	 * nmi_enter() deals with printk() re-entrance and use of RCU when
+-	 * RCU believed this CPU was idle. Because critical events can
+-	 * interrupt normal events, we may already be in_nmi().
+-	 */
+-	if (!in_nmi()) {
+-		nmi_enter();
+-		do_nmi_exit = true;
+-	}
++	nmi_enter();
  
--	if (irq)
-+	if (!in_nmi())
- 		rcu_prepare_for_idle();
+ 	ret = _sdei_handler(regs, arg);
  
- 	rcu_dynticks_eqs_enter();
+-	if (do_nmi_exit)
+-		nmi_exit();
++	nmi_exit();
  
--	if (irq)
-+	if (!in_nmi())
- 		rcu_dynticks_task_enter();
+ 	return ret;
  }
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -906,17 +906,13 @@ bool arm64_is_fatal_ras_serror(struct pt
  
- /**
-- * rcu_nmi_exit - inform RCU of exit from NMI context
-- *
-- * If you add or remove a call to rcu_nmi_exit(), be sure to test
-- * with CONFIG_RCU_EQS_DEBUG=y.
-- */
--void rcu_nmi_exit(void)
--{
--	rcu_nmi_exit_common(false);
--}
+ asmlinkage void do_serror(struct pt_regs *regs, unsigned int esr)
+ {
+-	const bool was_in_nmi = in_nmi();
 -
--/**
-  * rcu_irq_exit - inform RCU that current CPU is exiting irq towards idle
-  *
-  * Exit from an interrupt handler, which might possibly result in entering
-@@ -693,7 +684,7 @@ void rcu_nmi_exit(void)
- void rcu_irq_exit(void)
- {
- 	lockdep_assert_irqs_disabled();
--	rcu_nmi_exit_common(true);
-+	rcu_nmi_exit();
+-	if (!was_in_nmi)
+-		nmi_enter();
++	nmi_enter();
+ 
+ 	/* non-RAS errors are not containable */
+ 	if (!arm64_is_ras_serror(esr) || arm64_is_fatal_ras_serror(regs, esr))
+ 		arm64_serror_panic(regs, esr);
+ 
+-	if (!was_in_nmi)
+-		nmi_exit();
++	nmi_exit();
  }
  
- /*
-@@ -777,7 +768,7 @@ void rcu_user_exit(void)
- #endif /* CONFIG_NO_HZ_FULL */
+ asmlinkage void enter_from_user_mode(void)
+--- a/arch/powerpc/kernel/traps.c
++++ b/arch/powerpc/kernel/traps.c
+@@ -441,15 +441,9 @@ void hv_nmi_check_nonrecoverable(struct
+ void system_reset_exception(struct pt_regs *regs)
+ {
+ 	unsigned long hsrr0, hsrr1;
+-	bool nested = in_nmi();
+ 	bool saved_hsrrs = false;
  
- /**
-- * rcu_nmi_enter_common - inform RCU of entry to NMI context
-+ * rcu_nmi_enter - inform RCU of entry to NMI context
-  * @irq: Is this call from rcu_irq_enter?
-  *
-  * If the CPU was idle from RCU's viewpoint, update rdp->dynticks and
-@@ -786,10 +777,10 @@ void rcu_user_exit(void)
-  * long as the nesting level does not overflow an int.  (You will probably
-  * run out of stack space first.)
-  *
-- * If you add or remove a call to rcu_nmi_enter_common(), be sure to test
-+ * If you add or remove a call to rcu_nmi_enter(), be sure to test
-  * with CONFIG_RCU_EQS_DEBUG=y.
+-	/*
+-	 * Avoid crashes in case of nested NMI exceptions. Recoverability
+-	 * is determined by RI and in_nmi
+-	 */
+-	if (!nested)
+-		nmi_enter();
++	nmi_enter();
+ 
+ 	/*
+ 	 * System reset can interrupt code where HSRRs are live and MSR[RI]=1.
+@@ -521,8 +515,7 @@ void system_reset_exception(struct pt_re
+ 		mtspr(SPRN_HSRR1, hsrr1);
+ 	}
+ 
+-	if (!nested)
+-		nmi_exit();
++	nmi_exit();
+ 
+ 	/* What should we do here? We could issue a shutdown or hard reset. */
+ }
+@@ -823,9 +816,8 @@ int machine_check_generic(struct pt_regs
+ void machine_check_exception(struct pt_regs *regs)
+ {
+ 	int recover = 0;
+-	bool nested = in_nmi();
+-	if (!nested)
+-		nmi_enter();
++
++	nmi_enter();
+ 
+ 	__this_cpu_inc(irq_stat.mce_exceptions);
+ 
+@@ -863,8 +855,7 @@ void machine_check_exception(struct pt_r
+ 	return;
+ 
+ bail:
+-	if (!nested)
+-		nmi_exit();
++	nmi_exit();
+ }
+ 
+ void SMIException(struct pt_regs *regs)
+--- a/include/linux/hardirq.h
++++ b/include/linux/hardirq.h
+@@ -71,7 +71,7 @@ extern void irq_exit(void);
+ 		printk_nmi_enter();				\
+ 		lockdep_off();					\
+ 		ftrace_nmi_enter();				\
+-		BUG_ON(in_nmi());				\
++		BUG_ON(in_nmi() == NMI_MASK);			\
+ 		preempt_count_add(NMI_OFFSET + HARDIRQ_OFFSET);	\
+ 		rcu_nmi_enter();				\
+ 		trace_hardirq_enter();				\
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -26,13 +26,13 @@
+  *         PREEMPT_MASK:	0x000000ff
+  *         SOFTIRQ_MASK:	0x0000ff00
+  *         HARDIRQ_MASK:	0x000f0000
+- *             NMI_MASK:	0x00100000
++ *             NMI_MASK:	0x00f00000
+  * PREEMPT_NEED_RESCHED:	0x80000000
   */
--static __always_inline void rcu_nmi_enter_common(bool irq)
-+void rcu_nmi_enter(void)
+ #define PREEMPT_BITS	8
+ #define SOFTIRQ_BITS	8
+ #define HARDIRQ_BITS	4
+-#define NMI_BITS	1
++#define NMI_BITS	4
+ 
+ #define PREEMPT_SHIFT	0
+ #define SOFTIRQ_SHIFT	(PREEMPT_SHIFT + PREEMPT_BITS)
+--- a/kernel/printk/printk_safe.c
++++ b/kernel/printk/printk_safe.c
+@@ -296,12 +296,14 @@ static __printf(1, 0) int vprintk_nmi(co
+ 
+ void notrace printk_nmi_enter(void)
  {
- 	long incby = 2;
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
-@@ -807,12 +798,12 @@ static __always_inline void rcu_nmi_ente
- 	 */
- 	if (rcu_dynticks_curr_cpu_in_eqs()) {
- 
--		if (irq)
-+		if (!in_nmi())
- 			rcu_dynticks_task_exit();
- 
- 		rcu_dynticks_eqs_exit();
- 
--		if (irq)
-+		if (!in_nmi())
- 			rcu_cleanup_after_idle();
- 
- 		incby = 1;
-@@ -834,14 +825,6 @@ static __always_inline void rcu_nmi_ente
- 		   rdp->dynticks_nmi_nesting + incby);
- 	barrier();
+-	this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
++	if (!in_nmi())
++		this_cpu_or(printk_context, PRINTK_NMI_CONTEXT_MASK);
  }
--
--/**
-- * rcu_nmi_enter - inform RCU of entry to NMI context
-- */
--void rcu_nmi_enter(void)
--{
--	rcu_nmi_enter_common(false);
--}
- NOKPROBE_SYMBOL(rcu_nmi_enter);
  
- /**
-@@ -869,7 +852,7 @@ NOKPROBE_SYMBOL(rcu_nmi_enter);
- void rcu_irq_enter(void)
+ void notrace printk_nmi_exit(void)
  {
- 	lockdep_assert_irqs_disabled();
--	rcu_nmi_enter_common(true);
-+	rcu_nmi_enter();
+-	this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
++	if (!in_nmi())
++		this_cpu_and(printk_context, ~PRINTK_NMI_CONTEXT_MASK);
  }
  
  /*
