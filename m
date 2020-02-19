@@ -2,328 +2,156 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C54C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F9DC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1BD22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE3A22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="O1Sn1e4D"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wpMLy0VF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBSAGf (ORCPT
+        id S1727206AbgBSAHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:06:35 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:44392 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgBSAGW (ORCPT
+        Tue, 18 Feb 2020 19:07:45 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:21279 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726482AbgBSAHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:06:22 -0500
-Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DDC4A20B36F5;
-        Tue, 18 Feb 2020 16:06:21 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DDC4A20B36F5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1582070781;
-        bh=jkz7mNqyJRVyjKYUzJdpGoJMz8GLyizRCXfygvfb7ek=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1Sn1e4DRYYnPT+YtL/hkkT80hgWvcCr/Xx3WtB2RNimylQyMP5yu0CUQtIYAHS0k
-         uZH2N55mCUn49lzstrVx6p+nPkAnxRRJw8+4x2K91opJ+tKo93haa2VYdfj0EzBZMJ
-         XpoA+NkT+2Z5EM5qwyC6StbjRv7K+PREUQVa9mU4=
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-To:     zohar@linux.ibm.com, joe@perches.com, skhan@linuxfoundation.org,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/3] integrity: Remove duplicate pr_fmt definitions
-Date:   Tue, 18 Feb 2020 16:06:11 -0800
-Message-Id: <20200219000611.28141-4-tusharsu@linux.microsoft.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200219000611.28141-1-tusharsu@linux.microsoft.com>
-References: <20200219000611.28141-1-tusharsu@linux.microsoft.com>
+        Tue, 18 Feb 2020 19:07:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582070863; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=ix4I8HGZpni8gwUgc++/jUAdQuDMXvzl5RoCu8Kns8U=; b=wpMLy0VF4kXRrP5CKBxL3D3JUxbKquR+sipEvnOpu7/Dnh2s4ozSd2kaqGciVKtlaS3morQg
+ tkHuGOIOYTWUGV+FCewIlDllx/PoaVHtEAqt98WWcWm06gG5j2Ffl9hdOfYPeXOtpH5LIsAW
+ bNpgAdMU18lb03GxKTXAoK6wBaw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4c7c4e.7f6364d45688-smtp-out-n03;
+ Wed, 19 Feb 2020 00:07:42 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id F0DBCC447A4; Wed, 19 Feb 2020 00:07:41 +0000 (UTC)
+Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jackp)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 616A8C43383;
+        Wed, 19 Feb 2020 00:07:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 616A8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
+Date:   Tue, 18 Feb 2020 16:07:36 -0800
+From:   Jack Pham <jackp@codeaurora.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Pratham Pratap <prathampratap@codeaurora.org>,
+        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
+        Thinh Nguyen <thinhn@synopsys.com>,
+        Tejas Joglekar <tejas.joglekar@synopsys.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Todd Kjos <tkjos@google.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] usb: dwc3: gadget: Update chain bit correctly when using
+ sg list
+Message-ID: <20200219000736.GA5511@jackp-linux.qualcomm.com>
+References: <20200218235104.112323-1-john.stultz@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218235104.112323-1-john.stultz@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The #define for formatting log messages, pr_fmt, is duplicated in the
-files under security/integrity.
+Hi John,
 
-This change moves the definition to security/integrity/integrity.h and
-removes the duplicate definitions in the other files under
-security/integrity.
+Thanks for following-up with this! While you're doing minor tweaks
+anyway, I hope you don't mind me picking some nits below.
 
-With this change, the messages in the following files will be prefixed
-with 'integrity'.
+On Tue, Feb 18, 2020 at 11:51:04PM +0000, John Stultz wrote:
+> From: Pratham Pratap <prathampratap@codeaurora.org>
+> 
+> If scatter-gather operation is allowed, a large USB request is split
+> into multiple TRBs. For preparing TRBs for sg list, driver iterates
+> over the list and creates TRB for each sg and mark the chain bit to
+> false for the last sg. The current IOMMU driver is clubbing the list
+> of sgs which shares a page boundary into one and giving it to USB driver.
+> With this the number of sgs mapped it not equal to the the number of sgs
+> passed. Because of this USB driver is not marking the chain bit to false
+> since it couldn't iterate to the last sg. This patch addresses this issue
+> by marking the chain bit to false if it is the last mapped sg.
+> 
+> At a practical level, this patch resolves USB transfer stalls
+> seen with adb on dwc3 based db845c, pixel3 and other qcom
+> hardware after functionfs gadget added scatter-gather support
+> around v4.20.
+> 
+> Credit also to Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> who implemented a very similar fix to this issue.
+> 
+> Cc: Felipe Balbi <balbi@kernel.org>
+> Cc: Yang Fei <fei.yang@intel.com>
+> Cc: Thinh Nguyen <thinhn@synopsys.com>
+> Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
+> Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+> Cc: Jack Pham <jackp@codeaurora.org>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Linux USB List <linux-usb@vger.kernel.org>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Pratham Pratap <prathampratap@codeaurora.org>
+> [jstultz: Slight tweak to remove sg_is_last() usage, reworked
+>           commit message, minor comment tweak]
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/usb/dwc3/gadget.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+> index 1b8014ab0b25..10aa511051e8 100644
+> --- a/drivers/usb/dwc3/gadget.c
+> +++ b/drivers/usb/dwc3/gadget.c
+> @@ -1071,7 +1071,14 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+>  		unsigned int rem = length % maxp;
+>  		unsigned chain = true;
+>  
+> -		if (sg_is_last(s))
+> +		/*
+> +		 * IOMMU driver is coalescing the list of sgs which shares a
+> +		 * page boundary into one and giving it to USB driver. With
+> +		 * this the number of sgs mapped it not equal to the the number
+                                                 ^^ s/it/is/     ^^^ /d
 
-     security/integrity/platform_certs/platform_keyring.c
-     security/integrity/platform_certs/load_powerpc.c
-     security/integrity/platform_certs/load_uefi.c
-     security/integrity/iint.c
+Or could we more specifically say "number of sgs mapped could be less
+than number passed"?
 
-     e.g. "integrity: Error adding keys to platform keyring %s\n"
+> +		 * of sgs passed. Mark the chain bit to false if it is the last
+> +		 * mapped sg.
+> +		 */
+> +		if ((i == remaining - 1))
 
-And the messages in the following file will be prefixed with 'ima'.
+These outer parens are superfluous.
 
-     security/integrity/ima/ima_mok.c
+Also wondering if it would be more or less clear to just set the
+variable once (and awkwardly move the comment to appear above the
+local var declaration):
 
-     e.g. "ima: Allocating IMA blacklist keyring.\n"
+		unsigned chain = (i < remaining - 1);
 
-For the rest of the files under security/integrity, there will be no
-change in the message format. 
+>  			chain = false;
+>  
+>  		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
 
-Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
----
- security/integrity/digsig.c                  | 2 --
- security/integrity/digsig_asymmetric.c       | 2 --
- security/integrity/evm/evm_crypto.c          | 2 --
- security/integrity/evm/evm_main.c            | 2 --
- security/integrity/evm/evm_secfs.c           | 2 --
- security/integrity/ima/ima_asymmetric_keys.c | 2 --
- security/integrity/ima/ima_crypto.c          | 2 --
- security/integrity/ima/ima_fs.c              | 2 --
- security/integrity/ima/ima_init.c            | 2 --
- security/integrity/ima/ima_kexec.c           | 1 -
- security/integrity/ima/ima_main.c            | 2 --
- security/integrity/ima/ima_policy.c          | 2 --
- security/integrity/ima/ima_queue.c           | 2 --
- security/integrity/ima/ima_queue_keys.c      | 2 --
- security/integrity/ima/ima_template.c        | 2 --
- security/integrity/ima/ima_template_lib.c    | 2 --
- security/integrity/integrity.h               | 6 ++++++
- 17 files changed, 6 insertions(+), 31 deletions(-)
-
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index ea1aae3d07b3..e9cbadade74b 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -6,8 +6,6 @@
-  * Dmitry Kasatkin <dmitry.kasatkin@intel.com>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/err.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/digsig_asymmetric.c
-index 55aec161d0e1..4e0d6778277e 100644
---- a/security/integrity/digsig_asymmetric.c
-+++ b/security/integrity/digsig_asymmetric.c
-@@ -6,8 +6,6 @@
-  * Dmitry Kasatkin <dmitry.kasatkin@intel.com>
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/err.h>
- #include <linux/ratelimit.h>
- #include <linux/key-type.h>
-diff --git a/security/integrity/evm/evm_crypto.c b/security/integrity/evm/evm_crypto.c
-index d485f6fc908e..35682852ddea 100644
---- a/security/integrity/evm/evm_crypto.c
-+++ b/security/integrity/evm/evm_crypto.c
-@@ -10,8 +10,6 @@
-  *	 Using root's kernel master key (kmk), calculate the HMAC
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/export.h>
- #include <linux/crypto.h>
- #include <linux/xattr.h>
-diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index f9a81b187fae..d361d7fdafc4 100644
---- a/security/integrity/evm/evm_main.c
-+++ b/security/integrity/evm/evm_main.c
-@@ -11,8 +11,6 @@
-  *	evm_inode_removexattr, and evm_verifyxattr
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/crypto.h>
- #include <linux/audit.h>
-diff --git a/security/integrity/evm/evm_secfs.c b/security/integrity/evm/evm_secfs.c
-index c11c1f7b3ddd..39ad1038d45d 100644
---- a/security/integrity/evm/evm_secfs.c
-+++ b/security/integrity/evm/evm_secfs.c
-@@ -10,8 +10,6 @@
-  *	- Get the key and enable EVM
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/audit.h>
- #include <linux/uaccess.h>
- #include <linux/init.h>
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index 7678f0e3e84d..aaae80c4e376 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -9,8 +9,6 @@
-  *       create or update.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <keys/asymmetric-type.h>
- #include "ima.h"
- 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index 7967a6904851..423c84f95a14 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -10,8 +10,6 @@
-  *	Calculates md5/sha1 file hash, template hash, boot-aggreate hash
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/kernel.h>
- #include <linux/moduleparam.h>
- #include <linux/ratelimit.h>
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 2000e8df0301..a71e822a6e92 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -12,8 +12,6 @@
-  *	current measurement list and IMA statistics
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/fcntl.h>
- #include <linux/slab.h>
- #include <linux/init.h>
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 195cb4079b2b..567468188a61 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -11,8 +11,6 @@
-  *             initialization and cleanup functions
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-index 9e94eca48b89..121de3e04af2 100644
---- a/security/integrity/ima/ima_kexec.c
-+++ b/security/integrity/ima/ima_kexec.c
-@@ -6,7 +6,6 @@
-  * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>
-  * Mimi Zohar <zohar@linux.vnet.ibm.com>
-  */
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/seq_file.h>
- #include <linux/vmalloc.h>
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index aac1c44fb11b..9d0abedeae77 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -15,8 +15,6 @@
-  *	and ima_file_check.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/module.h>
- #include <linux/file.h>
- #include <linux/binfmts.h>
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 453427048999..c334e0dc6083 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -7,8 +7,6 @@
-  *	- initialize default measure policy rules
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/init.h>
- #include <linux/list.h>
- #include <linux/fs.h>
-diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
-index 1ce8b1701566..8753212ddb18 100644
---- a/security/integrity/ima/ima_queue.c
-+++ b/security/integrity/ima/ima_queue.c
-@@ -15,8 +15,6 @@
-  *       ever removed or changed during the boot-cycle.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/rculist.h>
- #include <linux/slab.h>
- #include "ima.h"
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index c87c72299191..cb3e3f501593 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -8,8 +8,6 @@
-  *       Enables deferred processing of keys
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/workqueue.h>
- #include <keys/asymmetric-type.h>
- #include "ima.h"
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index 6aa6408603e3..062d9ad49afb 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -9,8 +9,6 @@
-  *      Helpers to manage template descriptors.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include <linux/rculist.h>
- #include "ima.h"
- #include "ima_template_lib.h"
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 32ae05d88257..9cd1e50f3ccc 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -9,8 +9,6 @@
-  *      Library of supported template fields.
-  */
- 
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
- #include "ima_template_lib.h"
- 
- static bool ima_template_hash_algo_allowed(u8 algo)
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 73fc286834d7..298b73794d8b 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -6,6 +6,12 @@
-  * Mimi Zohar <zohar@us.ibm.com>
-  */
- 
-+#ifdef pr_fmt
-+#undef pr_fmt
-+#endif
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/types.h>
- #include <linux/integrity.h>
- #include <crypto/sha.h>
+Jack
 -- 
-2.17.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
