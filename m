@@ -2,172 +2,157 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452FFC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D4CC35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1608B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAEB2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWIfYWNk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JbyfA+6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbgBSTWl (ORCPT
+        id S1727135AbgBSTWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:22:41 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46182 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgBSTWl (ORCPT
+        Wed, 19 Feb 2020 14:22:52 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36701 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727020AbgBSTWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:22:41 -0500
-Received: by mail-il1-f195.google.com with SMTP id t17so21501112ilm.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:22:40 -0800 (PST)
+        Wed, 19 Feb 2020 14:22:52 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j20so1278301otq.3;
+        Wed, 19 Feb 2020 11:22:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ml1MOyX82nSja1VpXVmwy2WTtqE+i8Eb83IXuucGSCI=;
-        b=nWIfYWNkB9QhIwJaslwkx6i/R9ZPE365epjTHhQygQQSrEMa9PBLnvx4F5Dr0lXFKN
-         b05KlMVQ4LNnzDyIwhKFmnAyqZURfvO5KPlbqKQOl5UUc7CIDlgH+nFTvKYrzas33C6D
-         2cuSxe1UgWt5GPoYwo8K99kvg+7RWDIuw1tvoVhpF+RwoP40MJT7fTxO69770GdBCnL6
-         xeH7D2iIvai/DZhXnbhgH5gV/WSWG2t85EXmhgETbLhaQQ4xd/OSi7slI7BoOQT1Uakc
-         eELKJnmoWTz/WP2vJW16fwfi9LxexEWMuRrqssZ0dpsajF0+G/PaG1BdTmY/ukZR65uD
-         cQdw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nGyzNqwmfC+StEGiPL2xQ9nSi3AHwKN4sRF+U5rIpw4=;
+        b=JbyfA+6+JJDbDgo5q7DXJkywgq8p9fWfaHY9hcamDR9TIm1I8w5p0TslUp6LsE340e
+         Li294B0nCtY/sJUUB+3ldTqvUSUPubHJ3Itp3Yjg4K1QLM4bCa9yrMh8WDC7QkcYc55x
+         FVK+j9UdRhw5HtmGQNaLX8F/GtyjcEbFZApN0Ag3jG4VxXN9dIUwvrJOMbtplHukePML
+         zAG1lUuE1Orv/jQfCeiFsv3MwuWcPSH6WqCiE0Tj3bUAPABINb+DsIj0c0qHNlO97jy6
+         ITSfedy7wCZYK0t3u9u9ENvrs8lXiPtqcCPoQd+DnsxaKpmJnF79JyApAwSvV09bOgDT
+         OJag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ml1MOyX82nSja1VpXVmwy2WTtqE+i8Eb83IXuucGSCI=;
-        b=fe+RwdQc32j6Wgsag/Om8E/7EdrBOE8vNks7DvxPR2FAvRfNxJyfEeUGxG6u0fqwl5
-         qrVBJ3oo9Y3Dkb2EIWSHnPLOE/fmpce7FjyGO+JnrJhbFYN4SRw28h1pBafa09SCHsAX
-         4zj43v+UZPVfJq50x64nJ/aL5W7THxEREk1DSD2etCl/8OY32+71bMZDAFx6PnPI7HzO
-         Va3MkIuy7WrvP6nV8kQpkRBjbafyFhfFCdqj9lWIYm/7xm49ELi4Vyyixwt7aYV+yjWx
-         6XZU0tGovgKpLv2MseG0E4ZiBSwQ2LsbKMzBNZbvsfmfCs0C7sLFsK9NebgVnWeiEJWz
-         UIYA==
-X-Gm-Message-State: APjAAAWuSH3eirIwQVQspfE80rZcsdZ/NX9lUc1Tiyz/5QJY1n3XvxEg
-        fvrEeysprzAT/21sbmZBEkIsW8vrwCBm3tBevYg=
-X-Google-Smtp-Source: APXvYqxrDLQt40xRKej4K0PZCiMjI+y2gHlu4+VJmMz79iJuBIQJK6okXDNFJI7Gt+oOapOxnMEtlavBbN0FojuMcQ4=
-X-Received: by 2002:a92:d7c6:: with SMTP id g6mr24578181ilq.282.1582140160551;
- Wed, 19 Feb 2020 11:22:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200219171225.5547-1-idryomov@gmail.com> <CAHp75Vf24yNeLEweq_70AUzKwbdyurB6ze9739Qy9djA9dSefg@mail.gmail.com>
- <CAOi1vP9gfMoU14Ax+VLksQ+_3yOO3m3bh0Uh02SUMfPFDDEW9g@mail.gmail.com>
-In-Reply-To: <CAOi1vP9gfMoU14Ax+VLksQ+_3yOO3m3bh0Uh02SUMfPFDDEW9g@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 19 Feb 2020 20:23:06 +0100
-Message-ID: <CAOi1vP8NN=8e8kW6g7KegUt52auJoE53ZCdEQHv2DMqFe1=g0Q@mail.gmail.com>
-Subject: Re: [PATCH v2] vsprintf: don't obfuscate NULL and error pointers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nGyzNqwmfC+StEGiPL2xQ9nSi3AHwKN4sRF+U5rIpw4=;
+        b=S1dOFSE+tMBQV6XP9G469B4WZrJVUyU6zBRy0oa62oNhKJVd6XZKOszUBQUB5ueNDh
+         zGv+gaAydWuAjsm64PB05LUVrwv9RXBY8DlQE5KWj8Ps90kwYuvzCxIgVd7i6DBhwjL+
+         5w8IfYbO6EX2Add4PwD9aglp9t9XP01tyXueshF7SuaL0DhINc0orcBv8Mppw9lmJOtk
+         1UV5vmwK6T7NMHIFCvy5Y3lulUDlbbDZNdmfnUFAkbPqn/tTRWV1CDh8sgJEQY8Pbjeg
+         OStlvFetd3riEogsJGsuuiG56XpamT6Yr7rhOy10sZeWEOP9ceBzo/FxqjstQWPwhXyA
+         NvOw==
+X-Gm-Message-State: APjAAAUAQziFsnd1pZOzr2QzcmONoSJoV9KgyLK4/9foiFHUhzDz/ijd
+        T8XJbhcDDoXpwMIXQNPfqXY=
+X-Google-Smtp-Source: APXvYqxlEJNDcB79lMPiHrXtK79931NtdsnXY6+4CaCPWiQIDJF9SmeBFXKLjspoTxKQ8Ag/rEDtGw==
+X-Received: by 2002:a9d:6b84:: with SMTP id b4mr20963596otq.190.1582140170892;
+        Wed, 19 Feb 2020 11:22:50 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id t9sm211166otm.76.2020.02.19.11.22.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 11:22:50 -0800 (PST)
+Date:   Wed, 19 Feb 2020 12:22:49 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 3/6] tracing: Wrap section comparison in
+ tracer_alloc_buffers with COMPARE_SECTIONS
+Message-ID: <20200219192249.GA8840@ubuntu-m2-xlarge-x86>
+References: <20200219045423.54190-1-natechancellor@gmail.com>
+ <20200219045423.54190-4-natechancellor@gmail.com>
+ <20200219093445.386f1c09@gandalf.local.home>
+ <CAKwvOdm-N1iX0SMxGDV5Vf=qS5uHPdH3S-TRs-065BuSOdKt1w@mail.gmail.com>
+ <20200219181619.GV31668@ziepe.ca>
+ <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 7:07 PM Ilya Dryomov <idryomov@gmail.com> wrote:
->
-> On Wed, Feb 19, 2020 at 6:37 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Wed, Feb 19, 2020 at 11:11:19AM -0800, Nick Desaulniers wrote:
+> On Wed, Feb 19, 2020 at 10:16 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > >
-> > On Wed, Feb 19, 2020 at 7:13 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+> > On Wed, Feb 19, 2020 at 09:44:31AM -0800, Nick Desaulniers wrote:
+> > > Hey Nathan,
+> > > Thanks for the series; enabling the warning will help us find more
+> > > bugs.  Revisiting what the warning is about, I checked on this
+> > > "referring to symbols defined in linker scripts from C" pattern.  This
+> > > document [0] (by no means definitive, but I think it has a good idea)
+> > > says:
 > > >
-> > > I don't see what security concern is addressed by obfuscating NULL
-> > > and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-> > > of sites where %p is used (over 10000) and the fact that NULL pointers
-> > > aren't uncommon, it probably wouldn't take long for an attacker to
-> > > find the hash that corresponds to 0.  Although harder, the same goes
-> > > for most common error values, such as -1, -2, -11, -14, etc.
+> > > Linker symbols that represent a data address: In C code, declare the
+> > > variable as an extern variable. Then, refer to the value of the linker
+> > > symbol using the & operator. Because the variable is at a valid data
+> > > address, we know that a data pointer can represent the value.
+> > > Linker symbols for an arbitrary address: In C code, declare this as an
+> > > extern symbol. The type does not matter. If you are using GCC
+> > > extensions, declare it as "extern void".
 > > >
-> > > The NULL part actually fixes a regression: NULL pointers weren't
-> > > obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-> > > dereferencing invalid pointers") which went into 5.2.  I'm tacking
-> > > the IS_ERR() part on here because error pointers won't leak kernel
-> > > addresses and printing them as pointers shouldn't be any different
-> > > from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-> > > debugging based on existing pr_debug and friends excruciating.
+> > > Indeed, it seems that Clang is happier with that pattern:
+> > > https://godbolt.org/z/sW3t5W
 > > >
-> > > Note that the "always print 0's for %pK when kptr_restrict == 2"
-> > > behaviour which goes way back is left as is.
+> > > Looking at __stop___trace_bprintk_fmt in particular:
 > > >
-> > > Example output with the patch applied:
-> > >
-> > >                             ptr         error-ptr              NULL
-> > > %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > > %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > > %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-> > > %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-> > > %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
+> > > kernel/trace/trace.h
+> > > 1923:extern const char *__stop___trace_bprintk_fmt[];
 > >
-> > ...
+> > Godbolt says clang is happy if it is written as:
 > >
-> > > +/*
-> > > + * NULL pointers aren't hashed.
-> > > + */
-> > >  static void __init
-> > >  null_pointer(void)
-> > >  {
-> > > -       test_hashed("%p", NULL);
-> > > +       test(ZEROS "00000000", "%p", NULL);
-> > >         test(ZEROS "00000000", "%px", NULL);
-> > >         test("(null)", "%pE", NULL);
-> > >  }
-> > >
-> > > +/*
-> > > + * Error pointers aren't hashed.
-> > > + */
-> > > +static void __init
-> > > +error_pointer(void)
-> > > +{
-> > > +       test(ONES "fffffff5", "%p", ERR_PTR(-EAGAIN));
-> > > +       test(ONES "fffffff5", "%px", ERR_PTR(-EAGAIN));
+> >   if (&__stop___trace_bprintk_fmt[0] != &__start___trace_bprintk_fmt[0])
 > >
-> > > +       test("(efault)", "%pE", ERR_PTR(-EAGAIN));
-> >
-> > Hmm... Is capital E on purpose here?
->
-> Yes.  It shows that for %pE an error pointer is still invalid.
-> %pe is tested separately, in errptr(), and the output would have
-> been "-EAGAIN".
->
-> > Maybe we may use something else ('%ph'?) for sake of deviation?
->
-> If you look at the resulting file, you will see that null_pointer(),
-> error_pointer() and invalid_pointer() exercise the same three variants:
-> %p, %px and %pE.
->
-> This is somewhat confusing, but there seems to be some disagreement
-> between Pavel and Rasmus as to how the test suite should be structured
-> and I didn't want to attempt to restructure anything in this patch.
+> > Which is probably the best compromise. The type here is const char
+> > *[], so it would be a shame to see it go.
+> 
+> If the "address" is never dereferenced, but only used for arithmetic
+> (in a way that the the pointed to type is irrelevant), does the
+> pointed to type matter?  I don't feel strongly either way, but we seem
+> to have found two additional possible solutions for these warnings,
+> which is my ultimate goal. Nathan, hopefully those are some ideas you
+> can work with to address the additional cases throughout the kernel?
+> 
+> -- 
+> Thanks,
+> ~Nick Desaulniers
 
-Sorry, I meant Petr of course.
+Yes, thank you for the analysis and further discussion! I have done some
+rudimentary printk debugging in QEMU and it looks like these are produce
+the same value:
 
-Rasmus, who had to deal with mips defining EDQUOT to 1133 by special
-casing that in lib/errname.c, reminded me that error codes are a mess:
-EAGAIN is different on alpha.  Rather than picking another error code
-that is the same on all architectures, let's just use explicit -11.
+__stop___trace_bprintk_fmt
+&__stop___trace_bprintk_fmt
+&__start___trace_bprintk_fmt[0]
 
-error_pointer() should be:
+as well as
 
-        test(ONES "fffffff5", "%p", ERR_PTR(-11));
-        test(ONES "fffffff5", "%px", ERR_PTR(-11));
-        test("(efault)", "%pE", ERR_PTR(-11));
+__stop___trace_bprintk_fmt != __start___trace_bprintk_fmt
+&__stop___trace_bprintk_fmt != &__start___trace_bprintk_fmt
+&__stop___trace_bprintk_fmt[0] != &__start___trace_bprintk_fmt[0]
 
-I'll wait for more feedback and respin (or perhaps this can be
-fixed up while applying).
+I'll use the second one once I confirm this is true in all callspots
+with both Clang and GCC, since it looks cleaner. Let me know if there
+are any objections to that.
 
-Thanks,
-
-                Ilya
+Cheers,
+Nathan
