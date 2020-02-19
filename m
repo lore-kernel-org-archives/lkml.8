@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B54C18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3286C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CECE208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C479B21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dlIhDHUQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vejW2eF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbgBSUA7 (ORCPT
+        id S1727515AbgBSUBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:00:59 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44713 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbgBSUA4 (ORCPT
+        Wed, 19 Feb 2020 15:01:03 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43289 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbgBSUBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:00:56 -0500
-Received: by mail-pf1-f195.google.com with SMTP id y5so588795pfb.11;
-        Wed, 19 Feb 2020 12:00:55 -0800 (PST)
+        Wed, 19 Feb 2020 15:01:00 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so621936pgb.10;
+        Wed, 19 Feb 2020 12:00:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=E+ODUO2TskpAbtFr2qyA3nn46cxkcLiArVOXKcyYxHA=;
-        b=dlIhDHUQxjMGXorPCXm0ys37HBeXXH6MdFbIbI5A4GDlpIz+e/RTUp8VA5a9gouwne
-         y78Yhbn28xXtmk4gyoME3Xv2m+3f9tyzXRxGs9MBE/ezfx5m3j57UqeYrsrA5bjyNzmg
-         thCwQQlIUs/IZJAlhQ/EsVQZ+/mwhgnjkkMlqtH5P92JiISTdN0yd2AtZVVhPlRIVbcE
-         XGrhuVg0fMIWOT1GPd0ZQIE/ZoT+0LnPqSPh2wV9XINHDfXsb60AIsfdhHRftPafvw9h
-         Sam2xmDiCkr22aEJ4TDn67ufXYhnaHhtD1UFBKeQxHeOIdlBQ+Aej0Wo3s3r5kkTvz6T
-         5ruQ==
+        bh=RiNEerjQz5Z1eXDKERAoR3iSV24FkTdaO7Og7MzVBAo=;
+        b=vejW2eF9YVCfwvXLFdO7oBnXxTzCr3GGvUat95kJ4QLPc6T2nsgvMxA6mdQ8mtJ72s
+         I4GmcNjEvXZHZEyPsBv8czWDyZYW7vzbpJOEZn3AIqCxRpKI/JTOSBrf9rPIq8Q8wYOn
+         9zzum3CsP+iwJ3tYH7pKIAmMsbTYyQl01xbYppMYR8jzoUyMoq4pZY6vsApyqDss3jgJ
+         3F8uzXMRHTfBmqvtbFPBtNmBXJw4eEbCU4swkPB1qBeyp+H8/EUYOMEvQlJCP9DnkWix
+         fe8jOqmuYwJUGQ7uus7n9gq6W7flNuVWw6GcZUsm5aPr+VrEA4w2MAteuVJa24IAS5mS
+         ZXyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=E+ODUO2TskpAbtFr2qyA3nn46cxkcLiArVOXKcyYxHA=;
-        b=YMG9L+ap4hLKoA18y0Y5C1SwDa8UEJVCGTpJ9/P7HYVfSBubLJwim31jmCHaSerhea
-         Pi98Qk4xCEFOCBkRh7LxWi/xDZXGeO/fRvjqxxPQeNwtvt6pxPfhnt8/VHPqNEcHVGLA
-         ZrSvuDjmgJS2R72e1Ukmv/XGgxtWcSJa8hrYmM81OAJCq48R02cMUO+3jjhoAYM1t2Q8
-         /AMviSa9qjyZiNq8KspPJaArAIPHc1n9t3oITEAmu1L5k5UHjFn+6jqu7N6GF+fJhiFo
-         UHfILvdglJf+OMLoAh6XAh1wQH6PVFkZa/+8b6vVlBnazTZNKMQNglfbxka+Au1R8o1X
-         GxAw==
-X-Gm-Message-State: APjAAAUMx9brdSpyg7g/4svXRsICjdaH87RN+kCL1rSNHMjtuwbTeMv3
-        Ix8A3K/5rsBmjxd34KtWx6f/hu6t
-X-Google-Smtp-Source: APXvYqxp/AhYCeNLPuhAl8X5vt1vjZUBrc7uweR9IkGAcQQD7/A/afsD4BMQFzCBOFyIcBYPVN+GGQ==
-X-Received: by 2002:a62:e30f:: with SMTP id g15mr27822212pfh.124.1582142455032;
-        Wed, 19 Feb 2020 12:00:55 -0800 (PST)
+        bh=RiNEerjQz5Z1eXDKERAoR3iSV24FkTdaO7Og7MzVBAo=;
+        b=iCEF/qtdQUC487W9v8nMgtjcU0WUuBtbCVuUnxdTEzEdE3ExGDYUZ+Rwy4U6HTLvk7
+         QCj+S0dsgGfqtClsa1muy2h5jLhnLDw1hqCjl27UAiDVrnE/aU8At3nOg4QrNLfta73Y
+         K6VSosqVLC+GcoX03HLQ9m9F7nviv0DCaD9iEMLZb1xTLOz3EhWtgIRXDtzmnJ+irbL2
+         0yBzXKADb7LS8tCjFdMw94dJzq5ZiXueN6mTvI2ZCRFdFxirxv0O1QXTZu+lBE3/0uaY
+         Rf/bZiC9mEfl/MLlPM7sXs+RHB1ejxVclccqv6DAPoGsBloqcS/GwbeDQy4sxWQ93q0/
+         7Q+g==
+X-Gm-Message-State: APjAAAW+qxzHtTr+tDKJLeYJzPgPx+dHhsTUgkGZl/TklCc3qal5OTL6
+        /YmeSxPR4f3wmd20Ps7c3WhjxYZN
+X-Google-Smtp-Source: APXvYqxyT5OfEgISAVi3F6wxO1u24WUOdtGkq5Gk7BAa1bcVY+i9uDxrlZLzIrtOZre2vQCgIj/6lQ==
+X-Received: by 2002:a63:ed49:: with SMTP id m9mr28928851pgk.304.1582142459267;
+        Wed, 19 Feb 2020 12:00:59 -0800 (PST)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d2sm625926pjv.18.2020.02.19.12.00.53
+        by smtp.gmail.com with ESMTPSA id d2sm625926pjv.18.2020.02.19.12.00.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:00:53 -0800 (PST)
+        Wed, 19 Feb 2020 12:00:57 -0800 (PST)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Russell King <linux@armlinux.org.uk>,
         "David S. Miller" <davem@davemloft.net>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next v2 1/3] net: phy: broadcom: Allow BCM54810 to use bcm54xx_adjust_rxrefclk()
-Date:   Wed, 19 Feb 2020 12:00:47 -0800
-Message-Id: <20200219200049.12512-2-f.fainelli@gmail.com>
+Subject: [PATCH net-next v2 3/3] net: phy: broadcom: Wire suspend/resume for BCM54810
+Date:   Wed, 19 Feb 2020 12:00:49 -0800
+Message-Id: <20200219200049.12512-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200219200049.12512-1-f.fainelli@gmail.com>
 References: <20200219200049.12512-1-f.fainelli@gmail.com>
@@ -75,29 +75,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function bcm54xx_adjust_rxrefclk() works correctly on the BCM54810
-PHY, allow this device ID to proceed through.
+The BCM54810 PHY can use the standard BMCR Power down suspend, but needs
+a custom resume routine which first clear the Power down bit, and then
+re-initializes the PHY. While in low-power mode, the PHY only accepts
+writes to the BMCR register. The datasheet clearly says it:
+
+Reads or writes to any MII register other than MII Control register
+(address 00h) while the device is in the standby power-down mode may
+cause unpredictable results.
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/phy/broadcom.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/phy/broadcom.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/net/phy/broadcom.c b/drivers/net/phy/broadcom.c
-index 7d68b28bb893..4ad2128cc454 100644
+index b4eae84a9195..ab24692a92c6 100644
 --- a/drivers/net/phy/broadcom.c
 +++ b/drivers/net/phy/broadcom.c
-@@ -194,7 +194,8 @@ static void bcm54xx_adjust_rxrefclk(struct phy_device *phydev)
- 	/* Abort if we are using an untested phy. */
- 	if (BRCM_PHY_MODEL(phydev) != PHY_ID_BCM57780 &&
- 	    BRCM_PHY_MODEL(phydev) != PHY_ID_BCM50610 &&
--	    BRCM_PHY_MODEL(phydev) != PHY_ID_BCM50610M)
-+	    BRCM_PHY_MODEL(phydev) != PHY_ID_BCM50610M &&
-+	    BRCM_PHY_MODEL(phydev) != PHY_ID_BCM54810)
- 		return;
+@@ -313,6 +313,20 @@ static int bcm54xx_config_init(struct phy_device *phydev)
+ 	return 0;
+ }
  
- 	val = bcm_phy_read_shadow(phydev, BCM54XX_SHD_SCR3);
++static int bcm54xx_resume(struct phy_device *phydev)
++{
++	int ret;
++
++	/* Writes to register other than BMCR would be ignored
++	 * unless we clear the PDOWN bit first
++	 */
++	ret = genphy_resume(phydev);
++	if (ret < 0)
++		return ret;
++
++	return bcm54xx_config_init(phydev);
++}
++
+ static int bcm5482_config_init(struct phy_device *phydev)
+ {
+ 	int err, reg;
+@@ -706,6 +720,8 @@ static struct phy_driver broadcom_drivers[] = {
+ 	.config_aneg    = bcm5481_config_aneg,
+ 	.ack_interrupt  = bcm_phy_ack_intr,
+ 	.config_intr    = bcm_phy_config_intr,
++	.suspend	= genphy_suspend,
++	.resume		= bcm54xx_resume,
+ }, {
+ 	.phy_id		= PHY_ID_BCM5482,
+ 	.phy_id_mask	= 0xfffffff0,
 -- 
 2.17.1
 
