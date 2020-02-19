@@ -2,219 +2,107 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31846C3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A454C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25CD207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582078837;
-	bh=PukdpJhhjgYuAnS+LZqnItKFXpPSM7F0J1SE58D5GOU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yhJX3VADRC/PVe+CnwUKjJRb0nEDJu2Yjd7IJJ1k7SdfQNkAB2mLNN5Ugh9NbAJlq
-	 pnprytuUIgI+/eho41n3f377JvsSHGCTLkr3dMDN348YGloFIAvsRBKsS89M2WbQM6
-	 8b+h7QMmE40UDX6olg36Iyct8c2GSSm2uu3hcvfI=
+	by mail.kernel.org (Postfix) with ESMTP id 6905E207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:20:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UTz22aO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgBSCUf (ORCPT
+        id S1728087AbgBSCUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:20:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbgBSCUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:20:35 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 068C624656;
-        Wed, 19 Feb 2020 02:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582078834;
-        bh=PukdpJhhjgYuAnS+LZqnItKFXpPSM7F0J1SE58D5GOU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J4lXXwO4SG3sg/Vjn3QtQ8n6He791ZtltltY8C9Epz8Ev7O+ItEwRyZoilVbAkbVI
-         ZuEC0tJX6L3mi9N7G5Yif6uwcbZC+mPeNJEOEg4Y1rAdYE70I1qXIVko6LiJ7E+11B
-         1sTqa+CltotDgvP+ukaB1tlX38y4z5pWwb8JVHVg=
-Received: by mail-qv1-f50.google.com with SMTP id g6so10155202qvy.5;
-        Tue, 18 Feb 2020 18:20:33 -0800 (PST)
-X-Gm-Message-State: APjAAAWtdNnwruCTYajSY7faAXD4TA+lITKrh0+dY7T1/prj5+MQnRC1
-        ZxHfxZPqQxfhDe4Lh+iN6lzkgFHkGV0YyF8HPg==
-X-Google-Smtp-Source: APXvYqxtH4o9QxC+wJQ6/wOQr4uDaUYk+7j4zB9Fpp9gPaJ4ls+hEXLdVid0z3MoBMAlbuS+Dn+XXQvbF8+GM2YW3+E=
-X-Received: by 2002:ad4:450a:: with SMTP id k10mr17987010qvu.136.1582078833043;
- Tue, 18 Feb 2020 18:20:33 -0800 (PST)
+        Tue, 18 Feb 2020 21:20:40 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44552 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726768AbgBSCUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:20:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so22265212oia.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:20:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YYT6YZNCZsYRqHQEeWZi0Rtcai+ljMyFoBbjqMKSqxc=;
+        b=UTz22aO9BW7ldKype5PMjKYgkdUXWZkCahIJ+RyHZG91H2zi2kNtgjOZDbZPuQjQfc
+         /+4xIEr0CUk3JlchuehDeffQM5JKU85Hj+IOgrbEgRK6z9jBhpA87CFwmUbUwcnNZ0c+
+         p1/wGJ4HmKnzMxuj1pfJuKceL84ivttiu1R0mQP19Dq4ml8/vJYbL6/o2Z6cMEWQRtHZ
+         oiZ61kilcOkjq8KONZU8aWVeLkWoIJZoUj4Qz0B77fPjrJAw2sfd0f09a/rdPYGJOcaC
+         WpssdrebShKO6EY3OEevPWjqtZ2QE32GaLiTQZsErZwKzKVRnm20oPRuTruQwoleCxC7
+         m/zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YYT6YZNCZsYRqHQEeWZi0Rtcai+ljMyFoBbjqMKSqxc=;
+        b=WcRyAFsZ04mcb88qbvqPkCfIRMcEVhWbiUFXe2Ms/OQO3ioLbGLet+Z+ztbX+OB2Dd
+         /jsDODMXlIVBpGyVEzasdAX/zMmalwwTyp5DZT4rnqM2U4UKynTExpwF/veHE4X1wFx+
+         vY1WbGyg2S4nXJImZAx7Xf+ZW62PCwhP2vc8g05NfVBIk3Ro5U0X2n2DE58HKA/hIb5E
+         HbTFcDSDdG0nn6uMBG22vUnOx04k9qGMeYn/d36KEpPC2yuBSnbAGBM9rFHQnUg97S6v
+         xEQ7IlHFif09E8ZvTWCHX8IH2xAdEdftn+0yy/D7wQ8cSiH2XYo4PNqywpkIcsU0AIB1
+         6Txw==
+X-Gm-Message-State: APjAAAX9D5dOl3HVzBpKC2IgIngtsKgIXvNY+6wj7xv+zjFdZwWAIgxE
+        jBHQkNHzwsSlbzXGAwlyO2jlbxXYoZrc4leYU64rjA==
+X-Google-Smtp-Source: APXvYqyeq/1kr3UBsc2WTXKqbpQPEbbZqh8CMPINGqnKFEYX7pqqyj+Fk04yGXb+vCdmnpYvqdU5qlh8vlrkIUN0YVY=
+X-Received: by 2002:aca:4789:: with SMTP id u131mr3091991oia.43.1582078838922;
+ Tue, 18 Feb 2020 18:20:38 -0800 (PST)
 MIME-Version: 1.0
-References: <CGME20200213123953epcas1p45c39830a9ec6bd535f5370702f603806@epcas1p4.samsung.com>
- <20200213123934.10841-1-dafna.hirschfeld@collabora.com> <a1bc262f-d8af-9590-105b-1db0b16f2861@samsung.com>
-In-Reply-To: <a1bc262f-d8af-9590-105b-1db0b16f2861@samsung.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 18 Feb 2020 20:20:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJvCmwfA7tnyv05McZi+Gh=u8G9Kc2mb-VKbON9TPhKgQ@mail.gmail.com>
-Message-ID: <CAL_JsqJvCmwfA7tnyv05McZi+Gh=u8G9Kc2mb-VKbON9TPhKgQ@mail.gmail.com>
-Subject: Re: [PATCH v4] dt-bindings: extcon: usbc-cros-ec: convert
- extcon-usbc-cros-ec.txt to yaml format
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        devicetree@vger.kernel.org,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>, dafna3@gmail.com
+References: <20200111052125.238212-1-saravanak@google.com>
+In-Reply-To: <20200111052125.238212-1-saravanak@google.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 18 Feb 2020 18:20:03 -0800
+Message-ID: <CAGETcx-y8j21tCude5oxU3NbEmb91f_m1dWJa0wUALkA40pwfA@mail.gmail.com>
+Subject: Re: [PATCH v1] clocksource: Avoid creating dead devices
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 4:30 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+On Fri, Jan 10, 2020 at 9:21 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> On 2/13/20 9:39 PM, Dafna Hirschfeld wrote:
-> > convert the binding file extcon-usbc-cros-ec.txt to
-> > yaml format extcon-usbc-cros-ec.yaml
-> >
-> > This was tested and verified on ARM with:
-> > make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> > make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> >
-> > Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-> > Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > ---
-> > Changes since v1:
-> > 1 - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-> > 2 - changing the maintainers
-> > 3 - changing the google,usb-port-id property to have minimum 0 and maximum 255
-> >
-> > Changes since v2:
-> > 1 - Changing the patch subject to start with "dt-bindings: extcon: usbc-cros-ec:"
-> > 2 - In the example, adding a parent isp node, a reg field to cros-ec@0
-> > and adding nodes 'extcon0/1' instead of one node 'extcon'.
-> >
-> > Changes since v3:
-> > in the example, changing the node isp1 to spi0
-> >
-> >  .../bindings/extcon/extcon-usbc-cros-ec.txt   | 24 --------
-> >  .../bindings/extcon/extcon-usbc-cros-ec.yaml  | 56 +++++++++++++++++++
-> >  2 files changed, 56 insertions(+), 24 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> >  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> > deleted file mode 100644
-> > index 8e8625c00dfa..000000000000
-> > --- a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
-> > +++ /dev/null
-> > @@ -1,24 +0,0 @@
-> > -ChromeOS EC USB Type-C cable and accessories detection
-> > -
-> > -On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> > -able to detect the state of external accessories such as display adapters
-> > -or USB devices when said accessories are attached or detached.
-> > -
-> > -The node for this device must be under a cros-ec node like google,cros-ec-spi
-> > -or google,cros-ec-i2c.
-> > -
-> > -Required properties:
-> > -- compatible:                Should be "google,extcon-usbc-cros-ec".
-> > -- google,usb-port-id:        Specifies the USB port ID to use.
-> > -
-> > -Example:
-> > -     cros-ec@0 {
-> > -             compatible = "google,cros-ec-i2c";
-> > -
-> > -             ...
-> > -
-> > -             extcon {
-> > -                     compatible = "google,extcon-usbc-cros-ec";
-> > -                     google,usb-port-id = <0>;
-> > -             };
-> > -     }
-> > diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> > new file mode 100644
-> > index 000000000000..9c5849b341ea
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.yaml
-> > @@ -0,0 +1,56 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: https://protect2.fireeye.com/url?k=d3c63a24-8e5dc647-d3c7b16b-0cc47a31cdbc-e8d8e2b7806aed8e&u=http://devicetree.org/schemas/extcon/extcon-usbc-cros-ec.yaml#
-> > +$schema: https://protect2.fireeye.com/url?k=04f78247-596c7e24-04f60908-0cc47a31cdbc-1b9a3937c161a4b6&u=http://devicetree.org/meta-schemas/core.yaml#
-
-^^^
-
-> > +
-> > +title: ChromeOS EC USB Type-C cable and accessories detection
-> > +
-> > +maintainers:
-> > +  - Benson Leung <bleung@chromium.org>
-> > +  - Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > +
-> > +description: |
-> > +  On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
-> > +  able to detect the state of external accessories such as display adapters
-> > +  or USB devices when said accessories are attached or detached.
-> > +  The node for this device must be under a cros-ec node like google,cros-ec-spi
-> > +  or google,cros-ec-i2c.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: google,extcon-usbc-cros-ec
-> > +
-> > +  google,usb-port-id:
-> > +    allOf:
-> > +      - $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: the port id
-> > +    minimum: 0
-> > +    maximum: 255
-> > +
-> > +required:
-> > +  - compatible
-> > +  - google,usb-port-id
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    spi0 {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +        cros-ec@0 {
-> > +            compatible = "google,cros-ec-spi";
-> > +            reg = <0>;
-> > +
-> > +            usbc_extcon0: extcon0 {
-> > +                compatible = "google,extcon-usbc-cros-ec";
-> > +                google,usb-port-id = <0>;
-> > +            };
-> > +
-> > +            usbc_extcon1: extcon1 {
-> > +                compatible = "google,extcon-usbc-cros-ec";
-> > +                google,usb-port-id = <1>;
-> > +            };
-> > +        };
-> > +    };
-> >
+> Timer initialization is done during early boot way before the driver
+> core starts processing devices and drivers. Timers initialized during
+> this early boot period don't really need or use a struct device.
 >
-> Applied it. Thanks.
+> However, for timers represented as device tree nodes, the struct devices
+> are still created and sit around unused and wasting memory. This change
+> avoid this by marking the device tree nodes as "populated" if the
+> corresponding timer is successfully initialized.
+>
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/clocksource/timer-probe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+> index ee9574da53c0..a10f28d750a9 100644
+> --- a/drivers/clocksource/timer-probe.c
+> +++ b/drivers/clocksource/timer-probe.c
+> @@ -27,8 +27,10 @@ void __init timer_probe(void)
+>
+>                 init_func_ret = match->data;
+>
+> +               of_node_set_flag(np, OF_POPULATED);
+>                 ret = init_func_ret(np);
+>                 if (ret) {
+> +                       of_node_clear_flag(np, OF_POPULATED);
+>                         if (ret != -EPROBE_DEFER)
+>                                 pr_err("Failed to initialize '%pOF': %d\n", np,
+>                                        ret);
+> --
+> 2.25.0.rc1.283.g88dfdc4193-goog
 
-And once again corrupted it when applying it:
+Gentle reminder.
 
-Documentation/devicetree/bindings/Makefile:12: recipe for target
-'Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.example.dts'
-failed
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.6/dist-packages/jsonschema/validators.py",
-line 774, in resolve_from_url
-  document = self.store[url]
-  File "/usr/local/lib/python3.6/dist-packages/jsonschema/_utils.py",
-line 22, in __getitem__
-  return self.store[self.normalize(uri)]
-KeyError: 'https://protect2.fireeye.com/url?k=04f78247-596c7e24-04f60908-0cc47a31cdbc-1b9a3937c161a4b6&u=http://devicetree.org/meta-schemas/core.yaml'
+-Saravana
