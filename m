@@ -2,94 +2,131 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB68C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF50DC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4D8521D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NHM1TGu+"
+	by mail.kernel.org (Postfix) with ESMTP id B6CE524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582118009;
+	bh=bL/TOiagPfoRLR3fOAnI6m8tFS6WjfGcMBXv31ltqR8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RPjsQVNCb6qSo2S4SNrVpqvshI9Dgqy6rqOdpwtiIICvg7b00gCsumqyc/yPPRwNR
+	 9gr72njz3muFlRcx1rCGc58mnAA1k//SJgV+ovUNy0zZ4C6/CgAbS7siMsX8ccgJdn
+	 0q/h2WAYj/MCDUoj2hcDvuzT4p+4xa3nFbySLRxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgBSNMQ (ORCPT
+        id S1727624AbgBSNN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:12:16 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47262 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgBSNMQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:12:16 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JDC3LO065242;
-        Wed, 19 Feb 2020 07:12:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582117923;
-        bh=B/O91ZYHGjTEacr23ckeGZ3NbDZ9epolpD1ChKHO78s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NHM1TGu+mOsa6kL8O4ZCmpz5we8vGZ1NRM8JYIcwGE+HCeI9MakLQvq/312aHfpNP
-         uomBnpwDmNBivJM6qH7XSevgqXu8AKNhYbtLzfZbT9EtzNRQIavKtBe0YHdJMsbJU+
-         iL4FAP2OksTNoEMkTCELFG7FXnq/3zqV119d1rgQ=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JDC37c096025
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 07:12:03 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 07:12:03 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 07:12:03 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JDC2QZ056606;
-        Wed, 19 Feb 2020 07:12:03 -0600
-Subject: Re: [PATCH linux-master 0/3] MCAN updates for clock discovery
-To:     <linux-kernel@vger.kernel.org>, <mkl@pengutronix.de>,
-        <linux-can@vger.kernel.org>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-CC:     <davem@davemloft.net>
-References: <20200131183433.11041-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <a97ed7ef-e95a-af32-4d01-2ed7c2c08c20@ti.com>
-Date:   Wed, 19 Feb 2020 07:07:19 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 08:13:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgBSNN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:13:28 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF99821D56;
+        Wed, 19 Feb 2020 13:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582118006;
+        bh=bL/TOiagPfoRLR3fOAnI6m8tFS6WjfGcMBXv31ltqR8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=aSaExjJsYv/OEylvZg1BUY1DHJNR4GC+StKizipm622JuXBAEpuY5e4M5bFvBW+kr
+         /5eeJbTthSFR6dVZXnm6GWXeSD6WI3ytC6WNiP0m98FhAJICJm1tJ7a8Vihixg2n/a
+         8/ecKfw8wSa5uyM45tAJMlhscO1IP7EMZK0QBXV8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j4PAL-006VkK-2a; Wed, 19 Feb 2020 13:13:25 +0000
 MIME-Version: 1.0
-In-Reply-To: <20200131183433.11041-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 19 Feb 2020 13:13:25 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linus Walleij <linus.walleij@linaro.org>, marex@denx.de,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
+In-Reply-To: <ae69e38a-78f9-ca68-c48c-86275e41b3bb@st.com>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <20200218131218.10789-2-alexandre.torgue@st.com>
+ <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
+ <608d9c84813323ee3839f6ac21aa8f4e@kernel.org>
+ <ae69e38a-78f9-ca68-c48c-86275e41b3bb@st.com>
+Message-ID: <10cabf9edf901fb148a1a2a5e2448845@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, marex@denx.de, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bump
+On 2020-02-19 13:07, Alexandre Torgue wrote:
+> On 2/19/20 12:43 PM, Marc Zyngier wrote:
+>> On 2020-02-19 11:33, Alexandre Torgue wrote:
+>>> Fix Marc email address
+>>> 
+>>> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
+>>>> This commit introduces retrigger support for stm32_ext_h chip.
+>>>> It consists to rise the GIC interrupt mapped to an EXTI line.
+>>>> 
+>>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>>>> 
+>>>> diff --git a/drivers/irqchip/irq-stm32-exti.c 
+>>>> b/drivers/irqchip/irq-stm32-exti.c
+>>>> index e00f2fa27f00..c971d115edb4 100644
+>>>> --- a/drivers/irqchip/irq-stm32-exti.c
+>>>> +++ b/drivers/irqchip/irq-stm32-exti.c
+>>>> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
+>>>>       unregister_syscore_ops(&stm32_exti_h_syscore_ops);
+>>>>   }
+>>>>   +static int stm32_exti_h_retrigger(struct irq_data *d)
+>>>> +{
+>>>> +    struct stm32_exti_chip_data *chip_data = 
+>>>> irq_data_get_irq_chip_data(d);
+>>>> +    const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
+>>>> +    void __iomem *base = chip_data->host_data->base;
+>>>> +    u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
+>>>> +
+>>>> +    writel_relaxed(mask, base + stm32_bank->swier_ofst);
+>>>> +
+>>>> +    return irq_chip_retrigger_hierarchy(d);
+>> 
+>> Calling irq_chip_retrigger_hierarchy here is really odd. If the write
+>> above has the effect of making the interrupt pending again, why do you
+>> need to force the retrigger any further?
+> 
+> To be honest, as we use hierarchical irq_chip, I thought it was the
+> way to follow (to retrigger parent irq_chip). It makes maybe no sens
+> here.
 
-On 1/31/20 12:34 PM, Dan Murphy wrote:
-> Hello
->
-> These are the initial fixes for issues found in and requested in
-> https://lore.kernel.org/patchwork/patch/1165091/
->
-> For the clock discovery and initialization.
->
-> Dan
->
-> Dan Murphy (3):
->    can: tcan4x5x: Move clock init to TCAN driver
->    can: m_can_platform: Move clock discovery and init to platform
->    can: m_can: Remove unused clock function from the framework
->
->   drivers/net/can/m_can/m_can.c          | 16 ------
->   drivers/net/can/m_can/m_can.h          |  3 -
->   drivers/net/can/m_can/m_can_platform.c | 37 +++++++++---
->   drivers/net/can/m_can/tcan4x5x.c       | 78 +++++++++++++++++++-------
->   4 files changed, 89 insertions(+), 45 deletions(-)
->
+Indeed, it looks perfectly pointless. What 
+irq_chip_retrigger_hierarchy()
+does is to look for the first parent irqchip that is able to retrigger
+the interrupt. Guess what, you've just done that already. And once 
+you've
+generated the interrupt, you don't need to ask the other irqchips in the
+chain to do the same thing.
+
+> The most important to regenerate gic interrupt (associate to the exti
+> line) is to write in SWIER register.
+
+Quite. Hence my question.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
