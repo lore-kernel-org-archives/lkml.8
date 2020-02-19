@@ -2,119 +2,93 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F37C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D3AC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCDE24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cBhnjQYo"
+	by mail.kernel.org (Postfix) with ESMTP id 49AE724656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgBSPRb (ORCPT
+        id S1727232AbgBSPSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:17:31 -0500
-Received: from mail.efficios.com ([167.114.26.124]:55552 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgBSPRb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:17:31 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id D7BC02490A3;
-        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 2MXQCndbR0nH; Wed, 19 Feb 2020 10:17:29 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 946A7248E45;
-        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 946A7248E45
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1582125449;
-        bh=E+T2zau6Nrzd/5UrHxBwjFO/z6zZmEyWpKIt0k5o2nw=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=cBhnjQYooRNjkzLDy0EtHNIr0MyHS+be39Ze0qlXO3sCvsU1Yj2PiVygBNOpGqcSp
-         sZ0FgDegopcSsZYkbQtm24enMnm41JSZs7ecwoOJUs7oZANxMC6bpoU1TA/e2utw3v
-         Dvo0sbsYkU/i2V4JINq7iDku3UFIUow25QevcGzOtZRTdeVBYybp+l5pnKyzCfMS/O
-         +zK5ZuBF3QUgpI4f6wSwfkBG5P/b27iiVmnxdngYxcyPvDVMdwbvi20lFCS5kylVCH
-         euvJRAHMDK8ElCyDRlfzPucBAAXCaBMYBpRETN++FOGjkKBAm8F6RAoneYa4TtAlCR
-         qLMwim9QBTteA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id i_e6Jf-_d-MZ; Wed, 19 Feb 2020 10:17:29 -0500 (EST)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 7F9E2248E3F;
-        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
-Date:   Wed, 19 Feb 2020 10:17:28 -0500 (EST)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>, bpf <bpf@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>
-Message-ID: <1127123648.641.1582125448879.JavaMail.zimbra@efficios.com>
-In-Reply-To: <20200218233641.i7fyf36zxocgucap@ast-mbp>
-References: <20200214133917.304937432@linutronix.de> <20200214161504.325142160@linutronix.de> <20200214191126.lbiusetaxecdl3of@localhost> <87imk9t02r.fsf@nanos.tec.linutronix.de> <20200218233641.i7fyf36zxocgucap@ast-mbp>
-Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
+        Wed, 19 Feb 2020 10:18:16 -0500
+Received: from mga04.intel.com ([192.55.52.120]:22682 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726691AbgBSPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:18:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 07:18:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
+   d="scan'208";a="235919620"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 19 Feb 2020 07:18:14 -0800
+Date:   Wed, 19 Feb 2020 07:18:14 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Peter Xu <peterx@redhat.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v6 21/22] KVM: x86/mmu: Use ranged-based TLB flush for
+ dirty log memslot flush
+Message-ID: <20200219151814.GC15888@linux.intel.com>
+References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
+ <20200218210736.16432-22-sean.j.christopherson@intel.com>
+ <fdb72ab9-18d4-5719-2863-78cde4e97fae@cogentembedded.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
-Thread-Topic: Use migrate_disable() in hashtab code
-Thread-Index: FMpBzgOmPiKRGoH6zx7fdw8jq3/Jnw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdb72ab9-18d4-5719-2863-78cde4e97fae@cogentembedded.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Feb 18, 2020, at 6:36 PM, Alexei Starovoitov alexei.starovoitov@gmail.com wrote:
+On Wed, Feb 19, 2020 at 12:22:58PM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 19.02.2020 0:07, Sean Christopherson wrote:
+> 
+> >Use the with_address() variant to when performing a TLB flush for a
+>                                  ^^ is it really needed here?
 
-[...]
+Doh, thanks.  The subject also has a typo, it should be "range-based", not
+"ranged-based".
 
-> If I can use migrate_disable() without RT it will help my work on sleepable
-> BPF programs. I would only have to worry about rcu_read_lock() since
-> preempt_disable() is nicely addressed.
-
-Hi Alexei,
-
-You may want to consider using SRCU rather than RCU if you need to sleep while
-holding a RCU read-side lock.
-
-This is the synchronization approach I consider for adding the ability to take page
-faults when doing syscall tracing.
-
-Then you'll be able to replace preempt_disable() by combining SRCU and
-migrate_disable():
-
-AFAIU eBPF currently uses preempt_disable() for two reasons:
-
-- Ensure the thread is not migrated,
-  -> can be replaced by migrate_disable() in RT
-- Provide RCU existence guarantee through sched-RCU
-  -> can be replaced by SRCU, which allows sleeping and taking page faults.
-
-I wonder if it would be acceptable to take a page fault while migration is
-disabled though ?
-
-Thanks,
-
-Mathieu
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> >specific memslot via kvm_arch_flush_remote_tlbs_memslot(), i.e. when
+> >flushing after clearing dirty bits during KVM_{GET,CLEAR}_DIRTY_LOG.
+> >This aligns all dirty log memslot-specific TLB flushes to use the
+> >with_address() variant and paves the way for consolidating the relevant
+> >code.
+> >
+> >Note, moving to the with_address() variant only affects functionality
+> >when running as a HyperV guest.
+> >
+> >Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> [...]
+> 
+> MBR, Sergei
