@@ -2,134 +2,205 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0215C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51416C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF36221D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E00121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:26:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oez3uqjO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UE54qS9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgBSMZx (ORCPT
+        id S1727362AbgBSM0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:25:53 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40994 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgBSMZx (ORCPT
+        Wed, 19 Feb 2020 07:26:14 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41369 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726530AbgBSM0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:25:53 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m30so17269291lfp.8;
-        Wed, 19 Feb 2020 04:25:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vym7cnw2UswPy4mXXSErcySNdTESMC8KufR8ycUGU5w=;
-        b=oez3uqjO4V62x8YIYF5vSrd4T0ApecZAop66yE0oWlbRoOBzXF14svDpFD/Ng2lwwh
-         MCkn1LskfRITwXoyRp0xOmwHk67ybaAX4EciOuyLfZGtHWFWI9bjcJmRUxZRCeNltUtI
-         5002JRuke/Egc6Lp8iyOvY9JiSvbiuEdHqpyVfEF/WsPcfn4ClYnIZtUpyRO35QkyiGu
-         f7xtL1pRRS+lqqShdssORi9j3o3WiJExuAoe5pWnl++josbuHO3HzwcpIP1NDkV6aaxH
-         2+mbI6l985QaghxEZZgLMN5bsB/fAuh8pRSj4ATC6llE7H4pbDDy4QaVswKus/ta6d4A
-         vE1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vym7cnw2UswPy4mXXSErcySNdTESMC8KufR8ycUGU5w=;
-        b=hr3VgRbzK5OdJ87WDDe8ilLlbq2LUEPDkllwrR5X5OYIjsYYQq+Xh7cheKDGiN3NBr
-         lIrZ2TnUVnIfQ0MCmlbA/pdeHgBEo+9iRGwKlDGMdjW1aDNs0QS0w2Uyjz2DFSunEcHG
-         sHXtZoGARCkk+vChtAbusGxsF3dCW0laCijH6W5R93MaR1F91Xn6XDTDyurtTZi7vv+D
-         TtJHYVDfYCnj6+zJuv8A2A0D5hqfGihKsTWJJo+xJcQYLN7BYKiRGEGC4tSnjaO0aM8z
-         Dt9LW1K3ekTOD3fFsvphiChBL57KfZnyTAvHn4KoXquYut2VswUPjsTvtoP03YtKyT22
-         oCgQ==
-X-Gm-Message-State: APjAAAU5dW+/iEjvfJMO2n0oc7yhHOMqmL3JcGCUJ25umX07ycURO0tM
-        /UJSxQySyzo1ICN0if/A+/CIfmWZ
-X-Google-Smtp-Source: APXvYqwOXJJ7XlulCRTxrAdarKdKzkJYyE1YSvY/srBtjmnhMW4P80vG9t1erIHkDK0fASgisa/SAA==
-X-Received: by 2002:a05:6512:407:: with SMTP id u7mr12956722lfk.146.1582115150261;
-        Wed, 19 Feb 2020 04:25:50 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id a9sm1236930lfk.23.2020.02.19.04.25.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 04:25:49 -0800 (PST)
-Subject: Re: [PATCH for 5.6 v2] tty: serial: tegra: Handle RX transfer in PIO
- mode if DMA wasn't started
-To:     Jiri Slaby <jslaby@suse.cz>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200209164415.9632-1-digetx@gmail.com>
- <15b01f79-007d-09bb-03be-050c009ceff6@suse.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4d9a2352-6daa-4dcc-376b-175b1398ff6a@gmail.com>
-Date:   Wed, 19 Feb 2020 15:25:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 19 Feb 2020 07:26:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582115172;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aU/Kb9yyQfFq/B4zFRzH8ISmhlDlgLRWQwirtVr5slw=;
+        b=UE54qS9EII++lIIDvmCQ2gry6Zb33wf3llS2HNlhVLM/sb8tEYe7a40tRPo+yOnWc5zbpj
+        QD0W/FBhBR8A6x13LUq9W43DkBJr5NefuzxaiR/g5kCINTtkHgB7zlTSpiCu0BZkBl/nkf
+        kVBO+DjZ0aiZfAuBnZwCOQsOsyVF1/c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-b9pysub7Opy2xssPrJfx3Q-1; Wed, 19 Feb 2020 07:26:03 -0500
+X-MC-Unique: b9pysub7Opy2xssPrJfx3Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A18A5107ACC5;
+        Wed, 19 Feb 2020 12:26:01 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5767C5C112;
+        Wed, 19 Feb 2020 12:26:00 +0000 (UTC)
+Subject: Re: [PATCH v2] x86/mce: Do not log spurious corrected mce errors
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+References: <20200217130659.15895-1-prarit@redhat.com>
+ <20200218161319.GG14449@zn.tnic>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <894a39cb-21e7-3e43-1907-cae390537ccf@redhat.com>
+Date:   Wed, 19 Feb 2020 07:25:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <15b01f79-007d-09bb-03be-050c009ceff6@suse.cz>
+In-Reply-To: <20200218161319.GG14449@zn.tnic>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.02.2020 10:37, Jiri Slaby пишет:
-> On 09. 02. 20, 17:44, Dmitry Osipenko wrote:
->> It is possible to get an instant RX timeout or end-of-transfer interrupt
->> before RX DMA was started, if transaction is less than 16 bytes. Transfer
->> should be handled in PIO mode in this case because DMA can't handle it.
->> This patch brings back the original behaviour of the driver that was
->> changed by accident by a previous commit, it fixes occasional Bluetooth HW
->> initialization failures which I started to notice recently.
+
+
+On 2/18/20 11:13 AM, Borislav Petkov wrote:
+> On Mon, Feb 17, 2020 at 08:06:59AM -0500, Prarit Bhargava wrote:
+>> A user has reported that they are seeing spurious corrected errors on
+>> their hardware.
 >>
->> Fixes: d5e3fadb7012 ("tty: serial: tegra: Activate RX DMA transfer by request")
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+>> "spurious corrected errors may be logged in the IA32_MC0_STATUS register
+>> with the valid field (bit 63) set, the uncorrected error field (bit 61)
+>> not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+>> an MCA Error Code (bits [15:0]) of 0x0005."
+>>
+>> Block these spurious errors from the console and logs.
+>>
+>> Links to Intel Specification updates:
+>> HSD131: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-desktop-specification-update.html
+>> HSM142: https://www.intel.com/content/www/us/en/products/docs/processors/core/4th-gen-core-family-mobile-specification-update.html
+>> HSW131: https://www.intel.com/content/www/us/en/processors/xeon/xeon-e3-1200v3-spec-update.html
+>> BDM48: https://www.intel.com/content/www/us/en/products/docs/processors/core/5th-gen-core-family-spec-update.html
+> 
+> My previous review comment still holds:
+> 
+> Those links tend to get stale with time. If you really want to refer to
+> the PDFs, add a new bugzilla entry on https://bugzilla.kernel.org/, add
+> them there as an attachment and add the link to the entry to the commit
+> message.
+> 
+>> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>> Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
+> 
+> WARNING: Co-developed-by: must be immediately followed by Signed-off-by:
+> #36:
+
+Borislav, when I've been using your Co-developed-by & not using a Signed-off-by
+process but when I run checkpatch.py I get the following warning:
+
+WARNING: Co-developed-by and Signed-off-by: name/email do not match
+#21:
+Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+
+When I submitted this patch I looked at other commits in the kernel near
+top-of-tree and they have Signed-off-by followed by Co-developed-by, and also
+took your suggestion of not using a Signed-off-by for Alexander.  That's why I
+chose to display them this way in v2.
+
+Examples:
+
+126196100063 ("lib/zlib: add s390 hardware support for kernel zlib_inflate")
+40ca1bf580ef ("PCI: brcmstb: Add MSI support")
+
+I'm now thoroughly confused as to what the correct format is.  It seems like
+checkpatch.py is telling me to include a Signed-off-by in addition to the
+Co-developed-by for Alexander but you explicitly told me not to.
+
+P.
+
+> 
+> See Documentation/process/submitting-patches.rst for more detail.
+> 
+>> Cc: Tony Luck <tony.luck@intel.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: x86@kernel.org
+>> Cc: linux-edac@vger.kernel.org
 >> ---
+>>  arch/x86/kernel/cpu/mce/core.c     |  2 ++
+>>  arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
+>>  arch/x86/kernel/cpu/mce/internal.h |  1 +
+>>  3 files changed, 20 insertions(+)
 >>
->> Changelog:
->>
->> v2: - Corrected commit's title by adding the accidentally missed "tegra: "
->>       to the prefix.
->>
->>  drivers/tty/serial/serial-tegra.c | 35 ++++++++++++++-----------------
->>  1 file changed, 16 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
->> index 33034b852a51..8de8bac9c6c7 100644
->> --- a/drivers/tty/serial/serial-tegra.c
->> +++ b/drivers/tty/serial/serial-tegra.c
->> @@ -692,11 +692,22 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
->>  				   count, DMA_TO_DEVICE);
->>  }
+>> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+>> index 2c4f949611e4..fe3983d551cc 100644
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
+>>  {
+>>  	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
+>>  		return amd_filter_mce(m);
+>> +	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL)
+>> +		return intel_filter_mce(m);
 >>  
->> +static void do_handle_rx_pio(struct tegra_uart_port *tup)
->> +{
->> +	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
->> +	struct tty_port *port = &tup->uport.state->port;
+>>  	return false;
+>>  }
+>> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+>> index 5627b1091b85..989148e6746c 100644
+>> --- a/arch/x86/kernel/cpu/mce/intel.c
+>> +++ b/arch/x86/kernel/cpu/mce/intel.c
+>> @@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+>>  {
+>>  	intel_clear_lmce();
+>>  }
 >> +
->> +	tegra_uart_handle_rx_pio(tup, port);
->> +	if (tty) {
-> 
-> What's the tty good for here, actually?
-> 
->> +		tty_flip_buffer_push(port);
->> +		tty_kref_put(tty);
->> +	}
+>> +bool intel_filter_mce(struct mce *m)
+>> +{
+>> +	struct cpuinfo_x86 *c = &boot_cpu_data;
+>> +
+>> +	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
+>> +	if ((c->x86 == 6) &&
+>> +	    ((c->x86_model == INTEL_FAM6_HASWELL) ||
+>> +	     (c->x86_model == INTEL_FAM6_HASWELL_L) ||
+>> +	     (c->x86_model == INTEL_FAM6_BROADWELL) ||
+>> +	     (c->x86_model == INTEL_FAM6_HASWELL_G)) &&
+>> +	    (m->bank == 0) &&
+>> +	    ((m->status & 0xa0000000ffffffff) == 0x80000000000f0005))
+>> +		return true;
+>> +
+>> +	return false;
 >> +}
-
-I'm not really a TTY expert..
-
-Jon, maybe you have any clue whether TTY could disappear while port is
-opened?
+>> diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+>> index b785c0d0b590..821faba5b05d 100644
+>> --- a/arch/x86/kernel/cpu/mce/internal.h
+>> +++ b/arch/x86/kernel/cpu/mce/internal.h
+>> @@ -175,5 +175,6 @@ extern bool amd_filter_mce(struct mce *m);
+>>  #else
+>>  static inline bool amd_filter_mce(struct mce *m)			{ return false; };
+>>  #endif
+>> +extern bool intel_filter_mce(struct mce *m);
+> 
+> It doesn't even build:
+> 
+> ld: arch/x86/kernel/cpu/mce/core.o: in function `filter_mce':
+> /home/boris/kernel/linux/arch/x86/kernel/cpu/mce/core.c:1881: undefined reference to `intel_filter_mce'
+> make: *** [Makefile:1077: vmlinux] Error 1
+> 
+> Hint: do it like it is done for amd_filter_mce() but in the respective
+> #ifdef CONFIG_X86_MCE_INTEL place.
+> 
 
