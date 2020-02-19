@@ -3,108 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E747CC35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933FCC18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCF824654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A5B124671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582140401;
-	bh=aFXw8Li9wnpUZmRwFXzG5WXkfPVfjpgUyY8QQu27GyA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kl7X7IPCGLvGYPYAb7GPZ59OVDihO29RMohICYENGcpZIm2enrSt8Kv7Tf9N6Q4rv
-	 XXoZKspHCupR7sAr3LIwlXEBwJGLCBxKzp5tnR5CxIexhMvwHenuYgxMtrW+khuxxr
-	 aMdSd8HBK8O6Kn/vXsfsMagzhsiWVqwJa+5IWRFc=
+	s=default; t=1582140420;
+	bh=Yc4u2FNt1IF2IbHtsIBwT/EjGq6IDcKxgr96tmofLT0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IDqCFIJHoYWs+UEfsEs6CVrEuh8RnwZmE45d0RVmzPiBie0GzPCZft1MltyTtp3iO
+	 e4M3WPX0P9xup81xjM5gaGCSkTZaew6RbR+5PUmAxkaptmRokT8dg8T0n2tWx7oFcN
+	 F731hN773v+EfAkC/2tDkEToMAZar/7GPuuXG6ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBST0k (ORCPT
+        id S1726891AbgBST0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:26:40 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44287 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726719AbgBST0j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:26:39 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so1561482ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:26:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1fTub4GYfjONmIT82CPg1N7dCoXEnM2Sw2O8KqYucXw=;
-        b=TTXA143+I9mRmEBx9/1NhLISHKMsH6waUZcmcpT1BguCNEKTR0hF7JmV5HoBZEGz3o
-         db9fi0sUaay+pAz0CQoHWY2cCDHTPEMKkMTVnGzY174vOn3S+TeHtv27+wikNuljtZEX
-         gzePqVGy4l+pJiMwf4qLcoz9ecA3N8Y267gYc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1fTub4GYfjONmIT82CPg1N7dCoXEnM2Sw2O8KqYucXw=;
-        b=FmuiYAGA94qjF5EQYlEKv7UGPO6LVq46wvemwK5SzCL7oZtXzCCOLgpV/CruDhBkL6
-         367tNsIqtFiu/1GBNemfSDAUcr8BHUBXjY4YJhqf6MbRyHM+yN5kIV4CNfO4ONHSM2LX
-         Q5gfknZS6TG/17Ij1s8iUnbqIg86rP/4Pf/DqLYiitJAliTCqAx/K3jG/G/+o5wC/f6w
-         e8pPbgyZkynfxI6bebgYsafrdd5X9wb6mELR269HnB9jXD6rfwAgaeTDxFEDEYzMAfTZ
-         kb8Mh06EkSYxb1hfJ+DSDuWexN8vFCktC4Q9mHnDEfbQj9zv4hRcjjHv08a1JlCkalg3
-         3V7g==
-X-Gm-Message-State: APjAAAXSilKCimHO83LFZDgPIzfVnAq0taF/RSATf2TUdGoB7KEM5qku
-        SWdXKXJdfKYkwrPL0qwXHVyZOnTcuw0=
-X-Google-Smtp-Source: APXvYqz5YuqJg/QzVV1QQ0vyalE2q9QJkKMO90c9/0aCbF9Gc8f1TpsRxwK2+nM0cRA/0+99X5v98Q==
-X-Received: by 2002:a2e:a0d0:: with SMTP id f16mr16586450ljm.130.1582140395809;
-        Wed, 19 Feb 2020 11:26:35 -0800 (PST)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id v13sm293486lfq.69.2020.02.19.11.26.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 11:26:35 -0800 (PST)
-Received: by mail-lj1-f179.google.com with SMTP id n18so1578261ljo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:26:34 -0800 (PST)
-X-Received: by 2002:a2e:909a:: with SMTP id l26mr16050682ljg.209.1582140394436;
- Wed, 19 Feb 2020 11:26:34 -0800 (PST)
-MIME-Version: 1.0
-References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
- <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
- <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
- <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
- <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com>
-In-Reply-To: <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 19 Feb 2020 11:26:18 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whE0uzJy1C5z-GB-s7YioW_yhiEaes4cNa6tLJwyx19gA@mail.gmail.com>
-Message-ID: <CAHk-=whE0uzJy1C5z-GB-s7YioW_yhiEaes4cNa6tLJwyx19gA@mail.gmail.com>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Feb 2020 14:26:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726719AbgBST0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:26:54 -0500
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09525208E4;
+        Wed, 19 Feb 2020 19:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582140414;
+        bh=Yc4u2FNt1IF2IbHtsIBwT/EjGq6IDcKxgr96tmofLT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uuO8ONawyjT+YQsnSh9q7TNz5MXsxAChG8Jkavgb1IBkTn6/nlCiavADJp69yj4uH
+         Q+hOztkuyRvzY7JZQcWs5x2xWSd9ckOLENn2Kme+eE4juIf23dHrA3g1XPIBd4Asjw
+         WSHuBCjriM/qQ5bLTjugv90KBVY6t7QA5HNLpseA=
+Date:   Wed, 19 Feb 2020 11:26:53 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
+ free pages
+Message-Id: <20200219112653.116de9db314dade1f6086696@linux-foundation.org>
+In-Reply-To: <20200219182522.1960-1-sultan@kerneltoast.com>
+References: <20200219182522.1960-1-sultan@kerneltoast.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:07 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Actually, since this is apparently a different filetype, the _logical_
-> thing to do is to use "mknod()".
+On Wed, 19 Feb 2020 10:25:22 -0800 Sultan Alsawaf <sultan@kerneltoast.com> wrote:
 
-Btw, don't get me wrong. I realize that you want to send other
-information too in order to fill in all the metadata for what the
-mountpoint then _does_.
+> Keeping kswapd running when all the failed allocations that invoked it
+> are satisfied incurs a high overhead due to unnecessary page eviction
+> and writeback, as well as spurious VM pressure events to various
+> registered shrinkers. When kswapd doesn't need to work to make an
+> allocation succeed anymore, stop it prematurely to save resources.
 
-So the "mknod()" thing would be just to create a local placeholder
-(and an exclusive name) on the client - and then you do the ioctl on
-that (or whatever) that sends over the metadata to the server along
-with the name.
+Seems sensible.
 
-Think of it as a way to get a place to hook into things, and a (local
-only) reservation for the name.
+Please fully describe the userspace-visible runtime effects of this
+change?
 
-               Linus
