@@ -2,418 +2,411 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA55DC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A27DC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781BE24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:24:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfQXXJAV"
+	by mail.kernel.org (Postfix) with ESMTP id D3ED724654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582125937;
+	bh=y6NAYJ47Ka5YwGm5gy/anEE8klQk5OCZvT1zRhiLZ7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QKJP8Z/9fMcHkv/dKniSHQnALbYyN5iAxKea3r0e4BIN7MIe3Z2QCzkpFvVsi3gl+
+	 m8fESaD6JzvQ6/xHbW1KpZEFYxGNX7r/6JimTXbvunLZkdHhnEzanrohaTRVqlNQj1
+	 BqSAkArAzomoOD/RZB2NMparPs4yTFVAJZ2t7s0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgBSPYL (ORCPT
+        id S1726963AbgBSPZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:24:11 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41235 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgBSPYK (ORCPT
+        Wed, 19 Feb 2020 10:25:35 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32981 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726774AbgBSPZf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:24:10 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so24118604oie.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:24:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=uwWDSeWWO0hR4DXyky1z9WU+ZPyabJEylY7QISm4rEM=;
-        b=cfQXXJAVtFbqY95oRRM3/u/T7d6o8o7xoy26LHXqgG/x0cj4jHNx+Bs5wYSxL8Pv4q
-         6yAsqx20aUt8Iw2wrq3daHlQtI2r0t4ymYYEdXvu8T2HUFM/sO72ampUQvhHuPCRYVC7
-         ZBIBlf4OkDKEkOv9knQ5j2qTIO8NsQpL4wv4yKjmXTm/YeBDxP/L5qH3Mpqe4H4BeD0s
-         CIJo3gr+zbTxp/eo5qy5fNEKbua7sUkr4AV2K48CR25etD5gdpIVzKblGi1Fu711zaWn
-         V1IBXLKEbAQJA6iJa9UwcsfKX6gkiFP67FmHxzGXQFYh7rjM3HBYofuT+bAW2TAFx+NL
-         aElg==
+        Wed, 19 Feb 2020 10:25:35 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w6so515648otk.0;
+        Wed, 19 Feb 2020 07:25:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=uwWDSeWWO0hR4DXyky1z9WU+ZPyabJEylY7QISm4rEM=;
-        b=sW7kJSp/zTyi10N+UN7MwrpaRiWeagEyKwR/aCRxIBsja77vBsCepbDsBD+24QEmYW
-         zarRzy6K+4hcEtp1YjfweW++o+iK/bNbTN+2euxLwHSib5yecR0t5qkZvEe6KkNldtBC
-         CRkvcx+ln3dyffMzKKwSHip0FUcE2gwy/QgnmyJokw0ooG0+xyaWx564VMnCdCOCGFcp
-         MogeRkoRVB34/m3h3+wazg+tQoVACnVj/IS8s3wAgefUJGxzP5525VuUvZFm/1HsQQzC
-         4okHXLgqNQgwNUTyvQGNY3tpM5iYc8/oejcywCAz+U/9OalqqOm+uYGxZC1RJACTJdOD
-         bAzg==
-X-Gm-Message-State: APjAAAVhdMnR61zRu/w4gRi9Fl2f5YHu4iOVnwxtkYphDY9pg6mtIZqM
-        1IDnYBL9vZJPt2rhbFxtdg==
-X-Google-Smtp-Source: APXvYqzWFfw4hNfHbE0m3TgSpLG8nJYVfSeUMd9Tf1P89i/qu+5G5Pa616ouzrYd5B0JR1EkqNqx9A==
-X-Received: by 2002:aca:4b46:: with SMTP id y67mr4606544oia.122.1582125849490;
-        Wed, 19 Feb 2020 07:24:09 -0800 (PST)
-Received: from serve.minyard.net ([47.184.136.59])
-        by smtp.gmail.com with ESMTPSA id n2sm59434oia.58.2020.02.19.07.24.08
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9A6Pw6ubtA8XD2+nVSoO+kGVpenKZJvMby8DWoqvDxQ=;
+        b=uDC8fYYUpcX6fN1bLi2I3cQXJwj6thPPra5tdrAYe1UgXnhD2+wEregcdl+ceSyX+z
+         AeCG1fsx3wu9bPI1WlGLpJy319RtBYpgDfz69SHEUSlK1trQBJM9fprvBvJQnBcNPMmp
+         dQHa7rBInk0auExkKLCG01lSUxqmeurtpEiz9WvjMuf0k9dplcZIcTnSvKO3HkNLbxLA
+         LfbHsOpp8iOTcQa0plrdr4JKcX1DvIfFJjvWzaET8irGSupW+l/p6o3YXdwkjEi6MZK9
+         qs15NlySI4Et/yOlUSVBV2yWipcrX1pTeT8ty4dfebi8tbI2+78zrsW9e3C9Mm7oF7Lp
+         9cCw==
+X-Gm-Message-State: APjAAAUAJvJtaDFSx+2r4FXrJzgRRr6jEt9Ku2OpBV/jzRkvVX+J2VTS
+        j3pu1VGif5eUy2LMKLIhiA==
+X-Google-Smtp-Source: APXvYqz4EKkFWfBwsA+AUk6dcz7mZdu764nBiKi9eG73eELzPOgg8tPTfPvjMlS+TihdEuYh8ej3wA==
+X-Received: by 2002:a05:6830:607:: with SMTP id w7mr21047225oti.155.1582125933500;
+        Wed, 19 Feb 2020 07:25:33 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z21sm11646oto.52.2020.02.19.07.25.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 07:24:08 -0800 (PST)
-Received: from t560.mvista.com (unknown [IPv6:2001:470:b8f6:1b:9129:b2b8:445c:a4ff])
-        by serve.minyard.net (Postfix) with ESMTPA id 1986218016D;
-        Wed, 19 Feb 2020 15:24:08 +0000 (UTC)
-From:   minyard@acm.org
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
-Date:   Wed, 19 Feb 2020 09:24:03 -0600
-Message-Id: <20200219152403.3495-1-minyard@acm.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Feb 2020 07:25:32 -0800 (PST)
+Received: (nullmailer pid 18178 invoked by uid 1000);
+        Wed, 19 Feb 2020 15:25:32 -0000
+Date:   Wed, 19 Feb 2020 09:25:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alexandre.torgue@st.com, mark.rutland@arm.com,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ASoC: dt-bindings: stm32: convert sai to json-schema
+Message-ID: <20200219152532.GA10041@bogus>
+References: <20200212131259.18805-1-olivier.moysan@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200212131259.18805-1-olivier.moysan@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+On Wed, Feb 12, 2020 at 02:12:59PM +0100, Olivier Moysan wrote:
+> Convert the STM32 SAI bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> ---
+> Changes in v2:
+> - use pattern for compatible of child nodes
+> - rework dmas and clocks properties
+> - add "additionalProperties"
+> ---
+>  .../bindings/sound/st,stm32-sai.txt           | 107 ----------
+>  .../bindings/sound/st,stm32-sai.yaml          | 191 ++++++++++++++++++
+>  2 files changed, 191 insertions(+), 107 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> deleted file mode 100644
+> index 944743dd9212..000000000000
+> --- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+> +++ /dev/null
+> @@ -1,107 +0,0 @@
+> -STMicroelectronics STM32 Serial Audio Interface (SAI).
+> -
+> -The SAI interface (Serial Audio Interface) offers a wide set of audio protocols
+> -as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+> -The SAI contains two independent audio sub-blocks. Each sub-block has
+> -its own clock generator and I/O lines controller.
+> -
+> -Required properties:
+> -  - compatible: Should be "st,stm32f4-sai" or "st,stm32h7-sai"
+> -  - reg: Base address and size of SAI common register set.
+> -  - clocks: Must contain phandle and clock specifier pairs for each entry
+> -	in clock-names.
+> -  - clock-names: Must contain "pclk" "x8k" and "x11k"
+> -	"pclk": Clock which feeds the peripheral bus interface.
+> -	        Mandatory for "st,stm32h7-sai" compatible.
+> -	        Not used for "st,stm32f4-sai" compatible.
+> -	"x8k": SAI parent clock for sampling rates multiple of 8kHz.
+> -	"x11k": SAI parent clock for sampling rates multiple of 11.025kHz.
+> -  - interrupts: cpu DAI interrupt line shared by SAI sub-blocks
+> -
+> -Optional properties:
+> -  - resets: Reference to a reset controller asserting the SAI
+> -
+> -SAI subnodes:
+> -Two subnodes corresponding to SAI sub-block instances A et B can be defined.
+> -Subnode can be omitted for unsused sub-block.
+> -
+> -SAI subnodes required properties:
+> -  - compatible: Should be "st,stm32-sai-sub-a" or "st,stm32-sai-sub-b"
+> -	for SAI sub-block A or B respectively.
+> -  - reg: Base address and size of SAI sub-block register set.
+> -  - clocks: Must contain one phandle and clock specifier pair
+> -	for sai_ck which feeds the internal clock generator.
+> -	If the SAI shares a master clock, with another SAI set as MCLK
+> -	clock provider, SAI provider phandle must be specified here.
+> -  - clock-names: Must contain "sai_ck".
+> -	Must also contain "MCLK", if SAI shares a master clock,
+> -	with a SAI set as MCLK clock provider.
+> -  - dmas: see Documentation/devicetree/bindings/dma/stm32-dma.txt
+> -  - dma-names: identifier string for each DMA request line
+> -	"tx": if sai sub-block is configured as playback DAI
+> -	"rx": if sai sub-block is configured as capture DAI
+> -  - pinctrl-names: should contain only value "default"
+> -  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> -
+> -SAI subnodes Optional properties:
+> -  - st,sync: specify synchronization mode.
+> -	By default SAI sub-block is in asynchronous mode.
+> -	This property sets SAI sub-block as slave of another SAI sub-block.
+> -	Must contain the phandle and index of the sai sub-block providing
+> -	the synchronization.
+> -  - st,iec60958: support S/PDIF IEC6958 protocol for playback
+> -	IEC60958 protocol is not available for capture.
+> -	By default, custom protocol is assumed, meaning that protocol is
+> -	configured according to protocol defined in related DAI link node,
+> -	such as i2s, left justified, right justified, dsp and pdm protocols.
+> -	Note: ac97 protocol is not supported by SAI driver
+> -   - #clock-cells: should be 0. This property must be present if the SAI device
+> -	is a master clock provider, according to clocks bindings, described in
+> -	Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> -
+> -The device node should contain one 'port' child node with one child 'endpoint'
+> -node, according to the bindings defined in Documentation/devicetree/bindings/
+> -graph.txt.
+> -
+> -Example:
+> -sound_card {
+> -	compatible = "audio-graph-card";
+> -	dais = <&sai1b_port>;
+> -};
+> -
+> -sai1: sai1@40015800 {
+> -	compatible = "st,stm32h7-sai";
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -	ranges = <0 0x40015800 0x400>;
+> -	reg = <0x40015800 0x4>;
+> -	clocks = <&rcc SAI1_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+> -	clock-names = "pclk", "x8k", "x11k";
+> -	interrupts = <87>;
+> -
+> -	sai1a: audio-controller@40015804 {
+> -		compatible = "st,stm32-sai-sub-a";
+> -		reg = <0x4 0x1C>;
+> -		clocks = <&rcc SAI1_CK>;
+> -		clock-names = "sai_ck";
+> -		dmas = <&dmamux1 1 87 0x400 0x0>;
+> -		dma-names = "tx";
+> -		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_sai1a>;
+> -
+> -		sai1b_port: port {
+> -			cpu_endpoint: endpoint {
+> -				remote-endpoint = <&codec_endpoint>;
+> -				format = "i2s";
+> -			};
+> -		};
+> -	};
+> -};
+> -
+> -audio-codec {
+> -	codec_port: port {
+> -		codec_endpoint: endpoint {
+> -			remote-endpoint = <&cpu_endpoint>;
+> -		};
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> new file mode 100644
+> index 000000000000..51dd2b3bdeb1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
+> @@ -0,0 +1,191 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/st,stm32-sai.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectronics STM32 Serial Audio Interface (SAI)
+> +
+> +maintainers:
+> +  - Olivier Moysan <olivier.moysan@st.com>
+> +
+> +description:
+> +  The SAI interface (Serial Audio Interface) offers a wide set of audio
+> +  protocols as I2S standards, LSB or MSB-justified, PCM/DSP, TDM, and AC'97.
+> +  The SAI contains two independent audio sub-blocks. Each sub-block has
+> +  its own clock generator and I/O lines controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,stm32f4-sai
+> +      - st,stm32h7-sai
+> +
+> +  reg:
+> +    items:
+> +      - description: Base address and size of SAI common register set.
+> +      - description: Base address and size of SAI identification register set.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  ranges:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: pclk feeds the peripheral bus interface.
+> +      - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
+> +      - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pclk
+> +      - const: x8k
+> +      - const: x11k
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - ranges
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - clocks
+> +  - clock-names
+> +
+> +patternProperties:
+> +  "^audio-controller@[0-9a-f]+$":
+> +    type: object
+> +    description:
+> +      Two subnodes corresponding to SAI sub-block instances A et B
+> +      can be defined. Subnode can be omitted for unsused sub-block.
+> +
+> +    properties:
+> +      compatible:
+> +        description: Compatible for SAI sub-block A or B.
+> +        pattern: "st,stm32-sai-sub-[ab]"
+> +
+> +      "#sound-dai-cells":
+> +        const: 0
+> +
+> +      reg:
+> +        maxItems: 1
+> +
+> +      clocks:
+> +        items:
+> +          - description: sai_ck clock feeding the internal clock generator.
+> +          - description: MCLK clock from a SAI set as master clock provider.
+> +        minItems: 1
+> +        maxItems: 2
+> +
+> +      clock-names:
+> +        items:
+> +          - const: sai_ck
+> +          - const: MCLK
+> +        minItems: 1
+> +        maxItems: 2
+> +
+> +      dmas:
+> +        maxItems: 1
+> +
+> +      dma-names:
+> +        description: |
+> +          rx: SAI sub-block is configured as a capture DAI.
+> +          tx: SAI sub-block is configured as a playback DAI.
+> +        enum: [ rx, tx ]
+> +
+> +      st,sync:
+> +        description:
+> +          Configure the SAI sub-block as slave of another SAI sub-block.
+> +          By default SAI sub-block is in asynchronous mode.
+> +          Must contain the phandle and index of the SAI sub-block providing
+> +          the synchronization.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#definitions/phandle-array
+> +          - maxItems: 1
+> +
+> +      st,iec60958:
+> +        description:
+> +          If set, support S/PDIF IEC6958 protocol for playback.
+> +          IEC60958 protocol is not available for capture.
+> +          By default, custom protocol is assumed, meaning that protocol is
+> +          configured according to protocol defined in related DAI link node,
+> +          such as i2s, left justified, right justified, dsp and pdm protocols.
+> +        allOf:
+> +          - $ref: /schemas/types.yaml#definitions/flag
+> +
+> +      "#clock-cells":
+> +        description: Configure the SAI device as master clock provider.
+> +        const: 0
+> +
+> +    required:
+> +      - compatible
+> +      - "#sound-dai-cells"
+> +      - reg
+> +      - clocks
+> +      - clock-names
+> +      - dmas
+> +      - dma-names
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: st,stm32f4-sai
+> +
+> +  - then:
 
-I was working on a single-step bug on kgdb on an ARM64 system, and I saw
-this scenario:
+The '-' makes this 2 different schema.
 
-* A single step is setup to return to el1
-* The ERET return to el1
-* An interrupt is pending and runs before the instruction
-* As soon as PSTATE.D (the debug disable bit) is cleared, the single
-    step happens in that location, not where it should have.
+> +      properties:
+> +        clocks:
+> +          items:
+> +            - description: x8k, SAI parent clock for sampling rates multiple of 8kHz.
+> +            - description: x11k, SAI parent clock for sampling rates multiple of 11.025kHz.        
+> +
+> +        clock-names:
+> +          items:
+> +            - const: x8k
+> +            - const: x11k
 
-This appears to be due to PSTATE.SS not being cleared when the exception
-happens.  Per section D.2.12.5 of the ARMv8 reference manual, that
-appears to be incorrect, it says "As part of exception entry, the PE
-does all of the following: ...  Sets PSTATE.SS to 0."
+It is impossible for the first definition and this one to both be true. 
+You'll have to put the first definition in an 'else' clause here. 
 
-However, I appear to not be the first person who has noticed this.  In
-the el0-only portion of the kernel_entry macro in entry.S, I found the
-following comment: "Ensure MDSCR_EL1.SS is clear, since we can unmask
-debug exceptions when scheduling."  Exactly the same scenario, except
-coming from a userland single step, not a kernel one.
-
-As I was studying this, though, I realized that the following scenario
-had an issue:
-
-* Kernel enables MDSCR.SS, MDSCR.KDE, MDSCR.MDE (unnecessary), and
-  PSTATE.SS to enable a single step in el1, for kgdb or kprobes,
-  on the current CPU's MDSCR register and the process' PSTATE.SS
-  register.
-* Kernel returns from the exception with ERET.
-* An interrupt or page fault happens on the instruction, causing the
-  instruction to not be run, but the exception handler runs.
-* The exception causes the task to migrate to a new core.
-* The return from the exception runs on a different processor now,
-  where the MDSCR values are not set up for a single step.
-* The single step fails to happen.
-
-This is bad for kgdb, of course, but it seems really bad for kprobes if
-this happens.
-
-To fix both these problems, rework the handling of single steps to clear
-things out upon entry to the kernel from el1, and then to set up single
-step when returning to el1, and not do the setup in debug-monitors.c.
-This means that single stepping does not use
-enable/disable_debug_monitors(); it is no longer necessary to track
-those flags for single stepping.  This is much like single stepping is
-handled for el0.  A new flag is added in pt_regs to enable single
-stepping from el1.  Unfortunately, the old value of PSTATE.SS cannot be
-used for this because of the hardware bug mentioned earlier.
-
-As part of this, there is an interaction between single stepping and the
-other users of debug monitors with the MDSCR.KDE bit.  That bit has to
-be set for both hardware breakpoints at el1 and single stepping at el1.
-A new variable was created to store the cpu-wide value of MDSCR.KDE; the
-single stepping code makes sure not to clear that bit on kernel entry if
-it's set in the per-cpu variable.
-
-After fixing this and doing some more testing, I ran into another issue:
-
-* Kernel enables the pt_regs single step
-* Kernel returns from the exception with ERET.
-* An interrupt or page fault happens on the instruction, causing the
-  instruction to not be run, but the exception handler runs.
-* The exception handling hits a breakpoint and stops.
-* The user continues from the breakpoint, so the kernel is no longer
-  expecting a single step.
-* On the return from the first exception, the single step flag in
-  pt_regs is still set, so a single step trap happens.
-* The kernel keels over from an unexpected single step.
-
-There's no easy way to find the pt_regs that has the single step flag
-set.  So a thread info flag was added so that the single step could be
-disabled in this case.  Both that flag and the flag in pt_regs must be
-set to enable a single step.
-
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
----
-Changes from v1:
-
-After studying the EL0 handling for this, I realized an issue with using
-MDSCR to check if single step is enabled: it can be expensive on a VM.
-So check the task flag first to see if single step is enabled.  Then
-check MDSCR if the task flag is set.
-
- arch/arm64/include/asm/debug-monitors.h |  3 +-
- arch/arm64/include/asm/ptrace.h         |  4 +-
- arch/arm64/include/asm/thread_info.h    |  1 +
- arch/arm64/kernel/asm-offsets.c         |  1 +
- arch/arm64/kernel/debug-monitors.c      | 61 ++++++++++++++++++++++---
- arch/arm64/kernel/entry.S               | 44 ++++++++++++++++++
- arch/arm64/kernel/kgdb.c                |  6 ++-
- 7 files changed, 109 insertions(+), 11 deletions(-)
-
-diff --git a/arch/arm64/include/asm/debug-monitors.h b/arch/arm64/include/asm/debug-monitors.h
-index 7619f473155f..02842fef74bb 100644
---- a/arch/arm64/include/asm/debug-monitors.h
-+++ b/arch/arm64/include/asm/debug-monitors.h
-@@ -13,7 +13,8 @@
- #include <asm/ptrace.h>
- 
- /* Low-level stepping controls. */
--#define DBG_MDSCR_SS		(1 << 0)
-+#define DBG_MDSCR_SS_BIT	0
-+#define DBG_MDSCR_SS		(1 << DBG_MDSCR_SS_BIT)
- #define DBG_SPSR_SS		(1 << 21)
- 
- /* MDSCR_EL1 enabling bits */
-diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
-index bf57308fcd63..61b69f1f7c26 100644
---- a/arch/arm64/include/asm/ptrace.h
-+++ b/arch/arm64/include/asm/ptrace.h
-@@ -169,11 +169,11 @@ struct pt_regs {
- 	};
- 	u64 orig_x0;
- #ifdef __AARCH64EB__
--	u32 unused2;
-+	u32 ss_enable; /* Kernel single-step for a task */
- 	s32 syscallno;
- #else
- 	s32 syscallno;
--	u32 unused2;
-+	u32 ss_enable;
- #endif
- 
- 	u64 orig_addr_limit;
-diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-index f0cec4160136..445519a5d2c9 100644
---- a/arch/arm64/include/asm/thread_info.h
-+++ b/arch/arm64/include/asm/thread_info.h
-@@ -78,6 +78,7 @@ void arch_release_task_struct(struct task_struct *tsk);
- #define TIF_SVE_VL_INHERIT	24	/* Inherit sve_vl_onexec across exec */
- #define TIF_SSBD		25	/* Wants SSB mitigation */
- #define TIF_TAGGED_ADDR		26	/* Allow tagged user addresses */
-+#define TIF_KERNEL_SINGLESTEP	27	/* Single-stepping in EL1. */
- 
- #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
- #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index a5bdce8af65b..038e76d2f0c4 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -62,6 +62,7 @@ int main(void)
-   DEFINE(S_PSTATE,		offsetof(struct pt_regs, pstate));
-   DEFINE(S_PC,			offsetof(struct pt_regs, pc));
-   DEFINE(S_SYSCALLNO,		offsetof(struct pt_regs, syscallno));
-+  DEFINE(S_SS_ENABLE,		offsetof(struct pt_regs, ss_enable));
-   DEFINE(S_ORIG_ADDR_LIMIT,	offsetof(struct pt_regs, orig_addr_limit));
-   DEFINE(S_PMR_SAVE,		offsetof(struct pt_regs, pmr_save));
-   DEFINE(S_STACKFRAME,		offsetof(struct pt_regs, stackframe));
-diff --git a/arch/arm64/kernel/debug-monitors.c b/arch/arm64/kernel/debug-monitors.c
-index 48222a4760c2..9260f1cfe985 100644
---- a/arch/arm64/kernel/debug-monitors.c
-+++ b/arch/arm64/kernel/debug-monitors.c
-@@ -77,6 +77,14 @@ early_param("nodebugmon", early_debug_disable);
- static DEFINE_PER_CPU(int, mde_ref_count);
- static DEFINE_PER_CPU(int, kde_ref_count);
- 
-+/*
-+ * The KDE bit must be set for hardware breakpoints or single stepping
-+ * to work in the kernel.  So when a kernel single-step finishes, it
-+ * will clear the SS bit and the KDE bit.  It uses the below to restore
-+ * the KDE bit if we need it set for hardware breakpoints.
-+ */
-+DEFINE_PER_CPU_READ_MOSTLY(u64, mdscr_debug_bits);
-+
- void enable_debug_monitors(enum dbg_active_el el)
- {
- 	u32 mdscr, enable = 0;
-@@ -94,6 +102,7 @@ void enable_debug_monitors(enum dbg_active_el el)
- 		mdscr = mdscr_read();
- 		mdscr |= enable;
- 		mdscr_write(mdscr);
-+		__this_cpu_write(mdscr_debug_bits, mdscr & DBG_MDSCR_KDE);
- 	}
- }
- NOKPROBE_SYMBOL(enable_debug_monitors);
-@@ -115,6 +124,7 @@ void disable_debug_monitors(enum dbg_active_el el)
- 		mdscr = mdscr_read();
- 		mdscr &= disable;
- 		mdscr_write(mdscr);
-+		__this_cpu_write(mdscr_debug_bits, mdscr & DBG_MDSCR_KDE);
- 	}
- }
- NOKPROBE_SYMBOL(disable_debug_monitors);
-@@ -405,27 +415,66 @@ void user_fastforward_single_step(struct task_struct *task)
- }
- 
- /* Kernel API */
-+
-+/*
-+ * The task that is currently being single-stepped.  There can be only
-+ * one.
-+ */
-+struct task_struct *single_step_task;
-+
-+/*
-+ * Why, you may ask, does this have both regs->ss_enable and
-+ * TIF_KERNEL_SINGLESTEP to enable single stepping?  The trouble lies
-+ * in nested exceptions in the kernel.  If an interrupt is pending
-+ * when a single-step occurs, it will happen before the single step,
-+ * and it will go through the el1 kernel entry.
-+ *
-+ * One scenario is that another exception may occur during this
-+ * interrupt processing.  If you only had TIF_KERNEL_SINGLESTEP, single
-+ * stepping would be enabled there, but that's the wrong place.  So you
-+ * have to rely on regs->ss_enabled to tell you if that is the case,
-+ * since it won't be enabled in the second interrupt handler.
-+ *
-+ * A breakpoint may be hit during this interrupt, and the kernel will
-+ * stop there.  But if you only had regs->ss_enabled, you couldn't
-+ * disable the single stepping since you have no idea where regs is
-+ * you return from kgdb.  So when it returned, it would hit the single
-+ * step, and the kernel would die from an unknown single step source.
-+ * So you have TIF_KERNEL_SINGLESTEP to prevent that problem.  The
-+ * task being single-stepped is saved and the flag cleared when it is
-+ * disabled.
-+ *
-+ * It would be nice to be able to use SPSR.SS instead of having a
-+ * separate regs->ss_enable flag.  However, some processors don't
-+ * clear PSTATE.SS on an exception, so SPSR.SS will be set in
-+ * subsequent exception handlers.
-+ */
- void kernel_enable_single_step(struct pt_regs *regs)
- {
- 	WARN_ON(!irqs_disabled());
--	set_regs_spsr_ss(regs);
--	mdscr_write(mdscr_read() | DBG_MDSCR_SS);
--	enable_debug_monitors(DBG_ACTIVE_EL1);
-+	regs->ss_enable = DBG_MDSCR_SS;
-+	set_ti_thread_flag(task_thread_info(current), TIF_KERNEL_SINGLESTEP);
-+	get_task_struct(current);
-+	single_step_task = current;
- }
- NOKPROBE_SYMBOL(kernel_enable_single_step);
- 
- void kernel_disable_single_step(void)
- {
- 	WARN_ON(!irqs_disabled());
--	mdscr_write(mdscr_read() & ~DBG_MDSCR_SS);
--	disable_debug_monitors(DBG_ACTIVE_EL1);
-+	if (single_step_task) {
-+		clear_ti_thread_flag(task_thread_info(single_step_task),
-+				     TIF_KERNEL_SINGLESTEP);
-+		put_task_struct(single_step_task);
-+		single_step_task = NULL;
-+	}
- }
- NOKPROBE_SYMBOL(kernel_disable_single_step);
- 
- int kernel_active_single_step(void)
- {
- 	WARN_ON(!irqs_disabled());
--	return mdscr_read() & DBG_MDSCR_SS;
-+	return single_step_task != NULL;
- }
- NOKPROBE_SYMBOL(kernel_active_single_step);
- 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index 9461d812ae27..336fc667bf04 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -25,6 +25,7 @@
- #include <asm/thread_info.h>
- #include <asm/asm-uaccess.h>
- #include <asm/unistd.h>
-+#include <asm/debug-monitors.h>
- 
- /*
-  * Context tracking subsystem.  Used to instrument transitions
-@@ -191,6 +192,32 @@ alternative_cb_end
- 	mrs	x23, spsr_el1
- 	stp	lr, x21, [sp, #S_LR]
- 
-+	.if \el != 0
-+	/*
-+	 * If single-step was enabled, save it off and disable it,
-+	 * or it will trap on enable_dbg.
-+	 * The restore code will re-enable it if necessary.
-+	 * Use the task flag to know if kernel single step might be enabled,
-+	 * not the mdscr value first, accessing mdscr in a VM is expensive.
-+	 * But the task flag MDSCR.SS must be set for it to be enabled,
-+	 * so that has to be checked, if the task flag is set.
-+	 */
-+	mov	w21, #0
-+	ldr	x20, [tsk, #TSK_TI_FLAGS]
-+	tbz	x20, #TIF_KERNEL_SINGLESTEP, 1f
-+	mrs	x20, mdscr_el1
-+	tbz	x20, #DBG_MDSCR_SS_BIT, 1f
-+	ldr_this_cpu x19, mdscr_debug_bits, x21
-+	bic	x20, x20, #DBG_MDSCR_SS
-+	bic	x20, x20, #DBG_MDSCR_KDE
-+	orr	x20, x20, x19
-+	msr	mdscr_el1, x20
-+	mov	w21, #DBG_MDSCR_SS
-+1:
-+	str	w21, [sp, #S_SS_ENABLE]
-+	bic	x23, x23, #DBG_SPSR_SS
-+	.endif /* \el != 0 */
-+
- 	/*
- 	 * In order to be able to dump the contents of struct pt_regs at the
- 	 * time the exception was taken (in case we attempt to walk the call
-@@ -344,6 +371,23 @@ alternative_else_nop_endif
- 	apply_ssbd 0, x0, x1
- 	.endif
- 
-+	.if	\el != 0
-+	/* Restore the single-step bit. */
-+	ldr	w20, [sp, #S_SS_ENABLE]
-+	tbz	w20, #DBG_MDSCR_SS_BIT, 6f
-+	ldr	x20, [tsk, #TSK_TI_FLAGS]
-+	tbz	x20, #TIF_KERNEL_SINGLESTEP, 6f
-+	disable_daif
-+	mrs	x20, mdscr_el1
-+	orr	x20, x20, #DBG_MDSCR_SS // Enable single step
-+	/* KDE must be set for SS in EL1 */
-+	orr     x20, x20, #DBG_MDSCR_KDE
-+	msr	mdscr_el1, x20
-+	orr	x22, x22, #DBG_SPSR_SS
-+6:
-+	/* PSTATE.D and PSTATE.SS will be restored from SPSR_EL1. */
-+	.endif
-+
- 	msr	elr_el1, x21			// set up the return data
- 	msr	spsr_el1, x22
- 	ldp	x0, x1, [sp, #16 * 0]
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index 43119922341f..5b40f190f455 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -221,8 +221,10 @@ int kgdb_arch_handle_exception(int exception_vector, int signo,
- 		/*
- 		 * Enable single step handling
- 		 */
--		if (!kernel_active_single_step())
--			kernel_enable_single_step(linux_regs);
-+		if (kernel_active_single_step())
-+			/* Clear out the old one */
-+			kernel_disable_single_step();
-+		kernel_enable_single_step(linux_regs);
- 		err = 0;
- 		break;
- 	default:
--- 
-2.17.1
-
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+> +    #include <dt-bindings/reset/stm32mp1-resets.h>
+> +    sai1: sai@4400a000 {
+> +      compatible = "st,stm32h7-sai";
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges = <0 0x4400a000 0x400>;
+> +      reg = <0x4400a000 0x4>, <0x4400a3f0 0x10>;
+> +      interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&rcc SAI1>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+> +      clock-names = "pclk", "x8k", "x11k";
+> +      resets = <&rcc SAI1_R>;
+> +
+> +      sai1a: audio-controller@4400a004 {
+> +        compatible = "st,stm32-sai-sub-a";
+> +        #sound-dai-cells = <0>;
+> +        reg = <0x4 0x1c>;
+> +        clocks = <&rcc SAI1_K>;
+> +        clock-names = "sai_ck";
+> +        dmas = <&dmamux1 87 0x400 0x01>;
+> +        dma-names = "tx";
+> +      };
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
