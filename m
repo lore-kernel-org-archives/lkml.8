@@ -2,182 +2,233 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF061C34053
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6119FC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53B72467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 272EA24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GzyOGDrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbgBSQFU (ORCPT
+        id S1726761AbgBSQGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:05:20 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44158 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSQFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:05:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 435ACACF0;
-        Wed, 19 Feb 2020 16:05:17 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v3] leds: add SGI IP30 led support
-Date:   Wed, 19 Feb 2020 17:05:04 +0100
-Message-Id: <20200219160504.27555-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 11:06:16 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:38425 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbgBSQGQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:06:16 -0500
+Received: by mail-qk1-f195.google.com with SMTP id z19so586737qkj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:06:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Uhi4M2kPWQtaIRnOkT6OXlV4BqN3p0xNbs1d1Zj15X4=;
+        b=GzyOGDrLJcrnBQcUrMZ80TNTzBtWlzRzPrxkmbjiOI9pC2KwTjzcOREsMyKigWJ46k
+         /RHX7Ks1BbOR0ASTgNB0dYUdDf2zljHrcYOi68tPDKZwWjlI0cFSNKS19kPxsw1U4Yfv
+         fn15eOQ6IMYDNr+QBSGrSbP12JRmpJH2SpdRMxVEdtj94dMp3AbFxCsie6a9iHut/SmM
+         VLnezzpNvZdCneLOaNK1j4JxsbwDh+L1v4FMD6/2n/DOKQci2klhRiRDT8jUVLd1a7lo
+         TxcgdveImX3ek4L6a9XGMxzxqBbo40lOzueSI2tXN2X/gaHRmOrxyXPBydJJeI6602Sr
+         ycbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uhi4M2kPWQtaIRnOkT6OXlV4BqN3p0xNbs1d1Zj15X4=;
+        b=BCU6P2qbHltcjvl0stkINA5/n6IfWCMax3BreZ0v4JPmMeLsfTX2MxdpI31FUk6SpF
+         JnmvYdTK536jGYHWu6UJ2wYc9dPIfJHK4MkU8QlEUJ0fiuskCESiUdi4MUY7zySEQ6/T
+         STMvBAxIbcmpmaxK5QHx9pOCD9E/w26m17iOZTAXZa0nJhPXupu6pOiMLvcneUddFTMi
+         +bQOsC0z55O5tOTrlBEz8C/RXee+60Ja5YRvCwxtlrIbRaInKygeqtW3HCHmWI+6lB7I
+         md8uY+RapQl7JIZyL2zc/q7C/9Ul6Gjpfpr7XGKucGURAI9mAvRFkvzENZRlCSVWCu1i
+         OcUg==
+X-Gm-Message-State: APjAAAWM5ZXdR2uKtTtBUnrWx1zMM6iesZJCjQu0XEezV2D4v1u+qj01
+        qgd5Lws745V5c6GQ1THf2a+Y2k9iCW+4Pb7y/kJcIQ==
+X-Google-Smtp-Source: APXvYqwmcJfosb6qUJENX6YBHKmF0qqo2wR0Ifv8vS768JwiEr/utEMlU+l0aopgtrUhlEtfOf9MxSCQ+2t2drIetCY=
+X-Received: by 2002:a05:620a:150a:: with SMTP id i10mr2031290qkk.407.1582128375013;
+ Wed, 19 Feb 2020 08:06:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200219144724.800607165@infradead.org> <20200219150745.651901321@infradead.org>
+In-Reply-To: <20200219150745.651901321@infradead.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 19 Feb 2020 17:06:03 +0100
+Message-ID: <CACT4Y+Y+nPcnbb8nXGQA1=9p8BQYrnzab_4SvuPwbAJkTGgKOQ@mail.gmail.com>
+Subject: Re: [PATCH v3 22/22] x86/int3: Ensure that poke_int3_handler() is not sanitized
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implemenets a driver to support the front panel LEDs of
-SGI Octane (IP30) workstations.
+On Wed, Feb 19, 2020 at 4:14 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> In order to ensure poke_int3_handler() is completely self contained --
+> we call this while we're modifying other text, imagine the fun of
+> hitting another INT3 -- ensure that everything is without sanitize
+> crud.
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
-Changes in v3:
-  - rebased to 5.6-rc2
++kasan-dev
 
-Changes in v2:
-  - use led names conforming to include/dt-bindings/leds/common.h
-  - read LED state from firmware
-  - leave setting up to user
+Hi Peter,
 
- drivers/leds/Kconfig     | 11 ++++++
- drivers/leds/Makefile    |  1 +
- drivers/leds/leds-ip30.c | 80 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 92 insertions(+)
- create mode 100644 drivers/leds/leds-ip30.c
+How do we hit another INT3 here? Does the code do
+out-of-bounds/use-after-free writes?
+Debugging later silent memory corruption may be no less fun :)
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index d82f1dea3711..c664d84e1667 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -846,6 +846,17 @@ config LEDS_TPS6105X
- 	  It is a single boost converter primarily for white LEDs and
- 	  audio amplifiers.
- 
-+config LEDS_IP30
-+	tristate "LED support for SGI Octane machines"
-+	depends on LEDS_CLASS
-+	depends on SGI_MFD_IOC3
-+	help
-+	  This option enables support for the Red and White LEDs of
-+	  SGI Octane machines.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-ip30.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
- 
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index d7e1107753fb..46bd611a03a9 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
-+obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
-new file mode 100644
-index 000000000000..82453a216f81
---- /dev/null
-+++ b/drivers/leds/leds-ip30.c
-@@ -0,0 +1,80 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LED Driver for SGI Octane machines
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/leds.h>
-+
-+struct ip30_led {
-+	struct led_classdev cdev;
-+	u32 __iomem *reg;
-+};
-+
-+static void ip30led_set(struct led_classdev *led_cdev,
-+			enum led_brightness value)
-+{
-+	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
-+
-+	if (value)
-+		writel(1, led->reg);
-+	else
-+		writel(0, led->reg);
-+}
-+
-+static int ip30led_create(struct platform_device *pdev, int num)
-+{
-+	struct resource *res;
-+	struct ip30_led *data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
-+	if (!res)
-+		return -EBUSY;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->reg = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->reg))
-+		return PTR_ERR(data->reg);
-+
-+
-+	if (num == 0)
-+		data->cdev.name = "white:indicator";
-+	else
-+		data->cdev.name = "red:indicator";
-+
-+	data->cdev.brightness = readl(data->reg);
-+	data->cdev.max_brightness = 1;
-+	data->cdev.brightness_set = ip30led_set;
-+
-+	return devm_led_classdev_register(&pdev->dev, &data->cdev);
-+}
-+
-+static int ip30led_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = ip30led_create(pdev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ip30led_create(pdev, 1);
-+}
-+
-+static struct platform_driver ip30led_driver = {
-+	.probe		= ip30led_probe,
-+	.driver		= {
-+		.name		= "ip30-leds",
-+	},
-+};
-+
-+module_platform_driver(ip30led_driver);
-+
-+MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-+MODULE_DESCRIPTION("SGI Octane LED driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:ip30-leds");
--- 
-2.25.0
+Not sanitizing bsearch entirely is a bit unfortunate. We won't find
+any bugs in it when called from other sites too.
+It may deserve a comment at least. Tomorrow I may want to remove
+__no_sanitize, just because sanitizing more is better, and no int3
+test will fail to stop me from doing that...
 
+It's quite fragile. Tomorrow poke_int3_handler handler calls more of
+fewer functions, and both ways it's not detected by anything. And if
+we ignore all by one function, it is still not helpful, right?
+Depending on failure cause/mode, using kasan_disable/enable_current
+may be a better option.
+
+
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/kernel/alternative.c       |    4 ++--
+>  arch/x86/kernel/traps.c             |    2 +-
+>  include/linux/compiler-clang.h      |    7 +++++++
+>  include/linux/compiler-gcc.h        |    6 ++++++
+>  include/linux/compiler.h            |    5 +++++
+>  include/linux/compiler_attributes.h |    1 +
+>  lib/bsearch.c                       |    2 +-
+>  7 files changed, 23 insertions(+), 4 deletions(-)
+>
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -979,7 +979,7 @@ static __always_inline void *text_poke_a
+>         return _stext + tp->rel_addr;
+>  }
+>
+> -static int notrace patch_cmp(const void *key, const void *elt)
+> +static int notrace __no_sanitize patch_cmp(const void *key, const void *elt)
+>  {
+>         struct text_poke_loc *tp = (struct text_poke_loc *) elt;
+>
+> @@ -991,7 +991,7 @@ static int notrace patch_cmp(const void
+>  }
+>  NOKPROBE_SYMBOL(patch_cmp);
+>
+> -int notrace poke_int3_handler(struct pt_regs *regs)
+> +int notrace __no_sanitize poke_int3_handler(struct pt_regs *regs)
+>  {
+>         struct bp_patching_desc *desc;
+>         struct text_poke_loc *tp;
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -496,7 +496,7 @@ dotraplinkage void do_general_protection
+>  }
+>  NOKPROBE_SYMBOL(do_general_protection);
+>
+> -dotraplinkage void notrace do_int3(struct pt_regs *regs, long error_code)
+> +dotraplinkage void notrace __no_sanitize do_int3(struct pt_regs *regs, long error_code)
+>  {
+>         if (poke_int3_handler(regs))
+>                 return;
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -24,6 +24,13 @@
+>  #define __no_sanitize_address
+>  #endif
+>
+> +#if __has_feature(undefined_sanitizer)
+> +#define __no_sanitize_undefined \
+> +               __atribute__((no_sanitize("undefined")))
+> +#else
+> +#define __no_sanitize_undefined
+> +#endif
+> +
+>  /*
+>   * Not all versions of clang implement the the type-generic versions
+>   * of the builtin overflow checkers. Fortunately, clang implements
+> --- a/include/linux/compiler-gcc.h
+> +++ b/include/linux/compiler-gcc.h
+> @@ -145,6 +145,12 @@
+>  #define __no_sanitize_address
+>  #endif
+>
+> +#if __has_attribute(__no_sanitize_undefined__)
+> +#define __no_sanitize_undefined __attribute__((no_sanitize_undefined))
+> +#else
+> +#define __no_sanitize_undefined
+> +#endif
+> +
+>  #if GCC_VERSION >= 50100
+>  #define COMPILER_HAS_GENERIC_BUILTIN_OVERFLOW 1
+>  #endif
+> --- a/include/linux/compiler.h
+> +++ b/include/linux/compiler.h
+> @@ -199,6 +199,7 @@ void __read_once_size(const volatile voi
+>         __READ_ONCE_SIZE;
+>  }
+>
+> +#define __no_kasan __no_sanitize_address
+>  #ifdef CONFIG_KASAN
+>  /*
+>   * We can't declare function 'inline' because __no_sanitize_address confilcts
+> @@ -274,6 +275,10 @@ static __always_inline void __write_once
+>   */
+>  #define READ_ONCE_NOCHECK(x) __READ_ONCE(x, 0)
+>
+> +#define __no_ubsan __no_sanitize_undefined
+> +
+> +#define __no_sanitize __no_kasan __no_ubsan
+> +
+>  static __no_kasan_or_inline
+>  unsigned long read_word_at_a_time(const void *addr)
+>  {
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -41,6 +41,7 @@
+>  # define __GCC4_has_attribute___nonstring__           0
+>  # define __GCC4_has_attribute___no_sanitize_address__ (__GNUC_MINOR__ >= 8)
+>  # define __GCC4_has_attribute___fallthrough__         0
+> +# define __GCC4_has_attribute___no_sanitize_undefined__ (__GNUC_MINOR__ >= 9)
+>  #endif
+>
+>  /*
+> --- a/lib/bsearch.c
+> +++ b/lib/bsearch.c
+> @@ -28,7 +28,7 @@
+>   * the key and elements in the array are of the same type, you can use
+>   * the same comparison function for both sort() and bsearch().
+>   */
+> -void *bsearch(const void *key, const void *base, size_t num, size_t size,
+> +void __no_sanitize *bsearch(const void *key, const void *base, size_t num, size_t size,
+>               cmp_func_t cmp)
+>  {
+>         const char *pivot;
+>
+>
