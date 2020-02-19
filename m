@@ -2,48 +2,49 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65373C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B861FC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457D92464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CE2D2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgBSK1L (ORCPT
+        id S1726718AbgBSK1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:27:11 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:33499 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBSK1K (ORCPT
+        Wed, 19 Feb 2020 05:27:15 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56018 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBSK1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:27:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id s9so19579087ilk.0
+        Wed, 19 Feb 2020 05:27:12 -0500
+Received: by mail-io1-f71.google.com with SMTP id z21so15899798iob.22
         for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 02:27:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=33+se4haTh9DlmmNbmgp9VTTpKhaS8ygFsODy9mZqOc=;
-        b=q9CYTvlS/kBVhxfaklUDeq7lUihseT3tHKJszGIg1nbAphaQQXnhRF0yOkPwE22zwt
-         AZ/+QBpCrOJQ1b0hcGVa7m4G7uj6Xk23IEBeva8Rjd6+LQ1ceRQqr+PE6bdN07H79+nN
-         /XJl5rYGcpQValH4uOxMdteHylR1Ej/FY26+645Q8ckOwEd/iVQI7bQJ16a0to5EDYAO
-         +HURb0+nlLiLnhPgUce0eXVxA66LOXrjWvBVt0Nh6l74Fw2yDleLodc2lnB5UGTdUY9X
-         w90FeRhx/kD93fkZFvmYowQIdbZiBZ8jQD61TvzVCHIcbn7bAGZJWJsjVbXG+tjJugTg
-         AA7A==
-X-Gm-Message-State: APjAAAX6ikYRLsPW6up5C76Wf2Qan9dQ01+ohY+OTwOGjeV4q0Vf6xdI
-        OlVcsPHxw1XlIrP/QSbgPwMzUcm8efZUevSpfBYvfp2PNeaP
-X-Google-Smtp-Source: APXvYqzjlt+oO6qH5psK/10bssAQQU0chD5igzOKj4Hf95uzw4fn9SuSfWbr/5WIX8MhdAwIOytu+fdSxewjeeb1dM4wH4OHvGzT
+        bh=GN2id+2LRnjznw5TD1tuue3NaDlCHXdRMzYBB7qsFhg=;
+        b=uH10GjGZ4QlRYb58Zj3b4Qg1QvtOQ8G5LXecKPw9L0zrl1n5N9Zrke1OLm1sjw76nm
+         rn11hQ41jv+6F+3/RmKMed7I11/tCNAZtOV94z99YJyYXJrTh0g81zXHAluYRIetkFP2
+         kW7U495dVu7T3xQqXfbGdqxp0g9Je0FbXKMJRkvbR6gC8pV/hZlcRTxkIHkOoWvNjG6t
+         lHd555MdiEw+IPj+sq6pa8E8WrbYR0OdjHBX8ztsHnEurtY/xNrn3TD/TsjddL3B8TeM
+         PQNwb3kQChovrfmfMD/MadQ9sw5HvZvy8wcOG3U5O5DGLEi3a7rYt6SiYjR0V9zhU1FF
+         2cYA==
+X-Gm-Message-State: APjAAAXelkiXOuYIVOV6awTyWRzbqRtLQ16sOE56Pbdui3vNBMj64JiP
+        7vB0ROGCSktPNFSm1SUUN+llBK09BdPm8zr6ZPKFR931SGj2
+X-Google-Smtp-Source: APXvYqy6dRQOWUhMqpDmdIuC1tdFrGntBlc8Sj7new4Ib3QNCGH+lkabLXCVIsVhBGOtIkvhxT1eJD0piYh+YYDLpPJRAI4o3jIo
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e411:: with SMTP id u17mr20164483iog.39.1582108030273;
+X-Received: by 2002:a5d:8b9a:: with SMTP id p26mr19101008iol.273.1582108030498;
  Wed, 19 Feb 2020 02:27:10 -0800 (PST)
 Date:   Wed, 19 Feb 2020 02:27:10 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000240eeb059eeb3baf@google.com>
-Subject: net boot error: can't ssh into the instance (3)
-From:   syzbot <syzbot+fd422c644918bc119eae@syzkaller.appspotmail.com>
+Message-ID: <000000000000277b80059eeb3bdb@google.com>
+Subject: net-next boot error: can't ssh into the instance (3)
+From:   syzbot <syzbot+1312d700c503da6008a1@syzkaller.appspotmail.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
@@ -56,17 +57,17 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    a1fa83bd netdevice.h: fix all kernel-doc and Sphinx warnings
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=10153231e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=71f1d0a1df5278ab
-dashboard link: https://syzkaller.appspot.com/bug?extid=fd422c644918bc119eae
+HEAD commit:    2019fc96 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1387bd4ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
+dashboard link: https://syzkaller.appspot.com/bug?extid=1312d700c503da6008a1
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fd422c644918bc119eae@syzkaller.appspotmail.com
+Reported-by: syzbot+1312d700c503da6008a1@syzkaller.appspotmail.com
 
 
 
