@@ -2,147 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235F0C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C087C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AB321D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1EF2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:23:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbgBSLXK (ORCPT
+        id S1727187AbgBSLXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:23:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:46812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbgBSLXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:23:09 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12F8231B;
-        Wed, 19 Feb 2020 03:23:09 -0800 (PST)
-Received: from [10.37.12.28] (unknown [10.37.12.28])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 13CF43F6CF;
-        Wed, 19 Feb 2020 03:23:05 -0800 (PST)
-Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add dynamic-power-coefficient to
- Exynos5422 CPUs
-To:     kgene@kernel.org, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
-        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        b.zolnierkie@samsung.com, dietmar.eggemann@arm.com
-References: <20200219095828.8063-1-lukasz.luba@arm.com>
- <20200219095828.8063-2-lukasz.luba@arm.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <d545fe0f-3af2-4d37-ab44-c78fba350029@arm.com>
-Date:   Wed, 19 Feb 2020 11:23:04 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 19 Feb 2020 06:23:14 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10219 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727046AbgBSLXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:23:13 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D2C95F7484DAC9A56793;
+        Wed, 19 Feb 2020 19:23:11 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
+ 19:23:03 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <clm@fb.com>, <josef@toxicpanda.com>, <dsterba@suse.com>
+CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <zhengbin13@huawei.com>,
+        <yi.zhang@huawei.com>
+Subject: [PATCH 2/3] btrfs: remove set but not used variable 'parent'
+Date:   Wed, 19 Feb 2020 19:22:03 +0800
+Message-ID: <20200219112203.17075-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-In-Reply-To: <20200219095828.8063-2-lukasz.luba@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My apologizes for the mistake in the subject. It should be
-"PATCH v2 1/2" (mistake in script arguments while sending).
-The same applies to the second patch, should be  "PATCH v2 2/2".
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Regards,
-Lukasz
+fs/btrfs/tree-log.c: In function ‘walk_down_log_tree’:
+fs/btrfs/tree-log.c:2702:24: warning: variable ‘parent’
+set but not used [-Wunused-but-set-variable]
+fs/btrfs/tree-log.c: In function ‘walk_up_log_tree’:
+fs/btrfs/tree-log.c:2803:26: warning: variable ‘parent’
+set but not used [-Wunused-but-set-variable]
 
-On 2/19/20 9:58 AM, lukasz.luba@arm.com wrote:
-> From: Lukasz Luba <lukasz.luba@arm.com>
-> 
-> To use Energy Aware Scheduler (EAS) the Energy Model (EM) should be
-> registered for CPUs. Add dynamic-power-coefficient into CPU nodes which
-> let CPUFreq subsystem register the EM structures. This will increase
-> energy efficiency of big.LITTLE platforms.
-> 
-> The 'dynamic-power-coefficient' values have been obtained experimenting
-> with different workloads. The power measurements taken from big CPU
-> Cluster and LITTLE CPU Cluster has been compared with official documents
-> and synthetic workloads estimations. The effective power ratio between
-> Cortex-A7 and Cortex-A15 CPUs (~3x) is also aligned with documentation.
-> 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->   arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> index 1b8605cf2407..4b641b9b8179 100644
-> --- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
-> @@ -31,6 +31,7 @@
->   			operating-points-v2 = <&cluster_a7_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <539>;
-> +			dynamic-power-coefficient = <90>;
->   		};
->   
->   		cpu1: cpu@101 {
-> @@ -43,6 +44,7 @@
->   			operating-points-v2 = <&cluster_a7_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <539>;
-> +			dynamic-power-coefficient = <90>;
->   		};
->   
->   		cpu2: cpu@102 {
-> @@ -55,6 +57,7 @@
->   			operating-points-v2 = <&cluster_a7_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <539>;
-> +			dynamic-power-coefficient = <90>;
->   		};
->   
->   		cpu3: cpu@103 {
-> @@ -67,6 +70,7 @@
->   			operating-points-v2 = <&cluster_a7_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <539>;
-> +			dynamic-power-coefficient = <90>;
->   		};
->   
->   		cpu4: cpu@0 {
-> @@ -79,6 +83,7 @@
->   			operating-points-v2 = <&cluster_a15_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <1024>;
-> +			dynamic-power-coefficient = <310>;
->   		};
->   
->   		cpu5: cpu@1 {
-> @@ -91,6 +96,7 @@
->   			operating-points-v2 = <&cluster_a15_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <1024>;
-> +			dynamic-power-coefficient = <310>;
->   		};
->   
->   		cpu6: cpu@2 {
-> @@ -103,6 +109,7 @@
->   			operating-points-v2 = <&cluster_a15_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <1024>;
-> +			dynamic-power-coefficient = <310>;
->   		};
->   
->   		cpu7: cpu@3 {
-> @@ -115,6 +122,7 @@
->   			operating-points-v2 = <&cluster_a15_opp_table>;
->   			#cooling-cells = <2>; /* min followed by max */
->   			capacity-dmips-mhz = <1024>;
-> +			dynamic-power-coefficient = <310>;
->   		};
->   	};
->   };
-> 
+They are never used, and so can be removed.
+
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+---
+ fs/btrfs/tree-log.c | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 156beda01b18..19c107be9ef6 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -2699,7 +2699,6 @@ static noinline int walk_down_log_tree(struct btrfs_trans_handle *trans,
+ 	u64 ptr_gen;
+ 	struct extent_buffer *next;
+ 	struct extent_buffer *cur;
+-	struct extent_buffer *parent;
+ 	u32 blocksize;
+ 	int ret = 0;
+ 
+@@ -2719,8 +2718,6 @@ static noinline int walk_down_log_tree(struct btrfs_trans_handle *trans,
+ 		btrfs_node_key_to_cpu(cur, &first_key, path->slots[*level]);
+ 		blocksize = fs_info->nodesize;
+ 
+-		parent = path->nodes[*level];
+-
+ 		next = btrfs_find_create_tree_block(fs_info, bytenr);
+ 		if (IS_ERR(next))
+ 			return PTR_ERR(next);
+@@ -2800,12 +2797,6 @@ static noinline int walk_up_log_tree(struct btrfs_trans_handle *trans,
+ 			WARN_ON(*level == 0);
+ 			return 0;
+ 		} else {
+-			struct extent_buffer *parent;
+-			if (path->nodes[*level] == root->node)
+-				parent = path->nodes[*level];
+-			else
+-				parent = path->nodes[*level + 1];
+-
+ 			ret = wc->process_func(root, path->nodes[*level], wc,
+ 				 btrfs_header_generation(path->nodes[*level]),
+ 				 *level);
+-- 
+2.17.2
+
