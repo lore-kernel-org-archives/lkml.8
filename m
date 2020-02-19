@@ -2,827 +2,301 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3747AC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F22C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB7A20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DXFOIbw8"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD6320801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgBSRnS (ORCPT
+        id S1726739AbgBSRnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:43:18 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41796 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgBSRnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:43:13 -0500
-Received: by mail-io1-f68.google.com with SMTP id m25so1482893ioo.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:43:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=mrXEj2PJlu+l+Mv8TBp0HHGrRMadtJAnNxexO0DUVkQ=;
-        b=DXFOIbw8AOp+RLHzW2iEmJc5no7yLEskToWfJkoBPA7KtvH/UqUbu6FWbN7Nm7GM14
-         8x8FYnt9NHII+BBNNHviKpn9WHCpIXMRFIQvf698bdnECiTeUsJ5MHwesnqKL4L16dBm
-         ZLmQosXDSkcKkSCAjoqyfwFuhqTSBJy/XlMug=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mrXEj2PJlu+l+Mv8TBp0HHGrRMadtJAnNxexO0DUVkQ=;
-        b=LXJU4D9u5IpzRemDwIeMsghXiI36zVyeqHMNEfBJCKF/d60Af9L3ekHjlQLnaGFSdw
-         7uimaEm7DEtEGCoUd1m5sSuGb22ZeA11hmA7e9F80E2ZY/nPxgtfwHOTr5lyhIWnC17S
-         aKtJkXJJ+EzlDt9bogbIwUo4K1QpgRDp+nlBV+vF6Su7Qbw0F3LJjPZQg+5UeqOkZOVt
-         onZLvr2MDHicSljlNBcqUZFtzIw2Fka8EChdAxLQN2UPzVFsSRk0txZ0TxQKSLTrCCIy
-         tyXZ05CXu13g84tgOPfOKPixZJ2aF8fuSkYYpZoH7mP41TbXz9/1e2WeEYky7F7O92dX
-         zO0w==
-X-Gm-Message-State: APjAAAUcXbXMtViyN+E4x0BTTRHk4o9XGmXwcrEONCJaiyQ5SNnSZHmc
-        98xso3/Jffm0OzC9ksVXHdTayw==
-X-Google-Smtp-Source: APXvYqwDV5cpXJAFaWfwW5wKVw9A/fLU/gk0gZceL+S5v8n/JjtdysekiBtB9B4VT04H/8uYmAkBUg==
-X-Received: by 2002:a05:6602:2209:: with SMTP id n9mr6235488ion.62.1582134192441;
-        Wed, 19 Feb 2020 09:43:12 -0800 (PST)
-Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
-        by smtp.gmail.com with ESMTPSA id a21sm60355ioh.29.2020.02.19.09.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Feb 2020 09:43:11 -0800 (PST)
-From:   Drew Davenport <ddavenport@chromium.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Drew Davenport <ddavenport@chromium.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Fritz Koenig <frkoenig@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhengbin <zhengbin13@huawei.com>
-Subject: [PATCH 4/4] drm/msm/dpu: Track resources in global state
-Date:   Wed, 19 Feb 2020 10:42:27 -0700
-Message-Id: <20200219104148.4.I1c945b56a579b35955bea6c26e88086c6e91a17a@changeid>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
-References: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
+        Wed, 19 Feb 2020 12:43:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:53542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbgBSRnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:43:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0E5A31B;
+        Wed, 19 Feb 2020 09:43:40 -0800 (PST)
+Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0E843F703;
+        Wed, 19 Feb 2020 09:43:39 -0800 (PST)
+Subject: Re: [RFC PATCH v2 00/13] SCMI Notifications Core Support
+To:     Jim Quinlan <james.quinlan@broadcom.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, Jonathan.Cameron@huawei.com
+References: <20200214153535.32046-1-cristian.marussi@arm.com>
+ <CA+-6iNyFYusJTfiFgCNoRrcT5Xo4nof4fc=d46GiPAUD4o2j+Q@mail.gmail.com>
+From:   Cristian Marussi <cristian.marussi@arm.com>
+Message-ID: <e2587fae-a7d4-0426-fffd-104ebf26d014@arm.com>
+Date:   Wed, 19 Feb 2020 17:43:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+-6iNyFYusJTfiFgCNoRrcT5Xo4nof4fc=d46GiPAUD4o2j+Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move mapping of resources to encoder ids from the resource manager to a
-new dpu_global_state struct. Store this struct in global atomic state.
+Hi Jim
 
-Before this patch, atomic test would be performed by modifying global
-state (resource manager), and backing out any changes if the test fails.
-By using drm atomic global state, this is not necessary as any changes
-to the global state will be discarded if the test fails.
+and thanks for the feedback first of all.
 
-Signed-off-by: Drew Davenport <ddavenport@chromium.org>
----
+On 18/02/2020 20:19, Jim Quinlan wrote:
+> Hi Cristian,
+> 
+> This looks very robust and general but I'm wondering about the
+> "notification -> user" latency.  It appears there are at least five or
+> so memcpy()s of the notification message as it works its way to the
+> user, and added to that is the work queue deferral latency.  Is there
+> a concern on your end for low latency notifications, perhaps for
+> emergency notifications or do you consider this to be quick enough?
+> 
+I have to say user-latency was a primary concern when I first started
+looking into this, so that at first I had thought about exposing a
+dedicated additional method to let the users register callbacks which
+would have been called straight away from the RX ISR using an
+atomic notification chain.
 
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c |  65 +++++------
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  84 ++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     |  26 +++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      | 121 ++++++++++----------
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h      |  22 ++--
- 5 files changed, 207 insertions(+), 111 deletions(-)
+Reasoning about that, though:
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 6cadeff456f09..5afde2e7fef08 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -164,7 +164,6 @@ enum dpu_enc_rc_states {
-  *				clks and resources after IDLE_TIMEOUT time.
-  * @vsync_event_work:		worker to handle vsync event for autorefresh
-  * @topology:                   topology of the display
-- * @mode_set_complete:          flag to indicate modeset completion
-  * @idle_timeout:		idle timeout duration in milliseconds
-  */
- struct dpu_encoder_virt {
-@@ -202,7 +201,6 @@ struct dpu_encoder_virt {
- 	struct delayed_work delayed_off_work;
- 	struct kthread_work vsync_event_work;
- 	struct msm_display_topology topology;
--	bool mode_set_complete;
- 
- 	u32 idle_timeout;
- };
-@@ -563,6 +561,7 @@ static int dpu_encoder_virt_atomic_check(
- 	const struct drm_display_mode *mode;
- 	struct drm_display_mode *adj_mode;
- 	struct msm_display_topology topology;
-+	struct dpu_global_state *global_state;
- 	int i = 0;
- 	int ret = 0;
- 
-@@ -579,6 +578,7 @@ static int dpu_encoder_virt_atomic_check(
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	mode = &crtc_state->mode;
- 	adj_mode = &crtc_state->adjusted_mode;
-+	global_state = dpu_kms_get_existing_global_state(dpu_kms);
- 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
- 
- 	/*
-@@ -610,17 +610,15 @@ static int dpu_encoder_virt_atomic_check(
- 
- 	topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, adj_mode);
- 
--	/* Reserve dynamic resources now. Indicating AtomicTest phase */
-+	/* Reserve dynamic resources now. */
- 	if (!ret) {
- 		/*
- 		 * Avoid reserving resources when mode set is pending. Topology
- 		 * info may not be available to complete reservation.
- 		 */
--		if (drm_atomic_crtc_needs_modeset(crtc_state)
--				&& dpu_enc->mode_set_complete) {
--			ret = dpu_rm_reserve(&dpu_kms->rm, drm_enc, crtc_state,
--					     topology, true);
--			dpu_enc->mode_set_complete = false;
-+		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
-+			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
-+					drm_enc, crtc_state, topology);
- 		}
- 	}
- 
-@@ -957,12 +955,13 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
- 	struct drm_connector *conn = NULL, *conn_iter;
- 	struct drm_crtc *drm_crtc;
- 	struct dpu_crtc_state *cstate;
-+	struct dpu_global_state *global_state;
- 	struct msm_display_topology topology;
- 	struct dpu_hw_blk *hw_pp[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_ctl[MAX_CHANNELS_PER_ENC];
- 	struct dpu_hw_blk *hw_lm[MAX_CHANNELS_PER_ENC];
- 	int num_lm, num_ctl, num_pp;
--	int i, j, ret;
-+	int i, j;
- 
- 	if (!drm_enc) {
- 		DPU_ERROR("invalid encoder\n");
-@@ -976,6 +975,12 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	connector_list = &dpu_kms->dev->mode_config.connector_list;
- 
-+	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	if (IS_ERR_OR_NULL(global_state)) {
-+		DPU_ERROR("Failed to get global state");
-+		return;
-+	}
-+
- 	trace_dpu_enc_mode_set(DRMID(drm_enc));
- 
- 	list_for_each_entry(conn_iter, connector_list, head)
-@@ -996,21 +1001,14 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
- 
- 	topology = dpu_encoder_get_topology(dpu_enc, dpu_kms, adj_mode);
- 
--	/* Reserve dynamic resources now. Indicating non-AtomicTest phase */
--	ret = dpu_rm_reserve(&dpu_kms->rm, drm_enc, drm_crtc->state,
--			     topology, false);
--	if (ret) {
--		DPU_ERROR_ENC(dpu_enc,
--				"failed to reserve hw resources, %d\n", ret);
--		return;
--	}
--
--	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
--		DPU_HW_BLK_PINGPONG, hw_pp, ARRAY_SIZE(hw_pp));
--	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
--		DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
--	num_lm = dpu_rm_get_assigned_resources(&dpu_kms->rm, drm_enc->base.id,
--		DPU_HW_BLK_LM, hw_lm, ARRAY_SIZE(hw_lm));
-+	/* Query resource that have been reserved in atomic check step. */
-+	num_pp = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+		drm_enc->base.id, DPU_HW_BLK_PINGPONG, hw_pp,
-+		ARRAY_SIZE(hw_pp));
-+	num_ctl = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+		drm_enc->base.id, DPU_HW_BLK_CTL, hw_ctl, ARRAY_SIZE(hw_ctl));
-+	num_lm = dpu_rm_get_assigned_resources(&dpu_kms->rm, global_state,
-+		drm_enc->base.id, DPU_HW_BLK_LM, hw_lm, ARRAY_SIZE(hw_lm));
- 
- 	for (i = 0; i < MAX_CHANNELS_PER_ENC; i++)
- 		dpu_enc->hw_pp[i] = i < num_pp ? to_dpu_hw_pingpong(hw_pp[i])
-@@ -1035,21 +1033,21 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
- 		if (!dpu_enc->hw_pp[i]) {
- 			DPU_ERROR_ENC(dpu_enc,
- 				"no pp block assigned at idx: %d\n", i);
--			goto error;
-+			return;
- 		}
- 
- 		if (!hw_ctl[i]) {
- 			DPU_ERROR_ENC(dpu_enc,
- 				"no ctl block assigned at idx: %d\n", i);
--			goto error;
-+			return;
- 		}
- 
- 		phys->hw_pp = dpu_enc->hw_pp[i];
- 		phys->hw_ctl = to_dpu_hw_ctl(hw_ctl[i]);
- 
- 		num_blk = dpu_rm_get_assigned_resources(&dpu_kms->rm,
--			drm_enc->base.id, DPU_HW_BLK_INTF, hw_blk,
--			ARRAY_SIZE(hw_blk));
-+			global_state, drm_enc->base.id, DPU_HW_BLK_INTF,
-+			hw_blk, ARRAY_SIZE(hw_blk));
- 		for (j = 0; j < num_blk; j++) {
- 			struct dpu_hw_intf *hw_intf;
- 
-@@ -1061,18 +1059,13 @@ static void dpu_encoder_virt_mode_set(struct drm_encoder *drm_enc,
- 		if (!phys->hw_intf) {
- 			DPU_ERROR_ENC(dpu_enc,
- 				      "no intf block assigned at idx: %d\n", i);
--				goto error;
-+			return;
- 		}
- 
- 		phys->connector = conn->state->connector;
- 		if (phys->ops.mode_set)
- 			phys->ops.mode_set(phys, mode, adj_mode);
- 	}
--
--	dpu_enc->mode_set_complete = true;
--
--error:
--	dpu_rm_release(&dpu_kms->rm, drm_enc);
- }
- 
- static void _dpu_encoder_virt_enable_helper(struct drm_encoder *drm_enc)
-@@ -1169,6 +1162,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
-+	struct dpu_global_state *global_state;
- 	int i = 0;
- 
- 	if (!drm_enc) {
-@@ -1187,6 +1181,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
-+	global_state = dpu_kms_get_existing_global_state(dpu_kms);
- 
- 	trace_dpu_enc_disable(DRMID(drm_enc));
- 
-@@ -1216,7 +1211,7 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
- 
--	dpu_rm_release(&dpu_kms->rm, drm_enc);
-+	dpu_rm_release(global_state, drm_enc);
- 
- 	mutex_unlock(&dpu_enc->enc_lock);
- }
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index cb08fafb1dc14..59d42ff9da645 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -228,6 +228,85 @@ static int dpu_kms_debugfs_init(struct msm_kms *kms, struct drm_minor *minor)
- }
- #endif
- 
-+/* Global/shared object state funcs */
-+
-+/*
-+ * This is a helper that returns the private state currently in operation.
-+ * Note that this would return the "old_state" if called in the atomic check
-+ * path, and the "new_state" after the atomic swap has been done.
-+ */
-+struct dpu_global_state *
-+dpu_kms_get_existing_global_state(struct dpu_kms *dpu_kms)
-+{
-+	return to_dpu_global_state(dpu_kms->global_state.state);
-+}
-+
-+/*
-+ * This acquires the modeset lock set aside for global state, creates
-+ * a new duplicated private object state.
-+ */
-+struct dpu_global_state *dpu_kms_get_global_state(struct drm_atomic_state *s)
-+{
-+	struct msm_drm_private *priv = s->dev->dev_private;
-+	struct dpu_kms *dpu_kms = to_dpu_kms(priv->kms);
-+	struct drm_private_state *priv_state;
-+	int ret;
-+
-+	ret = drm_modeset_lock(&dpu_kms->global_state_lock, s->acquire_ctx);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	priv_state = drm_atomic_get_private_obj_state(s,
-+						&dpu_kms->global_state);
-+	if (IS_ERR(priv_state))
-+		return ERR_CAST(priv_state);
-+
-+	return to_dpu_global_state(priv_state);
-+}
-+
-+static struct drm_private_state *
-+dpu_kms_global_duplicate_state(struct drm_private_obj *obj)
-+{
-+	struct dpu_global_state *state;
-+
-+	state = kmemdup(obj->state, sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return NULL;
-+
-+	__drm_atomic_helper_private_obj_duplicate_state(obj, &state->base);
-+
-+	return &state->base;
-+}
-+
-+static void dpu_kms_global_destroy_state(struct drm_private_obj *obj,
-+				      struct drm_private_state *state)
-+{
-+	struct dpu_global_state *dpu_state = to_dpu_global_state(state);
-+
-+	kfree(dpu_state);
-+}
-+
-+static const struct drm_private_state_funcs dpu_kms_global_state_funcs = {
-+	.atomic_duplicate_state = dpu_kms_global_duplicate_state,
-+	.atomic_destroy_state = dpu_kms_global_destroy_state,
-+};
-+
-+static int dpu_kms_global_obj_init(struct dpu_kms *dpu_kms)
-+{
-+	struct dpu_global_state *state;
-+
-+	drm_modeset_lock_init(&dpu_kms->global_state_lock);
-+
-+	state = kzalloc(sizeof(*state), GFP_KERNEL);
-+	if (!state)
-+		return -ENOMEM;
-+
-+	drm_atomic_private_obj_init(dpu_kms->dev, &dpu_kms->global_state,
-+				    &state->base,
-+				    &dpu_kms_global_state_funcs);
-+	return 0;
-+}
-+
- static int dpu_kms_enable_vblank(struct msm_kms *kms, struct drm_crtc *crtc)
- {
- 	return dpu_crtc_vblank(crtc, true);
-@@ -770,6 +849,11 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 
- 	dpu_kms = to_dpu_kms(kms);
- 	dev = dpu_kms->dev;
-+
-+	rc = dpu_kms_global_obj_init(dpu_kms);
-+	if (rc)
-+		return rc;
-+
- 	priv = dev->dev_private;
- 
- 	atomic_set(&dpu_kms->bandwidth_ref, 0);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index c6169e7df19de..211f5de99a441 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -111,6 +111,13 @@ struct dpu_kms {
- 
- 	struct dpu_core_perf perf;
- 
-+	/*
-+	 * Global private object state, Do not access directly, use
-+	 * dpu_kms_global_get_state()
-+	 */
-+	struct drm_modeset_lock global_state_lock;
-+	struct drm_private_obj global_state;
-+
- 	struct dpu_rm rm;
- 	bool rm_init;
- 
-@@ -139,6 +146,25 @@ struct vsync_info {
- 
- #define to_dpu_kms(x) container_of(x, struct dpu_kms, base)
- 
-+#define to_dpu_global_state(x) container_of(x, struct dpu_global_state, base)
-+
-+/* Global private object state for tracking resources that are shared across
-+ * multiple kms objects (planes/crtcs/etc).
-+ */
-+struct dpu_global_state {
-+	struct drm_private_state base;
-+
-+	uint32_t pingpong_to_enc_id[PINGPONG_MAX - PINGPONG_0];
-+	uint32_t mixer_to_enc_id[LM_MAX - LM_0];
-+	uint32_t ctl_to_enc_id[CTL_MAX - CTL_0];
-+	uint32_t intf_to_enc_id[INTF_MAX - INTF_0];
-+};
-+
-+struct dpu_global_state
-+	*dpu_kms_get_existing_global_state(struct dpu_kms *dpu_kms);
-+struct dpu_global_state
-+	*__must_check dpu_kms_get_global_state(struct drm_atomic_state *s);
-+
- /**
-  * Debugfs functions - extra helper functions for debugfs support
-  *
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-index f1483b00b7423..bc940f9b12d7e 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-@@ -66,8 +66,6 @@ int dpu_rm_destroy(struct dpu_rm *rm)
- 		}
- 	}
- 
--	mutex_destroy(&rm->rm_lock);
--
- 	return 0;
- }
- 
-@@ -85,8 +83,6 @@ int dpu_rm_init(struct dpu_rm *rm,
- 	/* Clear, setup lists */
- 	memset(rm, 0, sizeof(*rm));
- 
--	mutex_init(&rm->rm_lock);
--
- 	/* Interrogate HW catalog and create tracking items for hw blocks */
- 	for (i = 0; i < cat->mixer_count; i++) {
- 		struct dpu_hw_mixer *hw;
-@@ -230,13 +226,14 @@ static bool _dpu_rm_check_lm_peer(struct dpu_rm *rm, int primary_idx,
-  * @Return: true if lm matches all requirements, false otherwise
-  */
- static bool _dpu_rm_check_lm_and_get_connected_blks(struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		uint32_t enc_id, int lm_idx, int *pp_idx)
- {
- 	const struct dpu_lm_cfg *lm_cfg;
- 	int idx;
- 
- 	/* Already reserved? */
--	if (reserved_by_other(rm->mixer_to_enc_id, lm_idx, enc_id)) {
-+	if (reserved_by_other(global_state->mixer_to_enc_id, lm_idx, enc_id)) {
- 		DPU_DEBUG("lm %d already reserved\n", lm_idx + LM_0);
- 		return false;
- 	}
-@@ -248,7 +245,7 @@ static bool _dpu_rm_check_lm_and_get_connected_blks(struct dpu_rm *rm,
- 		return false;
- 	}
- 
--	if (reserved_by_other(rm->pingpong_to_enc_id, idx, enc_id)) {
-+	if (reserved_by_other(global_state->pingpong_to_enc_id, idx, enc_id)) {
- 		DPU_DEBUG("lm %d pp %d already reserved\n", lm_cfg->id,
- 				lm_cfg->pingpong);
- 		return false;
-@@ -257,7 +254,9 @@ static bool _dpu_rm_check_lm_and_get_connected_blks(struct dpu_rm *rm,
- 	return true;
- }
- 
--static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
-+static int _dpu_rm_reserve_lms(struct dpu_rm *rm,
-+			       struct dpu_global_state *global_state,
-+			       uint32_t enc_id,
- 			       struct dpu_rm_requirements *reqs)
- 
- {
-@@ -279,8 +278,8 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
- 		lm_count = 0;
- 		lm_idx[lm_count] = i;
- 
--		if (!_dpu_rm_check_lm_and_get_connected_blks(
--				rm, enc_id, i, &pp_idx[lm_count])) {
-+		if (!_dpu_rm_check_lm_and_get_connected_blks(rm, global_state,
-+				enc_id, i, &pp_idx[lm_count])) {
- 			continue;
- 		}
- 
-@@ -298,8 +297,9 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
- 				continue;
- 			}
- 
--			if (!_dpu_rm_check_lm_and_get_connected_blks(
--					rm, enc_id, j, &pp_idx[lm_count])) {
-+			if (!_dpu_rm_check_lm_and_get_connected_blks(rm,
-+					global_state, enc_id, j,
-+					&pp_idx[lm_count])) {
- 				continue;
- 			}
- 
-@@ -314,8 +314,8 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
- 	}
- 
- 	for (i = 0; i < lm_count; i++) {
--		rm->mixer_to_enc_id[lm_idx[i]] = enc_id;
--		rm->pingpong_to_enc_id[pp_idx[i]] = enc_id;
-+		global_state->mixer_to_enc_id[lm_idx[i]] = enc_id;
-+		global_state->pingpong_to_enc_id[pp_idx[i]] = enc_id;
- 
- 		trace_dpu_rm_reserve_lms(lm_idx[i] + LM_0, enc_id,
- 					 pp_idx[i] + PINGPONG_0);
-@@ -326,6 +326,7 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
- 
- static int _dpu_rm_reserve_ctls(
- 		struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		uint32_t enc_id,
- 		const struct msm_display_topology *top)
- {
-@@ -345,7 +346,7 @@ static int _dpu_rm_reserve_ctls(
- 
- 		if (!rm->ctl_blks[j])
- 			continue;
--		if (reserved_by_other(rm->ctl_to_enc_id, j, enc_id))
-+		if (reserved_by_other(global_state->ctl_to_enc_id, j, enc_id))
- 			continue;
- 
- 		ctl = to_dpu_hw_ctl(rm->ctl_blks[j]);
-@@ -369,7 +370,7 @@ static int _dpu_rm_reserve_ctls(
- 		return -ENAVAIL;
- 
- 	for (i = 0; i < ARRAY_SIZE(ctl_idx) && i < num_ctls; i++) {
--		rm->ctl_to_enc_id[ctl_idx[i]] = enc_id;
-+		global_state->ctl_to_enc_id[ctl_idx[i]] = enc_id;
- 		trace_dpu_rm_reserve_ctls(i + CTL_0, enc_id);
- 	}
- 
-@@ -378,27 +379,34 @@ static int _dpu_rm_reserve_ctls(
- 
- static int _dpu_rm_reserve_intf(
- 		struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		uint32_t enc_id,
- 		uint32_t id)
- {
- 	int idx = id - INTF_0;
- 
-+	if (idx < 0 || idx >= ARRAY_SIZE(rm->intf_blks)) {
-+		DPU_ERROR("invalid intf id: %d", id);
-+		return -EINVAL;
-+	}
-+
- 	if (!rm->intf_blks[idx]) {
- 		DPU_ERROR("couldn't find intf id %d\n", id);
- 		return -EINVAL;
- 	}
- 
--	if (reserved_by_other(rm->intf_to_enc_id, idx, enc_id)) {
-+	if (reserved_by_other(global_state->intf_to_enc_id, idx, enc_id)) {
- 		DPU_ERROR("intf id %d already reserved\n", id);
- 		return -ENAVAIL;
- 	}
- 
--	rm->intf_to_enc_id[idx] = enc_id;
-+	global_state->intf_to_enc_id[idx] = enc_id;
- 	return 0;
- }
- 
- static int _dpu_rm_reserve_intf_related_hw(
- 		struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		uint32_t enc_id,
- 		struct dpu_encoder_hw_resources *hw_res)
- {
-@@ -409,7 +417,7 @@ static int _dpu_rm_reserve_intf_related_hw(
- 		if (hw_res->intfs[i] == INTF_MODE_NONE)
- 			continue;
- 		id = i + INTF_0;
--		ret = _dpu_rm_reserve_intf(rm, enc_id, id);
-+		ret = _dpu_rm_reserve_intf(rm, global_state, enc_id, id);
- 		if (ret)
- 			return ret;
- 	}
-@@ -419,24 +427,27 @@ static int _dpu_rm_reserve_intf_related_hw(
- 
- static int _dpu_rm_make_reservation(
- 		struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		struct drm_encoder *enc,
- 		struct dpu_rm_requirements *reqs)
- {
- 	int ret;
- 
--	ret = _dpu_rm_reserve_lms(rm, enc->base.id, reqs);
-+	ret = _dpu_rm_reserve_lms(rm, global_state, enc->base.id, reqs);
- 	if (ret) {
- 		DPU_ERROR("unable to find appropriate mixers\n");
- 		return ret;
- 	}
- 
--	ret = _dpu_rm_reserve_ctls(rm, enc->base.id, &reqs->topology);
-+	ret = _dpu_rm_reserve_ctls(rm, global_state, enc->base.id,
-+				&reqs->topology);
- 	if (ret) {
- 		DPU_ERROR("unable to find appropriate CTL\n");
- 		return ret;
- 	}
- 
--	ret = _dpu_rm_reserve_intf_related_hw(rm, enc->base.id, &reqs->hw_res);
-+	ret = _dpu_rm_reserve_intf_related_hw(rm, global_state, enc->base.id,
-+				&reqs->hw_res);
- 	if (ret)
- 		return ret;
- 
-@@ -470,33 +481,25 @@ static void _dpu_rm_clear_mapping(uint32_t *res_mapping, int cnt,
- 	}
- }
- 
--static void _dpu_rm_release_reservation(struct dpu_rm *rm, uint32_t enc_id)
--{
--	_dpu_rm_clear_mapping(rm->pingpong_to_enc_id,
--		ARRAY_SIZE(rm->pingpong_to_enc_id), enc_id);
--	_dpu_rm_clear_mapping(rm->mixer_to_enc_id,
--		ARRAY_SIZE(rm->mixer_to_enc_id), enc_id);
--	_dpu_rm_clear_mapping(rm->ctl_to_enc_id,
--		ARRAY_SIZE(rm->ctl_to_enc_id), enc_id);
--	_dpu_rm_clear_mapping(rm->intf_to_enc_id,
--		ARRAY_SIZE(rm->intf_to_enc_id), enc_id);
--}
--
--void dpu_rm_release(struct dpu_rm *rm, struct drm_encoder *enc)
-+void dpu_rm_release(struct dpu_global_state *global_state,
-+		    struct drm_encoder *enc)
- {
--	mutex_lock(&rm->rm_lock);
--
--	_dpu_rm_release_reservation(rm, enc->base.id);
--
--	mutex_unlock(&rm->rm_lock);
-+	_dpu_rm_clear_mapping(global_state->pingpong_to_enc_id,
-+		ARRAY_SIZE(global_state->pingpong_to_enc_id), enc->base.id);
-+	_dpu_rm_clear_mapping(global_state->mixer_to_enc_id,
-+		ARRAY_SIZE(global_state->mixer_to_enc_id), enc->base.id);
-+	_dpu_rm_clear_mapping(global_state->ctl_to_enc_id,
-+		ARRAY_SIZE(global_state->ctl_to_enc_id), enc->base.id);
-+	_dpu_rm_clear_mapping(global_state->intf_to_enc_id,
-+		ARRAY_SIZE(global_state->intf_to_enc_id), enc->base.id);
- }
- 
- int dpu_rm_reserve(
- 		struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		struct drm_encoder *enc,
- 		struct drm_crtc_state *crtc_state,
--		struct msm_display_topology topology,
--		bool test_only)
-+		struct msm_display_topology topology)
- {
- 	struct dpu_rm_requirements reqs;
- 	int ret;
-@@ -505,35 +508,31 @@ int dpu_rm_reserve(
- 	if (!drm_atomic_crtc_needs_modeset(crtc_state))
- 		return 0;
- 
--	DRM_DEBUG_KMS("reserving hw for enc %d crtc %d test_only %d\n",
--		      enc->base.id, crtc_state->crtc->base.id, test_only);
-+	if (IS_ERR(global_state)) {
-+		DPU_ERROR("failed to global state\n");
-+		return PTR_ERR(global_state);
-+	}
- 
--	mutex_lock(&rm->rm_lock);
-+	DRM_DEBUG_KMS("reserving hw for enc %d crtc %d\n",
-+		      enc->base.id, crtc_state->crtc->base.id);
- 
- 	ret = _dpu_rm_populate_requirements(enc, &reqs, topology);
- 	if (ret) {
- 		DPU_ERROR("failed to populate hw requirements\n");
--		goto end;
-+		return ret;
- 	}
- 
--	ret = _dpu_rm_make_reservation(rm, enc, &reqs);
--	if (ret) {
-+	ret = _dpu_rm_make_reservation(rm, global_state, enc, &reqs);
-+	if (ret)
- 		DPU_ERROR("failed to reserve hw resources: %d\n", ret);
--		_dpu_rm_release_reservation(rm, enc->base.id);
--	} else if (test_only) {
--		 /* test_only: test the reservation and then undo */
--		DPU_DEBUG("test_only: discard test [enc: %d]\n",
--				enc->base.id);
--		_dpu_rm_release_reservation(rm, enc->base.id);
--	}
- 
--end:
--	mutex_unlock(&rm->rm_lock);
-+
- 
- 	return ret;
- }
- 
--int dpu_rm_get_assigned_resources(struct dpu_rm *rm, uint32_t enc_id,
-+int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
-+	struct dpu_global_state *global_state, uint32_t enc_id,
- 	enum dpu_hw_blk_type type, struct dpu_hw_blk **blks, int blks_size)
- {
- 	struct dpu_hw_blk **hw_blks;
-@@ -543,22 +542,22 @@ int dpu_rm_get_assigned_resources(struct dpu_rm *rm, uint32_t enc_id,
- 	switch (type) {
- 	case DPU_HW_BLK_PINGPONG:
- 		hw_blks = rm->pingpong_blks;
--		hw_to_enc_id = rm->pingpong_to_enc_id;
-+		hw_to_enc_id = global_state->pingpong_to_enc_id;
- 		max_blks = ARRAY_SIZE(rm->pingpong_blks);
- 		break;
- 	case DPU_HW_BLK_LM:
- 		hw_blks = rm->mixer_blks;
--		hw_to_enc_id = rm->mixer_to_enc_id;
-+		hw_to_enc_id = global_state->mixer_to_enc_id;
- 		max_blks = ARRAY_SIZE(rm->mixer_blks);
- 		break;
- 	case DPU_HW_BLK_CTL:
- 		hw_blks = rm->ctl_blks;
--		hw_to_enc_id = rm->ctl_to_enc_id;
-+		hw_to_enc_id = global_state->ctl_to_enc_id;
- 		max_blks = ARRAY_SIZE(rm->ctl_blks);
- 		break;
- 	case DPU_HW_BLK_INTF:
- 		hw_blks = rm->intf_blks;
--		hw_to_enc_id = rm->intf_to_enc_id;
-+		hw_to_enc_id = global_state->intf_to_enc_id;
- 		max_blks = ARRAY_SIZE(rm->intf_blks);
- 		break;
- 	default:
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-index 9c8a436ba6cc1..6d2b04f306f09 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h
-@@ -11,6 +11,7 @@
- #include "msm_kms.h"
- #include "dpu_hw_top.h"
- 
-+struct dpu_global_state;
- 
- /**
-  * struct dpu_rm - DPU dynamic hardware resource manager
-@@ -18,10 +19,6 @@
-  * @mixer_blks: array of layer mixer hardware resources
-  * @ctl_blks: array of ctl hardware resources
-  * @intf_blks: array of intf hardware resources
-- * @pingpong_to_enc_id: mapping of pingpong hardware resources to an encoder ID
-- * @mixer_to_enc_id: mapping of mixer hardware resources to an encoder ID
-- * @ctl_to_enc_id: mapping of ctl hardware resources to an encoder ID
-- * @intf_to_enc_id: mapping of intf hardware resources to an encoder ID
-  * @lm_max_width: cached layer mixer maximum width
-  * @rm_lock: resource manager mutex
-  */
-@@ -31,13 +28,7 @@ struct dpu_rm {
- 	struct dpu_hw_blk *ctl_blks[CTL_MAX - CTL_0];
- 	struct dpu_hw_blk *intf_blks[INTF_MAX - INTF_0];
- 
--	uint32_t pingpong_to_enc_id[PINGPONG_MAX - PINGPONG_0];
--	uint32_t mixer_to_enc_id[LM_MAX - LM_0];
--	uint32_t ctl_to_enc_id[CTL_MAX - CTL_0];
--	uint32_t intf_to_enc_id[INTF_MAX - INTF_0];
--
- 	uint32_t lm_max_width;
--	struct mutex rm_lock;
- };
- 
- /**
-@@ -70,14 +61,13 @@ int dpu_rm_destroy(struct dpu_rm *rm);
-  * @drm_enc: DRM Encoder handle
-  * @crtc_state: Proposed Atomic DRM CRTC State handle
-  * @topology: Pointer to topology info for the display
-- * @test_only: Atomic-Test phase, discard results (unless property overrides)
-  * @Return: 0 on Success otherwise -ERROR
-  */
- int dpu_rm_reserve(struct dpu_rm *rm,
-+		struct dpu_global_state *global_state,
- 		struct drm_encoder *drm_enc,
- 		struct drm_crtc_state *crtc_state,
--		struct msm_display_topology topology,
--		bool test_only);
-+		struct msm_display_topology topology);
- 
- /**
-  * dpu_rm_reserve - Given the encoder for the display chain, release any
-@@ -86,12 +76,14 @@ int dpu_rm_reserve(struct dpu_rm *rm,
-  * @enc: DRM Encoder handle
-  * @Return: 0 on Success otherwise -ERROR
-  */
--void dpu_rm_release(struct dpu_rm *rm, struct drm_encoder *enc);
-+void dpu_rm_release(struct dpu_global_state *global_state,
-+		struct drm_encoder *enc);
- 
- /**
-  * Get hw resources of the given type that are assigned to this encoder.
-  */
--int dpu_rm_get_assigned_resources(struct dpu_rm *rm, uint32_t enc_id,
-+int dpu_rm_get_assigned_resources(struct dpu_rm *rm,
-+	struct dpu_global_state *global_state, uint32_t enc_id,
- 	enum dpu_hw_blk_type type, struct dpu_hw_blk **blks, int blks_size);
- #endif /* __DPU_RM_H__ */
- 
--- 
-2.24.1
+- me being really nervous about letting users register something that I'm
+  going to call on behalf of them in atomic context (...not bold enough I know :D)
+  since can potentially be misused and cause slowdowns to the notification
+  delivery or to the system as a whole
+
+- if something like that must be allowed it must be policed somehow from the
+  core....what if dozens of callbacks are allowed to be registered in this way
+  instead of the blocking mode ? they will slow down each other anyway..and
+  what about relative priorities amongst callbacks inside the same notification
+  chain ? (potentially registered from different users)
+
+- let's say we allow this and you can register your own atomic callback (which it would
+  be policed), what you can do with that at the end ? What are the benefits of this
+  scenario ? AICS there are two possible scenarios (but if you can propose more scenarios
+  that I've missed you're more than welcome):
+
+   1. you can do the smallest-amount-possible-of-work-in-irq-as-usual and defer,
+      probably attaching a timestamp of arrival to the stuff you push for
+      deferred processing (and this is what I'm doing already for you..even if
+      with too much memcpying around probably :D....more on this later...)
+OR 
+
+   2. you can immediately signal the condition just received to an external
+      processing unit...say like raising a line which will trigger an interrupt
+      in those agent...and this is a scenario in which I can imagine the atomic
+      notification chain can benefit (in fact that's the reason I'm still thinking
+      about it as a controlled/policed alternative)...but, anyway, in this scenario,
+      you are going to route as quickly as possible a critical SCMI notification to
+      some external processor for immediate processing...and so you want it to be
+      propagated as fast as possible...fine..but why passing through the richOS at all ?
+      if it's so critical shouldn't have been already handled by the platform to the
+      processing entity bypassing the richOS as a whole and all its inherent latencies ?
+      (beside my own memcpys :D)
+      So for this last consideration I gave up thinking about some more performant
+      atomic delivery of notifications ? But if you can make a case where some sort of
+      alternative quick atomic (policed) delivery makes sense, I'll be happy to think
+      about it again.
+
+
+> Note that we (BrcmSTB) have implemented our own  SCMI notification
+> system for a proprietary protocol and we designed it to deliver
+> notifications as quickly as possible.  Our system is more or less a
+> disposable hack and would not stand up to heavy or general usage.  We
+> fully intend to move to the approved Linux notification system.  On
+> that note,  I'm just wondering if you had any comment on the
+> possibility of  "slimming down" your RFC, e.g. perhaps somehow
+> collapsing some memcpy()s.
+> 
+
+Having said all of the above, I'll certainly review the memcopying to see if I can
+redesign an shrink a bit their number. (the only thing that I want to avoid is placing
+a spinlock into the ISR side of the dispatching...since now is all lock-free on that side
+thanks to the kfifo, the 1-reader-1-writer scnario, and an additional memcpy)
+
+In these regards what I had started to do (but no more), it was to sort of "profiling" a bit
+the latency from event RX up to the point immediately before the report is delivered to the users
+callbacks, and see if I can improve a bit this path in term of performance reshuffling the code.
+
+In V3 I'm reviewing a lot notification init/exit logic (which was a bit dirty and faulty ...)
+and handling of possible different platform instances (which were not handled), I'll see if I
+can stick some meaningful fix about memcopies (if not it will be V4)
+
+Moreover on this theme, given your low latencies requirements: as of now I'm using as a backend
+the normal Kernel notification chains, which means though, that:
+
+- users are in control of callbacks relative priorities, so that registering a high-pri slow one
+  could waste any gain and slow-down some other user registered callbacks on the same notification
+  chain (no matter if atomic or blocking)
+- users (maliciously ?) could simply register a callback that return NOTIFY_STOP and to cut the chain
+- users can (maliciously or not) mangle the event report fed to your callback along the way,
+  so that one user can trash potentially the event seen by the next user on the same chain
+
+Do you think the above issues are worth considering to be addressed (for performance/security issues) ?
+Because in v1 I had a patch for anti-tampering (now dropped to simplify the code) that could address
+all of the above, but I did not know if such policying/anti-tampering attempt was worth an valid.
+(even though, I think that if I'd end up adding some emergency/critical fast support, that would need
+some sort of callbacks priority policying at least)
+
+Thanks
+
+Regards
+
+Cristian
+
+
+> Thanks,
+> Jim
+> PS I'm going on vacation so I won't be able to email for a week.
+> 
+> 
+> On Fri, Feb 14, 2020 at 10:36 AM Cristian Marussi
+> <cristian.marussi@arm.com> wrote:
+>>
+>> Hi all,
+>>
+>> this series wants to introduce SCMI Notification Support, built on top of
+>> the standard Kernel notification chain subsystem.
+>>
+>> At initialization time each SCMI Protocol takes care to register with the
+>> new SCMI notification core the set of its own events which it intends to
+>> support.
+>>
+>> Using a possibly proposed API in include/linux/scmi_protocol.h (not
+>> finalized though, NO EXPORTs_) a Kernel user can register its own
+>> notifier_t callback (via a notifier_block as usual) against any registered
+>> event as identified by the tuple:
+>>
+>>                 (proto_id, event_id, src_id)
+>>
+>> where src_id represents a generic source identifier which is protocol
+>> dependent like domain_id, performance_id, sensor_id and so forth.
+>> (users can anyway do NOT provide any src_id, and subscribe instead to ALL
+>>  the existing (if any) src_id sources for that proto_id/evt_id combination)
+>>
+>> Each of the above tuple-specified event will be served on its own dedicated
+>> blocking notification chain.
+>>
+>> Upon a notification delivery all the users' registered notifier_t callbacks
+>> will be in turn invoked and fed with the event_id as @action param and a
+>> generated custom per-event struct _report as @data param.
+>> (as in include/linux/scmi_protocol.h)
+>>
+>> The final step of notification delivery via users' callback invocation is
+>> instead delegated to a pool of deferred workers (Kernel cmwq): each
+>> SCMI protocol has its own dedicated worker and dedicated queue to push
+>> events from the rx ISR to the worker.
+>>
+>> The series is marked as RFC mainly because:
+>>
+>> - the API as said is tentative and not EXPORTed; currently consisting of a
+>>   generic interface like:
+>>
+>>          scmi_register_event_notifier(proto_id, evt_id, *src_id, *nb)
+>>
+>>   as found in scmi_protocol.h, or using the equivalent 'handle' operations
+>>   in scmi_notify_ops if used by an scmi_driver.
+>>
+>>   It's open for discussion.
+>>
+>> - no Event priorization has been considered: each protocol has its own
+>>   queue and deferred worker instance, so as to avoid that one protocol
+>>   flood can overrun a single queue and influence other protocols'
+>>   notifications' delivery.
+>>   But that's it, all the workers are unbound, low_pri cmwq workers.
+>>
+>>   Should we enforce some sort of built-in prio amongst the events ?
+>>   Should this priority instead be compile time configurable ?
+>>
+>>   Again, open for discussion.
+>>
+>> - no configuration is possible: it can be imagined that on a real platform
+>>   events' priority (if any) and events queues' depth could be something
+>>   somehow compile-time configurable, but this is not addressed by this
+>>   series at all.
+>>
+>> Based on scmi-next 5.6 [1], on top of:
+>>
+>> commit 5c8a47a5a91d ("firmware: arm_scmi: Make scmi core independent of
+>>                       the transport type")
+>>
+>> This series has been tested on JUNO with an experimental firmware only
+>> supporting Perf Notifications.
+>>
+>> Any thoughts ?
+>>
+>> Thanks
+>>
+>> Cristian
+>> ----
+>>
+>> v1 --> v2:
+>> - dropped anti-tampering patch
+>> - rebased on top of scmi-for-next-5.6, which includes Viresh series that
+>>   make SCMI core independent of transport (5c8a47a5a91d)
+>> - add a few new SCMI transport methods on top of Viresh patch to address
+>>   needs of SCMI Notifications
+>> - reviewed/renamed scmi_handle_xfer_delayed_resp()
+>> - split main SCMI Notification core patch (~1k lines) into three chunks:
+>>   protocol-registration / callbacks-registration / dispatch-and-delivery
+>> - removed awkward usage of IDR maps in favour of pure hashtables
+>> - added enable/disable refcounting in notification core (was broken in v1)
+>> - removed per-protocol candidate API: a single generic API is now proposed
+>>   instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
+>> - added handle->notify_ops as an alternative notification API
+>>   for scmi_driver
+>> - moved ALL_SRCIDs enabled handling from protocol code to core code
+>> - reviewed protocol registration/unregistration logic to use devres
+>> - reviewed cleanup phase on shutdown
+>> - fixed  ERROR: reference preceded by free as reported by kbuild test robot
+>>
+>> [1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
+>>
+>> Cristian Marussi (10):
+>>   firmware: arm_scmi: Add notifications support in transport layer
+>>   firmware: arm_scmi: Add notification protocol-registration
+>>   firmware: arm_scmi: Add notification callbacks-registration
+>>   firmware: arm_scmi: Add notification dispatch and delivery
+>>   firmware: arm_scmi: Enable notification core
+>>   firmware: arm_scmi: Add Power notifications support
+>>   firmware: arm_scmi: Add Perf notifications support
+>>   firmware: arm_scmi: Add Sensor notifications support
+>>   firmware: arm_scmi: Add Reset notifications support
+>>   firmware: arm_scmi: Add Base notifications support
+>>
+>> Sudeep Holla (3):
+>>   firmware: arm_scmi: Add receive buffer support for notifications
+>>   firmware: arm_scmi: Update protocol commands and notification list
+>>   firmware: arm_scmi: Add support for notifications message processing
+>>
+>>  drivers/firmware/arm_scmi/Makefile  |    2 +-
+>>  drivers/firmware/arm_scmi/base.c    |  121 +++
+>>  drivers/firmware/arm_scmi/bus.c     |   11 +
+>>  drivers/firmware/arm_scmi/common.h  |   12 +
+>>  drivers/firmware/arm_scmi/driver.c  |  118 ++-
+>>  drivers/firmware/arm_scmi/mailbox.c |   17 +
+>>  drivers/firmware/arm_scmi/notify.c  | 1102 +++++++++++++++++++++++++++
+>>  drivers/firmware/arm_scmi/notify.h  |   78 ++
+>>  drivers/firmware/arm_scmi/perf.c    |  140 +++-
+>>  drivers/firmware/arm_scmi/power.c   |  133 +++-
+>>  drivers/firmware/arm_scmi/reset.c   |  100 ++-
+>>  drivers/firmware/arm_scmi/sensors.c |   77 +-
+>>  drivers/firmware/arm_scmi/shmem.c   |   15 +
+>>  include/linux/scmi_protocol.h       |  114 +++
+>>  14 files changed, 2009 insertions(+), 31 deletions(-)
+>>  create mode 100644 drivers/firmware/arm_scmi/notify.c
+>>  create mode 100644 drivers/firmware/arm_scmi/notify.h
+>>
+>> --
+>> 2.17.1
+>>
 
