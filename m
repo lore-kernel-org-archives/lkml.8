@@ -2,105 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714AFC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8047C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FFD24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KZjz6JeV"
+	by mail.kernel.org (Postfix) with ESMTP id 7EAB52064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582143203;
+	bh=pzd42AGMLbIrdC9gduvz9RTtiFEWMt84JmjPIXiEt5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZnN/7Op56babHXy0A02dEIBXbktoTr+D5IDZRxPdT2y7pa10VMYCDTJyh68SxAtVa
+	 GoVTw+ggw6LFt7j4j+LsppY7C0EBl1NAsI+AxeSZqf2totOR3PiSWKQwEkGI7Rslm/
+	 pdq9BUIINP4G/pnao3NKGW8DVGCVICKs8tgTQxqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgBSUMe (ORCPT
+        id S1727227AbgBSUNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:12:34 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:42281 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSUMe (ORCPT
+        Wed, 19 Feb 2020 15:13:22 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42078 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSUNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:12:34 -0500
-Received: by mail-vk1-f195.google.com with SMTP id c15so509822vko.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:12:34 -0800 (PST)
+        Wed, 19 Feb 2020 15:13:21 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so1712408ljl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:13:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=42MaK4n6+CrelpQTjPFZO9NB2S0O1OTsWCtSJ9pIv6o=;
-        b=KZjz6JeV1vFYXt8q0wyrdwBhXZ/8rzg3LVXGgnEjLp0yccOlrd9L+Ok9CSnmEDAScF
-         5DXgdCokxyl/DepQSJRvQZcSN+CE8Kcr0SWpEfzBMCL7WlKU8JPwmUJCsE2rI7Vb7lKV
-         bgQULZyhEbb7MwpvmgaQHsqZa8CaNOAvokqUXRgGKlW538y3zdoMMZdFUy60Yhv2WJdn
-         xOhNioYtaDA8ydHmJeTzDTHNO8vInpQ9cb9Ph5Mu9jvt5hFURbjsN43FQ7NZbkVfeBb2
-         LHRWZWKArxzLHQPRZfP/szxqEcv4AqpjRJQcw8TGu10OvO3/JnOO2GhuCUA9yjJvEBPV
-         ehWg==
+        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
+        b=L1xcjpv9tg4ovUYUrEvMleJYYGnxMSzUIGeTIEI8pb3Dp4HZy1mT2JTLUJYr+nQrPs
+         RkPEHZFY1/xrXLf8wYx0g7zYXtc/srkM5eYLE0fb8urwD0Hu/6f09qRJUwi9vY+uxkbK
+         MkE8Vg3sCpw9CxMHOqUIpxk4GiRP39hrEEF6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=42MaK4n6+CrelpQTjPFZO9NB2S0O1OTsWCtSJ9pIv6o=;
-        b=Z8BhsKge4kFfCpHTxFnaYFm30Z1SnWHzVIPCHHNXPl9EXvQppcGvBILGM3DhwQIGPl
-         RVbLuYoHKEm6+ZJhBXv6OUYDIB+Gw/8/pgWCFqO8gMlyhP7j2TFvzl97NWpcZUPnGXW5
-         1A3cMi5ZsreplbhzGVjIA0zkfcgbAkCzNV35gZauzjQKjZ7BrB089mkdDjVhPBhrEkjB
-         pUGrcSs5auicTgMRS7Jv+E7MX3/Dw+PiZbaCvnzBMb/YyqlmRIF5Gcsfbfr8Phy96/2g
-         jf+zVPbcDXuwOxLkYT/DDDSc89r3EjZAH5L5DiEGDja9y7aUuE1AbX5qnfbs40g7kj41
-         /APA==
-X-Gm-Message-State: APjAAAX+IZrAR8pUqZgGgYYoNGLnrjD5nS6YqNbNFvkefwOsky5M5/72
-        Aot86DSTWe2hLlbMeZ4p+6M3yLGReDuuNnc9KoYqEg==
-X-Google-Smtp-Source: APXvYqyTw52gSQ4jw8pztzOwndZ0sk6pyQFwXTfytaf2zPfg719bU3sRcZ3Xjk3tkUfVqd3npa2/1rrBf+K/+C8JeGQ=
-X-Received: by 2002:a1f:4541:: with SMTP id s62mr12216061vka.59.1582143153200;
- Wed, 19 Feb 2020 12:12:33 -0800 (PST)
+        bh=bgq6Y7b2zz3iA7vvFl1zD3iuBLDCnggP0uD/ReDPtoY=;
+        b=er9ZyqJl/FPckFJmmASuDRT59QEq40K7ruQHX+D4gXD7BAtAUNoYCehpVcMv1uzQBm
+         dy/Vf0tPR+N6kO0g4HZK/LaWOM+PPas2/vgfkJ+Udh4q0emiXQ5iRFdmzH1bHwfEvs1Y
+         O+JCoHrGKUTc6nA+NtqRxJQWHT23RxGvtUuUxedmIS3YN2dWqB9C4iCbWxpol0v1xqs0
+         fhpOAGC7zp+vgTIXZxDoU4nwhdU67X2AqijzUSJM1T6GCBRpUEPak7wV5Us33/swjg6v
+         0Nzs1xtsFbrQfRsuKsdE9sH4Mu456GOeF+zqVW5hfMOhmkg80HTQFLCVHPfWQycjPVeq
+         0eQQ==
+X-Gm-Message-State: APjAAAVYX4JhOHILrk6tFDW2BWUbX3noBVgq5RtaB5gEU1uvAfhSHthf
+        zvqykeruDU0tgSF/xU0ATa5g5LEFbow=
+X-Google-Smtp-Source: APXvYqxV6n2tIVIdDzTwrVUMTmGjm3gs77idsltWqCqM53X/CfgwE+ja029CrcZNUVI8Mmz5dOJ4tA==
+X-Received: by 2002:a2e:556:: with SMTP id 83mr16736140ljf.127.1582143196721;
+        Wed, 19 Feb 2020 12:13:16 -0800 (PST)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id n3sm385247ljc.100.2020.02.19.12.13.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 12:13:15 -0800 (PST)
+Received: by mail-lj1-f172.google.com with SMTP id a13so1707064ljm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:13:15 -0800 (PST)
+X-Received: by 2002:a2e:9d92:: with SMTP id c18mr17708042ljj.265.1582143194731;
+ Wed, 19 Feb 2020 12:13:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200219000817.195049-1-samitolvanen@google.com> <0386ecad-f3d6-f1dc-90da-7f05b2793839@arm.com>
-In-Reply-To: <0386ecad-f3d6-f1dc-90da-7f05b2793839@arm.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Wed, 19 Feb 2020 12:12:21 -0800
-Message-ID: <CABCJKudAYATQSVLHbM4873Yr2EYufrBWQ7Pmv+L97uHhBQUe4w@mail.gmail.com>
-Subject: Re: [PATCH v8 00/12] add support for Clang's Shadow Call Stack
-To:     James Morse <james.morse@arm.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+ <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
+ <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
+ <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+ <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <252465.1582142281@warthog.procyon.org.uk>
+In-Reply-To: <252465.1582142281@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Feb 2020 12:12:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
+Message-ID: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:38 AM James Morse <james.morse@arm.com> wrote:
-> This looks like reserving x18 is causing Clang to not-inline the __kern_hyp_va() calls,
-> losing the vitally important section information. (I can see why the compiler thinks this
-> is fair)
+On Wed, Feb 19, 2020 at 11:58 AM David Howells <dhowells@redhat.com> wrote:
+>
+> Actually, in many ways, they're more akin to symlinks (and are implemented as
+> symlinks with funny attributes).  It's a shame that symlinkat() doesn't have
+> an at_flags parameter.
 
-Thanks for catching this. This doesn't appear to be caused by
-reserving x18, it looks like SCS itself is causing clang to avoid
-inlining these. If I add __noscs to __kern_hyp_va(), clang inlines the
-function again. __always_inline also works, as you pointed out.
+Interesting. Then you'd get the metadata as the symlink data. Is the
+size of the available buffer (PATH_MAX) sufficient?
 
-> Is this a known, er, thing, with clang-9?
+In fact, would PATH_MAX-2 be sufficient?
 
-I can reproduce this with ToT clang as well.
+Because POSIX actually says that a double slash at the beginning of a
+filename is special:
 
-> I suspect repainting all KVM's 'inline' with __always_inline will fix it. (yuck!) I'll try
-> tomorrow.
+ "A pathname consisting of a single slash shall resolve to the root
+directory of the process. A null pathname shall not be successfully
+resolved. A pathname that begins with two successive slashes may be
+interpreted in an implementation-defined manner, although more than
+two leading slashes shall be treated as a single slash"
 
-I think switching to __always_inline is the correct solution here.
+so you _could_ actually just make the rule be something simple like
 
-Sami
+   symlink(target, "//datagoeshere")
+
+being the "create magic autolink directory using "datagoeshere".
+
+The advantage of that interface is that now you can do things from
+simple perl/shell scripts etc, instead of using any magic at all.
+
+> mknod() isn't otherwise supported on AFS as there aren't any UNIX special
+> files.
+
+Well, arguably that's a feature. You _could_ decide that a S_IFCHR
+mknod (with a special number pattern too, just as a special check)
+becomes that special node that you can then write the data to to
+create it.
+
+So then you could again script things with
+
+   mknod dirname c X Y
+   echo "datagoeshere" > dirname
+
+if that's what it takes.
+
+But the symlink thing strikes me as not unreasonable. It's POSIXy,
+even if Linux hasn't really traditionally treated two slashes
+specially (we've discussed it, and there may be _tools_ that already
+do, though)
+
+         Linus
