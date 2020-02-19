@@ -2,78 +2,92 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D49FC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302EAC169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154EF2067D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582138362;
-	bh=owwPLCIXW01JCabPd8oJy4g6ge27ISgAiv8nVu3IKf8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MLejeBuvnZikrRW0ReVm8Jxeff7pnhb3NZcOedlTZOIqJKcC4SSrXU3xYWA0Z+Hpe
-	 t9jbsHhQZ6UnBYd5Ht3XoPYMXza2DSTPyNIKGbikD2VglnsZJFuu2CJ6MbmdQMIfSu
-	 1Hzv9TUJou80OG5OJ4/rq7JEYLzqTho2w8eCA4F0=
+	by mail.kernel.org (Postfix) with ESMTP id 12D172064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBSSwk (ORCPT
+        id S1726777AbgBSSxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:52:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37360 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 13:53:07 -0500
+Received: from muru.com ([72.249.23.125]:56130 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbgBSSwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:52:40 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B36D2064C;
-        Wed, 19 Feb 2020 18:52:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582138359;
-        bh=owwPLCIXW01JCabPd8oJy4g6ge27ISgAiv8nVu3IKf8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q0HKNPJL+9nl6VtNmfRoqfyNHJ5j44MtPiZVzaJ6c67p5IzGO7/nDEKZ5raGnObN3
-         oxkbyVOp4P4lAflAlwGFcGiY8joZRPGYXFnK+Qi7RHpf82ANCide/XSfIiisHxYbl/
-         tlZ8Xo3zbeCtOpUv95T6gAr7bR5lZPCeNHgpiZuE=
-Date:   Wed, 19 Feb 2020 19:52:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 00/80] 5.5.5-stable review
-Message-ID: <20200219185237.GD2857377@kroah.com>
-References: <20200218190432.043414522@linuxfoundation.org>
- <20200219180954.GC26169@roeck-us.net>
+        id S1726613AbgBSSxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:53:07 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 63BF180F3;
+        Wed, 19 Feb 2020 18:53:50 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 10:53:02 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+Message-ID: <20200219185302.GC37466@atomide.com>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+ <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+ <20200218153211.GI35972@atomide.com>
+ <20200218170628.r47xc3yydg6xx2yh@earth.universe>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219180954.GC26169@roeck-us.net>
+In-Reply-To: <20200218170628.r47xc3yydg6xx2yh@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:09:54AM -0800, Guenter Roeck wrote:
-> On Tue, Feb 18, 2020 at 08:54:21PM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.5 release.
-> > There are 80 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
-> > Anything received after that time might be too late.
-> > 
+* Sebastian Reichel <sebastian.reichel@collabora.com> [200218 17:07]:
+> On Tue, Feb 18, 2020 at 07:32:11AM -0800, Tony Lindgren wrote:
+> > OK, but so what's the machine driver part in this case?
 > 
-> Build results:
-> 	total: 157 pass: 157 fail: 0
-> Qemu test results:
-> 	total: 412 pass: 412 fail: 0
+> simple-graph-card is the current machine driver. We might have to
+> introduce a Droid 4 specific driver instead. I used simple(-graph)-card
+> instead of introducing a new driver, since the setup was simple enough
+> without modem and bluetooth. The simple card was perfect to test the CPCAP
+> codec driver. The TDM things might be complex enough to create
+> a new machine driver (as I mentioned in the original patchset
+> adding CPCAP codec support).
 
-Great, thanks for testing all of them and letting me know.
+Well we do have the .set_tdm_slot to configure things. If it turns
+out we only need to track the machine audio state in cpcap.c, then
+we don't need a separate machine driver.
 
-greg k-h
+However, if it turns out that cpcap is not always active for
+some audio paths, then yeah it seems that we need a custom
+machine driver to keep track of the machine audio state.
+
+> Note: Don't use Motorola's tree to learn about ASoC. Their soundcard
+> and cpcap codec drivers are full of weird hacks. I'm pretty sure the
+> author(s) did not really understand how ASoC works. From my
+> experience you should only use their code to understand the
+> hardware wiring. You might also want to look into the MC13783
+> datasheet for the keyword "network mode".
+
+Yeah nope. And just dumping out the cpcap registers in Android
+seems to provide enough information to get the missing features
+working.
+
+Regards,
+
+Tony
+
+
