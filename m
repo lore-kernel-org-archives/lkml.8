@@ -2,91 +2,103 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEF6C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09B9C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EE624656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7892C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:32:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="A1rBdxeV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBSOcQ (ORCPT
+        id S1728014AbgBSOcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:32:16 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:38870 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727434AbgBSOcP (ORCPT
+        Wed, 19 Feb 2020 09:32:53 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56648 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727680AbgBSOcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:32:15 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JENarr019384;
-        Wed, 19 Feb 2020 09:32:14 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8ucu1kgq-1
+        Wed, 19 Feb 2020 09:32:52 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JEWWHR016893;
+        Wed, 19 Feb 2020 15:32:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=yVYeAkBr/Ft2oDd0dMTVl2kwlcLip9R6AePCGWxuxMw=;
+ b=A1rBdxeVPUK94k7W2bT3X9yIQ9+tmEgoujjCkMuwgscVu+O3cVk2/o00J+uKZ0mDIXQO
+ zv3BCA1w2cLnGH1wd8n2aMtXSA5hob9rrYjNkedLnLZ2XtBGSLignA0gdDWxK6i6Rp0q
+ vyeSkkfWan2+6H0SOfdl+VyMszHBg0kX2V4BvNnT4TB6FPr3uRSUQYqS7xv1BOPtwZ1g
+ XNvOfo8huh4wD/nS3PYiRw3UzvkXFb25E59BncK4YBXXSDTk0FrwjFv1aUrY8I34mPs4
+ KQc2qUnwkIsTSnxvp2WD1pUUh+WuwAiDbn5+zSvX/yG+QoEbzp9ywxoLcPu1NxBk7/4J kA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8uafkjfe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 09:32:13 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01JEWCuO038939
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 19 Feb 2020 09:32:13 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 19 Feb
- 2020 09:32:11 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 19 Feb 2020 09:32:11 -0500
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01JEW9WC027724;
-        Wed, 19 Feb 2020 09:32:09 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH] iio: accel: adxl372: Set iio_chan BE
-Date:   Wed, 19 Feb 2020 16:31:12 +0200
-Message-ID: <20200219143112.25976-1-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Feb 2020 15:32:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1DEB610003A;
+        Wed, 19 Feb 2020 15:32:31 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0722A2BEC59;
+        Wed, 19 Feb 2020 15:32:31 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb 2020 15:32:30
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <marex@denx.de>, <alexandre.torgue@st.com>
+Subject: [PATCH v3 0/2] Add GPIO level-sensitive interrupt support
+Date:   Wed, 19 Feb 2020 15:32:27 +0100
+Message-ID: <20200219143229.18084-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- suspectscore=0 mlxscore=0 clxscore=1015 phishscore=0 priorityscore=1501
- mlxlogscore=829 lowpriorityscore=0 adultscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Data stored in the iio-buffer is BE and this
-should be specified in the iio_chan_spec struct.
+This series adds the possibility to handle gpio interrupts on level.
 
-Fixes: f4f55ce38e5f8 ("iio:adxl372: Add FIFO and interrupts support")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/iio/accel/adxl372.c | 1 +
- 1 file changed, 1 insertion(+)
+GPIO hardware block is directly linked to EXTI block but EXTI handles
+external interrupts only on edge. To be able to handle GPIO interrupt on
+level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+is retriggered following interrupt type and gpio line value.
 
-diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
-index 9c6eebf379ca..3eb413df3c8d 100644
---- a/drivers/iio/accel/adxl372.c
-+++ b/drivers/iio/accel/adxl372.c
-@@ -237,6 +237,7 @@ static const struct adxl372_axis_lookup adxl372_axis_lookup_table[] = {
- 		.realbits = 12,						\
- 		.storagebits = 16,					\
- 		.shift = 4,						\
-+		.endianness = IIO_BE,					\
- 	},								\
- }
- 
+In exti irq chip, retrigger ops function is added.
+
+Changes since v2:
+ - Fix issues reported by Marc:
+   - do not retrigger uselessly a second time in exti irq retrigger callback
+   - minor comments in pinctrl patch
+
+Changes since v1:
+ - Fix issue reported by Marek: return statment in "stm32_gpio_set_type"
+   function.
+
+regards
+alex
+
+Alexandre Torgue (2):
+  irqchip/stm32: Add irq retrigger support
+  pinctrl: stm32: Add level interrupt support to gpio irq chip
+
+ drivers/irqchip/irq-stm32-exti.c      | 14 ++++++++-
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 45 +++++++++++++++++++++++++--
+ 2 files changed, 56 insertions(+), 3 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
