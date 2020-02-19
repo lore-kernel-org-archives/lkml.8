@@ -2,110 +2,121 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4CBC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F9C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64B482173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978A82173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="l1rqbLWH"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ih0TjNY9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgBSAwM (ORCPT
+        id S1727208AbgBSA63 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:52:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44836 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726595AbgBSAwL (ORCPT
+        Tue, 18 Feb 2020 19:58:29 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34652 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBSA62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:52:11 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J0V4ib124250;
-        Wed, 19 Feb 2020 00:51:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=EXfdJroLahj1fjenAt1LakeRFv7fBrTRyPPo6hNVXtA=;
- b=l1rqbLWHXkvzyQ7OXy4NjC3oFBHcH1c/+oeuX2WmwgluBVfnrsPTsIivJKsielRg8IZW
- Tcav/eymscmzuXsYpC5UkbyzXSs5yThkarrxTv9AIwfCFdRUoBsbT4ASIC9PUA2sBDGk
- 5kFPn1OyARyybizr4SzdZpPnJDT9w8/KQZ1ScIXj1l2wTsnDWRaRRpUzigOlh2D4Zoty
- bzucOq9PxxdqY1wLyMdegu3bm6lvo6QuKbuNbtJX/qU/eYM2wols0ICx5oMlYEQoyrog
- lSap7myPnsLOldM5AAEm8Dm8CLJjP23u7Lglp73mKJp6k8E0MviSAXCXeBN4gBotC0We ww== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2y7aq5w0ru-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 00:51:59 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J0Sx8w152757;
-        Wed, 19 Feb 2020 00:51:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2y82c2ds8w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 00:51:58 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J0psvl010065;
-        Wed, 19 Feb 2020 00:51:55 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 16:51:54 -0800
-Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Longpeng (Mike)" <longpeng2@huawei.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
-        weidong.huang@huawei.com, weifuqiang@huawei.com,
-        kvm@vger.kernel.org
-References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
- <20200218203717.GE28156@linux.intel.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <455abe66-d801-89c4-3e3c-503842fe403a@oracle.com>
-Date:   Tue, 18 Feb 2020 16:51:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 19:58:28 -0500
+Received: by mail-pf1-f195.google.com with SMTP id i6so11600993pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:58:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iSZk69ptAiTyf7jpHNkoClrlGQ6cnI+6Xpj9dCGMjN0=;
+        b=Ih0TjNY9842AqcuQgmoScvFqrmIbnDcyT2G+Zz4H7cAxEjHt0DyfSoOYIn774f5oXB
+         7N482BmqyEb+fPQ62sT9IirOQ1sOWGAEpZc/b9h9LQ9qxLL2Xkg18FgiTMcYoMsUYOV1
+         Agml5+hejGispc0IEUqgulEwAitKHdS/jC2J0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iSZk69ptAiTyf7jpHNkoClrlGQ6cnI+6Xpj9dCGMjN0=;
+        b=pfldqUK5SlUyvuNH5F+z59EzJ8yoAKwi3ufP8H7VV4koOf5kZw6S5Fv9U45Ibk65br
+         5vK7myja2qVT2j10EhfBKD9AOtOntmyUoJo5cVOzSXWv5aqvpOPEnQFLzThxrlnJ8jZO
+         bRisj0W2E8BzsHQo8Zd18L1ae+Nr3amR9CoxxDXnfUnSA/L32//TRAhp8T1XLw00s46p
+         HcPqQGTQFr1NtKM2HBagTnN2SMNY2/X9PAn70RICnWxOGACK6abDQWRy/0LyBWhOyuR1
+         3QFvgGB8QnAHAueA7IA8YzgcnTg3yDaFDtUU7E1diKdnxZhEiKm2aC2Yj9F9N37m0T4L
+         9G0g==
+X-Gm-Message-State: APjAAAVTQT29fDQLFdiK+vqg1hAdeMHzIpqDF2ebJGXG+pSba0QixfCX
+        KoCO3gqnkwTzwOjD1vnGArmvJg==
+X-Google-Smtp-Source: APXvYqwMB+TjIkvXxWZ6X+9g5aGFD1+V5OiJ0ztLwJPySi7aV3TrAhaznYiFLVqLpiYGnEPzwM+MEA==
+X-Received: by 2002:aa7:9aa5:: with SMTP id x5mr24532698pfi.131.1582073906946;
+        Tue, 18 Feb 2020 16:58:26 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 4sm213446pfn.90.2020.02.18.16.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 16:58:25 -0800 (PST)
+Date:   Tue, 18 Feb 2020 16:58:25 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com,
+        Dave Martin <Dave.Martin@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 09/12] arm64: disable SCS for hypervisor code
+Message-ID: <202002181658.41FA7C514E@keescook>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200219000817.195049-1-samitolvanen@google.com>
+ <20200219000817.195049-10-samitolvanen@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218203717.GE28156@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0
- phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190000
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 impostorscore=0 adultscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 clxscore=1011 bulkscore=0
- phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219000817.195049-10-samitolvanen@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 12:37 PM, Sean Christopherson wrote:
-> On Tue, Feb 18, 2020 at 08:10:25PM +0800, Longpeng(Mike) wrote:
->> Our machine encountered a panic after run for a long time and
->> the calltrace is:
+On Tue, Feb 18, 2020 at 04:08:14PM -0800, Sami Tolvanen wrote:
+> Disable SCS for code that runs at a different exception level by
+> adding __noscs to __hyp_text.
 > 
-> What's the actual panic?  Is it a BUG() in hugetlb_fault(), a bad pointer
-> dereference, etc...?
+> Suggested-by: James Morse <james.morse@arm.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 
-I too would like some more information on the panic.
-If your analysis is correct, then I would expect the 'ptep' returned by
-huge_pte_offset() to not point to a pte but rather some random address.
-This is because the 'pmd' calculated by pmd_offset(pud, addr) is not
-really the address of a pmd.  So, perhaps there is an addressing exception
-at huge_ptep_get() near the beginning of hugetlb_fault()?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-	ptep = huge_pte_offset(mm, haddr, huge_page_size(h));
-	if (ptep) {
-		entry = huge_ptep_get(ptep);
-		...
+-Kees
+
+> ---
+>  arch/arm64/include/asm/kvm_hyp.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+> index a3a6a2ba9a63..0f0603f55ea0 100644
+> --- a/arch/arm64/include/asm/kvm_hyp.h
+> +++ b/arch/arm64/include/asm/kvm_hyp.h
+> @@ -13,7 +13,7 @@
+>  #include <asm/kvm_mmu.h>
+>  #include <asm/sysreg.h>
+>  
+> -#define __hyp_text __section(.hyp.text) notrace
+> +#define __hyp_text __section(.hyp.text) notrace __noscs
+>  
+>  #define read_sysreg_elx(r,nvh,vh)					\
+>  	({								\
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
 
 -- 
-Mike Kravetz
+Kees Cook
