@@ -2,147 +2,97 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79654C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F30C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFA1222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:50:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750062176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:53:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbgBSIuc (ORCPT
+        id S1726491AbgBSIxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:50:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49712 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 03:53:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:43928 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726496AbgBSItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:49:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 886EAAC69;
-        Wed, 19 Feb 2020 08:49:50 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 01/10] n_gsm: drop unneeded gsm_dlci->fifo field
-Date:   Wed, 19 Feb 2020 09:49:40 +0100
-Message-Id: <20200219084949.28074-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.0
+        id S1726202AbgBSIxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:53:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F8441FB;
+        Wed, 19 Feb 2020 00:53:51 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D7DD3F68F;
+        Wed, 19 Feb 2020 00:53:49 -0800 (PST)
+Subject: Re: [RFC] Display the cpu of sched domain in procfs
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        Chen Yu <yu.chen.surf@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Mel Gorman <mgorman@suse.de>, Tony Luck <tony.luck@intel.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>
+References: <CADjb_WQ0wFgZWBo0Xo1Q+NWS6vF0BSs5H0ho+5FM82Mu-JVYoQ@mail.gmail.com>
+ <787302f0-670f-fadf-14e6-ea0a73603d77@arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <60febadb-df21-a44b-d282-e43c104d2497@arm.com>
+Date:   Wed, 19 Feb 2020 09:53:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <787302f0-670f-fadf-14e6-ea0a73603d77@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gsm_dlci->fifo always points to gsm_dlci->_fifo. So drop the pointer and
-rename _fifo to fifo. And update all the users (add & to them).
+On 19/02/2020 09:13, Valentin Schneider wrote:
+> Hi,
+> 
+> On 19/02/2020 07:15, Chen Yu wrote:
+>> Problem:
+>> sched domain topology is not always consistent with the CPU topology exposed at
+>> /sys/devices/system/cpu/cpuX/topology,  which makes it
+>> hard for monitor tools to distinguish the CPUs among different sched domains.
+>>
+>> For example, on x86 if there are NUMA nodes within a package, say,
+>> SNC(Sub-Numa-Cluster),
+>> then there would be no die sched domain but only NUMA sched domains
+>> created. As a result,
+>> you don't know what the sched domain hierarchical is by only looking
+>> at /sys/devices/system/cpu/cpuX/topology.
+>>
+>> Although by appending sched_debug in command line would show the sched
+>> domain CPU topology,
+>> it is only printed once during boot up, which makes it hard to track
+>> at run-time.
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- drivers/tty/n_gsm.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+What about /proc/schedstat?
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 5f8c30f0538e..828c0c7babdd 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -129,8 +129,7 @@ struct gsm_dlci {
- 	int retries;
- 	/* Uplink tty if active */
- 	struct tty_port port;	/* The tty bound to this DLCI if there is one */
--	struct kfifo *fifo;	/* Queue fifo for the DLCI */
--	struct kfifo _fifo;	/* For new fifo API porting only */
-+	struct kfifo fifo;	/* Queue fifo for the DLCI */
- 	int adaption;		/* Adaption layer in use */
- 	int prev_adaption;
- 	u32 modem_rx;		/* Our incoming virtual modem lines */
-@@ -796,7 +795,7 @@ static int gsm_dlci_data_output(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 
- 	total_size = 0;
- 	while (1) {
--		len = kfifo_len(dlci->fifo);
-+		len = kfifo_len(&dlci->fifo);
- 		if (len == 0)
- 			return total_size;
- 
-@@ -820,7 +819,7 @@ static int gsm_dlci_data_output(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 			*dp++ = gsm_encode_modem(dlci);
- 			break;
- 		}
--		WARN_ON(kfifo_out_locked(dlci->fifo, dp , len, &dlci->lock) != len);
-+		WARN_ON(kfifo_out_locked(&dlci->fifo, dp , len, &dlci->lock) != len);
- 		__gsm_data_queue(dlci, msg);
- 		total_size += size;
- 	}
-@@ -1424,7 +1423,7 @@ static void gsm_dlci_close(struct gsm_dlci *dlci)
- 	dlci->state = DLCI_CLOSED;
- 	if (dlci->addr != 0) {
- 		tty_port_tty_hangup(&dlci->port, false);
--		kfifo_reset(dlci->fifo);
-+		kfifo_reset(&dlci->fifo);
- 	} else
- 		dlci->gsm->dead = 1;
- 	wake_up(&dlci->gsm->event);
-@@ -1645,8 +1644,7 @@ static struct gsm_dlci *gsm_dlci_alloc(struct gsm_mux *gsm, int addr)
- 		return NULL;
- 	spin_lock_init(&dlci->lock);
- 	mutex_init(&dlci->mutex);
--	dlci->fifo = &dlci->_fifo;
--	if (kfifo_alloc(&dlci->_fifo, 4096, GFP_KERNEL) < 0) {
-+	if (kfifo_alloc(&dlci->fifo, 4096, GFP_KERNEL) < 0) {
- 		kfree(dlci);
- 		return NULL;
- 	}
-@@ -1681,7 +1679,7 @@ static void gsm_dlci_free(struct tty_port *port)
- 
- 	del_timer_sync(&dlci->t1);
- 	dlci->gsm->dlci[dlci->addr] = NULL;
--	kfifo_free(dlci->fifo);
-+	kfifo_free(&dlci->fifo);
- 	while ((dlci->skb = skb_dequeue(&dlci->skb_list)))
- 		dev_kfree_skb(dlci->skb);
- 	kfree(dlci);
-@@ -3030,7 +3028,7 @@ static int gsmtty_write(struct tty_struct *tty, const unsigned char *buf,
- 	if (dlci->state == DLCI_CLOSED)
- 		return -EINVAL;
- 	/* Stuff the bytes into the fifo queue */
--	sent = kfifo_in_locked(dlci->fifo, buf, len, &dlci->lock);
-+	sent = kfifo_in_locked(&dlci->fifo, buf, len, &dlci->lock);
- 	/* Need to kick the channel */
- 	gsm_dlci_data_kick(dlci);
- 	return sent;
-@@ -3041,7 +3039,7 @@ static int gsmtty_write_room(struct tty_struct *tty)
- 	struct gsm_dlci *dlci = tty->driver_data;
- 	if (dlci->state == DLCI_CLOSED)
- 		return -EINVAL;
--	return TX_SIZE - kfifo_len(dlci->fifo);
-+	return TX_SIZE - kfifo_len(&dlci->fifo);
- }
- 
- static int gsmtty_chars_in_buffer(struct tty_struct *tty)
-@@ -3049,7 +3047,7 @@ static int gsmtty_chars_in_buffer(struct tty_struct *tty)
- 	struct gsm_dlci *dlci = tty->driver_data;
- 	if (dlci->state == DLCI_CLOSED)
- 		return -EINVAL;
--	return kfifo_len(dlci->fifo);
-+	return kfifo_len(&dlci->fifo);
- }
- 
- static void gsmtty_flush_buffer(struct tty_struct *tty)
-@@ -3061,7 +3059,7 @@ static void gsmtty_flush_buffer(struct tty_struct *tty)
- 	   then the data being transmitted can't simply be junked once
- 	   it has first hit the stack. Until then we can just blow it
- 	   away */
--	kfifo_reset(dlci->fifo);
-+	kfifo_reset(&dlci->fifo);
- 	/* Need to unhook this DLCI from the transmit queue logic */
- }
- 
--- 
-2.25.0
+E.g. on Intel Xeon CPU E5-2690 v2
+
+$ cat /proc/schedstat | head
+version 15
+timestamp 4486170100
+cpu0 0 0 0 0 0 0 59501267037720 16902762382193 1319621004
+domain0 00,00100001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+
+        ^^^^^^^^^^^
+
+cpu1 0 0 0 0 0 0 56045879920164 16758983055410 1318489275
+domain0 00,00200002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+...
 
