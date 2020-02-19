@@ -2,136 +2,89 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE5BC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F23C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC407206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4638A24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582111161;
-	bh=bw7tkXaiDl+bnrBfZ2KC0VD9hye+RUOVzPXLGIA9hPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZeTD+i4ZmMO0N+jdHQiLDIyYPPSyhC2cbTqQjLhW1l6r2wz6H6VGEWE4IVQmVApDv
-	 VKgZw1kqAnjZJugAZXADG8LD3do1JaZDHojIfCc+HAFaMrcTxwjZCDMDrhaPyygnFA
-	 9tZw3qhI+ETR27EKJ9F4UPTWZDnXegmOCCPPxn84=
+	s=default; t=1582111185;
+	bh=BwgSD1a186ReLRbRpljqkbL5xbN/xb62IKOX5waLZ3U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MvDZ5aaaj/sC5BY+ycPEbl1laAU8ynaeRU3Pr3hh1xbmnt6tLxO5lv7P6jFYyen/5
+	 YNWLMM/AnjLQFUzAR/PEzKqDYRcFYd5W/5UZMPX20oFTAHZAHfWWyw00kqMHlhL2wM
+	 XXU3q04rHFLoTCfXib0BBxCR/nc+XJlzK3iDdATc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgBSLTU (ORCPT
+        id S1726875AbgBSLTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:19:20 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34659 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBSLTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:19:20 -0500
-Received: by mail-lj1-f193.google.com with SMTP id x7so26626327ljc.1;
-        Wed, 19 Feb 2020 03:19:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YMrisIju2xkaYMsmg7qHjv2/R/a5abS9W6nC/unzPBU=;
-        b=ehnJdxh+u1EGVGVOMvpYrAh00iOMtXGjaAfkAtbyLjCtGSAJclGf5fTwgowg0xJpuu
-         hxJCknqOR0ZM3goUkZSPbTck8sz1uwP2D/KQEagt0hO+sr5BIIw4hAmnJ2nZbXt2YZrI
-         R7VCH9B8n8G7SZ6KNvP70X5wh4PJTlLu4rx56LB1BT5QPj2JIi4390imQU4lh+ZvtTJ+
-         AwzxcVRnAshzwrLzBwuU06zi9xDqfGcyCOXGbpmlX+bQKD2vvKULb/fxRFI+P/Y8ztlu
-         tR7R2FdmYpxX8/+zajirWyiDLaCmh2XNcWhQNpsDS+qZGflgn62AKeOCmcuYrj6b+flU
-         3I/g==
-X-Gm-Message-State: APjAAAWOoBfzbw88LXfty8wK5Xd2mt8kHce1uCJfWiSFAr5qQLdNQbaz
-        zX6z7aib8qMS9Cp2xhMQT1I=
-X-Google-Smtp-Source: APXvYqyhI2csZSzCeIjjdIdhkC51zzAlpSMWZLNoe2xCIua51ifm1VcbOYzx/0tQGr0cT3kjZGExCQ==
-X-Received: by 2002:a2e:b04b:: with SMTP id d11mr16004699ljl.248.1582111157513;
-        Wed, 19 Feb 2020 03:19:17 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id 11sm1032702lju.103.2020.02.19.03.19.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 03:19:16 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j4NNp-0000wX-R8; Wed, 19 Feb 2020 12:19:13 +0100
-Date:   Wed, 19 Feb 2020 12:19:13 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] leds: trigger: implement a tty trigger
-Message-ID: <20200219111913.GB32540@localhost>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-5-uwe@kleine-koenig.org>
- <20200219105239.GA32540@localhost>
- <20200219110306.k5jndutalll64esu@pengutronix.de>
+        Wed, 19 Feb 2020 06:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726514AbgBSLTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:19:43 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28B97206E2;
+        Wed, 19 Feb 2020 11:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582111183;
+        bh=BwgSD1a186ReLRbRpljqkbL5xbN/xb62IKOX5waLZ3U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DtGnndcmPB5eBW9AOBpUytkTAaLSpoU88u6KVZS6XNDAOBWhHwzPa2+Yd3gwdop9J
+         XNvJgwMBfFFWGu9XDvoyVbpApAltto5Xq31N289qcRTU2cZWKUV9mPH/8tDpmAKCMH
+         ERqmxUf1atqq4K7mZtC0xLZO8+Xbl/eGBMRHM8Ko=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j4NOH-006URF-9N; Wed, 19 Feb 2020 11:19:41 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219110306.k5jndutalll64esu@pengutronix.de>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 19 Feb 2020 11:19:41 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alexandre Torgue <alexandre.torgue@st.com>
+Cc:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: stm32: Add level interrupt support to gpio
+ irq chip
+In-Reply-To: <dd6434a7-aff1-94ec-2fdf-51374c695ada@st.com>
+References: <20200210134901.1939-1-alexandre.torgue@st.com>
+ <20200210134901.1939-3-alexandre.torgue@st.com>
+ <377b0895-aaeb-b12e-cad7-469332787b4e@denx.de>
+ <dd6434a7-aff1-94ec-2fdf-51374c695ada@st.com>
+Message-ID: <b7965be80f0e5fe32599f188ae8b231d@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, marex@denx.de, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:03:06PM +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 19, 2020 at 11:52:39AM +0100, Johan Hovold wrote:
-> > On Thu, Feb 13, 2020 at 10:16:00AM +0100, Uwe Kleine-König wrote:
-> > > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > 
-> > > Usage is as follows:
-> > > 
-> > > 	myled=ledname
-> > > 	tty=ttyS0
-> > > 
-> > > 	echo tty > /sys/class/leds/$myled/trigger
-> > > 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
-> > > 
-> > > . When this new trigger is active it periodically checks the tty's
-> > > statistics and when it changed since the last check the led is flashed
-> > > once.
-> > > 
-> > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > > ---
-> > 
-> > > +static ssize_t dev_store(struct device *dev,
-> > > +			 struct device_attribute *attr, const char *buf,
-> > > +			 size_t size)
-> > > +{
-> > > +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> > > +	struct tty_struct *tty;
-> > > +	dev_t d;
-> > > +	int ret;
-> > > +
-> > > +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
-> > > +		tty = NULL;
-> > > +	} else {
-> > > +		ret = kstrtodev_t(buf, &d);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +
-> > > +		tty = tty_kopen_shared(d);
-> > 
-> > I really don't have time to look at this, but having the led-trigger
-> > keep the port open looks fundamentally broken (consider modem-control
-> > signals, power, etc).
-> 
-> If I understand correctly calling tty_kopen_shared() doesn't open the
-> device, just keep it referenced which prevents it to disappear. Unless I
-> miss something it doesn't result in the tty's .open() being called.
+On 2020-02-11 10:08, Alexandre Torgue wrote:
 
-So tty_kopen_shared() is something you added. Judging from a quick look
-it seems you can only attach a trigger to an already open port, but the
-trigger will then keep the port open (again, consider modem control,
-power).
+[...]
 
-I'm sorry I don't have time to review this myself, but this probably
-needs some more eyes on it before being merged.
+> Yes. It'll be fixed in v2.
 
-Johan
+And when you do that, please use my official email address (my @arm.com
+address goes to my ex manager, and I don't think he cares much about 
+this).
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
