@@ -2,182 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE226C3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4818AC3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCDF24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:48:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582076934;
-	bh=jHP0jc8ZveGDUmMSCOUaHBQdMWzeqy4r4osM0AUbe7I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=m9w3e7RMVbsmqZQVt8VpYM1VY+D2ec8vBHlfpD5KwpvFevIHl+dlPa6uCAdrQHUjt
-	 6NEHN1+o3qr4oreiCj6g5rxrNQ06s05gCxvXwRFVZ5PRRhxrGowkpe2qO2v8UL862Q
-	 06XiV2F4NumniVE9oxrB+bCiHc6UrAz6WKhYitXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 20C2524654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ts8VDPPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBSBsx (ORCPT
+        id S1728071AbgBSBtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:48:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbgBSBsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:48:53 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAE0524654;
-        Wed, 19 Feb 2020 01:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582076931;
-        bh=jHP0jc8ZveGDUmMSCOUaHBQdMWzeqy4r4osM0AUbe7I=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=uJzJNiSGMJcopQUCcyMLao3w9RpheF4zsJ6Kie0KIxr+Z2DDHoj4jqVKp7yj638bG
-         IMw8CVmYFFp7r2jj521OGV8yHpdcZ4zn6uJpDqRRuR/657XEQxDtAsEguqz37t+RX4
-         A+sPRds7GKSYUGreAFltwhCvXZIZ058EZveRcuJc=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 86A3C3520856; Tue, 18 Feb 2020 17:48:51 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:48:51 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, dhowells@redhat.com,
-        edumazet@google.com, fweisbec@gmail.com, oleg@redhat.com
-Subject: Re: [PATCH tip/core/rcu 1/3] rcu-tasks: *_ONCE() for
- rcu_tasks_cbs_head
-Message-ID: <20200219014851.GQ2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200217181615.GP2935@paulmck-ThinkPad-P72>
- <20200218075648.GW14914@hirez.programming.kicks-ass.net>
- <20200218162719.GE2935@paulmck-ThinkPad-P72>
- <20200218201142.GF11457@worktop.programming.kicks-ass.net>
- <20200218202226.GJ2935@paulmck-ThinkPad-P72>
- <20200218174503.3d4e4750@gandalf.local.home>
- <20200218225455.GN2935@paulmck-ThinkPad-P72>
- <20200219000144.GA26663@google.com>
- <20200219001640.GP2935@paulmck-ThinkPad-P72>
- <20200219011359.GA29762@google.com>
+        Tue, 18 Feb 2020 20:49:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43133 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727959AbgBSBtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 20:49:55 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so11524609pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 17:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mCpHqL2j5BnpvPO+BvKBhD4kS+poF12ECCa7tnpH+YM=;
+        b=ts8VDPPBuLBZSekAbBB4AA9teS6dDAo1HBlFrWgCyrq8tuMc3thxftGa4AHpAl9HfC
+         u7yxDltYVpeECwcY8RzDqO6Oc+ujMt1LKMzE60hyRUp4CRmsuXIAURjdU5sPKFRoFEwm
+         6FN7vQ7hbitggAiOqBJscQwLzxfsXk6P3kE/ijGHV8xJt/0agF6tzs7iGM9/TJ0Fvy9F
+         ArDT1pSLD7/sstOaJU2GCdk92lHOemZWj0EQ3zQfulnRwfJ76bPc+DDLQ9ZRE1nVboYb
+         jR7FRhkDaPhSRUnmUrrhkxZbwc53oVyaoPQDanlDY6cxtAjJ8vR46+8/3WdA4kMg6eXF
+         I4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mCpHqL2j5BnpvPO+BvKBhD4kS+poF12ECCa7tnpH+YM=;
+        b=JCWvm6uTi87Ktx3mUPGXCspGSOumUsN0H1mROXfg3JR3Oy0OHMXfjmYj6dwc8SPGYa
+         4LR+wWXVWE0m/MCAztmMAIlmSkILVziVZZksRBUB0AvFYKLtHcb4PdLQF4jss5Kr3WeL
+         NvOQx1o+d+u0wPA+rJtXr2INMKg+augzDy+RJCI3XSL9pQFXTGDE1bqIC54PYxkSpQki
+         0MW0mz229aFqhE9yG7RWgq7RNITWe9hrvzcj1YEAwcAivDJO7gf2vLY66jkq0ZDiOe1Y
+         AM3VKXpTxIXeKuDEk4mAEG2AvDRkOO4vlAbLnT4ysA3DOVw1b5IyEj8zWIAc05ByTiR/
+         Oh8w==
+X-Gm-Message-State: APjAAAV4nwGDJxINgKQINPTmdHB1UVmVJdNu8qM0XeAzrUv3jAkC+xHD
+        0hWUqQxdO06g+5HH9r4tpsFTvg==
+X-Google-Smtp-Source: APXvYqywbiuEpD1gaeQyiKrj/G0fRGBegWe1kQhCb3QNT2ZiaM+5B/V4zEAel8kBFDrwr4m3Dknbgg==
+X-Received: by 2002:a63:2266:: with SMTP id t38mr26477980pgm.145.1582076994532;
+        Tue, 18 Feb 2020 17:49:54 -0800 (PST)
+Received: from localhost ([223.226.55.170])
+        by smtp.gmail.com with ESMTPSA id q25sm288920pfg.41.2020.02.18.17.49.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Feb 2020 17:49:53 -0800 (PST)
+Date:   Wed, 19 Feb 2020 07:19:51 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Mark Langsdorf <mlangsdo@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [RFC PATCH 04/11] cpufreq: Remove Calxeda driver
+Message-ID: <20200219014951.2o2diuw5dzooafji@vireshk-i7>
+References: <20200218171321.30990-1-robh@kernel.org>
+ <20200218171321.30990-5-robh@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219011359.GA29762@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200218171321.30990-5-robh@kernel.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:13:59PM -0500, Joel Fernandes wrote:
-> On Tue, Feb 18, 2020 at 04:16:40PM -0800, Paul E. McKenney wrote:
-> > On Tue, Feb 18, 2020 at 07:01:44PM -0500, Joel Fernandes wrote:
-> > > On Tue, Feb 18, 2020 at 02:54:55PM -0800, Paul E. McKenney wrote:
-> > > > On Tue, Feb 18, 2020 at 05:45:03PM -0500, Steven Rostedt wrote:
-> > > > > On Tue, 18 Feb 2020 12:22:26 -0800
-> > > > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > > > > 
-> > > > > > On Tue, Feb 18, 2020 at 09:11:42PM +0100, Peter Zijlstra wrote:
-> > > > > > > On Tue, Feb 18, 2020 at 08:27:19AM -0800, Paul E. McKenney wrote:  
-> > > > > > > > On Tue, Feb 18, 2020 at 08:56:48AM +0100, Peter Zijlstra wrote:  
-> > > > > > >   
-> > > > > > > > > I just took offence at the Changelog wording. It seems to suggest there
-> > > > > > > > > actually is a problem, there is not.  
-> > > > > > > > 
-> > > > > > > > Quoting the changelog: "Not appropriate for backporting due to failure
-> > > > > > > > being unlikely."  
-> > > > > > > 
-> > > > > > > That implies there is failure, however unlikely.
-> > > > > > > 
-> > > > > > > In this particular case there is absolutely no failure, except perhaps
-> > > > > > > in KCSAN. This patch is a pure annotation such that KCSAN can understand
-> > > > > > > the code.
-> > > > > > > 
-> > > > > > > Like said, I don't object to the actual patch, but I do think it is
-> > > > > > > important to call out false negatives or to describe the actual problem
-> > > > > > > found.  
-> > > > > > 
-> > > > > > I don't feel at all comfortable declaring that there is absolutely
-> > > > > > no possibility of failure.
-> > > > > 
-> > > > > Perhaps wording it like so:
-> > > > > 
-> > > > > "There's know known issue with the current code, but the *_ONCE()
-> > > > > annotations here makes KCSAN happy, allowing us to focus on KCSAN
-> > > > > warnings that can help bring about known issues in other code that we
-> > > > > can fix, without being distracted by KCSAN warnings that we do not see
-> > > > > a problem with."
-> > > > > 
-> > > > > ?
-> > > > 
-> > > > That sounds more like something I might put in rcutodo.html as a statement
-> > > > of the RCU approach to KCSAN reports.
-> > > > 
-> > > > But switching to a different situation (for variety, if nothing else),
-> > > > what about the commit shown below?
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > commit 35bc02b04a041f32470ae6d959c549bcce8483db
-> > > > Author: Paul E. McKenney <paulmck@kernel.org>
-> > > > Date:   Tue Feb 18 13:41:02 2020 -0800
-> > > > 
-> > > >     rcutorture: Mark data-race potential for rcu_barrier() test statistics
-> > > >     
-> > > >     The n_barrier_successes, n_barrier_attempts, and
-> > > >     n_rcu_torture_barrier_error variables are updated (without access
-> > > >     markings) by the main rcu_barrier() test kthread, and accessed (also
-> > > >     without access markings) by the rcu_torture_stats() kthread.  This of
-> > > >     course can result in KCSAN complaints.
-> > > >     
-> > > >     Because the accesses are in diagnostic prints, this commit uses
-> > > >     data_race() to excuse the diagnostic prints from the data race.  If this
-> > > >     were to ever cause bogus statistics prints (for example, due to store
-> > > >     tearing), any misleading information would be disambiguated by the
-> > > >     presence or absence of an rcutorture splat.
-> > > >     
-> > > >     This data race was reported by KCSAN.  Not appropriate for backporting
-> > > >     due to failure being unlikely and due to the mild consequences of the
-> > > >     failure, namely a confusing rcutorture console message.
-> > > >     
-> > > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > 
-> > > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > > > index 5453bd5..b3301f3 100644
-> > > > --- a/kernel/rcu/rcutorture.c
-> > > > +++ b/kernel/rcu/rcutorture.c
-> > > > @@ -1444,9 +1444,9 @@ rcu_torture_stats_print(void)
-> > > >  		atomic_long_read(&n_rcu_torture_timers));
-> > > >  	torture_onoff_stats();
-> > > >  	pr_cont("barrier: %ld/%ld:%ld\n",
-> > > > -		n_barrier_successes,
-> > > > -		n_barrier_attempts,
-> > > > -		n_rcu_torture_barrier_error);
-> > > > +		data_race(n_barrier_successes),
-> > > > +		data_race(n_barrier_attempts),
-> > > > +		data_race(n_rcu_torture_barrier_error));
-> > > 
-> > > Would it be not worth just fixing the data-race within rcutorture itself?
-> > 
-> > I could use WRITE_ONCE() for updates and READ_ONCE() for statistics.
-> > However, my current rule is that diagnostic code that is not participating
-> > in the core synchronization uses data_race().  That way, if I do a typo
-> > and write to (say) n_barrier_attempts in some other thread, KCSAN will
-> > know to yell at me.
+On 18-02-20, 11:13, Rob Herring wrote:
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Do not apply yet.
 > 
-> Oh, ok. That makes sense.
-> 
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+>  drivers/cpufreq/Kconfig.arm          |  10 ---
+>  drivers/cpufreq/Makefile             |   3 +-
+>  drivers/cpufreq/cpufreq-dt-platdev.c |   3 -
+>  drivers/cpufreq/highbank-cpufreq.c   | 106 ---------------------------
+>  4 files changed, 1 insertion(+), 121 deletions(-)
+>  delete mode 100644 drivers/cpufreq/highbank-cpufreq.c
 
-Applied, thank you!
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-							Thanx, Paul
+-- 
+viresh
