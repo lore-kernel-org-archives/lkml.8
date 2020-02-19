@@ -2,101 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF891C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F984C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C1824654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:09:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142970;
-	bh=AztcshnCxUnp8DpcOWIHIAP7aw8oQ14fVfrm9ZaKZdk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jzGJE2lj/oWXIpeufjaiVsirHm2uAvHO0vDxIp7GTiDH+pcnUFD1K7SLIojkPD3vp
-	 HDr+g3VSBmMij053LuzSTIJ0wUjyNEcTwCLGN+7iE6PgbixL4j4E7eGPq8+57qUUXk
-	 3gDIfI5yhWWgMB5lQL5UZ8/WWMHKS+BTQkafiKZU=
+	by mail.kernel.org (Postfix) with ESMTP id 478732064C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:10:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbgBSUJ3 (ORCPT
+        id S1726793AbgBSUKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:09:29 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44582 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgBSUJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:09:28 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so25054763oia.11;
-        Wed, 19 Feb 2020 12:09:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mbkzQqUjkxGy2kasJcyhjpJz1rKXG3oq8o4SsxcCO/g=;
-        b=Qg5spdiBWw0OuUZQ7wWM0VlyQ1nJwIxu9GOBmx6CJYRwIuw+bQJUqHQ7p0JjJVnoh4
-         axOKZqTbQyBIDWjTDLlqDjqYAscnXMnBK32d29/PyYLXF65otPErSiKfTNT7eEmiDDk1
-         Rb0dHCK87ay/YEmqMxpLVhRAlQJoB3FZlcYRZFcDm3gmBLn6vSh+UCaM4QTECDP4eiEO
-         STGqUK7yb+kikgeU1VUKQ5jiXa1hXRXYZNxnn5WYs9SRpUNcmf0dD7RdcSfgVIOfwZxp
-         T8lXPWdljrST9pGzPyaEXIyboqQYoQ5l3p22EKMjXCzaIdMXYqa3Y4Xoqyj8QoNd4/DT
-         vxgg==
-X-Gm-Message-State: APjAAAVBScGJmwC8/J+vG/JP6pC7Mc5beff086DR30StKQcmii3rKnSW
-        odI1WZ+L4WMwXLrOLMmX5g==
-X-Google-Smtp-Source: APXvYqx7craa94cySPkeWut3Mcv/WirXtJmPA1s1cNBhvO13jw3nlv/Dh0x4LuMM8fFg3C9iZlRbRg==
-X-Received: by 2002:a05:6808:a8e:: with SMTP id q14mr5549272oij.173.1582142967720;
-        Wed, 19 Feb 2020 12:09:27 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 76sm258701otf.53.2020.02.19.12.09.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:09:27 -0800 (PST)
-Received: (nullmailer pid 21822 invoked by uid 1000);
-        Wed, 19 Feb 2020 20:09:26 -0000
-Date:   Wed, 19 Feb 2020 14:09:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        devicetree@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v2] dt-bindings: net: mdio: remove compatible string from
- example
-Message-ID: <20200219200926.GA21759@bogus>
-References: <20200214194408.9308-1-grygorii.strashko@ti.com>
+        Wed, 19 Feb 2020 15:10:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:56006 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbgBSUKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:10:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A741F31B;
+        Wed, 19 Feb 2020 12:10:41 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E475F3F68F;
+        Wed, 19 Feb 2020 12:10:39 -0800 (PST)
+Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, parth@linux.ibm.com, hdanton@sina.com
+References: <20200214152729.6059-5-vincent.guittot@linaro.org>
+ <20200219125513.8953-1-vincent.guittot@linaro.org>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
+Date:   Wed, 19 Feb 2020 20:10:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200214194408.9308-1-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200219125513.8953-1-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Feb 2020 21:44:08 +0200, Grygorii Strashko wrote:
-> Remove vendor specific compatible string from example, otherwise DT YAML
-> schemas validation may trigger warnings specific to TI ti,davinci_mdio
-> and not to the generic MDIO example.
-> 
-> For example, the "bus_freq" is required for davinci_mdio, but not required for
-> generic mdio example. As result following warning will be produced:
->  mdio.example.dt.yaml: mdio@5c030000: 'bus_freq' is a required property
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> ---
-> Remove compatible string from example instead of changing it.
-> 
-> v1: https://patchwork.ozlabs.org/patch/1201674/
-> 
->  Documentation/devicetree/bindings/net/mdio.yaml | 1 -
->  1 file changed, 1 deletion(-)
-> 
+On 19/02/2020 12:55, Vincent Guittot wrote:
+> @@ -740,8 +740,10 @@ void init_entity_runnable_average(struct sched_entity *se)
+>  	 * Group entities are initialized with zero load to reflect the fact that
+>  	 * nothing has been attached to the task group yet.
+>  	 */
+> -	if (entity_is_task(se))
+> +	if (entity_is_task(se)) {
+> +		sa->runnable_avg = SCHED_CAPACITY_SCALE;
 
-Applied, thanks.
+So this is a comment that's more related to patch 5, but the relevant bit is
+here. I'm thinking this initialization might be too aggressive wrt load
+balance. This will also give different results between symmetric vs
+asymmetric topologies - a single fork() will make a LITTLE CPU group (at the
+base domain level) overloaded straight away. That won't happen for bigs or on
+symmetric topologies because
 
-Rob
+  // group_is_overloaded()
+  sgs->group_capacity * imbalance_pct) < (sgs->group_runnable * 100)
+
+will be false - it would take more than one task for that to happen (due to
+the imbalance_pct).
+
+So maybe what we want here instead is to mimic what he have for utilization,
+i.e. initialize to half the spare capacity of the local CPU. IOW, 
+conceptually something like this:
+
+---
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 99249a2484b4..762717092235 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -740,10 +740,8 @@ void init_entity_runnable_average(struct sched_entity *se)
+ 	 * Group entities are initialized with zero load to reflect the fact that
+ 	 * nothing has been attached to the task group yet.
+ 	 */
+-	if (entity_is_task(se)) {
+-		sa->runnable_avg = SCHED_CAPACITY_SCALE;
++	if (entity_is_task(se))
+ 		sa->load_avg = scale_load_down(se->load.weight);
+-	}
+ 
+ 	/* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
+ }
+@@ -796,6 +794,8 @@ void post_init_entity_util_avg(struct task_struct *p)
+ 		}
+ 	}
+ 
++	sa->runnable_avg = sa->util_avg;
++
+ 	if (p->sched_class != &fair_sched_class) {
+ 		/*
+ 		 * For !fair tasks do:
+---
+
+The current approach has the merit of giving some sort of hint to the LB
+that there is a bunch of new tasks that it could spread out, but I fear it
+is too aggressive.
+
+>  		sa->load_avg = scale_load_down(se->load.weight);
+> +	}
+>  
+>  	/* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
+>  }
