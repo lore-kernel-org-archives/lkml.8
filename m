@@ -2,115 +2,126 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A200C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8033C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD8C24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9923424655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U8FaG0b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgBSBMu (ORCPT
+        id S1727901AbgBSBNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:12:50 -0500
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:46063 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726757AbgBSBMt (ORCPT
+        Tue, 18 Feb 2020 20:13:10 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9710 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgBSBNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:12:49 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07472768|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.264101-0.0159969-0.719902;DS=SPAM|spam_other|0.930438-0.00178347-0.0677784;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.GpVrOsg_1582074763;
-Received: from 172.16.10.102(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.GpVrOsg_1582074763)
-          by smtp.aliyun-inc.com(10.147.40.44);
-          Wed, 19 Feb 2020 09:12:44 +0800
-Subject: Re: [PATCH v2 11/11] mtd: new support oops logger based on pstore/blk
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org
-References: <1581078355-19647-1-git-send-email-liaoweixiong@allwinnertech.com>
- <1581078355-19647-12-git-send-email-liaoweixiong@allwinnertech.com>
- <20200218113449.5ac44955@xps13>
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-Message-ID: <5e95d596-3ba1-09e6-1777-007a5257f1cc@allwinnertech.com>
-Date:   Wed, 19 Feb 2020 09:13:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Feb 2020 20:13:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4c8b5e0000>; Tue, 18 Feb 2020 17:11:58 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 17:13:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 17:13:09 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 01:13:09 +0000
+Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-12-willy@infradead.org>
+ <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
+ <20200219010209.GI24185@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <61bcaa87-91b2-857b-350a-86dab81a1f13@nvidia.com>
+Date:   Tue, 18 Feb 2020 17:13:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200218113449.5ac44955@xps13>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200219010209.GI24185@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582074718; bh=169bBczyyFHIG/Q8UwlECaKiABa8QJEvrDhzzb+cU00=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=U8FaG0b00obFZSv859L8oWEaaOcwQeUfDVqSWQFkBUZBOwH8vbuoD4N7mPb4ZFtWF
+         66/vGL4h4APgHKYjB8OgTdyZD1sLYo/MuGcyMep47kybExxzp1I/HCoaNBtiZxm2fS
+         z+CWh0MSAuooR6vk29dw1BMTJOJvxutR9mbmjwbxN3WnaOY/L50yURHxsLJObLpMQU
+         Ye+mwSNNOhmkQv3gZWRZzP6kLA76Kaff/6vAmGV/UaA/UAx4frrOHDuI7u/Oh55/eT
+         2fQWmlP0+bY+bGivsDqexntMqk58H3NzVgP/QqVhoTlnPJM3AeBJTvYVT4g9z/6mYr
+         7MuMCGqKPcA/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Miquel Raynal,
+On 2/18/20 5:02 PM, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 04:01:43PM -0800, John Hubbard wrote:
+>> How about this instead? It uses the "for" loop fully and more naturally,
+>> and is easier to read. And it does the same thing:
+>>
+>> static inline struct page *readahead_page(struct readahead_control *rac)
+>> {
+>> 	struct page *page;
+>>
+>> 	if (!rac->_nr_pages)
+>> 		return NULL;
+>>
+>> 	page = xa_load(&rac->mapping->i_pages, rac->_start);
+>> 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+>> 	rac->_batch_count = hpage_nr_pages(page);
+>>
+>> 	return page;
+>> }
+>>
+>> static inline struct page *readahead_next(struct readahead_control *rac)
+>> {
+>> 	rac->_nr_pages -= rac->_batch_count;
+>> 	rac->_start += rac->_batch_count;
+>>
+>> 	return readahead_page(rac);
+>> }
+>>
+>> #define readahead_for_each(rac, page)			\
+>> 	for (page = readahead_page(rac); page != NULL;	\
+>> 	     page = readahead_page(rac))
+> 
+> I'm assuming you mean 'page = readahead_next(rac)' on that second line.
 
-On 2020/2/18 下午6:34, Miquel Raynal wrote:
-> Hi WeiXiong,
+
+Yep. :)
+
+
 > 
-> WeiXiong Liao <liaoweixiong@allwinnertech.com> wrote on Fri,  7 Feb
-> 2020 20:25:55 +0800:
-> 
->> It's the last one of a series of patches for adaptive to MTD device.
->>
->> The mtdpstore is similar to mtdoops but more powerful. It bases on
->> pstore/blk, aims to store panic and oops logs to a flash partition,
->> where it can be read back as files after mounting pstore filesystem.
->>
->> The pstore/blk and blkoops, a wrapper for pstore/blk, are designed for
->> block device at the very beginning, but now, compatible to not only
->> block device. After this series of patches, pstore/blk can also work
->> for MTD device. To make it work, 'blkdev' on kconfig or module
->> parameter of blkoops should be set as mtd device name or mtd number.
->> See more about pstore/blk and blkoops on:
->>     Documentation/admin-guide/pstore-block.rst
->>
->> Why do we need mtdpstore?
->> 1. repetitive jobs between pstore and mtdoops
->>    Both of pstore and mtdoops do the same jobs that store panic/oops log.
->>    They have much similar logic that register to kmsg dumper and store
->>    log to several chunks one by one.
->> 2. do what a driver should do
->>    To me, a driver should provide methods instead of policies. What MTD
->>    should do is to provide read/write/erase operations, geting rid of codes
->>    about chunk management, kmsg dumper and configuration.
->> 3. enhanced feature
->>    Not only store log, but also show it as files.
->>    Not only log, but also trigger time and trigger count.
->>    Not only panic/oops log, but also log recorder for pmsg, console and
->>    ftrace in the future.
->>
->> Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
-> 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> 
-> Richard, your PoV on this is welcome.
-> 
-> I suppose this patch depends on the others to work correctly so maybe
-> we should wait the next release before applying it.
+> If you keep reading all the way to the penultimate patch, it won't work
+> for iomap ... at least not in the same way.
 > 
 
-Of couse, thank you for your review
+OK, getting there...
 
-> Thanks,
-> Miquèl
-> 
 
+thanks,
 -- 
-liaoweixiong
+John Hubbard
+NVIDIA
