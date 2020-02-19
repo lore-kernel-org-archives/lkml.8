@@ -7,103 +7,107 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C435AC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D2BC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F36521D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E2721D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:29:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvc1kDyC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuXIpMj+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBSL2O (ORCPT
+        id S1726756AbgBSL3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:28:14 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46293 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbgBSL2O (ORCPT
+        Wed, 19 Feb 2020 06:29:33 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41116 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBSL3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:28:14 -0500
-Received: by mail-pf1-f195.google.com with SMTP id k29so12352138pfp.13;
-        Wed, 19 Feb 2020 03:28:14 -0800 (PST)
+        Wed, 19 Feb 2020 06:29:33 -0500
+Received: by mail-io1-f68.google.com with SMTP id m25so145149ioo.8;
+        Wed, 19 Feb 2020 03:29:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wx3s/bkbNNB3vgPZBOWnRZiJqvIY72P39vHnuYlfuuk=;
-        b=mvc1kDyCMpGtVRbHxdlrV1jBS9zHKLaAeY3c220YbADnhHBy6koZxJCrr0SzUfqwmf
-         wxZhFboilpeoPO4LxgEL5GwtTaFaCWnLe9KgggUTFWLQsK+3C/xPpQhwckbsXSjr/6nL
-         0FiRONn+jFcqWQRVAVKYEztEMroYAEdsAP9mQHYmvL+YabTzxwli+0pGKtQ0IUC3XWXZ
-         XqDsDH5P+JJbs8aIpNMchQAS3yvFwyMoXrlW1I7mXaQ8vMDtfRMXvjg5hl7rtqZnvaQ0
-         IJJ+qlM7yB7eH1y5+aByGkU8ZWp+K9jfbcDZWC/BmXBvBLgvJcNlJZpChuw/2kmBYZPw
-         zvbg==
+        bh=LuClPZIuWjei2K8sqfy9paJrcrdXGttPmOM7+E9ZZhA=;
+        b=MuXIpMj+BKaWePlr0r79/YIA9c8bnu8yVmlv0bEic4OfbkrG16vzHBsfSWaja7r9C9
+         NNsJ/WHSr1kB0pa9HQhu+TlyTXemBGYIqgVec1jvrvK0lfp5hzg+NA7JBbuNOSYhhdyP
+         xxTbKO5i4ZXM+5sFCMVEudqOzdpKN4B6WVI4QHMAIPD7yTJpZtHLj2LlPZuSxjekT0yQ
+         b4GwkqhkBcxSagqV9WHdR2CoVTCzh1UPEjEyyTOWx2mdiMjL3SrtJ8JlHLYy7WouKO3E
+         LjOhZhRojlkc/xrARk+NA62qTkbzPO/esLGQEeYsIpB4u21qteS5GHbGXtBf2LcKue8R
+         bjmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wx3s/bkbNNB3vgPZBOWnRZiJqvIY72P39vHnuYlfuuk=;
-        b=S3wCyPZandcCImgYX685TBs/78Fy1zP3StRyJWZAOOa2mk/88Hb5E6tcyHYvKhMZzl
-         77zLEqV95rGXX50H9AmNqDxurO5CMADGEn8ifBsiBLXj9WBPVhVQq3HineOtPPpgxJ9u
-         L3nj3gtJ4/mDHoUtoLL7kKy/r10Are5D47qnpjfvCAXQZm7e9LBWsQ024cbHbRD1nbRD
-         GvtrO/PZ4ofGN2ItTXDqmEsXQlGu7PgL00W17KAaVEuRujgql55uU99eoktiXWaE+CfG
-         JBKqjpGcmuySzaOswlRAk2gHKAACkHZ8DOL7uoj/hGnarLsCk9L1E7JKVC5pJsVwHlnu
-         E2JQ==
-X-Gm-Message-State: APjAAAUPgjQzJac2ZXddygVy+gyuAZKsxxilOBqfpvDo6vSrwGxY7k6j
-        ExYRJTB84ZjoaeLUIPhqCQAHsOD951cCdbV1WVs=
-X-Google-Smtp-Source: APXvYqzISBXt71R4g+vX/0MspAJXZ3gJ0T21rr2tNR59dt6Gy4t6vPkcY/YRuPp56r79sTBI5DZkH/BSWCh8M12YhfE=
-X-Received: by 2002:a63:5a23:: with SMTP id o35mr27161593pgb.4.1582111693619;
- Wed, 19 Feb 2020 03:28:13 -0800 (PST)
+        bh=LuClPZIuWjei2K8sqfy9paJrcrdXGttPmOM7+E9ZZhA=;
+        b=acadANllUbP+IEL4zaC7ASNeZjOXzYBpqbyLvnickGNm94d2+TEa29PQjmkZCIaL4+
+         z42nISYRUNskBx3cmE0k0FQM3mOBSFvNbo4Ki7jKlyr0UPHCc1o4Q+NeunXpcQq+s7lt
+         oNR3uVKub9PYE1H21ssG+cLopXx8Dm6Olz4wwozNHDSH51VKjWwCgNb76rUaqy17hA0E
+         NYmd1nc1mJdCBNnuifxQ1nBmzDD3E87NfUgK51YZdRWLMMeezg+BsHXpT2sEyQfRggBz
+         IZa4/bbq8HZfC0c3DUg0HLak+YmQwxUAGGb/xm/vbmgcAbuhRmqUxzuAfr5ktV5Xyfzb
+         Oxsw==
+X-Gm-Message-State: APjAAAWUPAgAeYzJ6zLm/42kfxh6E5BKuNUCu+p0ZE9mnrKilubNFs1h
+        2EyrtCjTdCLV+1svayhKFQP7BXaRBUcPHw5KOUo=
+X-Google-Smtp-Source: APXvYqzuLHFnt+BCtcAzKjlrtbURkaiGkUv6G9ObC1IkOhRPC5qz8V31aEO3gZf6dnSp1x/m2HGoxvy3hVfIfUNc0Ao=
+X-Received: by 2002:a02:8587:: with SMTP id d7mr20362995jai.39.1582111772680;
+ Wed, 19 Feb 2020 03:29:32 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYtnwFVPQxgHOU2Bi9y5+q4sSsww47yxK+_3ZAQ9=kyhUg@mail.gmail.com>
- <20200219013824.GB8602@b29397-desktop> <20200219024534.GB10078@jackp-linux.qualcomm.com>
- <CAHp75VfY1Y-jNr=YTfAO+eUOy3xUy9+AgtyJuhEk2ngrxMg5JA@mail.gmail.com> <c39584b0-302e-d1bb-2e97-ffc017755bf2@st.com>
-In-Reply-To: <c39584b0-302e-d1bb-2e97-ffc017755bf2@st.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Feb 2020 13:28:05 +0200
-Message-ID: <CAHp75VdDu678oL9VU8ea=A89O5L-5pPwkp8SOuySw+bCmtsAxA@mail.gmail.com>
-Subject: Re: msm_hsusb 78d9000.usb: failed to create device link to ci_hdrc.0.ulpi
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Jack Pham <jackp@codeaurora.org>, Peter Chen <peter.chen@nxp.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk> <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <CAHp75VeJm-hbbtVAu69ZbDCCjs9cUK922D=hhW-MVu5OxczDzg@mail.gmail.com>
+In-Reply-To: <CAHp75VeJm-hbbtVAu69ZbDCCjs9cUK922D=hhW-MVu5OxczDzg@mail.gmail.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Wed, 19 Feb 2020 12:29:59 +0100
+Message-ID: <CAOi1vP8e-RQ2DHFSDMBgod7Ug4yMMoJBwxGDYNXWA6UL68pixg@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:00 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
-> On 2/19/20 10:23 AM, Andy Shevchenko wrote:
-> > On Wed, Feb 19, 2020 at 4:46 AM Jack Pham <jackp@codeaurora.org> wrote:
-> >>
-> >> On Wed, Feb 19, 2020 at 01:38:22AM +0000, Peter Chen wrote:
-> >>> On 20-02-17 14:02:57, Naresh Kamboju wrote:
-> >>>> arm64 APQ 8016 SBC ( Dragonboard 410c)  device running Linux next boot
-> >>>> failed due to below error.
-
-...
-
-> >> Probably same cause as for this:
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=206435
-> >
-> > Yes, it's the same. I dunno why no fix yet available.
-> >
+On Wed, Feb 19, 2020 at 12:25 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Kishon has posted a patch yesterday for device link issue in phy core.
-
-Ah, good to know! (Seems it hasn't made Linux Next yet, though)
-
-> Please see:
+> On Wed, Feb 19, 2020 at 1:21 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+> > On Wed, Feb 19, 2020 at 9:21 AM Rasmus Villemoes
+> > <linux@rasmusvillemoes.dk> wrote:
+> > >
+> > > Extend %pe to pretty-print NULL in addition to ERR_PTRs,
+> > > i.e. everything IS_ERR_OR_NULL().
 >
-> https://lkml.org/lkml/2020/2/18/272
+> ...
+>
+> > > +       [0] = "NULL",
+>
+> > > +       test("[NULL]", "[%pe]", NULL);
+>
+> > FWIW I was about to post a patch that just special cases NULL here.
+> >
+> > I think changing errname() to return "NULL" for 0 is overkill.
+> > People will sooner or later discover that function and start using it
+> > in contexts that don't have anything to do with pointers.  Returning
+> > _some_ string for 0 (instead of NULL) makes it very close to standard
+> > strerror(), and "NULL" for 0 (i.e. success) seems rather odd.
+>
+> %pe is specifically for _pointers_. I don't see a point in your comment.
 
-Hint: use lore.kernel.org instead, much better if one would like to
-reply / apply / etc.
+%pe is for pointers, but errname() in lib/errname.c will likely grow
+more users in the future.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+
+                Ilya
