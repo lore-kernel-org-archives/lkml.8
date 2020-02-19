@@ -2,165 +2,386 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3678CC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9EEC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04767208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:26:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTGJxfGa"
+	by mail.kernel.org (Postfix) with ESMTP id 2079E222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgBSG0z (ORCPT
+        id S1726648AbgBSG1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:26:55 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:42270 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgBSG0m (ORCPT
+        Wed, 19 Feb 2020 01:27:53 -0500
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:7671 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726121AbgBSG1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:26:42 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dc14so10324674qvb.9;
-        Tue, 18 Feb 2020 22:26:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hXaVpGqqToiZNRZTnPuTvkrof7XCekzeFTv2omJ7ql0=;
-        b=aTGJxfGaQguG/6WoGHY8BrKiu17y3QOpcCYo76xvmyaS/GSok2dRM6n59tD8pavXWj
-         f+V0zsR/stnq5zPkngYrYCjvtH2CRDnugF1neZiMHEtSamCv1ZZRijR6wI1l8dpG0kGW
-         6JYlpj1Bq0u7dkfpM5AFpfEkh1pZOTVrsY5HgmKfCdWAL24uuiM8u8UMlToBKpUFcOrF
-         fJIeENfBZMjRxwhCp41/Lr1hKQLZ1MpOaC3eLqbH4E/Nygwx6CST/oMNCA8YsBlmTRds
-         pC4nc/ZS1I5Wpyi+Jvodp1DCKKxx+lFaxsKZr7Hv9OwqxSqVj4ToVvu/bcSZ79wx2NsC
-         JDmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hXaVpGqqToiZNRZTnPuTvkrof7XCekzeFTv2omJ7ql0=;
-        b=UkOdQbfUEGjbR0k3HH4GEiDWry/VjMitArrm7QO7aXSnPyl9cEh20fo3hB5JmORjnT
-         VQYIMffLxFp+DhEZGdam1DLiGTDLFkdBk8DpOtGT2rtbszouNJmx9ZyH9sQem9yrkStn
-         kN8abPi/COzHlP/a5M61VtWo8w9v8S5v9QX2s/OSYJ+2K9ra+LwuqaMSCwPsGSbmVLxV
-         iy6legj25x6Kg88I1xi8/1bOBpMRF+YNh5utRyxdafUxlXHmRT7lEFCqQ8cHajBMSyNc
-         4oMmgsBl7tMp48h3eynIJUcUwAsJvf8zGEmLKopB0D2OJjR7Hb4qykZYkt1WXRKXkpo3
-         0j0A==
-X-Gm-Message-State: APjAAAUucx/AL9RFKFYeAB3SIkTu/cdnzLfHW6MBjgvUmch2jZ9e6SsZ
-        63VWpuJ4TlpOch0Frz36Btw=
-X-Google-Smtp-Source: APXvYqwxOz7TcqcZHlxZvIwAhRTMOv71Kh2lq5ds/sJrRN+gLo3gAg1qrBsMDgHGW+J5GHFRBrZ/nw==
-X-Received: by 2002:a0c:e453:: with SMTP id d19mr231732qvm.217.1582093601083;
-        Tue, 18 Feb 2020 22:26:41 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id o55sm499907qtf.46.2020.02.18.22.26.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Feb 2020 22:26:39 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7B4442205E;
-        Wed, 19 Feb 2020 01:26:38 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 19 Feb 2020 01:26:38 -0500
-X-ME-Sender: <xms:HNVMXp7LrrTPuhN0Igae75mS0dN9wZdr28TqfaqxQ_aqRcq_2TE_tg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrjeelgdelgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepuehoqhhunhcu
-    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhs
-    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvsh
-    hmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheeh
-    vddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:HNVMXnc9lW4f6OV-RucTKrFWMmhqgp7eESkidpAVBHz1KgM1KAIBfw>
-    <xmx:HNVMXhokVVojT3ZkuVyNXETW7xskL3mpX_8v04OZEjFuVH4TW5wbag>
-    <xmx:HNVMXr3P4KQQCXxN2aWDWPEtZmpi9T6cB8GS5-gz9Fpvad5pGwy2PQ>
-    <xmx:HtVMXoyH-1ADIS0oWXhEiwfArNuM0HIQW9F9iGvdMgSVgjPclSYKcJRiz3E>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC32D328005E;
-        Wed, 19 Feb 2020 01:26:35 -0500 (EST)
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [RFC v2 2/4] Documentation/locking/atomic: Introduce atomic-tests directory
-Date:   Wed, 19 Feb 2020 14:26:25 +0800
-Message-Id: <20200219062627.104736-3-boqun.feng@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200219062627.104736-1-boqun.feng@gmail.com>
-References: <20200219062627.104736-1-boqun.feng@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 19 Feb 2020 01:27:53 -0500
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 18 Feb 2020 22:27:51 -0800
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP; 18 Feb 2020 22:27:48 -0800
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id 7FC7221495; Wed, 19 Feb 2020 11:57:46 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sivaprak@codeaurora.org
+Subject: [PATCH] arm64: dts: ipq6018: Add a few device nodes
+Date:   Wed, 19 Feb 2020 11:57:35 +0530
+Message-Id: <1582093655-9673-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although we have atomic_t.txt and its friends to describe the semantics
-of atomic APIs and lib/atomic64_test.c for build testing and testing in
-UP mode, the tests for our atomic APIs in real SMP mode are still
-missing. Since now we have the LKMM tool in kernel and litmus tests can
-be used to generate kernel modules for testing purpose with "klitmus" (a
-tool from the LKMM toolset), it makes sense to put a few typical litmus
-tests into kernel so that
+add i2c, spi, crypto, rng, watchdog, peripheral nodes, also add
+support for wcss Q6 remoteproc driver and enable hw mutex, smem,
+mailbox, smp2p and rpmsg drivers
 
-1)	they are the examples to describe the conceptual mode of the
-	semantics of atomic APIs, and
-
-2)	they can be used to generate kernel test modules for anyone
-	who is interested to test the atomic APIs implementation (in
-	most cases, is the one who implements the APIs for a new arch)
-
-Therefore, introduce the atomic-tests directory for this purpose. The
-directory is maintained by the LKMM group to make sure the litmus tests
-are always aligned with our memory model.
-
-Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 ---
- Documentation/atomic-tests/README | 4 ++++
- MAINTAINERS                       | 1 +
- 2 files changed, 5 insertions(+)
- create mode 100644 Documentation/atomic-tests/README
+This patch depends on Sricharan's ipq60xx dts patch
+https://patchwork.kernel.org/patch/11340681/
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  34 ++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 228 +++++++++++++++++++++++++++
+ 2 files changed, 262 insertions(+)
 
-diff --git a/Documentation/atomic-tests/README b/Documentation/atomic-tests/README
-new file mode 100644
-index 000000000000..ae61201a4271
---- /dev/null
-+++ b/Documentation/atomic-tests/README
-@@ -0,0 +1,4 @@
-+This directory contains litmus tests that are typical to describe the semantics
-+of our atomic APIs. For more information about how to "run" a litmus test or
-+how to generate a kernel test module based on a litmus test, please see
-+tools/memory-model/README.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ffc7d5712735..ebca5f6263bb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9718,6 +9718,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
- F:	tools/memory-model/
- F:	Documentation/atomic_bitops.txt
- F:	Documentation/atomic_t.txt
-+F:	Documentation/atomic-tests/
- F:	Documentation/core-api/atomic_ops.rst
- F:	Documentation/core-api/refcount-vs-atomic.rst
- F:	Documentation/memory-barriers.txt
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+index 897b4b2..b31117a 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
++++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+@@ -28,3 +28,37 @@
+ 	pinctrl-names = "default";
+ 	status = "ok";
+ };
++
++&i2c_1 {
++	pinctrl-0 = <&i2c_1_pins>;
++	pinctrl-names = "default";
++	status = "ok";
++};
++
++&spi_0 {
++	cs-select = <0>;
++	status = "ok";
++
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++		compatible = "n25q128a11";
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&tlmm {
++	i2c_1_pins: i2c-1-pins {
++		pins = "gpio42", "gpio43";
++		function = "blsp2_i2c";
++		drive-strength = <8>;
++	};
++
++	spi_0_pins: spi-0-pins {
++		pins = "gpio38", "gpio39", "gpio40", "gpio41";
++		function = "blsp0_spi";
++		drive-strength = <8>;
++		bias-pull-down;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 0fb44e5..5d4dfb8 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
++#include <dt-bindings/reset/qcom,gcc-ipq6018.h>
+ 
+ / {
+ 	#address-cells = <2>;
+@@ -69,6 +70,12 @@
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm";
++		};
++	};
++
+ 	pmuv8: pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+@@ -89,6 +96,22 @@
+ 			reg = <0x0 0x48500000 0x0 0x00200000>;
+ 			no-map;
+ 		};
++
++		smem_region: memory@4aa00000 {
++			reg = <0x0 0x4aa00000 0x0 0x00100000>;
++			no-map;
++		};
++
++		q6_region: memory@4ab00000 {
++			reg = <0x0 0x4ab00000 0x0 0x02800000>;
++			no-map;
++		};
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++		hwlocks = <&tcsr_mutex 0>;
+ 	};
+ 
+ 	soc: soc {
+@@ -98,6 +121,36 @@
+ 		dma-ranges;
+ 		compatible = "simple-bus";
+ 
++		rng: qrng@e1000 {
++			compatible = "qcom,prng-ee";
++			reg = <0xe3000 0x1000>;
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "core";
++		};
++
++		cryptobam: dma@704000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x00704000 0x20000>;
++			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <1>;
++			qcom,controlled-remotely = <1>;
++			qcom,config-pipe-trust-reg = <0>;
++		};
++
++		crypto: crypto@73a000 {
++			compatible = "qcom,crypto-v5.1";
++			reg = <0x0073a000 0x6000>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
++				<&gcc GCC_CRYPTO_AXI_CLK>,
++				<&gcc GCC_CRYPTO_CLK>;
++			clock-names = "iface", "bus", "core";
++			dmas = <&cryptobam 2>, <&cryptobam 3>;
++			dma-names = "rx", "tx";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq6018-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+@@ -125,6 +178,26 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1905000 {
++			compatible = "syscon";
++			reg = <0x01905000 0x8000>;
++		};
++
++		tcsr_q6: syscon@1945000 {
++			compatible = "syscon";
++			reg = <0x01945000 0xe000>;
++		};
++
++		blsp_dma: dma@7884000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x07884000 0x2b000>;
++			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++		};
++
+ 		blsp1_uart3: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x078b1000 0x200>;
+@@ -135,6 +208,66 @@
+ 			status = "disabled";
+ 		};
+ 
++		spi_0: spi@78b5000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b5000 0x600>;
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		spi_1: spi@78b6000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 14>, <&blsp_dma 15>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		i2c_0: i2c@78b6000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b7000 0x600>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
+@@ -146,6 +279,21 @@
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		watchdog@b017000 {
++			compatible = "qcom,kpss-wdt";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x0b017000 0x40>;
++			clocks = <&sleep_clk>;
++			timeout-sec = <10>;
++		};
++
++		apcs_glb: mailbox@b111000 {
++			compatible = "qcom,ipq8074-apcs-apps-global";
++			reg = <0x0b111000 0xc>;
++
++			#mbox-cells = <1>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -213,5 +361,85 @@
+ 			};
+ 		};
+ 
++		q6v5_wcss: q6v5_wcss@cd00000 {
++			compatible = "qcom,ipq8074-wcss-pil";
++			reg = <0x0cd00000 0x4040>,
++				<0x004ab000 0x20>;
++			reg-names = "qdsp6",
++				    "rmb";
++			qca,auto-restart;
++			qca,extended-intc;
++			interrupts-extended = <&intc GIC_SPI 325 IRQ_TYPE_EDGE_RISING>,
++					      <&wcss_smp2p_in 0 0>,
++					      <&wcss_smp2p_in 1 0>,
++					      <&wcss_smp2p_in 2 0>,
++					      <&wcss_smp2p_in 3 0>;
++			interrupt-names = "wdog",
++					  "fatal",
++					  "ready",
++					  "handover",
++					  "stop-ack";
++
++			resets = <&gcc GCC_WCSSAON_RESET>,
++				 <&gcc GCC_WCSS_BCR>,
++				 <&gcc GCC_WCSS_Q6_BCR>;
++
++			reset-names = "wcss_aon_reset",
++				      "wcss_reset",
++				      "wcss_q6_reset";
++
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "prng";
++
++			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
++
++			qcom,smem-states = <&wcss_smp2p_out 0>,
++					   <&wcss_smp2p_out 1>;
++			qcom,smem-state-names = "shutdown",
++						"stop";
++
++			memory-region = <&q6_region>;
++
++			glink-edge {
++				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
++				qcom,remote-pid = <1>;
++				mboxes = <&apcs_glb 8>;
++
++				rpm_requests {
++					qcom,glink-channels = "IPCRTR";
++				};
++			};
++		};
++
++	};
++
++	tcsr_mutex: tcsr-mutex {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x80>;
++		#hwlock-cells = <1>;
++	};
++
++	wcss: wcss-smp2p {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <GIC_SPI 322 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apcs_glb 9>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		wcss_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		wcss_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
+ 	};
+ };
 -- 
-2.25.0
+2.7.4
 
