@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA0AC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2836C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD0B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B002208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:40:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727463AbgBSHkF (ORCPT
+        id S1727686AbgBSHkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:40:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41566 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 02:40:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:41518 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbgBSHj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:39:56 -0500
+        id S1726779AbgBSHjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:39:54 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id B93E9B1EA;
-        Wed, 19 Feb 2020 07:39:53 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 30456AEA8;
+        Wed, 19 Feb 2020 07:39:52 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 7/9] vt: vt_kern.h, remove extern from functions
-Date:   Wed, 19 Feb 2020 08:39:49 +0100
-Message-Id: <20200219073951.16151-7-jslaby@suse.cz>
+Subject: [PATCH 2/9] vt: ioctl, switch VT_IS_IN_USE and VT_BUSY to inlines
+Date:   Wed, 19 Feb 2020 08:39:44 +0100
+Message-Id: <20200219073951.16151-2-jslaby@suse.cz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219073951.16151-1-jslaby@suse.cz>
 References: <20200219073951.16151-1-jslaby@suse.cz>
@@ -41,112 +40,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Unify the declarations of functions in vt_kern.h: some are with extern,
-some are not. Remove extern from the former as it is not needed for
-functions.
+These two were macros. Switch them to static inlines, so that it's more
+understandable what they are doing.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- include/linux/vt_kern.h | 62 ++++++++++++++++++++---------------------
- 1 file changed, 31 insertions(+), 31 deletions(-)
+ drivers/tty/vt/vt_ioctl.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/vt_kern.h b/include/linux/vt_kern.h
-index ded5c48598f3..abf5bccf906a 100644
---- a/include/linux/vt_kern.h
-+++ b/include/linux/vt_kern.h
-@@ -28,8 +28,9 @@
- #define BROKEN_GRAPHICS_PROGRAMS 1
- #endif
+diff --git a/drivers/tty/vt/vt_ioctl.c b/drivers/tty/vt/vt_ioctl.c
+index bf4daa0c7930..693d9d7ffb68 100644
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -40,10 +40,25 @@
+ #include <linux/selection.h>
  
--extern void kd_mksound(unsigned int hz, unsigned int ticks);
--extern int kbd_rate(struct kbd_repeat *rep);
-+void kd_mksound(unsigned int hz, unsigned int ticks);
-+int kbd_rate(struct kbd_repeat *rep);
+ char vt_dont_switch;
+-extern struct tty_driver *console_driver;
+ 
+-#define VT_IS_IN_USE(i)	(console_driver->ttys[i] && console_driver->ttys[i]->count)
+-#define VT_BUSY(i)	(VT_IS_IN_USE(i) || i == fg_console || vc_is_sel(vc_cons[i].d))
++static inline bool vt_in_use(unsigned int i)
++{
++	extern struct tty_driver *console_driver;
 +
- extern int fg_console, last_console, want_console;
++	return console_driver->ttys[i] && console_driver->ttys[i]->count;
++}
++
++static inline bool vt_busy(int i)
++{
++	if (vt_in_use(i))
++		return true;
++	if (i == fg_console)
++		return true;
++	if (vc_is_sel(vc_cons[i].d))
++		return true;
++
++	return false;
++}
  
- /* console.c */
-@@ -131,8 +132,8 @@ void vt_event_post(unsigned int event, unsigned int old, unsigned int new);
- int vt_waitactive(int n);
- void change_console(struct vc_data *new_vc);
- void reset_vc(struct vc_data *vc);
--extern int do_unbind_con_driver(const struct consw *csw, int first, int last,
--			     int deflt);
-+int do_unbind_con_driver(const struct consw *csw, int first, int last,
-+			 int deflt);
- int vty_init(const struct file_operations *console_fops);
+ /*
+  * Console (vt and kd) routines, as defined by USL SVR4 manual, and by
+@@ -289,7 +304,7 @@ static int vt_disallocate(unsigned int vc_num)
+ 	int ret = 0;
  
- extern bool vt_dont_switch;
-@@ -146,7 +147,7 @@ struct vt_spawn_console {
- };
- extern struct vt_spawn_console vt_spawn_con;
+ 	console_lock();
+-	if (VT_BUSY(vc_num))
++	if (vt_busy(vc_num))
+ 		ret = -EBUSY;
+ 	else if (vc_num)
+ 		vc = vc_deallocate(vc_num);
+@@ -311,7 +326,7 @@ static void vt_disallocate_all(void)
  
--extern int vt_move_to_console(unsigned int vt, int alloc);
-+int vt_move_to_console(unsigned int vt, int alloc);
- 
- /* Interfaces for VC notification of character events (for accessibility etc) */
- 
-@@ -155,35 +156,34 @@ struct vt_notifier_param {
- 	unsigned int c;		/* Printed char */
- };
- 
--extern int register_vt_notifier(struct notifier_block *nb);
--extern int unregister_vt_notifier(struct notifier_block *nb);
-+int register_vt_notifier(struct notifier_block *nb);
-+int unregister_vt_notifier(struct notifier_block *nb);
- 
--extern void hide_boot_cursor(bool hide);
-+void hide_boot_cursor(bool hide);
- 
- /* keyboard  provided interfaces */
--extern int vt_do_diacrit(unsigned int cmd, void __user *up, int eperm);
--extern int vt_do_kdskbmode(int console, unsigned int arg);
--extern int vt_do_kdskbmeta(int console, unsigned int arg);
--extern int vt_do_kbkeycode_ioctl(int cmd, struct kbkeycode __user *user_kbkc,
--								int perm);
--extern int vt_do_kdsk_ioctl(int cmd, struct kbentry __user *user_kbe,
--					int perm, int console);
--extern int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb,
--                                        int perm);
--extern int vt_do_kdskled(int console, int cmd, unsigned long arg, int perm);
--extern int vt_do_kdgkbmode(int console);
--extern int vt_do_kdgkbmeta(int console);
--extern void vt_reset_unicode(int console);
--extern int vt_get_shift_state(void);
--extern void vt_reset_keyboard(int console);
--extern int vt_get_leds(int console, int flag);
--extern int vt_get_kbd_mode_bit(int console, int bit);
--extern void vt_set_kbd_mode_bit(int console, int bit);
--extern void vt_clr_kbd_mode_bit(int console, int bit);
--extern void vt_set_led_state(int console, int leds);
--extern void vt_set_led_state(int console, int leds);
--extern void vt_kbd_con_start(int console);
--extern void vt_kbd_con_stop(int console);
-+int vt_do_diacrit(unsigned int cmd, void __user *up, int eperm);
-+int vt_do_kdskbmode(int console, unsigned int arg);
-+int vt_do_kdskbmeta(int console, unsigned int arg);
-+int vt_do_kbkeycode_ioctl(int cmd, struct kbkeycode __user *user_kbkc,
-+			  int perm);
-+int vt_do_kdsk_ioctl(int cmd, struct kbentry __user *user_kbe, int perm,
-+		     int console);
-+int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm);
-+int vt_do_kdskled(int console, int cmd, unsigned long arg, int perm);
-+int vt_do_kdgkbmode(int console);
-+int vt_do_kdgkbmeta(int console);
-+void vt_reset_unicode(int console);
-+int vt_get_shift_state(void);
-+void vt_reset_keyboard(int console);
-+int vt_get_leds(int console, int flag);
-+int vt_get_kbd_mode_bit(int console, int bit);
-+void vt_set_kbd_mode_bit(int console, int bit);
-+void vt_clr_kbd_mode_bit(int console, int bit);
-+void vt_set_led_state(int console, int leds);
-+void vt_set_led_state(int console, int leds);
-+void vt_kbd_con_start(int console);
-+void vt_kbd_con_stop(int console);
- 
- void vc_scrolldelta_helper(struct vc_data *c, int lines,
- 		unsigned int rolled_over, void *_base, unsigned int size);
+ 	console_lock();
+ 	for (i = 1; i < MAX_NR_CONSOLES; i++)
+-		if (!VT_BUSY(i))
++		if (!vt_busy(i))
+ 			vc[i] = vc_deallocate(i);
+ 		else
+ 			vc[i] = NULL;
+@@ -648,7 +663,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 			state = 1;	/* /dev/tty0 is always open */
+ 			for (i = 0, mask = 2; i < MAX_NR_CONSOLES && mask;
+ 							++i, mask <<= 1)
+-				if (VT_IS_IN_USE(i))
++				if (vt_in_use(i))
+ 					state |= mask;
+ 			ret = put_user(state, &vtstat->v_state);
+ 		}
+@@ -661,7 +676,7 @@ int vt_ioctl(struct tty_struct *tty,
+ 	case VT_OPENQRY:
+ 		/* FIXME: locking ? - but then this is a stupid API */
+ 		for (i = 0; i < MAX_NR_CONSOLES; ++i)
+-			if (! VT_IS_IN_USE(i))
++			if (!vt_in_use(i))
+ 				break;
+ 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
+ 		goto setint;		 
 -- 
 2.25.0
 
