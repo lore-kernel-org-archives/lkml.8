@@ -2,227 +2,257 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B42C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137CAC18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA19208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D319A208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582144025;
-	bh=xUD1J8SGBmZ9GMQ+Ot9ht/x+yQ38ulnax1xGeav4ywI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WFoHUgypEn5qvyfaB1QYyeP7TJNQSoA4BLqCz90MMyHb+Y6x4fYntlUTHHYePbQrP
-	 ajQUxszyk1Mxp/aZCiPBnUQn/xs+fymBFFPXXs1mEZgFKTHS5asAUF1FI2AfPVIsxe
-	 D6TNwatnYSn9xgtd0wlupWlaXp0Ng3qZaH/WWldU=
+	s=default; t=1582144227;
+	bh=LH025Khs3m5Cl4tvE1JGGQgH7DR9Zq2kwSXb/EH9clI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=opUx9eTYYnbx04eikdk5h3KDBIov4meSUrLJOSMU5TQgnIm0SCCclQ4Cl8p9bepXc
+	 N2PNEPjMecIwDSkyN/JSPVVO9bdeR08o2idjx47H5x39ezUUF1gKYxGjpbiVHjHXvO
+	 C/WWxFMdxF0kzWhapkRattp2lcl0P6W8LzlCXzgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBSU1E (ORCPT
+        id S1726851AbgBSUa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:27:04 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44873 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSU1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:27:02 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h9so1426933otj.11;
-        Wed, 19 Feb 2020 12:27:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CdW2v94vclBbMClu4Uts81wJU8rv+QPDvyeeQ3vvmNk=;
-        b=L7mQF17uPy56+VtZKx73GNovD30OoV6vbmZaLrjTaLP0ucrC61rr2jkEyqp4pQNQtj
-         uJetKm+AwBifEq7nMfkofGKF75/GDisHt/6H+DY6CcagPPyM6bKbMsZYQTrcmpF4coyF
-         8ZrJI+yLfpxGdJh2dbODGO5kx497b8V+Vcp9NJVNo++MIWHnSPPobZOQNz4iKLqS+Vt1
-         CDyy/zgukKtwj7Rfvijhzc/DBPNfS/CkWl6X7iwEPXPaB6pYzgJ2DxuwebrV66d6ETKH
-         vcuO2rf4TfXOTw2GeYqzwZaXFpm4J5mhxixsk6sTGWCb5uMmzbvupwTeTzCuiy4PMHL1
-         zrig==
-X-Gm-Message-State: APjAAAUYrBtd8R9wxz8D0ZzxoFjoYH9nYAwGpT+zSPsdvoRoSGQb1M+g
-        r2hyaQ9l81F3wAyPp2ptTA==
-X-Google-Smtp-Source: APXvYqz+hinonc4v6VST89rZ3Ydv6zU5hyEVqM43ywd3Axx39ymW7FHAQ8T8eXK1+IvzATwTNIBD2w==
-X-Received: by 2002:a9d:3b09:: with SMTP id z9mr21138164otb.195.1582144021801;
-        Wed, 19 Feb 2020 12:27:01 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a1sm285965oti.2.2020.02.19.12.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:27:01 -0800 (PST)
-Received: (nullmailer pid 13831 invoked by uid 1000);
-        Wed, 19 Feb 2020 20:27:00 -0000
-Date:   Wed, 19 Feb 2020 14:27:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: cadence: Add PCIe RC/EP DT
- schema for Cadence PCIe
-Message-ID: <20200219202700.GA21908@bogus>
-References: <20200217111519.29163-1-kishon@ti.com>
- <20200217111519.29163-2-kishon@ti.com>
+        Wed, 19 Feb 2020 15:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbgBSUa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:30:26 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F85E208C4;
+        Wed, 19 Feb 2020 20:30:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582144224;
+        bh=LH025Khs3m5Cl4tvE1JGGQgH7DR9Zq2kwSXb/EH9clI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CbZyY3iXr1kC26sTgWTHnQgVKk+zmuTTiQ9kO3GJA3JR7oCfR6XwMuDHk5TPMGIqq
+         laISIS8qIo3Zlt/qcmdpJMSYGDGNd1zplHJfFRgZ4cqSBS8uStNhDsjBcbHvh7mDYJ
+         11ONlMDHDks86Wltn9WCL1KmOaFt+LqFwGLP82cg=
+Date:   Wed, 19 Feb 2020 21:30:22 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Linux 4.19.105
+Message-ID: <20200219203022.GA2883622@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <20200217111519.29163-2-kishon@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 04:45:18PM +0530, Kishon Vijay Abraham I wrote:
-> Add PCIe Host (RC) and Endpoint (EP) device tree schema for Cadence
-> PCIe core library. Platforms using Cadence PCIe core can include the
-> schemas added here in the platform specific schemas.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 22 +++++++++
->  .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++++++
->  .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++++++++++
->  3 files changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
->  create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
-> new file mode 100644
-> index 000000000000..b22d54605009
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-ep.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence PCIe Endpoint
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +allOf:
-> +  - $ref: "cdns-pcie.yaml#"
-> +
-> +properties:
-> +  max-functions:
-> +    description: Maximum number of functions that can be configured
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint8
-> +    minimum: 1
-> +    default: 1
-> +    maximum: 256
 
-Create a pcie-ep.yaml and put this there as every endpoint binding 
-seems to use this and I'm sure there's more properties to come. 
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also, the max can only be 255.
+I'm announcing the release of the 4.19.105 kernel.
 
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-> new file mode 100644
-> index 000000000000..ab6e43b636ec
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-> @@ -0,0 +1,27 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie-host.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence PCIe Host
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +allOf:
-> +  - $ref: "/schemas/pci/pci-bus.yaml#"
-> +  - $ref: "cdns-pcie.yaml#"
-> +
-> +properties:
-> +  cdns,no-bar-match-nbits:
-> +    description:
-> +      Set into the no BAR match register to configure the number of least
-> +      significant bits kept during inbound (PCIe -> AXI) address translations
+All users of the 4.19 kernel series must upgrade.
 
-This should probably be deprecated IMO. This info should really be 
-extracted from sizes in 'dma-ranges'.
+The updated 4.19.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
+x-4.19.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
+ummary
 
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 64
-> +    default: 32
-> +
-> +  msi-parent: true
-> diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> new file mode 100644
-> index 000000000000..fd690b062de1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/pci/cdns-pcie.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence PCIe Core
-> +
-> +maintainers:
-> +  - Tom Joseph <tjoseph@cadence.com>
-> +
-> +properties:
-> +  max-link-speed:
-> +    description: maximum link speed
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 1
-> +    maximum: 4
+thanks,
 
-Standard property in pci-bus.yaml, no need to define it again.
+greg k-h
 
-> +
-> +  num-lanes:
-> +    description: maximum number of lanes
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 1
-> +    maximum: 16
+------------
 
-This should be added to pci-bus.yaml. Assume here it is.
+ Makefile                                  |    2=20
+ arch/arm/mach-npcm/Kconfig                |    2=20
+ arch/arm64/kernel/cpufeature.c            |   52 +++++++++++++--
+ arch/arm64/kernel/fpsimd.c                |   20 +++++-
+ arch/arm64/kernel/process.c               |    7 ++
+ arch/arm64/kvm/hyp/switch.c               |   10 ++-
+ arch/s390/include/asm/timex.h             |    2=20
+ arch/x86/events/amd/core.c                |    1=20
+ arch/x86/events/intel/ds.c                |    2=20
+ arch/x86/kvm/paging_tmpl.h                |    2=20
+ arch/x86/kvm/vmx/vmx.c                    |    3=20
+ drivers/hwmon/pmbus/ltc2978.c             |    4 -
+ drivers/infiniband/core/security.c        |   24 ++-----
+ drivers/infiniband/core/uverbs_cmd.c      |   15 ++--
+ drivers/infiniband/hw/hfi1/affinity.c     |    2=20
+ drivers/infiniband/hw/hfi1/file_ops.c     |   52 +++++++++------
+ drivers/infiniband/hw/hfi1/hfi.h          |    5 +
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c |    5 -
+ drivers/infiniband/hw/hfi1/user_sdma.c    |   17 +++--
+ drivers/infiniband/sw/rdmavt/qp.c         |   84 +++++++++++++++----------
+ drivers/infiniband/sw/rxe/rxe_comp.c      |    8 +-
+ drivers/input/mouse/synaptics.c           |    4 -
+ drivers/nvme/host/core.c                  |    2=20
+ fs/btrfs/disk-io.c                        |    1=20
+ fs/btrfs/extent_map.c                     |   11 +++
+ fs/btrfs/ref-verify.c                     |    5 +
+ fs/btrfs/super.c                          |    2=20
+ fs/ext4/block_validity.c                  |    1=20
+ fs/ext4/dir.c                             |   14 ++--
+ fs/ext4/ext4.h                            |    5 +
+ fs/ext4/inode.c                           |   12 +++
+ fs/ext4/mmp.c                             |   12 ++-
+ fs/ext4/namei.c                           |    7 ++
+ fs/ext4/super.c                           |   32 ++++-----
+ fs/jbd2/commit.c                          |   46 +++++++------
+ fs/jbd2/transaction.c                     |   10 +--
+ fs/nfs/nfs4proc.c                         |    2=20
+ sound/pci/hda/patch_realtek.c             |    1=20
+ sound/usb/clock.c                         |   99 ++++++++++++++++++++-----=
+-----
+ sound/usb/clock.h                         |    4 -
+ sound/usb/format.c                        |    3=20
+ sound/usb/mixer.c                         |   12 +++
+ sound/usb/quirks.c                        |    1=20
+ 43 files changed, 404 insertions(+), 201 deletions(-)
 
-> +
-> +  cdns,max-outbound-regions:
-> +    description: maximum number of outbound regions
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 1
-> +    maximum: 32
-> +    default: 32
+Alexander Tsoy (1):
+      ALSA: usb-audio: Add clock validity quirk for Denon MC7000/MCX8000
 
-This too should be deprecated IMO. It is nothing more than error 
-checking number of 'ranges' entries. But deprecating should be a 
-follow-up.
+Andreas Dilger (1):
+      ext4: don't assume that mmp_nodename/bdevname have NUL
 
-> +
-> +  phys:
-> +    description:
-> +      One per lane if more than one in the list. If only one PHY listed it must
-> +      manage all lanes.
-> +    minItems: 1
-> +    maxItems: 16
-> +
-> +  phy-names:
-> +    items:
-> +      - const: pcie-phy
-> +    # FIXME: names when more than 1
-> -- 
-> 2.17.1
-> 
+Arvind Sankar (1):
+      ALSA: usb-audio: Apply sample rate quirk for Audioengine D1
+
+Avihai Horon (1):
+      RDMA/core: Fix invalid memory access in spec_filter_size
+
+Benjamin Tissoires (1):
+      Input: synaptics - remove the LEN0049 dmi id from topbuttonpad list
+
+David Sterba (2):
+      btrfs: print message when tree-log replay starts
+      btrfs: log message when rw remount is attempted with unclean tree-log
+
+Filipe Manana (1):
+      Btrfs: fix race between using extent maps and merging them
+
+Gaurav Agrawal (1):
+      Input: synaptics - enable SMBus on ThinkPad L470
+
+Greg Kroah-Hartman (1):
+      Linux 4.19.105
+
+Jan Kara (1):
+      ext4: fix checksum errors with indexed dirs
+
+Kaike Wan (2):
+      IB/hfi1: Acquire lock to release TID entries when user file is closed
+      IB/rdmavt: Reset all QPs when the device is shut down
+
+Kamal Heib (1):
+      RDMA/hfi1: Fix memory leak in _dev_comp_vect_mappings_create
+
+Kan Liang (1):
+      perf/x86/intel: Fix inaccurate period in context switch for auto-relo=
+ad
+
+Kim Phillips (1):
+      perf/x86/amd: Add missing L2 misses event spec to AMD Family 17h's ev=
+ent map
+
+Krzysztof Kozlowski (1):
+      ARM: npcm: Bring back GPIOLIB support
+
+Leon Romanovsky (1):
+      RDMA/core: Fix protection fault in get_pkey_idx_qp_list
+
+Lyude Paul (1):
+      Input: synaptics - switch T470s to RMI4 by default
+
+Mike Jones (1):
+      hwmon: (pmbus/ltc2978) Fix PMBus polling of MFR_COMMON definitions.
+
+Mike Marciniszyn (1):
+      IB/hfi1: Close window for pq and request coliding
+
+Nathan Chancellor (1):
+      s390/time: Fix clk type in get_tod_clock
+
+Olga Kornievskaia (1):
+      NFSv4.1 make cachethis=3Dno for writes
+
+Saurav Girepunje (1):
+      ALSA: usb-audio: sound: usb: usb true/false for bool return type
+
+Sean Christopherson (2):
+      KVM: nVMX: Use correct root level for nested EPT shadow page tables
+      KVM: x86/mmu: Fix struct guest_walker arrays for 5-level paging
+
+Shijie Luo (1):
+      ext4: add cond_resched() to ext4_protect_reserved_inode
+
+Suzuki K Poulose (2):
+      arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+      arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
+
+Takashi Iwai (2):
+      ALSA: usb-audio: Fix UAC2/3 effect unit parsing
+      ALSA: hda/realtek - Fix silent output on MSI-GL73
+
+Theodore Ts'o (2):
+      ext4: fix support for inode sizes > 1024 bytes
+      ext4: improve explanation of a mount failure caused by a misconfigure=
+d kernel
+
+Wenwen Wang (1):
+      btrfs: ref-verify: fix memory leaks
+
+Will Deacon (1):
+      arm64: ssbs: Fix context-switch when SSBS is present on all CPUs
+
+Yi Zhang (1):
+      nvme: fix the parameter order for nvme_get_log in nvme_get_fw_slot_in=
+fo
+
+Zhu Yanjun (1):
+      RDMA/rxe: Fix soft lockup problem due to using tasklets in softirq
+
+zhangyi (F) (2):
+      jbd2: move the clearing of b_modified flag to the journal_unmap_buffe=
+r()
+      jbd2: do not clear the BH_Mapped flag when forgetting a metadata buff=
+er
+
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl5NmtsACgkQONu9yGCS
+aT7RIA/+PveWJnSi5UE3ZxcAGCqSeO2gequ9QQ32FRmz5vHVakSEqYOcEXPVojiJ
+nePnre675qEgyUK5yLYeGKt4KUHSCYnX6/jXVGDtSigJBPu/LXB32VnVXOO8SHlW
+QHTCSt/wD+Vj+6kdS605ZEUv86INDt1PFyxP6O4IgonVIPz7zR3jHkO2WjnJ8hUa
+w8Ti1d/Ki3tK1TuWiWfa1qtILSl15hsVxh1sMEiJ9XlleodgAmvoDB6IWyHcSX/M
+Zk/v8IDClY5sJltJovxghm6VHw2V3iM4zrtVWN+wrg6NvnLJN2m77x+mzUrr1+8i
+dJd+ypgd2GAvDjF2s1Hiq2fUxsW2sktxri0YsPV1UZDI9AKLKeOt2xx9fDIgXwqj
+RyWUiHys/pblrVvpeLEstDES1xVK+yh3Wqh+vZJOw4U57Bms+djg5AD4xrgBDWmb
+lKausHMvE9HGokJmrM/Y7fzt/4KWxKcHndnvKUgOApVE2XbMi2TGUvHiQqY1Ep0u
+GdOs4QITqcxjgUDN3axp+H+vkpZKdeRBRldAaC8APDZVI9jsInsmmS4gO4SMGQFb
+mRvu2hcV+JnBS8uAJ+4NjuPWKpAubg0UvC1YtfBHkxNX89q6+cHTj3tzOXWg7Z7i
+B8mMq3PgK0U+Au2F1nvGQXmF7S+DxFDzKTBuEsh+upXe9mDtlg4=
+=+R7n
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
