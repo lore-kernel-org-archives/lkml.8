@@ -2,136 +2,242 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C62C11D8F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D44AC11D81
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A1B24691
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:23:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MdBwteHm"
+	by mail.kernel.org (Postfix) with ESMTP id 22ED1207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727858AbgBSWXy (ORCPT
+        id S1727845AbgBSWbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:23:54 -0500
-Received: from ozlabs.org ([203.11.71.1]:53965 "EHLO ozlabs.org"
+        Wed, 19 Feb 2020 17:31:38 -0500
+Received: from mga14.intel.com ([192.55.52.115]:18607 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgBSWXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:23:54 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48NC1L4Sm0z9sRG;
-        Thu, 20 Feb 2020 09:23:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1582151031;
-        bh=LUDgvdSwYxLSm2ujH88YLkYz8f+r7X9YUZvj7psSYMw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MdBwteHmzPo3JsgXveNOGoWTVkStnSrYU2WyiPZUaqRRhnZE+FXcXFE9T7qGBIpKo
-         RESFvzDSWiRv7miPSKAggjvJUVvMiXR4PvApMahxIgTiyE7bnF0IK26cwrs2WP+ZED
-         86/FSVgC5p5zUFo/UiVuGCjdJkIJOwVdBcIzAJ8DPsjstSQycZbXsrUyBfxzuMorOD
-         +yIhOEoe7uNucs5NecgQlp1FLUlw/tuwprJxTl+TKnOHgZhtaH6ad8iGdIp9c+2rj0
-         k0Yr8yEt63kWrJ2gttii9LJeL/AJXOg/SqfAJQRsJuPWac7/nuD1ka3+sp11gyKQth
-         jfAQP25J2X05A==
-Date:   Thu, 20 Feb 2020 09:23:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: linux-next: build failure after merge of the btrfs tree
-Message-ID: <20200220092344.2a738574@canb.auug.org.au>
+        id S1727232AbgBSWbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 17:31:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 14:31:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
+   d="scan'208";a="408587016"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 19 Feb 2020 14:31:36 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j4XsV-000I6o-QC; Thu, 20 Feb 2020 06:31:35 +0800
+Date:   Thu, 20 Feb 2020 06:31:08 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:irq/urgent] BUILD SUCCESS
+ cba6437a1854fde5934098ec3bd0ee83af3129f5
+Message-ID: <5e4db72c.QV4TV/Bbyo62oU/J%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HhWZXL8A9/VOX789pJ1LhRS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/HhWZXL8A9/VOX789pJ1LhRS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
+branch HEAD: cba6437a1854fde5934098ec3bd0ee83af3129f5  genirq/proc: Reject invalid affinity masks (again)
 
-Hi all,
+elapsed time: 7826m
 
-After merging the btrfs tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+configs tested: 179
+configs skipped: 0
 
-fs/btrfs/extent-tree.c: In function 'btrfs_alloc_logged_file_extent':
-fs/btrfs/extent-tree.c:4425:20: error: passing argument 1 of 'btrfs_pin_ext=
-ent' from incompatible pointer type [-Werror=3Dincompatible-pointer-types]
- 4425 |   btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
-      |                    ^~~~~~~
-      |                    |
-      |                    struct btrfs_fs_info *
-fs/btrfs/extent-tree.c:2609:49: note: expected 'struct btrfs_trans_handle *=
-' but argument is of type 'struct btrfs_fs_info *'
- 2609 | int btrfs_pin_extent(struct btrfs_trans_handle *trans,
-      |                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Caused by commit
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+sparc64                           allnoconfig
+openrisc                 simple_smp_defconfig
+s390                             allmodconfig
+sparc64                             defconfig
+parisc                            allnoconfig
+ia64                                defconfig
+sh                               allmodconfig
+mips                      malta_kvm_defconfig
+alpha                               defconfig
+riscv                               defconfig
+i386                             alldefconfig
+i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200219
+x86_64               randconfig-a002-20200219
+x86_64               randconfig-a003-20200219
+i386                 randconfig-a001-20200219
+i386                 randconfig-a002-20200219
+i386                 randconfig-a003-20200219
+alpha                randconfig-a001-20200219
+m68k                 randconfig-a001-20200219
+nds32                randconfig-a001-20200219
+parisc               randconfig-a001-20200219
+riscv                randconfig-a001-20200219
+c6x                  randconfig-a001-20200219
+h8300                randconfig-a001-20200219
+microblaze           randconfig-a001-20200219
+nios2                randconfig-a001-20200219
+sparc64              randconfig-a001-20200219
+csky                 randconfig-a001-20200219
+openrisc             randconfig-a001-20200219
+s390                 randconfig-a001-20200219
+xtensa               randconfig-a001-20200219
+x86_64               randconfig-b001-20200219
+x86_64               randconfig-b002-20200219
+x86_64               randconfig-b003-20200219
+i386                 randconfig-b001-20200219
+i386                 randconfig-b002-20200219
+i386                 randconfig-b003-20200219
+x86_64               randconfig-c001-20200219
+x86_64               randconfig-c002-20200219
+x86_64               randconfig-c003-20200219
+i386                 randconfig-c001-20200219
+i386                 randconfig-c002-20200219
+i386                 randconfig-c003-20200219
+x86_64               randconfig-c001-20200220
+x86_64               randconfig-c002-20200220
+x86_64               randconfig-c003-20200220
+i386                 randconfig-c001-20200220
+i386                 randconfig-c002-20200220
+i386                 randconfig-c003-20200220
+x86_64               randconfig-d001-20200219
+x86_64               randconfig-d002-20200219
+x86_64               randconfig-d003-20200219
+i386                 randconfig-d001-20200219
+i386                 randconfig-d002-20200219
+i386                 randconfig-d003-20200219
+x86_64               randconfig-e001-20200219
+x86_64               randconfig-e002-20200219
+x86_64               randconfig-e003-20200219
+i386                 randconfig-e001-20200219
+i386                 randconfig-e002-20200219
+i386                 randconfig-e003-20200219
+x86_64               randconfig-f001-20200219
+x86_64               randconfig-f002-20200219
+x86_64               randconfig-f003-20200219
+i386                 randconfig-f001-20200219
+i386                 randconfig-f002-20200219
+i386                 randconfig-f003-20200219
+x86_64               randconfig-f001-20200220
+x86_64               randconfig-f002-20200220
+x86_64               randconfig-f003-20200220
+i386                 randconfig-f001-20200220
+i386                 randconfig-f002-20200220
+i386                 randconfig-f003-20200220
+x86_64               randconfig-g001-20200219
+x86_64               randconfig-g002-20200219
+x86_64               randconfig-g003-20200219
+i386                 randconfig-g001-20200219
+i386                 randconfig-g002-20200219
+i386                 randconfig-g003-20200219
+x86_64               randconfig-h001-20200219
+x86_64               randconfig-h002-20200219
+x86_64               randconfig-h003-20200219
+i386                 randconfig-h001-20200219
+i386                 randconfig-h002-20200219
+i386                 randconfig-h003-20200219
+arc                  randconfig-a001-20200214
+sparc                randconfig-a001-20200214
+ia64                 randconfig-a001-20200214
+arm                  randconfig-a001-20200214
+arm64                randconfig-a001-20200214
+arc                  randconfig-a001-20200219
+arm                  randconfig-a001-20200219
+arm64                randconfig-a001-20200219
+ia64                 randconfig-a001-20200219
+powerpc              randconfig-a001-20200219
+sparc                randconfig-a001-20200219
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                       zfcpdump_defconfig
+s390                             alldefconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-  4e2c2f96e6a3 ("btrfs: Make btrfs_pin_extent take trans handle")
-
-interacting with commit
-
-  bd727173e443 ("btrfs: handle logged extent failure properly")
-
-from the btrfs-fixes tree.
-
-I have applied the following merge fix patch for today.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 20 Feb 2020 09:20:33 +1100
-Subject: [PATCH] btrfs: fix for btrfs_pin_extent() API change
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- fs/btrfs/extent-tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index 56ad0a4ff5ba..9dcd70cc3ca3 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -4422,7 +4422,7 @@ int btrfs_alloc_logged_file_extent(struct btrfs_trans=
-_handle *trans,
- 	ret =3D alloc_reserved_file_extent(trans, 0, root_objectid, 0, owner,
- 					 offset, ins, 1);
- 	if (ret)
--		btrfs_pin_extent(fs_info, ins->objectid, ins->offset, 1);
-+		btrfs_pin_extent(trans, ins->objectid, ins->offset, 1);
- 	btrfs_put_block_group(block_group);
- 	return ret;
- }
---=20
-2.25.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/HhWZXL8A9/VOX789pJ1LhRS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5NtXAACgkQAVBC80lX
-0GxufQf/e3XdeaPJVdcDfX8oGy6W9crlHRnAli6kk/7TKllyFq0an9xB/7Rnq92d
-A/UKsx2N4nKnKcJ2Stj8hq2zOzb1WpXVsCLniPkVxjY608ih9hm+sF4li/kvW8Z8
-5xEPwNEm72AJn/iFt1WqefjNRI4p0QBfL8w/W2CWb5ZllN8wLjcF00rjb/Tjr5Yb
-niPPgCLjLk0YTmxxOdLuqZxMFRxvOhF+1PDncMByWRAIpCrP/Yfb+zUwzpHITSsJ
-zmJnR5R+PmRv6PxUwIhfBS75IQnGj/0o7WSD/OrXPV3tOa4YLMWTcYWu6S5T3VUv
-DjnvCfuDAk7SkbQtfOF4D3V7VLAfDg==
-=/xZK
------END PGP SIGNATURE-----
-
---Sig_/HhWZXL8A9/VOX789pJ1LhRS--
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
