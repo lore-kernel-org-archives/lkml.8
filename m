@@ -6,74 +6,105 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF07C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67335C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8A324654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D22220801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgBSMvE (ORCPT
+        id S1727576AbgBSMws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:51:04 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10644 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727103AbgBSMvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:51:04 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ABEEFDECA7019B363D4E;
-        Wed, 19 Feb 2020 20:51:00 +0800 (CST)
-Received: from host-suse12sp4.huawei.com (10.67.133.175) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 19 Feb 2020 20:50:51 +0800
-From:   Yan Zhu <zhuyan34@huawei.com>
-To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <hpa@zytor.com>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <liucheng32@huawei.com>
-Subject: [PATCH] KVM: x86: fix mmu_set_spte coding style warning
-Date:   Wed, 19 Feb 2020 20:50:51 +0800
-Message-ID: <20200219125051.49529-1-zhuyan34@huawei.com>
-X-Mailer: git-send-email 2.12.3
+        Wed, 19 Feb 2020 07:52:48 -0500
+Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:49098 "EHLO
+        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727103AbgBSMws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:52:48 -0500
+X-Greylist: delayed 2361 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 07:52:47 EST
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1j4OE9-0003q3-58; Wed, 19 Feb 2020 12:13:17 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.93)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1j4OE8-005GIt-ID; Wed, 19 Feb 2020 12:13:16 +0000
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] rqchip/gic: make clearner warnings when no-type specified
+Date:   Wed, 19 Feb 2020 12:13:14 +0000
+Message-Id: <20200219121315.1254222-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.133.175]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-checkpatch.pl warns:
+If an IRQ is defined without an associated type, then this triggers a
+warning in the IRQ translation function gic_irq_domain_translate()
+which does not give any useful information about which node was at fault.
+It also means that if there are multiple entries the dmesg soon fills
+with backtraces which are not useufl either.
 
-ERROR: code indent should use tabs where possible
-+^I^I       ^Ibool speculative, bool host_writable)$
+Change to print a single line with the info of which fwspec
+info was at fault.
 
-WARNING: please, no space before tabs
-+^I^I       ^Ibool speculative, bool host_writable)$
-
-This warning occurs because there is a space before the tab on this line.
-Remove them so that the indentation is consistent with the Linux kernel
-coding style
-
-Fixes: 61524f1bccc0 ("KVM: x86: extend usage of RET_MMIO_PF_* constants")
-Signed-off-by: Yan Zhu <zhuyan34@huawei.com>
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- arch/x86/kvm/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Cc; linux-arm-kernel@lists.infradead.org
+---
+ drivers/irqchip/irq-gic.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 3a281a2decde..0d403f41afc5 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -2682,7 +2682,7 @@ static int set_spte(struct kvm_vcpu *vcpu, u64 *sptep,
- 
- static int mmu_set_spte(struct kvm_vcpu *vcpu, u64 *sptep, unsigned pte_access,
- 			int write_fault, int level, gfn_t gfn, kvm_pfn_t pfn,
--		       	bool speculative, bool host_writable)
-+			bool speculative, bool host_writable)
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 30ab623343d3..52442eff4027 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -996,6 +996,16 @@ static void gic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
  {
- 	int was_rmapped = 0;
- 	int rmap_count;
+ }
+ 
++/* give a useful warning if there is no type specified. Just using WARN()
++ * end up with lots of not-useful stack backtraces. SHow the node and the
++ * IRQ number being translated.
++ */
++static void warn_no_type(struct irq_domain *d, unsigned long irq)
++{
++	pr_warn("WARNING: GIC: %s: no type specified when translating %lu\n",
++		d->name, irq);
++}
++
+ static int gic_irq_domain_translate(struct irq_domain *d,
+ 				    struct irq_fwspec *fwspec,
+ 				    unsigned long *hwirq,
+@@ -1018,7 +1028,8 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+ 		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+ 
+ 		/* Make it clear that broken DTs are... broken */
+-		WARN_ON(*type == IRQ_TYPE_NONE);
++		if (*type == IRQ_TYPE_NONE)
++			warn_no_type(d, fwspec->param[1]);
+ 		return 0;
+ 	}
+ 
+@@ -1029,7 +1040,8 @@ static int gic_irq_domain_translate(struct irq_domain *d,
+ 		*hwirq = fwspec->param[0];
+ 		*type = fwspec->param[1];
+ 
+-		WARN_ON(*type == IRQ_TYPE_NONE);
++		if (*type == IRQ_TYPE_NONE)
++			warn_no_type(d, fwspec->param[0]);
+ 		return 0;
+ 	}
+ 
 -- 
-2.12.3
+2.25.0
 
