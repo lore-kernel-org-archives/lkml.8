@@ -2,98 +2,117 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BEDC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C06C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A5820801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99AD2467E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J7s5sJmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBSNiV (ORCPT
+        id S1727448AbgBSNnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:38:21 -0500
-Received: from mga01.intel.com ([192.55.52.88]:10095 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727263AbgBSNiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:38:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 05:38:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="348943003"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 19 Feb 2020 05:38:16 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 19 Feb 2020 15:38:15 +0200
-Date:   Wed, 19 Feb 2020 15:38:15 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Bin Liu <b-liu@ti.com>, Benson Leung <bleung@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: [PATCH 5/9] usb: roles: Provide the switch drivers handle to the
- switch in the API
-Message-ID: <20200219133815.GH28776@kuha.fi.intel.com>
-References: <20200213132428.53374-1-heikki.krogerus@linux.intel.com>
- <20200213132428.53374-6-heikki.krogerus@linux.intel.com>
- <20200213133239.GN1498@kuha.fi.intel.com>
- <20200218072341.GA30350@b29397-desktop>
- <20200218122545.GF28776@kuha.fi.intel.com>
- <20200219015840.GC8602@b29397-desktop>
+        Wed, 19 Feb 2020 08:43:11 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60016 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726548AbgBSNnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:43:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582119790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ogUgNQHMZGphvFbHLWSXZKUdZldeedaIJcgIFpDuE+4=;
+        b=J7s5sJmPffvZw0EwOC7GX6nBp98FmgPHkvU/dXF5wxj0GX2xmABTyG9RqqXFTCVijI3zyO
+        VrmEzFkG2pCeiQY0qAKqNzUokgBZUTnVqoOFGJd+85CnCzbEXdR20cEe18JSz4pRIIdMJv
+        pSkjJSIV3b2mp2oUKuXRLasSEEaddWU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-365-1C0NK7uANj6M3v3QxALrfQ-1; Wed, 19 Feb 2020 08:43:06 -0500
+X-MC-Unique: 1C0NK7uANj6M3v3QxALrfQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C36288DE74D;
+        Wed, 19 Feb 2020 13:43:04 +0000 (UTC)
+Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D08A90F76;
+        Wed, 19 Feb 2020 13:42:55 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 14:42:54 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4?= =?UTF-8?B?cmdlbnNlbg==?= 
+        <toke@redhat.com>, brouer@redhat.com
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Message-ID: <20200219144254.36c3921b@carbon>
+In-Reply-To: <20200219132856.GA2836367@kroah.com>
+References: <20200219133012.7cb6ac9e@carbon>
+        <20200219132856.GA2836367@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219015840.GC8602@b29397-desktop>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:58:38AM +0000, Peter Chen wrote:
-> On 20-02-18 14:25:45, Heikki Krogerus wrote:
-> > Hi,
-> > 
-> > On Tue, Feb 18, 2020 at 07:23:41AM +0000, Peter Chen wrote:
-> > > > > @@ -1118,6 +1119,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
-> > > > >  	}
-> > > > >  
-> > > > >  	if (ci_role_switch.fwnode) {
-> > > > > +		ci_role_switch.driver_data = ci;
-> > > > >  		ci->role_switch = usb_role_switch_register(dev,
-> > > > >  					&ci_role_switch);
-> > > 
-> > > Why the struct usb_role_switch_desc needs drvdata, the struct
-> > > usb_role_switch has already one?
-> > 
-> > I'm assuming that you are asking why not just register the switch,
-> > and then call usb_role_switch_set_drvdata(), right?
-> 
-> Yes.
-> 
-> > 
-> > That may create a race condition where the switch is accessed before
-> > the driver data is available. That can happen for example if the
-> > switch is exposed to the user space.
-> > 
-> > To play it safe, supplying the driver data as part of the descriptor.
-> > That way we can be sure that the driver data is always available
-> > the moment the switch is registered.
-> > 
-> 
-> Then, you may use the uniform way for the driver. Some may have
-> race condition like you said.
+On Wed, 19 Feb 2020 14:28:56 +0100
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-Uniform way for the driver?
+> On Wed, Feb 19, 2020 at 01:30:12PM +0100, Jesper Dangaard Brouer wrote:
+> > Hi Andrii,
+> > 
+> > Downloaded tarball for kernel release 5.5.4, and I cannot compile
+> > tools/testing/selftests/bpf/ with latest LLVM release version 9.  
+> 
+> Is this something that recently broke?  If so, what commit caused it?
+
+Digging through, it seems several commits.
+
+> And has llvm 9 always worked here?
+
+Yes, llvm-9 used to work for tools/testing/selftests/bpf/.
+
+
+> > Looking closer at the build error messages, I can see that this is
+> > caused by using LLVM features that (I assume) will be avail in release
+> > 10. I find it very strange that we can release a kernel that have build
+> > dependencies on a unreleased version of LLVM.  
+> 
+> Is this the first time you have tried using llvm to build a kernel?
+> This isn't a new thing :)
+
+LOL - we are talking past each-other... I'm not building the entire
+kernel with LLVM.  Notice I'm talking about the BPF-selftests located
+in directory tools/testing/selftests/bpf/.  Building the selftests
+programs are broken
+
+We always use LLVM to build BPF programs (both samples/bpf/ and selftests).
+
+ 
+> > I love the new LLVM BTF features, but we cannot break users/CI-systems
+> > that wants to run the BPF-selftests.  
 
 -- 
-heikki
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
