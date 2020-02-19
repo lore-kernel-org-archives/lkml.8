@@ -2,160 +2,96 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D527C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CD7C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346A124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFF3B24673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G0a9vOzj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bjFV7Bpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgBSR4w (ORCPT
+        id S1726697AbgBSR5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:56:52 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54240 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgBSR4v (ORCPT
+        Wed, 19 Feb 2020 12:57:21 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:35637 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSR5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:56:51 -0500
-Received: by mail-wm1-f65.google.com with SMTP id s10so1661288wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:56:50 -0800 (PST)
+        Wed, 19 Feb 2020 12:57:21 -0500
+Received: by mail-qv1-f68.google.com with SMTP id u10so594264qvi.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:57:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RnmIkUaXzV1O+1VS/NyDxwCOq2I1yESOXBaHwQRGaf0=;
-        b=G0a9vOzj/q7uDeIqggCjkaY5G0W5f/ja02TiSC66hscZOYLFvDhK3JRR2tAEVdaSKc
-         ehrXQMN+fczRLpaCaQBJgW9+IHXpd4HvUhoEo27xkVy33Z3X+gzuxYnZKixfyVnToTGD
-         yS+knnLIdpwQJ72FxmyyRrg4/8mYoROAm82Cb4k1JmiqbyjfxCQWA96gcl3H4jU2INrv
-         l/YpJ2u0XZpqmo8jGUBOtJaIZvebTNZhzfoGcLseEAFQAGgyw013bVvkXU/EzlKNjcTi
-         7iL7RaAvVQ0QR2cm/0GMqi/s+8CylnEQTkg4ydOZRYbfo/iRp+5yJ8Rlj9Uvy5QveANO
-         qcCA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ewush9FZQ99JcnNrTcfn2jc4jttJEoZmIN55Ep+JY/c=;
+        b=bjFV7BpzBl5/r4KME15BBl/2n+bVTDAncv8sTanHwXAM8jDiGn/sFGDHoK6HtisdkL
+         hBnbnQnh9GPF92plI9SY6ltsPWh+4ecUrxf/a//fgPunmKz4CIeskkwjCmOjxVCnBOVk
+         eYjw5+AT3sZlpNUSE6Kwwb9AKTI1KZKGx8DU2C67fDVqB4CveQ9/QdbFUbNVwxyFf9Iy
+         5SZWkAvun+q3J+jTOP0hTZve6gN6GSXX72J82h7qXfY/6IBTiyV/2LZqoLf+BBFaDsLB
+         paB4v5o3XjYsKCBDsVTDib+fS/s90xKawepYrF5to/wv5GiygPwT4JTfKCN7KDw1t66s
+         87Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RnmIkUaXzV1O+1VS/NyDxwCOq2I1yESOXBaHwQRGaf0=;
-        b=hSy+hZgzepmgareXI2lY7MbHHSBhlR2HNqg8fgu5RSLJgUrf2yACW6Vi/G+vqOtFud
-         crhiaI+8Q6mJATB5MBqzl9FLn5/BrDe7HcarqZqa2SHzkt6t5yGepO5/P6Rlq6K+WwQV
-         tNTpfoypi94PsxsyHxaIZqRdQxqhhG3W29TOBHB1FPbzTaGUlu+p3sDndwQR8AE5kJ/m
-         Xwj/LrYZ85IfO3Mc/9KcSepvLX7C3/7rRrSESqapvnkCH6crrKNhnsoUWeG/uq06NnZq
-         fqciRFPjkgSM/6ADe83TkaAtHdQ6KdJQ9nFmf2uCc39rjk+yQfUu/gmSlbSrQPN/3p+Q
-         0/+g==
-X-Gm-Message-State: APjAAAUNHKfZne4bF+AcqH9cO0ewoYDAvLQkcgvH16WSDaCt7y1MYcKJ
-        D/HTa37udXLRzQEIoRmyP1LmdBJidAId/4fCup4VKQ==
-X-Google-Smtp-Source: APXvYqyumjWbeIRbAAQ3QUDMQpO38pyn00miVAyE08VUKdejWzZ9hUptAO3teis8IB/n5DFxkzZoLzcGAQL54YQ0tPQ=
-X-Received: by 2002:a7b:c1d0:: with SMTP id a16mr11236052wmj.175.1582135009360;
- Wed, 19 Feb 2020 09:56:49 -0800 (PST)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ewush9FZQ99JcnNrTcfn2jc4jttJEoZmIN55Ep+JY/c=;
+        b=bKTGemcOwnpChfE5xOXghNnKP+iDVmJaoYmneyb+e4NUBi4ra0pFfWI04/NkDqWslp
+         BtBbDgk8+HZfVfFW0ByZvll+NjzlQzVV1VLpokxgRjC7F/yi/BWHevQuxkcnOc5MSNDC
+         hG/TTh2mFnXJ9eggMedThIM/FWJPrtbiS6JYkFLiz+ZmgFkdyCzYi7oV7Y5LNunHYxBL
+         0zYIr7h03thLNpWcQRlOXwXomhcF65Y2RYEI5DpCPK0hJ0z2GNme36956i+0iuWeS2jL
+         ZU+F403TlDZh48xgNf9uU1WPzCrnhQK88ocGFlJVVrLMh4MkoRhfvTXXCrtUPGJI/puz
+         jf1g==
+X-Gm-Message-State: APjAAAXcSer78XJyK2e9I+3cUbd5cjck7huWv+KhrZOxS1xWcWEXKQ2T
+        Ov+Sk0O6ApgbaQHZ1th9MU6eKQSp
+X-Google-Smtp-Source: APXvYqy1JFOM36lrk50My1kNeEuMpeOOKtOfPz3NY31uc/Bc9jAPvLQxFdsCW9q/8YaUVArqgLYdwg==
+X-Received: by 2002:a05:6214:133:: with SMTP id w19mr5288728qvs.6.1582135039509;
+        Wed, 19 Feb 2020 09:57:19 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o21sm196817qki.56.2020.02.19.09.57.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 09:57:19 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 19 Feb 2020 12:57:17 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200219175717.GA1892094@rani.riverdale.lan>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+ <20200205162921.GA318609@rani.riverdale.lan>
+ <20200218180353.GA930230@rani.riverdale.lan>
+ <20200219120938.GB30966@zn.tnic>
 MIME-Version: 1.0
-References: <20200218094815.233387-1-glider@google.com> <202002190916.EFA74B50C@keescook>
-In-Reply-To: <202002190916.EFA74B50C@keescook>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Wed, 19 Feb 2020 18:56:38 +0100
-Message-ID: <CAG_fn=X-BeOooHDCKczm+KzWDBp_TY5e2VTnUxiqbHpipoF-sg@mail.gmail.com>
-Subject: Re: [PATCH] lib/test_stackinit: move a local outside the switch statement
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219120938.GB30966@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 6:36 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Feb 18, 2020 at 10:48:15AM +0100, glider@google.com wrote:
-> > Right now CONFIG_INIT_STACK_ALL is unable to initialize locals declared
-> > in switch statements, see http://llvm.org/PR44916.
-> > Move the variable declaration outside the switch in lib/test_stackinit.=
-c
-> > to prevent potential test failures until this is sorted out.
-> >
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Signed-off-by: Alexander Potapenko <glider@google.com>
->
-> Er, no. This test is specifically to catch that case. (i.e. the proposed
-> GCC version of this feature misses this case too.) We absolutely want
-> this test to continue to fail until it's fixed:
->
-> [   65.546670] test_stackinit: switch_1_none FAIL (uninit bytes: 8)
-> [   65.547478] test_stackinit: switch_2_none FAIL (uninit bytes: 8)
->
-> What would be nice is if Clang could at least _warn_ about these
-> conditions. GCC does this in the same situation:
->
-> fs/fcntl.c: In function =E2=80=98send_sigio_to_task=E2=80=99:
-> fs/fcntl.c:738:13: warning: statement will never be executed [-Wswitch-un=
-reachable]
->    siginfo_t si;
->              ^~
+On Wed, Feb 19, 2020 at 01:09:38PM +0100, Borislav Petkov wrote:
+> 
+> You keep pinging. Why? Is it a showstopper or what is the urgency here?
+> 
+> This is shaving off some 100 - 200 KiB from the final bzImage, AFAICT. Or
+> is there something more broken this is fixing?
+> 
 
-Is this really a bug from the C Standard point of view?
-Initializing the switch-local variable or executing other code after
-the switch would indeed be a problem, but isn't it correct to declare
-an uninitialized local as long as it's initialized in the branches
-that use it?
-
-> I have a patch to fix all the switch statement variables, though:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=
-=3Dkspp/gcc-plugin/stackinit&id=3D35ed32e16e13a86370e4b70991db8d5f771ba898
-
-Am I understanding right that these warnings only show up in the
-instrumented build?
-According to the GCC manual:
-
-   -Wswitch-unreachable does not warn if the statement between the
-controlling expression and the first case label is just a declaration
-
-> -Kees
->
-> > ---
-> >  lib/test_stackinit.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
-> > index 2d7d257a430e..41e2a6e0cdaa 100644
-> > --- a/lib/test_stackinit.c
-> > +++ b/lib/test_stackinit.c
-> > @@ -282,9 +282,9 @@ DEFINE_TEST(user, struct test_user, STRUCT, none);
-> >   */
-> >  static int noinline __leaf_switch_none(int path, bool fill)
-> >  {
-> > -     switch (path) {
-> > -             uint64_t var;
-> > +     uint64_t var;
-> >
-> > +     switch (path) {
-> >       case 1:
-> >               target_start =3D &var;
-> >               target_size =3D sizeof(var);
-> > --
-> > 2.25.0.265.gbab2e86ba0-goog
-> >
->
-> --
-> Kees Cook
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+There isn't any particular urgency (at least until fg-kaslr patches try
+to make it 64MiB bigger), but it's unclear how long to wait before
+sending a reminder -- Documentation/process suggests that comments
+should be received in a week or so, pinging after 4 and 6 weeks seemed
+reasonable. If x86 has a longer queue, might be worth documenting that
+somewhere?
