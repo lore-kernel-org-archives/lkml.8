@@ -2,137 +2,66 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 426E1C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29C4C35242
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED853208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="F4dKmYn3"
+	by mail.kernel.org (Postfix) with ESMTP id 7594B24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgBSTWC (ORCPT
+        id S1726820AbgBSTWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:22:02 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33003 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSTWC (ORCPT
+        Wed, 19 Feb 2020 14:22:06 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46662 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSTWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:22:02 -0500
-Received: by mail-pj1-f67.google.com with SMTP id m7so375008pjs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:22:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fNyeUEKMDXco+f5Gr/DTD6fZuo/Z/fNiUWmps4qVNiM=;
-        b=F4dKmYn37998FSEwAVJIJ13HtzqZYxYanNuNVDOrckCAcCzDalwmtvEv8eaCwU4JWc
-         OaD/TGnYeN3c5kqTQIoYIteZH4/lOpo0EFTRLfLVEiPjDsuQr3NaCwpNW7gpcNPipdxD
-         yspz+StYfhcin6GNXfngrYioGCvryRYNr+w5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fNyeUEKMDXco+f5Gr/DTD6fZuo/Z/fNiUWmps4qVNiM=;
-        b=GkcWknaEAKmamWVHWcbcNCuxzB48z5qLnbJOGz06b4e+Ebm2zDtx+3BWKq0JF2Ca8o
-         llqm7BjYV2HGED2hE/aaBFpycGpoSIqusf6F2RGpbb78xHCt9hyWvOLuDstwxb207tKB
-         qKog4MfUR702FJAvtiD995adxLYO3oiQvi0XFq/LjjyEPe3+2YEOjIMwxMXBp8LEt0Kh
-         MoEL6MVKWwmrWinpaEST8w0TtlWhRfmfpUkI+9tY+H16Ras3Awhu7BsRN/gPvtvVraOO
-         uQa8p81WpU3xDfi7UKzuQystll2hTgGmhyP2bryIjLX1geiak69lskuYSjn+U1ZuQa3M
-         pVVg==
-X-Gm-Message-State: APjAAAVA0kmuB7w0+UH2O7/x5iGVeCqhRVks+xzY+1oH5TOej6n6pwXg
-        6e8Hd4J/VcpnHHskFqtzX+GWTg==
-X-Google-Smtp-Source: APXvYqxvLSqbL57XLB1HSQgzv+lSozrrOo3DLhYYy8Kx2J4x0eKq0ai0JH+f3c0UJxa1T7sQ83OEtQ==
-X-Received: by 2002:a17:902:b909:: with SMTP id bf9mr26106967plb.96.1582140121379;
-        Wed, 19 Feb 2020 11:22:01 -0800 (PST)
-Received: from [10.67.49.41] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z19sm390351pfn.49.2020.02.19.11.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 11:22:00 -0800 (PST)
-Subject: Re: [PATCH v2 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
- when present
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        linux-kernel@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, Bjorn Helgaas <bhelgaas@google.com>
-References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
- <20200219123933.2792-4-nsaenzjulienne@suse.de>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; prefer-encrypt=mutual; keydata=
- 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
- OXY+VnhOn2EcREN7qdAKw0j9Sw==
-Message-ID: <10a53db8-960e-eea7-1e8d-790de9a79e71@broadcom.com>
-Date:   Wed, 19 Feb 2020 11:21:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200219123933.2792-4-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 19 Feb 2020 14:22:04 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1659D15AE0877;
+        Wed, 19 Feb 2020 11:22:03 -0800 (PST)
+Date:   Wed, 19 Feb 2020 11:22:02 -0800 (PST)
+Message-Id: <20200219.112202.41545263500542131.davem@davemloft.net>
+To:     hkallweit1@gmail.com
+Cc:     nic_swsd@realtek.com, jcliburn@gmail.com, chris.snook@gmail.com,
+        rmody@marvell.com, skalluru@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, benve@cisco.com, _govind@gmx.com,
+        pkaustub@cisco.com, jeffrey.t.kirsher@intel.com,
+        cooldavid@cooldavid.org, snelson@pensando.io, drivers@pensando.io,
+        timur@kernel.org, jaswinder.singh@linaro.org,
+        ilias.apalodimas@linaro.org, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com, sashal@kernel.org,
+        doshir@vmware.com, pv-drivers@vmware.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-hyperv@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/13] net: core: add helper
+ tcp_v6_gso_csum_prep
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Feb 2020 11:22:04 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 4:39 AM, Nicolas Saenz Julienne wrote:
-> xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-> RPi4's VideoCore firmware interface to be up and running. It's possible
-> for both initializations to race, so make sure it's available prior
-> starting.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Date: Tue, 18 Feb 2020 20:55:18 +0100
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Several network drivers for chips that support TSO6 share the same code
+> for preparing the TCP header, so let's factor it out to a helper.
+> A difference is that some drivers reset the payload_len whilst others
+> don't do this. This value is overwritten by TSO anyway, therefore
+> the new helper resets it in general.
 
-It does not look like there is something making sure that
-CONFIG_RASPBERRYPI_FIRMWARE is being selected or depended on, should we
-have a "default XHCI_PCI" added to drivers/firmware/Kconfig?
--- 
-Florian
+Series applied, thanks Heiner.
