@@ -2,98 +2,161 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA77C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B94C3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9209224655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8brOLYu"
+	by mail.kernel.org (Postfix) with ESMTP id 91AA024656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727476AbgBSBGD (ORCPT
+        id S1727680AbgBSBIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:06:03 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39462 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBSBGC (ORCPT
+        Tue, 18 Feb 2020 20:08:48 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:59344 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726716AbgBSBIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:06:02 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a141so11657134qkg.6;
-        Tue, 18 Feb 2020 17:06:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OwfuP5nGjqxy79JMZZiigB23bcGhIb7riQCt1QZquPY=;
-        b=i8brOLYuPtuxuL6R0n667/ZUqpFTCCpewfMKnl/XDjdTDO5M6ebkK8Uf+vUTjKUC5Z
-         YgCQljZuCf7fh3grRa0glhcFtyiZo7vTZbPeBZyWl/dWwBfvmjRJw+7CA3N10hgl4IAs
-         WA5AQw8j02wgCmVu2YpXkLtIUABvUHyOGP35KejxM5mk43OqXTguPRQd9ME4WMsWm69I
-         Jzqf7SmIzDpdJ1idCvBR74zxFTKoTsv/Aww5SvJQPhVjuXiz9lq4rQ8GpuPX/cWmHQ+J
-         UbzFi4RhGhIHaUQ4i/7PsckLQXsEMHyIx4nKnEWe4rn+mqWUoMAP8Nu46Ok7xsGqUKep
-         kbtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OwfuP5nGjqxy79JMZZiigB23bcGhIb7riQCt1QZquPY=;
-        b=Cc7FPzNXw3zaO+PGFSZjZzZVK6eIC6qW6T3Fxy/McFP5PzGsUfbXlVe3Og9H3SALEk
-         PcBLHuPrU9yvQrtiMLmgVLzmllIoUgBKprKay1m7vQYnuFp4znH/zr6gzDa8/BqhHAJw
-         Opb8CQ7lL4UhrFjFWRdxfQbQSNgwhSXbhlHReOFmX6iRDQO72HCJ+HXOHLkkjtnpZ20Z
-         KWvK49n1VvGtpVYdzE7qfU4+dSSqSOuGcKduNSHTcG9438pGhMyTXs1u0sqYbb6ZUQLQ
-         fHofB/nHktLwWsQ5V2ZYXner6hi6RrY74AM6RJ+ZboCV6RvBmHVKck5+VRPeYJBfnj+h
-         w5mg==
-X-Gm-Message-State: APjAAAVg2ZDda89Kbjx98Zxaufp+nC1vrYwiLVmXLVxLQ6cFcBk8PJSp
-        rN+IWKXTR2xEZb0O9jaeVJg=
-X-Google-Smtp-Source: APXvYqx/zjFkEC8bz2JJmFlSRjhc4MJJfniyQ6Fjav3IyHnUNf7sVst+AnbkK6KVfJeDi9SH7hMzVA==
-X-Received: by 2002:a37:e81:: with SMTP id 123mr17873898qko.193.1582074361074;
-        Tue, 18 Feb 2020 17:06:01 -0800 (PST)
-Received: from ?IPv6:2601:282:803:7700:5af:31c:27bd:ccb5? ([2601:282:803:7700:5af:31c:27bd:ccb5])
-        by smtp.googlemail.com with ESMTPSA id g11sm130191qtc.48.2020.02.18.17.05.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2020 17:06:00 -0800 (PST)
-Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
-To:     Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
-        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
-        paolo.lungaroni@cnit.it
-References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
- <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
- <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
- <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
-Date:   Tue, 18 Feb 2020 18:05:58 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.2
+        Tue, 18 Feb 2020 20:08:48 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 6590F3A3346;
+        Wed, 19 Feb 2020 12:08:42 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4Dqy-0004dZ-Qv; Wed, 19 Feb 2020 12:08:40 +1100
+Date:   Wed, 19 Feb 2020 12:08:40 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 09/19] mm: Add page_cache_readahead_limit
+Message-ID: <20200219010840.GX10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-16-willy@infradead.org>
+ <20200218063110.GO10776@dread.disaster.area>
+ <20200218195404.GD24185@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218195404.GD24185@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=pXOkKLco0wbfc50Nqe8A:9
+        a=VBWjYGV6Kxsh7Hhu:21 a=T0X9MdoumZd6j53S:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 4:50 PM, Carmine Scarpitta wrote:
-> Indeed both call fib_table_lookup and rt_dst_alloc are exported for modules. 
-> However, several functions defined in route.c are not exported:
-> - the two functions rt_cache_valid and rt_cache_route required to handle the routing cache
-> - find_exception, required to support fib exceptions.
-> This would require duplicating a lot of the IPv4 routing code. 
-> The reason behind this change is really to reuse the IPv4 routing code instead of doing a duplication. 
+On Tue, Feb 18, 2020 at 11:54:04AM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:31:10PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:45:56AM -0800, Matthew Wilcox wrote:
+> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > > 
+> > > ext4 and f2fs have duplicated the guts of the readahead code so
+> > > they can read past i_size.  Instead, separate out the guts of the
+> > > readahead code so they can call it directly.
+> > 
+> > Gross and nasty (hosting non-stale data beyond EOF in the page
+> > cache, that is).
 > 
-> For the fi member of the struct fib_result, we will fix it by initializing before "if (!tbl_known)"
+> I thought you meant sneaking changes into the VFS (that were rejected) by
+> copying VFS code and modifying it ...
 
-The route.c code does not need to know about the fib table or fib
-policy. Why do all of the existing policy options (mark, L3 domains,
-uid) to direct the lookup to the table of interest not work for this use
-case?
+Well, now that you mention it... :P
+
+> > > +/**
+> > > + * page_cache_readahead_limit - Start readahead beyond a file's i_size.
+> > > + * @mapping: File address space.
+> > > + * @file: This instance of the open file; used for authentication.
+> > > + * @offset: First page index to read.
+> > > + * @end_index: The maximum page index to read.
+> > > + * @nr_to_read: The number of pages to read.
+> > > + * @lookahead_size: Where to start the next readahead.
+> > > + *
+> > > + * This function is for filesystems to call when they want to start
+> > > + * readahead potentially beyond a file's stated i_size.  If you want
+> > > + * to start readahead on a normal file, you probably want to call
+> > > + * page_cache_async_readahead() or page_cache_sync_readahead() instead.
+> > > + *
+> > > + * Context: File is referenced by caller.  Mutexes may be held by caller.
+> > > + * May sleep, but will not reenter filesystem to reclaim memory.
+> > >   */
+> > > -void __do_page_cache_readahead(struct address_space *mapping,
+> > > -		struct file *filp, pgoff_t offset, unsigned long nr_to_read,
+> > > -		unsigned long lookahead_size)
+> > > +void page_cache_readahead_limit(struct address_space *mapping,
+> > 
+> > ... I don't think the function name conveys it's purpose. It's
+> > really a ranged readahead that ignores where i_size lies. i.e
+> > 
+> > 	page_cache_readahead_range(mapping, start, end, nr_to_read)
+> > 
+> > seems like a better API to me, and then you can drop the "start
+> > readahead beyond i_size" comments and replace it with "Range is not
+> > limited by the inode's i_size and hence can be used to read data
+> > stored beyond EOF into the page cache."
+> 
+> I'm concerned that calling it 'range' implies "I want to read between
+> start and end" rather than "I want to read nr_to_read at start, oh but
+> don't go past end".
+> 
+> Maybe the right way to do this is have the three callers cap nr_to_read.
+> Well, the one caller ... after all, f2fs and ext4 have no desire to
+> cap the length.  Then we can call it page_cache_readahead_exceed() or
+> page_cache_readahead_dangerous() or something else like that to make it
+> clear that you shouldn't be calling it.
+
+Fair point.
+
+And in reading this, it occurred to me that what we are enabling is
+an "out of bounds" readahead function. so
+page_cache_readahead_OOB() or *_unbounded() might be a better name....
+
+>   * Like add_to_page_cache_locked, but used to add newly allocated pages:
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 9dd431fa16c9..cad26287ad8b 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -142,45 +142,43 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages)
+>  	blk_finish_plug(&plug);
+>  }
+>  
+> -/*
+> - * __do_page_cache_readahead() actually reads a chunk of disk.  It allocates
+> - * the pages first, then submits them for I/O. This avoids the very bad
+> - * behaviour which would occur if page allocations are causing VM writeback.
+> - * We really don't want to intermingle reads and writes like that.
+> +/**
+> + * page_cache_readahead_exceed - Start unchecked readahead.
+> + * @mapping: File address space.
+> + * @file: This instance of the open file; used for authentication.
+> + * @index: First page index to read.
+> + * @nr_to_read: The number of pages to read.
+> + * @lookahead_size: Where to start the next readahead.
+> + *
+> + * This function is for filesystems to call when they want to start
+> + * readahead beyond a file's stated i_size.  This is almost certainly
+> + * not the function you want to call.  Use page_cache_async_readahead()
+> + * or page_cache_sync_readahead() instead.
+> + *
+> + * Context: File is referenced by caller.  Mutexes may be held by caller.
+> + * May sleep, but will not reenter filesystem to reclaim memory.
+
+Yup, looks much better.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
