@@ -2,161 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB1EC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9312C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7514D24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="ZTcpg9Zv"
+	by mail.kernel.org (Postfix) with ESMTP id BC6362465A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgBSD2w (ORCPT
+        id S1726762AbgBSD3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:28:52 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36087 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgBSD2v (ORCPT
+        Tue, 18 Feb 2020 22:29:07 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:56365 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726667AbgBSD3H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:28:51 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p17so5153080wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:28:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PFrPzzwmpyAD/udwXE359rvjJD5ZEgk+K9aOBrdRGe4=;
-        b=ZTcpg9Zvzm2Ac6+wAF372I1lGI//y+yRBrSU5kW2wA6VNPv3yptFR4gnP4NusurYX5
-         E0Cyoe8S7d6FO50mtLaC/cDuQY9YtxgAglsLaKO+DuxNfOuBfuWUTfpxOFZn4Cnc39dk
-         zlwhIpXITMnDYQuHmMuU5piaWl2f36nsUSq5cl6kr72sVhr4RZLDzsrHXidZCV9UrBYq
-         seqSSXu1TEksjZLUk2AKA6e7vl7vJL8cfJGP3xLCpsEg+hVjCS0RQczc3Yfot+LKTh96
-         p7p6ePUP+BwF2yl4uIDAY1g9zyOq1kn9ib/TbSTt1qSMHIgoqNWwT+93OKlkbsyKyqoq
-         WDmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PFrPzzwmpyAD/udwXE359rvjJD5ZEgk+K9aOBrdRGe4=;
-        b=PVt6F4s9/GDTe+/EoKJmA7rW0mUmMTzfPiib9L944vx/eHpEvyR2lndy4uYzmE48aj
-         gY67yRyoUTnVP7oJFkKr9aPgi+s4p+Z+zZIRJtQrwftmtJgVAhNiOqaQs/3VOmcuUdGU
-         bS8ctIStaGh4F743ECN/V1I21Uvhol1YHyC4sAPXRo8P9Yk6uq87jHEY9yQYcSScWyAf
-         6dR6+6z1FIHQdnjahcCvF+bKzZYZHBb8QLBWnANQgaTeznn1SeQt8yWE+WySFcKxxPsZ
-         xWXVWftNvYwmTrQTVBeNBK/AKck0uCI1+tUmnt8HJ7ISVxz0ZsZhfXt69O3Pk3xQQ5bW
-         Ok0w==
-X-Gm-Message-State: APjAAAUrmPlb/+jOoBy6RWGqKbW7Rv8XJVKKthZQWKOPZc0IIbc0p9L2
-        PclZiB131q8HRlrmq7afnbe3aBaSOJEbHO7yyaLUyg==
-X-Google-Smtp-Source: APXvYqxSVPM8kfU6Iae8q2VWGU/sIXjjlqOBO7h73TYwMqPDl2u3Q1WJfEz4BPOyClmmzeP2Q3AidC1kme6QlYOAk0c=
-X-Received: by 2002:a05:600c:285:: with SMTP id 5mr6773557wmk.120.1582082929545;
- Tue, 18 Feb 2020 19:28:49 -0800 (PST)
+        Tue, 18 Feb 2020 22:29:07 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id C4ADA7EB4FD;
+        Wed, 19 Feb 2020 14:29:02 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4G2m-0005Wz-JP; Wed, 19 Feb 2020 14:29:00 +1100
+Date:   Wed, 19 Feb 2020 14:29:00 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200219032900.GE10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-31-willy@infradead.org>
 MIME-Version: 1.0
-References: <CAOnJCU+_CnH6XcXbVrf4LCg3s830n6x6OyWckzoBC-kG2yFpwQ@mail.gmail.com>
- <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-afe8915b-f34a-49e5-86fd-92f5de4100ed@palmerdabbelt-glaptop1>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Wed, 19 Feb 2020 08:58:38 +0530
-Message-ID: <CAAhSdy15mLGz3Xtu_Q7vOCP5Y2hQjWEosU1v8o8FxKfiLDx4qQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Don't enable all interrupts in trap_init()
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-31-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=D_ITGRzz0ucxF3CW0B0A:9
+        a=m4Eakf-3O-CBJR1D:21 a=uIsSIQHDIO17Gszz:21 a=CjuIK1q_8ugA:10
+        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:06 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Sun, 02 Feb 2020 03:48:18 PST (-0800), atishp@atishpatra.org wrote:
-> > On Sun, Feb 2, 2020 at 3:06 AM Anup Patel <anup.patel@wdc.com> wrote:
-> >>
-> >> Historically, we have been enabling all interrupts for each
-> >> HART in trap_init(). Ideally, we should only enable M-mode
-> >> interrupts for M-mode kernel and S-mode interrupts for S-mode
-> >> kernel in trap_init().
-> >>
-> >> Currently, we get suprious S-mode interrupts on Kendryte K210
-> >> board running M-mode NO-MMU kernel because we are enabling all
-> >> interrupts in trap_init(). To fix this, we only enable software
-> >> and external interrupt in trap_init(). In future, trap_init()
-> >> will only enable software interrupt and PLIC driver will enable
-> >> external interrupt using CPU notifiers.
->
-> I think we should add a proper interrupt controller driver for the per-hart
-> interrupt controllers, as doing this within the other drivers is ugly -- for
-> example, there's no reason an MMIO timer or interrupt controller driver should
-> be toggling these bits.
+On Mon, Feb 17, 2020 at 10:46:11AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> By putting the 'have we reached the end of the page' condition at the end
+> of the loop instead of the beginning, we can remove the 'submit the last
+> page' code from iomap_readpages().  Also check that iomap_readpage_actor()
+> didn't return 0, which would lead to an endless loop.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/iomap/buffered-io.c | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index cb3511eb152a..44303f370b2d 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -400,15 +400,9 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		void *data, struct iomap *iomap, struct iomap *srcmap)
+>  {
+>  	struct iomap_readpage_ctx *ctx = data;
+> -	loff_t done, ret;
+> +	loff_t ret, done = 0;
+>  
+> -	for (done = 0; done < length; done += ret) {
+> -		if (ctx->cur_page && offset_in_page(pos + done) == 0) {
+> -			if (!ctx->cur_page_in_bio)
+> -				unlock_page(ctx->cur_page);
+> -			put_page(ctx->cur_page);
+> -			ctx->cur_page = NULL;
+> -		}
+> +	while (done < length) {
+>  		if (!ctx->cur_page) {
+>  			ctx->cur_page = iomap_next_page(inode, ctx->pages,
+>  					pos, length, &done);
+> @@ -418,6 +412,15 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		}
+>  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+>  				ctx, iomap, srcmap);
+> +		if (WARN_ON(ret == 0))
+> +			break;
 
-I have always been in support of having per-hart interrupt controller driver.
+This error case now leaks ctx->cur_page....
 
-I will rebase my RISC-V INTC driver upon latest kernel and send it again.
-Of course, now the situation has changed the RISC-V INTC driver will
-have to consider NOMMU kernel as well.
+> +		done += ret;
+> +		if (offset_in_page(pos + done) == 0) {
+> +			if (!ctx->cur_page_in_bio)
+> +				unlock_page(ctx->cur_page);
+> +			put_page(ctx->cur_page);
+> +			ctx->cur_page = NULL;
+> +		}
+>  	}
+>  
+>  	return done;
+> @@ -451,11 +454,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+>  done:
+>  	if (ctx.bio)
+>  		submit_bio(ctx.bio);
+> -	if (ctx.cur_page) {
+> -		if (!ctx.cur_page_in_bio)
+> -			unlock_page(ctx.cur_page);
+> -		put_page(ctx.cur_page);
+> -	}
+> +	BUG_ON(ctx.cur_page);
 
-The last version of RISC-V INTC driver can be found in riscv_intc_v2
-branch of https://github.com/avpatel/linux.git
+And so will now trigger both a warn and a bug....
 
->
-> >> Cc: stable@vger.kernel.org
-> >> Fixes: 76d2a0493a17 ("RISC-V: Init and Halt Code)
->
-> I'd argue this actually fixes the M-mode stuff, since that's the first place
-> this issue shows up.  I've queued this with
->
-> Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
->
-> instead, as that's the first commit that will actually write to MIE and
-> therefor the first commit that will actually exhibit bad behavior.  It also has
-> the advantage of making the patch apply on older trees, which should make life
-> easier for the stable folks.
+Cheers,
 
-Sure, no problem.
-
->
-> >> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> >> ---
-> >>  arch/riscv/kernel/traps.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-> >> index f4cad5163bf2..ffb3d94bf0cc 100644
-> >> --- a/arch/riscv/kernel/traps.c
-> >> +++ b/arch/riscv/kernel/traps.c
-> >> @@ -156,6 +156,6 @@ void __init trap_init(void)
-> >>         csr_write(CSR_SCRATCH, 0);
-> >>         /* Set the exception vector address */
-> >>         csr_write(CSR_TVEC, &handle_exception);
-> >> -       /* Enable all interrupts */
-> >> -       csr_write(CSR_IE, -1);
-> >> +       /* Enable interrupts */
-> >> +       csr_write(CSR_IE, IE_SIE | IE_EIE);
-> >>  }
-> >> --
-> >> 2.17.1
-> >>
-> >>
-> >
-> > Looks good.
-> > Reviewed-by: Atish Patra <atish.patra@wdc.com>
->
-> Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
->
-> I consider this a bugfix, so I'm targeting it for RCs.  It's on fixes and
-> should go up this week.
->
-> Thanks!
-
-Thanks,
-Anup
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
