@@ -2,130 +2,55 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4E5C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E47C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:09:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70EBF207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:06:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0baOwT4"
+	by mail.kernel.org (Postfix) with ESMTP id 67046207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:09:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgBSKG1 (ORCPT
+        id S1726569AbgBSKJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:06:27 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36112 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBSKG0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:06:26 -0500
-Received: by mail-pj1-f65.google.com with SMTP id gv17so2329209pjb.1;
-        Wed, 19 Feb 2020 02:06:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GVRdPNZo5d7eI2NxNW1l7GKKSA1O3A8YX4K6fJNiyFY=;
-        b=j0baOwT4MtNLCJOeh0o5lSqPQB90+Rp/h2KSZs0EGIBpTIb0AtoyvA9Om1n5YFIChN
-         kteaGHD0cop5owLYIfi7ILHZFl/vUjEP8PP4z5tDqAuta7CFnOTHkXjeGdoceEfQY4XO
-         +Ebx9VrVptRX/UV81DTLEQDt6kUPYlRyDJtljGmiWE6bAj0ohSZlDqigr+O8baB1TD7n
-         IXCxhV5e35GbRm/8inLkz6r+6idv2be0yxk/GyBL3pGxrBw/DpTlWvPXiJBj6ZrPuQ81
-         RyptQrK4Rp5tDRTw1lnJo2YOWDKA4Y202Di+Cqnuq/xTMh9naiEzvBzwJ+IaZfs+Hup8
-         yNSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GVRdPNZo5d7eI2NxNW1l7GKKSA1O3A8YX4K6fJNiyFY=;
-        b=hN73Fn4ZbR7speJsfuqEwK1Vz+++ntnk+yoVJzE15mZhA5BoHAeeioaG0I0Pzb5I4a
-         /WWEdl2dQtE8rE3/9kXJ0BDXNIp78ysXVEWM57hdDDdl7Q2OpnzdEm8VsHEdxAhWCouo
-         UcTqdAJ/SKAFFtTQp+PXMZfzrZoXa8iutTJjfkbgnQt1dcqmLHe8oFxQvKKMAN4vbMkl
-         zgxtp4XyGudUPOMRHnMUHCVsGIKhOJMgVUwLboFVSmV8R1+nWzAyVSMRkS4p8QIruDri
-         OxJzn34KtY+BuV/4iLlPPVGZVED886hlAhpr5Zhe64epBBwjDyAnE308SLATT0nWKfK2
-         Wguw==
-X-Gm-Message-State: APjAAAWMZecFY/2cH+wMUkV14sNmkCbbHAP2tJFQ0QONnQMlwTMuRS/3
-        QpciQOIErzEbiKdWskGuqZ0=
-X-Google-Smtp-Source: APXvYqzBjjlOD+j8XLKGMCJFZ0gJV4hY7IPslrCb7PxPpQVZPaaNPRR0FsXbdorABRNjPsdeAx5FPQ==
-X-Received: by 2002:a17:902:7c85:: with SMTP id y5mr24648684pll.227.1582106786018;
-        Wed, 19 Feb 2020 02:06:26 -0800 (PST)
-Received: from localhost.localdomain ([146.196.37.220])
-        by smtp.googlemail.com with ESMTPSA id w14sm2097754pgi.22.2020.02.19.02.06.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 02:06:25 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] tcp: Pass lockdep expression to RCU lists
-Date:   Wed, 19 Feb 2020 15:35:46 +0530
-Message-Id: <20200219100545.27397-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 19 Feb 2020 05:09:16 -0500
+Received: from 8bytes.org ([81.169.241.247]:54842 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgBSKJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:09:15 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id A44F5346; Wed, 19 Feb 2020 11:09:14 +0100 (CET)
+Date:   Wed, 19 Feb 2020 11:09:13 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] iommu/amd: Disable IOMMU on Stoney Ridge systems
+Message-ID: <20200219100913.GA1961@8bytes.org>
+References: <20200210075115.14838-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210075115.14838-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcp_cong_list is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of tcp_cong_list_lock.
+On Mon, Feb 10, 2020 at 03:51:15PM +0800, Kai-Heng Feng wrote:
+> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
+> 
+> Use identity-mapping and PCI ATS doesn't help this issue.
+> 
+> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do
+> the same here to avoid screen flickering on 4K monitor.
+> 
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Bug: https://gitlab.freedesktop.org/drm/amd/issues/961
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Hence, add corresponding lockdep expression to silence false-positive
-warnings, and harden RCU lists.
-
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/ipv4/tcp_cong.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
-index 3737ec096650..8d4446ed309e 100644
---- a/net/ipv4/tcp_cong.c
-+++ b/net/ipv4/tcp_cong.c
-@@ -25,7 +25,8 @@ static struct tcp_congestion_ops *tcp_ca_find(const char *name)
- {
- 	struct tcp_congestion_ops *e;
- 
--	list_for_each_entry_rcu(e, &tcp_cong_list, list) {
-+	list_for_each_entry_rcu(e, &tcp_cong_list, list,
-+				lockdep_is_held(&tcp_cong_list_lock)) {
- 		if (strcmp(e->name, name) == 0)
- 			return e;
- 	}
-@@ -55,7 +56,8 @@ struct tcp_congestion_ops *tcp_ca_find_key(u32 key)
- {
- 	struct tcp_congestion_ops *e;
- 
--	list_for_each_entry_rcu(e, &tcp_cong_list, list) {
-+	list_for_each_entry_rcu(e, &tcp_cong_list, list,
-+				lockdep_is_held(&tcp_cong_list_lock)) {
- 		if (e->key == key)
- 			return e;
- 	}
-@@ -317,7 +319,8 @@ int tcp_set_allowed_congestion_control(char *val)
- 	}
- 
- 	/* pass 2 clear old values */
--	list_for_each_entry_rcu(ca, &tcp_cong_list, list)
-+	list_for_each_entry_rcu(ca, &tcp_cong_list, list,
-+				lockdep_is_held(&tcp_cong_list_lock))
- 		ca->flags &= ~TCP_CONG_NON_RESTRICTED;
- 
- 	/* pass 3 mark as allowed */
--- 
-2.24.1
+Applied, thanks.
 
