@@ -2,107 +2,132 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96721C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60006C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F441206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:02:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582138943;
-	bh=kYo8STywMoNPbXqq5MqKyc6HbXDhI5RlUyf1kHZ/nco=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=Rm8GwQmcBQ32F3fciY9d1LlBsKVBS9UpneKmj1nYJl8p79o/VlkecI4yTWRPW8CuS
-	 zcG1MwMC47lhoqYd4WeB4yKn01oB44bLsT6zclAuubgySjdEwjuwglBsSkkzYvCo9B
-	 26X1Hj6XdIWafpinC7ol37i6tEZjhRnvAQHJ5vlo=
+	by mail.kernel.org (Postfix) with ESMTP id 30A7F206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:03:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nnU0eJ7y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgBSTCW (ORCPT
+        id S1726731AbgBSTDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:02:22 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37547 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgBSTCV (ORCPT
+        Wed, 19 Feb 2020 14:03:50 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60288 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgBSTDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:02:21 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so530106pfn.4;
-        Wed, 19 Feb 2020 11:02:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=8ve6EAIa0mteEpntsUQ3aTXDFQ6XprvcJ5I+N3SPGaQ=;
-        b=gp/JWMdRuQhZq3r638Uh84x5b1u8kP3cOCU/cld5iaolDmtWtgn/7PNjuzktWfX657
-         K8r7hSYWtwQEJFyZdeSbYu+f7icosVg73HcDyqxn457TBzExZqfqm7WhtZMJmPGoXAT9
-         HBsSkbNxrGLoI0EGRPtLcIpCkcISXO//7DqDKgoQX3OiMD6oQDtie0ubh/ak0UhXl0qF
-         cCIf65r5UkPIdU9WvC12GF/7LJken8zvbcE5s/TXotLyWiGEh0LCyjxO6x92no7c27H7
-         vZT58abZz3D0yD6wq84lfOgD/w4XTYaTlkvbHO3bBpVs01iqGtOyrZdtRa0IfIrlcoIK
-         5nvg==
-X-Gm-Message-State: APjAAAUGeNn3RK1VJ0xzQsjaetoaJg7h6J1BaQcnDkIJDTQytaqijazY
-        S5IZw2u11PJulz1vSMH7Iq0=
-X-Google-Smtp-Source: APXvYqx9OcV1TGaGspwn3Rsjucan0AVm2E8MH3mexVmIn3LIMMiVSPGYNtKZFipTVy3mhbKlh2ouVQ==
-X-Received: by 2002:a63:2254:: with SMTP id t20mr29922920pgm.423.1582138940832;
-        Wed, 19 Feb 2020 11:02:20 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id l29sm428731pgb.86.2020.02.19.11.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:02:20 -0800 (PST)
-Message-ID: <5e4d863c.1c69fb81.25df8.14d3@mx.google.com>
-Date:   Wed, 19 Feb 2020 11:02:14 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stable@vger.kernel.org
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH] MIPS: ingenic: DTS: Fix watchdog nodes
-References:  <20200211145337.16311-1-paul@crapouillou.net>
-In-Reply-To:  <20200211145337.16311-1-paul@crapouillou.net>
+        Wed, 19 Feb 2020 14:03:50 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JJ3fWj081890;
+        Wed, 19 Feb 2020 13:03:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582139021;
+        bh=PdP8o3LePLb06Tf/GSMcpBK5khtA63IgL9abPaFPLnE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nnU0eJ7yBDLsLSx5IRHXyo0FGmb2NnTyOaruSSIERsrn6odGaDwEDyagmA9FHRKN9
+         gbrZ/f0OThJ0qPx7YoBdHpg+Aqfu+gW0e99IGShwVv3nDwcVRgIMOSnJcYbw39sL4L
+         AJBlJlm8SmBeSH7p3oTFxB2Hw0VidfQPd5Xl3J6I=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JJ3fh7127964
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 13:03:41 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 13:03:41 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 13:03:41 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JJ3eYB115217;
+        Wed, 19 Feb 2020 13:03:40 -0600
+Subject: Re: [PATCH net-master] net: phy: dp83848: Add the TI TLK05/06 PHY ID
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <afd@ti.com>
+References: <20200219181613.5898-1-dmurphy@ti.com>
+ <20200219184847.GD3281@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <81b0e285-8a2a-2370-ecf5-2540bc30f1ed@ti.com>
+Date:   Wed, 19 Feb 2020 12:58:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200219184847.GD3281@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Andrew(s)
 
-Paul Cercueil wrote:
-> The devicetree ABI was broken on purpose by commit 6d532143c915
-> ("watchdog: jz4740: Use regmap provided by TCU driver"), and
-> commit 1d9c30745455 ("watchdog: jz4740: Use WDT clock provided
-> by TCU driver"). The commit message of the latter explains why the ABI
-> was broken.
-> 
-> However, the current devicetree files were not updated to the new ABI
-> described in Documentation/devicetree/bindings/timer/ingenic,tcu.txt,
-> so the watchdog driver would not probe.
-> 
-> Fix this problem by updating the watchdog nodes to comply with the new
-> ABI.
-> 
-> Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU
-> driver")
+On 2/19/20 12:48 PM, Andrew Lunn wrote:
+> On Wed, Feb 19, 2020 at 12:16:13PM -0600, Dan Murphy wrote:
+>> Add the TLK05/06 PHY ID to the DP83848 driver.  The TI website indicates
+>> that the DP83822 device is a drop in replacement for the TLK05 device
+>> but the TLK device does not have WoL support.  The TLK device is
+>> register compatible to the DP83848 and the DP83848 does not support WoL
+>> either.  So this PHY can be associated with the DP83848 driver.
+>>
+>> The initial TLKx PHY ID in the driver is a legacy ID and the public data
+>> sheet indicates a new PHY ID.  So not to break any kernels out there
+>> both IDs will continue to be supported in this driver.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   drivers/net/phy/dp83848.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
+>> index 54c7c1b44e4d..66907cfa816a 100644
+>> --- a/drivers/net/phy/dp83848.c
+>> +++ b/drivers/net/phy/dp83848.c
+>> @@ -12,6 +12,7 @@
+>>   #define TI_DP83620_PHY_ID		0x20005ce0
+>>   #define NS_DP83848C_PHY_ID		0x20005c90
+>>   #define TLK10X_PHY_ID			0x2000a210
+>> +#define TLK105_06_PHY_ID		0x2000a211
+>>   
+>>   /* Registers */
+>>   #define DP83848_MICR			0x11 /* MII Interrupt Control Register */
+>> @@ -85,6 +86,7 @@ static struct mdio_device_id __maybe_unused dp83848_tbl[] = {
+>>   	{ NS_DP83848C_PHY_ID, 0xfffffff0 },
+>>   	{ TI_DP83620_PHY_ID, 0xfffffff0 },
+>>   	{ TLK10X_PHY_ID, 0xfffffff0 },
+>> +	{ TLK105_06_PHY_ID, 0xfffffff0 },
+>>   	{ }
+>>   };
+>>   MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
+>> @@ -115,6 +117,8 @@ static struct phy_driver dp83848_driver[] = {
+>>   			   dp83848_config_init),
+>>   	DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY",
+>>   			   NULL),
+>> +	DP83848_PHY_DRIVER(TLK105_06_PHY_ID, "TI TLK105/06 10/100 Mbps PHY",
+>> +			   NULL),
+> I'm pretty sure Andrew's comment is correct. Due to the mask, the
+> TLK10X_PHY_ID entry will hit.
+Yes Andrew D is correct.
+> What you can do is change the order and the mask. Put TLK105_06_PHY_ID
+> before TLK10X_PHY_ID and have an exact match, no mask.
 
-Applied to mips-fixes.
+I don't think we need a patch then for this ID.
 
-> commit 11479e8e3cd8
-> https://git.kernel.org/mips/c/11479e8e3cd8
-> 
-> Fixes: 6d532143c915 ("watchdog: jz4740: Use regmap provided by TCU driver")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+As Andrew D pointed out it will match the current ID since the lower 
+nibble of the ID is masked off.
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Dan
+>
+>         Andrew
