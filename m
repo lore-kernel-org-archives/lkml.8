@@ -2,105 +2,138 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E77BC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4443C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1856724656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:59:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GMZy5iX2"
+	by mail.kernel.org (Postfix) with ESMTP id BA6F824654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:02:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582077773;
+	bh=zZgKpAVTcS0HFTReo92vS7ROv9M5SlQjFcvItuZaouo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q2qsp39CAUIkHZrcWXCCjFUeSk5ZOmjhFFfUYwgtnm74w8j5LKidmceVeZM6cy8ED
+	 9zvpR4gws9VMkIhiTfgcY5T43ISksyN0IdOOLWQ4+KgdlteN6Wnj9HRgsMWs6ZoBPl
+	 0aHubo06+vdgxeBa3eiIuoGkgfJnNPvt4jN62LEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgBSB71 (ORCPT
+        id S1728072AbgBSCCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:59:27 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43691 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbgBSB70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:59:26 -0500
-Received: by mail-pg1-f196.google.com with SMTP id u12so11534812pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 17:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=TZ+7kRkf1Lb1X9EkNUXTuLGtV52JPBS+BiH82cZ97uE=;
-        b=GMZy5iX2FbvSR0qa5UWp68F42ojx9YlQxKtTgkrUEsiPsiOTsgLrVojcR12Pf6FHlV
-         A1aT/CgO/luy/th87b66oa3WKnLZePEw0nQorqhPingnsgI9jvQoPgIeu7M+JxbNzugg
-         cMRm8ESMLQMh5CxS3BOb2jjTISrjaYyWGA28/9nx2LGyT/I16zrpMKK1HsG20TLz0ezC
-         +MEbCHc6YRKNYebsZ6Tw7G9vOG1JeRofS4NrpVWHBU9bTeQhSqhmFgX7Dg4o48Mc5KcC
-         vfSIE4bxxBj8mfgL64t+PlyjiptWoqpUiw2aHcElM+xXRqB9+rBt544+0OLVOQr9KLod
-         Eepw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=TZ+7kRkf1Lb1X9EkNUXTuLGtV52JPBS+BiH82cZ97uE=;
-        b=Eh0nJ3HdzyW17n7bYc928zaAnvi5IlEtoVPJC2lQbdaGIVdb+n3dLsWiN2zgyXjE/J
-         qrJqJ53VKCy1pZq+BzM1+G6DLyfsCIFPkhxQbBSDA0VwS6kDX5sh+jDtWJheXsRLPPIo
-         HrTRCIM5lAzqdT1wqXKwn38mxMgO1XQYRlU5fG7nqlPDOEq8KYFXegMMiXNDej3sUvuQ
-         Mf9Y+tHc0RWZEsrTKsgVgiaqq46NitX4RuwR8UGZZuJNAJXuckpK0ZX/ztgd4JPoOUBn
-         01IsPruK+/U+RfeKCw3LlzUxQzgFS9jAQ6ZsLhce8PUGEh2KZ69/jxXibVtLo808w/XK
-         bLkw==
-X-Gm-Message-State: APjAAAUQFxAH1I+r6cqUTzOp3Eq+uPjB/xGyehIhp+mQct1GRmQ2ZjJE
-        7brYOrowk9YHsgfmOy9CpqW7jg==
-X-Google-Smtp-Source: APXvYqw+V0VAtQKn0eaWJa755lGgYuTurTfSIJy5uTIQetEteVKiiY7hKxJ3kAsxkZ2gWHp2GxOq9w==
-X-Received: by 2002:a63:aa07:: with SMTP id e7mr25757088pgf.90.1582077565568;
-        Tue, 18 Feb 2020 17:59:25 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id r145sm306132pfr.5.2020.02.18.17.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 17:59:24 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:59:24 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jeremy Cline <jcline@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [patch] mm, thp: track fallbacks due to failed memcg charges
- separately
-In-Reply-To: <20200218082632.kn5ouiditzx5h2iq@box>
-Message-ID: <alpine.DEB.2.21.2002181758480.108053@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.2002172139310.152060@chino.kir.corp.google.com> <20200218082632.kn5ouiditzx5h2iq@box>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 18 Feb 2020 21:02:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727811AbgBSCCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:02:52 -0500
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 458AC206DB;
+        Wed, 19 Feb 2020 02:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582077771;
+        bh=zZgKpAVTcS0HFTReo92vS7ROv9M5SlQjFcvItuZaouo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KCDvIX5ESx+/fv2GnQodDCuhBF3i33bgdk0P29bY4M65DN6YnkPaUL8Eq89/mUfa9
+         CHCnzIHCRkXPfC8R9b8lqwJyoRn5SpyfY3uDcf36X2cHocrVtDhl00zts6aYUhpUqg
+         8rZ+Sis0tKo+8K56bw/I3farjiXEOpmhwXx5QUfI=
+Date:   Wed, 19 Feb 2020 10:02:45 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Leo Li <leoyang.li@nxp.com>
+Cc:     "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: defconfig: enable additional drivers needed
+ by NXP QorIQ boards
+Message-ID: <20200219020244.GG6075@dragon>
+References: <1581382559-18520-1-git-send-email-leoyang.li@nxp.com>
+ <1581382559-18520-2-git-send-email-leoyang.li@nxp.com>
+ <20200217053730.GB6042@dragon>
+ <VE1PR04MB668774D60323E11C7FF1FF7F8F110@VE1PR04MB6687.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB668774D60323E11C7FF1FF7F8F110@VE1PR04MB6687.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020, Kirill A. Shutemov wrote:
-
-> On Mon, Feb 17, 2020 at 09:41:40PM -0800, David Rientjes wrote:
-> > The thp_fault_fallback stat in either /proc/vmstat is incremented if 
-> > either the hugepage allocation fails through the page allocator or the 
-> > hugepage charge fails through mem cgroup.
-> > 
-> > This patch leaves this field untouched but adds a new field,
-> > thp_fault_fallback_charge, which is incremented only when the mem cgroup
-> > charge fails.
-> > 
-> > This distinguishes between faults that want to be backed by hugepages but
-> > fail due to fragmentation (or low memory conditions) and those that fail
-> > due to mem cgroup limits.  That can be used to determine the impact of 
-> > fragmentation on the system by excluding faults that failed due to memcg 
-> > usage.
-> > 
-> > Signed-off-by: David Rientjes <rientjes@google.com>
+On Tue, Feb 18, 2020 at 04:44:09PM +0000, Leo Li wrote:
 > 
-> The patch looks good to me, but I noticed that we miss THP_FAULT_FALLBACK
-> (and THP_FAULT_FALLBACK_CHARGE) accounting in shmem_getpage_gfp().
 > 
-> Could you fix this while you are there?
+> > -----Original Message-----
+> > From: Shawn Guo <shawnguo@kernel.org>
+> > Sent: Sunday, February 16, 2020 11:38 PM
+> > To: Leo Li <leoyang.li@nxp.com>
+> > Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 2/2] arm64: defconfig: enable additional drivers needed
+> > by NXP QorIQ boards
+> > 
+> > On Mon, Feb 10, 2020 at 06:55:59PM -0600, Li Yang wrote:
+> > > This enables the following SoC device drivers for NXP/FSL QorIQ SoCs:
+> > > CONFIG_QORIQ_CPUFREQ=y
+> > > CONFIG_NET_SWITCHDEV=y
+> > > CONFIG_MSCC_OCELOT_SWITCH=y
+> > > CONFIG_CAN=m
+> > > CONFIG_CAN_FLEXCAN=m
+> > > CONFIG_FSL_MC_BUS=y
+> > > CONFIG_MTD_NAND_FSL_IFC=y
+> > > CONFIG_FSL_ENETC=y
+> > > CONFIG_FSL_ENETC_VF=y
+> > > CONFIG_SPI_FSL_LPSPI=y
+> > > CONFIG_SPI_FSL_QUADSPI=y
+> > > CONFIG_SPI_FSL_DSPI=y
+> > > CONFIG_GPIO_MPC8XXX=y
+> > > CONFIG_ARM_SBSA_WATCHDOG=y
+> > > CONFIG_DRM_MALI_DISPLAY=m
+> > > CONFIG_FSL_MC_DPIO=y
+> > > CONFIG_CRYPTO_DEV_FSL_DPAA2_CAAM=m
+> > > CONFIG_FSL_DPAA=y
+> > > CONFIG_FSL_FMAN=y
+> > > CONFIG_FSL_DPAA_ETH=y
+> > > CONFIG_FSL_DPAA2_ETH=y
+> > >
+> > > And the drivers for on-board devices for the upstreamed QorIQ
+> > > reference
+> > > boards:
+> > > CONFIG_MTD_CFI=y
+> > > CONFIG_MTD_CFI_ADV_OPTIONS=y
+> > > CONFIG_MTD_CFI_INTELEXT=y
+> > > CONFIG_MTD_CFI_AMDSTD=y
+> > > CONFIG_MTD_CFI_STAA=y
+> > > CONFIG_MTD_PHYSMAP=y
+> > > CONFIG_MTD_PHYSMAP_OF=y
+> > > CONFIG_MTD_DATAFLASH=y
+> > > CONFIG_MTD_SST25L=y
+> > > CONFIG_EEPROM_AT24=m
+> > > CONFIG_RTC_DRV_DS1307=y
+> > > CONFIG_RTC_DRV_PCF85363=y
+> > > CONFIG_RTC_DRV_PCF2127=y
+> > > CONFIG_E1000=y
+> > > CONFIG_AQUANTIA_PHY=y
+> > > CONFIG_MICROSEMI_PHY=y
+> > > CONFIG_VITESSE_PHY=y
+> > > CONFIG_MDIO_BUS_MUX_MULTIPLEXER=y
+> > > CONFIG_MUX_MMIO=y
+> > >
+> > > The following two options are implied by new options and removed from
+> > > defconfig:
+> > > CONFIG_CLK_QORIQ=y
+> > > CONFIG_MEMORY=y
+> > >
+> > > Signed-off-by: Li Yang <leoyang.li@nxp.com>
+> > 
+> > This is too much change in a single patch. It should be split properly to make
+> > review and merge easier, considering arm-soc folks are cautious to those 'y'
+> > options.
+> 
+> Ok.  So probably separating them based on different subsystems will be good?  It would be too many patches if I separate for each individual config option.
 
-Sure, I'll add it as a predecessor and also count THP_FAULT_ALLOC for 
-consistency.
+Yep, subsystem should be good.  And for those 'y' options, please state
+why they need necessarily to be 'y'.
+
+Shawn
