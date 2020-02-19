@@ -2,82 +2,94 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A096C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B88FC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C03222D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582099054;
-	bh=dX6II76srch6B1FGnp5iAvUq0daDmqaINqk1Uwkiv7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1PstAoDHfF158zKk45Q3TafR5ATg4CzLut7MW2nv6paDBLWpo3G3hBhpXlfFIx+Tu
-	 dFredai/HoQULEUQCQBdiR5kU+do4sWCthuVVvW3oUgplAhRPQjBAUP9bXzmOfQT5y
-	 vMaYO7TL5YLFC/HY+3KSJEkxEwHyg3EItfredrqo=
+	by mail.kernel.org (Postfix) with ESMTP id 014BF21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbgBSH5c (ORCPT
+        id S1726656AbgBSH5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:57:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbgBSH5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:57:32 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B30321D56;
-        Wed, 19 Feb 2020 07:57:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582099052;
-        bh=dX6II76srch6B1FGnp5iAvUq0daDmqaINqk1Uwkiv7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FSWnDFgkZCvfs4BxmO1i+z3Hx1ADug+aiVjtcyfa4bpW005OrxgcnTe4InbIoV+c/
-         OiPP3h5bTJREVwMOz8BY5aM1ePubbMVN40KHH7NdvqCGR09/udT5pFMHbW0x0S22gH
-         2EQv8yZYYrCMWU8O7NDH5P+FpTuxgTlbSlNR/HZU=
-Date:   Wed, 19 Feb 2020 08:57:30 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] driver core: Make deferred_probe_timeout global
- so it can be shared
-Message-ID: <20200219075730.GA2732797@kroah.com>
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <20200218220748.54823-2-john.stultz@linaro.org>
+        Wed, 19 Feb 2020 02:57:42 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10642 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726260AbgBSH5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:57:42 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EB2D92AC65ADECDF186C;
+        Wed, 19 Feb 2020 15:57:33 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 19 Feb 2020 15:57:26 +0800
+From:   Tian Tao <tiantao6@hisilicon.com>
+To:     <puck.chen@hisilicon.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <tzimmermann@suse.de>, <kraxel@redhat.com>,
+        <alexander.deucher@amd.com>, <tglx@linutronix.de>,
+        <dri-devel@lists.freedesktop.org>, <xinliang.liu@linaro.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linuxarm@huawei.com>
+Subject: [PATCH] drm/hisilicon: Fixed pcie resource conflict between drm and firmware
+Date:   Wed, 19 Feb 2020 15:57:08 +0800
+Message-ID: <1582099028-11898-1-git-send-email-tiantao6@hisilicon.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218220748.54823-2-john.stultz@linaro.org>
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:07:48PM +0000, John Stultz wrote:
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -236,6 +236,7 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
->  }
->  #endif
->  
-> +extern int deferred_probe_timeout;
->  void driver_deferred_probe_add(struct device *dev);
+remove the framebuffer initialized by fireware/bootloader,which will use
+hibmc's pcie resource, and may cause conflict.
 
-If this is going to be global now, can you rename it to
-"driver_defferred_probe_timeout" to make it more in line with the other
-exported symbols here?
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+Signed-off-by: Gong junjie <gongjunjie2@huawei.com>
+---
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-thanks,
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 5f612f6..7ebe831 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -47,6 +47,22 @@ static irqreturn_t hibmc_drm_interrupt(int irq, void *arg)
+ 	return IRQ_HANDLED;
+ }
+ 
++static void hibmc_remove_framebuffers(struct pci_dev *pdev)
++{
++	struct apertures_struct *ap;
++
++	ap = alloc_apertures(1);
++	if (!ap)
++		return;
++
++	ap->ranges[0].base = pci_resource_start(pdev, 0);
++	ap->ranges[0].size = pci_resource_len(pdev, 0);
++
++	drm_fb_helper_remove_conflicting_framebuffers(ap, "hibmcdrmfb", false);
++
++	kfree(ap);
++}
++
+ static struct drm_driver hibmc_driver = {
+ 	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC,
+ 	.fops			= &hibmc_fops,
+@@ -327,6 +343,8 @@ static int hibmc_pci_probe(struct pci_dev *pdev,
+ 	struct drm_device *dev;
+ 	int ret;
+ 
++	hibmc_remove_framebuffers(pdev);
++
+ 	dev = drm_dev_alloc(&hibmc_driver, &pdev->dev);
+ 	if (IS_ERR(dev)) {
+ 		DRM_ERROR("failed to allocate drm_device\n");
+-- 
+2.7.4
 
-greg k-h
