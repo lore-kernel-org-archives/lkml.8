@@ -2,107 +2,131 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A2C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E6BFC3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A33320801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA90520801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FSoLGQMr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mrPteIz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgBSDsd (ORCPT
+        id S1726697AbgBSDtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:48:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36768 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSDsd (ORCPT
+        Tue, 18 Feb 2020 22:49:18 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59640 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSDtS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:48:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=P0Aqnmh/ude15oZ9+jBKMekOeIkaNHoxHvgKFKL94mA=; b=FSoLGQMrnCic9sH2LnjBTVvXkY
-        cR8rxIORXfKa4enzs9Cs2GXR0z+rIuK88JgQsM8DtS928q38iVLZIXEqIQc8q+6qXpA+vPjP2afdW
-        JtadyP4iMVqVGAS5bem1ldbKGp0NNtsOSoR55HFUXZe2bqClYtvXkf0CTJALcTtf1fLUKAyYAxfFK
-        uIGYTiCemjUsA7zZ2KRiYHV+n6nadA3f8CiLvC9UwXrmwnutB8y991dzJSvNTqvLXt/c12hRzyk+z
-        l09uLVtA1n5dG8voulxeaN4r82ntGQnLY0NInwJabn4DZp6u6QQSpP+7/aa9cy5PT2a7MgjX4wADX
-        Z5fiC2XA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4GLg-00024B-95; Wed, 19 Feb 2020 03:48:32 +0000
-Date:   Tue, 18 Feb 2020 19:48:32 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 00/19] Change readahead API
-Message-ID: <20200219034832.GL24185@bombadil.infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200218045633.GH10776@dread.disaster.area>
- <20200218134230.GN7778@bombadil.infradead.org>
- <20200218212652.GR10776@dread.disaster.area>
- <20200219034525.GH10776@dread.disaster.area>
+        Tue, 18 Feb 2020 22:49:18 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3mvlY170771;
+        Wed, 19 Feb 2020 03:49:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=gHlccQ6ZZAYSbCQvUXMqxP/tdLBTjkConysTLhwg+LU=;
+ b=mrPteIz90peuC/Duu4pivDaPAwnRfz3K39l4PuvHw0BdY/cSP9JmJf/d35otq0LcMyZE
+ 33MVlSDUYXpjIzWjfjpNCfmKXg1hvVgee0/HrbWBuVhQAikeSu/eoMjYLlLWB9PfYlHD
+ tPvlwGx4mQR3mW923jfRk38WVPWEjlBd94/A/yxakZnYz2167woPBfXBr4wwFDIaCd4X
+ xyyYHFUKnym6k5rYcPhs9RH8QN5d+TuH3BW8jn7kA53u97zZgsOUDdmcYIVOJhrrsF5O
+ o+hnAAC77o/IMqSK39hQBbR6xzYSwv96U9t5Nv516gEyfcOBb4tT2YohP4yQf6fjYDk8 6g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2y8ud10c72-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 03:49:04 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3lvE8149521;
+        Wed, 19 Feb 2020 03:49:04 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2y8ud25fr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 03:49:04 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J3n2cC005269;
+        Wed, 19 Feb 2020 03:49:02 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Feb 2020 19:49:02 -0800
+Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
+To:     "Longpeng (Mike)" <longpeng2@huawei.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, arei.gonglei@huawei.com,
+        weidong.huang@huawei.com, weifuqiang@huawei.com,
+        kvm@vger.kernel.org
+References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
+ <20200218205239.GE24185@bombadil.infradead.org>
+ <593d82a3-1d1e-d8f2-6b90-137f10441522@huawei.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <8292299c-4c5a-a8cb-22e2-d5c9051f122a@oracle.com>
+Date:   Tue, 18 Feb 2020 19:49:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <593d82a3-1d1e-d8f2-6b90-137f10441522@huawei.com>
+Content-Type: text/plain; charset=gbk
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219034525.GH10776@dread.disaster.area>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190026
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:45:25PM +1100, Dave Chinner wrote:
-> On Wed, Feb 19, 2020 at 08:26:52AM +1100, Dave Chinner wrote:
-> > On Tue, Feb 18, 2020 at 05:42:30AM -0800, Matthew Wilcox wrote:
-> > > On Tue, Feb 18, 2020 at 03:56:33PM +1100, Dave Chinner wrote:
-> > > > Latest version in your git tree:
-> > > > 
-> > > > $ â–¶ glo -n 5 willy/readahead
-> > > > 4be497096c04 mm: Use memalloc_nofs_save in readahead path
-> > > > ff63497fcb98 iomap: Convert from readpages to readahead
-> > > > 26aee60e89b5 iomap: Restructure iomap_readpages_actor
-> > > > 8115bcca7312 fuse: Convert from readpages to readahead
-> > > > 3db3d10d9ea1 f2fs: Convert from readpages to readahead
-> > > > $
-> > > > 
-> > > > merged into a 5.6-rc2 tree fails at boot on my test vm:
-> > > > 
-> > > > [    2.423116] ------------[ cut here ]------------
-> > > > [    2.424957] list_add double add: new=ffffea000efff4c8, prev=ffff8883bfffee60, next=ffffea000efff4c8.
-> > > > [    2.428259] WARNING: CPU: 4 PID: 1 at lib/list_debug.c:29 __list_add_valid+0x67/0x70
-> > > > [    2.457484] Call Trace:
-> > > > [    2.458171]  __pagevec_lru_add_fn+0x15f/0x2c0
-> > > > [    2.459376]  pagevec_lru_move_fn+0x87/0xd0
-> > > > [    2.460500]  ? pagevec_move_tail_fn+0x2d0/0x2d0
-> > > > [    2.461712]  lru_add_drain_cpu+0x8d/0x160
-> > > > [    2.462787]  lru_add_drain+0x18/0x20
-> > > 
-> > > Are you sure that was 4be497096c04 ?  I ask because there was a
-> > 
-> > Yes, because it's the only version I've actually merged into my
-> > working tree, compiled and tried to run. :P
-> > 
-> > > version pushed to that git tree that did contain a list double-add
-> > > (due to a mismerge when shuffling patches).  I noticed it and fixed
-> > > it, and 4be497096c04 doesn't have that problem.  I also test with
-> > > CONFIG_DEBUG_LIST turned on, but this problem you hit is going to be
-> > > probabilistic because it'll depend on the timing between whatever other
-> > > list is being used and the page actually being added to the LRU.
-> > 
-> > I'll see if I can reproduce it.
-> 
-> Just updated to a current TOT Linus kernel and your latest branch,
-> and so far this is 100% reproducable.
-> 
-> Not sure how I'm going to debug it yet, because it's init that is
-> triggering it....
+On 2/18/20 6:09 PM, Longpeng (Mike) wrote:
+> ÔÚ 2020/2/19 4:52, Matthew Wilcox Ð´µÀ:
+>> On Tue, Feb 18, 2020 at 08:10:25PM +0800, Longpeng(Mike) wrote:
+>>>  {
+>>> -	pgd_t *pgd;
+>>> -	p4d_t *p4d;
+>>> -	pud_t *pud;
+>>> -	pmd_t *pmd;
+>>> +	pgd_t *pgdp;
+>>> +	p4d_t *p4dp;
+>>> +	pud_t *pudp, pud;
+>>> +	pmd_t *pmdp, pmd;
+>>
+>> Renaming the variables as part of a fix is a really bad idea.  It obscures
+>> the actual fix and makes everybody's life harder.  Plus, it's not even
+>> renaming to follow the normal convention -- there are only two places
+>> (migrate.c and gup.c) which follow this pattern in mm/ while there are
+>> 33 that do not.
+>>
+> Good suggestion, I've never noticed this, thanks.
+> By the way, could you give an example if we use this way to fix the bug?
 
-Eric found it ... still not sure why I don't see it.
+Matthew and others may have better suggestions for naming.  However, I would
+keep the existing names and add:
+
+pud_t pud_entry;
+pmd_t pmd_entry;
+
+Then the *_entry variables are the target of the READ_ONCE()
+
+pud_entry = READ_ONCE(*pud);
+if (sz != PUD_SIZE && pud_none(pud_entry))
+...
+...
+pmd_entry = READ_ONCE(*pmd);
+if (sz != PMD_SIZE && pmd_none(pmd_entry))
+...
+...
+
+BTW, thank you for finding this issue!
+-- 
+Mike Kravetz
