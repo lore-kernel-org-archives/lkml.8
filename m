@@ -2,122 +2,100 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C5DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EDAC3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46E2207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CFA2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="euzainEa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgBSGCG (ORCPT
+        id S1726496AbgBSGER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:02:06 -0500
-Received: from mga11.intel.com ([192.55.52.93]:45551 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgBSGCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:02:06 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 22:02:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="269047072"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.41])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Feb 2020 22:02:03 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, Feng Tang <feng.tang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Michal Hocko" <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC -V2 2/8] autonuma, memory tiering: Rate limit NUMA migration throughput
-References: <20200218082634.1596727-1-ying.huang@intel.com>
-        <20200218082634.1596727-3-ying.huang@intel.com>
-        <20200218085721.GC3420@suse.de>
-Date:   Wed, 19 Feb 2020 14:01:57 +0800
-In-Reply-To: <20200218085721.GC3420@suse.de> (Mel Gorman's message of "Tue, 18
-        Feb 2020 08:57:21 +0000")
-Message-ID: <87sgj7glnu.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 19 Feb 2020 01:04:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44630 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbgBSGEQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 01:04:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AFjhUzdSTL6y+bUgZojZ9Wfk2mmuh2/h+v4Y4bp+dts=; b=euzainEafG+87t1P9h7KE5mkvI
+        BHK6B7Pb2S42nRqKfcgAxHx9lFxGyY7C4gj0VsK14d+283DNJqKHVA8ulMfTJEKhRhjaq5HbAv/Bj
+        yCSVjDiOvBuN5IouW8M010Z1gvID/vYICHdQtwhvOJL8WI0Prvbbr6uWzK5nJ222Oa6HP/Mr12RGo
+        jPGPdHpBaPvDbncrTzOP/5LqdTrwJZFkq06bWAdt2uPG75ZDwc3cqft38JwV/UZQwpSUxvyhp1NxM
+        bDCDWcvC/x8L3kKhtMOzDVs+Xy/gJ34WwhYKpGiluzGZtbEfTxXFNIj6sPNg+5CRpsUh1EjuiFaHm
+        uGIQ/O2Q==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4IT1-0003R9-8O; Wed, 19 Feb 2020 06:04:15 +0000
+Date:   Tue, 18 Feb 2020 22:04:15 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200219060415.GO24185@bombadil.infradead.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-31-willy@infradead.org>
+ <20200219032900.GE10776@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219032900.GE10776@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Mel,
+On Wed, Feb 19, 2020 at 02:29:00PM +1100, Dave Chinner wrote:
+> On Mon, Feb 17, 2020 at 10:46:11AM -0800, Matthew Wilcox wrote:
+> > @@ -418,6 +412,15 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+> >  		}
+> >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+> >  				ctx, iomap, srcmap);
+> > +		if (WARN_ON(ret == 0))
+> > +			break;
+> 
+> This error case now leaks ctx->cur_page....
 
-Thanks a lot for your review!
+Yes ... and I see the consequence.  I mean, this is a "shouldn't happen",
+so do we want to put effort into cleanup here ...
 
-Mel Gorman <mgorman@suse.de> writes:
+> > @@ -451,11 +454,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> >  done:
+> >  	if (ctx.bio)
+> >  		submit_bio(ctx.bio);
+> > -	if (ctx.cur_page) {
+> > -		if (!ctx.cur_page_in_bio)
+> > -			unlock_page(ctx.cur_page);
+> > -		put_page(ctx.cur_page);
+> > -	}
+> > +	BUG_ON(ctx.cur_page);
+> 
+> And so will now trigger both a warn and a bug....
 
-> On Tue, Feb 18, 2020 at 04:26:28PM +0800, Huang, Ying wrote:
->> From: Huang Ying <ying.huang@intel.com>
->> 
->> In autonuma memory tiering mode, the hot PMEM (persistent memory)
->> pages could be migrated to DRAM via autonuma.  But this incurs some
->> overhead too.  So that sometimes the workload performance may be hurt.
->> To avoid too much disturbing to the workload, the migration throughput
->> should be rate-limited.
->> 
->> At the other hand, in some situation, for example, some workloads
->> exits, many DRAM pages become free, so that some pages of the other
->> workloads can be migrated to DRAM.  To respond to the workloads
->> changing quickly, it's better to migrate pages faster.
->> 
->> To address the above 2 requirements, a rate limit algorithm as follows
->> is used,
->> 
->> - If there is enough free memory in DRAM node (that is, > high
->>   watermark + 2 * rate limit pages), then NUMA migration throughput will
->>   not be rate-limited to respond to the workload changing quickly.
->> 
->> - Otherwise, counting the number of pages to try to migrate to a DRAM
->>   node via autonuma, if the count exceeds the limit specified by the
->>   users, stop NUMA migration until the next second.
->> 
->> A new sysctl knob kernel.numa_balancing_rate_limit_mbps is added for
->> the users to specify the limit.  If its value is 0, the default
->> value (high watermark) will be used.
->> 
->> TODO: Add ABI document for new sysctl knob.
->> 
->
-> I very strongly suggest that this only be done as a last resort and with
-> supporting data as to why it is necessary. NUMA balancing did have rate
-> limiting at one point and it was removed when balancing was smart enough
-> to mostly do the right thing without rate limiting. I posted a series
-> that reconciled NUMA balancing with the CPU load balancer recently which
-> further reduced spurious and unnecessary migrations. I would not like
-> to see rate limiting reintroduced unless there is no other way of fixing
-> saturation of memory bandwidth due to NUMA balancing. Even if it's
-> needed as a stopgap while the feature is finalised, it should be
-> introduced late in the series explaining why it's temporarily necessary.
+... or do we just want to run slap bang into this bug?
 
-This adds rate limit to NUMA migration between the different
-types of memory nodes only (e.g. from PMEM to DRAM), but not between the
-same types of memory nodes (e.g. from DRAM to DRAM).  Sorry for
-confusing patch subject.  I will change it in the next version.
+Option 1: Remove the check for 'ret == 0' altogether, as we had it before.
+That puts us into endless loop territory for a failure mode, and it's not
+parallel with iomap_readpage().
 
-And, rate limit is an inherent part of the algorithm used in the
-patchset.  Because we just use LRU algorithm to find the cold pages on
-the fast memory node (e.g. DRAM), and use NUMA hint page fault latency
-to find the hot pages on the slow memory node (e.g. PMEM).  But we don't
-compare the temperature between the cold DRAM pages and the hot PMEM
-pages.  Instead, we just try to exchange some cold DRAM pages and some
-hot PMEM pages, even if the cold DRAM pages is hotter than the hot PMEM
-pages.  The rate limit is used to control how many pages to exchange
-between DRAM and PMEM per second.  This isn't perfect, but it works well
-in our testing.
+Option 2: Remove the WARN_ON from the check.  Then we just hit the BUG_ON,
+but we don't know why we did it.
 
-Best Regards,
-Huang, Ying
+Option 3: Set cur_page to NULL.  We'll hit the WARN_ON, avoid the BUG_ON,
+might end up with a page in the page cache which is never unlocked.
 
+Option 4: Do the unlock/put page dance before setting the cur_page to NULL.
+We might double-unlock the page.
+
+There are probably other options here too.
