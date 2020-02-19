@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317DEC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D480C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1617207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:18:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620AF207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qPHAUt/Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOfv3pE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgBSCSr (ORCPT
+        id S1728123AbgBSCS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:18:47 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43054 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbgBSCSr (ORCPT
+        Tue, 18 Feb 2020 21:18:59 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33303 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgBSCS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:18:47 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p11so8879448plq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:18:45 -0800 (PST)
+        Tue, 18 Feb 2020 21:18:58 -0500
+Received: by mail-pl1-f196.google.com with SMTP id ay11so8908367plb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:18:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HCei443+woU3d+4WFpgaBHBCXtW7EVH0nzt1yj3zjH4=;
-        b=qPHAUt/Qv05p/vp1UY+On7Y1+0zpI+56l4XvY0X6HovroNJTO/UN0Wo8hWOSt2aYBP
-         81bp0JEwCCknAREh4lEU3rf6jhCs7q5JMRsfgSJr725g35H+eJwcqmLFtsSeWJTidN/H
-         s3JYwmrFEQSXnkrHc0DpPDbNSdH3bF4o8HxakP5D+feZdIbm36Z+jU0DfBznHzyHi0Tn
-         73Axzgj9lknUuk/j+oeNgMv1HtqUIMNBajxEsusKEKEsrSbyHNVAnjR4IvhhKtI6n6xM
-         r9NegZd1gP4bDJ3cK0QDDRVUf9E71IUSXzdt9nRGImfvxVU+RX6nYIudHaakRpz1bT1K
-         6nhQ==
+        bh=Nt7KCfOCeoniLbejBgBQRi5gzr/DUGn0cHKbOhTd9/Q=;
+        b=dOfv3pE6XbFb8+IRmXPhqeV8igWMRBbr+HjmaMwvwVzN9E/7yEORi7dYoDiXgpqnOd
+         YbNIC741TwrprDCJYLH3GbQBZzKZBTZ4hgruvN8k6MAu7lNWg/YmqdPtnGRBKSEC7ELr
+         5cXWrgy6pUF46qjvO9k1oqqPXRDgof2z+DaGUJ8Ta9LjbCgSX+QG7ob36DdlOqc1tEPz
+         pLVVNUKMkQy13ZjCvs5MYJeMBh8Yb11VwrKuj+Z7g29jZJGByTnOUD44UUa8CmSYNWTS
+         /pXvhI7S/Ob1rEthERuwJqU9v9YToQJcP6Apb7oIpa5LZFeBFlGJNxlVAgrgF8P8QaLT
+         HElQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=HCei443+woU3d+4WFpgaBHBCXtW7EVH0nzt1yj3zjH4=;
-        b=KFOdO0Th/YfZuMxk1xIfq49uQ57iIxV3FWqH6/PNdvWe7gpv7TLVXMPtuilm2AZKAF
-         YQxQPcB0WqgyBN4PWDMT1LCEInJlYpSfx9acNKVZW86bhyStKvyc374oG6e7j0AWfsvB
-         SKJ/mmQzijt1XzLznUaXFQH7I8G8BgowznTEC/hHp2I7v7dcJn5ADiToyJasJwxmwoKV
-         8OyljMXAaUNOmrlWPbluDov5apNNjxcvb1KyA/N0DzuSzMc9KLfY2bmGYG4cH3Klu2n9
-         FTq/BTsIOofmN8nZmyV1YqTkHvmfYXAkQypCwPT152bd4G6TNyhPWX+TUg0D7SewwzS+
-         M+ZQ==
-X-Gm-Message-State: APjAAAXc+H6pASHcKKhghkmKz4u2an68LuVgqGifcvuUVRj97suxZYwF
-        iItGxf79UoeIvJa3o2H0mTt7YA==
-X-Google-Smtp-Source: APXvYqxmQ/J85EL9NXtjtE9q/6aOEoSr+QIuagctzT/TN68j9pNNr0W7dZ+vImvAs1AhkrENqn3SVg==
-X-Received: by 2002:a17:902:9f83:: with SMTP id g3mr23820348plq.101.1582078725013;
-        Tue, 18 Feb 2020 18:18:45 -0800 (PST)
+        bh=Nt7KCfOCeoniLbejBgBQRi5gzr/DUGn0cHKbOhTd9/Q=;
+        b=o/nyintBXyFFozNOJqTExjwjo2uM/9v930r+jCMhruZ1a0Z8aeEoPPVkmELGcTi2NL
+         KV6Po+BY8rjuJ+QmAPVRMRHBqnMZNzRI2m8DiWiJei3vEbaiQX8Ll26qdn+tAmAi0Lfa
+         tV2lQtRgAmMQKaQHYHl/UOnJwYJFcvpVf54v1CofVlesRiF8SbqTo8G/SqsNBlVguVqv
+         qMi94NXbyjtIID7jmRD/ZLKdIn9NjLU/b71zpCMzGmnMBr8Pc2bGaSJMp2CpkUL5y8Mc
+         LjUYNyYaLV9Hq082s9nOvLo1+wfy3HQXzm0UMHRwx63qDarDBjKWDQqWitezqcnBwnGo
+         z6qg==
+X-Gm-Message-State: APjAAAX9kOvL4+OZ29o+lhnxUI8q3yiCdBo78Vn9lv18SY6cuRo2lpg0
+        uE1BpzqxvjLlQN0/b9FlrKqqTQ==
+X-Google-Smtp-Source: APXvYqxDMsV8y7MK6jcTkE0Nuq8R5uyaSz1O3tf6S14c6N+G6BlQ2tLZV9SIKkIeGfxUC7AzaJhMIA==
+X-Received: by 2002:a17:902:8e84:: with SMTP id bg4mr22905597plb.11.1582078736772;
+        Tue, 18 Feb 2020 18:18:56 -0800 (PST)
 Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id q11sm322698pff.111.2020.02.18.18.18.35
+        by smtp.gmail.com with ESMTPSA id q11sm322698pff.111.2020.02.18.18.18.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 18:18:44 -0800 (PST)
+        Tue, 18 Feb 2020 18:18:56 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -70,9 +70,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Coresight ML <coresight@lists.linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 1/5] perf cs-etm: Swap packets for instruction samples
-Date:   Wed, 19 Feb 2020 10:18:07 +0800
-Message-Id: <20200219021811.20067-2-leo.yan@linaro.org>
+Subject: [PATCH v5 2/5] perf cs-etm: Continuously record last branch
+Date:   Wed, 19 Feb 2020 10:18:08 +0800
+Message-Id: <20200219021811.20067-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200219021811.20067-1-leo.yan@linaro.org>
 References: <20200219021811.20067-1-leo.yan@linaro.org>
@@ -81,101 +81,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If use option '--itrace=iNNN' with Arm CoreSight trace data, perf tool
-fails inject instruction samples; the root cause is the packets are
-only swapped for branch samples and last branches but not for
-instruction samples, so the new coming packets cannot be properly
-handled for only synthesizing instruction samples.
+Every time synthesize instruction sample, the last branch recording
+will be reset.  This is fine if the instruction period is big enough,
+for example if use the option '--itrace=i100000', the last branch
+array is reset for every sample with 100000 instructions per period;
+before generate the next instruction sample, there has the sufficient
+packets coming to fill the last branch array.
 
-To fix this issue, this patch refactors the code with a new function
-cs_etm__packet_swap() which is used to swap packets and adds the
-condition for instruction samples.
+On the other hand, if set a very small period, the packets will be
+significantly reduced between two continuous instruction samples, thus
+the last branch array is almost empty for new instruction sample by
+frequently resetting.
+
+To allow the last branches to work properly for any instruction periods,
+this patch avoids to reset the last branch for every instruction sample
+and only reset it when flush the trace data.  The last branches will
+be reset only for two cases, one is for trace starting, another case
+is for discontinuous trace; other cases can keep recording last branches
+for continuous instruction samples.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ tools/perf/util/cs-etm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 5471045ebf5c..84f30c2de185 100644
+index 84f30c2de185..b2f31390126a 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -363,6 +363,23 @@ struct cs_etm_packet_queue
- 	return NULL;
+@@ -1170,9 +1170,6 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 			"CS ETM Trace: failed to deliver instruction event, error %d\n",
+ 			ret);
+ 
+-	if (etm->synth_opts.last_branch)
+-		cs_etm__reset_last_branch_rb(tidq);
+-
+ 	return ret;
  }
  
-+static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
-+				struct cs_etm_traceid_queue *tidq)
-+{
-+	struct cs_etm_packet *tmp;
-+
-+	if (etm->sample_branches || etm->synth_opts.last_branch ||
-+	    etm->sample_instructions) {
-+		/*
-+		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
-+		 * the next incoming packet.
-+		 */
-+		tmp = tidq->packet;
-+		tidq->packet = tidq->prev_packet;
-+		tidq->prev_packet = tmp;
-+	}
-+}
-+
- static void cs_etm__packet_dump(const char *pkt_string)
- {
- 	const char *color = PERF_COLOR_BLUE;
-@@ -1340,7 +1357,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			  struct cs_etm_traceid_queue *tidq)
- {
- 	struct cs_etm_auxtrace *etm = etmq->etm;
--	struct cs_etm_packet *tmp;
- 	int ret;
- 	u8 trace_chan_id = tidq->trace_chan_id;
- 	u64 instrs_executed = tidq->packet->instr_count;
-@@ -1404,15 +1420,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		}
- 	}
- 
--	if (etm->sample_branches || etm->synth_opts.last_branch) {
--		/*
--		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
--		 * the next incoming packet.
--		 */
--		tmp = tidq->packet;
--		tidq->packet = tidq->prev_packet;
--		tidq->prev_packet = tmp;
--	}
-+	cs_etm__packet_swap(etm, tidq);
- 
- 	return 0;
- }
-@@ -1441,7 +1449,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- {
- 	int err = 0;
- 	struct cs_etm_auxtrace *etm = etmq->etm;
--	struct cs_etm_packet *tmp;
- 
- 	/* Handle start tracing packet */
- 	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
-@@ -1476,15 +1483,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 	}
- 
+@@ -1485,6 +1482,10 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
  swap_packet:
--	if (etm->sample_branches || etm->synth_opts.last_branch) {
--		/*
--		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
--		 * the next incoming packet.
--		 */
--		tmp = tidq->packet;
--		tidq->packet = tidq->prev_packet;
--		tidq->prev_packet = tmp;
--	}
-+	cs_etm__packet_swap(etm, tidq);
+ 	cs_etm__packet_swap(etm, tidq);
  
++	/* Reset last branches after flush the trace */
++	if (etm->synth_opts.last_branch)
++		cs_etm__reset_last_branch_rb(tidq);
++
  	return err;
  }
+ 
 -- 
 2.17.1
 
