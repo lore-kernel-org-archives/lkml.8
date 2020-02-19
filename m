@@ -2,118 +2,97 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF8C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA07C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 600A624672
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60DE224672
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:11:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="udinrWQO"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qt0zwqzX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbgBSJLp (ORCPT
+        id S1726632AbgBSJLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:11:45 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:48735 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726260AbgBSJLp (ORCPT
+        Wed, 19 Feb 2020 04:11:48 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58570 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726202AbgBSJLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:11:45 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4LONjze0uP9a94LOQjnfLP; Wed, 19 Feb 2020 10:11:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582103503; bh=xsN8vhfHa7tW/G+6aX+0P4BNgzapyUwsBGOb49UIpYU=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=udinrWQOgb62fcBFlTUaRKjgx4/5BXVbXBc0URjtyG0AazxHRKsVcmiXkrJYHWsAd
-         sd1iA8eHUhHmh0huM+aJGJ6gFNUp/sWnBvhjC7aXVImmnvoRGVP9huDG+1ujiU53QU
-         NzZEyDtSIfQW/5UTrfxOQXppJ8vi4/JkoAPxKDb9Gbb+YWtTD/Ovta0KSulMYbHJ0a
-         sqsO9NHhQGscck6tlVgaGMRxuQtiYwLBw5zU1icY8ltrM/ncbyxQsOlYwYAUFnWRgT
-         GqRbQI5wMkCdRZ8BvRkl25v0WQGLhvC734MIYLk4U8EQhln4I7xLLed/INo8jYOiWD
-         9XBO3t0xa0iUw==
-Subject: Re: [RFC][PATCHv2 05/12] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-6-senozhatsky@chromium.org>
- <83147032-25a4-9450-d455-437e82e09dc8@xs4all.nl>
- <20200219090547.GF122464@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <9bd88d23-9c4f-05dd-2514-b7c46f03a578@xs4all.nl>
-Date:   Wed, 19 Feb 2020 10:11:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 04:11:47 -0500
+X-UUID: 557d7cd66a6a422f971494d1dc2267f0-20200219
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=SLGppPs6Z/J39znqpbn3i7/ZsMo7evHcwHC2/b+MPjU=;
+        b=qt0zwqzX4AHHitPhtdDlzMqc5Jzk7iBeYR/CHj0sm359kd8/gljuMzU7ipNZFXFnB0U8X96/BU/IM7h4ePi0eLaQ+xQsPDO8ZTf3HagJq2KcL/XushcFrFFgU61GUDDIDwNM0xnM2GaTs1uiVBin/Gbjd+DT/PD9pBddM1a2xnM=;
+X-UUID: 557d7cd66a6a422f971494d1dc2267f0-20200219
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 289965575; Wed, 19 Feb 2020 17:11:40 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 19 Feb 2020 17:09:07 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 19 Feb 2020 17:12:13 +0800
+Message-ID: <1582103495.26304.42.camel@mtksdccf07>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
+ reference clock
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>,
+        <asutoshd@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Date:   Wed, 19 Feb 2020 17:11:35 +0800
+In-Reply-To: <a8cd5beee0a1e12a40da752c6cd9b5de@codeaurora.org>
+References: <20200217093559.16830-1-stanley.chu@mediatek.com>
+         <20200217093559.16830-2-stanley.chu@mediatek.com>
+         <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
+         <1581945168.26304.4.camel@mtksdccf07>
+         <e518c4d1d94ec15e9c4c31c34a9e42d1@codeaurora.org>
+         <1581946449.26304.15.camel@mtksdccf07>
+         <56c1fc80919491d058d904fcc7301835@codeaurora.org>
+         <a8cd5beee0a1e12a40da752c6cd9b5de@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20200219090547.GF122464@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfNLD2qyH4WWBgDvGKIxeVc0YKijOhw/xXNM0IXvd+FD9r53kiC1OnbaA/pniGBduWa7/ZNwXVVZMK3ohTj75fe2FP/wA89cPd7km2yn79QqCRumHXpRS
- 6PGtrwWptkDkSVqmuTfUeWLWOhmAmsqK6QaGRKFcgQcgmZAFuuwLLBBTo4RYC+xrWLAsIKHkhzzhFaFpyUOAXBDr4OPUAvpcW/haVl+EWfziSVXpSJdUO2+W
- fQbRDpVq3N5tK3tm/g/0Cby0wY6yTvja2B4L6R8RpRDMbqMbvOfhzbq72N6mllfXUp6tG4aqoS+k3AZG4vB12m5dBBbnaqbJJtX5/stnqxYf/tg7Sk6QLmgt
- eiRW+/dZ7W+0x22vr7FxEzkl4Fg/SENWrSCQoKKZ+YKzyTNQDYVcr0SQiPmh6fxZJNHxQYAX8wA0r2a0a5BBh7kZbZA+26UUyNGmbjXPWj1OuPZDd9St/8z2
- NBm0hmc+c+bgSTdaw7QNL/nLyoLHEFDqrqCN4s6ISfKEz+0eFosRNva2zuImI7/4XoMdIdxBFpR9PAnN
+X-TM-SNTS-SMTP: 9236600DEE7C39A014B8A4C770286A4CF9C92C55D3222424BDB3994F3AAEDF2E2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 10:05 AM, Sergey Senozhatsky wrote:
-> On (20/02/19 09:48), Hans Verkuil wrote:
-> [..]
->>>  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
->>>  {
->>>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
->>> +	bool consistent = true;
->>> +
->>> +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
->>> +		consistent = false;
->>
->> There is no check against allow_cache_hints: if that's 0, then
->> the V4L2_FLAG_MEMORY_NON_CONSISTENT flag should be cleared since it is
->> not supported.
-> 
-> The check is in set_queue_consistency()
-
-That's the check against the functionality. I'm talking about the API level:
-if !q->allow_cache_hints, then clear V4L2_FLAG_MEMORY_NON_CONSISTENT from
-req->flags so that, when the ioctl returns to userspace, the application can
-tell that that flag was rejected.
-
-Regards,
-
-	Hans
-
-> 
-> static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-> {
-> 	if (!q->allow_cache_hints)
-> 		return;
-> 
-> 	if (consistent_mem)
-> 		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> 	else
-> 		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-> }
-> 
-> I don't explicitly clear DMA_ATTR_NON_CONSISTENT attr for
-> !->allow_cache_hints queues just in case if the driver for
-> some reason sets that flag. ->allow_cache_hints is, thus,
-> only for cases when user-space asks us to set or clear it.
-> 
-> 	-ss
-> 
+SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDItMTkgYXQgMTA6MzUgKzA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQoNCj4gU2luY2Ugd2UgYWxsIG5lZWQgdGhpcyBkZWxheSBoZXJlLCBob3cgYWJvdXQgcHV0
+IHRoZSBkZWxheSBpbiB0aGUNCj4gZW50cmVuY2Ugb2YgdWZzaGNkX3NldHVwX2Nsb2NrcygpLCBi
+ZWZvcmUgdm9wc19zZXR1cF9jbG9ja3MoKT8NCj4gSWYgc28sIHdlIGNhbiByZW1vdmUgYWxsIHRo
+ZSBkZWxheXMgd2UgYWRkZWQgaW4gb3VyIHZvcHMgc2luY2UgdGhlDQo+IGRlbGF5IGFueXdheXMg
+ZGVsYXlzIGV2ZXJ5dGhpbmcgaW5zaWRlIHVmc2hjZF9zZXR1cF9jbG9ja3MoKS4NCj4gDQoNCkFs
+d2F5cyBwdXR0aW5nIHRoZSBkZWxheSBpbiB0aGUgZW50cmFuY2Ugb2YgdWZzaGNkX3NldHVwX2Ns
+b2NrcygpIG1heQ0KYWRkIHVud2FudGVkIGRlbGF5IGZvciB2ZW5kb3JzLCBqdXN0IGxpa2UgeW91
+ciBjdXJyZW50IGltcGxlbWVudGF0aW9uLA0Kb3Igc29tZSBvdGhlciB2ZW5kb3JzIHdobyBkbyBu
+b3Qgd2FudCB0byBkaXNhYmxlIHRoZSByZWZlcmVuY2UgY2xvY2suDQoNCkkgdGhpbmsgY3VycmVu
+dCBwYXRjaCBpcyBtb3JlIHJlYXNvbmFibGUgYmVjYXVzZSB0aGUgZGVsYXkgaXMgYXBwbGllZCB0
+bw0KY2xvY2sgb25seSBuYW1lZCBhcyAicmVmX2NsayIgc3BlY2lmaWNhbGx5Lg0KDQpJZiB5b3Ug
+bmVlZHMgdG8ga2VlcCAicmVmX2NsayIgaW4gRFQsIHdvdWxkIHlvdSBjb25zaWRlciB0byByZW1v
+dmUgdGhlDQpkZWxheSBpbiB5b3VyIHVmc19xY29tX2Rldl9yZWZfY2xrX2N0cmwoKSBhbmQgbGV0
+IHRoZSBkZWxheSBoYXBwZW5zIHZpYQ0KY29tbW9uIHVmc2hjZF9zZXR1cF9jbG9ja3MoKSBvbmx5
+PyBIb3dldmVyIHlvdSBtYXkgc3RpbGwgbmVlZCBkZWxheSBpZg0KY2FsbCBwYXRoIGNvbWVzIGZy
+b20gdWZzX3Fjb21fcHdyX2NoYW5nZV9ub3RpZnkoKS4NCg0KV2hhdCBkbyB5b3UgdGhpbms/DQoN
+Cj4gTWVhbndoaWxlLCBpZiB5b3Ugd2FudCB0byBtb2RpZnkgdGhlIGRlbGF5DQo+IChoYmEtPmRl
+dl9pbmZvLmNsa19nYXRpbmdfd2FpdF91cykgZm9yIHNvbWUgcmVhc29ucywgc2F5IGZvciBzcGVj
+aWZpYw0KPiBVRlMgZGV2aWNlcywgeW91IHN0aWxsIGNhbiBkbyBpdCBpbiB2b3BzX2FwcGx5X2Rl
+dl9xdWlya3MoKS4NCj4gDQo+IFdoYXQgZG8geW91IHNheT8NCj4gDQo+IFRoYW5rcywNCj4gQ2Fu
+IEd1by4NCg0KVGhhbmtzLA0KU3RhbmxleSBDaHUNCg0K
 
