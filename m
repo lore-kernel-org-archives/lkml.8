@@ -2,147 +2,121 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5213EC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61306C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5CE24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392B624654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:46:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LZhVVy30"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M5Ob83ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgBSCpk (ORCPT
+        id S1728231AbgBSCqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:45:40 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55416 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728027AbgBSCpk (ORCPT
+        Tue, 18 Feb 2020 21:46:24 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:25949 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728031AbgBSCqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:45:40 -0500
+        Tue, 18 Feb 2020 21:46:23 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582080339; h=In-Reply-To: Content-Type: MIME-Version:
+ s=smtp; t=1582080383; h=In-Reply-To: Content-Type: MIME-Version:
  References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=+Hnsb9d6PeDSY82BGR34PbCnjCNdf3secKOnbmp9Pfc=; b=LZhVVy30AbsN2ft16RIVf0NptQdJPiMyTUvvqj5S2BBcpxa7wdhiUj1JkT1e4qqozO/f6fDJ
- ff2JE3TOApbUAHBsaTxd25ZcMqwzoNRxVpP/9rtSt49Vt2F1ghXuoWng/FWk6Z4DDIMsupuU
- AS/VeYX8jTcbTbEfDts1aprZsN4=
-X-Mailgun-Sending-Ip: 104.130.122.26
+ bh=EZldwMwfRwILNbyiADsIQMw6OSHJxtFM2DQb2VA7DkY=; b=M5Ob83haVinyvmzduiwwULsSncmmzfQGSn69/7tF0qe9eVWrVdiiKoMedBoxb8LjjFQwZLcW
+ Ebb6VOj1rmYwMtHlu1z40Gm9nKijAgBjyK/jV4aGLzyKtwrw0FgE1j5Y9m+qPhoPahzwQ/+i
+ 0rXKyW5SNqGU6i2pgwyaVk6kffo=
+X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4ca153.7f130836dce0-smtp-out-n03;
- Wed, 19 Feb 2020 02:45:39 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4ca178.7fe21eea3ae8-smtp-out-n02;
+ Wed, 19 Feb 2020 02:46:16 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D4713C447A0; Wed, 19 Feb 2020 02:45:37 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id 076E4C447A0; Wed, 19 Feb 2020 02:46:16 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A38B4C43383;
-        Wed, 19 Feb 2020 02:45:36 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A38B4C43383
+        (Authenticated sender: pkondeti)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B682C43383;
+        Wed, 19 Feb 2020 02:46:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B682C43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Tue, 18 Feb 2020 18:45:34 -0800
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: msm_hsusb 78d9000.usb: failed to create device link to
- ci_hdrc.0.ulpi
-Message-ID: <20200219024534.GB10078@jackp-linux.qualcomm.com>
-References: <CA+G9fYtnwFVPQxgHOU2Bi9y5+q4sSsww47yxK+_3ZAQ9=kyhUg@mail.gmail.com>
- <20200219013824.GB8602@b29397-desktop>
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
+Date:   Wed, 19 Feb 2020 08:16:09 +0530
+From:   Pavan Kondeti <pkondeti@codeaurora.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
+Message-ID: <20200219024608.GE28029@codeaurora.org>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-4-qais.yousef@arm.com>
+ <20200217092329.GC28029@codeaurora.org>
+ <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
+ <20200218041620.GD28029@codeaurora.org>
+ <20200218174718.ma6cpr2qwnueertn@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219013824.GB8602@b29397-desktop>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200218174718.ma6cpr2qwnueertn@e107158-lin.cambridge.arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:38:22AM +0000, Peter Chen wrote:
-> On 20-02-17 14:02:57, Naresh Kamboju wrote:
-> > arm64 APQ 8016 SBC ( Dragonboard 410c)  device running Linux next boot
-> > failed due to below error.
+On Tue, Feb 18, 2020 at 05:47:19PM +0000, Qais Yousef wrote:
+> On 02/18/20 09:46, Pavan Kondeti wrote:
+> > The original RT task placement i.e without capacity awareness, places the task
+> > on the previous CPU if the task can preempt the running task. I interpreted it
+> > as that "higher prio RT" task should get better treatment even if it results
+> > in stopping the lower prio RT execution and migrating it to another CPU.
 > > 
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> > [    0.000000] Linux version 5.6.0-rc2-next-20200217 (oe-user@oe-host)
-> > (gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Mon Feb 17 04:27:31 UTC 2020
-> > [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> > <>
-> > [    4.439291] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.448891] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.457879] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.467331] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.475636] mmc0: new HS200 MMC card at address 0001
-> > [    4.478895] mmcblk0: mmc0:0001 DS2008 7.28 GiB
-> > [    4.480629] mmcblk0boot0: mmc0:0001 DS2008 partition 1 4.00 MiB
-> > [    4.484719] mmcblk0boot1: mmc0:0001 DS2008 partition 2 4.00 MiB
-> > [    4.492247] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.502611] mmcblk0rpmb: mmc0:0001 DS2008 partition 3 4.00 MiB,
-> > chardev (234:0)
-> > [    4.506949] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.517901] random: fast init done
-> > [    4.521420] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
-> > [    4.523400] mmcblk1: mmc1:aaaa SL16G 14.8 GiB
-> > [    4.532843] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.539131]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14
-> > [    4.542309]  mmcblk1: p1
-> > [    4.561843] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.573481] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.585283] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.592622] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.600074] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.607204] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
-> > [    4.614679] msm_hsusb 78d9000.usb: failed to create device link to
-> > ci_hdrc.0.ulpi
+> > Now coming to your patch (merged), we force find_lowest_rq() if the previous
+> > CPU can't fit the task though this task can right away run there. When the
+> > lowest mask returns an unfit CPU (with your new patch), We have two choices,
+> > either to place it on this unfit CPU (may involve migration) or place it on
+> > the previous CPU to avoid the migration. We are selecting the first approach.
+> > 
+> > The task_cpu(p) check in find_lowest_rq() only works when the previous CPU
+> > does not have a RT task. If it is running a lower prio RT task than the
+> > waking task, the lowest_mask may not contain the previous CPU.
+> > 
+> > I don't if any workload hurts due to this change in behavior. So not sure
+> > if we have to restore the original behavior. Something like below will do.
 > 
-> The chipidea USB code hasn't changed recently. Would you please bisect
-> which commit affect it?
+> Is this patch equivalent to yours? If yes, then I got you. If not, then I need
+> to re-read this again..
+> 
+> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
+> index ace9acf9d63c..854a0c9a7be6 100644
+> --- a/kernel/sched/rt.c
+> +++ b/kernel/sched/rt.c
+> @@ -1476,6 +1476,13 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
+>         if (test || !rt_task_fits_capacity(p, cpu)) {
+>                 int target = find_lowest_rq(p);
+> 
+> +               /*
+> +                * Bail out if we were forcing a migration to find a better
+> +                * fitting CPU but our search failed.
+> +                */
+> +               if (!test && !rt_task_fits_capacity(p, target))
+> +                       goto out_unlock;
+> +
 
-Probably same cause as for this:
-https://bugzilla.kernel.org/show_bug.cgi?id=206435
+Yes. This is what I was referring to.
 
-> > metadata:
-> >   git branch: master
-> >   git repo: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927547718&amp;sdata=Hy52nqOnn5nPgLcgSgWWJciwVy73MnHheNAqOi8tX4g%3D&amp;reserved=0
-> >   git commit: c25a951c50dca1da4a449a985a9debd82dc18573
-> >   git describe: next-20200217
-> >   make_kernelversion: 5.6.0-rc2
-> >   kernel-config:
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fsnapshots.linaro.org%2Fopenembedded%2Flkft%2Flkft%2Fsumo%2Fdragonboard-410c%2Flkft%2Flinux-next%2F705%2Fconfig&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927547718&amp;sdata=7tuNCoQH2Fu5yDtcfE3D%2F1SDGQg9wSyKKPO8ufmQg1w%3D&amp;reserved=0
-> >   build-location:
-> > https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fsnapshots.linaro.org%2Fopenembedded%2Flkft%2Flkft%2Fsumo%2Fdragonboard-410c%2Flkft%2Flinux-next%2F705&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927557710&amp;sdata=%2FBbdDiwFV%2B7z01ayzHuKl%2FLMIa6Qv%2BjajgywkhsVrJY%3D&amp;reserved=0
-> > 
-> > ref:
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fqa-reports.linaro.org%2Flkft%2Flinux-next-oe%2Fbuild%2Fnext-20200217%2Ftestrun%2F1223296%2Flog&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927557710&amp;sdata=hXhbx%2FMJ6BDzQkYMUZrc8uRmiCb2YfLluvzjg6uaZ%2Fw%3D&amp;reserved=0
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fqa-reports.linaro.org%2Flkft%2Flinux-next-oe%2Fbuild%2Fnext-20200217%2Ftestrun%2F1223301%2Flog&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927557710&amp;sdata=5zrDqvPVZcgrFEogBjes0NG1uRv7WJnEeUiGUqe%2FB7A%3D&amp;reserved=0
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fqa-reports.linaro.org%2Flkft%2Flinux-next-oe%2Fbuild%2Fnext-20200217%2Ftestrun%2F1223310%2Flog&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927557710&amp;sdata=TWixPlJuzES7AReilcm%2FG4pWTYVy3ku6zetEVmeXB6I%3D&amp;reserved=0
-> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fqa-reports.linaro.org%2Flkft%2Flinux-next-oe%2Fbuild%2Fnext-20200217%2Ftestrun%2F1223308%2Flog&amp;data=02%7C01%7CPeter.Chen%40nxp.com%7C4e1721d16eb94d84db0208d7b38405d8%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637175251927557710&amp;sdata=qSxWLfIWM047jLKjahfDC6luxI9kYr5xPhErkD%2BxiaQ%3D&amp;reserved=0
+Thanks,
+Pavan
 
-Jack
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
