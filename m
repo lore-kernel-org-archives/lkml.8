@@ -2,118 +2,167 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77858C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79B1C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A49C21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8096B21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bmHIpqpu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgBSLeE (ORCPT
+        id S1727227AbgBSLec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:34:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:46970 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbgBSLeE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:34:04 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7CD631B;
-        Wed, 19 Feb 2020 03:34:03 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AF023F6CF;
-        Wed, 19 Feb 2020 03:34:01 -0800 (PST)
-Date:   Wed, 19 Feb 2020 11:33:52 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        james.morse@arm.com, Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
+        Wed, 19 Feb 2020 06:34:32 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23750 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726530AbgBSLec (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:34:32 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBYIaF018375;
+        Wed, 19 Feb 2020 12:34:18 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
+ : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=sYV+fXFkNE49b3PkSLY5bKUtbpxLPJfmmOZx2ifgHCY=;
+ b=bmHIpqpu4wcMqOaGmCyiVnCqOjBS1mi8K/1TPdBbSaeHA61FRTkuvdV6XKnQKw/jK0Vq
+ YQV+b7qnSRB70GmxlkcYN4jooKhfoLk+Xv++L7aPESeNBNWtmlpuPBUYdvux6DCeuESd
+ 1gfjr+mDRqdeHnhFq0n3fZk++s9JV7aOmaHcqtqi0yC3DmgYQaPWCORUh8yJC/Qm0d+h
+ ImJmNsGInRGMX0dSa83DEEt/kWkJynbW8oyrXccbH7cquLtmFPAm79ycGcKFF3l1/4UD
+ zm4FlBlvwYeLhOTbawrmUjWmMbgG5fNWIEzG2Jd7x1+4ipyVHcV1SALj4b5k240rqGNR GQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5jrfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Feb 2020 12:34:18 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 28B27100034;
+        Wed, 19 Feb 2020 12:34:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 15D232B2DE7;
+        Wed, 19 Feb 2020 12:34:14 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
+ 2020 12:34:13 +0100
+Subject: Re: [PATCH v2 2/2] pinctrl: stm32: Add level interrupt support to
+ gpio irq chip
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 04/12] scs: disable when function graph tracing is
- enabled
-Message-ID: <20200219113351.GA14462@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200219000817.195049-1-samitolvanen@google.com>
- <20200219000817.195049-5-samitolvanen@google.com>
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <marex@denx.de>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <20200218131218.10789-3-alexandre.torgue@st.com>
+Message-ID: <f82caf02-5a47-ce3e-ec85-313712ef6de0@st.com>
+Date:   Wed, 19 Feb 2020 12:34:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219000817.195049-5-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20200218131218.10789-3-alexandre.torgue@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 04:08:09PM -0800, Sami Tolvanen wrote:
-> The graph tracer hooks returns by modifying frame records on the
-> (regular) stack, but with SCS the return address is taken from the
-> shadow stack, and the value in the frame record has no effect. As we
-> don't currently have a mechanism to determine the corresponding slot
-> on the shadow stack (and to pass this through the ftrace
-> infrastructure), for now let's disable SCS when the graph tracer is
-> enabled.
+Fix Marc email address.
+
+On 2/18/20 2:12 PM, Alexandre Torgue wrote:
+> This patch adds level interrupt support to gpio irq chip.
 > 
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
+> GPIO hardware block is directly linked to EXTI block but EXTI handles
+> external interrupts only on edge. To be able to handle GPIO interrupt on
+> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+> is retriggered following interrupt type and gpio line value.
 > 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 66b34fd0df54..4102b8e0eea9 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -535,6 +535,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
->  
->  config SHADOW_CALL_STACK
->  	bool "Clang Shadow Call Stack"
-> +	depends on !FUNCTION_GRAPH_TRACER
-
-Fangrui Song has implemented `-fpatchable-function-entry` in LLVM (for
-10.x onwards), so we can support this when DYNAMIC_FTRACE_WITH_REGS is
-selected.
-
-This can be:
-
-	depends on DYNAMIC_FTRACE_WITH_REGS || !FUNCTION_GRAPH_TRACER
-
-... and we can update the commit message to something like:
-
-| With SCS the return address is taken from the shadow stack and the
-| value in the frame record has no effect. The mcount based graph tracer
-| hooks returns by modifying frame records on the (regular) stack, and
-| thus is not compatible. The patchable-function-entry graph tracer
-| used for DYNAMIC_FTRACE_WITH_REGS modifies the LR before it is saved
-| to the shadow stack, and is compatible.
-|
-| Modifying the mcount based graph tracer to work with SCS would require
-| a mechanism to determine the corresponding slot on the shadow stack
-| (and to pass this through the ftrace infrastructure), and we expect
-| that everyone will eventually move to the patchable-function-entry
-| based graph tracer anyway, so for now let's disable SCS when the
-| mcount-based graph tracer is enabled.
-|
-| SCS and patchable-function-entry are both supported from LLVM 10.x.
-
-Assuming you're happy with that:
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> Tested-by: Marek Vasut <marex@denx.de>
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 2d5e0435af0a..dae236562543 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -92,6 +92,7 @@ struct stm32_gpio_bank {
+>   	u32 bank_nr;
+>   	u32 bank_ioport_nr;
+>   	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
+> +	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
+>   };
+>   
+>   struct stm32_pinctrl {
+> @@ -303,6 +304,46 @@ static const struct gpio_chip stm32_gpio_template = {
+>   	.get_direction		= stm32_gpio_get_direction,
+>   };
+>   
+> +void stm32_gpio_irq_eoi(struct irq_data *d)
+> +{
+> +	struct stm32_gpio_bank *bank = d->domain->host_data;
+> +	int line;
+> +
+> +	irq_chip_eoi_parent(d);
+> +
+> +	/* If level interrupt type then retrig */
+> +	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
+> +	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
+> +	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
+> +		irq_chip_retrigger_hierarchy(d);
+> +};
+> +
+> +static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct stm32_gpio_bank *bank = d->domain->host_data;
+> +	u32 parent_type;
+> +
+> +	bank->irq_type[d->hwirq] = type;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		parent_type = type;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		parent_type = IRQ_TYPE_EDGE_RISING;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		parent_type = IRQ_TYPE_EDGE_FALLING;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return irq_chip_set_type_parent(d, parent_type);
+> +};
+> +
+>   static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
+>   {
+>   	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
+> @@ -332,11 +373,11 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
+>   
+>   static struct irq_chip stm32_gpio_irq_chip = {
+>   	.name		= "stm32gpio",
+> -	.irq_eoi	= irq_chip_eoi_parent,
+> +	.irq_eoi	= stm32_gpio_irq_eoi,
+>   	.irq_ack	= irq_chip_ack_parent,
+>   	.irq_mask	= irq_chip_mask_parent,
+>   	.irq_unmask	= irq_chip_unmask_parent,
+> -	.irq_set_type	= irq_chip_set_type_parent,
+> +	.irq_set_type	= stm32_gpio_set_type,
+>   	.irq_set_wake	= irq_chip_set_wake_parent,
+>   	.irq_request_resources = stm32_gpio_irq_request_resources,
+>   	.irq_release_resources = stm32_gpio_irq_release_resources,
+> 
