@@ -2,301 +2,128 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F22C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA578C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD6320801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9C39206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="P6O6kvX0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgBSRnm (ORCPT
+        id S1726826AbgBSRoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:43:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:53542 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbgBSRnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:43:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0E5A31B;
-        Wed, 19 Feb 2020 09:43:40 -0800 (PST)
-Received: from [10.1.197.50] (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0E843F703;
-        Wed, 19 Feb 2020 09:43:39 -0800 (PST)
-Subject: Re: [RFC PATCH v2 00/13] SCMI Notifications Core Support
-To:     Jim Quinlan <james.quinlan@broadcom.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, Jonathan.Cameron@huawei.com
-References: <20200214153535.32046-1-cristian.marussi@arm.com>
- <CA+-6iNyFYusJTfiFgCNoRrcT5Xo4nof4fc=d46GiPAUD4o2j+Q@mail.gmail.com>
-From:   Cristian Marussi <cristian.marussi@arm.com>
-Message-ID: <e2587fae-a7d4-0426-fffd-104ebf26d014@arm.com>
-Date:   Wed, 19 Feb 2020 17:43:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CA+-6iNyFYusJTfiFgCNoRrcT5Xo4nof4fc=d46GiPAUD4o2j+Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 19 Feb 2020 12:44:04 -0500
+Received: from mail-eopbgr00092.outbound.protection.outlook.com ([40.107.0.92]:44162
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726582AbgBSRoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:44:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TEIDRwetZTLZ00ekhOYfDs6zPyxFulxCKRBu6jnkOjhI/YwkUdlluaY4SbruWR6GB2hfdkU847sisYXKCUlS4Z/+hWMG2zISdvr8GMwgwL+liGBsfOEFKNlfHo40zFm2f3+Vh+Z3iNoCr/RPvWFy0w2me4niG5C348R2+xuJK/nTNvgUa6dFG6wvMR5+ofJTGDZJzECmNZXA7EH+fSjpc6CIBU3Lln0ZHdhDsRO70FuDF/iA9f0JRNwB/xTmZDVYQGopMQdpiMHr0mpusNYu+XjAzBtZUPijZCLPriAi4SXgUsdC5gX0aaVw0msxdN8MZanjiL1DXer8Ym+g0ddl0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ImU0+VoYGqwJ1CgP4EtRw0mK35XDl7AgW9evSxgwRSs=;
+ b=cGs5EXeytDAuKA2OGwARyITROVO++e8BT3JtQw36h6a+8gNDd0bgCYO0D7fe3b4osgWvXNIsDgIc5/ZZiKrN8+rwcBBx4ahdgZSEnUcXHUFdF034JT24wR0tfl0f5Ifw5AawhcBGacItdNXn3d01oAF5Rg6AYdlk3MdCgsFGl/8u0GbyJX25x1u3RYXm2SGYtURcCpIDYD3fOunOCZ+5+8QDVDUQd71LJznmknPrm/n0RBkkeMKTA3+f00SiN2fiGvqK/aV22u+onZAEzs5j0kiwhp1aBWKiUwfFgRoMYdwVw5LtWwdF8CBaRW6JxX9bClSvSuX6JFjrsF2R3dJ4Hw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
+ dkim=pass header.d=criteo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ImU0+VoYGqwJ1CgP4EtRw0mK35XDl7AgW9evSxgwRSs=;
+ b=P6O6kvX0eM4lx5Sj6Vg1vhu0CmDOGc6YaeZnPEDFtfcCdnD9QxVnrlCXU1cs+gazdudX/WzfGQ73wVDNcMQsEbxoPFnbPLhXfyR7RsM85oc29jQ7rW/M1tC//4KX6vRkIhwlyLis9R8ddw1GbemnF4hBcoURwcZKttmAvnpPjyE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=e.velu@criteo.com; 
+Received: from VI1PR04MB4926.eurprd04.prod.outlook.com (20.177.48.80) by
+ VI1PR04MB6126.eurprd04.prod.outlook.com (20.179.28.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Wed, 19 Feb 2020 17:43:59 +0000
+Received: from VI1PR04MB4926.eurprd04.prod.outlook.com
+ ([fe80::99f4:5892:158f:5ae4]) by VI1PR04MB4926.eurprd04.prod.outlook.com
+ ([fe80::99f4:5892:158f:5ae4%5]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 17:43:59 +0000
+Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
+From:   Erwan Velu <e.velu@criteo.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200214143035.607115-1-e.velu@criteo.com>
+ <20200214170508.GB20690@linux.intel.com>
+ <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
+ <20200218184802.GC28156@linux.intel.com>
+ <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
+ <416e20b6-8f21-5949-bf51-f02603793b49@criteo.com>
+Message-ID: <5fee0f19-e926-47fe-e213-913bebf6354c@criteo.com>
+Date:   Wed, 19 Feb 2020 18:42:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <416e20b6-8f21-5949-bf51-f02603793b49@criteo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: LO2P265CA0325.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::25) To VI1PR04MB4926.eurprd04.prod.outlook.com
+ (2603:10a6:803:51::16)
+MIME-Version: 1.0
+Received: from [192.168.4.193] (91.199.242.236) by LO2P265CA0325.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Wed, 19 Feb 2020 17:43:58 +0000
+X-Originating-IP: [91.199.242.236]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6109b2ce-5fd4-49a6-a690-08d7b5634d04
+X-MS-TrafficTypeDiagnostic: VI1PR04MB6126:
+X-Microsoft-Antispam-PRVS: <VI1PR04MB612650D5E4D0735B11F922AAF2100@VI1PR04MB6126.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0318501FAE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(199004)(189003)(2906002)(6486002)(956004)(7416002)(2616005)(52116002)(54906003)(8936002)(6666004)(66556008)(66946007)(36756003)(16576012)(316002)(66476007)(6916009)(186003)(16526019)(86362001)(31696002)(26005)(478600001)(4326008)(81166006)(53546011)(31686004)(4744005)(966005)(81156014)(5660300002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB6126;H:VI1PR04MB4926.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: criteo.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Mrt3VhG318YcnAzwBcErfBV9TUxUQUyM03gDzIYIMZGyVGFU623wIT+SMojDLwNf7EMz1gPU5IAq5ms0kIzVuhhbc0Dau1WHdh2DdZWkX53V3GVPsXyxmyeiggD2SkvNsLCZQfZ3jrbwK4eOqCVguGFhauPXuAjE95bAiE8gn9pP8r1lga0HLYdG2OBYHD0fStE+hiVSBPo3GhamRqwS0RKR9nWwrnQoRzyLjDMVhLQFnnzWiCh1DNgwGbNVLLqFX3YxPlMFuWmNbPDyiJ6tVb3xDKPM3s0UCcFrkgf1DwL1WvylkgvgwgHBePQ538TIfow8TXWRcbnbmId4tsxbPzq6qIvTNJ6kr4JNzmGzIy8l2wCvpq0O0RMtWE+Eo7Tfs2wSP7jyvkK1oghQjDA/ajcsljNzDIwWBijPK9h35sKnAql8bnZJJXmFaeG7PZzgVfeoT7A5plFJBA1DdtpU5GuILiQjMhU3vCnDS1Tte4IbRPFTdb/is5+19moSh3WM2gUiV0AtK65l7G7K0uSRCg==
+X-MS-Exchange-AntiSpam-MessageData: 0sahV+eBLTHTcJFF0i1cmPmBHyE9SmxnDKfQb4xPf0J3RiW9xeIOObqmgDsRvBGqxIRz1QmjuasNIrs1m+jtJQ1VhHNEgO+s++J2YQEvgo9fCtx5MPj4WKJYzxpTCoz+PiAWv4d8phLoD+kpkQkkNQ==
+X-OriginatorOrg: criteo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6109b2ce-5fd4-49a6-a690-08d7b5634d04
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 17:43:59.6243
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2a35d8fd-574d-48e3-927c-8c398e225a01
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3V3FaRq+8ofrcQteaCFzWEcMWL20PrcMKsjq3vRTj+AAkD6YtdU5I5UKVqPaMlrNY4SDHWsOHwtNAeWlniWkGg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jim
 
-and thanks for the feedback first of all.
+On 19/02/2020 12:32, Erwan Velu wrote:
+> On 19/02/2020 12:19, Erwan Velu wrote:
+> [...]
+>> - contacting the udev people to see the rational & fix it too : I'll 
+>> do that 
+>
+> I created https://github.com/systemd/systemd/issues/14906, if some 
+> want to participate/follow the discussions with systemd.
+>
+It appear that its fixed on recent systemd, I tried at least starting 
+from v239 this is fixed. I didn't tried earlier releases as they are 
+painful to build.
 
-On 18/02/2020 20:19, Jim Quinlan wrote:
-> Hi Cristian,
-> 
-> This looks very robust and general but I'm wondering about the
-> "notification -> user" latency.  It appears there are at least five or
-> so memcpy()s of the notification message as it works its way to the
-> user, and added to that is the work queue deferral latency.  Is there
-> a concern on your end for low latency notifications, perhaps for
-> emergency notifications or do you consider this to be quick enough?
-> 
-I have to say user-latency was a primary concern when I first started
-looking into this, so that at first I had thought about exposing a
-dedicated additional method to let the users register callbacks which
-would have been called straight away from the RX ISR using an
-atomic notification chain.
+To me that doesn't means that the ratelimited printing have no interest 
+for all existing systems unless we weren't at least two reporting this ;)
 
-Reasoning about that, though:
-
-- me being really nervous about letting users register something that I'm
-  going to call on behalf of them in atomic context (...not bold enough I know :D)
-  since can potentially be misused and cause slowdowns to the notification
-  delivery or to the system as a whole
-
-- if something like that must be allowed it must be policed somehow from the
-  core....what if dozens of callbacks are allowed to be registered in this way
-  instead of the blocking mode ? they will slow down each other anyway..and
-  what about relative priorities amongst callbacks inside the same notification
-  chain ? (potentially registered from different users)
-
-- let's say we allow this and you can register your own atomic callback (which it would
-  be policed), what you can do with that at the end ? What are the benefits of this
-  scenario ? AICS there are two possible scenarios (but if you can propose more scenarios
-  that I've missed you're more than welcome):
-
-   1. you can do the smallest-amount-possible-of-work-in-irq-as-usual and defer,
-      probably attaching a timestamp of arrival to the stuff you push for
-      deferred processing (and this is what I'm doing already for you..even if
-      with too much memcpying around probably :D....more on this later...)
-OR 
-
-   2. you can immediately signal the condition just received to an external
-      processing unit...say like raising a line which will trigger an interrupt
-      in those agent...and this is a scenario in which I can imagine the atomic
-      notification chain can benefit (in fact that's the reason I'm still thinking
-      about it as a controlled/policed alternative)...but, anyway, in this scenario,
-      you are going to route as quickly as possible a critical SCMI notification to
-      some external processor for immediate processing...and so you want it to be
-      propagated as fast as possible...fine..but why passing through the richOS at all ?
-      if it's so critical shouldn't have been already handled by the platform to the
-      processing entity bypassing the richOS as a whole and all its inherent latencies ?
-      (beside my own memcpys :D)
-      So for this last consideration I gave up thinking about some more performant
-      atomic delivery of notifications ? But if you can make a case where some sort of
-      alternative quick atomic (policed) delivery makes sense, I'll be happy to think
-      about it again.
-
-
-> Note that we (BrcmSTB) have implemented our own  SCMI notification
-> system for a proprietary protocol and we designed it to deliver
-> notifications as quickly as possible.  Our system is more or less a
-> disposable hack and would not stand up to heavy or general usage.  We
-> fully intend to move to the approved Linux notification system.  On
-> that note,  I'm just wondering if you had any comment on the
-> possibility of  "slimming down" your RFC, e.g. perhaps somehow
-> collapsing some memcpy()s.
-> 
-
-Having said all of the above, I'll certainly review the memcopying to see if I can
-redesign an shrink a bit their number. (the only thing that I want to avoid is placing
-a spinlock into the ISR side of the dispatching...since now is all lock-free on that side
-thanks to the kfifo, the 1-reader-1-writer scnario, and an additional memcpy)
-
-In these regards what I had started to do (but no more), it was to sort of "profiling" a bit
-the latency from event RX up to the point immediately before the report is delivered to the users
-callbacks, and see if I can improve a bit this path in term of performance reshuffling the code.
-
-In V3 I'm reviewing a lot notification init/exit logic (which was a bit dirty and faulty ...)
-and handling of possible different platform instances (which were not handled), I'll see if I
-can stick some meaningful fix about memcopies (if not it will be V4)
-
-Moreover on this theme, given your low latencies requirements: as of now I'm using as a backend
-the normal Kernel notification chains, which means though, that:
-
-- users are in control of callbacks relative priorities, so that registering a high-pri slow one
-  could waste any gain and slow-down some other user registered callbacks on the same notification
-  chain (no matter if atomic or blocking)
-- users (maliciously ?) could simply register a callback that return NOTIFY_STOP and to cut the chain
-- users can (maliciously or not) mangle the event report fed to your callback along the way,
-  so that one user can trash potentially the event seen by the next user on the same chain
-
-Do you think the above issues are worth considering to be addressed (for performance/security issues) ?
-Because in v1 I had a patch for anti-tampering (now dropped to simplify the code) that could address
-all of the above, but I did not know if such policying/anti-tampering attempt was worth an valid.
-(even though, I think that if I'd end up adding some emergency/critical fast support, that would need
-some sort of callbacks priority policying at least)
-
-Thanks
-
-Regards
-
-Cristian
-
-
-> Thanks,
-> Jim
-> PS I'm going on vacation so I won't be able to email for a week.
-> 
-> 
-> On Fri, Feb 14, 2020 at 10:36 AM Cristian Marussi
-> <cristian.marussi@arm.com> wrote:
->>
->> Hi all,
->>
->> this series wants to introduce SCMI Notification Support, built on top of
->> the standard Kernel notification chain subsystem.
->>
->> At initialization time each SCMI Protocol takes care to register with the
->> new SCMI notification core the set of its own events which it intends to
->> support.
->>
->> Using a possibly proposed API in include/linux/scmi_protocol.h (not
->> finalized though, NO EXPORTs_) a Kernel user can register its own
->> notifier_t callback (via a notifier_block as usual) against any registered
->> event as identified by the tuple:
->>
->>                 (proto_id, event_id, src_id)
->>
->> where src_id represents a generic source identifier which is protocol
->> dependent like domain_id, performance_id, sensor_id and so forth.
->> (users can anyway do NOT provide any src_id, and subscribe instead to ALL
->>  the existing (if any) src_id sources for that proto_id/evt_id combination)
->>
->> Each of the above tuple-specified event will be served on its own dedicated
->> blocking notification chain.
->>
->> Upon a notification delivery all the users' registered notifier_t callbacks
->> will be in turn invoked and fed with the event_id as @action param and a
->> generated custom per-event struct _report as @data param.
->> (as in include/linux/scmi_protocol.h)
->>
->> The final step of notification delivery via users' callback invocation is
->> instead delegated to a pool of deferred workers (Kernel cmwq): each
->> SCMI protocol has its own dedicated worker and dedicated queue to push
->> events from the rx ISR to the worker.
->>
->> The series is marked as RFC mainly because:
->>
->> - the API as said is tentative and not EXPORTed; currently consisting of a
->>   generic interface like:
->>
->>          scmi_register_event_notifier(proto_id, evt_id, *src_id, *nb)
->>
->>   as found in scmi_protocol.h, or using the equivalent 'handle' operations
->>   in scmi_notify_ops if used by an scmi_driver.
->>
->>   It's open for discussion.
->>
->> - no Event priorization has been considered: each protocol has its own
->>   queue and deferred worker instance, so as to avoid that one protocol
->>   flood can overrun a single queue and influence other protocols'
->>   notifications' delivery.
->>   But that's it, all the workers are unbound, low_pri cmwq workers.
->>
->>   Should we enforce some sort of built-in prio amongst the events ?
->>   Should this priority instead be compile time configurable ?
->>
->>   Again, open for discussion.
->>
->> - no configuration is possible: it can be imagined that on a real platform
->>   events' priority (if any) and events queues' depth could be something
->>   somehow compile-time configurable, but this is not addressed by this
->>   series at all.
->>
->> Based on scmi-next 5.6 [1], on top of:
->>
->> commit 5c8a47a5a91d ("firmware: arm_scmi: Make scmi core independent of
->>                       the transport type")
->>
->> This series has been tested on JUNO with an experimental firmware only
->> supporting Perf Notifications.
->>
->> Any thoughts ?
->>
->> Thanks
->>
->> Cristian
->> ----
->>
->> v1 --> v2:
->> - dropped anti-tampering patch
->> - rebased on top of scmi-for-next-5.6, which includes Viresh series that
->>   make SCMI core independent of transport (5c8a47a5a91d)
->> - add a few new SCMI transport methods on top of Viresh patch to address
->>   needs of SCMI Notifications
->> - reviewed/renamed scmi_handle_xfer_delayed_resp()
->> - split main SCMI Notification core patch (~1k lines) into three chunks:
->>   protocol-registration / callbacks-registration / dispatch-and-delivery
->> - removed awkward usage of IDR maps in favour of pure hashtables
->> - added enable/disable refcounting in notification core (was broken in v1)
->> - removed per-protocol candidate API: a single generic API is now proposed
->>   instead of scmi_register_<proto>_event_notifier(evt_id, *src_id, *nb)
->> - added handle->notify_ops as an alternative notification API
->>   for scmi_driver
->> - moved ALL_SRCIDs enabled handling from protocol code to core code
->> - reviewed protocol registration/unregistration logic to use devres
->> - reviewed cleanup phase on shutdown
->> - fixed  ERROR: reference preceded by free as reported by kbuild test robot
->>
->> [1] git://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git
->>
->> Cristian Marussi (10):
->>   firmware: arm_scmi: Add notifications support in transport layer
->>   firmware: arm_scmi: Add notification protocol-registration
->>   firmware: arm_scmi: Add notification callbacks-registration
->>   firmware: arm_scmi: Add notification dispatch and delivery
->>   firmware: arm_scmi: Enable notification core
->>   firmware: arm_scmi: Add Power notifications support
->>   firmware: arm_scmi: Add Perf notifications support
->>   firmware: arm_scmi: Add Sensor notifications support
->>   firmware: arm_scmi: Add Reset notifications support
->>   firmware: arm_scmi: Add Base notifications support
->>
->> Sudeep Holla (3):
->>   firmware: arm_scmi: Add receive buffer support for notifications
->>   firmware: arm_scmi: Update protocol commands and notification list
->>   firmware: arm_scmi: Add support for notifications message processing
->>
->>  drivers/firmware/arm_scmi/Makefile  |    2 +-
->>  drivers/firmware/arm_scmi/base.c    |  121 +++
->>  drivers/firmware/arm_scmi/bus.c     |   11 +
->>  drivers/firmware/arm_scmi/common.h  |   12 +
->>  drivers/firmware/arm_scmi/driver.c  |  118 ++-
->>  drivers/firmware/arm_scmi/mailbox.c |   17 +
->>  drivers/firmware/arm_scmi/notify.c  | 1102 +++++++++++++++++++++++++++
->>  drivers/firmware/arm_scmi/notify.h  |   78 ++
->>  drivers/firmware/arm_scmi/perf.c    |  140 +++-
->>  drivers/firmware/arm_scmi/power.c   |  133 +++-
->>  drivers/firmware/arm_scmi/reset.c   |  100 ++-
->>  drivers/firmware/arm_scmi/sensors.c |   77 +-
->>  drivers/firmware/arm_scmi/shmem.c   |   15 +
->>  include/linux/scmi_protocol.h       |  114 +++
->>  14 files changed, 2009 insertions(+), 31 deletions(-)
->>  create mode 100644 drivers/firmware/arm_scmi/notify.c
->>  create mode 100644 drivers/firmware/arm_scmi/notify.h
->>
->> --
->> 2.17.1
->>
+Erwan,
 
