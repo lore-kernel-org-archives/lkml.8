@@ -2,104 +2,132 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33270C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD7C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0812324654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855B724654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7FEeBlm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sxDHcG/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgBSVkF (ORCPT
+        id S1727721AbgBSVlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:40:05 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51236 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727277AbgBSVkE (ORCPT
+        Wed, 19 Feb 2020 16:41:12 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:39526 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBSVlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:40:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582148403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Akm5nZ5Nk5RDJvPlHXdmc1pTXqzcrHwStmylDtS4kdo=;
-        b=Q7FEeBlmVUh0HfH0GHlPoGXauLp7DnFB6j6lWOhAMobuz6Bvil01pYOrKCVXZ5j+ALZb/6
-        LTf2FDXpJx8MyQCpCZ2xsY8CHR+BzRQ7WRv8ZvriohhuqX/gmjvWSTqAruI+K0vJ8/gueG
-        jIRGGzP2zMHrQa2QbkAMqZVZdGyQhWY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-lYV3sqb5NxSus3qboGNwYQ-1; Wed, 19 Feb 2020 16:39:58 -0500
-X-MC-Unique: lYV3sqb5NxSus3qboGNwYQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF399800D50;
-        Wed, 19 Feb 2020 21:39:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A04215C1B0;
-        Wed, 19 Feb 2020 21:39:54 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com>
-References: <CAHk-=wgtAEvD6J_zVPKXHDjZ7rNe3piRzD_bX2HcVgY3AMGhjw@mail.gmail.com> <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk> <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com> <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com> <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com> <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com> <252465.1582142281@warthog.procyon.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     dhowells@redhat.com, jaltman@auristor.com,
-        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+        Wed, 19 Feb 2020 16:41:12 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JLd8nA160959;
+        Wed, 19 Feb 2020 21:41:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=CQ02yU9L3CkVYagd27UoMk+0f7/E/ZNIr/nEAq4qgrw=;
+ b=sxDHcG/yZ7tARteJZLWRhuw/VLnSv4leEPcXRJi3NZ+rCWIjaQvL9MA7Pqx5SAJgDXYf
+ JYr+sc9bDHvQurCSebh7BiToCjjNSk2x/iBUElo6gEHtg12l1rMC4anPIQk8cKFjS5n5
+ lNMbkVKIkoo9b8mCoDT3KGJaABUq2SFJ3rhdr9zLU5kckXRdAw1E+rlCvmLT+j3fe+v5
+ be10TpttHzkVZWrrzO+n0arB/B2uHEMqu0b3IJFPcxlACUCRCxpIK1/pF3md66xyVuhf
+ NWU+mptwvt9mBA1cIAOcFjYW4CXe1BwCEf6jXOTPmOLrdvXtncoRaLRu0VWQaiXjS0R3 mw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2y8udd61ne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 21:41:03 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JLbrdH055467;
+        Wed, 19 Feb 2020 21:41:03 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2y8ud49sjv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 21:41:02 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01JLf0LX012739;
+        Wed, 19 Feb 2020 21:41:01 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 13:40:59 -0800
+Date:   Wed, 19 Feb 2020 16:41:12 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <260917.1582148393.1@warthog.procyon.org.uk>
-Date:   Wed, 19 Feb 2020 21:39:53 +0000
-Message-ID: <260918.1582148393@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219195332.GE11847@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190160
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190160
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, Feb 19, 2020 at 08:53:32PM +0100, Michal Hocko wrote:
+> On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
+> > On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
+> > > On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
+> > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
+> > > > while keeping direct reclaim as a fallback. In our testing, this
+> > > > eliminated all direct reclaim from the affected workload.
+> > > 
+> > > Who is accounted for all the work? Unless I am missing something this
+> > > just gets hidden in the system activity and that might hurt the
+> > > isolation. I do see how moving the work to a different context is
+> > > desirable but this work has to be accounted properly when it is going to
+> > > become a normal mode of operation (rather than a rare exception like the
+> > > existing irq context handling).
+> > 
+> > Yes, the plan is to account it to the cgroup on whose behalf we're
+> > doing the work.
 
-> so you _could_ actually just make the rule be something simple like
+How are you planning to do that?
+
+I've been thinking about how to account a kernel thread's CPU usage to a cgroup
+on and off while working on the parallelizing Michal mentions below.  A few
+approaches are described here:
+
+https://lore.kernel.org/linux-mm/20200212224731.kmss6o6agekkg3mw@ca-dmjordan1.us.oracle.com/
+
+> shows that the amount of the work required for the high limit reclaim
+> can be non-trivial. Somebody has to do that work and we cannot simply
+> allow everybody else to pay for that.
 > 
->    symlink(target, "//datagoeshere")
-> 
-> being the "create magic autolink directory using "datagoeshere".
+> > The problem is that we have a general lack of usable CPU control right
+> > now - see Rik's work on this: https://lkml.org/lkml/2019/8/21/1208.
+> > For workloads that are contended on CPU, we cannot enable the CPU
+> > controller because the scheduling latencies are too high. And for
+> > workloads that aren't CPU contended, well, it doesn't really matter
+> > where the reclaim cycles are accounted to.
+> > 
+> > Once we have the CPU controller up to speed, we can add annotations
+> > like these to account stretches of execution to specific
+> > cgroups. There just isn't much point to do it before we can actually
+> > enable CPU control on the real workloads where it would matter.
 
-Interesting.  I'll ask around to see if this is feasible.  Some applications
-(emacs being one maybe) sometimes appear to store information in symlink
-bodies - I'm not sure if any of those could be a problem.
-
-Since the mountpoint body is formulaic:
-
-	[%#](<cellname>:)?<volumename>(.readonly|.backup)?.
-
-maybe I can use that pattern.
-
-symlink() would be returning a dentry that appears to be a directory, but it
-doesn't look like that should be a problem.
-
-> So then you could again script things with
-> 
->    mknod dirname c X Y
->    echo "datagoeshere" > dirname
-
-This would be tricky to get right as it's not atomic and the second part could
-fail to happen.  For extra fun, another client could interfere between the
-steps (setxattr would be safer than write here).
-
-David
-
+Which annotations do you mean?  I didn't see them when skimming through Rik's
+work or in this patch.
