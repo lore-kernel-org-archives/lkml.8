@@ -2,104 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB42C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3D9C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BBE20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:06:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582139180;
-	bh=dJ5Jp5M2ZripkZLxmjhbH9IB6dSwM7CiJClk7XNCuwE=;
-	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=kV68MWyRU8ZQ8t9HUQg+t+Adu7VifbAMbTZrqSKN64QTxO9hCosQo1wZKy0jxnich
-	 0SQ3W+55WDPb7n/odWMpoRfVI2NrCqSV8dAJvCfQ/v7ur0z+RJdH95h0N2au7ozPiD
-	 FPfcow4D44uHfPcLAo1YJtXMAIgoelBULaBNdrjc=
+	by mail.kernel.org (Postfix) with ESMTP id C1DE420801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:06:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XoIByrGD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726828AbgBSTGT (ORCPT
+        id S1726948AbgBSTGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:06:19 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:35852 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbgBSTGT (ORCPT
+        Wed, 19 Feb 2020 14:06:43 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32872 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgBSTGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:06:19 -0500
-Received: by mail-pj1-f65.google.com with SMTP id gv17so465980pjb.1;
-        Wed, 19 Feb 2020 11:06:18 -0800 (PST)
+        Wed, 19 Feb 2020 14:06:43 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h4so1207424qkm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m/aJSG1GnO/FT6DkcizY0uaRrvb/5pvLMIdj8tnZKx8=;
+        b=XoIByrGDv6i82eVAV//K7wSt8/qjjE4WRdFaDTsnvyoaOczAZrPomz2G6fvczEljhO
+         QUK/NFCscW2+/b/4kZ7Oz9cUXubB0OaO3eAzmzAdMt59Ino3V2JJNpklqOh9NxaCJwlt
+         CDJM5nyxfJMCKzbsuCKGsTVJTAwYZIkjlnZV8H4Rp4bdzKa72tmsBQh3C5ZUxIeDQLUl
+         KgdxHVs8LKaBfhSSX2Fleo/A+ZUDA8Dx+u6WXZGWMFeBmZQK8LWO0+jXCfNeORrxX0ay
+         vDvWNJP2eTO+2yWwRzwEBC4aUrlU2ZBsYrnTgMp5h6ITZt1XNLkbZ3R8R0Clq3Cg3Lic
+         oe+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
-         :references:in-reply-to;
-        bh=Li69D96UynYkf8JlXUUJ5Eri/Si/2jqwsMBbn3qmZS4=;
-        b=c2pkXgvmisK98DUswluhTx/FWGUz0fV8YpkjWQtb3+nV8xD9zL2MUF26OiL0pZIkK0
-         yyOJcxQJtint+8n5+/3mM2tWvmepc86GiYbYyGZ7t1wX6h7gvc1cXHZTz7wHR9uBD2nd
-         pzy0/Hbj/euXkDbKJmtIQ/z5laUKSG6TexHz5x+WVlEw9+n601hL8EeH1axHbFqVfqMT
-         ZgCf51SswB325UMZ08J6dJb1diVJPgppRtqzZqpXjJPGM99gjTncYEGjJ7Kk6HvxwoDF
-         3I1e11VSrJ0fQnJp2tPJl7S2vtdlzf78Ghr0DjmWReoqYNWCuw+7+peNqCp9NhrbtIFo
-         Nx8w==
-X-Gm-Message-State: APjAAAXuIolOBufMRwWIGeLAjOdcwBYb4VGe+V9k/rkKRskNAo7EGFGo
-        mANnZwKpBmERf5Q+tg7eb70=
-X-Google-Smtp-Source: APXvYqxEWtnBUAbhG3oyDrpABKMoy4uPAfK1vDTH8uFSy42bySZvvzQ185jRsvkELv1wDoR5r/7gOQ==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr27599050plo.193.1582139177825;
-        Wed, 19 Feb 2020 11:06:17 -0800 (PST)
-Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
-        by smtp.gmail.com with ESMTPSA id v5sm467463pgc.11.2020.02.19.11.06.17
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m/aJSG1GnO/FT6DkcizY0uaRrvb/5pvLMIdj8tnZKx8=;
+        b=jRAt4EH3z22IlE14NjjZ31W1SvwVN48iX2338Yaz0dD4407uk+ptxPWxj4cGE09I9Y
+         UufX5AmdTJFL9O43sgTW0eXxP3R1A+jMIisHr9+eu48IjwaxGcFJ9a6NoTfBhYunLe55
+         tzlsGi2QuZ3ovSb8qmggmfVMXh38Qbrwr/BpXKcd6ZDQ734Jm1lTTCphaNp8LhqGGmMY
+         QmG7yiKd9dpSpqFsWg5P+Ef0NGV+sVUe4sNWvqnXyOvYSWagDhd4sjO0CMetwGAT2dY1
+         5WsqGxA2J/tFyk53NRyRYMIlCxqWl2jWHkXPhslnokq1g0kwIsz4daYB1lEa0FhsU18I
+         0KlQ==
+X-Gm-Message-State: APjAAAVUxtl70zIRKGAUkT0t0CkBVhv9ZMN1feJxRPBUyI/Ey+QdamNX
+        CFtl6VGtx8tDr+nmhMzkQt0Lu/Yk
+X-Google-Smtp-Source: APXvYqwUwOZpW1fVd3kaNR02Zf66B6fIWhv1+GJ5XEdDawDsImh3meHEQ4eCe+CPIGSZPG7nnJejAg==
+X-Received: by 2002:a05:620a:1332:: with SMTP id p18mr2119777qkj.283.1582139202217;
+        Wed, 19 Feb 2020 11:06:42 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id r1sm434566qtu.83.2020.02.19.11.06.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:06:17 -0800 (PST)
-Message-ID: <5e4d8729.1c69fb81.a8fdb.15ed@mx.google.com>
-Date:   Wed, 19 Feb 2020 11:06:11 -0800
-From:   Paul Burton <paulburton@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?utf-8?q?Philippe_Mathieu-Daud?= =?utf-8?q?=C3=A9?= 
-        <f4bug@amsat.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-CC:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH v2] MIPS: configs: Cleanup old Kconfig options
-References:  <20200217165634.5362-1-krzk@kernel.org>
-In-Reply-To:  <20200217165634.5362-1-krzk@kernel.org>
+        Wed, 19 Feb 2020 11:06:42 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 19 Feb 2020 14:06:40 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200219190640.GA1926073@rani.riverdale.lan>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+ <20200205162921.GA318609@rani.riverdale.lan>
+ <20200218180353.GA930230@rani.riverdale.lan>
+ <20200219120938.GB30966@zn.tnic>
+ <20200219175717.GA1892094@rani.riverdale.lan>
+ <20200219182230.GG30966@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219182230.GG30966@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Krzysztof Kozlowski wrote:
-> CONFIG_MTD_NAND_IDS is gone and not needed (part of CONFIG_MTD_NAND)
-> since commit f16bd7ca0457 ("mtd: nand: Kill the MTD_NAND_IDS Kconfig
-> option").
+On Wed, Feb 19, 2020 at 07:22:30PM +0100, Borislav Petkov wrote:
+> On Wed, Feb 19, 2020 at 12:57:17PM -0500, Arvind Sankar wrote:
+> > There isn't any particular urgency (at least until fg-kaslr patches try
 > 
-> CONFIG_IOSCHED_DEADLINE, CONFIG_IOSCHED_CFQ and CONFIG_DEFAULT_NOOP are
-> gone since commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+> Ok, I was just making sure you're not pinging because there's something
+> more urgent here. See below.
 > 
-> The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-> now enabled by default (along with MQ_IOSCHED_KYBER).
+> > to make it 64MiB bigger), but it's unclear how long to wait before
+> > sending a reminder -- Documentation/process suggests that comments
+> > should be received in a week or so, pinging after 4 and 6 weeks seemed
+> > reasonable. If x86 has a longer queue, might be worth documenting that
+> > somewhere?
 > 
-> The BFQ_GROUP_IOSCHED is the only multiqueue scheduler which comes with
-> group scheduling so select it in configs previously choosing
-> CFQ_GROUP_IOSCHED.
-
-Applied to mips-next.
-
-> commit f6541f347bba
-> https://git.kernel.org/mips/c/f6541f347bba
+> We try to track all stuff but x86 is super crazy most of the time,
+> especially currently, so stuff gets prioritized based on urgency and we
+> also try to round-robin through all submitters so that stuff doesn't get
+> left out.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
+> Thus the one-week thing will never work with x86. Once a month ping
+> maybe.
+> 
+> In your case, since it is an improvement which is good to have but not
+> absolutely a must and not a bugfix, it is understandable that it would
+> get pushed back in priority.
+> 
+> But stuff usually won't be forgotten and we'll get to it eventually - it
+> is just that we're mega swamped all the time. :-\
+> 
 
-Thanks,
-    Paul
-
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paulburton@kernel.org to report it. ]
+Ok, thanks.
