@@ -2,171 +2,146 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AD8C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A6BC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABD8206E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B05206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lqrMZzD7"
+	dkim=pass (1024-bit key) header.d=criteo.com header.i=@criteo.com header.b="ipVAdUY6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgBSLU1 (ORCPT
+        id S1727132AbgBSLUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:20:27 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38481 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgBSLU1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:20:27 -0500
-Received: by mail-il1-f193.google.com with SMTP id f5so20259332ilq.5;
-        Wed, 19 Feb 2020 03:20:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wlG3nAa6BYD+iSp33UrqkLf/yy6E18oediW8a3IHWEE=;
-        b=lqrMZzD75cIs1XvYxtvW/PfD/BoQl24mKjNsYCd6y/97XIQT6pJHdKQvlURlGAn5ji
-         9Kng8T8BBQAVnuttwpOZEIB+rvcYhxrv4uUrX3xZd63KuUDvT90rqqugMLDgpHNfONVU
-         LzTYhqlQ1dE53RZU0SAi18BpeklsaEI4VmogQl2Y+VhMaEKXnDkmDXlYMPJ9PH29lUZV
-         WqQdiopEXJYdFpHqqHN41Q0dE6hiyh9f7I9/ssz80F0hEPTfwH+xu5orFtNJFMTSfPIV
-         UNx0gmq06kljo9YkbVLDHDGC00zFrgpvQAi1Mc99Brv2BedjxjVa+/vjBSRKxhokYG73
-         1sag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wlG3nAa6BYD+iSp33UrqkLf/yy6E18oediW8a3IHWEE=;
-        b=fQkUud1ETtQymdXKcN8PvVl8USykAqN3/JlMvVXyOENishbfpR/yPC4gI9B1soboBf
-         iZPpG1E4cotHyIlfKsOEBMiBnze7dyoze9rPJoI1nEV/ms2kU5MGAtnkF+4UQjjLZfe+
-         wAMt+yodsjkjZFdBpimoo7czyUGMRwN+2gqlICJ77Bj7Ed6EUGMt7manR82evIHiSOn7
-         Dp6+CQbfbZuR/tt8i1GWybEAw8UHTZq5zmau1HUloMAt1vX+ExezIpDP2Ly1j5ikGUH5
-         BUFG0CPMQPrCPG8mNs0uvOuzYzae9a9P6QgpnedcJ6mLSrrSLUbw/AkGv5+S0gebOgUC
-         sDnw==
-X-Gm-Message-State: APjAAAWOrI/p+yuoqYjo/cgDoh2J8gxXjgqnj11xZRp61+0KfPa7W6yV
-        P8xnf3JEhBMR8TLwhZS4aAvkej0mU6YjGOq1FYs=
-X-Google-Smtp-Source: APXvYqxe3KWnktEfzpmKptdMszpnXSJm8A5UxsbKU39uxO1rNDKE7wgLIqdm+nZ9iVSSMOkm7yfbWcV56Fb0MZ54YQA=
-X-Received: by 2002:a92:3a8d:: with SMTP id i13mr25028030ilf.112.1582111226499;
- Wed, 19 Feb 2020 03:20:26 -0800 (PST)
+        Wed, 19 Feb 2020 06:20:31 -0500
+Received: from mail-eopbgr60121.outbound.protection.outlook.com ([40.107.6.121]:51978
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726514AbgBSLUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:20:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aUUp52KxfSK4kJHsaeRgyFIwebhVKEzNY3MNJ3NzvaawOnHSGqWtN7lJ5gnlPlUVTa0k327EIFS236k6HC5Ron0ClNcCX0B/i2v+rLNuxFmQ/mZPjuZBsS/5nHcfQ9oFCNcXlNwGSKjVNZzNNQ8hQB6UD+fILPER3wLc/k6JgPqkBKC5tCGIrR4bKXwQH17ic+RhMj7Hes3O/lPdt7J7stUqPZ7/Fuh2NFKIwe2/bLMjqYD0/H1O83vByixhGWEWZ+K0nqBRYUJUUo4oWW/eeGLsPASe5TayA3uq9KAqmWY5O8EcpWNyzlQrR1RqdvA/scgDrFLR7uleZRl+gGAjBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qRqHHu/PwHfTszKwYrk3C9YVOSR4sMfgAqyS5YRtsYg=;
+ b=bSA0jBif9tCzfTfoFFJgupWGJTEd8dOOd+J860Qetb+XQPZT1KAY5cKi5Q5/e0mE0fKTtUocMSri8yDFvwzTUloSZU/VrEdHwQavZqJguorItM0rFZWgla2OXDAYVyeRhJhlf7hJ/+XT7BmkA1ely2VcZFp9JL+z7YHRujnvXBDk7iKmP/QjEtmn7uErOTufDqJo/WC3doeXwu9+fcD7HFhaHD0HkyO4/FzMMH4MSfRySIm/EuXBnfCOVwL9wja4L+17d+KEmmEiwELaGekexEpA/u6YUqpwqXV3dYdhTTTvA8VzHpuEJi7Qttt6S8tu5cBxds/EdoP929h4742UMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=criteo.com; dmarc=pass action=none header.from=criteo.com;
+ dkim=pass header.d=criteo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=criteo.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qRqHHu/PwHfTszKwYrk3C9YVOSR4sMfgAqyS5YRtsYg=;
+ b=ipVAdUY6jefmr1B2Rd0GKwTCiYfdP2GmMRBbgtwdcgheGVrQCbzVmohU4OMxi3TnqZX+oyH6+RWxN84o59nk6gWVtdNCJ9UfStEzYUaA+q2y+nFZYZbr7GdHhv5GqKJR6Yr+pbTjafQ1xxagGHU8DsmLGOc58IU/ViB1reKCVzo=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=e.velu@criteo.com; 
+Received: from VI1PR04MB4926.eurprd04.prod.outlook.com (20.177.48.80) by
+ VI1PR04MB4112.eurprd04.prod.outlook.com (52.133.14.153) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.18; Wed, 19 Feb 2020 11:20:27 +0000
+Received: from VI1PR04MB4926.eurprd04.prod.outlook.com
+ ([fe80::99f4:5892:158f:5ae4]) by VI1PR04MB4926.eurprd04.prod.outlook.com
+ ([fe80::99f4:5892:158f:5ae4%5]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 11:20:27 +0000
+Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Erwan Velu <erwanaliasr1@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200214143035.607115-1-e.velu@criteo.com>
+ <20200214170508.GB20690@linux.intel.com>
+ <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com>
+ <20200218184802.GC28156@linux.intel.com>
+From:   Erwan Velu <e.velu@criteo.com>
+Message-ID: <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com>
+Date:   Wed, 19 Feb 2020 12:19:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+In-Reply-To: <20200218184802.GC28156@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: LNXP265CA0069.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:5d::33) To VI1PR04MB4926.eurprd04.prod.outlook.com
+ (2603:10a6:803:51::16)
 MIME-Version: 1.0
-References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
- <20200219082155.6787-1-linux@rasmusvillemoes.dk>
-In-Reply-To: <20200219082155.6787-1-linux@rasmusvillemoes.dk>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 19 Feb 2020 12:20:53 +0100
-Message-ID: <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
-Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from [192.168.4.193] (91.199.242.236) by LNXP265CA0069.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5d::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 19 Feb 2020 11:20:26 +0000
+X-Originating-IP: [91.199.242.236]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: abba21ef-3c38-4858-0607-08d7b52db867
+X-MS-TrafficTypeDiagnostic: VI1PR04MB4112:
+X-Microsoft-Antispam-PRVS: <VI1PR04MB4112623275E239C0F36EF79CF2100@VI1PR04MB4112.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0318501FAE
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(39860400002)(346002)(366004)(396003)(376002)(199004)(189003)(53546011)(4326008)(5660300002)(86362001)(31696002)(66476007)(36756003)(54906003)(316002)(956004)(66556008)(2906002)(16576012)(66946007)(478600001)(2616005)(81166006)(31686004)(7416002)(81156014)(186003)(16526019)(8676002)(52116002)(26005)(8936002)(6666004)(6486002)(6916009);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR04MB4112;H:VI1PR04MB4926.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: criteo.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: f5H7+0/gn7OYIfKTJ3PQyIe0SgvtoE3t+1FC/3QEsVuHgnsYudpcGS6C3/XcZR2REUAnvLqXCes7LNO4omDJqEikBpucg6lnPUrClrQmaqU33S0OeDKNgoUwox05FMxrBf/1IqNvibu5qjXZVJBwXsn6I+EyBip514IvHaRSLyz5z2zGSI6OHGZDDKnrvW0wAxWpdUkOK+v+SA3+rqnVK+v4qSSGYBgxb6TQbLBEm5+4QN8Khzwz02HWo6zf2CcIbNYrg4G8fI+RgG5OKdGSeRX0CnSko95BZJFBDs7xWUioUnYE5cEtkYd8n8WOmaXqfSpJKMqZnxI7+JCWs4w3Trlueygi/bmahTGMNfI1Vh0ZmfgXR8PnpWKHVfEoWMQbJd+vDnoZSzfR/N2r2bDw64nfMOZDpAkhUqXlE4YVeF0gP4YRw4TyOXISx8MmErlI
+X-MS-Exchange-AntiSpam-MessageData: SIBKJv/EiQnkF6oqLYgfzFlyIOeNrKo8c8NqfTbulQWRk2wjyLINEGxWRQnZG6L3ta2HVuiwK0xHdwE5bEkTCAMzi0Nfa8r0hLSl5TBC3z6t7yCEF0MfIPJCe5KPZIaUp6G1MB+copy91Ip076p/Hw==
+X-OriginatorOrg: criteo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: abba21ef-3c38-4858-0607-08d7b52db867
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 11:20:27.0728
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2a35d8fd-574d-48e3-927c-8c398e225a01
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: temZXt3YHMuxhuec/Aa2voDcpkwSBNWzSdjS7R4zC95/uzV9WrE6gyWWSOwAiuBysJirOqsLk6FYjt21mjPK/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:21 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+On 18/02/2020 19:48, Sean Christopherson wrote:
+[...]
+> Fix userspace to only do the "add" on one CPU.
 >
-> Extend %pe to pretty-print NULL in addition to ERR_PTRs,
-> i.e. everything IS_ERR_OR_NULL().
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
-> Something like this? The actual code change is +2,-1 with another +1
-> for a test case.
->
->  Documentation/core-api/printk-formats.rst | 9 +++++----
->  lib/errname.c                             | 4 ++++
->  lib/test_printf.c                         | 1 +
->  lib/vsprintf.c                            | 4 ++--
->  4 files changed, 12 insertions(+), 6 deletions(-)
->
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index 8ebe46b1af39..964b55291445 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -86,10 +86,11 @@ Error Pointers
->
->         %pe     -ENOSPC
->
-> -For printing error pointers (i.e. a pointer for which IS_ERR() is true)
-> -as a symbolic error name. Error values for which no symbolic name is
-> -known are printed in decimal, while a non-ERR_PTR passed as the
-> -argument to %pe gets treated as ordinary %p.
-> +For printing error pointers (i.e. a pointer for which IS_ERR() is
-> +true) as a symbolic error name. Error values for which no symbolic
-> +name is known are printed in decimal. A NULL pointer is printed as
-> +NULL. All other pointer values (i.e. anything !IS_ERR_OR_NULL()) get
-> +treated as ordinary %p.
->
->  Symbols/Function Pointers
->  -------------------------
-> diff --git a/lib/errname.c b/lib/errname.c
-> index 0c4d3e66170e..7757bc00f564 100644
-> --- a/lib/errname.c
-> +++ b/lib/errname.c
-> @@ -11,9 +11,13 @@
->   * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
->   * on mips), so this wastes a bit of space on those - though we
->   * special case the EDQUOT case.
-> + *
-> + * For the benefit of %pe being able to print any ERR_OR_NULL pointer
-> + * symbolically, 0 is also treated specially.
->   */
->  #define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = "-" #err
->  static const char *names_0[] = {
-> +       [0] = "NULL",
->         E(E2BIG),
->         E(EACCES),
->         E(EADDRINUSE),
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 2d9f520d2f27..3a37d0e9e735 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -641,6 +641,7 @@ errptr(void)
->         test("[-EIO    ]", "[%-8pe]", ERR_PTR(-EIO));
->         test("[    -EIO]", "[%8pe]", ERR_PTR(-EIO));
->         test("-EPROBE_DEFER", "%pe", ERR_PTR(-EPROBE_DEFER));
-> +       test("[NULL]", "[%pe]", NULL);
->  #endif
->  }
->
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 7c488a1ce318..b7118d78eb20 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -2247,8 +2247,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->         case 'x':
->                 return pointer_string(buf, end, ptr, spec);
->         case 'e':
-> -               /* %pe with a non-ERR_PTR gets treated as plain %p */
-> -               if (!IS_ERR(ptr))
-> +               /* %pe with a non-ERR_OR_NULL ptr gets treated as plain %p */
-> +               if (!IS_ERR_OR_NULL(ptr))
->                         break;
+> Changing kvm_arch_init() to use pr_err_once() for the disabled_by_bios()
+> case "works", but it's effectively a hack to workaround a flawed userspace.
 
-FWIW I was about to post a patch that just special cases NULL here.
+I'll see with the user space tool to sort this out.
 
-I think changing errname() to return "NULL" for 0 is overkill.
-People will sooner or later discover that function and start using it
-in contexts that don't have anything to do with pointers.  Returning
-_some_ string for 0 (instead of NULL) makes it very close to standard
-strerror(), and "NULL" for 0 (i.e. success) seems rather odd.
+I'm also considering how "wrong" is what they do: udevadm trigger is 
+generating 3500  "uevent add" on my system and I only noticed kvm to 
+print this noisy message.
 
-Thanks,
+So as the print once isn't that "wrong" neither, this simple patch would 
+avoid polluting the kernel logs.
 
-                Ilya
+
+So my proposal would be
+
+- have this simple patch on the kernel side to avoid having userspace 
+apps polluting logs
+
+- contacting the udev people to see the rational & fix it too : I'll do that
+
+
+As you said, once probed, there is no need reprinting the same message 
+again as the situation cannot have changed.
+
+As we are on the preliminary return code path (to make a EOPNOTSUPP), I 
+would vote for protecting the print against multiple calls/prints.
+
+The kernel patch isn't impacting anyone (in a regular case) and just 
+avoid pollution.
+
+
+Would you agree on that ?
+
+Erwan,
+
