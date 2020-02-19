@@ -2,123 +2,178 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CA4C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019FFC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4D4207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN10sBd/"
+	by mail.kernel.org (Postfix) with ESMTP id D75FF207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgBSKRF (ORCPT
+        id S1726715AbgBSKRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:17:05 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46409 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgBSKRF (ORCPT
+        Wed, 19 Feb 2020 05:17:13 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45111 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSKRM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:17:05 -0500
-Received: by mail-pg1-f193.google.com with SMTP id y30so855916pga.13;
-        Wed, 19 Feb 2020 02:17:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wx3cl/ju+y18z95mSB4X4cdRQQ7rCw0DISRZpgvl858=;
-        b=mN10sBd/GXiQoJR3Ywfsm0PgOHnA0dVmNF3IgQ8Ktyp7fHFx4uXm9z6AnSYjILHEIV
-         BAZuo/Qzdzixq8W+e9q65H8A0nw4EeI4VW8DpBfebiI8ju0TWNS5j6aH+EUlou6AYQnO
-         QowgF8dWYECxBSGNFRbDdqgiNPb4ggGYLCHRw6x4N1s+H7Y8VoinygwuqrYU9UI08Mkn
-         1jdpPlct9uT3eS4Hyp281UiuPQ8R9RCNUENIsaUMvOdmPRsrzEPB6R3V2VvWEQzELr9T
-         dXuxcP4YxroyUstNofwTQhh6Yk+wv4ttKWd+yjJf0swaUFO3aBClYJpFbl4F8ctGX/Bf
-         ZVdw==
+        Wed, 19 Feb 2020 05:17:12 -0500
+Received: by mail-ot1-f66.google.com with SMTP id 59so22599722otp.12;
+        Wed, 19 Feb 2020 02:17:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wx3cl/ju+y18z95mSB4X4cdRQQ7rCw0DISRZpgvl858=;
-        b=R+uQYR//jDMLz6rW5FgeVsvM6NUNgcDU1EpL38UnDCrGyT/D/mBn06c4KF4ZTdsprJ
-         Kko+OMVZ4muJ87CV7lV3o0RUR+ee7Gk3GsKD0JB+hIXLl048gr2bPJP8MiESSsFjtRgZ
-         K1mxcE+BiEyS93bb45w8aSo/H+Yz6LT2LZt2HnDZM8iYAQbum2M/KZlXrUSRwoVPo1Ih
-         7oGZONIKAtOcNJfo1vN+36f0vD8Hku3MQl619Db7KAdT96irQFsG+6Op68H0PCbr6z8C
-         qYdY60HCpzuPaPoGAMhoFFVJvqw0+5rFv5Ya8OQUPOCuF2pM84vHPEx1QCkyz2I1i2uG
-         H4YQ==
-X-Gm-Message-State: APjAAAXECzoHvUUIDoqxUyOVTLYR9Of/LoL7ZoHSmkLDQkvmaMN45Ws/
-        /6W1VdEw77kdUvivlwLkrKM=
-X-Google-Smtp-Source: APXvYqy6NiIl+ebEVWdcRWivE8SiuoiFsCnaSaA8epCJyhv6rxlKttT+lXy/ebF12zJfvlcSy/d+Bw==
-X-Received: by 2002:a63:6d0b:: with SMTP id i11mr26437592pgc.266.1582107424607;
-        Wed, 19 Feb 2020 02:17:04 -0800 (PST)
-Received: from localhost.localdomain ([146.196.37.220])
-        by smtp.googlemail.com with ESMTPSA id a2sm2400885pfi.30.2020.02.19.02.16.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 02:17:04 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] netfilter: ipt_CLUSTERIP: Pass lockdep expression to RCU lists
-Date:   Wed, 19 Feb 2020 15:46:27 +0530
-Message-Id: <20200219101626.31943-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GJAqVwXdCZXPTne0AiTX4Fk1uxObKIcjDphAbJJ660k=;
+        b=q2Gzjl9HuMen1wCAAI9CmaFnjtFH+hhjKyFKWC1FHFAG2fuRnJWJ3dc36IiZGTliii
+         Qr5swYw5AAwaJR/VoF6Ib9ahaWgnWDW27pc5C4WrE8CZTW3EwORywr/6rMK5/r1bamnz
+         hfxVSh4nWn6MACSaO3MKLLedDWhsNKUiwObN0L+ePjA3th5X8MAQp5IuSAIupNTNgA5x
+         r50XSXQjL/Pe+kVnj+F61TClq5HLlfv+uIFmcxAGI3hOWzWVCHzBFQQVEMA2essz/HC/
+         fG9sEjVUjl0ilb2w93Du2sxLt+H0iBgjt7XUIZY+HlYD4uuisrGdYqZ9Yo/wF3Z6O7px
+         SqmQ==
+X-Gm-Message-State: APjAAAV8nxCB3RI1PNqrBtwTDHirbqBY9vaE2CzT3aylLYZNF61rFm26
+        zYWCkPTQ+wBmCwipf20hAPLEG7UtWRbety8E8es=
+X-Google-Smtp-Source: APXvYqzZrdQJH/Cfn4il9kL1X9oAi45ce4JPx5PKjIVPqq1ze44X+v1H30gqpKR+Zhq1zOgAfO3sVmnLElkeTuTigJI=
+X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr4220978otk.145.1582107430981;
+ Wed, 19 Feb 2020 02:17:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200218151812.7816-1-geert+renesas@glider.be> <20200218151812.7816-3-geert+renesas@glider.be>
+In-Reply-To: <20200218151812.7816-3-geert+renesas@glider.be>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 19 Feb 2020 11:17:00 +0100
+Message-ID: <CAMuHMdVzkN5c1P3=xD5BzC=R-O8fWJfMRdDtWxcTLO0TUy5n1Q@mail.gmail.com>
+Subject: Re: [PATCH v5 2/5] gpiolib: Add support for GPIO line table lookup
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cn->configs is traversed using list_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of cn->lock.
+On Tue, Feb 18, 2020 at 4:18 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Currently GPIOs can only be referred to by GPIO controller and offset in
+> GPIO lookup tables.
+>
+> Add support for looking them up by line name.
+> Rename gpiod_lookup.chip_label to gpiod_lookup.key, to make it clear
+> that this field can have two meanings, and update the kerneldoc and
+> GPIO_LOOKUP*() macros.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+> Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-Hence, add corresponding lockdep expression to silence false-positive
-warnings, and harden RCU lists.
+> --- a/include/linux/gpio/machine.h
+> +++ b/include/linux/gpio/machine.h
+> @@ -20,8 +20,9 @@ enum gpio_lookup_flags {
+>
+>  /**
+>   * struct gpiod_lookup - lookup table
+> - * @chip_label: name of the chip the GPIO belongs to
+> - * @chip_hwnum: hardware number (i.e. relative to the chip) of the GPIO
+> + * @key: either the name of the chip the GPIO belongs to, or the GPIO line name
+> + * @chip_hwnum: hardware number (i.e. relative to the chip) of the GPIO, or
+> + *              U16_MAX to indicate that @key is a GPIO line name
+>   * @con_id: name of the GPIO from the device's point of view
+>   * @idx: index of the GPIO in case several GPIOs share the same name
+>   * @flags: bitmask of gpio_lookup_flags GPIO_* values
+> @@ -30,7 +31,7 @@ enum gpio_lookup_flags {
+>   * functions using platform data.
+>   */
+>  struct gpiod_lookup {
+> -       const char *chip_label;
+> +       const char *key;
+>         u16 chip_hwnum;
+>         const char *con_id;
+>         unsigned int idx;
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/ipv4/netfilter/ipt_CLUSTERIP.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+This needs an update in the documentation:
 
-diff --git a/net/ipv4/netfilter/ipt_CLUSTERIP.c b/net/ipv4/netfilter/ipt_CLUSTERIP.c
-index 6bdb1ab8af61..df856ff835b7 100644
---- a/net/ipv4/netfilter/ipt_CLUSTERIP.c
-+++ b/net/ipv4/netfilter/ipt_CLUSTERIP.c
-@@ -139,7 +139,8 @@ __clusterip_config_find(struct net *net, __be32 clusterip)
- 	struct clusterip_config *c;
- 	struct clusterip_net *cn = clusterip_pernet(net);
- 
--	list_for_each_entry_rcu(c, &cn->configs, list) {
-+	list_for_each_entry_rcu(c, &cn->configs, list,
-+				lockdep_is_held(&cn->lock)) {
- 		if (c->clusterip == clusterip)
- 			return c;
- 	}
-@@ -194,7 +195,8 @@ clusterip_netdev_event(struct notifier_block *this, unsigned long event,
- 	struct clusterip_config *c;
- 
- 	spin_lock_bh(&cn->lock);
--	list_for_each_entry_rcu(c, &cn->configs, list) {
-+	list_for_each_entry_rcu(c, &cn->configs, list,
-+				lockdep_is_held(&cn->lock)) {
- 		switch (event) {
- 		case NETDEV_REGISTER:
- 			if (!strcmp(dev->name, c->ifname)) {
+--- a/Documentation/driver-api/gpio/board.rst
++++ b/Documentation/driver-api/gpio/board.rst
+@@ -113,13 +113,15 @@ files that desire to do so need to include the
+following header::
+ GPIOs are mapped by the means of tables of lookups, containing instances of the
+ gpiod_lookup structure. Two macros are defined to help declaring such
+mappings::
+
+-       GPIO_LOOKUP(chip_label, chip_hwnum, con_id, flags)
+-       GPIO_LOOKUP_IDX(chip_label, chip_hwnum, con_id, idx, flags)
++       GPIO_LOOKUP(key, chip_hwnum, con_id, flags)
++       GPIO_LOOKUP_IDX(key, chip_hwnum, con_id, idx, flags)
+
+ where
+
+-  - chip_label is the label of the gpiod_chip instance providing the GPIO
+-  - chip_hwnum is the hardware number of the GPIO within the chip
++  - key is either the label of the gpiod_chip instance providing the GPIO, or
++    the GPIO line name
++  - chip_hwnum is the hardware number of the GPIO within the chip, or U16_MAX
++    to indicate that key is a GPIO line name
+   - con_id is the name of the GPIO function from the device point of view. It
+        can be NULL, in which case it will match any function.
+   - idx is the index of the GPIO within the function.
+
+
+Furthermore, a few drivers populate the gpiod_lookup members directly,
+instead of using the convenience macros:
+
+    arch/arm/mach-integrator/impd1.c
+    drivers/i2c/busses/i2c-i801.c
+    drivers/mfd/sm501.c
+
+Either they have to be updated s/chip_label/key/, or start using the macros,
+e.g.
+
+--- a/drivers/i2c/busses/i2c-i801.c
++++ b/drivers/i2c/busses/i2c-i801.c
+@@ -1444,9 +1444,9 @@ static int i801_add_mux(struct i801_priv *priv)
+                return -ENOMEM;
+        lookup->dev_id = "i2c-mux-gpio";
+        for (i = 0; i < mux_config->n_gpios; i++) {
+-               lookup->table[i].chip_label = mux_config->gpio_chip;
+-               lookup->table[i].chip_hwnum = mux_config->gpios[i];
+-               lookup->table[i].con_id = "mux";
++               lookup->table[i] = (struct gpiod_lookup)
++                       GPIO_LOOKUP(mux_config->gpio_chip,
++                                   mux_config->gpios[i], "mux", 0);
+        }
+        gpiod_add_lookup_table(lookup);
+        priv->lookup = lookup;
+
+Do you have any preference?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.24.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
