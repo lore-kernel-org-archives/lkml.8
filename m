@@ -2,96 +2,144 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 448AEC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943FDC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182FC2467E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:52:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aPCcJ9zr"
+	by mail.kernel.org (Postfix) with ESMTP id 773752464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgBSQv6 (ORCPT
+        id S1726826AbgBSQwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:51:58 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:35476 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726450AbgBSQv6 (ORCPT
+        Wed, 19 Feb 2020 11:52:20 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:52941 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgBSQwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:51:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=aOY3HVNQlxhNJtO2V3TApKHEpYE+w+Db2fWfBxPBg70=; b=aPCcJ9zrRXoUBYVDUKXy3j/k5j
-        yZk9tmPqWFKmqWJQ98hEtRqBOsPIYOIenFwwhHx8m8CYgSGxcMjQzJ3YApVKYLxDgUX8aXH4oQzJf
-        KfZg5wyIDaz2RVRvBCtSBe6T39nda9WAj3V65qNSoEBI5/eA+3hPRpB2ADTKUO/zfZ4q+nOTE78/5
-        H6ljMA5Pp3zU3gbJ2Duv8QwodNYEKtto+/JcMYkkLWTtPjcY4t4V+YTCkY9VRCLXJAGPxTQpK/ooh
-        c2qx87kmUEOKNEsWjyp/LQ/LKXol9Q8hyI60NtIMd2SzUwABydg/rZARjRJvflIPrQBT/U2mRpItU
-        1vqZOtTQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4SZN-0001JM-FA; Wed, 19 Feb 2020 16:51:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75EB4300606;
-        Wed, 19 Feb 2020 17:49:35 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DB88D201E478A; Wed, 19 Feb 2020 17:51:27 +0100 (CET)
-Date:   Wed, 19 Feb 2020 17:51:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Subject: Re: [PATCH v3 22/22] x86/int3: Ensure that poke_int3_handler() is
- not sanitized
-Message-ID: <20200219165127.GF14946@hirez.programming.kicks-ass.net>
-References: <20200219144724.800607165@infradead.org>
- <20200219150745.651901321@infradead.org>
- <CACT4Y+Y+nPcnbb8nXGQA1=9p8BQYrnzab_4SvuPwbAJkTGgKOQ@mail.gmail.com>
- <20200219163025.GH18400@hirez.programming.kicks-ass.net>
+        Wed, 19 Feb 2020 11:52:20 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M8QFi-1j8sQZ3yPg-004Vt0; Wed, 19 Feb 2020 17:51:52 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Adam Williamson <awilliam@redhat.com>,
+        Chris Murphy <bugzilla@colorremedies.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Tim Waugh <tim@cyberelk.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: [PATCH] compat_ioctl, cdrom: Replace .ioctl with .compat_ioctl in four appropriate places
+Date:   Wed, 19 Feb 2020 17:50:07 +0100
+Message-Id: <20200219165139.3467320-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219163025.GH18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:s83bO8mKDR7xliqovCqp1GmWzEogAJvpGM54ZuLLH4pmNDsLTFY
+ ZxQUDSrXrb28nM+9drVbtrJ8MxqeW1pcICoxq0M2y+aB7qvD7iMDpcHWlECDzZL3mhdhI8K
+ BS8BYAcJqRI2ZWDXrlXqDDTO/DjF/Q05SjUWe1SBIBOeT7W12CpXurHmSTHy5X5VVQQIUtO
+ bOHv7lVkw7ikMgz7kiz/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6qcWV+qWiLI=:kjXIiUB/VicY7yGRA7ziGY
+ 1kANGtrqCMHfXJf786bqSJ4WFSALkZjbMLtINIV4T+vxgzLgP14+/+o87XoB8AVtCbsM8kSU2
+ JI4f2MPP0HNWgn+2LpS3cLb7xghKtlFrZesE8ZoHQdrwNQA8TYnwo7i8iyWT9HB/jOsfGV3LL
+ 44C+RdOO+cVWTpSTxrIQlkh0FqrhHoevLjCx+9RY95AdV8S2y5F34wcsWwJ6ip0PT5kuzV6Il
+ hzgefpeFTffFB3QgfQolJedi0HJGGr8LxI0ncuaVgWICAk3xBtKfPuNevbrVXP4lsI1AM8hgF
+ e+AIJYY4vi0qSKjKANRQ/QT0Dx71Txo5/LLy3/UAuJTwirsg+AcLyZvPJMm64+1WptLr3b6BF
+ RKNkDnFWVixEY95EGsfpmnYdt9NeK0dbodW6RUy81Q/jnEPU2MGfTAu1tIbqmB2W35IXC6DuF
+ podvY+5Xxnq/2Q2vk9VqoBFXvehS9LY6pj6EZ5yEWpyT7NauOEat01WVpSczGhPHXHnEN/3h6
+ aKIueqLHBKpGHnXYIjiuy2iGxQsibiG/eLbSbcBMKwYVdRWRbqcnHP4Kq9GTyLwL4dTE5USZi
+ aPOlnrKGSAjB/LMbVO4F7dN1KG6ykrsF2HvXh7QxFP6Q1NvKuZte5cMMhgj1N8BSC4ARzLYxv
+ LBdyXTSwHlhJGZV+d1tLgWwyR1mZFiTy0jP5n1sx42z9DwEe1XaujjxQN57RcT2S93y3Qj0Ky
+ rm7R3B5pUNK3kdNFswGHNan0hA50VY7ikJxsHyKcBI69ebqUEeCdCLq1mGBHTdpDNsPeiCTQE
+ 1WnDQxC7sbtImKsPybVj6QylWejuYsNDlTlTBj14+wohn9SOzM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 05:30:25PM +0100, Peter Zijlstra wrote:
-> > It's quite fragile. Tomorrow poke_int3_handler handler calls more of
-> > fewer functions, and both ways it's not detected by anything.
-> 
-> Yes; not having tools for this is pretty annoying. In 0/n I asked Dan if
-> smatch could do at least the normal tracing stuff, the compiler
-> instrumentation bits are going to be far more difficult because smatch
-> doesn't work at that level :/
-> 
-> (I actually have
+From: Adam Williamson <awilliam@redhat.com>
 
-... and I stopped typing ...
+Arnd Bergmann inadvertently typoed these in d320a9551e394 and
+64cbfa96551a; they seem to be the cause of
+https://bugzilla.redhat.com/show_bug.cgi?id=1801353 , invalid
+SCSI commands when udev tries to query a DVD drive.
 
-I think I mean to say something like: ... more changes to
-poke_int3_handler() pending, but they're all quite simple).
+[arnd] Found another instance of the same bug, also introduced
+in my compat_ioctl series.
+
+Fixes: d320a9551e39 ("compat_ioctl: scsi: move ioctl handling into drivers")
+Fixes: 64cbfa96551a ("compat_ioctl: move cdrom commands into cdrom.c")
+Fixes: c103d6ee69f9 ("compat_ioctl: ide: floppy: add handler")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1801353
+Bisected-by: Chris Murphy <bugzilla@colorremedies.com>
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/block/paride/pcd.c | 2 +-
+ drivers/cdrom/gdrom.c      | 2 +-
+ drivers/ide/ide-gd.c       | 2 +-
+ drivers/scsi/sr.c          | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
+index 117cfc8cd05a..cda5cf917e9a 100644
+--- a/drivers/block/paride/pcd.c
++++ b/drivers/block/paride/pcd.c
+@@ -276,7 +276,7 @@ static const struct block_device_operations pcd_bdops = {
+ 	.release	= pcd_block_release,
+ 	.ioctl		= pcd_block_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.ioctl		= blkdev_compat_ptr_ioctl,
++	.compat_ioctl	= blkdev_compat_ptr_ioctl,
+ #endif
+ 	.check_events	= pcd_block_check_events,
+ };
+diff --git a/drivers/cdrom/gdrom.c b/drivers/cdrom/gdrom.c
+index 886b2638c730..c51292c2a131 100644
+--- a/drivers/cdrom/gdrom.c
++++ b/drivers/cdrom/gdrom.c
+@@ -519,7 +519,7 @@ static const struct block_device_operations gdrom_bdops = {
+ 	.check_events		= gdrom_bdops_check_events,
+ 	.ioctl			= gdrom_bdops_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.ioctl			= blkdev_compat_ptr_ioctl,
++	.compat_ioctl		= blkdev_compat_ptr_ioctl,
+ #endif
+ };
+ 
+diff --git a/drivers/ide/ide-gd.c b/drivers/ide/ide-gd.c
+index 1bb99b556393..05c26986637b 100644
+--- a/drivers/ide/ide-gd.c
++++ b/drivers/ide/ide-gd.c
+@@ -361,7 +361,7 @@ static const struct block_device_operations ide_gd_ops = {
+ 	.release		= ide_gd_release,
+ 	.ioctl			= ide_gd_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.ioctl			= ide_gd_compat_ioctl,
++	.compat_ioctl		= ide_gd_compat_ioctl,
+ #endif
+ 	.getgeo			= ide_gd_getgeo,
+ 	.check_events		= ide_gd_check_events,
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 0fbb8fe6e521..e4240e4ae8bb 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -688,7 +688,7 @@ static const struct block_device_operations sr_bdops =
+ 	.release	= sr_block_release,
+ 	.ioctl		= sr_block_ioctl,
+ #ifdef CONFIG_COMPAT
+-	.ioctl		= sr_block_compat_ioctl,
++	.compat_ioctl	= sr_block_compat_ioctl,
+ #endif
+ 	.check_events	= sr_block_check_events,
+ 	.revalidate_disk = sr_block_revalidate_disk,
+-- 
+2.25.0
+
