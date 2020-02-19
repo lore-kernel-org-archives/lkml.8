@@ -2,114 +2,138 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50208C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D07C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BE321D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B22E21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Rtapr6oX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgBSNI6 (ORCPT
+        id S1727506AbgBSNLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:08:58 -0500
-Received: from gate.crashing.org ([63.228.1.57]:38973 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726558AbgBSNI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:08:57 -0500
-Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 01JD8ATq027345;
-        Wed, 19 Feb 2020 07:08:10 -0600
-Received: (from segher@localhost)
-        by gate.crashing.org (8.14.1/8.14.1/Submit) id 01JD88xt027342;
-        Wed, 19 Feb 2020 07:08:08 -0600
-X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
-Date:   Wed, 19 Feb 2020 07:08:08 -0600
-From:   Segher Boessenkool <segher@kernel.crashing.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>
-Subject: Re: Surprising code generated for vdso_read_begin()
-Message-ID: <20200219130808.GU22482@gate.crashing.org>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr> <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr> <20200109200733.GS3191@gate.crashing.org> <77a8bf25-6615-6c0a-56d4-eae7aa8a8f09@c-s.fr> <20200111113328.GX3191@gate.crashing.org> <CAK8P3a11wX1zJ+TAacDTkYsrzvfdVmNrcB6OC23aFvCxF57opQ@mail.gmail.com> <305fcee5-2e1b-ea4d-9a2a-a0e8034d40a8@c-s.fr> <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+        Wed, 19 Feb 2020 08:11:04 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:38213 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgBSNLE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:11:04 -0500
+Received: by mail-qv1-f66.google.com with SMTP id g6so128480qvy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 05:11:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vlvlwshc67nfmD8mnuDhiaIo5+M0W9hN5kIZIDEuy2Q=;
+        b=Rtapr6oXl/ZaEBtZq5MfyQnS/XVirN0sBqwZyUReZu3pzXQ2HAamZkYWPIMCtWRriL
+         PlfqwVm3qUiKuPhjgf2FqEOb+9LWbcBCTU0xBqkoZ4U5iBzYnXMvl909/fXT0InfuC8B
+         N70oP0+7MZYJDZZXXBUxPVRTR5UdfeLhq0Lh2CTq7o9GjhBv/uMIfVcKsNgtBKWUA9Bd
+         687rV989HvQ3dUWl7k2hSZ8DC/1JiuaaFAFdwdrXBvqkfrDwFIG5yF4aQW32+XtdODc3
+         C5J+OVhXMAC39OjPPCXmC+cRSbvP8SRplMyRJ8iDX10PRgz2xf6J2YBsk10bMlJIqOjF
+         /bBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vlvlwshc67nfmD8mnuDhiaIo5+M0W9hN5kIZIDEuy2Q=;
+        b=h8zwCwbU8dmGrmA8hsUS+hBqfKnuLbXc95Wg9/MLTvgEHiUtUxqLTG1MIddXH/863g
+         zNE9ghiIE2xNc0vEnA1SGbq5/LpyMkS2Dd7IpBBsvaq6SrFhPibUQEpVWg7zvPd0z7WB
+         NHvI5nGxVwi+KaJU71q39Q2kEz8AM2MIcwNYu1rXDNyqCgRdV+ab429b/9pr2ZetK+kS
+         PeEMRBGffpHUB982KvLBlHPVDNkTwuQAVMITbaZ0pRCr/KD3OIIm6Y9HVqVqAtr5UEur
+         vuOitB3xixzuMdmiHJZ6vhlDnARCcoRszJSOaLZDBxb/MYfFtawy3G8mQsu8Din6axam
+         LNVA==
+X-Gm-Message-State: APjAAAVeNRcwY8844lLnM2K8VlqXVv1uR7jWcVTUp1G5HyQ51+t9Jjc9
+        J1sk+YDJ6QrEymPAZDeOWHhfWg==
+X-Google-Smtp-Source: APXvYqyZcNxGLb7eHMU18r0zr3qpKpcwiysfX6S+jAaXMEUPECzgHhYx1h9AJGMzMfZeBkbc96JYEA==
+X-Received: by 2002:a05:6214:965:: with SMTP id do5mr20929587qvb.202.1582117863137;
+        Wed, 19 Feb 2020 05:11:03 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id m95sm939421qte.41.2020.02.19.05.11.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 05:11:02 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j4P82-000137-AB; Wed, 19 Feb 2020 09:11:02 -0400
+Date:   Wed, 19 Feb 2020 09:11:02 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Tiwei Bie <tiwei.bie@intel.com>
+Cc:     mst@redhat.com, jasowang@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, shahafs@mellanox.com,
+        rob.miller@broadcom.com, haotian.wang@sifive.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com,
+        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
+        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
+Subject: Re: [PATCH] vhost: introduce vDPA based backend
+Message-ID: <20200219131102.GN31668@ziepe.ca>
+References: <20200131033651.103534-1-tiwei.bie@intel.com>
+ <20200218135359.GA9608@ziepe.ca>
+ <20200219025217.GA971968@___>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
-User-Agent: Mutt/1.4.2.3i
+In-Reply-To: <20200219025217.GA971968@___>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:52:16AM +0100, Arnd Bergmann wrote:
-> On Wed, Feb 19, 2020 at 9:45 AM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
-> > Le 16/02/2020 à 19:10, Arnd Bergmann a écrit :
-> > > On Sat, Jan 11, 2020 at 12:33 PM Segher Boessenkool
-> > > <segher@kernel.crashing.org> wrote:
-> > >>
-> > >> On Fri, Jan 10, 2020 at 07:45:44AM +0100, Christophe Leroy wrote:
-> > >>> Le 09/01/2020 à 21:07, Segher Boessenkool a écrit :
-> > >>>> It looks like the compiler did loop peeling.  What GCC version is this?
-> > >>>> Please try current trunk (to become GCC 10), or at least GCC 9?
-> > >>>
-> > >>> It is with GCC 5.5
-> > >>>
-> > >>> https://mirrors.edge.kernel.org/pub/tools/crosstool/ doesn't have more
-> > >>> recent than 8.1
-> > >>
-> > >> Arnd, can you update the tools?  We are at 8.3 and 9.2 now :-)  Or is
-> > >> this hard and/or painful to do?
-> > >
-> > > To follow up on this older thread, I have now uploaded 6.5, 7.5, 8.3 and 9.2
-> > > binaries, as well as a recent 10.0 snapshot.
-> > >
-> >
-> > Thanks Arnd,
-> >
-> > I have built the VDSO with 9.2, I get less performant result than with
-> > 8.2 (same performance as with 5.5).
-> >
-> > After a quick look, I see:
-> > - Irrelevant NOPs to align loops and stuff, allthough -mpcu=860 should
-> > avoid that.
-> > - A stack frame is set for saving r31 in __c_kernel_clock_gettime. GCC
-> > 8.1 don't need that, all VDSO functions are frameless with 8.1
+On Wed, Feb 19, 2020 at 10:52:38AM +0800, Tiwei Bie wrote:
+> > > +static int __init vhost_vdpa_init(void)
+> > > +{
+> > > +	int r;
+> > > +
+> > > +	idr_init(&vhost_vdpa.idr);
+> > > +	mutex_init(&vhost_vdpa.mutex);
+> > > +	init_waitqueue_head(&vhost_vdpa.release_q);
+> > > +
+> > > +	/* /dev/vhost-vdpa/$vdpa_device_index */
+> > > +	vhost_vdpa.class = class_create(THIS_MODULE, "vhost-vdpa");
+> > > +	if (IS_ERR(vhost_vdpa.class)) {
+> > > +		r = PTR_ERR(vhost_vdpa.class);
+> > > +		goto err_class;
+> > > +	}
+> > > +
+> > > +	vhost_vdpa.class->devnode = vhost_vdpa_devnode;
+> > > +
+> > > +	r = alloc_chrdev_region(&vhost_vdpa.devt, 0, MINORMASK + 1,
+> > > +				"vhost-vdpa");
+> > > +	if (r)
+> > > +		goto err_alloc_chrdev;
+> > > +
+> > > +	cdev_init(&vhost_vdpa.cdev, &vhost_vdpa_fops);
+> > > +	r = cdev_add(&vhost_vdpa.cdev, vhost_vdpa.devt, MINORMASK + 1);
+> > > +	if (r)
+> > > +		goto err_cdev_add;
+> > 
+> > It is very strange, is the intention to create a single global char
+> > dev?
 > 
-> If you think it should be fixed in gcc, maybe try to reproduce it in
-> https://godbolt.org/
+> No. It's to create a per-vdpa char dev named
+> vhost-vdpa/$vdpa_device_index in dev.
+> 
+> I followed the code in VFIO which creates char dev
+> vfio/$GROUP dynamically, e.g.:
+> 
+> https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L2164-L2180
+> https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L373-L387
+> https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L1553
+> 
+> Is it something unwanted?
 
-(Feel free to skip this step; and don't put links to godbolt (or anything
-else external) in our bugzilla, please; such links go stale before you
-know it.)
+Yes it is unwanted. This is some special pattern for vfio's unique
+needs. 
 
-> and open a gcc bug against that.
+Since this has a struct device for each char dev instance please use
+the normal cdev_device_add() driven pattern here, or justify why it
+needs to be special like this.
 
-Yes please :-)
-
-> Also, please try the gcc-10 snapshot, which has the highest chance
-> of getting fixes if it shows the same issue (or worse).
-
-If it is a regression, chances are it will be backported.  (But not to
-9.3, which is due in just a few weeks, just like 8.4).  If it is just a
-side effect of some other change, it will probably *not* be undone, not
-on trunk (GCC 10) either.  It depends.
-
-But sure, always test trunk if you can.
-
-
-Segher
+Jason
