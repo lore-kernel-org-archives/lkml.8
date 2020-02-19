@@ -2,138 +2,137 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A22EC3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36ECC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43729208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:31:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IjeBbZQU"
+	by mail.kernel.org (Postfix) with ESMTP id 86A9B2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgBSGb5 (ORCPT
+        id S1726469AbgBSGkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:31:57 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39633 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgBSGb4 (ORCPT
+        Wed, 19 Feb 2020 01:40:12 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48643 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726156AbgBSGkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:31:56 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so9143631plp.6;
-        Tue, 18 Feb 2020 22:31:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=yHHgpBANwrMB3jhs9hI0b1CDaiyJ2Cjlf5IBS/MPeGo=;
-        b=IjeBbZQUFOdhM9b+UyK5lJqf3gDoZ0Zhe707jyNovSSDOez8X/Tu/7asUcWC5tvBxX
-         eC9+ShCPTZGQGNIins6XiE5JMLC8urRb+cPNn2mpk52UgzFZe2dMdAcTJsaX8v5/vQYf
-         s9uHUYJXWcgDUkPAy4ukI8ViP/9q+32cK69loQqb8iPrrhMBld/3i5Jlo2pLDbnUcW7f
-         +W5sB6gwuPQk2PexwdCdWSvjNt7xsHyP9p7F4DOgfmT67iiqpUAFM7Beig1HcXrDoxKc
-         u5cuolfzhLiDi1UjAxcFVO8bq7dY76O8UI1lZUUaBNbuhetz7zHP5w8YMd70UqxSixJ5
-         U6lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=yHHgpBANwrMB3jhs9hI0b1CDaiyJ2Cjlf5IBS/MPeGo=;
-        b=uf1PpzQ6Ky3E4TyEVtS8qKp1TUkly9vVs5lHiRJ4FJfo8+LdBpy4rIf6/JbQc0WIxm
-         5dMy8uLvc+U1EfofqgpZLWqp8QSuh8GXkKlVrA0Gu9NyRCeGMBvmnO3HQ0cMjwke2sqM
-         Jp3xFfmK7ziYwzf6TerwKyHBzk5KUYR0Gn8VYLwkP2JKSccj39Qoezn7vI/jBKJG0VvZ
-         CqmsIfdpC4yXTWIC9PhmsncexlMqVm29majHx9KpUs51HXvtfNgVXbrdVFy47HtH/h+8
-         WBOGff6IPSD3n6iii0bfr2SCfXfMBCGFmjbQ3r6RJEmC//31zeLCK710NTPyKkFw7NGN
-         3OkQ==
-X-Gm-Message-State: APjAAAWE/42qWfrH2rUuRrHg5bTaBTmB4oW4oHHeaxBL+KyV0vIhmTC+
-        k7QpNGdU4GrUoEG6NuGB/6hIWHSJ
-X-Google-Smtp-Source: APXvYqzds47dr4tLMQlbJAHaKvXWG2xLrP8jOwn9XRTGCXyf6gKnsxD15JrWb4ks/Qj5UazhHoX/1A==
-X-Received: by 2002:a17:90a:ec10:: with SMTP id l16mr7158975pjy.19.1582093915829;
-        Tue, 18 Feb 2020 22:31:55 -0800 (PST)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id w17sm1169047pfi.56.2020.02.18.22.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 22:31:55 -0800 (PST)
-Date:   Tue, 18 Feb 2020 22:31:46 -0800
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Message-ID: <5e4cd6527bf96_404b2ac01efba5b491@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200217200111.GA5283@embeddedor>
-References: <20200217200111.GA5283@embeddedor>
-Subject: RE: [PATCH][next] bpf, sockmap: Replace zero-length array with
- flexible-array member
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 01:40:11 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 93B223A38C1;
+        Wed, 19 Feb 2020 17:40:06 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4J1h-0006cP-MZ; Wed, 19 Feb 2020 17:40:05 +1100
+Date:   Wed, 19 Feb 2020 17:40:05 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
+Message-ID: <20200219064005.GL10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-31-willy@infradead.org>
+ <20200219032900.GE10776@dread.disaster.area>
+ <20200219060415.GO24185@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219060415.GO24185@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=7-415B0cAAAA:8 a=r7nCFNou5KQKI5VhP1MA:9 a=-52OSV3k6aGjHW0a:21
+        a=qFaRso0K34Rwt0Du:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Tue, Feb 18, 2020 at 10:04:15PM -0800, Matthew Wilcox wrote:
+> On Wed, Feb 19, 2020 at 02:29:00PM +1100, Dave Chinner wrote:
+> > On Mon, Feb 17, 2020 at 10:46:11AM -0800, Matthew Wilcox wrote:
+> > > @@ -418,6 +412,15 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
+> > >  		}
+> > >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
+> > >  				ctx, iomap, srcmap);
+> > > +		if (WARN_ON(ret == 0))
+> > > +			break;
+> > 
+> > This error case now leaks ctx->cur_page....
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
-> 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
-> 
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
-> 
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  net/core/sock_map.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-> index 085cef5857bb..3a7a96ab088a 100644
-> --- a/net/core/sock_map.c
-> +++ b/net/core/sock_map.c
-> @@ -518,7 +518,7 @@ struct bpf_htab_elem {
->  	u32 hash;
->  	struct sock *sk;
->  	struct hlist_node node;
-> -	u8 key[0];
-> +	u8 key[];
->  };
->  
->  struct bpf_htab_bucket {
-> -- 
-> 2.25.0
-> 
+> Yes ... and I see the consequence.  I mean, this is a "shouldn't happen",
+> so do we want to put effort into cleanup here ...
 
-The same pattern is in ./kernel/bpf/hashtab.c can you also change
-it here then if this is the case so sockmap is aligned with bpf
-coding style.
+Well, the normal thing for XFS is that a production kernel cleans up
+and handles the error gracefully with a WARN_ON_ONCE, while a debug
+kernel build will chuck a tanty and burn the house down so to make
+the developers aware that there is a "should not happen" situation
+occurring....
 
-.John
+> > > @@ -451,11 +454,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
+> > >  done:
+> > >  	if (ctx.bio)
+> > >  		submit_bio(ctx.bio);
+> > > -	if (ctx.cur_page) {
+> > > -		if (!ctx.cur_page_in_bio)
+> > > -			unlock_page(ctx.cur_page);
+> > > -		put_page(ctx.cur_page);
+> > > -	}
+> > > +	BUG_ON(ctx.cur_page);
+> > 
+> > And so will now trigger both a warn and a bug....
+> 
+> ... or do we just want to run slap bang into this bug?
+> 
+> Option 1: Remove the check for 'ret == 0' altogether, as we had it before.
+> That puts us into endless loop territory for a failure mode, and it's not
+> parallel with iomap_readpage().
+> 
+> Option 2: Remove the WARN_ON from the check.  Then we just hit the BUG_ON,
+> but we don't know why we did it.
+> 
+> Option 3: Set cur_page to NULL.  We'll hit the WARN_ON, avoid the BUG_ON,
+> might end up with a page in the page cache which is never unlocked.
+
+None of these are appealing.
+
+> Option 4: Do the unlock/put page dance before setting the cur_page to NULL.
+> We might double-unlock the page.
+
+why would we double unlock the page?
+
+Oh, the readahead cursor doesn't handle the case of partial page
+submission, which would result in IO completion unlocking the page.
+
+Ok, that's what the ctx.cur_page_in_bio check is used to detect i.e.
+if we've got a page that the readahead cursor points at, and we
+haven't actually added it to a bio, then we can leave it to the
+read_pages() to unlock and clean up. If it's in a bio, then IO
+completion will unlock it and so we only have to drop the submission
+reference and move the readahead cursor forwards so read_pages()
+doesn't try to unlock this page. i.e:
+
+	/* clean up partial page submission failures */
+	if (ctx.cur_page && ctx.cur_page_in_bio) {
+		put_page(ctx.cur_page);
+		readahead_next(rac);
+	}
+
+looks to me like it will handle the case of "ret == 0" in the actor
+function just fine.
+
+Cheers,
+
+Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
