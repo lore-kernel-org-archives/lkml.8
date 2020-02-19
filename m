@@ -2,112 +2,161 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9A1C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E461C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603C724655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582080570;
-	bh=pOEc9MEZ6T3vljY0q9joT1dIPADh7c/sUtPf/8kggMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTo6shrvBnCoU0ObN1G1nOsG2hWq/hdlQJbUbYbMaTElHjQWoTwbQjS4HMWfUXWfL
-	 dwp8N4e6GTOThwJRzGMwRbhvxkaP/fw29WauFmbShMheoDoad6op7tXVhfl2wJGoz3
-	 XqrPBy5G3syKBb71QjlIZoSOnKWTpurnFOdnZWRk=
+	by mail.kernel.org (Postfix) with ESMTP id 6F04724655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgBSCt3 (ORCPT
+        id S1728279AbgBSCte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:49:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbgBSCt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:49:29 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858F824654;
-        Wed, 19 Feb 2020 02:49:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582080568;
-        bh=pOEc9MEZ6T3vljY0q9joT1dIPADh7c/sUtPf/8kggMk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tkBphdEXciG/bwBiAOIIhSYPuMeHdIWO0uxMZpL3fzTZhoAR1aoCXZO/tH87u8s9U
-         KPcA7GhWRjiysUMR0tEoGNPW/ip5Ngqm2Y0pywj2dgV8OA9GYlDt1gRcmo18BgvkWB
-         Yij4dbl2lXpt1mvwI2Uo7AbpdKRdT54rsW7Hqq2k=
-Date:   Tue, 18 Feb 2020 18:49:28 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH 1/3] f2fs: avoid __GFP_NOFAIL in f2fs_bio_alloc
-Message-ID: <20200219024928.GA96609@google.com>
-References: <20200218102136.32150-1-yuchao0@huawei.com>
+        Tue, 18 Feb 2020 21:49:34 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33001 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbgBSCtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:49:33 -0500
+Received: by mail-ed1-f67.google.com with SMTP id r21so27341866edq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:49:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3YO1Y1VDHcP44ZD0tS0W7OVzzWFpRpsczECwzMV+qhw=;
+        b=CrBOaYK+8ZFUbKAjS+HBKCOj9fgPjewapiaTXGOH9d/STNXon++xluzfqNnhY4BxQe
+         PsZz3lmyrz0PBV8wmwpPgvQDg1M/YS7Jx6KH3i3kKVGXKd58Gf6vbnO4I/UdNpXzihjL
+         av0eoo5+nxADlidddr7cb/wFMKp4eX7TL3HKa+jbM5AxXCE8BQQNCBL/d35+bhqlX2x2
+         eKAjIfWLc/nUmGZ0K74dBTKL0YQ8DZUSOPKpbT3wvyvfDwG60LRuEETnb26GNQ7j+KjI
+         SJMyEvYVnGhIM2VzcCG2z+0dLAerB2lGZ58fjQQiGW2J0WhMd06knY4DhkQYlPGHxwqL
+         nBcg==
+X-Gm-Message-State: APjAAAWMyiiIlEhgDOZebXm6eBCUhOcMjTtW8yfNe58BWxbwEDGIJ5E7
+        B6NCKJGISL1QjX5K2kcSjhnzi7pzucA=
+X-Google-Smtp-Source: APXvYqw2WT63fvCw4qLur5lo3KnAvvKIS4jNQb/FjUFwfp3YRbVXcbR+hLwI1egOjLHzl9ABOkcKYw==
+X-Received: by 2002:a17:906:f14e:: with SMTP id gw14mr834201ejb.217.1582080571088;
+        Tue, 18 Feb 2020 18:49:31 -0800 (PST)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
+        by smtp.gmail.com with ESMTPSA id d8sm24849edn.52.2020.02.18.18.49.30
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 18:49:30 -0800 (PST)
+Received: by mail-wr1-f51.google.com with SMTP id y11so26363948wrt.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:49:30 -0800 (PST)
+X-Received: by 2002:a5d:640d:: with SMTP id z13mr31363099wru.181.1582080570098;
+ Tue, 18 Feb 2020 18:49:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218102136.32150-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200219010951.395599-1-megous@megous.com>
+In-Reply-To: <20200219010951.395599-1-megous@megous.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 19 Feb 2020 10:49:18 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
+Message-ID: <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
+Subject: Re: [PATCH] bus: sunxi-rsb: Return correct data when mixing 16-bit
+ and 8-bit reads
+To:     Ondrej Jirman <megous@megous.com>
+Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/18, Chao Yu wrote:
-> __f2fs_bio_alloc() won't fail due to memory pool backend, remove unneeded
-> __GFP_NOFAIL flag in __f2fs_bio_alloc().
+On Wed, Feb 19, 2020 at 9:10 AM Ondrej Jirman <megous@megous.com> wrote:
+>
+> When doing a 16-bit read that returns data in the MSB byte, the
+> RSB_DATA register will keep the MSB byte unchanged when doing
+> the following 8-bit read. sunxi_rsb_read() will then return
+> a result that contains high byte from 16-bit read mixed with
+> the 8-bit result.
+>
+> The consequence is that after this happens the PMIC's regmap will
+> look like this: (0x33 is the high byte from the 16-bit read)
+>
+> % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
+> 00: 33
+> 01: 33
+> 02: 33
+> 03: 33
+> 04: 33
+> 05: 33
+> 06: 33
+> 07: 33
+> 08: 33
+> 09: 33
+> 0a: 33
+> 0b: 33
+> 0c: 33
+> 0d: 33
+> 0e: 33
+> [snip]
+>
+> Fix this by masking the result of the read with the correct mask
+> based on the size of the read. There are no 16-bit users in the
+> mainline kernel, so this doesn't need to get into the stable tree.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-It it safe for old kernels as well when thinking backports?
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+for the fix, however it's not entirely clear to me how the MSB 0x33
+value got into the regmap. Looks like I expected the regmap core to
+handle any overflows, or didn't expect the lingering MSB from 16-bit
+reads, as I didn't have any 16-bit register devices back when I wrote
+this.
+
+ChenYu
+
+
 > ---
->  fs/f2fs/data.c | 12 ++++--------
->  fs/f2fs/f2fs.h |  2 +-
->  2 files changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index baf12318ec64..3a4ece26928c 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -54,17 +54,13 @@ static inline struct bio *__f2fs_bio_alloc(gfp_t gfp_mask,
->  	return bio_alloc_bioset(gfp_mask, nr_iovecs, &f2fs_bioset);
->  }
->  
-> -struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail)
-> +struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool noio)
+>  drivers/bus/sunxi-rsb.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+> index b8043b58568ac..8ab6a3865f569 100644
+> --- a/drivers/bus/sunxi-rsb.c
+> +++ b/drivers/bus/sunxi-rsb.c
+> @@ -316,6 +316,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
 >  {
-> -	struct bio *bio;
-> -
-> -	if (no_fail) {
-> +	if (noio) {
->  		/* No failure on bio allocation */
-> -		bio = __f2fs_bio_alloc(GFP_NOIO, npages);
-> -		if (!bio)
-> -			bio = __f2fs_bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
-> -		return bio;
-> +		return __f2fs_bio_alloc(GFP_NOIO, npages);
->  	}
-> +
->  	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
->  		f2fs_show_injection_info(sbi, FAULT_ALLOC_BIO);
->  		return NULL;
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 5316ac3eacdf..65f569949d42 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -3343,7 +3343,7 @@ void f2fs_destroy_checkpoint_caches(void);
->   */
->  int __init f2fs_init_bioset(void);
->  void f2fs_destroy_bioset(void);
-> -struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail);
-> +struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool noio);
->  int f2fs_init_bio_entry_cache(void);
->  void f2fs_destroy_bio_entry_cache(void);
->  void f2fs_submit_bio(struct f2fs_sb_info *sbi,
-> -- 
-> 2.18.0.rc1
+>         u32 cmd;
+>         int ret;
+> +       u32 mask;
+>
+>         if (!buf)
+>                 return -EINVAL;
+> @@ -323,12 +324,15 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+>         switch (len) {
+>         case 1:
+>                 cmd = RSB_CMD_RD8;
+> +               mask = 0xffu;
+>                 break;
+>         case 2:
+>                 cmd = RSB_CMD_RD16;
+> +               mask = 0xffffu;
+>                 break;
+>         case 4:
+>                 cmd = RSB_CMD_RD32;
+> +               mask = 0xffffffffu;
+>                 break;
+>         default:
+>                 dev_err(rsb->dev, "Invalid access width: %zd\n", len);
+> @@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+>         if (ret)
+>                 goto unlock;
+>
+> -       *buf = readl(rsb->regs + RSB_DATA);
+> +       *buf = readl(rsb->regs + RSB_DATA) & mask;
+>
+>  unlock:
+>         mutex_unlock(&rsb->lock);
+> --
+> 2.25.1
+>
