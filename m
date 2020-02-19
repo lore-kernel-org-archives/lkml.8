@@ -2,163 +2,102 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9F3C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA663C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D8124654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqh4bs39"
+	by mail.kernel.org (Postfix) with ESMTP id B1E682465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582130376;
+	bh=/CX8XIpaKr86fJuFzYlFh8LeDEIxxg1IRlMhB0yl2rk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=roNNaO+zjpKH0Kk+ft4RhemasPOSb+MYTYg1cixTDrrauNIIPziIxpIGtez+Oduy6
+	 2K8NIDA+B7xh06tsa1A/F3Cz9ARx32ABNkrkwpkIJTP0U1OdWarivXJY7fBV+8nu6p
+	 EBKIElpaWaCvbTxDrIBzGn1j8pgD5xuzlJMjhBwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgBSQir (ORCPT
+        id S1726922AbgBSQjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:38:47 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43754 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgBSQir (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:38:47 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so1020662ljm.10;
-        Wed, 19 Feb 2020 08:38:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1BusTSWHZd4iZhqbIKlYBvbWdX7TmPHyP4IOzI8LiCY=;
-        b=bqh4bs39engdAvKvgFF0Zq2hPV28q+L7t9AlNPVJj2fqn3XcGBoy+rUUkCCeL32Xi3
-         OeWL2FthjZuAJLQaXc3UOE/IgsF0Jnv5Sx1GPD4767AKTekJe+6lZikAAw7BpV4VCnin
-         Hln5vKrlY87pHkmHFJPdBEbklM0G+cpBZGnM1RldqR+QupyhnE4ZZCUNFxPimXiAuYkt
-         1Qt2ITISl728KQy0MCMc+gYpcgOHkIOQqgE33ZqAbhkdUhWe6LRf9AFJbtObzSL7jUtJ
-         qDmF+IV1Vw+XmPYdv24jE/9v8BMVWyLvDug601UYkL5L3yZ/Zl8iynnTRtYScSJuPdSj
-         f0dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1BusTSWHZd4iZhqbIKlYBvbWdX7TmPHyP4IOzI8LiCY=;
-        b=tZGGdSwGXm07qpt++bskoqhvYyHnCPyG9zwhdSLkVO/z+zOAbIQPgy+GKpWoIOOuSV
-         5gk6uvT/8N0bOpzpiq3LLJG48vHJNgBYqNOVTOvux9EeQ9Q7bZvF/OmubsHjPMyr9ne7
-         lfvHJRVNibKMOf0FaTwJ7BlVOcy+HVM7uaYOBauJnV0YpSVY4wUXdPFrFwTUU2obQ8fb
-         YHz2s/kFvwAaXmuzIrCRo0qdfJ7vKNb9Ci2tPFLlEVih7XZJeDfLe0x3/7xgDHm1JIFI
-         axkG7nAbzwILO6tTZzBTZANDWXmg5Qse+hdPdSxxZUc14P9pOsD8aI0NkmdDg/WDlQCc
-         GCkQ==
-X-Gm-Message-State: APjAAAX1ORkQJ8J8NAOJbeB2XXUXcUSrj5WhU7Pu0UT7ss9WBslRNuFE
-        +hw3hUR2PKZLTSsTCMp8lDTSdAIhh2G8uwl2D5k=
-X-Google-Smtp-Source: APXvYqzMMZMnixr5rsqY/fP8O2JFDCDwpwfXCjfmgaU+YylBAsv9qXiKUG6cCv/c0LQblPf/mhGidILCwMduX/S9iNw=
-X-Received: by 2002:a2e:a404:: with SMTP id p4mr16827752ljn.234.1582130324319;
- Wed, 19 Feb 2020 08:38:44 -0800 (PST)
+        Wed, 19 Feb 2020 11:39:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726569AbgBSQjf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:39:35 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D851724654;
+        Wed, 19 Feb 2020 16:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582130374;
+        bh=/CX8XIpaKr86fJuFzYlFh8LeDEIxxg1IRlMhB0yl2rk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Ax5CMFITNCdHNpbnOkvKU+C1twFP5c8MOR0MfOSxGS8MQRWa5+JMZoPwaJjaRZ4MD
+         cM+oT9cVnmTFXacu0OLqV1rOi9IDr3VNFlnty02cvaPZ8ar8ZNsxWuGFohErKCaUSC
+         Ezofaa6c6li6Vpq/aVFyEoasoR8P5fe5FXyIQWoA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B382935209B0; Wed, 19 Feb 2020 08:39:34 -0800 (PST)
+Date:   Wed, 19 Feb 2020 08:39:34 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 07/22] rcu: Mark rcu_dynticks_curr_cpu_in_eqs() inline
+Message-ID: <20200219163934.GA2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.775936989@infradead.org>
 MIME-Version: 1.0
-References: <20200214133917.304937432@linutronix.de> <20200214161503.804093748@linutronix.de>
- <87a75ftkwu.fsf@linux.intel.com> <875zg3q7cn.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <875zg3q7cn.fsf@nanos.tec.linutronix.de>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Feb 2020 08:38:33 -0800
-Message-ID: <CAADnVQ+Q6hZNFZyKSQm1vPYNszH9T6Krz4K8Eu9f3Dy5UQPsag@mail.gmail.com>
-Subject: Re: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple
- call sites.
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf <bpf@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219150744.775936989@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 1:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
->
-> Cc+: seccomp folks
->
-> > Thomas Gleixner <tglx@linutronix.de> writes:
-> >
-> >> From: David Miller <davem@davemloft.net>
->
-> Leaving content for reference
->
-> >> All of these cases are strictly of the form:
-> >>
-> >>      preempt_disable();
-> >>      BPF_PROG_RUN(...);
-> >>      preempt_enable();
-> >>
-> >> Replace this with BPF_PROG_RUN_PIN_ON_CPU() which wraps BPF_PROG_RUN()
-> >> with:
-> >>
-> >>      migrate_disable();
-> >>      BPF_PROG_RUN(...);
-> >>      migrate_enable();
-> >>
-> >> On non RT enabled kernels this maps to preempt_disable/enable() and on RT
-> >> enabled kernels this solely prevents migration, which is sufficient as
-> >> there is no requirement to prevent reentrancy to any BPF program from a
-> >> preempting task. The only requirement is that the program stays on the same
-> >> CPU.
-> >>
-> >> Therefore, this is a trivially correct transformation.
-> >>
-> >> [ tglx: Converted to BPF_PROG_RUN_PIN_ON_CPU() ]
-> >>
-> >> Signed-off-by: David S. Miller <davem@davemloft.net>
-> >> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> >>
-> >> ---
-> >>  include/linux/filter.h    |    4 +---
-> >>  kernel/seccomp.c          |    4 +---
-> >>  net/core/flow_dissector.c |    4 +---
-> >>  net/core/skmsg.c          |    8 ++------
-> >>  net/kcm/kcmsock.c         |    4 +---
-> >>  5 files changed, 6 insertions(+), 18 deletions(-)
-> >>
-> >> --- a/include/linux/filter.h
-> >> +++ b/include/linux/filter.h
-> >> @@ -713,9 +713,7 @@ static inline u32 bpf_prog_run_clear_cb(
-> >>      if (unlikely(prog->cb_access))
-> >>              memset(cb_data, 0, BPF_SKB_CB_LEN);
-> >>
-> >> -    preempt_disable();
-> >> -    res = BPF_PROG_RUN(prog, skb);
-> >> -    preempt_enable();
-> >> +    res = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
-> >>      return res;
-> >>  }
-> >>
-> >> --- a/kernel/seccomp.c
-> >> +++ b/kernel/seccomp.c
-> >> @@ -268,16 +268,14 @@ static u32 seccomp_run_filters(const str
-> >>       * All filters in the list are evaluated and the lowest BPF return
-> >>       * value always takes priority (ignoring the DATA).
-> >>       */
-> >> -    preempt_disable();
-> >>      for (; f; f = f->prev) {
-> >> -            u32 cur_ret = BPF_PROG_RUN(f->prog, sd);
-> >> +            u32 cur_ret = BPF_PROG_RUN_PIN_ON_CPU(f->prog, sd);
-> >>
-> >
-> > More a question really, isn't the behavior changing here? i.e. shouldn't
-> > migrate_disable()/migrate_enable() be moved to outside the loop? Or is
-> > running seccomp filters on different cpus not a problem?
->
-> In my understanding this is a list of filters and they are independent
-> of each other.
+On Wed, Feb 19, 2020 at 03:47:31PM +0100, Peter Zijlstra wrote:
+> Since rcu_is_watching() is notrace (and needs to be, as it can be
+> called from the tracers), make sure everything it in turn calls is
+> notrace too.
+> 
+> To that effect, mark rcu_dynticks_curr_cpu_in_eqs() inline, which
+> implies notrace, as the function is tiny.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Yes. It's fine to be preempted between filters.
+There was some controversy over inline vs. notrace, leading me to
+ask whether we should use both inline and notrace here.  ;-)
+
+Assuming that the usual tracing suspects are OK with it:
+
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+> ---
+>  kernel/rcu/tree.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -294,7 +294,7 @@ static void rcu_dynticks_eqs_online(void
+>   *
+>   * No ordering, as we are sampling CPU-local information.
+>   */
+> -static bool rcu_dynticks_curr_cpu_in_eqs(void)
+> +static inline bool rcu_dynticks_curr_cpu_in_eqs(void)
+>  {
+>  	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
+>  
+> 
+> 
