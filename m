@@ -2,130 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63266C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E0C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3151520801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="S1RlRDFe"
+	by mail.kernel.org (Postfix) with ESMTP id 3C0D0206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgBSDt3 (ORCPT
+        id S1726512AbgBSDyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:49:29 -0500
-Received: from mail-bn7nam10on2053.outbound.protection.outlook.com ([40.107.92.53]:6170
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        Tue, 18 Feb 2020 22:54:37 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58866 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbgBSDt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:49:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mO6Z+kIeVlh8rh94rX8mEt4qo6mVZvaVfJ3nKzcxB2b8xg7jftMYzSLsr9tsLeIuSLLHqGdtzpfv2ISp2X0Bp7n+JAja/VEkgFTYGaDHjxbeO9lL9qebRsCXpVHnP9dO4kA7qw+leElWmNsI2qshShdcR8w+BhbwnCiICA7aU+YFXX1jBSr8AVe2v9XYFPSgZBNoOB7Vk1pUQ1CXFCoKjwK1c0szW4KvvePG72ceuAUALMmkchE+WL8PGHJDcyTN9Pdqd0A5MobGps8M6NZJHHenl4OxezJos+b3NEqfFur4Q0lco0Ge74z1YTRoN4kwLLpyq8xCQqK/IdlsbYBjjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ahr4tQbi/LZROCj5Y+IuRVr/GQUX/dF5s4CeWPm/90=;
- b=V+ofTY90V7dyj/vJWVlqrVliCN2qlhGjQgH0cwRvlQfX77YH3tlCrzE9b1GwGtGN1/L7e/FKHAlIVwrSu/GCM2KdrIv/tA4xqWi0VBcUr2D/04hEtw/CUSgxMcVF7cQnZbD2utzAR7cNGVabEErBOHVakxBeTjSIi4UOxCTlXQK22Wwh8nnas7Lu/23JVAxyF/DLeZTcR9rpoKKZZilL6R+lCxmuiSUcJr/1XYUPBhmtHHQ/PMrDZMcxZ4r9QTKtX0Y9EoiQQ++8EbaxMIWKjGNAy12HWXiB7wsrcXgqAPljMb9qfLLeBRCVUwMXsdGJBeHOkqA0ATM2fZAF51Cb4Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ahr4tQbi/LZROCj5Y+IuRVr/GQUX/dF5s4CeWPm/90=;
- b=S1RlRDFeo9bMaHcLhcncn/RCL2Ue3aYbI+Pf0cm9lqiAQcg0lti/d2uQaQ8aC+gWHAlkgr84kY4czZ26fhuIpo2Z07RMyYI5Sj80xvN/tjJ/UtjQpXk3Sj7vb/ZH1UqNzTle0lip9p/8Lw6/B21IPNxiDvxgC+jSuH8Cj5wy8bs=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3704.namprd13.prod.outlook.com (20.180.15.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.9; Wed, 19 Feb 2020 03:49:24 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::55a5:5dab:67de:b5d8]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::55a5:5dab:67de:b5d8%5]) with mapi id 15.20.2750.016; Wed, 19 Feb 2020
- 03:49:24 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com
-Cc:     aou@eecs.berkeley.edu, atish.patra@wdc.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH] riscv: dts: Add GPIO reboot method to HiFive Unleashed DTS file
-Date:   Wed, 19 Feb 2020 09:19:07 +0530
-Message-Id: <1582084147-24516-1-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 2.7.4
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR02CA0030.apcprd02.prod.outlook.com
- (2603:1096:3:18::18) To CH2PR13MB3368.namprd13.prod.outlook.com
- (2603:10b6:610:2c::26)
+        id S1726439AbgBSDyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:54:37 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2E7D78F300AE887A7AEF;
+        Wed, 19 Feb 2020 11:54:34 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
+ 2020 11:54:28 +0800
+Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
+ called
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200214185855.217360-1-jaegeuk@kernel.org>
+ <20200214185855.217360-3-jaegeuk@kernel.org>
+ <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
+ <20200218232714.GB10213@google.com>
+ <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
+ <20200219030425.GA102063@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <266f233b-e084-cccd-d07e-96d8438d5b74@huawei.com>
+Date:   Wed, 19 Feb 2020 11:54:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from osubuntu003.open-silicon.com (159.117.144.156) by SG2PR02CA0030.apcprd02.prod.outlook.com (2603:1096:3:18::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.17 via Frontend Transport; Wed, 19 Feb 2020 03:49:21 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [159.117.144.156]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: bd056562-d682-453f-84c2-08d7b4eeb5bc
-X-MS-TrafficTypeDiagnostic: CH2PR13MB3704:
-X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR13MB37041D379B5AD2BC160803D88C100@CH2PR13MB3704.namprd13.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(6029001)(366004)(396003)(376002)(346002)(136003)(39850400004)(199004)(189003)(81156014)(36756003)(81166006)(478600001)(8676002)(2906002)(66556008)(66476007)(6666004)(8936002)(66946007)(52116002)(6636002)(6512007)(86362001)(107886003)(4326008)(5660300002)(956004)(4744005)(316002)(6486002)(6506007)(186003)(26005)(16526019)(44832011)(2616005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3704;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gVKTZMsQcmnajmnRbKDu6EZLOcooU79AhgG3Lo37V+5XTdH5AP6VSyeY5zFZAzlXz8ibHJd/BDfzpXx+o/UsEQtoMYIhXxhrcEEkOCWnIeF/SGQrCSecqc1oAU9peFvqIny3xJ4QXy0zwAEs4NTvYm/RVB/OVFTMRarAp+YCs2V5nQ/jfyu4G9QBSkasgMJkhOiQo3v6mXUZBcYZtSPo3LStESN2ojJaPm8wBZAf9+awCtTNwwklUCLP0tVltbM5cNZhuDRo/YAHGLs4CdcY+0hTHug6l0Cg2VN+trtSeuUZMObwaIVrxy9bhxGW30Cb94YBd4T+OL5bUSzWWfZ8ydGFtT/ruEQP1LRwoeOaKNaZDVECg9vSnkpzLTY1Pe4XQYdoa/mMqBL9mlekBPEZdEJ9LCOPibznjKGHYFn8YFJBb2y4ZK4Fc59PlDJiGbOI
-X-MS-Exchange-AntiSpam-MessageData: rLn//ekM0RwrOyjTpZSApbqJVSKCGS8NZY8PQcsZN6z0pnPBc9ZyU0l8te8pF68Dm/CFWrnsJSLg/xI1nn7z6FUb/LcCUXWfmoSqiLjDwX8MmuTNstjPxcZvbnop3+B9TCyKEKZEVL3fTOes47V1kg==
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd056562-d682-453f-84c2-08d7b4eeb5bc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 03:49:24.4859
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nPV4MC2VYmxDKuSODXS34wiLFYANryNvhXH3xrCjF+dHtdT1PbqcOEZeCV+jk/4cWd01PIGWuLFjg5k6uDgDYw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3704
+In-Reply-To: <20200219030425.GA102063@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ability to reboot the HiFive Unleashed board via GPIO.
+On 2020/2/19 11:04, Jaegeuk Kim wrote:
+> On 02/19, Chao Yu wrote:
+>> On 2020/2/19 7:27, Jaegeuk Kim wrote:
+>>> On 02/17, Chao Yu wrote:
+>>>> On 2020/2/15 2:58, Jaegeuk Kim wrote:
+>>>>> FG_GC needs to move entire section more quickly.
+>>>>>
+>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>> ---
+>>>>>  fs/f2fs/gc.c | 2 +-
+>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>>>>> index bbf4db3f6bb4..1676eebc8c8b 100644
+>>>>> --- a/fs/f2fs/gc.c
+>>>>> +++ b/fs/f2fs/gc.c
+>>>>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
+>>>>>  
+>>>>>  		if (get_valid_blocks(sbi, segno, false) == 0)
+>>>>>  			goto freed;
+>>>>> -		if (__is_large_section(sbi) &&
+>>>>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
+>>>>>  				migrated >= sbi->migration_granularity)
+>>>>
+>>>> I knew migrating one large section is a more efficient way, but this can
+>>>> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
+>>>> extreme fragmented space.
+>>>
+>>> FG_GC requires to wait for whole section migration which shows the entire
+>>> latency.
+>>
+>> That will cause long-tail latency for single f2fs_balance_fs() procedure,
+>> which it looks a very long hang when userspace call f2fs syscall, so why
+>> not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
+> 
+> Then, other ops can easily make more dirty segments. The intention of FG_GC is
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+Yup, that's a problem, if there are more dirty datas being made, reserved segments
+may be ran out during FG_GC.
 
-diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-index 609198c..4a2729f 100644
---- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-+++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2018-2019 SiFive, Inc */
- 
- #include "fu540-c000.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- /* Clock frequency (in Hz) of the PCB crystal for rtcclk */
- #define RTCCLK_FREQ		1000000
-@@ -41,6 +42,10 @@
- 		clock-frequency = <RTCCLK_FREQ>;
- 		clock-output-names = "rtcclk";
- 	};
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &uart0 {
--- 
-2.7.4
+> to block everything and make min. free segments as a best shot.
 
+I just try to simulate write GC's logic in FTL to mitigate single op's max latency,
+otherwise benchmark looks hang during FG_GC (in a 500mb+ section).
+
+Thanks,
+
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>  			goto skip;
+>>>>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
+>>>>>
+>>> .
+>>>
+> .
+> 
