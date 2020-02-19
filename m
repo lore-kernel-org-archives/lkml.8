@@ -2,303 +2,140 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887CBC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A8DC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B01524658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB6124656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:55:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlD3m2Xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBSEyy (ORCPT
+        id S1726656AbgBSEyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:54:54 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53124 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726739AbgBSEyx (ORCPT
+        Tue, 18 Feb 2020 23:54:33 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39571 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgBSEyc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:54:53 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J4sHuJ087751
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:54:52 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8ubrmh4w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:54:51 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 19 Feb 2020 04:54:49 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 04:54:42 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J4sf0w33161358
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 04:54:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8431FA405C;
-        Wed, 19 Feb 2020 04:54:41 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC425A4054;
-        Wed, 19 Feb 2020 04:54:40 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 04:54:40 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3D1B7A00DF;
-        Wed, 19 Feb 2020 15:54:36 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
+        Tue, 18 Feb 2020 23:54:32 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so22579807oih.6;
+        Tue, 18 Feb 2020 20:54:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Os68XGDBUjifyLXJ9YoVcjf5m29kyGwpnUt6cu21Uo4=;
+        b=WlD3m2XzyakcphSWqvY6ufrDPoLiHTqfkDQel1TWzkr4wSIEc8m6I2qtiY+qrLWeU0
+         g24miItGoafOI1Afqip5txCb4iejvdTbOEcciEI4t2EBCj5h+bH9ZcXAzvN+u3OfKper
+         lHkxw+DTwWmAZjVEJ9pySiYz9LIakW1AssZAbdku//dq8ulQQ6aGSko1ag5vhyO0v3jx
+         +9ixehPaMPDo8W1qU/yf4TdND+x19tPSzYWPvF/V7kJ1uHkDn2m4TiaQTPm6xWdI37dD
+         RyhBWAPc8LYQTGV2ukmDO4AvpZVnmIaw9KdKvw6fkGEK7i4GfP/zjQUWgjm+eEBE+aDn
+         nfCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Os68XGDBUjifyLXJ9YoVcjf5m29kyGwpnUt6cu21Uo4=;
+        b=JtGJsFzbtbYy9hpVw7vAX3v66jUF41pPQbA5LZKNAyfR76ggOrX6o2HsGcZ6IIzSpd
+         O48y0/sD7oeVwo9/MdFGTknETjd+Gxxa4h5iED5YDO8QanBoLzjgUatHd9chSGdcIdvB
+         ssyBTm/pZphQJ0UNjHFnW87S1wY5wh5klhy8gRWP6B9NS1Pi4BXPU7T+aq1xHt4oJvy1
+         DRg5t+0QXkJbc4XyODt4nHJaodNfuK3UAk5J2ty1D/IkLcSl7Z4XC+cHnvVZIt+r2J8m
+         I2W8OI8TykyLqOUusX3FKxuTBqNgJfRE1gWXjJmwrpuhc7fTIpvI7RepV2OYPtWYl5ZT
+         OdVw==
+X-Gm-Message-State: APjAAAW5geamwYyfA5yvh/q7hFDF8H9J5l1+r7PKv40m8WlPtf0BFnSm
+        k/3VRTjlSnZ+eoHJiF7iY94=
+X-Google-Smtp-Source: APXvYqxy9VnLpe/f+G1QU6ZpnKmD90vBPbNlWqY9osCEKUE9HSgK6fxs2ivjl+MoiJ1Q8dJ5DNS0zg==
+X-Received: by 2002:aca:1204:: with SMTP id 4mr3613290ois.143.1582088071777;
+        Tue, 18 Feb 2020 20:54:31 -0800 (PST)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id c7sm288894otn.81.2020.02.18.20.54.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 20:54:31 -0800 (PST)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
         Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 19 Feb 2020 15:54:39 +1100
-In-Reply-To: <20200203142254.00007377@Huawei.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-15-alastair@au1.ibm.com>
-         <20200203142254.00007377@Huawei.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 0/6] Silence some instances of -Wtautological-compare and enable globally
+Date:   Tue, 18 Feb 2020 21:54:17 -0700
+Message-Id: <20200219045423.54190-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021904-0028-0000-0000-000003DC4DB5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021904-0029-0000-0000-000024A15924
-Message-Id: <3909c7f2e22f2ff275f0a2e1d1991fad061e01af.camel@au1.ibm.com>
-Subject: RE: [PATCH v2 14/27] nvdimm/ocxl: Add support for near storage commands
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002190032
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 14:22 +0000, Jonathan Cameron wrote:
-> On Tue, 3 Dec 2019 14:46:42 +1100
-> Alastair D'Silva <alastair@au1.ibm.com> wrote:
-> 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Similar to the previous patch, this adds support for near storage
-> > commands.
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/nvdimm/ocxl/scm.c          |  6 +++++
-> >  drivers/nvdimm/ocxl/scm_internal.c | 41
-> > ++++++++++++++++++++++++++++++
-> >  drivers/nvdimm/ocxl/scm_internal.h | 38
-> > +++++++++++++++++++++++++++
-> >  3 files changed, 85 insertions(+)
-> > 
-> > diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-> > index 1e175f3c3cf2..6c16ca7fabfa 100644
-> > --- a/drivers/nvdimm/ocxl/scm.c
-> > +++ b/drivers/nvdimm/ocxl/scm.c
-> > @@ -310,12 +310,18 @@ static int scm_setup_command_metadata(struct
-> > scm_data *scm_data)
-> >  	int rc;
-> >  
-> >  	mutex_init(&scm_data->admin_command.lock);
-> > +	mutex_init(&scm_data->ns_command.lock);
-> >  
-> >  	rc = scm_extract_command_metadata(scm_data,
-> > GLOBAL_MMIO_ACMA_CREQO,
-> >  					  &scm_data->admin_command);
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	rc = scm_extract_command_metadata(scm_data,
-> > GLOBAL_MMIO_NSCMA_CREQO,
-> > +					  &scm_data->ns_command);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> 
-> Ah. So much for my comment in previous patch.  Ignore that...
-> 
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/drivers/nvdimm/ocxl/scm_internal.c
-> > b/drivers/nvdimm/ocxl/scm_internal.c
-> > index 7b11b56863fb..c405f1d8afb8 100644
-> > --- a/drivers/nvdimm/ocxl/scm_internal.c
-> > +++ b/drivers/nvdimm/ocxl/scm_internal.c
-> > @@ -132,6 +132,47 @@ int scm_admin_response_handled(const struct
-> > scm_data *scm_data)
-> >  				      OCXL_LITTLE_ENDIAN,
-> > GLOBAL_MMIO_CHI_ACRA);
-> >  }
-> >  
-> > +int scm_ns_command_request(struct scm_data *scm_data, u8 op_code)
-> > +{
-> > +	u64 val;
-> > +	int rc = ocxl_global_mmio_read64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_CHI,
-> > +					 OCXL_LITTLE_ENDIAN, &val);
-> > +	if (rc)
-> > +		return rc;
-> > +
-> > +	if (!(val & GLOBAL_MMIO_CHI_NSCRA))
-> > +		return -EBUSY;
-> > +
-> > +	return scm_command_request(scm_data, &scm_data->ns_command,
-> > op_code);
-> > +}
-> > +
-> > +int scm_ns_response(const struct scm_data *scm_data)
-> > +{
-> > +	return scm_command_response(scm_data, &scm_data->ns_command);
-> > +}
-> > +
-> > +int scm_ns_command_execute(const struct scm_data *scm_data)
-> > +{
-> > +	return ocxl_global_mmio_set64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_HCI,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > GLOBAL_MMIO_HCI_NSCRW);
-> > +}
-> > +
-> > +bool scm_ns_command_complete(const struct scm_data *scm_data)
-> > +{
-> > +	u64 val = 0;
-> > +	int rc = scm_chi(scm_data, &val);
-> > +
-> > +	WARN_ON(rc);
-> > +
-> > +	return (val & GLOBAL_MMIO_CHI_NSCRA) != 0;
-> > +}
-> > +
-> > +int scm_ns_response_handled(const struct scm_data *scm_data)
-> > +{
-> > +	return ocxl_global_mmio_set64(scm_data->ocxl_afu,
-> > GLOBAL_MMIO_CHIC,
-> > +				      OCXL_LITTLE_ENDIAN,
-> > GLOBAL_MMIO_CHI_NSCRA);
-> > +}
-> > +
-> >  void scm_warn_status(const struct scm_data *scm_data, const char
-> > *message,
-> >  		     u8 status)
-> >  {
-> > diff --git a/drivers/nvdimm/ocxl/scm_internal.h
-> > b/drivers/nvdimm/ocxl/scm_internal.h
-> > index 9bff684cd069..9575996a89e7 100644
-> > --- a/drivers/nvdimm/ocxl/scm_internal.h
-> > +++ b/drivers/nvdimm/ocxl/scm_internal.h
-> > @@ -108,6 +108,7 @@ struct scm_data {
-> >  	struct ocxl_context *ocxl_context;
-> >  	void *metadata_addr;
-> >  	struct command_metadata admin_command;
-> > +	struct command_metadata ns_command;
-> >  	struct resource scm_res;
-> >  	struct nd_region *nd_region;
-> >  	char fw_version[8+1];
-> > @@ -176,6 +177,42 @@ int scm_admin_command_complete_timeout(const
-> > struct scm_data *scm_data,
-> >   */
-> >  int scm_admin_response_handled(const struct scm_data *scm_data);
-> >  
-> > +/**
-> > + * scm_ns_command_request() - Issue a near storage command request
-> > + * @scm_data: a pointer to the SCM device data
-> > + * @op_code: The op-code for the command
-> > + * Returns an identifier for the command, or negative on error
-> > + */
-> > +int scm_ns_command_request(struct scm_data *scm_data, u8 op_code);
-> > +
-> > +/**
-> > + * scm_ns_response() - Validate a near storage response
-> > + * @scm_data: a pointer to the SCM device data
-> > + * Returns the status code of the command, or negative on error
-> > + */
-> > +int scm_ns_response(const struct scm_data *scm_data);
-> > +
-> > +/**
-> > + * scm_ns_command_execute() - Notify the controller to start
-> > processing a pending near storage command
-> > + * @scm_data: a pointer to the SCM device data
-> > + * Returns 0 on success, negative on error
-> > + */
-> > +int scm_ns_command_execute(const struct scm_data *scm_data);
-> > +
-> > +/**
-> > + * scm_ns_command_complete() - Is a near storage command executing
-> > + * scm_data: a pointer to the SCM device data
-> > + * Returns true if the previous admin command has completed
-> > + */
-> > +bool scm_ns_command_complete(const struct scm_data *scm_data);
-> > +
-> > +/**
-> > + * scm_ns_response_handled() - Notify the controller that the near
-> > storage response has been handled
-> > + * scm_data: a pointer to the SCM device data
-> > + * Returns 0 on success, negative on failure
-> > + */
-> > +int scm_ns_response_handled(const struct scm_data *scm_data);
-> > +
-> >  /**
-> >   * scm_warn_status() - Emit a kernel warning showing a command
-> > status.
-> >   * @scm_data: a pointer to the SCM device data
-> > @@ -184,3 +221,4 @@ int scm_admin_response_handled(const struct
-> > scm_data *scm_data);
-> >   */
-> >  void scm_warn_status(const struct scm_data *scm_data, const char
-> > *message,
-> >  		     u8 status);
-> > +
-> Stray blank line!
-Ok
+Hi everyone,
 
-> 
-> Now we are into the real nitpicks.  Not enough coffee.
-> 
-> Jonathan
-> 
+This patch series aims to silence some instances of clang's
+-Wtautological-compare that are not problematic and enable it globally
+for the kernel because it has a bunch of subwarnings that can find real
+bugs in the kernel such as
+https://lore.kernel.org/lkml/20200116222658.5285-1-natechancellor@gmail.com/
+and https://bugs.llvm.org/show_bug.cgi?id=42666, which was specifically
+requested by Dmitry.
+
+The first patch adds a macro that casts the section variables to
+unsigned long (uintptr_t), which silences the warning and adds
+documentation.
+
+Patches two through four silence the warning in the places I have
+noticed it across all of my builds with -Werror, including arm, arm64,
+and x86_64 defconfig/allmodconfig/allyesconfig. There might still be
+more lurking but those will have to be teased out over time.
+
+Patch six finally enables the warning, while leaving one of the
+subwarnings disabled because it is rather noisy and somewhat pointless
+for the kernel, where core kernel code is expected to build and run with
+many different configurations where variable types can be different
+sizes.
+
+A slight meta comment: This is the first treewide patchset that I have
+sent. I pray I did everything right but please let me know if I did not.
+I assume someone like Andrew will pick this up with acks from everyone
+but let me know if there is someone better.
+
+Cheers,
+Nathan
+
+Nathan Chancellor (6):
+  asm/sections: Add COMPARE_SECTIONS macro
+  kernel/extable: Wrap section comparison in sort_main_extable with
+    COMPARE_SECTIONS
+  tracing: Wrap section comparison in tracer_alloc_buffers with
+    COMPARE_SECTIONS
+  dynamic_debug: Wrap section comparison in dynamic_debug_init with
+    COMPARE_SECTIONS
+  mm: kmemleak: Wrap section comparison in kmemleak_init with
+    COMPARE_SECTIONS
+  kbuild: Enable -Wtautological-compare
+
+ Makefile                       | 3 +--
+ include/asm-generic/sections.h | 7 +++++++
+ kernel/extable.c               | 3 ++-
+ kernel/trace/trace.c           | 2 +-
+ lib/dynamic_debug.c            | 2 +-
+ mm/kmemleak.c                  | 3 ++-
+ 6 files changed, 14 insertions(+), 6 deletions(-)
+
+
+base-commit: 02815e777db630e3c183718cab73752b48a5053e
 -- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+2.25.1
 
