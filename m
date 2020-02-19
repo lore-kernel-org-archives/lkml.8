@@ -4,61 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B99C3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E0C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD7924656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1F824656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sYYSXB08"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cu/THgoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgBSAIe (ORCPT
+        id S1727763AbgBSAIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:08:34 -0500
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:44523 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgBSAId (ORCPT
+        Tue, 18 Feb 2020 19:08:38 -0500
+Received: from mail-qv1-f74.google.com ([209.85.219.74]:43835 "EHLO
+        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBSAIh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:08:33 -0500
-Received: by mail-qt1-f202.google.com with SMTP id k20so14307745qtm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:31 -0800 (PST)
+        Tue, 18 Feb 2020 19:08:37 -0500
+Received: by mail-qv1-f74.google.com with SMTP id z9so13488318qvo.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=iAnwqX/AAGd26TFtb0myYOOPt2TU78CQZiCptAhki6M=;
-        b=sYYSXB08w4w7CLMRT3/eNDx6xYva8cYEFTCuJQR4rh30Mullg9eZPGtxoD1mkVM562
-         qadEoq/TXeLxpXMKTCLBB81ggPREoj6H3j99DsaWGjos6Iv2MW4hGhE6MqdaSqPtEvoS
-         onQCQXI5swqMYQy6JUA4UFH3ODTe0Inj7zi0AQdoA3IaQTVXLJ2qKNMkyDMhboK9PZqP
-         6+YGjfOGlwGI5VSXEpTlnSBOzBhsV1jpt3wTqfGr+bkOLRdvaWmj+DumCJeDJk52OzTm
-         PgRgNf1gqwBqXUmrJGX3Q52KCvBbk7XtYFQgYhw0gPs6CtuQSKOJll9v8A/ezPLF5eEJ
-         AQSQ==
+        bh=0f/RzoyEatytyatThC+F3eOfN2v+QCCQ4NfkPjtyieo=;
+        b=cu/THgoI4tMw6Hv/cnWQTiNWXWXUr6AKTVvfgPfzSMLj0kWYcpifZKdSq6w1+DteE0
+         kXx8mLdQVe2X1IQWWOSR6Mh+Qa+NPbQfhsSgJqX39vvszx480CLksDEmmIFQd2vxoqY3
+         1dP0HJ2lDnH66hEZo0ZFi1oE3hkU0IZ8oCsB7mmk/3IFcSboHkCVWkxpT1HW+h7VC1n7
+         yOmJd+ZtmnwfszU5a6Kt86Lcv2GGAwqezGTfzkaF0JiBJgiasqm6vEx4C8j7oNaglBnU
+         JfJ9UsRRTrbO7JD+RSG6YqwZQYiUQK+KI9Aw/1esMS/y9pSezRReN3CDnTr6Mdf4Z3gi
+         lu3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=iAnwqX/AAGd26TFtb0myYOOPt2TU78CQZiCptAhki6M=;
-        b=gfXrrjdaQICwk/dcb8F4zyoGklU3P2MFw7RjE66vVJQNIETWBKxKlhM66xgT9snTby
-         jF+hjSziMRGreZGMDNK0gj0ziOr/goxQfUDJQW6T3Uyh+EuqPmgpIuLJC/9BxtN/t8do
-         kRaCTSL3/PzwaVqgYnn4AdlK6kcI7t2fOOW+iSPBCCWqSnLINNuXSmEpY26ACf1K1sdd
-         DPD2HhFhvb3k9RvbXaZV4Gnzqfr8npaw64nPCJbM3rKSf6LZCL5C+/XR0Qp9jDjK+Lg7
-         sQqdXhTH4f02qQxVfNcUjqQgN0D5s5KLqRPz2QgEWaLtT/yLUEBJsN9OnsDo6xvJqReH
-         +ATg==
-X-Gm-Message-State: APjAAAXKe6ZyQ2f5JgbwyAGPdcBUkm0+DmBaeRwVpUuDqFtMbDKn2V1r
-        SM1kN2pudIJm4iu1Ve/v79at+Ejwsg3wtWovJFs=
-X-Google-Smtp-Source: APXvYqyEM4p/A8Dl5zz+8866IE6ZO7JWpwVqiWbBAAG9TUdmyrC5F892d6R7GtnA+eKeMUIgQtNYLB6Qlf3RSSdVxGQ=
-X-Received: by 2002:a0c:c250:: with SMTP id w16mr18163747qvh.24.1582070910338;
- Tue, 18 Feb 2020 16:08:30 -0800 (PST)
-Date:   Tue, 18 Feb 2020 16:08:07 -0800
+        bh=0f/RzoyEatytyatThC+F3eOfN2v+QCCQ4NfkPjtyieo=;
+        b=iw8tXt2eENStRnai0dhBC3O7oWIJy9Cjea69NiZx8sKPXgw1ptY1IgR/zezc9EWYy5
+         qLGCewqRBt4Mpi9utdBbFYNhpDSheZ+suEPBoFr12yWH22EGC0llEuqrAjkNoRrEoMva
+         xTJXNM86+CSxiigpQveIbj6Gqi3xEBw44fy9iK3u8g74+z/+cH7exHCySNHpt7aszeyE
+         nDXwZVjkbMk41vlY9k0QkfbbdsT8GIo5ohFZccQCx2Cbu1SIsdHEOVXL4SgmWgllrUIl
+         XgLwJ0S36l6bPezj/SQkjxduRguKoJQS24WmHjw5pY/e08UZ213OX3UYN1Pz7zbSLJUn
+         z7uA==
+X-Gm-Message-State: APjAAAVO31rnC9iz7Uaa5hco7qG6Oib6k4Do4XJOu+UjBZLdZ4GAQ7+e
+        dIDrWWzEtodBVGR1jZpMsusrRzSBuGV47O/5dFE=
+X-Google-Smtp-Source: APXvYqw4ER8WovKBYQVVrHd0oyLZvkEq3WR7WVWTpyENeUeptJ25rnbegEbU6hsEORKa9iiI1OoS973GsI/tCw23qS4=
+X-Received: by 2002:a37:4e89:: with SMTP id c131mr22333834qkb.5.1582070915273;
+ Tue, 18 Feb 2020 16:08:35 -0800 (PST)
+Date:   Tue, 18 Feb 2020 16:08:08 -0800
 In-Reply-To: <20200219000817.195049-1-samitolvanen@google.com>
-Message-Id: <20200219000817.195049-3-samitolvanen@google.com>
+Message-Id: <20200219000817.195049-4-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200219000817.195049-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v8 02/12] scs: add accounting
+Subject: [PATCH v8 03/12] scs: add support for stack usage debugging
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -84,176 +85,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds accounting for the memory allocated for shadow stacks.
+Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
+also prints out the highest shadow stack usage per process.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/base/node.c    |  6 ++++++
- fs/proc/meminfo.c      |  4 ++++
- include/linux/mmzone.h |  3 +++
- kernel/scs.c           | 20 ++++++++++++++++++++
- mm/page_alloc.c        |  6 ++++++
- mm/vmstat.c            |  3 +++
- 6 files changed, 42 insertions(+)
+ kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 98a31bafc8a2..874a8b428438 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -415,6 +415,9 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       "Node %d AnonPages:      %8lu kB\n"
- 		       "Node %d Shmem:          %8lu kB\n"
- 		       "Node %d KernelStack:    %8lu kB\n"
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+		       "Node %d ShadowCallStack:%8lu kB\n"
-+#endif
- 		       "Node %d PageTables:     %8lu kB\n"
- 		       "Node %d NFS_Unstable:   %8lu kB\n"
- 		       "Node %d Bounce:         %8lu kB\n"
-@@ -438,6 +441,9 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       nid, K(node_page_state(pgdat, NR_ANON_MAPPED)),
- 		       nid, K(i.sharedram),
- 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+		       nid, sum_zone_node_page_state(nid, NR_KERNEL_SCS_BYTES) / 1024,
-+#endif
- 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
- 		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
- 		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 8c1f1bb1a5ce..49768005a79e 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -103,6 +103,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 	show_val_kb(m, "SUnreclaim:     ", sunreclaim);
- 	seq_printf(m, "KernelStack:    %8lu kB\n",
- 		   global_zone_page_state(NR_KERNEL_STACK_KB));
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+	seq_printf(m, "ShadowCallStack:%8lu kB\n",
-+		   global_zone_page_state(NR_KERNEL_SCS_BYTES) / 1024);
-+#endif
- 	show_val_kb(m, "PageTables:     ",
- 		    global_zone_page_state(NR_PAGETABLE));
- 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 462f6873905a..0a6f395abc68 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -200,6 +200,9 @@ enum zone_stat_item {
- 	NR_MLOCK,		/* mlock()ed pages found and moved off LRU */
- 	NR_PAGETABLE,		/* used for pagetables */
- 	NR_KERNEL_STACK_KB,	/* measured in KiB */
-+#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-+	NR_KERNEL_SCS_BYTES,	/* measured in bytes */
-+#endif
- 	/* Second 128 byte cacheline */
- 	NR_BOUNCE,
- #if IS_ENABLED(CONFIG_ZSMALLOC)
 diff --git a/kernel/scs.c b/kernel/scs.c
-index 28abed21950c..5245e992c692 100644
+index 5245e992c692..ad74d13f2c0f 100644
 --- a/kernel/scs.c
 +++ b/kernel/scs.c
-@@ -12,6 +12,7 @@
- #include <linux/scs.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
-+#include <linux/vmstat.h>
- #include <asm/scs.h>
- 
- static inline void *__scs_base(struct task_struct *tsk)
-@@ -89,6 +90,11 @@ static void scs_free(void *s)
- 	vfree_atomic(s);
- }
- 
-+static struct page *__scs_page(struct task_struct *tsk)
-+{
-+	return vmalloc_to_page(__scs_base(tsk));
-+}
-+
- static int scs_cleanup(unsigned int cpu)
- {
- 	int i;
-@@ -135,6 +141,11 @@ static inline void scs_free(void *s)
- 	kmem_cache_free(scs_cache, s);
- }
- 
-+static struct page *__scs_page(struct task_struct *tsk)
-+{
-+	return virt_to_page(__scs_base(tsk));
-+}
-+
- void __init scs_init(void)
- {
- 	scs_cache = kmem_cache_create("scs_cache", SCS_SIZE, SCS_SIZE,
-@@ -153,6 +164,12 @@ void scs_task_reset(struct task_struct *tsk)
- 	task_set_scs(tsk, __scs_base(tsk));
- }
- 
-+static void scs_account(struct task_struct *tsk, int account)
-+{
-+	mod_zone_page_state(page_zone(__scs_page(tsk)), NR_KERNEL_SCS_BYTES,
-+		account * SCS_SIZE);
-+}
-+
- int scs_prepare(struct task_struct *tsk, int node)
- {
- 	void *s;
-@@ -162,6 +179,8 @@ int scs_prepare(struct task_struct *tsk, int node)
- 		return -ENOMEM;
- 
- 	task_set_scs(tsk, s);
-+	scs_account(tsk, 1);
-+
+@@ -184,6 +184,44 @@ int scs_prepare(struct task_struct *tsk, int node)
  	return 0;
  }
  
-@@ -182,6 +201,7 @@ void scs_release(struct task_struct *tsk)
++#ifdef CONFIG_DEBUG_STACK_USAGE
++static inline unsigned long scs_used(struct task_struct *tsk)
++{
++	unsigned long *p = __scs_base(tsk);
++	unsigned long *end = scs_magic(p);
++	unsigned long s = (unsigned long)p;
++
++	while (p < end && READ_ONCE_NOCHECK(*p))
++		p++;
++
++	return (unsigned long)p - s;
++}
++
++static void scs_check_usage(struct task_struct *tsk)
++{
++	static DEFINE_SPINLOCK(lock);
++	static unsigned long highest;
++	unsigned long used = scs_used(tsk);
++
++	if (used <= highest)
++		return;
++
++	spin_lock(&lock);
++
++	if (used > highest) {
++		pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
++			tsk->comm, task_pid_nr(tsk), used);
++		highest = used;
++	}
++
++	spin_unlock(&lock);
++}
++#else
++static inline void scs_check_usage(struct task_struct *tsk)
++{
++}
++#endif
++
+ bool scs_corrupted(struct task_struct *tsk)
+ {
+ 	unsigned long *magic = scs_magic(__scs_base(tsk));
+@@ -200,6 +238,7 @@ void scs_release(struct task_struct *tsk)
+ 		return;
  
  	WARN_ON(scs_corrupted(tsk));
++	scs_check_usage(tsk);
  
-+	scs_account(tsk, -1);
+ 	scs_account(tsk, -1);
  	task_set_scs(tsk, NULL);
- 	scs_free(s);
- }
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..1381b9d84e4c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5340,6 +5340,9 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			" managed:%lukB"
- 			" mlocked:%lukB"
- 			" kernel_stack:%lukB"
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+			" shadow_call_stack:%lukB"
-+#endif
- 			" pagetables:%lukB"
- 			" bounce:%lukB"
- 			" free_pcp:%lukB"
-@@ -5362,6 +5365,9 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			K(zone_managed_pages(zone)),
- 			K(zone_page_state(zone, NR_MLOCK)),
- 			zone_page_state(zone, NR_KERNEL_STACK_KB),
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+			zone_page_state(zone, NR_KERNEL_SCS_BYTES) / 1024,
-+#endif
- 			K(zone_page_state(zone, NR_PAGETABLE)),
- 			K(zone_page_state(zone, NR_BOUNCE)),
- 			K(free_pcp),
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 78d53378db99..d0650391c8c1 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1119,6 +1119,9 @@ const char * const vmstat_text[] = {
- 	"nr_mlock",
- 	"nr_page_table_pages",
- 	"nr_kernel_stack",
-+#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-+	"nr_shadow_call_stack_bytes",
-+#endif
- 	"nr_bounce",
- #if IS_ENABLED(CONFIG_ZSMALLOC)
- 	"nr_zspages",
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
