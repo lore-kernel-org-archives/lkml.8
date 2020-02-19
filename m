@@ -2,125 +2,151 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE893C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:17:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0624C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C13A21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B75DB21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="myvt75/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgBSJRx (ORCPT
+        id S1726610AbgBSJUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:17:53 -0500
-Received: from mga18.intel.com ([134.134.136.126]:48107 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgBSJRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:17:53 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 01:17:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="408385806"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga005.jf.intel.com with ESMTP; 19 Feb 2020 01:17:50 -0800
-Subject: Re: [PATCH] xhci: Do not open code __print_symbolic() in xhci trace
- events
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-References: <20200214115634.30e8ebf2@gandalf.local.home>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <c25679c6-de22-ae16-b041-ff914ee94a93@linux.intel.com>
-Date:   Wed, 19 Feb 2020 11:20:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 19 Feb 2020 04:20:53 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3710 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726210AbgBSJUw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:20:52 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J9Dklq019115;
+        Wed, 19 Feb 2020 10:20:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=drNFQy5Nym5BRpRAJATahkWJTxzhFZMOhGlvwzCfLzo=;
+ b=myvt75/wzffVMTxrJAGDUUJara5rP6SUyX1Ms6XdIRUiiVVjeMxAPz/nTFe/fmY+/jVF
+ sQ2EKRrNZrSBJDqV8isAI9U9vqcI36UMqlb9cHIuaBaaX1xV0zLkqKCrR+VGn05UIdCP
+ 258g8FeQWS2kNCJLnwNf/lDzlOz2HwT/ajbv+m8XkRbj9QnrF5YwZVzDEQFggM9cMf+f
+ QF/L8eGg1kFPIKd6f38bioUViLibtSCavrboGVFuxaoW8dguCQBY9bwb5iXsKkqIntn6
+ TCwB9Rf+Q8KbeEk3zXhSWm09GFHWSnDhnPOyNTzHazMlWzPi1qFROQM0wWJCDImsvENW 2Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub020hm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Feb 2020 10:20:30 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AB05B100039;
+        Wed, 19 Feb 2020 10:20:27 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9657D2A6C79;
+        Wed, 19 Feb 2020 10:20:27 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
+ 2020 10:20:26 +0100
+Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+ <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
+ <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
+Date:   Wed, 19 Feb 2020 10:20:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200214115634.30e8ebf2@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_02:2020-02-19,2020-02-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.2.2020 18.56, Steven Rostedt wrote:
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> libtraceevent (used by perf and trace-cmd) failed to parse the
-> xhci_urb_dequeue trace event. This is because the user space trace
-> event format parsing is not a full C compiler. It can handle some basic
-> logic, but is not meant to be able to handle everything C can do.
-> 
-> In cases where a trace event field needs to be converted from a number
-> to a string, there's the __print_symbolic() macro that should be used:
-> 
->  See samples/trace_events/trace-events-sample.h
-> 
-> Some xhci trace events open coded the __print_symbolic() causing the
-> user spaces tools to fail to parse it. This has to be replaced with
-> __print_symbolic() instead.
-> 
-> CC: stable@vger.kernel.org
-> Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206531
-> Fixes: 5abdc2e6e12ff ("usb: host: xhci: add urb_enqueue/dequeue/giveback tracers")
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
 
-Thanks
-Added to queue
 
--Mathias
+On 2/18/20 7:13 PM, Marek Vasut wrote:
+> On 2/18/20 7:10 PM, Alexandre Torgue wrote:
+>> Hi Marek
+> 
+> Hi,
+> 
+>> On 2/18/20 5:25 PM, Marek Vasut wrote:
+>>> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
+>>>> This series adds the possibility to handle gpio interrupts on level.
+>>>>
+>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>>>> external interrupts only on edge. To be able to handle GPIO interrupt on
+>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>>> chip)
+>>>> is retriggered following interrupt type and gpio line value.
+>>>>
+>>>> In exti irq chip, retrigger ops function is added.
+>>>
+>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2 set
+>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
+>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux selection")
+>>> prevents that.
+>>>
+>>
+>> No it's not possible. Each gpio line doesn't have a dedicated Exti line
+>> Each Exti line is muxing between gpio banks.
+> 
+> OK, that confirms my assumption.
+> 
+>> Mapping is done as following:
+>>
+>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
+>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
+>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
+>> ...
+> 
+> Is it at least possible to have IRQs of the same type on the same exti
+> line? E.g. gpioA2 of trigger-edge-falling and gpioB2 trigger-edge-falling ?
+> 
+
+Sorry I don't catch your point. If you already succeed to get gpioA2, 
+then you will failed to get gpioB2 but looking at function call stack we 
+could get an other issue.
+
+Lets take example where you succeed to get gpioa2 as interrupt (using 
+interrupt bindings) and now you try to do the same for gpiob2, you will 
+have (roughly):
+
+stm32_gpio_irq_request_resources (for gpiob2) --> succeed
+
+stm32_gpio_set_type
+  |
+  |--> stm32_exti_set_type type -> change exti line 2 trigger registers
+                                   with gpiob2 binding.
+
+stm32_gpio_domain_activate --> failed as exti line2 is already used
+			       by gpioa2.
+
+So as stm32_gpio_set_type is called before checking than exti line is 
+available, type could be changed and behavior of gpioa2 interrupt broken.
+
+Solution would be to move the exti line mux check from 
+stm32_gpio_domain_activate to  stm32_gpio_irq_request_resources callback.
+
+Regards
+Alex
+
+
+
+
