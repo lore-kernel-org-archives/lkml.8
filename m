@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0000AC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E28CC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C924624658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A1B24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbgBSImp (ORCPT
+        id S1726729AbgBSIlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:42:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726703AbgBSIlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Feb 2020 03:41:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44252 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726510AbgBSIlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:41:22 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E1FBFAD88;
-        Wed, 19 Feb 2020 08:41:22 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 9FDF5AEC5;
+        Wed, 19 Feb 2020 08:41:20 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 12/24] n_hdlc: inline n_hdlc_release
-Date:   Wed, 19 Feb 2020 09:41:06 +0100
-Message-Id: <20200219084118.26491-12-jslaby@suse.cz>
+Subject: [PATCH 05/24] n_hdlc: cleanup messages during registration
+Date:   Wed, 19 Feb 2020 09:40:59 +0100
+Message-Id: <20200219084118.26491-5-jslaby@suse.cz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219084118.26491-1-jslaby@suse.cz>
 References: <20200219084118.26491-1-jslaby@suse.cz>
@@ -40,77 +40,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put the body of n_hdlc_release into the only caller. It can be seen,
-that the "if" is superfluous now -- the same happens few lines above in
-n_hdlc_tty_close already. So drop it.
-
-Drop also n_hdlc2tty macro as this was the only user.
+1) n_hdlc prints two lines during registration. Squeeze it into one.
+2) prefix the error message with "N_HDLC: ", so that it's clear which
+   ldisc failed to register.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/n_hdlc.c | 35 ++++++++++-------------------------
- 1 file changed, 10 insertions(+), 25 deletions(-)
+ drivers/tty/n_hdlc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index 67162611af58..39a58febd896 100644
+index b651b5ba64ee..87f22e57e4f6 100644
 --- a/drivers/tty/n_hdlc.c
 +++ b/drivers/tty/n_hdlc.c
-@@ -175,8 +175,6 @@ static void n_hdlc_tty_receive(struct tty_struct *tty, const __u8 *cp,
- 			       char *fp, int count);
- static void n_hdlc_tty_wakeup(struct tty_struct *tty);
+@@ -899,13 +899,13 @@ static int __init n_hdlc_init(void)
+ 	else if (maxframe > 65535)
+ 		maxframe = 65535;
  
--#define n_hdlc2tty(n_hdlc)	((n_hdlc)->tty)
+-	pr_info("HDLC line discipline maxframe=%d\n", maxframe);
 -
- static void flush_rx_queue(struct tty_struct *tty)
- {
- 	struct n_hdlc *n_hdlc = tty->disc_data;
-@@ -220,28 +218,6 @@ static void n_hdlc_free_buf_list(struct n_hdlc_buf_list *list)
- 	} while (buf);
- }
+ 	status = tty_register_ldisc(N_HDLC, &n_hdlc_ldisc);
+ 	if (!status)
+-		pr_info("N_HDLC line discipline registered.\n");
++		pr_info("N_HDLC line discipline registered with maxframe=%d\n",
++				maxframe);
+ 	else
+-		pr_err("error registering line discipline: %d\n", status);
++		pr_err("N_HDLC: error registering line discipline: %d\n",
++				status);
  
--/**
-- * n_hdlc_release - release an n_hdlc per device line discipline info structure
-- * @n_hdlc - per device line discipline info structure
-- */
--static void n_hdlc_release(struct n_hdlc *n_hdlc)
--{
--	struct tty_struct *tty = n_hdlc2tty (n_hdlc);
--
--	/* Ensure that the n_hdlcd process is not hanging on select()/poll() */
--	wake_up_interruptible (&tty->read_wait);
--	wake_up_interruptible (&tty->write_wait);
--
--	if (tty->disc_data == n_hdlc)
--		tty->disc_data = NULL;	/* Break the tty->n_hdlc link */
--
--	n_hdlc_free_buf_list(&n_hdlc->rx_free_buf_list);
--	n_hdlc_free_buf_list(&n_hdlc->tx_free_buf_list);
--	n_hdlc_free_buf_list(&n_hdlc->rx_buf_list);
--	n_hdlc_free_buf_list(&n_hdlc->tx_buf_list);
--	kfree(n_hdlc);
--}	/* end of n_hdlc_release() */
--
- /**
-  * n_hdlc_tty_close - line discipline close
-  * @tty - pointer to tty info structure
-@@ -266,7 +242,16 @@ static void n_hdlc_tty_close(struct tty_struct *tty)
- 	tty->disc_data = NULL;
- 	if (tty != n_hdlc->tty)
- 		return;
--	n_hdlc_release (n_hdlc);
-+
-+	/* Ensure that the n_hdlcd process is not hanging on select()/poll() */
-+	wake_up_interruptible(&tty->read_wait);
-+	wake_up_interruptible(&tty->write_wait);
-+
-+	n_hdlc_free_buf_list(&n_hdlc->rx_free_buf_list);
-+	n_hdlc_free_buf_list(&n_hdlc->tx_free_buf_list);
-+	n_hdlc_free_buf_list(&n_hdlc->rx_buf_list);
-+	n_hdlc_free_buf_list(&n_hdlc->tx_buf_list);
-+	kfree(n_hdlc);
- }	/* end of n_hdlc_tty_close() */
- 
- /**
+ 	return status;
+ 	
 -- 
 2.25.0
 
