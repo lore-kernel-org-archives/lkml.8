@@ -2,198 +2,155 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B808C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BFCC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E38020658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93AD20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WydRZKXY"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="DIyxlmhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgBSLxa (ORCPT
+        id S1726882AbgBSL5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:53:30 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40506 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbgBSLx3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:53:29 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n18so44582ljo.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:53:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=71fpEu9gj4xQyGwVvrbfmB+uFD/Qs603qpfWf+rF/cI=;
-        b=WydRZKXY9aoo5/x9r7meASA5yIZERSvCqFjexbUYomQCBLBEMl8ai9Rdp78ufDUjEO
-         jDpzgAurjWlj6uqcwYa/MbVhrLIe44j2GlJRQvJCVc293/5erLflQh+iQfVWV7gir5F4
-         RHZkO/3p6owHHQCYafZVPzY+y0IoY0Bh7pYY8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=71fpEu9gj4xQyGwVvrbfmB+uFD/Qs603qpfWf+rF/cI=;
-        b=GLVz1xffP802RZTHYWfa7AvGTCceN0lqTeAca7UlVtPVia/31N45mG3jewK547MKEF
-         pv2aKXlVbIXiW3JMN2NpIZsGu1PGdx3P61i1mrp1U7E5Gfa38SjWLF9lfFzASVAqHk5Y
-         o3kbcF0uzT2N6UkB+vnBkkOdhe3X4zUs/ytmJWBk8poO/6V/9Kz41WZc+/EYHs1pY221
-         PqPDBWKj+1GurmrJMt/cTU1mmuCpuh3loJkNqK+CUIo21ZztMkv2abHxfJ84LxrrhG+h
-         W+LFFyNWIw9tpqhFxiWjAkdO/NjVTz0Y4f1rMF8lRJ2AzBBewthfqqKnLEiYIWyXXqSV
-         L6PA==
-X-Gm-Message-State: APjAAAUmBfDAmwEsjY+qY184qgnM5V1GoTqgwz0DTwCaeltxdwJFahZj
-        Ecs6zBM9MFm0cf60AUjqzOeETNjDNWJHHF2P
-X-Google-Smtp-Source: APXvYqwriRVyrAscp4UctZ1kCxokgDNdH+bpOZqirl4aV2eKSeSZNiDE+6GiSUXaE4BVrSQYu3s1Dg==
-X-Received: by 2002:a2e:556:: with SMTP id 83mr15644254ljf.127.1582113204971;
-        Wed, 19 Feb 2020 03:53:24 -0800 (PST)
-Received: from [172.16.11.50] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id o69sm1150496lff.14.2020.02.19.03.53.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 03:53:24 -0800 (PST)
-Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
- <20200219082155.6787-1-linux@rasmusvillemoes.dk>
- <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
-Date:   Wed, 19 Feb 2020 12:53:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 19 Feb 2020 06:57:18 -0500
+Received: from mail-eopbgr130117.outbound.protection.outlook.com ([40.107.13.117]:32093
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726558AbgBSL5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:57:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gypDhe/vfxWsUoertfApfMgjXbD99qCVEOfkK7Dyi9SLthHo1AjZq+b8JMq3X9aEyc2ISYbzVu8euU8dkHH0wQ5xv8M7phxTWWmAz/C/JBtYi93eP2FI4JzeSuipu9fUtGRu9FIhi9kfxB6lXtTGpM7RB3cvlLGbGt7R9btX1dGtr0EUY6ZxJSI1zkP8vUGP+K2ZJrOakA+CSs0sEj38cSvi6221NtxGdb/XNAnPuV8p9nIn7OpB/UvOfhUGOYywoF/e8N9QQGY5bbxpaR2QRqQjCYKn7VK+IaDm3qgFiVUy8mY6zYz3EY7Nox2zsC5hct0rnodalUHCQ7YGHbbNvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbaRyFI+AQayIqXPg9EJfANGjleTwZMkFamRErvfBjE=;
+ b=mblr4sSPhP9bwHZGcXtvS8JYL39Onx6v1u4SzGsjOJ2hnbBppwu7F2Ab5AO1Du1LwSdfSDUw/0h3MdhWBIF7KLyV6cKDy4oB23Y774XBpe0U8l0YJatfeHO3hHRIDE4Gu+MrFb8/eRPzdH8296wxx2x0ipx5YTfkgVlTNLZaMoi3AwGkh34Pz9HyrPLeLEG8dUy8l4z7/fxemIeSy58b3uNUTPcxgIvDVdA0eGAf2GMrCSBs1YyT/ttaBv0qjg09OeCQ29j+MV8TwoJVi3LUwtYQo2srtiggNUPM9oIyQsRDqsAE02wWCN/2reoGDrt5PwNw3hgLC1nwJjKNDIUOFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbaRyFI+AQayIqXPg9EJfANGjleTwZMkFamRErvfBjE=;
+ b=DIyxlmhMwNKDn6t0oSOaqjRPr2DcgCn8C9e8mtH71gfKkLXIHZkY3r3o154hs4dw0jpBIksoxp+Yu8l3y6MSE72H7qvDqTiOepHV4m2PjKzWbwjXXre7j10WKUYyzrYn7kNln+VdPMb1DKcSBwN6gJK1Y8lKXkcKh/od1kyaIeE=
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB5197.eurprd05.prod.outlook.com (20.178.11.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.24; Wed, 19 Feb 2020 11:57:13 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 11:57:13 +0000
+Received: from localhost (194.105.145.90) by PR3P191CA0037.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:55::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Wed, 19 Feb 2020 11:57:12 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+Thread-Topic: [PATCH] ARM: dts: imx7-colibri: Fix frequency for sd/mmc
+Thread-Index: AQHV5xu5UD2HW6jXL0+gmbn3erTUlg==
+Date:   Wed, 19 Feb 2020 11:57:13 +0000
+Message-ID: <20200219115709.3473072-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR3P191CA0037.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:102:55::12) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3eac186d-e322-48a2-8875-08d7b532db69
+x-ms-traffictypediagnostic: VI1PR05MB5197:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB5197CE9F548774E0864DA21EF9100@VI1PR05MB5197.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39850400004)(346002)(366004)(376002)(136003)(396003)(199004)(189003)(66946007)(66556008)(64756008)(54906003)(66446008)(66476007)(5660300002)(316002)(6486002)(6496006)(36756003)(86362001)(4326008)(52116002)(8936002)(7416002)(6916009)(44832011)(71200400001)(478600001)(81166006)(16526019)(2616005)(186003)(26005)(2906002)(1076003)(8676002)(81156014)(956004);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB5197;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Y9BXsWtMKDKT0SmEmjpulPfa7Myg586sUnsLhrSGcU3epTS4014uiSm7D0Qe1/byEjYtBG64eUqH7wAQJgbuzvu4KAod0sNoVUIT4deBtTUwGAT/CQdbL68LH3MXvs2aU0xwwfPrhtXBB5mWowpeI2VduEohkhj1MPLWZMHOtLBnTclmfLMihGJF6gQ/1yd7/hl5CxxV7pAPXpFK3RLcT6q5v/DG5DZoq4P2kl7ohJq7+Lk/UYT574HWAMWmtsW5SyfNOBxRcVl7Biyq5Yh0Eg32GrOYn36DdG5K42Ep9xakvPvjJvmPzWH2MHLmLmksBU2ZX91HyY+4NudAO7eapID6/5FILwdQOH3Zo/cN9CRn46uJTlAvi1JC2tXjakZCNroE8R58F8rDwwflO4uYEoFk/3tPNy0gQw6jWXAYZxG5NR/wKaeBh8t/IGLRf5jh
+x-ms-exchange-antispam-messagedata: 5yfbRxDH2RDwlqVyjE8EZZsliMJ7IEaTeaSiAmywh/aKEj0qYHhurnSBl3iXCA6Etg42OK6X5hbi7TfmMAZaqBwQddAX1tH/GhBl8iuoa/yfVz0V6odwQDtS7o5k7LHNDyOUlMEk0CsrOeR7z+06Rg==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3eac186d-e322-48a2-8875-08d7b532db69
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 11:57:13.2242
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NIVkYFd7VPy3XY+Mf2P63x6Vg+IGmaQB2ZNRXzfOE18FzMpUySqDWojidCKECiGKwmfvXyatx9eQsfBoamfVFIyZTfeZvieGBeX61pZAfl0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 12.20, Ilya Dryomov wrote:
-> On Wed, Feb 19, 2020 at 9:21 AM Rasmus Villemoes
-> <linux@rasmusvillemoes.dk> wrote:
->>
->> Extend %pe to pretty-print NULL in addition to ERR_PTRs,
->> i.e. everything IS_ERR_OR_NULL().
->>
->> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
->> ---
->> Something like this? The actual code change is +2,-1 with another +1
->> for a test case.
->>
->>  Documentation/core-api/printk-formats.rst | 9 +++++----
->>  lib/errname.c                             | 4 ++++
->>  lib/test_printf.c                         | 1 +
->>  lib/vsprintf.c                            | 4 ++--
->>  4 files changed, 12 insertions(+), 6 deletions(-)
->>
->> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
->> index 8ebe46b1af39..964b55291445 100644
->> --- a/Documentation/core-api/printk-formats.rst
->> +++ b/Documentation/core-api/printk-formats.rst
->> @@ -86,10 +86,11 @@ Error Pointers
->>
->>         %pe     -ENOSPC
->>
->> -For printing error pointers (i.e. a pointer for which IS_ERR() is true)
->> -as a symbolic error name. Error values for which no symbolic name is
->> -known are printed in decimal, while a non-ERR_PTR passed as the
->> -argument to %pe gets treated as ordinary %p.
->> +For printing error pointers (i.e. a pointer for which IS_ERR() is
->> +true) as a symbolic error name. Error values for which no symbolic
->> +name is known are printed in decimal. A NULL pointer is printed as
->> +NULL. All other pointer values (i.e. anything !IS_ERR_OR_NULL()) get
->> +treated as ordinary %p.
->>
->>  Symbols/Function Pointers
->>  -------------------------
->> diff --git a/lib/errname.c b/lib/errname.c
->> index 0c4d3e66170e..7757bc00f564 100644
->> --- a/lib/errname.c
->> +++ b/lib/errname.c
->> @@ -11,9 +11,13 @@
->>   * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
->>   * on mips), so this wastes a bit of space on those - though we
->>   * special case the EDQUOT case.
->> + *
->> + * For the benefit of %pe being able to print any ERR_OR_NULL pointer
->> + * symbolically, 0 is also treated specially.
->>   */
->>  #define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = "-" #err
->>  static const char *names_0[] = {
->> +       [0] = "NULL",
->>         E(E2BIG),
->>         E(EACCES),
->>         E(EADDRINUSE),
->> diff --git a/lib/test_printf.c b/lib/test_printf.c
->> index 2d9f520d2f27..3a37d0e9e735 100644
->> --- a/lib/test_printf.c
->> +++ b/lib/test_printf.c
->> @@ -641,6 +641,7 @@ errptr(void)
->>         test("[-EIO    ]", "[%-8pe]", ERR_PTR(-EIO));
->>         test("[    -EIO]", "[%8pe]", ERR_PTR(-EIO));
->>         test("-EPROBE_DEFER", "%pe", ERR_PTR(-EPROBE_DEFER));
->> +       test("[NULL]", "[%pe]", NULL);
->>  #endif
->>  }
->>
->> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
->> index 7c488a1ce318..b7118d78eb20 100644
->> --- a/lib/vsprintf.c
->> +++ b/lib/vsprintf.c
->> @@ -2247,8 +2247,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
->>         case 'x':
->>                 return pointer_string(buf, end, ptr, spec);
->>         case 'e':
->> -               /* %pe with a non-ERR_PTR gets treated as plain %p */
->> -               if (!IS_ERR(ptr))
->> +               /* %pe with a non-ERR_OR_NULL ptr gets treated as plain %p */
->> +               if (!IS_ERR_OR_NULL(ptr))
->>                         break;
-> 
-> FWIW I was about to post a patch that just special cases NULL here.
-> 
-> I think changing errname() to return "NULL" for 0 is overkill.
-> People will sooner or later discover that function and start using it
-> in contexts that don't have anything to do with pointers.  Returning
-> _some_ string for 0 (instead of NULL) makes it very close to standard
-> strerror(), and "NULL" for 0 (i.e. success) seems rather odd.
+SD/MMC on Colibri iMX7S/D modules successfully support
+200Mhz frequency in HS200 mode.
 
-I see what you mean, but I don't share your assumption that errname()
-will ever grow callers other than the one in vsprintf.c. But I don't
-have any strong opinion either way. Perhaps this on top of my patch
+Removing the unnecessary max-frequency limit significantly
+increases the performance:
 
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -619,7 +619,7 @@ static char *err_ptr(char *buf, char *end, void *ptr,
-                     struct printf_spec spec)
- {
-        int err = PTR_ERR(ptr);
--       const char *sym = errname(err);
-+       const char *sym = err ? errname(err) : "NULL";
+=3D=3D before fix =3D=3D=3D=3D
+root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+/dev/mmcblk0:
+ Timing buffered disk reads: 252 MB in  3.02 seconds =3D  83.54 MB/sec
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-        if (sym)
-                return string_nocheck(buf, end, sym, spec);
+=3D=3D=3D after fix =3D=3D=3D=3D
+root@colibri-imx7-emmc:~# hdparm -t /dev/mmcblk0
+/dev/mmcblk0:
+ Timing buffered disk reads: 408 MB in  3.00 seconds =3D 135.94 MB/sec
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-instead of the change(s) in errname.c? And then the test case for
-'"%pe", NULL' should also be moved outside CONFIG_SYMBOLIC_ERRNAME.
+Fixes: f928a4a377e4 ("ARM: dts: imx7: add Toradex Colibri iMX7D
+                      1GB (eMMC) support")
+Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+---
 
-BTW., your original patch for %p lacks corresponding update of
-test_vsprintf.c. Please add appropriate test cases.
+ arch/arm/boot/dts/imx7-colibri.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-Rasmus
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-c=
+olibri.dtsi
+index d05be3f0e2a7..04717cf69db0 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -336,7 +336,6 @@ &usdhc3 {
+ 	assigned-clock-rates =3D <400000000>;
+ 	bus-width =3D <8>;
+ 	fsl,tuning-step =3D <2>;
+-	max-frequency =3D <100000000>;
+ 	vmmc-supply =3D <&reg_module_3v3>;
+ 	vqmmc-supply =3D <&reg_DCDC3>;
+ 	non-removable;
+--=20
+2.24.1
+
