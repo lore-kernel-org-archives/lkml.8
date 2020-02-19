@@ -2,113 +2,93 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8F5C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FADBC7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5638206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F2F2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="L9RxT6F0"
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="qE0lGCYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgBSWvP (ORCPT
+        id S1727940AbgBSWvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:51:15 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35451 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727883AbgBSWvP (ORCPT
+        Wed, 19 Feb 2020 17:51:50 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40857 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbgBSWvt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:51:15 -0500
-Received: by mail-pj1-f67.google.com with SMTP id q39so10676pjc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:51:13 -0800 (PST)
+        Wed, 19 Feb 2020 17:51:49 -0500
+Received: by mail-lj1-f196.google.com with SMTP id n18so2126304ljo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:51:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=/C/96K5oLYn6X+y/FSyD1yv4KOr+6D8nD+8tPOB3y0Q=;
-        b=L9RxT6F05R55DW31tM4Z5gEB7dV+9AOuoO5r5z9ceAqqDfiSEL/104dEWIO1iraFNT
-         089InYs24GWN+iGki+xKDf1BTG0dSNtUruxPvMiJrcIwPvDHxtP43v9EyTIvZdcrcuUu
-         HRRYVWm7Ddkt5nek6SrdQonpS/rCmeNVXpdUY=
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qF+TpbZHrOUGgQZVKOV7JZekNV17t91t70D78UaeuV8=;
+        b=qE0lGCYEV/tXSremxFtO+b+1kn4LhCpKcL0pKd+sbzRFgl9GsEEDGGR2mBR7igtDgm
+         8hVsj9f55arrsH3V4lKT7BeGkN2EPQrMlGnp+oqflal0Nx2+apHfIwyohwS/RWfEAZyR
+         pYDsC2a0X2pJCRiiAOZPpnhbP8VG/bnBMxeVJOOZFHg3yUo1PKkkKAcOxfi5j5cslOk5
+         AU75vS7GFewOBoyz1/NNBPlXp2seG/oVoDbDJDWC2eduZ8U4MD3T4ptt/32u/p3gvk2+
+         fPemF52qrudx4/VNDAtZ9jDG8kYF5mlxjy7ySceAV0NUlXxM5WdvpTlDVlkM5yppHAeA
+         NT9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=/C/96K5oLYn6X+y/FSyD1yv4KOr+6D8nD+8tPOB3y0Q=;
-        b=b2HEXndifxnAZDWbaxWY8Idmbrnw+nu8OuIDBWNe/x9CJWrvkP6PjoNt7q5Dez7Xri
-         EW9u1UAocQXH+3Qnz99/XWl3Txffoakv26ZOc0YoYH1B9X5ux5vxic2dcugQFSC9QDXu
-         +3LcoNiLiJeHrYvZP7PIiHCkTEPsDeLTUxOnuyTuEReITEkemJHQu7hTa3bfilM6m11L
-         +j/5brjbJZeUVznxnUKZFV7gcbwiTlmfrjZHC1LVyXBc7BilqXnvkItXrwwLgDhQXgo5
-         73Nf/uQBggxiNGWgQXhaEgoy2ecqlzdr7vp49UP9RpeGSVCxVPeobrvF8HAgr1+qdDz4
-         Y/Gw==
-X-Gm-Message-State: APjAAAWyR2r1W5G2QmuAMytoBK1lsvbZqiFYTHolLCxKAyNVeVTPdI9F
-        1JyD8AyzRT8lqW8pPl05hJz8yQ==
-X-Google-Smtp-Source: APXvYqya2k/fNH0PCv1YhT7xUIMf025rMaROJHmjvNV8yKGJHvlsVKCJayU+6UxVpnujNIsc/SR0KA==
-X-Received: by 2002:a17:90a:e2ce:: with SMTP id fr14mr10935860pjb.99.1582152673231;
-        Wed, 19 Feb 2020 14:51:13 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id k9sm808496pjo.19.2020.02.19.14.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:51:12 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qF+TpbZHrOUGgQZVKOV7JZekNV17t91t70D78UaeuV8=;
+        b=FNpoGng7SIs08qQmej4vN2FCx3OfLOamo+ye3bq/CyIa7dOf8fyNOztikbDmpefB6o
+         N1G45aRcSGYXZ3A2v4MeFfkZ9/JmGkHacks25q8jjlzicJnngXfOtWfI/Phw04JmhOcJ
+         s4OHGMLKXmuJWLwwvWtkbOaKv3Q9nz0FsbWtUMA5rFt6FU5Hmk1yGtfk155wvkExKF0Q
+         Mz7J1sM5S4ZlH4g4yrdMZ7WQHxZaBsVnJhZuW9M6dXsVr2ME1rDH+0RCVPQwG5J0SiW1
+         suf47tZzYNj/9MJwsb87uWQI2HrurkCyIGLQ8splehpN28of7vLZB8D4w74rCXpqn8Sg
+         BxPQ==
+X-Gm-Message-State: APjAAAXtWXXThrg83iTMhTxSRJiUcWae5jyeZG1DehWCfuggcwOfjYKR
+        FIzZebi4Z+FFKOb9Ae9q2PuB54m/BFUQKhSiszHlzQ==
+X-Google-Smtp-Source: APXvYqxzBylDBrYSY6Fo3SoinIImzJQsM7dJ2yDo7/RG1hZiJWszXYIePRhb84fn6Fc+TKHWfSqdrs8ymxAOohv4gaQ=
+X-Received: by 2002:a2e:9a51:: with SMTP id k17mr16119136ljj.206.1582152708042;
+ Wed, 19 Feb 2020 14:51:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8990f5cd5ec2bc2aa0f13c0ad5cd41b8d1a5632e.1582048155.git.amit.kucheria@linaro.org>
-References: <cover.1582048155.git.amit.kucheria@linaro.org> <8990f5cd5ec2bc2aa0f13c0ad5cd41b8d1a5632e.1582048155.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH v5 7/8] drivers: thermal: tsens: kernel-doc fixup
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
-        linux-pm@vger.kernel.org
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
-        daniel.lezcano@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sivaa@codeaurora.org
-Date:   Wed, 19 Feb 2020 14:51:12 -0800
-Message-ID: <158215267200.184098.11619305318344159345@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200217153145.13780-1-james.hughes@raspberrypi.com>
+In-Reply-To: <20200217153145.13780-1-james.hughes@raspberrypi.com>
+From:   Eric Anholt <eric@anholt.net>
+Date:   Wed, 19 Feb 2020 14:51:37 -0800
+Message-ID: <CADaigPXfS4o-QQVPsp1axNz+hAATJqA-vzupC0VRWceJNEZNEg@mail.gmail.com>
+Subject: Re: [PATCH] GPU: DRM: VC4/V3D Replace wait_for macros in to remove
+ use of msleep
+To:     James Hughes <james.hughes@raspberrypi.com>
+Cc:     David Airlie <airlied@linux.ie>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2020-02-18 10:12:11)
-> Document ul_lock, threshold and control structure members and make
-> the following kernel-doc invocation happy:
->=20
-> $ scripts/kernel-doc -v -none drivers/thermal/qcom/*
->=20
-> drivers/thermal/qcom/qcom-spmi-temp-alarm.c:105: info: Scanning doc for q=
-pnp_tm_get_temp_stage
-> drivers/thermal/qcom/tsens-common.c:18: info: Scanning doc for struct tse=
-ns_irq_data
-> drivers/thermal/qcom/tsens-common.c:130: info: Scanning doc for tsens_hw_=
-to_mC
-> drivers/thermal/qcom/tsens-common.c:163: info: Scanning doc for tsens_mC_=
-to_hw
-> drivers/thermal/qcom/tsens-common.c:245: info: Scanning doc for tsens_set=
-_interrupt
-> drivers/thermal/qcom/tsens-common.c:268: info: Scanning doc for tsens_thr=
-eshold_violated
-> drivers/thermal/qcom/tsens-common.c:362: info: Scanning doc for tsens_cri=
-tical_irq_thread
-> drivers/thermal/qcom/tsens-common.c:438: info: Scanning doc for tsens_irq=
-_thread
-> drivers/thermal/qcom/tsens.h:41: info: Scanning doc for struct tsens_sens=
-or
-> drivers/thermal/qcom/tsens.h:59: info: Scanning doc for struct tsens_ops
-> drivers/thermal/qcom/tsens.h:494: info: Scanning doc for struct tsens_fea=
-tures
-> drivers/thermal/qcom/tsens.h:513: info: Scanning doc for struct tsens_pla=
-t_data
-> drivers/thermal/qcom/tsens.h:529: info: Scanning doc for struct tsens_con=
-text
->=20
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+On Mon, Feb 17, 2020 at 7:41 AM James Hughes
+<james.hughes@raspberrypi.com> wrote:
+>
+> The wait_for macro's for Broadcom VC4 and V3D drivers used msleep
+> which is inappropriate due to its inaccuracy at low values (minimum
+> wait time is about 30ms on the Raspberry Pi).
+>
+> This patch replaces the macro with the one from the Intel i915 version
+> which uses usleep_range to provide more accurate waits.
+>
+> Signed-off-by: James Hughes <james.hughes@raspberrypi.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+To apply this, we're going to want to split the patch up between v3d
+(with a fixes tag to the introduction of the driver, since it's a
+pretty critical fix) and vc4 (where it's used in KMS, and we're pretty
+sure we want it but changing timing like this in KMS paths is risky so
+we don't want to backport to stable).  And adjust the commit messages
+to have consistent prefixes to the rest of the commits to those
+drivers.
+
+I've been fighting with the drm maintainer tools today to try to apply
+the patch, with no luck.   I'll keep trying, and if I succeed, I'll
+push it.
