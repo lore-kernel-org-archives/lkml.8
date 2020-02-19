@@ -2,158 +2,119 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00484C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38F37C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1FD224670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FCDE24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cBhnjQYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgBSPRI (ORCPT
+        id S1727213AbgBSPRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:17:08 -0500
-Received: from mga17.intel.com ([192.55.52.151]:11100 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726683AbgBSPRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:17:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 07:16:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="258945868"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Feb 2020 07:16:44 -0800
-Date:   Wed, 19 Feb 2020 07:16:44 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] KVM: x86: Move #PF retry tracking variables into
- emulation context
-Message-ID: <20200219151644.GB15888@linux.intel.com>
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-4-sean.j.christopherson@intel.com>
- <40c8d560-1a5d-d592-5682-720980ca3dd9@redhat.com>
+        Wed, 19 Feb 2020 10:17:31 -0500
+Received: from mail.efficios.com ([167.114.26.124]:55552 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgBSPRb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:17:31 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D7BC02490A3;
+        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 2MXQCndbR0nH; Wed, 19 Feb 2020 10:17:29 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 946A7248E45;
+        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 946A7248E45
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1582125449;
+        bh=E+T2zau6Nrzd/5UrHxBwjFO/z6zZmEyWpKIt0k5o2nw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=cBhnjQYooRNjkzLDy0EtHNIr0MyHS+be39Ze0qlXO3sCvsU1Yj2PiVygBNOpGqcSp
+         sZ0FgDegopcSsZYkbQtm24enMnm41JSZs7ecwoOJUs7oZANxMC6bpoU1TA/e2utw3v
+         Dvo0sbsYkU/i2V4JINq7iDku3UFIUow25QevcGzOtZRTdeVBYybp+l5pnKyzCfMS/O
+         +zK5ZuBF3QUgpI4f6wSwfkBG5P/b27iiVmnxdngYxcyPvDVMdwbvi20lFCS5kylVCH
+         euvJRAHMDK8ElCyDRlfzPucBAAXCaBMYBpRETN++FOGjkKBAm8F6RAoneYa4TtAlCR
+         qLMwim9QBTteA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id i_e6Jf-_d-MZ; Wed, 19 Feb 2020 10:17:29 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 7F9E2248E3F;
+        Wed, 19 Feb 2020 10:17:29 -0500 (EST)
+Date:   Wed, 19 Feb 2020 10:17:28 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, bpf <bpf@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Message-ID: <1127123648.641.1582125448879.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200218233641.i7fyf36zxocgucap@ast-mbp>
+References: <20200214133917.304937432@linutronix.de> <20200214161504.325142160@linutronix.de> <20200214191126.lbiusetaxecdl3of@localhost> <87imk9t02r.fsf@nanos.tec.linutronix.de> <20200218233641.i7fyf36zxocgucap@ast-mbp>
+Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40c8d560-1a5d-d592-5682-720980ca3dd9@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Use migrate_disable() in hashtab code
+Thread-Index: FMpBzgOmPiKRGoH6zx7fdw8jq3/Jnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:13:00AM +0100, Paolo Bonzini wrote:
-> On 19/02/20 00:03, Sean Christopherson wrote:
-> > Move last_retry_eip and last_retry_addr into the emulation context as
-> > they are specific to retrying an instruction after emulation failure.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> I'm not sure about this, since it's not used by emulate.c.  The other
-> two patches are good.
+----- On Feb 18, 2020, at 6:36 PM, Alexei Starovoitov alexei.starovoitov@gmail.com wrote:
 
-The easy solution to that is to move retry_instruction() into emulate.c.
-That would also allow making x86_page_table_writing_insn() static.  All
-other functions invoked from retry_instruction() are exposed via kvm_host.h.
+[...]
 
-Moving last_retry_* into the emulator context hopefully makes it more clear
-that this code is the only user of the variables, e.g. last_retry_eip can't
-be set by some other non-emulator flow.
+> If I can use migrate_disable() without RT it will help my work on sleepable
+> BPF programs. I would only have to worry about rcu_read_lock() since
+> preempt_disable() is nicely addressed.
 
-	if (ctxt->eip == last_retry_eip && last_retry_addr == cr2)
-		return false;
+Hi Alexei,
 
-	vcpu->arch.last_retry_eip = ctxt->eip;
-	vcpu->arch.last_retry_addr = cr2;
+You may want to consider using SRCU rather than RCU if you need to sleep while
+holding a RCU read-side lock.
 
-> > ---
-> >  arch/x86/include/asm/kvm_emulate.h |  4 ++++
-> >  arch/x86/include/asm/kvm_host.h    |  3 ---
-> >  arch/x86/kvm/x86.c                 | 11 ++++++-----
-> >  3 files changed, 10 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-> > index a4ef19a6e612..a26c8de414e8 100644
-> > --- a/arch/x86/include/asm/kvm_emulate.h
-> > +++ b/arch/x86/include/asm/kvm_emulate.h
-> > @@ -315,6 +315,10 @@ struct x86_emulate_ctxt {
-> >  	bool gpa_available;
-> >  	gpa_t gpa_val;
-> >  
-> > +	/* Track EIP and CR2/GPA when retrying faulting instruction on #PF. */
-> > +	unsigned long last_retry_eip;
-> > +	unsigned long last_retry_addr;
-> > +
-> >  	/*
-> >  	 * decode cache
-> >  	 */
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index 9c79c41eb5f6..6312ea32bb41 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -752,9 +752,6 @@ struct kvm_vcpu_arch {
-> >  
-> >  	cpumask_var_t wbinvd_dirty_mask;
-> >  
-> > -	unsigned long last_retry_eip;
-> > -	unsigned long last_retry_addr;
-> > -
-> >  	struct {
-> >  		bool halted;
-> >  		gfn_t gfns[roundup_pow_of_two(ASYNC_PF_PER_VCPU)];
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index f88b72932c35..d19eb776f297 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -6407,6 +6407,7 @@ static void init_emulate_ctxt(struct kvm_vcpu *vcpu)
-> >  
-> >  	kvm_x86_ops->get_cs_db_l_bits(vcpu, &cs_db, &cs_l);
-> >  
-> > +	/* last_retry_{eip,addr} are persistent and must not be init'd here. */
-> >  	ctxt->gpa_available = false;
-> >  	ctxt->eflags = kvm_get_rflags(vcpu);
-> >  	ctxt->tf = (ctxt->eflags & X86_EFLAGS_TF) != 0;
-> > @@ -6557,8 +6558,8 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
-> >  	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
-> >  	unsigned long last_retry_eip, last_retry_addr, gpa = cr2_or_gpa;
-> >  
-> > -	last_retry_eip = vcpu->arch.last_retry_eip;
-> > -	last_retry_addr = vcpu->arch.last_retry_addr;
-> > +	last_retry_eip = ctxt->last_retry_eip;
-> > +	last_retry_addr = ctxt->last_retry_addr;
-> >  
-> >  	/*
-> >  	 * If the emulation is caused by #PF and it is non-page_table
-> > @@ -6573,7 +6574,7 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
-> >  	 * and the address again, we can break out of the potential infinite
-> >  	 * loop.
-> >  	 */
-> > -	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
-> > +	ctxt->last_retry_eip = ctxt->last_retry_addr = 0;
-> >  
-> >  	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
-> >  		return false;
-> > @@ -6588,8 +6589,8 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
-> >  	if (ctxt->eip == last_retry_eip && last_retry_addr == cr2_or_gpa)
-> >  		return false;
-> >  
-> > -	vcpu->arch.last_retry_eip = ctxt->eip;
-> > -	vcpu->arch.last_retry_addr = cr2_or_gpa;
-> > +	ctxt->last_retry_eip = ctxt->eip;
-> > +	ctxt->last_retry_addr = cr2_or_gpa;
-> >  
-> >  	if (!vcpu->arch.mmu->direct_map)
-> >  		gpa = kvm_mmu_gva_to_gpa_write(vcpu, cr2_or_gpa, NULL);
-> > 
-> 
+This is the synchronization approach I consider for adding the ability to take page
+faults when doing syscall tracing.
+
+Then you'll be able to replace preempt_disable() by combining SRCU and
+migrate_disable():
+
+AFAIU eBPF currently uses preempt_disable() for two reasons:
+
+- Ensure the thread is not migrated,
+  -> can be replaced by migrate_disable() in RT
+- Provide RCU existence guarantee through sched-RCU
+  -> can be replaced by SRCU, which allows sleeping and taking page faults.
+
+I wonder if it would be acceptable to take a page fault while migration is
+disabled though ?
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
