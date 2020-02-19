@@ -2,124 +2,89 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C08DC761A1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D291C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031822465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64359206EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150692;
-	bh=AXnbOh2nyCYDjmRNHp01cqLKWdZnvLDJhpOUR1uau9c=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=hLcBy0a/rDzzavtTu14r0/2hWQJpvFRMA5QhTvvYlr77Jce7mfxhkD4872yoXlJ0b
-	 xQC+HqZIJvYEp6XtL5jrWDUH7g1LLiQcEtAp86AaPQOC9BGazQm9uehrV6P/cDvc4X
-	 ZfChcGHTVdJHRKwWh2C4hLaPweQqOIjV924DEers=
+	s=default; t=1582150732;
+	bh=0i1ndzBN59fSht4S6INk+5rj3E8rhaA9bzXAqf/zrs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UsZ1izqWfyIryq+TTP/cOODraSBB7MyKLwiApCOPm9H2WWZJOBktMJJOHaoJOawEf
+	 skb2px39HI6RgYomdnSBfCyOFIWh1SOZ6cxIFqe2aOd6ncwZSEwsv7jhh/vheqAB3t
+	 rqghRPgQXSOOcNTQwU+tA4lOb5lRYj0YSU8dZ5Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBSWSK (ORCPT
+        id S1727802AbgBSWSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:18:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727163AbgBSWSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:18:10 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B889206EF;
-        Wed, 19 Feb 2020 22:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582150689;
-        bh=AXnbOh2nyCYDjmRNHp01cqLKWdZnvLDJhpOUR1uau9c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=a7CIckuq1biRb27wgRWDNoOXnMDB4iWPaM4U8gSN8tFPj9BxzFDKPJi3wMvAm+jn0
-         wrHzvOY7Zz7LszytwFLT4041qxJ8ddHV4FZqmX4RHQlrICpkOlgLQxNzPQKXzomQ1H
-         noWT6Qas13+w30P+tFtc+f/rHuR1iKfOEHppzNOw=
-Subject: Re: [PATCH v2] kunit: run kunit_tool from any directory
-To:     Heidi Fahim <heidifahim@google.com>, brendanhiggins@google.com,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Cc:     frowand.list@gmail.com, shuah <shuah@kernel.org>
-References: <20200218221916.239951-1-heidifahim@google.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <be2a28e9-6e5b-37a7-b298-2fef410d3be3@kernel.org>
-Date:   Wed, 19 Feb 2020 15:18:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 17:18:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38236 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbgBSWSu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 17:18:50 -0500
+Received: by mail-oi1-f193.google.com with SMTP id r137so5911184oie.5;
+        Wed, 19 Feb 2020 14:18:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lb8z6pmbJJ2LJeHbmRGrWhVRqC/aW6CAMpmAMz1gxTk=;
+        b=AcroxdroS4ZlXmUajS7qeyXYTCRnG7+hY5+1dY8e/J6X/cCxbkN/rC7rphrkRqukSq
+         ctjnP0TYiLUWfQ718+g8wowVBDowpiUOPwxdaHrA4q1RBoqwVFupwCnfpLyp7ynYB6wC
+         zV3ShcJFYYWYTHomfmYkqQitX6LZCiyJcXGYfTyFOO4JtknyI/xrzusE2imGYD5jl1Y0
+         E3rkHI/kM/3scO8lwuQfgj9xhSBq6BUgQ9kz/WJ+O+3UdixsoYi8RQdwVHtoxRSyRgY/
+         PfLZSvxQOUX63KYo1prWC3yqYKZAXZ26fRFiXIY3MEUovD7m5GSW7yjeM7zNk9DaGM5N
+         SdQw==
+X-Gm-Message-State: APjAAAXiKh1Bpx3cJd8DTjFxoDO/SR+LWl1czBHhR/m/JN5HbjwLi3mU
+        l63YWFUnnd8SkdcHeFL4mg==
+X-Google-Smtp-Source: APXvYqzHJyK1DAI0qeUN2NlIkEGccyceEGasZSdf75idALGhOVUFySZL04o4JBQ0SR/eiD5nh9G9cQ==
+X-Received: by 2002:a05:6808:3ae:: with SMTP id n14mr6210097oie.63.1582150729704;
+        Wed, 19 Feb 2020 14:18:49 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p184sm428899oic.40.2020.02.19.14.18.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 14:18:49 -0800 (PST)
+Received: (nullmailer pid 6936 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:18:48 -0000
+Date:   Wed, 19 Feb 2020 16:18:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Anand Moon <linux.amoon@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH] dt-bindings: usb: exynos-usb: Document clock names for
+ DWC3 bindings
+Message-ID: <20200219221848.GA6855@bogus>
+References: <1581343456-18900-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200218221916.239951-1-heidifahim@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581343456-18900-1-git-send-email-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heidi,
-
-On 2/18/20 3:19 PM, Heidi Fahim wrote:
-> Implemented small fix so that the script changes work directories to the
-> root of the linux kernel source tree from which kunit.py is run. This
-> enables the user to run kunit from any working directory. Originally
-> considered using os.path.join but this is more error prone as we would
-> have to find all file path usages and modify them accordingly. Using
-> os.chdir ensures that the entire script is run within /linux.
+On Mon, 10 Feb 2020 15:04:16 +0100, Krzysztof Kozlowski wrote:
+> The Exynos DWC3 driver expects certain clock names, depending on used
+> compatible.  Document this explicitly in the bindings.
 > 
-> Signed-off-by: Heidi Fahim <heidifahim@google.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-
-Thanks for  the patch. In the future please include changes from v1
-to v2.
-
-I am assuming this v2 addresses Frank's comments.
-
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->   tools/testing/kunit/kunit.py | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index 3f552e847a14..060d960a7029 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
-> @@ -26,6 +26,8 @@ KunitResult = namedtuple('KunitResult', ['status','result'])
->   KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
->   					'build_dir', 'defconfig', 'json'])
->   
-> +KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
-> +
->   class KunitStatus(Enum):
->   	SUCCESS = auto()
->   	CONFIG_FAILURE = auto()
-> @@ -37,6 +39,13 @@ def create_default_kunitconfig():
->   		shutil.copyfile('arch/um/configs/kunit_defconfig',
->   				kunit_kernel.kunitconfig_path)
->   
-> +def get_kernel_root_path():
-> +	parts = sys.argv[0] if not __file__ else __file__
-> +	parts = os.path.realpath(parts).split('tools/testing/kunit')
-> +	if len(parts) != 2:
-> +		sys.exit(1)
-> +	return parts[0]
-> +
->   def run_tests(linux: kunit_kernel.LinuxSourceTree,
->   	      request: KunitRequest) -> KunitResult:
->   	config_start = time.time()
-> @@ -130,6 +139,9 @@ def main(argv, linux=None):
->   	cli_args = parser.parse_args(argv)
->   
->   	if cli_args.subcommand == 'run':
-> +		if get_kernel_root_path():
-> +			os.chdir(get_kernel_root_path())
-> +
->   		if cli_args.build_dir:
->   			if not os.path.exists(cli_args.build_dir):
->   				os.mkdir(cli_args.build_dir)
+>  Documentation/devicetree/bindings/usb/exynos-usb.txt | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
 
-thanks,
--- Shuah
+Applied, thanks.
+
+Rob
