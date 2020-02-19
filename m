@@ -2,115 +2,96 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F196C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F0CC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAE6522B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE03A22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgBSDAE (ORCPT
+        id S1728300AbgBSDB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:00:04 -0500
-Received: from mga11.intel.com ([192.55.52.93]:6619 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbgBSDAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:00:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 19:00:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,458,1574150400"; 
-   d="scan'208";a="348830245"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Feb 2020 18:59:58 -0800
-Date:   Wed, 19 Feb 2020 10:59:48 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH V2 3/5] vDPA: introduce vDPA bus
-Message-ID: <20200219025948.GA972742@___>
-References: <cf7abcc9-f8ef-1fe2-248e-9b9028788ade@redhat.com>
- <20200212125108.GS4271@mellanox.com>
- <12775659-1589-39e4-e344-b7a2c792b0f3@redhat.com>
- <20200213134128.GV4271@mellanox.com>
- <ebaea825-5432-65e2-2ab3-720a8c4030e7@redhat.com>
- <20200213150542.GW4271@mellanox.com>
- <8b3e6a9c-8bfd-fb3c-12a8-2d6a3879f1ae@redhat.com>
- <20200214135232.GB4271@mellanox.com>
- <01c86ebb-cf4b-691f-e682-2d6f93ddbcf7@redhat.com>
- <20200218135608.GS4271@mellanox.com>
+        Tue, 18 Feb 2020 22:01:28 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36894 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728187AbgBSDB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:01:28 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 580147073D7EF8328B36;
+        Wed, 19 Feb 2020 11:01:23 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
+ 2020 11:01:21 +0800
+Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
+ called
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200214185855.217360-1-jaegeuk@kernel.org>
+ <20200214185855.217360-3-jaegeuk@kernel.org>
+ <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
+ <20200218232714.GB10213@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
+Date:   Wed, 19 Feb 2020 11:01:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200218135608.GS4271@mellanox.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200218232714.GB10213@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:56:12PM +0000, Jason Gunthorpe wrote:
-> On Mon, Feb 17, 2020 at 02:08:03PM +0800, Jason Wang wrote:
+On 2020/2/19 7:27, Jaegeuk Kim wrote:
+> On 02/17, Chao Yu wrote:
+>> On 2020/2/15 2:58, Jaegeuk Kim wrote:
+>>> FG_GC needs to move entire section more quickly.
+>>>
+>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>> ---
+>>>  fs/f2fs/gc.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>>> index bbf4db3f6bb4..1676eebc8c8b 100644
+>>> --- a/fs/f2fs/gc.c
+>>> +++ b/fs/f2fs/gc.c
+>>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
+>>>  
+>>>  		if (get_valid_blocks(sbi, segno, false) == 0)
+>>>  			goto freed;
+>>> -		if (__is_large_section(sbi) &&
+>>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
+>>>  				migrated >= sbi->migration_granularity)
+>>
+>> I knew migrating one large section is a more efficient way, but this can
+>> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
+>> extreme fragmented space.
 > 
-> > I thought you were copied in the patch [1], maybe we can move vhost related
-> > discussion there to avoid confusion.
-> >
-> > [1] https://lwn.net/Articles/811210/
-> 
-> Wow, that is .. confusing.
-> 
-> So this is supposed to duplicate the uAPI of vhost-user? But it is
-> open coded and duplicated because .. vdpa?
+> FG_GC requires to wait for whole section migration which shows the entire
+> latency.
 
-Do you mean the vhost-user in DPDK? There is no vhost-user
-in Linux kernel.
+That will cause long-tail latency for single f2fs_balance_fs() procedure,
+which it looks a very long hang when userspace call f2fs syscall, so why
+not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
 
 Thanks,
-Tiwei
 
 > 
-> > So it's cheaper and simpler to introduce a new bus instead of refactoring a
-> > well known bus and API where brunches of drivers and devices had been
-> > implemented for years.
+>>
+>> Thanks,
+>>
+>>>  			goto skip;
+>>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
+>>>
+> .
 > 
-> If you reason for this approach is to ease the implementation then you
-> should talk about it in the cover letters/etc
-> 
-> Maybe it is reasonable to do this because the rework is too great, I
-> don't know, but to me this whole thing looks rather messy. 
-> 
-> Remember this stuff is all uAPI as it shows up in sysfs, so you can
-> easilly get stuck with it forever.
-> 
-> Jason
