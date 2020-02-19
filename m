@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A182EC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E87EC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783DF24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B324677
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgBSPuj (ORCPT
+        id S1726791AbgBSPvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:50:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 10:51:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgBSPuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:50:37 -0500
+        id S1726569AbgBSPvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:51:01 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5C5C2465D;
-        Wed, 19 Feb 2020 15:50:35 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 10:50:34 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id BE58624671;
+        Wed, 19 Feb 2020 15:50:59 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 10:50:58 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
@@ -37,7 +37,7 @@ Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         "Steven Rostedt (VMware)" <rosted@goodmis.org>
 Subject: Re: [PATCH v3 09/22] sched,rcu,tracing: Avoid tracing before
  in_nmi() is correct
-Message-ID: <20200219105034.40915c50@gandalf.local.home>
+Message-ID: <20200219105058.3b844e10@gandalf.local.home>
 In-Reply-To: <20200219150744.888917422@infradead.org>
 References: <20200219144724.800607165@infradead.org>
         <20200219150744.888917422@infradead.org>
@@ -68,7 +68,6 @@ Peter Zijlstra <peterz@infradead.org> wrote:
 > Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->
 
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
