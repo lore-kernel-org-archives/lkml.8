@@ -2,78 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3789FC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD30C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00D4421D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:58:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L+1ewkA6"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC0824658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726647AbgBSJ6W (ORCPT
+        id S1726664AbgBSJ7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:58:22 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:53244 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgBSJ6W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:58:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Ju7RNVO+JUQObhm5lTREw7ao6b53xwESyy/6/lACiL0=; b=L+1ewkA6EVs5oN2GGY8MYky2gE
-        9FunJgfuBsZQMomY5BEFobzJYMRAV5WYcTILodEJv/m9cNLedZOgWt5q2BTUlG8U3XMEBLNZz0fFX
-        ivkdkw3tgSXLX4zD28oQwm7PPgSJ7I/nAkUpRGImCRcloi7irGrVkRwbBRY1vxZyXRFOSMPpXKH7j
-        xEbthzvAKo2Fd3hbxjrJNDvmbUrEMfiBFkcqePLsP4wec8M0QQnFCTTmzQxd5fg5OzzBqlVA/Y6ar
-        ekLUf0CdybblQZ92NvyFT+xHHdhCsVcpqPbnOwaALl34bXOgBW56VmxxbjPAEqImQiLoyJiZ1DiR7
-        jfxsrp3g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4M71-0002Lw-IW; Wed, 19 Feb 2020 09:57:47 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6076330008D;
-        Wed, 19 Feb 2020 10:55:51 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 963B92B959662; Wed, 19 Feb 2020 10:57:43 +0100 (CET)
-Date:   Wed, 19 Feb 2020 10:57:43 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200219095743.GA18400@hirez.programming.kicks-ass.net>
-References: <20200212232005.GC115917@google.com>
- <20200213082716.GI14897@hirez.programming.kicks-ass.net>
- <20200213135138.GB2935@paulmck-ThinkPad-P72>
- <20200213164031.GH14914@hirez.programming.kicks-ass.net>
- <20200213185612.GG2935@paulmck-ThinkPad-P72>
- <20200213204444.GA94647@google.com>
- <20200218195831.GD11457@worktop.programming.kicks-ass.net>
- <20200218201728.GH2935@paulmck-ThinkPad-P72>
- <20200218204021.GJ11457@worktop.programming.kicks-ass.net>
- <20200218213925.GL2935@paulmck-ThinkPad-P72>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218213925.GL2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Feb 2020 04:59:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:45038 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbgBSJ7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:59:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 550BE1FB;
+        Wed, 19 Feb 2020 01:59:00 -0800 (PST)
+Received: from e123648.arm.com (unknown [10.37.12.28])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5972A3F6CF;
+        Wed, 19 Feb 2020 01:58:56 -0800 (PST)
+From:   lukasz.luba@arm.com
+To:     kgene@kernel.org, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        cw00.choi@samsung.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, lukasz.luba@arm.com,
+        dietmar.eggemann@arm.com
+Subject: [PATCH v2 0/2] Enable Odroid-XU3/4 to use Energy Model and Energy Aware Scheduler 
+Date:   Wed, 19 Feb 2020 09:58:26 +0000
+Message-Id: <20200219095828.8063-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 01:39:25PM -0800, Paul E. McKenney wrote:
-> OK.  I will drop it later today, but leave tag in_nmi.2020.02.18a
-> pointing at it for future reference.
+From: Lukasz Luba <lukasz.luba@arm.com>
 
-Thanks, I've picked it up in my series.
+The Odroid-XU4/3 is a decent and easy accessible ARM big.LITTLE platform,
+which might be used for research and development.
+
+This small patch set provides possibility to run Energy Aware Scheduler (EAS)
+on Odroid-XU4/3 and experiment with it. 
+
+The patch 1/2 provides 'dynamic-power-coefficient' in CPU DT nodes, which is
+then used by the Energy Model (EM).
+The patch 2/2 enables SCHED_MC (which adds another level in scheduling domains)
+and enables EM making EAS possible to run (when schedutil is set as a CPUFreq
+governor).
+
+1. Test results
+
+Two types of different tests have been executed. The first is energy test
+case showing impact on energy consumption of this patch set. It is using a
+synthetic set of tasks (rt-app based). The second is the performance test
+case which is using hackbench (less time to complete is better).
+In both tests schedutil has been used as cpufreq governor. In all tests
+PROVE_LOCKING has not been compiled into the kernels.
+
+1.1 Energy test case
+
+10 iterations of 24 periodic rt-app tasks (16ms period, 10% duty-cycle)
+with energy measurement. The cpufreq governor - schedutil. Unit is Joules.
+The energy is calculated based on hwmon0 and hwmon3 power1_input.
+The goal is to save energy, lower is better.
+
++-----------+-----------------+------------------------+
+|           | Without patches | With patches           |
++-----------+--------+--------+----------------+-------+
+| benchmark |  Mean  | RSD*   | Mean           | RSD*  |
++-----------+--------+--------+----------------+-------+
+| 24 rt-app |  21.56 |  1.37% |  19.85 (-9.2%) | 0.92% |
+|    tasks  |        |        |                |       |
++-----------+--------+--------+----------------+-------+
+
+1.2 Performance test case
+
+10 consecutive iterations of hackbench (hackbench -l 500 -s 4096),
+no delay between two successive executions.
+The cpufreq governor - schedutil. Units in seconds.
+The goal is to see not regression, lower completion time is better.
+
++-----------+-----------------+------------------------+
+|           | Without patches | With patches           |
++-----------+--------+--------+----------------+-------+
+| benchmark | Mean   | RSD*   | Mean           | RSD*  |
++-----------+--------+--------+----------------+-------+
+| hackbench |  8.15  | 2.86%  |  7.95 (-2.5%)  | 0.60% |
++-----------+--------+--------+----------------+-------+
+
+*RSD: Relative Standard Deviation (std dev / mean)
+
+Changes:
+v2:
+- changed dynamic power coeffcient to 90 for A7, which prevents odd
+  behaviour for some low utilisation and at low OPPs;
+  now, the power ratio is ~3x between big an LITTLE core;
+  it's better aligned with [1]; probably due to measurement noise
+  at lower OPPs the values obtained from hwmon0|3 were different
+  from reality; some synthetic workloads showed this differences
+- cleaned commit messages (no measurements in commit message)
+- merged configs into one patch and re-ordered patches
+- provided energy measurmements in the cover letter
+- measurements focused on comparing similar setup - with schedutil governor,
+  to compare apples with apples
+
+The v1 can be found in [2].
+The patch set is on top of Krzysztof's tree, branch 'next/dt' [3] and has 
+been tested on Odroid-XU3 rev0.2 20140529.
+
+Regards,
+Lukasz Luba
+
+[1] https://www.cl.cam.ac.uk/~rdm34/big.LITTLE.pdf
+[2] https://lore.kernel.org/linux-arm-kernel/20200127215453.15144-1-lukasz.luba@arm.com/T/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git/log/?h=next/dt
+
+Lukasz Luba (2):
+  ARM: dts: exynos: Add dynamic-power-coefficient to Exynos5422 CPUs
+  ARM: exynos_defconfig: Enable SCHED_MC and ENERGY_MODEL
+
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 8 ++++++++
+ arch/arm/configs/exynos_defconfig      | 2 ++
+ 2 files changed, 10 insertions(+)
+
+-- 
+2.17.1
+
