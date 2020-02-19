@@ -2,163 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B222EC18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADCD2C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D7921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142019;
-	bh=xfjnFkbT2TQJzsng8Rn2N+nnV+ZtWeg8yKhQjOcviqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K1zNAq348miyChCcAp2cajYbSoQexE4531g85LsjTvITUauXje6PT9cQpmwzVcTHw
-	 WyE57TXQiLU0NadhPIb7MdUk70MZF79LFPhJkiTZ2WswfrxgDArCvP3zHT/mW/V2zc
-	 46GlVycpCRsinewEJuThzTkV9x6bjj51PL3DYHOg=
+	by mail.kernel.org (Postfix) with ESMTP id 7DFC9207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:54:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ODVc7IEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBSTxi (ORCPT
+        id S1726962AbgBSTy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:53:38 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55908 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgBSTxh (ORCPT
+        Wed, 19 Feb 2020 14:54:27 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:40208 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgBSTy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:53:37 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so1996534wmj.5;
-        Wed, 19 Feb 2020 11:53:35 -0800 (PST)
+        Wed, 19 Feb 2020 14:54:26 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v25so1144542qto.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:54:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GZ9YXuE15eVQ1m82XL11R20aCz4heFp3V/a8Xs8KTDk=;
+        b=ODVc7IEJfwpkmKIQUqFybHBw620ekiVwat/n9Ac5Pfspu1Q4DuB58gmJDIsLNVVBR7
+         EpgFHQfjMKK9d8IFitaDW17i9XWGMOavG4yOJnvYsg02g18N65AN1jFk1HcjJ57HAFxd
+         Srq5n3/4F5KJ984TW6fFo2kUw679IcjtmPWAcaOWdAcZSMUz+MUTctzRJjL6rDujJi/Y
+         EZ5twEFC1HpJvBQ4+fhBpkHpbsTIlkaMeDsXOufmgAI9ouoTt9BWBKfdT8kf7Xff3/mQ
+         zcrvJjierCEsOXBM6EBzIlWLE2Y6UQ4XbCxlvapTQbBcZKR3JvyWwjtYZpGRKgkQ/k9/
+         vfwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nnIsYFJ4c+zLIzekV3dJ84C94gebKMjwkIZilDifoOM=;
-        b=cQRLWEs6TK9fDm33/0sC/m8agKnSbuU8Hrm72nhitiyVFK2A7tRZcgmSgvzYpoXyE5
-         1OpJMSUzXn6cvppZ0+7lEwXIV3+WEqa2JdfyGtqH6lOhY1WhT8ZRTgV16muazapCUjya
-         L8dBlLgeMkHXKs/e7kl9ICm562DssRm9S2mahXXQcid1VUwSak1D1BZRVGZykJ7CjbTs
-         hCzYGecjmRP075FJ4w94B8Bf/j4fpWmxoNL/qF69r4o5hjeX0JIxT+uXB5+be0Gu1bw9
-         2o0R2lmHfn0jiPeTQwYJ177IeygGZ9eg3RVSKa2bc0zIAFvrWz7mIRbmiy6DNT56Wb4t
-         xOww==
-X-Gm-Message-State: APjAAAU9kMkpfsq5Z7u7gWMZJkkh+ztIo0SsBi45GAoglzGFBnxKj8KZ
-        xRKUqrrjxOgSm1UVSV71Xfc=
-X-Google-Smtp-Source: APXvYqwxkGqDAk0Y2VhBAmNNJv3d+gI7R73J4kZe59ouysIC5YMAqD8Yb25dW1TmHIlJdsprmgqMEQ==
-X-Received: by 2002:a1c:1d13:: with SMTP id d19mr12267421wmd.163.1582142015105;
-        Wed, 19 Feb 2020 11:53:35 -0800 (PST)
-Received: from localhost (ip-37-188-133-21.eurotel.cz. [37.188.133.21])
-        by smtp.gmail.com with ESMTPSA id e22sm1082263wme.45.2020.02.19.11.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:53:34 -0800 (PST)
-Date:   Wed, 19 Feb 2020 20:53:32 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200219195332.GE11847@dhcp22.suse.cz>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219191618.GB54486@cmpxchg.org>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GZ9YXuE15eVQ1m82XL11R20aCz4heFp3V/a8Xs8KTDk=;
+        b=GlePMC1KoAZZRzocKSr/x8bUTcHLTj0RyligaRtmfyn+nvzIvtDCZUKuEwQyzal1Uc
+         CQAfYO/RkzjcSAxVBEzxiKEW+rR11EoTP07TBaMtjQVwEMrgSMa7v5Cshikm7QfJfqzT
+         4J+slltY2JTsT8ck4/AUzWp0K6CUUwdNjZj+KqUPSQM7t1nolKjI81IRFPPErGGQpuwl
+         0lt/SNAtHZNBjZHA/njNDyxYeY/nOAwJeLE+I8jANBpxifLE4x/avoAiglrOeM/hYXeZ
+         M2HVI9zolvKTlsWBV/itb5wFfSS04nP3Kku/gbbQvTHgqzJ8xdcrXZzwtv2oUoUtJUuC
+         h6aw==
+X-Gm-Message-State: APjAAAW4HXG125C7+7F1MqZVtQIAROl+qaJwjkzR7oLUVsupDEbMC1/+
+        kQMbVoSuVDui0sgEODr8Z/3t1A==
+X-Google-Smtp-Source: APXvYqwUhupndXBE09xsDkgUA7kwgC2NQShW8nuUAvL8wUSkyIakN42anJqBWpm/nMwac3dxI/meAg==
+X-Received: by 2002:aed:3fb7:: with SMTP id s52mr22354651qth.97.1582142065790;
+        Wed, 19 Feb 2020 11:54:25 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id p8sm490083qtn.71.2020.02.19.11.54.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 11:54:25 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j4VQO-0006DL-Tx; Wed, 19 Feb 2020 15:54:24 -0400
+Date:   Wed, 19 Feb 2020 15:54:24 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH 3/6] tracing: Wrap section comparison in
+ tracer_alloc_buffers with COMPARE_SECTIONS
+Message-ID: <20200219195424.GW31668@ziepe.ca>
+References: <20200219045423.54190-1-natechancellor@gmail.com>
+ <20200219045423.54190-4-natechancellor@gmail.com>
+ <20200219093445.386f1c09@gandalf.local.home>
+ <CAKwvOdm-N1iX0SMxGDV5Vf=qS5uHPdH3S-TRs-065BuSOdKt1w@mail.gmail.com>
+ <20200219181619.GV31668@ziepe.ca>
+ <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219191618.GB54486@cmpxchg.org>
+In-Reply-To: <CAKwvOd=8vb5eOjiLg96zr25Xsq_Xge_Ym7RsNqKK8g+ZR9KWzA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
-> On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
-> > On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
-> > > We have received regression reports from users whose workloads moved
-> > > into containers and subsequently encountered new latencies. For some
-> > > users these were a nuisance, but for some it meant missing their SLA
-> > > response times. We tracked those delays down to cgroup limits, which
-> > > inject direct reclaim stalls into the workload where previously all
-> > > reclaim was handled my kswapd.
-> > 
-> > I am curious why is this unexpected when the high limit is explicitly
-> > documented as a throttling mechanism.
+On Wed, Feb 19, 2020 at 11:11:19AM -0800, Nick Desaulniers wrote:
+> > Godbolt says clang is happy if it is written as:
+> >
+> >   if (&__stop___trace_bprintk_fmt[0] != &__start___trace_bprintk_fmt[0])
+> >
+> > Which is probably the best compromise. The type here is const char
+> > *[], so it would be a shame to see it go.
 > 
-> Memory.high is supposed to curb aggressive growth using throttling
-> instead of OOM killing. However, if the workload has plenty of easily
-> reclaimable memory and just needs to recycle a couple of cache pages
-> to permit an allocation, there is no need to throttle the workload -
-> just as there wouldn't be any need to trigger the OOM killer.
-> 
-> So it's not unexpected, but it's unnecessarily heavy-handed: since
-> memory.high allows some flexibility around the target size, we can
-> move the routine reclaim activity (cache recycling) out of the main
-> execution stream of the workload, just like we do with kswapd. If that
-> cannot keep up, we can throttle and do direct reclaim.
-> 
-> It doesn't change the memory.high semantics, but it allows exploiting
-> the fact that we have SMP systems and can parallize the book keeping.
+> If the "address" is never dereferenced, but only used for arithmetic
+> (in a way that the the pointed to type is irrelevant), does the
+> pointed to type matter? 
 
-Thanks, this describes the problem much better and I believe this all
-belongs to the changelog.
+The type is used here:
 
-> > > This patch adds asynchronous reclaim to the memory.high cgroup limit
-> > > while keeping direct reclaim as a fallback. In our testing, this
-> > > eliminated all direct reclaim from the affected workload.
-> > 
-> > Who is accounted for all the work? Unless I am missing something this
-> > just gets hidden in the system activity and that might hurt the
-> > isolation. I do see how moving the work to a different context is
-> > desirable but this work has to be accounted properly when it is going to
-> > become a normal mode of operation (rather than a rare exception like the
-> > existing irq context handling).
-> 
-> Yes, the plan is to account it to the cgroup on whose behalf we're
-> doing the work.
+        if (*pos < start_index)
+                return __start___trace_bprintk_fmt + *pos;
 
-OK, great, because honestly I am not really sure we can merge this work
-without that being handled, I am afraid. We've had similar attempts
-- mostly to parallelize work on behalf of the process (e.g. address space
-tear down) - and the proper accounting was always the main obstacle so we
-really need to handle this problem for other reasons. This doesn't sound
-very different. And your example of a workload not meeting SLAs just
-shows that the amount of the work required for the high limit reclaim
-can be non-trivial. Somebody has to do that work and we cannot simply
-allow everybody else to pay for that.
+The return expression should be a const char **
 
-> The problem is that we have a general lack of usable CPU control right
-> now - see Rik's work on this: https://lkml.org/lkml/2019/8/21/1208.
-> For workloads that are contended on CPU, we cannot enable the CPU
-> controller because the scheduling latencies are too high. And for
-> workloads that aren't CPU contended, well, it doesn't really matter
-> where the reclaim cycles are accounted to.
-> 
-> Once we have the CPU controller up to speed, we can add annotations
-> like these to account stretches of execution to specific
-> cgroups. There just isn't much point to do it before we can actually
-> enable CPU control on the real workloads where it would matter.
-> 
-> [ This is generally work in process: for example, if you isolate
->   workloads with memory.low, kswapd cpu time isn't accounted to the
->   cgroup that causes it. Swap IO issued by kswapd isn't accounted to
->   the group that is getting swapped.
+Presumably the caller of find_next derferences it.
 
-Well, kswapd is a system activity and as such it is acceptable that it
-is accounted to the system. But in this case we are talking about a
-memcg configuration which influences all other workloads by stealing CPU
-cycles from them without much throttling on the consumer side -
-especially when the memory is reclaimable without a lot of sleeping or
-contention on locks etc.
-
-I am absolutely aware that we will never achieve a perfect isolation due
-to all sorts of shared data structures, lock contention and what not but
-this patch alone just allows spill over to unaccounted work way too
-easily IMHO.
-
->   The memory consumed by struct
->   cgroup itself, the percpu allocations for the vmstat arrays etc.,
->   which is sizable, are not accounted to the cgroup that creates
->   subgroups, and so forth. ]
-
--- 
-Michal Hocko
-SUSE Labs
+Jason
