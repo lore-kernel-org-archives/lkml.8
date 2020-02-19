@@ -2,130 +2,120 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1835FC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7CCC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E639A2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:36:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TPtjy4D4"
+	by mail.kernel.org (Postfix) with ESMTP id 6D2502464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:36:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582133782;
+	bh=n68rtlOq2g52DbrL2K50i3HYY6NSis5K+k5x/xmKyr8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=ru/4c95j6NaeDqUM/stw7THgdyQwMDx/oJYpxXvXMxoCgY6EWVqMZofyUSjHMaTv+
+	 ucnspyKXwD9rAtWltEwoebChaQN7nOlVACDd08GoHeCjLzL+6ETJIxFVOIHNxP71xM
+	 YT8Ld+y4VPaw6dHNfpO0PNbBMDaMJ8Uj8AcmSVcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgBSRgH (ORCPT
+        id S1726779AbgBSRgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:36:07 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33062 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgBSRgH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:36:07 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so362843plb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:36:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=tAaLKrE1Z8JOnxwlw25YePbSDtyhE+ndxQTEfFT/04w=;
-        b=TPtjy4D4jV0++Xhi8uiJg5/88ean8xsUdshEvLdOrkeXtlV2VE9/G/odj6VfRPcn+J
-         Vh6+hIPRRX7k7zSPxFQsRQd8dZvtRt+FLIcLMiHphb6PYUrCafQbBWIL98oEsnWvQJ+a
-         PAc5lBi3FJBX+eLsC5hyANL6xEZNStIaqcKQM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=tAaLKrE1Z8JOnxwlw25YePbSDtyhE+ndxQTEfFT/04w=;
-        b=Ydp/TwpK1w3EH/ifuENZNo1Ofq2vekZbpcwdHpD2YKxwp0J2XWGDi2COANIMysus/Y
-         dD2fw0L71iAbHpdNpKAXXGwDxUDN9P2YxiJwuVaEb+qMuoqzOPrkxrIHDY435DaZWvzY
-         2nj9NMTqVNNTVUfQjDCWz0jVCzMxK/5cXH1ionoZcghx1oqNFuTrf3ss1MaFC6j5ihDk
-         eiZie3wn0DKDRTdXIzc4Rr6UNHJKWTOQWm7UngC395zeZD7dUn6+Ste20hwkO1lo99Tt
-         qGR4QReXRsTanzsgDm6ZxGXRgzbzdR4MssH4JUN5fn4QJWDIdNsWFjsyCIv7LaXDMUql
-         4amA==
-X-Gm-Message-State: APjAAAU/8g/T3jzdsOIFRnzQBiQNMG2V/67R2AWxgy2p4AuS2NdkzVWi
-        /sGaaGEXQViN+T7pbfCsr3t0By24i4U=
-X-Google-Smtp-Source: APXvYqyzsFSIApZMXJl3qcBWlNY6072ABLOXDIZ5B1dQ0ZAeOxK+EYzeCuVOV4iVSNlECIzL+ESvHw==
-X-Received: by 2002:a17:90a:102:: with SMTP id b2mr10118008pjb.64.1582133766781;
-        Wed, 19 Feb 2020 09:36:06 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z30sm215405pfq.154.2020.02.19.09.36.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 09:36:05 -0800 (PST)
-Date:   Wed, 19 Feb 2020 09:36:04 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     glider@google.com
-Cc:     jannh@google.com, ard.biesheuvel@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lib/test_stackinit: move a local outside the switch
- statement
-Message-ID: <202002190916.EFA74B50C@keescook>
-References: <20200218094815.233387-1-glider@google.com>
+        Wed, 19 Feb 2020 12:36:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbgBSRgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:36:21 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3414B20801;
+        Wed, 19 Feb 2020 17:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582133780;
+        bh=n68rtlOq2g52DbrL2K50i3HYY6NSis5K+k5x/xmKyr8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wwi9imsdBeViLGikErNgnhaGf9071VFOCDpBO2oo7n/erM3qyHW4UTnylzqbukwxJ
+         /tjQxrc2JzyHjfY5v6ukCzyHBKUPd3IpD7VPs8yMpyG14OqTIBQmtwFjXELKA1Z3aA
+         eaT3rsnCNEyu+NyVtYGIP/tJ9baj8yaRLEJ3HcNE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1123035209B0; Wed, 19 Feb 2020 09:36:20 -0800 (PST)
+Date:   Wed, 19 Feb 2020 09:36:20 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, mingo@kernel.org,
+        joel@joelfernandes.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        Marco Elver <elver@google.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 16/22] locking/atomics, kcsan: Add KCSAN
+ instrumentation
+Message-ID: <20200219173620.GI2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200219144724.800607165@infradead.org>
+ <20200219150745.299217979@infradead.org>
+ <20200219104626.633f0650@gandalf.local.home>
+ <20200219160318.GG18400@hirez.programming.kicks-ass.net>
+ <20200219165020.GF2935@paulmck-ThinkPad-P72>
+ <20200219165455.GM18400@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200218094815.233387-1-glider@google.com>
+In-Reply-To: <20200219165455.GM18400@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:48:15AM +0100, glider@google.com wrote:
-> Right now CONFIG_INIT_STACK_ALL is unable to initialize locals declared
-> in switch statements, see http://llvm.org/PR44916.
-> Move the variable declaration outside the switch in lib/test_stackinit.c
-> to prevent potential test failures until this is sorted out.
+On Wed, Feb 19, 2020 at 05:54:55PM +0100, Peter Zijlstra wrote:
+> On Wed, Feb 19, 2020 at 08:50:20AM -0800, Paul E. McKenney wrote:
+> > On Wed, Feb 19, 2020 at 05:03:18PM +0100, Peter Zijlstra wrote:
+> > > On Wed, Feb 19, 2020 at 10:46:26AM -0500, Steven Rostedt wrote:
+> > > > On Wed, 19 Feb 2020 15:47:40 +0100
+> > > > Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > 
+> > > > > From: Marco Elver <elver@google.com>
+> > > > > 
+> > > > > This adds KCSAN instrumentation to atomic-instrumented.h.
+> > > > > 
+> > > > > Signed-off-by: Marco Elver <elver@google.com>
+> > > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > > > [peterz: removed the actual kcsan hooks]
+> > > > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > > > > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> > > > > ---
+> > > > >  include/asm-generic/atomic-instrumented.h |  390 +++++++++++++++---------------
+> > > > >  scripts/atomic/gen-atomic-instrumented.sh |   14 -
+> > > > >  2 files changed, 212 insertions(+), 192 deletions(-)
+> > > > > 
+> > > > 
+> > > > 
+> > > > Does this and the rest of the series depend on the previous patches in
+> > > > the series? Or can this be a series on to itself (patches 16-22)?
+> > > 
+> > > It can probably stand on its own, but it very much is related in so far
+> > > that it's fallout from staring at all this nonsense.
+> > > 
+> > > Without these the do_int3() can actually have accidental tracing before
+> > > reaching it's nmi_enter().
+> > 
+> > The original is already in -tip, so some merge magic will be required.
 > 
-> Cc: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Alexander Potapenko <glider@google.com>
-
-Er, no. This test is specifically to catch that case. (i.e. the proposed
-GCC version of this feature misses this case too.) We absolutely want
-this test to continue to fail until it's fixed:
-
-[   65.546670] test_stackinit: switch_1_none FAIL (uninit bytes: 8)
-[   65.547478] test_stackinit: switch_2_none FAIL (uninit bytes: 8)
-
-What would be nice is if Clang could at least _warn_ about these
-conditions. GCC does this in the same situation:
-
-fs/fcntl.c: In function ‘send_sigio_to_task’:
-fs/fcntl.c:738:13: warning: statement will never be executed [-Wswitch-unreachable]
-   siginfo_t si;
-             ^~
-
-I have a patch to fix all the switch statement variables, though:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=kspp/gcc-plugin/stackinit&id=35ed32e16e13a86370e4b70991db8d5f771ba898
-
--Kees
-
-> ---
->  lib/test_stackinit.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Yes, So I don't strictly need this one, but I do need the two next
+> patches adding __always_inline to everything. I figured it was easier to
+> also pick this one (and butcher it) than to rebase everything.
 > 
-> diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
-> index 2d7d257a430e..41e2a6e0cdaa 100644
-> --- a/lib/test_stackinit.c
-> +++ b/lib/test_stackinit.c
-> @@ -282,9 +282,9 @@ DEFINE_TEST(user, struct test_user, STRUCT, none);
->   */
->  static int noinline __leaf_switch_none(int path, bool fill)
->  {
-> -	switch (path) {
-> -		uint64_t var;
-> +	uint64_t var;
->  
-> +	switch (path) {
->  	case 1:
->  		target_start = &var;
->  		target_size = sizeof(var);
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+> I didn't want to depend on the locking/kcsan tree, and if this goes in,
+> we do have to do something 'funny' there. Maybe rebase, maybe put in a
+> few kcsan stubs so the original patch at least compiles. We'll see :/
 
--- 
-Kees Cook
+Fair enough!
+
+							Thanx, Paul
