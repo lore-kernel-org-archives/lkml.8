@@ -2,139 +2,151 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8463C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B03C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E04D24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:21:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="emjYqXgP"
+	by mail.kernel.org (Postfix) with ESMTP id B9E9324671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582118683;
+	bh=WeK8iDiz+u7KGQl8xdyYvIuPvj8pRW13k3gZGmGmUOU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ixHwGJmQ3eFmbhVLjNlRyjZsWlAoz7mW0N0JLd4hAlOOYTX7phgGS2kRaUE1ykEOb
+	 ilFrOeLImV+98wi8IedarGmyBo3U3VMNodrMujbflr//hVMbTqoddY7baHSbxNpV6E
+	 pxECtIxYAPPpRJretIVoWzk+Cgs/d2lITjF8yg0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgBSNVv (ORCPT
+        id S1727636AbgBSNYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:21:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:41722 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726671AbgBSNVu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:21:50 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582118510; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=EJ69/rQIpsMhqCMo4+XIs+5vRF2VLIJtTPq/QzZue78=; b=emjYqXgPpq7vyJB27qai+bGUmeySnzhr5QxY21cHBpmLPSqcza2mby2QKiJjDoU5WDuiJz0u
- 2WkoqwpsBGNPwgQGY+Q4krHMqIy86+pxFZ8HE0U4FRWaqhA2FWHAvDSue9C0h9Xqve0gOtZx
- 79495zpXtz2o+t5d7R9uF4kghR0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d366d.7f8e946bbab0-smtp-out-n03;
- Wed, 19 Feb 2020 13:21:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4D6A8C4479F; Wed, 19 Feb 2020 13:21:49 +0000 (UTC)
-Received: from [10.252.222.65] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 19 Feb 2020 08:24:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726671AbgBSNYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:24:42 -0500
+Received: from hump (unknown [147.67.241.226])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: akashast)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 190F6C43383;
-        Wed, 19 Feb 2020 13:21:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 190F6C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
-Subject: Re: [PATCH V4 3/3] dt-bindings: geni-se: Add binding for UART pin
- swap
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
-        rojay@codeaurora.org, skakit@codeaurora.org, swboyd@chromium.org
-References: <1581932212-19469-1-git-send-email-akashast@codeaurora.org>
- <1581932212-19469-4-git-send-email-akashast@codeaurora.org>
- <20200218190731.GC15781@google.com>
-From:   Akash Asthana <akashast@codeaurora.org>
-Message-ID: <ec5de895-3e86-811e-7ffc-fb98e115f850@codeaurora.org>
-Date:   Wed, 19 Feb 2020 18:51:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D8B24654;
+        Wed, 19 Feb 2020 13:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582118681;
+        bh=WeK8iDiz+u7KGQl8xdyYvIuPvj8pRW13k3gZGmGmUOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CrDKTg0KsoKO1U07yyagx89/mJ6hieOjLuM/lo6w3mB9Y9R+aQAidXZSv/ywuM3au
+         r4bYkFE2ZGGFM/SSIBeOb3LJun+6yquvbVIUq2PH+U+U65CCtHToRoSUxXZ4LnlfNf
+         XO/4CZv966+4qxBk+L+tbRqcMNDfbzR2x3+83oH0=
+Date:   Wed, 19 Feb 2020 14:24:20 +0100
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        James Morse <james.morse@arm.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Stafford Horne <shorne@gmail.com>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        kvmarm@lists.cs.columbia.edu, kvm-ppc@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, nios2-dev@lists.rocketboards.org,
+        openrisc@lists.librecores.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 07/13] powerpc: add support for folded p4d page tables
+Message-ID: <20200219132420.GA5559@hump>
+References: <20200216081843.28670-1-rppt@kernel.org>
+ <20200216081843.28670-8-rppt@kernel.org>
+ <5b7c3929-5833-8ceb-85c8-a8e92e6a138e@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200218190731.GC15781@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5b7c3929-5833-8ceb-85c8-a8e92e6a138e@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On Wed, Feb 19, 2020 at 01:07:55PM +0100, Christophe Leroy wrote:
+> 
+> Le 16/02/2020 à 09:18, Mike Rapoport a écrit :
+> > diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
+> > index 206156255247..7bd4b81d5b5d 100644
+> > --- a/arch/powerpc/mm/ptdump/ptdump.c
+> > +++ b/arch/powerpc/mm/ptdump/ptdump.c
+> > @@ -277,9 +277,9 @@ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
+> >   	}
+> >   }
+> > -static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
+> > +static void walk_pud(struct pg_state *st, p4d_t *p4d, unsigned long start)
+> >   {
+> > -	pud_t *pud = pud_offset(pgd, 0);
+> > +	pud_t *pud = pud_offset(p4d, 0);
+> >   	unsigned long addr;
+> >   	unsigned int i;
+> > @@ -293,6 +293,22 @@ static void walk_pud(struct pg_state *st, pgd_t *pgd, unsigned long start)
+> >   	}
+> >   }
+> > +static void walk_p4d(struct pg_state *st, pgd_t *pgd, unsigned long start)
+> > +{
+> > +	p4d_t *p4d = p4d_offset(pgd, 0);
+> > +	unsigned long addr;
+> > +	unsigned int i;
+> > +
+> > +	for (i = 0; i < PTRS_PER_P4D; i++, p4d++) {
+> > +		addr = start + i * P4D_SIZE;
+> > +		if (!p4d_none(*p4d) && !p4d_is_leaf(*p4d))
+> > +			/* p4d exists */
+> > +			walk_pud(st, p4d, addr);
+> > +		else
+> > +			note_page(st, addr, 2, p4d_val(*p4d));
+> 
+> Level 2 is already used by walk_pud().
+> 
+> I think you have to increment the level used in walk_pud() and walk_pmd()
+> and walk_pte()
 
-On 2/19/2020 12:37 AM, Matthias Kaehlcke wrote:
-> Hi Akash,
->
-> I didn't see a patch that implements the binding, did you post it?
-
-We haven't posted any update on patch@ 
-https://patchwork.kernel.org/cover/11313817/
-
-[tty: serial: qcom_geni_serial: Configure UART_IO_MACRO_CTRL register]. 
-We will spin it ASAP.
-
->
->
-> On Mon, Feb 17, 2020 at 03:06:52PM +0530, Akash Asthana wrote:
->> Add documentation to support RX/TX/CTS/RTS pin swap in HW.
->>
->> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml | 9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->> index 11530df..7e4b9af 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
->> @@ -165,6 +165,15 @@ patternProperties:
->>             - description: UART core irq
->>             - description: Wakeup irq (RX GPIO)
->>   
->> +      rx-tx-swap:
->> +        description: RX and TX pins are swap.
-> s/swap/swapped/
-Ok
->
->> +
->> +      cts-rts-swap:
->> +        description: CTS and RTS pins are swap.
-> s/swap/swapped/
-Ok
->
->> +
->> +      rx-tx-cts-rts-swap:
->> +        description: RX-TX and CTS-RTS both pairs are swap.
-> I don't think this option adds much value, if both pairs are swapped
-> the above two properties can be set.
-
-Yeah ok, It is possible to derive value for rx-tx-cts-rts if above 2 
-properties are set.
-
->
->> +
->>       required:
->>         - compatible
->>         - interrupts
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
-
-Thanks for reviewing,
-
-
-Regards,
-
-Akash
+Thanks for catching this!
+I'll fix the numbers in the next version.
+ 
+> > +	}
+> > +}
+> > +
+> >   static void walk_pagetables(struct pg_state *st)
+> >   {
+> >   	unsigned int i;
+> > @@ -306,7 +322,7 @@ static void walk_pagetables(struct pg_state *st)
+> >   	for (i = pgd_index(addr); i < PTRS_PER_PGD; i++, pgd++, addr += PGDIR_SIZE) {
+> >   		if (!pgd_none(*pgd) && !pgd_is_leaf(*pgd))
+> >   			/* pgd exists */
+> > -			walk_pud(st, pgd, addr);
+> > +			walk_p4d(st, pgd, addr);
+> >   		else
+> >   			note_page(st, addr, 1, pgd_val(*pgd));
+> >   	}
+> 
+> Christophe
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
+Sincerely yours,
+Mike.
