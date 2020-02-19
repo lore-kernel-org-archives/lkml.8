@@ -2,124 +2,106 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C37CC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B349C18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5574A2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582141846;
-	bh=eiT46h6cjs5cGRD8Py4ELAq6/mSDHNGSWtuhwdPFC68=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YiSYcCw8ilXRkAWAbqzz8EbHy0d7SKINETvPv29Ac25FNqdIM9/NbO+UH2qe1l0pZ
-	 HXsQ4u0Zgd5GMTi3lZGqsICEYVdOCQNLLXn7pmL/AftUxywt6bEkvw17nv/LrxQDGG
-	 hjmP5xSBu72um5j8lyyYSyuNdTZGb6NMlKDNVsdI=
+	by mail.kernel.org (Postfix) with ESMTP id 0225C207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:51:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kYk0BubJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBSTup (ORCPT
+        id S1726875AbgBSTvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:50:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSTuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:50:44 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A98207FD;
-        Wed, 19 Feb 2020 19:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582141843;
-        bh=eiT46h6cjs5cGRD8Py4ELAq6/mSDHNGSWtuhwdPFC68=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=j0Q2SNNJu/5La8erWI6ydWvVV+EQ2a5xDQQhRl6IGSx6/S4BBCC7/lnXBc6gAkn15
-         TlW1RyJOGfEytCYaWwF2apo+9I4u9DMgUsLN6C/j0xC+K4O87bjU9Cu9gX5DhuF3Ix
-         KFA0A53ZRcG/hTnqnfzya0RQF+eDqvR2SRhoFiXc=
-Date:   Wed, 19 Feb 2020 11:50:42 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        richardw.yang@linux.intel.com, david@redhat.com, osalvador@suse.de,
-        dan.j.williams@intel.com, mhocko@suse.com
-Subject: Re: [PATCH v2 RESEND] mm/sparsemem: pfn_to_page is not valid yet on
- SPARSEMEM
-Message-Id: <20200219115042.e8738272455292d3a6a6e498@linux-foundation.org>
-In-Reply-To: <20200219030454.4844-1-bhe@redhat.com>
-References: <20200219030454.4844-1-bhe@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 14:51:06 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43014 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSTvG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:51:06 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p11so489878plq.10;
+        Wed, 19 Feb 2020 11:51:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M4zKKP2Q/R2OqgXmQC7JNNxIqu37zs1Y9dnrMmNhKok=;
+        b=kYk0BubJtysEMvnnNMFVM2IeGCr/Ru/1kfwbbHPBOBzi4yZrxwxByDP6WsdcN/Vx+O
+         L+WCpjbRy+2EKKAygOeHsRw/f6pdNP/RIvO3BeCvi+bP2TjPUZ7+GeMXjAvXQlICZoy/
+         OevfqzKOx6/eAovyMtu7G/oDqXc2UWTZb1mlsBNgTlTfPOM8udclGqbaVeXqeR6KhAyC
+         m8M5f5wPFgloka5Xu0Qop9wSSZtctnLXyxEFZXECtLslg9qYcj8dJuY2ghZZc+Fc2ay5
+         kChYlnafdEFyX0ptn61peDksV2Xh+QgWDN+z0XWbhmcfmbDJ+Eglc+yfSLJZxj4wa+nK
+         prNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M4zKKP2Q/R2OqgXmQC7JNNxIqu37zs1Y9dnrMmNhKok=;
+        b=ow4Juqku5Xss4S8WiM/Jp5zg98FmJ/POirhNGYsjMeU81HvawVZcbcJr6lqzftV9qH
+         k0V7xuEuh/gB1vpFul8YDe0nDGRznjPCXDVxKoFgoUL1yURyLljnNI2kTdkmts6oZW2m
+         LdBlM1JD5GWGOpUIWAjbsC93Y/wRRXVngmvhLtIl/QU5XReDeHtuPl+u9Gk2arASKW+3
+         py81aPg1yoNjeh60S0MKlHgOVquBuJWB6kjcqqcNjlH1E9jYYGyjNg2QV7b+fKbpMXP4
+         F59bxJU7efbRWWvYcLFYzOGxLCZ0n4ktwWDswpqZtgX5EMAWBgoK2jRWzhXRoHGsp8Fg
+         9RJg==
+X-Gm-Message-State: APjAAAUaC6eZ1qn/p1lFhuFzjP6TfmyFR2ezF9ezsoF07hmpMmOUBAwZ
+        xWJQhCPVgJxRrmUqO4n5MTol9c7aUUHxq1vT5Hg=
+X-Google-Smtp-Source: APXvYqzWKZoMXWkNrbnA1iDHd6g69T2x4VPoAwG/SDYVlx1df4kBzSZPdGZCwUj1t8upq1pqlBurbpQO9aN3F7v2m8U=
+X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr11000285pjq.132.1582141865462;
+ Wed, 19 Feb 2020 11:51:05 -0800 (PST)
+MIME-Version: 1.0
+References: <20200213091600.554-1-uwe@kleine-koenig.org> <20200213091600.554-2-uwe@kleine-koenig.org>
+In-Reply-To: <20200213091600.554-2-uwe@kleine-koenig.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Feb 2020 21:50:54 +0200
+Message-ID: <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 11:04:54 +0800 Baoquan He <bhe@redhat.com> wrote:
+On Thu, Feb 13, 2020 at 11:27 AM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.o=
+rg> wrote:
+>
+> This function is in the same spirit as the other kstrto* functions and
+> uses the same calling convention. It expects the input string to be in
+> the format %u:%u and implements stricter parsing than sscanf as it
+> returns an error on trailing data (other than the usual \n).
 
-> From: Wei Yang <richardw.yang@linux.intel.com>
-> 
-> When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
-> doesn't work before sparse_init_one_section() is called. This leads to a
-> crash when hotplug memory:
-> 
-> [   41.839170] BUG: unable to handle page fault for address: 0000000006400000
-> [   41.840663] #PF: supervisor write access in kernel mode
-> [   41.841822] #PF: error_code(0x0002) - not-present page
-> [   41.842970] PGD 0 P4D 0
-> [   41.843538] Oops: 0002 [#1] SMP PTI
-> [   41.844125] CPU: 3 PID: 221 Comm: kworker/u16:1 Tainted: G        W         5.5.0-next-20200205+ #343
-> [   41.845659] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> [   41.846977] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-> [   41.847904] RIP: 0010:__memset+0x24/0x30
-> [   41.848660] Code: cc cc cc cc cc cc 0f 1f 44 00 00 49 89 f9 48 89 d1 83 e2 07 48 c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 <f3> 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 f3
-> [   41.851836] RSP: 0018:ffffb43ac0373c80 EFLAGS: 00010a87
-> [   41.852686] RAX: ffffffffffffffff RBX: ffff8a1518800000 RCX: 0000000000050000
-> [   41.853824] RDX: 0000000000000000 RSI: 00000000000000ff RDI: 0000000006400000
-> [   41.854967] RBP: 0000000000140000 R08: 0000000000100000 R09: 0000000006400000
-> [   41.856107] R10: 0000000000000000 R11: 0000000000000002 R12: 0000000000000000
-> [   41.857255] R13: 0000000000000028 R14: 0000000000000000 R15: ffff8a153ffd9280
-> [   41.858414] FS:  0000000000000000(0000) GS:ffff8a153ab00000(0000) knlGS:0000000000000000
-> [   41.859703] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   41.860627] CR2: 0000000006400000 CR3: 0000000136fca000 CR4: 00000000000006e0
-> [   41.861716] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   41.862680] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   41.863628] Call Trace:
-> [   41.863983]  sparse_add_section+0x1c9/0x26a
-> [   41.864570]  __add_pages+0xbf/0x150
-> [   41.865057]  add_pages+0x12/0x60
-> [   41.865489]  add_memory_resource+0xc8/0x210
-> [   41.866017]  ? wake_up_q+0xa0/0xa0
-> [   41.866416]  __add_memory+0x62/0xb0
-> [   41.866825]  acpi_memory_device_add+0x13f/0x300
-> [   41.867410]  acpi_bus_attach+0xf6/0x200
-> [   41.867890]  acpi_bus_scan+0x43/0x90
-> [   41.868448]  acpi_device_hotplug+0x275/0x3d0
-> [   41.868972]  acpi_hotplug_work_fn+0x1a/0x30
-> [   41.869473]  process_one_work+0x1a7/0x370
-> [   41.869953]  worker_thread+0x30/0x380
-> [   41.870396]  ? flush_rcu_work+0x30/0x30
-> [   41.870846]  kthread+0x112/0x130
-> [   41.871236]  ? kthread_create_on_node+0x60/0x60
-> [   41.871770]  ret_from_fork+0x35/0x40
-> 
-> We should use memmap as it did.
-> 
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> CC: Dan Williams <dan.j.williams@intel.com>
+Can we first split the kstrotox* (and simple_strto*) to the separate
+header first?
 
-This should have included your signed-off-by, as you were on the patch
-delivery path.  I have made that change to my copy of the patch - is
-that OK?
+On top of that, why kstrtodev_t is so important? How many users are
+already in the kernel to get an advantage out of it?
+What to do with all other possible variants ("%d:%d", "%dx%d" and its
+%u variant, etc)?
 
-I also added a cc:stable.  Do we agree this is appropriate?
+Why simple_strto*() can't be used?
 
-I added Dan's "On x86 the impact is limited to x86_32 builds, or x86_64
-configurations that override the default setting for
-SPARSEMEM_VMEMMAP." to the changelog.
+>  #include <linux/export.h>
+>  #include <linux/types.h>
+>  #include <linux/uaccess.h>
+
+> +#include <linux/kdev_t.h>
+
+Perhaps preserve order? (It's for the future, since I doubt we will
+get this in upstream anyway).
+
+--=20
+With Best Regards,
+Andy Shevchenko
