@@ -2,78 +2,99 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A3FC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DADC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F47207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42944207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:00:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1xtQrA+"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IzvE2I3I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgBST6s (ORCPT
+        id S1726791AbgBSUAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:58:48 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:34279 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBST6r (ORCPT
+        Wed, 19 Feb 2020 15:00:44 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37875 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbgBSUAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:58:47 -0500
-Received: by mail-qv1-f66.google.com with SMTP id o18so779713qvf.1;
-        Wed, 19 Feb 2020 11:58:47 -0800 (PST)
+        Wed, 19 Feb 2020 15:00:43 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so522018pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:00:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EE2YczNla8qcSD1v8Yhtpjh81Hi8Cqph0O/BaPLbCAQ=;
-        b=G1xtQrA+Fl4T+NuvpjF24JE+In7qYLxIVbRiQPkhWMC1ygQS53vX7qgTSJMWTK1yAo
-         Fnxy/LLZlO9YMHyqOehXXfantuBgsWk1g8kgrvnXyuidsDUdQsLyt1rTnOGIQwyLGuIU
-         HGm7wU+lOgUaYtDAA5xrONZf4U02774D8cZPxqI2iptCYE32M4ji1gZOfi2bgXgdYCBm
-         49/aFU3pEkkgxZlJBuLQR2S3S5uyUNHBH6Y8l7sc8MzEiiEgATMsMsbvswFymESb6z2f
-         imR7csI3tgyJvoX49ybjwQDkDLW7BbsVmnemJTSEBOwtr8wfDCBflEPziuqtohqxBBCk
-         3EGA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=fmDci05JHgVKjcgLPSVfqdV3CiFfxgAZngf1Re3DIhY=;
+        b=IzvE2I3IpnWm6NE2Ng5/GGEuVLFwyvJlma/2j4jiSayqmL7fZvL7kfydyrijoVplQ+
+         ASCRNMkgO7D68tZ50d9B/8VrV/u68HMSx2UPoXoiG9ChvNQXMeQDTfwSp0NWGMLbHq1l
+         FAYYZTNOq2x/zjyfRkrlAMNF3Jjrmq2VDjY6A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=EE2YczNla8qcSD1v8Yhtpjh81Hi8Cqph0O/BaPLbCAQ=;
-        b=AWi1weQTcuulGOJmUEAjlqdalzW6J6+KOY6EQYrB/Sfik1giHPc7SHkr94ESHbKbQ/
-         9Unz9VGCd8Z55sgWi6vz1IW8vrijNT92cP4Uoc8PRzS8ufr+aKKK3gqCkVL8ZOnh2x/b
-         iSC/mGeEz7XatLdN9jHxp18RiS//MqlburLAPpX6BN9I4P00m9EvaU5zGfNK/t1s35af
-         RSeeH/60iwTaLGSECLD/IrEc+5ln31F5KQVBPpcbUDGI7Bg5gaIg3GkLHAn1BdtWsC/6
-         fKFxqusRCnMDkNTGLj8RQFSjO/GPMoqpyC3LsY+86oEnptjlqBMHZ3Pjcbl3Xx0HROxe
-         VP8Q==
-X-Gm-Message-State: APjAAAUzhOf/29Q8Er25Dl42Vah888hbJASj//57x3MLLFJHdQU4cJeN
-        awH4cjV2eKvRqKKjMQes9ps=
-X-Google-Smtp-Source: APXvYqxzp/p/uQ5OKuQzlRYvxU23dKiBTzDJThNZdRcJUJajNV++tcWXBL5KzKBvpWKSUDJ/qbow+A==
-X-Received: by 2002:a0c:f24a:: with SMTP id z10mr22861156qvl.33.1582142326588;
-        Wed, 19 Feb 2020 11:58:46 -0800 (PST)
-Received: from andrew4.ggf2gnjfztzulbq0d1gogf4ope.bx.internal.cloudapp.net ([52.224.106.77])
-        by smtp.gmail.com with ESMTPSA id j28sm368751qki.61.2020.02.19.11.58.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Feb 2020 11:58:46 -0800 (PST)
-From:   Andrew Norrie <andrew.p.norrie@gmail.com>
-X-Google-Original-From: Andrew Norrie <andrew.norrie@cgg.com>
-To:     bvanassche@acm.org
-Cc:     axboe@kernel.dk, jaegeuk@kernel.org, linux-block@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [f2fs-dev] [PATCH v3] loop: avoid EAGAIN, if offset or block_size are changed
-Date:   Wed, 19 Feb 2020 19:58:45 +0000
-Message-Id: <1582142325-40880-1-git-send-email-andrew.norrie@cgg.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <898950e4-3759-c78e-dd5d-422af9f8c507@acm.org>
-References: <898950e4-3759-c78e-dd5d-422af9f8c507@acm.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=fmDci05JHgVKjcgLPSVfqdV3CiFfxgAZngf1Re3DIhY=;
+        b=ZZiKdV2+cMEVsxxvdJoi76w7KYmBZOQCWox236oSxp6EJX8lEMAQthWl32a6Flvsx3
+         O4B7z35Of27SEKY0PY/h3GKRilQDfMuf2rLf2wZmYHBhutIfzPX4PvSpH9IVCxBEBqOc
+         3+Z3jANqwZqQDXRQNfakIQ9QW9tInACekU2wjFSUIOyOhTvDtF55ABwSEJOmGkspVQ19
+         O6Ei3AQfsaKUppIax+Dixt9MYvoUvydC/HXSQ+cmOwE1QueB/L2zCSfNyXTE6HWqEh9Q
+         eQFjVTNa2THA6CEk0DpNHhn2VjMyKjfzcwl6es9lX41ahxA3ZhB4MPnINgpPZ6ydHL0G
+         TXsg==
+X-Gm-Message-State: APjAAAVvaV36Jqa3XnS/DqGM2tBYtsIBQJnRO/CKCLyIou+EJ5dg/7c2
+        Fjb6aYtIwqBlW0hYzGEJAEb5kA==
+X-Google-Smtp-Source: APXvYqzpcl13F5RQ5GygW2x7suYzcJF08duSYixNAJ2FvzcdSkb52Y+MCajGLFfYVA8rX3sUwWjzwQ==
+X-Received: by 2002:a17:90a:f012:: with SMTP id bt18mr10864393pjb.8.1582142442905;
+        Wed, 19 Feb 2020 12:00:42 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d1sm498600pgj.79.2020.02.19.12.00.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 12:00:42 -0800 (PST)
+Date:   Wed, 19 Feb 2020 12:00:41 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     Benoit Parrot <bparrot@ti.com>, Rob Herring <robh@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Fix typo in "TI VPE/CAL DRIVERS"
+Message-ID: <202002191158.2BB5431@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The recent MAINTAINERS entry change for "TI VPE/CAL DRIVERS" broke the
+file format as it skipped having a line prefix character. Add missing
+"F:".
 
-Just checking again the status of this patch?
-It doesn't look like it's made it into the kernel yet?
+Fixes: 2099ef02c6c0 ("media: dt-bindings: media: cal: convert binding to yaml")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a0d86490c2c6..8f95de7f5eee 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16752,7 +16752,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
+ S:	Maintained
+ F:	drivers/media/platform/ti-vpe/
+ F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+-	Documentation/devicetree/bindings/media/ti,cal.yaml
++F:	Documentation/devicetree/bindings/media/ti,cal.yaml
+ 
+ TI WILINK WIRELESS DRIVERS
+ L:	linux-wireless@vger.kernel.org
+-- 
+2.20.1
+
+
+-- 
+Kees Cook
