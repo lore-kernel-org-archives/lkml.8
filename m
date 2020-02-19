@@ -2,167 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A79B1C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B68C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:35:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8096B21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bmHIpqpu"
+	by mail.kernel.org (Postfix) with ESMTP id C8C0524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgBSLec (ORCPT
+        id S1727291AbgBSLfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:34:32 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:23750 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726530AbgBSLec (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:34:32 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBYIaF018375;
-        Wed, 19 Feb 2020 12:34:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=sYV+fXFkNE49b3PkSLY5bKUtbpxLPJfmmOZx2ifgHCY=;
- b=bmHIpqpu4wcMqOaGmCyiVnCqOjBS1mi8K/1TPdBbSaeHA61FRTkuvdV6XKnQKw/jK0Vq
- YQV+b7qnSRB70GmxlkcYN4jooKhfoLk+Xv++L7aPESeNBNWtmlpuPBUYdvux6DCeuESd
- 1gfjr+mDRqdeHnhFq0n3fZk++s9JV7aOmaHcqtqi0yC3DmgYQaPWCORUh8yJC/Qm0d+h
- ImJmNsGInRGMX0dSa83DEEt/kWkJynbW8oyrXccbH7cquLtmFPAm79ycGcKFF3l1/4UD
- zm4FlBlvwYeLhOTbawrmUjWmMbgG5fNWIEzG2Jd7x1+4ipyVHcV1SALj4b5k240rqGNR GQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5jrfk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 12:34:18 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 28B27100034;
-        Wed, 19 Feb 2020 12:34:14 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 15D232B2DE7;
-        Wed, 19 Feb 2020 12:34:14 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
- 2020 12:34:13 +0100
-Subject: Re: [PATCH v2 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <marex@denx.de>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-3-alexandre.torgue@st.com>
-Message-ID: <f82caf02-5a47-ce3e-ec85-313712ef6de0@st.com>
-Date:   Wed, 19 Feb 2020 12:34:12 +0100
+        Wed, 19 Feb 2020 06:35:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38264 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726636AbgBSLfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:35:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 17951B1B2;
+        Wed, 19 Feb 2020 11:34:54 +0000 (UTC)
+Subject: Re: [PATCH 2/3] btrfs: remove set but not used variable 'parent'
+To:     yu kuai <yukuai3@huawei.com>, clm@fb.com, josef@toxicpanda.com,
+        dsterba@suse.com
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zhengbin13@huawei.com, yi.zhang@huawei.com
+References: <20200219112203.17075-1-yukuai3@huawei.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <f7bc478c-2fe9-2694-cd0c-92c188d178c5@suse.com>
+Date:   Wed, 19 Feb 2020 13:34:53 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200218131218.10789-3-alexandre.torgue@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200219112203.17075-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix Marc email address.
 
-On 2/18/20 2:12 PM, Alexandre Torgue wrote:
-> This patch adds level interrupt support to gpio irq chip.
+
+On 19.02.20 г. 13:22 ч., yu kuai wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
 > 
-> GPIO hardware block is directly linked to EXTI block but EXTI handles
-> external interrupts only on edge. To be able to handle GPIO interrupt on
-> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
-> is retriggered following interrupt type and gpio line value.
+> fs/btrfs/tree-log.c: In function ‘walk_down_log_tree’:
+> fs/btrfs/tree-log.c:2702:24: warning: variable ‘parent’
+> set but not used [-Wunused-but-set-variable]
+> fs/btrfs/tree-log.c: In function ‘walk_up_log_tree’:
+> fs/btrfs/tree-log.c:2803:26: warning: variable ‘parent’
+> set but not used [-Wunused-but-set-variable]
 > 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> Tested-by: Marek Vasut <marex@denx.de>
+> They are never used, and so can be removed.
 > 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> index 2d5e0435af0a..dae236562543 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> @@ -92,6 +92,7 @@ struct stm32_gpio_bank {
->   	u32 bank_nr;
->   	u32 bank_ioport_nr;
->   	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
-> +	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
->   };
->   
->   struct stm32_pinctrl {
-> @@ -303,6 +304,46 @@ static const struct gpio_chip stm32_gpio_template = {
->   	.get_direction		= stm32_gpio_get_direction,
->   };
->   
-> +void stm32_gpio_irq_eoi(struct irq_data *d)
-> +{
-> +	struct stm32_gpio_bank *bank = d->domain->host_data;
-> +	int line;
-> +
-> +	irq_chip_eoi_parent(d);
-> +
-> +	/* If level interrupt type then retrig */
-> +	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-> +	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
-> +	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-> +		irq_chip_retrigger_hierarchy(d);
-> +};
-> +
-> +static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
-> +{
-> +	struct stm32_gpio_bank *bank = d->domain->host_data;
-> +	u32 parent_type;
-> +
-> +	bank->irq_type[d->hwirq] = type;
-> +
-> +	switch (type) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		parent_type = type;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		parent_type = IRQ_TYPE_EDGE_RISING;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		parent_type = IRQ_TYPE_EDGE_FALLING;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return irq_chip_set_type_parent(d, parent_type);
-> +};
-> +
->   static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
->   {
->   	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-> @@ -332,11 +373,11 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
->   
->   static struct irq_chip stm32_gpio_irq_chip = {
->   	.name		= "stm32gpio",
-> -	.irq_eoi	= irq_chip_eoi_parent,
-> +	.irq_eoi	= stm32_gpio_irq_eoi,
->   	.irq_ack	= irq_chip_ack_parent,
->   	.irq_mask	= irq_chip_mask_parent,
->   	.irq_unmask	= irq_chip_unmask_parent,
-> -	.irq_set_type	= irq_chip_set_type_parent,
-> +	.irq_set_type	= stm32_gpio_set_type,
->   	.irq_set_wake	= irq_chip_set_wake_parent,
->   	.irq_request_resources = stm32_gpio_irq_request_resources,
->   	.irq_release_resources = stm32_gpio_irq_release_resources,
-> 
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+
+Ah yes, those two are a result of my :
+
+e084c5ab48f9 ("btrfs: Call btrfs_pin_reserved_extent only during active
+transaction")  (in misc-next branch)
+
+David perhaps you can squash the two var removals into the original patch?
+
+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
