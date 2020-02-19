@@ -3,104 +3,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D87BFC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96826C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3712176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767FE2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgBSOCt (ORCPT
+        id S1727881AbgBSOGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:02:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:49580 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgBSOCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:02:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A0481FB;
-        Wed, 19 Feb 2020 06:02:48 -0800 (PST)
-Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AF603F68F;
-        Wed, 19 Feb 2020 06:02:47 -0800 (PST)
-Date:   Wed, 19 Feb 2020 14:02:44 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Pavan Kondeti <pkondeti@codeaurora.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
+        Wed, 19 Feb 2020 09:06:24 -0500
+Received: from outbound-smtp48.blacknight.com ([46.22.136.219]:59635 "EHLO
+        outbound-smtp48.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726736AbgBSOGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:06:23 -0500
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+        by outbound-smtp48.blacknight.com (Postfix) with ESMTPS id CBC31FB26D
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:06:21 +0000 (GMT)
+Received: (qmail 17049 invoked from network); 19 Feb 2020 14:06:21 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 14:06:21 -0000
+Date:   Wed, 19 Feb 2020 14:06:19 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
-Message-ID: <20200219140243.wfljmupcrwm2jelo@e107158-lin>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-4-qais.yousef@arm.com>
- <20200217092329.GC28029@codeaurora.org>
- <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/13] Reconcile NUMA balancing decisions with the load
+ balancer v4
+Message-ID: <20200219140619.GQ3466@techsingularity.net>
+References: <20200219135442.18107-1-mgorman@techsingularity.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200219135442.18107-1-mgorman@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/17/20 13:53, Qais Yousef wrote:
-> On 02/17/20 14:53, Pavan Kondeti wrote:
-> > I notice a case where tasks would migrate for no reason (happens without this
-> > patch also). Assuming BIG cores are busy with other RT tasks. Now this RT
-> > task can go to *any* little CPU. There is no bias towards its previous CPU.
-> > I don't know if it makes any difference but I see RT task placement is too
-> > keen on reducing the migrations unless it is absolutely needed.
+On Wed, Feb 19, 2020 at 01:54:29PM +0000, Mel Gorman wrote:
+> This is V4 which includes the latest versions of Vincent's patch
+> addressing review feedback. Patches 4-8 are Vincent's work plus one
+> important performance fix. They can be merged in isolation even if the
+> remaining patches are rejected for whatever reason.
 > 
-> In find_lowest_rq() there's a check if the task_cpu(p) is in the lowest_mask
-> and prefer it if it is.
-> 
-> But yeah I see it happening too
-> 
-> https://imgur.com/a/FYqLIko
-> 
-> Tasks on CPU 0 and 3 swap. Note that my tasks are periodic but the plots don't
-> show that.
-> 
-> I shouldn't have changed something to affect this bias. Do you think it's
-> something I introduced?
-> 
-> It's something maybe worth digging into though. I'll try to have a look.
 
-FWIW, I dug a bit into this and I found out we have a thundering herd issue.
+And I managed to send the wrong version, this is wrong.
 
-Since I just have a set of periodic task that all start together,
-select_task_rq_rt() ends up selecting the same fitting CPU for all of them
-(CPU1). The end up all waking up on CPU1, only to get pushed back out
-again with only one surviving.
-
-This reshuffles the task placement ending with some tasks being swapped.
-
-I don't think this problem is specific to my change and could happen without
-it.
-
-The problem is caused by the way find_lowest_rq() selects a cpu in the mask
-
-1750                         best_cpu = cpumask_first_and(lowest_mask,
-1751                                                      sched_domain_span(sd));
-1752                         if (best_cpu < nr_cpu_ids) {
-1753                                 rcu_read_unlock();
-1754                                 return best_cpu;
-1755                         }
-
-It always returns the first CPU in the mask. Or the mask could only contain
-a single CPU too. The end result is that we most likely end up herding all the
-tasks that wake up simultaneously to the same CPU.
-
-I'm not sure how to fix this problem yet.
-
---
-Qais Yousef
+-- 
+Mel Gorman
+SUSE Labs
