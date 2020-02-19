@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D8BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F00EC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E56F2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C5A2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MdvlJjod"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YOUgET+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBSOCO (ORCPT
+        id S1727915AbgBSOCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:02:14 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33421 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727740AbgBSOCJ (ORCPT
+        Wed, 19 Feb 2020 09:02:16 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35853 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727756AbgBSOCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:02:09 -0500
-Received: by mail-wr1-f65.google.com with SMTP id u6so725156wrt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 06:02:05 -0800 (PST)
+        Wed, 19 Feb 2020 09:02:13 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so694616wru.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 06:02:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=B0pc8rNUfKA91/mI/jbjBI/vxhEIwivCzVEJQitpams=;
-        b=MdvlJjodnjxxVjia3FLOHZ/QdbSoFHeKNlkgn4xsS3hUyQmhEurTkKp9jD5nVl97np
-         scYgr3ht58Iu97gLOgRGV3QTZXtdM9YQRG5CMaY2EiF3V50sGZgLBya5EaALXQkqYsXo
-         6VOPEDEOq5XqJhlQkP/4Y8ep/v5txVJuLlPi4G4smn/OiQel6dINsVxg+5ykfNuwIewM
-         lJCHszPYzhfNFj8qaFqaxZ7HkDp6bgLNM/Bt7fGslg1WOegmFFNi7jlCk2eYIulUdHmq
-         wDXxlqLlSHyofJvOMLZVTl+eK+aW78Bv3oyazQ3i8ypBdYffWtssUSknLTS3PV0xkk0N
-         MGbQ==
+        bh=glMpHGfoxy59MT1nCJe+0fFtPySi308jUiqy/6I+JEo=;
+        b=YOUgET+jOl8FFIb8DMdvnGisZnKWE5nBZjpL3UyvNfcVy8qZSWyeaYqvKIUvNFaVCY
+         GfCA7Jf8+NGPdojz1+e1vWymcd7rTSeb0zwhEepyKzxMT23jHFfijyesO1CsK+g+YRUE
+         DcJyEFnSqmBDIkuO6AJgvnFwCmK/WwdEUrWy/hRD92mgGsE3D4SBIMyzbicJdJdf0msj
+         +qhysrC6I+eo9GXalmxobSfQLd/GW6ENupo2ZW+1dqCXB/P/UzAmGmwKeDs5xHQAIW+d
+         GwTjW1UzbcbKL90seZWNlR40VZIcQH9xE0VF5hU98Tt61Y4BfqkKCnO8q2SZ5PVJPT4i
+         pwsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=B0pc8rNUfKA91/mI/jbjBI/vxhEIwivCzVEJQitpams=;
-        b=ngYRX83fpsrnPoL6qt0vL7m8AiLHA1TbBk/tc2G7tG/jodtOthHjsHmKVOoIrxjZkh
-         ECWkkK+GFVMvgBZ6Mdw37W1LA+/nDCd8693IpfwYUbIDrxcB0hUr6d230bEk4DmpgIoN
-         RzBuLuhaBBGDsWQUcJJ0c5n078Jk5vuL+3NjrABYDrmeW9elj+yajbO7c8HKw3UMNnvh
-         k4Vy2OJNh7jwSFQKUhurBJ8eKiWUBAqsEVY2pjQu5jZ39qbylU2ndPnSoBlCJgKmrE92
-         xYvD0o/RXf4HUdBNINmb69m736czvn3oegxN71RUbQB3tjHdJ4asUTfpcnAnIv14gO+K
-         mHJw==
-X-Gm-Message-State: APjAAAWKVTiddyPpxl1Ub8ZMPIfxFxztGjZzWAKaZaoVPlWf3L4kgx5W
-        1krvgsuhhPy7YK9RHHFFCpDUrQ==
-X-Google-Smtp-Source: APXvYqyLjLWojrW/08yuQhqeGbZbGDhTSDYDf4Dmezt7qRKIAR9DY41li1NaQRWtJ8p4ZxGFPvKbJw==
-X-Received: by 2002:a5d:65cf:: with SMTP id e15mr35567939wrw.126.1582120923404;
-        Wed, 19 Feb 2020 06:02:03 -0800 (PST)
+        bh=glMpHGfoxy59MT1nCJe+0fFtPySi308jUiqy/6I+JEo=;
+        b=t7Ki6FnmxN9VucV9gokVYo2E90eF0KyoRH+UxHV63y1EQuiEoLnu1wVnLe/j/UTn5d
+         tOZconHaKxokUrzgD21Kdf1TgjA6aU5D8gR+aQUGuVFCe0+KpGyF3Y48cP2Zk3oj+wYs
+         sH0osJvMZDW+qNUPu1f5Akt06+lQFv8x2FDiLVjIgUD5md3kclkXlNaY64/Dlw5N/+OC
+         bFMzg6MwFJ7XbfsOzcJ+vGfTP7+AOCznhHceqxDh34PHe2obcJKQKh3RlSj2RoelKgV7
+         XKNzvHYhTt+RpUG0dcKroYPoijNEpKuqkudvRcQYHyJwZHFmAW2oqLP2YEksAKtc0hr5
+         iH4A==
+X-Gm-Message-State: APjAAAWT4VwphoAmvo/hyKoPyLmvOjaq4c5FxtrNsZKIlD9zXunip5Rd
+        adifkM+0S94rerFiv5dXLv9yRA==
+X-Google-Smtp-Source: APXvYqyU0h0L0Oq9lyQGhcq8GAHW5Y7/ux0t0pqd862/+dQoTSBSUsfhZ91+HlRnAFxINvElBPqOBg==
+X-Received: by 2002:a5d:4a04:: with SMTP id m4mr36719403wrq.104.1582120929804;
+        Wed, 19 Feb 2020 06:02:09 -0800 (PST)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858])
-        by smtp.gmail.com with ESMTPSA id j14sm3178634wrn.32.2020.02.19.06.02.02
+        by smtp.gmail.com with ESMTPSA id j14sm3178634wrn.32.2020.02.19.06.02.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 06:02:02 -0800 (PST)
+        Wed, 19 Feb 2020 06:02:08 -0800 (PST)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
         linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/4] media: v4l2-mem2mem: handle draining, stopped and next-buf-is-last states
-Date:   Wed, 19 Feb 2020 15:01:53 +0100
-Message-Id: <20200219140156.22893-2-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v6 4/4] media: meson: vdec: add H.264 decoding support
+Date:   Wed, 19 Feb 2020 15:01:56 +0100
+Message-Id: <20200219140156.22893-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200219140156.22893-1-narmstrong@baylibre.com>
 References: <20200219140156.22893-1-narmstrong@baylibre.com>
@@ -74,473 +75,646 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the draining and stop phase of the HW decoder mem2mem behaviour is
-now clearly defined, we can move handling of the following states to the
-common v4l2-mem2mem core code:
-- draining
-- stopped
-- next-buf-is-last
+From: Maxime Jourdan <mjourdan@baylibre.com>
 
-By introducing the following v4l2-mem2mem APIs:
-- v4l2_m2m_encoder_cmd/v4l2_m2m_ioctl_encoder_cmd to handle start/stop command
-- v4l2_m2m_decoder_cmd/v4l2_m2m_ioctl_decoder_cmd to handle start/stop command
-- v4l2_m2m_update_start_streaming_state to update state on start of streaming
-of the de/encoder queue
-- v4l2_m2m_update_stop_streaming_state to update state on stop of streaming
-of the de/encoder queue
-- v4l2_m2m_last_buffer_done to make the current dest buffer as the last one
+Add support for the H264 compressed format (V4L2_PIX_FMT_H264).
 
-And inline helpers:
-- v4l2_m2m_mark_stopped to mark the de/encoding process as stopped
-- v4l2_m2m_clear_state to clear the de/encoding state
-- v4l2_m2m_dst_buf_is_last to detect the current dequeued dst_buf is the last
-- v4l2_m2m_has_stopped to detect the de/encoding stopped state
-- v4l2_m2m_is_last_draining_src_buf to detect the current source buffer should
- be the last processing before stopping the de/encoding process
-
-The special next-buf-is-last when min_buffers != 1 case is also handled
-in v4l2_m2m_qbuf() by reusing the other introduced APIs.
-
-This state management has been stolen from the vicodec implementation,
-and is no-op for drivers not calling the v4l2_m2m_encoder_cmd or
-v4l2_m2m_decoder_cmd and v4l2_m2m_update_start/stop_streaming_state.
-
-The vicodec will be the first one to be converted as an example.
-
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/media/v4l2-core/v4l2-mem2mem.c | 221 ++++++++++++++++++++++++-
- include/media/v4l2-mem2mem.h           | 133 +++++++++++++++
- 2 files changed, 352 insertions(+), 2 deletions(-)
+ drivers/staging/media/meson/vdec/Makefile     |   2 +-
+ drivers/staging/media/meson/vdec/codec_h264.c | 484 ++++++++++++++++++
+ drivers/staging/media/meson/vdec/codec_h264.h |  14 +
+ .../staging/media/meson/vdec/vdec_platform.c  |  61 +++
+ 4 files changed, 560 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/media/meson/vdec/codec_h264.c
+ create mode 100644 drivers/staging/media/meson/vdec/codec_h264.h
 
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-index 1afd9c6ad908..c4a84d9f693a 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -340,6 +340,11 @@ static void __v4l2_m2m_try_queue(struct v4l2_m2m_dev *m2m_dev,
- 		m2m_ctx->new_frame = !dst->vb2_buf.copied_timestamp ||
- 			dst->vb2_buf.timestamp != src->vb2_buf.timestamp;
+diff --git a/drivers/staging/media/meson/vdec/Makefile b/drivers/staging/media/meson/vdec/Makefile
+index 6bea129084b7..711d990c760e 100644
+--- a/drivers/staging/media/meson/vdec/Makefile
++++ b/drivers/staging/media/meson/vdec/Makefile
+@@ -3,6 +3,6 @@
  
-+	if (m2m_ctx->has_stopped) {
-+		dprintk("Device has stopped\n");
-+		goto job_unlock;
-+	}
-+
- 	if (m2m_dev->m2m_ops->job_ready
- 		&& (!m2m_dev->m2m_ops->job_ready(m2m_ctx->priv))) {
- 		dprintk("Driver not ready\n");
-@@ -556,6 +561,140 @@ int v4l2_m2m_querybuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_querybuf);
+ meson-vdec-objs = esparser.o vdec.o vdec_helpers.o vdec_platform.o
+ meson-vdec-objs += vdec_1.o
+-meson-vdec-objs += codec_mpeg12.o
++meson-vdec-objs += codec_mpeg12.o codec_h264.o
  
+ obj-$(CONFIG_VIDEO_MESON_VDEC) += meson-vdec.o
+diff --git a/drivers/staging/media/meson/vdec/codec_h264.c b/drivers/staging/media/meson/vdec/codec_h264.c
+new file mode 100644
+index 000000000000..cbabc8f29f2d
+--- /dev/null
++++ b/drivers/staging/media/meson/vdec/codec_h264.c
+@@ -0,0 +1,484 @@
++// SPDX-License-Identifier: GPL-2.0+
 +/*
-+ * This will add the LAST flag and mark the buffer management
-+ * state as stopped.
-+ * This is called when the last capture buffer must be flagged as LAST
-+ * in draining mode from the encoder/decoder driver buf_queue() callback
-+ * or from v4l2_update_last_buf_state() when a capture buffer is available.
++ * Copyright (C) 2019 BayLibre, SAS
++ * Author: Maxime Jourdan <mjourdan@baylibre.com>
 + */
-+void v4l2_m2m_last_buffer_done(struct v4l2_m2m_ctx *m2m_ctx,
-+			       struct vb2_v4l2_buffer *vbuf)
-+{
-+	vbuf->flags |= V4L2_BUF_FLAG_LAST;
-+	vb2_buffer_done(&vbuf->vb2_buf, VB2_BUF_STATE_DONE);
 +
-+	v4l2_m2m_mark_stopped(m2m_ctx);
++#include <media/v4l2-mem2mem.h>
++#include <media/videobuf2-dma-contig.h>
++
++#include "vdec_helpers.h"
++#include "dos_regs.h"
++
++#define SIZE_EXT_FW	(20 * SZ_1K)
++#define SIZE_WORKSPACE	0x1ee000
++#define SIZE_SEI	(8 * SZ_1K)
++
++/*
++ * Offset added by the firmware which must be substracted
++ * from the workspace phyaddr
++ */
++#define WORKSPACE_BUF_OFFSET	0x1000000
++
++/* ISR status */
++#define CMD_MASK		GENMASK(7, 0)
++#define CMD_SRC_CHANGE		1
++#define CMD_FRAMES_READY	2
++#define CMD_FATAL_ERROR		6
++#define CMD_BAD_WIDTH		7
++#define CMD_BAD_HEIGHT		8
++
++#define SEI_DATA_READY	BIT(15)
++
++/* Picture type */
++#define PIC_TOP_BOT	5
++#define PIC_BOT_TOP	6
++
++/* Size of Motion Vector per macroblock */
++#define MB_MV_SIZE	96
++
++/* Frame status data */
++#define PIC_STRUCT_BIT	5
++#define PIC_STRUCT_MASK	GENMASK(2, 0)
++#define BUF_IDX_MASK	GENMASK(4, 0)
++#define ERROR_FLAG	BIT(9)
++#define OFFSET_BIT	16
++#define OFFSET_MASK	GENMASK(15, 0)
++
++/* Bitstream parsed data */
++#define MB_TOTAL_BIT	8
++#define MB_TOTAL_MASK	GENMASK(15, 0)
++#define MB_WIDTH_MASK	GENMASK(7, 0)
++#define MAX_REF_BIT	24
++#define MAX_REF_MASK	GENMASK(6, 0)
++#define AR_IDC_BIT	16
++#define AR_IDC_MASK	GENMASK(7, 0)
++#define AR_PRESENT_FLAG	BIT(0)
++#define AR_EXTEND	0xff
++
++/*
++ * Buffer to send to the ESPARSER to signal End Of Stream for H.264.
++ * This is a 16x16 encoded picture that will trigger drain firmware-side.
++ * There is no known alternative.
++ */
++static const u8 eos_sequence[SZ_4K] = {
++	0x00, 0x00, 0x00, 0x01, 0x06, 0x05, 0xff, 0xe4, 0xdc, 0x45, 0xe9, 0xbd,
++	0xe6, 0xd9, 0x48, 0xb7,	0x96, 0x2c, 0xd8, 0x20, 0xd9, 0x23, 0xee, 0xef,
++	0x78, 0x32, 0x36, 0x34, 0x20, 0x2d, 0x20, 0x63,	0x6f, 0x72, 0x65, 0x20,
++	0x36, 0x37, 0x20, 0x72, 0x31, 0x31, 0x33, 0x30, 0x20, 0x38, 0x34, 0x37,
++	0x35, 0x39, 0x37, 0x37, 0x20, 0x2d, 0x20, 0x48, 0x2e, 0x32, 0x36, 0x34,
++	0x2f, 0x4d, 0x50, 0x45,	0x47, 0x2d, 0x34, 0x20, 0x41, 0x56, 0x43, 0x20,
++	0x63, 0x6f, 0x64, 0x65, 0x63, 0x20, 0x2d, 0x20,	0x43, 0x6f, 0x70, 0x79,
++	0x6c, 0x65, 0x66, 0x74, 0x20, 0x32, 0x30, 0x30, 0x33, 0x2d, 0x32, 0x30,
++	0x30, 0x39, 0x20, 0x2d, 0x20, 0x68, 0x74, 0x74, 0x70, 0x3a, 0x2f, 0x2f,
++	0x77, 0x77, 0x77, 0x2e,	0x76, 0x69, 0x64, 0x65, 0x6f, 0x6c, 0x61, 0x6e,
++	0x2e, 0x6f, 0x72, 0x67, 0x2f, 0x78, 0x32, 0x36,	0x34, 0x2e, 0x68, 0x74,
++	0x6d, 0x6c, 0x20, 0x2d, 0x20, 0x6f, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x73,
++	0x3a, 0x20, 0x63, 0x61, 0x62, 0x61, 0x63, 0x3d, 0x31, 0x20, 0x72, 0x65,
++	0x66, 0x3d, 0x31, 0x20,	0x64, 0x65, 0x62, 0x6c, 0x6f, 0x63, 0x6b, 0x3d,
++	0x31, 0x3a, 0x30, 0x3a, 0x30, 0x20, 0x61, 0x6e,	0x61, 0x6c, 0x79, 0x73,
++	0x65, 0x3d, 0x30, 0x78, 0x31, 0x3a, 0x30, 0x78, 0x31, 0x31, 0x31, 0x20,
++	0x6d, 0x65, 0x3d, 0x68, 0x65, 0x78, 0x20, 0x73, 0x75, 0x62, 0x6d, 0x65,
++	0x3d, 0x36, 0x20, 0x70,	0x73, 0x79, 0x5f, 0x72, 0x64, 0x3d, 0x31, 0x2e,
++	0x30, 0x3a, 0x30, 0x2e, 0x30, 0x20, 0x6d, 0x69,	0x78, 0x65, 0x64, 0x5f,
++	0x72, 0x65, 0x66, 0x3d, 0x30, 0x20, 0x6d, 0x65, 0x5f, 0x72, 0x61, 0x6e,
++	0x67, 0x65, 0x3d, 0x31, 0x36, 0x20, 0x63, 0x68, 0x72, 0x6f, 0x6d, 0x61,
++	0x5f, 0x6d, 0x65, 0x3d,	0x31, 0x20, 0x74, 0x72, 0x65, 0x6c, 0x6c, 0x69,
++	0x73, 0x3d, 0x30, 0x20, 0x38, 0x78, 0x38, 0x64,	0x63, 0x74, 0x3d, 0x30,
++	0x20, 0x63, 0x71, 0x6d, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x61, 0x64, 0x7a,
++	0x6f, 0x6e, 0x65, 0x3d, 0x32, 0x31, 0x2c, 0x31, 0x31, 0x20, 0x63, 0x68,
++	0x72, 0x6f, 0x6d, 0x61,	0x5f, 0x71, 0x70, 0x5f, 0x6f, 0x66, 0x66, 0x73,
++	0x65, 0x74, 0x3d, 0x2d, 0x32, 0x20, 0x74, 0x68,	0x72, 0x65, 0x61, 0x64,
++	0x73, 0x3d, 0x31, 0x20, 0x6e, 0x72, 0x3d, 0x30, 0x20, 0x64, 0x65, 0x63,
++	0x69, 0x6d, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x20, 0x6d, 0x62, 0x61, 0x66,
++	0x66, 0x3d, 0x30, 0x20,	0x62, 0x66, 0x72, 0x61, 0x6d, 0x65, 0x73, 0x3d,
++	0x30, 0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74,	0x3d, 0x32, 0x35, 0x30,
++	0x20, 0x6b, 0x65, 0x79, 0x69, 0x6e, 0x74, 0x5f, 0x6d, 0x69, 0x6e, 0x3d,
++	0x32, 0x35, 0x20, 0x73, 0x63, 0x65, 0x6e, 0x65, 0x63, 0x75, 0x74, 0x3d,
++	0x34, 0x30, 0x20, 0x72,	0x63, 0x3d, 0x61, 0x62, 0x72, 0x20, 0x62, 0x69,
++	0x74, 0x72, 0x61, 0x74, 0x65, 0x3d, 0x31, 0x30,	0x20, 0x72, 0x61, 0x74,
++	0x65, 0x74, 0x6f, 0x6c, 0x3d, 0x31, 0x2e, 0x30, 0x20, 0x71, 0x63, 0x6f,
++	0x6d, 0x70, 0x3d, 0x30, 0x2e, 0x36, 0x30, 0x20, 0x71, 0x70, 0x6d, 0x69,
++	0x6e, 0x3d, 0x31, 0x30,	0x20, 0x71, 0x70, 0x6d, 0x61, 0x78, 0x3d, 0x35,
++	0x31, 0x20, 0x71, 0x70, 0x73, 0x74, 0x65, 0x70,	0x3d, 0x34, 0x20, 0x69,
++	0x70, 0x5f, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x3d, 0x31, 0x2e, 0x34, 0x30,
++	0x20, 0x61, 0x71, 0x3d, 0x31, 0x3a, 0x31, 0x2e, 0x30, 0x30, 0x00, 0x80,
++	0x00, 0x00, 0x00, 0x01,	0x67, 0x4d, 0x40, 0x0a, 0x9a, 0x74, 0xf4, 0x20,
++	0x00, 0x00, 0x03, 0x00, 0x20, 0x00, 0x00, 0x06,	0x51, 0xe2, 0x44, 0xd4,
++	0x00, 0x00, 0x00, 0x01, 0x68, 0xee, 0x32, 0xc8, 0x00, 0x00, 0x00, 0x01,
++	0x65, 0x88, 0x80, 0x20, 0x00, 0x08, 0x7f, 0xea, 0x6a, 0xe2, 0x99, 0xb6,
++	0x57, 0xae, 0x49, 0x30,	0xf5, 0xfe, 0x5e, 0x46, 0x0b, 0x72, 0x44, 0xc4,
++	0xe1, 0xfc, 0x62, 0xda, 0xf1, 0xfb, 0xa2, 0xdb,	0xd6, 0xbe, 0x5c, 0xd7,
++	0x24, 0xa3, 0xf5, 0xb9, 0x2f, 0x57, 0x16, 0x49, 0x75, 0x47, 0x77, 0x09,
++	0x5c, 0xa1, 0xb4, 0xc3, 0x4f, 0x60, 0x2b, 0xb0, 0x0c, 0xc8, 0xd6, 0x66,
++	0xba, 0x9b, 0x82, 0x29,	0x33, 0x92, 0x26, 0x99, 0x31, 0x1c, 0x7f, 0x9b,
++	0x00, 0x00, 0x01, 0x0ff,
++};
++
++static const u8 *codec_h264_eos_sequence(u32 *len)
++{
++	*len = ARRAY_SIZE(eos_sequence);
++	return eos_sequence;
 +}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_last_buffer_done);
 +
-+/* When stop command is issued, update buffer management state */
-+static int v4l2_update_last_buf_state(struct v4l2_m2m_ctx *m2m_ctx)
++struct codec_h264 {
++	/* H.264 decoder requires an extended firmware */
++	void      *ext_fw_vaddr;
++	dma_addr_t ext_fw_paddr;
++
++	/* Buffer for the H.264 Workspace */
++	void      *workspace_vaddr;
++	dma_addr_t workspace_paddr;
++
++	/* Buffer for the H.264 references MV */
++	void      *ref_vaddr;
++	dma_addr_t ref_paddr;
++	u32	   ref_size;
++
++	/* Buffer for parsed SEI data */
++	void      *sei_vaddr;
++	dma_addr_t sei_paddr;
++
++	u32 mb_width;
++	u32 mb_height;
++	u32 max_refs;
++};
++
++static int codec_h264_can_recycle(struct amvdec_core *core)
 +{
-+	struct vb2_v4l2_buffer *next_dst_buf;
++	return !amvdec_read_dos(core, AV_SCRATCH_7) ||
++	       !amvdec_read_dos(core, AV_SCRATCH_8);
++}
 +
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
-+
-+	if (m2m_ctx->has_stopped)
-+		return 0;
-+
-+	m2m_ctx->last_src_buf = v4l2_m2m_last_src_buf(m2m_ctx);
-+	m2m_ctx->is_draining = true;
-+
++static void codec_h264_recycle(struct amvdec_core *core, u32 buf_idx)
++{
 +	/*
-+	 * The processing of the last output buffer queued before
-+	 * the STOP command is expected to mark the buffer management
-+	 * state as stopped with v4l2_m2m_mark_stopped().
++	 * Tell the firmware it can recycle this buffer.
++	 * AV_SCRATCH_8 serves the same purpose.
 +	 */
-+	if (m2m_ctx->last_src_buf)
-+		return 0;
++	if (!amvdec_read_dos(core, AV_SCRATCH_7))
++		amvdec_write_dos(core, AV_SCRATCH_7, buf_idx + 1);
++	else
++		amvdec_write_dos(core, AV_SCRATCH_8, buf_idx + 1);
++}
 +
-+	/*
-+	 * In case the output queue is empty, try to mark the last capture
-+	 * buffer as LAST.
-+	 */
-+	next_dst_buf = v4l2_m2m_dst_buf_remove(m2m_ctx);
-+	if (!next_dst_buf) {
-+		/*
-+		 * Wait for the next queued one in encoder/decoder driver
-+		 * buf_queue() callback using the v4l2_m2m_dst_buf_is_last()
-+		 * helper or in v4l2_m2m_qbuf() if encoder/decoder is not yet
-+		 * streaming.
-+		 */
-+		m2m_ctx->next_buf_last = true;
-+		return 0;
-+	}
++static int codec_h264_start(struct amvdec_session *sess)
++{
++	u32 workspace_offset;
++	struct amvdec_core *core = sess->core;
++	struct codec_h264 *h264 = sess->priv;
 +
-+	v4l2_m2m_last_buffer_done(m2m_ctx, next_dst_buf);
++	/* Allocate some memory for the H.264 decoder's state */
++	h264->workspace_vaddr =
++		dma_alloc_coherent(core->dev, SIZE_WORKSPACE,
++				   &h264->workspace_paddr, GFP_KERNEL);
++	if (!h264->workspace_vaddr)
++		return -ENOMEM;
++
++	/* Allocate some memory for the H.264 SEI dump */
++	h264->sei_vaddr = dma_alloc_coherent(core->dev, SIZE_SEI,
++					     &h264->sei_paddr, GFP_KERNEL);
++	if (!h264->sei_vaddr)
++		return -ENOMEM;
++
++	amvdec_write_dos_bits(core, POWER_CTL_VLD, BIT(9) | BIT(6));
++
++	workspace_offset = h264->workspace_paddr - WORKSPACE_BUF_OFFSET;
++	amvdec_write_dos(core, AV_SCRATCH_1, workspace_offset);
++	amvdec_write_dos(core, AV_SCRATCH_G, h264->ext_fw_paddr);
++	amvdec_write_dos(core, AV_SCRATCH_I, h264->sei_paddr -
++					     workspace_offset);
++
++	/* Enable "error correction" */
++	amvdec_write_dos(core, AV_SCRATCH_F,
++			 (amvdec_read_dos(core, AV_SCRATCH_F) & 0xffffffc3) |
++			 BIT(4) | BIT(7));
++
++	amvdec_write_dos(core, MDEC_PIC_DC_THRESH, 0x404038aa);
 +
 +	return 0;
 +}
 +
-+/*
-+ * Updates the encoding/decoding buffer management state, should
-+ * be called from encoder/decoder drivers start_streaming()
-+ */
-+void v4l2_m2m_update_start_streaming_state(struct v4l2_m2m_ctx *m2m_ctx,
-+					   struct vb2_queue *q)
++static int codec_h264_stop(struct amvdec_session *sess)
 +{
-+	/* If start streaming again, untag the last output buffer */
-+	if (V4L2_TYPE_IS_OUTPUT(q->type))
-+		m2m_ctx->last_src_buf = NULL;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_update_start_streaming_state);
++	struct codec_h264 *h264 = sess->priv;
++	struct amvdec_core *core = sess->core;
 +
-+/*
-+ * Updates the encoding/decoding buffer management state, should
-+ * be called from encoder/decoder driver stop_streaming()
-+ */
-+void v4l2_m2m_update_stop_streaming_state(struct v4l2_m2m_ctx *m2m_ctx,
-+					  struct vb2_queue *q)
-+{
-+	if (V4L2_TYPE_IS_OUTPUT(q->type)) {
-+		/*
-+		 * If in draining state, either mark next dst buffer as
-+		 * done or flag next one to be marked as done either
-+		 * in encoder/decoder driver buf_queue() callback using
-+		 * the v4l2_m2m_dst_buf_is_last() helper or in v4l2_m2m_qbuf()
-+		 * if encoder/decoder is not yet streaming
-+		 */
-+		if (m2m_ctx->is_draining) {
-+			struct vb2_v4l2_buffer *next_dst_buf;
++	if (h264->ext_fw_vaddr)
++		dma_free_coherent(core->dev, SIZE_EXT_FW,
++				  h264->ext_fw_vaddr, h264->ext_fw_paddr);
 +
-+			m2m_ctx->last_src_buf = NULL;
-+			next_dst_buf = v4l2_m2m_dst_buf_remove(m2m_ctx);
-+			if (!next_dst_buf)
-+				m2m_ctx->next_buf_last = true;
-+			else
-+				v4l2_m2m_last_buffer_done(m2m_ctx,
-+							  next_dst_buf);
-+		}
-+	} else {
-+		v4l2_m2m_clear_state(m2m_ctx);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_update_stop_streaming_state);
++	if (h264->workspace_vaddr)
++		dma_free_coherent(core->dev, SIZE_WORKSPACE,
++				  h264->workspace_vaddr, h264->workspace_paddr);
 +
-+static void v4l2_m2m_force_last_buf_done(struct v4l2_m2m_ctx *m2m_ctx,
-+					 struct vb2_queue *q)
-+{
-+	struct vb2_buffer *vb;
-+	struct vb2_v4l2_buffer *vbuf;
-+	unsigned int i;
++	if (h264->ref_vaddr)
++		dma_free_coherent(core->dev, h264->ref_size,
++				  h264->ref_vaddr, h264->ref_paddr);
 +
-+	if (WARN_ON(q->is_output))
-+		return;
-+	if (list_empty(&q->queued_list))
-+		return;
++	if (h264->sei_vaddr)
++		dma_free_coherent(core->dev, SIZE_SEI,
++				  h264->sei_vaddr, h264->sei_paddr);
 +
-+	vb = list_first_entry(&q->queued_list, struct vb2_buffer, queued_entry);
-+	for (i = 0; i < vb->num_planes; i++)
-+		vb2_set_plane_payload(vb, i, 0);
-+
-+	/*
-+	 * Since the buffer hasn't been queued to the ready queue,
-+	 * mark is active and owned before marking it LAST and DONE
-+	 */
-+	vb->state = VB2_BUF_STATE_ACTIVE;
-+	atomic_inc(&q->owned_by_drv_count);
-+
-+	vbuf = to_vb2_v4l2_buffer(vb);
-+	vbuf->field = V4L2_FIELD_NONE;
-+
-+	v4l2_m2m_last_buffer_done(m2m_ctx, vbuf);
-+}
-+
- int v4l2_m2m_qbuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 		  struct v4l2_buffer *buf)
- {
-@@ -570,11 +709,25 @@ int v4l2_m2m_qbuf(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 			__func__);
- 		return -EPERM;
- 	}
-+
- 	ret = vb2_qbuf(vq, vdev->v4l2_dev->mdev, buf);
--	if (!ret && !(buf->flags & V4L2_BUF_FLAG_IN_REQUEST))
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If the capture queue is streaming, but streaming hasn't started
-+	 * on the device, but was asked to stop, mark the previously queued
-+	 * buffer as DONE with LAST flag since it won't be queued on the
-+	 * device.
-+	 */
-+	if (!V4L2_TYPE_IS_OUTPUT(vq->type) &&
-+	    vb2_is_streaming(vq) && !vb2_start_streaming_called(vq) &&
-+	   (v4l2_m2m_has_stopped(m2m_ctx) || v4l2_m2m_dst_buf_is_last(m2m_ctx)))
-+		v4l2_m2m_force_last_buf_done(m2m_ctx, vq);
-+	else if (!(buf->flags & V4L2_BUF_FLAG_IN_REQUEST))
- 		v4l2_m2m_try_schedule(m2m_ctx);
- 
--	return ret;
 +	return 0;
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_qbuf);
- 
-@@ -1225,6 +1378,70 @@ int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
- }
- EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_try_decoder_cmd);
- 
-+/*
-+ * Updates the encoding state on ENC_CMD_STOP/ENC_CMD_START
-+ * Should be called from the encoder driver encoder_cmd() callback
-+ */
-+int v4l2_m2m_encoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_encoder_cmd *ec)
++}
++
++static int codec_h264_load_extended_firmware(struct amvdec_session *sess,
++					     const u8 *data, u32 len)
 +{
-+	if (ec->cmd != V4L2_ENC_CMD_STOP && ec->cmd != V4L2_ENC_CMD_START)
++	struct codec_h264 *h264;
++	struct amvdec_core *core = sess->core;
++
++	if (len < SIZE_EXT_FW)
 +		return -EINVAL;
 +
-+	if (ec->cmd == V4L2_ENC_CMD_STOP)
-+		return v4l2_update_last_buf_state(m2m_ctx);
++	h264 = kzalloc(sizeof(*h264), GFP_KERNEL);
++	if (!h264)
++		return -ENOMEM;
 +
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
++	h264->ext_fw_vaddr = dma_alloc_coherent(core->dev, SIZE_EXT_FW,
++						&h264->ext_fw_paddr,
++						GFP_KERNEL);
++	if (!h264->ext_fw_vaddr) {
++		kfree(h264);
++		return -ENOMEM;
++	}
 +
-+	if (m2m_ctx->has_stopped)
-+		m2m_ctx->has_stopped = false;
++	memcpy(h264->ext_fw_vaddr, data, SIZE_EXT_FW);
++	sess->priv = h264;
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_encoder_cmd);
++
++static const struct v4l2_fract par_table[] = {
++	{ 1, 1 },   { 1, 1 },    { 12, 11 }, { 10, 11 },
++	{ 16, 11 }, { 40, 33 },  { 24, 11 }, { 20, 11 },
++	{ 32, 11 }, { 80, 33 },  { 18, 11 }, { 15, 11 },
++	{ 64, 33 }, { 160, 99 }, { 4, 3 },   { 3, 2 },
++	{ 2, 1 }
++};
++
++static void codec_h264_set_par(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++	u32 seq_info = amvdec_read_dos(core, AV_SCRATCH_2);
++	u32 ar_idc = (seq_info >> AR_IDC_BIT) & AR_IDC_MASK;
++
++	if (!(seq_info & AR_PRESENT_FLAG))
++		return;
++
++	if (ar_idc == AR_EXTEND) {
++		u32 ar_info = amvdec_read_dos(core, AV_SCRATCH_3);
++
++		sess->pixelaspect.numerator = ar_info & 0xffff;
++		sess->pixelaspect.denominator = (ar_info >> 16) & 0xffff;
++		return;
++	}
++
++	if (ar_idc >= ARRAY_SIZE(par_table))
++		return;
++
++	sess->pixelaspect = par_table[ar_idc];
++}
++
++static void codec_h264_resume(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++	struct codec_h264 *h264 = sess->priv;
++	u32 mb_width, mb_height, mb_total;
++
++	amvdec_set_canvases(sess,
++			    (u32[]){ ANC0_CANVAS_ADDR, 0 },
++			    (u32[]){ 24, 0 });
++
++	dev_dbg(core->dev, "max_refs = %u; actual_dpb_size = %u\n",
++		h264->max_refs, sess->num_dst_bufs);
++
++	/* Align to a multiple of 4 macroblocks */
++	mb_width = ALIGN(h264->mb_width, 4);
++	mb_height = ALIGN(h264->mb_height, 4);
++	mb_total = mb_width * mb_height;
++
++	h264->ref_size = mb_total * MB_MV_SIZE * h264->max_refs;
++	h264->ref_vaddr = dma_alloc_coherent(core->dev, h264->ref_size,
++					     &h264->ref_paddr, GFP_KERNEL);
++	if (!h264->ref_vaddr) {
++		amvdec_abort(sess);
++		return;
++	}
++
++	/* Address to store the references' MVs */
++	amvdec_write_dos(core, AV_SCRATCH_1, h264->ref_paddr);
++	/* End of ref MV */
++	amvdec_write_dos(core, AV_SCRATCH_4, h264->ref_paddr + h264->ref_size);
++
++	amvdec_write_dos(core, AV_SCRATCH_0, (h264->max_refs << 24) |
++					     (sess->num_dst_bufs << 16) |
++					     ((h264->max_refs - 1) << 8));
++}
 +
 +/*
-+ * Updates the decoding state on DEC_CMD_STOP/DEC_CMD_START
-+ * Should be called from the decoder driver decoder_cmd() callback
++ * Configure the H.264 decoder when the parser detected a parameter set change
 + */
-+int v4l2_m2m_decoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_decoder_cmd *dc)
++static void codec_h264_src_change(struct amvdec_session *sess)
 +{
-+	if (dc->cmd != V4L2_DEC_CMD_STOP && dc->cmd != V4L2_DEC_CMD_START)
-+		return -EINVAL;
++	struct amvdec_core *core = sess->core;
++	struct codec_h264 *h264 = sess->priv;
++	u32 parsed_info, mb_total;
++	u32 crop_infor, crop_bottom, crop_right;
++	u32 frame_width, frame_height;
 +
-+	if (dc->cmd == V4L2_DEC_CMD_STOP)
-+		return v4l2_update_last_buf_state(m2m_ctx);
++	sess->keyframe_found = 1;
 +
-+	if (m2m_ctx->is_draining)
-+		return -EBUSY;
++	parsed_info = amvdec_read_dos(core, AV_SCRATCH_1);
 +
-+	if (m2m_ctx->has_stopped)
-+		m2m_ctx->has_stopped = false;
++	/* Total number of 16x16 macroblocks */
++	mb_total = (parsed_info >> MB_TOTAL_BIT) & MB_TOTAL_MASK;
++	/* Number of macroblocks per line */
++	h264->mb_width = parsed_info & MB_WIDTH_MASK;
++	/* Number of macroblock lines */
++	h264->mb_height = mb_total / h264->mb_width;
 +
-+	return 0;
++	h264->max_refs = ((parsed_info >> MAX_REF_BIT) & MAX_REF_MASK) + 1;
++
++	crop_infor = amvdec_read_dos(core, AV_SCRATCH_6);
++	crop_bottom = (crop_infor & 0xff);
++	crop_right = (crop_infor >> 16) & 0xff;
++
++	frame_width = h264->mb_width * 16 - crop_right;
++	frame_height = h264->mb_height * 16 - crop_bottom;
++
++	dev_dbg(core->dev, "frame: %ux%u; crop: %u %u\n",
++		frame_width, frame_height, crop_right, crop_bottom);
++
++	codec_h264_set_par(sess);
++	amvdec_src_change(sess, frame_width, frame_height, h264->max_refs + 5);
 +}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_decoder_cmd);
 +
-+int v4l2_m2m_ioctl_encoder_cmd(struct file *file, void *priv,
-+			       struct v4l2_encoder_cmd *ec)
++/*
++ * The bitstream offset is split in half in 2 different registers.
++ * Fetch its MSB here, which location depends on the frame number.
++ */
++static u32 get_offset_msb(struct amvdec_core *core, int frame_num)
 +{
-+	struct v4l2_fh *fh = file->private_data;
++	int take_msb = frame_num % 2;
++	int reg_offset = (frame_num / 2) * 4;
++	u32 offset_msb = amvdec_read_dos(core, AV_SCRATCH_A + reg_offset);
 +
-+	return v4l2_m2m_encoder_cmd(file, fh->m2m_ctx, ec);
++	if (take_msb)
++		return offset_msb & 0xffff0000;
++
++	return (offset_msb & 0x0000ffff) << 16;
 +}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_encoder_cmd);
 +
-+int v4l2_m2m_ioctl_decoder_cmd(struct file *file, void *priv,
-+			       struct v4l2_decoder_cmd *dc)
++static void codec_h264_frames_ready(struct amvdec_session *sess, u32 status)
 +{
-+	struct v4l2_fh *fh = file->private_data;
++	struct amvdec_core *core = sess->core;
++	int error_count;
++	int num_frames;
++	int i;
 +
-+	return v4l2_m2m_decoder_cmd(file, fh->m2m_ctx, dc);
++	error_count = amvdec_read_dos(core, AV_SCRATCH_D);
++	num_frames = (status >> 8) & 0xff;
++	if (error_count) {
++		dev_warn(core->dev,
++			 "decoder error(s) happened, count %d\n", error_count);
++		amvdec_write_dos(core, AV_SCRATCH_D, 0);
++	}
++
++	for (i = 0; i < num_frames; i++) {
++		u32 frame_status = amvdec_read_dos(core, AV_SCRATCH_1 + i * 4);
++		u32 buffer_index = frame_status & BUF_IDX_MASK;
++		u32 pic_struct = (frame_status >> PIC_STRUCT_BIT) &
++				 PIC_STRUCT_MASK;
++		u32 offset = (frame_status >> OFFSET_BIT) & OFFSET_MASK;
++		u32 field = V4L2_FIELD_NONE;
++
++		/*
++		 * A buffer decode error means it was decoded,
++		 * but part of the picture will have artifacts.
++		 * Typical reason is a temporarily corrupted bitstream
++		 */
++		if (frame_status & ERROR_FLAG)
++			dev_dbg(core->dev, "Buffer %d decode error\n",
++				buffer_index);
++
++		if (pic_struct == PIC_TOP_BOT)
++			field = V4L2_FIELD_INTERLACED_TB;
++		else if (pic_struct == PIC_BOT_TOP)
++			field = V4L2_FIELD_INTERLACED_BT;
++
++		offset |= get_offset_msb(core, i);
++		amvdec_dst_buf_done_idx(sess, buffer_index, offset, field);
++	}
 +}
-+EXPORT_SYMBOL_GPL(v4l2_m2m_ioctl_decoder_cmd);
 +
- int v4l2_m2m_ioctl_stateless_try_decoder_cmd(struct file *file, void *fh,
- 					     struct v4l2_decoder_cmd *dc)
- {
-diff --git a/include/media/v4l2-mem2mem.h b/include/media/v4l2-mem2mem.h
-index 1d85e24791e4..98753f00df7e 100644
---- a/include/media/v4l2-mem2mem.h
-+++ b/include/media/v4l2-mem2mem.h
-@@ -80,6 +80,10 @@ struct v4l2_m2m_queue_ctx {
-  *		for an existing frame. This is always true unless
-  *		V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF is set, which
-  *		indicates slicing support.
-+ * @is_draining: indicates device is in draining phase
-+ * @last_src_buf: indicate the last source buffer for draining
-+ * @next_buf_last: next capture queud buffer will be tagged as last
-+ * @has_stopped: indicate the device has been stopped
-  * @m2m_dev: opaque pointer to the internal data to handle M2M context
-  * @cap_q_ctx: Capture (output to memory) queue context
-  * @out_q_ctx: Output (input from memory) queue context
-@@ -98,6 +102,11 @@ struct v4l2_m2m_ctx {
++static irqreturn_t codec_h264_threaded_isr(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++	u32 status;
++	u32 size;
++	u8 cmd;
++
++	status = amvdec_read_dos(core, AV_SCRATCH_0);
++	cmd = status & CMD_MASK;
++
++	switch (cmd) {
++	case CMD_SRC_CHANGE:
++		codec_h264_src_change(sess);
++		break;
++	case CMD_FRAMES_READY:
++		codec_h264_frames_ready(sess, status);
++		break;
++	case CMD_FATAL_ERROR:
++		dev_err(core->dev, "H.264 decoder fatal error\n");
++		goto abort;
++	case CMD_BAD_WIDTH:
++		size = (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
++		dev_err(core->dev, "Unsupported video width: %u\n", size);
++		goto abort;
++	case CMD_BAD_HEIGHT:
++		size = (amvdec_read_dos(core, AV_SCRATCH_1) + 1) * 16;
++		dev_err(core->dev, "Unsupported video height: %u\n", size);
++		goto abort;
++	case 0: /* Unused but not worth printing for */
++	case 9:
++		break;
++	default:
++		dev_info(core->dev, "Unexpected H264 ISR: %08X\n", cmd);
++		break;
++	}
++
++	if (cmd && cmd != CMD_SRC_CHANGE)
++		amvdec_write_dos(core, AV_SCRATCH_0, 0);
++
++	/* Decoder has some SEI data for us ; ignore */
++	if (amvdec_read_dos(core, AV_SCRATCH_J) & SEI_DATA_READY)
++		amvdec_write_dos(core, AV_SCRATCH_J, 0);
++
++	return IRQ_HANDLED;
++abort:
++	amvdec_abort(sess);
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t codec_h264_isr(struct amvdec_session *sess)
++{
++	struct amvdec_core *core = sess->core;
++
++	amvdec_write_dos(core, ASSIST_MBOX1_CLR_REG, 1);
++
++	return IRQ_WAKE_THREAD;
++}
++
++struct amvdec_codec_ops codec_h264_ops = {
++	.start = codec_h264_start,
++	.stop = codec_h264_stop,
++	.load_extended_firmware = codec_h264_load_extended_firmware,
++	.isr = codec_h264_isr,
++	.threaded_isr = codec_h264_threaded_isr,
++	.can_recycle = codec_h264_can_recycle,
++	.recycle = codec_h264_recycle,
++	.eos_sequence = codec_h264_eos_sequence,
++	.resume = codec_h264_resume,
++};
+diff --git a/drivers/staging/media/meson/vdec/codec_h264.h b/drivers/staging/media/meson/vdec/codec_h264.h
+new file mode 100644
+index 000000000000..7cb4fb86ff36
+--- /dev/null
++++ b/drivers/staging/media/meson/vdec/codec_h264.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (C) 2019 BayLibre, SAS
++ * Author: Maxime Jourdan <mjourdan@baylibre.com>
++ */
++
++#ifndef __MESON_VDEC_CODEC_H264_H_
++#define __MESON_VDEC_CODEC_H264_H_
++
++#include "vdec.h"
++
++extern struct amvdec_codec_ops codec_h264_ops;
++
++#endif
+diff --git a/drivers/staging/media/meson/vdec/vdec_platform.c b/drivers/staging/media/meson/vdec/vdec_platform.c
+index 066d4a055894..e9356a46828f 100644
+--- a/drivers/staging/media/meson/vdec/vdec_platform.c
++++ b/drivers/staging/media/meson/vdec/vdec_platform.c
+@@ -9,9 +9,22 @@
  
- 	bool				new_frame;
+ #include "vdec_1.h"
+ #include "codec_mpeg12.h"
++#include "codec_h264.h"
  
-+	bool				is_draining;
-+	struct vb2_v4l2_buffer		*last_src_buf;
-+	bool				next_buf_last;
-+	bool				has_stopped;
-+
- 	/* internal use only */
- 	struct v4l2_m2m_dev		*m2m_dev;
+ static const struct amvdec_format vdec_formats_gxbb[] = {
+ 	{
++		.pixfmt = V4L2_PIX_FMT_H264,
++		.min_buffers = 2,
++		.max_buffers = 24,
++		.max_width = 1920,
++		.max_height = 1080,
++		.vdec_ops = &vdec_1_ops,
++		.codec_ops = &codec_h264_ops,
++		.firmware_path = "meson/vdec/gxbb_h264.bin",
++		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
++		.flags = V4L2_FMT_FLAG_COMPRESSED |
++			 V4L2_FMT_FLAG_DYN_RESOLUTION,
++	}, {
+ 		.pixfmt = V4L2_PIX_FMT_MPEG1,
+ 		.min_buffers = 8,
+ 		.max_buffers = 8,
+@@ -38,6 +51,18 @@ static const struct amvdec_format vdec_formats_gxbb[] = {
  
-@@ -215,6 +224,86 @@ v4l2_m2m_buf_done(struct vb2_v4l2_buffer *buf, enum vb2_buffer_state state)
- 	vb2_buffer_done(&buf->vb2_buf, state);
- }
+ static const struct amvdec_format vdec_formats_gxl[] = {
+ 	{
++		.pixfmt = V4L2_PIX_FMT_H264,
++		.min_buffers = 2,
++		.max_buffers = 24,
++		.max_width = 3840,
++		.max_height = 2160,
++		.vdec_ops = &vdec_1_ops,
++		.codec_ops = &codec_h264_ops,
++		.firmware_path = "meson/vdec/gxl_h264.bin",
++		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
++		.flags = V4L2_FMT_FLAG_COMPRESSED |
++			 V4L2_FMT_FLAG_DYN_RESOLUTION,
++	}, {
+ 		.pixfmt = V4L2_PIX_FMT_MPEG1,
+ 		.min_buffers = 8,
+ 		.max_buffers = 8,
+@@ -64,6 +89,18 @@ static const struct amvdec_format vdec_formats_gxl[] = {
  
-+/**
-+ * v4l2_m2m_clear_state() - clear encoding/decoding state
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ */
-+static inline void
-+v4l2_m2m_clear_state(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	m2m_ctx->next_buf_last = false;
-+	m2m_ctx->is_draining = false;
-+	m2m_ctx->has_stopped = false;
-+}
-+
-+/**
-+ * v4l2_m2m_mark_stopped() - set current encoding/decoding state as stopped
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ */
-+static inline void
-+v4l2_m2m_mark_stopped(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	m2m_ctx->next_buf_last = false;
-+	m2m_ctx->is_draining = false;
-+	m2m_ctx->has_stopped = true;
-+}
-+
-+/**
-+ * v4l2_m2m_dst_buf_is_last() - return the current encoding/decoding session
-+ * draining management state of next queued capture buffer
-+ *
-+ * This last capture buffer should be tagged with V4L2_BUF_FLAG_LAST to notify
-+ * the end of the capture session.
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ */
-+static inline bool
-+v4l2_m2m_dst_buf_is_last(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	return m2m_ctx->is_draining && m2m_ctx->next_buf_last;
-+}
-+
-+/**
-+ * v4l2_m2m_has_stopped() - return the current encoding/decoding session
-+ * stopped state
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ */
-+static inline bool
-+v4l2_m2m_has_stopped(struct v4l2_m2m_ctx *m2m_ctx)
-+{
-+	return m2m_ctx->has_stopped;
-+}
-+
-+/**
-+ * v4l2_m2m_is_last_draining_src_buf() - return the output buffer draining
-+ * state in the current encoding/decoding session
-+ *
-+ * This will identify the last output buffer queued before a session stop
-+ * was required, leading to an actual encoding/decoding session stop state
-+ * in the encoding/decoding process after being processed.
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @vbuf: pointer to struct &v4l2_buffer
-+ */
-+static inline bool
-+v4l2_m2m_is_last_draining_src_buf(struct v4l2_m2m_ctx *m2m_ctx,
-+				  struct vb2_v4l2_buffer *vbuf)
-+{
-+	return m2m_ctx->is_draining && vbuf == m2m_ctx->last_src_buf;
-+}
-+
-+/**
-+ * v4l2_m2m_last_buffer_done() - marks the buffer with LAST flag and DONE
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @vbuf: pointer to struct &v4l2_buffer
-+ */
-+void v4l2_m2m_last_buffer_done(struct v4l2_m2m_ctx *m2m_ctx,
-+			       struct vb2_v4l2_buffer *vbuf);
-+
- /**
-  * v4l2_m2m_reqbufs() - multi-queue-aware REQBUFS multiplexer
-  *
-@@ -312,6 +401,46 @@ int v4l2_m2m_streamon(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- int v4l2_m2m_streamoff(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
- 		       enum v4l2_buf_type type);
+ static const struct amvdec_format vdec_formats_gxm[] = {
+ 	{
++		.pixfmt = V4L2_PIX_FMT_H264,
++		.min_buffers = 2,
++		.max_buffers = 24,
++		.max_width = 3840,
++		.max_height = 2160,
++		.vdec_ops = &vdec_1_ops,
++		.codec_ops = &codec_h264_ops,
++		.firmware_path = "meson/vdec/gxm_h264.bin",
++		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
++		.flags = V4L2_FMT_FLAG_COMPRESSED |
++			 V4L2_FMT_FLAG_DYN_RESOLUTION,
++	}, {
+ 		.pixfmt = V4L2_PIX_FMT_MPEG1,
+ 		.min_buffers = 8,
+ 		.max_buffers = 8,
+@@ -90,6 +127,18 @@ static const struct amvdec_format vdec_formats_gxm[] = {
  
-+/**
-+ * v4l2_m2m_update_start_streaming_state() - update the encoding/decoding
-+ * session state when a start of streaming of a video queue is requested
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @q: queue
-+ */
-+void v4l2_m2m_update_start_streaming_state(struct v4l2_m2m_ctx *m2m_ctx,
-+					   struct vb2_queue *q);
-+
-+/**
-+ * v4l2_m2m_update_stop_streaming_state() -  update the encoding/decoding
-+ * session state when a stop of streaming of a video queue is requested
-+ *
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @q: queue
-+ */
-+void v4l2_m2m_update_stop_streaming_state(struct v4l2_m2m_ctx *m2m_ctx,
-+					  struct vb2_queue *q);
-+
-+/**
-+ * v4l2_m2m_encoder_cmd() - execute an encoder command
-+ *
-+ * @file: pointer to struct &file
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @ec: pointer to the encoder command
-+ */
-+int v4l2_m2m_encoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_encoder_cmd *ec);
-+
-+/**
-+ * v4l2_m2m_decoder_cmd() - execute a decoder command
-+ *
-+ * @file: pointer to struct &file
-+ * @m2m_ctx: m2m context assigned to the instance given by struct &v4l2_m2m_ctx
-+ * @dc: pointer to the decoder command
-+ */
-+int v4l2_m2m_decoder_cmd(struct file *file, struct v4l2_m2m_ctx *m2m_ctx,
-+			 struct v4l2_decoder_cmd *dc);
-+
- /**
-  * v4l2_m2m_poll() - poll replacement, for destination buffers only
-  *
-@@ -704,6 +833,10 @@ int v4l2_m2m_ioctl_streamon(struct file *file, void *fh,
- 				enum v4l2_buf_type type);
- int v4l2_m2m_ioctl_streamoff(struct file *file, void *fh,
- 				enum v4l2_buf_type type);
-+int v4l2_m2m_ioctl_encoder_cmd(struct file *file, void *fh,
-+			       struct v4l2_encoder_cmd *ec);
-+int v4l2_m2m_ioctl_decoder_cmd(struct file *file, void *fh,
-+			       struct v4l2_decoder_cmd *dc);
- int v4l2_m2m_ioctl_try_encoder_cmd(struct file *file, void *fh,
- 				   struct v4l2_encoder_cmd *ec);
- int v4l2_m2m_ioctl_try_decoder_cmd(struct file *file, void *fh,
+ static const struct amvdec_format vdec_formats_g12a[] = {
+ 	{
++		.pixfmt = V4L2_PIX_FMT_H264,
++		.min_buffers = 2,
++		.max_buffers = 24,
++		.max_width = 3840,
++		.max_height = 2160,
++		.vdec_ops = &vdec_1_ops,
++		.codec_ops = &codec_h264_ops,
++		.firmware_path = "meson/vdec/g12a_h264.bin",
++		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
++		.flags = V4L2_FMT_FLAG_COMPRESSED |
++			 V4L2_FMT_FLAG_DYN_RESOLUTION,
++	}, {
+ 		.pixfmt = V4L2_PIX_FMT_MPEG1,
+ 		.min_buffers = 8,
+ 		.max_buffers = 8,
+@@ -116,6 +165,18 @@ static const struct amvdec_format vdec_formats_g12a[] = {
+ 
+ static const struct amvdec_format vdec_formats_sm1[] = {
+ 	{
++		.pixfmt = V4L2_PIX_FMT_H264,
++		.min_buffers = 2,
++		.max_buffers = 24,
++		.max_width = 3840,
++		.max_height = 2160,
++		.vdec_ops = &vdec_1_ops,
++		.codec_ops = &codec_h264_ops,
++		.firmware_path = "meson/vdec/g12a_h264.bin",
++		.pixfmts_cap = { V4L2_PIX_FMT_NV12M, 0 },
++		.flags = V4L2_FMT_FLAG_COMPRESSED |
++			 V4L2_FMT_FLAG_DYN_RESOLUTION,
++	}, {
+ 		.pixfmt = V4L2_PIX_FMT_MPEG1,
+ 		.min_buffers = 8,
+ 		.max_buffers = 8,
 -- 
 2.22.0
 
