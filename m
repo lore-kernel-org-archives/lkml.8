@@ -2,57 +2,62 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0325EC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6175BC3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFE1821D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3077121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="unhcIQ9S"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uagqCpIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgBSH7S (ORCPT
+        id S1726622AbgBSIAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:59:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49900 "EHLO
+        Wed, 19 Feb 2020 03:00:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49922 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSH7S (ORCPT
+        with ESMTP id S1726156AbgBSIAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:59:18 -0500
+        Wed, 19 Feb 2020 03:00:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
         Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=d2h7Hjg5NeUkN0zqsxuDL8hCed7EaXHpJcg40URIgGc=; b=unhcIQ9SV2IoiGA3l5wj4aTMMP
-        RUvmwIA4vyLRk6+iiWP1g7Ti/gK6hxO8wv1abAwX//kQjRpSzVxzTMKKPZ95tszkPypQkuAobhl8d
-        N3Dhz4xo7VAvSS2YNd+oYJgy9mXfDtvEmS3xiSXOCxwHax5MLAAKEL+Kb+j4KgSErdNnNw5XQ2bIb
-        IQdVLg6G9sNSoVrSdXqiG0L92YAYZ22OZnDLDChr3lTNWQ8Z3k8gUcz/8kb1TWAEophJlR4x8gmLS
-        tN/Ndo2AJmC4rlYtmWr8slAuSEK2D5dbYXQmDD2scrYZ58n3X97KX6Nz7+uJTlKhn7yn3ZO5iH6In
-        pyPT3VZA==;
+        bh=trpPk2WCBAaB8e66Xo0uUXjYRjRhuDQkfqxMFp/+GPg=; b=uagqCpIVPVHVsTkn56aoqnkANj
+        x5c0XkQ7Ss8xfD4ifDJ5mbST4AYb4uQ9CK11geJLE6Bc5kkHkTx614fUuOaLFYWPV+xsXprgfqvgT
+        7JYI5Dof2/QM23L2QkVz+WJfIXaN9CdXbg3dFb3m6qO1yeZguDtT/SLWmFjzGvJ+cmfzn1ZEWWgC6
+        NwtNFgI6d7fpG34CM0PQyg8SbicK5XvTa2ut6+rI64Cgobo5qzLgMeFQs17SmZ2UulQ7Mdv2FloC9
+        Yurv+dBoKF3+c7UeIg8mvcwfYzrEds9rV7UpNiZG6xxCeucosZ+WHUzeOJGfMJed+J+mRDcfJLOkz
+        xs+VYH3g==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4KGJ-0006SD-TK; Wed, 19 Feb 2020 07:59:15 +0000
-Subject: Re: [PATCH v5 2/2] clk: intel: Add CGU clock driver for a new SoC
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org,
-        mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com,
-        rtanwar <rahul.tanwar@intel.com>
-References: <cover.1582096982.git.rahul.tanwar@linux.intel.com>
- <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
+        id 1j4KHC-0007fE-Hu; Wed, 19 Feb 2020 08:00:10 +0000
+Subject: Re: [PATCH v3 2/2] driver core: Make deferred_probe_timeout global so
+ it can be shared
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org
+References: <20200218220748.54823-1-john.stultz@linaro.org>
+ <20200218220748.54823-2-john.stultz@linaro.org>
+ <20200219075730.GA2732797@kroah.com>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e8259928-cb2a-a453-8f2a-1b57c8abdb8c@infradead.org>
-Date:   Tue, 18 Feb 2020 23:59:14 -0800
+Message-ID: <e67836f6-dcaa-c7b6-0779-35a9ff98ba38@infradead.org>
+Date:   Wed, 19 Feb 2020 00:00:09 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <6148b5b25d4a6833f0a72801d569ed97ac6ca55b.1582096982.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <20200219075730.GA2732797@kroah.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -61,70 +66,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 11:40 PM, Rahul Tanwar wrote:
-> From: rtanwar <rahul.tanwar@intel.com>
+On 2/18/20 11:57 PM, Greg Kroah-Hartman wrote:
+> On Tue, Feb 18, 2020 at 10:07:48PM +0000, John Stultz wrote:
+>> --- a/include/linux/device/driver.h
+>> +++ b/include/linux/device/driver.h
+>> @@ -236,6 +236,7 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>>  }
+>>  #endif
+>>  
+>> +extern int deferred_probe_timeout;
+>>  void driver_deferred_probe_add(struct device *dev);
 > 
-> Clock Generation Unit(CGU) is a new clock controller IP of a forthcoming
-> Intel network processor SoC named Lightning Mountain(LGM). It provides
-> programming interfaces to control & configure all CPU & peripheral clocks.
-> Add common clock framework based clock controller driver for CGU.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/clk/Kconfig           |   1 +
->  drivers/clk/x86/Kconfig       |   8 +
->  drivers/clk/x86/Makefile      |   1 +
->  drivers/clk/x86/clk-cgu-pll.c | 156 +++++++++++
->  drivers/clk/x86/clk-cgu.c     | 636 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/x86/clk-cgu.h     | 335 ++++++++++++++++++++++
->  drivers/clk/x86/clk-lgm.c     | 492 ++++++++++++++++++++++++++++++++
->  7 files changed, 1629 insertions(+)
->  create mode 100644 drivers/clk/x86/Kconfig
->  create mode 100644 drivers/clk/x86/clk-cgu-pll.c
->  create mode 100644 drivers/clk/x86/clk-cgu.c
->  create mode 100644 drivers/clk/x86/clk-cgu.h
->  create mode 100644 drivers/clk/x86/clk-lgm.c
-> 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index bcb257baed06..43dab257e7aa 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -360,6 +360,7 @@ source "drivers/clk/sunxi-ng/Kconfig"
->  source "drivers/clk/tegra/Kconfig"
->  source "drivers/clk/ti/Kconfig"
->  source "drivers/clk/uniphier/Kconfig"
-> +source "drivers/clk/x86/Kconfig"
->  source "drivers/clk/zynqmp/Kconfig"
->  
->  endmenu
+> If this is going to be global now, can you rename it to
+> "driver_defferred_probe_timeout" to make it more in line with the other
 
-Hi,
+or driver_deferred_probe_timeout please.
 
-> diff --git a/drivers/clk/x86/Kconfig b/drivers/clk/x86/Kconfig
-> new file mode 100644
-> index 000000000000..2e2b9730541f
-> --- /dev/null
-> +++ b/drivers/clk/x86/Kconfig
-> @@ -0,0 +1,8 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +config CLK_LGM_CGU
-> +	depends on (OF && HAS_IOMEM) || COMPILE_TEST
+> exported symbols here?
 
-This "depends on" looks problematic to me. I guess we shall see when
-all the build bots get to it.
 
-> +	select OF_EARLY_FLATTREE
-
-If OF is not set and HAS_IOMEM is not set, but COMPILE_TEST is set,
-I expect that this should not be attempting to select OF_EARLY_FLATTREE.
-
-Have you tried such a config combination?
-
-> +	bool "Clock driver for Lightning Mountain(LGM) platform"
-> +	help
-> +	  Clock Generation Unit(CGU) driver for Intel Lightning Mountain(LGM)
-> +	  network processor SoC.
-thanks.
 -- 
 ~Randy
 
