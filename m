@@ -2,111 +2,94 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C7FC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D773C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D0021D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d5tYuItY"
+	by mail.kernel.org (Postfix) with ESMTP id 2F5EA21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBSVw0 (ORCPT
+        id S1727727AbgBSVxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:52:26 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39053 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726703AbgBSVw0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:52:26 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m13so31077120edb.6;
-        Wed, 19 Feb 2020 13:52:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1Pl1p6onjyyNhZnPY6M71H8E4MdpgjmmIc7gcGFJmcs=;
-        b=d5tYuItYhYfncdYE4Og9MRxjnnd33Snx7t9bJssD5ZBb84D8N/QLaRte5tQGuyFNDt
-         2zDMAP6QKGbvPKA9cc8cDzzdMBOFBu/80DKBo1z7yPLdkaN+eZQzM5hwfVMdVn/0s8F6
-         tCJTfBOARRxqWz4CakzSJZhBrneW4UWe/vJFQKwCS+JoC8n81civ0DP1ay0PxN2405WI
-         GfpoLnql+Rytb7apFkz6cIymK6seZun4eQPBCA0fU8UlT9EdD5StiO8/t84nvBt0vqRS
-         bsIHwxq8QEbwfkrrSzwrVP9xk58/70A2Aoi7UGlh0FDRU6O9WnmMb0QgcVzvfxkkPArb
-         ItBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1Pl1p6onjyyNhZnPY6M71H8E4MdpgjmmIc7gcGFJmcs=;
-        b=VmKzPvUpfPXB1IpnAfLTFSuwKsHPHEWXm7qvtzWqcdncopzlkR6i+HKGF+98MdND2x
-         Xu62gug5TjQmI5L0Mdp7X7CoNu/WrcwnLJ2EtqJ03r6IZWs+ZnWrBdC09VLKdrusk1Lf
-         NfUFWtt3TiBsE1fkIxGUvfsPMhVKV1mCxW7Nzq6DcM/yv0hoQeo55opa22DvD3kEVJr0
-         B96q3iHNumxO+p7e/C95Elh+aJNhoTGSZB8ZJvxrbnnQXS1+gwGysrBXc2boL5WvK2Qk
-         pvDsHmDCahyHU0ABonT4ymJP1eOcD3J2n3p9iKfIKqa+RCzpOYS/HFravUtSza0RP5R1
-         3IcQ==
-X-Gm-Message-State: APjAAAW/MYvvAdOYZgufGA3/P8F+UDnNyw4zt29ngNphPnRnkHQ1mt2+
-        Zy2kLEPFtChT10ekUh6UvfXY7kC6GAoUOZKWl6c=
-X-Google-Smtp-Source: APXvYqxwJR781+/L2fsg5egRTc2qzBZtIsZtnYnGzVeSuh8bgnU+GswsSgywE+2PeGqDBYOquuKRo4ETRnVoMbIScBw=
-X-Received: by 2002:a17:906:934c:: with SMTP id p12mr26282804ejw.68.1582149144477;
- Wed, 19 Feb 2020 13:52:24 -0800 (PST)
+        Wed, 19 Feb 2020 16:53:46 -0500
+Received: from mga03.intel.com ([134.134.136.65]:61579 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726703AbgBSVxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:53:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 13:53:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
+   d="scan'208";a="228724420"
+Received: from ssavage-mobl.amr.corp.intel.com (HELO [10.254.46.100]) ([10.254.46.100])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Feb 2020 13:53:43 -0800
+Subject: Re: [PATCH] ASoC: dpcm: remove confusing trace in dpcm_get_be()
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>
+References: <20200219115048.934678-1-jbrunet@baylibre.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <88391284-8125-1be6-f7c9-4509b1d89367@linux.intel.com>
+Date:   Wed, 19 Feb 2020 15:53:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200214143035.607115-1-e.velu@criteo.com> <20200214170508.GB20690@linux.intel.com>
- <70b4d8fa-57c0-055b-8391-4952dec32a58@criteo.com> <20200218184802.GC28156@linux.intel.com>
- <91db305a-1d81-61a6-125b-3094e75b4b3e@criteo.com> <20200219161827.GD15888@linux.intel.com>
- <646147a6-730b-0366-10db-ed74489ad11e@criteo.com> <ea2800cf-4c23-9cb5-5904-08a709f6d594@redhat.com>
-In-Reply-To: <ea2800cf-4c23-9cb5-5904-08a709f6d594@redhat.com>
-From:   Erwan Velu <erwanaliasr1@gmail.com>
-Date:   Wed, 19 Feb 2020 22:52:12 +0100
-Message-ID: <CAL2JzuzmdFApEQbjs14fL4uErjHf62nFRy8UYB=hTCRhxaKk0w@mail.gmail.com>
-Subject: Re: [PATCH] kvm: x86: Print "disabled by bios" only once per host
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Erwan Velu <e.velu@criteo.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        kvm@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200219115048.934678-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'll send a patch in this direction.
-Thanks,
 
-Le mer. 19 f=C3=A9vr. 2020 =C3=A0 18:51, Paolo Bonzini <pbonzini@redhat.com=
-> a =C3=A9crit :
->
-> On 19/02/20 17:53, Erwan Velu wrote:
-> >
-> >
-> > I've been testing the ratelimited which is far better but still prints
-> > 12 messages.
->
-> 12 is already much better than 256.  Someone else will have an even
-> bigger system requiring a larger delay, so I'd go with the default.
->
-> Paolo
->
-> > I saw the ratelimit is on about 5 sec, I wonder if we can explicit a
-> > longer one for this one.
-> >
-> > I searched around this but it doesn't seems that hacking the delay is a
-> > common usage.
-> >
-> > Do you have any insights/ideas around that ?
-> >
-> >
-> > Switching to ratelimit could be done by replacing the actual call or ad=
-d
-> > a macro similar to  kvm_pr_unimpl() so it can be reused easily.
->
+
+On 2/19/20 5:50 AM, Jerome Brunet wrote:
+> Now that dpcm_get_be() is used in dpcm_end_walk_at_be(), it is not a error
+> if this function does not find a BE for the provided widget. Remove the
+> related dev_err() trace which is confusing since things might be working
+> as expected.
+> 
+> When called from dpcm_add_paths(), it is an error if dpcm_get_be() fails to
+> find a BE for the provided widget. The necessary error trace is already
+> done in this case.
+> 
+> Fixes: 027a48387183 ("ASoC: soc-pcm: use dpcm_get_be() at dpcm_end_walk_at_be()")
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Good catch, this error log is indeed unnecessary, I see more than 30 
+lines of 'can't get capture/playback BE' for all the non-BE widgets in 
+our topologies (PCM, buffers, PGA, EQ, etc).
+
+Tested-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+> ---
+>   sound/soc/soc-pcm.c | 4 +---
+>   1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+> index 63f67eb7c077..aff27c8599ef 100644
+> --- a/sound/soc/soc-pcm.c
+> +++ b/sound/soc/soc-pcm.c
+> @@ -1270,9 +1270,7 @@ static struct snd_soc_pcm_runtime *dpcm_get_be(struct snd_soc_card *card,
+>   		}
+>   	}
+>   
+> -	/* dai link name and stream name set correctly ? */
+> -	dev_err(card->dev, "ASoC: can't get %s BE for %s\n",
+> -		stream ? "capture" : "playback", widget->name);
+> +	/* Widget provided is not a BE */
+>   	return NULL;
+>   }
+>   
+> 
