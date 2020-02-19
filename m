@@ -2,120 +2,140 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8873AC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5D9C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F3CF2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF3D222D9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgBSImW (ORCPT
+        id S1727614AbgBSIma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:42:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44278 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgBSIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:41:25 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 00C32AED8;
-        Wed, 19 Feb 2020 08:41:23 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 15/24] n_hdlc: add helper for buffers allocation
-Date:   Wed, 19 Feb 2020 09:41:09 +0100
-Message-Id: <20200219084118.26491-15-jslaby@suse.cz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200219084118.26491-1-jslaby@suse.cz>
-References: <20200219084118.26491-1-jslaby@suse.cz>
+        Wed, 19 Feb 2020 03:42:30 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38480 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbgBSImY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:42:24 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r137so3474135oie.5;
+        Wed, 19 Feb 2020 00:42:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gcGrTtSZqo75NtjJJ7mVC6SXcJFXr8kJ31jQXw/H/KQ=;
+        b=NyWvCZmb/ZhQuWuhTB6KcDNc6/NifMcxvCzFi0KeeNpo0KBdzXEhQNeRpwWFBTW+SC
+         rr/KEcuzwVkx+DZroLcnUPZlftpDYzmEwoyLK7Ci8+auP4LXhAYfJdivbjnL54fj+ylx
+         MYbzSc9FhXx+Ud98tw3fVOEoOs/0otB0ClAD4e72BBj8GT12tW1OQfaaLmV3wXsYMKOX
+         l0PGGeKwEYZX+jTqbZI1X58F6KWkGHOH8fYbUn5dXUXK/BcNIni9sn+wHVC6wXXfDQ9A
+         3ESbxREPl1rg2EZoYspUTbzaixSlXtTVrG8xzptprJxz67x92Fmc8chfJwvvpLFlCch7
+         XlrQ==
+X-Gm-Message-State: APjAAAW6V1G0Jt5ZOJT8M5ZhB+SAfegdtKIjFlzxZg6TB18GYS9szwYW
+        O6t3gkH94OzOBRCIzt1oahXAURv6gHNI8JWkJ0knDkV4
+X-Google-Smtp-Source: APXvYqwXN+JTU40xx/WiTO9R063gRnVxxMUOM08YTvRovwTavoMCLPf3oKtDrBoe6c7DGxqkQRQZoNf+fGvgE1SDjlw=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr3748069oia.148.1582101742559;
+ Wed, 19 Feb 2020 00:42:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200219074950.23344-1-masahiroy@kernel.org>
+In-Reply-To: <20200219074950.23344-1-masahiroy@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 19 Feb 2020 09:42:10 +0100
+Message-ID: <CAMuHMdU7=jRNCWvtiFhJwUM6P4xNmqwXdPX14qvE=6by1V7APA@mail.gmail.com>
+Subject: Re: [PATCH] kconfig: make 'imply' obey the direct dependency
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Given both rx and tx allocations do the same, add a new helper
-(n_hdlc_alloc_buf) and use it for both of them. This cleans up
-n_hdlc_alloc slightly.
+Hi Yamada-san,
 
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- drivers/tty/n_hdlc.c | 42 ++++++++++++++++++++----------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+On Wed, Feb 19, 2020 at 8:51 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> The 'imply' statement may create unmet direct dependency when the
+> implied symbol depends on m.
+>
+> [Test Code]
+>
+>   config FOO
+>           tristate "foo"
+>           imply BAZ
+>
+>   config BAZ
+>           tristate "baz"
+>           depends on BAR
+>
+>   config BAR
+>           def_tristate m
+>
+>   config MODULES
+>           def_bool y
+>           option modules
+>
+> If you set FOO=y, BAZ is also promoted to y, which results in the
+> following .config file:
+>
+>   CONFIG_FOO=y
+>   CONFIG_BAZ=y
+>   CONFIG_BAR=m
+>   CONFIG_MODULES=y
+>
+> This ignores the dependency "BAZ depends on BAR".
+>
+> Unlike 'select', what is worse, Kconfig never shows the
+> "WARNING: unmet direct dependencies detected for ..." for this case.
+>
+> Because 'imply' should be weaker than 'depends on', Kconfig should
+> take the direct dependency into account.
+>
+> Describe this case in Documentation/kbuild/kconfig-language.rst for
+> clarification.
+>
+> Commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword") says that
+> a symbol implied by y is restricted to y or n, excluding m.
+>
+> As for the combination of FOO=y and BAR=m, the case of BAZ=m is excluded
+> by the 'imply', and BAZ=y is also excluded by 'depends on'. So, only the
+> possible value is BAZ=n.
+>
+> Having said that, this case was probably "We don't care" at that time
+> because Kconfig did not handle 'depends on m' correctly until
+> commit f622f8279581 ("kconfig: warn unmet direct dependency of tristate
+> symbols selected by y") fixed it.
+>
+> Backporting this to 4.19+ will probably be fine. If you care this
+> problem on 4.14.x, you need to backport f622f8279581 as well.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-index 2709d18364eb..4276931fd071 100644
---- a/drivers/tty/n_hdlc.c
-+++ b/drivers/tty/n_hdlc.c
-@@ -699,6 +699,23 @@ static __poll_t n_hdlc_tty_poll(struct tty_struct *tty, struct file *filp,
- 	return mask;
- }	/* end of n_hdlc_tty_poll() */
- 
-+static void n_hdlc_alloc_buf(struct n_hdlc_buf_list *list, unsigned int count,
-+		const char *name)
-+{
-+	struct n_hdlc_buf *buf;
-+	unsigned int i;
-+
-+	for (i = 0; i < count; i++) {
-+		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
-+		if (!buf) {
-+			pr_debug("%s(%d)%s(), kmalloc() failed for %s buffer %u\n",
-+					__FILE__, __LINE__, __func__, name, i);
-+			return;
-+		}
-+		n_hdlc_buf_put(list, buf);
-+	}
-+}
-+
- /**
-  * n_hdlc_alloc - allocate an n_hdlc instance data structure
-  *
-@@ -706,8 +723,6 @@ static __poll_t n_hdlc_tty_poll(struct tty_struct *tty, struct file *filp,
-  */
- static struct n_hdlc *n_hdlc_alloc(void)
- {
--	struct n_hdlc_buf *buf;
--	int i;
- 	struct n_hdlc *n_hdlc = kzalloc(sizeof(*n_hdlc), GFP_KERNEL);
- 
- 	if (!n_hdlc)
-@@ -723,26 +738,9 @@ static struct n_hdlc *n_hdlc_alloc(void)
- 	INIT_LIST_HEAD(&n_hdlc->rx_buf_list.list);
- 	INIT_LIST_HEAD(&n_hdlc->tx_buf_list.list);
- 
--	/* allocate free rx buffer list */
--	for(i=0;i<DEFAULT_RX_BUF_COUNT;i++) {
--		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
--		if (buf)
--			n_hdlc_buf_put(&n_hdlc->rx_free_buf_list,buf);
--		else
--			pr_debug("%s(%d)%s(), kmalloc() failed for rx buffer %d\n",
--					__FILE__, __LINE__, __func__, i);
--	}
--	
--	/* allocate free tx buffer list */
--	for(i=0;i<DEFAULT_TX_BUF_COUNT;i++) {
--		buf = kmalloc(struct_size(buf, buf, maxframe), GFP_KERNEL);
--		if (buf)
--			n_hdlc_buf_put(&n_hdlc->tx_free_buf_list,buf);
--		else
--			pr_debug("%s(%d)%s(), kmalloc() failed for tx buffer %d\n",
--					__FILE__, __LINE__, __func__, i);
--	}
--	
-+	n_hdlc_alloc_buf(&n_hdlc->rx_free_buf_list, DEFAULT_RX_BUF_COUNT, "rx");
-+	n_hdlc_alloc_buf(&n_hdlc->tx_free_buf_list, DEFAULT_TX_BUF_COUNT, "tx");
-+
- 	/* Initialize the control block */
- 	n_hdlc->magic  = HDLC_MAGIC;
- 
+Thanks a lot! This fixes the build issues in
+https://lore.kernel.org/alsa-devel/CAMuHMdW8SvDgQJyenTtEm4Xn2Ma6PK9pfwKR2_gn60t2AqNWXg@mail.gmail.com/
+
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
