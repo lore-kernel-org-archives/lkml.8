@@ -2,228 +2,113 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE70C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFE2C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A10092464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A45C82464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jQ81op52"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmeGzOyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgBSJpH (ORCPT
+        id S1726648AbgBSJpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:45:07 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:35956 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726270AbgBSJpH (ORCPT
+        Wed, 19 Feb 2020 04:45:12 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38620 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgBSJpL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:45:07 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582105505; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=VAvh5XCQx9dzzw+9nGUpw/8x4szB+5O8PLNIQXRSMas=; b=jQ81op52sGF280khCg8zTF9vVjhTrzyoW9VCNjnj1FOfOPk3ooJ0WlVcN0ItkRWye/L+rS1y
- gFzoG1ObdtK7JQ5IZE5e/6SGL4Zh0YFnwpNj+YrHPUcFXX9iG1HGxusi7Q8uX2UIz7zJkgOg
- D2XHX2ijj8h8NmXLY3EnjahdQSg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d039d.7f1099010490-smtp-out-n02;
- Wed, 19 Feb 2020 09:45:01 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BD918C43383; Wed, 19 Feb 2020 09:45:01 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB876C433A2;
-        Wed, 19 Feb 2020 09:44:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB876C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, dianders@google.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH V2] mmc: mmc_test: Pass different sg lists for non-blocking requests
-Date:   Wed, 19 Feb 2020 15:14:31 +0530
-Message-Id: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
-References: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
+        Wed, 19 Feb 2020 04:45:11 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so12236411pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:45:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k2sHioBgitIhnFo2YiqI9nwJzMPQopbQYiLEimmzsTw=;
+        b=ZmeGzOyRoL/QKZoNhywtSO44lICxNKvYc//LurCRq9js/OnemH0nqVVJHQzSAPouuz
+         PFpbfs4nWJirOWL9OuQk0htkEWzskQT0iXypda/eZmZccBW77wNZtP6t3ycSDynpt0rz
+         mY8QUfeITpSvNZx5nYhAOhA3q12PKelPQ0f4edZqXN4ZXz6GDgNjB2tEHhBq3e/W+ei+
+         iSojJIatqnbBNKw3bJSZ1H+3g23SLU4eGAh6KyEj19kQeu9F709Shn4Qc5NK76gO9hOa
+         3Bxjxc4OnyT9FdwP9pU0SqVy5iqzxeMWuG1/cZkJsrkQ9JaCDG5lj/vR+ZqspXkKBPGM
+         43BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k2sHioBgitIhnFo2YiqI9nwJzMPQopbQYiLEimmzsTw=;
+        b=F9zciA4+e2WKkP4gXPQulZ6eLIWTiO7fh+CTcEc8mOhbow+1BmJsd5maZjwBN7uOEg
+         oFROrE+H8jyuiMkWbGNIkLdClJKgQkY+j1uiL5MdkRqpuBlMFflJgfpVn5gD5kxrNk1E
+         3wrkDJvbSEE30j1HOcPidPfp6yL7CqkDGrlL5CgIhjrKZC/n4o755Fgj79HBfTexlogp
+         RQrROcBeDxEf6QDAQUgMkLzMLNMTRjdHABZ/T2elFK++rmGFmlMnQoZeM9UvvW9jrj/7
+         VJDrwO7e7ryTRFI5PxHa5FcI0ydF7EePFLU9D5qTycPuRnbBzXtHBFlrCFQYUL0NgFbO
+         h/Qg==
+X-Gm-Message-State: APjAAAVx8pUw+0kBZwDedd97tbPtkzHEvIGssQkscKvb7X5wAoGz4woA
+        5KX/3mVywAoattt68EflpEmhBw==
+X-Google-Smtp-Source: APXvYqw0pFDneFtW688nh18WrP7X4OhSccbWrIqI7ONYhXzLatnBM/oxLz41sfwbFVhqaoqM6Fx3Ig==
+X-Received: by 2002:aa7:9525:: with SMTP id c5mr26040665pfp.133.1582105511258;
+        Wed, 19 Feb 2020 01:45:11 -0800 (PST)
+Received: from localhost ([223.226.55.170])
+        by smtp.gmail.com with ESMTPSA id z127sm1931611pgb.64.2020.02.19.01.45.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 01:45:10 -0800 (PST)
+Date:   Wed, 19 Feb 2020 15:15:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
+ intermediate callbacks
+Message-ID: <20200219094508.trftyq22rwozzdh2@vireshk-i7>
+References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+ <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
+ <20200219093526.hexyzhfuirb2lg4m@vireshk-i7>
+ <AM0PR04MB4481A321F1881B111D247BEB88100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481A321F1881B111D247BEB88100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supply a separate sg list for each of the request in non-blocking
-IO test cases where two requests will be issued at same time.
+On 19-02-20, 09:41, Peng Fan wrote:
+> In drivers/cpufreq/cpufreq.c, function __target_index. Line 2065, see below:
+> 
+> 2062         notify = !(cpufreq_driver->flags & CPUFREQ_ASYNC_NOTIFICATION);
+> 2063         if (notify) {
+> 2064                 /* Handle switching to intermediate frequency */
+> 2065                 if (cpufreq_driver->get_intermediate) {
+> 2066                         retval = __target_intermediate(policy, &freqs, index);
+> 2067                         if (retval)
+> 2068                                 return retval;
+> 2069
+> 2070                         intermediate_freq = freqs.new;
+> 2071                         /* Set old freq to intermediate */
+> 2072                         if (intermediate_freq)
+> 2073                                 freqs.old = freqs.new;
+> 2074                 }
+> 
+> Inspired from tegra20-cpufreq.c, use target_intermediate could handle
+> i.MX7ULP cpufreq easier.
 
-Otherwise, sg memory may get unmapped when a request is done while
-same memory is being accessed by controller from the other request,
-and it leads to iommu errors with below call stack:
+Ahh, sorry about that. Completely forgot this stuff existed :)
 
-	__arm_lpae_unmap+0x2e0/0x478
-	arm_lpae_unmap+0x54/0x70
-	arm_smmu_unmap+0x64/0xa4
-	__iommu_unmap+0xb8/0x1f0
-	iommu_unmap_fast+0x38/0x48
-	__iommu_dma_unmap+0x88/0x108
-	iommu_dma_unmap_sg+0x90/0xa4
-	sdhci_post_req+0x5c/0x78
-	mmc_test_start_areq+0x10c/0x120 [mmc_test]
-	mmc_test_area_io_seq+0x150/0x264 [mmc_test]
-	mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
-	mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
-	mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
-	mtf_test_write+0x238/0x3cc [mmc_test]
-
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-
----
-Changes since V1:
-	- Freeing-up sg_areq memory.
-	- Added check to ensure sg length is equal for both the sg-lists
-	  supplied in case of non-blocking requests.
----
- drivers/mmc/core/mmc_test.c | 42 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 36 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
-index 492dd45..f8f884a 100644
---- a/drivers/mmc/core/mmc_test.c
-+++ b/drivers/mmc/core/mmc_test.c
-@@ -71,6 +71,7 @@ struct mmc_test_mem {
-  * @sg_len: length of currently mapped scatterlist @sg
-  * @mem: allocated memory
-  * @sg: scatterlist
-+ * @sg_areq: scatterlist for non-blocking request
-  */
- struct mmc_test_area {
- 	unsigned long max_sz;
-@@ -82,6 +83,7 @@ struct mmc_test_area {
- 	unsigned int sg_len;
- 	struct mmc_test_mem *mem;
- 	struct scatterlist *sg;
-+	struct scatterlist *sg_areq;
- };
- 
- /**
-@@ -836,7 +838,9 @@ static int mmc_test_start_areq(struct mmc_test_card *test,
- }
- 
- static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
--				      struct scatterlist *sg, unsigned sg_len,
-+				      struct scatterlist *sg,
-+				      struct scatterlist *sg_areq,
-+				      unsigned int sg_len,
- 				      unsigned dev_addr, unsigned blocks,
- 				      unsigned blksz, int write, int count)
- {
-@@ -867,6 +871,7 @@ static int mmc_test_nonblock_transfer(struct mmc_test_card *test,
- 			prev_mrq = &rq2->mrq;
- 
- 		swap(mrq, prev_mrq);
-+		swap(sg, sg_areq);
- 		dev_addr += blocks;
- 	}
- 
-@@ -1396,10 +1401,11 @@ static int mmc_test_no_highmem(struct mmc_test_card *test)
-  * Map sz bytes so that it can be transferred.
-  */
- static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
--			     int max_scatter, int min_sg_len)
-+			     int max_scatter, int min_sg_len, bool nonblock)
- {
- 	struct mmc_test_area *t = &test->area;
- 	int err;
-+	unsigned int sg_len = 0;
- 
- 	t->blocks = sz >> 9;
- 
-@@ -1411,6 +1417,22 @@ static int mmc_test_area_map(struct mmc_test_card *test, unsigned long sz,
- 		err = mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
- 				      t->max_seg_sz, &t->sg_len, min_sg_len);
- 	}
-+
-+	if (err || !nonblock)
-+		goto err;
-+
-+	if (max_scatter) {
-+		err = mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_areq,
-+						  t->max_segs, t->max_seg_sz,
-+						  &sg_len);
-+	} else {
-+		err = mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max_segs,
-+				      t->max_seg_sz, &sg_len, min_sg_len);
-+	}
-+	if (!err && sg_len != t->sg_len)
-+		err = -EINVAL;
-+
-+err:
- 	if (err)
- 		pr_info("%s: Failed to map sg list\n",
- 		       mmc_hostname(test->card->host));
-@@ -1458,15 +1480,16 @@ static int mmc_test_area_io_seq(struct mmc_test_card *test, unsigned long sz,
- 			sz = max_tfr;
- 	}
- 
--	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len);
-+	ret = mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonblock);
- 	if (ret)
- 		return ret;
- 
- 	if (timed)
- 		ktime_get_ts64(&ts1);
- 	if (nonblock)
--		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
--				 dev_addr, t->blocks, 512, write, count);
-+		ret = mmc_test_nonblock_transfer(test, t->sg, t->sg_areq,
-+				 t->sg_len, dev_addr, t->blocks, 512, write,
-+				 count);
- 	else
- 		for (i = 0; i < count && ret == 0; i++) {
- 			ret = mmc_test_area_transfer(test, dev_addr, write);
-@@ -1525,6 +1548,7 @@ static int mmc_test_area_cleanup(struct mmc_test_card *test)
- 	struct mmc_test_area *t = &test->area;
- 
- 	kfree(t->sg);
-+	kfree(t->sg_areq);
- 	mmc_test_free_mem(t->mem);
- 
- 	return 0;
-@@ -1584,6 +1608,12 @@ static int mmc_test_area_init(struct mmc_test_card *test, int erase, int fill)
- 		goto out_free;
- 	}
- 
-+	t->sg_areq = kmalloc_array(t->max_segs, sizeof(*t->sg), GFP_KERNEL);
-+	if (!t->sg_areq) {
-+		ret = -ENOMEM;
-+		goto out_free;
-+	}
-+
- 	t->dev_addr = mmc_test_capacity(test->card) / 2;
- 	t->dev_addr -= t->dev_addr % (t->max_sz >> 9);
- 
-@@ -2468,7 +2498,7 @@ static int __mmc_test_cmds_during_tfr(struct mmc_test_card *test,
- 	if (!(test->card->host->caps & MMC_CAP_CMD_DURING_TFR))
- 		return RESULT_UNSUP_HOST;
- 
--	ret = mmc_test_area_map(test, sz, 0, 0);
-+	ret = mmc_test_area_map(test, sz, 0, 0, use_areq);
- 	if (ret)
- 		return ret;
- 
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+viresh
