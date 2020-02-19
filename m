@@ -2,124 +2,115 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CEC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1250C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBAB820656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="c7TWOHvd"
+	by mail.kernel.org (Postfix) with ESMTP id A0E732465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgBSV4d (ORCPT
+        id S1727845AbgBSV4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:56:33 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39079 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727429AbgBSV4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:56:33 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so638160plp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Azu2hLv1JxMDvmUxRW44SGEWy8s3ld4pghrW56XCt6M=;
-        b=c7TWOHvdXbs8XVMlR8ak2j2dOVotN58THB1IoCFTfPwhfZYSyCThOf4Uwt/h/YiwTP
-         C4f4cNiGmf3g+/JTB/nmySLtHFkNcbsTdphZ/X3OO5zOvQh31wXuIUh6Td8HLEdp4YOv
-         fslV+YGcPP6RMcuohrbQMoofsTra+Jk2AU22gjMavwfOBgJ74L81QUv6AEgDr5xRGvkA
-         3Ki/uS5ldmhYscfAaN0autLmj3+AAsssZVj4lH2DjcGS/hNAljyhttLK9TX0XHRtl4TP
-         LsjsfAVYCa9xD1tl6Wb8kuejT/AlU9opB8F2FNk7IVwCJO3Dc5E+cFU9JrwID4No3Pkr
-         ATjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Azu2hLv1JxMDvmUxRW44SGEWy8s3ld4pghrW56XCt6M=;
-        b=tSjs9l3cnZY8a8f34YwHhX39iTege1yRFXlPYZiwBm2tBZC3Fyz6DEpk0zCsMFF/Dx
-         TRiDBrbMShiqNNEnCgODfooFng95yY+OcMuksLmFDEgWmFCJ9BlBy+pfUZyWhxyqwrJK
-         6R0NdOjLb/hoOVi3Pgj7Fg2zOweGZnudvciY5UkoZFRSC4yqvGo3yhhTynF6W14VlNKI
-         6ftXYk+CgL9fh3sEOYV+HrHI1m6KCmBwv23vf+tMUPEJnJ1U2b0Mkl9s2957ATfXTtot
-         JPrTNsrsCMaTeIignvYozHnWJTjFfBs7oAY8SgUvrxw+2AG/AxWC/5c6VO5+Yxan8xeX
-         +JDw==
-X-Gm-Message-State: APjAAAWl8+jshSPxNQjLZ4hiWdnThWLBhN8/wmrDXHB2bECItyiS92jZ
-        gQbP15wA62Zc68ASO5ES9+nY7g==
-X-Google-Smtp-Source: APXvYqymQ0qEvxoVB2HEtnEL4mIJWhCSks7TQ64jqXAFKrZw2Hqz77cp9KHgLn9ttxGpF6k20Rhu0Q==
-X-Received: by 2002:a17:90a:3841:: with SMTP id l1mr11289750pjf.108.1582149392531;
-        Wed, 19 Feb 2020 13:56:32 -0800 (PST)
-Received: from cisco ([2001:420:c0c8:1007::7a1])
-        by smtp.gmail.com with ESMTPSA id f8sm608035pfn.2.2020.02.19.13.56.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 13:56:31 -0800 (PST)
-Date:   Wed, 19 Feb 2020 14:56:23 -0700
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-Message-ID: <20200219215623.GA11724@cisco>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
- <20200219193558.GA27641@mail.hallyn.com>
- <20200219214837.GA29159@mail.hallyn.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219214837.GA29159@mail.hallyn.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Feb 2020 16:56:43 -0500
+Received: from mxout2.idt.com ([157.165.5.26]:50676 "EHLO mxout2.idt.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727429AbgBSV4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:56:43 -0500
+Received: from mail6.idt.com (localhost [127.0.0.1])
+        by mxout2.idt.com (8.14.4/8.14.4) with ESMTP id 01JLuYLD030681;
+        Wed, 19 Feb 2020 13:56:34 -0800
+Received: from corpml3.corp.idt.com (corpml3.corp.idt.com [157.165.140.25])
+        by mail6.idt.com (8.14.4/8.14.4) with ESMTP id 01JLuYA4018416;
+        Wed, 19 Feb 2020 13:56:34 -0800
+Received: from minli-office.na.ads.idt.com (corpimss.corp.idt.com [157.165.140.30])
+        by corpml3.corp.idt.com (8.11.7p1+Sun/8.11.7) with ESMTP id 01JLuXW10601;
+        Wed, 19 Feb 2020 13:56:33 -0800 (PST)
+From:   min.li.xe@renesas.com
+To:     robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Min Li <min.li.xe@renesas.com>
+Subject: [PATCH v3 1/2] dt-bindings: ptp: Add device tree binding for IDT 82P33 based PTP clock
+Date:   Wed, 19 Feb 2020 16:56:15 -0500
+Message-Id: <1582149375-25168-1-git-send-email-min.li.xe@renesas.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:48:37PM -0600, Serge E. Hallyn wrote:
-> On Wed, Feb 19, 2020 at 01:35:58PM -0600, Serge E. Hallyn wrote:
-> > On Tue, Feb 18, 2020 at 03:33:46PM +0100, Christian Brauner wrote:
-> > > With fsid mappings we can solve this by writing an id mapping of 0
-> > > 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
-> > > access the kernel will now lookup the mapping for 300000 in the fsid
-> > > mapping tables of the user namespace. And since such a mapping exists,
-> > > the corresponding files will have correct ownership.
-> > 
-> > So if I have
-> > 
-> > /proc/self/uid_map: 0 100000 100000
-> > /proc/self/fsid_map: 1000 1000 1
-> 
-> Oh, sorry.  Your explanation in 20/25 i think set me straight, though I need
-> to think through a few more examples.
-> 
-> ...
-> 
-> > 3. If I create a new file, as nsuid 1000, what will be the inode owning kuid?
-> 
-> (Note - I edited the quoted txt above to be more precise)
-> 
-> I'm still not quite clear on this.  I believe the fsid mapping will take
-> precedence so it'll be uid 1000 ?  Per mount behavior would be nice there,
-> but perhaps unwieldy.
+From: Min Li <min.li.xe@renesas.com>
 
-The is_userns_visible() bits seems to be an attempt at understanding
-what people would want per-mount, with a policy hard coded in the
-kernel.
+Add device tree binding doc for the PTP clock based on IDT 82P33
+Synchronization Management Unit (SMU).
 
-But maybe per-mount behavior can be solved more elegantly with shifted
-bind mounts, so we can drop all that from this series, and ignore
-per-mount settings here?
+Changes since v1:
+ - As suggested by Rob Herring:
+   1. Drop reg description for i2c
+   2. Replace i2c@1 with i2c
+   3. Add addtionalProperties: false
 
-Tycho
+Signed-off-by: Min Li <min.li.xe@renesas.com>
+---
+ .../devicetree/bindings/ptp/ptp-idt82p33.yaml      | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+
+diff --git a/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+new file mode 100644
+index 0000000..25806de
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/ptp-idt82p33.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/ptp/ptp-idt82p33.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IDT 82P33 PTP Clock Device Tree Bindings
++
++description: |
++  IDT 82P33XXX Synchronization Management Unit (SMU) based PTP clock
++
++maintainers:
++  - Min Li <min.li.xe@renesas.com>
++
++properties:
++  compatible:
++    enum:
++      - idt,82p33810
++      - idt,82p33813
++      - idt,82p33814
++      - idt,82p33831
++      - idt,82p33910
++      - idt,82p33913
++      - idt,82p33914
++      - idt,82p33931
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++addtionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        phc@51 {
++            compatible = "idt,82p33810";
++            reg = <0x51>;
++        };
++    };
+-- 
+2.7.4
+
