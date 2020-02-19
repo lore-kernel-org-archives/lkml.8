@@ -2,143 +2,201 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC0EC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F14C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E811121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:50:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vDd3UE8R"
+	by mail.kernel.org (Postfix) with ESMTP id DA753208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582098704;
+	bh=AuiuY44Grg31bHYi1FEZ+W1LLV8zMJGA8HVNelAlbK4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=KfmjTJy720u/Bjj34nD0RhjXA3qQwUPw7P8Hkt+ceF0HV8IDuLgkIkposY6lbNEs2
+	 e+HnpOs++QHtZ0gARleP0k3Euho6ZYTRdk87jFJ6djythWNBiR3xpKisLeL9JYOQCo
+	 TI+jZDUskufSXginewWQSGSJK5FUt3rO8ef09PVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgBSHub (ORCPT
+        id S1727393AbgBSHvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:50:31 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42458 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgBSHua (ORCPT
+        Wed, 19 Feb 2020 02:51:42 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:34486 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbgBSHvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:50:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=8mFw61Czqg56/JxSmBKdUElYWIaIMTtisEbvrwNrP2k=; b=vDd3UE8R4dQygKI901pT7mIRLT
-        idFLmDlF/QiEq0wgvfbAD1gc9ivo1jGIjMKt3jONTogs+pWxEfvC6JN/gfmiLzyJ4bfCD8ufAIMiq
-        MYaebz1SFBThc64yw1bd5sP/m0EAHVXvi++NXX8sqylLQqo2R22QSdXPY4MBENp67jwJ1RHwfWuKv
-        WtEAT9w3xuQ7QEcDpU6HzzMF+BoHhI5H+OBM/+tdNi+CGqGd81YK71vRb6NG7QSKyDsm73PcqD0q1
-        2X3ipwMefMUaNNDeUxXOg7pYYMAo8LKz2L9rRqocTaG5G7lxa3sVz9qs318H5mChwfQr/M2XE/wrV
-        sElu2zAg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4K7q-0003cQ-2R; Wed, 19 Feb 2020 07:50:30 +0000
-Subject: Re: [PATCH v3 2/4] thermal: k3: Add support for bandgap sensors
-To:     Keerthy <j-keerthy@ti.com>, rui.zhang@intel.com,
-        robh+dt@kernel.org, daniel.lezcano@linaro.org
-Cc:     amit.kucheria@verdurent.com, t-kristo@ti.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        mark.rutland@arm.com
-References: <20200219074314.22829-1-j-keerthy@ti.com>
- <20200219074314.22829-3-j-keerthy@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ab0bc84b-189f-a9be-e838-a38c14fa702a@infradead.org>
-Date:   Tue, 18 Feb 2020 23:50:29 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200219074314.22829-3-j-keerthy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 02:51:42 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 01J7oBm0008413;
+        Wed, 19 Feb 2020 16:50:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 01J7oBm0008413
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582098613;
+        bh=CmAkppl+SFFJV1RkBUsjbfUnoQtSHwVJbJtqBWpmqgs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=s4e2LiFvAWd7foi/qebZk1ywEQ32xF0d+kOi1DjnzKKpbe5UQLKkqw8c8vcHIFVlp
+         lN9rLpbyNAz2hdK5TVf4/kPse1mIRuW7/r0JjIi8EKBwdzwz2/Ne+VQHKcSyJcsz/A
+         17B8wd1IgKZvBL93419ZmZ1AjXGE0MY3haxcK0inoJAiAanJ0fGTzU34btlV+8lfyM
+         YWjBxDtVvxQG79sgxvqeW/SggmrC5b5cvAb0Ky0qc/hQobueIL2XcHq6Q25Hkcr24l
+         d11ENJQGH8SZaTFxsN61gaZotxPiAEueW+6KYAxDrh+MvlI8lAmaYIkqTyuflr7tFt
+         1zDTvo1+NMmDA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@fluxnic.net>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kconfig: make 'imply' obey the direct dependency
+Date:   Wed, 19 Feb 2020 16:49:50 +0900
+Message-Id: <20200219074950.23344-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 11:43 PM, Keerthy wrote:
-> The bandgap provides current and voltage reference for its internal
-> circuits and other analog IP blocks. The analog-to-digital
-> converter (ADC) produces an output value that is proportional
-> to the silicon temperature.
-> 
-> Currently reading temperatures and trend computing is supported
-> as there are no active/passive cooling agent supported.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/thermal/Kconfig      |  12 ++
->  drivers/thermal/Makefile     |   1 +
->  drivers/thermal/k3_bandgap.c | 342 +++++++++++++++++++++++++++++++++++
->  3 files changed, 355 insertions(+)
->  create mode 100644 drivers/thermal/k3_bandgap.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5438d6..fa598eddc7ac 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -251,6 +251,18 @@ config IMX_THERMAL
->  	  cpufreq is used as the cooling device to throttle CPUs when the
->  	  passive trip is crossed.
->  
-> +config K3_THERMAL
-> +	bool "Texas Instruments K3 thermal support"
+The 'imply' statement may create unmet direct dependency when the
+implied symbol depends on m.
 
-Hi,
-Why is this bool and not tristate?
+[Test Code]
 
-> +	depends on THERMAL
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get thermal support for the Texas Instruments
-> +	  K3 SoC family. The current chip supported is:
-> +	   - AM654
-> +
-> +	  This includes temperature reading functionality and also trend
-> +	  computation.
-> +
->  config MAX77620_THERMAL
->  	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->  	depends on MFD_MAX77620
+  config FOO
+          tristate "foo"
+          imply BAZ
 
-> diff --git a/drivers/thermal/k3_bandgap.c b/drivers/thermal/k3_bandgap.c
-> new file mode 100644
-> index 000000000000..35d904eb9857
-> --- /dev/null
-> +++ b/drivers/thermal/k3_bandgap.c
-> @@ -0,0 +1,342 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI Bandgap temperature sensor driver for K3 SoC Family
-> + *
-> + * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-> + */
+  config BAZ
+          tristate "baz"
+          depends on BAR
 
-> +static int k3_bgp_read_temp(struct k3_thermal_data *devdata,
-> +			    int *temp)
-> +{
-> +	struct k3_bandgap *bgp;
-> +	unsigned int dtemp, s0, s1, s2;
-> +
-> +	bgp = devdata->bgp;
-> +	/**
+  config BAR
+          def_tristate m
 
-"/**" is used to indicate kernel-doc notation in the Linux kernel source files,
-but this comment is not kernel-doc notation, so please just use "/*".
+  config MODULES
+          def_bool y
+          option modules
 
-> +	 * Errata is applicable for am654 pg 1.0 silicon. There
-> +	 * is a variation of the order for 8-10 degree centigrade.
-> +	 * Work around that by getting the average of two closest
-> +	 * readings out of three readings everytime we want to
-> +	 * report temperatures.
-> +	 *
-> +	 * Errata workaround.
-> +	 */
-thanks.
+If you set FOO=y, BAZ is also promoted to y, which results in the
+following .config file:
+
+  CONFIG_FOO=y
+  CONFIG_BAZ=y
+  CONFIG_BAR=m
+  CONFIG_MODULES=y
+
+This ignores the dependency "BAZ depends on BAR".
+
+Unlike 'select', what is worse, Kconfig never shows the
+"WARNING: unmet direct dependencies detected for ..." for this case.
+
+Because 'imply' should be weaker than 'depends on', Kconfig should
+take the direct dependency into account.
+
+Describe this case in Documentation/kbuild/kconfig-language.rst for
+clarification.
+
+Commit 237e3ad0f195 ("Kconfig: Introduce the "imply" keyword") says that
+a symbol implied by y is restricted to y or n, excluding m.
+
+As for the combination of FOO=y and BAR=m, the case of BAZ=m is excluded
+by the 'imply', and BAZ=y is also excluded by 'depends on'. So, only the
+possible value is BAZ=n.
+
+Having said that, this case was probably "We don't care" at that time
+because Kconfig did not handle 'depends on m' correctly until
+commit f622f8279581 ("kconfig: warn unmet direct dependency of tristate
+symbols selected by y") fixed it.
+
+Backporting this to 4.19+ will probably be fine. If you care this
+problem on 4.14.x, you need to backport f622f8279581 as well.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Documentation/kbuild/kconfig-language.rst |  7 +++++--
+ scripts/kconfig/symbol.c                  | 17 +++++++++++++----
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/kbuild/kconfig-language.rst b/Documentation/kbuild/kconfig-language.rst
+index d0111dd26410..9141f03ff744 100644
+--- a/Documentation/kbuild/kconfig-language.rst
++++ b/Documentation/kbuild/kconfig-language.rst
+@@ -159,11 +159,11 @@ applicable everywhere (see syntax).
+   Given the following example::
+ 
+     config FOO
+-	tristate
++	tristate "foo"
+ 	imply BAZ
+ 
+     config BAZ
+-	tristate
++	tristate "baz"
+ 	depends on BAR
+ 
+   The following values are possible:
+@@ -174,6 +174,9 @@ applicable everywhere (see syntax).
+ 	n		y		n		N/m/y
+ 	m		y		m		M/y/n
+ 	y		y		y		Y/n
++	n		m		n		N/m
++	m		m		m		M/n
++	y		m		n		N
+ 	y		n		*		N
+ 	===		===		=============	==============
+ 
+diff --git a/scripts/kconfig/symbol.c b/scripts/kconfig/symbol.c
+index 8d38b700b314..6100e6ead8ad 100644
+--- a/scripts/kconfig/symbol.c
++++ b/scripts/kconfig/symbol.c
+@@ -221,7 +221,7 @@ static void sym_calc_visibility(struct symbol *sym)
+ 		sym_set_changed(sym);
+ 	}
+ 	tri = no;
+-	if (sym->implied.expr && sym->dir_dep.tri != no)
++	if (sym->implied.expr)
+ 		tri = expr_calc_value(sym->implied.expr);
+ 	if (tri == mod && sym_get_type(sym) == S_BOOLEAN)
+ 		tri = yes;
+@@ -393,7 +393,17 @@ void sym_calc_value(struct symbol *sym)
+ 				}
+ 				if (sym->implied.tri != no) {
+ 					sym->flags |= SYMBOL_WRITE;
+-					newval.tri = EXPR_OR(newval.tri, sym->implied.tri);
++					newval.tri = EXPR_OR(newval.tri,
++							     sym->implied.tri);
++					newval.tri = EXPR_AND(newval.tri,
++							      sym->dir_dep.tri);
++
++					if (newval.tri == mod && sym->implied.tri == yes) {
++						if (sym->dir_dep.tri == yes)
++							newval.tri = yes;
++						else
++							newval.tri = no;
++					}
+ 				}
+ 			}
+ 		calc_newval:
+@@ -401,8 +411,7 @@ void sym_calc_value(struct symbol *sym)
+ 				sym_warn_unmet_dep(sym);
+ 			newval.tri = EXPR_OR(newval.tri, sym->rev_dep.tri);
+ 		}
+-		if (newval.tri == mod &&
+-		    (sym_get_type(sym) == S_BOOLEAN || sym->implied.tri == yes))
++		if (newval.tri == mod && sym_get_type(sym) == S_BOOLEAN)
+ 			newval.tri = yes;
+ 		break;
+ 	case S_STRING:
 -- 
-~Randy
+2.17.1
 
