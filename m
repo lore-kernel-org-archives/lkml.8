@@ -2,190 +2,404 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BE6C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACB3C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A5D24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cW2cAcBP"
+	by mail.kernel.org (Postfix) with ESMTP id 52B9F24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582125383;
+	bh=RB1vycRfsJAR9zdlq4aYtCV/+1ZlaUZshtY1cshE9oE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lgbZ4M4N1PuXz26CABj7z2Ys7caKXiZE3/j7T2ccD+6NpLvCap5q1XJcp791BX3QZ
+	 3eN+ABNgHCb3OmVj2Uz96or9+Nx5jvY6SDVEIB8+W9gARk57Z8+QRKRPMbTnlaN/uV
+	 0TBU1ekKzdM9rhfLvhqirdEk2Cl9nYtntIFybchI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgBSPPp (ORCPT
+        id S1727006AbgBSPQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:15:45 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:49791 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbgBSPPn (ORCPT
+        Wed, 19 Feb 2020 10:16:21 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40148 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726691AbgBSPQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:15:43 -0500
-Received: by mail-wr1-f73.google.com with SMTP id w6so204503wrm.16
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=Byu8soxgkprIbakxZbQOBFe9yLNNMXZxXhnHj/Q3XIE=;
-        b=cW2cAcBPaoRfi740A0YFL1zfRrWwQT3Ywad2o0tS1cjb3DWhwcokkOpkWIQVHOyuij
-         Y9vktaPxXwfSZZm3OKWDkMNSP6w6IeDMe+Rx1UPkBMZOdd7hXHE2m6JrxXBX8ZdrrAsY
-         Vi6M+PauJdkMZTMVfR62A965PBQ93m/Zl3MqSlBcp0SndV+8dVMqze7nCnc5TdYMYNsp
-         U073aNUXW+L0Rfodeag1IePWwgMVdV/2SWiEYbTFe3oBVg4NllG4GVa8GpI56SL9/tRm
-         ap4rV4BXKIOKcbdiGdz8BLtaMT4L94XMhsU7cqYBrnPkbU0YcVxUjjyA8XX0nj5s7LUu
-         ETqA==
+        Wed, 19 Feb 2020 10:16:21 -0500
+Received: by mail-ot1-f65.google.com with SMTP id i6so452004otr.7;
+        Wed, 19 Feb 2020 07:16:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=Byu8soxgkprIbakxZbQOBFe9yLNNMXZxXhnHj/Q3XIE=;
-        b=ka29pDUuvN57zavjvLfE1uoY4CsFvS1rTxtkuQ618UZXst4TDzSonyUFS8UeTEdFEh
-         cLBQOCBUuMn2Xuo4C4ZXOyvLpbf2eccCRex3O4EajHWXuLnhmLIg0K2Xa9XVXrNlp0Zl
-         /fIiT9L2x3i6oDpXZWm085lZoi2lP7B7c7HCfxRks6pLqP56APoUPpHk1e7Hg8w10cUR
-         kfsHzKMh7aqiMXllevtiqu0qR560KLlqUH3BaKLhcGkjAKTDyRqw1BAw/2Kki8a6HnFT
-         HQ/qatrRfo9wLRnRqzYXXjy5nPpOBdQKMEU8G2ifXyIxsVJeUPszMJDc8b6sezqtneTe
-         3tNA==
-X-Gm-Message-State: APjAAAWkNnKf286RqimaAMZU95ohWbT/7F9Sph75mmOFQUO9CLgxUpFn
-        34YbR3Uo3fXwduzdf+xaLk+0I3RQ8w==
-X-Google-Smtp-Source: APXvYqzfKoU7MwR28IPVZkrEnceMYCpwrSoFkpv0xw1GtOH2qCPEW/pH2s1jHSsLXmvp21i0qSDZpjDpnQ==
-X-Received: by 2002:a5d:6404:: with SMTP id z4mr9741809wru.262.1582125340973;
- Wed, 19 Feb 2020 07:15:40 -0800 (PST)
-Date:   Wed, 19 Feb 2020 16:15:31 +0100
-Message-Id: <20200219151531.161515-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] kcsan: Add option for verbose reporting
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9UdK/NvuxAwd8nrf57s06dVQ9BD68d4hTcVv/rTIoIE=;
+        b=N6woa1ISTi0GBM0M5jhQiXMGDRpE2Vg+Vz5FU5/WA5FBxh4AAJB/TdcuSztbVs522j
+         bGBDdv44Rp8QfIcOWPeuQpqPg8pry06rGneU4vSu83xjdTO9cDDCLifUbMm9Gl8cf0GF
+         Y8gtOEXXQhlDpxhJQLmh0fpkwfvLhvHgbQtGxmScnntHkYrsSKhUBaNSI7Eq13J9d+EI
+         PUWzzvcvYvd5u5ni2PR3ky8s/KF1o93ifKNdGqShuM1OPhUnwDNjaKJALCH8R+yJIb0R
+         8fxoSkt29PDWq1XlFZ3JCuRxzVY1J7RUSRD1aynmpJJ6OVNGNnSrokYCk8EcaBgL8Tm+
+         KLHw==
+X-Gm-Message-State: APjAAAW87r7t17CL0W8nR8zCED0yN3WpmsthYgCKJ454MPNDjowQt5rF
+        PU1kbw0g/lPSzI5wQh+ZJA==
+X-Google-Smtp-Source: APXvYqxSw7z3z0fSVI98oBsaiy8eSFW+kYZqvDQzGZYLxH5iuNJf8ccK+XqBOmL+AtyXwEXekqkF0A==
+X-Received: by 2002:a9d:62ca:: with SMTP id z10mr3532395otk.263.1582125379181;
+        Wed, 19 Feb 2020 07:16:19 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r17sm749otq.70.2020.02.19.07.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:16:18 -0800 (PST)
+Received: (nullmailer pid 5117 invoked by uid 1000);
+        Wed, 19 Feb 2020 15:16:17 -0000
+Date:   Wed, 19 Feb 2020 09:16:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     lee.jones@linaro.org, mark.rutland@arm.co, alexandre.torgue@st.com,
+        linus.walleij@linaro.org, amelie.delaunay@st.com,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: mfd: Convert stmfx bindings to
+ json-schema
+Message-ID: <20200219151617.GA22892@bogus>
+References: <20200207145712.24898-1-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207145712.24898-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds CONFIG_KCSAN_VERBOSE to optionally enable more verbose reports.
-Currently information about the reporting task's held locks and IRQ
-trace events are shown, if they are enabled.
+On Fri, Feb 07, 2020 at 03:57:12PM +0100, Benjamin Gaignard wrote:
+> Convert stmfx bindings to json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> version 2:
+> - fix description indentation
+> - change pin controller node name to pinctrl
+> - document pinctrl subnode properties
+> - add pinctrl subnode example
+> 
+>  Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 -----
+>  Documentation/devicetree/bindings/mfd/stmfx.yaml   | 120 +++++++++++++++++++++
+>  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 --------------------
+>  3 files changed, 120 insertions(+), 144 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/stmfx.txt b/Documentation/devicetree/bindings/mfd/stmfx.txt
+> deleted file mode 100644
+> index f0c2f7fcf5c7..000000000000
+> --- a/Documentation/devicetree/bindings/mfd/stmfx.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -STMicroelectonics Multi-Function eXpander (STMFX) Core bindings
+> -
+> -ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
+> -communication with the main MCU. Its main features are GPIO expansion, main
+> -MCU IDD measurement (IDD is the amount of current that flows through VDD) and
+> -resistive touchscreen controller.
+> -
+> -Required properties:
+> -- compatible: should be "st,stmfx-0300".
+> -- reg: I2C slave address of the device.
+> -- interrupts: interrupt specifier triggered by MFX_IRQ_OUT signal.
+> -  Please refer to ../interrupt-controller/interrupt.txt
+> -
+> -Optional properties:
+> -- drive-open-drain: configure MFX_IRQ_OUT as open drain.
+> -- vdd-supply: phandle of the regulator supplying STMFX.
+> -
+> -Example:
+> -
+> -	stmfx: stmfx@42 {
+> -		compatible = "st,stmfx-0300";
+> -		reg = <0x42>;
+> -		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
+> -		interrupt-parent = <&gpioi>;
+> -		vdd-supply = <&v3v3>;
+> -	};
+> -
+> -Please refer to ../pinctrl/pinctrl-stmfx.txt for STMFX GPIO expander function bindings.
+> diff --git a/Documentation/devicetree/bindings/mfd/stmfx.yaml b/Documentation/devicetree/bindings/mfd/stmfx.yaml
+> new file mode 100644
+> index 000000000000..1af906fb876f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/stmfx.yaml
+> @@ -0,0 +1,120 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/stmfx.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: STMicroelectonics Multi-Function eXpander (STMFX) bindings
+> +
+> +description: ST Multi-Function eXpander (STMFX) is a slave controller using I2C for
+> +               communication with the main MCU. Its main features are GPIO expansion,
+> +               main MCU IDD measurement (IDD is the amount of current that flows
+> +               through VDD) and resistive touchscreen controller.
+> +
+> +maintainers:
+> +  - Amelie Delaunay <amelie.delaunay@st.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: st,stmfx-0300
+> +
+> +  reg:
+> +    enum: [ 0x42, 0x43 ]
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  drive-open-drain: true
+> +
+> +  vdd-supply:
+> +    maxItems: 1
+> +
+> +  pinctrl:
+> +    type: object
+> +
+> +    $ref: ../pinctrl/pincfg-node.yaml
 
-Signed-off-by: Marco Elver <elver@google.com>
-Suggested-by: Qian Cai <cai@lca.pw>
----
- kernel/kcsan/report.c | 48 +++++++++++++++++++++++++++++++++++++++++++
- lib/Kconfig.kcsan     | 13 ++++++++++++
- 2 files changed, 61 insertions(+)
+allOf needed here.
 
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 11c791b886f3c..f14becb6f1537 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -1,10 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/debug_locks.h>
- #include <linux/jiffies.h>
- #include <linux/kernel.h>
- #include <linux/lockdep.h>
- #include <linux/preempt.h>
- #include <linux/printk.h>
-+#include <linux/rcupdate.h>
- #include <linux/sched.h>
- #include <linux/spinlock.h>
- #include <linux/stacktrace.h>
-@@ -245,6 +247,29 @@ static int sym_strcmp(void *addr1, void *addr2)
- 	return strncmp(buf1, buf2, sizeof(buf1));
- }
- 
-+static void print_verbose_info(struct task_struct *task)
-+{
-+	if (!task)
-+		return;
-+
-+	if (task != current && task->state == TASK_RUNNING)
-+		/*
-+		 * Showing held locks for a running task is unreliable, so just
-+		 * skip this. The printed locks are very likely inconsistent,
-+		 * since the stack trace was obtained when the actual race
-+		 * occurred and the task has since continued execution. Since we
-+		 * cannot display the below information from the racing thread,
-+		 * but must print it all from the watcher thread, bail out.
-+		 * Note: Even if the task is not running, there is a chance that
-+		 * the locks held may be inconsistent.
-+		 */
-+		return;
-+
-+	pr_err("\n");
-+	debug_show_held_locks(task);
-+	print_irqtrace_events(task);
-+}
-+
- /*
-  * Returns true if a report was generated, false otherwise.
-  */
-@@ -319,6 +344,26 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 				  other_info.num_stack_entries - other_skipnr,
- 				  0);
- 
-+		if (IS_ENABLED(CONFIG_KCSAN_VERBOSE) && other_info.task_pid != -1) {
-+			struct task_struct *other_task;
-+
-+			/*
-+			 * Rather than passing @current from the other task via
-+			 * @other_info, obtain task_struct here. The problem
-+			 * with passing @current via @other_info is that, we
-+			 * would have to get_task_struct/put_task_struct, and if
-+			 * we race with a task being released, we would have to
-+			 * release it in release_report(). This may result in
-+			 * deadlock if we want to use KCSAN on the allocators.
-+			 * Instead, make this best-effort, and if the task was
-+			 * already released, we just do not print anything here.
-+			 */
-+			rcu_read_lock();
-+			other_task = find_task_by_pid_ns(other_info.task_pid, &init_pid_ns);
-+			print_verbose_info(other_task);
-+			rcu_read_unlock();
-+		}
-+
- 		pr_err("\n");
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
- 		       get_access_type(access_type), ptr, size,
-@@ -340,6 +385,9 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 	stack_trace_print(stack_entries + skipnr, num_stack_entries - skipnr,
- 			  0);
- 
-+	if (IS_ENABLED(CONFIG_KCSAN_VERBOSE))
-+		print_verbose_info(current);
-+
- 	/* Print report footer. */
- 	pr_err("\n");
- 	pr_err("Reported by Kernel Concurrency Sanitizer on:\n");
-diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index f0b791143c6ab..ba9268076cfbc 100644
---- a/lib/Kconfig.kcsan
-+++ b/lib/Kconfig.kcsan
-@@ -20,6 +20,19 @@ menuconfig KCSAN
- 
- if KCSAN
- 
-+config KCSAN_VERBOSE
-+	bool "Show verbose reports with more information about system state"
-+	depends on PROVE_LOCKING
-+	help
-+	  If enabled, reports show more information about the system state that
-+	  may help better analyze and debug races. This includes held locks and
-+	  IRQ trace events.
-+
-+	  While this option should generally be benign, we call into more
-+	  external functions on report generation; if a race report is
-+	  generated from any one of them, system stability may suffer due to
-+	  deadlocks or recursion.  If in doubt, say N.
-+
- config KCSAN_DEBUG
- 	bool "Debugging of KCSAN internals"
- 
--- 
-2.25.0.265.gbab2e86ba0-goog
+However, this is not in the right spot.
 
+> +
+> +    properties:
+> +      compatible:
+> +        const: st,stmfx-0300-pinctrl
+> +
+> +      "#gpio-cells":
+> +        const: 2
+> +
+> +      "#interrupt-cells":
+> +        const: 2
+> +
+> +      gpio-controller: true
+> +
+> +      interrupt-controller: true
+> +
+> +      gpio-ranges:
+> +        description: if all STMFX pins[24:0] are available (no other STMFX function in use),
+> +                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+> +                     if agpio[3:0] are not available (STMFX Touchscreen function in use),
+> +                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 16>, <&stmfx_pinctrl 20 20 4>;
+> +                     if agpio[7:4] are not available (STMFX IDD function in use),
+> +                     you should use gpio-ranges = <&stmfx_pinctrl 0 0 20>;
+> +        maxItems: 1
+> +
+> +    patternProperties:
+> +      "^[a-zA-Z][a-zA-Z0-9_]+$":
+
+I'm surprised this works because it is going to match on most of the 
+other properties in this node. You really need a node name pattern you 
+can match on like '-pins$'. Otherwise, you have to do:
+
+if:
+  type: object
+then:
+  ...
+
+I'd rather see the dts files fixed.
+
+> +        type: object
+> +        $ref: ../pinctrl/pinmux-node.yaml
+
+Actually, this is why it doesn't error. With no 'allOf', 'type: object' 
+is ignored.
+
+> +
+> +        properties:
+> +          pins: true
+> +          bias-disable: true
+> +          bias-pull-up: true
+> +          bias-pull-pin-default: true
+> +          bias-pull-down: true
+> +          drive-open-drain: true
+> +          drive-push-pull: true
+> +          output-high: true
+> +          output-low: true
+
+'additionalProperties: false' needed here.
+
+> +
+> +    required:
+> +      - compatible
+> +      - "#gpio-cells"
+> +      - "#interrupt-cells"
+> +      - gpio-controller
+> +      - interrupt-controller
+> +      - gpio-ranges
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    i2c@0 {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      stmfx@42 {
+> +        compatible = "st,stmfx-0300";
+> +        reg = <0x42>;
+> +        interrupts = <8 IRQ_TYPE_EDGE_RISING>;
+> +        interrupt-parent = <&gpioi>;
+> +        vdd-supply = <&v3v3>;
+> +
+> +        stmfx_pinctrl: pinctrl {
+> +          compatible = "st,stmfx-0300-pinctrl";
+> +          #gpio-cells = <2>;
+> +          #interrupt-cells = <2>;
+> +          gpio-controller;
+> +          interrupt-controller;
+> +          gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+> +
+> +          joystick_pins: joystick {
+> +            pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
+> +            drive-push-pull;
+> +            bias-pull-up;
+> +          };
+> +        };
+> +      };
+> +    };
+> +...
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> deleted file mode 100644
+> index c1b4c1819b84..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+> +++ /dev/null
+> @@ -1,116 +0,0 @@
+> -STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander bindings
+> -
+> -ST Multi-Function eXpander (STMFX) offers up to 24 GPIOs expansion.
+> -Please refer to ../mfd/stmfx.txt for STMFX Core bindings.
+> -
+> -Required properties:
+> -- compatible: should be "st,stmfx-0300-pinctrl".
+> -- #gpio-cells: should be <2>, the first cell is the GPIO number and the second
+> -  cell is the gpio flags in accordance with <dt-bindings/gpio/gpio.h>.
+> -- gpio-controller: marks the device as a GPIO controller.
+> -- #interrupt-cells: should be <2>, the first cell is the GPIO number and the
+> -  second cell is the interrupt flags in accordance with
+> -  <dt-bindings/interrupt-controller/irq.h>.
+> -- interrupt-controller: marks the device as an interrupt controller.
+> -- gpio-ranges: specifies the mapping between gpio controller and pin
+> -  controller pins. Check "Concerning gpio-ranges property" below.
+> -Please refer to ../gpio/gpio.txt.
+> -
+> -Please refer to pinctrl-bindings.txt for pin configuration.
+> -
+> -Required properties for pin configuration sub-nodes:
+> -- pins: list of pins to which the configuration applies.
+> -
+> -Optional properties for pin configuration sub-nodes (pinconf-generic ones):
+> -- bias-disable: disable any bias on the pin.
+> -- bias-pull-up: the pin will be pulled up.
+> -- bias-pull-pin-default: use the pin-default pull state.
+> -- bias-pull-down: the pin will be pulled down.
+> -- drive-open-drain: the pin will be driven with open drain.
+> -- drive-push-pull: the pin will be driven actively high and low.
+> -- output-high: the pin will be configured as an output driving high level.
+> -- output-low: the pin will be configured as an output driving low level.
+> -
+> -Note that STMFX pins[15:0] are called "gpio[15:0]", and STMFX pins[23:16] are
+> -called "agpio[7:0]". Example, to refer to pin 18 of STMFX, use "agpio2".
+> -
+> -Concerning gpio-ranges property:
+> -- if all STMFX pins[24:0] are available (no other STMFX function in use), you
+> -  should use gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+> -- if agpio[3:0] are not available (STMFX Touchscreen function in use), you
+> -  should use gpio-ranges = <&stmfx_pinctrl 0 0 16>, <&stmfx_pinctrl 20 20 4>;
+> -- if agpio[7:4] are not available (STMFX IDD function in use), you
+> -  should use gpio-ranges = <&stmfx_pinctrl 0 0 20>;
+> -
+> -
+> -Example:
+> -
+> -	stmfx: stmfx@42 {
+> -		...
+> -
+> -		stmfx_pinctrl: stmfx-pin-controller {
+> -			compatible = "st,stmfx-0300-pinctrl";
+> -			#gpio-cells = <2>;
+> -			#interrupt-cells = <2>;
+> -			gpio-controller;
+> -			interrupt-controller;
+> -			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+> -
+> -			joystick_pins: joystick {
+> -				pins = "gpio0", "gpio1", "gpio2", "gpio3", "gpio4";
+> -				drive-push-pull;
+> -				bias-pull-up;
+> -			};
+> -		};
+> -	};
+> -
+> -Example of STMFX GPIO consumers:
+> -
+> -	joystick {
+> -		compatible = "gpio-keys";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -		pinctrl-0 = <&joystick_pins>;
+> -		pinctrl-names = "default";
+> -		button-0 {
+> -			label = "JoySel";
+> -			linux,code = <KEY_ENTER>;
+> -			interrupt-parent = <&stmfx_pinctrl>;
+> -			interrupts = <0 IRQ_TYPE_EDGE_RISING>;
+> -		};
+> -		button-1 {
+> -			label = "JoyDown";
+> -			linux,code = <KEY_DOWN>;
+> -			interrupt-parent = <&stmfx_pinctrl>;
+> -			interrupts = <1 IRQ_TYPE_EDGE_RISING>;
+> -		};
+> -		button-2 {
+> -			label = "JoyLeft";
+> -			linux,code = <KEY_LEFT>;
+> -			interrupt-parent = <&stmfx_pinctrl>;
+> -			interrupts = <2 IRQ_TYPE_EDGE_RISING>;
+> -		};
+> -		button-3 {
+> -			label = "JoyRight";
+> -			linux,code = <KEY_RIGHT>;
+> -			interrupt-parent = <&stmfx_pinctrl>;
+> -			interrupts = <3 IRQ_TYPE_EDGE_RISING>;
+> -		};
+> -		button-4 {
+> -			label = "JoyUp";
+> -			linux,code = <KEY_UP>;
+> -			interrupt-parent = <&stmfx_pinctrl>;
+> -			interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> -		};
+> -	};
+> -
+> -	leds {
+> -		compatible = "gpio-leds";
+> -		orange {
+> -			gpios = <&stmfx_pinctrl 17 1>;
+> -		};
+> -
+> -		blue {
+> -			gpios = <&stmfx_pinctrl 19 1>;
+> -		};
+> -	}
+> -- 
+> 2.15.0
+> 
