@@ -2,214 +2,210 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC01C3404F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260F8C3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787DE24658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7F1524656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:03:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rtZ6DjLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgBSFCt (ORCPT
+        id S1726213AbgBSFD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:02:49 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41958 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725306AbgBSFCs (ORCPT
+        Wed, 19 Feb 2020 00:03:27 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47768 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbgBSFD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:02:48 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J507WD053003
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:02:47 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubecqys-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:02:46 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 19 Feb 2020 05:02:43 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 05:02:37 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J51es032047418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 05:01:41 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C8C9AE056;
-        Wed, 19 Feb 2020 05:02:36 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4EDAAE05D;
-        Wed, 19 Feb 2020 05:02:35 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 05:02:35 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 28E0EA00DF;
-        Wed, 19 Feb 2020 16:02:31 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 19 Feb 2020 16:02:34 +1100
-In-Reply-To: <20200203151148.00000ae0@Huawei.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-23-alastair@au1.ibm.com>
-         <20200203151148.00000ae0@Huawei.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Wed, 19 Feb 2020 00:03:27 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J53Ccr008615;
+        Wed, 19 Feb 2020 05:03:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to :
+ subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=4wb1PXrowO/bZ2zmYBNcI9KLy084JjW31QmqVq7Tmpk=;
+ b=rtZ6DjLtAePl3u5vyRF4ewe6M6oT4TAPArEUztpLW2ghHOlQYqis+52Y0+rentyxiSM6
+ mF84WCtOQNGIQt+QEscqC6w5woVZzhIB7vFPGdwSX13QVejcwA4DkvBq0TVShuYrAeX0
+ ipIbyK10O+jFx1pbCmR2qLJZDvE8fUpKHaN6VKQgC8RlbA3NKYK5rnuosQuTw2hRmF9C
+ +BNHwpPRQ30qs/fPK1AovGhVbwwZJF18m8U4FgvIURgQ/+j4LmhHn21CvKtv8KDr0Z66
+ t4mbjWGCUcdoBkOHnUXv25FnHsjJlSeIbLFHrLi4gZGB6v5ykKRMI3avPX2ES1g28OWq 4A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2y8udk8j4y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 05:03:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J51mph078154;
+        Wed, 19 Feb 2020 05:03:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2y8ud08knm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 05:03:22 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J53F1m020548;
+        Wed, 19 Feb 2020 05:03:16 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Feb 2020 21:03:15 -0800
+Date:   Tue, 18 Feb 2020 21:03:14 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: Regression: hibernation is broken since
+ e6bc9de714972cac34daa1dc1567ee48a47a9342
+Message-ID: <20200219050314.GA9504@magnolia>
+References: <20200213172351.GA6747@dumbo>
+ <20200213175753.GS6874@magnolia>
+ <20200213183515.GA8798@dumbo>
+ <20200213193410.GB6868@magnolia>
+ <20200213194135.GF6870@magnolia>
+ <20200214211523.GA32637@dumbo>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021905-0012-0000-0000-0000038826FF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021905-0013-0000-0000-000021C4B959
-Message-Id: <d5038cb1f1f4517c2691e85dfdc379bb6848a0db.camel@au1.ibm.com>
-Subject: RE: [PATCH v2 22/27] nvdimm/ocxl: Implement the heartbeat command
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 mlxscore=0 mlxlogscore=927 bulkscore=0
- malwarescore=0 spamscore=0 impostorscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214211523.GA32637@dumbo>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002190033
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190033
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 15:11 +0000, Jonathan Cameron wrote:
-> On Tue, 3 Dec 2019 14:46:50 +1100
-> Alastair D'Silva <alastair@au1.ibm.com> wrote:
+On Fri, Feb 14, 2020 at 10:15:24PM +0100, Domenico Andreoli wrote:
+> [ added linux-pm ]
 > 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > The heartbeat admin command is a simple admin command that
-> > exercises
-> > the communication mechanisms within the controller.
-> > 
-> > This patch issues a heartbeat command to the card during init to
-> > ensure
-> > we can communicate with the card's crontroller.
+> On Thu, Feb 13, 2020 at 11:41:35AM -0800, Darrick J. Wong wrote:
+> > On Thu, Feb 13, 2020 at 11:34:10AM -0800, Darrick J. Wong wrote:
+> > > 
+> > > Well ... you could try the in-kernel hibernate (which I think is what
+> > > 'systemctl hibernate' does), though you'd lose the nifty features of
+> > > µswsusp.
 > 
-> controller
+> Indeed 'systemctl hibernate' works perfectly with v5.6-rc1 in my setup.
 
-That's a perfectly cromulent misspelling ;)
+As I suspected, the in-kernel hibernate can write the memory image to
+the swap file just fine...
 
-> 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/nvdimm/ocxl/scm.c | 43
-> > +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
+> > > In the end, though, I'll probably have to revert all those IS_SWAPFILE
+> > > checks (at least if CONFIG_HIBERNATION=y) since it's not fair to force
+> > > you to totally reconfigure your hibernation setup.
 > > 
-> > diff --git a/drivers/nvdimm/ocxl/scm.c b/drivers/nvdimm/ocxl/scm.c
-> > index 8a30c887b5ed..e8b34262f397 100644
-> > --- a/drivers/nvdimm/ocxl/scm.c
-> > +++ b/drivers/nvdimm/ocxl/scm.c
-> > @@ -353,6 +353,44 @@ static bool scm_is_usable(const struct
-> > scm_data *scm_data)
-> >  	return true;
-> >  }
+> > Also, does the following partial revert fix uswsusp for you?  It'll
+> > allow the direct writes that uswsusp wants to do, while leaving the rest
+> > (mmap writes) in place.
+> > 
+> > --D
+> > 
+> > diff --git a/fs/block_dev.c b/fs/block_dev.c
+> > index 69bf2fb6f7cd..077d9fa6b87d 100644
+> > --- a/fs/block_dev.c
+> > +++ b/fs/block_dev.c
+> > @@ -2001,8 +2001,10 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+> >  	if (bdev_read_only(I_BDEV(bd_inode)))
+> >  		return -EPERM;
 > >  
-> > +/**
-> > + * scm_heartbeat() - Issue a heartbeat command to the controller
-> > + * @scm_data: a pointer to the SCM device data
-> > + * Return: 0 if the controller responded correctly, negative on
-> > error
-> > + */
-> > +static int scm_heartbeat(struct scm_data *scm_data)
-> > +{
-> > +	int rc;
-> > +
-> > +	mutex_lock(&scm_data->admin_command.lock);
-> > +
-> > +	rc = scm_admin_command_request(scm_data,
-> > ADMIN_COMMAND_HEARTBEAT);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = scm_admin_command_execute(scm_data);
-> > +	if (rc)
-> > +		goto out;
-> > +
-> > +	rc = scm_admin_command_complete_timeout(scm_data,
-> > ADMIN_COMMAND_HEARTBEAT);
-> > +	if (rc < 0) {
-> > +		dev_err(&scm_data->dev, "Heartbeat timeout\n");
-> > +		goto out;
-> > +	}
-> > +
-> > +	rc = scm_admin_response(scm_data);
-> > +	if (rc < 0)
-> > +		goto out;
-> > +	if (rc != STATUS_SUCCESS)
-> > +		scm_warn_status(scm_data, "Unexpected status from
-> > heartbeat", rc);
-> > +
-> > +	rc = scm_admin_response_handled(scm_data);
-> > +
-> > +out:
-> > +	mutex_unlock(&scm_data->admin_command.lock);
-> > +	return rc;
-> > +}
-> > +
-> >  /**
-> >   * allocate_scm_minor() - Allocate a minor number to use for an
-> > SCM device
-> >   * @scm_data: The SCM device to associate the minor with
-> > @@ -1508,6 +1546,11 @@ static int scm_probe(struct pci_dev *pdev,
-> > const struct pci_device_id *ent)
-> >  		goto err;
-> >  	}
-> >  
-> > +	if (scm_heartbeat(scm_data)) {
-> > +		dev_err(&pdev->dev, "SCM Heartbeat failed\n");
-> > +		goto err;
-> > +	}
-> > +
-> >  	elapsed = 0;
-> >  	timeout = scm_data->readiness_timeout + scm_data-
-> > >memory_available_timeout;
-> >  	while (!scm_is_usable(scm_data)) {
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+> > +#ifndef CONFIG_HIBERNATION
+> >  	if (IS_SWAPFILE(bd_inode))
+> >  		return -ETXTBSY;
+> > +#endif
+> 
+> This alone is enough to make uswsusp work again.
+> 
+> I propose this alternative:
+> 
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -2001,7 +2001,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+>         if (bdev_read_only(I_BDEV(bd_inode)))
+>                 return -EPERM;
+>  
+> -       if (IS_SWAPFILE(bd_inode))
+> +       /* Hibernation might happen via uswsusp, let it write to the swap */
+> +       if (IS_SWAPFILE(bd_inode) && !IS_ENABLED(CONFIG_HIBERNATION))
 
+...but maybe we could do something a little more targeted?
+
+>                 return -ETXTBSY;
+>  
+>         if (!iov_iter_count(from))
+> 
+> I looked for a more selective way to enable writes to swap at runtime,
+> so I tried with system_entering_hibernation() but it's not yet armed
+> at the point in which uswsusp wants to write to the swap and therefore
+> it does not work.
+
+Hmm.  I was poking around in the uswsusp code and I /think/ it prepares
+the kernel for the userspace-driven hibernation by calling the ioctl
+SNAPSHOT_SET_SWAP_FILE on the device that it's going to use.  If that's
+true, we could have it clear S_SWAPFILE on the chosen device, though I'd
+have to do some more digging to figure out how to restore the flag after
+resuming from hibernation.
+
+--D
+
+> 
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/task_io_accounting_ops.h>
+>  #include <linux/falloc.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/suspend.h>
+>  #include "internal.h"
+> 
+>  struct bdev_inode {
+> @@ -2001,7 +2002,8 @@ ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+>         if (bdev_read_only(I_BDEV(bd_inode)))
+>                 return -EPERM;
+> 
+> -       if (IS_SWAPFILE(bd_inode))
+> +       /* Hibernation might happen via uswsusp, let it write to the swap */
+> +       if (IS_SWAPFILE(bd_inode) && !system_entering_hibernation())
+>                 return -ETXTBSY;
+> 
+>         if (!iov_iter_count(from))
+> 
+> >  	if (!iov_iter_count(from))
+> >  		return 0;
+> > diff --git a/mm/filemap.c b/mm/filemap.c
+> > index 1784478270e1..3df3211abe25 100644
+> > --- a/mm/filemap.c
+> > +++ b/mm/filemap.c
+> > @@ -2920,8 +2920,10 @@ inline ssize_t generic_write_checks(struct kiocb *iocb, struct iov_iter *from)
+> >  	loff_t count;
+> >  	int ret;
+> >  
+> > +#ifndef CONFIG_HIBERNATION
+> >  	if (IS_SWAPFILE(inode))
+> >  		return -ETXTBSY;
+> > +#endif
+> >  
+> >  	if (!iov_iter_count(from))
+> >  		return 0;
+> 
+> The above is not needed in my case but I'm not sure it would not be
+> needed in some other configuration of uswsusp.
+> 
+> Dom
+> 
+> -- 
+> rsa4096: 3B10 0CA1 8674 ACBA B4FE  FCD2 CE5B CF17 9960 DE13
+> ed25519: FFB4 0CC3 7F2E 091D F7DA  356E CC79 2832 ED38 CB05
