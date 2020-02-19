@@ -2,84 +2,105 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9766EC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C769BC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E9924656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A026321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZUBKqcM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBSLYg (ORCPT
+        id S1727046AbgBSLZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:24:36 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10220 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726484AbgBSLYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:24:35 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 36923731F1AD512310EE;
-        Wed, 19 Feb 2020 19:24:33 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
- 19:24:24 +0800
-From:   yu kuai <yukuai3@huawei.com>
-To:     <allison@lohutok.net>, <gregkh@linuxfoundation.org>,
-        <tglx@linutronix.de>, <bianpan2016@163.com>,
-        <kstewart@linuxfoundation.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yukuai3@huawei.com>, <yi.zhang@huawei.com>,
-        <zhengbin13@huawei.com>
-Subject: [PATCH 3/3] NFC: fdp: remove set but not used variable 'client'
-Date:   Wed, 19 Feb 2020 19:23:24 +0800
-Message-ID: <20200219112324.17682-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.17.2
+        Wed, 19 Feb 2020 06:25:34 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39839 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726497AbgBSLZe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:25:34 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g6so9465816plp.6;
+        Wed, 19 Feb 2020 03:25:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=21gY3/MhljLsWlz+/3WUpCFpSYC8nAK43SlfTRohGYA=;
+        b=aZUBKqcMCqPDYYwW2sZZB72MLf0SqltcpMGBffZq+ZDdKMXMFyCDBdPVuH5p7ucN0I
+         P8NYK3Ghvj4eNHStH7Gre7Q/tP6vJBUFS0jUs4HntsVgWyX3VuBDqiSw86H/nCKId1N3
+         jvzrEzzdy7Th8jdiFsf3ACPF4kIsrsmn2EYsn1aS73SbYFIEUEt3Y6ppfxD+JBQHcUQ2
+         wIJAaRORFz7OC5UWjS/0MLRGmJuzm0IGZJLEIBWtLHOsv1Yl+Lr4NwVm1VePJiHQn40T
+         9vcENKYT8P0p2Yaro88zdaJZXjx0cp9RVLVIhB47NSk5jl7zdtC5+ah5DeGxWX2Ef+mP
+         UnCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=21gY3/MhljLsWlz+/3WUpCFpSYC8nAK43SlfTRohGYA=;
+        b=ddJay6nDfH7NRthjuJTwDRsZMJj7tDwuAYz9qFz5cLxcElsZD5szBPjdHdZ1HuUWqA
+         +h5QI6ibZAh7nQpQT6Iw1oTroYrMbm1abs/SPILSZe9uBH8o/yDLvkf6U0tm6AQw2oL3
+         2EXpycWonklvg5PLWJy4uWmu9o9nIMz1UKywlyx3pbG/vxrzJSr/Xz4KEhG6cKGi4pEr
+         Wq1dRVGGEwPT3DuHYMWcQWQQOIzET1XJ3xJzMJKWrqoCakSkWvp/jkCARokyZf8tmPEl
+         hp5aVMy6q8Cva6F8Fx1lorjRLkyvujEB6ke1N566hpJ07NPajdnwCyVQAPmUNt0owu8g
+         Fy9g==
+X-Gm-Message-State: APjAAAUvf7YYsMDdoXRcJiKuzp6seqmzm3WBfTMslZ9BBrSj2eRJztit
+        LFJ1DhcBAjZIqU9yUq1hu9Rz0igCpMb48OMx3yw=
+X-Google-Smtp-Source: APXvYqxfXf2dLIGpHYVUEutJPxg5jBn1pfUFhIu+hcxD/793xLK9qKjFBsWdAUmoCxU2LbsdXUp9J3bdII57MKTX63M=
+X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr8607090pjc.20.1582111533396;
+ Wed, 19 Feb 2020 03:25:33 -0800 (PST)
 MIME-Version: 1.0
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk> <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+In-Reply-To: <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Feb 2020 13:25:25 +0200
+Message-ID: <CAHp75VeJm-hbbtVAu69ZbDCCjs9cUK922D=hhW-MVu5OxczDzg@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Wed, Feb 19, 2020 at 1:21 PM Ilya Dryomov <idryomov@gmail.com> wrote:
+> On Wed, Feb 19, 2020 at 9:21 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
+> >
+> > Extend %pe to pretty-print NULL in addition to ERR_PTRs,
+> > i.e. everything IS_ERR_OR_NULL().
 
-drivers/nfc/fdp/i2c.c: In function ‘fdp_nci_i2c_irq_thread_fn’:
-drivers/nfc/fdp/i2c.c:205:21: warning: variable ‘client’ set but
-not used [-Wunused-but-set-variable]
+...
 
-It is never used, and so can be removed.
+> > +       [0] = "NULL",
 
-Signed-off-by: yu kuai <yukuai3@huawei.com>
----
- drivers/nfc/fdp/i2c.c | 3 ---
- 1 file changed, 3 deletions(-)
+> > +       test("[NULL]", "[%pe]", NULL);
 
-diff --git a/drivers/nfc/fdp/i2c.c b/drivers/nfc/fdp/i2c.c
-index 257fdd7a28c7..31de9a7e70f8 100644
---- a/drivers/nfc/fdp/i2c.c
-+++ b/drivers/nfc/fdp/i2c.c
-@@ -202,7 +202,6 @@ static int fdp_nci_i2c_read(struct fdp_i2c_phy *phy, struct sk_buff **skb)
- static irqreturn_t fdp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
- {
- 	struct fdp_i2c_phy *phy = phy_id;
--	struct i2c_client *client;
- 	struct sk_buff *skb;
- 	int r;
- 
-@@ -211,8 +210,6 @@ static irqreturn_t fdp_nci_i2c_irq_thread_fn(int irq, void *phy_id)
- 		return IRQ_NONE;
- 	}
- 
--	client = phy->i2c_dev;
--
- 	r = fdp_nci_i2c_read(phy, &skb);
- 
- 	if (r == -EREMOTEIO)
+> FWIW I was about to post a patch that just special cases NULL here.
+>
+> I think changing errname() to return "NULL" for 0 is overkill.
+> People will sooner or later discover that function and start using it
+> in contexts that don't have anything to do with pointers.  Returning
+> _some_ string for 0 (instead of NULL) makes it very close to standard
+> strerror(), and "NULL" for 0 (i.e. success) seems rather odd.
+
+%pe is specifically for _pointers_. I don't see a point in your comment.
+
 -- 
-2.17.2
-
+With Best Regards,
+Andy Shevchenko
