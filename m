@@ -2,69 +2,83 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBE8C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37ACBC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E518206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:52:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X0rDPJg7"
+	by mail.kernel.org (Postfix) with ESMTP id 0B83E206ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBSOwr (ORCPT
+        id S1726784AbgBSOxV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:52:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44034 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSOwq (ORCPT
+        Wed, 19 Feb 2020 09:53:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:38431 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSOxU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:52:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uMegKaz1HfLpF2g7p7DlQ/EBiCvWUcUbr7nX80vF5Lc=; b=X0rDPJg7QU0PJJIjNaGAqpvYpn
-        /6hHDMHrdwYkFf1WvaYRTaaFo3AeckX2+ZMOn/Nm+JcW/3hxiePAiir6lvCdGk/P9uGHhfEvpwucR
-        bDgJplk4ZCNgyTGHvDtEAXPpGMvUHcNEbcpg/CZuZzZ8G0wxOm3ivsGEcGAf/pSiwD7Ps2HXhUwxB
-        /EDsb5LGA3euGi7WrNg3xJ0jEsmipdOVSe+xRb9+nw2AsqZgT8EzK22Jb+prE9J0v1S+vNMRg8lPH
-        dfLqR0GpfpnFRQ0KGllMdG0K8ZzeSgnbnF1b+ANwO8esQ2ZRQlWzlSH06wNuzINQh6c12fiPoXmuF
-        OO0s+XQw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4QiU-0007wz-2Y; Wed, 19 Feb 2020 14:52:46 +0000
-Date:   Wed, 19 Feb 2020 06:52:46 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 07/19] mm: Put readahead pages in cache earlier
-Message-ID: <20200219145246.GA29869@infradead.org>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-12-willy@infradead.org>
- <e3671faa-dfb3-ceba-3120-a445b2982a95@nvidia.com>
- <20200219144117.GP24185@bombadil.infradead.org>
+        Wed, 19 Feb 2020 09:53:20 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j4Qiu-00063u-0H; Wed, 19 Feb 2020 15:53:12 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 9D842103A05; Wed, 19 Feb 2020 15:53:11 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH] xen: Enable interrupts when calling _cond_resched()
+In-Reply-To: <8808612b-11c2-f7b8-f027-7ff92e992c50@suse.com>
+References: <87tv3mq1rm.fsf@nanos.tec.linutronix.de> <8808612b-11c2-f7b8-f027-7ff92e992c50@suse.com>
+Date:   Wed, 19 Feb 2020 15:53:11 +0100
+Message-ID: <87h7zmpr1k.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219144117.GP24185@bombadil.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 06:41:17AM -0800, Matthew Wilcox wrote:
-> #define readahead_for_each(rac, page)                                   \
->         while ((page = readahead_page(rac)))
-> 
-> No more readahead_next() to forget to add to filesystems which don't use
-> the readahead_for_each() iterator.  Ahem.
+Jürgen Groß <jgross@suse.com> writes:
 
-And then kill readahead_for_each and open code the above to make it
-even more obvious?
+> On 19.02.20 12:01, Thomas Gleixner wrote:
+>> xen_maybe_preempt_hcall() is called from the exception entry point
+>> xen_do_hypervisor_callback with interrupts disabled.
+>> 
+>> _cond_resched() evades the might_sleep() check in cond_resched() which
+>> would have caught that and schedule_debug() unfortunately lacks a check
+>> for irqs_disabled().
+>> 
+>> Enable interrupts around the call and use cond_resched() to catch future
+>> issues.
+>> 
+>> Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>> ---
+>>   drivers/xen/preempt.c |    4 +++-
+>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>> 
+>> --- a/drivers/xen/preempt.c
+>> +++ b/drivers/xen/preempt.c
+>> @@ -33,8 +33,10 @@ asmlinkage __visible void xen_maybe_pree
+>>   		 * cpu.
+>>   		 */
+>>   		__this_cpu_write(xen_in_preemptible_hcall, false);
+>> -		_cond_resched();
+>> +		local_irq_enable();
+>> +		cond_resched();
+>>   		__this_cpu_write(xen_in_preemptible_hcall, true);
+>> +		local_irq_disable();
+>
+> Could you please put the call of local_irq_disable() directly after the
+> cond_resched() call to make the result symmetric regarding writing of
+> xen_in_preemptible_hcall and irq enable/disable?
+
+Darn. Of course does this need to be there. Stupid me, let me resend.
