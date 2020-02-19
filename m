@@ -2,187 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC0CC18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6101C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AE7208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A995D208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ZICvLtBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgBSTPb (ORCPT
+        id S1726851AbgBSTQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:15:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8006 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgBSTPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:15:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 11:15:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,461,1574150400"; 
-   d="scan'208";a="408537891"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 19 Feb 2020 11:15:28 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j4Uoh-000GYr-Vi; Thu, 20 Feb 2020 03:15:27 +0800
-Date:   Thu, 20 Feb 2020 03:14:51 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:ras/urgent] BUILD SUCCESS
- 51dede9c05df2b78acd6dcf6a17d21f0877d2d7b
-Message-ID: <5e4d892b.D4qwYzEZOHJuC148%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 19 Feb 2020 14:16:21 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42936 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbgBSTQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:16:21 -0500
+Received: by mail-qk1-f196.google.com with SMTP id o28so1187815qkj.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mZCRvJUEd0aeZMSM2KiDRl8M85Gpn4sTqFj3MDhSdPs=;
+        b=ZICvLtBj1Wsb4nDHlvOkhJNjp3TK0gM17yFa9MWXljGt5qzSyWPJyOsQ2sFarzK7fo
+         BUjh3r6byLkmeK3UhKrBX+McO538JJpggApObSaFa7bl67ekDkGK29iwsMiq41gfPvMX
+         4UHHiWljqNjxb1OKPRXzIXh8ymNLCJGtes2Zcn12WpgyyO+0SUmRejsSms4mxW7hSzgU
+         nKjNF019p2KE9fxskrQvcbZt5XkL0ZWaIaAcdZtK7/I/2r4+s7VR/gLAVBzZknuwqgPw
+         s7kQMRNLecMpnp/YU05mEVI/pqk3i00TvTx+a7189OODFLRBJcRg3laDJqIQubVaU+LO
+         924w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mZCRvJUEd0aeZMSM2KiDRl8M85Gpn4sTqFj3MDhSdPs=;
+        b=trl9JyrTecRq23qnw5RJHn+Nfec5T+OhsdPJLbHUmcknnN1/DwFthdAyaozl4APtVj
+         A4stOu9xdWHVmijyioWR2YNqGqp5J+xiTKn6GavWbUXmeXaYDc9x6YJF9Ss50wgPvGHu
+         QxFMLGdKoKbJKCx2/jpewT0z+sbclUMFNyEpdesRzi7xh9khK52kePDKI092PKdnKymX
+         1baRQI6uFqO/JNF+Mn8o7ntWfUe7SZvSptv3NOW/+cVPNs6jYnfJY1VHEdEV1AdkZvMe
+         k4AAudGta2/HDNkk8N+gB0ovEzRlXn4qqhqVwWiX836eu9Bmbbm0e5reWX0jU73I0+FT
+         5nIQ==
+X-Gm-Message-State: APjAAAVLHBPPVHyHEyWdZEK52vUQR/93leEoKqQgefn5A2SrFwuI59i7
+        fSvdFvgFUCsE/UTqTHolZUWtouGdSj0=
+X-Google-Smtp-Source: APXvYqz9amEfdzGX4zShoEWYftKfNorEjDz56/h4hIyjAMq7P48d1ZPghHUVh4aopdc5sI0lKx4huw==
+X-Received: by 2002:ae9:e207:: with SMTP id c7mr24017223qkc.128.1582139780194;
+        Wed, 19 Feb 2020 11:16:20 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:3bde])
+        by smtp.gmail.com with ESMTPSA id b84sm310728qkg.90.2020.02.19.11.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 11:16:19 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:16:18 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200219191618.GB54486@cmpxchg.org>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200219183731.GC11847@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  ras/urgent
-branch HEAD: 51dede9c05df2b78acd6dcf6a17d21f0877d2d7b  x86/mce/amd: Fix kobject lifetime
+On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
+> On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
+> > We have received regression reports from users whose workloads moved
+> > into containers and subsequently encountered new latencies. For some
+> > users these were a nuisance, but for some it meant missing their SLA
+> > response times. We tracked those delays down to cgroup limits, which
+> > inject direct reclaim stalls into the workload where previously all
+> > reclaim was handled my kswapd.
+> 
+> I am curious why is this unexpected when the high limit is explicitly
+> documented as a throttling mechanism.
 
-elapsed time: 5915m
+Memory.high is supposed to curb aggressive growth using throttling
+instead of OOM killing. However, if the workload has plenty of easily
+reclaimable memory and just needs to recycle a couple of cache pages
+to permit an allocation, there is no need to throttle the workload -
+just as there wouldn't be any need to trigger the OOM killer.
 
-configs tested: 124
-configs skipped: 96
+So it's not unexpected, but it's unnecessarily heavy-handed: since
+memory.high allows some flexibility around the target size, we can
+move the routine reclaim activity (cache recycling) out of the main
+execution stream of the workload, just like we do with kswapd. If that
+cannot keep up, we can throttle and do direct reclaim.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+It doesn't change the memory.high semantics, but it allows exploiting
+the fact that we have SMP systems and can parallize the book keeping.
 
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc64                             defconfig
-parisc                            allnoconfig
-alpha                               defconfig
-riscv                               defconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-i386                              allnoconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-arm                              allmodconfig
-arm64                            allmodconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200219
-x86_64               randconfig-a002-20200219
-x86_64               randconfig-a003-20200219
-i386                 randconfig-a001-20200219
-i386                 randconfig-a002-20200219
-i386                 randconfig-a003-20200219
-alpha                randconfig-a001-20200219
-m68k                 randconfig-a001-20200219
-nds32                randconfig-a001-20200219
-parisc               randconfig-a001-20200219
-riscv                randconfig-a001-20200219
-c6x                  randconfig-a001-20200219
-h8300                randconfig-a001-20200219
-microblaze           randconfig-a001-20200219
-nios2                randconfig-a001-20200219
-sparc64              randconfig-a001-20200219
-csky                 randconfig-a001-20200219
-openrisc             randconfig-a001-20200219
-s390                 randconfig-a001-20200219
-xtensa               randconfig-a001-20200219
-x86_64               randconfig-b001-20200219
-x86_64               randconfig-b002-20200219
-x86_64               randconfig-b003-20200219
-i386                 randconfig-b001-20200219
-i386                 randconfig-b002-20200219
-i386                 randconfig-b003-20200219
-x86_64               randconfig-c001-20200219
-x86_64               randconfig-c002-20200219
-x86_64               randconfig-c003-20200219
-i386                 randconfig-c001-20200219
-i386                 randconfig-c002-20200219
-i386                 randconfig-c003-20200219
-i386                 randconfig-e001-20200219
-i386                 randconfig-e003-20200219
-x86_64               randconfig-e001-20200219
-x86_64               randconfig-e002-20200219
-i386                 randconfig-e002-20200219
-x86_64               randconfig-e003-20200219
-x86_64               randconfig-g001-20200219
-x86_64               randconfig-g002-20200219
-x86_64               randconfig-g003-20200219
-i386                 randconfig-g001-20200219
-i386                 randconfig-g002-20200219
-i386                 randconfig-g003-20200219
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+> > This patch adds asynchronous reclaim to the memory.high cgroup limit
+> > while keeping direct reclaim as a fallback. In our testing, this
+> > eliminated all direct reclaim from the affected workload.
+> 
+> Who is accounted for all the work? Unless I am missing something this
+> just gets hidden in the system activity and that might hurt the
+> isolation. I do see how moving the work to a different context is
+> desirable but this work has to be accounted properly when it is going to
+> become a normal mode of operation (rather than a rare exception like the
+> existing irq context handling).
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yes, the plan is to account it to the cgroup on whose behalf we're
+doing the work.
+
+The problem is that we have a general lack of usable CPU control right
+now - see Rik's work on this: https://lkml.org/lkml/2019/8/21/1208.
+For workloads that are contended on CPU, we cannot enable the CPU
+controller because the scheduling latencies are too high. And for
+workloads that aren't CPU contended, well, it doesn't really matter
+where the reclaim cycles are accounted to.
+
+Once we have the CPU controller up to speed, we can add annotations
+like these to account stretches of execution to specific
+cgroups. There just isn't much point to do it before we can actually
+enable CPU control on the real workloads where it would matter.
+
+[ This is generally work in process: for example, if you isolate
+  workloads with memory.low, kswapd cpu time isn't accounted to the
+  cgroup that causes it. Swap IO issued by kswapd isn't accounted to
+  the group that is getting swapped. The memory consumed by struct
+  cgroup itself, the percpu allocations for the vmstat arrays etc.,
+  which is sizable, are not accounted to the cgroup that creates
+  subgroups, and so forth. ]
