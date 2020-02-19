@@ -2,125 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864CDC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5855DC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEE0208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27821208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sMELI4Dv";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sMELI4Dv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iuSeZQwe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgBSPge (ORCPT
+        id S1726927AbgBSPgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:36:34 -0500
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:50724 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726645AbgBSPgd (ORCPT
+        Wed, 19 Feb 2020 10:36:52 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36799 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSPgv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:36:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C8E7E8EE3C5;
-        Wed, 19 Feb 2020 07:36:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582126592;
-        bh=Olisob633QW5LfExi8a7Lh6PWpLjGpBMyExTbRd7Pdk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sMELI4Dv6IfAbGlqQCjDKaFb+F5bS8Ikx7LEV6RQPYrgTG4tqtMwI5n/x9AHlu21V
-         lji/5z5uQav4OvhsoGGnbM5e7HpCKAkv91/3YIL5FJT1M2FMitGqNkAydb+5BoQaWT
-         gT0awUIFgCzQyD8Bw/W27GG1ZGAzxGF5C2fA5Qro=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id DuU4QiKOBDg9; Wed, 19 Feb 2020 07:36:32 -0800 (PST)
-Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DC9F58EE144;
-        Wed, 19 Feb 2020 07:36:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1582126592;
-        bh=Olisob633QW5LfExi8a7Lh6PWpLjGpBMyExTbRd7Pdk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=sMELI4Dv6IfAbGlqQCjDKaFb+F5bS8Ikx7LEV6RQPYrgTG4tqtMwI5n/x9AHlu21V
-         lji/5z5uQav4OvhsoGGnbM5e7HpCKAkv91/3YIL5FJT1M2FMitGqNkAydb+5BoQaWT
-         gT0awUIFgCzQyD8Bw/W27GG1ZGAzxGF5C2fA5Qro=
-Message-ID: <1582126590.10671.18.camel@HansenPartnership.com>
-Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     =?ISO-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, smbarber@chromium.org,
-        Seth Forshee <seth.forshee@canonical.com>,
-        linux-security-module@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Date:   Wed, 19 Feb 2020 07:36:30 -0800
-In-Reply-To: <20200219122752.jalnsmsotigwxwsw@wittgenstein>
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
-         <1582069856.16681.59.camel@HansenPartnership.com>
-         <20200219122752.jalnsmsotigwxwsw@wittgenstein>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 10:36:51 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so846916ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:36:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6tTYqiI2XE0FI71U+lA9HyQqoyVK3A/0rXuG1/SFCPQ=;
+        b=iuSeZQwearV2fKHrfA+H+kQGrsn3B9fAltXjE6wipUFmOXwOK+J4Mqs3QDTJzkAey0
+         90z8swo5Ztdjovby+eyf2wHlciMMjVx37FYy66KbOBdqu4KIPQWP8B3TrZAWuPJnjVbl
+         ZV0U+j/0ZO2wPNb7emK12mdJa9Puv2flmwjHx/NgzvlYCe208h7LIumAE19ATIBBPVk6
+         imugZxDTCbHBbmEH5GuEN6VWwH9w/KNmYs2CjA1mcFdwcY2aBCqo/uPOOsr4rQ+X/kV8
+         7Kqf2HMeMuGRZSPq0SJYKSZ8nuPEs+dHalyKA7bXZmEsaNnrgozJXmUWTv7GnsroRVfU
+         dcyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6tTYqiI2XE0FI71U+lA9HyQqoyVK3A/0rXuG1/SFCPQ=;
+        b=lfpJBiXSMFnMgIw5ghmIeIaG8Q2MuHwc0M0yK51mCPaC1Q11KFFYPPK2zltOifkqdj
+         m+D+pKyMiEJgpoWOPdw2igeaxhi0mOR6J7jKQ/PtOO/8HNEr8eGJvqdIUQ6y6dGrE9Xp
+         KP+IUDfMAcjgVnhrbO5JxA1isxQFnh6S4X4STK+Hr0cBid4KAZarUpb5tESMonFSzPyP
+         EM3MncIQMh76+JQb+WM5SXiYRJdY1nb4wjhGsiPB4QF1G097NcIqzXefBPGRlVpA1kXR
+         1sB8l8lHX6FmcR/NBjo41KHF/3Zgbc6zoU/8mAec5E2SuayQa3mAz26lxNfgwcUqEVby
+         1Pgg==
+X-Gm-Message-State: APjAAAUEfe+aYU9FTql/OmaoQU5y+6xnhbXXUtOc1oL3ufdzPLd2nOmj
+        mynO5wYmDwvo23ispKswwRqHEQ==
+X-Google-Smtp-Source: APXvYqzx6nhZsTlXRtRpmdMR+DniVGZB2pzu5JFzIZhLE1ehK6HOgUsK5ph4YaJ7e7rkNRpNq/K9tA==
+X-Received: by 2002:a2e:5304:: with SMTP id h4mr16066587ljb.75.1582126608365;
+        Wed, 19 Feb 2020 07:36:48 -0800 (PST)
+Received: from genomnajs.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id s15sm28532ljs.58.2020.02.19.07.36.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:36:47 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2] irqchip: vic: Support cascaded VIC in device tree
+Date:   Wed, 19 Feb 2020 16:36:44 +0100
+Message-Id: <20200219153644.137293-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-19 at 13:27 +0100, Christian Brauner wrote:
-> On Tue, Feb 18, 2020 at 03:50:56PM -0800, James Bottomley wrote:
-> > On Tue, 2020-02-18 at 15:33 +0100, Christian Brauner wrote:
-[...]
-> > > With fsid mappings we can solve this by writing an id mapping of
-> > > 0 100000 100000 and an fsid mapping of 0 300000 100000. On
-> > > filesystem access the kernel will now lookup the mapping for
-> > > 300000 in the fsid mapping tables of the user namespace. And
-> > > since such a mapping exists, the corresponding files will have
-> > > correct ownership.
-> > 
-> > So I did compile this up in order to run the shiftfs tests over it
-> > to see how it coped with the various corner cases.  However, what I
-> > find is it simply fails the fsid reverse mapping in the
-> > setup.  Trying to use a simple uid of 0 100000 1000 and a fsid of
-> > 100000 0 1000 fails the entry setuid(0) call because of this code:
-> 
-> This is easy to fix. But what's the exact use-case?
+When transitioning some elder platforms to device tree it
+becomes necessary to cascade VIC IRQ chips off another
+interrupt controller.
 
-Well, the use case I'm looking to solve is the same one it's always
-been: getting a deprivileged fake root in a user_ns to be able to write
-an image at fsuid 0.
+Tested with the cascaded VIC on the Integrator/AP attached
+logic module IM-PD1.
 
-I don't think it's solvable in your current framework, although
-allowing the domain to be disjoint might possibly hack around it.  The
-problem with the proposed framework is that there are no backshifts
-from the filesystem view, there are only forward shifts to the
-filesystem view.  This means that to get your framework to write a
-filesystem at fsuid 0 you have to have an identity map for fsuid. Which
-I can do: I tested uid shift 0 100000 1000 and fsuid shift 0 0 1000. 
-It does all work, as you'd expect because the container has real fs
-root not a fake root.  And that's the whole problem:  Firstly, I'm fs
-root for any filesystem my userns can see, so any imprecision in
-setting up the mount namespace of the container and I own your host and
-secondly any containment break and I'm privileged with respect to the
-fs uid wherever I escape to so I will likewise own your host.
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Drop the default assignment of 0 as parent IRQ.
+- This is not tagged as fix: no regression.
+---
+ drivers/irqchip/irq-vic.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-The only way to keep containment is to have a zero fsuid inside the
-container corresponding to a non-zero one outside.  And the only way to
-solve the imprecision in mount namespace issue is to strictly control
-the entry point at which the writing at fsuid 0 becomes active.
-
-James
-
-
+diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
+index f3f20a3cff50..3c87d925f74c 100644
+--- a/drivers/irqchip/irq-vic.c
++++ b/drivers/irqchip/irq-vic.c
+@@ -509,9 +509,7 @@ static int __init vic_of_init(struct device_node *node,
+ 	void __iomem *regs;
+ 	u32 interrupt_mask = ~0;
+ 	u32 wakeup_mask = ~0;
+-
+-	if (WARN(parent, "non-root VICs are not supported"))
+-		return -EINVAL;
++	int parent_irq;
+ 
+ 	regs = of_iomap(node, 0);
+ 	if (WARN_ON(!regs))
+@@ -519,11 +517,14 @@ static int __init vic_of_init(struct device_node *node,
+ 
+ 	of_property_read_u32(node, "valid-mask", &interrupt_mask);
+ 	of_property_read_u32(node, "valid-wakeup-mask", &wakeup_mask);
++	parent_irq = of_irq_get(node, 0);
++	if (parent_irq < 0)
++		parent_irq = 0;
+ 
+ 	/*
+ 	 * Passing 0 as first IRQ makes the simple domain allocate descriptors
+ 	 */
+-	__vic_init(regs, 0, 0, interrupt_mask, wakeup_mask, node);
++	__vic_init(regs, parent_irq, 0, interrupt_mask, wakeup_mask, node);
+ 
+ 	return 0;
+ }
+-- 
+2.24.1
 
