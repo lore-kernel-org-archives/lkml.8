@@ -2,194 +2,296 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89762C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB3AC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF4D24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41E4C24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="iCVA5M5C";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="ZmdqgKm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbgBSAhR (ORCPT
+        id S1726811AbgBSAjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:37:17 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:35011 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbgBSAhP (ORCPT
+        Tue, 18 Feb 2020 19:39:39 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:59852 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726595AbgBSAji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:37:15 -0500
-Received: by mail-il1-f200.google.com with SMTP id h18so18611595ilc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:37:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=G0UMOdy6Hx8tmKoct5pIw4vcRna5accTPF/IPfYBhh8=;
-        b=FSR0LxCATgb6YiYGgy4CJUirl3lNrZF/auel8U0tbajvjWAnPO2TIGHDeMesvEyGIe
-         8XgasrK9iG7r6zZHdVyobJjO4xCP782k9AvnCO380IXv4PsnDRfStnB96cDSenDBqaX2
-         mFFQwbaXYLAC7nnpCWpa66Fwf4MUNnObn/93NBoOYORYUTylJemBrJ20HGL1nMEjTLkn
-         d4LRAsWarueK1TuSS8PZArS7IeuGw30etwUmXT8pMRNLm3HJGks4YV4QRg7fyYReuZp6
-         nSWd3lpCTjaMp1o0SuD7xhSvrrEc8ZhZdNuHgF6s7PSIyqxoNDWW3x9MAuBjNQhb+clf
-         fM5w==
-X-Gm-Message-State: APjAAAVF5VF9BNEXhTCPCfuvBmAS3BjifKvelUYe2PPSovCt3qfd58IN
-        sz1URJ4r0+ZiiV4wFTI7h3cXIO0ZfaLtc9imEYSJYGvXwlML
-X-Google-Smtp-Source: APXvYqxOg5ZusHJNKTp/6eLXbbdM4Rp9vPcRFhbcxm0I2XjrAgydk5UUE1yoPNaa6Fjw6Hh2aQjFeU4NrVNqHINA9iSJrgBj5SuJ
+        Tue, 18 Feb 2020 19:39:38 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 07A2140122;
+        Wed, 19 Feb 2020 00:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1582072777; bh=NgOiwbT4DgxxPdn2w/EgICJ0ErxsALwSOL9VJ93EEJo=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=iCVA5M5CCyMyUD7jvi8k6r1vX3kauT17lFJlGXCunRSqeRUgPa1xHq021JkrbbkkW
+         Vbj9B3pZzKu1jj94qf21iQZ6Hn1PXWdd5EuoQ4uM0kvoRwaqVewcWAljOrVT9eHYjG
+         8dH1PP832fbxKz7zqA/aZKDc30PLB0BzLSwWDR8AIOKa+Ih8lEjenWAfj/u+DcbmGc
+         ZvYR/ikDGjS5A0u328KGyRxk9aOg5Fl2CcGMvP0767Cq7cmtgX13VKifmqZDouAryT
+         r8m9A8hLwbfdVZ2Ez27vpdMSwuKCoBaqww8wGuU6uyK8mHjDKj6cR9f/cbOb/xAc+x
+         Tg/8gpUZjxA4w==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 59C82A0079;
+        Wed, 19 Feb 2020 00:39:33 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 18 Feb 2020 16:39:33 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 18 Feb 2020 16:39:32 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cNXeiy+1Rscx30QCiVM+QMc84NVe+RkcrGp/lRwRDxLKx9aNv7yhF0ohl+V7EC3qovJP8oTKrFN5dEx7RjG+9uvViJf3VSVoMAhb6lWf8H7KbNSTuxDYpIX8iHtNTgt7QPnkw6InNuZIEMN1thKkkJDIGjUwswahLPXU5CC/ly4JOfHUs+eFsi8WRVrVJrRLTKZEchyBFrfjGut0JABz/n2/tmvT5MoAflxGjLJj9AE+eMU62lF0FX1SxlwRaJCJ/49m+1cP3Lkx9TjqUEGmzZKrJoDACxjDhXx7SK92aMqWJzI5B5nH9s4t8EkwmnSffQTe2JL0f/DMCS2LrqkIDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/HWQJPkoxFSoKPbqmF6KdNYVIBEAlWh4GTlbUxvRcL4=;
+ b=UuEY/NVrxVz7okdZzSt4lgUu2RuDvyva1dewJJXrubZ5Fru4Q/tUIlzYkP9/wc5502/UX8CftWbHSUbM0ZfSDEK/L2Wo5UyQUZcebaRRSPGudWJh7h2mvQ2tppMuHtf501mTQgPCMyOGF8NWXuwHXEy3IwCUqSKqFq2uqiTaF4JJdjyqQcq3pKj8xBPsF8cDRSQWDDwjvlv41QghtK2dEfX214dXP8EVz1SlO9MlGdwu3muJYKxAYSImlYYOJVI/ms80F7OR2VSYGdw5K6jLrdTBcDkJT0Jzp4GEIH83gk/aptkL0sTPoe4L+RB0+GcF4KI6LNrmPU2vp+0GV6VObg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/HWQJPkoxFSoKPbqmF6KdNYVIBEAlWh4GTlbUxvRcL4=;
+ b=ZmdqgKm/6q+hMLsuUNnydlmGDeM4nMSXpIkEIMesDBMgg7ZkQVHdrt1pa13uyXSNSuTkU0SWnrw7N7QOfxfIprlv3u/AOw8y60fILZxKqz5odWSBflcfn6Nu63Jc37WTI7ERHPzKOP18yfm8zk4AunfAQBW2Aj0K8jeY5L+QT88=
+Received: from CH2PR12MB4216.namprd12.prod.outlook.com (20.180.6.151) by
+ CH2PR12MB4296.namprd12.prod.outlook.com (20.180.16.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Wed, 19 Feb 2020 00:39:31 +0000
+Received: from CH2PR12MB4216.namprd12.prod.outlook.com
+ ([fe80::c8d1:bea7:c855:bcfe]) by CH2PR12MB4216.namprd12.prod.outlook.com
+ ([fe80::c8d1:bea7:c855:bcfe%5]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 00:39:31 +0000
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Vitor Soares <Vitor.Soares@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: RE: [PATCH v3 0/5] Introduce i3c device userspace interface
+Thread-Topic: [PATCH v3 0/5] Introduce i3c device userspace interface
+Thread-Index: AQHV5rqI90LrTPLnik2TPIdRwWN8OaghqdAQ
+Date:   Wed, 19 Feb 2020 00:39:31 +0000
+Message-ID: <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
+References: <cover.1582069402.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1582069402.git.vitor.soares@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
+ =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
+ =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctNDg1YWQzNTQtNTJiMC0xMWVhLTgyOGQtYjgwOGNm?=
+ =?us-ascii?Q?NTlkN2ZjXGFtZS10ZXN0XDQ4NWFkMzU1LTUyYjAtMTFlYS04MjhkLWI4MDhj?=
+ =?us-ascii?Q?ZjU5ZDdmY2JvZHkudHh0IiBzej0iMzUyOSIgdD0iMTMyMjY1NDYzNjkzMjk4?=
+ =?us-ascii?Q?OTMxIiBoPSJIWGJCMm11SDEyUWROK0hpczZURnJOUjU2M3c9IiBpZD0iIiBi?=
+ =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQUR6?=
+ =?us-ascii?Q?ekgwTHZlYlZBZHBwQkRxTEFhTG0ybWtFT29zQm91WU9BQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBUUFCQUFBQXNQcFJHUUFBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
+ =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
+ =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
+ =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
+ =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
+ =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
+ =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
+ =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
+ =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
+ =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
+ =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
+ =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
+ =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
+ =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
+ =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
+ =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
+ =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
+ =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
+ =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
+ =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
+ =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
+ =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
+ =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
+ =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
+ =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=soares@synopsys.com; 
+x-originating-ip: [2.83.222.20]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f2a20bda-90c1-4a79-f125-08d7b4d42f2a
+x-ms-traffictypediagnostic: CH2PR12MB4296:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR12MB42966F8CE0B57774FAC5DFB7AE100@CH2PR12MB4296.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(396003)(136003)(366004)(346002)(199004)(189003)(64756008)(55016002)(66446008)(66556008)(9686003)(966005)(478600001)(33656002)(71200400001)(86362001)(52536014)(66946007)(76116006)(186003)(8936002)(6916009)(81166006)(4326008)(26005)(5660300002)(54906003)(66476007)(81156014)(8676002)(7696005)(6506007)(2906002)(316002)(42413003);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR12MB4296;H:CH2PR12MB4216.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q0N9vGH5KNW0r2Y8fnfRQZiDR/i74oHSEq7TFtEfqba6NWVMvtkPPQx/CoNMSaq/dWUEGeSfRoZ2bPm6SvkHYVX/ceLdeDUZ9pDDXsdYU4NAgc996/hQZw8W1/WvfjNiGDUk8zVhkB8ysxy98SOrxOfgG4+/KidJbKWjHYBO9UcAe5XYKNgmP3BcXqZnFBBL5VI/75BwaogHVM2qWhAVuzpsqTUAxGdL/mBiEu1EA9Z8YwXyy+frSqv8CVYDYuGd3TmFeZFUq9ZRiwBonGpMyr47IXspFZj+oVWJAzH2l2wVI5cOf0NGjzgcbw3EmSawC+rn6Xt/Ljl1h68LOSquybbCna0VEdvFZGFyd0w526cFkCDyFUjPKuPhZSV0lP9RIw6vkCGwTJUCf4l8TstysEoj77nOG8NejhXTb1fvI+k5+HzVffvQLijtu9mBluOrKUu7AYMIpkoy26G8rniuLOUhh42mMnlO9eYGWxeJ9mWUQXuoCblr214fR4QScrc5IaUS5eA9XNWlo94zMaqPjZQj8Ip3Q0V+Rw2Nj3NKPLKmf4WTCLfE3nB00DRjwcwi
+x-ms-exchange-antispam-messagedata: NMuRwhx4gMIdYtT3ChR1hIOVLe3P2cvMZhJ4+ciWjTPAwa7Lx8dDvlSLZYgH8uHe/6Ckwf3hyX5b7ORrQF73dAXK/1WtKRZ2O0MA1G2lDPW0YFZgvzbwuG91oaYpZmRI2baAKJ3LLSNMGwDGMEOgDQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a6b:e411:: with SMTP id u17mr18784050iog.39.1582072633265;
- Tue, 18 Feb 2020 16:37:13 -0800 (PST)
-Date:   Tue, 18 Feb 2020 16:37:13 -0800
-In-Reply-To: <0000000000000973ee059eaf4de6@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000509454059ee2fd96@google.com>
-Subject: Re: possible deadlock in bpf_lru_push_free
-From:   syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, hdanton@sina.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2a20bda-90c1-4a79-f125-08d7b4d42f2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 00:39:31.1802
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gqOJ4CXUCbz1db58EVZCeoCoRNH9nS5/B6eTl3y5amaXg1OqHCOqvW1d7cX+VXwGoy+FuUKB/SbIjlZ+OB/Ygg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4296
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Boris,
 
-HEAD commit:    e20d3a05 bpf, offload: Replace bitwise AND by logical AND ..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1491c481e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e7d35de59001df38
-dashboard link: https://syzkaller.appspot.com/bug?extid=122b5421d14e68f29cd1
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ca6c45e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134bae29e00000
+From: Vitor Soares <vitor.soares@synopsys.com>
+Date: Wed, Feb 19, 2020 at 00:20:38
 
-Bisection is inconclusive: the first bad commit could be any of:
+> For today there is no way to use i3c devices from user space and
+> the introduction of such API will help developers during the i3c device
+> or i3c host controllers development.
+>=20
+> The i3cdev module is highly based on i2c-dev and yet I tried to address
+> the concerns raised in [1].
+>=20
+> NOTES:
+> - The i3cdev dynamically request an unused major number.
+>=20
+> - The i3c devices are dynamically exposed/removed from dev/ folder based
+>   on if they have a device driver bound to it.
+>=20
+> - For now, the module exposes i3c devices without device driver on
+>   dev/bus/i3c/<bus>-<pid>
+>=20
+> - As in the i2c subsystem, here it is exposed the i3c_priv_xfer to
+>   userspace. I tried to use a dedicated structure as in spidev but I don'=
+t
+>   see any obvious advantage.
+>=20
+> - Since the i3c API only exposes i3c_priv_xfer to devices, for now, the
+>   module just makes use of one ioctl(). This can change in the future wit=
+h
+>   the introduction hdr commands or by the need of exposing some CCC
+>   commands to the device API (private contract between master-slave).
+>   Regarding the i3c device info, some information is already available
+>   through sysfs. We can add more device attributes to expose more
+>   information or add a dedicated ioctl() request for that purpose or both=
+.
+>=20
+> - Similar to i2c, I have also created a tool that you can find in [2]
+>   for testing purposes. If you have some time available I would appreciat=
+e
+>   your feedback about it as well.
+>=20
+> [1] https://lkml.org/lkml/2018/11/15/853
+> [2] https://github.com/vitor-soares-snps/i3c-tools.git
+>=20
+> Changes in v3:
+>   Use the xfer_lock to prevent device detach during ioctl call
+>   Expose i3cdev under /dev/bus/i3c/ folder like usb does
+>   Change NOTIFY_BOUND to NOTIFY_BIND, this allows the device detach occur
+>   before driver->probe call
+>   Avoid use of IS_ERR_OR_NULL
+>   Use u64_to_user_ptr instead of (void __user *)(uintptr_t) cast
+>   Allocate k_xfer and data_ptrs at once and eliminate double allocation
+>   check
+>   Pass i3cdev to dev->driver_data
+>   Make all minors available
+>   Add API documentation
+>=20
+> Changes in v2:
+>   Use IDR api for minor numbering
+>   Modify ioctl struct
+>   Fix SPDX license
+>=20
+> Vitor Soares (5):
+>   i3c: master: export i3c_masterdev_type
+>   i3c: master: export i3c_bus_type symbol
+>   i3c: master: add i3c_for_each_dev helper
+>   i3c: add i3cdev module to expose i3c dev in /dev
+>   userspace-api: add i3cdev documentation
+>=20
+>  Documentation/userspace-api/i3c/i3cdev.rst | 116 ++++++++
+>  drivers/i3c/Kconfig                        |  15 +
+>  drivers/i3c/Makefile                       |   1 +
+>  drivers/i3c/i3cdev.c                       | 429 +++++++++++++++++++++++=
+++++++
+>  drivers/i3c/internals.h                    |   2 +
+>  drivers/i3c/master.c                       |  16 +-
+>  include/uapi/linux/i3c/i3cdev.h            |  38 +++
+>  7 files changed, 616 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/userspace-api/i3c/i3cdev.rst
+>  create mode 100644 drivers/i3c/i3cdev.c
+>  create mode 100644 include/uapi/linux/i3c/i3cdev.h
+>=20
+> --=20
+> 2.7.4
 
-36a375c6 mailmap: add entry for Tiezhu Yang
-95c472ff Documentation/ko_KR/howto: Update a broken link
-ff1e81a7 Documentation: build warnings related to missing blank lines after explicit markups has been fixed
-5549c202 Documentation/ko_KR/howto: Update broken web addresses
-599e6f8d Documentation: changes.rst: update several outdated project URLs
-4bfdebd6 docs/locking: Fix outdated section names
-d1c9038a Allow git builds of Sphinx
-41dcd67e Merge tag 'docs-5.6-2' of git://git.lwn.net/linux
+I want to make you know that none of your previous comments was ignored=20
+and  I would like to start the discussion from this point.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17c6c36ee00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com
-
-IPVS: ftp: loaded support on port[0] = 21
-======================================================
-WARNING: possible circular locking dependency detected
-5.5.0-syzkaller #0 Not tainted
-------------------------------------------------------
-syz-executor198/9748 is trying to acquire lock:
-ffffe8ffffc49158 (&l->lock){....}, at: bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
-ffffe8ffffc49158 (&l->lock){....}, at: bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
-ffffe8ffffc49158 (&l->lock){....}, at: bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
-
-but task is already holding lock:
-ffff88809f6c3b60 (&htab->buckets[i].lock){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (&htab->buckets[i].lock){....}:
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-       htab_lru_map_delete_node+0xce/0x2f0 kernel/bpf/hashtab.c:593
-       __bpf_lru_list_shrink_inactive kernel/bpf/bpf_lru_list.c:220 [inline]
-       __bpf_lru_list_shrink+0xf9/0x470 kernel/bpf/bpf_lru_list.c:266
-       bpf_percpu_lru_pop_free kernel/bpf/bpf_lru_list.c:416 [inline]
-       bpf_lru_pop_free+0xa9f/0x1670 kernel/bpf/bpf_lru_list.c:497
-       prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
-       __htab_lru_percpu_map_update_elem+0x67e/0xa90 kernel/bpf/hashtab.c:1069
-       bpf_percpu_hash_update+0x16e/0x210 kernel/bpf/hashtab.c:1585
-       bpf_map_update_value.isra.0+0x2d7/0x8e0 kernel/bpf/syscall.c:181
-       map_update_elem kernel/bpf/syscall.c:1089 [inline]
-       __do_sys_bpf+0x3163/0x41e0 kernel/bpf/syscall.c:3384
-       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
--> #0 (&l->lock){....}:
-       check_prev_add kernel/locking/lockdep.c:2475 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
-       validate_chain kernel/locking/lockdep.c:2970 [inline]
-       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
-       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-       bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
-       bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
-       bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
-       __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
-       htab_lru_percpu_map_lookup_and_delete_batch+0x37/0x40 kernel/bpf/hashtab.c:1474
-       bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
-       __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
-       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
-       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
-       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-       entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&htab->buckets[i].lock);
-                               lock(&l->lock);
-                               lock(&htab->buckets[i].lock);
-  lock(&l->lock);
-
- *** DEADLOCK ***
-
-2 locks held by syz-executor198/9748:
- #0: ffffffff89bac200 (rcu_read_lock){....}, at: __htab_map_lookup_and_delete_batch+0x54b/0x1540 kernel/bpf/hashtab.c:1308
- #1: ffff88809f6c3b60 (&htab->buckets[i].lock){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
-
-stack backtrace:
-CPU: 0 PID: 9748 Comm: syz-executor198 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
- check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
- check_prev_add kernel/locking/lockdep.c:2475 [inline]
- check_prevs_add kernel/locking/lockdep.c:2580 [inline]
- validate_chain kernel/locking/lockdep.c:2970 [inline]
- __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
- lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
- __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
- _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
- bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
- bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
- bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
- __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
- htab_lru_percpu_map_lookup_and_delete_batch+0x37/0x40 kernel/bpf/hashtab.c:1474
- bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
- __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
- __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
- __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x440c09
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff14512e08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
-RAX: ffffffffffffffda RBX: 00000000004a2390 RCX: 0000000000440c09
-RDX: 0000000000000038 RSI: 0000000020000100 RDI: 0000000000000019
-RBP: 00000000006cb018 R08: 0000000120080522 R09: 0000000120080522
-R10: 0000000120080522 R11: 0000000000000246 R12: 0000000000402110
-R13: 00000000004021a0 R14: 0000000000000000 R15: 0000000000000000
-
+Best regards,
+Vitor Soares
