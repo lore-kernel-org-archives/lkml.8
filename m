@@ -4,33 +4,32 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C93C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCA2C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2B0B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 705BB208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgBSItw (ORCPT
+        id S1726787AbgBSIty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:49:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49730 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 03:49:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49718 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbgBSItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726195AbgBSItw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Feb 2020 03:49:52 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2D75FACF2;
-        Wed, 19 Feb 2020 08:49:51 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id D40BBABE7;
+        Wed, 19 Feb 2020 08:49:50 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 03/10] n_gsm: introduce enum gsm_dlci_mode
-Date:   Wed, 19 Feb 2020 09:49:42 +0100
-Message-Id: <20200219084949.28074-3-jslaby@suse.cz>
+Subject: [PATCH 02/10] n_gsm: introduce enum gsm_dlci_state
+Date:   Wed, 19 Feb 2020 09:49:41 +0100
+Message-Id: <20200219084949.28074-2-jslaby@suse.cz>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200219084949.28074-1-jslaby@suse.cz>
 References: <20200219084949.28074-1-jslaby@suse.cz>
@@ -41,41 +40,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gsm_dlci->mode is clearly an enumeration. So introduce one and use it
+gsm_dlci->state is clearly an enumeration. So introduce one and use it
 -- compiler now checks if valid values are assigned to the field.
+
+Note that a compiler warns about unhandled cases in switch. Add default
+cases with a pr_debug (which is not printed by default).
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- drivers/tty/n_gsm.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/tty/n_gsm.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 1d0a140027ff..7fee5a580f21 100644
+index 828c0c7babdd..1d0a140027ff 100644
 --- a/drivers/tty/n_gsm.c
 +++ b/drivers/tty/n_gsm.c
-@@ -107,6 +107,11 @@ enum gsm_dlci_state {
- 	DLCI_CLOSING,		/* Sending DISC not seen UA/DM */
+@@ -100,6 +100,13 @@ struct gsm_msg {
+ 	unsigned char buffer[];
  };
  
-+enum gsm_dlci_mode {
-+	DLCI_MODE_ABM,		/* Normal Asynchronous Balanced Mode */
-+	DLCI_MODE_ADM,		/* Asynchronous Disconnected Mode */
++enum gsm_dlci_state {
++	DLCI_CLOSED,
++	DLCI_OPENING,		/* Sending SABM not seen UA */
++	DLCI_OPEN,		/* SABM/UA complete */
++	DLCI_CLOSING,		/* Sending DISC not seen UA/DM */
 +};
 +
  /*
   *	Each active data link has a gsm_dlci structure associated which ties
   *	the link layer to an optional tty (if the tty side is open). To avoid
-@@ -124,9 +129,7 @@ struct gsm_dlci {
+@@ -113,11 +120,7 @@ struct gsm_msg {
+ struct gsm_dlci {
+ 	struct gsm_mux *gsm;
+ 	int addr;
+-	int state;
+-#define DLCI_CLOSED		0
+-#define DLCI_OPENING		1	/* Sending SABM not seen UA */
+-#define DLCI_OPEN		2	/* SABM/UA complete */
+-#define DLCI_CLOSING		3	/* Sending DISC not seen UA/DM */
++	enum gsm_dlci_state state;
  	struct mutex mutex;
  
  	/* Link layer */
--	int mode;
--#define DLCI_MODE_ABM		0	/* Normal Asynchronous Balanced Mode */
--#define DLCI_MODE_ADM		1	/* Asynchronous Disconnected Mode */
-+	enum gsm_dlci_mode mode;
- 	spinlock_t lock;	/* Protects the internal state */
- 	struct timer_list t1;	/* Retransmit timer for SABM and UA */
- 	int retries;
+@@ -1495,6 +1498,9 @@ static void gsm_dlci_t1(struct timer_list *t)
+ 		} else
+ 			gsm_dlci_close(dlci);
+ 		break;
++	default:
++		pr_debug("%s: unhandled state: %d\n", __func__, dlci->state);
++		break;
+ 	}
+ }
+ 
+@@ -1808,6 +1814,10 @@ static void gsm_queue(struct gsm_mux *gsm)
+ 		case DLCI_OPENING:
+ 			gsm_dlci_open(dlci);
+ 			break;
++		default:
++			pr_debug("%s: unhandled state: %d\n", __func__,
++					dlci->state);
++			break;
+ 		}
+ 		break;
+ 	case DM:	/* DM can be valid unsolicited */
 -- 
 2.25.0
 
