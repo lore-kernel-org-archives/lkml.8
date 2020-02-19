@@ -2,131 +2,195 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A59FEC35254
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD69C3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAB024671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E4524673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:57:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582145867;
+	bh=0556/W4oJCT2Llotqt/ikhVTlPFGLryOXw5ErmcBMjY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=ZgmwbUknElQ5aujilPQZvCIvPNNr181sx2V94ui+EH5cF6o6Mu/ORRwist4crM0q9
+	 VPkrHYBaUoJJ9BAAmVjxrOerbXY3nG9SK0sKj5uU2vCJ07xVyfiBQFVDJCpWod6XfM
+	 bmdf0zPlgtd6Ze2RnPVCSalqw4LnJye80ZswHTfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgBSU5F (ORCPT
+        id S1727581AbgBSU5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:57:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:43236 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 15:57:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:56776 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgBSU5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:57:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E16ABB26D;
-        Wed, 19 Feb 2020 20:57:01 +0000 (UTC)
-Subject: Re: [PATCH bpf-next 0/6] bpftool: Allow to select sections and filter
- probes
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-References: <20200218190224.22508-1-mrostecki@opensuse.org>
- <CAADnVQJm_tvMGjhHyVn66feA3rHLSXTdzqCCABu+9tKer89LVA@mail.gmail.com>
- <06ae3070-0d35-df49-9310-d1fb7bfb3e67@opensuse.org>
- <CAADnVQLhEaV=dWMZC83g5QHit7Qvu4H84Dh--K3aOTiUNeEd4g@mail.gmail.com>
- <498282f3-7e75-c24d-513d-be97b165b01f@iogearbox.net>
-From:   Michal Rostecki <mrostecki@opensuse.org>
-Autocrypt: addr=mrostecki@opensuse.org; keydata=
- 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
- ZURUUA==
-Message-ID: <c93f1721-5016-9e3d-4fd2-dab33720d1b5@opensuse.org>
-Date:   Wed, 19 Feb 2020 21:57:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <498282f3-7e75-c24d-513d-be97b165b01f@iogearbox.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1726739AbgBSU5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:57:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3225F1FB;
+        Wed, 19 Feb 2020 12:57:45 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABEED3F68F;
+        Wed, 19 Feb 2020 12:57:44 -0800 (PST)
+Date:   Wed, 19 Feb 2020 20:57:43 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: tas2562: Add support for ISENSE and VSENSE" to the asoc tree
+In-Reply-To:  <20200219134622.22066-1-dmurphy@ti.com>
+Message-Id:  <applied-20200219134622.22066-1-dmurphy@ti.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 5:52 PM, Daniel Borkmann wrote:
-> On 2/19/20 5:37 PM, Alexei Starovoitov wrote:
->> On Wed, Feb 19, 2020 at 4:33 AM Michal Rostecki
->> <mrostecki@opensuse.org> wrote:
->>>
->>> On 2/19/20 4:02 AM, Alexei Starovoitov wrote:
->>>> The motivation is clear, but I think the users shouldn't be made
->>>> aware of such implementation details. I think instead of filter_in/out
->>>> it's better to do 'full or safe' mode of probing.
->>>> By default it can do all the probing that doesn't cause
->>>> extra dmesgs and in 'full' mode it can probe everything.
->>>
->>> Alright, then I will send later v2 where the "internal" implementation
->>> (filtering out based on regex) stays similar (filter_out will stay in
->>> the code without being exposed to users, filter_in will be removed). And
->>> the exposed option of "safe" probing will just apply the
->>> "(trace|write_user)" filter_out pattern. Does it sound good?
->>
->> yes. If implementation is doing filter_in and applying
->> 'trace_printk|write_user'
->> strings hidden within bpftool than I think it should be good.
->> What do you think the default should be?
->> It feels to me that the default should not be causing dmesg prints.
->> So only addition flag for bpftool command line will be 'bpftool
->> feature probe full'
-> 
-> Agree, that makes sense to me.
+The patch
 
-Makes sense to me as well. I will do that in v2.
+   ASoC: tas2562: Add support for ISENSE and VSENSE
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 69e53129d01317d94e8b97ec11688880106a2f97 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Wed, 19 Feb 2020 07:46:22 -0600
+Subject: [PATCH] ASoC: tas2562: Add support for ISENSE and VSENSE
+
+Add additional support for ISENSE and VSENSE feature for the TAS2562.
+This feature monitors the output to the loud speaker attempts to
+eliminate IR drop errors due to packaging.
+
+This feature is defined in Section 8.4.5 IV Sense of the data sheet.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20200219134622.22066-1-dmurphy@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/codecs/tas2562.c | 32 +++++++++++++++++++++++++++-----
+ sound/soc/codecs/tas2562.h |  6 +++---
+ 2 files changed, 30 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index 729acd874c48..b517ada7e809 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -382,18 +382,34 @@ static int tas2562_dac_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *component =
+ 					snd_soc_dapm_to_component(w->dapm);
+ 	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++	int ret;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+-		dev_info(tas2562->dev, "SND_SOC_DAPM_POST_PMU\n");
++		ret = snd_soc_component_update_bits(component,
++			TAS2562_PWR_CTRL,
++			TAS2562_MODE_MASK,
++			TAS2562_MUTE);
++		if (ret)
++			goto end;
+ 		break;
+ 	case SND_SOC_DAPM_PRE_PMD:
+-		dev_info(tas2562->dev, "SND_SOC_DAPM_PRE_PMD\n");
++		ret = snd_soc_component_update_bits(component,
++			TAS2562_PWR_CTRL,
++			TAS2562_MODE_MASK,
++			TAS2562_SHUTDOWN);
++		if (ret)
++			goto end;
+ 		break;
+ 	default:
+-		break;
++		dev_err(tas2562->dev, "Not supported evevt\n");
++		return -EINVAL;
+ 	}
+ 
++end:
++	if (ret < 0)
++		return ret;
++
+ 	return 0;
+ }
+ 
+@@ -415,7 +431,6 @@ static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+ static const struct snd_soc_dapm_widget tas2562_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2562_asi1_mux),
+-	SND_SOC_DAPM_AIF_IN("DAC IN", "Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2562_dac_event,
+ 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_SWITCH("ISENSE", TAS2562_PWR_CTRL, 3, 1, &isense_switch),
+@@ -430,7 +445,7 @@ static const struct snd_soc_dapm_route tas2562_audio_map[] = {
+ 	{"ASI1 Sel", "Left", "ASI1"},
+ 	{"ASI1 Sel", "Right", "ASI1"},
+ 	{"ASI1 Sel", "LeftRightDiv2", "ASI1"},
+-	{ "DAC", NULL, "DAC IN" },
++	{ "DAC", NULL, "ASI1 Sel" },
+ 	{ "OUT", NULL, "DAC" },
+ 	{"ISENSE", "Switch", "IMON"},
+ 	{"VSENSE", "Switch", "VMON"},
+@@ -471,6 +486,13 @@ static struct snd_soc_dai_driver tas2562_dai[] = {
+ 			.rates      = SNDRV_PCM_RATE_8000_192000,
+ 			.formats    = TAS2562_FORMATS,
+ 		},
++		.capture = {
++			.stream_name    = "ASI1 Capture",
++			.channels_min   = 0,
++			.channels_max   = 2,
++			.rates		= SNDRV_PCM_RATE_8000_192000,
++			.formats	= TAS2562_FORMATS,
++		},
+ 		.ops = &tas2562_speaker_dai_ops,
+ 	},
+ };
+diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
+index 62e659ab786d..6f55ebcf19ea 100644
+--- a/sound/soc/codecs/tas2562.h
++++ b/sound/soc/codecs/tas2562.h
+@@ -40,7 +40,7 @@
+ 
+ #define TAS2562_RESET	BIT(0)
+ 
+-#define TAS2562_MODE_MASK	0x3
++#define TAS2562_MODE_MASK	GENMASK(1,0)
+ #define TAS2562_ACTIVE		0x0
+ #define TAS2562_MUTE		0x1
+ #define TAS2562_SHUTDOWN	0x2
+@@ -73,8 +73,8 @@
+ #define TAS2562_TDM_CFG2_RXWLEN_24B	BIT(3)
+ #define TAS2562_TDM_CFG2_RXWLEN_32B	(BIT(2) | BIT(3))
+ 
+-#define TAS2562_VSENSE_POWER_EN		BIT(2)
+-#define TAS2562_ISENSE_POWER_EN		BIT(3)
++#define TAS2562_VSENSE_POWER_EN		2
++#define TAS2562_ISENSE_POWER_EN		3
+ 
+ #define TAS2562_TDM_CFG5_VSNS_EN	BIT(6)
+ #define TAS2562_TDM_CFG5_VSNS_SLOT_MASK	GENMASK(5, 0)
+-- 
+2.20.1
+
