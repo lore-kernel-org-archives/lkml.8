@@ -2,171 +2,122 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C6C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81BE7C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC71824670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C54F24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruvoWZhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBSSiT (ORCPT
+        id S1726750AbgBSSi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:38:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:54568 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726598AbgBSSiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:38:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B807031B;
-        Wed, 19 Feb 2020 10:38:18 -0800 (PST)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CE273F703;
-        Wed, 19 Feb 2020 10:38:16 -0800 (PST)
-Subject: Re: [PATCH v8 00/12] add support for Clang's Shadow Call Stack
-To:     Sami Tolvanen <samitolvanen@google.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200219000817.195049-1-samitolvanen@google.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <0386ecad-f3d6-f1dc-90da-7f05b2793839@arm.com>
-Date:   Wed, 19 Feb 2020 18:38:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 19 Feb 2020 13:38:58 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43524 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbgBSSi5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:38:57 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p2so644011qvo.10;
+        Wed, 19 Feb 2020 10:38:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9rFtbpEK/pv7MaVuCRPS0QnaNP+BWE7+SWRKkiX4Bc0=;
+        b=ruvoWZhP4w3GP/DQ2XHfLqzoOGPI1EjC0rZp2A9jnitdHOD7/gaAKvEmiCSMr0nsvY
+         1EPYQq41qknMI2uxrV/YYWGZYB66RQR5QM4wzPZ0YZRuGOQsUSh+SKF9dIkNJ/5LfqzR
+         Rjk7ckhw+NB+qvaJ9c/yDzYF7PxmiRNGTD7dDU2qdSy+d7U+mvBqSAKHbyfuoxUN7bQa
+         vvePBRTk2zyLNJdRghuA6e7IGMB3tMuFu4Y/IqGiytiM0G4hK7np7otgwlxk2qKNwxN7
+         DrjArR6RMrU3MnahQ/uzmxhHwSrrxIWu/4vW3pu37RNB59D9swbxHBIH3GQH00tls7rZ
+         pxqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9rFtbpEK/pv7MaVuCRPS0QnaNP+BWE7+SWRKkiX4Bc0=;
+        b=sGctTknFFMeSHVweeqZCG3fU1ge7ukpA1hMu0v+1UHzG+YSBMpl3cRejQ5Ndk614Rn
+         FNGYN/InZ7mVYUnfK2v/f5la4ySPV48nktG7kbpJ/NOg4ggcCUzbIIoxzHXoDTtqyyat
+         d1rIC9HreZ+hT025GKnjypKLdPOknGMrU8y15Nr25j2E67ifpBut0W7t5/AL8AGFwnTC
+         lztwlDt1i8OjyvtRT2rf2pPpgFJoqHDjOm21AkJyY7wHlmgTPo8rFL/yluUUTpTNZ8Hc
+         DYrkzZ+MvV2WJeWzsTs3o1mvKxddLpV8mfP0UBlke3fHo3zbD287d83mkYQmryfVIdb+
+         RPkQ==
+X-Gm-Message-State: APjAAAVyORNkavGqteosbuKzSFPcqW5G3cqUEuQ/eY4GPC/A5T2ZTuWX
+        aHDSIM+sIh/L0gY4mTW35gtKkMOqtiRC2rn0Wj8=
+X-Google-Smtp-Source: APXvYqys6t/plniHSIE7RFiTqfc7mBay5jRkWI5/A6qXBamlubuscaSkZpnMnZgJmzvWc7S+n+TH/oEC51E08nsLU6Y=
+X-Received: by 2002:ad4:514e:: with SMTP id g14mr22238350qvq.196.1582137536138;
+ Wed, 19 Feb 2020 10:38:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219000817.195049-1-samitolvanen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200219133012.7cb6ac9e@carbon> <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
+ <20200219180348.40393e28@carbon> <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
+ <20200219192854.6b05b807@carbon>
+In-Reply-To: <20200219192854.6b05b807@carbon>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 19 Feb 2020 10:38:45 -0800
+Message-ID: <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+To:     Jesper Dangaard Brouer <brouer@redhat.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
+On Wed, Feb 19, 2020 at 10:29 AM Jesper Dangaard Brouer
+<brouer@redhat.com> wrote:
+>
+> On Wed, 19 Feb 2020 09:38:50 -0800
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > On Wed, Feb 19, 2020 at 9:04 AM Jesper Dangaard Brouer
+> > <brouer@redhat.com> wrote:
+> > >
+> > > On Wed, 19 Feb 2020 08:41:27 -0800
+> > > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > > On Wed, Feb 19, 2020 at 4:30 AM Jesper Dangaard Brouer
+> > > > <brouer@redhat.com> wrote:
+> > > > >
+> > > > > I'm willing to help out, such that we can do either version or feature
+> > > > > detection, to either skip compiling specific test programs or at least
+> > > > > give users a proper warning of they are using a too "old" LLVM version.
+> > > > ...
+> > > > > progs/test_core_reloc_bitfields_probed.c:47:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
+> > > > >         out->ub1 = BPF_CORE_READ_BITFIELD_PROBED(in, ub1);
+> > > >
+> > > > imo this is proper warning message already.
+> > >
+> > > This is an error, not a warning.  The build breaks as the make process stops.
+> > >
+> >
+> > Latest Clang was a requirement for building and running all selftests
+> > for a long time now. There were few previous discussions on mailing
+> > list about this and each time the conclusion was the same: latest
+> > Clang is a requirement for BPF selftests.
+>
+> The latest Clang is 9.0.1, and it doesn't build with that.
 
-(CC: +Marc)
+Latest as in "latest built from sources".
 
-On 19/02/2020 00:08, Sami Tolvanen wrote:
-> This patch series adds support for Clang's Shadow Call Stack
-> (SCS) mitigation, which uses a separately allocated shadow stack
-> to protect against return address overwrites.
-
-I took this for a spin on some real hardware. cpu-idle, kexec hibernate etc all work
-great... but starting a KVM guest causes the CPU to get stuck in EL2.
-
-With CONFIG_SHADOW_CALL_STACK disabled, this doesn't happen ... so its something about the
-feature being enabled.
-
-
-I'm using clang-9 from debian bullseye/sid. (I tried to build tip of tree ... that doesn't
-go so well on arm64)
-
-KVM takes an instruction abort from EL2 to EL2, because some of the code it runs is not
-mapped at EL2:
-
-| ffffa00011588308 <__kvm_tlb_flush_local_vmid>:
-| ffffa00011588308:       d10103ff        sub     sp, sp, #0x40
-| ffffa0001158830c:       f90013f3        str     x19, [sp, #32]
-| ffffa00011588310:       a9037bfd        stp     x29, x30, [sp, #48]
-| ffffa00011588314:       9100c3fd        add     x29, sp, #0x30
-| ffffa00011588318:       97ae18bf        bl      ffffa0001010e614 <__kern_hyp_va>
-
-INSTRUCTION ABORT!
-
-| ffffa0001158831c:       f9400000        ldr     x0, [x0]
-| ffffa00011588320:       97ae18bd        bl      ffffa0001010e614 <__kern_hyp_va>
-| ffffa00011588324:       aa0003f3        mov     x19, x0
-| ffffa00011588328:       97ae18c1        bl      ffffa0001010e62c <has_vhe>
-
-
-__kern_hyp_va() is static-inline which is patched wherever it appears at boot with the EL2
-ASLR values, it converts a kernel linear-map address to its EL2 KVM alias:
-
-| ffffa0001010dc5c <__kern_hyp_va>:
-| ffffa0001010dc5c:       92400000        and     x0, x0, #0x1
-| ffffa0001010dc60:       93c00400        ror     x0, x0, #1
-| ffffa0001010dc64:       91000000        add     x0, x0, #0x0
-| ffffa0001010dc68:       91400000        add     x0, x0, #0x0, lsl #12
-| ffffa0001010dc6c:       93c0fc00        ror     x0, x0, #63
-| ffffa0001010dc70:       d65f03c0        ret
-
-
-The problem here is where __kern_hyp_va() is. Its outside the __hyp_text section:
-| morse@eglon:~/kernel/linux-pigs$ nm -s vmlinux | grep hyp_text
-| ffffa0001158b800 T __hyp_text_end
-| ffffa000115838a0 T __hyp_text_start
-
-
-If I disable CONFIG_SHADOW_CALL_STACK in Kconfig, I get:
-| ffffa00011527fe0 <__kvm_tlb_flush_local_vmid>:
-| ffffa00011527fe0:       d100c3ff        sub     sp, sp, #0x30
-| ffffa00011527fe4:       a9027bfd        stp     x29, x30, [sp, #32]
-| ffffa00011527fe8:       910083fd        add     x29, sp, #0x20
-| ffffa00011527fec:       92400000        and     x0, x0, #0x1
-| ffffa00011527ff0:       93c00400        ror     x0, x0, #1
-| ffffa00011527ff4:       91000000        add     x0, x0, #0x0
-| ffffa00011527ff8:       91400000        add     x0, x0, #0x0, lsl #12
-| ffffa00011527ffc:       93c0fc00        ror     x0, x0, #63
-| ffffa00011528000:       f9400000        ldr     x0, [x0]
-| ffffa00011528004:       910023e1        add     x1, sp, #0x8
-| ffffa00011528008:       92400000        and     x0, x0, #0x1
-| ffffa0001152800c:       93c00400        ror     x0, x0, #1
-| ffffa00011528010:       91000000        add     x0, x0, #0x0
-| ffffa00011528014:       91400000        add     x0, x0, #0x0, lsl #12
-| ffffa00011528018:       93c0fc00        ror     x0, x0, #63
-| ffffa0001152801c:       97ffff78        bl      ffffa00011527dfc <__tlb_switch_>
-| ffffa00011528020:       d508871f        tlbi    vmalle1
-| ffffa00011528024:       d503201f        nop
-
-
-This looks like reserving x18 is causing Clang to not-inline the __kern_hyp_va() calls,
-losing the vitally important section information. (I can see why the compiler thinks this
-is fair)
-
-Is this a known, er, thing, with clang-9?
-
-From eyeballing the disassembly __always_inline on __kern_hyp_va() is enough of a hint to
-stop this, ... with this configuration of clang-9. But KVM still doesn't work, so it isn't
-the only inlining decision KVM relies on that is changed by SCS.
-
-I suspect repainting all KVM's 'inline' with __always_inline will fix it. (yuck!) I'll try
-tomorrow.
-
-I don't think keeping the compiler-flags as they are today for KVM is the right thing to
-do, it could lead to x18 getting corrupted with the shared vhe/non-vhe code. Splitting
-that code up would lead to duplication.
-
-(hopefully objtool will be able to catch these at build time)
-
-
-Thanks,
-
-James
-
-> SCS is currently supported only on arm64, where the compiler
-> requires the x18 register to be reserved for holding the current
-> task's shadow stack pointer.
-
-> Changes in v8:
->  - Added __noscs to __hyp_text instead of filtering SCS flags from
->    the entire arch/arm64/kvm/hyp directory
+>
+> --
+> Best regards,
+>   Jesper Dangaard Brouer
+>   MSc.CS, Principal Kernel Engineer at Red Hat
+>   LinkedIn: http://www.linkedin.com/in/brouer
+>
