@@ -2,107 +2,138 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58149C3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C466FC3404C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30FAD22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:55:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GVL4OezX"
+	by mail.kernel.org (Postfix) with ESMTP id 9F29D24658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:58:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582081096;
+	bh=zLZw1qR/XpXYBmvugwhE5yh5SqRSUw18nixQc8D5mtY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EkxKl8QT/76trNXvEVjOnpV9HDn0cC4Ks6DaxDKj/r+aWxq9hvhADKStkcJRSyhIG
+	 It8kYJCMuJVYSHo9D4kLVDwhbiREWjg69yeIa8LTZO+bz3YD1I56IqCL0dUpVo/RO/
+	 N23iBT9Kw/gCkKLpYCfHkW12nqUAn6mAMXswP5/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgBSCzR (ORCPT
+        id S1728265AbgBSC6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:55:17 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:45381 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728027AbgBSCzR (ORCPT
+        Tue, 18 Feb 2020 21:58:16 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35256 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728175AbgBSC6P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:55:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582080915;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3ssQCDVM74SPVby1fTm4z6JcG59jAK5ps2tKRPOXbU4=;
-        b=GVL4OezXwz3mU/QWmyOMkaWGZqdBaccYOwBHEAMVervBCWK2C6O7YogLiTlyZE0WHpIFZn
-        ey3s0CMGC0gnpqDAkJcf3HClHNJhpNOpXJBJ8MVt3QDECurayKZ7W229K3fiUNZNAa+/vK
-        sVK9T6a2HYJjxZe8ZwvX1cNHaOaPAoE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-191-_wNmUkm6NrOlf5L7e8yLSw-1; Tue, 18 Feb 2020 21:55:11 -0500
-X-MC-Unique: _wNmUkm6NrOlf5L7e8yLSw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EB950107ACC5;
-        Wed, 19 Feb 2020 02:55:09 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-21.pek2.redhat.com [10.72.8.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8A085C13B;
-        Wed, 19 Feb 2020 02:55:01 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 10:54:56 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jesse Barnes <jsbarnes@google.com>
-Cc:     Salman Qazi <sqazi@google.com>, Ming Lei <tom.leiming@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-Message-ID: <20200219025456.GD31488@ming.t460p>
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p>
- <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
- <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org>
- <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
- <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com>
- <20200215034652.GA19867@ming.t460p>
- <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
+        Tue, 18 Feb 2020 21:58:15 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so21761087otd.2;
+        Tue, 18 Feb 2020 18:58:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xTGQmxUmNRth+yRhSKHtoUgcE+23rlmrBG/UqSF57C4=;
+        b=XNA29+YmzuxvM/slxw06R+9X+34E8Xau2m71G2+s1ko/IUXtCj7yhIvKr8gom8XrzA
+         LwpFydzHmiwzLNNb7UjGmYl4idD0+kMVz7Wn6m73Tr1+4pMi3P11Zip9UHc+/zxrPK5u
+         J4fNJXu0hqkAdj2hjzXkOyklszD2G5kcm6QBIF1jPr9PSQFAw6qdalmRRqgfaF2B7GQ+
+         P8VE0kdyAxdiclF98DEIceFEnqjrLci/CsK/Dorugef4BpPilYhd2m4V0JW6Qe+f2Htk
+         nSc0Zu7XKjZJyHr13Ldw3/Ky2FV31hK0QpUEkLnSZeSNIxNzn0yjNjnc4Z32qvBthkCa
+         fP5w==
+X-Gm-Message-State: APjAAAVuMWQ7rJhj+rbwsP82FC0POvKTDeTv5lnRzTQal4JG5SNcDuNF
+        Ld8rAo/AeeSZrVH+NJ04aA==
+X-Google-Smtp-Source: APXvYqw1L6GCZna8YMWf4yMNAkVw7UgscE3jBjEI1Do4b3teVIqY+vAlfCJe0QT1lA33JTK7rqs3sA==
+X-Received: by 2002:a9d:69ce:: with SMTP id v14mr18336960oto.248.1582081093490;
+        Tue, 18 Feb 2020 18:58:13 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id r2sm204259otk.22.2020.02.18.18.58.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 18:58:12 -0800 (PST)
+Received: (nullmailer pid 8516 invoked by uid 1000);
+        Wed, 19 Feb 2020 02:58:11 -0000
+Date:   Tue, 18 Feb 2020 20:58:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: clock: Add binding documentation for
+ TI syscon gate clock
+Message-ID: <20200219025811.GA20054@bogus>
+References: <20200215141724.32291-1-vigneshr@ti.com>
+ <20200215141724.32291-2-vigneshr@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200215141724.32291-2-vigneshr@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:11:53AM -0800, Jesse Barnes wrote:
-> On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > What are the 'other operations'? Are they block IOs?
-> >
-> > If yes, that is why I suggest to fix submit_bio_wait(), which should cover
-> > most of sync bio submission.
-> >
-> > Anyway, the fix is simple & generic enough, I'd plan to post a formal
-> > patch if no one figures out better doable approaches.
+On Sat, Feb 15, 2020 at 07:47:23PM +0530, Vignesh Raghavendra wrote:
+> Add dt bindings for TI syscon gate clock driver that is used to control
+> EHRPWM's TimeBase clock (TBCLK) on TI's AM654 SoC.
 > 
-> Yeah I think any block I/O operation that occurs after the
-> BLKSECDISCARD is submitted will also potentially be affected by the
-> hung task timeouts, and I think your patch will address that.  My only
-> concern with it is that it might hide some other I/O "hangs" that are
-> due to device misbehavior instead.  Yes driver and device timeouts
-> should generally catch those, but with this in place we might miss a
-> few bugs.
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  .../bindings/clock/ti,am654-ehrpwm-tbclk.yaml | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
 > 
-> Given the nature of these types of storage devices though, I think
-> that's a minor issue and not worth blocking the patch on, given that
-> it should prevent a lot of false positive hang reports as Salman
-> demonstrated.
+> diff --git a/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+> new file mode 100644
+> index 000000000000..3bf954ecb803
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+> @@ -0,0 +1,35 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/ti,am654-ehrpwm-tbclk.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI syscon gate clock driver
 
-Hello Jesse and Salman,
+Bindings are for h/w blocks, not drivers.
 
-One more question about this issue, do you enable BLK_WBT on your test
-kernel?
+> +
+> +maintainers:
+> +  - Vignesh Raghavendra <vigneshr@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: ti,am654-ehrpwm-tbclk
+> +      - const: syscon
 
-Thanks,
-Ming
+Why is this a syscon? Are there other functions or it's just the easy 
+way to get a regmap.
 
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    ehrpwm_tbclk: syscon@4140 {
+> +        compatible = "ti,am654-ehrpwm-tbclk", "syscon";
+> +        reg = <0x4140 0x18>;
+> +        #clock-cells = <1>;
+> +    };
+> -- 
+> 2.25.0
+> 
