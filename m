@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C281DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D655C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3DC24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106A321D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="T+g7h50V"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wea5RKCh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgBSIGL (ORCPT
+        id S1726717AbgBSIGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:06:11 -0500
-Received: from mail-eopbgr60048.outbound.protection.outlook.com ([40.107.6.48]:27265
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Wed, 19 Feb 2020 03:06:15 -0500
+Received: from mail-vi1eur05on2047.outbound.protection.outlook.com ([40.107.21.47]:6073
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726163AbgBSIGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:06:10 -0500
+        id S1726163AbgBSIGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:06:15 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MtrNqCwaXx8JK2smgkrfNRS7wHaLiVWxhCnsLfkZ2YqO37+1VAAc3qwxENE3OdAzT5pH2dq8sCGCblMA8XdNAF2Eh3DP4m4LT4Qn7KTsdhY2b9gMEpadMS48WmcMNxAAQ+knvkIMDm4vO/EnzbcOkYBgJb9UBnm6/gwmCjZovrCCR8JmnXqU2FmK5bH95PpbdvL3XSQ/p3DhKwrsTB9Muintp0b3lJPdF1kix3YdSHC6aanEcGtM0DnDT4th58fG3WgtleERJOAeH6+9IsEFjojrWRtBkXopT65NCM8n5c6ZtT9wDNHl0EwKutyLQaJvI6GETxMoBRBmSQLf8GJg9Q==
+ b=f93elHpcQq060gUNxP9MedsvvCAWWXQXY7FLeHmYGTsV0BVVvb4fhoPl7TVS5qKZlFEMOxv+TJVWukjMU3KAHWok2dTZZVTl6tBFe8dQgO1ymFp5tUpJqX4HjtEx6RxjGH463T+CJWUJI58fwJKcjo3awHnjhYX+N+n09WUB99heAugLb151WC2giRjyO0b8P12WWcAhw4aR6wn5Hp3+xdtZmwkDs34CEuUSWGK1Igq98GTqs5jzUugIKr8uerH2JD4YeZKW0o0sO0bzS08Gt9HO2D2NVpeqxfR99aQDlvWgEhs4eZqGRJhrC+3rv94ZzuMpDm87Xp9jJjD1jhHkaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=df5ritx7B5D6lOHcf8L1nv7tKL8flDA1EfZkxehyBis=;
- b=UlAWL4A+06AFl2f0tpXVNf0FsnVRrVmDOXyTAGMT8CxgV+pWC73+GchKn4UsZM29atnDki5YNEbz4ZKXm7h6zgiJCFXDXqo2oIC2Qgq4uXGxI3rF2RrGiEpbDLlqDxwTZ3tw0PsfoHwzDmqTxbOujF3SFuDMAsR6HVdumaeGoCYnOwoOQ6Bw6jTWbiM15VSS/s5n5Sn2M8eMKiVgWmmmM4M9C/ioEENFRowXCPuFPA9HlPRmTSQysKT+6jFrDyMIkz2hP1ul9XyShWwaR7Ex6QkFPS1KcZQxdgb14bWmGXFPtx6c9AmiRoxS2TByPXllmn+wojJN7fPcPBGk36JJ0w==
+ bh=Lt+E3byxpxw4yGz5p/ITyqcuR31aI8PMY9W1MyE+fLM=;
+ b=jhlZy+RdhM09kbt4gxSDkkX874qpXyUqmxKCNX4+VViG7rzjVa0HFHE4AS3Gp0yawE/BlZz0z14EPUVim0natwy9ERd2iCzvNQESCORkno5v9/32x6k6K/rdnQgIli1bkgDBv0aOaRxWVVRxhET2DQWW6+R5uO0C3oHXWHq85YY7JGKw/ZjFvZDbnUl2Xc59i+wFhOWq4HlF4zn5zx7NXOb3oHBCxD4CLNHZvu/xFllwuLtGUKIxMO3Z3uJyC02xb7jRMsyHR5RXnk8PrCQyA5Qxk8H0u1WHuVQ4gz6p7plTNe7xR7nt5AQIi+xrpKokF9G41jRr+xr9parSXA8m/w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=df5ritx7B5D6lOHcf8L1nv7tKL8flDA1EfZkxehyBis=;
- b=T+g7h50VXgkf5ALIWJxhanuSATu0daahVRYkUZTrhtR51WzX1PlcHZ3hpVSFRvmYLqeCocxDp2kFAE2DH72Zw8n6U2T0DxiXC/LTkA/fgVsv2FR92jbhgLkv3MdY1UJVx1X1SMAA4BDWevdjzXdBLemn/3s/7yuGgddYk+rtrwQ=
+ bh=Lt+E3byxpxw4yGz5p/ITyqcuR31aI8PMY9W1MyE+fLM=;
+ b=Wea5RKCh5He3laRfu8wt24/teRCSRIkjm4TKccvKKbF/thx16pcqcoKh/ri66tTTZysAYLuDVT4/0DXsqllH+cmJv3fJqZnd4R9B+DMNF2TZv7GFRs2b77bO1aZTvYZfGeuMTOKC0kyJk30fgbUs+3VIMC6xTn2x4WHzwgrSL+I=
 Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
  AM0PR04MB6401.eurprd04.prod.outlook.com (20.179.254.97) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Wed, 19 Feb 2020 08:06:07 +0000
+ 15.20.2729.25; Wed, 19 Feb 2020 08:06:11 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 08:06:07 +0000
+ 08:06:11 +0000
 From:   peng.fan@nxp.com
 To:     shawnguo@kernel.org, s.hauer@pengutronix.de, sboyd@kernel.org,
         robh+dt@kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net
@@ -54,9 +54,9 @@ Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
         Anson.Huang@nxp.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, abel.vesa@nxp.com,
         Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH v2 01/14] dt-bindings: fsl: add i.MX7ULP PMC binding doc
-Date:   Wed, 19 Feb 2020 15:59:44 +0800
-Message-Id: <1582099197-20327-2-git-send-email-peng.fan@nxp.com>
+Subject: [PATCH v2 02/14] ARM: dts: imx7ulp: add pmc node
+Date:   Wed, 19 Feb 2020 15:59:45 +0800
+Message-Id: <1582099197-20327-3-git-send-email-peng.fan@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
 References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
@@ -65,32 +65,32 @@ X-ClientProxiedBy: HKAPR04CA0013.apcprd04.prod.outlook.com
  (2603:1096:203:d0::23) To AM0PR04MB4481.eurprd04.prod.outlook.com
  (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Received: from localhost.localdomain (119.31.174.66) by HKAPR04CA0013.apcprd04.prod.outlook.com (2603:1096:203:d0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2729.23 via Frontend Transport; Wed, 19 Feb 2020 08:06:02 +0000
+Received: from localhost.localdomain (119.31.174.66) by HKAPR04CA0013.apcprd04.prod.outlook.com (2603:1096:203:d0::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2729.23 via Frontend Transport; Wed, 19 Feb 2020 08:06:07 +0000
 X-Mailer: git-send-email 2.7.4
 X-Originating-IP: [119.31.174.66]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 51cdb211-25ff-415e-5e8f-08d7b512925e
+X-MS-Office365-Filtering-Correlation-Id: 25b9cfd0-25cd-4e59-3840-08d7b5129504
 X-MS-TrafficTypeDiagnostic: AM0PR04MB6401:|AM0PR04MB6401:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB64016AB925518DBDADB9874788100@AM0PR04MB6401.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <AM0PR04MB6401604BB880C26D1B95734C88100@AM0PR04MB6401.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:243;
 X-Forefront-PRVS: 0318501FAE
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(199004)(189003)(2616005)(81166006)(8676002)(9686003)(4326008)(66476007)(8936002)(478600001)(52116002)(6512007)(6506007)(66556008)(69590400006)(81156014)(316002)(86362001)(66946007)(956004)(6666004)(186003)(5660300002)(966005)(26005)(6486002)(36756003)(16526019)(2906002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6401;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(199004)(189003)(2616005)(81166006)(8676002)(9686003)(4326008)(66476007)(4744005)(8936002)(478600001)(52116002)(6512007)(6506007)(66556008)(69590400006)(81156014)(316002)(86362001)(66946007)(956004)(6666004)(186003)(5660300002)(26005)(6486002)(36756003)(16526019)(2906002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6401;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rjmGaNWP0Asrk0kV5c92Vsf7GL376th+0SEFXobh2AvZGlNDfflJNNYuSuA5CLT4Bl1In0GKUO722AeAxfYqyqXgrXmJRYbASSALDJHBwJq50UNvo/V52XhrUNA6vSOHamibCPsvrlBL5yig0Fi5oYmM78S7gge4+OakCZrGJEBmHN2MX8fKAl2xOK2a3kwoVaMR0r+kHonFWrT8NB63x001WftC0dAStc/m8gy/BkG1BaBh+JOCUEsWviwsbKaLht7zAshhAaoLiCky3Foxb3vi/t3q5UwnV0Lp0ryfMeRVGTMr/FkcY50ijMsmGitgz4KfjBZYed4KPZUctFjJQwPKgTcvLtgIW1FAh0DeFAzCGaDn+/W3pT+JKhOd4Zs9XqQ1KvCdA+vYxcXLaT46VeZdeZ6SzczfxcTFKxqhJ1AL3C7rpuCNJD/ueOQRqqvMEyjDT8NuVxf+VDdGL9Loettvv8eT2DHB9BULemIgWpAwVUz7BrJ/KEgDWp5+ZLdo4HgofuIk4jCqxpcKtD1jRYyQH9++gW6II/DEAcio6/yLhkgT0buedToApyDrUDMl/HVeXjNBY3+R748bJ7oGT7ZfoNxtkn7iTR1qEzCk1oj62HgG5BDylk62SpOK2Iu3
-X-MS-Exchange-AntiSpam-MessageData: 0dn9N7oM/tAaDtirpdiS0lHOYDZuZ82ldd1JxTh9P2vuOYc8MQaEglXXGMMMPsr7PyJDrmHxhduUwJVCOynDrPUWp2cMEsh1SIHNvShSPRdvX+2V2022+uthVKRpSoW6UrYU7JXO8dfFsZh0cjvc8Q==
+X-Microsoft-Antispam-Message-Info: 8P4vXpe6ZMrY07bQtsNK4teErsr8uZUAxnS9u9eCa4ljNTXLErhZBlphXtLkNZ/t5a/OmIiV7a8GaIdI9N/Zc4Yak/XgOgm2F3/qfzzk6FkhyY2oEr1yNL6c1WIa4fwVu2glxhtUBRnpbCMvI9FA5XFXka+ZKjJTGYBGmSzZBaO+QKYhbrFoDSC/jsOSuGmX2HDUbcZisCKGA+XaHG4z4SRBCTfnVCKe7ORoBakuZ3skXBY2sZ9KVfbLGG9d1GwYW5O56bpelI15e3AsijQomQt2bs15KWifTyds3dJU+CaMFhgb5r47ru5HHcEwb64+8ZaWFgLLLHfh5o588YKCV8TujhW/6Vxi7FI/riaeeEWAx9pBj/ZV3qHQL38DnvGHJ2sld6mJyJmMe6+SUtPA7qmPxiqyEswdKe3yGgvCzRUQ7GHPrWjbY6ANZBYEHom9Bi2wuQngGtA4as8ZHkKnA0KzHfULeP1DUckkmjmj1Q7uDz19iiFS2Gj1JXqTMhqSs5d2p7OjyuqhbTf1iP4cplQETA6yX/VGK8F7SgRO4zo=
+X-MS-Exchange-AntiSpam-MessageData: ceZAaI8fGzzv6ATynXCwXF69/nJG7R09oVM4HqaiNGTOWT2YVHCTHW9L+alvq0WLKO45DtodGJyiwJbarHc8qkRcnECBLwi9hmXv0YxPMrYuLDOjY+5XXn5+4o24Eyt70ZpEqPFG2kM6wUAZrGtY+g==
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 51cdb211-25ff-415e-5e8f-08d7b512925e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 08:06:06.9639
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25b9cfd0-25cd-4e59-3840-08d7b5129504
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2020 08:06:11.4092
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +8KQQg8zQnEyeN4XuNEv/UNwHk3tRIb30hNdbszov1l/xsvI9VvFgH4zLTgmPMs0jee9C4TgSjZN5tlOJ3e7ZQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: dlbXbn2qRzcpZWlER2DiwDD0s250qNlsc4epRLqHRnelpkyB1mnR9w5oJV48Y1QLFCvLzg4/Mf889rXWLy+FDQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6401
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -99,52 +99,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Add i.MX7ULP Power Management Controller binding doc
+Add i.MX7ULP pmc0/1 node
 
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- .../bindings/arm/freescale/imx7ulp_pmc.yaml        | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
+ arch/arm/boot/dts/imx7ulp.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-new file mode 100644
-index 000000000000..992a5ea29d39
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/imx7ulp_pmc.yaml
-@@ -0,0 +1,32 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/arm/freescale/imx7ulp_pmc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+index ab91c98f2124..32c218123662 100644
+--- a/arch/arm/boot/dts/imx7ulp.dtsi
++++ b/arch/arm/boot/dts/imx7ulp.dtsi
+@@ -286,6 +286,11 @@
+ 			assigned-clock-parents = <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
+ 		};
+ 
++		pmc1: pmc1@40400000 {
++			compatible = "fsl,imx7ulp-pmc1";
++			reg = <0x40400000 0x1000>;
++		};
 +
-+title: i.MX7ULP Power Management Controller(PMC) Device Tree Bindings
+ 		smc1: clock-controller@40410000 {
+ 			compatible = "fsl,imx7ulp-smc1";
+ 			reg = <0x40410000 0x1000>;
+@@ -447,6 +452,11 @@
+ 		reg = <0x41080000 0x80000>;
+ 		ranges;
+ 
++		pmc0: pmc0@410a1000 {
++			compatible = "fsl,imx7ulp-pmc0";
++			reg = <0x410a1000 0x1000>;
++		};
 +
-+maintainers:
-+  - Peng Fan <peng.fan@nxp.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,imx7ulp-pmc0
-+          - fsl,imx7ulp-pmc1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    pmc0: pmc0@410a1000 {
-+        compatible = "fsl,imx7ulp-pmc0";
-+        reg = <0x410a1000 0x1000>;
-+    };
-+...
+ 		sim: sim@410a3000 {
+ 			compatible = "fsl,imx7ulp-sim", "syscon";
+ 			reg = <0x410a3000 0x1000>;
 -- 
 2.16.4
 
