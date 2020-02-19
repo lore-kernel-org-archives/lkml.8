@@ -2,112 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F332C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C42C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2832E207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28922464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFl+Rpgh"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PHJLdRAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgBSJgJ (ORCPT
+        id S1726648AbgBSJg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:36:09 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43665 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgBSJgJ (ORCPT
+        Wed, 19 Feb 2020 04:36:27 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:50276 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSJg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:36:09 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p11so9318959plq.10;
-        Wed, 19 Feb 2020 01:36:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=USv22fMY4lRbm7kdOlrco6KeUFWgxCIZrYv0NUecR8k=;
-        b=mFl+Rpghcx4xs9gygrl7xbkfupYFtIeXXg7A2VrlMXSkKuMQsWKeCG26GbJDCiOieA
-         OjvFeZpZfmYjIpBwwOBC9csCzviJo3jbxes07OuwfMKnYxJUcVKvyfaQepkrHlLQx9es
-         OV7Iu2BxOSRlY1uWn0azWWlBlxhrfAL1rnIEVUnSViqd4vKaKk30ZnHvziLZcbICXXdJ
-         rLShTFl9eQRoiKGW0P2xPeeBunLdmhwGgSpuuQMZFkTJMTClvncjNGMTqkyzJhTPZ7l7
-         bVuNYv9kA+TX8kwieNjO4JqyjO3IVcfqL78VqmZ1CUZaxtive881yHsaUaEmaKDPtOo0
-         yKTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=USv22fMY4lRbm7kdOlrco6KeUFWgxCIZrYv0NUecR8k=;
-        b=BnqxSqgb2PCsdaQaiqsFx6PyJxYz4A8QlguJcIIK6LB6qseV1pRAe9qC/opNUtm1/Z
-         q2kTuAS1gmtlSj2KUBi2npYm/ys6/JvmZ7NUcjc9xk74+S5A4A7hXxwGpY+HEzjbOdXU
-         hVpa5xxZ+PwoYXsJOar9WFMD7nIGFDkxLopYce2iXGl7IbJrFEqq8LTe++FQVnz8ltpL
-         XFbveUc9719dJSVdDnIdYe6b7fL7GeVPKbtt0xmamfoSMCDmVCV8l3LWSGX3SWDCw2k6
-         OEsOgjkf8Fyyc6I4WByIQAnXT2hwcmaajRqP94bct8GfUzEK6+X/QPiXoGJyhVeumOXi
-         EyZQ==
-X-Gm-Message-State: APjAAAUMbtOMaR3X4PdQv3XPBrbLxvQYFqeT2wgZeNDX2PO0vOqHDZ73
-        i/zFEE4z/nfH3RIHD1KkySQ=
-X-Google-Smtp-Source: APXvYqyK7T17usTuMnhZLEVXZVGy6SV0GxYbz6ukrtcwQEV2x5dPjBIC/2rZ3TlaqMsCMFAuKp/yxQ==
-X-Received: by 2002:a17:902:9a09:: with SMTP id v9mr24385277plp.341.1582104968248;
-        Wed, 19 Feb 2020 01:36:08 -0800 (PST)
-Received: from localhost.localdomain ([146.196.37.220])
-        by smtp.googlemail.com with ESMTPSA id x197sm2119217pfc.1.2020.02.19.01.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 01:36:07 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] sunrpc: Pass lockdep expression to RCU lists
-Date:   Wed, 19 Feb 2020 15:05:05 +0530
-Message-Id: <20200219093504.16290-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 19 Feb 2020 04:36:27 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9XHFa006568;
+        Wed, 19 Feb 2020 09:35:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=9rfqPcoS6V4Kfp93WA9G++pHoTv0A+Yp1wS/x30l2eQ=;
+ b=PHJLdRAOWRaUIlGZ//fcyFcx/mLwvAziwjs3AdXF+qFp78sFzYri34snttxw/PnEYkId
+ j8exOnZbQX95HEm1GhXTvoSsX8M2IIoEq0B/Gv3eYF7GtrJn8ucs4HygiA8wHbBpEWv5
+ mH/PpPPdrH+d6xF2oUXZeTDkdmLs9TZd49WJIZd85Njnd2PswF6WvnlFr/kPJwv2jZv3
+ 8caZCY9VGyLFa6AxXEa+eGdkR1nTbu4l40E6qi/inZRC+969bgY/oO342ecerAjDFsl6
+ mCwcQDbPNknxCbG4101KHoRF105vPGsSjRPqDDgMtz/8C2OnFGihZwy6nQIuSmg1y5Bx Uw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2y8udd1r0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 09:35:55 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J9WhrE176762;
+        Wed, 19 Feb 2020 09:35:55 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2y8ud2rtxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 09:35:55 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01J9ZsWG004025;
+        Wed, 19 Feb 2020 09:35:54 GMT
+Received: from dhcp-10-175-189-86.vpn.oracle.com (/10.175.189.86)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 01:33:56 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     mingo@redhat.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v2 0/2] ftrace/selftest: clean up failure cases
+Date:   Wed, 19 Feb 2020 09:33:28 +0000
+Message-Id: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=646 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=3 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190070
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ mlxlogscore=706 malwarescore=0 mlxscore=0 suspectscore=3
+ priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-detail->hash_table[] is traversed using hlist_for_each_entry_rcu
-outside an RCU read-side critical section but under the protection
-of detail->hash_lock.
+When running the ftrace selftests, 2 failures and 6 unresolved
+cases were observed.  The failures can be avoided by setting
+a sysctl prior to test execution (fixed in patch 1) and by
+having unresolved cases not return 0 from ftracetest by default
+since they indicate an absence of testing modules/programs
+rather than ftrace issues (patch 2).
 
-Hence, add corresponding lockdep expression to silence false-positive
-warnings, and harden RCU lists.
+The latter are classified as "unresolved" tests, which operate
+differently from "unsupported" tests.  For unsupported tests,
+we note the unsupported count but do not consider the tests
+as having failed, whereas with unresolved the test run is
+considered to have failed so returns "not ok" when run via
+kselftest ("make -C tools/testing/selftest/ftrace run_tests").
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- net/sunrpc/cache.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Patch 2 aligns the unresolved behaviour with the unsupported;
+by default, unresolved outcomes do not trigger overall failure,
+but they can if --fail-unresolved is specified.
 
-diff --git a/net/sunrpc/cache.c b/net/sunrpc/cache.c
-index f740cb51802a..5db5f5b94726 100644
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -97,7 +97,8 @@ static struct cache_head *sunrpc_cache_add_entry(struct cache_detail *detail,
- 	spin_lock(&detail->hash_lock);
- 
- 	/* check if entry appeared while we slept */
--	hlist_for_each_entry_rcu(tmp, head, cache_list) {
-+	hlist_for_each_entry_rcu(tmp, head, cache_list,
-+				 lockdep_is_held(&detail->hash_lock)) {
- 		if (detail->match(tmp, key)) {
- 			if (cache_is_expired(detail, tmp)) {
- 				hlist_del_init_rcu(&tmp->cache_list);
+Changes since v1:
+
+- updated patch 1 to use /proc path instead of sysctl (Masami)
+- updated patch 2 to modify unresolved handling in ftracetest
+  rather than change individual unresolved -> unsupported (Masami)
+
+Alan Maguire (2):
+  ftrace/selftests: workaround cgroup RT scheduling issues
+  ftrace/selftest: make unresolved cases cause failure if
+    --fail-unresolved set
+
+ tools/testing/selftests/ftrace/ftracetest | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
+
 -- 
-2.24.1
+1.8.3.1
 
