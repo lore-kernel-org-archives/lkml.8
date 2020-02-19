@@ -2,173 +2,107 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD6CC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F57BC169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCA52465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCB5020801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582139271;
+	bh=K+l4PwzbcGcfT9N6LvjaNpSxXm+P598rAuw+Hp3l4js=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BcviR8bS3EGMikSxxgC/uoWFAJanmn4vQREcJBH/Al8WZ8K2I+KU1DedpW41QP4M5
+	 idgmDNcYjrA7nvygwUi4EBIrdJ+/0ZIGlpg2H3TcPuS2yaLnLQpevsJZs1Ifo5VVZ7
+	 WGFZ94yP5nh9MEMgtCq7HHmbLEy8EA4JDReVsoVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgBSTHm (ORCPT
+        id S1726882AbgBSTHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:07:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39118 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSTHl (ORCPT
+        Wed, 19 Feb 2020 14:07:51 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41588 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgBSTHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:07:41 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j4Uh2-0002Ro-UH; Wed, 19 Feb 2020 20:07:33 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8527C1C20D7;
-        Wed, 19 Feb 2020 20:07:32 +0100 (CET)
-Date:   Wed, 19 Feb 2020 19:07:32 -0000
-From:   "tip-bot2 for Kim Phillips" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/cpu/amd: Enable the fixed Instructions Retired
- counter IRPERF
-Cc:     Kim Phillips <kim.phillips@amd.com>, Borislav Petkov <bp@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214201805.13830-1-kim.phillips@amd.com>
-References: <20200214201805.13830-1-kim.phillips@amd.com>
+        Wed, 19 Feb 2020 14:07:50 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so990156lfp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:07:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PW7lNRLaUwWMkxjmDviGmCx98DZMFUxSA3+XY1xBUHc=;
+        b=Hx1j/CCXthRsFcYUkCqUCZKHuALKrv53PhNO0/eSPdI55ETBuvMT4Bzt7Qa//aT+Xq
+         pbz3LbAT0K7mf2O2wl4T+6nDRq33OiFGxtJRkEnoPAzmD/q8ILz+w8fB+i5OEbDM4aTv
+         V5D7jcX/IJAfFXSwG3AgccJqFA6k9pBx+DkqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PW7lNRLaUwWMkxjmDviGmCx98DZMFUxSA3+XY1xBUHc=;
+        b=qSiz/2l/YCnGuYu23z0unUwTUO7wTh65z3tITUIqzJe2vrXdUWRSbrYUTy+fEiBbLx
+         gfYld/ImbhbhFCAB3CVDV2b6ZwSAIpfsZ03WmaBVYFJweD70DeqLpNjEkLFmWxJGgK0E
+         lEqpvoaElurR4V6glouI4BY7MQQ7nJQtgxF75s9EEZDj4llW6XBQJ/csdEpO/zMWtMx2
+         PcmYxWo6bew6oqxKyCB5f60SLswrqXFqkCd8NsUKQdH8LnPD33pOn57+2wbMMvkSlW2E
+         rUjOQp7LMtNHzD89Pk2DjElaYWklpAWKjwhH1CewQJD0aMiJl0gaHKDLDq0bPQAR7n8g
+         LFLg==
+X-Gm-Message-State: APjAAAVF0myecDZsjNmyqK/00JmuYHTCBX7d4EyXIERUcD/wfKkzVkdJ
+        uIyPG49XLNhx2PF77YCiG3zf8BZOp4U=
+X-Google-Smtp-Source: APXvYqxLPllsGZLlxNtEUpBnVXacBqb+gEXDDN272hE95BQSEU8d8/PhZ51akiCWShoJWTk8nIciww==
+X-Received: by 2002:a19:c205:: with SMTP id l5mr14090817lfc.159.1582139266396;
+        Wed, 19 Feb 2020 11:07:46 -0800 (PST)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id q14sm267168lfc.60.2020.02.19.11.07.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 11:07:45 -0800 (PST)
+Received: by mail-lf1-f51.google.com with SMTP id f24so1015369lfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:07:44 -0800 (PST)
+X-Received: by 2002:a05:6512:687:: with SMTP id t7mr14685091lfe.30.1582139264476;
+ Wed, 19 Feb 2020 11:07:44 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158213925220.13786.9146323471825204537.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+ <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
+ <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
+ <241568.1582134931@warthog.procyon.org.uk> <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+In-Reply-To: <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Feb 2020 11:07:28 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com>
+Message-ID: <CAHk-=whfoWHvL29PPXncxV6iprC4e_m6CQWQJ1G4-JtR+uGVUA@mail.gmail.com>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, Feb 19, 2020 at 10:55 AM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> Why don't you just use mkdir with S_ISVTX set, or something like that?
 
-Commit-ID:     21b5ee59ef18e27d85810584caf1f7ddc705ea83
-Gitweb:        https://git.kernel.org/tip/21b5ee59ef18e27d85810584caf1f7ddc705ea83
-Author:        Kim Phillips <kim.phillips@amd.com>
-AuthorDate:    Wed, 19 Feb 2020 18:52:43 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 19 Feb 2020 20:01:54 +01:00
+Actually, since this is apparently a different filetype, the _logical_
+thing to do is to use "mknod()".
 
-x86/cpu/amd: Enable the fixed Instructions Retired counter IRPERF
+Yes, yes, it will require a new case (and maybe a per-filesystem
+callback or a flag or something) in "may_mknod()" and "do_mknodat()"
+to let those new kinds through, but it sounds like mknod() is actually
+what you're doing.
 
-Commit
+You presumably need a new type _anyway_ for stat() and/or the filldir
+d_type field. Or do you always want to make it look exactly like a
+directory to all user space?
 
-  aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired)
-		  performance counter")
-
-added support for access to the free-running counter via 'perf -e
-msr/irperf/', but when exercised, it always returns a 0 count:
-
-BEFORE:
-
-  $ perf stat -e instructions,msr/irperf/ true
-
-   Performance counter stats for 'true':
-
-             624,833      instructions
-                   0      msr/irperf/
-
-Simply set its enable bit - HWCR bit 30 - to make it start counting.
-
-Enablement is restricted to all machines advertising IRPERF capability,
-except those susceptible to an erratum that makes the IRPERF return
-bad values.
-
-That erratum occurs in Family 17h models 00-1fh [1], but not in F17h
-models 20h and above [2].
-
-AFTER (on a family 17h model 31h machine):
-
-  $ perf stat -e instructions,msr/irperf/ true
-
-   Performance counter stats for 'true':
-
-             621,690      instructions
-             622,490      msr/irperf/
-
-[1] Revision Guide for AMD Family 17h Models 00h-0Fh Processors
-[2] Revision Guide for AMD Family 17h Models 30h-3Fh Processors
-
-The revision guides are available from the bugzilla Link below.
-
- [ bp: Massage commit message. ]
-
-Fixes: aaf248848db50 ("perf/x86/msr: Add AMD IRPERF (Instructions Retired) performance counter")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-Link: http://lkml.kernel.org/r/20200214201805.13830-1-kim.phillips@amd.com
----
- arch/x86/include/asm/msr-index.h |  2 ++
- arch/x86/kernel/cpu/amd.c        | 14 ++++++++++++++
- 2 files changed, 16 insertions(+)
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index ebe1685..d5e517d 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -512,6 +512,8 @@
- #define MSR_K7_HWCR			0xc0010015
- #define MSR_K7_HWCR_SMMLOCK_BIT		0
- #define MSR_K7_HWCR_SMMLOCK		BIT_ULL(MSR_K7_HWCR_SMMLOCK_BIT)
-+#define MSR_K7_HWCR_IRPERF_EN_BIT	30
-+#define MSR_K7_HWCR_IRPERF_EN		BIT_ULL(MSR_K7_HWCR_IRPERF_EN_BIT)
- #define MSR_K7_FID_VID_CTL		0xc0010041
- #define MSR_K7_FID_VID_STATUS		0xc0010042
- 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index ac83a0f..1f875fb 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -28,6 +28,7 @@
- 
- static const int amd_erratum_383[];
- static const int amd_erratum_400[];
-+static const int amd_erratum_1054[];
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum);
- 
- /*
-@@ -972,6 +973,15 @@ static void init_amd(struct cpuinfo_x86 *c)
- 	/* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
- 	if (!cpu_has(c, X86_FEATURE_XENPV))
- 		set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
-+
-+	/*
-+	 * Turn on the Instructions Retired free counter on machines not
-+	 * susceptible to erratum #1054 "Instructions Retired Performance
-+	 * Counter May Be Inaccurate".
-+	 */
-+	if (cpu_has(c, X86_FEATURE_IRPERF) &&
-+	    !cpu_has_amd_erratum(c, amd_erratum_1054))
-+		msr_set_bit(MSR_K7_HWCR, MSR_K7_HWCR_IRPERF_EN_BIT);
- }
- 
- #ifdef CONFIG_X86_32
-@@ -1099,6 +1109,10 @@ static const int amd_erratum_400[] =
- static const int amd_erratum_383[] =
- 	AMD_OSVW_ERRATUM(3, AMD_MODEL_RANGE(0x10, 0, 0, 0xff, 0xf));
- 
-+/* #1054: Instructions Retired Performance Counter May Be Inaccurate */
-+static const int amd_erratum_1054[] =
-+	AMD_OSVW_ERRATUM(0, AMD_MODEL_RANGE(0x17, 0, 0, 0x2f, 0xf));
-+
- 
- static bool cpu_has_amd_erratum(struct cpuinfo_x86 *cpu, const int *erratum)
- {
+                  Linus
