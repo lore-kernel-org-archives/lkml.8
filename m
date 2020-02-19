@@ -2,436 +2,465 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BDEC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3240C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6ECD208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22F8208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 07:47:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bFDgLtwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgBSHq3 (ORCPT
+        id S1727078AbgBSHrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 02:46:29 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:45510 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726760AbgBSHq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 02:46:29 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DD79A920F607F25628D;
-        Wed, 19 Feb 2020 15:46:24 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
- 2020 15:46:17 +0800
-Subject: Re: [PATCH v2] erofs: convert workstn to XArray
-To:     Gao Xiang <gaoxiang25@huawei.com>, <linux-erofs@lists.ozlabs.org>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20200217033042.137855-1-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <58f1ff26-e1f8-96a4-fa7b-ee86f972b0aa@huawei.com>
-Date:   Wed, 19 Feb 2020 15:46:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 19 Feb 2020 02:47:06 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44505 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgBSHrG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 02:47:06 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so26919859wrx.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 23:47:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=AySmLIYsWtvcCXv7Xaz2smxRH6W+EenMOBf4ub6ztI8=;
+        b=bFDgLtwjoQzbwuSl939RWSiJCf7qXnTYi0J3TsRl8Q64qWqIHnEoozze0OGlBaNA2L
+         Hu6Dn95vLs4YrPSQ6lOQNYtbM1BX35T9MTLO5pXucPrXZXcWrrD7n0SAV1YtSSk9VYI9
+         ePCo9MiBVrSvPbduguSJ53jWbFRMPRzm+g45/otQwLKJEEN/saxUnsJ1ikdLtfedylQ/
+         44gnnPDFBXiynrVqREHOMvmiULrL6/sjapj7Cfjp7JcZwBJP8KR4vW9tX1DCQvfDkNKl
+         ODXTOPJNkFw1tBwNPTrlIgQa/DIGmjQOyc62TcRWi3ntmeAJGx0CTshyr5G3kiCrXdUN
+         zeGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=AySmLIYsWtvcCXv7Xaz2smxRH6W+EenMOBf4ub6ztI8=;
+        b=MVduCLyVbpm2PRDcr17HZ6h9ArmmZwjXy4Y1UV6Ct44+pJdI/IcIkRbrodyYk/QHGi
+         Jb6i/iudsOwH0y/KZbGneQjTJMg88FX5ob6fIZ10Ldi0R03rfF/KOp1DWUMBs/yQtt3q
+         q/3s1ovpWTdN0qVejx1E9+hTYKvbwOcMRs/SNcautVgNiuNg1WZDmGl0bPNMVC/6RbYX
+         6y6rOdYqVUzv3r1DpV8utuJ7zjFkcC/bEpCnesZ2yHq8LC1s0aNIvaIyn/EhrkLq6oby
+         6pGyvAfcdsMAd1EWvf5GRb43KFfxfbfWuGjX/R4p8lW/YxQuw98LkwaZ6xEtqoBrsaFu
+         Te9g==
+X-Gm-Message-State: APjAAAVii+UVmHlabH0AT7960L7mJTas7xY8/l6gI+YMUoA81d8TwWSx
+        A9W938tF+DiEulL3zr8BXVk7nQ==
+X-Google-Smtp-Source: APXvYqwvdTSZ5Bz88iJbsZk5BCT+ScNenQ+7sUrT8+MLVN9AbvV14Ny/r2PnMQPMXPlx4S9+Fkil8Q==
+X-Received: by 2002:a5d:510f:: with SMTP id s15mr33886678wrt.408.1582098423177;
+        Tue, 18 Feb 2020 23:47:03 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id h10sm1853680wml.18.2020.02.18.23.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 23:47:02 -0800 (PST)
+Date:   Wed, 19 Feb 2020 07:47:30 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: LED backlight on Droid 4 and others
+Message-ID: <20200219074730.GD3494@dell>
+References: <20200105183202.GA17784@duo.ucw.cz>
+ <20200106084549.GA14821@dell>
+ <20200211172900.GH64767@atomide.com>
+ <20200212201638.GB20085@amd>
+ <20200218135219.GC3494@dell>
+ <20200218141452.GF35972@atomide.com>
+ <20200218231001.GA28817@amd>
 MIME-Version: 1.0
-In-Reply-To: <20200217033042.137855-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218231001.GA28817@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/17 11:30, Gao Xiang wrote:
-> XArray has friendly apis and it will replace the old radix
-> tree in the near future.
-> 
-> This convert makes use of __xa_cmpxchg when inserting on
-> a just inserted item by other thread. In detail, instead
-> of totally looking up again as what we did for the old
-> radix tree, it will try to legitimize the current in-tree
-> item in the XArray therefore more effective.
-> 
-> In addition, naming is rather a challenge for non-English
-> speaker like me. The basic idea of workstn is to provide
-> a runtime sparse array with items arranged in the physical
-> block number order. Such items (was called workgroup) can be
-> used to record compress clusters or for later new features.
-> 
-> However, both workgroup and workstn seem not good names from
-> whatever point of view, so I'd like to rename them as pslot
-> and managed_pslots to stand for physical slots. This patch
-> handles the second as a part of the radix root convert.
-> 
-> Cc: Chao Yu <yuchao0@huawei.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
-> changes since v1:
->  - update the comment above "struct xarray managed_pslots";
->  - get rid of "comparison to NULL" style in v1;
->  - stress tested without strange behaviors;
->    https://lore.kernel.org/r/20200206135631.1491-1-hsiangkao@aol.com
-> 
->  fs/erofs/internal.h |  8 ++---
->  fs/erofs/super.c    |  2 +-
->  fs/erofs/utils.c    | 85 ++++++++++++++++-----------------------------
->  fs/erofs/zdata.c    | 65 ++++++++++++++++------------------
->  4 files changed, 64 insertions(+), 96 deletions(-)
-> 
-> diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
-> index c4c6dcdc89ad..b70f52c80852 100644
-> --- a/fs/erofs/internal.h
-> +++ b/fs/erofs/internal.h
-> @@ -52,8 +52,8 @@ struct erofs_sb_info {
->  	struct list_head list;
->  	struct mutex umount_mutex;
->  
-> -	/* the dedicated workstation for compression */
-> -	struct radix_tree_root workstn_tree;
-> +	/* managed XArray arranged in physical block number */
-> +	struct xarray managed_pslots;
->  
->  	/* threshold for decompression synchronously */
->  	unsigned int max_sync_decompress_pages;
-> @@ -402,8 +402,8 @@ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
->  int erofs_workgroup_put(struct erofs_workgroup *grp);
->  struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
->  					     pgoff_t index);
-> -int erofs_register_workgroup(struct super_block *sb,
-> -			     struct erofs_workgroup *grp);
-> +struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
-> +					       struct erofs_workgroup *grp);
->  void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
->  void erofs_shrinker_register(struct super_block *sb);
->  void erofs_shrinker_unregister(struct super_block *sb);
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index 057e6d7b5b7f..b514c67e5fc2 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -425,7 +425,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
->  		sb->s_flags &= ~SB_POSIXACL;
->  
->  #ifdef CONFIG_EROFS_FS_ZIP
-> -	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
-> +	xa_init(&sbi->managed_pslots);
->  #endif
->  
->  	/* get the root inode */
-> diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
-> index fddc5059c930..56ab5b3f73b0 100644
-> --- a/fs/erofs/utils.c
-> +++ b/fs/erofs/utils.c
-> @@ -37,9 +37,6 @@ void *erofs_get_pcpubuf(unsigned int pagenr)
->  /* global shrink count (for all mounted EROFS instances) */
->  static atomic_long_t erofs_global_shrink_cnt;
->  
-> -#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
-> -#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
-> -
->  static int erofs_workgroup_get(struct erofs_workgroup *grp)
->  {
->  	int o;
-> @@ -66,7 +63,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
->  
->  repeat:
->  	rcu_read_lock();
-> -	grp = radix_tree_lookup(&sbi->workstn_tree, index);
-> +	grp = xa_load(&sbi->managed_pslots, index);
->  	if (grp) {
->  		if (erofs_workgroup_get(grp)) {
->  			/* prefer to relax rcu read side */
-> @@ -80,43 +77,36 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
->  	return grp;
->  }
->  
-> -int erofs_register_workgroup(struct super_block *sb,
-> -			     struct erofs_workgroup *grp)
-> +struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
-> +					       struct erofs_workgroup *grp)
->  {
->  	struct erofs_sb_info *sbi;
-> -	int err;
-> -
-> -	/* grp shouldn't be broken or used before */
-> -	if (atomic_read(&grp->refcount) != 1) {
-> -		DBG_BUGON(1);
-> -		return -EINVAL;
-> -	}
-> -
-> -	err = radix_tree_preload(GFP_NOFS);
-> -	if (err)
-> -		return err;
-> -
-> -	sbi = EROFS_SB(sb);
-> -	xa_lock(&sbi->workstn_tree);
-> +	struct erofs_workgroup *pre;
->  
->  	/*
-> -	 * Bump up reference count before making this workgroup
-> -	 * visible to other users in order to avoid potential UAF
-> -	 * without serialized by workstn_lock.
-> +	 * Bump up a reference count before making this visible
-> +	 * to others for the XArray in order to avoid potential
-> +	 * UAF without serialized by xa_lock.
->  	 */
-> -	__erofs_workgroup_get(grp);
-> +	atomic_inc(&grp->refcount);
->  
-> -	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
-> -	if (err)
-> -		/*
-> -		 * it's safe to decrease since the workgroup isn't visible
-> -		 * and refcount >= 2 (cannot be freezed).
-> -		 */
-> -		__erofs_workgroup_put(grp);
-> -
-> -	xa_unlock(&sbi->workstn_tree);
-> -	radix_tree_preload_end();
-> -	return err;
-> +	sbi = EROFS_SB(sb);
-> +repeat:
-> +	xa_lock(&sbi->managed_pslots);
-> +	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
-> +			   NULL, grp, GFP_NOFS);
-> +	if (pre) {
+On Wed, 19 Feb 2020, Pavel Machek wrote:
 
-It looks __xa_cmpxchg() could return negative value in case of failure, e.g.
-no memory case. We'd better handle that case and old valid workgroup separately?
+> Hi!
+> 
+> > > > > > > It would be good to get LED backlight to work in clean way for 5.6
+> > > > > > > kernel.
+> > > > > ...
+> > > > > > > [If you have an idea what else is needed, it would be welcome; it
+> > > > > > > works for me in development tree but not in tree I'd like to
+> > > > > > > upstream.]
+> > > > > > > 
+> > > > > > > Lee, would you be willing to take "backlight: add led-backlight
+> > > > > > > driver"? Would it help if I got "leds: Add managed API to get a LED
+> > > > > > > from a device driver" and "leds: Add of_led_get() and led_put()" into
+> > > > > > > for_next tree of the LED subsystem?
+> > > > > > 
+> > > > > > It looks like you have an open question from Tony on v10.
+> > > > > > 
+> > > > > > Is that patch orthogonal, or are there depend{ants,encies}?
+> > > > > 
+> > > > > Uhh looks like we messed up a bit with integration. Now droid4
+> > > > > LCD backlight can no longer be enabled at all manually in v5.6-rc1
+> > > > > without the "add led-backlight driver" patch.. Should we just
+> > > > > merge it to fix it rather than start scrambling with other
+> > > > > temporary hacks?
+> > > > 
+> > > > We should just merge the "add led-backlight driver". Everything should
+> > > > be ready for it. I'm sorry if I broke something working, I was not
+> > > > aware it worked at all.
+> > > > 
+> > > > Unfortunately, this is backlight code, not LED, so I can't just merge it.
+> > > 
+> > > Please go ahead.  Apply my Acked-by and merge away ASAP.
+> > > 
+> > > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > 
+> > OK best to merge the driver via the LED tree:
+> > 
+> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > Tested-by: Tony Lindgren <tony@atomide.com>
+> 
+> Is the patch below the one both of you are talking about?
+> 
+> Hmm. I should s/default-brightness-level/default-brightness/
+> below.
+> 
+> Lee, I can of course take it (thanks), but won't Kconfig/Makefile
+> pieces cause rejects? It might be still better if you took it. I can
+> hand-edit it and submit it in form for easy application... tommorow.
 
-Thanks,
+My suggestion would be to send it to Linus ASAP.
 
-> +		/* try to legitimize the current in-tree one */
-> +		if (erofs_workgroup_get(pre)) {
-> +			xa_unlock(&sbi->managed_pslots);
-> +			cond_resched();
-> +			goto repeat;
+Ideally it would get into the -rcs, as it 'fixes' things.
+
+> Best regards,
+> 
+> 									Pavel
+> 
+> commit 81a2daadf8dd6c8e0cbc3b60246932436be3c714
+> Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Date:   Thu Oct 3 10:28:12 2019 +0200
+> 
+>     backlight: add led-backlight driver
+>     
+>     This patch adds a led-backlight driver (led_bl), which is similar to
+>     pwm_bl except the driver uses a LED class driver to adjust the
+>     brightness in the HW. Multiple LEDs can be used for a single backlight.
+>     
+>     Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+>     Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+>     Acked-by: Pavel Machek <pavel@ucw.cz>
+>     Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> 
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 4c8f73394aac..93836ef872f5 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -463,6 +463,13 @@ config BACKLIGHT_RAVE_SP
+>  	help
+>  	  Support for backlight control on RAVE SP device.
+>  
+> +config BACKLIGHT_LED
+> +	tristate "Generic LED based Backlight Driver"
+> +	depends on LEDS_CLASS && OF
+> +	help
+> +	  If you have a LCD backlight adjustable by LED class driver, say Y
+> +	  to enable this driver.
+> +
+>  endif # BACKLIGHT_CLASS_DEVICE
+>  
+>  endmenu
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index 961fb553b9c0..5e13242f31d6 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -60,3 +60,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+>  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+>  obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+>  obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
+> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> new file mode 100644
+> index 000000000000..3f66549997c8
+> --- /dev/null
+> +++ b/drivers/video/backlight/led_bl.c
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> + *
+> + * Based on pwm_bl.c
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct led_bl_data {
+> +	struct device		*dev;
+> +	struct backlight_device	*bl_dev;
+> +	struct led_classdev	**leds;
+> +	bool			enabled;
+> +	int			nb_leds;
+> +	unsigned int		*levels;
+> +	unsigned int		default_brightness;
+> +	unsigned int		max_brightness;
+> +};
+> +
+> +static void led_bl_set_brightness(struct led_bl_data *priv, int level)
+> +{
+> +	int i;
+> +	int bkl_brightness;
+> +
+> +	if (priv->levels)
+> +		bkl_brightness = priv->levels[level];
+> +	else
+> +		bkl_brightness = level;
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_set_brightness(priv->leds[i], bkl_brightness);
+> +
+> +	priv->enabled = true;
+> +}
+> +
+> +static void led_bl_power_off(struct led_bl_data *priv)
+> +{
+> +	int i;
+> +
+> +	if (!priv->enabled)
+> +		return;
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_set_brightness(priv->leds[i], LED_OFF);
+> +
+> +	priv->enabled = false;
+> +}
+> +
+> +static int led_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct led_bl_data *priv = bl_get_data(bl);
+> +	int brightness = bl->props.brightness;
+> +
+> +	if (bl->props.power != FB_BLANK_UNBLANK ||
+> +	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
+> +	    bl->props.state & BL_CORE_FBBLANK)
+> +		brightness = 0;
+> +
+> +	if (brightness > 0)
+> +		led_bl_set_brightness(priv, brightness);
+> +	else
+> +		led_bl_power_off(priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct backlight_ops led_bl_ops = {
+> +	.update_status	= led_bl_update_status,
+> +};
+> +
+> +static int led_bl_get_leds(struct device *dev,
+> +			   struct led_bl_data *priv)
+> +{
+> +	int i, nb_leds, ret;
+> +	struct device_node *node = dev->of_node;
+> +	struct led_classdev **leds;
+> +	unsigned int max_brightness;
+> +	unsigned int default_brightness;
+> +
+> +	ret = of_count_phandle_with_args(node, "leds", NULL);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Unable to get led count\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	nb_leds = ret;
+> +	if (nb_leds < 1) {
+> +		dev_err(dev, "At least one LED must be specified!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	leds = devm_kzalloc(dev, sizeof(struct led_classdev *) * nb_leds,
+> +			    GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < nb_leds; i++) {
+> +		leds[i] = devm_of_led_get(dev, i);
+> +		if (IS_ERR(leds[i]))
+> +			return PTR_ERR(leds[i]);
+> +	}
+> +
+> +	/* check that the LEDs all have the same brightness range */
+> +	max_brightness = leds[0]->max_brightness;
+> +	for (i = 1; i < nb_leds; i++) {
+> +		if (max_brightness != leds[i]->max_brightness) {
+> +			dev_err(dev, "LEDs must have identical ranges\n");
+> +			return -EINVAL;
 > +		}
-> +		atomic_dec(&grp->refcount);
-> +		grp = pre;
 > +	}
-> +	xa_unlock(&sbi->managed_pslots);
-> +	return grp;
->  }
->  
->  static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
-> @@ -155,7 +145,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
->  
->  	/*
->  	 * Note that all cached pages should be unattached
-> -	 * before deleted from the radix tree. Otherwise some
-> +	 * before deleted from the XArray. Otherwise some
->  	 * cached pages could be still attached to the orphan
->  	 * old workgroup when the new one is available in the tree.
->  	 */
-> @@ -169,7 +159,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
->  	 * however in order to avoid some race conditions, add a
->  	 * DBG_BUGON to observe this in advance.
->  	 */
-> -	DBG_BUGON(radix_tree_delete(&sbi->workstn_tree, grp->index) != grp);
-> +	DBG_BUGON(xa_erase(&sbi->managed_pslots, grp->index) != grp);
->  
->  	/*
->  	 * If managed cache is on, last refcount should indicate
-> @@ -182,22 +172,11 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
->  static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
->  					      unsigned long nr_shrink)
->  {
-> -	pgoff_t first_index = 0;
-> -	void *batch[PAGEVEC_SIZE];
-> +	struct erofs_workgroup *grp;
->  	unsigned int freed = 0;
-> +	unsigned long index;
->  
-> -	int i, found;
-> -repeat:
-> -	xa_lock(&sbi->workstn_tree);
-> -
-> -	found = radix_tree_gang_lookup(&sbi->workstn_tree,
-> -				       batch, first_index, PAGEVEC_SIZE);
-> -
-> -	for (i = 0; i < found; ++i) {
-> -		struct erofs_workgroup *grp = batch[i];
-> -
-> -		first_index = grp->index + 1;
-> -
-> +	xa_for_each(&sbi->managed_pslots, index, grp) {
->  		/* try to shrink each valid workgroup */
->  		if (!erofs_try_to_release_workgroup(sbi, grp))
->  			continue;
-> @@ -206,10 +185,6 @@ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
->  		if (!--nr_shrink)
->  			break;
->  	}
-> -	xa_unlock(&sbi->workstn_tree);
-> -
-> -	if (i && nr_shrink)
-> -		goto repeat;
->  	return freed;
->  }
->  
-> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
-> index 80e47f07d946..0d77a166068f 100644
-> --- a/fs/erofs/zdata.c
-> +++ b/fs/erofs/zdata.c
-> @@ -67,16 +67,6 @@ static void z_erofs_pcluster_init_once(void *ptr)
->  		pcl->compressed_pages[i] = NULL;
->  }
->  
-> -static void z_erofs_pcluster_init_always(struct z_erofs_pcluster *pcl)
-> -{
-> -	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
-> -
-> -	atomic_set(&pcl->obj.refcount, 1);
-> -
-> -	DBG_BUGON(cl->nr_pages);
-> -	DBG_BUGON(cl->vcnt);
-> -}
-> -
->  int __init z_erofs_init_zip_subsystem(void)
->  {
->  	pcluster_cachep = kmem_cache_create("erofs_compress",
-> @@ -341,26 +331,19 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
->  				     struct inode *inode,
->  				     struct erofs_map_blocks *map)
->  {
-> -	struct erofs_workgroup *grp;
-> -	struct z_erofs_pcluster *pcl;
-> +	struct z_erofs_pcluster *pcl = clt->pcl;
->  	struct z_erofs_collection *cl;
->  	unsigned int length;
->  
-> -	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
-> -	if (!grp)
-> -		return -ENOENT;
-> -
-> -	pcl = container_of(grp, struct z_erofs_pcluster, obj);
-> +	/* to avoid unexpected loop formed by corrupted images */
->  	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
->  		DBG_BUGON(1);
-> -		erofs_workgroup_put(grp);
->  		return -EFSCORRUPTED;
->  	}
->  
->  	cl = z_erofs_primarycollection(pcl);
->  	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
->  		DBG_BUGON(1);
-> -		erofs_workgroup_put(grp);
->  		return -EFSCORRUPTED;
->  	}
->  
-> @@ -368,7 +351,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
->  	if (length & Z_EROFS_PCLUSTER_FULL_LENGTH) {
->  		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
->  			DBG_BUGON(1);
-> -			erofs_workgroup_put(grp);
->  			return -EFSCORRUPTED;
->  		}
->  	} else {
-> @@ -391,7 +373,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
->  	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
->  	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
->  		clt->tailpcl = NULL;
-> -	clt->pcl = pcl;
->  	clt->cl = cl;
->  	return 0;
->  }
-> @@ -402,14 +383,14 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
->  {
->  	struct z_erofs_pcluster *pcl;
->  	struct z_erofs_collection *cl;
-> -	int err;
-> +	struct erofs_workgroup *grp;
->  
->  	/* no available workgroup, let's allocate one */
->  	pcl = kmem_cache_alloc(pcluster_cachep, GFP_NOFS);
->  	if (!pcl)
->  		return -ENOMEM;
->  
-> -	z_erofs_pcluster_init_always(pcl);
-> +	atomic_set(&pcl->obj.refcount, 1);
->  	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
->  
->  	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
-> @@ -429,20 +410,27 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
->  	clt->mode = COLLECT_PRIMARY_FOLLOWED;
->  
->  	cl = z_erofs_primarycollection(pcl);
 > +
-> +	/* must be cleaned before freeing to slab */
-> +	DBG_BUGON(cl->nr_pages);
-> +	DBG_BUGON(cl->vcnt);
+> +	/* get the default brightness from the first LED from the list */
+> +	default_brightness = leds[0]->brightness;
 > +
->  	cl->pageofs = map->m_la & ~PAGE_MASK;
->  
->  	/*
->  	 * lock all primary followed works before visible to others
->  	 * and mutex_trylock *never* fails for a new pcluster.
->  	 */
-> -	mutex_trylock(&cl->lock);
-> +	DBG_BUGON(!mutex_trylock(&cl->lock));
->  
-> -	err = erofs_register_workgroup(inode->i_sb, &pcl->obj);
-> -	if (err) {
-> +	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
-> +	if (grp != &pcl->obj) {
-> +		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
->  		mutex_unlock(&cl->lock);
->  		kmem_cache_free(pcluster_cachep, pcl);
-> -		return -EAGAIN;
-> +		return -EEXIST;
->  	}
+> +	priv->nb_leds = nb_leds;
+> +	priv->leds = leds;
+> +	priv->max_brightness = max_brightness;
+> +	priv->default_brightness = default_brightness;
 > +
->  	/* used to check tail merging loop due to corrupted images */
->  	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
->  		clt->tailpcl = pcl;
-> @@ -456,6 +444,7 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
->  				   struct inode *inode,
->  				   struct erofs_map_blocks *map)
->  {
-> +	struct erofs_workgroup *grp;
->  	int ret;
->  
->  	DBG_BUGON(clt->cl);
-> @@ -469,21 +458,25 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
->  		return -EINVAL;
->  	}
->  
-> -repeat:
-> -	ret = z_erofs_lookup_collection(clt, inode, map);
-> -	if (ret == -ENOENT) {
-> +	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
-> +	if (grp) {
-> +		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
-> +	} else {
->  		ret = z_erofs_register_collection(clt, inode, map);
->  
-> -		/* someone registered at the same time, give another try */
-> -		if (ret == -EAGAIN) {
-> -			cond_resched();
-> -			goto repeat;
-> -		}
-> +		if (!ret)
-> +			goto out;
-> +		if (ret != -EEXIST)
+> +	return 0;
+> +}
+> +
+> +static int led_bl_parse_levels(struct device *dev,
+> +			   struct led_bl_data *priv)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	int num_levels;
+> +	u32 value;
+> +	int ret;
+> +
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	num_levels = of_property_count_u32_elems(node, "brightness-levels");
+> +	if (num_levels > 1) {
+> +		int i;
+> +		unsigned int db;
+> +		u32 *levels = NULL;
+> +
+> +		levels = devm_kzalloc(dev, sizeof(u32) * num_levels,
+> +				      GFP_KERNEL);
+> +		if (!levels)
+> +			return -ENOMEM;
+> +
+> +		ret = of_property_read_u32_array(node, "brightness-levels",
+> +						levels,
+> +						num_levels);
+> +		if (ret < 0)
 > +			return ret;
->  	}
->  
-> -	if (ret)
-> +	ret = z_erofs_lookup_collection(clt, inode, map);
-> +	if (ret) {
-> +		erofs_workgroup_put(&clt->pcl->obj);
->  		return ret;
+> +
+> +		/*
+> +		 * Try to map actual LED brightness to backlight brightness
+> +		 * level
+> +		 */
+> +		db = priv->default_brightness;
+> +		for (i = 0 ; i < num_levels; i++) {
+> +			if ((i && db > levels[i-1]) && db <= levels[i])
+> +				break;
+> +		}
+> +		priv->default_brightness = i;
+> +		priv->max_brightness = num_levels - 1;
+> +		priv->levels = levels;
+> +	} else if (num_levels >= 0)
+> +		dev_warn(dev, "Not enough levels defined\n");
+> +
+> +	ret = of_property_read_u32(node, "default-brightness-level", &value);
+> +	if (!ret && value <= priv->max_brightness)
+> +		priv->default_brightness = value;
+> +	else if (!ret  && value > priv->max_brightness)
+> +		dev_warn(dev, "Invalid default brightness. Ignoring it\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int led_bl_probe(struct platform_device *pdev)
+> +{
+> +	struct backlight_properties props;
+> +	struct led_bl_data *priv;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->dev = &pdev->dev;
+> +
+> +	ret = led_bl_get_leds(&pdev->dev, priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = led_bl_parse_levels(&pdev->dev, priv);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to parse DT data\n");
+> +		return ret;
 > +	}
->  
-> +out:
->  	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
->  				  clt->cl->pagevec, clt->cl->vcnt);
->  
+> +
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.type = BACKLIGHT_RAW;
+> +	props.max_brightness = priv->max_brightness;
+> +	props.brightness = priv->default_brightness;
+> +	props.power = (priv->default_brightness > 0) ? FB_BLANK_POWERDOWN :
+> +		      FB_BLANK_UNBLANK;
+> +	priv->bl_dev = backlight_device_register(dev_name(&pdev->dev),
+> +			&pdev->dev, priv, &led_bl_ops, &props);
+> +	if (IS_ERR(priv->bl_dev)) {
+> +		dev_err(&pdev->dev, "Failed to register backlight\n");
+> +		return PTR_ERR(priv->bl_dev);
+> +	}
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_sysfs_disable(priv->leds[i]);
+> +
+> +	backlight_update_status(priv->bl_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int led_bl_remove(struct platform_device *pdev)
+> +{
+> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
+> +	struct backlight_device *bl = priv->bl_dev;
+> +	int i;
+> +
+> +	backlight_device_unregister(bl);
+> +
+> +	led_bl_power_off(priv);
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_sysfs_enable(priv->leds[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id led_bl_of_match[] = {
+> +	{ .compatible = "led-backlight" },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
+> +
+> +static struct platform_driver led_bl_driver = {
+> +	.driver		= {
+> +		.name		= "led-backlight",
+> +		.of_match_table	= of_match_ptr(led_bl_of_match),
+> +	},
+> +	.probe		= led_bl_probe,
+> +	.remove		= led_bl_remove,
+> +};
+> +
+> +module_platform_driver(led_bl_driver);
+> +
+> +MODULE_DESCRIPTION("LED based Backlight Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:led-backlight");
 > 
+
+
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
