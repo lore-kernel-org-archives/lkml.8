@@ -2,61 +2,78 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A7BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3789FC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBFA24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D4421D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:58:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L+1ewkA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBSJ5O (ORCPT
+        id S1726647AbgBSJ6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:57:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37763 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726385AbgBSJ5O (ORCPT
+        Wed, 19 Feb 2020 04:58:22 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:53244 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgBSJ6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:57:14 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4M6T-0001jk-Dz; Wed, 19 Feb 2020 10:57:13 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 13812103A05; Wed, 19 Feb 2020 10:57:13 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org
-Subject: [PATCH] x86/entry/32: Add missing ASM_CLAC in general_protection entry
-Date:   Wed, 19 Feb 2020 10:57:13 +0100
-Message-ID: <87zhdeq4qu.fsf@nanos.tec.linutronix.de>
+        Wed, 19 Feb 2020 04:58:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Ju7RNVO+JUQObhm5lTREw7ao6b53xwESyy/6/lACiL0=; b=L+1ewkA6EVs5oN2GGY8MYky2gE
+        9FunJgfuBsZQMomY5BEFobzJYMRAV5WYcTILodEJv/m9cNLedZOgWt5q2BTUlG8U3XMEBLNZz0fFX
+        ivkdkw3tgSXLX4zD28oQwm7PPgSJ7I/nAkUpRGImCRcloi7irGrVkRwbBRY1vxZyXRFOSMPpXKH7j
+        xEbthzvAKo2Fd3hbxjrJNDvmbUrEMfiBFkcqePLsP4wec8M0QQnFCTTmzQxd5fg5OzzBqlVA/Y6ar
+        ekLUf0CdybblQZ92NvyFT+xHHdhCsVcpqPbnOwaALl34bXOgBW56VmxxbjPAEqImQiLoyJiZ1DiR7
+        jfxsrp3g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4M71-0002Lw-IW; Wed, 19 Feb 2020 09:57:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6076330008D;
+        Wed, 19 Feb 2020 10:55:51 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 963B92B959662; Wed, 19 Feb 2020 10:57:43 +0100 (CET)
+Date:   Wed, 19 Feb 2020 10:57:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
+Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
+Message-ID: <20200219095743.GA18400@hirez.programming.kicks-ass.net>
+References: <20200212232005.GC115917@google.com>
+ <20200213082716.GI14897@hirez.programming.kicks-ass.net>
+ <20200213135138.GB2935@paulmck-ThinkPad-P72>
+ <20200213164031.GH14914@hirez.programming.kicks-ass.net>
+ <20200213185612.GG2935@paulmck-ThinkPad-P72>
+ <20200213204444.GA94647@google.com>
+ <20200218195831.GD11457@worktop.programming.kicks-ass.net>
+ <20200218201728.GH2935@paulmck-ThinkPad-P72>
+ <20200218204021.GJ11457@worktop.programming.kicks-ass.net>
+ <20200218213925.GL2935@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218213925.GL2935@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All exception entry points must have ASM_CLAC right at the
-beginning. The general_protection entry is missing one.
+On Tue, Feb 18, 2020 at 01:39:25PM -0800, Paul E. McKenney wrote:
+> OK.  I will drop it later today, but leave tag in_nmi.2020.02.18a
+> pointing at it for future reference.
 
-Fixes: e59d1b0a2419 ("x86-32, smap: Add STAC/CLAC instructions to 32-bit kernel entry")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
----
- arch/x86/entry/entry_32.S |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -1681,6 +1681,7 @@ SYM_CODE_START(int3)
- SYM_CODE_END(int3)
- 
- SYM_CODE_START(general_protection)
-+	ASM_CLAC
- 	pushl	$do_general_protection
- 	jmp	common_exception
- SYM_CODE_END(general_protection)
+Thanks, I've picked it up in my series.
