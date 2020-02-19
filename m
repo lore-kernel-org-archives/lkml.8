@@ -2,104 +2,94 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B06DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE0FC3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D507A24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A6C924670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582147363;
-	bh=SMT83HTbhfyboCPhfsiX1K20ihz6gLD6srtGATEOVI0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sUZURiSuu3vgqQYBwasIyX33idGWL5Ka6C4rpi7duWKRFkas7iun2O335FFnmCGQT
-	 figwl817FF2QgyEKYrXdOrSWLrWRs37HLnzjw8KPBCNRHISJJO10qI7l0UyHxxTzTO
-	 yXUj2mrtwv3QamZYxE5NGRTY4UBTgeJTQ4YjVngg=
+	s=default; t=1582147540;
+	bh=mfv/pL3ZEiWQQphjN9TDvanaEn6a7BTYp2d1xLoX0TY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TugqDMGm3hO5gh9CxPNjvzxPxgRwoaYAh/LrEKRycZXCEI9jEsIFeUykVkZlk/Sxf
+	 QOh66ReQVpAdwduHvH5zp4bzwR7pPwoFR+vSB5m1KqDMMmw2fiaIcjmQ7+bgFjGMh1
+	 hHjPyhDfRorj9+xCd9zC0OK01a2hjoodJaZOxOEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbgBSVWm (ORCPT
+        id S1727462AbgBSVZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSVWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:22:42 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECAE124656;
-        Wed, 19 Feb 2020 21:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582147360;
-        bh=SMT83HTbhfyboCPhfsiX1K20ihz6gLD6srtGATEOVI0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TwGo8139M7PeZk7Ov1iEDzoLrm1mJZkY3kstaz84xgWoJbRuTjVmp5aqfcHPmKG9M
-         kjI4/Wm5JwTpg8UlU9udwUB24H1NaXig16E9n0t/Nki27LU2HfkQKbuzg2Jtq74Mt0
-         KMSow4Ne76+p2IgcExEruN5IHkGzH2vIxV1CL3dI=
-Date:   Wed, 19 Feb 2020 13:22:39 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Justin He <Justin.He@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>
-Subject: Re: [PATCH] mm: Avoid data corruption on CoW fault into PFN-mapped
- VMA
-Message-Id: <20200219132239.92a22479e4bff7ec73ae6bdb@linux-foundation.org>
-In-Reply-To: <20200218154151.13349-1-kirill.shutemov@linux.intel.com>
-References: <20200218154151.13349-1-kirill.shutemov@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 16:25:39 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39612 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgBSVZj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:25:39 -0500
+Received: by mail-oi1-f196.google.com with SMTP id z2so25332469oih.6;
+        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WCxKuFuKrKCmX1uT5gLX0bEHo5oCkRKj0kBnIt2u63M=;
+        b=JOSVdHoDopCv2+s+Gwxv8k25oW01alnL8rsEPehJdZHCBrqL0N80WwQoaaz9AHW+PA
+         0KO2TGqatqGX+qWzWK6Ryz4+hjS8pXRITKD+XuOEU6Q/wSmM58ReEZ7HhUIVKhdjbjfx
+         FuUiEXFh+IqFPfDpDIaNqb6C66p1SgPCpsXMiiOMyauDQPeERoteJE/0aVMhva7pz9iH
+         RwG4OjpVgFouZIJqeF2tYe1WXq+ea0zvjQ4C86r+Z3aUwuyP1lBOU9fEZQ1TkvfiN5TU
+         lut4ClkW9EvFxUPED+XC/CoftERkR7TeESHQwef9KmSUVquSpgsO1x84UwYtub7saS5V
+         6mng==
+X-Gm-Message-State: APjAAAUP8xlDO0zPHh0Oi2WmQyv2rmCffSrQdLRqHiuBrPVa05zKin/1
+        ANnlRhTbjx4VDl2map+z0w==
+X-Google-Smtp-Source: APXvYqwDVCsW3U1t+AEF60kSVA4s4dd6NUwHx6X/WAXPqRa5l1ABP+U4U73fvsww73PFx1TuvezuaA==
+X-Received: by 2002:a05:6808:b13:: with SMTP id s19mr5717061oij.119.1582147538427;
+        Wed, 19 Feb 2020 13:25:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm321464otl.71.2020.02.19.13.25.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 13:25:37 -0800 (PST)
+Received: (nullmailer pid 29494 invoked by uid 1000);
+        Wed, 19 Feb 2020 21:25:36 -0000
+Date:   Wed, 19 Feb 2020 15:25:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Daniel Junho <djunho@gmail.com>
+Cc:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
+        michael.hennerich@analog.com, patrick.vasseur@c-s.fr,
+        alexandru.Ardelean@analog.com
+Subject: Re: [PATCH v2] dt-bindings: iio: adc: ad7923: Add binding
+ documentation for AD7928
+Message-ID: <20200219212536.GA29435@bogus>
+References: <20200218110647.24758-1-djunho@padtec.com.br>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218110647.24758-1-djunho@padtec.com.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 18:41:51 +0300 "Kirill A. Shutemov" <kirill@shutemov.name> wrote:
+On Tue, 18 Feb 2020 08:06:47 -0300, Daniel Junho wrote:
+> From: Daniel Junho <djunho@gmail.com>
+> 
+> This patch add device tree binding documentation for AD7923 adc in YAML
+> format.
+> 
+> Signed-off-by: Daniel Junho <djunho@gmail.com>
+> ---
+> Changes in v2:
+> - Fix the license header to "GPL-2.0-only OR BSD-2-Clause";
+> - Change the Michael Hennerich email.
+> 
+>  .../bindings/iio/adc/adi,ad7923.yaml          | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7923.yaml
+> 
 
-> Jeff Moyer has reported that one of xfstests triggers a warning when run
-> on DAX-enabled filesystem:
-> 
-> 	WARNING: CPU: 76 PID: 51024 at mm/memory.c:2317 wp_page_copy+0xc40/0xd50
-> 	...
-> 	wp_page_copy+0x98c/0xd50 (unreliable)
-> 	do_wp_page+0xd8/0xad0
-> 	__handle_mm_fault+0x748/0x1b90
-> 	handle_mm_fault+0x120/0x1f0
-> 	__do_page_fault+0x240/0xd70
-> 	do_page_fault+0x38/0xd0
-> 	handle_page_fault+0x10/0x30
-> 
-> The warning happens on failed __copy_from_user_inatomic() which tries to
-> copy data into a CoW page.
-> 
-> This happens because of race between MADV_DONTNEED and CoW page fault:
-> 
-> 	CPU0					CPU1
->  handle_mm_fault()
->    do_wp_page()
->      wp_page_copy()
->        do_wp_page()
-> 					madvise(MADV_DONTNEED)
-> 					  zap_page_range()
-> 					    zap_pte_range()
-> 					      ptep_get_and_clear_full()
-> 					      <TLB flush>
-> 	 __copy_from_user_inatomic()
-> 	 sees empty PTE and fails
-> 	 WARN_ON_ONCE(1)
-> 	 clear_page()
-> 
-> The solution is to re-try __copy_from_user_inatomic() under PTL after
-> checking that PTE is matches the orig_pte.
-> 
-> The second copy attempt can still fail, like due to non-readable PTE,
-> but there's nothing reasonable we can do about, except clearing the CoW
-> page.
-
-You don't think this is worthy of a cc:stable?
+Reviewed-by: Rob Herring <robh@kernel.org>
