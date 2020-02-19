@@ -2,106 +2,97 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A7C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BFDC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83A124670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582145909;
-	bh=lomgRHNnKmZyWT3BrZj0+YdGDSIaOudGKTJAXdjS9mo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=jVHB5Mw1joHGHQL8Rj2UhcTtCbgilaNf2E44U2itbflojWJDE4TlFJc4tfJ+W4BLf
-	 fQ9MDRYiUIZYDo7dUTqXLF06pC91rgJTrnIdnlkkMHShWXRZdDmiP9oPv+ddqyU6yF
-	 /IQEKfbJA1AAB/OYijfSPaBJe9CZzHnb7t4PxfBY=
+	by mail.kernel.org (Postfix) with ESMTP id 7FD1324677
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:01:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZzC5IVFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgBSU61 (ORCPT
+        id S1727982AbgBSVBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:58:27 -0500
-Received: from foss.arm.com ([217.140.110.172]:56886 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgBSU61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:58:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED44F1FB;
-        Wed, 19 Feb 2020 12:58:26 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 72EAA3F68F;
-        Wed, 19 Feb 2020 12:58:26 -0800 (PST)
-Date:   Wed, 19 Feb 2020 20:58:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Phong LE <ple@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regmap: wrong descriptions in regmap_range_cfg" to the regmap tree
-In-Reply-To:  <20200219140906.29180-1-ple@baylibre.com>
-Message-Id:  <applied-20200219140906.29180-1-ple@baylibre.com>
-X-Patchwork-Hint: ignore
+        Wed, 19 Feb 2020 16:01:09 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35870 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgBSVBF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:01:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=kI+e3DKHZCvuETM0kGlQ5Wq6KkhuqIaWlS8EiD2lk0A=; b=ZzC5IVFh0zlc1y+RlFNcNpnUtw
+        Rge9z5CBVAmxghZo5qqYsD0k2HEyUgXnAgk0o1iJvoENMLpE1iyVC53S+MIvgvKsQ7v098DYPZc2m
+        KF32Sjd1voZIcKRvwP8HuYAU8AoNCWgXiGYtvHra3cRAKlyf/kexaB6/QH43CRRhuIQGSXUZ+HtfS
+        8hu9zW+gfrUNOvtp+JCnoAMo6GnCXTByaQRymMZ2omEv+9/G9JWerFHF7ao5084aXIYWiRNI3h62w
+        yMud0oTZuBULmwcHEZAf3C8oIapUf/waEYUsFR02ezCMGOo/qJrfJqrG+7AAtFgyZifl8unYi8fx/
+        KfHDS9Cw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4WSv-0008Ti-0Z; Wed, 19 Feb 2020 21:01:05 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v7 08/24] mm: Remove 'page_offset' from readahead loop
+Date:   Wed, 19 Feb 2020 13:00:47 -0800
+Message-Id: <20200219210103.32400-9-willy@infradead.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200219210103.32400-1-willy@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 
-   regmap: wrong descriptions in regmap_range_cfg
+Replace the page_offset variable with 'index + i'.
 
-has been applied to the regmap tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From ad5906bd6e9aa3e156dcac8fc070b153648e8b68 Mon Sep 17 00:00:00 2001
-From: Phong LE <ple@baylibre.com>
-Date: Wed, 19 Feb 2020 15:09:06 +0100
-Subject: [PATCH] regmap: wrong descriptions in regmap_range_cfg
-
-Swap selector_mask and selector_shift descriptions
-
-Signed-off-by: Phong LE <ple@baylibre.com>
-Link: https://lore.kernel.org/r/20200219140906.29180-1-ple@baylibre.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 ---
- include/linux/regmap.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/readahead.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index f0a092a1a96d..40b07168fd8e 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -461,8 +461,8 @@ struct regmap_config {
-  * @range_max: Address of the highest register in virtual range.
-  *
-  * @selector_reg: Register with selector field.
-- * @selector_mask: Bit shift for selector value.
-- * @selector_shift: Bit mask for selector value.
-+ * @selector_mask: Bit mask for selector value.
-+ * @selector_shift: Bit shift for selector value.
-  *
-  * @window_start: Address of first (lowest) register in data window.
-  * @window_len: Number of registers in data window.
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 8a25fc7e2bf2..83df5c061d33 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -181,12 +181,10 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 	 * Preallocate as many pages as we will need.
+ 	 */
+ 	for (i = 0; i < nr_to_read; i++) {
+-		pgoff_t page_offset = index + i;
+-
+-		if (page_offset > end_index)
++		if (index + i > end_index)
+ 			break;
+ 
+-		page = xa_load(&mapping->i_pages, page_offset);
++		page = xa_load(&mapping->i_pages, index + i);
+ 		if (page && !xa_is_value(page)) {
+ 			/*
+ 			 * Page already present?  Kick off the current batch of
+@@ -200,7 +198,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
+ 		page = __page_cache_alloc(gfp_mask);
+ 		if (!page)
+ 			break;
+-		page->index = page_offset;
++		page->index = index + i;
+ 		list_add(&page->lru, &page_pool);
+ 		if (i == nr_to_read - lookahead_size)
+ 			SetPageReadahead(page);
 -- 
-2.20.1
+2.25.0
 
