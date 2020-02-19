@@ -2,173 +2,198 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5380C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B808C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AF024654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E38020658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WydRZKXY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgBSLvB (ORCPT
+        id S1727099AbgBSLxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:51:01 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34714 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726495AbgBSLu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:50:59 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 79B762677E22060FC49B;
-        Wed, 19 Feb 2020 19:50:54 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
- 19:50:47 +0800
-Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
- SGI callbacks
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Robert Richter" <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-9-maz@kernel.org>
- <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
- <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
- <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <8db95a86-0981-710b-6c82-be7f7f844151@huawei.com>
-Date:   Wed, 19 Feb 2020 19:50:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 19 Feb 2020 06:53:30 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40506 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbgBSLx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:53:29 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n18so44582ljo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:53:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=71fpEu9gj4xQyGwVvrbfmB+uFD/Qs603qpfWf+rF/cI=;
+        b=WydRZKXY9aoo5/x9r7meASA5yIZERSvCqFjexbUYomQCBLBEMl8ai9Rdp78ufDUjEO
+         jDpzgAurjWlj6uqcwYa/MbVhrLIe44j2GlJRQvJCVc293/5erLflQh+iQfVWV7gir5F4
+         RHZkO/3p6owHHQCYafZVPzY+y0IoY0Bh7pYY8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=71fpEu9gj4xQyGwVvrbfmB+uFD/Qs603qpfWf+rF/cI=;
+        b=GLVz1xffP802RZTHYWfa7AvGTCceN0lqTeAca7UlVtPVia/31N45mG3jewK547MKEF
+         pv2aKXlVbIXiW3JMN2NpIZsGu1PGdx3P61i1mrp1U7E5Gfa38SjWLF9lfFzASVAqHk5Y
+         o3kbcF0uzT2N6UkB+vnBkkOdhe3X4zUs/ytmJWBk8poO/6V/9Kz41WZc+/EYHs1pY221
+         PqPDBWKj+1GurmrJMt/cTU1mmuCpuh3loJkNqK+CUIo21ZztMkv2abHxfJ84LxrrhG+h
+         W+LFFyNWIw9tpqhFxiWjAkdO/NjVTz0Y4f1rMF8lRJ2AzBBewthfqqKnLEiYIWyXXqSV
+         L6PA==
+X-Gm-Message-State: APjAAAUmBfDAmwEsjY+qY184qgnM5V1GoTqgwz0DTwCaeltxdwJFahZj
+        Ecs6zBM9MFm0cf60AUjqzOeETNjDNWJHHF2P
+X-Google-Smtp-Source: APXvYqwriRVyrAscp4UctZ1kCxokgDNdH+bpOZqirl4aV2eKSeSZNiDE+6GiSUXaE4BVrSQYu3s1Dg==
+X-Received: by 2002:a2e:556:: with SMTP id 83mr15644254ljf.127.1582113204971;
+        Wed, 19 Feb 2020 03:53:24 -0800 (PST)
+Received: from [172.16.11.50] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id o69sm1150496lff.14.2020.02.19.03.53.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 03:53:24 -0800 (PST)
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Ilya Dryomov <idryomov@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk>
+ <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
+Date:   Wed, 19 Feb 2020 12:53:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-On 2020/2/18 23:31, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On 2020-02-18 09:27, Marc Zyngier wrote:
->> Hi Zenghui,
+On 19/02/2020 12.20, Ilya Dryomov wrote:
+> On Wed, Feb 19, 2020 at 9:21 AM Rasmus Villemoes
+> <linux@rasmusvillemoes.dk> wrote:
 >>
->> On 2020-02-18 07:00, Zenghui Yu wrote:
->>> Hi Marc,
-> 
-> [...]
-> 
->>> There might be a race on reading the 'vpe->col_idx' against a concurrent
->>> vPE schedule (col_idx will be modified in its_vpe_set_affinity)? Will we
->>> end up accessing the GICR_VSGI* registers of the old redistributor,
->>> while the vPE is now resident on the new one? Or is it harmful?
+>> Extend %pe to pretty-print NULL in addition to ERR_PTRs,
+>> i.e. everything IS_ERR_OR_NULL().
 >>
->> Very well spotted. There is a potential problem if old and new RDs are 
->> not part
->> of the same CommonLPIAff group.
+>> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> ---
+>> Something like this? The actual code change is +2,-1 with another +1
+>> for a test case.
 >>
->>> The same question for direct_lpi_inv(), where 'vpe->col_idx' will be
->>> used in irq_to_cpuid().
+>>  Documentation/core-api/printk-formats.rst | 9 +++++----
+>>  lib/errname.c                             | 4 ++++
+>>  lib/test_printf.c                         | 1 +
+>>  lib/vsprintf.c                            | 4 ++--
+>>  4 files changed, 12 insertions(+), 6 deletions(-)
 >>
->> Same problem indeed. We need to ensure that no VMOVP operation can 
->> occur whilst
->> we use col_idx to access a redistributor. This means a vPE lock of 
->> some sort
->> that will protect the affinity.
-
-Yeah, I had the same view here, a vPE level lock might help.
-
->> But I think there is a slightly more general problem here, which we 
->> failed to
->> see initially: the same issue exists for physical LPIs, as col_map[] 
->> can be
->> updated (its_set_affinity()) in parallel with a direct invalidate.
+>> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+>> index 8ebe46b1af39..964b55291445 100644
+>> --- a/Documentation/core-api/printk-formats.rst
+>> +++ b/Documentation/core-api/printk-formats.rst
+>> @@ -86,10 +86,11 @@ Error Pointers
 >>
->> The good old invalidation through the ITS does guarantee that the two 
->> operation
->> don't overlap, but direct invalidation breaks it.
-
-Agreed!
-
->> Let me have a think about it.
+>>         %pe     -ENOSPC
+>>
+>> -For printing error pointers (i.e. a pointer for which IS_ERR() is true)
+>> -as a symbolic error name. Error values for which no symbolic name is
+>> -known are printed in decimal, while a non-ERR_PTR passed as the
+>> -argument to %pe gets treated as ordinary %p.
+>> +For printing error pointers (i.e. a pointer for which IS_ERR() is
+>> +true) as a symbolic error name. Error values for which no symbolic
+>> +name is known are printed in decimal. A NULL pointer is printed as
+>> +NULL. All other pointer values (i.e. anything !IS_ERR_OR_NULL()) get
+>> +treated as ordinary %p.
+>>
+>>  Symbols/Function Pointers
+>>  -------------------------
+>> diff --git a/lib/errname.c b/lib/errname.c
+>> index 0c4d3e66170e..7757bc00f564 100644
+>> --- a/lib/errname.c
+>> +++ b/lib/errname.c
+>> @@ -11,9 +11,13 @@
+>>   * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
+>>   * on mips), so this wastes a bit of space on those - though we
+>>   * special case the EDQUOT case.
+>> + *
+>> + * For the benefit of %pe being able to print any ERR_OR_NULL pointer
+>> + * symbolically, 0 is also treated specially.
+>>   */
+>>  #define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = "-" #err
+>>  static const char *names_0[] = {
+>> +       [0] = "NULL",
+>>         E(E2BIG),
+>>         E(EACCES),
+>>         E(EADDRINUSE),
+>> diff --git a/lib/test_printf.c b/lib/test_printf.c
+>> index 2d9f520d2f27..3a37d0e9e735 100644
+>> --- a/lib/test_printf.c
+>> +++ b/lib/test_printf.c
+>> @@ -641,6 +641,7 @@ errptr(void)
+>>         test("[-EIO    ]", "[%-8pe]", ERR_PTR(-EIO));
+>>         test("[    -EIO]", "[%8pe]", ERR_PTR(-EIO));
+>>         test("-EPROBE_DEFER", "%pe", ERR_PTR(-EPROBE_DEFER));
+>> +       test("[NULL]", "[%pe]", NULL);
+>>  #endif
+>>  }
+>>
+>> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+>> index 7c488a1ce318..b7118d78eb20 100644
+>> --- a/lib/vsprintf.c
+>> +++ b/lib/vsprintf.c
+>> @@ -2247,8 +2247,8 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>>         case 'x':
+>>                 return pointer_string(buf, end, ptr, spec);
+>>         case 'e':
+>> -               /* %pe with a non-ERR_PTR gets treated as plain %p */
+>> -               if (!IS_ERR(ptr))
+>> +               /* %pe with a non-ERR_OR_NULL ptr gets treated as plain %p */
+>> +               if (!IS_ERR_OR_NULL(ptr))
+>>                         break;
 > 
-> So I've thought about it, wrote a patch, and I don't really like the 
-> look of it.
-> This is pretty invasive, and we end-up serializing a lot more than we 
-> used to
-> (the repurposing of vlpi_lock to a general "lpi mapping lock" is 
-> probably too
-> coarse).
+> FWIW I was about to post a patch that just special cases NULL here.
 > 
-> It of course needs splitting over at least three patches, but it'd be 
-> good if
-> you could have a look (applies on top of the whole series).
+> I think changing errname() to return "NULL" for 0 is overkill.
+> People will sooner or later discover that function and start using it
+> in contexts that don't have anything to do with pointers.  Returning
+> _some_ string for 0 (instead of NULL) makes it very close to standard
+> strerror(), and "NULL" for 0 (i.e. success) seems rather odd.
 
-So the first thing is that
+I see what you mean, but I don't share your assumption that errname()
+will ever grow callers other than the one in vsprintf.c. But I don't
+have any strong opinion either way. Perhaps this on top of my patch
 
-1. there're races on choosing the RD against a concurrent LPI/vPE
-affinity changing.
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -619,7 +619,7 @@ static char *err_ptr(char *buf, char *end, void *ptr,
+                     struct printf_spec spec)
+ {
+        int err = PTR_ERR(ptr);
+-       const char *sym = errname(err);
++       const char *sym = err ? errname(err) : "NULL";
 
-And sure, I will have a look on the following patch! But I'd first
-talk about some other issues I've seen today...
+        if (sym)
+                return string_nocheck(buf, end, sym, spec);
 
-2. Another potential race is on accessing the same RD by different
-CPUs, which gets more obvious after introducing the GICv4.1.
-We can as least take two registers for example:
+instead of the change(s) in errname.c? And then the test case for
+'"%pe", NULL' should also be moved outside CONFIG_SYMBOLIC_ERRNAME.
 
-  - GICR_VSGIR:
-    Let's assume that vPE0 is just descheduled from CPU0 and then vPE1
-    is scheduled on. CPU0 is writing its GICR_VSGIR with vpeid1 to serve
-    vPE1's GICR_ISPENDR0 read trap, whilst userspace is getting vSGI's
-    pending state of vPE0 (i.e., by a debugfs read) thus another CPU
-    will try to write the same GICR_VSGIR with vpeid0... without waiting
-    GICR_VSGIPENDR.Busy reads as 0.
-    This is a CONSTRAINED UNPREDICTABLE behavior from the spec and at
-    least one of the queries will fail.
-  - GICR_INV{LPI,ALL}R:
-    Multiple LPIs can be targeted to the same RD, thus multiple writes to
-    the same GICR_INVLPIR (with different INITID, even with different V)
-    can happen concurrently...
+BTW., your original patch for %p lacks corresponding update of
+test_vsprintf.c. Please add appropriate test cases.
 
-Above comes from the fact that the same redistributor can be accessed
-(concurrently) by multiple CPUs but we don't have a mechanism to ensure
-some extent of serialization. I also had a look at how KVM will handle
-this kind of access, but
-
-3. it looks like KVM makes the assumption that the per-RD MMIO region
-will only be accessed by the associated VCPU?  But I think this's not
-restricted by the architecture, we can do it better.  Or I've just
-missed some important points here.
-
-
-I will look at the following patch asap but may need some time to
-think about all above, and do some fix if possible :-)
-
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-> b/drivers/irqchip/irq-gic-v3-its.c
-> index 7656b353a95f..0ed286dba827 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-
-[...]
-
-
-Thanks,
-Zenghui
-
+Rasmus
