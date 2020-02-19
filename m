@@ -2,131 +2,158 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF50DC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:13:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9ADC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CE524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582118009;
-	bh=bL/TOiagPfoRLR3fOAnI6m8tFS6WjfGcMBXv31ltqR8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RPjsQVNCb6qSo2S4SNrVpqvshI9Dgqy6rqOdpwtiIICvg7b00gCsumqyc/yPPRwNR
-	 9gr72njz3muFlRcx1rCGc58mnAA1k//SJgV+ovUNy0zZ4C6/CgAbS7siMsX8ccgJdn
-	 0q/h2WAYj/MCDUoj2hcDvuzT4p+4xa3nFbySLRxI=
+	by mail.kernel.org (Postfix) with ESMTP id 57A6C21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFbKLM5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgBSNN2 (ORCPT
+        id S1727553AbgBSNQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:13:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbgBSNN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:13:28 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Feb 2020 08:16:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58105 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726891AbgBSNQy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 08:16:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582118214;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=EZeX/sR4EMAk2QlfO8plMdFFOB0OohNSKOrhSwQkcdA=;
+        b=fFbKLM5aNUYcLrN+nnD7wgMdUxDVk7WCDSLrZIr0XRbD7I26vq64LV0JjqpOAFgGrAD5DK
+        qOtH1XXqBmikPGxpnlW6WHrPfpgceXRxRJDPVied4YWiaCEgGmJq8Fht4LUJCYJMB6rpcD
+        qZc+VlmmzaqSvNgf2rDhFkc0QmyxHd0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-80-J9pVqpnQNe-FnyV9qyGlig-1; Wed, 19 Feb 2020 08:16:45 -0500
+X-MC-Unique: J9pVqpnQNe-FnyV9qyGlig-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF99821D56;
-        Wed, 19 Feb 2020 13:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582118006;
-        bh=bL/TOiagPfoRLR3fOAnI6m8tFS6WjfGcMBXv31ltqR8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aSaExjJsYv/OEylvZg1BUY1DHJNR4GC+StKizipm622JuXBAEpuY5e4M5bFvBW+kr
-         /5eeJbTthSFR6dVZXnm6GWXeSD6WI3ytC6WNiP0m98FhAJICJm1tJ7a8Vihixg2n/a
-         8/ecKfw8wSa5uyM45tAJMlhscO1IP7EMZK0QBXV8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4PAL-006VkK-2a; Wed, 19 Feb 2020 13:13:25 +0000
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A7F52DB60;
+        Wed, 19 Feb 2020 13:16:43 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5DDB78B56B;
+        Wed, 19 Feb 2020 13:16:42 +0000 (UTC)
+From:   Prarit Bhargava <prarit@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Prarit Bhargava <prarit@redhat.com>,
+        Alexander Krupp <centos@akr.yagii.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-edac@vger.kernel.org
+Subject: [PATCH v3] x86/mce: Do not log spurious corrected mce errors
+Date:   Wed, 19 Feb 2020 08:16:11 -0500
+Message-Id: <20200219131611.36816-1-prarit@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 19 Feb 2020 13:13:25 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linus Walleij <linus.walleij@linaro.org>, marex@denx.de,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/2] irqchip/stm32: Add irq retrigger support
-In-Reply-To: <ae69e38a-78f9-ca68-c48c-86275e41b3bb@st.com>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <20200218131218.10789-2-alexandre.torgue@st.com>
- <16d27f75-8157-7a92-ae61-b5b3ab05bdd9@st.com>
- <608d9c84813323ee3839f6ac21aa8f4e@kernel.org>
- <ae69e38a-78f9-ca68-c48c-86275e41b3bb@st.com>
-Message-ID: <10cabf9edf901fb148a1a2a5e2448845@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linus.walleij@linaro.org, marex@denx.de, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-19 13:07, Alexandre Torgue wrote:
-> On 2/19/20 12:43 PM, Marc Zyngier wrote:
->> On 2020-02-19 11:33, Alexandre Torgue wrote:
->>> Fix Marc email address
->>> 
->>> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
->>>> This commit introduces retrigger support for stm32_ext_h chip.
->>>> It consists to rise the GIC interrupt mapped to an EXTI line.
->>>> 
->>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
->>>> 
->>>> diff --git a/drivers/irqchip/irq-stm32-exti.c 
->>>> b/drivers/irqchip/irq-stm32-exti.c
->>>> index e00f2fa27f00..c971d115edb4 100644
->>>> --- a/drivers/irqchip/irq-stm32-exti.c
->>>> +++ b/drivers/irqchip/irq-stm32-exti.c
->>>> @@ -604,12 +604,24 @@ static void stm32_exti_h_syscore_deinit(void)
->>>>       unregister_syscore_ops(&stm32_exti_h_syscore_ops);
->>>>   }
->>>>   +static int stm32_exti_h_retrigger(struct irq_data *d)
->>>> +{
->>>> +    struct stm32_exti_chip_data *chip_data = 
->>>> irq_data_get_irq_chip_data(d);
->>>> +    const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
->>>> +    void __iomem *base = chip_data->host_data->base;
->>>> +    u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
->>>> +
->>>> +    writel_relaxed(mask, base + stm32_bank->swier_ofst);
->>>> +
->>>> +    return irq_chip_retrigger_hierarchy(d);
->> 
->> Calling irq_chip_retrigger_hierarchy here is really odd. If the write
->> above has the effect of making the interrupt pending again, why do you
->> need to force the retrigger any further?
-> 
-> To be honest, as we use hierarchical irq_chip, I thought it was the
-> way to follow (to retrigger parent irq_chip). It makes maybe no sens
-> here.
+A user has reported that they are seeing spurious corrected errors on
+their hardware.
 
-Indeed, it looks perfectly pointless. What 
-irq_chip_retrigger_hierarchy()
-does is to look for the first parent irqchip that is able to retrigger
-the interrupt. Guess what, you've just done that already. And once 
-you've
-generated the interrupt, you don't need to ask the other irqchips in the
-chain to do the same thing.
+Intel Errata HSD131, HSM142, HSW131, and BDM48 report that
+"spurious corrected errors may be logged in the IA32_MC0_STATUS register
+with the valid field (bit 63) set, the uncorrected error field (bit 61)
+not set, a Model Specific Error Code (bits [31:16]) of 0x000F, and
+an MCA Error Code (bits [15:0]) of 0x0005."  The Errata PDFs are linked i=
+n
+the bugzilla below.
 
-> The most important to regenerate gic interrupt (associate to the exti
-> line) is to write in SWIER register.
+Block these spurious errors from the console and logs.
 
-Quite. Hence my question.
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D206587
+Co-developed-by: Alexander Krupp <centos@akr.yagii.de>
+Signed-off-by: Alexander Krupp <centos@akr.yagii.de>
+Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-edac@vger.kernel.org
+---
+v2: Fix intel_filter_mce() declaration
+v3: Fix !CONFIG_X86_MCE_INTEL compile
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+ arch/x86/kernel/cpu/mce/core.c     |  2 ++
+ arch/x86/kernel/cpu/mce/intel.c    | 17 +++++++++++++++++
+ arch/x86/kernel/cpu/mce/internal.h |  5 +++++
+ 3 files changed, 24 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
+e.c
+index 2c4f949611e4..fe3983d551cc 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1877,6 +1877,8 @@ bool filter_mce(struct mce *m)
+ {
+ 	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_AMD)
+ 		return amd_filter_mce(m);
++	if (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_INTEL)
++		return intel_filter_mce(m);
+=20
+ 	return false;
+ }
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/in=
+tel.c
+index 5627b1091b85..989148e6746c 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -520,3 +520,20 @@ void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+ {
+ 	intel_clear_lmce();
+ }
++
++bool intel_filter_mce(struct mce *m)
++{
++	struct cpuinfo_x86 *c =3D &boot_cpu_data;
++
++	/* MCE errata HSD131, HSM142, HSW131, BDM48, and HSM142 */
++	if ((c->x86 =3D=3D 6) &&
++	    ((c->x86_model =3D=3D INTEL_FAM6_HASWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_L) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_BROADWELL) ||
++	     (c->x86_model =3D=3D INTEL_FAM6_HASWELL_G)) &&
++	    (m->bank =3D=3D 0) &&
++	    ((m->status & 0xa0000000ffffffff) =3D=3D 0x80000000000f0005))
++		return true;
++
++	return false;
++}
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce=
+/internal.h
+index b785c0d0b590..f6e0419969c5 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -175,5 +175,10 @@ extern bool amd_filter_mce(struct mce *m);
+ #else
+ static inline bool amd_filter_mce(struct mce *m)			{ return false; };
+ #endif
++#ifdef CONFIG_X86_MCE_INTEL
++extern bool intel_filter_mce(struct mce *m);
++#else
++static inline bool intel_filter_mce(struct mce *m) { return false; };
++#endif
+=20
+ #endif /* __X86_MCE_INTERNAL_H__ */
+--=20
+2.21.1
+
