@@ -2,126 +2,63 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E6CC34053
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B789C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFA92465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cg1bMIXW"
+	by mail.kernel.org (Postfix) with ESMTP id 1E9ED2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgBSPwZ (ORCPT
+        id S1726949AbgBSPwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:52:25 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:40788 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbgBSPwZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:52:25 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JFlKkn165283;
-        Wed, 19 Feb 2020 15:52:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=+0MKjwYS6o56kZOWus6xPspoxgNogY35LPaujONId3I=;
- b=cg1bMIXWVeTVesVIC7DolETYE7jLDNBF2KZx3Fx8KiAQ4s5MTyUO4dubtOBMrzBmPfVL
- o/rTNkUZGCuIftPwlV1cmEug8HP0B5A1SuFJUiAkaJ6KYMgNKXf9jrCEoVRjyK33VVH6
- kbSCfrqZIJoxaLpm+6EIrXFCyU4gXfLo4+TdOduNQgUou96FKH5CPWVFEU+xX/xzB20X
- tmyhzf1YTMZKZ3lOqsDJ+EtpqgpIXTi4PVUQ13z1/ky0nKmmK23wJnMazIgYVSjUer82
- o2R/92rS67TxO+d5gGzwVuUzKwIK/NxaBmemDyVdawPP7gR53LFzGxbRJ7KLB1X+djoC 7g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2y8udkc083-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 15:52:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JFmEOF030012;
-        Wed, 19 Feb 2020 15:50:16 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2y8udargwy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 15:50:16 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01JFoF96031867;
-        Wed, 19 Feb 2020 15:50:15 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Feb 2020 07:50:15 -0800
-Date:   Wed, 19 Feb 2020 07:50:12 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        raven@themaw.net, mszeredi@redhat.com, christian@brauner.io,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications [ver
- #16]
-Message-ID: <20200219155012.GA9496@magnolia>
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
- <20200219144613.lc5y2jgzipynas5l@wittgenstein>
+        Wed, 19 Feb 2020 10:52:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726604AbgBSPws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:52:48 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 739BB24656;
+        Wed, 19 Feb 2020 15:52:46 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 10:52:45 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 12/22] tracing: Employ trace_rcu_{enter,exit}()
+Message-ID: <20200219105245.05072de5@gandalf.local.home>
+In-Reply-To: <20200219150745.060958307@infradead.org>
+References: <20200219144724.800607165@infradead.org>
+        <20200219150745.060958307@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219144613.lc5y2jgzipynas5l@wittgenstein>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190119
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1011
- malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190119
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:46:13PM +0100, Christian Brauner wrote:
-> On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
-> > 
-> > Here are a set of patches that adds system calls, that (a) allow
-> > information about the VFS, mount topology, superblock and files to be
-> > retrieved and (b) allow for notifications of mount topology rearrangement
-> > events, mount and superblock attribute changes and other superblock events,
-> > such as errors.
-> > 
-> > ============================
-> > FILESYSTEM INFORMATION QUERY
-> > ============================
-> > 
-> > The first system call, fsinfo(), allows information about the filesystem at
-> > a particular path point to be queried as a set of attributes, some of which
-> > may have more than one value.
-> > 
-> > Attribute values are of four basic types:
-> > 
-> >  (1) Version dependent-length structure (size defined by type).
-> > 
-> >  (2) Variable-length string (up to 4096, including NUL).
-> > 
-> >  (3) List of structures (up to INT_MAX size).
-> > 
-> >  (4) Opaque blob (up to INT_MAX size).
+On Wed, 19 Feb 2020 15:47:36 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> Replace the opencoded (and incomplete) RCU manipulations with the new
+> helpers to ensure a regular RCU context when calling into
+> __ftrace_trace_stack().
 > 
-> I mainly have an organizational question. :) This is a huge patchset
-> with lots and lots of (good) features. Wouldn't it make sense to make
-> the fsinfo() syscall a completely separate patchset from the
-> watch_mount() and watch_sb() syscalls? It seems that they don't need to
-> depend on each other at all. This would make reviewing this so much
-> nicer and likely would mean that fsinfo() could proceed a little faster.
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
 
-Agreed; I was also wondering why it was necessary to have three new
-features in the same large(ish) patchset.
 
---D
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-> Christian
+-- Steve
