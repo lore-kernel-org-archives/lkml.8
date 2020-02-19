@@ -2,121 +2,87 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A1EC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528CC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC6F121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3A02465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582108817;
+	bh=8JYFzGZHQl9Mlj4BlcdpdXsjdg+HCV5duko0Ww+/3ts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZCZPDhezGmfhtVU7/CBIqpknjsTHnTmsg+kTyzdyd2SQHoEdo06iLf8FUB5Qon4s7
+	 tPMwDYmuec9MdmMYPUHbpapQ23o8bQaRudoeQj7B9IkBFHFNOqtpju9zn0QC/xaaCw
+	 ZUvDVAi1Jae0lge1VOp8PpsgDoHk+YLMt+WUhHwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726683AbgBSKiW (ORCPT
+        id S1726700AbgBSKkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:38:22 -0500
-Received: from out28-76.mail.aliyun.com ([115.124.28.76]:49501 "EHLO
-        out28-76.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBSKiW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:38:22 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08794115|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0546757-0.00261561-0.942709;DS=CONTINUE|ham_regular_dialog|0.41055-0.0161671-0.573283;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=9;RT=9;SR=0;TI=SMTPD_---.GpgTeGr_1582108696;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GpgTeGr_1582108696)
-          by smtp.aliyun-inc.com(10.147.41.187);
-          Wed, 19 Feb 2020 18:38:16 +0800
-Subject: Re: [RFC v4 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-References: <cover.1581958529.git.hns@goldelico.com>
- <86b78db4d607e0bdda6def018bc7f73207ce82e8.1581958529.git.hns@goldelico.com>
- <20200218212609.GA30081@bogus>
- <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E4D1017.4060707@wanyeetech.com>
-Date:   Wed, 19 Feb 2020 18:38:15 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 19 Feb 2020 05:40:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgBSKkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:40:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A68B321D56;
+        Wed, 19 Feb 2020 10:40:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582108815;
+        bh=8JYFzGZHQl9Mlj4BlcdpdXsjdg+HCV5duko0Ww+/3ts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D+fmuPcnBwAiKMYnQrNvzuGYOjb2KTjyX5HfTG0lNs3In6g0cemEDq808Ew9cEW4k
+         ByqighL55iGXWuJat2cl6WrbwVQJ4wOiXP5/u8Ea8AeB8aaWFB+0M3WKQGb9X8jAcN
+         TQS56FeVzpSYqk586vJhfvbluu0CEb7qtB2yhsas=
+Date:   Wed, 19 Feb 2020 11:40:12 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] leds: trigger: implement a tty trigger
+Message-ID: <20200219104012.GA2814125@kroah.com>
+References: <20200213091600.554-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-In-Reply-To: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200213091600.554-1-uwe@kleine-koenig.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nikolaus,
+On Thu, Feb 13, 2020 at 10:15:56AM +0100, Uwe Kleine-König wrote:
+> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Hello,
+> 
+> This is v6 of my quest to introduce ledtriggers for UARTs. The previous
+> series is available at
+> 
+> 	http://lore.kernel.org/r/20191219093947.15502-1-u.kleine-koenig@pengutronix.de
+> 
+> The changes compared to that are that parsing of the dev parameter is
+> more strict and that I set brightness directly from the kworker instead
+> of using led_blink_set_oneshot which makes use of another kworker. (Both
+> requested by Pavel Machek.)
+> 
+> For the former I introduced a new helper kstrtodev_t() in the spirit of
+> kstrtoul() to implement the stricter parsing (instead of the lax one
+> using plain sscanf() in v5).
 
-On 2020å¹´02æœˆ19æ—¥ 13:48, H. Nikolaus Schaller wrote:
->> Am 18.02.2020 um 22:26 schrieb Rob Herring <robh@kernel.org>:
->>
->> On Mon, Feb 17, 2020 at 05:55:26PM +0100, H. Nikolaus Schaller wrote:
->>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>>
->>> This patch brings support for the JZ4780 efuse. Currently it only expose
->>> a read only access to the entire 8K bits efuse memory.
->>>
->>> Tested-by: Mathieu Malaterre <malat@debian.org>
->>> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
->>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->>> ---
->>> .../bindings/nvmem/ingenic,jz4780-efuse.txt     | 17 +++++++++++++++++
->>> 1 file changed, 17 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->> Please convert to a DT schema.
-> Is there someone of you who can help to do that?
->
-> DT schemas are still like a Chinese dialect for me (i.e. I can decipher with help but neither speak nor write).
->
-> BR and thanks,
-> Nikolaus
+Looks good to me, Pavel, any objection to me merging this through the
+tty tree?
 
-I am also suffering from this, and I am going to ask Paul for advice.
+thanks,
 
->
->>> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>> new file mode 100644
->>> index 000000000000..339e74daa9a9
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
->>> @@ -0,0 +1,17 @@
->>> +Ingenic JZ EFUSE driver bindings
->>> +
->>> +Required properties:
->>> +- "compatible"		Must be set to "ingenic,jz4780-efuse"
->>> +- "reg"			Register location and length
->>> +- "clocks"		Handle for the ahb clock for the efuse.
->>> +- "clock-names"		Must be "bus_clk"
->> 'clk' is redundant. How about 'ahb'?
-
-How about replace "bus_clk" with "efuse"? Other SoCs (like T21, X1000, 
-X1500, X1830, X2000) has a dedicated bit in the CLKGR register to 
-control the EFUSE clock.
-A corresponding "XXX_CLK_EFUSE" is provided in the "xxx-cgu.c" driver.
-
-Thanks and best regards!
-
->>> +
->>> +Example:
->>> +
->>> +efuse: efuse@134100d0 {
->>> +	compatible = "ingenic,jz4780-efuse";
->>> +	reg = <0x134100d0 0x2c>;
->>> +
->>> +	clocks = <&cgu JZ4780_CLK_AHB2>;
->>> +	clock-names = "bus_clk";
->>> +};
->>> -- 
->>> 2.23.0
->>>
-
+greg k-h
