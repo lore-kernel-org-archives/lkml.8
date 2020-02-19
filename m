@@ -2,98 +2,179 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8248C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9001FC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7BD82465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582120214;
-	bh=hA9urcjcTZ9xT7r14FRC9Xm37pN89/H+vVci8y+Mp8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IZSzKRlN6jNepaBi1HPLOc2ODJXwBmfAHZk+1lNDZg6UyRyTyEwLnwjujnjwuX/nL
-	 4n6wB7HXYBHAlMWpBz5NE6W6LyzsX+VKN+heC8ZDTlAb6Gjm2jmznntBzttfNtKTH7
-	 qJnCdMjANZHfgnXuH4Lq8xJKA+ZJk5I70RF6ESN0=
+	by mail.kernel.org (Postfix) with ESMTP id 633B921D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 13:51:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LnjG0+3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgBSNuN (ORCPT
+        id S1727662AbgBSNvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 08:50:13 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45791 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbgBSNuN (ORCPT
+        Wed, 19 Feb 2020 08:51:52 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38336 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgBSNvv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 08:50:13 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 59so131403otp.12;
-        Wed, 19 Feb 2020 05:50:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PDadwaa2tCalOGhbrNe+eCFiucqxINzGz8b3IuyJVBo=;
-        b=EGsSEAtLKFuTpzxcIzJ29HQJY0zofaY7DnrDaCzc7Nd/0nu8bq6suOGmsO0EthPJAV
-         PGhvnjGpA5/ZIK3qeyAdbL7h5JPk3xQd7crvCg2N5MAQQVqw0AewtgjCrGFwU7upd5H2
-         mvFYsWCFIzwujge6bHVq31oy4SuOLrhah4CM6DJZOAAxmD9RVl1Cg3EBxnxuwVsNjptV
-         Tu8Pjx2ySkdxfYbn0AyVM96HhSWOxezRxW0ovZREXjGagS+TSuVVzxTPoTIwI9L+4ebM
-         Ewa+cwlsSien2ZeIP+zSBfNR/uezp5JYVdEb3/6atEBKZc8KCgRinPS2RvANxQLJIAcM
-         AQyQ==
-X-Gm-Message-State: APjAAAXpPUIsrR9PeRNpu6EluZpLJKPPIuKeGjYk8YKdc5UOJhyskEdL
-        A2ouHV31hQxMido4IsqBCg==
-X-Google-Smtp-Source: APXvYqx9tjudoBcfo2l2gjTj/tz/jOPKzWnJusxxw8qa+pcBGOCG323+8cZRapiKtJcy/ffY1jGT2Q==
-X-Received: by 2002:a05:6830:1c8:: with SMTP id r8mr6946584ota.63.1582120212489;
-        Wed, 19 Feb 2020 05:50:12 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a1sm654837oti.2.2020.02.19.05.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 05:50:11 -0800 (PST)
-Received: (nullmailer pid 9937 invoked by uid 1000);
-        Wed, 19 Feb 2020 13:50:10 -0000
-Date:   Wed, 19 Feb 2020 07:50:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, orsonzhai@gmail.com, baolin.wang7@gmail.com,
-        freeman.liu@unisoc.com, zhang.lyra@gmail.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] dt-bindings: thermal: sprd: Add the Spreadtrum
- thermal documentation
-Message-ID: <20200219135010.GA9880@bogus>
-References: <444e45ce0a9b390b2502dfcefd1ddb36948fa8e1.1582013101.git.baolin.wang7@gmail.com>
+        Wed, 19 Feb 2020 08:51:51 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JDp7OS029970;
+        Wed, 19 Feb 2020 07:51:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582120267;
+        bh=vTSHaVd8INFkohfIoQSaUHu44hugyt9qmFZrmuUvcUk=;
+        h=From:To:CC:Subject:Date;
+        b=LnjG0+3auAQ579Ba+OfDzHq5zy8sUEL5JC0Ez42EgKQtbnLdWVeTi+AoNH8pcdWt/
+         kssWmoTWECbHi9GX1meiCPOO4DPyrUZZeWLQFNpTJpl542+le+G4UPxG7WRMdUaFKy
+         GR00AwFd+sVk8/HtTDLPY7thu3KhVbgsYPJhF5uY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JDp7Ll071524
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 07:51:07 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 07:51:06 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 07:51:06 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JDp6CC005716;
+        Wed, 19 Feb 2020 07:51:06 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH] ASoC: tas2562: Add support for ISENSE and VSENSE
+Date:   Wed, 19 Feb 2020 07:46:22 -0600
+Message-ID: <20200219134622.22066-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <444e45ce0a9b390b2502dfcefd1ddb36948fa8e1.1582013101.git.baolin.wang7@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 16:10:27 +0800, Baolin Wang wrote:
-> From: Baolin Wang <baolin.wang@unisoc.com>
-> 
-> Add the Spreadtrum thermal documentation.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
-> Changes from v2:
->  - Add missing #address-cells and #size-cells properties.
->  - Change the child node name with patternProperties.
->  - Simplify the nvmem-cells-names property.
-> 
-> Changes from v1:
->  - Change to yaml format.
-> ---
->  .../devicetree/bindings/thermal/sprd-thermal.yaml  |  108 ++++++++++++++++++++
->  1 file changed, 108 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/sprd-thermal.yaml
-> 
+Add additional support for ISENSE and VSENSE feature for the TAS2562.
+This feature monitors the output to the loud speaker attempts to
+eliminate IR drop errors due to packaging.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This feature is defined in Section 8.4.5 IV Sense of the data sheet.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ sound/soc/codecs/tas2562.c | 32 +++++++++++++++++++++++++++-----
+ sound/soc/codecs/tas2562.h |  6 +++---
+ 2 files changed, 30 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index 5b4803a76719..b2682c2360b6 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -383,18 +383,34 @@ static int tas2562_dac_event(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *component =
+ 					snd_soc_dapm_to_component(w->dapm);
+ 	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++	int ret;
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+-		dev_info(tas2562->dev, "SND_SOC_DAPM_POST_PMU\n");
++		ret = snd_soc_component_update_bits(component,
++			TAS2562_PWR_CTRL,
++			TAS2562_MODE_MASK,
++			TAS2562_MUTE);
++		if (ret)
++			goto end;
+ 		break;
+ 	case SND_SOC_DAPM_PRE_PMD:
+-		dev_info(tas2562->dev, "SND_SOC_DAPM_PRE_PMD\n");
++		ret = snd_soc_component_update_bits(component,
++			TAS2562_PWR_CTRL,
++			TAS2562_MODE_MASK,
++			TAS2562_SHUTDOWN);
++		if (ret)
++			goto end;
+ 		break;
+ 	default:
+-		break;
++		dev_err(tas2562->dev, "Not supported evevt\n");
++		return -EINVAL;
+ 	}
+ 
++end:
++	if (ret < 0)
++		return ret;
++
+ 	return 0;
+ }
+ 
+@@ -416,7 +432,6 @@ static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+ static const struct snd_soc_dapm_widget tas2562_dapm_widgets[] = {
+ 	SND_SOC_DAPM_AIF_IN("ASI1", "ASI1 Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_MUX("ASI1 Sel", SND_SOC_NOPM, 0, 0, &tas2562_asi1_mux),
+-	SND_SOC_DAPM_AIF_IN("DAC IN", "Playback", 0, SND_SOC_NOPM, 0, 0),
+ 	SND_SOC_DAPM_DAC_E("DAC", NULL, SND_SOC_NOPM, 0, 0, tas2562_dac_event,
+ 			   SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_SWITCH("ISENSE", TAS2562_PWR_CTRL, 3, 1, &isense_switch),
+@@ -431,7 +446,7 @@ static const struct snd_soc_dapm_route tas2562_audio_map[] = {
+ 	{"ASI1 Sel", "Left", "ASI1"},
+ 	{"ASI1 Sel", "Right", "ASI1"},
+ 	{"ASI1 Sel", "LeftRightDiv2", "ASI1"},
+-	{ "DAC", NULL, "DAC IN" },
++	{ "DAC", NULL, "ASI1 Sel" },
+ 	{ "OUT", NULL, "DAC" },
+ 	{"ISENSE", "Switch", "IMON"},
+ 	{"VSENSE", "Switch", "VMON"},
+@@ -472,6 +487,13 @@ static struct snd_soc_dai_driver tas2562_dai[] = {
+ 			.rates      = SNDRV_PCM_RATE_8000_192000,
+ 			.formats    = TAS2562_FORMATS,
+ 		},
++		.capture = {
++			.stream_name    = "ASI1 Capture",
++			.channels_min   = 0,
++			.channels_max   = 2,
++			.rates		= SNDRV_PCM_RATE_8000_192000,
++			.formats	= TAS2562_FORMATS,
++		},
+ 		.ops = &tas2562_speaker_dai_ops,
+ 	},
+ };
+diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
+index 62e659ab786d..6f55ebcf19ea 100644
+--- a/sound/soc/codecs/tas2562.h
++++ b/sound/soc/codecs/tas2562.h
+@@ -40,7 +40,7 @@
+ 
+ #define TAS2562_RESET	BIT(0)
+ 
+-#define TAS2562_MODE_MASK	0x3
++#define TAS2562_MODE_MASK	GENMASK(1,0)
+ #define TAS2562_ACTIVE		0x0
+ #define TAS2562_MUTE		0x1
+ #define TAS2562_SHUTDOWN	0x2
+@@ -73,8 +73,8 @@
+ #define TAS2562_TDM_CFG2_RXWLEN_24B	BIT(3)
+ #define TAS2562_TDM_CFG2_RXWLEN_32B	(BIT(2) | BIT(3))
+ 
+-#define TAS2562_VSENSE_POWER_EN		BIT(2)
+-#define TAS2562_ISENSE_POWER_EN		BIT(3)
++#define TAS2562_VSENSE_POWER_EN		2
++#define TAS2562_ISENSE_POWER_EN		3
+ 
+ #define TAS2562_TDM_CFG5_VSNS_EN	BIT(6)
+ #define TAS2562_TDM_CFG5_VSNS_SLOT_MASK	GENMASK(5, 0)
+-- 
+2.25.0
+
