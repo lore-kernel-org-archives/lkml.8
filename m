@@ -2,82 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1830BC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F93C7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E434220656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2B020656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:47:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwGZAmZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgBSWpG (ORCPT
+        id S1727877AbgBSWrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:45:06 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52265 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727232AbgBSWpG (ORCPT
+        Wed, 19 Feb 2020 17:47:42 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45620 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBSWrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:45:06 -0500
-Received: by mail-pj1-f65.google.com with SMTP id ep11so1639pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:45:06 -0800 (PST)
+        Wed, 19 Feb 2020 17:47:42 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z5so1426915lfd.12;
+        Wed, 19 Feb 2020 14:47:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PTmndBpAP4Mw3qk0P0XsD0NoHsf5gj3SK5DonytGx7c=;
+        b=fwGZAmZRzsMFXy1lRO3l/3TkJe6kDihJ1V5/+yJDq+nqT+peeY1AP4gBHF/ncduZQg
+         PFdwh+MBTyxEFX8usxrBBmO9WZNY8OWNpA4vxXNDPd0f7ZqsJX5bNn74PO4cLIEvxTZG
+         Oc/gInRbrBraEP8tviaQOHaaEa+od4rsqdzHU1UIC1NmA0VMg8kshjgoem0fZjkZ+BzU
+         nHTM3lrGffm5/KOorCdnA6CYrDq0C9B2oO9nwmnvNyEEK9R/Qnf+U7BZAmqM+qti3fo4
+         VnNkqwxxsniAqmIJxjQYjSa/s2TDA4sO+edC0QiF1Y9H/oHEWs2EYs/JbDVrdkgS6Jc0
+         3Y0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lLbGCApp0kw/cxO3wVgRURONxiOtR+9Pq112uDjPMic=;
-        b=FWHHth5cXf9YwDIY1a770hHPFHPmIGuR7k15yKwf/YNxBM3ikR1BLuh2il5meJ+NZq
-         Ruzoz4Lvj0dU0aOIJhFRCd5vJ8LCUVaNG4cZgBibkIRe48bFppmTASKq5RBbJbNU8lif
-         3JprgUoubXqlZLsxazvq2wUvQMbyNugGR9O58MeUaY+zWj+3Yjy33+8Lq0Ck1guRDCL4
-         sCvfrWqp2Z/udJTquE4S54MydG1SEeLCX0WYYOGEOgmQfZisbNj3yk6HRYf9TUqSbMf+
-         AEv0CGtSARl46lS2107oVJKG3PzKJnpxA+TwNuty83Di6JHQGZeaSTjBlsEf8dFl+whT
-         b5KA==
-X-Gm-Message-State: APjAAAUYB/+fwvg1laS0E/ABoIDw45i6Kl6SKtUUd5u36tgeqSJaQtMP
-        qm0QeyL4k7vPmZsoVUVI1auApb14
-X-Google-Smtp-Source: APXvYqzRqiVsaGXY7a6QyEtZAOH71T7kxfaQgp64P/WRyCjh5HKUpXVZchgo0NJk119epb6nRCH0FQ==
-X-Received: by 2002:a17:902:123:: with SMTP id 32mr28771095plb.38.1582152305677;
-        Wed, 19 Feb 2020 14:45:05 -0800 (PST)
-Received: from sultan-book.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id o9sm652686pfg.130.2020.02.19.14.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:45:05 -0800 (PST)
-Date:   Wed, 19 Feb 2020 14:45:03 -0800
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200219224503.GB5190@sultan-book.localdomain>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <20200219112653.116de9db314dade1f6086696@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PTmndBpAP4Mw3qk0P0XsD0NoHsf5gj3SK5DonytGx7c=;
+        b=lxePDvQvZ+fYa2joGLgN/Mpy7liI+qJdPOIYL3QU0X/Jv0BvTZ684PI9joJRE3uX0x
+         Yyb+6uzDXk7xg3TX1CmsdU8n+bLTynz+ctSaFU7ff+Y13kVj/jCEsoali5eVIsvgcuhz
+         tyDwPKBCa2v0CGCvCit4rhEtR/gzUn8m4UysdzGJT0gBzj3yYe/vRyJmGa4EgWPccqGb
+         wTWXlXM2b7e9/Xq5w+owRcep7f5PmI+GH0Nydd9H+1fXeM0l2BKqus0YTxvNzu69c54m
+         xWHDqXO6su+AyPjN9A9Tv4aA1npf0/WdR7tzxn6vJ/IDbysbMb7ZW0vBZyF3ELB7ve4v
+         hWJw==
+X-Gm-Message-State: APjAAAU0msDdxqIR39z+Ka8ALDHzCP4BSdZEbfmu45WLndZNGY/6676w
+        0hyjQQE7nnWhPy+U1VUmKANNAYUhzoFwfO4tpuw=
+X-Google-Smtp-Source: APXvYqy8HcTrPteWsRWUUhMXsuJOiPQSODf+C4YF2cg0VABtzDB61NZGU2YHrtcYeBnfYI8DQ0eb54FO3rOCszdyAPM=
+X-Received: by 2002:a05:6512:68f:: with SMTP id t15mr3089849lfe.174.1582152460116;
+ Wed, 19 Feb 2020 14:47:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219112653.116de9db314dade1f6086696@linux-foundation.org>
+References: <20200218030432.4600-1-dxu@dxuuu.xyz> <20200218030432.4600-3-dxu@dxuuu.xyz>
+In-Reply-To: <20200218030432.4600-3-dxu@dxuuu.xyz>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Feb 2020 14:47:28 -0800
+Message-ID: <CAADnVQKA3ZCEAynRQOaorAxF4hP2ZgCD=6UMbF5yMCtrR7hw9A@mail.gmail.com>
+Subject: Re: [PATCH v8 bpf-next 2/2] selftests/bpf: add bpf_read_branch_records()
+ selftest
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:26:53AM -0800, Andrew Morton wrote:
-> On Wed, 19 Feb 2020 10:25:22 -0800 Sultan Alsawaf <sultan@kerneltoast.com> wrote:
-> 
-> > Keeping kswapd running when all the failed allocations that invoked it
-> > are satisfied incurs a high overhead due to unnecessary page eviction
-> > and writeback, as well as spurious VM pressure events to various
-> > registered shrinkers. When kswapd doesn't need to work to make an
-> > allocation succeed anymore, stop it prematurely to save resources.
-> 
-> Seems sensible.
-> 
-> Please fully describe the userspace-visible runtime effects of this
-> change?
-> 
+On Mon, Feb 17, 2020 at 7:04 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> Add a selftest to test:
+>
+> * default bpf_read_branch_records() behavior
+> * BPF_F_GET_BRANCH_RECORDS_SIZE flag behavior
+> * error path on non branch record perf events
+> * using helper to write to stack
+> * using helper to write to global
+>
+> On host with hardware counter support:
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+>
+> On host without hardware counter support (VM):
+>
+>     # ./test_progs -t perf_branches
+>     #27/1 perf_branches_hw:OK
+>     #27/2 perf_branches_no_hw:OK
+>     #27 perf_branches:OK
+>     Summary: 1/2 PASSED, 1 SKIPPED, 0 FAILED
 
-FWIW, it looks like the refcount API doesn't allow refcounts to be zero, so I'd
-have to update this patch to use just plain atomic_t instead. But since there
-doesn't seem to be much interest in this, I'll only send an updated patch if
-it's desired.
+That's not what I see:
+./test_progs -t perf_branches
+test_perf_branches_hw:FAIL:perf_event_open err -1
+#27/1 perf_branches_hw:FAIL
+#27/2 perf_branches_no_hw:OK
+#27 perf_branches:FAIL
+Summary: 0/1 PASSED, 0 SKIPPED, 2 FAILED
 
-Sultan
+I remember previous version used to work, but something changed.
