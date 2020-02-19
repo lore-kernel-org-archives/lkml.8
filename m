@@ -2,97 +2,169 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F30C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0565C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 750062176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918A22176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:54:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="cKLGRFvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbgBSIxw (ORCPT
+        id S1726593AbgBSIyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:53:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:43928 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgBSIxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:53:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F8441FB;
-        Wed, 19 Feb 2020 00:53:51 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D7DD3F68F;
-        Wed, 19 Feb 2020 00:53:49 -0800 (PST)
-Subject: Re: [RFC] Display the cpu of sched domain in procfs
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Chen Yu <yu.chen.surf@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Mel Gorman <mgorman@suse.de>, Tony Luck <tony.luck@intel.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>
-References: <CADjb_WQ0wFgZWBo0Xo1Q+NWS6vF0BSs5H0ho+5FM82Mu-JVYoQ@mail.gmail.com>
- <787302f0-670f-fadf-14e6-ea0a73603d77@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <60febadb-df21-a44b-d282-e43c104d2497@arm.com>
-Date:   Wed, 19 Feb 2020 09:53:44 +0100
+        Wed, 19 Feb 2020 03:54:02 -0500
+Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:34177 "EHLO
+        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726202AbgBSIyB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:54:01 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 4L7DjzUj7P9a94L7HjnXMz; Wed, 19 Feb 2020 09:53:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582102439; bh=2p6yrU2qxWpRKjFkqg7qvyKVhP0kDi+Qi1iAy50JEUg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=cKLGRFvqbpZgo0LFTRPnQ7277Djzvaqii5Hs+CtHO5MmBBNQyMwnwy81qfGz/0sWR
+         SuKXmB9R+m44ayGEfSDpeyNOyXJvgygjAZlsXTZnTNp72tWaIvJZdg1ddHnbf8Ezz9
+         SOGLyj5lXa+6VdrzvIJPZFMWI4LFkd6nIjQjZBoUtiqGoVgpy0Pm11fgmtVtyztb39
+         Mn8Liiu0k0Y4dxaaCuJQ3VFZ3XaknAgF31qAs4W1nxdbggW3/tJ6hHAk6zrwirgAYA
+         ygkEkO0IvBPDlqLo+4eLBZkyzk1ZddPq/xRCoiz4JqF3+VMlztohbTyIkpQQ+Vo7WD
+         NABzhcgCInZKg==
+Subject: Re: [RFC][PATCHv2 00/12] Implement V4L2_BUF_FLAG_NO_CACHE_* flags
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <35d43107-3c1c-3bf8-20e5-6569605643c3@xs4all.nl>
+Date:   Wed, 19 Feb 2020 09:53:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <787302f0-670f-fadf-14e6-ea0a73603d77@arm.com>
+In-Reply-To: <20200204025641.218376-1-senozhatsky@chromium.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfJIKlUkJqnGnu5IIgcFzlxuIzPemo059Lomge90EQ5rG+k1u6j4ir7mSpjZvEQVSky3LcWja9ulbbJzWaf5yFxHl1vCzQvRclL4CqQl3CuwYdBHuzCMR
+ D3EjaZc3xBx1m0NtNaO4w4qvscI1lTG5kbUpu6u8Yq5QCSVL6CfWJdd6tjqdh9B6/c/mtYbsA+zftWNQ3zm5cxuJE5WkrkLT7C+U2NnqLbDekCG4SeD2XCBY
+ s+mwJUOOz7Kp//mHte/vIWcpUeupT8kFnhCuxmgI5TSvZhjubuv+dF4enqgnGWrv9jiuXP6v7oEuvM7Z2qsiUKQ6Q34BolNfeEorC4hpKOIUzL1McihbFets
+ 2FHPIgi9H0dvLP36cpHyyNJVewiHwKNPjv+e7PU21p2tkflxeeMDBqQjbWnOZVrRUWPYi6Vrs26uw8BJZL3k0adAIfDN30HyEIEtJLO8iHlO7JtCODqWmjpu
+ zS99R5qPmvn1YPrA7PyomLkVArbgD9zBeD8zh0kZQky6aQ4ID19sHRnfm9YP9cI2XScDYf2Wcw6+oGtd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 09:13, Valentin Schneider wrote:
-> Hi,
+On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
+> Hello,
 > 
-> On 19/02/2020 07:15, Chen Yu wrote:
->> Problem:
->> sched domain topology is not always consistent with the CPU topology exposed at
->> /sys/devices/system/cpu/cpuX/topology,  which makes it
->> hard for monitor tools to distinguish the CPUs among different sched domains.
->>
->> For example, on x86 if there are NUMA nodes within a package, say,
->> SNC(Sub-Numa-Cluster),
->> then there would be no die sched domain but only NUMA sched domains
->> created. As a result,
->> you don't know what the sched domain hierarchical is by only looking
->> at /sys/devices/system/cpu/cpuX/topology.
->>
->> Although by appending sched_debug in command line would show the sched
->> domain CPU topology,
->> it is only printed once during boot up, which makes it hard to track
->> at run-time.
+> 	V2 of the patchset, reshuffled, added more documentation,
+> 	addressed some of the feedback ;) Still in RFC, tho
+> 
+> v1 link: https://lore.kernel.org/lkml/20191217032034.54897-1-senozhatsky@chromium.org/
+> 
+> ---
+>         This is a reworked version of the vb2 cache hints
+> (V4L2_BUF_FLAG_NO_CACHE_INVALIDATE / V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> support patch series which previsouly was developed by Sakari and
+> Laurent [0].
+> 
+> The patch set attempts to preserve the existing behvaiour - cache
+> sync is performed in ->prepare() and ->finish() (unless the buffer
+> is DMA exported). User space can request “default behavior” override
+> with cache management hints, which are handled on a per-buffer basis
+> and should be supplied with v4l2_buffer ->flags during buffer
+> preparation. There are two possible hints:
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_INVALIDATE
+>         No cache sync on ->finish()
+> 
+> - V4L2_BUF_FLAG_NO_CACHE_CLEAN
+>         No cache sync on ->prepare()
+> 
+> In order to keep things on the safe side, we also require driver
+> to explicitly state which of its queues (if any) support user space
+> cache management hints (such queues should have ->allow_cache_hints
+> bit set).
+> 
+> The patch set also (to some extent) simplifies allocators' ->prepare()
+> and ->finish() callbacks. Namely, we move cache management decision
+> making to the upper - core - layer. For example, if, previously, we
+> would have something like this
+> 
+>         vb2_buffer_done()
+>           vb2_dc_finish()
+>             if (buf->db_attach)
+>                return;
+> 
+> where each allocators' ->finish() callback would either bail
+> out (DMA exported buffer, for instance) or sync, now that "bail
+> out or sync" decision is made before we call into the allocator.
+> 
+> Along with cache management hints, user space is also able to
+> adjust queue's memory consistency attributes. Memory consistency
+> attribute (dma_attrs) is per-queue, yet it plays its role on the
+> allocator level, when we allocate buffers’ private memory (planes).
+> For the time being, only one consistency attribute is supported:
+> DMA_ATTR_NON_CONSISTENT.
 
-What about /proc/schedstat?
+This is starting to look pretty good. I think you can drop the RFC
+for the next time you post this.
 
-E.g. on Intel Xeon CPU E5-2690 v2
+One thing I would like to see as well is test code in v4l2-compliance,
+specifically for testing the various flags and capabilities. I.e.,
+if V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS, then it should test that it can
+set the cache flags and the NON_CONSISTENT flag. If it is not set,
+then those flags should be cleared when attempting to set them.
 
-$ cat /proc/schedstat | head
-version 15
-timestamp 4486170100
-cpu0 0 0 0 0 0 0 59501267037720 16902762382193 1319621004
-domain0 00,00100001 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+Also code in v4l2-ctl and common/v4l2-info.cpp to support the new
+flags, both reporting them, but also setting them.
 
-        ^^^^^^^^^^^
+Regards,
 
-cpu1 0 0 0 0 0 0 56045879920164 16758983055410 1318489275
-domain0 00,00200002 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-domain1 00,3ff003ff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-domain2 ff,ffffffff 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-...
+	Hans
+
+> 
+> [0] https://www.mail-archive.com/linux-media@vger.kernel.org/msg112459.html
+> 
+> Sergey Senozhatsky (12):
+>   videobuf2: add cache management members
+>   videobuf2: handle V4L2 buffer cache flags
+>   videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: add queue memory consistency parameter
+>   videobuf2: handle V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+>   videobuf2: factor out planes prepare/finish functions
+>   videobuf2: do not sync caches when we are allowed not to
+>   videobuf2: check ->synced flag in prepare() and finish()
+>   videobuf2: let user-space know if driver supports cache hints
+>   videobuf2: add begin/end cpu_access callbacks to dma-contig
+>   videobuf2: add begin/end cpu_access callbacks to dma-sg
+>   videobuf2: don't test db_attach in dma-contig prepare and finish
+> 
+>  Documentation/media/uapi/v4l/buffer.rst       |  27 +++++
+>  .../media/uapi/v4l/vidioc-create-bufs.rst     |   9 +-
+>  .../media/uapi/v4l/vidioc-reqbufs.rst         |  22 +++-
+>  .../media/common/videobuf2/videobuf2-core.c   | 110 +++++++++++++-----
+>  .../common/videobuf2/videobuf2-dma-contig.c   |  39 ++++++-
+>  .../media/common/videobuf2/videobuf2-dma-sg.c |  30 +++--
+>  .../media/common/videobuf2/videobuf2-v4l2.c   |  59 +++++++++-
+>  drivers/media/dvb-core/dvb_vb2.c              |   2 +-
+>  drivers/media/v4l2-core/v4l2-ioctl.c          |   5 +-
+>  include/media/videobuf2-core.h                |  17 ++-
+>  include/uapi/linux/videodev2.h                |  11 +-
+>  11 files changed, 273 insertions(+), 58 deletions(-)
+> 
 
