@@ -3,89 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D36DC3405E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D0CC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FDE24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2517224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgBSRFW (ORCPT
+        id S1726826AbgBSRF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:05:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726514AbgBSRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:05:22 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Feb 2020 12:05:29 -0500
+Received: from avon.wwwdotorg.org ([104.237.132.123]:33014 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgBSRF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:05:29 -0500
+X-Greylist: delayed 331 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 12:05:28 EST
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F9AF2464E;
-        Wed, 19 Feb 2020 17:05:20 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 12:05:19 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v3 04/22] x86/doublefault: Make memmove()
- notrace/NOKPROBE
-Message-ID: <20200219120519.22ba89c4@gandalf.local.home>
-In-Reply-To: <20200219162747.GX2935@paulmck-ThinkPad-P72>
-References: <20200219144724.800607165@infradead.org>
-        <20200219150744.604459293@infradead.org>
-        <20200219103614.2299ff61@gandalf.local.home>
-        <20200219154031.GE18400@hirez.programming.kicks-ass.net>
-        <20200219155715.GD14946@hirez.programming.kicks-ass.net>
-        <20200219160442.GE14946@hirez.programming.kicks-ass.net>
-        <20200219111228.44c2999b@gandalf.local.home>
-        <20200219162747.GX2935@paulmck-ThinkPad-P72>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 7C4F21C092D;
+        Wed, 19 Feb 2020 09:59:55 -0700 (MST)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.1 at avon.wwwdotorg.org
+Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
+ parameter
+To:     Christoph Hellwig <hch@infradead.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
+        Colin Cross <ccross@android.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200219162339.16192-1-digetx@gmail.com>
+ <20200219162738.GA10644@infradead.org>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Message-ID: <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
+Date:   Wed, 19 Feb 2020 09:59:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200219162738.GA10644@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 08:27:47 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
-
-> > Or, we could just cut and paste the current memmove and make a notrace
-> > version too. Then we don't need to worry bout bugs like this.  
+On 2/19/20 9:27 AM, Christoph Hellwig wrote:
+> On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
+>> The gpt_sector=<sector> causes the GPT partition search to look at the
+>> specified sector for a valid GPT header if the GPT is not found at the
+>> beginning or the end of block device.
+>>
+>> In particular this is needed for NVIDIA Tegra consumer-grade Android
+>> devices in order to make them usable with the upstream kernel because
+>> these devices use a proprietary / closed-source partition table format
+>> for the EMMC and it's impossible to change the partition's format. Luckily
+>> there is a GPT table in addition to the proprietary table, which is placed
+>> in uncommon location of the EMMC storage and bootloader passes the
+>> location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
+>>
+>> This patch is based on the original work done by Colin Cross for the
+>> downstream Android kernel.
 > 
-> OK, I will bite...
-> 
-> Can we just make the core be an inline function and make a notrace and
-> a trace caller?  Possibly going one step further and having one call
-> the other?  (Presumably the traceable version invoking the notrace
-> version, but it has been one good long time since I have looked at
-> function preambles.)
+> I don't think a magic command line is the way to go.  The best would be
+> to reverse-engineer the proprietary partition table format.  If that is
+> too hard we can at least key off the odd GPT location based of it's
+> magic number.
 
-Sure. Looking at the implementation (which is big and ugly), we could
-have a
+I thought that the backup GPT was always present in the standard 
+location; it's just the primary GPT that's in an odd location. So, this 
+kernel parameter just forces the kernel to look first for the primary 
+GPT in the unusual location, thus avoiding an error message when that's 
+not there, and the system falls back to the backup GPT.
 
-static always_inline void __memmove(...)
-{
-	[..]
-}
-
-__visible void *memmove(...)
-{
-	return __memmove(...);
-}
-
-__visible notrace void *memmove_notrace(...)
-{
-	return __memmove(...);
-}
-
--- Steve
+Or, do I misremember the layout, or the kernel's behaviour if primary 
+GPT is missing?
