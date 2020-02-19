@@ -2,92 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E75DC169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEDC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 050D8208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CABBB24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="NubdAZU+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dp80u7+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgBSR5b (ORCPT
+        id S1726754AbgBSR6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:57:31 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53322 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgBSR5a (ORCPT
+        Wed, 19 Feb 2020 12:58:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47064 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726609AbgBSR6H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:57:30 -0500
-Received: by mail-wm1-f68.google.com with SMTP id s10so1663497wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:57:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=KHboEJQ4V7KnKKRwo21hWQi19tJ6wvBUxs3FLeRZPmM=;
-        b=NubdAZU+sSIbz0BV0mDakLLuTLcEqspzE4Up1DQtkWIpdW1mpgNM1v8RJ8ZZuhKvJi
-         MWbF+35NEjHnzip03/uJuENbfIAdHWuamF8c69nFYf8zV/oVGHqSUZ630Fswm4XC1dXz
-         5YvgY7LY2WqHCTIKhYcdwQ+R6HX4cffTVm3cfpYzg4Eu5XyaxWurXKwAMWFatKDl7RdO
-         PwF98nY3P7BdedA9YhLoKZf9L8cjS/aJl3c0DkPJ45wMIxscmqwbW4Gqu5RHDGZJzlOH
-         3ErQZHlJgoTkUGCUcLd9fsGwG4X59w8oZIXhFIykIQMVOmotCRQ/36uQA3DJfB4uT2nw
-         EGiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=KHboEJQ4V7KnKKRwo21hWQi19tJ6wvBUxs3FLeRZPmM=;
-        b=sAnGh1f+4mWMv7SKc0ClSYo+AmqeEQbofMrx7HjDY8RE7wg7hijN9RdlycZXO+XTRV
-         EFbvIW8W1UDmeldpvQszbT/Qachglqk+nhiRSRGbu2h0LAJkft1IS4J+TK8zH6qELSBR
-         iosGbsz+NOCjruGboRRc03aytDhihl98dUUn3NvqD56KwgFPVb3Yh2hbpLT1/Cz4xcAU
-         WucZLqpUsFIuBZYrePPDO8qTPE/4RdY3TR1e2VpYsaQHWI87xEljFiBixjJ9YHboCtKo
-         QmbmcmC65TQ6w9/zg7PLewkzg/4FqMc2c5xrrVEVz4nIzjsXlIIYrSnb76BMt6MrdsqL
-         Ly6w==
-X-Gm-Message-State: APjAAAWWE6axEkAtKhHZdXxGeBLaI4ufenxywq1KVgkvztmTE656zAgi
-        aksEk2EQWTWgMNJRF+7Dk0TFXg==
-X-Google-Smtp-Source: APXvYqzbs/Rr0atG2jUBRF7oE+i6F0iHSH+QTqV8GivqqqY0OmLGz1cSkAVCbjhN3skyuX9vVMLI2A==
-X-Received: by 2002:a05:600c:2207:: with SMTP id z7mr10879867wml.167.1582135048910;
-        Wed, 19 Feb 2020 09:57:28 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id f8sm771899wru.12.2020.02.19.09.57.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 09:57:28 -0800 (PST)
-References: <20200219084928.28707-1-narmstrong@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] clk: meson: g12a: add support for the SPICC SCLK Source clocks
-In-reply-to: <20200219084928.28707-1-narmstrong@baylibre.com>
-Date:   Wed, 19 Feb 2020 18:57:27 +0100
-Message-ID: <1jy2sywjco.fsf@starbuckisacylon.baylibre.com>
+        Wed, 19 Feb 2020 12:58:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582135081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=osE6Os536TzWa3Iu36fjeW3PyeJPL+4fg4AlWyJ2Fe8=;
+        b=Dp80u7+h+NTPn25UgqJgIBHJYRTbYliLbwoPnDMF7kwC2v4UcREtqWfWyASQb40Zn0wjST
+        aAdSMHsMMgwQ860VpueDOkOteDc6vyBwcVYnmNKUl3VtAvnkkFWhRtNzkKo6P0LXaxG8FI
+        7wiBctcke6Jk02q1NqKK46rGw4G5xTc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-Bt2leHTQP2q-fUD22d082g-1; Wed, 19 Feb 2020 12:57:59 -0500
+X-MC-Unique: Bt2leHTQP2q-fUD22d082g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1470D100550E;
+        Wed, 19 Feb 2020 17:57:57 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE60648;
+        Wed, 19 Feb 2020 17:57:53 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 15:11:34 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
+Message-ID: <20200219151134.GI1078625@stefanha-x1.localdomain>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--zqjkMoGlbUJ91oFe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 19 Feb 2020 at 09:49, Neil Armstrong <narmstrong@baylibre.com> wrote:
+On Thu, Feb 13, 2020 at 01:37:26PM +0100, Halil Pasic wrote:
+> Two patches are handling new edge cases introduced by doing DMA mappings
+> (which can fail) in virtio core.
+>=20
+> I stumbled upon this while stress testing I/O for Protected Virtual
+> Machines. I deliberately chose a tiny swiotlb size and have generated
+> load with fio. With more than one virtio-blk disk in use I experienced
+> hangs.
+>=20
+> The goal of this series is to fix those hangs.
+>=20
+> Halil Pasic (2):
+>   virtio-blk: fix hw_queue stopped on arbitrary error
+>   virtio-blk: improve virtqueue error to BLK_STS
+>=20
+>  drivers/block/virtio_blk.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>=20
+>=20
+> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+> --=20
+> 2.17.1
+>=20
 
-> Like on the AXG SoCs, the SPICC controllers can make use of an external clock
-> source instead of it's internal divider over xtal to provide a better SCLK
-> clock frequency.
->
-> This serie adds the new clock IDs and the associated clocks in the g12a driver.
->
-> Neil Armstrong (2):
->   dt-bindings: clk: g12a-clkc: add SPICC SCLK Source clock IDs
->   clk: meson: g12a: add support for the SPICC SCLK Source clocks
->
->  drivers/clk/meson/g12a.c              | 129 ++++++++++++++++++++++++++
->  drivers/clk/meson/g12a.h              |   6 +-
->  include/dt-bindings/clock/g12a-clkc.h |   2 +
->  3 files changed, 136 insertions(+), 1 deletion(-)
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Applied. Thx
+--zqjkMoGlbUJ91oFe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5NUCYACgkQnKSrs4Gr
+c8j5Pgf+MI41fd9a93cz9zlmiW7E/b+B99Zg/shlPYBcQXo0INymDnvknnpzLpqK
+uHn5ZGq85kM6+ls29Zhh4w7bxiJlBBNRzCkIIRxe5CwyOptQPcKHONreD1suCGT0
+boXaZtrbU1Wt1bWRBK4F9OLZcyIFxUESQ36b1r1VddZsKeFETUXAwjpSEU9bVCZ6
+qJfDp9RLYVvFISB17avVnsqyw8xO9mVI3RyIdzQATERL9W3DVxaacULruMmlBHvq
+T3nt4WcQjbTHEmTjvpnwGg2Oz4uvaRGm617bv082XAOP+Xr0h9uNU119WKCYk1Qk
+VML23VMN5owhMcib+gUXV3/9bQQkYQ==
+=GsRc
+-----END PGP SIGNATURE-----
+
+--zqjkMoGlbUJ91oFe--
+
