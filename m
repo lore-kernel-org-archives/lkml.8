@@ -2,249 +2,212 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39223C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78DC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097762465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A11324658
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:31:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iFcqO2NQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lSRiWyqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbgBSDbH (ORCPT
+        id S1726735AbgBSDbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:31:07 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:44586 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSDbH (ORCPT
+        Tue, 18 Feb 2020 22:31:17 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35724 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSDbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:31:07 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3IaFR109722;
-        Wed, 19 Feb 2020 03:31:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=GTH/p68KdhkiFJWtpDMSC/Ls9kAY8iH8V5hCViKDEQw=;
- b=iFcqO2NQC+0xUPGPzYCTKqu22A1wVsuAbiybcxrag0KuWmAV2RewPkL2l1A0kpsRdoDm
- IHF8wT6+MF+vL+IgE9NtOT/b6eX05UP9d5wofMjghyCzbSKQ2u6a3B7LoI1SZzg2z5hm
- pZo5lEmXP3zucjC+nsO3gcHOEXUAQIg7xFfxZel1emKzaCUPKf2jADyv2INDKdc4LSbQ
- juvEIa8OWSnXrfj40aUGX9+tulZ62kgyYVJedLdn/Sg+IB7cNC/3VUOQJ0sJjWHZUGMu
- ThRPJy0ix+7mjwiNWJuw3NGng62V4gn7gClzXfMlN1GEUmITbXxwqfldQBzxai4ngJCm KQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y8ud10aq7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 03:31:00 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01J3S5Hh004910;
-        Wed, 19 Feb 2020 03:29:00 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y8ud04f8p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 03:29:00 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01J3SxNs012381;
-        Wed, 19 Feb 2020 03:28:59 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Feb 2020 19:28:59 -0800
-Subject: Re: [PATCH v12 7/9] hugetlb: support file_region coalescing again
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211213128.73302-7-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <cb402ae6-8424-c1f7-35ff-6acc68f9a23b@oracle.com>
-Date:   Tue, 18 Feb 2020 19:28:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 22:31:16 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w12so26455545wrt.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 19:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=RUMuVs1svRgomvUT7C8h2abvo8cNrgy2pES+6QXQSIY=;
+        b=lSRiWyqvirwdh3sajPv4FCUQufn+NzX52afEcKKM8leoF1H3MtRqEsLmku+C8Ze+H2
+         lfA6n+jce+2xW1ffSpoXfiq8fGq3xDI8PoHIQZGEWksh7H9iV/+v1VJT5DRYwyQ6s48X
+         xNhtOdMuzESoS7XgzRa0/shNra7lMx/a2ghJ0HMbG7zU1nXfy5oYL1KMBT49kubqULED
+         e6ct6ku1vJGfh8g/9vM9fYX0VTURNyR+3AnmY36q7vvui76YT3mQFUga7sGVUsZ6FgU5
+         sdmHfp8/gPXOJR1CMKRIAybRUrNdMkN+VZWfQTV2qSQEFds+GgqARfnR9ifm7LY6Xvnw
+         fJMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=RUMuVs1svRgomvUT7C8h2abvo8cNrgy2pES+6QXQSIY=;
+        b=UdgmLwpUJxMv79ASr8dsh//sXuLHpCD90bMWhs40fCPnFPlkleM2INynTpDdXnF06T
+         D9sGuiNNtwTuACH6cmlT3rFL5pDmdL2w4sd/o66ZXEEk0gjwFuF3Qb/r5DGBMUrWgu+H
+         41ZID+/9QshFnQSDdBcMo9KJhk2xrJUIJKKK4D7CN1giw8rwAA94JDL6uD8OH+jHWsEk
+         QbmaN69pcQNpn7rvQdPJJzmorXnbpXFrhZNz7XxurIblzBSxThK1TC54rIhhCgT53rBd
+         1I8NHsaRlqSBq186sT/p7wVGI5/SghZW/UsybPZmnl9dbZRQIAKd+WbVN7mzLH2CVDAV
+         chEA==
+X-Gm-Message-State: APjAAAUnmTUcVyOF96upiOxl0xak3MpSbhSd7ovfk+qPwgl3vkpHdrot
+        VXpjErc/ls0BqewR4Sa9w6giRgiMn0DfSjhqtC2wBcHQ
+X-Google-Smtp-Source: APXvYqyKCQZKKzXdetohYhko115KDmC7T9isKLnFTdyUP/gReDXBrkiAUTbFnxl49QnS6a9b+AbhgdiM8+UgzIOLRWM=
+X-Received: by 2002:a5d:4384:: with SMTP id i4mr5444781wrq.215.1582083074227;
+ Tue, 18 Feb 2020 19:31:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200211213128.73302-7-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190023
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9535 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
- impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190023
+References: <CAHVeOW-TgaUctUE71jDSofBCM_O3dxrSvbCYLPRKm_eRpmY_MQ@mail.gmail.com>
+In-Reply-To: <CAHVeOW-TgaUctUE71jDSofBCM_O3dxrSvbCYLPRKm_eRpmY_MQ@mail.gmail.com>
+From:   Chris Gorman <chrisjohgorman@gmail.com>
+Date:   Tue, 18 Feb 2020 22:31:02 -0500
+Message-ID: <CAHVeOW8+5o51aY58dGd9Qz8wOMa2pvzN0Sz53eSQ+hgso9RiGA@mail.gmail.com>
+Subject: Re: digital microphone on google chromebook code name banon
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/11/20 1:31 PM, Mina Almasry wrote:
-> An earlier patch in this series disabled file_region coalescing in order
-> to hang the hugetlb_cgroup uncharge info on the file_region entries.
-> 
-> This patch re-adds support for coalescing of file_region entries.
-> Essentially everytime we add an entry, we call a recursive function that
-> tries to coalesce the added region with the regions next to it. The
-> worst case call depth for this function is 3: one to coalesce with the
-> region next to it, one to coalesce to the region prev, and one to reach
-> the base case.
-> 
-> This is an important performance optimization as private mappings add
-> their entries page by page, and we could incur big performance costs for
-> large mappings with lots of file_region entries in their resv_map.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
-> 
-> Changes in v12:
-> - Changed logic for coalescing. Instead of checking inline to coalesce
-> with only the region on next or prev, we now have a recursive function
-> that takes care of coalescing in both directions.
-> - For testing this code I added a bunch of debug code that checks that
-> the entries in the resv_map are coalesced appropriately. This passes
-> with libhugetlbfs tests.
-> 
-> ---
->  mm/hugetlb.c | 85 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 2d62dd35399db..45219cb58ac71 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -276,6 +276,86 @@ static void record_hugetlb_cgroup_uncharge_info(struct hugetlb_cgroup *h_cg,
->  #endif
->  }
-> 
-> +static bool has_same_uncharge_info(struct file_region *rg,
-> +				   struct file_region *org)
-> +{
-> +#ifdef CONFIG_CGROUP_HUGETLB
-> +	return rg && org &&
-> +	       rg->reservation_counter == org->reservation_counter &&
-> +	       rg->css == org->css;
-> +
-> +#else
-> +	return true;
-> +#endif
-> +}
-> +
-> +#ifdef CONFIG_DEBUG_VM
-> +static void dump_resv_map(struct resv_map *resv)
-> +{
-> +	struct list_head *head = &resv->regions;
-> +	struct file_region *rg = NULL;
-> +
-> +	pr_err("--------- start print resv_map ---------\n");
-> +	list_for_each_entry(rg, head, link) {
-> +		pr_err("rg->from=%ld, rg->to=%ld, rg->reservation_counter=%px, rg->css=%px\n",
-> +		       rg->from, rg->to, rg->reservation_counter, rg->css);
-> +	}
-> +	pr_err("--------- end print resv_map ---------\n");
-> +}
-> +
-> +/* Debug function to loop over the resv_map and make sure that coalescing is
-> + * working.
-> + */
-> +static void check_coalesce_bug(struct resv_map *resv)
-> +{
-> +	struct list_head *head = &resv->regions;
-> +	struct file_region *rg = NULL, *nrg = NULL;
-> +
-> +	list_for_each_entry(rg, head, link) {
-> +		nrg = list_next_entry(rg, link);
-> +
-> +		if (&nrg->link == head)
-> +			break;
-> +
-> +		if (nrg->reservation_counter && nrg->from == rg->to &&
-> +		    nrg->reservation_counter == rg->reservation_counter &&
-> +		    nrg->css == rg->css) {
-> +			dump_resv_map(resv);
-> +			VM_BUG_ON(true);
-> +		}
-> +	}
-> +}
-> +#endif
-> +
-> +static void coalesce_file_region(struct resv_map *resv, struct file_region *rg)
-> +{
-> +	struct file_region *nrg = NULL, *prg = NULL;
-> +
-> +	prg = list_prev_entry(rg, link);
-> +	if (&prg->link != &resv->regions && prg->to == rg->from &&
-> +	    has_same_uncharge_info(prg, rg)) {
-> +		prg->to = rg->to;
-> +
-> +		list_del(&rg->link);
-> +		kfree(rg);
-> +
-> +		coalesce_file_region(resv, prg);
-> +		return;
-> +	}
-> +
-> +	nrg = list_next_entry(rg, link);
-> +	if (&nrg->link != &resv->regions && nrg->from == rg->to &&
-> +	    has_same_uncharge_info(nrg, rg)) {
-> +		nrg->from = rg->from;
-> +
-> +		list_del(&rg->link);
-> +		kfree(rg);
-> +
-> +		coalesce_file_region(resv, nrg);
-> +		return;
-> +	}
-> +}
-> +
->  /* Must be called with resv->lock held. Calling this with count_only == true
->   * will count the number of pages to be added but will not modify the linked
->   * list. If regions_needed != NULL and count_only == true, then regions_needed
-> @@ -327,6 +407,7 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->  				record_hugetlb_cgroup_uncharge_info(h_cg, h,
->  								    resv, nrg);
->  				list_add(&nrg->link, rg->link.prev);
-> +				coalesce_file_region(resv, nrg);
->  			} else if (regions_needed)
->  				*regions_needed += 1;
->  		}
-> @@ -344,11 +425,15 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->  				resv, last_accounted_offset, t);
->  			record_hugetlb_cgroup_uncharge_info(h_cg, h, resv, nrg);
->  			list_add(&nrg->link, rg->link.prev);
-> +			coalesce_file_region(resv, nrg);
->  		} else if (regions_needed)
->  			*regions_needed += 1;
->  	}
-> 
->  	VM_BUG_ON(add < 0);
-> +#ifdef CONFIG_DEBUG_VM
-> +	check_coalesce_bug(resv);
-> +#endif
+Hello All,
 
-Some distros have CONFIG_DEBUG_VM on in their default kernels.  Fedora comes
-to mind.  Yes, this means 'VM_BUG_ON()' become 'BUG_ON()'.  That is somewhat
-accepted.  I don't think we want this debug code behind CONFIG_DEBUG_VM and
-called each time a file region is added.  It may be overkill to make it a
-debug option via the config system.  Perhaps, just make it something like
-CONFIG_DEBUG_HUGETLB_RSV_REGION and let hugetlb developers turn it on if
-they would like?
+I have been doing some more research into my problem microphone and
+came up with some kernel error messages.  The dmesg output from my
+machine follows with a few bits cut out.  Everything below after
+19.828677 shows an error. I am particularly interested in 723.334601
+and 723.334661 which show up during running aplay.  It seems that
+there is something wrong with my intel_sst_acpi driver?  It
+initializes, but then errors due to wait timeouts.  The last two error
+messages 1867.44593 and 1867.446002, are from an arecord.
+Interestingly no further wait timeout messages occur after the record
+attempt.  I will try git bisect tomorrow to see if I can isolate when
+the error messages start showing up.  I don't believe they existed in
+5.5-rc6, but I will find out.  If anyone has ideas on how to fix
+either my error messages or my dmic, please let me know.  I am not on
+the mailing list due to the high volume of messages, so if you respond
+please cc me directly.  Thanks for your time.
 
-Other than that, the code looks good.
--- 
-Mike Kravetz
+Chris
 
->  	return add;
->  }
-> 
-> --
-> 2.25.0.225.g125e21ebc7-goog
-> 
+[    1.050358] rt5645 i2c-10EC5650:00: Detected Google Chrome platform
+---snip---
+[    1.477956] intel_sst_acpi 808622A8:00: LPE base: 0xd1000000 size:0x200000
+[    1.477962] intel_sst_acpi 808622A8:00: IRAM base: 0xd10c0000
+[    1.477994] intel_sst_acpi 808622A8:00: DRAM base: 0xd1100000
+[    1.478010] intel_sst_acpi 808622A8:00: SHIM base: 0xd1140000
+[    1.478023] intel_sst_acpi 808622A8:00: Mailbox base: 0xd1144000
+[    1.478034] intel_sst_acpi 808622A8:00: DDR base: 0x20000000
+[    1.478544] intel_sst_acpi 808622A8:00: Got drv data max stream 25
+[    1.478938] cht-bsw-rt5645 cht-bsw-rt5645: quirk PMC_PLT_CLK_0 enabled
+[    1.484286] cht-bsw-rt5645 cht-bsw-rt5645: snd-soc-dummy-dai <->
+media-cpu-dai mapping ok
+[    1.484364] cht-bsw-rt5645 cht-bsw-rt5645: snd-soc-dummy-dai <->
+deepbuffer-cpu-dai mapping ok
+[    1.485720] cht-bsw-rt5645 cht-bsw-rt5645: rt5645-aif1 <->
+ssp2-port mapping ok
+---snip---
+[   19.828677] intel_sst_acpi 808622A8:00: FW Version 01.0b.02.02
+---errors from here on---
+[   31.278276] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[   31.278287] intel_sst_acpi 808622A8:00: fw returned err -16
+[   31.278299] sst-mfld-platform sst-mfld-platform: ASoC: PRE_PMD:
+pcm0_in event failed: -16
+[   32.300753] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[   32.300761] intel_sst_acpi 808622A8:00: fw returned err -16
+[   32.300770] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+media0_out event failed: -16
+[   33.324565] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[   33.324593] intel_sst_acpi 808622A8:00: fw returned err -16
+[   33.324623] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+codec_out0 mix 0 event failed: -16
+[   34.347757] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[   34.347766] intel_sst_acpi 808622A8:00: fw returned err -16
+[   34.347779] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+media0_out mix 0 event failed: -16
+[  723.334601] intel_sst_acpi 808622A8:00: FW sent error response 0x40015
+[  723.334661] intel_sst_acpi 808622A8:00: FW sent error response 0x40006
+[  768.479671] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[  768.479702] intel_sst_acpi 808622A8:00: fw returned err -16
+[  768.479739] sst-mfld-platform sst-mfld-platform: ASoC: PRE_PMD:
+pcm0_in event failed: -16
+[  769.503586] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[  769.503614] intel_sst_acpi 808622A8:00: fw returned err -16
+[  769.503643] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+media0_out event failed: -16
+[  770.527829] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[  770.527837] intel_sst_acpi 808622A8:00: fw returned err -16
+[  770.527846] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+codec_out0 mix 0 event failed: -16
+[  771.552544] intel_sst_acpi 808622A8:00: Wait timed-out
+condition:0x0, msg_id:0x1 fw_state 0x3
+[  771.552575] intel_sst_acpi 808622A8:00: fw returned err -16
+[  771.552613] sst-mfld-platform sst-mfld-platform: ASoC: POST_PMD:
+media0_out mix 0 event failed: -16
+---snip---
+[ 1867.445943] intel_sst_acpi 808622A8:00: FW sent error response 0x40015
+[ 1867.446002] intel_sst_acpi 808622A8:00: FW sent error response 0x40006
+
+On Fri, Feb 14, 2020 at 2:26 PM Chris Gorman <chrisjohgorman@gmail.com> wrote:
+>
+> Hello All,
+>
+> I have a problem with my laptop recording via the digital microphone.
+> I did try to explain the problem on
+> https://bugzilla.kernel.org/show_bug.cgi?id=95681, but I have heard no
+> response on the issue, so I am bugging the mailing list in hopes that
+> someone will have a magic fix for me. ;)
+>
+> My laptop is a google chromebook, braswell, banon.  It is of the intel
+> strago family.  When I try to record all I get is white noise.  I can
+> reduce the level of noise via alsamixer, but I have to reduce all the
+> capture levels to 5 or lower.
+>
+> I reached out to Sam McNally (thank you sam) from chromium regarding
+> his patch to cht_bsw_rt5645.c
+> adebb11139029ddf1fba6f796c4a476f17eacddc.  He was quite nice and
+> helpful.  According to Sam, the banon chromebooks dmic works with
+> their chromeos 4.9 and chromeos 5.4 kernels.  Unfortunately the dmic
+> still failed on my system when I tried the chromeos 5.4 kernel.
+> Perhaps the problem is my new coreboot 4.11 bios, whereas chrome uses
+> an older bios? I don't know.
+>
+> Sam also pointed me to checking /sys/kernel/debug/clk/clk_summary.
+> While recording I get..
+>
+> pmc_plt_clk_0                     0        0        0    19200000
+>        0     0  50000
+>
+> and while playing everything's fine and I get...
+>
+> pmc_plt_clk_0                     1        1        0    19200000
+>        0     0  50000
+>
+> This is clearly the problem.  I don't know how to get the clock
+> working with the capture function though.
+>
+> My kernel configs are ...
+>
+> SOUND = y
+> SND = y
+> SND_SOC = y
+> SND_SOC_INTEL_MACH = y
+> SND_SST_ATOM_HIFI2_PLATFORM = y
+> SND_SST_ATOM_HIFI2_PLATFORM_ACPI = y
+> I2C = y
+> ACPI = y
+> X86_INTEL_LPSS = y
+> SND_SOC_ACPI = y
+> SND_SOC_INTEL_CHT_BSW_RT5645_MACH = y
+> SND_SOC_RT5645 = y
+> SND_SOC_DMIC = y
+>
+> and I am running linux 5.5.0.  I welcome patches and suggestions, but
+> have not subscribed to the mailing list because of the volume of
+> emails, so please cc me with any response.
+>
+> Thanks in advance.
+>
+> Chris Gorman
