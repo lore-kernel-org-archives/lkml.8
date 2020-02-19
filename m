@@ -2,103 +2,103 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E919EC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E526DC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB28D24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:48:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G46DzT2w"
+	by mail.kernel.org (Postfix) with ESMTP id C2CBD24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:50:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbgBSAsJ (ORCPT
+        id S1726964AbgBSAuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:48:09 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46289 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgBSAsJ (ORCPT
+        Tue, 18 Feb 2020 19:50:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:37156 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgBSAuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:48:09 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a22so22104770oid.13;
-        Tue, 18 Feb 2020 16:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UH3IDmpA8z5gal2ML7pd0cStB9p9jlzpO3tNMXaPA/Y=;
-        b=G46DzT2wR7mYuLF4OdUnkxuJ4vV9LkHQlyise1UPaWycBuqVo/+9sYVe8CyABlQv9S
-         FcUJycWUQDFZnNIlbZ+MminrFt5KgbpHqxmdce4wMJYLLh1+CBPEYQPZTlyvHyRgTQ4D
-         HioT4agIrXoLHvU6tXSFFkR9JNa+5dLE6qgA47RPU/52G9HUFaWn2z9XbBhtNaW6QCcU
-         3c2vd06Z93HYAT/1PC9LJvttO84Hp5cXHLapMrXBB4xuvgpv/f4Fs1sAVVerd5d/NSIH
-         2IWDe9AJ61HbC/PUwKOgDL36FvElTN+3JEg1tqIzBURSswp6DZZ22wUBNfX/edekr0et
-         aT2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UH3IDmpA8z5gal2ML7pd0cStB9p9jlzpO3tNMXaPA/Y=;
-        b=Lg8SMk8Mkmm+MWvTgCviCJegNSpCWNxzGBYqB8ohpaC1cOAhjEfjitulFj5l62VUgs
-         Ms5CiUnlBdwSf7DRp56KV2uBpz/I4ZAQq9BPyyMeWC5P1S7YyNUZg332pIMDs0fjKATl
-         HoeKc5bOdytQoRNjPeczcjz6ekRuTapvV5k9GWVl3ZpgDeHt6BYKp/d7cDwqjauqLp1B
-         l9crm1RHPq9aROPH6QHSPRBtHnC9sztA6Wwjl2gjvO4FYcgYS7O1juNZx0TFDiW50MGl
-         8hTG9nJEbTKSXblz0gnkzxeXt+DuJ/CPQv1rG0zft8t3Yo9q1Cq6a++I6JtCvNMBl4xj
-         i05g==
-X-Gm-Message-State: APjAAAUxeRlK9Va/M2P17HOJaUeuuJZy/JvFfvjOgmQCp05bjoKDp1OD
-        0znR9UpzNs8wYXE5P7JOsx5fyilK1gjkemKQeNRuSKFOfRw=
-X-Google-Smtp-Source: APXvYqxVg8rifc6xWARcGcKwhNsrc+w58M3hPOw37yAdk62NyvEgpr0Be+TDHX4flYJZQCOr+WF75uOxrdy81pUxUvA=
-X-Received: by 2002:a05:6808:249:: with SMTP id m9mr3124374oie.5.1582073287013;
- Tue, 18 Feb 2020 16:48:07 -0800 (PST)
+        Tue, 18 Feb 2020 19:50:52 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j4DYs-00020a-9D; Wed, 19 Feb 2020 01:49:58 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A7363100F56; Wed, 19 Feb 2020 01:49:57 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
+In-Reply-To: <20200218233641.i7fyf36zxocgucap@ast-mbp>
+References: <20200214133917.304937432@linutronix.de> <20200214161504.325142160@linutronix.de> <20200214191126.lbiusetaxecdl3of@localhost> <87imk9t02r.fsf@nanos.tec.linutronix.de> <20200218233641.i7fyf36zxocgucap@ast-mbp>
+Date:   Wed, 19 Feb 2020 01:49:57 +0100
+Message-ID: <87blpvqu2y.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <1582022829-27032-1-git-send-email-wanpengli@tencent.com> <87zhdg84n6.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87zhdg84n6.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 19 Feb 2020 08:47:56 +0800
-Message-ID: <CANRm+Cyx+J+YK8FzFBV8LRNPeCaXPc93vjFdpA0D_hA+wrpywQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Recalculate apic map in batch
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 at 20:24, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > In the vCPU reset and set APIC_BASE MSR path, the apic map will be recalculated
-> > several times, each time it will consume 10+ us observed by ftrace in my
-> > non-overcommit environment since the expensive memory allocate/mutex/rcu etc
-> > operations. This patch optimizes it by recaluating apic map in batch, I hope
-> > this can benefit the serverless scenario which can frequently create/destroy
-> > VMs.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
->
-> An alternative idea: instead of making every caller return bool and
-> every call site handle the result (once) just add a
-> KVM_REQ_APIC_MAP_RECALC flag or a boolean flag to struct kvm. I
-> understand it may not be that easy as it sounds as we may be conunting
-> on valid mapping somewhere before we actually get to handiling
+Alexei,
 
-Yes.
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> Overall looks great.
+> Thank you for taking time to write commit logs and detailed cover letter.
+> I think s/__this_cpu_inc/this_cpu_inc/ is the only bit that needs to be
+> addressed for it to be merged.
+> There were few other suggestions from Mathieu and Jakub.
+> Could you address them and resend?
 
-> KVM_REQ_APIC_MAP_RECALC but we may preserve *some*
-> recalculate_apic_map() calls (and make it reset KVM_REQ_APIC_MAP_RECALC).
+I have them fixed up already, but I was waiting for further
+comments. I'll send it out tomorrow morning as I'm dead tired by now.
 
-Paolo, keep the caller return bool or add a booleen flag to struct
-kvm, what do you think?
+> I saw patch 1 landing in tip tree, but it needs to be in bpf-next as well
+> along with the rest of the series. Does it really need to be in the tip?
+> I would prefer to take the whole thing and avoid conflicts around
+> migrate_disable() especially if nothing in tip is going to use it in this
+> development cycle. So just drop patch 1 from the tip?
 
-    Wanpeng
+I'll add patch 2 to a tip branch as well and I'll give you a tag to pull
+into BPF (which has only those two commits). That allows us to further
+tweak the relevant files without creating conflicts in next.
+
+> Regarding
+> union {
+>    raw_spinlock_t  raw_lock;
+>    spinlock_t      lock;
+> };
+> yeah. it's not pretty, but I also don't have better ideas.
+
+Yeah. I really tried hard to avoid it, but the alternative solution was
+code duplication which was even more horrible.
+
+> Regarding migrate_disable()... can you enable it without the rest of RT?
+> I haven't seen its implementation. I suspect it's scheduler only change?
+> If I can use migrate_disable() without RT it will help my work on sleepable
+> BPF programs. I would only have to worry about rcu_read_lock() since
+> preempt_disable() is nicely addressed.
+
+You have to talk to Peter Zijlstra about this as this is really
+scheduler relevant stuff. FYI, he undamentaly hates migrate_disable()
+from a schedulabilty POV, but as with the above lock construct the
+amount of better solutions is also close to zero.
+
+Thanks,
+
+        tglx
