@@ -2,567 +2,151 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09620C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F121DC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B975721D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C251721D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhZAcQAP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AdkOxge9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgBSJyW (ORCPT
+        id S1726528AbgBSJzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:54:22 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:40386 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgBSJyV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:54:21 -0500
-Received: by mail-ot1-f67.google.com with SMTP id i6so22543859otr.7;
-        Wed, 19 Feb 2020 01:54:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=9yzyk4WDAhF2960y0XYTuZWdM/GpnGj/BkNLB1y2ZvY=;
-        b=fhZAcQAP862v2Qb0fXg+nfbDuOsRnJ3iVxtbHhKxQYYvReoDPMPqAvCOSIcWekbw4f
-         hobyMUTOyymnZCkuOI7vGVfJvoFaXLnrgU7a4dVYpiuQ5aVgooeoOKeAmBZEpqDX+vV0
-         CV4Jaxjg/h/wro22GPTDqAH+3hir7IY0GrwR85xLkyAWyNxb/YIq+mKRJ8g47BWlXHc7
-         MSbzv73V0LsAM5vv+xVX3MGco611ii9jfKRinu7608O+eZuxZD+NA4Y8mxq6C/TP1Myt
-         TOr9nKKhsk2aQpBqdIHlMpv3MyiJDAuc2tNWcm3JY/hhw+8p0GzhJWF8k1DGshRV0Jvf
-         dseA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=9yzyk4WDAhF2960y0XYTuZWdM/GpnGj/BkNLB1y2ZvY=;
-        b=f32ukzvJn82fLcnR7cWXq0dx7HFIraZVgnzepJXA3rYq7PZ8rqaq5bG+YTvuZsdwig
-         h+r7bTgE4plKxIhiH+VP4qs6QRAjxgR2LNqjKAnCpbTf/fY4hUSylobRWsKifH0ryyS/
-         rCBlUCEGg8a/d9FW3Hk0IawcyTVzY7E6d9LWtzddArps65lf4jOSEvb7vKoG1AZwnb5f
-         HCixMKtdi3aC6Jq47UGvhiGKpK3IkJxoN/QPZL0AHxXfTiXdzAlcQmb1GwnW8J7McAVB
-         k5GJX3c+j4Dtoa6KDlsgmfCwNPgWRUE00f4DZ6hyJtQT1RY1zlMYpCH7bBYUEd2+BHVH
-         0pFA==
-X-Gm-Message-State: APjAAAVToGRqhZP751NkUk/77pIoidgXEniIstUnnm8iTSW6H2n7ADUh
-        feHKHbMk0QUzIjnqoqNr95oh+dzQ
-X-Google-Smtp-Source: APXvYqyZR2IvaDLAUvmLnLci4mmPQjVBWU8gYMjNb4We6bO8R2sHTFBbQBtbUDpJJd6+swNpHH1dsw==
-X-Received: by 2002:a9d:6f8f:: with SMTP id h15mr17890834otq.1.1582106059406;
-        Wed, 19 Feb 2020 01:54:19 -0800 (PST)
-Received: from ziggy.stardust ([213.195.113.243])
-        by smtp.gmail.com with ESMTPSA id e21sm563013oib.16.2020.02.19.01.54.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 01:54:18 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] pinctrl: make MediaTek pinctrl v2 driver ready for
- buidling loadable module
-To:     light.hsieh@mediatek.com, linus.walleij@linaro.org
-Cc:     sean.wang@kernel.org, kuohong.wang@mediatek.com,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-References: <1582078102-26332-1-git-send-email-light.hsieh@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a06a4a3e-0a8c-ade6-7916-8d2926de6fd7@gmail.com>
-Date:   Wed, 19 Feb 2020 10:54:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1582078102-26332-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset=utf-8
+        Wed, 19 Feb 2020 04:55:43 -0500
+Received: from mail-eopbgr20070.outbound.protection.outlook.com ([40.107.2.70]:37298
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726385AbgBSJzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:55:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MhPIkTGq/DmZKGTO55vrBn9jnfaQ7tycRCS9yw/UiHVDp/11CAuG1aaY6NP91s6BXFL0oRzxaB47v3kXZkX6/EkgBC/rOpSSh3d1FEEfG65fJI4F6rVny0L/gFdbKfQGaLoBo0eXbsOI9Dg3CSMZ3C0epp0Lg68D6EQGZb9ufTfBKny/BP0Pm1aFh9bwudbi0JhPCriy4cAyJ2FXp/6+OnM7bOwfDDJEMpnw6GMDERuNSt0YjS1pC9UZO2MFVmJl7/1lsEs4iX4EGLOjxJYfTDWfWi1Ll3nX1JBlg56m4FBQ7ADEQln86wxJgJgtZxKgklrGpQRpgxUQVF/b7f9EfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JqD83DZNrnn/o8j0K6PwZLQEadzOVt1Lxc7Jw432W0o=;
+ b=GhbioS6N+a2dP7k0BKImypSiI3pyisxMyG9F0nXubViudONfEAxFu92XVSG6Uzi3+UcSTU1U2wRuBO1zgKF/eEWGnD99O5yyD22KHlWjG3Eh5h6mc/qSvmigiUkcIsNn5B+N7X3xAfTQZASYNjZx4I11D39Wkpcvut+8QmfcmnMnjTJofaOXyUMacfUcXqvWiQjgZuu0QJyebBWZPyuF46VVIveoiZgdbwTYGqq9pw8qcl7c6Qz0KQVM4+R81fIqbJBP+J9NS4YavzchRILaw7okAUYJ2JSOK6mJP+pGbEo6cQgPoIkH2zghv0pyi5bwW9vyFz3X+DnnJC6I9ZlweQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JqD83DZNrnn/o8j0K6PwZLQEadzOVt1Lxc7Jw432W0o=;
+ b=AdkOxge9SqQM7ofmHw0WA271sfEG13bR91/OIOGoUR5Aj3oVu1o98q5s5+yLj+dQexpxZugZ2XPDgaDgSn/pfIgSKxHyDWHtR7YoODL1Xk11P61FiySDUUAN5ww5hlrmQrp/jwp6ysyRXIQ1KISfk/NRG6pbX6xGxYHKg5OBme0=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4979.eurprd04.prod.outlook.com (20.177.40.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.22; Wed, 19 Feb 2020 09:55:39 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 09:55:39 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: RE: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
+ intermediate callbacks
+Thread-Topic: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
+ intermediate callbacks
+Thread-Index: AQHV5vuGM17dCu5aOkOrNUFZCKyD1qgiRNWAgAAAzHA=
+Date:   Wed, 19 Feb 2020 09:55:39 +0000
+Message-ID: <AM0PR04MB4481BE7EB99F6D3E198A4D7088100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1582099197-20327-1-git-send-email-peng.fan@nxp.com>
+ <1582099197-20327-11-git-send-email-peng.fan@nxp.com>
+ <20200219094603.2yfat5xxyabunlja@vireshk-i7>
+In-Reply-To: <20200219094603.2yfat5xxyabunlja@vireshk-i7>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 8f30c23a-0281-4a2f-89e5-08d7b521e03e
+x-ms-traffictypediagnostic: AM0PR04MB4979:|AM0PR04MB4979:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB49793C215A9151F5918A837588100@AM0PR04MB4979.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(2906002)(53546011)(6506007)(8936002)(26005)(81156014)(52536014)(66476007)(66446008)(66556008)(64756008)(5660300002)(186003)(8676002)(81166006)(66946007)(76116006)(86362001)(71200400001)(6916009)(316002)(4326008)(54906003)(7696005)(33656002)(7416002)(478600001)(9686003)(55016002)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4979;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Zzjx40BdPqviYtovZr+0yorcMGqlPSXwtFfwvd42CwWaHOXKdduvPHffQ8h/zB0Tb0DKxYZqNT0DRtv0vD+eFDprIkYuCvXlrGhNVhXDTNpndSOJXXro5ba4KFaZQMWiPqTPy8RoK49Ywk2SXfDTTcgoi5OWE5wtkLub2NMRmKYBv5NpEeJ5k2bLmAzqlOpkmec+YVQOvoMST6fUbSY9PyJC/idIuBIqfvMcfRMUFU+syhlASQ98lgD8BWbLJGsxZtt04VZfa2n9AdEnFc8Seb8PJdWW8I2Lq9jJtOHd0y7taBbVxgy73xWaYNIpKn/yDXWBKLkBEVzwF9tFTnLmsVHiNpVTtOKNd8KGe8JXoMXa6aixvAPbgRBFG5dPg/QssEhQyRmZJRr65L0nxyxuroCwL/wdd6m4O9kco53DO9sRyuszfbmsKOxTIKC1gu2v
+x-ms-exchange-antispam-messagedata: w3Yb/n1Gz6lNZxgCCkbHk9VUm4xYMFiAswrwU/ltHkq5nTRJybvgFIBQeM1X41xur8Lk9OIcJ5iCAYr13yTa3lD6MFP7jH7GrXkghtfC/8ZvLOczT0tRq7PMkkhIGu9jMHE6QcEMM0GJWMCpRHS8SA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f30c23a-0281-4a2f-89e5-08d7b521e03e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 09:55:39.6178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZxrmUlPCZ0k2t2PRXK6nGA0SHG+Jb9ZuxWgEVMHXSFNI9AhM7qsKGvMMDFpxkDxGAv9AJFbp7Eunj9hKV7U2Fg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4979
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Light,
+Hi Viresh,
 
-On 19/02/2020 03:08, light.hsieh@mediatek.com wrote:
-> From: Light Hsieh <light.hsieh@mediatek.com>
-> 
-> In the future we want to be able to build the MediaTek pinctrl driver,
-> based on paris, as kernel module. This patch allows pinctrl-paris.c, the
-> external interrupt controller mtk-eint.c, and pinctrl-mtk-common-v2.c to
-> be loadable as module.
-> 
-> The following is the rationale for determining whether mtk-eint.c,
-> pinctrl-mtk-common-v2.c, and pinctrl-paris.c are built as loadable module:
-> 
-> 1. drivers/pinctrl/mediatek/Kconfig:
-> 1.1 PINCTRL_MTXXXX: change from bool to tristate. It is specified in
->         defconfig file. MTXXXX can only be the user of pinctrl-paris,
->         which can MT6765 or MT8183. The patch for changing
->         PINCTRL_MT6765 from bool to tristate will be given as the next
->         patch of the patch series.
-> 1.2 PINCTRL_MTK_PARIS: change from bool to tristate and select
->         PINCTRL_MTK_V2. No need to specify in defconfig file.
->       * PINCTRL_MTK_PARIS will be y if any PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS is y.
->       * PINCTRL_MTK_PARIS will be n if all PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS is n.
->       * PINCTRL_MTK_PARIS will be m if some PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS are m and other PINCTRL_MTXXXX selecting
->         PINCTRL_MTK_PARIS are n.
-> 1.3 PINCTRL_MTK_MOORE: select EINT_MTK and PINCTRL_MTK_V2. It is make
->         to be ready for building as loadable kernel module because it
->         is not used on Android kernel.
-> 1.4 PINCTRL_MTK_V2: add this tristate config which depends on
->         PINCTRL_MTK_PARIS and PINCTRL_MTK_MOORE. No need to specify in
->         defconfig file.
->       * PINCTRL_MTK_V2 will be y if either PINCTRL_MTK_PARIS or
->         PINCTRL_MTK_MOORE is y.
->       * PINCTRL_MTK_V2 will be n if both PINCTRL_MTK_PARIS and
->         PINCTRL_MTK_MOORE are n.
->       * PINCTRL_MTK_V2 will be m if PINCTRL_MTK_PARIS is m and
->         PINCTRL_MTK_MOORE is n.
-> 1.5 EINT_MTK: change from bool to tristate and add rule for default.
->         No need to specify in defconfig file.
->       * First rule: determine if EINT_MTK is y or n according to
->         selection of PINCTRL_MTK or PINCTRL_MTK_MORE.
->       * Second rule: determine if EINT_MTK is y, m, or n according to
->         selection of PINCTRL_MTK_PARIS.
-> 
-> 2. drivers/pinctrl/mediatek/Makefile: Use PINCTRL_MTK_V2 to determine
->         if pinctrl-mtk-common-v2.c is built as loadable module or
->         built-in.
-> 
-> Signed-off-by: Light Hsieh <light.hsieh@mediatek.com>
+> Subject: Re: [PATCH v2 10/14] cpufreq: dt: Allow platform specific
+> intermediate callbacks
+>=20
+> On 19-02-20, 15:59, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > Platforms may need to implement platform specific get_intermediate and
+> > target_intermediate hooks.
+> >
+> > Update cpufreq-dt driver's platform data to contain those for such
+> > platforms.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  drivers/cpufreq/cpufreq-dt.c | 4 ++++  drivers/cpufreq/cpufreq-dt.h |
+> > 4 ++++
+> >  2 files changed, 8 insertions(+)
+>=20
+> Looks fine to me, please lemme know the patches you want me to apply to
+> the cpufreq tree.
 
-You forgot to add the Reviewed-by tags from your last series.
-Apart I had a comment on this patch which you didn't address nor objected :)
+Thanks for quick reply.
 
-https://patchwork.kernel.org/patch/11388087/
+Patch 1-9,13 needs to go into i.MX tree. Patch 10-12 needs to go into your =
+tree.
 
-Regards,
-Matthias
+But patch 11,12 depends on patch 3-9 to make i.MX7ULP cpufreq work. So
+for now, only patch 10 could be directly taken into your tree.
 
-> ---
->  drivers/pinctrl/mediatek/Kconfig                 | 13 +++++++++++--
->  drivers/pinctrl/mediatek/Makefile                |  5 +++--
->  drivers/pinctrl/mediatek/mtk-eint.c              |  9 +++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 ++++++++++++++++++++++++
->  drivers/pinctrl/mediatek/pinctrl-paris.c         |  5 +++++
->  drivers/pinctrl/pinconf-generic.c                |  1 +
->  6 files changed, 53 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index 701f9af..4cd1109 100644
-> --- a/drivers/pinctrl/mediatek/Kconfig
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -3,10 +3,12 @@ menu "MediaTek pinctrl drivers"
->  	depends on ARCH_MEDIATEK || COMPILE_TEST
->  
->  config EINT_MTK
-> -	bool "MediaTek External Interrupt Support"
-> +	tristate "MediaTek External Interrupt Support"
->  	depends on PINCTRL_MTK || PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS || COMPILE_TEST
->  	select GPIOLIB
->  	select IRQ_DOMAIN
-> +	default y if PINCTRL_MTK || PINCTRL_MTK_MOORE
-> +	default PINCTRL_MTK_PARIS
->  
->  config PINCTRL_MTK
->  	bool
-> @@ -17,23 +19,30 @@ config PINCTRL_MTK
->  	select EINT_MTK
->  	select OF_GPIO
->  
-> +config PINCTRL_MTK_V2
-> +	tristate
-> +	depends on PINCTRL_MTK_MOORE || PINCTRL_MTK_PARIS
-> +
->  config PINCTRL_MTK_MOORE
->  	bool
->  	depends on OF
->  	select GENERIC_PINCONF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> +	select EINT_MTK
->  	select GPIOLIB
->  	select OF_GPIO
-> +	select PINCTRL_MTK_V2
->  
->  config PINCTRL_MTK_PARIS
-> -	bool
-> +	tristate
->  	depends on OF
->  	select PINMUX
->  	select GENERIC_PINCONF
->  	select GPIOLIB
->  	select EINT_MTK
->  	select OF_GPIO
-> +	select PINCTRL_MTK_V2
->  
->  # For ARMv7 SoCs
->  config PINCTRL_MT2701
-> diff --git a/drivers/pinctrl/mediatek/Makefile b/drivers/pinctrl/mediatek/Makefile
-> index a74325a..4b71328 100644
-> --- a/drivers/pinctrl/mediatek/Makefile
-> +++ b/drivers/pinctrl/mediatek/Makefile
-> @@ -2,8 +2,9 @@
->  # Core
->  obj-$(CONFIG_EINT_MTK)		+= mtk-eint.o
->  obj-$(CONFIG_PINCTRL_MTK)	+= pinctrl-mtk-common.o
-> -obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o pinctrl-mtk-common-v2.o
-> -obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o pinctrl-mtk-common-v2.o
-> +obj-$(CONFIG_PINCTRL_MTK_V2)	+= pinctrl-mtk-common-v2.o
-> +obj-$(CONFIG_PINCTRL_MTK_MOORE) += pinctrl-moore.o
-> +obj-$(CONFIG_PINCTRL_MTK_PARIS) += pinctrl-paris.o
->  
->  # SoC Drivers
->  obj-$(CONFIG_PINCTRL_MT2701)	+= pinctrl-mt2701.o
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-> index 7e526bcf..99703a8 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -9,6 +9,7 @@
->   *
->   */
->  
-> +#include <linux/module.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/gpio/driver.h>
-> @@ -379,6 +380,7 @@ int mtk_eint_do_suspend(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_suspend);
->  
->  int mtk_eint_do_resume(struct mtk_eint *eint)
->  {
-> @@ -386,6 +388,7 @@ int mtk_eint_do_resume(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_resume);
->  
->  int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->  			  unsigned int debounce)
-> @@ -440,6 +443,7 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_num,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_set_debounce);
->  
->  int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->  {
-> @@ -451,6 +455,7 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
->  
->  	return irq;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
->  
->  int mtk_eint_do_init(struct mtk_eint *eint)
->  {
-> @@ -495,3 +500,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_eint_do_init);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("MediaTek EINT Driver");
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 1da9425..cdf2d69 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -6,6 +6,7 @@
->   *
->   */
->  
-> +#include <linux/module.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
-> @@ -206,6 +207,7 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_hw_set_value);
->  
->  int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  		     int field, int *value)
-> @@ -225,6 +227,7 @@ int mtk_hw_get_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_hw_get_value);
->  
->  static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
->  {
-> @@ -363,6 +366,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
->  
->  	return mtk_eint_do_init(hw->eint);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_build_eint);
->  
->  /* Revision 0 */
->  int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
-> @@ -382,6 +386,7 @@ int mtk_pinconf_bias_disable_set(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set);
->  
->  int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->  				 const struct mtk_pin_desc *desc, int *res)
-> @@ -404,6 +409,7 @@ int mtk_pinconf_bias_disable_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get);
->  
->  int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->  			 const struct mtk_pin_desc *desc, bool pullup)
-> @@ -423,6 +429,7 @@ int mtk_pinconf_bias_set(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set);
->  
->  int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->  			 const struct mtk_pin_desc *desc, bool pullup, int *res)
-> @@ -442,6 +449,7 @@ int mtk_pinconf_bias_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get);
->  
->  /* Revision 1 */
->  int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
-> @@ -456,6 +464,7 @@ int mtk_pinconf_bias_disable_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_set_rev1);
->  
->  int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->  				      const struct mtk_pin_desc *desc, int *res)
-> @@ -473,6 +482,7 @@ int mtk_pinconf_bias_disable_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_disable_get_rev1);
->  
->  int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, bool pullup)
-> @@ -492,6 +502,7 @@ int mtk_pinconf_bias_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_rev1);
->  
->  int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, bool pullup,
-> @@ -517,6 +528,7 @@ int mtk_pinconf_bias_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_gev1);
->  
->  /* Combo for the following pull register type:
->   * 1. PU + PD
-> @@ -717,6 +729,7 @@ int mtk_pinconf_bias_set_combo(struct mtk_pinctrl *hw,
->  out:
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_set_combo);
->  
->  int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc,
-> @@ -737,6 +750,7 @@ int mtk_pinconf_bias_get_combo(struct mtk_pinctrl *hw,
->  out:
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_bias_get_combo);
->  
->  /* Revision 0 */
->  int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
-> @@ -766,6 +780,7 @@ int mtk_pinconf_drive_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set);
->  
->  int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->  			  const struct mtk_pin_desc *desc, int *val)
-> @@ -790,6 +805,7 @@ int mtk_pinconf_drive_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get);
->  
->  /* Revision 1 */
->  int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
-> @@ -811,6 +827,7 @@ int mtk_pinconf_drive_set_rev1(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_rev1);
->  
->  int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, int *val)
-> @@ -828,18 +845,21 @@ int mtk_pinconf_drive_get_rev1(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_rev1);
->  
->  int mtk_pinconf_drive_set_raw(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, u32 arg)
->  {
->  	return mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV, arg);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_set_raw);
->  
->  int mtk_pinconf_drive_get_raw(struct mtk_pinctrl *hw,
->  			       const struct mtk_pin_desc *desc, int *val)
->  {
->  	return mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV, val);
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_drive_get_raw);
->  
->  int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
-> @@ -880,6 +900,7 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_set);
->  
->  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  			     const struct mtk_pin_desc *desc, bool pullup,
-> @@ -922,6 +943,7 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_pull_get);
->  
->  int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, u32 arg)
-> @@ -948,6 +970,7 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
->  
->  	return err;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_set);
->  
->  int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->  			      const struct mtk_pin_desc *desc, u32 *val)
-> @@ -971,3 +994,4 @@ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
->  
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(mtk_pinconf_adv_drive_get);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 83bf29c..af97794 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -9,6 +9,7 @@
->   *	   Hongzhou.Yang <hongzhou.yang@mediatek.com>
->   */
->  
-> +#include <linux/module.h>
->  #include <linux/gpio/driver.h>
->  #include <dt-bindings/pinctrl/mt65xx.h>
->  #include "pinctrl-paris.h"
-> @@ -1037,3 +1038,7 @@ static int mtk_paris_pinctrl_resume(struct device *device)
->  	.suspend_noirq = mtk_paris_pinctrl_suspend,
->  	.resume_noirq = mtk_paris_pinctrl_resume,
->  };
-> +EXPORT_SYMBOL_GPL(mtk_paris_pinctrl_probe);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("MediaTek Pinctrl Common Driver V2 Paris");
-> diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-> index 9eb8630..dfef471 100644
-> --- a/drivers/pinctrl/pinconf-generic.c
-> +++ b/drivers/pinctrl/pinconf-generic.c
-> @@ -286,6 +286,7 @@ int pinconf_generic_parse_dt_config(struct device_node *np,
->  	kfree(cfg);
->  	return ret;
->  }
-> +EXPORT_SYMBOL_GPL(pinconf_generic_parse_dt_config);
->  
->  int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
->  		struct device_node *np, struct pinctrl_map **map,
-> 
+Will let you know after CLK and i.MX maintainer agree on the clk part, then
+you could take patches 10-12 in a whole.
+
+Thanks,
+Peng.=20
+
+>=20
+> --
+> viresh
