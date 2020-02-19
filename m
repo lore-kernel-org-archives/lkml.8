@@ -2,270 +2,118 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD790C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08271C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4DC208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:48:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Q+wZUNs3"
+	by mail.kernel.org (Postfix) with ESMTP id DE5CB2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgBSIs6 (ORCPT
+        id S1726648AbgBSItR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:48:58 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:34827 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726163AbgBSIs6 (ORCPT
+        Wed, 19 Feb 2020 03:49:17 -0500
+Received: from outbound-smtp62.blacknight.com ([46.22.136.251]:52275 "EHLO
+        outbound-smtp62.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726480AbgBSItR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:48:58 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4L2KjzSO4P9a94L2NjnViQ; Wed, 19 Feb 2020 09:48:55 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582102135; bh=wuIrxAkCMRn2Whv+hbIxQ7O/czDkYP3xWSz7segqdM0=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Q+wZUNs3Hki73XttSqXSo1BHVDS2kpaLF8rzUDk8LeAsPMXdGrJkXulq0BKCTVHrf
-         CSOFRHZ01His86MckdNiWSXIQfzEziEzrEvnGhJW2EehAyv7B6awYix+yuFM4mEO9u
-         z67IHgBoy2eTXjiX5kRv1lWcWRHQ211JxMJPwNlfc6vhwlgpkmDKEEIJK0MsoPUzQz
-         /0tWhVLtkB8WABDuRLrdphTV+EWpRTOqWSAc5oMGcvZylFI7YvqbgJGKGobecJIpFR
-         wZXRVKoJbzzdnHj8Ro5rJ/fSE1hhMtjY/HsNDk8/gq6Bj+IBONL+WrVAP9l3ex8kdo
-         tkxEWQi2j/QKQ==
-Subject: Re: [RFC][PATCHv2 05/12] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT flag
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-6-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <83147032-25a4-9450-d455-437e82e09dc8@xs4all.nl>
-Date:   Wed, 19 Feb 2020 09:48:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 03:49:17 -0500
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp62.blacknight.com (Postfix) with ESMTPS id 94EFDFA897
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:49:15 +0000 (GMT)
+Received: (qmail 29501 invoked from network); 19 Feb 2020 08:49:15 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 08:49:15 -0000
+Date:   Wed, 19 Feb 2020 08:49:12 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        willy@infradead.org, lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, mhocko@kernel.org, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 0/9] mm / virtio: Provide support for free page
+ reporting
+Message-ID: <20200219084912.GO3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+ <20200211150510.ca864143284c8ccaa906f524@linux-foundation.org>
+ <c45a6e8ab6af089da1001c0db28783dcea6bebd5.camel@linux.intel.com>
+ <20200211161927.1068232d044e892782aef9ae@linux-foundation.org>
+ <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200204025641.218376-6-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfL6f8FK3SjIMGhFaApyJ7a5BdOACLLJjKExW17bP4dv/L+Y/rCpf+nd2Qy+KnKAY47U18odOdEeQuBwmQmIgO/HX6COAxVjpQdc5MZpNDksQk2oDPpdN
- ZN9159U1Wd42NV9ymC+6fZwp/PuQsp1epWD90yOuhVSVfacqkAThbrlKJ/+qMUU5AAPsjNwTsybbUYrYe8fucVBmEEqUoYyOusIH4s8ZKLSIgAd4Tf3LraqS
- i2nrD2Uq2bwr7mYAJ/2VL+dsmooSTh/++9SviuYcVZdUsnRF73E8csxoasW8/XINmDq4hpRCRu7XyXHK6a8ucZZoX8ei3k3m7pTLXof6rG+BiUstn7HDC1Ua
- UQDvVYM0L/8WQ3qMudLQBf7JZEb2YeWAEzAbHjl+GP6BDH4dLt+gyfTibQnWLjD2Ft39+uziFP/+1z4yhbYz5Opdqa22W7AfvV+N/HK5eCfjiWuzsiCU7IAj
- 2/0uTJ7ONoE86vm3DoT8QVZanTXhXWO/FbcazsL+XRTa66xBTXLH9MrO+D1w7kFEFKz6pHC0MCb7mRSO
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <31383bb111737c9f8ffbb1e6e4446cb4fd620a53.camel@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
-> This patch lets user-space to request a non-consistent memory
-> allocation during CREATE_BUFS and REQBUFS ioctl calls.
+On Tue, Feb 18, 2020 at 08:37:46AM -0800, Alexander Duyck wrote:
+> On Tue, 2020-02-11 at 16:19 -0800, Andrew Morton wrote:
+> > On Tue, 11 Feb 2020 15:55:31 -0800 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+> > 
+> > > On the host I just have to monitor /proc/meminfo and I can see the
+> > > difference. I get the following results on the host, in the enabled case
+> > > it takes about 30 seconds for it to settle into the final state since I
+> > > only report page a bit at a time:
+> > > Baseline/Applied
+> > >   MemTotal:    131963012 kB
+> > >   MemFree:      95189740 kB
+> > > 
+> > > Enabled:
+> > >   MemTotal:    131963012 kB
+> > >   MemFree:     126459472 kB
+> > > 
+> > > This is what I was referring to with the comment above. I had a test I was
+> > > running back around the first RFC that consisted of bringing up enough VMs
+> > > so that there was a bit of memory overcommit and then having the VMs in
+> > > turn run memhog. As I recall the difference between the two was  something
+> > > like a couple minutes to run through all the VMs as the memhog would take
+> > > up to 40+ seconds for one that was having to pull from swap while it took
+> > > only 5 to 7 seconds for the VMs that were all running the page hinting.
+> > > 
+> > > I had referenced it here in the RFC:
+> > > https://lore.kernel.org/lkml/20190204181118.12095.38300.stgit@localhost.localdomain/
+> > > 
+> > > I have been verifying the memory has been getting freed but didn't feel
+> > > like the test added much value so I haven't added it to the cover page for
+> > > a while since the time could vary widely and is dependent on things like
+> > > the disk type used for the host swap since my SSD is likely faster than
+> > > spinning rust, but may not be as fast as other SSDs on the market. Since
+> > > the disk speed can play such a huge role I wasn't comfortable posting
+> > > numbers since the benefits could vary so widely.
+> > 
+> > OK, thanks.  I'll add the patches to the mm pile.  The new
+> > mm/page_reporting.c is unreviewed afaict, so I guess you own that for
+> > now ;)
+> > 
+> > It would be very nice to get some feedback from testers asserting "yes,
+> > this really helped my workload" but I understand this sort of testing
+> > is hard to obtain at this stage.
+> > 
 > 
-> = CREATE_BUFS
+> Mel,
 > 
->   struct v4l2_create_buffers has seven 4-byte reserved areas,
->   so reserved[0] is renamed to ->flags. The struct, thus, now
->   has six reserved 4-byte regions.
-> 
-> = REQBUFS
-> 
->  We use one bit of a ->reserved[1] member of struct v4l2_requestbuffers,
->  which is now renamed to ->flags. Unlike v4l2_create_buffers, struct
->  v4l2_requestbuffers does not have enough reserved room. Therefore for
->  backward compatibility  ->reserved and ->flags were put into anonymous
->  union.
-> 
-> Change-Id: I0eaab3428de499ce1bce6fc6b26c5ca5ff405882
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  .../media/uapi/v4l/vidioc-create-bufs.rst     |  9 +++++++-
->  .../media/uapi/v4l/vidioc-reqbufs.rst         | 15 ++++++++++---
->  .../media/common/videobuf2/videobuf2-v4l2.c   | 21 ++++++++++++++++---
->  drivers/media/v4l2-core/v4l2-ioctl.c          |  5 +----
->  include/uapi/linux/videodev2.h                |  8 +++++--
->  5 files changed, 45 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-> index bd08e4f77ae4..68185e94b686 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-create-bufs.rst
-> @@ -121,7 +121,14 @@ than the number requested.
->  	other changes, then set ``count`` to 0, ``memory`` to
->  	``V4L2_MEMORY_MMAP`` and ``format.type`` to the buffer type.
->      * - __u32
-> -      - ``reserved``\ [7]
-> +      - ``flags``
-> +      - Specifies additional buffer management attributes. Valid only when
-> +	queue reports :ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
-> +	Old drivers and applications must set it to zero.
-> +
-> +
-> +    * - __u32
-> +      - ``reserved``\ [6]
->        - A place holder for future extensions. Drivers and applications
->  	must set the array to zero.
->  
-> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> index d0c643db477a..9741dac0d5b3 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> @@ -112,10 +112,19 @@ aborting or finishing any DMA in progress, an implicit
->  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
->  	free any previously allocated buffers, so this is typically something
->  	that will be done at the start of the application.
-> -    * - __u32
-> +    * - union
-> +      - (anonymous)
-> +    * -
-> +      - __u32
-> +      - ``flags``\ [1]
-> +      - Specifies additional buffer management attributes. Valid only when
-> +	queue reports :ref:`V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS` capability.
-> +	Old drivers and applications must set it to zero.
-> +
-> +    * -
-> +      - __u32
->        - ``reserved``\ [1]
-> -      - A place holder for future extensions. Drivers and applications
-> -	must set the array to zero.
-> +      - Kept for backwards compatibility. Use ``flags`` instead.
->  
->  .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
->  
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index 7cdfcd1baf82..eb5d1306cb03 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -707,9 +707,15 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
->  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
->  {
->  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
-> +	bool consistent = true;
-> +
-> +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> +		consistent = false;
-
-There is no check against allow_cache_hints: if that's 0, then
-the V4L2_FLAG_MEMORY_NON_CONSISTENT flag should be cleared since it is
-not supported.
-
->  
->  	fill_buf_caps(q, &req->capabilities);
-> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
-> +	if (ret)
-> +		return ret;
-> +	return vb2_core_reqbufs(q, req->memory, consistent, &req->count);
->  }
->  EXPORT_SYMBOL_GPL(vb2_reqbufs);
->  
-> @@ -738,6 +744,7 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->  	unsigned requested_sizes[VIDEO_MAX_PLANES];
->  	struct v4l2_format *f = &create->format;
->  	int ret = vb2_verify_memory_type(q, create->memory, f->type);
-> +	bool consistent = true;
->  	unsigned i;
->  
->  	fill_buf_caps(q, &create->capabilities);
-> @@ -783,7 +790,11 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
->  	for (i = 0; i < requested_planes; i++)
->  		if (requested_sizes[i] == 0)
->  			return -EINVAL;
-> -	return ret ? ret : vb2_core_create_bufs(q, create->memory, true,
-> +
-> +	if (create->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> +		consistent = false;
-
-Ditto.
-
-Regards,
-
-	Hans
-
-> +
-> +	return ret ? ret : vb2_core_create_bufs(q, create->memory, consistent,
->  		&create->count, requested_planes, requested_sizes);
->  }
->  EXPORT_SYMBOL_GPL(vb2_create_bufs);
-> @@ -953,13 +964,17 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
->  {
->  	struct video_device *vdev = video_devdata(file);
->  	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
-> +	bool consistent = true;
->  
->  	fill_buf_caps(vdev->queue, &p->capabilities);
->  	if (res)
->  		return res;
->  	if (vb2_queue_is_busy(vdev, file))
->  		return -EBUSY;
-> -	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
-> +	if (p->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> +		consistent = false;
-> +
-> +	res = vb2_core_reqbufs(vdev->queue, p->memory, consistent, &p->count);
->  	/* If count == 0, then the owner has released all buffers and he
->  	   is no longer owner of the queue. Otherwise we have a new owner. */
->  	if (res == 0)
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index aaf83e254272..9791e2882382 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1973,9 +1973,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
->  
->  	if (ret)
->  		return ret;
-> -
-> -	CLEAR_AFTER_FIELD(p, capabilities);
-> -
->  	return ops->vidioc_reqbufs(file, fh, p);
->  }
->  
-> @@ -2015,7 +2012,7 @@ static int v4l_create_bufs(const struct v4l2_ioctl_ops *ops,
->  	if (ret)
->  		return ret;
->  
-> -	CLEAR_AFTER_FIELD(create, capabilities);
-> +	CLEAR_AFTER_FIELD(create, flags);
->  
->  	v4l_sanitize_format(&create->format);
->  
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 72efc1c544cd..169a8cf345ed 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -938,7 +938,10 @@ struct v4l2_requestbuffers {
->  	__u32			type;		/* enum v4l2_buf_type */
->  	__u32			memory;		/* enum v4l2_memory */
->  	__u32			capabilities;
-> -	__u32			reserved[1];
-> +	union {
-> +		__u32		flags;
-> +		__u32		reserved[1];
-> +	};
->  };
->  
->  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
-> @@ -2445,7 +2448,8 @@ struct v4l2_create_buffers {
->  	__u32			memory;
->  	struct v4l2_format	format;
->  	__u32			capabilities;
-> -	__u32			reserved[7];
-> +	__u32			flags;
-> +	__u32			reserved[6];
->  };
->  
->  /*
+> Any ETA on when you would be available to review these patches? They are
+> now in Andrew's tree and in linux-next. I am hoping to get any remaining
+> review from the community sorted out in the next few weeks so I can move
+> onto focusing on how best to exert pressure on the page cache so that we
+> can keep the guest memory footprint small.
 > 
 
+I hope to get to it soon. I'm trying to finalise a scheduler-related
+series that reconciles NUMA and CPU balancing and it's occupying much of
+my attention available for mainline development :(
+
+-- 
+Mel Gorman
+SUSE Labs
