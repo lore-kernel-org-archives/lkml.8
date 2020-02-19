@@ -2,176 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B0BC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4E5C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7C0121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EBF207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="pIkSmqtU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j0baOwT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBSKFM (ORCPT
+        id S1726651AbgBSKG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:05:12 -0500
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.112]:35918 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbgBSKFM (ORCPT
+        Wed, 19 Feb 2020 05:06:27 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:36112 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgBSKG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:05:12 -0500
-Received: from [100.113.6.75] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-b.eu-central-1.aws.symcld.net id 43/CE-62111-4580D4E5; Wed, 19 Feb 2020 10:05:08 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDJsWRWlGSWpSXmKPExsWSoc9lrhvC4Rt
-  ncGSmhMWVi4eYLNY0dzBZTH34hM3ixOFGZotvV4Dcy7vmsFns+LeJzeLX/2dMFvc2PGO2uLvu
-  L4vFhu9rGR24PTZ8bmLz2DnrLrvHgk2lHov3vGTy2LSqk81j3slAj/VbrrJ4fN4kF8ARxZqZl
-  5RfkcCa8fjPCvaC6QIVH+9fZWpg/MPfxcjFwSiwlFlic9sjRgjnGIvE7uNzmSCczYwSv3t/sn
-  UxcnKwCJxglti13RQkISQwgUlicsduJgjnLqPEthuLWECq2AQsJCafeMAGkhAROMMocfvUSxY
-  Qh1lgBbPE9FPtQA4Hh7BAsMTEFRwgDSICIRL/pjczQdj5EtMeHWSBWKcqsfPTYjCbVyBWYm3j
-  d6ht+1glNjQvA2vgFIiTuHvjA9h9jAKyEl8aVzOD2MwC4hK3nswHq5EQEJBYsuc8M4QtKvHy8
-  T9WiPpUiZNNNxgh4joSZ68/gbIVJfacWwjVKytxaX43VNxXYl7rajYIW0via88ZFgjbQmJJdy
-  vYXxICKhL/DlVChHMkDu1cBtWqJnHjTQfUCTISMz69hxr/g1li3uvgCYwGs5BcPQtoErOApsT
-  6XfoQYUWJKd0P2WeBQ0JQ4uTMJywLGFlWMVomFWWmZ5TkJmbm6BoaGOgaGhrrmugamZrqJVbp
-  Jumlluomp+aVFCUCZfUSy4v1iitzk3NS9PJSSzYxApNgSiHL/x2MW9a+1zvEKMnBpCTKa8nsG
-  yfEl5SfUpmRWJwRX1Sak1p8iFGGg0NJgvcxK1BOsCg1PbUiLTMHmJBh0hIcPEoivJm/feKEeI
-  sLEnOLM9MhUqcYjTkmvJy7iJnjyNyli5iFWPLy81KlxHnXsgFNEgApzSjNgxsEyxSXGGWlhHk
-  ZGRgYhHgKUotyM0tQ5V8xinMwKgnz7mAHmsKTmVcCt+8V0ClMQKe8FwY7pSQRISXVwORRfJrb
-  LffYn3q3dQnOSjs7aybK/1yfcPiLic6mJaVJ9/hyNG7l1p60mLTe/YpjfcXX+H2VrW3Pt4bUz
-  XU8uauEty9DpoB3ubyp/ixZL+YfD89lXbu4Irvz8Sv1iU+eH31pYmF35sgFtv0/l1xqOPouqz
-  2oxnn/x4/a0eGcmSZZ5RO2Hku+tyRh46OeX+Hfdp7l2fS8bGLLO08NKSnzffETGra7ZBV0vbz
-  8f+KnAMtIgyrmdRdcpDkWCm/8cyhsy4935fPm8R+/Fcqms/DT9VjrN9Ja5dOv5hSWbv/mYzVZ
-  29T1RGyrcyKvkG+ko7G68JagzzHWp01CnPfkBwXNvaqx0/jbnH3KnjZK5U2z2pVYijMSDbWYi
-  4oTAS8HrMuPBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-3.tower-239.messagelabs.com!1582106707!2307183!1
-X-Originating-IP: [104.47.10.55]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.25; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 5845 invoked from network); 19 Feb 2020 10:05:08 -0000
-Received: from mail-db5eur03lp2055.outbound.protection.outlook.com (HELO EUR03-DB5-obe.outbound.protection.outlook.com) (104.47.10.55)
-  by server-3.tower-239.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 19 Feb 2020 10:05:08 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mbeYvTelu8NtpIZ0aD3Cvr+k2sBQ8IEfhQZeBUPeFfCEiW2uk5ZPdHEW1gp8d5Tda1ureh1uHqVG4XzK+jCWBBRv1lsUQQGVv04ySKIh1ycLnosSMZZ0AsyemxbGaWy3iDPT6kBIE8vqVcu8ohSTPNautEjX1BKWbhXG3vYZUenTmedy5Tol2n8O5ashw1VKtj83Te1BsbEw4nnlS/aASrJHXh+EG3m39e5DIOKbxFBTtbeDOFGtc6M8utNjug3gMIg+m8PxVNKA+ImDoSVagP1tvSF1qI/sfz73XLe2Fv0ORCS7koQ1+FAeQ2ktlIyWDIaIG5Qqb/RrPjtszPkyCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ravth+LkyJ+fveKHVBQ+bL8eB7JFvMwxR0pIxhvVgvE=;
- b=FRHLa6V3Guoi9vuaKvW2n9iq1wP6+cXLgDp3ydVLQ8/RGcr41/XuspPBIEnaAGXIfEibXojLDHXEN30fAf3lT3PpBWtHGaNRV8P3+9A7/1cPw1GYOYWAWfx5NmOcmDncvoRf7Iz+jhxodwKGNNj8klX/YiWYlQ/PzmXgUtijaOy2t+cqDmh3AG/FoIdTa1wSPeLyWkFbQAuKamVtRYeHx67zuOCFU/VJbPAvViR4kpDVKScga4OlD8Lz70tXUko51mifu2LGZbxuyOSKsuFXPukB3KETnbegYDJOYvGbYPw5VIn4A59rpCu198moEfAR9NpmRUUkysIC96JYWvdWYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
+        Wed, 19 Feb 2020 05:06:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id gv17so2329209pjb.1;
+        Wed, 19 Feb 2020 02:06:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ravth+LkyJ+fveKHVBQ+bL8eB7JFvMwxR0pIxhvVgvE=;
- b=pIkSmqtUGLiz9rCxRVvPKrIvkn0uodPxEt9iH6w0CkoTmpyptiEURguSSQyQsJ42NLZpIpt1zzl6mAvdGoQR1vaQPRtl2T7/uCA7ZDz6kkrYAGTcrFIEdUlflNF8yt/VIrCAPmqYmy1aLtFN7hQeiY3j8sqLfylpecp+AUQ4zVg=
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM (20.177.116.141) by
- AM6PR10MB3432.EURPRD10.PROD.OUTLOOK.COM (10.255.34.97) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Wed, 19 Feb 2020 10:05:04 +0000
-Received: from AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01]) by AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::993f:cdb5:bb05:b01%7]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 10:05:04 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
-CC:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "cychiang@google.com" <cychiang@google.com>
-Subject: RE: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
- callback
-Thread-Topic: [alsa-devel] [PATCH] ASoC: da7219: check SRM lock in trigger
- callback
-Thread-Index: AQHV3+t05QGFzNuez06VZ5VdF8K2kqgUfAmAgAFKeYCAAGrTgIAARPoAgAAJp4CAAAclgIAAAzgAgADQubCACrf3gIAAPT6g
-Date:   Wed, 19 Feb 2020 10:05:04 +0000
-Message-ID: <AM6PR10MB2263A832CF4B0947091A0DB380100@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
-References: <1581322611-25695-1-git-send-email-brent.lu@intel.com>
- <AM6PR10MB2263F302A86B17C95B16361280190@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <SN6PR11MB26702B2E7E5F705425517F4897180@SN6PR11MB2670.namprd11.prod.outlook.com>
- <855c88fb-4438-aefb-ac9b-a9a5a2dc8caa@linux.intel.com>
- <CAFQqKeWHDyyd_YBBaD6P2sCL5OCNEsiUU6B7eUwtiLv8GZU0yg@mail.gmail.com>
- <2eeca7fe-aec9-c680-5d61-930de18b952b@linux.intel.com>
- <CAFQqKeXK3OG7KXaHGUuC75sxWrdf11xJooC7XsDCOyd6KUgPTQ@mail.gmail.com>
- <c9dbcdd8-b943-94a6-581f-7bbebe8c6d25@linux.intel.com>
- <AM6PR10MB22630C79D08CE74878A6A096801B0@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
- <SN6PR11MB2670FA720AB341183478A00B97100@SN6PR11MB2670.namprd11.prod.outlook.com>
-In-Reply-To: <SN6PR11MB2670FA720AB341183478A00B97100@SN6PR11MB2670.namprd11.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.85]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a0e90fd2-4250-4428-eb60-08d7b52330bb
-x-ms-traffictypediagnostic: AM6PR10MB3432:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR10MB34320B988377E57B471699FBA7100@AM6PR10MB3432.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0318501FAE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(199004)(189003)(81156014)(86362001)(53546011)(55016002)(26005)(6506007)(7416002)(9686003)(71200400001)(110136005)(5660300002)(81166006)(498600001)(186003)(8676002)(54906003)(8936002)(2906002)(55236004)(4326008)(76116006)(52536014)(66556008)(66446008)(64756008)(66476007)(33656002)(66946007)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB3432;H:AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ni4udFefZWMiaXa71/ntN6w6EQtSRsUuqyx6ixZihVCvjC/9zPWzdq2UzA463oyRCWIxVv67sX+Y72hC7shmScnMxgx0ilST4pE7BE8295cqLnepBsAzYBkplWsKPV8f84NtnuQgtVPyhjOIlveC7xWyG9GPdziCqaBMItoeups12bLry6hQ8FWmhYYd+4jI5wHH9LzoFcc+p3VOOkTr2uBEqnAMY23ScslLmq4d8ATXX7Kp19d63CSWXXh08Za2I1WMyiM9ULMH7Vqj7cnURNrEi3PXsFPR94Qyg+gwyX0UrvA1cMtTiKLOZHTriM04AiKtmOKG1QSXR25Mg4UdukQPX56O7CNZ4s+bz8RojPrqtGVAm6M35tzBeh3atfFCY/GIRmwiaNiuekRHWOU0esifaymX/bpnkemA3VLbGByoop3i+UE1tYD30cheIWDd
-x-ms-exchange-antispam-messagedata: UgDodlp0h4nGNZM2bwpAaJVqUUjYo2uE9VtFClcJUberNq5sBsMIWLdIbkichxKdXj3K3+lwqBJyMgrWriGyZRwSJQVzUNl5q1siK1FkLTU8Y650Jr1QF5ixZt4mECpIJ5GGWlM34yBQJTEuSkhgSg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GVRdPNZo5d7eI2NxNW1l7GKKSA1O3A8YX4K6fJNiyFY=;
+        b=j0baOwT4MtNLCJOeh0o5lSqPQB90+Rp/h2KSZs0EGIBpTIb0AtoyvA9Om1n5YFIChN
+         kteaGHD0cop5owLYIfi7ILHZFl/vUjEP8PP4z5tDqAuta7CFnOTHkXjeGdoceEfQY4XO
+         +Ebx9VrVptRX/UV81DTLEQDt6kUPYlRyDJtljGmiWE6bAj0ohSZlDqigr+O8baB1TD7n
+         IXCxhV5e35GbRm/8inLkz6r+6idv2be0yxk/GyBL3pGxrBw/DpTlWvPXiJBj6ZrPuQ81
+         RyptQrK4Rp5tDRTw1lnJo2YOWDKA4Y202Di+Cqnuq/xTMh9naiEzvBzwJ+IaZfs+Hup8
+         yNSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GVRdPNZo5d7eI2NxNW1l7GKKSA1O3A8YX4K6fJNiyFY=;
+        b=hN73Fn4ZbR7speJsfuqEwK1Vz+++ntnk+yoVJzE15mZhA5BoHAeeioaG0I0Pzb5I4a
+         /WWEdl2dQtE8rE3/9kXJ0BDXNIp78ysXVEWM57hdDDdl7Q2OpnzdEm8VsHEdxAhWCouo
+         UcTqdAJ/SKAFFtTQp+PXMZfzrZoXa8iutTJjfkbgnQt1dcqmLHe8oFxQvKKMAN4vbMkl
+         zgxtp4XyGudUPOMRHnMUHCVsGIKhOJMgVUwLboFVSmV8R1+nWzAyVSMRkS4p8QIruDri
+         OxJzn34KtY+BuV/4iLlPPVGZVED886hlAhpr5Zhe64epBBwjDyAnE308SLATT0nWKfK2
+         Wguw==
+X-Gm-Message-State: APjAAAWMZecFY/2cH+wMUkV14sNmkCbbHAP2tJFQ0QONnQMlwTMuRS/3
+        QpciQOIErzEbiKdWskGuqZ0=
+X-Google-Smtp-Source: APXvYqzBjjlOD+j8XLKGMCJFZ0gJV4hY7IPslrCb7PxPpQVZPaaNPRR0FsXbdorABRNjPsdeAx5FPQ==
+X-Received: by 2002:a17:902:7c85:: with SMTP id y5mr24648684pll.227.1582106786018;
+        Wed, 19 Feb 2020 02:06:26 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.220])
+        by smtp.googlemail.com with ESMTPSA id w14sm2097754pgi.22.2020.02.19.02.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 02:06:25 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>, netdev@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] tcp: Pass lockdep expression to RCU lists
+Date:   Wed, 19 Feb 2020 15:35:46 +0530
+Message-Id: <20200219100545.27397-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0e90fd2-4250-4428-eb60-08d7b52330bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 10:05:04.1349
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WpySvhoH9Feur8kw1Xw+DSYMchqyXatiiiyQuqnEd4UW/aSDVrbPWpxurxxm1G4d/AM4Kfsvu5PzNK4A4nnxKHmJvEg6/Aosxw2R2O6SIqQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB3432
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTkgRmVicnVhcnkgMjAyMCAwNTo1NywgTHUsIEJyZW50IHdyb3RlOg0KDQo+ID4gQW0gbm90
-IGdvaW5nIHRvIG1ha2UgbXlzZWxmIHBvcHVsYXIgaGVyZS4gSXQncyBNQ0xLIGFuZCBGU1lOQyAo
-b3IgV0NMSyBhcw0KPiA+IGl0J3MgdGVybWVkIGZvciBvdXIgZGV2aWNlKSB0aGF0IGlzIHJlcXVp
-cmVkIGZvciBTUk0gdG8gbG9jayBpbiB0aGUgUExMLg0KPiA+DQo+ID4gU28gZmFyIEkndmUgbm90
-IGZvdW5kIGEgd2F5IGluIHRoZSBjb2RlYyBkcml2ZXIgdG8gYmUgYWJsZSB0byBnZXQgYXJvdW5k
-IHRoaXMuDQo+ID4gSSBzcGVudCBhIHZlcnkgbG9uZyB0aW1lIHdpdGggU2F0aHlhIGluIHRoZSBl
-YXJseSBkYXlzIChBcG9sbG8gTGFrZSkgbG9va2luZyBhdA0KPiA+IG9wdGlvbnMgYnV0IG5vdGhp
-bmcgd291bGQgZml0IHdoaWNoIGlzIHdoeSBJIGhhdmUgdGhlIHNvbHV0aW9uIHRoYXQncyBpbiBw
-bGFjZQ0KPiA+IHJpZ2h0IG5vdy4gV2UgY291bGQgcHJvYmFibHkgcmVkdWNlIHRoZSBudW1iZXIg
-b2YgcmVjaGVja3MgYmVmb3JlDQo+ID4gdGltZW91dCBpbiB0aGUgZHJpdmVyIGJ1dCB0aGF0J3Mg
-cmVhbGx5IGp1c3QgcGFwZXJpbmcgb3ZlciB0aGUgY3JhY2sgYW5kIHRoZXJlJ3MNCj4gPiBzdGls
-bCB0aGUgcG9zc2liaWxpdHkgb2Ygbm9pc2UgbGF0ZXIgd2hlbiBTUk0gZmluYWxseSBkb2VzIGxv
-Y2suDQo+IA0KPiBIaSBBZGFtLA0KPiANCj4gRm9yIEdvb2dsZSBDVFMgcmVxdWlyZW1lbnQgKDIw
-MG1zIGNvbGQgb3V0cHV0IGxhdGVuY3kpLCB3ZSBwbGFuIHRvIHVwbG9hZCBhDQo+IHBhdGNoIHdo
-aWNoIHJlZHVjZXMgdGhlIHJlY2hlY2sgbnVtYmVyIHRvIDQgYW5kIGludGVydmFsIHRvIDIwbXMg
-c28gdGhlIHRvdGFsDQo+IGRlbGF5IGhlcmUgd291bGQgYmUgODBtcyBmb3Igb3VyIHBsYXRmb3Jt
-LiBXZSB0aGluayB0aGUgdGltZSBpcyBzdGlsbCBzdWZmaWNpZW50DQo+IGZvciBvdGhlciBwbGF0
-Zm9ybXMgdG8gZ2VuZXJhdGUgYSBzdGFibGUgV0NMSyBhbmQgZm9yIHRoZSBjb2RlYyBTUk0gdG8g
-bG9jayBidXQNCj4gc3RpbGwgbmVlZHMgeW91ciBjb25maXJtYXRpb24uIEhvdyBkbyB5b3UgdGhp
-bms/DQoNCkhpIEJyZW50LA0KDQpJJ20gY29uY2VybmVkIHRoYXQganVzdCBzZXR0aW5nIGEgdGlt
-ZW91dCB0byBzdWl0IHRoZSBHb29nbGUgQ1RTIHJlcXVpcmVtZW50DQppc24ndCBuZWNlc3Nhcmls
-eSBzdWl0YWJsZSBmb3IgYWxsIHRhcmdldHMsIGFuZCB0aGlzIGRvZXNuJ3QgYWN0dWFsbHkgZml4
-IHRoZQ0KcmVhbCBwcm9ibGVtIGhlcmUuDQoNCkhvdyBsb25nIGRvIHlvdSBkZXRlcm1pbmUgcGxh
-dGZvcm1zIHdpbGwgdGFrZSB0byBnZW5lcmF0ZSBhIHN0YWJsZSBXQ0xLPyBEbyB3ZQ0KaGF2ZSBh
-biBpZGVhIG9mIGhvdyBsb25nIHRoYXQgbWlnaHQgYmUgaW4gYSB3b3JzdCBjYXNlIHNjZW5hcmlv
-PyBJZiBzbyB0aGVuIHdlDQpjYW4gbG9vayBhdCBhZGp1c3RpbmcgdGhpcyBkb3duLCBidXQgSSdk
-IGxpa2UgdG8gYmUgY2xlYXIuDQoNCj4gDQo+IA0KPiBSZWdhcmRzLA0KPiBCcmVudA0K
+tcp_cong_list is traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of tcp_cong_list_lock.
+
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
+
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ net/ipv4/tcp_cong.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/net/ipv4/tcp_cong.c b/net/ipv4/tcp_cong.c
+index 3737ec096650..8d4446ed309e 100644
+--- a/net/ipv4/tcp_cong.c
++++ b/net/ipv4/tcp_cong.c
+@@ -25,7 +25,8 @@ static struct tcp_congestion_ops *tcp_ca_find(const char *name)
+ {
+ 	struct tcp_congestion_ops *e;
+ 
+-	list_for_each_entry_rcu(e, &tcp_cong_list, list) {
++	list_for_each_entry_rcu(e, &tcp_cong_list, list,
++				lockdep_is_held(&tcp_cong_list_lock)) {
+ 		if (strcmp(e->name, name) == 0)
+ 			return e;
+ 	}
+@@ -55,7 +56,8 @@ struct tcp_congestion_ops *tcp_ca_find_key(u32 key)
+ {
+ 	struct tcp_congestion_ops *e;
+ 
+-	list_for_each_entry_rcu(e, &tcp_cong_list, list) {
++	list_for_each_entry_rcu(e, &tcp_cong_list, list,
++				lockdep_is_held(&tcp_cong_list_lock)) {
+ 		if (e->key == key)
+ 			return e;
+ 	}
+@@ -317,7 +319,8 @@ int tcp_set_allowed_congestion_control(char *val)
+ 	}
+ 
+ 	/* pass 2 clear old values */
+-	list_for_each_entry_rcu(ca, &tcp_cong_list, list)
++	list_for_each_entry_rcu(ca, &tcp_cong_list, list,
++				lockdep_is_held(&tcp_cong_list_lock))
+ 		ca->flags &= ~TCP_CONG_NON_RESTRICTED;
+ 
+ 	/* pass 3 mark as allowed */
+-- 
+2.24.1
+
