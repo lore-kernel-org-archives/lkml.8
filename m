@@ -2,225 +2,123 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66742C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6E3C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F67E24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:45:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582076704;
-	bh=qpTTMVRLJNcxBHib9lFttaQwXSDkZNlFWsTHKLbdhAI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8Ckh35IbdoA01oywMeksIAisSeU8VNvAbP+h4CCLxV1ho66xl16iVsU0nCPPxXgo
-	 vvsvQgRWNWjolfwOPerTfh8NHhe52nTZGfPDutVX5esp8knNduYsIHPtcBRIDxA4BO
-	 uKvJM2/zhmufEXy/DJHKAuRWnvlhGkvWb2kNdakc=
+	by mail.kernel.org (Postfix) with ESMTP id B894F24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLgqtn1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgBSBpD (ORCPT
+        id S1727992AbgBSBrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:45:03 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39261 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbgBSBoo (ORCPT
+        Tue, 18 Feb 2020 20:47:11 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51822 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbgBSBrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:44:44 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g6so8870169plp.6;
-        Tue, 18 Feb 2020 17:44:43 -0800 (PST)
+        Tue, 18 Feb 2020 20:47:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t23so4736938wmi.1;
+        Tue, 18 Feb 2020 17:47:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=c3jgjNejCBb9X6M77zvWpmzx347WGq75tEtMqAj/+Ok=;
-        b=AL4pzbixVHKxDcp2U71m+QJepOHq30WmQqf7j+F+x7wQi2XW7iI96LNeCD/OaKmSF+
-         Kve/u7Jsgl64NPcQA1Q4Qoh9LhX2XTblwdrSs5djpew5yaRJI1bFsKtlOWuCFnwUaFC7
-         PUBYTat0BVIXGik0ytrSqhntDQW2DMum1kRT7n1JY+RN2WKKabSbQTNwJ9tJTg0u7bs9
-         UF0+ceWRbv4U/sfMLJ7xIMf+LxzCPc+1fjNzY6GEciumm3pfJfHaxZjMFYlp/HP07Cr5
-         Vd6Qi3/S+dHt1BorH7jfFvA6ii9OFJFR602lgfgvGUtoLmQFZ8eEFKp4dsmsTjBeAFnc
-         1gfg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0fVrJXKQFBq1+DGIaqCpMFpVnwhHK6KBaU4A547suOs=;
+        b=YLgqtn1vXiFmrY2qtcO4cITsJLHu/AVbBSZEJXUjgEko2za6mFlRXo65+dWkQXKRgO
+         oyBH45ZP6ovZa90w72vhBPA/kdwQ5l4Wb6ww2v4tsfqrpiNr7wJJr6qDkQxGAq6UNzYu
+         7/x8FMTWoPNKGNhE4+jxj9C/trMmqmjjwxMJZujH5pncP7uKTDGvYc9sUwjK8KZYa6Nb
+         fGR0/n70ccFqpNmW5VzoivbPHUQrUmfIbjH3P/GH2fkkj2J908pE1+IOMjtK0wRvkR64
+         3oBrPq0e4MK8O9EwGEEJSyHaZUvoBsFww7Px/X0M//l5pky9UaU1PoheuYo2Bn2CYrML
+         ehUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=c3jgjNejCBb9X6M77zvWpmzx347WGq75tEtMqAj/+Ok=;
-        b=CENyJ47CnY8qro14B6OSIsCxBJrB9u2ujg7BP/vfUHWQaY82YEbLE0/BJDYycCfqvp
-         f+yn6ZP8dmeBwDvIR3QbnN5ctacY/kPVPWpyrOd3a93L90sdVEkoAaXmfPCzQenK1mfT
-         lK3BumDBGJp0G189EI53bTjj99kvCQ4ufin3k8m2MU4DD198SZ6oFpNeqTldiQRHiIfY
-         OIJWvAXZazJJff8s2uPF619et5B9RzZxTPVfzQA3A2lfFjpgMo2HhXxSEYKFgwAgC/yZ
-         KjWkA0/JnO6B5scpuOJ+zIky/3RZ7iTktcIqP1vMETn8zD2gfF/ofewHEDUw9+tlo72/
-         yfeQ==
-X-Gm-Message-State: APjAAAVjln9BK+yysJr+rRuQLBTVKcpern28kiVSkSW77TIUq1/z+BRi
-        hXNeb6dTR40MAvcru1S5g0Uz6zWO
-X-Google-Smtp-Source: APXvYqygDJwDS7PyVA1yTqfgxMw2cPIblIFGAm8JUg/EszRSRLPi2m3lE8zcfv8RlWVvwMYMaTWAbQ==
-X-Received: by 2002:a17:902:7687:: with SMTP id m7mr23358861pll.136.1582076682761;
-        Tue, 18 Feb 2020 17:44:42 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id t186sm221192pgd.26.2020.02.18.17.44.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 17:44:41 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
-        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH v6 3/7] mm: check fatal signal pending of target process
-Date:   Tue, 18 Feb 2020 17:44:29 -0800
-Message-Id: <20200219014433.88424-4-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200219014433.88424-1-minchan@kernel.org>
-References: <20200219014433.88424-1-minchan@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0fVrJXKQFBq1+DGIaqCpMFpVnwhHK6KBaU4A547suOs=;
+        b=MXkOhgX6Ei82z1ra9Cc8UKEvBMCe+y8M5/JhbL1DtDG++2Q+REwCO/8jFl6EgOfoyv
+         jFt9+RuY3ynXqv/SzVUpXtbEsqZJvtpyb4Fdtg4EftXrbaAJ3uUSvW3KCfGyIVqVhZqk
+         zO8R5Prr6jyb2cn7+XExSomrk3Grrnw2xONSPIV7AegeHX8go2Y5ji7tiYmHlUXjZcV4
+         pkgfPSrDzft3lL9Ln4YVTf/6kV2Je6H9g5382t27UK4fk6LxSXAVNLoEM302vhOOkvTv
+         7YOwKZet2QH3Y/Sp40M0KqUhP7G+3yGIHz+m0f2ds4iIxJn4lD+lC4wEAjxgvIZW74fe
+         EWOQ==
+X-Gm-Message-State: APjAAAWrPWoLW1ZZNDfNZyWBn8LJHmgAlEWgEaGoCf1d5iRPuoSNTZTy
+        WGuW9ht9DO1P1lQ3jFF80WZyChMaQWq9FtxPp8Y=
+X-Google-Smtp-Source: APXvYqz/18W0f7bNjt6tGI58SVmP1FmnZYrDg6ZokZyrHZqy2s5BaPpIsHcEE+bP4h8WKGWdiuCoYqOW2DZrhZYGBqA=
+X-Received: by 2002:a1c:5441:: with SMTP id p1mr6603389wmi.161.1582076827865;
+ Tue, 18 Feb 2020 17:47:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200213123728.61216-1-pasic@linux.ibm.com> <20200213123728.61216-2-pasic@linux.ibm.com>
+ <CACVXFVNiADTW_vLVc1bUSa0CoViLbVzoMnSJW4=sx=MCE-xUPw@mail.gmail.com> <20200218133531.3eb08120.pasic@linux.ibm.com>
+In-Reply-To: <20200218133531.3eb08120.pasic@linux.ibm.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Wed, 19 Feb 2020 09:46:56 +0800
+Message-ID: <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] virtio-blk: fix hw_queue stopped on arbitrary error
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bail out to prevent unnecessary CPU overhead if target process has
-pending fatal signal during (MADV_COLD|MADV_PAGEOUT) operation.
+On Tue, Feb 18, 2020 at 8:35 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+>
+> On Tue, 18 Feb 2020 10:21:18 +0800
+> Ming Lei <tom.leiming@gmail.com> wrote:
+>
+> > On Thu, Feb 13, 2020 at 8:38 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+> > >
+> > > Since nobody else is going to restart our hw_queue for us, the
+> > > blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+> > > necessarily sufficient to ensure that the queue will get started again.
+> > > In case of global resource outage (-ENOMEM because mapping failure,
+> > > because of swiotlb full) our virtqueue may be empty and we can get
+> > > stuck with a stopped hw_queue.
+> > >
+> > > Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+> > > indicates a full virtqueue, where the hw_queue is guaranteed to get
+> > > started by virtblk_done() before when it makes sense to carry on
+> > > submitting requests. Let us also remove a stale comment.
+> >
+> > The generic solution may be to stop queue only when there is any
+> > in-flight request
+> > not completed.
+> >
+>
+> I think this is a pretty close to that. The queue is stopped only on
+> ENOSPC, which means virtqueue is full.
+>
+> > Checking -ENOMEM may not be enough, given -EIO can be returned from
+> > virtqueue_add()
+> > too in case of dma map failure.
+>
+> I'm not checking on -ENOMEM. So the queue would not be stopped on EIO.
+> Maybe I'm misunderstanding something In any case, please have another
+> look at the diff, and if your concerns persist please help me understand.
 
-Signed-off-by: Minchan Kim <minchan@kernel.org>
----
- mm/madvise.c | 29 +++++++++++++++++++++--------
- 1 file changed, 21 insertions(+), 8 deletions(-)
+Looks I misread the patch, and this patch is fine:
 
-diff --git a/mm/madvise.c b/mm/madvise.c
-index f29155b8185d..def1507c2030 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -36,6 +36,7 @@
- struct madvise_walk_private {
- 	struct mmu_gather *tlb;
- 	bool pageout;
-+	struct task_struct *target_task;
- };
- 
- /*
-@@ -316,6 +317,10 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
- 	if (fatal_signal_pending(current))
- 		return -EINTR;
- 
-+	if (private->target_task &&
-+			fatal_signal_pending(private->target_task))
-+		return -EINTR;
-+
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	if (pmd_trans_huge(*pmd)) {
- 		pmd_t orig_pmd;
-@@ -471,12 +476,14 @@ static const struct mm_walk_ops cold_walk_ops = {
- };
- 
- static void madvise_cold_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = false,
- 		.tlb = tlb,
-+		.target_task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -484,7 +491,8 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
- 	tlb_end_vma(tlb, vma);
- }
- 
--static long madvise_cold(struct vm_area_struct *vma,
-+static long madvise_cold(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -497,19 +505,21 @@ static long madvise_cold(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
- }
- 
- static void madvise_pageout_page_range(struct mmu_gather *tlb,
-+			     struct task_struct *task,
- 			     struct vm_area_struct *vma,
- 			     unsigned long addr, unsigned long end)
- {
- 	struct madvise_walk_private walk_private = {
- 		.pageout = true,
- 		.tlb = tlb,
-+		.target_task = task,
- 	};
- 
- 	tlb_start_vma(tlb, vma);
-@@ -533,7 +543,8 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
- 		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
- }
- 
--static long madvise_pageout(struct vm_area_struct *vma,
-+static long madvise_pageout(struct task_struct *task,
-+			struct vm_area_struct *vma,
- 			struct vm_area_struct **prev,
- 			unsigned long start_addr, unsigned long end_addr)
- {
-@@ -549,7 +560,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
- 
- 	lru_add_drain();
- 	tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
--	madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-+	madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
- 	tlb_finish_mmu(&tlb, start_addr, end_addr);
- 
- 	return 0;
-@@ -929,7 +940,8 @@ static int madvise_inject_error(int behavior,
- #endif
- 
- static long
--madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-+madvise_vma(struct task_struct *task, struct vm_area_struct *vma,
-+		struct vm_area_struct **prev,
- 		unsigned long start, unsigned long end, int behavior)
- {
- 	switch (behavior) {
-@@ -938,9 +950,9 @@ madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 	case MADV_WILLNEED:
- 		return madvise_willneed(vma, prev, start, end);
- 	case MADV_COLD:
--		return madvise_cold(vma, prev, start, end);
-+		return madvise_cold(task, vma, prev, start, end);
- 	case MADV_PAGEOUT:
--		return madvise_pageout(vma, prev, start, end);
-+		return madvise_pageout(task, vma, prev, start, end);
- 	case MADV_FREE:
- 	case MADV_DONTNEED:
- 		return madvise_dontneed_free(vma, prev, start, end, behavior);
-@@ -1140,7 +1152,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
- 			tmp = end;
- 
- 		/* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
--		error = madvise_vma(vma, &prev, start, tmp, behavior);
-+		error = madvise_vma(target_task, vma, &prev,
-+					start, tmp, behavior);
- 		if (error)
- 			goto out;
- 		start = tmp;
--- 
-2.25.0.265.gbab2e86ba0-goog
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
+
+Thanks,
+Ming Lei
