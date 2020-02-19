@@ -2,162 +2,143 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D67EC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58916C7619D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F20624670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D40206EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582150349;
-	bh=Edxw1/Xj6IDMQRRULmBb4YHseF9jGQhpofWf9k5TxeE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pL2JUAsTp3T4sWi0dd+cqrWjz8AHrCSkJAvbV6wI0TZrlI8m7+PrHw8j+VONIqDDu
-	 N7VAhuAV8Lf0ITAkoo3nDPPvLX89elwzXGHg0ExBLxeFdNv9J5jgDyap5BWd6IjlWb
-	 qVquk3JSgSB1IsGghuobwKuYcXL1W+hnEvj6X2E8=
+	s=default; t=1582150395;
+	bh=ddoyKRwVDKIYIprPOKhr/kDrCRRWlvXxVqPXPWAljWo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jjkjEnlxEszal8yyBrgS6/Doy3qZo66OCd9gBtDtcTBb4RjihqFaTzntEPb5Br6vl
+	 Lu1vZM0QeCo6HTu1m1qxHcH5B1ADht/7nva8dEIXvyavI4eOg+shiQIOOys03ArG4U
+	 cuQl4N7XP8+goJhQ+PDnRHBUYGWCpbsq09Kq8EeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbgBSWM2 (ORCPT
+        id S1727802AbgBSWNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:12:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727232AbgBSWM1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:12:27 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DFC62467E
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:12:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582150346;
-        bh=Edxw1/Xj6IDMQRRULmBb4YHseF9jGQhpofWf9k5TxeE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fdAQGROs0G4kvMof9V31M9lffdCcs3Dagxfh3LVPbOsVmDlGtla+YkezvbO4iYJp+
-         X6tEJehQOEnbt4571mJzKnBGWpJiGnjjjOL8Re6yhyqF9UsbJlDPj94iPgEt2zXz4d
-         nEvdIfNQMqBe3gHHVxPHzWeNh+Iz9kEWJUIu5vNk=
-Received: by mail-wr1-f52.google.com with SMTP id y11so2380186wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:12:26 -0800 (PST)
-X-Gm-Message-State: APjAAAXkpqy30HjKqpbEpXV1CuFUgCgLmwdwri8TeX7U5tGP0MpAgvdZ
-        VgE0fZa17kAFFd5JBI7hoKFmC77EV5Mo7eza9sYEtg==
-X-Google-Smtp-Source: APXvYqw9mumzTmIZKMTrJ8akhQtHuopoTYY+e3SanNp+3VZDeZX8YRgKlahhu91qcNwWHp7w9FySQS8wTxuP8/tMeOc=
-X-Received: by 2002:adf:ea85:: with SMTP id s5mr37297631wrm.75.1582150344766;
- Wed, 19 Feb 2020 14:12:24 -0800 (PST)
+        Wed, 19 Feb 2020 17:13:14 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41685 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727232AbgBSWNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 17:13:13 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so25433925oie.8;
+        Wed, 19 Feb 2020 14:13:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QCDRXvFi+gR1oNSsjcXCHacRJtQD8q7DV4e37/61Byk=;
+        b=smef+T69eC9WkkzH2P5wIDQyYMnCrd3sj13Bweli4qiH0kH0xJEvbFt2kY7g6YFfcF
+         e6ffo4ZltG871JHoSK64NHJR2YhAqmCKiQK3yJVkYmhSRIlM3XJZYcATerpeZQ1Ea08k
+         8N5eSLFXDLeP2xbxllwPU5kujZCiW95MdLCJKJjLTivatwtPyP/43YuJv/3Xb++9+5a6
+         AWZps9F+1Z0kMgxQ5gBk4jJZNFcK6iAt8qYxWTlj87F5Ad82D57L/YFSw2m0yHoRRzKX
+         CfXFoZgbNWfIt5ro6XTTX0UTr5oWR3ifPv4r6CBY5OJ35wkVeAdD/HeMTVjsjODWPPil
+         SeiQ==
+X-Gm-Message-State: APjAAAUxDvzQ6b4kd9o/5QTIJJCkNAJnbR1O6wZ3xlJpGfZU5oZk0kL5
+        64k3PAVgLRA+hMfPoNS6wg==
+X-Google-Smtp-Source: APXvYqwLFvsnaggZIZ/FphpHVECAI3EPZlrYh7AiYB66zYzCl73IpPqpn2LPQw1Q8GLsGZZvQeYS7w==
+X-Received: by 2002:aca:4306:: with SMTP id q6mr6190796oia.54.1582150392520;
+        Wed, 19 Feb 2020 14:13:12 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n25sm418938oic.6.2020.02.19.14.13.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 14:13:11 -0800 (PST)
+Received: (nullmailer pid 30690 invoked by uid 1000);
+        Wed, 19 Feb 2020 22:13:10 -0000
+Date:   Wed, 19 Feb 2020 16:13:10 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: mfd: motmdm: Add binding for
+ motorola-mdm
+Message-ID: <20200219221310.GA26624@bogus>
+References: <20200210040107.10306-1-tony@atomide.com>
+ <20200210040107.10306-4-tony@atomide.com>
 MIME-Version: 1.0
-References: <20200219144724.800607165@infradead.org> <20200219150744.488895196@infradead.org>
- <20200219171309.GC32346@zn.tnic> <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
- <20200219173358.GP18400@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200219173358.GP18400@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 19 Feb 2020 14:12:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrVdNCRoToO2-mxhPxO2zaRU6urTffBn7iSTgHaGpB523Q@mail.gmail.com>
-Message-ID: <CALCETrVdNCRoToO2-mxhPxO2zaRU6urTffBn7iSTgHaGpB523Q@mail.gmail.com>
-Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210040107.10306-4-tony@atomide.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Feb 19, 2020 at 09:21:48AM -0800, Andy Lutomirski wrote:
-> > On Wed, Feb 19, 2020 at 9:13 AM Borislav Petkov <bp@alien8.de> wrote:
-> > >
-> > > On Wed, Feb 19, 2020 at 03:47:26PM +0100, Peter Zijlstra wrote:
-> > > > Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
-> > >
-> > > x86/mce: ...
-> > >
-> > > > It is an abomination; and in prepration of removing the whole
-> > > > ist_enter() thing, it needs to go.
-> > > >
-> > > > Convert #MC over to using task_work_add() instead; it will run the
-> > > > same code slightly later, on the return to user path of the same
-> > > > exception.
-> > >
-> > > That's fine because the error happened in userspace.
-> >
-> > Unless there is a signal pending and the signal setup code is about to
-> > hit the same failed memory.  I suppose we can just treat cases like
-> > this as "oh well, time to kill the whole system".
-> >
-> > But we should genuinely agree that we're okay with deferring this handling.
->
-> It doesn't delay much. The moment it does that local_irq_enable() it's
-> subject to preemption, just like it is on the return to user path.
->
-> Do you really want to create code that unwinds enough of nmi_enter() to
-> get you to a preemptible context? *shudder*
+On Sun, Feb 09, 2020 at 08:01:05PM -0800, Tony Lindgren wrote:
+> Add a binding document for Motorola modems controllable by
+> TS 27.010 UART line discipline using serdev drivers.
+> 
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../mfd/motorola,mapphone-mdm6600.yaml        | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> @@ -0,0 +1,37 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Well, there's another way to approach this:
+Dual license new bindings please:
 
-void notrace nonothing do_machine_check(struct pt_regs *regs)
-{
-  if (user_mode(regs))
-    do_sane_machine_check(regs);
-  else
-    do_awful_machine_check(regs);
-}
+(GPL-2.0-only OR BSD-2-Clause)
 
-void do_sane_machine_check(regs)
-{
-  nothing special here.  just a regular exception, more or less.
-}
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/motorola,mapphone-mdm6600.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Motorola Mapphone MDM6600 Modem
+> +
+> +maintainers:
+> +  - Tony Lindgren <tony@atomide.com>
+> +
+> +allOf:
+> +  - $ref: "motorola,mapphone-mdm6600.yaml#"
 
-void do_awful_macine_check(regs)
-{
-  basically an NMI.  No funny business, no recovery possible.
-task_work_add() not allowed.
-}
+Huh? A recursive include? I'm not sure how that didn't blow up.
 
-Or, even better, depending on how tglx's series shakes out, we could
-build on this patch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/idtentry&id=ebd8303dda34ea21476e4493cee671d998e83a48
-
-and actually have two separate do_machine_check entry points.  So we'd
-do, roughly:
-
-idtentry_ist ... normal_stack_entry=do_sane_machine_check
-ist_stack_entry=do_awful_machine_check
-
-and now there's no chance for confusion.
-
-All of the above has some issues when Tony decides that he wants to
-recover from specially annotated recoverable kernel memory accesses.
-Then task_word_add() is a nonstarter, but the current
-stack-switch-from-usermode *also* doesn't work.  I floated the idea of
-also doing the stack switch if we come from an IF=1 context, but
-that's starting to get nasty.
-
-One big question here: are memory failure #MC exceptions synchronous
-or can they be delayed?   If we get a memory failure, is it possible
-that the #MC hits some random context and not the actual context where
-the error occurred?
-
-I suppose the general consideration I'm trying to get at is: is
-task_work_add() actually useful at all here?  For the case when a
-kernel thread does memcpy_mcsafe() or similar, task work registered
-using task_work_add() will never run.
-
---Andy
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: motorola,mapphone-mdm6600-serial
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: usb
+> +
+> +required:
+> +  - compatible
+> +  - phys
+> +  - phy-names
+> +
+> +examples:
+> +  - |
+> +    modem {
+> +        compatible = "motorola,mapphone-mdm6600-serial";
+> +        phys = <&fsusb1_phy>;
+> +        phy-names = "usb";
+> +    };
+> -- 
+> 2.25.0
