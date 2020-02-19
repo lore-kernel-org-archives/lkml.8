@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B9BC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969B4C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 004222464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60ADD206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 22:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ELKjPCAs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BCbh2aaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgBSWwa (ORCPT
+        id S1727891AbgBSWxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 17:52:30 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40784 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbgBSWw3 (ORCPT
+        Wed, 19 Feb 2020 17:53:30 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37385 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBSWx3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 17:52:29 -0500
-Received: by mail-pj1-f68.google.com with SMTP id 12so2672pjb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:52:28 -0800 (PST)
+        Wed, 19 Feb 2020 17:53:29 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so862193pgl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:53:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=ZFoLB6pXpWwVB/0/nffKZvl9x/yuFK41bQrQqAdnUDU=;
-        b=ELKjPCAsP9wn4m64lhqgq4GsDkSec4foH+Z4EnFjf6Law40CGWBtMXKTU1TahNqTao
-         JrMKYq+VwFQ8yCdkMa9xx+hxKabDXCc4EQx8z0/GoIH9f7xcv7EhMqIuc0kvh+gkzv2t
-         ytn6ROGRkgTmIzG2qPqCQb/R3Jf5eN5n+q+s0=
+        bh=AcediiSivT+LWqDEtOSOEIb/ql/h3th0iLtIJJddY0A=;
+        b=BCbh2aaODXUOMbJ47FYF0Z3q9D7rmjUO9/HBZ51aFQnoqI+xQZNeZTl4dktydUcZO5
+         mfuB+gNhVU3QidqaXo1cEkR9P6QUPcTUycelJSZTKfXGbYQhspJ+EvcjDHoXBiGZuk9q
+         e9xQE32LTHEKzSITdQuKrTMmihiSSub4Q4KM0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=ZFoLB6pXpWwVB/0/nffKZvl9x/yuFK41bQrQqAdnUDU=;
-        b=RC5e59DhmF7r5SpjNOjFVKp1+HFwI3U+ZrI68E/1bK9+k3HU2L8eyORwetLLM8xCHd
-         RGJaLBVlJ1M7R+bySTCkl83TyFy1EAE4ms/eBpW7Oj3ofADAEAMgzG/cjvWu5BVt2GQW
-         SB1FmlzcHtqvYpw/f1d2FJI8Gt96D1QQdxf3EVYJr1iF38mGIZVzbn2oC6eKrbTzq3Ng
-         H+qrwWJlcoBDfuZ5GKqe3FMVj9HRPtMT3blZrXbRmS2ntKuN+OmtCkjoo0nomyNVsz7w
-         aQ/Z+YMw8728rGDdBO5rpNS6STYl3B85uZvg6y6G5upapaumaEtr/rcgjxEoZeVxNMPN
-         HJdg==
-X-Gm-Message-State: APjAAAVOmnE910v4Pzqf98VhD8m3IK7tvyrRDHuQr3HD6vbk8shjY8TY
-        mt+/683iqol5nemP9nJxojAAHw==
-X-Google-Smtp-Source: APXvYqzyMU1+wblbZiSb70HWL3nCcboMCE3sFJ00Oxk4gmWezLb8kmCwTc1+/jgiWjZuoIZb3VlUkA==
-X-Received: by 2002:a17:902:265:: with SMTP id 92mr26471493plc.292.1582152748063;
-        Wed, 19 Feb 2020 14:52:28 -0800 (PST)
+        bh=AcediiSivT+LWqDEtOSOEIb/ql/h3th0iLtIJJddY0A=;
+        b=hddDCO3PZxfKa3Lerah77KlS7c8beD1BfCa1OpqjOX7iy9sH0882mhOjUME5CFgbVW
+         nCwvyPiDh7S2UHZjxz7OMshAB75cy2j+gfkA6WlQfCjxuqAep319TgI7XvBXCnw1S3Wv
+         8byQopX3Dy/A5HHInSZGD+0cLT7ZQ6YhfairD+O/QyaOloFjzEDdzB5kJvAhz1iDgUo7
+         TArBvJqGNDxTd8UL/gADA0RDdJ8zaKjtiIESzmjOCwry2gMDKcTCGfdzUumy/UKrXC+1
+         nQTytdQ64cOzS2va4FLu8bllV2fj4VdvJpAt6OpI/pdq+S2+3hfa2y6kITUBnLNc3yxf
+         q8yw==
+X-Gm-Message-State: APjAAAWxxAPPX039Ouhy1No6kfDbWSJ5lv5IZQPptQRpb2dPpy3NWkjP
+        fvI/bvKNaOhBJQvHX13LtO305Q==
+X-Google-Smtp-Source: APXvYqzgVogCk4wmUAOqQEW4bVutbe6o2CYTMqBsdOfoHwfv/G7oBszdNXPvfuE9X4po34XTi3SYTg==
+X-Received: by 2002:a63:c30e:: with SMTP id c14mr31594137pgd.168.1582152807989;
+        Wed, 19 Feb 2020 14:53:27 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id x10sm662447pfi.180.2020.02.19.14.52.27
+        by smtp.gmail.com with ESMTPSA id h3sm845289pjs.0.2020.02.19.14.53.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 14:52:27 -0800 (PST)
+        Wed, 19 Feb 2020 14:53:27 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <eb967cd5a374fa32d93e486b1c9fd7e56796629a.1582048155.git.amit.kucheria@linaro.org>
-References: <cover.1582048155.git.amit.kucheria@linaro.org> <eb967cd5a374fa32d93e486b1c9fd7e56796629a.1582048155.git.amit.kucheria@linaro.org>
-Subject: Re: [PATCH v5 6/8] drivers: thermal: tsens: Add watchdog support
+In-Reply-To: <6f95b3f0d39433c7e6b01094bdb200a7ac8e9f0d.1582048155.git.amit.kucheria@linaro.org>
+References: <cover.1582048155.git.amit.kucheria@linaro.org> <6f95b3f0d39433c7e6b01094bdb200a7ac8e9f0d.1582048155.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH v5 3/8] drivers: thermal: tsens: use simpler variables
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     Amit Kucheria <amit.kucheria@verdurent.com>,
         linux-pm@vger.kernel.org
@@ -67,19 +67,17 @@ To:     Amit Kucheria <amit.kucheria@linaro.org>,
         Andy Gross <agross@kernel.org>, bjorn.andersson@linaro.org,
         daniel.lezcano@linaro.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, sivaa@codeaurora.org
-Date:   Wed, 19 Feb 2020 14:52:26 -0800
-Message-ID: <158215274684.184098.4618542372318170687@swboyd.mtv.corp.google.com>
+Date:   Wed, 19 Feb 2020 14:53:26 -0800
+Message-ID: <158215280660.184098.15487361696633323314@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Amit Kucheria (2020-02-18 10:12:10)
-> TSENS IP v2.3 onwards adds support for a watchdog to detect if the TSENS
-> HW FSM is stuck. Add support to detect and restart the FSM in the
-> driver. The watchdog is configured by the bootloader, we just enable the
-> watchdog bark as a debug feature in the kernel.
+Quoting Amit Kucheria (2020-02-18 10:12:07)
+> We already dereference the sensor and save it into a variable. Use the
+> variable directly to make the code easier to read.
 >=20
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
