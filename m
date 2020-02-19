@@ -2,487 +2,182 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530C4C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9D0C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A48924655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDA724655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:09:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOTYxNs9"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FeWzveAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBSBI4 (ORCPT
+        id S1727799AbgBSBJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:08:56 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44843 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgBSBIz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:08:55 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y5so11587650pfb.11;
-        Tue, 18 Feb 2020 17:08:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F7nw5RZ2QNeJp9maCrezYJITdIyGySj2oDhIQYUXndA=;
-        b=GOTYxNs9+eq213hUjZ/4gW7JkPKDM9kqrDuPbi+X9nq3IeKGNkjjJvFEVsdPeLzH7i
-         TN9UuPWFqdF+j3wEbxRU7xeqTtyWVu0pzvEgC5w/mlOO1CKQnts/BAW6apuCMFz6EYaz
-         HlNVBncgYm6KNkAJalL8e3FUBhsLBdVm37yV4LrG4wMBXbC9QmeNTNQADTdz3oqhnp6b
-         b0hQqGumF51FAjgF37sTwjoQY9Rxj6AKsRjoVVsKBBDSYw/pyEu8CWFTUdN26vS9MDP+
-         97xfQXyyGSHJcjrNpF/W5qXGWD1KWCO1B+/SQXAxnB8Jem66+l3UtGnQSMVyXmD2fgH3
-         TX7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F7nw5RZ2QNeJp9maCrezYJITdIyGySj2oDhIQYUXndA=;
-        b=PRr3mjVl0jIPpqW7KswZPgqL10TUTmZDjgNsWE3RVbsj8LmUxQ2ef4at6rgXhfWM8x
-         PLq0GiHxOyjwMNdpL45rr1SLiPTXaCa28afiH6N+1euVMazk6nokNpYC78i9NpQH97WS
-         jYemV4IltG5TF5cWwD9Hvbgh8n9RilQjVmUEVMfIWD1UrX19d+7S6X6PMHLOal68df37
-         PI35K345s3mdZY/wkN6PB6jTblCarmdoRxwq/0k6NIfMMMsFHmCeB/Qy4zzIaIgvtsUM
-         +/e12xaJNNRX9lZcHmrg26QtqQeelG13SScc6tUULeu7egeahvYtl8RebGHxarTXd020
-         HxnQ==
-X-Gm-Message-State: APjAAAWF8rUWigCvwt+dnOBH0o4+NSlXZ4wi1oXM5R2dIJv8VLqHr6m/
-        CxeQsv5DupD/3z6FjDR0ReM=
-X-Google-Smtp-Source: APXvYqy6/qmgpZiAyG1aKdQVMoIuZapQP0zjCLdz9E1bHg/xvZJqaCGGENk35MWrqXy2amh+Y9S0+Q==
-X-Received: by 2002:a63:be09:: with SMTP id l9mr3761152pgf.439.1582074533862;
-        Tue, 18 Feb 2020 17:08:53 -0800 (PST)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id z30sm216932pff.131.2020.02.18.17.08.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Feb 2020 17:08:53 -0800 (PST)
-Date:   Tue, 18 Feb 2020 17:09:05 -0800
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ASoC: fsl_easrc: Add EASRC ASoC CPU DAI and
- platform drivers
-Message-ID: <20200219010905.GB32720@Asurada-Nvidia.nvidia.com>
-References: <cover.1582007379.git.shengjiu.wang@nxp.com>
- <cea88cec3e32759a49d44c41cb615a839f689937.1582007379.git.shengjiu.wang@nxp.com>
+        Tue, 18 Feb 2020 20:09:46 -0500
+Received: from mail-db8eur05on2042.outbound.protection.outlook.com ([40.107.20.42]:6189
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726761AbgBSBJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 20:09:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PBcQOLYq2WxHQ/JLo7kdYv78b3874dWzSY++07r7jGGq00cU23Mm3bpW9z6rFcWMsa4th1ESYKPP+a5yXN8lmefRsHJEY7FeSLeK0OSgFgyH/d/+fvaoUAyR8riuZC3Jriptdqmnf0jTML2188w7dLiko3P2K4vIUqVL5kGgJrtpMitBNijcX1eIUt/KcuVA7gKPk1SHaPxL46P/0inisr4njU/O3/OLEEPpiTycTueltJk6vJlRGjGhnn3ZMKg1Q7KHoCo7CzBxQxh8U0lTiuzBrvF++sBhjKYAQ1YWm5ymR0jA/k2TQevxeDHMa7ItljogmwZfHSYPpcdJgVVP6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jxKkd/ogCaklC4BHSyOyqan70nCoU0gzqM6lcOBSMX8=;
+ b=i9iR6KF/+n8XQDclcqIPDn4rajFgVLiJX7X58SVwMdez/egtLvJ2bm7lmpCPSVspHGhfCWRh+9uD23FJ1Evd/Ns8PSKjWdxd1u0v5Ah1WlVL0BDqas0O+HMlEcad1J/OLzamOzwuOe39e3A0g80ZU/IR0FE97F/OBbUkSohhkWwS7wyNz7TGhiExRyxBABrTpma9MRcLnjUezBpUlziptAROnM/2Ygo8UKhrFnt47GlCRED3DGWjRgWplBatvDt+H/uYdFU0QCo5+CgBcWOC85IyCMtzj4A5vPHB4kjvwgW5jQ1FTVHZAQb7s2o2ZPA+xEV6KXOIDsvGauMIjkA3uQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jxKkd/ogCaklC4BHSyOyqan70nCoU0gzqM6lcOBSMX8=;
+ b=FeWzveAS9nGZCszdaAp8Lt/g7rrr7PHbTQmen31i1vky7ExsmOnb6QxnKV/KnnoYUNEI2VlBEF56InIKMPmhfgLr6IC1wyiw8DyzwyEb1P8CIeJ7uvv26q51lhrX0rUDTk/l5plibBKvByc24mEUcVDoqbOU8cYefg+VvcbdniE=
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com (20.177.51.23) by
+ VI1PR04MB5757.eurprd04.prod.outlook.com (20.178.126.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.24; Wed, 19 Feb 2020 01:09:42 +0000
+Received: from VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::c7d:58a2:7265:407e]) by VI1PR04MB5327.eurprd04.prod.outlook.com
+ ([fe80::c7d:58a2:7265:407e%6]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
+ 01:09:42 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: [PATCH 23/28] drivers: usb: Call cpu_latency_qos_*() instead of
+ pm_qos_*()
+Thread-Topic: [PATCH 23/28] drivers: usb: Call cpu_latency_qos_*() instead of
+ pm_qos_*()
+Thread-Index: AQHV4TRn3BXs86jgkEan911jMn55C6ghwCCA
+Date:   Wed, 19 Feb 2020 01:09:42 +0000
+Message-ID: <20200219010943.GA8602@b29397-desktop>
+References: <1654227.8mz0SueHsU@kreacher> <19064076.ICumzjfW0v@kreacher>
+In-Reply-To: <19064076.ICumzjfW0v@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 942975e1-3920-4f8a-7c1d-08d7b4d866ac
+x-ms-traffictypediagnostic: VI1PR04MB5757:
+x-microsoft-antispam-prvs: <VI1PR04MB575732C5C22E9787BA9FEE618B100@VI1PR04MB5757.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0318501FAE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(366004)(376002)(396003)(136003)(346002)(189003)(199004)(8936002)(81156014)(66476007)(8676002)(64756008)(316002)(66556008)(66446008)(4326008)(6486002)(76116006)(186003)(81166006)(66946007)(44832011)(9686003)(6512007)(71200400001)(33656002)(5660300002)(91956017)(2906002)(86362001)(1076003)(6916009)(6506007)(26005)(54906003)(478600001)(33716001)(53546011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5757;H:VI1PR04MB5327.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9jC6apnwgX/iHK3crz0lbp6n9qCiQw3W9ygpwtyI5FVJes0IuRWsEzIjAdwdl4Sstuy28RE6nnmGXoIabtVvP4nHdTSJQ9tt4Wn/QFcATiYjYdaS5f68ClT3on8mRCLPUeOVADnLgzYolSBO8fBR0MqlnhQx8xuoNZGrN3wqpdsd3VJj/3pgg7pby2SfS0zZ/N7wyJ1RqIS6LRGEbRlDyaF3pYsThJqyrhcaQ6Li2GU5g8nP0QCxxoaMjV5y+PW3dBNajtw9uZ+tPSBN8D37RBqMJ3ArXTFH4USM9hlZq2L+R3anMEUHSe5jL6UFx0AnLy4drA0sFUZ23/r0HFVbC5FpGvCGfVYh7BS9pOK+H/D0ZxEmt8TJK73PQkB1e7VKb+lBxd5KPpr7JaoWXWASON553f8vUXyCtJcUircrWP7LUvaUROARenBqu55x9f5b
+x-ms-exchange-antispam-messagedata: 3X978MQ+C9apvw02I+ViPPhsPoINZ0Q/bUpLFBzbDm1ytynn+tvx5VBKu113W3IhCSDGOlQsWL9njuZbwns1Cf4xgYnM876jCxvwi5GRKiYd1vvyPDdqZ7yyu/t9sKIeDl15tbAgovruUgt4/c+hVw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B6BF50EE27DE8B4FA0F5FBF8A2854802@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cea88cec3e32759a49d44c41cb615a839f689937.1582007379.git.shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 942975e1-3920-4f8a-7c1d-08d7b4d866ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 01:09:42.4000
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6tNNwKL/N9gbgau5CyhqXQnYSQHP4S9LqPqpa4JblEvWxojsdns8p7haPNDC3vTzHBNfr6hu4aidsqRD4tUC3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5757
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 02:39:37PM +0800, Shengjiu Wang wrote:
-> EASRC (Enhanced Asynchronous Sample Rate Converter) is a new IP module
-> found on i.MX8MN. It is different with old ASRC module.
-> 
-> The primary features for the EASRC are as follows:
-> - 4 Contexts - groups of channels with an independent time base
-> - Fully independent and concurrent context control
-> - Simultaneous processing of up to 32 audio channels
-> - Programmable filter charachteristics for each context
-> - 32, 24, 20, and 16-bit fixed point audio sample support
-> - 32-bit floating point audio sample support
-> - 8kHz to 384kHz sample rate
-> - 1/16 to 8x sample rate conversion ratio
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+On 20-02-12 00:28:44, Rafael J. Wysocki wrote:
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>=20
+> Call cpu_latency_qos_add/remove_request() instead of
+> pm_qos_add/remove_request(), respectively, because the
+> latter are going to be dropped.
+>=20
+> No intentional functional impact.
+>=20
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  sound/soc/fsl/Kconfig           |   10 +
->  sound/soc/fsl/Makefile          |    2 +
->  sound/soc/fsl/fsl_asrc_common.h |    1 +
->  sound/soc/fsl/fsl_easrc.c       | 2265 +++++++++++++++++++++++++++++++
->  sound/soc/fsl/fsl_easrc.h       |  668 +++++++++
->  sound/soc/fsl/fsl_easrc_dma.c   |  440 ++++++
+>  drivers/usb/chipidea/ci_hdrc_imx.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci=
+_hdrc_imx.c
+> index d8e7eb2f97b9..a479af3ae31d 100644
+> --- a/drivers/usb/chipidea/ci_hdrc_imx.c
+> +++ b/drivers/usb/chipidea/ci_hdrc_imx.c
+> @@ -393,8 +393,7 @@ static int ci_hdrc_imx_probe(struct platform_device *=
+pdev)
+>  	}
+> =20
+>  	if (pdata.flags & CI_HDRC_PMQOS)
+> -		pm_qos_add_request(&data->pm_qos_req,
+> -			PM_QOS_CPU_DMA_LATENCY, 0);
+> +		cpu_latency_qos_add_request(&data->pm_qos_req, 0);
+> =20
+>  	ret =3D imx_get_clks(dev);
+>  	if (ret)
+> @@ -478,7 +477,7 @@ static int ci_hdrc_imx_probe(struct platform_device *=
+pdev)
+>  		/* don't overwrite original ret (cf. EPROBE_DEFER) */
+>  		regulator_disable(data->hsic_pad_regulator);
+>  	if (pdata.flags & CI_HDRC_PMQOS)
+> -		pm_qos_remove_request(&data->pm_qos_req);
+> +		cpu_latency_qos_remove_request(&data->pm_qos_req);
+>  	data->ci_pdev =3D NULL;
+>  	return ret;
+>  }
+> @@ -499,7 +498,7 @@ static int ci_hdrc_imx_remove(struct platform_device =
+*pdev)
+>  	if (data->ci_pdev) {
+>  		imx_disable_unprepare_clks(&pdev->dev);
+>  		if (data->plat_data->flags & CI_HDRC_PMQOS)
+> -			pm_qos_remove_request(&data->pm_qos_req);
+> +			cpu_latency_qos_remove_request(&data->pm_qos_req);
+>  		if (data->hsic_pad_regulator)
+>  			regulator_disable(data->hsic_pad_regulator);
+>  	}
+> @@ -527,7 +526,7 @@ static int __maybe_unused imx_controller_suspend(stru=
+ct device *dev)
+> =20
+>  	imx_disable_unprepare_clks(dev);
+>  	if (data->plat_data->flags & CI_HDRC_PMQOS)
+> -		pm_qos_remove_request(&data->pm_qos_req);
+> +		cpu_latency_qos_remove_request(&data->pm_qos_req);
+> =20
+>  	data->in_lpm =3D true;
+> =20
+> @@ -547,8 +546,7 @@ static int __maybe_unused imx_controller_resume(struc=
+t device *dev)
+>  	}
+> =20
+>  	if (data->plat_data->flags & CI_HDRC_PMQOS)
+> -		pm_qos_add_request(&data->pm_qos_req,
+> -			PM_QOS_CPU_DMA_LATENCY, 0);
+> +		cpu_latency_qos_add_request(&data->pm_qos_req, 0);
+> =20
+>  	ret =3D imx_prepare_enable_clks(dev);
+>  	if (ret)
+> --=20
+> 2.16.4
+>=20
 
-I see a 90% similarity between fsl_asrc_dma and fsl_easrc_dma files.
-Would it be possible reuse the existing code? Could share structures
-from my point of view, just like it reuses "enum asrc_pair_index", I
-know differentiating "pair" and "context" is a big point here though.
+Acked-by: Peter Chen <peter.chen@nxp.com>
 
-A possible quick solution for that, off the top of my head, could be:
+--=20
 
-1) in fsl_asrc_common.h
-
-	struct fsl_asrc {
-		....
-	};
-
-	struct fsl_asrc_pair {
-		....
-	};
-
-2) in fsl_easrc.h
-
-	/* Renaming shared structures */
-	#define fsl_easrc fsl_asrc
-	#define fsl_easrc_context fsl_asrc_pair
-
-May be a good idea to see if others have some opinion too.
-
-> diff --git a/sound/soc/fsl/fsl_easrc.c b/sound/soc/fsl/fsl_easrc.c
-> new file mode 100644
-> index 000000000000..6fe2953317f2
-> --- /dev/null
-> +++ b/sound/soc/fsl/fsl_easrc.c
-> +
-> +/* set_rs_ratio
-> + *
-> + * According to the resample taps, calculate the resample ratio
-> + */
-> +static int set_rs_ratio(struct fsl_easrc_context *ctx)
-
-"fsl_easrc_" prefix? Would be nice to have a formula in the comments.
-
-> +/* resets the pointer of the coeff memory pointers */
-> +static int fsl_coeff_mem_ptr_reset(struct fsl_easrc *easrc,
-> +				   unsigned int ctx_id, int mem_type)
-> +{
-> +	/*  To reset the write pointer back to zero, the register field
-> +	 *  ASRC_CTX_CTRL_EXT1x[PF_COEFF_MEM_RST] can be toggled from
-> +	 *  0x0 to 0x1 to 0x0.
-> +	 */
-
-Please use the style:
-	/*
-	 * xxx
-	 */
-
-> +static int fsl_easrc_resampler_config(struct fsl_easrc *easrc)
-> +{
-> +	for (i = 0; i < hdr->interp_scen; i++) {
-> +		if ((interp[i].num_taps - 1) ==
-> +				bits_taps_to_val(easrc->rs_num_taps)) {
-
-Could do below to save some indentations from the rest of the routine:
-+		if ((interp[i].num_taps - 1) !=
-+		    bits_taps_to_val(easrc->rs_num_taps))
-+			continue;
-
-> +			arr = interp[i].coeff;
-> +			selected_interp = &interp[i];
-> +			dev_dbg(dev, "Selected interp_filter: %u taps - %u phases\n",
-> +				selected_interp->num_taps,
-> +				selected_interp->num_phases);
-> +			break;
-
-> +/*****************************************************************************
-> + *  Scale filter coefficients (64 bits float)
-> + *  For input float32 normalized range (1.0,-1.0) -> output int[16,24,32]:
-> + *      scale it by multiplying filter coefficients by 2^31
-> + *  For input int[16, 24, 32] -> output float32
-> + *      scale it by multiplying filter coefficients by 2^-15, 2^-23, 2^-31
-> + *  input:
-> + *      easrc:  Structure pointer of fsl_easrc
-> + *      infilter : Pointer to non-scaled input filter
-> + *      shift:  The multiply factor
-> + *  output:
-> + *      outfilter: scaled filter
-> + *****************************************************************************/
-> +static int NormalizedFilterForFloat32InIntOut(struct fsl_easrc *easrc,
-> +					      u64 *infilter,
-> +					      u64 *outfilter,
-> +					      int shift)
-
-Coding style looks very different, at comments and function naming.
-
-> +{
-> +	struct device *dev = &easrc->pdev->dev;
-> +	u64 coef = *infilter;
-> +	s64 exp  = (coef & 0x7ff0000000000000ll) >> 52;
-> +	u64 outcoef;
-> +
-> +	/*
-> +	 * If exponent is zero (value == 0), or 7ff (value == NaNs)
-> +	 * dont touch the content
-> +	 */
-> +	if (((coef & 0x7ff0000000000000ll) == 0) ||
-> +	    ((coef & 0x7ff0000000000000ll) == ((u64)0x7ff << 52))) {
-> +		*outfilter = coef;
-> +	} else {
-> +		if ((shift > 0 && (shift + exp) >= 2047) ||
-> +		    (shift < 0 && (exp + shift) <= 0)) {
-> +			dev_err(dev, "coef error\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* coefficient * 2^shift ==>  coefficient_exp + shift */
-> +		exp += shift;
-> +		outcoef = (u64)(coef & 0x800FFFFFFFFFFFFFll) +
-> +					((u64)exp << 52);
-> +		*outfilter = outcoef;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int write_pf_coeff_mem(struct fsl_easrc *easrc, int ctx_id,
-> +			      u64 *arr, int n_taps, int shift)
-
-Function naming.
-
-> +static int fsl_easrc_prefilter_config(struct fsl_easrc *easrc,
-> +				      unsigned int ctx_id)
-> +{
-> +	struct fsl_easrc_context *ctx;
-> +	struct asrc_firmware_hdr *hdr;
-> +	struct prefil_params *prefil, *selected_prefil = NULL;
-> +	struct device *dev;
-> +	u32 inrate, outrate, offset = 0;
-> +	int ret, i;
-> +
-> +	/* to modify prefilter coeficients, the user must perform
-> +	 * a write in ASRC_PRE_COEFF_FIFO[COEFF_DATA] while the
-> +	 * RUN_EN for that context is set to 0
-> +	 */
-> +	if (!easrc)
-> +		return -ENODEV;
-
-Hmm..I don't see the relationship between the comments and the code.
-
-> +	if (ctx->out_params.sample_rate >= ctx->in_params.sample_rate) {
-> +		if (ctx->out_params.sample_rate == ctx->in_params.sample_rate)
-> +			regmap_update_bits(easrc->regmap,
-> +					   REG_EASRC_CCE1(ctx_id),
-> +					   EASRC_CCE1_RS_BYPASS_MASK,
-> +					   EASRC_CCE1_RS_BYPASS);
-> +
-> +		if (ctx->in_params.sample_format == SNDRV_PCM_FORMAT_FLOAT_LE &&
-> +		    ctx->out_params.sample_format != SNDRV_PCM_FORMAT_FLOAT_LE) {
-> +			ctx->st1_num_taps = 1;
-> +			ctx->st1_coeff    = &easrc->const_coeff;
-> +			ctx->st1_num_exp  = 1;
-> +			ctx->st2_num_taps = 0;
-> +			ctx->st1_addexp = 31;
-> +		} else if (ctx->in_params.sample_format != SNDRV_PCM_FORMAT_FLOAT_LE &&
-> +			   ctx->out_params.sample_format == SNDRV_PCM_FORMAT_FLOAT_LE) {
-> +			ctx->st1_num_taps = 1;
-> +			ctx->st1_coeff    = &easrc->const_coeff;
-> +			ctx->st1_num_exp  = 1;
-> +			ctx->st2_num_taps = 0;
-> +			ctx->st1_addexp -= ctx->in_params.fmt.addexp;
-> +		} else {
-> +			ctx->st1_num_taps = 1;
-> +			ctx->st1_coeff    = &easrc->const_coeff;
-> +			ctx->st1_num_exp  = 1;
-> +			ctx->st2_num_taps = 0;
-
-The first four lines of each path are completely duplicated. Probably
-only needs to diff st1_addexp?
-
-> +	} else {
-> +		inrate = ctx->in_params.norm_rate;
-> +		outrate = ctx->out_params.norm_rate;
-> +
-> +		hdr = easrc->firmware_hdr;
-> +		prefil = easrc->prefil;
-> +
-> +		for (i = 0; i < hdr->prefil_scen; i++) {
-> +			if (inrate == prefil[i].insr && outrate == prefil[i].outsr) {
-
-Could do below to save indentations:
-+			if (inrate != prefil[i].insr ||
-+			    outrate != prefil[i].outsr)
-+				continue;
-
-> +		if (!selected_prefil) {
-> +			dev_err(dev, "Conversion from in ratio %u(%u) to out ratio %u(%u) is not supported\n",
-> +				ctx->in_params.sample_rate,
-> +				inrate,
-> +				ctx->out_params.sample_rate, outrate);
-
-Could fit into single lines:
-+				ctx->in_params.sample_rate, inrate,
-+				ctx->out_params.sample_rate, outrate);
-
-> +static int fsl_easrc_config_one_slot(struct fsl_easrc_context *ctx,
-> +				     struct fsl_easrc_slot *slot,
-> +				     unsigned int slot_idx,
-> +				     unsigned int reg0,
-> +				     unsigned int reg1,
-> +				     unsigned int reg2,
-> +				     unsigned int reg3,
-> +				     unsigned int *req_channels,
-> +				     unsigned int *start_channel,
-> +				     unsigned int *avail_channel)
-
-There could be some simplification for the parameters here:
-1) slot_idx could be a part of struct fsl_easrc_slot?
-2) reg0->reg3 could be a part of struct too, or use some macro
-   calculating from slot_idx?
-
-> +{
-> +	struct fsl_easrc *easrc = ctx->easrc;
-> +	int st1_chanxexp, st1_mem_alloc = 0, st2_mem_alloc = 0;
-> +	unsigned int addr;
-> +
-> +	if (*req_channels <= *avail_channel) {
-> +		slot->num_channel = *req_channels;
-> +		slot->min_channel = *start_channel;
-> +		slot->max_channel = *start_channel + *req_channels - 1;
-> +		slot->ctx_index = ctx->index;
-> +		slot->busy = true;
-> +		*start_channel += *req_channels;
-> +		*req_channels = 0;
-> +	} else {
-> +		slot->num_channel = *avail_channel;
-> +		slot->min_channel = *start_channel;
-> +		slot->max_channel = *start_channel + *avail_channel - 1;
-> +		slot->ctx_index = ctx->index;
-> +		slot->busy = true;
-> +		*start_channel += *avail_channel;
-> +		*req_channels -= *avail_channel;
-> +	}
-
-Could merge duplicated parts:
-+	if (*req_channels <= *avail_channel) {
-+		slot->num_channel = *req_channels;
-+		*req_channels = 0;
-+	} else {
-+		slot->num_channel = *req_channels;
-+		*req_channels -= *avail_channel;
-+	};
-+
-+	slot->min_channel = *start_channel;
-+	slot->max_channel = *start_channel + slot->num_channel - 1;
-+	slot->ctx_index = ctx->index;
-+	slot->busy = true;
-+	*start_channel += slot->num_channel;
-
-> +	if (ctx->st1_num_taps > 0) {
-> +		if (ctx->st2_num_taps > 0)
-> +			st1_mem_alloc =
-> +				(ctx->st1_num_taps - 1) * slot->num_channel *
-> +				ctx->st1_num_exp + slot->num_channel;
-> +		else
-> +			st1_mem_alloc = ctx->st1_num_taps * slot->num_channel;
-> +
-> +		slot->pf_mem_used = st1_mem_alloc;
-> +		regmap_update_bits(easrc->regmap, reg2,
-> +				   EASRC_DPCS0R2_ST1_MA_MASK,
-> +				   EASRC_DPCS0R2_ST1_MA(st1_mem_alloc));
-> +
-> +		if (slot_idx == 1)
-> +			addr = 0x1800 - st1_mem_alloc;
-
-Where is this 0x1800 coming from?
-
-> +int fsl_easrc_start_context(struct fsl_easrc_context *ctx)
-> +{
-> +			   EASRC_CC_FWMDE_MASK,
-> +			   EASRC_CC_FWMDE);
-
-> +			   EASRC_COC_FWMDE_MASK,
-> +			   EASRC_COC_FWMDE);
-
-> +			   EASRC_CC_EN_MASK,
-> +			   EASRC_CC_EN);
-
-They could fit into single lines.
-
-> +static const struct regmap_config fsl_easrc_regmap_config = {
-> +	.readable_reg = fsl_easrc_readable_reg,
-> +	.volatile_reg = fsl_easrc_volatile_reg,
-> +	.writeable_reg = fsl_easrc_writeable_reg,
-
-Can we use regmap_range and regmap_access_table?
-
-> +void easrc_dump_firmware(struct fsl_easrc *easrc)
-
-fsl_easrc_dump_firmware?
-
-> +{
-> +	dev_dbg(dev, "Firmware v%u dump:\n", firm->firmware_version);
-> +	pr_debug("Num prefitler scenarios: %u\n", firm->prefil_scen);
-> +	pr_debug("Num interpolation scenarios: %u\n", firm->interp_scen);
-> +	pr_debug("\nInterpolation scenarios:\n");
-
-dev_dbg vs. pr_debug?
-
-> +int easrc_get_firmware(struct fsl_easrc *easrc)
-
-fsl_easrc_get_firmware?
-
-> +static int fsl_easrc_probe(struct platform_device *pdev)
-> +{
-> +	/*Set default value*/
-
-White space in the comments
-
-> +	ret = of_property_read_u32(np, "fsl,asrc-rate",
-> +				   &easrc->easrc_rate);
-
-Could fit into one line.
-
-> +	ret = of_property_read_u32(np, "fsl,asrc-width",
-> +				   &width);
-
-Ditto
-
-> +static int fsl_easrc_runtime_resume(struct device *dev)
-> +{
-> +}
-> +#endif /*CONFIG_PM*/
-
-White space in the comments
-
-> diff --git a/sound/soc/fsl/fsl_easrc.h b/sound/soc/fsl/fsl_easrc.h
-> new file mode 100644
-> index 000000000000..205f6ef3e1e3
-> --- /dev/null
-> +++ b/sound/soc/fsl/fsl_easrc.h
-> @@ -0,0 +1,668 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (C) 2019 NXP
-> + */
-> +
-> +#ifndef _FSL_EASRC_H
-> +#define _FSL_EASRC_H
-> +
-> +#include <sound/asound.h>
-> +#include <linux/miscdevice.h>
-
-For miscdevice...
-
-> +/**
-> + * fsl_easrc: EASRC private data
-> + *
-> + * @pdev: platform device pointer
-> + * @regmap: regmap handler
-> + * @dma_params_rx: DMA parameters for receive channel
-> + * @dma_params_tx: DMA parameters for transmit channel
-> + * @ctx:  context pointer
-> + * @slot: slot setting
-> + * @mem_clk: clock source to access register
-> + * @firmware_hdr:  the header of firmware
-> + * @interp: pointer to interpolation filter coeff
-> + * @prefil: pointer to prefilter coeff
-> + * @fw: firmware of coeff table
-> + * @fw_name: firmware name
-> + * @paddr: physical address to the base address of registers
-> + * @rs_num_taps:  resample filter taps, 32, 64, or 128
-> + * @bps_i2c958: bits per sample of iec958
-> + * @chn_avail: available channels, maximum 32
-> + * @lock: spin lock for resource protection
-> + * @easrc_rate: default sample rate for ASoC Back-Ends
-> + * @easrc_format: default sample format for ASoC Back-Ends
-> + */
-> +
-> +struct fsl_easrc {
-> +	struct platform_device *pdev;
-> +	struct regmap *regmap;
-> +	struct miscdevice easrc_miscdev;
-
-This is not being described in the comments area nor used in the
-driver. Should probably stay downstream, or be added later when
-the downstream feature gets upstream.
+Thanks,
+Peter Chen=
