@@ -2,96 +2,111 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B72C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BCDC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8282176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="d+n6hz/R"
+	by mail.kernel.org (Postfix) with ESMTP id 755B82176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbgBSI4s (ORCPT
+        id S1726663AbgBSI5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:56:48 -0500
-Received: from lb2-smtp-cloud7.xs4all.net ([194.109.24.28]:58457 "EHLO
-        lb2-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726453AbgBSI4r (ORCPT
+        Wed, 19 Feb 2020 03:57:15 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15010 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726202AbgBSI5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:56:47 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4L9ujzVzQP9a94L9xjnYGj; Wed, 19 Feb 2020 09:56:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582102606; bh=wMYH0++xXVdNrPD6hp0aMAkDKXWc1nMp+q18Zh330pk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=d+n6hz/Ru5q19j/TzWehXIYzIBao+OwBd0hPRs6nf6SOeHyAOqwZljv6a1h/+z6kY
-         FuFRb+nzZPKUThfC+y9GN/Z6IjRN6MUeKUsXzRplK77SlDC65qgO8czBpEXUlJVW65
-         Wekmk3YM/bXtERYBsjiYy6L7Ey76YODqCocsfIXeMdxnGlI7Hvepvgk4/rYIVCHj0I
-         af+XCVaHO9+jROi79MLko3Jpqe4HjU2AAwZbC6qbBG+3XjzjK5uK+ObnTXSaJ6khbA
-         yJQWVZUPxRpjTRg5NBWTvvL9TFdJBPAqh2xhLjsq/yT8Vd4g/IPZ3IFZVYlusQVT+n
-         VDvFnb/Cenb7w==
-Subject: Re: [RFC][PATCHv2 09/12] videobuf2: let user-space know if driver
- supports cache hints
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-10-senozhatsky@chromium.org>
- <2a00bf5c-462e-8d35-844c-55ce2383b8e2@xs4all.nl>
- <20200219084521.GD122464@google.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <b92457b8-0a74-c147-aa98-af5a8e13f0a6@xs4all.nl>
-Date:   Wed, 19 Feb 2020 09:56:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 03:57:14 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J8qDlY005937
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:57:13 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uecu6dy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:57:13 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Wed, 19 Feb 2020 08:57:11 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 08:57:06 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J8v5qr58917114
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 08:57:05 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ED074C044;
+        Wed, 19 Feb 2020 08:57:05 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E2224C046;
+        Wed, 19 Feb 2020 08:57:02 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.205.50])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 19 Feb 2020 08:57:02 +0000 (GMT)
+Date:   Wed, 19 Feb 2020 09:57:00 +0100
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH v2 RESEND] mm/sparsemem: pfn_to_page is not valid yet on
+ SPARSEMEM
+References: <20200219030454.4844-1-bhe@redhat.com>
+ <CAPcyv4iZCnSpypshYpXCL35yT4KZfgXqDqS8cFDGpXC-A72Utg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200219084521.GD122464@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfOs3ao3oD+Hmrelz0Wsv2/+6kJUoTR/7llL1dgSy8ZeiNOYqbSY6CPNFI8dGjs2sv+P8yb3cqO3kdpqiGfoljP8j0oiyj4FdWEUkTusnaMLM+IPyDTlA
- rNNw39whGReOOA5tHI20wtMXdmR49MyV2b/pcDFOg2ycO8dPz4V16L4FD8OJzELfwStvqLvEB6N+Y1QET4amupZs1F6O41QKAb8m2hnZNb9dhSyMznu1B1RM
- UjHSWxKUZIgM3/1PV04mBr19nICBkuQuTb3EeuKcjI3d8OBS2vTqJxZ3U6/u9dfR/SWRW2EKEm3eci5zn4biju/prPlR16lm5f6GSpXHuX/1UbFIrD/qB/IF
- nK177JD51tesKBwGBeH9Y1zruE9GCOlla88I2nwtWd+Psb3syeW/bFx7BmUyF5YHlOM8ARRxOsYGkGWS/3X7x9z+KyCW3Cea6SSmOFj31CkeopKRWhJCwFzk
- aYC9HJt1oDv882OkWWM8NTZP/XnfLCfvyWEcBCQ3fKdmGIRAi2LbzKLrRqk/n2yHNA174qY+4Bpkm/Uq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iZCnSpypshYpXCL35yT4KZfgXqDqS8cFDGpXC-A72Utg@mail.gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20021908-0016-0000-0000-000002E830E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021908-0017-0000-0000-0000334B484C
+Message-Id: <20200219085700.GB32242@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_02:2020-02-19,2020-02-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 mlxlogscore=891 suspectscore=1 malwarescore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190066
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 9:45 AM, Sergey Senozhatsky wrote:
-> On (20/02/19 09:33), Hans Verkuil wrote:
->> On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
->>> Add V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS to fill_buf_caps(), which
->>> is set when queue supports user-space cache management hints.
->>
->> Ah, you add the capability here :-)
->>
->> This should be moved forward in the series. Actually, I think this should
->> be merged with the first patch of the series.
+On Tue, Feb 18, 2020 at 07:25:15PM -0800, Dan Williams wrote:
+> On Tue, Feb 18, 2020 at 7:05 PM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > From: Wei Yang <richardw.yang@linux.intel.com>
+> >
+> > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
+> > doesn't work before sparse_init_one_section() is called. This leads to a
+> > crash when hotplug memory:
 > 
-> OK, can squash. This way I don't have to split 03/12.
+> I'd also add:
 > 
-> I can also update V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/CLEAN in 01/12 then.
-> Would that work?
+> "On x86 the impact is limited to x86_32 builds, or x86_64
+> configurations that override the default setting for
+> SPARSEMEM_VMEMMAP".
 
-Yes, that makes sense.
-
-	Hans
-
+Do we also want to check how it affects, say, arm64, ia64 and ppc? ;-)
+ 
+> Other than that:
 > 
-> 	-ss
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > 
+
+-- 
+Sincerely yours,
+Mike.
 
