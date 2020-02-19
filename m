@@ -2,143 +2,160 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F12DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A3EC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0B62176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B2B32176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:17:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qRy1riiL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBSIRF (ORCPT
+        id S1726731AbgBSIRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:17:05 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60918 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSIRE (ORCPT
+        Wed, 19 Feb 2020 03:17:20 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38913 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgBSIRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:17:04 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1EB82292F60;
-        Wed, 19 Feb 2020 08:17:02 +0000 (GMT)
-Date:   Wed, 19 Feb 2020 09:16:58 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <Vitor.Soares@synopsys.com>
-Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "wsa@the-dreams.de" <wsa@the-dreams.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
-Subject: Re: [PATCH v3 0/5] Introduce i3c device userspace interface
-Message-ID: <20200219091658.7506e7bd@collabora.com>
-In-Reply-To: <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
-References: <cover.1582069402.git.vitor.soares@synopsys.com>
-        <CH2PR12MB421604E9272413A6C456AB16AE100@CH2PR12MB4216.namprd12.prod.outlook.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Feb 2020 03:17:19 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so27032624wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8DM5RbAjU3k/1x40w1mSb6mN+/6HvquZmqjXWrIELcc=;
+        b=qRy1riiLgt1ceFQQEtX/Sz3UC3PNnCeIdXmCUdimHAQfCCmTs85KIGGqv5g0XmsMfa
+         64ZGcHJGem+hhD2+iDnJMf6Q1WRVwyb/9jXn2rgK9VKehR4Ozvtm8D/JnDk5Op7uOIsu
+         BAyCbkThuOREEbJZdtNzgfaX+WEx8ZRQVkcfbcazqjr2eYy3X79cHtqYcU6UJ/BmdiEB
+         Hqjqe0FDfCdHt2GShxuYcUqxjK/YKLK5FNcIUHDF5EYJKt0d0ZfPXB5ClQNEmJ1SNOKT
+         jgZr9z6C663L3MZc8cVBtNuEVU1g0mdyGFc45JMvIY0pOEZ+NCCoIzrg8u496DKoK1yN
+         P44A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=8DM5RbAjU3k/1x40w1mSb6mN+/6HvquZmqjXWrIELcc=;
+        b=W2o7abZwMBisah0sCOLsRzj1cl6rnmQFh5Q0VMJZVXeC5Z/BaXJhmqyV2zOzceXyeZ
+         uWjtzwHlHe2Jy9Ox8/sDdrAsy1TGQP4iXhALQWAQ0H3hj7+eZzBzTSZuc6pD6oTZv1fS
+         BnuYXvjl+LeEFv6egHqgK3QlERq2bRYtP3zsVE/CGTJXaEA7VlFqc+IrhdklEJ9zGxqj
+         c97L9weDgZVEDxAHgeStKbapEKSh9MxavmFT67mVlhm4ifEvhgD3UTXBg3turpSEMh/R
+         PHclkAVrfxlhnYjR9S2giSQpuUaq7Hni19Yilb1z53+q8KqhU81J7Ryx9XNCdymgv0NM
+         Hiew==
+X-Gm-Message-State: APjAAAVYNP/zgseBRWeJWiVaGwchvCDWCVV/dzi3FVYfq7ovXcGWwdQu
+        L44VLeH4CCHVPcD5Hbiz0rMAi7AN7CJbMg==
+X-Google-Smtp-Source: APXvYqwiY9NxzI3K6jCzx0KigmeEu/ij1ES5XFEFcxCL/1DkKLMsiU6js8UGvcul+SLKt5/UEmw9vg==
+X-Received: by 2002:adf:f802:: with SMTP id s2mr36323251wrp.201.1582100235730;
+        Wed, 19 Feb 2020 00:17:15 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id p11sm1981998wrn.40.2020.02.19.00.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 00:17:14 -0800 (PST)
+Subject: Re: [PATCH v2 0/3] spi: meson-axg: add few enhanced features
+To:     Sunny Luo <sunny.luo@amlogic.com>, Mark Brown <broonie@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Carlo Caione <carlo@caione.org>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        linux-spi@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1544690354-16409-1-git-send-email-sunny.luo@amlogic.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <cb4a7228-b75c-7b54-8228-14dbb370b19f@baylibre.com>
+Date:   Wed, 19 Feb 2020 09:17:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1544690354-16409-1-git-send-email-sunny.luo@amlogic.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 00:39:31 +0000
-Vitor Soares <Vitor.Soares@synopsys.com> wrote:
+Hi Sunny,
 
-> Hi Boris,
+On 13/12/2018 09:39, Sunny Luo wrote:
+> add a few enhanced features for the SPICC controller of Meson-AXG SoC.
 > 
-> From: Vitor Soares <vitor.soares@synopsys.com>
-> Date: Wed, Feb 19, 2020 at 00:20:38
+> These patches are actually quite independent from each other, I send them
+> together in case to avoid the file conflicts.
 > 
-> > For today there is no way to use i3c devices from user space and
-> > the introduction of such API will help developers during the i3c device
-> > or i3c host controllers development.
-> > 
-> > The i3cdev module is highly based on i2c-dev and yet I tried to address
-> > the concerns raised in [1].
-> > 
-> > NOTES:
-> > - The i3cdev dynamically request an unused major number.
-> > 
-> > - The i3c devices are dynamically exposed/removed from dev/ folder based
-> >   on if they have a device driver bound to it.
-> > 
-> > - For now, the module exposes i3c devices without device driver on
-> >   dev/bus/i3c/<bus>-<pid>
-> > 
-> > - As in the i2c subsystem, here it is exposed the i3c_priv_xfer to
-> >   userspace. I tried to use a dedicated structure as in spidev but I don't
-> >   see any obvious advantage.
-> > 
-> > - Since the i3c API only exposes i3c_priv_xfer to devices, for now, the
-> >   module just makes use of one ioctl(). This can change in the future with
-> >   the introduction hdr commands or by the need of exposing some CCC
-> >   commands to the device API (private contract between master-slave).
-> >   Regarding the i3c device info, some information is already available
-> >   through sysfs. We can add more device attributes to expose more
-> >   information or add a dedicated ioctl() request for that purpose or both.
-> > 
-> > - Similar to i2c, I have also created a tool that you can find in [2]
-> >   for testing purposes. If you have some time available I would appreciate
-> >   your feedback about it as well.
-> > 
-> > [1] https://lkml.org/lkml/2018/11/15/853
-> > [2] https://github.com/vitor-soares-snps/i3c-tools.git
-> > 
-> > Changes in v3:
-> >   Use the xfer_lock to prevent device detach during ioctl call
-> >   Expose i3cdev under /dev/bus/i3c/ folder like usb does
-> >   Change NOTIFY_BOUND to NOTIFY_BIND, this allows the device detach occur
-> >   before driver->probe call
-> >   Avoid use of IS_ERR_OR_NULL
-> >   Use u64_to_user_ptr instead of (void __user *)(uintptr_t) cast
-> >   Allocate k_xfer and data_ptrs at once and eliminate double allocation
-> >   check
-> >   Pass i3cdev to dev->driver_data
-> >   Make all minors available
-> >   Add API documentation
-> > 
-> > Changes in v2:
-> >   Use IDR api for minor numbering
-> >   Modify ioctl struct
-> >   Fix SPDX license
-> > 
-> > Vitor Soares (5):
-> >   i3c: master: export i3c_masterdev_type
-> >   i3c: master: export i3c_bus_type symbol
-> >   i3c: master: add i3c_for_each_dev helper
-> >   i3c: add i3cdev module to expose i3c dev in /dev
-> >   userspace-api: add i3cdev documentation
-> > 
-> >  Documentation/userspace-api/i3c/i3cdev.rst | 116 ++++++++
-> >  drivers/i3c/Kconfig                        |  15 +
-> >  drivers/i3c/Makefile                       |   1 +
-> >  drivers/i3c/i3cdev.c                       | 429 +++++++++++++++++++++++++++++
-> >  drivers/i3c/internals.h                    |   2 +
-> >  drivers/i3c/master.c                       |  16 +-
-> >  include/uapi/linux/i3c/i3cdev.h            |  38 +++
-> >  7 files changed, 616 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/userspace-api/i3c/i3cdev.rst
-> >  create mode 100644 drivers/i3c/i3cdev.c
-> >  create mode 100644 include/uapi/linux/i3c/i3cdev.h
-> > 
-> > -- 
-> > 2.7.4  
+> Changes since v1 at [1]
+> - Add OF and COMMON_CLK dependence for SPICC in Kconfig to avoid compiling
+>   error.
 > 
-> I want to make you know that none of your previous comments was ignored 
-> and  I would like to start the discussion from this point.
+> [1] https://lore.kernel.org/lkml/20180503213645.20694-1-yixun.lan@amlogic.com
+> 
+> Sunny Luo (3):
+>   spi: meson-axg: support MAX 80M clock
+>   spi: meson-axg: enhance output enable feature
+>   spi: meson-axg: add a linear clock divider support
+> 
+>  drivers/spi/Kconfig           |   2 +-
+>  drivers/spi/spi-meson-spicc.c | 270 ++++++++++++++++++++++++++++++++++--------
+>  2 files changed, 223 insertions(+), 49 deletions(-)
+> 
 
-Sure, np. I'll probably wait for a v4 exploring the option I proposed
-then.
+Is there still a plan to push an updated version for AXG and G12A ?
+
+Neil
