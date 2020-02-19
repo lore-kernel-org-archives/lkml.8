@@ -2,153 +2,92 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3079DC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE879C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC38524656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A96172465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKInHGSK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WmaW14ZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgBSSGq (ORCPT
+        id S1726681AbgBSSIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:06:46 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36137 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgBSSGp (ORCPT
+        Wed, 19 Feb 2020 13:08:48 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36335 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgBSSIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:06:45 -0500
-Received: by mail-io1-f65.google.com with SMTP id d15so1591439iog.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:06:45 -0800 (PST)
+        Wed, 19 Feb 2020 13:08:47 -0500
+Received: by mail-pg1-f193.google.com with SMTP id d9so491303pgu.3;
+        Wed, 19 Feb 2020 10:08:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lh9HDmiIL2+C6gKZFkkGaBll4E2H2sF+884fA79a3d4=;
-        b=OKInHGSKvIkqurX1aNTcyJ5ZRSa99BcEVRAEw2dytl0WWVormMy+BNoYv2PhuWZg/J
-         O+DlL7WwCVTj1WuJcoFPIQsDb6tKsiHotMHwQ4MYGMDjT9Mm2sxDCU7CTMFLeHQj3Ltq
-         PfczyxtesAHl5KW7TobIH+e1VxayU21t97tT/V45NFJj2i3hdwBP/zEqLlgQEw+GMTDP
-         fei14aYzXuov9cqupGB0xWLve/ofzYAAULe6TVWfjcDQiJvTiu5Y3LGXTWeHpqUeG1Ey
-         kxkVbp7nPQuwN/lNspRFq8jHZq7tRJMdTAAInZhnhd38Uxc8fmN10h/zcNPJYAvFfAHw
-         J5XA==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aDlAiDkLNZZHtzRW9HWTJOzKn3LqLil9fUD3GqWmFKg=;
+        b=WmaW14ZZlPih7rNfsOIQAcFFlakDmm/L9hjSA6RWF6DdwtdrKHwnvLd2PGeRrL9d0o
+         OL0PSd08+rj+kH2Z03YudjX/LZkZh5g/7JvBW5TN/JJZBxqOGC7B0Y17liAXC9H0fkWI
+         /6H943Q+P7WCtbFAtoh2xR8M3duX6PN4VdCR5BQrL8kytuPRZx5bVUCLqjbk7oOmnquL
+         XozF3L27Uk1cLTmTDbzHHb8lzTmcajcrIZLCevrdRdYLjzzHPvNz9uG3E+XTOR+b5wOw
+         eBVh9pqXbsNOHOhLrixZ7q7xu66cA8cDZdK46QPJfVzT2LRJfA113RVOqQ25aHKsXDIv
+         mvAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lh9HDmiIL2+C6gKZFkkGaBll4E2H2sF+884fA79a3d4=;
-        b=YtYUK5To7WDrjE1unt8A6xPtSRk++/7tEHhTkKMpINIqxuG+0Vo1sRgEV80h2PsFKj
-         3l1Z/eGww6V4voGnMQgaVSGhSL5Ak0Vw8Jhzqc1mguc0+1ib0xpBIbqYjm04HqP1yil5
-         yEaYamj8DoncnA7leIQGtWl2gX88YcwB4h2Fnd7EjQUz/lvQR1YkXF0nPuLRgU5k3QX4
-         Ixxjq7RYXtJ5ADGnDcsKt3YSebuRAmkcEpft5+O9+iT8uD0zRMAo9t7GfBXI90qR97hS
-         q9smRdVHhzNNntzaZJx6qdl3n7nMm5SRjM1GM4UwQBeiuxwsxMCdNi3J8vUi7Bn5hZew
-         6+eA==
-X-Gm-Message-State: APjAAAVm7Av3o4vtgjnJ/uWFA/C21pfPdUgjWdsWxpIWnWHEs0c246v4
-        gxxQu/6wDr5RzKA1UP2zO2jaNS0TA+/oPTU/irYRjV1PyMhZ4A==
-X-Google-Smtp-Source: APXvYqzqHSgJKe/YwJXPDuKTakGoCeik+JiiUjpLCGoFJgSHMe5t+EuCEAcw+2EL0ThP568dhesTAnpv2qdBsqcPE/4=
-X-Received: by 2002:a6b:1781:: with SMTP id 123mr19791852iox.282.1582135604653;
- Wed, 19 Feb 2020 10:06:44 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aDlAiDkLNZZHtzRW9HWTJOzKn3LqLil9fUD3GqWmFKg=;
+        b=bzZk/LAACBT5b/jScEx+J8JxBWfRuqKyIVr8f1mOk5pSgJ/aiW53uain8sdrDk9iDy
+         lRy+hSIJDT7UGmH8GynThdFsvVRY405ixJ/ZzUhA54ZGjGCeXUYkII0TAQuDZ8oAPx9o
+         NpmSSGlNHSKXdDuIZwvHVEih/0EzgOzhLeYNZLuuyC6JXHHhvBWDUBhuYuTITtE0i80G
+         vNFwhaY828E/SfQGy5f2RB/Xw2IGMScn3OCXHcNW1I4UvNzQZWH2V4Ilg5oFXFov3aYJ
+         R7i1vqxHIqI7g/9B13c2mmuvicaY0rwo+DSMNx03+EUvk3pmArrGFJRQFg5UlFTtwcgl
+         48IQ==
+X-Gm-Message-State: APjAAAW5Tho4fv9G12GILMZiB9Z4z421JPGDzqrw67OFa8uHeN4MqJx7
+        tmN7ln1FwExRvPdDheKP3Ln0+ntl
+X-Google-Smtp-Source: APXvYqxGt2EYOA9Z5oFErfiRjcgPT1UdemXHAJBnar4aKLpKmCquseEX6H9fw/FI/Z2kfJRJxouimQ==
+X-Received: by 2002:a65:4305:: with SMTP id j5mr30264507pgq.315.1582135727196;
+        Wed, 19 Feb 2020 10:08:47 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x197sm308852pfc.1.2020.02.19.10.08.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 10:08:46 -0800 (PST)
+Date:   Wed, 19 Feb 2020 10:08:44 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/38] 4.19.105-stable review
+Message-ID: <20200219180844.GA26169@roeck-us.net>
+References: <20200218190418.536430858@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20200219171225.5547-1-idryomov@gmail.com> <CAHp75Vf24yNeLEweq_70AUzKwbdyurB6ze9739Qy9djA9dSefg@mail.gmail.com>
-In-Reply-To: <CAHp75Vf24yNeLEweq_70AUzKwbdyurB6ze9739Qy9djA9dSefg@mail.gmail.com>
-From:   Ilya Dryomov <idryomov@gmail.com>
-Date:   Wed, 19 Feb 2020 19:07:10 +0100
-Message-ID: <CAOi1vP9gfMoU14Ax+VLksQ+_3yOO3m3bh0Uh02SUMfPFDDEW9g@mail.gmail.com>
-Subject: Re: [PATCH v2] vsprintf: don't obfuscate NULL and error pointers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 6:37 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Feb 19, 2020 at 7:13 PM Ilya Dryomov <idryomov@gmail.com> wrote:
-> >
-> > I don't see what security concern is addressed by obfuscating NULL
-> > and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-> > of sites where %p is used (over 10000) and the fact that NULL pointers
-> > aren't uncommon, it probably wouldn't take long for an attacker to
-> > find the hash that corresponds to 0.  Although harder, the same goes
-> > for most common error values, such as -1, -2, -11, -14, etc.
-> >
-> > The NULL part actually fixes a regression: NULL pointers weren't
-> > obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-> > dereferencing invalid pointers") which went into 5.2.  I'm tacking
-> > the IS_ERR() part on here because error pointers won't leak kernel
-> > addresses and printing them as pointers shouldn't be any different
-> > from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-> > debugging based on existing pr_debug and friends excruciating.
-> >
-> > Note that the "always print 0's for %pK when kptr_restrict == 2"
-> > behaviour which goes way back is left as is.
-> >
-> > Example output with the patch applied:
-> >
-> >                             ptr         error-ptr              NULL
-> > %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> > %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-> > %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
->
-> ...
->
-> > +/*
-> > + * NULL pointers aren't hashed.
-> > + */
-> >  static void __init
-> >  null_pointer(void)
-> >  {
-> > -       test_hashed("%p", NULL);
-> > +       test(ZEROS "00000000", "%p", NULL);
-> >         test(ZEROS "00000000", "%px", NULL);
-> >         test("(null)", "%pE", NULL);
-> >  }
-> >
-> > +/*
-> > + * Error pointers aren't hashed.
-> > + */
-> > +static void __init
-> > +error_pointer(void)
-> > +{
-> > +       test(ONES "fffffff5", "%p", ERR_PTR(-EAGAIN));
-> > +       test(ONES "fffffff5", "%px", ERR_PTR(-EAGAIN));
->
-> > +       test("(efault)", "%pE", ERR_PTR(-EAGAIN));
->
-> Hmm... Is capital E on purpose here?
+On Tue, Feb 18, 2020 at 08:54:46PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.105 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
+> Anything received after that time might be too late.
+> 
 
-Yes.  It shows that for %pE an error pointer is still invalid.
-%pe is tested separately, in errptr(), and the output would have
-been "-EAGAIN".
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 403 pass: 403 fail: 0
 
-> Maybe we may use something else ('%ph'?) for sake of deviation?
-
-If you look at the resulting file, you will see that null_pointer(),
-error_pointer() and invalid_pointer() exercise the same three variants:
-%p, %px and %pE.
-
-This is somewhat confusing, but there seems to be some disagreement
-between Pavel and Rasmus as to how the test suite should be structured
-and I didn't want to attempt to restructure anything in this patch.
-
-Thanks,
-
-                Ilya
+Guenter
