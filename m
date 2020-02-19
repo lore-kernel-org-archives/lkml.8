@@ -2,120 +2,70 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0498EC34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3EFF2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582109566;
-	bh=axp31p+X29VX2lZqPotyMNnmfGZhymFjJXaoGd2qP4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=At61sVYIpDyaeXfIZ3UQk+RwMH0jraItDiGpls4JHAA0biZnMEw+CtqgEc5eufVDU
-	 67JDd1KmnKLVcz1zt6gjVPFN4Vry8SkUIa32OWd/qzG8EVN0tz4lUEJjiiTTRtXNlu
-	 1zdIMLEifu/7jRwnwBY6j3R7O100jHGA9jxZ0lZE=
+	by mail.kernel.org (Postfix) with ESMTP id 47E0B24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="hMU/sPil"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgBSKwp (ORCPT
+        id S1726865AbgBSKxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:52:45 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37409 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBSKwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:52:45 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b15so17082238lfc.4;
-        Wed, 19 Feb 2020 02:52:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=v3s+ERWW/NblNdTfhgSfXo0YgD0956d1UiWAg5L+DJk=;
-        b=MWQMFI/emrPaJ/v3ipgnvdfX7P0hWleGIZhWaE+IeH3JWwzkqX9U8P5jTCKxEmTo6a
-         TARKahN7Kj7Ee592SVx8NejND/G5Qao+JGFgd6vfgMXcPezn6hbbN1Ula1gmKch+ofyV
-         LDBaJEr8PqKyLi6Y5aSMksae44Sme0Hvu1JRQ+V1smm7b6/R0WvIX5JMf1wNqNvhBFyh
-         /L4w8smE1W/VeyvMJ/O/nOTqOBTtSoc8Ks58TW/qCJF9njk2AV5ectw+GGf06KHXkBd8
-         ie3uwe43EruDGV+JLGBwSEMn0cPoslhIWfCwA0t4kNfi/jl1qv6GI/xZ2hCZ3ZJvSUqT
-         z4uQ==
-X-Gm-Message-State: APjAAAUizxfPbmrrWhwlkliI71oIxuTy2nv42sUx+vH0b/iXhdIe20pr
-        MtK4Ky5Rk2pOWOZpWPKZWQQ=
-X-Google-Smtp-Source: APXvYqw6DAazSuLZGpERtO0Wuuj4fIWppskXwAfH8ZYT4nIGGCIFRs18yczjnxOHJxH6oBPvE3iy5w==
-X-Received: by 2002:a19:c014:: with SMTP id q20mr13531882lff.209.1582109563035;
-        Wed, 19 Feb 2020 02:52:43 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id w3sm988956ljo.66.2020.02.19.02.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 02:52:42 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j4My7-0000ly-9r; Wed, 19 Feb 2020 11:52:39 +0100
-Date:   Wed, 19 Feb 2020 11:52:39 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] leds: trigger: implement a tty trigger
-Message-ID: <20200219105239.GA32540@localhost>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-5-uwe@kleine-koenig.org>
+        Wed, 19 Feb 2020 05:53:04 -0500
+Received: from first.geanix.com ([116.203.34.67]:57048 "EHLO first.geanix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726469AbgBSKxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:53:03 -0500
+Received: from localhost (_gateway [172.20.0.1])
+        by first.geanix.com (Postfix) with ESMTPSA id 02379C002E;
+        Wed, 19 Feb 2020 10:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582109581; bh=VW+jgWITWMNA+jY6FIGR7+cpj/MuFZAzw0f/ewJNF7g=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=hMU/sPilGZlwszhd5lSoK39aqNCiUQ79DXow8DJr08WITajb0g/jA4MXJ8abVeifh
+         nkhyCkvPWZLbJJDY90uF9MfKSTj+pNUX7UpiMYigxCpwXhkq5XMo0zJCBlegR62/35
+         0Z3o2VRxtOYIlqL78WGk2XMqJ8fJdJ8EqTc1i+SRWkEaggvkhdi7QtQFyFoygxthe7
+         3vQaSXjJFlJOnA4tS5WXh7nXt+muMECwd5KJahXqB33z1AnaRSv+ajCI2n/nNYCe3o
+         TDdekERClLYPV4o8AOAStO7eOx4l7SsDD8Q5UACLCul2XRgYQhQrXU1R1B7d7yqiyH
+         rMKFfq1D7sQmQ==
+From:   Esben Haabendal <esben@geanix.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch,
+        michal.simek@xilinx.com, ynezz@true.cz
+Subject: Re: [PATCH 0/8] net: ll_temac: Bugfixes and ethtool support
+References: <20200218082607.7035-1-esben@geanix.com>
+        <20200218.115014.2022578847900470441.davem@davemloft.net>
+Date:   Wed, 19 Feb 2020 11:53:00 +0100
+In-Reply-To: <20200218.115014.2022578847900470441.davem@davemloft.net> (David
+        Miller's message of "Tue, 18 Feb 2020 11:50:14 -0800 (PST)")
+Message-ID: <875zg2n90z.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200213091600.554-5-uwe@kleine-koenig.org>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 10:16:00AM +0100, Uwe Kleine-König wrote:
-> From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> 
-> Usage is as follows:
-> 
-> 	myled=ledname
-> 	tty=ttyS0
-> 
-> 	echo tty > /sys/class/leds/$myled/trigger
-> 	cat /sys/class/tty/$tty/dev > /sys/class/leds/$myled/dev
-> 
-> . When this new trigger is active it periodically checks the tty's
-> statistics and when it changed since the last check the led is flashed
-> once.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
+David Miller <davem@davemloft.net> writes:
 
-> +static ssize_t dev_store(struct device *dev,
-> +			 struct device_attribute *attr, const char *buf,
-> +			 size_t size)
-> +{
-> +	struct ledtrig_tty_data *trigger_data = led_trigger_get_drvdata(dev);
-> +	struct tty_struct *tty;
-> +	dev_t d;
-> +	int ret;
-> +
-> +	if (size == 0 || (size == 1 && buf[0] == '\n')) {
-> +		tty = NULL;
-> +	} else {
-> +		ret = kstrtodev_t(buf, &d);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		tty = tty_kopen_shared(d);
+> Several errors in this submission:
+>
+> 1) Do not mix bug fixes and new features.  Submit the bug fixes
+>    targetting 'net', and then wait for net to be merged into
+>    net-next at which time you can submit the new features on
+>    top.
+>
+> 2) As per Documentation/networking/netdev-FAQ.rst you should not
+>    ever CC: stable for networking patches, we submit bug fixes to
+>    stable ourselves.
 
-I really don't have time to look at this, but having the led-trigger
-keep the port open looks fundamentally broken (consider modem-control
-signals, power, etc).
+Got it.  I will resend against net and net-next.
 
-Johan
+/Esben
