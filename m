@@ -2,132 +2,110 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140B1C18DF4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEF3C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C89206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:44:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5cq4mF/"
+	by mail.kernel.org (Postfix) with ESMTP id 90E9A20801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582134364;
+	bh=6jQXc7OQT6Tcx9ZaYTOFIo+N/ctZIbnsTNU0Eriz2NY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RJydlgPO4N2v3+IFvolonYOMo+PzjR9ZLGe9z7sl46ClSNdE/JMZSIEi+A8U1veI4
+	 uvnoXOrCfgD3MIiIrnhT8m454fvNeRo7+bpP2EMo37PEw6eIzot08QsP9oAYCU7Z5K
+	 odLC+l+IaNMQVsEBjNTkpBIL9o6heuPqJe6ZTwCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgBSRor (ORCPT
+        id S1726718AbgBSRqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:44:47 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36550 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgBSRoq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:44:46 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f24so813561lfh.3;
-        Wed, 19 Feb 2020 09:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uPOumAcBRmkHJ4EJLjVwjyx0UkodYRqLQx2fcbRzjcU=;
-        b=e5cq4mF/bFwQMZTp+Vg5gt8plzWasQB/r379lvjWCErASKW+BA24SB2zyRZyLc7oSZ
-         eKHynbtTSgcyUJYqX+Jqk+hTx5l+o5ytfPRpvB8WPsPBQHThkSIWoujH9ARG2lEYmljh
-         Sa5plISmGyfd5q9hLgFzpxQKAELhTv2KoKASuA+jpf+fzErpbrZ/BUx7QH1X6S8ZlOUA
-         z6S+YwuBYuPsVwJ9Auuythr9wVH6piDHCcXCH+ECIltgt6y6HT9dxZARyfD4LqYNSPZ8
-         fSCHMfObm2ls8WuoqWT3eLjzLPLAp0P22mi/GAvLHFu7lzuvB88AQYdHT04Yfrvt4QH/
-         RPlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uPOumAcBRmkHJ4EJLjVwjyx0UkodYRqLQx2fcbRzjcU=;
-        b=G5ouDUSr6vEQA41NgErXP1VhP0li4TOijwsliMr3ocroWYVecmLWW1tbHg1ZaQqKwa
-         W7SUnZT/CevepzvPMlZ2FbMum52vDP+9S/0BP/f7LQhpTBRENY8WBsxQz3Mk2v7ktGZf
-         nLTylRLWLCfFVophLOg1UvK353DUByf0ej1EZTt1zR60edoX3dBPkw6f0OhjfYErpDOp
-         Gbi2GeJcou+oR0R9+laYpJrb8EzktuvV32+aJqMGFZQwHuYpoIwBfEXPca+DBXttiJlD
-         jYMP5NkoBLkMx+MES7/xT/LKeBPDyza7ZO1tNkIaNgsaa7ifRg0XwARnkAXHwZwvOHWM
-         84Qw==
-X-Gm-Message-State: APjAAAX3a/lTZTXX+JpklliJ9nL3lTpTOKD3HrdpeJOsVB7Ei6WEXAmU
-        5FsrMIVJ170rR5K3KSjBUGl8h9ah
-X-Google-Smtp-Source: APXvYqw3ltqhA/bDiRtozOcGmk+Vo3B59KY45uUdjerXfOUHP0AtD/B/7ZhTC9AxNjJ9jBSxV6oGVA==
-X-Received: by 2002:a19:5e41:: with SMTP id z1mr14182445lfi.101.1582134283843;
-        Wed, 19 Feb 2020 09:44:43 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id s17sm254568ljo.18.2020.02.19.09.44.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 09:44:43 -0800 (PST)
-Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
- parameter
-To:     Stephen Warren <swarren@wwwdotorg.org>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
-        Colin Cross <ccross@android.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200219162339.16192-1-digetx@gmail.com>
- <20200219162738.GA10644@infradead.org>
- <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0c0d0cff-7b20-f777-8724-0d2b07e60e3d@gmail.com>
-Date:   Wed, 19 Feb 2020 20:44:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 19 Feb 2020 12:46:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:53604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgBSRqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:46:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B19E131B;
+        Wed, 19 Feb 2020 09:46:02 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35EC33F703;
+        Wed, 19 Feb 2020 09:46:02 -0800 (PST)
+Date:   Wed, 19 Feb 2020 17:46:00 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>
+Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
+ support
+Message-ID: <20200219174600.GH4488@sirena.org.uk>
+References: <20200211181005.54008-1-tony@atomide.com>
+ <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
+ <20200212144620.GJ64767@atomide.com>
+ <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
+ <20200217232325.GD35972@atomide.com>
+ <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
+ <20200218153211.GI35972@atomide.com>
+ <20200218170628.r47xc3yydg6xx2yh@earth.universe>
+ <20200218174258.GK4232@sirena.org.uk>
+ <20200219173902.GA37466@atomide.com>
 MIME-Version: 1.0
-In-Reply-To: <f9e41108-7811-0deb-6977-be0f60e23b52@wwwdotorg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+Z7/5fzWRHDJ0o7Q"
+Content-Disposition: inline
+In-Reply-To: <20200219173902.GA37466@atomide.com>
+X-Cookie: FORTH IF HONK THEN
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.02.2020 19:59, Stephen Warren пишет:
-> On 2/19/20 9:27 AM, Christoph Hellwig wrote:
->> On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
->>> The gpt_sector=<sector> causes the GPT partition search to look at the
->>> specified sector for a valid GPT header if the GPT is not found at the
->>> beginning or the end of block device.
->>>
->>> In particular this is needed for NVIDIA Tegra consumer-grade Android
->>> devices in order to make them usable with the upstream kernel because
->>> these devices use a proprietary / closed-source partition table format
->>> for the EMMC and it's impossible to change the partition's format.
->>> Luckily
->>> there is a GPT table in addition to the proprietary table, which is
->>> placed
->>> in uncommon location of the EMMC storage and bootloader passes the
->>> location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
->>>
->>> This patch is based on the original work done by Colin Cross for the
->>> downstream Android kernel.
->>
->> I don't think a magic command line is the way to go.  The best would be
->> to reverse-engineer the proprietary partition table format.  If that is
->> too hard we can at least key off the odd GPT location based of it's
->> magic number.
-> 
-> I thought that the backup GPT was always present in the standard
-> location; it's just the primary GPT that's in an odd location. So, this
-> kernel parameter just forces the kernel to look first for the primary
-> GPT in the unusual location, thus avoiding an error message when that's
-> not there, and the system falls back to the backup GPT.
-> 
-> Or, do I misremember the layout, or the kernel's behaviour if primary
-> GPT is missing?
 
-The backup GPT not always presents in the standard location. For example
-Tegra30 ASUS Google Nexus 7 has a backup GPT in the proper location and
-this is what KMSG prints:
+--+Z7/5fzWRHDJ0o7Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[    1.722888] Primary GPT is invalid, using alternate GPT.
-[    1.723076]  mmcblk1: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10
+On Wed, Feb 19, 2020 at 09:39:02AM -0800, Tony Lindgren wrote:
+> * Mark Brown <broonie@kernel.org> [200218 17:43]:
 
-But this doesn't work for Tegra20 Acer A500 and (IIRC) Tegra30 Ouya
-because both primary and backup GPTs are invalid at the standard locations.
+> > you to address for system enablement.  OTOH if you manage to get one of
+> > the generic cards working well that'd be excellent!
+
+> Well to me it seems that we just already have all the data needed with
+> the graph binding and snd-soc-audio-graph-card + codec2codec support.
+
+> I don't think we have cases where the cpcap codec is not the master,
+> so as long as the cpcap codec knows what's going on then there
+> may not be a need for machine driver.
+
+> I guess the the bluetooth to modem path is the one to check to see
+> what provides the clocks..
+
+Usually in telephony cases it's the modem that's the clock master FWIW.
+
+--+Z7/5fzWRHDJ0o7Q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NdFcACgkQJNaLcl1U
+h9BHgQf/WmvIam0UASnfG1o54i1CWeWsvsmiCK7/+FWgq77+E+b2l7WNCZLeu/4r
+g7DR1qjj+5Ogl5aUXofhX4nOIBziyJTk1uEjy4MNFr5fIzexu4zaV2hNPuzcJ8YF
+21g7bpU3IrsVnaldU5zh4e6olPpVwfBsB7UboCb2fWidPqe3d525T2L+pj3l1HfZ
+9TEr58a2UEpQh9f+33kJKhmMmNhwh1ycKm2A9bRrRGfNOneX3mw0CfDGby6QpAfU
+F80CcEmoDlHYzrLcE7osxHLLWdIR+f2iMi1LXR4QfyM4oz7J8f2imPHKOZDXPqjB
+Z43rTMLpES32bQjaMY/bDBxDi36EdQ==
+=fNVj
+-----END PGP SIGNATURE-----
+
+--+Z7/5fzWRHDJ0o7Q--
