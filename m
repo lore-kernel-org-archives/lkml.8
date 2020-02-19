@@ -2,157 +2,671 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57830C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0718C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 322D221D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7710B21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:05:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbgBSIFR (ORCPT
+        id S1726623AbgBSIFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:05:17 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48616 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726156AbgBSIFR (ORCPT
+        Wed, 19 Feb 2020 03:05:22 -0500
+Received: from out28-74.mail.aliyun.com ([115.124.28.74]:36467 "EHLO
+        out28-74.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgBSIFV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:05:17 -0500
-X-AuditID: c0a8fbf4-473ff70000004419-44-5e4cec3b9e36
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 1F.61.17433.B3CEC4E5; Wed, 19 Feb 2020 09:05:15 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 19 Feb 2020 09:05:14 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 2/5] dt_bindings: ROHM BD99954 Charger
-Thread-Topic: [RFC PATCH v2 2/5] dt_bindings: ROHM BD99954 Charger
-Thread-Index: AQHV4wmFTXdRcLHQD0CUbuLOwEiFn6ghWyIAgADEoQA=
-Date:   Wed, 19 Feb 2020 08:05:13 +0000
-Message-ID: <1da3415507c216d09eb72c30ad915bc139d2ff3d.camel@fi.rohmeurope.com>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-         <104b5ef63c2ad4771503d9e6618bf427721042c3.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200218202122.GA599@bogus>
-In-Reply-To: <20200218202122.GA599@bogus>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5273CCB71B442745BCB3EEAD3DE67A9D@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 19 Feb 2020 03:05:21 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.421906-0.0107096-0.567384;DS=CONTINUE|ham_regular_dialog|0.191699-0.00649547-0.801806;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=24;RT=24;SR=0;TI=SMTPD_---.GpdyRw5_1582099030;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GpdyRw5_1582099030)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Wed, 19 Feb 2020 15:57:12 +0800
+Subject: Re: [PATCH v5 2/7] MIPS: JZ4780: Introduce SMP support.
+To:     Paul Cercueil <paul@crapouillou.net>
+References: <1581792932-108032-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1581792932-108032-4-git-send-email-zhouyanjie@wanyeetech.com>
+ <1581865141.3.3@crapouillou.net>
+Cc:     linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, ralf@linux-mips.org, paulburton@kernel.org,
+        jiaxun.yang@flygoat.com, chenhc@lemote.com, allison@lohutok.net,
+        tglx@linutronix.de, daniel.lezcano@linaro.org,
+        geert+renesas@glider.be, krzk@kernel.org, keescook@chromium.org,
+        ebiederm@xmission.com, miquel.raynal@bootlin.com,
+        paul@boddie.org.uk, hns@goldelico.com,
+        mips-creator-ci20-dev@googlegroups.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E4CEA56.8070009@wanyeetech.com>
+Date:   Wed, 19 Feb 2020 15:57:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTQRjO7G7bKbBmKWhHiiZuNF6xBcPDihf6QlWCJkQfTAQXWSlKW7It
-        AsZofTGKgkeoCRUPjgbk8KhRoZZIKihqggcgMQG0SMpRxQSMSjTqbhehT/PNfNefzA9xVak8
-        BuaYrBxvYnNpeRjRVvfLtWb955T0uK/9GsbuG5Yz19u7ZEzZ71qM6XZXyJmpknbAOPveYEyF
-        s5Ng/nqaFczLR9Ykpb7xWiPQtzgGFHpX/Rm5vv+dR66fci3eJdsbviGTtR5Jy8k26TbtDzcE
-        PrwBeTfiCp85S2U2YNMVAyVEVALqeV2lKAZhUEX1AlTytF4mXToBah/xEMUAQjm1ARW/V4iG
-        aGo5qmzw4aIGpy4RyHYzIBeJKGoLOtV3XiaJtiL327czOBE1DXuDGoJahmpedxEiJqlUNPWg
-        aabsCUA9k4Fgg5JaiQYC34NmQC1CZ2wTmIhxSo1c/h8yaWwK1Xhe4RKej8Y+/Zl5p1HrtC84
-        NC7k3HbrJGsSqun9opDwElR21qeQZohEz8uHiQtggSOkwTHndoS4HSFuR4j7BpDVA2Rkc3Kz
-        WSsXr+W5fC1vNhiF44DZ6ALS/35rBn+927wAg8ALFkKMnk9ODqakq+ZlmrOKDKzFkMHn53IW
-        L0AQp6PJHert6Soyiy06yvHm/5QGErSaXO67uE9FiV2HOS6P4/+zsRDSiDwREEIjeS6bKzyY
-        k2udozGoFMPDYqItnCmL49l8qyFDXJAMi7AhIhUh9FaPC3bSkscahVfJ+gKshhfGrlbhsP2q
-        swpXESaziYtRk/dGBSklSg35ptmicaCGgI4ir4hBEcKSz+aMCxWYUPE1KlhhZeeoGBs451w/
-        +XjP0N2dE/42u6bxzkBcbbmuYLU7me4YKtdV9B6vg1REwubOBNNDy+WuA4neFbLWW0c197Wn
-        7SfDNxX4htdSg1lLqn/ybi4tofWjanA/rx+JS106PardFr6uqGN3UsG0X1N7kU+2v/J3d1em
-        aA81h21pwKzOho3HWmLbaMJiYONX4byF/QcP7sfqoQMAAA==
+In-Reply-To: <1581865141.3.3@crapouillou.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW9ybmluZyBSb2IsDQoNCk9uIFR1ZSwgMjAyMC0wMi0xOCBhdCAxNDoyMSAtMDYwMCwgUm9iIEhl
-cnJpbmcgd3JvdGU6DQo+IE9uIEZyaSwgMTQgRmViIDIwMjAgMDk6MzY6NDcgKzAyMDAsIE1hdHRp
-IFZhaXR0aW5lbiB3cm90ZToNCj4gPiBUaGUgUk9ITSBCRDk5OTU0IGlzIGEgQmF0dGVyeSBNYW5h
-Z2VtZW50IExTSSBmb3IgMS00IGNlbGwgTGl0aGl1bS0NCj4gPiBJb24NCj4gPiBzZWNvbmRhcnkg
-YmF0dGVyeS4gSW50ZW5kZWQgdG8gYmUgdXNlZCBpbiBzcGFjZS1jb25zdHJhaW50DQo+ID4gZXF1
-aXBtZW50IHN1Y2gNCj4gPiBhcyBMb3cgcHJvZmlsZSBOb3RlYm9vayBQQywgVGFibGV0cyBhbmQg
-b3RoZXIgYXBwbGljYXRpb25zLiBCRDk5OTU0DQo+ID4gcHJvdmlkZXMgYSBEdWFsLXNvdXJjZSBC
-YXR0ZXJ5IENoYXJnZXIsIHR3byBwb3J0IEJDMS4yIGRldGVjdGlvbg0KPiA+IGFuZCBhDQo+ID4g
-QmF0dGVyeSBNb25pdG9yLg0KPiA+IA0KPiA+IERvY3VtZW50IHRoZSBEVCBiaW5kaW5ncyBmb3Ig
-QkQ5OTk1NA0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGku
-dmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IEl0IHdvdWxk
-IHByb2JhYmx5IGJlIG5pY2UgaWYgdGhlIGNoYXJnZXIgRFQgYmluZGluZyB5YW1sIGNvdWxkDQo+
-ID4gc29tZWhvdw0KPiA+IGJlIGxpc3RpbmcgYW5kIGV2YWx1YXRpbmcgcHJvcGVydGllcyB0aGF0
-IGl0IGNhbiB1c2UgZnJvbSBzdGF0aWMNCj4gPiBiYXR0ZXJ5DQo+ID4gbm9kZXMgLSBhbmQgcGVy
-aGFwcyBzb21lIHdhcm5pbmcgY291bGQgYmUgZW1pdHRlZCBpZiB1bnN1cHBvcnRlZA0KPiA+IHBy
-b3BlcnRpZXMgYXJlIGdpdmVuIGZyb20gYmF0dGVyeSBub2Rlcyg/KSBKdXN0IHNvbWUgdGhpbmtp
-bmcgaGVyZS4NCj4gPiBXaGF0IGlmIHRoZSBjaGFyZ2VyIGlnbm9yZXMgZm9yIGV4YW1wbGUgdGhl
-IGN1cnJlbnQgbGltaXRzIGZyb20NCj4gPiBiYXR0ZXJ5DQo+ID4gbm9kZSAoSSBhbSBub3Qgc3Vy
-ZSBidXQgSSB0aGluayBhIGZldyBtYXkgaWdub3JlKSAtIEkgZ3Vlc3MgaXQNCj4gPiB3b3VsZCBi
-ZQ0KPiA+IG5pY2UgdG8gZ2l2ZSBhIG51ZGdlIHRvIGEgcGVyc29uIHdobyBhZGRlZCB0aG9zZSBw
-cm9wZXJ0aWVzIGluIGhpcw0KPiA+IERUDQo+ID4gaWYgdGhleSB3b24ndCBoYXZlIGFueSBpbXBh
-Y3Q/IEFueSB0aG91Z2h0cz8NCj4gPiANCj4gPiAgLi4uL2JpbmRpbmdzL3Bvd2VyL3N1cHBseS9y
-b2htLGJkOTk5NXgueWFtbCAgIHwgMTY3DQo+ID4gKysrKysrKysrKysrKysrKysrDQo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxNjcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQN
-Cj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvc3VwcGx5L3JvaG0s
-YmQ5OTk1eC55YW1sDQo+ID4gDQo+IA0KPiBNeSBib3QgZm91bmQgZXJyb3JzIHJ1bm5pbmcgJ21h
-a2UgZHRfYmluZGluZ19jaGVjaycgb24geW91ciBwYXRjaDoNCg0KT3VjaCAuLi4gc29ycnkuIFRo
-ZXJlIGlzIHNvbWUgbGVmdG92ZXIgYmxvY2sgZnJvbSBhbm90aGVyIHRleHQgYmFzZWQNCmJpbmRp
-bmcgZG9jdW1lbnQgd2hpY2ggSSB1c2VkIGFzIGFuIGV4YW1wbGUgd2hpbGUgd3JpdGluZyBvdXQg
-dGhlDQpiYXR0ZXJ5IHBhcmFtZXRlcnMgQkQ5OTk1NCB1c2VzLg0KDQpUaGVyZSdzIHR3byBvdGhl
-ciBoaWNjdXBzIHdoZW4gSSB0cnkgcnVubmluZyBtYWtlIGR0X2JpbmRpbmdfY2hlY2suIEkNCmFz
-c3VtZSB0aGV5IGFyZSBmYWxzZSBwb3NpdGl2ZXMuDQoNCjxTSURFIE5PVEU+DQpBbHRob3VnaC4u
-LiBCYWNrIGluIG15IE5va2lhIGRheXMgSSBqb2luZWQgaW4gYSB0cmFpbmVyLXRyYWluaW5nLiBJ
-IGhhZA0KZXhjZWxsZW50IEJyaXRpc2ggY29hY2ggLSBHcmFoYW0gaWYgSSByZW1lbWJlciBjb3Jy
-ZWN0bHkgLSB3aG8gdG9sZCB1cw0KbmV2ZXIgdG8gYXNzdW1lLiBIZSBleHBsYWluZWQgd2hlcmUg
-d29yZCBhc3MtdS1tZSBjb21lcyBmcm9tLiBJIGNhbg0Kc3RpbGwgaGVhciBoaXMgdmVyeSBCcml0
-aXNoIGFjY2VudDogIkl0IG1ha2VzIGFuIGFzcyBvdXQgb2YgdSBhbmQgbWUiLg0KSSBzdGlsbCBk
-byBzbyB0aG91Z2guIEknbSBub3QgbGVhcm5pbmcgZWFzaWx5IGl0IHNlZW1zLg0KPC9TSURFIE5P
-VEU+DQoNCjEuIEl0IHNlZW1zIHRvIG1lIHRoZSBtdWx0aXBsZU9mOiBpcyBub3QgcmVjb2duaXpl
-ZC4gSSBndWVzcyBpdA0Kc2hvdWxkKD8pIEkgd2lsbCBjb21tZW50IGl0IG91dCBpbiB2MyB0aG91
-Z2ggdW50aWwgSSBnZXQgY29uZmlybWF0aW9uDQppdCBzaG91bGQgd29yay4NCg0KMi4gc2NoZW1h
-IHZhbGlkYXRpb24gZm9yOg0KDQogIHJvaG0sdnN5cy1yZWd1bGF0aW9uLW1pY3Jvdm9sdDoNCiAg
-ICBkZXNjcmlwdGlvbjogc3lzdGVtIHNwZWNpZmljIGxvd2VyIGxpbWl0IGZvciBzeXN0ZW0gdm9s
-dGFnZS4NCiAgICBtaW5pbXVtOiAyNTYwMDAwDQogICAgbWF4aW11bTogMTkyMDAwMDANCiAgICAj
-bXVsdGlwbGVPZjogNjQwMDANCg0KZmFpbHMuIEJ1dCB3aGVuIEkgY2hhbmdlIHRoaXMgdG8NCiAg
-cm9obSx2c3lzLXJlZ3VsYXRpb24tbWljcm92b2x0czogKHBsdXJhbCkNCml0IHNlZW1zIHRvIGJl
-IHBhc3NpbmcgdGhlIHZhbGlkYXRpb24uIEEgZ2l0IGdyZXAgdW5kZXINCkRvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncyByZXZlYWxzIHRoYXQgYm90aCBwbHVyYWwgYW5kIHNpbmd1bGFy
-DQphcmUgdXNlZCAtIGJ1dCB0aGUgc2luZ3VsYXIgc2VlbXMgdG8gYmUgZmFyIG1vcmUgcG9wdWxh
-ciB0aGFuIHBsdXJhbC4NCkl0IGFsc28gbG9va3MgbGlrZSB0aGUgJ2NvcmUgYmluZGluZ3MnIGxp
-a2UgcmVndWxhdG9ycyB1c2Ugc2luZ3VsYXIuDQpIZW5jZSBJJ2xsIGxlYXZlIHRoaXMgdG8gc2lu
-Z3VsYXIgZm9yIHYzIGV2ZW4gdGhvdWdoIGl0IGZhaWxzIHRoZQ0KdmFsaWRhdGlvbiAtIHBsZWFz
-ZSBsZXQgbWUga25vdyBpZiB0aGlzIHdhcyB3cm9uZyBjaG9pY2Ugb3IgaWYgeW91IHNwb3QNCmFu
-eSBvdGhlciBvZGRpdGllcyB0aGVyZS4gSSBjYW4ndCBzZWUgd2hhdCBlbHNlIGl0IGNvdWxkIGJl
-IGJ1dCBmb3INCnNvbWUgcmVhc29uIEkgc3RpbGwgZmluZCB0aGlzIHlhbWwgdGVycmlibHkgaGFy
-ZCA6KA0KDQpIbW0uLiBJIHdvbmRlciBpZiBJIGhhdmUgc29tZSBvbGQgY2hlY2tlciB0b29scyBp
-bnN0YWxsZWQgYW5kIHVzZWQgb24NCm15IFBDPyBJIGFsc28gZ2V0IHZhbGlkYXRpb24gZmFpbHVy
-ZXMgZm9yIHRoZSBleGFtcGxlIHNjaGVtYXMgOi8NCg0KPiB3YXJuaW5nOiBubyBzY2hlbWEgZm91
-bmQgaW4gZmlsZToNCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1
-cHBseS9yb2htLGJkOTk5NXgueWFtbA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtDQo+
-IHJldmlldy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvc3VwcGx5L3Jv
-aG0sYmQ5OTk1eC55YQ0KPiBtbDogaWdub3JpbmcsIGVycm9yIHBhcnNpbmcgZmlsZQ0KPiBEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaW1wbGUtDQo+IGZyYW1lYnVm
-ZmVyLmV4YW1wbGUuZHRzOjIxLjE2LTM3LjExOiBXYXJuaW5nIChjaG9zZW5fbm9kZV9pc19yb290
-KToNCj4gL2V4YW1wbGUtMC9jaG9zZW46IGNob3NlbiBub2RlIG11c3QgYmUgYXQgcm9vdCBub2Rl
-DQo+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBwbHkvcm9obSxi
-ZDk5OTV4LnlhbWw6ICB3aA0KPiBpbGUgc2Nhbm5pbmcgYSBzaW1wbGUga2V5DQo+ICAgaW4gIjx1
-bmljb2RlIHN0cmluZz4iLCBsaW5lIDI5LCBjb2x1bW4gMw0KPiBjb3VsZCBub3QgZmluZCBleHBl
-Y3RlZCAnOicNCj4gICBpbiAiPHVuaWNvZGUgc3RyaW5nPiIsIGxpbmUgMzAsIGNvbHVtbiAxDQo+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9NYWtlZmlsZToxMjogcmVjaXBlIGZv
-ciB0YXJnZXQNCj4gJ0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9zdXBw
-bHkvcm9obSxiZDk5OTV4LmV4YW1wbGUuDQo+IGR0cycgZmFpbGVkDQo+IG1ha2VbMV06ICoqKg0K
-PiBbRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3N1cHBseS9yb2htLGJk
-OTk5NXguZXhhbXBsZS4NCj4gZHRzXSBFcnJvciAxDQo+IE1ha2VmaWxlOjEyNjM6IHJlY2lwZSBm
-b3IgdGFyZ2V0ICdkdF9iaW5kaW5nX2NoZWNrJyBmYWlsZWQNCj4gbWFrZTogKioqIFtkdF9iaW5k
-aW5nX2NoZWNrXSBFcnJvciAyDQo+IA0KPiBTZWUgaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9y
-Zy9wYXRjaC8xMjM3OTAyDQo+IFBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0Lg0KDQpJIGhhdmUg
-dGhlIFJGQyB2MyBhbG1vc3QgZmluaXNoZWQuIEhvcGUgdG8gZmluZCB0aGUgdGltZSB0byBmaW5p
-c2ggYW5kDQpzdWJtaXQgaXQgc3RpbGwgdG9kYXkgOikNCg0KVGhhbmtzIGFuZCByZWdhcmRzDQoJ
-TWF0dGkNCg0K
+Hi Paul,
+
+On 2020年02月16日 22:59, Paul Cercueil wrote:
+> Hi Zhou,
+>
+>
+> Le dim., févr. 16, 2020 at 02:55, 周琰杰 (Zhou Yanjie) 
+> <zhouyanjie@wanyeetech.com> a écrit :
+>> Forward port smp support from kernel 3.18.3 of CI20_linux
+>> to upstream kernel 5.6.
+>>
+>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Tested-by: Paul Boddie <paul@boddie.org.uk>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>
+>> Notes:
+>>     v1->v2:
+>>     1.Remove unnecessary "plat_irq_dispatch(void)" in irq-ingenic.c.
+>>     2.Add a timeout check for "jz4780_boot_secondary()" to avoid a 
+>> dead loop.
+>>     3.Replace hard code in smp.c with macro.
+>>
+>>     v2->v3:
+>>     1.Remove unnecessary "extern void (*r4k_blast_dcache)(void)" in 
+>> smp.c.
+>>     2.Use "for_each_of_cpu_node" instead "for_each_compatible_node" 
+>> in smp.c.
+>>     3.Use "of_cpu_node_to_id" instead "of_property_read_u32_index" in 
+>> smp.c.
+>>     4.Move LCR related operations to jz4780-cgu.c.
+>>
+>>     v3->v4:
+>>     Rebase on top of kernel 5.6-rc1.
+>>
+>>     v4->v5:
+>>     1.Splitting changes involving "jz4780-cgu.c" into separate commit.
+>>     2.Use "request_irq()" replace "setup_irq()".
+>>
+>>  arch/mips/include/asm/mach-jz4740/jz4780-smp.h |  91 ++++++++
+>>  arch/mips/jz4740/Kconfig                       |   3 +
+>>  arch/mips/jz4740/Makefile                      |   5 +
+>>  arch/mips/jz4740/prom.c                        |   4 +
+>>  arch/mips/jz4740/smp-entry.S                   |  57 +++++
+>>  arch/mips/jz4740/smp.c                         | 283 
+>> +++++++++++++++++++++++++
+>>  arch/mips/kernel/idle.c                        |  14 +-
+>>  7 files changed, 456 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/mips/include/asm/mach-jz4740/jz4780-smp.h
+>>  create mode 100644 arch/mips/jz4740/smp-entry.S
+>>  create mode 100644 arch/mips/jz4740/smp.c
+>>
+>> diff --git a/arch/mips/include/asm/mach-jz4740/jz4780-smp.h 
+>> b/arch/mips/include/asm/mach-jz4740/jz4780-smp.h
+>> new file mode 100644
+>> index 00000000..3f592ce
+>> --- /dev/null
+>> +++ b/arch/mips/include/asm/mach-jz4740/jz4780-smp.h
+>> @@ -0,0 +1,91 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP definitions
+>> + */
+>> +
+>> +#ifndef __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
+>> +#define __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__
+>> +
+>> +#define read_c0_corectrl()        __read_32bit_c0_register($12, 2)
+>> +#define write_c0_corectrl(val) __write_32bit_c0_register($12, 2, val)
+>> +
+>> +#define read_c0_corestatus() __read_32bit_c0_register($12, 3)
+>> +#define write_c0_corestatus(val) __write_32bit_c0_register($12, 3, val)
+>> +
+>> +#define read_c0_reim()            __read_32bit_c0_register($12, 4)
+>> +#define write_c0_reim(val) __write_32bit_c0_register($12, 4, val)
+>> +
+>> +#define read_c0_mailbox0()        __read_32bit_c0_register($20, 0)
+>> +#define write_c0_mailbox0(val) __write_32bit_c0_register($20, 0, val)
+>> +
+>> +#define read_c0_mailbox1()        __read_32bit_c0_register($20, 1)
+>> +#define write_c0_mailbox1(val) __write_32bit_c0_register($20, 1, val)
+>> +
+>> +#define smp_clr_pending(mask) do {        \
+>> +        unsigned int stat;        \
+>> +        stat = read_c0_corestatus();    \
+>> +        stat &= ~((mask) & 0xff);    \
+>> +        write_c0_corestatus(stat);    \
+>> +    } while (0)
+>> +
+>> +/*
+>> + * Core Control register
+>> + */
+>> +#define CORECTRL_SLEEP1M_SHIFT    17
+>> +#define CORECTRL_SLEEP1M    (_ULCAST_(0x1) << CORECTRL_SLEEP1M_SHIFT)
+>> +#define CORECTRL_SLEEP0M_SHIFT    16
+>> +#define CORECTRL_SLEEP0M    (_ULCAST_(0x1) << CORECTRL_SLEEP0M_SHIFT)
+>> +#define CORECTRL_RPC1_SHIFT    9
+>> +#define CORECTRL_RPC1        (_ULCAST_(0x1) << CORECTRL_RPC1_SHIFT)
+>> +#define CORECTRL_RPC0_SHIFT    8
+>> +#define CORECTRL_RPC0        (_ULCAST_(0x1) << CORECTRL_RPC0_SHIFT)
+>> +#define CORECTRL_SWRST1_SHIFT    1
+>> +#define CORECTRL_SWRST1        (_ULCAST_(0x1) << CORECTRL_SWRST1_SHIFT)
+>> +#define CORECTRL_SWRST0_SHIFT    0
+>> +#define CORECTRL_SWRST0        (_ULCAST_(0x1) << CORECTRL_SWRST0_SHIFT)
+>> +
+>> +/*
+>> + * Core Status register
+>> + */
+>> +#define CORESTATUS_SLEEP1_SHIFT    17
+>> +#define CORESTATUS_SLEEP1    (_ULCAST_(0x1) << CORESTATUS_SLEEP1_SHIFT)
+>> +#define CORESTATUS_SLEEP0_SHIFT    16
+>> +#define CORESTATUS_SLEEP0    (_ULCAST_(0x1) << CORESTATUS_SLEEP0_SHIFT)
+>> +#define CORESTATUS_IRQ1P_SHIFT    9
+>> +#define CORESTATUS_IRQ1P    (_ULCAST_(0x1) << CORESTATUS_IRQ1P_SHIFT)
+>> +#define CORESTATUS_IRQ0P_SHIFT    8
+>> +#define CORESTATUS_IRQ0P    (_ULCAST_(0x1) << CORESTATUS_IRQ8P_SHIFT)
+>> +#define CORESTATUS_MIRQ1P_SHIFT    1
+>> +#define CORESTATUS_MIRQ1P    (_ULCAST_(0x1) << CORESTATUS_MIRQ1P_SHIFT)
+>> +#define CORESTATUS_MIRQ0P_SHIFT    0
+>> +#define CORESTATUS_MIRQ0P    (_ULCAST_(0x1) << CORESTATUS_MIRQ0P_SHIFT)
+>> +
+>> +/*
+>> + * Reset Entry & IRQ Mask register
+>> + */
+>> +#define REIM_ENTRY_SHIFT    16
+>> +#define REIM_ENTRY        (_ULCAST_(0xffff) << REIM_ENTRY_SHIFT)
+>> +#define REIM_IRQ1M_SHIFT    9
+>> +#define REIM_IRQ1M        (_ULCAST_(0x1) << REIM_IRQ1M_SHIFT)
+>> +#define REIM_IRQ0M_SHIFT    8
+>> +#define REIM_IRQ0M        (_ULCAST_(0x1) << REIM_IRQ0M_SHIFT)
+>> +#define REIM_MBOXIRQ1M_SHIFT    1
+>> +#define REIM_MBOXIRQ1M        (_ULCAST_(0x1) << REIM_MBOXIRQ1M_SHIFT)
+>> +#define REIM_MBOXIRQ0M_SHIFT    0
+>> +#define REIM_MBOXIRQ0M        (_ULCAST_(0x1) << REIM_MBOXIRQ0M_SHIFT)
+>> +
+>> +#ifdef CONFIG_SMP
+>> +
+>> +extern void jz4780_smp_wait_irqoff(void);
+>> +
+>> +extern void jz4780_smp_init(void);
+>> +extern void jz4780_secondary_cpu_entry(void);
+>> +
+>> +#else /* !CONFIG_SMP */
+>> +
+>> +static inline void jz4780_smp_init(void) { }
+>> +
+>> +#endif /* !CONFIG_SMP */
+>> +
+>> +#endif /* __MIPS_ASM_MACH_JZ4740_JZ4780_SMP_H__ */
+>> diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
+>> index 412d2fa..0239597 100644
+>> --- a/arch/mips/jz4740/Kconfig
+>> +++ b/arch/mips/jz4740/Kconfig
+>> @@ -34,9 +34,12 @@ config MACH_JZ4770
+>>
+>>  config MACH_JZ4780
+>>      bool
+>> +    select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+>>      select MIPS_CPU_SCACHE
+>> +    select NR_CPUS_DEFAULT_2
+>>      select SYS_HAS_CPU_MIPS32_R2
+>>      select SYS_SUPPORTS_HIGHMEM
+>> +    select SYS_SUPPORTS_SMP
+>>
+>>  config MACH_X1000
+>>      bool
+>> diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+>> index 6de14c0..0a0f024 100644
+>> --- a/arch/mips/jz4740/Makefile
+>> +++ b/arch/mips/jz4740/Makefile
+>> @@ -12,3 +12,8 @@ CFLAGS_setup.o = -I$(src)/../../../scripts/dtc/libfdt
+>>  # PM support
+>>
+>>  obj-$(CONFIG_PM) += pm.o
+>> +
+>> +# SMP support
+>> +
+>> +obj-$(CONFIG_SMP) += smp.o
+>> +obj-$(CONFIG_SMP) += smp-entry.o
+>> diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
+>> index ff4555c..a79159e 100644
+>> --- a/arch/mips/jz4740/prom.c
+>> +++ b/arch/mips/jz4740/prom.c
+>> @@ -8,10 +8,14 @@
+>>
+>>  #include <asm/bootinfo.h>
+>>  #include <asm/fw/fw.h>
+>> +#include <asm/mach-jz4740/jz4780-smp.h>
+>>
+>>  void __init prom_init(void)
+>>  {
+>>      fw_init_cmdline();
+>> +#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
+>> +    jz4780_smp_init();
+>> +#endif
+>
+> You should not check for defined(CONFIG_MACH_JZ4780), because that 
+> means you cannot have a kernel that works on multiple SoCs at the same 
+> time. Instead, check the value of "mips_machtype".
+
+Sure, I will change it in next version.
+
+Thanks and best regards!
+
+>
+> -Paul
+>
+>>  }
+>>
+>>  void __init prom_free_prom_memory(void)
+>> diff --git a/arch/mips/jz4740/smp-entry.S b/arch/mips/jz4740/smp-entry.S
+>> new file mode 100644
+>> index 00000000..20049a3
+>> --- /dev/null
+>> +++ b/arch/mips/jz4740/smp-entry.S
+>> @@ -0,0 +1,57 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP entry point
+>> + */
+>> +
+>> +#include <asm/addrspace.h>
+>> +#include <asm/asm.h>
+>> +#include <asm/asmmacro.h>
+>> +#include <asm/cacheops.h>
+>> +#include <asm/mipsregs.h>
+>> +
+>> +#define CACHE_SIZE (32 * 1024)
+>> +#define CACHE_LINESIZE 32
+>> +
+>> +.extern jz4780_cpu_entry_sp
+>> +.extern jz4780_cpu_entry_gp
+>> +
+>> +.section .text.smp-entry
+>> +.balign 0x10000
+>> +.set noreorder
+>> +LEAF(jz4780_secondary_cpu_entry)
+>> +    mtc0    zero, CP0_CAUSE
+>> +
+>> +    li    t0, ST0_CU0
+>> +    mtc0    t0, CP0_STATUS
+>> +
+>> +    /* cache setup */
+>> +    li    t0, KSEG0
+>> +    ori    t1, t0, CACHE_SIZE
+>> +    mtc0    zero, CP0_TAGLO, 0
+>> +1:    cache    Index_Store_Tag_I, 0(t0)
+>> +    cache    Index_Store_Tag_D, 0(t0)
+>> +    bne    t0, t1, 1b
+>> +     addiu    t0, t0, CACHE_LINESIZE
+>> +
+>> +    /* kseg0 cache attribute */
+>> +    mfc0    t0, CP0_CONFIG, 0
+>> +    ori    t0, t0, CONF_CM_CACHABLE_NONCOHERENT
+>> +    mtc0    t0, CP0_CONFIG, 0
+>> +
+>> +    /* pagemask */
+>> +    mtc0    zero, CP0_PAGEMASK, 0
+>> +
+>> +    /* retrieve sp */
+>> +    la    t0, jz4780_cpu_entry_sp
+>> +    lw    sp, 0(t0)
+>> +
+>> +    /* retrieve gp */
+>> +    la    t0, jz4780_cpu_entry_gp
+>> +    lw    gp, 0(t0)
+>> +
+>> +    /* jump to the kernel in kseg0 */
+>> +    la    t0, smp_bootstrap
+>> +    jr    t0
+>> +     nop
+>> +    END(jz4780_secondary_cpu_entry)
+>> diff --git a/arch/mips/jz4740/smp.c b/arch/mips/jz4740/smp.c
+>> new file mode 100644
+>> index 00000000..826fd0f
+>> --- /dev/null
+>> +++ b/arch/mips/jz4740/smp.c
+>> @@ -0,0 +1,283 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + *  Copyright (C) 2013, Paul Burton <paul.burton@imgtec.com>
+>> + *  JZ4780 SMP
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/of.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/sched/task_stack.h>
+>> +#include <linux/smp.h>
+>> +#include <linux/tick.h>
+>> +#include <asm/mach-jz4740/jz4780-smp.h>
+>> +#include <asm/r4kcache.h>
+>> +#include <asm/smp-ops.h>
+>> +
+>> +static struct clk *cpu_clock_gates[CONFIG_NR_CPUS] = { NULL };
+>> +
+>> +u32 jz4780_cpu_entry_sp;
+>> +u32 jz4780_cpu_entry_gp;
+>> +
+>> +static struct cpumask cpu_running;
+>> +
+>> +static DEFINE_SPINLOCK(smp_lock);
+>> +
+>> +/*
+>> + * The Ingenic jz4780 SMP variant has to write back dirty cache 
+>> lines before
+>> + * executing wait. The CPU & cache clock will be gated until we 
+>> return from
+>> + * the wait, and if another core attempts to access data from our 
+>> data cache
+>> + * during this time then it will lock up.
+>> + */
+>> +void jz4780_smp_wait_irqoff(void)
+>> +{
+>> +    unsigned long pending = read_c0_cause() & read_c0_status() & 
+>> CAUSEF_IP;
+>> +
+>> +    /*
+>> +     * Going to idle has a significant overhead due to the cache 
+>> flush so
+>> +     * try to avoid it if we'll immediately be woken again due to an 
+>> IRQ.
+>> +     */
+>> +    if (!need_resched() && !pending) {
+>> +        r4k_blast_dcache();
+>> +
+>> +        __asm__(
+>> +        "    .set push    \n"
+>> +        "    .set mips3    \n"
+>> +        "    sync        \n"
+>> +        "    wait        \n"
+>> +        "    .set pop    \n");
+>> +    }
+>> +
+>> +    local_irq_enable();
+>> +}
+>> +
+>> +static irqreturn_t mbox_handler(int irq, void *dev_id)
+>> +{
+>> +    int cpu = smp_processor_id();
+>> +    u32 action, status;
+>> +
+>> +    spin_lock(&smp_lock);
+>> +
+>> +    switch (cpu) {
+>> +    case 0:
+>> +        action = read_c0_mailbox0();
+>> +        write_c0_mailbox0(0);
+>> +        break;
+>> +    case 1:
+>> +        action = read_c0_mailbox1();
+>> +        write_c0_mailbox1(0);
+>> +        break;
+>> +    default:
+>> +        panic("unhandled cpu %d!", cpu);
+>> +    }
+>> +
+>> +    /* clear pending mailbox interrupt */
+>> +    status = read_c0_corestatus();
+>> +    status &= ~(CORESTATUS_MIRQ0P << cpu);
+>> +    write_c0_corestatus(status);
+>> +
+>> +    spin_unlock(&smp_lock);
+>> +
+>> +    if (action & SMP_RESCHEDULE_YOURSELF)
+>> +        scheduler_ipi();
+>> +    if (action & SMP_CALL_FUNCTION)
+>> +        generic_smp_call_function_interrupt();
+>> +
+>> +    return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void jz4780_smp_setup(void)
+>> +{
+>> +    u32 addr, reim;
+>> +    int cpu;
+>> +
+>> +    reim = read_c0_reim();
+>> +
+>> +    for (cpu = 0; cpu < NR_CPUS; cpu++) {
+>> +        __cpu_number_map[cpu] = cpu;
+>> +        __cpu_logical_map[cpu] = cpu;
+>> +        set_cpu_possible(cpu, true);
+>> +    }
+>> +
+>> +    /* mask mailbox interrupts for this core */
+>> +    reim &= ~REIM_MBOXIRQ0M;
+>> +    write_c0_reim(reim);
+>> +
+>> +    /* clear mailboxes & pending mailbox IRQs */
+>> +    write_c0_mailbox0(0);
+>> +    write_c0_mailbox1(0);
+>> +    write_c0_corestatus(0);
+>> +
+>> +    /* set reset entry point */
+>> +    addr = KSEG1ADDR((u32)&jz4780_secondary_cpu_entry);
+>> +    WARN_ON(addr & ~REIM_ENTRY);
+>> +    reim &= ~REIM_ENTRY;
+>> +    reim |= addr & REIM_ENTRY;
+>> +
+>> +    /* unmask mailbox interrupts for this core */
+>> +    reim |= REIM_MBOXIRQ0M;
+>> +    write_c0_reim(reim);
+>> +    set_c0_status(STATUSF_IP3);
+>> +    irq_enable_hazard();
+>> +
+>> +    cpumask_set_cpu(cpu, &cpu_running);
+>> +}
+>> +
+>> +static void jz4780_smp_prepare_cpus(unsigned int max_cpus)
+>> +{
+>> +    struct device_node *cpu_node;
+>> +    unsigned cpu, ctrl;
+>> +    int err;
+>> +
+>> +    /* setup the mailbox IRQ */
+>> +    err = request_irq(MIPS_CPU_IRQ_BASE + 3, mbox_handler,
+>> +                IRQF_PERCPU | IRQF_NO_THREAD, "core mailbox", NULL);
+>> +    if (err)
+>> +        pr_err("request_irq() on core mailbox failed\n");
+>> +
+>> +    init_cpu_present(cpu_possible_mask);
+>> +
+>> +    ctrl = read_c0_corectrl();
+>> +
+>> +    for (cpu = 0; cpu < max_cpus; cpu++) {
+>> +        /* use reset entry point from REIM register */
+>> +        ctrl |= CORECTRL_RPC0 << cpu;
+>> +    }
+>> +
+>> +    for_each_of_cpu_node(cpu_node) {
+>> +        cpu = of_cpu_node_to_id(cpu_node);
+>> +        if (cpu < 0) {
+>> +            pr_err("Failed to read index of %s\n",
+>> +                   cpu_node->full_name);
+>> +            continue;
+>> +        }
+>> +
+>> +        cpu_clock_gates[cpu] = of_clk_get(cpu_node, 0);
+>> +        if (IS_ERR(cpu_clock_gates[cpu])) {
+>> +            cpu_clock_gates[cpu] = NULL;
+>> +            continue;
+>> +        }
+>> +
+>> +        err = clk_prepare(cpu_clock_gates[cpu]);
+>> +        if (err)
+>> +            pr_err("Failed to prepare CPU clock gate\n");
+>> +    }
+>> +
+>> +    write_c0_corectrl(ctrl);
+>> +}
+>> +
+>> +static int jz4780_boot_secondary(int cpu, struct task_struct *idle)
+>> +{
+>> +    unsigned long flags;
+>> +    u32 ctrl;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +
+>> +    /* ensure the core is in reset */
+>> +    ctrl = read_c0_corectrl();
+>> +    ctrl |= CORECTRL_SWRST0 << cpu;
+>> +    write_c0_corectrl(ctrl);
+>> +
+>> +    /* ungate core clock */
+>> +    if (cpu_clock_gates[cpu])
+>> +        clk_enable(cpu_clock_gates[cpu]);
+>> +
+>> +    /* set entry sp/gp register values */
+>> +    jz4780_cpu_entry_sp = __KSTK_TOS(idle);
+>> +    jz4780_cpu_entry_gp = (u32)task_thread_info(idle);
+>> +    smp_wmb();
+>> +
+>> +    /* take the core out of reset */
+>> +    ctrl &= ~(CORECTRL_SWRST0 << cpu);
+>> +    write_c0_corectrl(ctrl);
+>> +
+>> +    cpumask_set_cpu(cpu, &cpu_running);
+>> +
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void jz4780_init_secondary(void)
+>> +{
+>> +}
+>> +
+>> +static void jz4780_smp_finish(void)
+>> +{
+>> +    u32 reim;
+>> +
+>> +    spin_lock(&smp_lock);
+>> +
+>> +    /* unmask mailbox interrupts for this core */
+>> +    reim = read_c0_reim();
+>> +    reim |= REIM_MBOXIRQ0M << smp_processor_id();
+>> +    write_c0_reim(reim);
+>> +
+>> +    spin_unlock(&smp_lock);
+>> +
+>> +    /* unmask interrupts for this core */
+>> +    change_c0_status(ST0_IM, STATUSF_IP3 | STATUSF_IP2 |
+>> +             STATUSF_IP1 | STATUSF_IP0);
+>> +    irq_enable_hazard();
+>> +
+>> +    /* force broadcast timer */
+>> +    tick_broadcast_force();
+>> +}
+>> +
+>> +static void jz4780_send_ipi_single_locked(int cpu, unsigned int action)
+>> +{
+>> +    u32 mbox;
+>> +
+>> +    switch (cpu) {
+>> +    case 0:
+>> +        mbox = read_c0_mailbox0();
+>> +        write_c0_mailbox0(mbox | action);
+>> +        break;
+>> +    case 1:
+>> +        mbox = read_c0_mailbox1();
+>> +        write_c0_mailbox1(mbox | action);
+>> +        break;
+>> +    default:
+>> +        panic("unhandled cpu %d!", cpu);
+>> +    }
+>> +}
+>> +
+>> +static void jz4780_send_ipi_single(int cpu, unsigned int action)
+>> +{
+>> +    unsigned long flags;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +    jz4780_send_ipi_single_locked(cpu, action);
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +}
+>> +
+>> +static void jz4780_send_ipi_mask(const struct cpumask *mask,
+>> +                 unsigned int action)
+>> +{
+>> +    unsigned long flags;
+>> +    int cpu;
+>> +
+>> +    spin_lock_irqsave(&smp_lock, flags);
+>> +
+>> +    for_each_cpu(cpu, mask)
+>> +        jz4780_send_ipi_single_locked(cpu, action);
+>> +
+>> +    spin_unlock_irqrestore(&smp_lock, flags);
+>> +}
+>> +
+>> +static struct plat_smp_ops jz4780_smp_ops = {
+>> +    .send_ipi_single = jz4780_send_ipi_single,
+>> +    .send_ipi_mask = jz4780_send_ipi_mask,
+>> +    .init_secondary = jz4780_init_secondary,
+>> +    .smp_finish = jz4780_smp_finish,
+>> +    .boot_secondary = jz4780_boot_secondary,
+>> +    .smp_setup = jz4780_smp_setup,
+>> +    .prepare_cpus = jz4780_smp_prepare_cpus,
+>> +};
+>> +
+>> +void jz4780_smp_init(void)
+>> +{
+>> +    register_smp_ops(&jz4780_smp_ops);
+>> +}
+>> diff --git a/arch/mips/kernel/idle.c b/arch/mips/kernel/idle.c
+>> index 37f8e78..a406de3 100644
+>> --- a/arch/mips/kernel/idle.c
+>> +++ b/arch/mips/kernel/idle.c
+>> @@ -19,6 +19,10 @@
+>>  #include <asm/idle.h>
+>>  #include <asm/mipsregs.h>
+>>
+>> +#ifdef CONFIG_MACH_JZ4780
+>> +# include <asm/mach-jz4740/jz4780-smp.h>
+>> +#endif
+>> +
+>>  /*
+>>   * Not all of the MIPS CPUs have the "wait" instruction available. 
+>> Moreover,
+>>   * the implementation of the "wait" feature differs between CPU 
+>> families. This
+>> @@ -172,7 +176,6 @@ void __init check_wait(void)
+>>      case CPU_CAVIUM_OCTEON_PLUS:
+>>      case CPU_CAVIUM_OCTEON2:
+>>      case CPU_CAVIUM_OCTEON3:
+>> -    case CPU_XBURST:
+>>      case CPU_LOONGSON32:
+>>      case CPU_XLR:
+>>      case CPU_XLP:
+>> @@ -246,6 +249,15 @@ void __init check_wait(void)
+>>             cpu_wait = r4k_wait;
+>>           */
+>>          break;
+>> +    case CPU_XBURST:
+>> +#if defined(CONFIG_MACH_JZ4780) && defined(CONFIG_SMP)
+>> +        if (NR_CPUS > 1)
+>> +            cpu_wait = jz4780_smp_wait_irqoff;
+>> +        else
+>> +            cpu_wait = r4k_wait;
+>> +#else
+>> +        cpu_wait = r4k_wait;
+>> +#endif
+>>      default:
+>>          break;
+>>      }
+>> -- 
+>> 2.7.4
+>>
+>
+
