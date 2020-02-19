@@ -2,251 +2,121 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C870BC5ACC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A4CC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F10208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EDE2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIlUYzd/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZp2sja7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgBSXIi (ORCPT
+        id S1726731AbgBSXMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:08:38 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33508 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXIi (ORCPT
+        Wed, 19 Feb 2020 18:12:22 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42764 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:08:38 -0500
-Received: by mail-ot1-f67.google.com with SMTP id w6so1910596otk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 15:08:37 -0800 (PST)
+        Wed, 19 Feb 2020 18:12:21 -0500
+Received: by mail-lj1-f195.google.com with SMTP id d10so2161859ljl.9;
+        Wed, 19 Feb 2020 15:12:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+b/hnzT2EVX6PsP41apCreu0TLShLliK5hvUBXDcdhg=;
-        b=qIlUYzd/1xNdQTWozr3rnyU8nrLQyoqiBCS7An0VMpC+1xLFH+/vQkw0MpeRYPX3kV
-         DMYkRfYvJs4yNdOPs62dxOgs0L0eJTu/Kn5rfdZz4c2nN4aRvBSbol5Rd5ltHkWE2j/r
-         DHJKOv3OxVQfbCyg49Ja1bbxVoV5AJBbe0QN+iqpdt1pygJCis+5/wnc2VAuIp2Rudxp
-         K28hrmMkh3mpLyFNVv2bFwANNfaM6JMFhcqkhWu8jZJVlNhETSr78kdLxgpz8aLH49UG
-         FnEAH7GZ4+M6lrxmZ7Uphk+aNvThaOx45Bj7DcXlwmqFY2aYKMp3S62d+FmsPvyrYAj5
-         SOEg==
+        bh=wWdZgMsswVvJQU2MierpIWKnEFD04FeEgnx6asgVYnI=;
+        b=WZp2sja7wA3CR4NIL6OyZNdn7QmZHOUFWiYV+dkja9uSHKew/+bKSEoWrRnL4FOiqN
+         NGKZ4lkj83ixJoxxqYMgH7q+tRSNqs/cV0YQugYHYC6+zecrm6XFLsvmzH/6VoY2M6DH
+         YNyynBe/YBVf54qhOuBgRSG0BduKg2rd+Gi9nZfJ+ShsciOYfrDHTibht+8oGOG8wO2i
+         C6Mmp0pSF3V8ndb4C8RNL5DKFVNkzFNa4ps+1Uswgqj7AgLHsbDJUrCqc/ZnY1fnbNkT
+         TFIojIeyAX77RzBMv0GTNM7oCJsteTdQAglUGUpH1pvd7ycS+nb4V0fsW8NgEVIWhmIY
+         iydg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+b/hnzT2EVX6PsP41apCreu0TLShLliK5hvUBXDcdhg=;
-        b=VLO2jIIU6j784nzEeBEvIjqY5MMGP5wIjSrwO5D+OX4HZn1e7OS6oVLUdrolMs5nke
-         29T/JVJ0POJSV9Sb2/HSv9z89Ra4j0GX602lJrUizJHeVDixUzCb26+1YTLF/IZrGUsG
-         tQ9dBGqFYx5PmcUtDzxRUzqq7e8eKuAx+NoRAYeY8/JfJZDJ9RF9tJgUlKD3/ny7gez8
-         TmAt9QdmhNDInOTR/I7TO7KqLbkNBz1Rt26K1KDZLbECf0XgsY1ICibsdN8Kz+9eTiFH
-         WuGWmvMIv9uWdNYtZnVAdRYvBn9kwRqaSF+trlxvg3RjD+LfzTlnQYzhyMEvyWRTSK3a
-         Rjog==
-X-Gm-Message-State: APjAAAU5pc+dHM5kPJkyjSu2kXHbQYI8stKlKMZASFEeMG8BvlPdhY9B
-        CIZVj6zexSnNTL/in2DLnmbdvV6rAz7LEJ4XAh3vvdgoe20XZA==
-X-Google-Smtp-Source: APXvYqymq8C+IWZykVtXoDYEl/sBsbLdmJzjVdXLfHaGCka/F3YZemVTX4DcJK0wIaWoPsEJf0m8EHdynLmhmXHKNgc=
-X-Received: by 2002:a05:6830:13c3:: with SMTP id e3mr6694844otq.180.1582153717156;
- Wed, 19 Feb 2020 15:08:37 -0800 (PST)
+        bh=wWdZgMsswVvJQU2MierpIWKnEFD04FeEgnx6asgVYnI=;
+        b=IoyEC68NEy2B9YxLveA561cB1QlNGnv9l+4aHQr3/vSr8aCZu540C0hOz3ApJFtd4E
+         maHWFUz5YTZXEVtSqM3kRM129bPQrSuUaDteQXCJRbyJ/2EacT7XRPCN5wXpzzTMvteD
+         w39ZuBWvWofJWMVM/ajfTxEtslUzsjFPQTpXa8f1CM6U2KtVmDrqvEUJK9FMns0Vgdtv
+         /j5444GS1hoVvQLpHN+dvNcXrtUQeNk7zUD6Mx5p+WiM1mDEb1slua+tUI0WvDOWtdnQ
+         O6uW/UCbG+5HxwEFAbDfOT6wSJSdDvIWEYR7kiQHARlzx4VgvSuIOOFtP28JaVCQ7KN9
+         5swA==
+X-Gm-Message-State: APjAAAWukbffjjmctfRkVxE6NfHQUOI3IuSmGTGQrO+uwJNtuSIduaQd
+        GCXPJ6zE524VyvNMplzo+VoRCRCH/+XCA84rt3Y=
+X-Google-Smtp-Source: APXvYqwPuJO1pn4qVz8SRf9ExBqbylkQAOl355R6sC3iaV5KVqsifvyxlpaZ5kyrxsscgSt0NeEvY1Pp6dOu7d2MFu8=
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr17395927ljh.138.1582153938706;
+ Wed, 19 Feb 2020 15:12:18 -0800 (PST)
 MIME-Version: 1.0
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
- <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
-In-Reply-To: <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 20 Feb 2020 00:08:11 +0100
-Message-ID: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com>
-Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
+References: <20200218172552.215077-1-brianvv@google.com> <c31be4c5-d4c7-5979-215e-de23b9ca0549@fb.com>
+In-Reply-To: <c31be4c5-d4c7-5979-215e-de23b9ca0549@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Feb 2020 15:12:06 -0800
+Message-ID: <CAADnVQJofPTYg73qoY6e-SwgyrtqPwU9JKx8DQ-9+L_uW6=X9g@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf] bpf: Do not grab the bucket spinlock by default on
+ htab batch ops
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Brian Vazquez <brianvv@google.com>,
+        Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 6:07 PM David Howells <dhowells@redhat.com> wrote:
-> Add a superblock event notification facility whereby notifications about
-> superblock events, such as I/O errors (EIO), quota limits being hit
-> (EDQUOT) and running out of space (ENOSPC) can be reported to a monitoring
-> process asynchronously.  Note that this does not cover vfsmount topology
-> changes.  watch_mount() is used for that.
-[...]
-> @@ -354,6 +356,10 @@ void deactivate_locked_super(struct super_block *s)
->  {
->         struct file_system_type *fs = s->s_type;
->         if (atomic_dec_and_test(&s->s_active)) {
-> +#ifdef CONFIG_SB_NOTIFICATIONS
-> +               if (s->s_watchers)
-> +                       remove_watch_list(s->s_watchers, s->s_unique_id);
-> +#endif
->                 cleancache_invalidate_fs(s);
->                 unregister_shrinker(&s->s_shrink);
->                 fs->kill_sb(s);
-[...]
-> +/**
-> + * sys_watch_sb - Watch for superblock events.
-> + * @dfd: Base directory to pathwalk from or fd referring to superblock.
-> + * @filename: Path to superblock to place the watch upon
-> + * @at_flags: Pathwalk control flags
-> + * @watch_fd: The watch queue to send notifications to.
-> + * @watch_id: The watch ID to be placed in the notification (-1 to remove watch)
-> + */
-> +SYSCALL_DEFINE5(watch_sb,
-> +               int, dfd,
-> +               const char __user *, filename,
-> +               unsigned int, at_flags,
-> +               int, watch_fd,
-> +               int, watch_id)
-> +{
-> +       struct watch_queue *wqueue;
-> +       struct super_block *s;
-> +       struct watch_list *wlist = NULL;
-> +       struct watch *watch = NULL;
-> +       struct path path;
-> +       unsigned int lookup_flags =
-> +               LOOKUP_DIRECTORY | LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
-> +       int ret;
-[...]
-> +       wqueue = get_watch_queue(watch_fd);
-> +       if (IS_ERR(wqueue))
-> +               goto err_path;
-> +
-> +       s = path.dentry->d_sb;
-> +       if (watch_id >= 0) {
-> +               ret = -ENOMEM;
-> +               if (!s->s_watchers) {
+On Tue, Feb 18, 2020 at 1:23 PM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 2/18/20 9:25 AM, Brian Vazquez wrote:
+> > Grabbing the spinlock for every bucket even if it's empty, was causing
+> > significant perfomance cost when traversing htab maps that have only a
+> > few entries. This patch addresses the issue by checking first the
+> > bucket_cnt, if the bucket has some entries then we go and grab the
+> > spinlock and proceed with the batching.
+> >
+> > Tested with a htab of size 50K and different value of populated entries.
+> >
+> > Before:
+> >    Benchmark             Time(ns)        CPU(ns)
+> >    ---------------------------------------------
+> >    BM_DumpHashMap/1       2759655        2752033
+> >    BM_DumpHashMap/10      2933722        2930825
+> >    BM_DumpHashMap/200     3171680        3170265
+> >    BM_DumpHashMap/500     3639607        3635511
+> >    BM_DumpHashMap/1000    4369008        4364981
+> >    BM_DumpHashMap/5k     11171919       11134028
+> >    BM_DumpHashMap/20k    69150080       69033496
+> >    BM_DumpHashMap/39k   190501036      190226162
+> >
+> > After:
+> >    Benchmark             Time(ns)        CPU(ns)
+> >    ---------------------------------------------
+> >    BM_DumpHashMap/1        202707         200109
+> >    BM_DumpHashMap/10       213441         210569
+> >    BM_DumpHashMap/200      478641         472350
+> >    BM_DumpHashMap/500      980061         967102
+> >    BM_DumpHashMap/1000    1863835        1839575
+> >    BM_DumpHashMap/5k      8961836        8902540
+> >    BM_DumpHashMap/20k    69761497       69322756
+> >    BM_DumpHashMap/39k   187437830      186551111
+> >
+> > Fixes: 057996380a42 ("bpf: Add batch ops to all htab bpf map")
+> > Cc: Yonghong Song <yhs@fb.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+>
+> Thanks for the fix.
+> Acked-by: Yonghong Song <yhs@fb.com>
 
-READ_ONCE() ?
-
-> +                       wlist = kzalloc(sizeof(*wlist), GFP_KERNEL);
-> +                       if (!wlist)
-> +                               goto err_wqueue;
-> +                       init_watch_list(wlist, NULL);
-> +               }
-> +
-> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
-> +               if (!watch)
-> +                       goto err_wlist;
-> +
-> +               init_watch(watch, wqueue);
-> +               watch->id               = s->s_unique_id;
-> +               watch->private          = s;
-> +               watch->info_id          = (u32)watch_id << 24;
-> +
-> +               ret = security_watch_sb(watch, s);
-> +               if (ret < 0)
-> +                       goto err_watch;
-> +
-> +               down_write(&s->s_umount);
-> +               ret = -EIO;
-> +               if (atomic_read(&s->s_active)) {
-> +                       if (!s->s_watchers) {
-> +                               s->s_watchers = wlist;
-> +                               wlist = NULL;
-> +                       }
-> +
-> +                       ret = add_watch_to_object(watch, s->s_watchers);
-> +                       if (ret == 0) {
-> +                               spin_lock(&sb_lock);
-> +                               s->s_count++;
-> +                               spin_unlock(&sb_lock);
-
-Where is the corresponding decrement of s->s_count? I'm guessing that
-it should be in the ->release_watch() handler, except that there isn't
-one...
-
-> +                               watch = NULL;
-> +                       }
-> +               }
-> +               up_write(&s->s_umount);
-> +       } else {
-> +               ret = -EBADSLT;
-> +               if (READ_ONCE(s->s_watchers)) {
-
-(Nit: I don't get why you do a lockless check here before taking the
-lock - it'd be more straightforward to take the lock first, and it's
-not like you want to optimize for the case where someone calls
-sys_watch_sb() with invalid arguments...)
-
-> +                       down_write(&s->s_umount);
-> +                       ret = remove_watch_from_object(s->s_watchers, wqueue,
-> +                                                      s->s_unique_id, false);
-> +                       up_write(&s->s_umount);
-> +               }
-> +       }
-> +
-> +err_watch:
-> +       kfree(watch);
-> +err_wlist:
-> +       kfree(wlist);
-> +err_wqueue:
-> +       put_watch_queue(wqueue);
-> +err_path:
-> +       path_put(&path);
-> +       return ret;
-> +}
-> +#endif
-[...]
-> +/**
-> + * notify_sb: Post simple superblock notification.
-> + * @s: The superblock the notification is about.
-> + * @subtype: The type of notification.
-> + * @info: WATCH_INFO_FLAG_* flags to be set in the record.
-> + */
-> +static inline void notify_sb(struct super_block *s,
-> +                            enum superblock_notification_type subtype,
-> +                            u32 info)
-> +{
-> +#ifdef CONFIG_SB_NOTIFICATIONS
-> +       if (unlikely(s->s_watchers)) {
-
-READ_ONCE() ?
-
-> +               struct superblock_notification n = {
-> +                       .watch.type     = WATCH_TYPE_SB_NOTIFY,
-> +                       .watch.subtype  = subtype,
-> +                       .watch.info     = watch_sizeof(n) | info,
-> +                       .sb_id          = s->s_unique_id,
-> +               };
-> +
-> +               post_sb_notification(s, &n);
-> +       }
-> +
-> +#endif
-> +}
-> +
-> +/**
-> + * notify_sb_error: Post superblock error notification.
-> + * @s: The superblock the notification is about.
-> + * @error: The error number to be recorded.
-> + */
-> +static inline int notify_sb_error(struct super_block *s, int error)
-> +{
-> +#ifdef CONFIG_SB_NOTIFICATIONS
-> +       if (unlikely(s->s_watchers)) {
-
-READ_ONCE() ?
-
-> +               struct superblock_error_notification n = {
-> +                       .s.watch.type   = WATCH_TYPE_SB_NOTIFY,
-> +                       .s.watch.subtype = NOTIFY_SUPERBLOCK_ERROR,
-> +                       .s.watch.info   = watch_sizeof(n),
-> +                       .s.sb_id        = s->s_unique_id,
-> +                       .error_number   = error,
-> +                       .error_cookie   = 0,
-> +               };
-> +
-> +               post_sb_notification(s, &n.s);
-> +       }
-> +#endif
-> +       return error;
-> +}
+Applied. Thanks
