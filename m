@@ -2,151 +2,136 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0624C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AAEC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B75DB21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC2F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="myvt75/w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skzdvmlk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBSJUx (ORCPT
+        id S1726643AbgBSJWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:20:53 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:3710 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726210AbgBSJUw (ORCPT
+        Wed, 19 Feb 2020 04:22:00 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:44466 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbgBSJV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:20:52 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J9Dklq019115;
-        Wed, 19 Feb 2020 10:20:30 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=drNFQy5Nym5BRpRAJATahkWJTxzhFZMOhGlvwzCfLzo=;
- b=myvt75/wzffVMTxrJAGDUUJara5rP6SUyX1Ms6XdIRUiiVVjeMxAPz/nTFe/fmY+/jVF
- sQ2EKRrNZrSBJDqV8isAI9U9vqcI36UMqlb9cHIuaBaaX1xV0zLkqKCrR+VGn05UIdCP
- 258g8FeQWS2kNCJLnwNf/lDzlOz2HwT/ajbv+m8XkRbj9QnrF5YwZVzDEQFggM9cMf+f
- QF/L8eGg1kFPIKd6f38bioUViLibtSCavrboGVFuxaoW8dguCQBY9bwb5iXsKkqIntn6
- TCwB9Rf+Q8KbeEk3zXhSWm09GFHWSnDhnPOyNTzHazMlWzPi1qFROQM0wWJCDImsvENW 2Q== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub020hm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 10:20:30 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AB05B100039;
-        Wed, 19 Feb 2020 10:20:27 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9657D2A6C79;
-        Wed, 19 Feb 2020 10:20:27 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.46) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
- 2020 10:20:26 +0100
-Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
-To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
- <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
- <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
-Date:   Wed, 19 Feb 2020 10:20:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 04:21:59 -0500
+Received: by mail-ot1-f66.google.com with SMTP id h9so22419176otj.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:21:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jnk001kHHnMJZPh5284on/H7ZVuekrqsnplVhw3qKG4=;
+        b=skzdvmlkEwjc+AAGfz8cHX6+KV0Ear7q/T2X/aLZyVNB8hYHhuw7952mIi9a+oHsp2
+         a1qaqaJ4LCcNqSSVeOrMDRc8eCDQ3PQxS8dNBJdz6Jn23OH1JxI0uxCYBe6DfX+c3Wsv
+         BMvlxvoP7fNcpGpjkNUEGOMVNRsOdBPAlrgy+eyisWwxiYxQbtZhI/qyU3ILtNbxWj30
+         XJ7Y5/V1GTnfsI37Rl1wHgxVw8Ow3geprTuNTc9F7LzKNG4Bq3L0gtcPzyJIV6b75eUg
+         jFoCUoEaq29fBnOKzUjWJKft6VdearndY50Bh6pcEV5S8fsxKTzBy/FpQ9saBVoUf2eO
+         DNNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jnk001kHHnMJZPh5284on/H7ZVuekrqsnplVhw3qKG4=;
+        b=RRYdKl3wmOfG5JIlgtvsFFLdWcDWQtQPSqWF4p6kRErI87tZgpg/ppEb4NOEXTUZF1
+         CpC01A3P6CacqH2LNFBTk1tQb3cGFNWxcnVNGP6JRzkzRX8BJ75wvrzhDiksrFhaeOp9
+         heGiRha/jTHfxRWFBrGegdFg4GEycH58tuet3At0gVJTeDY6uAP6gjrjz0moHRhXl/qB
+         E2jCSEPh/DtYNLNYJeFmNDfwnH8OaE2g4kNXmynnqiWSC4Q4HpJ1MBpbhCCzXqszyNDH
+         gg7e+ONCpDch0/0JhcjAMXaP0yNI0pXO2S+fOeJbCt9a/XAxV8ylF96Ht/+Ym/7uQBL+
+         iBQw==
+X-Gm-Message-State: APjAAAXc7GfN402otGU9WZihXGqxowdmi2RL0XxlzjZHOEMinNJB8E4i
+        YztAliUZ1ouG222isE8156OhpWc0lfo23pDEKmi5Mg==
+X-Google-Smtp-Source: APXvYqyJ4nt9+Cb3VvmCUmEkmEWPRJPd34khUiRmOXNDD0rpIaPsxx6hd3bW+kSqhqA60hbPtZDo3MahZ+o5NuJLHog=
+X-Received: by 2002:a9d:7410:: with SMTP id n16mr19494651otk.23.1582104117580;
+ Wed, 19 Feb 2020 01:21:57 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_02:2020-02-19,2020-02-19 signatures=0
+References: <20200219045228.GO23230@ZenIV.linux.org.uk> <EDCBB5B9-DEE4-4D4B-B2F4-F63179977D6C@lca.pw>
+ <20200219052329.GP23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200219052329.GP23230@ZenIV.linux.org.uk>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 19 Feb 2020 10:21:46 +0100
+Message-ID: <CANpmjNM=+y-OwKjtsjsEkwPjpHXpt7ywaE48JyiND6dKt=Vf1Q@mail.gmail.com>
+Subject: Re: [PATCH] fs: fix a data race in i_size_write/i_size_read
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Qian Cai <cai@lca.pw>, Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 19 Feb 2020 at 06:23, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Wed, Feb 19, 2020 at 12:08:40AM -0500, Qian Cai wrote:
+> >
+> >
+> > > On Feb 18, 2020, at 11:52 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > >
+> > > If aligned 64bit stores on 64bit host (note the BITS_PER_LONG ifdefs) end up
+> > > being split, the kernel is FUBAR anyway.  Details, please - how could that
+> > > end up happening?
+> >
+> > My understanding is the compiler might decide to split the load into saying two 4-byte loads. Then, we might have,
+> >
+> > Load1
+> > Store
+> > Load2
+> >
+> > where the load value could be a garbage. Also, Marco (the KCSAN maintainer) who knew more of compiler than me mentioned that there is no guarantee that the store will not be split either. Thus, the WRITE_ONCE().
+> >
 
+In theory, yes. But by now we're aware of the current convention of
+assuming plain aligned writes up to word-size are atomic (which KCSAN
+respects with default Kconfig).
 
-On 2/18/20 7:13 PM, Marek Vasut wrote:
-> On 2/18/20 7:10 PM, Alexandre Torgue wrote:
->> Hi Marek
-> 
-> Hi,
-> 
->> On 2/18/20 5:25 PM, Marek Vasut wrote:
->>> On 2/18/20 2:12 PM, Alexandre Torgue wrote:
->>>> This series adds the possibility to handle gpio interrupts on level.
->>>>
->>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>>> external interrupts only on edge. To be able to handle GPIO interrupt on
->>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>> chip)
->>>> is retriggered following interrupt type and gpio line value.
->>>>
->>>> In exti irq chip, retrigger ops function is added.
->>>
->>> btw. this might be unrelated, but is it possible to have e.g. gpioC2 set
->>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
->>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux selection")
->>> prevents that.
->>>
->>
->> No it's not possible. Each gpio line doesn't have a dedicated Exti line
->> Each Exti line is muxing between gpio banks.
-> 
-> OK, that confirms my assumption.
-> 
->> Mapping is done as following:
->>
->> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
->> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
->> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
->> ...
-> 
-> Is it at least possible to have IRQs of the same type on the same exti
-> line? E.g. gpioA2 of trigger-edge-falling and gpioB2 trigger-edge-falling ?
-> 
+>         I would suggest
+> * if some compiler does that, ask the persons responsible for that
+> "optimization" which flags should be used to disable it.
+> * if they fail to provide such, educate them regarding the
+> usefulness of their idea
+> * if that does not help, don't use the bloody piece of garbage.
+>
+>         Again, is that pure theory (because I can't come up with
+> any reason why splitting a 32bit load would be any less legitimate
+> than doing the same to a 64bit one on a 64bit architecture),
+> or is there anything that really would pull that off?
 
-Sorry I don't catch your point. If you already succeed to get gpioA2, 
-then you will failed to get gpioB2 but looking at function call stack we 
-could get an other issue.
+Right. In reality, for mainstream architectures, it appears quite unlikely.
 
-Lets take example where you succeed to get gpioa2 as interrupt (using 
-interrupt bindings) and now you try to do the same for gpiob2, you will 
-have (roughly):
+There may be other valid reasons, such as documenting the fact the
+write can happen concurrently with loads.
 
-stm32_gpio_irq_request_resources (for gpiob2) --> succeed
+Let's assume the WRITE_ONCE can be dropped.
 
-stm32_gpio_set_type
-  |
-  |--> stm32_exti_set_type type -> change exti line 2 trigger registers
-                                   with gpiob2 binding.
+The load is a different story. While load tearing may not be an issue,
+it's more likely that other optimizations can break the code. For
+example load fusing can break code that expects repeated loads in a
+loop. E.g. I found these uses of i_size_read in loops:
 
-stm32_gpio_domain_activate --> failed as exti line2 is already used
-			       by gpioa2.
+git grep -E '(for|while) \(.*i_size_read'
+fs/ocfs2/dir.c: while (ctx->pos < i_size_read(inode)) {
+fs/ocfs2/dir.c:                 for (i = 0; i < i_size_read(inode) &&
+i < offset; ) {
+fs/ocfs2/dir.c: while (ctx->pos < i_size_read(inode)) {
+fs/ocfs2/dir.c:         while (ctx->pos < i_size_read(inode)
+fs/squashfs/dir.c:      while (length < i_size_read(inode)) {
+fs/squashfs/namei.c:    while (length < i_size_read(dir)) {
 
-So as stm32_gpio_set_type is called before checking than exti line is 
-available, type could be changed and behavior of gpioa2 interrupt broken.
+Can i_size writes happen concurrently, and if so will these break if
+the compiler decides to just do i_size_read's load once, and keep the
+result in a register?
 
-Solution would be to move the exti line mux check from 
-stm32_gpio_domain_activate to  stm32_gpio_irq_request_resources callback.
-
-Regards
-Alex
-
-
-
-
+Thanks,
+-- Marco
