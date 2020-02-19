@@ -2,156 +2,111 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DE9C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31E3C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C152176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D5DA2176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="J38HY+0W"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nb0J2Xyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgBSIHS (ORCPT
+        id S1726651AbgBSIIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:07:18 -0500
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:52911 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726645AbgBSIHR (ORCPT
+        Wed, 19 Feb 2020 03:08:17 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40280 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgBSIIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:07:17 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 4KO0jz8rdP9a94KO3jnHDi; Wed, 19 Feb 2020 09:07:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582099636; bh=4JszDvEP0ShkvbT7hmQQt4q+fEGdViCdhbC3vRlO4Zc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=J38HY+0WBneQ44VTT0ydJAh7tKoDCurI75R2Yed5X3wSgFtGJ7LOIEtbFgZ0tn3b0
-         Lqc3oWtItD82z1/UKatuw2brs5iUpjoZbyHfKn86OfVdKNYKkfsP7TpX+AMpB2maJ3
-         kz4grIBnOwVLKhXUcqeKfLJlmqhxEeOAhPNFk4xbekOB5vR/3EvNMUEHyrJ2Htstw2
-         RQ7Z46RMEzuAXX5H3d7o7KT9S498GjqF9ELEut+LU/iUpfD2Z/Vd6fO2TMWk1tPvxg
-         pF1Pwm+h/96DlRZj5ar5ZOHHam1HgyOrjNVbcwwPyuvxE2ZWPHZjj0ZB/R4lyRDOxQ
-         dv+vYxHShNnuA==
-Subject: Re: [RFC][PATCHv2 02/12] videobuf2: handle V4L2 buffer cache flags
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-3-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <be430540-4b8e-6b44-1eee-9d7291a365be@xs4all.nl>
-Date:   Wed, 19 Feb 2020 09:07:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 03:08:16 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so2204815pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:08:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eDEEn06gGe3wz7Pt5Sy7Iqux/1AIKbtlqlkTn71Oy4k=;
+        b=Nb0J2Xyp5yfAHRANQeHIM9Bhe1mDPndS/8VRCMtVIO7WP2mPoXO7nq0sWc55gXRTfK
+         faA/psEl79dEmvXeFu/v0EqEL7MiOU0dNsB+D97gDKuHmJhxcDJ4lXeJb/HjVRFWehHy
+         ADEkYgAsVtcvH2QNrCYYERUN/CgxqKAr88vWc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eDEEn06gGe3wz7Pt5Sy7Iqux/1AIKbtlqlkTn71Oy4k=;
+        b=BT0n1GmSBkg6fMYh5e3I66acezeIDDN1zYxyuRgoGVHQL6GoQYGWpqNGlxFtd/JNvA
+         7vCQyc9hfhilZE55jnNdVe+leWIToG6vUtZsHCxxPpIF8MnEFO9HMdGLkOuc18WRutDa
+         IRVLXUkFMA0JNuXf04Gbkn/cXrlX5zhXHd0SnTG/MyD/pTOfxFxOFWH2VJzO8q2kwEML
+         0u9Iq1VpdGIqsBqL+mXfqt7Rh31eomyVT0ZtYSMb3tcvkZ90h8WDOE/0tfS7F3Hf+8PF
+         KX1jABMM8aLmBjf5+jLo47rHPVp7cbi7pKqt5O04nOywSOLvC1v/YZzS04vHYmCepG1Y
+         jUhQ==
+X-Gm-Message-State: APjAAAXSBeR4speRKd2Dn9AyVSJr33Q0S2AFVUA5euh8fBn873J2vv6z
+        PUjf9+fsTHaMAJixv26BaPySXA==
+X-Google-Smtp-Source: APXvYqzOZKpamAABfdMJ/fDZQ0VlsPGfT9UmaFnev4sLY13+z4pxoduWq15xXgZAbVThF3gN2BNn5g==
+X-Received: by 2002:a17:902:7406:: with SMTP id g6mr25130286pll.103.1582099696282;
+        Wed, 19 Feb 2020 00:08:16 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:1f16:51f4:8631:68b2])
+        by smtp.gmail.com with ESMTPSA id ci5sm1484267pjb.5.2020.02.19.00.08.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 00:08:15 -0800 (PST)
+From:   David Stevens <stevensd@chromium.org>
+To:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        David Stevens <stevensd@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
+        virtio-dev@lists.oasis-open.org
+Subject: [PATCH 0/2] Support virtio cross-device resources
+Date:   Wed, 19 Feb 2020 17:06:35 +0900
+Message-Id: <20200219080637.61312-1-stevensd@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-In-Reply-To: <20200204025641.218376-3-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDMh8ro/1Ej3uCr/B88xs9QSf1DQj6Cz3VMN0DFqayPtMFym6D6tk98LH/aCi2Bh25lrowBe6aZX7dTPe86vpCs33hxqiTaRY23yNDv1ipIaD+E93owU
- PdL6uUcLJA73sbKrM25qdpXV+42++eaA2z/wRCGInSmivia/wXNEW6K75Rtil9FnkP7G3q6eaFbx22n8YNeBhYIEvZATKgYBDZhG5Ng6nKEQ8Z37zKWexEJr
- XxKM3sMO43CXniSwceC+XIX/7c+JJmpllLk7XbGq+EEKB1cRi9JAI1i3AubHcjEdM8eWFkAylshmrHQvezK67wCh8MPGCurUlQbqXMTf7ITVvDXYdjp9rUi+
- gwhe2AT6CYdI3uJU752G7+Xkug/ozKOOgL+U3G9taERMMnRbvsH1Z3VArLq2A76jpjNT6KX60BfCzL4j6RIAjHBf0UQITr5aohD/QosDOkEeG3cNEOx9awcj
- caSQ3XZAxqikyQefmaOvlmw+NgyKEOWX9RhQPKZ5w4A8Owp5x8XyGdJd1TRxe5fHIGj/A1CBRfj0R71b
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
-> Set video buffer cache management flags corresponding to V4L2 cache
-> flags.
-> 
-> Both ->prepare() and ->finish() cache management hints should be
-> passed during this stage (buffer preparation), because there is no
-> other way for user-space to skip ->finish() cache flush.
-> 
-> There are two possible alternative approaches:
-> - The first one is to move cache sync from ->finish() to dqbuf().
->   But this breaks some drivers, that need to fix-up buffers before
->   dequeueing them.
-> 
-> - The second one is to move ->finish() call from ->done() to dqbuf.
-> 
-> Change-Id: I3bef1d1fb93a5fba290ce760eaeecdc8e7d6885a
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  .../media/common/videobuf2/videobuf2-v4l2.c   | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index eb5d5db96552..2da06a2ad6c4 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -337,6 +337,41 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
->  	return 0;
->  }
->  
-> +static void set_buffer_cache_hints(struct vb2_queue *q,
-> +				   struct vb2_buffer *vb,
-> +				   struct v4l2_buffer *b)
-> +{
-> +	/*
-> +	 * DMA exporter should take care of cache syncs, so we can avoid
-> +	 * explicit ->prepare()/->finish() syncs. For other ->memory types
-> +	 * we always need ->prepare() or/and ->finish() cache sync.
-> +	 */
-> +	if (q->memory == VB2_MEMORY_DMABUF) {
-> +		vb->need_cache_sync_on_finish = 0;
-> +		vb->need_cache_sync_on_prepare = 0;
-> +		return;
-> +	}
-> +
-> +	if (!q->allow_cache_hints)
-> +		return;
-> +
-> +	vb->need_cache_sync_on_prepare = 1;
+This patchset implements the current proposal for virtio cross-device
+resource sharing [1], with minor changes based on recent comments (i.e.
+renumbering the new virtio gpu command and adding a feature flag).
 
-This needs a comment explaining why prepare is set to 1 by default. I remember
-we discussed this earlier, and the conclusion of that discussion needs to be
-documented here in a comment.
+The patchset adds a new flavor of dma-bufs that supports querying the
+underlying virtio object UUID, as well as adding support for exporting
+resources from virtgpu. It is expected that this will be used to import
+virtgpu resources into the virtio-video driver currently under
+discussion [2].
 
-Regards,
+[1] https://markmail.org/thread/jsaoqy7phrqdcpqu
+[2] https://markmail.org/thread/p5d3k566srtdtute
 
-	Hans
+David Stevens (2):
+  virtio: add dma-buf support for exported objects
+  drm/virtio: Support virtgpu exported resources
 
-> +	/*
-> +	 * ->finish() cache sync can be avoided when queue direction is
-> +	 * TO_DEVICE.
-> +	 */
-> +	if (q->dma_dir != DMA_TO_DEVICE)
-> +		vb->need_cache_sync_on_finish = 1;
-> +	else
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
-> +		vb->need_cache_sync_on_finish = 0;
-> +
-> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
-> +		vb->need_cache_sync_on_prepare = 0;
-> +}
-> +
->  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
->  				    struct v4l2_buffer *b, bool is_prepare,
->  				    struct media_request **p_req)
-> @@ -381,6 +416,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
->  	}
->  
->  	if (!vb->prepared) {
-> +		set_buffer_cache_hints(q, vb, b);
->  		/* Copy relevant information provided by the userspace */
->  		memset(vbuf->planes, 0,
->  		       sizeof(vbuf->planes[0]) * vb->num_planes);
-> 
+ drivers/gpu/drm/virtio/virtgpu_drv.c   |   3 +
+ drivers/gpu/drm/virtio/virtgpu_drv.h   |  21 +++++
+ drivers/gpu/drm/virtio/virtgpu_kms.c   |   4 +
+ drivers/gpu/drm/virtio/virtgpu_prime.c | 109 ++++++++++++++++++++++++-
+ drivers/gpu/drm/virtio/virtgpu_vq.c    |  58 +++++++++++++
+ drivers/virtio/Makefile                |   2 +-
+ drivers/virtio/virtio.c                |   6 ++
+ drivers/virtio/virtio_dma_buf.c        |  97 ++++++++++++++++++++++
+ include/linux/virtio.h                 |   1 +
+ include/linux/virtio_dma_buf.h         |  62 ++++++++++++++
+ include/uapi/linux/virtio_gpu.h        |  19 +++++
+ 11 files changed, 378 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/virtio/virtio_dma_buf.c
+ create mode 100644 include/linux/virtio_dma_buf.h
+
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
