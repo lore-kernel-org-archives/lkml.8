@@ -2,83 +2,105 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CA0C34053
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D87BFC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D9D2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3712176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBSOCY (ORCPT
+        id S1727954AbgBSOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:02:24 -0500
-Received: from outbound-smtp16.blacknight.com ([46.22.139.233]:39152 "EHLO
-        outbound-smtp16.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727756AbgBSOCV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:02:21 -0500
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp16.blacknight.com (Postfix) with ESMTPS id 508D31C1B30
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:02:19 +0000 (GMT)
-Received: (qmail 3146 invoked from network); 19 Feb 2020 14:02:19 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 14:02:19 -0000
-Date:   Wed, 19 Feb 2020 14:02:17 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org, pauld@redhat.com,
-        parth@linux.ibm.com, valentin.schneider@arm.com, hdanton@sina.com
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-Message-ID: <20200219140216.GP3466@techsingularity.net>
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org>
+        Wed, 19 Feb 2020 09:02:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:49580 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgBSOCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:02:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A0481FB;
+        Wed, 19 Feb 2020 06:02:48 -0800 (PST)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2AF603F68F;
+        Wed, 19 Feb 2020 06:02:47 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:02:44 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Pavan Kondeti <pkondeti@codeaurora.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
+Message-ID: <20200219140243.wfljmupcrwm2jelo@e107158-lin>
+References: <20200214163949.27850-1-qais.yousef@arm.com>
+ <20200214163949.27850-4-qais.yousef@arm.com>
+ <20200217092329.GC28029@codeaurora.org>
+ <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200219125513.8953-1-vincent.guittot@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:55:13PM +0100, Vincent Guittot wrote:
-> Now that runnable_load_avg has been removed, we can replace it by a new
-> signal that will highlight the runnable pressure on a cfs_rq. This signal
-> track the waiting time of tasks on rq and can help to better define the
-> state of rqs.
+On 02/17/20 13:53, Qais Yousef wrote:
+> On 02/17/20 14:53, Pavan Kondeti wrote:
+> > I notice a case where tasks would migrate for no reason (happens without this
+> > patch also). Assuming BIG cores are busy with other RT tasks. Now this RT
+> > task can go to *any* little CPU. There is no bias towards its previous CPU.
+> > I don't know if it makes any difference but I see RT task placement is too
+> > keen on reducing the migrations unless it is absolutely needed.
 > 
-> At now, only util_avg is used to define the state of a rq:
->   A rq with more that around 80% of utilization and more than 1 tasks is
->   considered as overloaded.
+> In find_lowest_rq() there's a check if the task_cpu(p) is in the lowest_mask
+> and prefer it if it is.
 > 
-> But the util_avg signal of a rq can become temporaly low after that a task
-> migrated onto another rq which can bias the classification of the rq.
+> But yeah I see it happening too
 > 
-> When tasks compete for the same rq, their runnable average signal will be
-> higher than util_avg as it will include the waiting time and we can use
-> this signal to better classify cfs_rqs.
+> https://imgur.com/a/FYqLIko
 > 
-> The new runnable_avg will track the runnable time of a task which simply
-> adds the waiting time to the running time. The runnable _avg of cfs_rq
-> will be the /Sum of se's runnable_avg and the runnable_avg of group entity
-> will follow the one of the rq similarly to util_avg.
+> Tasks on CPU 0 and 3 swap. Note that my tasks are periodic but the plots don't
+> show that.
 > 
-> Tested-by: Valentin Schneider <valentin.schneider@arm.com>
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> I shouldn't have changed something to affect this bias. Do you think it's
+> something I introduced?
+> 
+> It's something maybe worth digging into though. I'll try to have a look.
 
-Thanks.
+FWIW, I dug a bit into this and I found out we have a thundering herd issue.
 
-Picked up and included in "Reconcile NUMA balancing decisions with the
-load balancer v4". The only change I made to your patches was move the
-reintroduction of cpu_runnable to the patch that requires it to avoid a
-build warning.
+Since I just have a set of periodic task that all start together,
+select_task_rq_rt() ends up selecting the same fitting CPU for all of them
+(CPU1). The end up all waking up on CPU1, only to get pushed back out
+again with only one surviving.
 
--- 
-Mel Gorman
-SUSE Labs
+This reshuffles the task placement ending with some tasks being swapped.
+
+I don't think this problem is specific to my change and could happen without
+it.
+
+The problem is caused by the way find_lowest_rq() selects a cpu in the mask
+
+1750                         best_cpu = cpumask_first_and(lowest_mask,
+1751                                                      sched_domain_span(sd));
+1752                         if (best_cpu < nr_cpu_ids) {
+1753                                 rcu_read_unlock();
+1754                                 return best_cpu;
+1755                         }
+
+It always returns the first CPU in the mask. Or the mask could only contain
+a single CPU too. The end result is that we most likely end up herding all the
+tasks that wake up simultaneously to the same CPU.
+
+I'm not sure how to fix this problem yet.
+
+--
+Qais Yousef
