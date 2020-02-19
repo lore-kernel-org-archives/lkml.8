@@ -2,49 +2,49 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9148C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F937C34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A248A24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C5424672
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:15:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oVC9Kd4o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RLJ1AqDT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgBSPPQ (ORCPT
+        id S1728033AbgBSPPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:15:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:52010 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727787AbgBSPOg (ORCPT
+        Wed, 19 Feb 2020 10:15:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36044 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727815AbgBSPOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Feb 2020 10:14:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=NXy2WyoL4s4z0mcmpcFDbcqBMvtipXVeSVJos+aTK1g=; b=oVC9Kd4osHCIQ5bGQH7EkOxEKD
-        I1XitWHmaZN1j1G2RTQl30nuGe7DtRe6vhkXtaxBIZYeDpS8uI0AoaAXE68E5DNpzKCwlj9CfleWw
-        Xg1L43EQbYwdzkbPwoIHITUHnemD+7n8Fe8iipPfOX+2PbOXIB6ytpP/b8AW92iO2G6i0moENDnYq
-        zVNyTzlhoxt4LR/34dDx/Wlfjo7fDvm1YLhvcpeyR45Zjsx/dPPEnzcK81Z4hzPbeUe0DKONdAupp
-        B5Ku8Eul8Lhv5krHggFzJahoCPQUe7V6yLZfC9/qqU9jOUzAvnDn59NwTXraqiSgCUs7raxuNQp7h
-        qMxH/u7g==;
+        d=infradead.org; s=bombadil.20170209; h=Subject:Cc:To:From:Date:Message-Id:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=Tmzlc5GU+2LuXYGWt7gcVS9vojP8AGSHIRv/BiATIi0=; b=RLJ1AqDT5IOdWw0L3nXNI4Y2Xr
+        shD5Nx8gbnsbDFZe2ryXjjuQnXWLP/YmRxfeZEEsSNrVOzf2uMUYsCZZYeiO4yACOs+eI6O6x8xrj
+        EUC1NGAeky8p3KUo5ROakWtjiFmcQk3AvYLqYiBal6QK/L+qPMaAstVOQyoXDjLTMG70lJloDscgN
+        9OkI7g2l9qoSkfs9NyZC2FhppuoaHCyzOctISzMQReuvCOILefpvc/TN+sCfpNCaQ0BWq3pRCPO4G
+        6Gv24jTf13J4Xy5gVwinsJ3AwlAXh2+m7TSdOi27Lmf5H0JsScZqtmFnO0fdgIiv3gaG/sTzItXBq
+        a2fIo6jA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4R37-0007fC-Gz; Wed, 19 Feb 2020 15:14:05 +0000
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4R38-00010x-BN; Wed, 19 Feb 2020 15:14:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DF34A307455;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4DE403070F9;
         Wed, 19 Feb 2020 16:12:11 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 7EBB829E0A034; Wed, 19 Feb 2020 16:14:03 +0100 (CET)
-Message-Id: <20200219150744.775936989@infradead.org>
+        id 65E0420D96A36; Wed, 19 Feb 2020 16:14:03 +0100 (CET)
+Message-Id: <20200219144724.800607165@infradead.org>
 User-Agent: quilt/0.65
-Date:   Wed, 19 Feb 2020 15:47:31 +0100
+Date:   Wed, 19 Feb 2020 15:47:24 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,37 +54,47 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v3 07/22] rcu: Mark rcu_dynticks_curr_cpu_in_eqs() inline
-References: <20200219144724.800607165@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v3 00/22] tracing vs world
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since rcu_is_watching() is notrace (and needs to be, as it can be
-called from the tracers), make sure everything it in turn calls is
-notrace too.
+Hi all,
 
-To that effect, mark rcu_dynticks_curr_cpu_in_eqs() inline, which
-implies notrace, as the function is tiny.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- kernel/rcu/tree.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+These here patches are the result of Mathieu and Steve trying to get commit
+865e63b04e9b2 ("tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+tracepoints") reverted again.
 
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -294,7 +294,7 @@ static void rcu_dynticks_eqs_online(void
-  *
-  * No ordering, as we are sampling CPU-local information.
-  */
--static bool rcu_dynticks_curr_cpu_in_eqs(void)
-+static inline bool rcu_dynticks_curr_cpu_in_eqs(void)
- {
- 	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
- 
+One of the things discovered is that tracing MUST NOT happen before nmi_enter()
+or after nmi_exit(). Audit results of the previous version are still valid.
 
+This then snowballed into auditing other exceptions, notably #MC, and #BP. Lots
+of patches came out of that.
+
+I would love for some tooling in this area. Dan, smatch has full callchains
+right? Would it be possible to have an __assert_no_tracing__() marker of sorts
+that validates that no possible callchain reaching that assertion has hit
+tracing before that point?
+
+It would mean you have to handle the various means of 'notrace' annotation
+(both the function attribute as well as the Makefile rules), recognising
+tracepoints and ideally handling NOKPROBE annotations.
+
+Changes since -v2:
+
+ - #MC / ist_enter() audit -- first 4 patches. After this in_nmi() should
+   always be set 'correctly'.
+ - RCU IRQ enter/exit function simplification
+ - #BP / poke_int3_handler() audit -- last many patches.
+ - pulled in some locking/kcsan patches
+
+Changes since -v1:
+
+ - Added tags
+ - Changed #4; changed nmi_enter() to use __preempt_count_add() vs
+   marking preempt_count_add() notrace.
+ - Changed #5; confusion on which functions are notrace due to Makefile
+ - Added #9; remove limitation on the perf-function-trace coupling
 
