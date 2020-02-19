@@ -2,121 +2,174 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61306C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBBEC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392B624654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AC924654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="M5Ob83ha"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ekXkvC/Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgBSCqY (ORCPT
+        id S1728256AbgBSCrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:46:24 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25949 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728031AbgBSCqX (ORCPT
+        Tue, 18 Feb 2020 21:47:01 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:8077 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728027AbgBSCrB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:46:23 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582080383; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=EZldwMwfRwILNbyiADsIQMw6OSHJxtFM2DQb2VA7DkY=; b=M5Ob83haVinyvmzduiwwULsSncmmzfQGSn69/7tF0qe9eVWrVdiiKoMedBoxb8LjjFQwZLcW
- Ebb6VOj1rmYwMtHlu1z40Gm9nKijAgBjyK/jV4aGLzyKtwrw0FgE1j5Y9m+qPhoPahzwQ/+i
- 0rXKyW5SNqGU6i2pgwyaVk6kffo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4ca178.7fe21eea3ae8-smtp-out-n02;
- Wed, 19 Feb 2020 02:46:16 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 076E4C447A0; Wed, 19 Feb 2020 02:46:16 +0000 (UTC)
-Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B682C43383;
-        Wed, 19 Feb 2020 02:46:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B682C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Wed, 19 Feb 2020 08:16:09 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] sched/rt: fix pushing unfit tasks to a better CPU
-Message-ID: <20200219024608.GE28029@codeaurora.org>
-References: <20200214163949.27850-1-qais.yousef@arm.com>
- <20200214163949.27850-4-qais.yousef@arm.com>
- <20200217092329.GC28029@codeaurora.org>
- <20200217135306.cjc2225wdlwqiicu@e107158-lin.cambridge.arm.com>
- <20200218041620.GD28029@codeaurora.org>
- <20200218174718.ma6cpr2qwnueertn@e107158-lin.cambridge.arm.com>
+        Tue, 18 Feb 2020 21:47:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4ca1830002>; Tue, 18 Feb 2020 18:46:27 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Feb 2020 18:46:59 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Feb 2020 18:46:59 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Feb
+ 2020 02:46:59 +0000
+Subject: Re: [PATCH v6 09/19] mm: Add page_cache_readahead_limit
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-16-willy@infradead.org>
+ <1263603d-f446-c447-2eac-697d105fa76c@nvidia.com>
+ <20200219022300.GJ24185@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <f2d2346d-611c-ebdd-8430-ea4478e044d4@nvidia.com>
+Date:   Tue, 18 Feb 2020 18:46:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218174718.ma6cpr2qwnueertn@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200219022300.GJ24185@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582080388; bh=V/HjUqswaF1dKPtA+ar56SFisPTsJ76O2QClKAvYPMw=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ekXkvC/QTudnr/E7HumrPKVft3Ce5bTjTn20IMsFFhe9t9mDZ0EgD+a2C09d+D85z
+         AGPEc99roqIevW1cBB2LdQIY1R6pe8q72KUOxkuIp6p8ulVKsh7zjBwgatxBG8hoeY
+         QCLpxGRClqbTVbQD9myhbXiWfGyh0XLZkFJPDeq8WH2Shs7nzWGWidWzrF8oIhNTD7
+         gsu9og2JxYod5aXUSdIlTtmakADanFstew6fv/i4LfFYqRVcDKJxsz2fwKiq29RqNZ
+         JuJ7HKzL8sQILyEv0UsrM9YMdAbV3+bKN9dwYJItSxNZFn4ZwN8tC/8LQGXu1nSPCC
+         H2F7kU+zXB7Eg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 05:47:19PM +0000, Qais Yousef wrote:
-> On 02/18/20 09:46, Pavan Kondeti wrote:
-> > The original RT task placement i.e without capacity awareness, places the task
-> > on the previous CPU if the task can preempt the running task. I interpreted it
-> > as that "higher prio RT" task should get better treatment even if it results
-> > in stopping the lower prio RT execution and migrating it to another CPU.
-> > 
-> > Now coming to your patch (merged), we force find_lowest_rq() if the previous
-> > CPU can't fit the task though this task can right away run there. When the
-> > lowest mask returns an unfit CPU (with your new patch), We have two choices,
-> > either to place it on this unfit CPU (may involve migration) or place it on
-> > the previous CPU to avoid the migration. We are selecting the first approach.
-> > 
-> > The task_cpu(p) check in find_lowest_rq() only works when the previous CPU
-> > does not have a RT task. If it is running a lower prio RT task than the
-> > waking task, the lowest_mask may not contain the previous CPU.
-> > 
-> > I don't if any workload hurts due to this change in behavior. So not sure
-> > if we have to restore the original behavior. Something like below will do.
+On 2/18/20 6:23 PM, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 05:32:31PM -0800, John Hubbard wrote:
+>>> +			page_cache_readahead_limit(inode->i_mapping, NULL,
+>>> +					index, LONG_MAX, num_ra_pages, 0);
+>>
+>>
+>> LONG_MAX seems bold at first, but then again I can't think of anything smaller 
+>> that makes any sense, and the previous code didn't have a limit either...OK.
 > 
-> Is this patch equivalent to yours? If yes, then I got you. If not, then I need
-> to re-read this again..
+> Probably worth looking at Dave's review of this and what we've just
+> negotiated on the other subthread ... LONG_MAX is gone.
+
+
+Great. OK, I see where it's going there.
+
 > 
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index ace9acf9d63c..854a0c9a7be6 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -1476,6 +1476,13 @@ select_task_rq_rt(struct task_struct *p, int cpu, int sd_flag, int flags)
->         if (test || !rt_task_fits_capacity(p, cpu)) {
->                 int target = find_lowest_rq(p);
+>> I also wondered about the NULL file parameter, and wonder if we're stripping out
+>> information that is needed for authentication, given that that's what the newly
+>> written kerneldoc says the "file" arg is for. But it seems that if we're this 
+>> deep in the fs code's read routines, file system authentication has long since 
+>> been addressed.
 > 
-> +               /*
-> +                * Bail out if we were forcing a migration to find a better
-> +                * fitting CPU but our search failed.
-> +                */
-> +               if (!test && !rt_task_fits_capacity(p, target))
-> +                       goto out_unlock;
-> +
+> The authentication is for network filesystems.  Local filesystems
+> generally don't use the 'file' parameter, and since we're going to be
+> calling back into the filesystem's own readahead routine, we know it's
+> not needed.
+> 
+>> Any actually I don't yet (still working through the patches) see any authentication,
+>> so maybe that parameter will turn out to be unnecessary.
+>>
+>> Anyway, It's nice to see this factored out into a single routine.
+> 
+> I'm kind of thinking about pushing the rac in the other direction too,
+> so page_cache_readahead_unlimited(rac, nr_to_read, lookahead_size).
+> 
+>>> +/**
+>>> + * page_cache_readahead_limit - Start readahead beyond a file's i_size.
+>>
+>>
+>> Maybe: 
+>>
+>>     "Start readahead to a caller-specified end point" ?
+>>
+>> (It's only *potentially* beyond files's i_size.)
+> 
+> My current tree has:
+>  * page_cache_readahead_exceed - Start unchecked readahead.
 
-Yes. This is what I was referring to.
 
-Thanks,
-Pavan
+Sounds good.
 
+> 
+> 
+>>> + * @mapping: File address space.
+>>> + * @file: This instance of the open file; used for authentication.
+>>> + * @offset: First page index to read.
+>>> + * @end_index: The maximum page index to read.
+>>> + * @nr_to_read: The number of pages to read.
+>>
+>>
+>> How about:
+>>
+>>     "The number of pages to read, as long as end_index is not exceeded."
+> 
+> API change makes this irrelevant ;-)
+> 
+>>> + * @lookahead_size: Where to start the next readahead.
+>>
+>> Pre-existing, but...it's hard to understand how a size is "where to start".
+>> Should we rename this arg?
+> 
+> It should probably be lookahead_count.
+> 
+>>> + *
+>>> + * This function is for filesystems to call when they want to start
+>>> + * readahead potentially beyond a file's stated i_size.  If you want
+>>> + * to start readahead on a normal file, you probably want to call
+>>> + * page_cache_async_readahead() or page_cache_sync_readahead() instead.
+>>> + *
+>>> + * Context: File is referenced by caller.  Mutexes may be held by caller.
+>>> + * May sleep, but will not reenter filesystem to reclaim memory.
+>>
+>> In fact, can we say "must not reenter filesystem"? 
+> 
+> I think it depends which side of the API you're looking at which wording
+> you prefer ;-)
+> 
+> 
+
+Yes. We should try to write these so that it's clear which way we're looking:
+in or out. 
+
+
+thanks,
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+John Hubbard
+NVIDIA
