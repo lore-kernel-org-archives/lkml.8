@@ -2,121 +2,68 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A82E3C3405F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7FEC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDCB24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582137695;
-	bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=Q+fnhHeOQK7+XVcEc+QOyGHQSYz4P5Ob/sTni5Sbc8BKDdnfTFMzAzncFjD9NMfao
-	 eo+g8gGbKid5vBEFPdeMZEKughutZlFoaW1c1Z294mtHy1AvtnXhEDe583VKOzC10L
-	 4yAB1PxhYPkw0VONMPLvpJRPO3J534rcoDeQdCbM=
+	by mail.kernel.org (Postfix) with ESMTP id F197E24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:42:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgBSSle (ORCPT
+        id S1726677AbgBSSmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 13:42:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:53458 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgBSSle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:41:34 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A62B24670;
-        Wed, 19 Feb 2020 18:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582137693;
-        bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Pg2nZ4uoohWZjP+BIMtpi2NMG9sPU8dIIUTvOC22OSIqGA70OfJB/rzFiJCYjpeww
-         DvQL878DwOMYisPb3aPKrLmjbuIOnIjYLwJaVOs1g/vlRJxfuyG+hZApM+W0rTipbe
-         QcDbarV7quXlg7jGtGql29sX3o8CfyG29JO0ztAU=
-Content-Type: text/plain; charset="utf-8"
+        id S1726613AbgBSSmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:42:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C0348B22A;
+        Wed, 19 Feb 2020 18:42:30 +0000 (UTC)
+Subject: Re: [PATCH V2] xen: Enable interrupts when calling _cond_resched()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org
+References: <87tv3mq1rm.fsf@nanos.tec.linutronix.de>
+ <8808612b-11c2-f7b8-f027-7ff92e992c50@suse.com>
+ <87h7zmpr1k.fsf@nanos.tec.linutronix.de>
+ <878skypjrh.fsf@nanos.tec.linutronix.de>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <a2dee352-409b-1c6b-e7f0-bcbbf5d71a95@suse.com>
+Date:   Wed, 19 Feb 2020 19:42:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com> <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com> <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com> <1581999138.19053.21.camel@mtkswgap22> <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
-Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Fabien Parent <fparent@baylibre.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mars Cheng <mars.cheng@mediatek.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        mtk01761 <wendell.lin@mediatek.com>,
-        CC Hwang <cc.hwang@mediatek.com>,
-        Loda Chou <loda.chou@mediatek.com>,
-        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
-To:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Date:   Wed, 19 Feb 2020 10:41:32 -0800
-Message-ID: <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+In-Reply-To: <878skypjrh.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Matthias Brugger (2020-02-18 08:45:42)
->=20
->=20
-> On 18/02/2020 05:12, Macpaul Lin wrote:
-> > On Sat, 2020-02-15 at 02:47 +0100, Matthias Brugger wrote:
-> >=20
-> > Hi Stephen,
-> >=20
-> >> Hi Stephen,
-> >>
-> >> On 13/02/2020 00:44, Stephen Boyd wrote:
-> >>> Quoting Macpaul Lin (2020-02-07 01:20:43)
-> >>>> This patch adds basic SoC support for Mediatek's new 8-core SoC,
-> >>>> MT6765, which is mainly for smartphone application.
-> >>>
-> >>> Clock patches look OK to me. Can you resend them without the defconfig
-> >>> and dts patches and address Matthias' question?
-> >>>
-> >>
-> >> I'm not sure if I understand you. Do you prefer to have just the clock=
- parts
-> >> send as an independent version so that you can easier apply the patche=
-s to your
-> >> tree?
-> >>
-> >> Patch 2, 5, 6 and 7 should go through my tree.
-> >> So do you want a series with patches 1, 3 and 4?
-> >>
-> >> Regards,
-> >> Matthias
-> >=20
-> > Yup, I've got a little bit confused, too.
-> > Should I separate and resend these patches into 2 patch sets?
-> > The 1st patch set includes #1, #3, and #4?
-> > And the other includes #2, #5, #6, and #7?
-> >=20
->=20
-> Yes please do so. I think that's what Stephen referred to.
->=20
+On 19.02.20 18:30, Thomas Gleixner wrote:
+> xen_maybe_preempt_hcall() is called from the exception entry point
+> xen_do_hypervisor_callback with interrupts disabled.
+> 
+> _cond_resched() evades the might_sleep() check in cond_resched() which
+> would have caught that and schedule_debug() unfortunately lacks a check
+> for irqs_disabled().
+> 
+> Enable interrupts around the call and use cond_resched() to catch future
+> issues.
+> 
+> Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-If those are the ones that aren't dts or defconfig patches sounds good
-to me.
+Reviewed-by: Juergen Gross <jgross@suse.com>
+
+
+Juergen
+
