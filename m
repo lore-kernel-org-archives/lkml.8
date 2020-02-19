@@ -2,74 +2,120 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DE8C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FB8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1121C2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A56F72464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:52:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgBSJtC (ORCPT
+        id S1726593AbgBSJwf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:49:02 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:60568 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgBSJtB (ORCPT
+        Wed, 19 Feb 2020 04:52:35 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:43719 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgBSJwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:49:01 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01J9mnsY029951, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01J9mnsY029951
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 17:48:49 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Feb 2020 17:48:49 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Feb 2020 17:48:48 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
- RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
- 15.01.1779.005; Wed, 19 Feb 2020 17:48:48 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        nic_swsd <nic_swsd@realtek.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH net-next v2 12/13] r8152: use new helper tcp_v6_gso_csum_prep
-Thread-Topic: [PATCH net-next v2 12/13] r8152: use new helper
- tcp_v6_gso_csum_prep
-Thread-Index: AQHV5phMsUMHsElpxUaoxEMxm3ymXagiRPkw
-Date:   Wed, 19 Feb 2020 09:48:48 +0000
-Message-ID: <42d3acd04d79422aa37715f136497369@realtek.com>
-References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
- <1dd1668a-b3c6-d441-681d-6cbe3ab22fa4@gmail.com>
-In-Reply-To: <1dd1668a-b3c6-d441-681d-6cbe3ab22fa4@gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 19 Feb 2020 04:52:34 -0500
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mmhs6-1jlyJ51ItK-00jnKw; Wed, 19 Feb 2020 10:52:33 +0100
+Received: by mail-qk1-f178.google.com with SMTP id u124so21910451qkh.13;
+        Wed, 19 Feb 2020 01:52:33 -0800 (PST)
+X-Gm-Message-State: APjAAAWcLSIIx8i5+sfpHcLdtgKtlQCdUUriQ1VAFclMlEZdJ0Xanf0Y
+        3YSowuPIznniXF6K04m0cULmZUWKkDnw9YPzTJY=
+X-Google-Smtp-Source: APXvYqz6sQrDPqUNAmecu/h04WniHkbB4ukHoV+epQJlqXgny5NFbF326v+1laQu3l+m+Fb5JwCdWHZ/0sv+ehZyuPE=
+X-Received: by 2002:a05:620a:1530:: with SMTP id n16mr22824472qkk.394.1582105952127;
+ Wed, 19 Feb 2020 01:52:32 -0800 (PST)
 MIME-Version: 1.0
+References: <cover.1577111363.git.christophe.leroy@c-s.fr> <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr>
+ <20200109200733.GS3191@gate.crashing.org> <77a8bf25-6615-6c0a-56d4-eae7aa8a8f09@c-s.fr>
+ <20200111113328.GX3191@gate.crashing.org> <CAK8P3a11wX1zJ+TAacDTkYsrzvfdVmNrcB6OC23aFvCxF57opQ@mail.gmail.com>
+ <305fcee5-2e1b-ea4d-9a2a-a0e8034d40a8@c-s.fr>
+In-Reply-To: <305fcee5-2e1b-ea4d-9a2a-a0e8034d40a8@c-s.fr>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 19 Feb 2020 10:52:16 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
+Message-ID: <CAK8P3a0SfCwP04CJPThCuDmngGhwtejN8Px_UQpSwi=s_ww=bw@mail.gmail.com>
+Subject: Re: Surprising code generated for vdso_read_begin()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Segher Boessenkool <segher@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:KfAcI+gmei7MEogTHDFUMd8r6p43ZGnpPPhbMyVd38ltGLhQ+/C
+ ndqCjVB3FVXe5vp1kY/yjjKmGeOk8b+Egk2k2n5HlVk213lpmmkUj4gFRdddOjdAphhbQ5L
+ lG6idmDOjNwUbarIQ83wl0SovEwmdEFLQNPrn18m5cSTe/3KxY/myeW/X6zLQ0Zg8rap4f6
+ /SKF4iu4AJ8GBkxgX+2rw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MhDAhJpzmlU=:DjPodyAtMoLFwqgep3fd1v
+ XDckU16XYd5HBY3MqlOKv7C03hN20ucrMu0tSrSxsBlQzLJG4C976PtM4MmLD2Tbk0Wrp8kIJ
+ 8Riq5depe7w8YRDkwpzoc2HdzfQWdSpXijJSnV8tksY2eYkNvONAbhXOsrSipomkamamRDBJW
+ 0kTw8IRBibFRVxxoE8l7l/oagyl8srBT0kNWRHf9GsmN064qlJf9FSHfEPGAAfOXGhrgT6uM1
+ TjTNADH7wOa75N0+ICyjwfl4mSbffjH9yqnRGvfh8qBuetnQW/W4nd8VGA15hFbWivtFKLR2a
+ kTxp2SyUh60ANYbFDYHT4Or2BSu/aJ7SKuTpPPcXOBofBj1sPnoKAaUxV+SmS2k0zB+9nz2Ox
+ 0wl0Uxt9NpIGqXNcBVxl+HUqdgw0pnvNRKWwJwgLJVrbf4l+0WSIR2mIitQUf7iJx8DWgl34P
+ kMPoQmVI4Vouldx6ANUMgD7ZEeLl2MXCq6JWoVizJu5Jz+ds8AyAR74LS7JldkDm6CK+TbT2/
+ NnXZNE7JyGRKuRgKdbJ/qwzLM5nnfwqpbICfmmPnZ0Zb3AJbXSlwr+kudiB2ltlrpoATPuIqm
+ cIm9LAMY6Hw/UdKYbV6jCVlof5PzIoRDmBSYepgt1VMvJJB0aGY54vJaNrXZ6CMeOoeALccH0
+ UfaX1FyfJavjuhhaSgpeKqgdG+FMchw4dyeyTazJOI7wqoPLXI7Nv0Tf5I4dAb9S5m3Bgkgln
+ W4Knc8n89vHn+ftkP6A2o+phyIXhA/pavmRVSPKSGA755c3DtDgYbs7UBECfhfDOF2DMsOnDl
+ GciNkSl4WuQtylVJlIJSfGXtG+cTNL5qJUC9Q/dmEnfk3iSY7k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVpbmVyIEthbGx3ZWl0IFttYWlsdG86aGthbGx3ZWl0MUBnbWFpbC5jb21dDQo+IFNlbnQ6IFdl
-ZG5lc2RheSwgRmVicnVhcnkgMTksIDIwMjAgNDoxMyBBTQ0KPiBTdWJqZWN0OiBbUEFUQ0ggbmV0
-LW5leHQgdjIgMTIvMTNdIHI4MTUyOiB1c2UgbmV3IGhlbHBlcg0KPiB0Y3BfdjZfZ3NvX2NzdW1f
-cHJlcA0KPiANCj4gVXNlIG5ldyBoZWxwZXIgdGNwX3Y2X2dzb19jc3VtX3ByZXAgaW4gYWRkaXRp
-b25hbCBuZXR3b3JrIGRyaXZlcnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBIZWluZXIgS2FsbHdl
-aXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPg0KDQpBY2tlZC1ieTogSGF5ZXMgV2FuZyA8aGF5ZXN3
-YW5nQHJlYWx0ZWsuY29tPg0KDQpCZXN0IFJlZ2FyZHMsDQpIYXllcw0KDQo=
+On Wed, Feb 19, 2020 at 9:45 AM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
+> Le 16/02/2020 à 19:10, Arnd Bergmann a écrit :
+> > On Sat, Jan 11, 2020 at 12:33 PM Segher Boessenkool
+> > <segher@kernel.crashing.org> wrote:
+> >>
+> >> On Fri, Jan 10, 2020 at 07:45:44AM +0100, Christophe Leroy wrote:
+> >>> Le 09/01/2020 à 21:07, Segher Boessenkool a écrit :
+> >>>> It looks like the compiler did loop peeling.  What GCC version is this?
+> >>>> Please try current trunk (to become GCC 10), or at least GCC 9?
+> >>>
+> >>> It is with GCC 5.5
+> >>>
+> >>> https://mirrors.edge.kernel.org/pub/tools/crosstool/ doesn't have more
+> >>> recent than 8.1
+> >>
+> >> Arnd, can you update the tools?  We are at 8.3 and 9.2 now :-)  Or is
+> >> this hard and/or painful to do?
+> >
+> > To follow up on this older thread, I have now uploaded 6.5, 7.5, 8.3 and 9.2
+> > binaries, as well as a recent 10.0 snapshot.
+> >
+>
+> Thanks Arnd,
+>
+> I have built the VDSO with 9.2, I get less performant result than with
+> 8.2 (same performance as with 5.5).
+>
+> After a quick look, I see:
+> - Irrelevant NOPs to align loops and stuff, allthough -mpcu=860 should
+> avoid that.
+> - A stack frame is set for saving r31 in __c_kernel_clock_gettime. GCC
+> 8.1 don't need that, all VDSO functions are frameless with 8.1
+
+If you think it should be fixed in gcc, maybe try to reproduce it in
+https://godbolt.org/ and open a gcc bug against that.
+
+Also, please try the gcc-10 snapshot, which has the highest chance
+of getting fixes if it shows the same issue (or worse).
+
+     Arnd
