@@ -2,163 +2,164 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDF7C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1CC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 278742465A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C446B2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uXpGi2Jt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBPLYa8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgBSAV7 (ORCPT
+        id S1727576AbgBSAbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:21:59 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44891 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726858AbgBSAV7 (ORCPT
+        Tue, 18 Feb 2020 19:31:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40783 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726595AbgBSAbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:21:59 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so22031570oia.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:21:58 -0800 (PST)
+        Tue, 18 Feb 2020 19:31:34 -0500
+Received: by mail-wr1-f65.google.com with SMTP id t3so26141477wru.7;
+        Tue, 18 Feb 2020 16:31:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iwevfYaMGMnWqDp7BRBH9ndZK1ueB9FpG7BWDRha664=;
-        b=uXpGi2JtCaKA3afhjgPnx3+k6bu9jRJFFsxC1tdxkFA2xmvGo813n+ZBpK+kHNH/39
-         aZ7yNwhZeAq6N113hFT+Z7i3q+igLWsyXdAmQCx0FBwKnVkgREb0kVWKfguOHKueZveq
-         ZvOaEfMgOMt2ySw4a1QyCrQJC2t/FNxIRmHkuSurQ9D6XOB2qmC2ne59d1ee/3/6jwaM
-         JtifkDeTXpnBdsiIlxZf5GoQkjGQc5fpmIu0DLDptiQoBobekKlKZo6hn+pha4aLWmPr
-         B+bYAjtTgusI/aORPogBkG+bpo4h/Bu6olv6xoFBj2IjpY4R4Lva9xceCo8cbzAhNQPZ
-         v9Nw==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=UHaPN0DZu1fxS+M0vlQ6OnOtCLQym/jYIkBeP1Ud8+E=;
+        b=FBPLYa8qSF1TjjZnYfw2tJppeOUpIbGdtVRiliBaQqmiNjFxJfyZeJ1KneAeVH1wuz
+         71e0KkTvuJrusRMQ5QrXvQksiw6/ATDZERsiLbN/mHyZDv4a2g8gKls7DIFvIsO9hUQf
+         4ilBuNvzR8XxGn6evl3VgjvRtWusjJwZsgKboCwEDOR8HOWf25XL8pzgbxmzYW4vkGqP
+         R2N1IatXyA1hGzuf5VQMrw1T2Qs73e4jMsCWbY2+Sf7Vgt/aDryxhlBJ+cKNGN/kvy6q
+         dDsVLY3dlWS4JqXXpam1QJkmvNuovzaLo6Cso1Ni/MzDyWo1iKsLVMuhxcS33e1UjrMZ
+         eYew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iwevfYaMGMnWqDp7BRBH9ndZK1ueB9FpG7BWDRha664=;
-        b=CYjF3wXh+CRXbHDK8x62r/n8GD56AV77GindIEr6XcVt0NbjQ3fFkJl6qSJGJ2cHRw
-         EwArBukcL6UyRFLbfp2Ww6aebWyLuuDg+VeG3ZwSyjKPdoDJQeTdyyLiAh2P/sW079eq
-         F8iETwXBACcns1vGd8tuBKOSVFHA6piVa3pmPvDpOPq98dynZx+xGPD/zEImaA2fpIcy
-         NTvcwiyW3vAhKtxEnhUM5MnqOeKMoRXjzl59v+ZbOTqFJP9ZvXGgf807eOvRrYYosYzm
-         AurgNFsa0z8j3agQNX2u18DyKc8ZI9M12JYgYqqsfQf4qp0E1u18JYOrE1zmBh3p6cCm
-         hSWg==
-X-Gm-Message-State: APjAAAW3uRmxHLBxs1QbrswZSgyXj0xh8Btslhy2Fgg9KlE6w7m3B+n0
-        5MkA6ypQOKqqS2NDfpokuHGp8Or3Cgyybf8gH6mSAQ==
-X-Google-Smtp-Source: APXvYqyYiXJ4jQH3RxiDV6J7/uaLgk6BiS53+aqHNeUal6TNgdsW5hDDsiGSQ/HeW/6snAkmK42XqN3LCG9NUaItzAg=
-X-Received: by 2002:a54:4396:: with SMTP id u22mr3027403oiv.128.1582071718379;
- Tue, 18 Feb 2020 16:21:58 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=UHaPN0DZu1fxS+M0vlQ6OnOtCLQym/jYIkBeP1Ud8+E=;
+        b=pRSwvV9n9CHrhd4C7d0T5kuQSqDe6GJKWBOh3K8qrdKwRg+Wn59IuoqyAL6QCN0mTn
+         UiqoqjhS+hHosgz73KZnRogXW79Fuo097zFcouwVyGlB2aruoO/MnPUJBaoKbEbA5NWz
+         Ro0U+7o2QRzo/aEusLgmQgfuIPv3WdusHDGPGOsboOBufz8rZ1YJNwlj+2F7jUChAfri
+         ahna6salKjCYiEV97vanPCSS28clNa44j/6Fh0VrhGaKjAwyoIbu7HQL/mAjNfu2N1OL
+         Zqz9SgkvnPyU72uUVXS54p8SEbbTzer74WAHoVyE2AEhsNMeZDDPIQO8z2D1/iabjUag
+         nzUQ==
+X-Gm-Message-State: APjAAAULuttJEJ7rIDq8+3dFnpJdBCRbq2Ee5pxH0zIDl067OSm1Gpv+
+        jzh1SXFudFbwi+nPVXAI1+jy4n9ORgm6MP4g7/AFdDtVfDs=
+X-Google-Smtp-Source: APXvYqzJ4OM4IWZg/0jbA8gz1iT9obfQTHotphWhtXWd7kYWI9cCCgmPh/uIJq2MCjgG9qtTheImBfFIzN206KXAblo=
+X-Received: by 2002:a5d:68cf:: with SMTP id p15mr30780329wrw.31.1582072290537;
+ Tue, 18 Feb 2020 16:31:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200218235104.112323-1-john.stultz@linaro.org> <20200219000736.GA5511@jackp-linux.qualcomm.com>
-In-Reply-To: <20200219000736.GA5511@jackp-linux.qualcomm.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Feb 2020 16:21:47 -0800
-Message-ID: <CALAqxLUSU4j3G6zBsxeOanF2A4fi-Q+JKu6FVDXOwAzpnZvWNQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: dwc3: gadget: Update chain bit correctly when using
- sg list
-To:     Jack Pham <jackp@codeaurora.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Pratham Pratap <prathampratap@codeaurora.org>,
-        Felipe Balbi <balbi@kernel.org>, Yang Fei <fei.yang@intel.com>,
-        Thinh Nguyen <thinhn@synopsys.com>,
-        Tejas Joglekar <tejas.joglekar@synopsys.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Todd Kjos <tkjos@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
+From:   Lucas De Marchi <lucas.de.marchi@gmail.com>
+Date:   Tue, 18 Feb 2020 16:31:17 -0800
+Message-ID: <CAKi4VAL0R+rzTirDQmFGVTRYLL6ACYN3oXVegfPgovvN5ibR6A@mail.gmail.com>
+Subject: [ANNOUNCE] kmod 27
+To:     linux-modules <linux-modules@vger.kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 4:07 PM Jack Pham <jackp@codeaurora.org> wrote:
->
-> Hi John,
->
-> Thanks for following-up with this! While you're doing minor tweaks
-> anyway, I hope you don't mind me picking some nits below.
->
-> On Tue, Feb 18, 2020 at 11:51:04PM +0000, John Stultz wrote:
-> > From: Pratham Pratap <prathampratap@codeaurora.org>
-> >
-> > If scatter-gather operation is allowed, a large USB request is split
-> > into multiple TRBs. For preparing TRBs for sg list, driver iterates
-> > over the list and creates TRB for each sg and mark the chain bit to
-> > false for the last sg. The current IOMMU driver is clubbing the list
-> > of sgs which shares a page boundary into one and giving it to USB driver.
-> > With this the number of sgs mapped it not equal to the the number of sgs
-> > passed. Because of this USB driver is not marking the chain bit to false
-> > since it couldn't iterate to the last sg. This patch addresses this issue
-> > by marking the chain bit to false if it is the last mapped sg.
-> >
-> > At a practical level, this patch resolves USB transfer stalls
-> > seen with adb on dwc3 based db845c, pixel3 and other qcom
-> > hardware after functionfs gadget added scatter-gather support
-> > around v4.20.
-> >
-> > Credit also to Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> > who implemented a very similar fix to this issue.
-> >
-> > Cc: Felipe Balbi <balbi@kernel.org>
-> > Cc: Yang Fei <fei.yang@intel.com>
-> > Cc: Thinh Nguyen <thinhn@synopsys.com>
-> > Cc: Tejas Joglekar <tejas.joglekar@synopsys.com>
-> > Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-> > Cc: Jack Pham <jackp@codeaurora.org>
-> > Cc: Todd Kjos <tkjos@google.com>
-> > Cc: Greg KH <gregkh@linuxfoundation.org>
-> > Cc: Linux USB List <linux-usb@vger.kernel.org>
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Pratham Pratap <prathampratap@codeaurora.org>
-> > [jstultz: Slight tweak to remove sg_is_last() usage, reworked
-> >           commit message, minor comment tweak]
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  drivers/usb/dwc3/gadget.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> > index 1b8014ab0b25..10aa511051e8 100644
-> > --- a/drivers/usb/dwc3/gadget.c
-> > +++ b/drivers/usb/dwc3/gadget.c
-> > @@ -1071,7 +1071,14 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
-> >               unsigned int rem = length % maxp;
-> >               unsigned chain = true;
-> >
-> > -             if (sg_is_last(s))
-> > +             /*
-> > +              * IOMMU driver is coalescing the list of sgs which shares a
-> > +              * page boundary into one and giving it to USB driver. With
-> > +              * this the number of sgs mapped it not equal to the the number
->                                                  ^^ s/it/is/     ^^^ /d
->
-> Or could we more specifically say "number of sgs mapped could be less
-> than number passed"?
->
-> > +              * of sgs passed. Mark the chain bit to false if it is the last
-> > +              * mapped sg.
-> > +              */
-> > +             if ((i == remaining - 1))
->
-> These outer parens are superfluous.
+kmod 27 is out:
 
-Thanks for catching these. I'll respin here shortly.
+        https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.xz
+        https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-27.tar.sign
 
-> Also wondering if it would be more or less clear to just set the
-> variable once (and awkwardly move the comment to appear above the
-> local var declaration):
->
->                 unsigned chain = (i < remaining - 1);
->
+- Improvements
+        - Link to libcrypto rather than requiring openssl
 
-Personally, I think doing it via the conditional makes the logic a bit
-less taxing to read/skim. So I might keep that bit as is.
+        - Print a better error message when kernel doesn't support module unload
 
-thanks
--john
+        - Use PKCS#7 instead of CMS for parsing module signature to be
+          compatible with LibreSSL and OpenSSL < 1.1.0
+
+        - Teach modinfo to parse modules.builtin.modinfo. When using
+Linux kernel
+          >= v5.2-rc1 it's possible to get module information from
+this new file. Now
+          modinfo is able to show it instead of an error message that
+the module is
+          built-in:
+
+          Before:
+          $ modinfo ext4
+          modinfo: ERROR: Module ext4 not found.
+
+          After:
+          $ modinfo ext4
+          name:           ext4
+          filename:       (builtin)
+          softdep:        pre: crc32c
+          license:        GPL
+          description:    Fourth Extended Filesystem
+          author:         Remy Card, Stephen Tweedie, Andrew Morton,
+Andreas Dilger, Theodore Ts'o and others
+          alias:          fs-ext4
+          alias:          ext3
+          alias:          fs-ext3
+          alias:          ext2
+          alias:          fs-ext2
+
+- Bug fixes
+        - Do not link python bindings with libpython to be compatible with
+          python3.8
+
+        - Fix module removal with `modprobe -r` when a dependency is built-in.
+          Now it properly ignores them and proceed with removal of other
+          dependencies
+
+        - Fix propagation of return code from install/remove commands to the
+          the probe function. The return values of
+kmod_module_probe_insert_module()
+          have very specific meanings, do not confuse the caller by return codes
+          from system()
+
+        - Fix softdep config parsing leading to buffer overflow
+
+Shortlog is below:
+
+Lucas De Marchi (5):
+      testsuite: update gitignore
+      travis: remove old compiler failing to build kernel module
+      modprobe: use flags rather than bool args
+      libkmod: reset was_space on second pass
+      kmod 27
+
+Alexey Gladkov (4):
+      libkmod: Add parser for modules.builtin.modinfo
+      libkmod: Add function to get list of built-in modules
+      Lookup aliases in the modules.builtin.modinfo
+      modinfo: Show information about built-in modules
+
+Adrian Bunk (1):
+      build: Stop using dolt
+
+Dave Reisner (1):
+      Link against libcrypto, not all of openssl
+
+Ezequiel Garcia (1):
+      tools: Print a message if refcnt attribute is missing
+
+Fabrice Fontaine (1):
+      Makefile.am: filter -Wl,--no-undefined
+
+Stefan Strogin (1):
+      libkmod-signature: use PKCS#7 instead of CMS
+
+Thomas Petazzoni (1):
+      Do not check for undefined symbols when building the Python modules
+
+Topi Miettinen (1):
+      libkmod-module: convert return value from system() to errno
+
+Yauheni Kaliuta (1):
+      modprobe: ignore builtin module on recursive removing
+
+
+Thank you all for the contributions.
+
+
+Lucas De Marchi
