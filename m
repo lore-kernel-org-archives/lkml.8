@@ -3,114 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C0C35242
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D4DC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5383C24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:23:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED438208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgBSTXj (ORCPT
+        id S1726712AbgBST0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:23:39 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52818 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726609AbgBSTXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:23:38 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JJKBLw099841;
-        Wed, 19 Feb 2020 14:23:33 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uba9ugc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 14:23:32 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01JJKMw5017166;
-        Wed, 19 Feb 2020 19:23:31 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma03wdc.us.ibm.com with ESMTP id 2y6896p7j1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 19:23:31 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JJNUaL48038180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 19:23:30 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD42ABE04F;
-        Wed, 19 Feb 2020 19:23:30 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D931BE054;
-        Wed, 19 Feb 2020 19:23:30 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 19:23:30 +0000 (GMT)
-Subject: Re: [PATCH v2 0/4] Enable vTPM 2.0 for the IBM vTPM driver
-To:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
-        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
-        gcwilson@linux.ibm.com, jgg@ziepe.ca,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <f76ce5e5-0552-bc2c-4548-ae9552d4e3ba@linux.ibm.com>
-Date:   Wed, 19 Feb 2020 14:23:29 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Wed, 19 Feb 2020 14:26:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726634AbgBST0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 14:26:30 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E60208E4;
+        Wed, 19 Feb 2020 19:26:28 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 14:26:27 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     shuah@kernel.org
+Cc:     Alan Maguire <alan.maguire@oracle.com>, mhiramat@kernel.org,
+        mingo@redhat.com, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] ftrace/selftest: clean up failure cases
+Message-ID: <20200219142627.716090a0@gandalf.local.home>
+In-Reply-To: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
+References: <1582104810-12983-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_05:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 phishscore=0 adultscore=0 mlxscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190147
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/13/20 3:23 PM, Stefan Berger wrote:
-> From: Stefan Berger <stefanb@linux.ibm.com>
->
-> QEMU 5.0 will support the PAPR vTPM device model for TPM 1.2 and TPM 2.0.
-> This series of patches enables vTPM 2.0 support for the IBM vTPM driver.
+
+Shuah,
+
+Can you take these two patches through your tree?
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+-- Steve
 
 
-If there are no more comments to this series, maybe Jarkko can queue it?
+On Wed, 19 Feb 2020 09:33:28 +0000
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-
-    Stefan
-
-
->
-> Regards,
->     Stefan
->
-> - v1->v2:
->    - Addressed comments to v1; added patch 3 to handle case when
->      TPM_OPS_AUTO_STARTUP is not set
->
-> Stefan Berger (4):
->    tpm: of: Handle IBM,vtpm20 case when getting log parameters
->    tpm: ibmvtpm: Wait for buffer to be set before proceeding
->    tpm: Implement tpm2_init to call when TPM_OPS_AUTO_STARTUP is not set
->    tpm: ibmvtpm: Add support for TPM 2
->
->   drivers/char/tpm/eventlog/of.c   |  8 +++++++-
->   drivers/char/tpm/tpm-interface.c |  5 ++++-
->   drivers/char/tpm/tpm.h           |  1 +
->   drivers/char/tpm/tpm2-cmd.c      | 14 ++++++++++++++
->   drivers/char/tpm/tpm_ibmvtpm.c   | 15 ++++++++++++++-
->   drivers/char/tpm/tpm_ibmvtpm.h   |  1 +
->   6 files changed, 41 insertions(+), 3 deletions(-)
->
+> When running the ftrace selftests, 2 failures and 6 unresolved
+> cases were observed.  The failures can be avoided by setting
+> a sysctl prior to test execution (fixed in patch 1) and by
+> having unresolved cases not return 0 from ftracetest by default
+> since they indicate an absence of testing modules/programs
+> rather than ftrace issues (patch 2).
+> 
+> The latter are classified as "unresolved" tests, which operate
+> differently from "unsupported" tests.  For unsupported tests,
+> we note the unsupported count but do not consider the tests
+> as having failed, whereas with unresolved the test run is
+> considered to have failed so returns "not ok" when run via
+> kselftest ("make -C tools/testing/selftest/ftrace run_tests").
+> 
+> Patch 2 aligns the unresolved behaviour with the unsupported;
+> by default, unresolved outcomes do not trigger overall failure,
+> but they can if --fail-unresolved is specified.
+> 
+> Changes since v1:
+> 
+> - updated patch 1 to use /proc path instead of sysctl (Masami)
+> - updated patch 2 to modify unresolved handling in ftracetest
+>   rather than change individual unresolved -> unsupported (Masami)
+> 
+> Alan Maguire (2):
+>   ftrace/selftests: workaround cgroup RT scheduling issues
+>   ftrace/selftest: make unresolved cases cause failure if
+>     --fail-unresolved set
+> 
+>  tools/testing/selftests/ftrace/ftracetest | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
 
