@@ -2,109 +2,123 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03D6C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E31EC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FBB2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:41:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YXfzBWdA"
+	by mail.kernel.org (Postfix) with ESMTP id 0CB062465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgBSKlD (ORCPT
+        id S1727206AbgBSKlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:41:03 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:43621 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726948AbgBSKlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:41:01 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582108860; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=emh5A6mkF9IlRNLF9/kdYwlLasTRTZIXQ0xT8fk6B3w=; b=YXfzBWdA2LQxY7gM8NLaPegW/qGlrX8mmRFXppvsSrevdyzRyTVT/s92tT6yygUzaW5hNSO2
- uLTNq08DswBmUPg7WOBJq2f5jIDoxP5Ir0FjPn2QC0iV7sQlctNzTCiKPc8swVhwe+mK7YGl
- pzkeGGIHQOGBNjNXOwareDefjTk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4d10bc.7f108ad1b490-smtp-out-n02;
- Wed, 19 Feb 2020 10:41:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 36047C4479D; Wed, 19 Feb 2020 10:41:00 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA021C447A3;
-        Wed, 19 Feb 2020 10:40:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA021C447A3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v5 7/7] soc: qcom: rpmh: Invoke rpmh_flush for dirty caches
-Date:   Wed, 19 Feb 2020 16:10:10 +0530
-Message-Id: <1582108810-21263-8-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
-References: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
+        Wed, 19 Feb 2020 05:41:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36058 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726548AbgBSKlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 05:41:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 3FF7CB4D0;
+        Wed, 19 Feb 2020 10:41:12 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 11:41:11 +0100
+Message-ID: <s5h36b66erc.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] sound fixes for 5.6-rc3
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add changes to invoke rpmh flush when the data in cache is dirty.
+Linus,
 
-This is done only if OSI is not supported in PSCI. If OSI is supported
-rpmh_flush will get invoked by power domain off call when the last cpu
-in the domain is going to power collapse.
+please pull sound fixes for v5.6-rc3 from:
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.6-rc3
+
+The topmost commit is 385536090b18534967b1073d0f18b5b86d793c30
+
+----------------------------------------------------------------
+
+sound fixes for 5.6-rc3
+
+The only largish change in this pull request is about the revert
+of the recent max98090 and its relevant patches due to regressions.
+Other than that, all small fixes for ALSA core (covering KCSAN
+fuzzer warnings in ALSA sequencer and rawmidi), Intel SOF HD-audio
+fixes, AMD ACP fixes, usual HD-audio quirks, and various ASoC fixes.
+
+----------------------------------------------------------------
+
+Arnd Bergmann (1):
+      ASoC: atmel: fix atmel_ssc_set_audio link failure
+
+Kai Vehmanen (3):
+      ALSA: hda: do not override bus codec_mask in link_get()
+      ASoC: SOF: Intel: hda: fix ordering bug in resume flow
+      ASoC: SOF: Intel: hda: move i915 init earlier
+
+Oleksandr Suvorov (1):
+      ASoC: fsl_sai: Fix exiting path on probing failure
+
+Ravulapati Vishnu vardhan rao (2):
+      ASoC: amd: Buffer Size instead of MAX Buffer
+      ASoC: amd: ACP needs to be powered off in BIOS.
+
+Samuel Holland (2):
+      ASoC: codec2codec: avoid invalid/double-free of pcm runtime
+      ASoC: sun8i-codec: Fix setting DAI data format
+
+Takashi Iwai (6):
+      ALSA: seq: Avoid concurrent access to queue flags
+      ALSA: seq: Fix concurrent access to queue current tick/time
+      ALSA: rawmidi: Avoid bit fields for state flags
+      ALSA: hda/realtek - Apply quirk for MSI GP63, too
+      ALSA: hda/realtek - Apply quirk for yet another MSI laptop
+      ALSA: hda: Use scnprintf() for printing texts for sysfs/procfs
+
+Tzung-Bi Shih (3):
+      ASoC: max98090: revert invalid fix for handling SHDN
+      ASoC: dapm: remove snd_soc_dapm_put_enum_double_locked
+      ASoC: hdmi-codec: set plugged_cb to NULL when component removing
+
 ---
- drivers/soc/qcom/rpmh.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/sound/rawmidi.h             |   6 +-
+ include/sound/soc-dapm.h            |   2 -
+ sound/core/seq/seq_clientmgr.c      |   4 +-
+ sound/core/seq/seq_queue.c          |  29 ++-
+ sound/core/seq/seq_timer.c          |  13 +-
+ sound/core/seq/seq_timer.h          |   3 +-
+ sound/hda/ext/hdac_ext_controller.c |   9 +-
+ sound/hda/hdmi_chmap.c              |   2 +-
+ sound/pci/hda/hda_codec.c           |   2 +-
+ sound/pci/hda/hda_eld.c             |   2 +-
+ sound/pci/hda/hda_sysfs.c           |   4 +-
+ sound/pci/hda/patch_realtek.c       |   2 +
+ sound/soc/amd/raven/acp3x-i2s.c     |   8 +
+ sound/soc/amd/raven/acp3x-pcm-dma.c |   7 +-
+ sound/soc/amd/raven/pci-acp3x.c     |  23 --
+ sound/soc/atmel/Kconfig             |   4 +-
+ sound/soc/atmel/Makefile            |  10 +-
+ sound/soc/codecs/hdmi-codec.c       |  10 +
+ sound/soc/codecs/max98090.c         | 434 ++++++++++--------------------------
+ sound/soc/codecs/max98090.h         |   3 +-
+ sound/soc/fsl/fsl_sai.c             |  22 +-
+ sound/soc/soc-dapm.c                |  57 ++---
+ sound/soc/sof/intel/hda-codec.c     |  12 +-
+ sound/soc/sof/intel/hda-dsp.c       |  11 +
+ sound/soc/sof/intel/hda.c           |  19 +-
+ sound/soc/sunxi/sun8i-codec.c       |   3 +-
+ 26 files changed, 265 insertions(+), 436 deletions(-)
 
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index 83ba4e0..839af8d 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/psci.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-@@ -163,6 +164,9 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
- unlock:
- 	spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
- 
-+	if (ctrlr->dirty && !psci_has_osi_support())
-+		return rpmh_flush(ctrlr) ? ERR_PTR(-EINVAL) : req;
-+
- 	return req;
- }
- 
-@@ -391,6 +395,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
- 
- 	if (state != RPMH_ACTIVE_ONLY_STATE) {
- 		cache_batch(ctrlr, req);
-+		if (!psci_has_osi_support())
-+			return rpmh_flush(ctrlr);
- 		return 0;
- 	}
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
