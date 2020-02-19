@@ -2,143 +2,212 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C1DC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 147D7C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26D924654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8r7fYcX"
+	by mail.kernel.org (Postfix) with ESMTP id DC2452465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582130282;
+	bh=ACKzIqdrnFtV0FFqptMxhiTP7NwwRO+06iz2twchFQQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=V/HBG0sZOltXqrXB/0wgmZVyawScgRTm3ladhLNFe1vMKmz0p124xz98fdmwJ5A/M
+	 +mqn/S7LDdONrLr93xPaICROgnOQtygp/kotrOz+378DZuF9gTmy+orAgErFK+E2IR
+	 p0pkphmsQ/M6gYl2OczGatlxvMj22XA5pL0PAxGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBSQht (ORCPT
+        id S1726750AbgBSQiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:37:49 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37314 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726528AbgBSQhs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:37:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so1313695wru.4;
-        Wed, 19 Feb 2020 08:37:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KPmxyNATaLVpAQvuOpd2h7IWbWbQsEMr8UgAvD2qu28=;
-        b=n8r7fYcXZK3E7JRs7OI9Y36fSnz6WoXlC7/tv+WMU15W1F3Z4yXVuy1v1ew/0JocM+
-         EFWeELkDAfXJyviTQ/6Io0GTve7zs1Rf45gpbgpCpf5gKgvG5vx4K33PNaqPJz7O68O5
-         m8/0IYvZBdrswT7rINpiZ/muEulYNErEQR+Nojeq/kgtLFEDLnSLCFNkNvjBjKEgWfPr
-         Rix/6YVJ/9kYaKRfz21zWwM1Cxc97fOsHh6CFhv+R65xOA5TC7HgJZXphzXM9Ao+s58e
-         P+sRZmkek8nooJPJZIHp4ff7pLcj2PfElXb4fXHOgJvxV0tqNGkcTiCkMfSfg3SaHUMU
-         gyiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KPmxyNATaLVpAQvuOpd2h7IWbWbQsEMr8UgAvD2qu28=;
-        b=MhOYpCkDXSYxdhy8HVNSdS9uOHLh3LXJr0GmF+fQFTKN9pFHAvNMq7aOMSXCJhwnj+
-         M+IV1PM6PNhqxa724x4s/S2dmPZgwV4+kHROxhWLnQ9gA+GnboW3Pi8NSG17BSKN+4st
-         N/t6AX2yKATJCzZ9UYIA+YJb0OIC6qD5dyl1xntZLElA+tuKmsJaFVerlkl6xHkgYetM
-         IND9aSOJfYwgb5zKzr7f8AO9DUYIL+X/h6nBogiV6tszjPq6TfzhYjbm3mXT48MJ+jbk
-         otSGyjdM0AK5wePYIsNs0+oCr+gCW8wbHRr9mhQvafQLCK4PnjtpNY7sbI6ss6knUbzh
-         mW8Q==
-X-Gm-Message-State: APjAAAUVHt5ZmC6O/a7TGsoET5NCEVK2IU6ltrIRX3smuOtt7Dx9OBtP
-        3XblfYX4hP6Noqz2B8Pb7fA=
-X-Google-Smtp-Source: APXvYqzBGnSioRanirnIZ0fE6WCyTMzNuZS5g3Y2HNi1JOITTZdsNv9JQf10ibvZsl0eUnru5u5vgA==
-X-Received: by 2002:a5d:5007:: with SMTP id e7mr37079257wrt.228.1582130266405;
-        Wed, 19 Feb 2020 08:37:46 -0800 (PST)
-Received: from Ansuel-XPS.localdomain ([5.170.104.247])
-        by smtp.googlemail.com with ESMTPSA id i204sm464895wma.44.2020.02.19.08.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 08:37:45 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Adrian Panella <ianchi74@outlook.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: add smb208 support
-Date:   Wed, 19 Feb 2020 17:37:11 +0100
-Message-Id: <20200219163711.479-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 11:38:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726528AbgBSQiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:38:01 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FA3424656;
+        Wed, 19 Feb 2020 16:38:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582130280;
+        bh=ACKzIqdrnFtV0FFqptMxhiTP7NwwRO+06iz2twchFQQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=XIAnyBdocShxMXVBWTgaMbJW3qbkUhapUga77mw09uqicPtYZSnWt51Car3M+vT9N
+         +BBZxhS71mPZb262IXNtWdbuYBCjwxP9fsMA8r33zzgkUG1kRA0Si8Q/Iv0kPgZgeG
+         /imIvhWxE//aTVJiGc5gW8FfDT/QryoFU7TQ/5dU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0A14035209B0; Wed, 19 Feb 2020 08:38:00 -0800 (PST)
+Date:   Wed, 19 Feb 2020 08:38:00 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 06/22] rcu: Rename rcu_irq_{enter,exit}_irqson()
+Message-ID: <20200219163800.GZ2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.719277483@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219150744.719277483@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Smb208 regulators are used on some ipq806x soc.
-Add support for it to make it avaiable on some routers
-that use it.
+On Wed, Feb 19, 2020 at 03:47:30PM +0100, Peter Zijlstra wrote:
+> The functions do in fact use local_irq_{save,restore}() and can
+> therefore be used when IRQs are in fact disabled. Worse, they are
+> already used in places where IRQs are disabled, leading to great
+> confusion when reading the code.
+> 
+> Rename them to fix this confusion.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Signed-off-by: Adrian Panella <ianchi74@outlook.com>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
----
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
- drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
- 2 files changed, 13 insertions(+)
+My first reaction was "Hey, wait, where is the _irqrestore()?"
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-index 3c91ad430eea..b823b8625243 100644
---- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-+++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
-@@ -61,6 +61,7 @@ Regulator nodes are identified by their compatible:
- 		    "qcom,rpm-pm8901-regulators"
- 		    "qcom,rpm-pm8921-regulators"
- 		    "qcom,rpm-pm8018-regulators"
-+		    "qcom,rpm-smb208-regulators"
- 
- - vdd_l0_l1_lvs-supply:
- - vdd_l2_l11_l12-supply:
-@@ -171,6 +172,9 @@ pm8018:
- 	s1, s2, s3, s4, s5, , l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
- 	l12, l14, lvs1
- 
-+smb208:
-+	s1a, s1b, s2a, s2b
-+
- The content of each sub-node is defined by the standard binding for regulators -
- see regulator.txt - with additional custom properties described below:
- 
-diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
-index 7407cd5a1b74..7fc97f23fcf4 100644
---- a/drivers/regulator/qcom_rpm-regulator.c
-+++ b/drivers/regulator/qcom_rpm-regulator.c
-@@ -925,12 +925,21 @@ static const struct rpm_regulator_data rpm_pm8921_regulators[] = {
- 	{ }
- };
- 
-+static const struct rpm_regulator_data rpm_smb208_regulators[] = {
-+	{ "s1a",  QCOM_RPM_SMB208_S1a, &smb208_smps, "vin_s1a" },
-+	{ "s1b",  QCOM_RPM_SMB208_S1b, &smb208_smps, "vin_s1b" },
-+	{ "s2a",  QCOM_RPM_SMB208_S2a, &smb208_smps, "vin_s2a" },
-+	{ "s2b",  QCOM_RPM_SMB208_S2b, &smb208_smps, "vin_s2b" },
-+	{ }
-+};
-+
- static const struct of_device_id rpm_of_match[] = {
- 	{ .compatible = "qcom,rpm-pm8018-regulators",
- 		.data = &rpm_pm8018_regulators },
- 	{ .compatible = "qcom,rpm-pm8058-regulators", .data = &rpm_pm8058_regulators },
- 	{ .compatible = "qcom,rpm-pm8901-regulators", .data = &rpm_pm8901_regulators },
- 	{ .compatible = "qcom,rpm-pm8921-regulators", .data = &rpm_pm8921_regulators },
-+	{ .compatible = "qcom,rpm-smb208-regulators", .data = &rpm_smb208_regulators },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_of_match);
--- 
-2.25.0
+Nevertheless, especially since these are the only _irqson() functions:
 
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+> ---
+>  include/linux/rcupdate.h   |    4 ++--
+>  include/linux/rcutiny.h    |    4 ++--
+>  include/linux/rcutree.h    |    4 ++--
+>  include/linux/tracepoint.h |    4 ++--
+>  kernel/cpu_pm.c            |    4 ++--
+>  kernel/rcu/tree.c          |    8 ++++----
+>  kernel/trace/trace.c       |    4 ++--
+>  7 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -120,9 +120,9 @@ static inline void rcu_init_nohz(void) {
+>   */
+>  #define RCU_NONIDLE(a) \
+>  	do { \
+> -		rcu_irq_enter_irqson(); \
+> +		rcu_irq_enter_irqsave(); \
+>  		do { a; } while (0); \
+> -		rcu_irq_exit_irqson(); \
+> +		rcu_irq_exit_irqsave(); \
+>  	} while (0)
+>  
+>  /*
+> --- a/include/linux/rcutiny.h
+> +++ b/include/linux/rcutiny.h
+> @@ -68,8 +68,8 @@ static inline int rcu_jiffies_till_stall
+>  static inline void rcu_idle_enter(void) { }
+>  static inline void rcu_idle_exit(void) { }
+>  static inline void rcu_irq_enter(void) { }
+> -static inline void rcu_irq_exit_irqson(void) { }
+> -static inline void rcu_irq_enter_irqson(void) { }
+> +static inline void rcu_irq_exit_irqsave(void) { }
+> +static inline void rcu_irq_enter_irqsave(void) { }
+>  static inline void rcu_irq_exit(void) { }
+>  static inline void exit_rcu(void) { }
+>  static inline bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+> --- a/include/linux/rcutree.h
+> +++ b/include/linux/rcutree.h
+> @@ -46,8 +46,8 @@ void rcu_idle_enter(void);
+>  void rcu_idle_exit(void);
+>  void rcu_irq_enter(void);
+>  void rcu_irq_exit(void);
+> -void rcu_irq_enter_irqson(void);
+> -void rcu_irq_exit_irqson(void);
+> +void rcu_irq_enter_irqsave(void);
+> +void rcu_irq_exit_irqsave(void);
+>  
+>  void exit_rcu(void);
+>  
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -181,7 +181,7 @@ static inline struct tracepoint *tracepo
+>  		 */							\
+>  		if (rcuidle) {						\
+>  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> -			rcu_irq_enter_irqson();				\
+> +			rcu_irq_enter_irqsave();			\
+>  		}							\
+>  									\
+>  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
+> @@ -195,7 +195,7 @@ static inline struct tracepoint *tracepo
+>  		}							\
+>  									\
+>  		if (rcuidle) {						\
+> -			rcu_irq_exit_irqson();				\
+> +			rcu_irq_exit_irqsave();				\
+>  			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+>  		}							\
+>  									\
+> --- a/kernel/cpu_pm.c
+> +++ b/kernel/cpu_pm.c
+> @@ -24,10 +24,10 @@ static int cpu_pm_notify(enum cpu_pm_eve
+>  	 * could be disfunctional in cpu idle. Copy RCU_NONIDLE code to let
+>  	 * RCU know this.
+>  	 */
+> -	rcu_irq_enter_irqson();
+> +	rcu_irq_enter_irqsave();
+>  	ret = __atomic_notifier_call_chain(&cpu_pm_notifier_chain, event, NULL,
+>  		nr_to_call, nr_calls);
+> -	rcu_irq_exit_irqson();
+> +	rcu_irq_exit_irqsave();
+>  
+>  	return notifier_to_errno(ret);
+>  }
+> --- a/kernel/rcu/tree.c
+> +++ b/kernel/rcu/tree.c
+> @@ -699,10 +699,10 @@ void rcu_irq_exit(void)
+>  /*
+>   * Wrapper for rcu_irq_exit() where interrupts are enabled.
+>   *
+> - * If you add or remove a call to rcu_irq_exit_irqson(), be sure to test
+> + * If you add or remove a call to rcu_irq_exit_irqsave(), be sure to test
+>   * with CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_irq_exit_irqson(void)
+> +void rcu_irq_exit_irqsave(void)
+>  {
+>  	unsigned long flags;
+>  
+> @@ -875,10 +875,10 @@ void rcu_irq_enter(void)
+>  /*
+>   * Wrapper for rcu_irq_enter() where interrupts are enabled.
+>   *
+> - * If you add or remove a call to rcu_irq_enter_irqson(), be sure to test
+> + * If you add or remove a call to rcu_irq_enter_irqsave(), be sure to test
+>   * with CONFIG_RCU_EQS_DEBUG=y.
+>   */
+> -void rcu_irq_enter_irqson(void)
+> +void rcu_irq_enter_irqsave(void)
+>  {
+>  	unsigned long flags;
+>  
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -3004,9 +3004,9 @@ void __trace_stack(struct trace_array *t
+>  	if (unlikely(in_nmi()))
+>  		return;
+>  
+> -	rcu_irq_enter_irqson();
+> +	rcu_irq_enter_irqsave();
+>  	__ftrace_trace_stack(buffer, flags, skip, pc, NULL);
+> -	rcu_irq_exit_irqson();
+> +	rcu_irq_exit_irqsave();
+>  }
+>  
+>  /**
+> 
+> 
