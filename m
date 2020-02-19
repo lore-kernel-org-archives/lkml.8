@@ -2,109 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67335C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DDAC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D22220801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62C020801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBSMws (ORCPT
+        id S1727716AbgBSMwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:52:48 -0500
-Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:49098 "EHLO
-        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgBSMws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:52:48 -0500
-X-Greylist: delayed 2361 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Feb 2020 07:52:47 EST
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
-        id 1j4OE9-0003q3-58; Wed, 19 Feb 2020 12:13:17 +0000
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.93)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1j4OE8-005GIt-ID; Wed, 19 Feb 2020 12:13:16 +0000
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] rqchip/gic: make clearner warnings when no-type specified
-Date:   Wed, 19 Feb 2020 12:13:14 +0000
-Message-Id: <20200219121315.1254222-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 07:52:53 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33276 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbgBSMwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:52:53 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E9F2C4E3A921C48424B1;
+        Wed, 19 Feb 2020 20:52:12 +0800 (CST)
+Received: from [127.0.0.1] (10.177.246.209) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
+ 20:52:03 +0800
+Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+CC:     Matthew Wilcox <willy@infradead.org>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <arei.gonglei@huawei.com>, <weidong.huang@huawei.com>,
+        <weifuqiang@huawei.com>, <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
+ <20200218205239.GE24185@bombadil.infradead.org>
+ <593d82a3-1d1e-d8f2-6b90-137f10441522@huawei.com>
+ <8292299c-4c5a-a8cb-22e2-d5c9051f122a@oracle.com>
+From:   "Longpeng (Mike)" <longpeng2@huawei.com>
+Message-ID: <805f6f4b-af57-b08c-49c6-6c2f02ee2f96@huawei.com>
+Date:   Wed, 19 Feb 2020 20:52:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <8292299c-4c5a-a8cb-22e2-d5c9051f122a@oracle.com>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.246.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If an IRQ is defined without an associated type, then this triggers a
-warning in the IRQ translation function gic_irq_domain_translate()
-which does not give any useful information about which node was at fault.
-It also means that if there are multiple entries the dmesg soon fills
-with backtraces which are not useufl either.
+在 2020/2/19 11:49, Mike Kravetz 写道:
+> On 2/18/20 6:09 PM, Longpeng (Mike) wrote:
+>> 在 2020/2/19 4:52, Matthew Wilcox 写道:
+>>> On Tue, Feb 18, 2020 at 08:10:25PM +0800, Longpeng(Mike) wrote:
+>>>>  {
+>>>> -	pgd_t *pgd;
+>>>> -	p4d_t *p4d;
+>>>> -	pud_t *pud;
+>>>> -	pmd_t *pmd;
+>>>> +	pgd_t *pgdp;
+>>>> +	p4d_t *p4dp;
+>>>> +	pud_t *pudp, pud;
+>>>> +	pmd_t *pmdp, pmd;
+>>>
+>>> Renaming the variables as part of a fix is a really bad idea.  It obscures
+>>> the actual fix and makes everybody's life harder.  Plus, it's not even
+>>> renaming to follow the normal convention -- there are only two places
+>>> (migrate.c and gup.c) which follow this pattern in mm/ while there are
+>>> 33 that do not.
+>>>
+>> Good suggestion, I've never noticed this, thanks.
+>> By the way, could you give an example if we use this way to fix the bug?
+> 
+> Matthew and others may have better suggestions for naming.  However, I would
+> keep the existing names and add:
+> 
+> pud_t pud_entry;
+> pmd_t pmd_entry;
+> 
+> Then the *_entry variables are the target of the READ_ONCE()
+> 
+> pud_entry = READ_ONCE(*pud);
+> if (sz != PUD_SIZE && pud_none(pud_entry))
+> ...
+> ...
+> pmd_entry = READ_ONCE(*pmd);
+> if (sz != PMD_SIZE && pmd_none(pmd_entry))
+> ...
+> ...
+> 
+Uh, looks much better.
 
-Change to print a single line with the info of which fwspec
-info was at fault.
+BTW, I missed one of your email in my mail client, but I find it in lkml.org.
+'''
+I too would like some more information on the panic.
+If your analysis is correct, then I would expect the 'ptep' returned by
+huge_pte_offset() to not point to a pte but rather some random address.
+This is because the 'pmd' calculated by pmd_offset(pud, addr) is not
+really the address of a pmd.  So, perhaps there is an addressing exception
+at huge_ptep_get() near the beginning of hugetlb_fault()?
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
----
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc; linux-arm-kernel@lists.infradead.org
----
- drivers/irqchip/irq-gic.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+	ptep = huge_pte_offset(mm, haddr, huge_page_size(h));
+	if (ptep) {
+		entry = huge_ptep_get(ptep);
+		...
+'''
+Yep, your analysis above is the same as mine, we got a 'dummy pmd' and then
+cause access a bad address.
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 30ab623343d3..52442eff4027 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -996,6 +996,16 @@ static void gic_irq_domain_unmap(struct irq_domain *d, unsigned int irq)
- {
- }
- 
-+/* give a useful warning if there is no type specified. Just using WARN()
-+ * end up with lots of not-useful stack backtraces. SHow the node and the
-+ * IRQ number being translated.
-+ */
-+static void warn_no_type(struct irq_domain *d, unsigned long irq)
-+{
-+	pr_warn("WARNING: GIC: %s: no type specified when translating %lu\n",
-+		d->name, irq);
-+}
-+
- static int gic_irq_domain_translate(struct irq_domain *d,
- 				    struct irq_fwspec *fwspec,
- 				    unsigned long *hwirq,
-@@ -1018,7 +1028,8 @@ static int gic_irq_domain_translate(struct irq_domain *d,
- 		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
- 
- 		/* Make it clear that broken DTs are... broken */
--		WARN_ON(*type == IRQ_TYPE_NONE);
-+		if (*type == IRQ_TYPE_NONE)
-+			warn_no_type(d, fwspec->param[1]);
- 		return 0;
- 	}
- 
-@@ -1029,7 +1040,8 @@ static int gic_irq_domain_translate(struct irq_domain *d,
- 		*hwirq = fwspec->param[0];
- 		*type = fwspec->param[1];
- 
--		WARN_ON(*type == IRQ_TYPE_NONE);
-+		if (*type == IRQ_TYPE_NONE)
-+			warn_no_type(d, fwspec->param[0]);
- 		return 0;
- 	}
- 
+What's your opinion about the solution to fix this problem, not only
+huge_pte_offset, some other places also have the same problem(e.g.
+lookup_address_in_pgd) ?
+
+> BTW, thank you for finding this issue!
+> 
+
+
 -- 
-2.25.0
+Regards,
+Longpeng(Mike)
 
