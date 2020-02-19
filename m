@@ -2,105 +2,193 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636C5C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5870C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D082464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E572464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ec5DVi3J"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="PYsekawx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgBSPjJ (ORCPT
+        id S1726712AbgBSPkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:39:09 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:31953 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726450AbgBSPjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:39:08 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48N22L0vM1z9tyQp;
-        Wed, 19 Feb 2020 16:39:06 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Ec5DVi3J; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id F7NQYazWhv04; Wed, 19 Feb 2020 16:39:06 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48N22K6W0Cz9tyQn;
-        Wed, 19 Feb 2020 16:39:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582126745; bh=eUO+h2tmIsZDDPRpWTpjttyrkmWIQuxStTtECWph288=;
-        h=From:Subject:To:Cc:Date:From;
-        b=Ec5DVi3JadiopR9ptMYYwNvb7+TvwNVut6VS5PDM6hLkkH8c1+XfDiFM79VYOflYw
-         5DWwyFzzoVH4LzaGKaQTEkgjOF4l48dOZeBBH0stalXo8GfHn4W1YYdcURqW8JekM/
-         WRVOD7gmnregRqGO3ZXoUJjliC8yD7wny8YKnihA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 70EC68B856;
-        Wed, 19 Feb 2020 16:39:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id AOFhe5s48LHn; Wed, 19 Feb 2020 16:39:07 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.102])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 206D38B85E;
-        Wed, 19 Feb 2020 16:39:07 +0100 (CET)
-Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 13CBC6532A; Wed, 19 Feb 2020 15:39:07 +0000 (UTC)
-Message-Id: <b798adc754d932416f20857fc8a939b0e39de217.1582126737.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH] powerpc/kasan: Fix error detection on memory allocation
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 19 Feb 2020 15:39:07 +0000 (UTC)
+        Wed, 19 Feb 2020 10:40:15 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44634 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbgBSPkO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:40:14 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v201so442030lfa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=DjhGrWlHlzAhSmIGZSJTb9Plyn22VtP6qt1MQHcL+Zk=;
+        b=PYsekawxaa7r8OQGnxfNV9VnCXM7BrK+NDwHk7T4i0z/ztAjW1r5lTXG9aEIqTs9dY
+         97kQ385qlpSZOGpcd83URJfWGgRk0MLMML8fI3zLpbxGQjtI/u+xf3TV/IO+7J7cplxj
+         nQSd9TXyIDpsTxB5HtLVYiS14MaXI1w3REUbo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DjhGrWlHlzAhSmIGZSJTb9Plyn22VtP6qt1MQHcL+Zk=;
+        b=DzKsvRk3tfdsO23YCqbyOBdZ0IIx9+y66cjxys097yV5LDW2yL0X9q8KwqcTmmgsIC
+         K7v/ih2NbR9eVpm/h9Q923n6sjWo+tg2WazaOOLjBFdHyFMf+FDEbEUl7kGe7gy1m+rH
+         ZBVypXKob8oqGcvuPmJF4eQUmiD3ZznrphUBJHEbpb0Z8fo9dCQ6Fw4+Le0VasGk+By3
+         uvUC8xJ23nF47zd0K9WBFaH0kYNWCG6J/oWeLnzDYYzERLVleuJZjczAuifMz41X2P64
+         PYEsht5WOlQNGdjJP+OGPPWhNOQf28Ct4Lqc/Uhpizbr8Q63dKTbYgIA0buzAZl+1kSn
+         sZgQ==
+X-Gm-Message-State: APjAAAW1gavV5829Vyc3hPNJgIkBVOsADlb5I38mPl5fmuK26mVhuMvC
+        uuy9ZGQJLrsedkripa11goO0/Y2H/gNeOp7Y
+X-Google-Smtp-Source: APXvYqwBV533EPhDKSU98zhnDXzc4T1ILEZyOcIFNV5+E+aUHF7rksvA7rro099KnL/VyIoD16hSzA==
+X-Received: by 2002:ac2:44bc:: with SMTP id c28mr13417993lfm.72.1582126810463;
+        Wed, 19 Feb 2020 07:40:10 -0800 (PST)
+Received: from [172.16.11.50] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id y7sm1591308lfk.83.2020.02.19.07.40.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 07:40:10 -0800 (PST)
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk>
+ <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
+ <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
+ <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
+ <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
+Date:   Wed, 19 Feb 2020 16:40:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case (k_start & PAGE_MASK) doesn't equal (kstart), 'va' will never be
-NULL allthough 'block' is NULL
+On 19/02/2020 15.45, Petr Mladek wrote:
+> On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
+>> On 19/02/2020 14.48, Petr Mladek wrote:
+>>> On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
+>>>> --- a/lib/vsprintf.c
+>>>> +++ b/lib/vsprintf.c
+>>> The test should go into null_pointer() instead of errptr().
+>>
+>> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
+>> way. But I should add a #else section that tests how %pe behaves without
+>> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
+> 
+> OK, we should agree on some structure first.
+> 
+> We already have two top level functions that test how a particular
+> pointer is printed using different pointer modifiers:
+> 
+> 	null_pointer();     -> NULL with %p, %pX, %pE
+> 	invalid_pointer();  -> random pointer with %p, %pX, %pE
+> 
+> Following this logic, errptr() should test how a pointer from IS_ERR() range
+> is printed using different pointer formats.
 
-Check the return of memblock_alloc() directly instead of
-the resulting address in the loop.
+Oh please. I wrote test_printf.c originally and structured it with one
+helper for each %p<whatever>. How are your additions null_pointer and
+invalid_pointer good examples for what the existing style is?
 
-Fixes: 509cd3f2b473 ("powerpc/32: Simplify KASAN init")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- arch/powerpc/mm/kasan/kasan_init_32.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 649)
+test_pointer(void)
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 650) {
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 651)  plain();
+3e5903eb9cff7 (Petr Mladek      2019-04-17 13:53:48 +0200 652)
+null_pointer();
+3e5903eb9cff7 (Petr Mladek      2019-04-17 13:53:48 +0200 653)
+invalid_pointer();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 654)
+symbol_ptr();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 655)
+kernel_ptr();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 656)
+struct_resource();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 657)  addr();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 658)
+escaped_str();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 659)
+hex_string();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 660)  mac();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 661)  ip();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 662)  uuid();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 663)  dentry();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 664)
+struct_va_format();
+4d42c44727a06 (Andy Shevchenko  2018-12-04 23:23:11 +0200 665)
+struct_rtc_time();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 666)
+struct_clk();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 667)  bitmap();
+707cc7280f452 (Rasmus Villemoes 2015-11-06 16:30:29 -0800 668)
+netdev_features();
+edf14cdbf9a0e (Vlastimil Babka  2016-03-15 14:55:56 -0700 669)  flags();
+57f5677e535ba (Rasmus Villemoes 2019-10-15 21:07:05 +0200 670)  errptr();
+f1ce39df508de (Sakari Ailus     2019-10-03 15:32:19 +0300 671)
+fwnode_pointer();
 
-diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
-index b533e7a8319d..e998c3576ae1 100644
---- a/arch/powerpc/mm/kasan/kasan_init_32.c
-+++ b/arch/powerpc/mm/kasan/kasan_init_32.c
-@@ -78,15 +78,14 @@ static int __init kasan_init_region(void *start, size_t size)
- 		return ret;
- 
- 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
-+	if (!block)
-+		return -ENOMEM;
- 
- 	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
- 		pmd_t *pmd = pmd_offset(pud_offset(pgd_offset_k(k_cur), k_cur), k_cur);
- 		void *va = block + k_cur - k_start;
- 		pte_t pte = pfn_pte(PHYS_PFN(__pa(va)), PAGE_KERNEL);
- 
--		if (!va)
--			return -ENOMEM;
--
- 		__set_pte_at(&init_mm, k_cur, pte_offset_kernel(pmd, k_cur), pte, 0);
- 	}
- 	flush_tlb_kernel_range(k_start, k_end);
--- 
-2.25.0
 
+> I am open to crate another logic but it must be consistent.
+
+So yeah, I'm going to continue testing the behaviour of %pe in errptr, TYVM.
+
+> If you want to check %pe with NULL in errptr(), you have to
+> split the other two functions per-modifier. IMHO, it is not
+> worth it.
+
+Agreed, let's leave null_pointer and invalid_pointer alone.
+
+>>>> BTW., your original patch for %p lacks corresponding update of
+>>>> test_vsprintf.c. Please add appropriate test cases.
+>>>
+>>> diff --git a/lib/test_printf.c b/lib/test_printf.c
+>>> index 2d9f520d2f27..1726a678bccd 100644
+>>> --- a/lib/test_printf.c
+>>> +++ b/lib/test_printf.c
+>>> @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
+>>>  static void __init
+>>>  null_pointer(void)
+>>>  {
+>>> -	test_hashed("%p", NULL);
+>>> +	test(ZEROS "00000000", "%p", NULL);
+>>
+>> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
+>> (where one of course has to use explicit integers and not E* constants).
+> 
+> Yes, it would be great to add checks for %p, %px for IS_ERR() range.
+> But it is different story. The above change is for the original patch
+> and it was about NULL pointer handling.
+
+Wrong. The original patch (i.e. Ilya's) had subject "vsprintf: don't
+obfuscate NULL and error pointers" and did
+
++	if (IS_ERR_OR_NULL(ptr))
+
+so the tests that should be part of that patch very much need to cover
+both NULL and ERR_PTRs passed to plain %p.
+
+Rasmus
