@@ -2,176 +2,196 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451CAC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1CAC3404F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FD5206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHca1o/S"
+	by mail.kernel.org (Postfix) with ESMTP id DA8DF206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgBSCjS (ORCPT
+        id S1728175AbgBSClN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:39:18 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40816 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbgBSCjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:39:18 -0500
-Received: by mail-lf1-f65.google.com with SMTP id c23so16099453lfi.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:39:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=60VIe0tObFe5ZoC97rjmVnguUIDOMQa1br+X3tRbe10=;
-        b=UHca1o/SHo7SCNMRYI5uY8DaMu5GNllMTWkGXc5MS7P+s59msv88R2RviPw2CrOdtu
-         CBYu4sbldJnVT1FZ4EGw/g0beAcwJZibwEdKWreHa7YxWkDE+ddKocoIZ9UR7ShdnQVZ
-         d0rJP2X2GMfBDkIsJTqnqbDLsagB+KbZGkN4sIy6+SQyvunqj6whX/S3KiHe+CCAuSUe
-         V8V6ErHKDlLBVBklt76W8/t2SyUb3RxNGmYwe/GRHBAp/LmO2TRDnCr8tJNL5x5W3OeH
-         aN2WCvS1jho5+x6IQlq90GqSRdcEHfB7aS4FipQh2m0FegTyCBpi43myQ0pZrYyZekNQ
-         3Baw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=60VIe0tObFe5ZoC97rjmVnguUIDOMQa1br+X3tRbe10=;
-        b=ZMpn5JTuW8twY2L2xCa2REAzTSxby3Qb/+cf7I8nZtWe9t+bkMz95vL6CX8C9e4krN
-         ORN9LaKoTnrsqJxwTu+qnqRW2+YoTD2Eh2Y883lfVa7d9oArn0AspoTVeURANfbnsCTu
-         XpXlSrq6Y5uPRsmtpLr92JsaK1FRY7TdeiRPwv8qLmrtqU8CemKT5oJ+cJ3sGEUb2JQT
-         aADExrHG/tRJbbGIlBLIExxE5qGLhtMlBe1vwMXpxomax1y14nLxy3DNAUyfWR5pYCD7
-         TlB07FElmqPZwLYA43KEKHvFwgjsN9RAl4IVYljay9050FyyrUaAzZWUwml3K/8uFt/f
-         9bjQ==
-X-Gm-Message-State: APjAAAUjde0nA3xqwyfJDf8cX4Ku07eqJJOAcN0pNat0g2h/yom8QRPn
-        wRYvcwG9vhhUWQk0xXc+sZgJ8aCZyEWK0l/iQXusIdWvrmc=
-X-Google-Smtp-Source: APXvYqzJM6Bp8/duZfOtgIHDfdILC0e0bJjneyJsmVwnnJSvPRPpbhC+jzIEaDDX+lRvrEHkDYny86gzlmRYtk6cP2U=
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr11383861lfn.74.1582079955688;
- Tue, 18 Feb 2020 18:39:15 -0800 (PST)
+        Tue, 18 Feb 2020 21:41:13 -0500
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2966 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbgBSClN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:41:13 -0500
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 245B626217D9D6DA7E4E;
+        Wed, 19 Feb 2020 10:41:08 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Feb 2020 10:41:07 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 19 Feb 2020 10:41:07 +0800
+Date:   Wed, 19 Feb 2020 10:39:48 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v6 12/19] erofs: Convert uncompressed files from
+ readpages to readahead
+Message-ID: <20200219023948.GB83440@architecture4>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-21-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200218190418.536430858@linuxfoundation.org>
-In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 19 Feb 2020 08:09:04 +0530
-Message-ID: <CA+G9fYsdcDkYdinGRW+0dtEz-qojZi67dsbnuiOF1=LiWKaUYw@mail.gmail.com>
-Subject: Re: [PATCH 4.19 00/38] 4.19.105-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-21-willy@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme720-chm.china.huawei.com (10.1.199.116) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 at 01:27, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.19.105 release.
-> There are 38 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.19.105-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Feb 17, 2020 at 10:46:01AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> 
+> Use the new readahead operation in erofs
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+It looks good to me, and will test it later as well..
 
-Summary
-------------------------------------------------------------------------
+Acked-by: Gao Xiang <gaoxiang25@huawei.com>
 
-kernel: 4.19.105-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: 85265e81d664e50b5da918dbdf02b5bbb926b2ea
-git describe: v4.19.104-39-g85265e81d664
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.104-39-g85265e81d664
+Thanks,
+Gao Xiang
 
-No regressions (compared to build v4.19.104)
-
-No fixes (compared to build v4.19.104)
-
-
-Ran 23734 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+>  fs/erofs/data.c              | 39 +++++++++++++-----------------------
+>  fs/erofs/zdata.c             |  2 +-
+>  include/trace/events/erofs.h |  6 +++---
+>  3 files changed, 18 insertions(+), 29 deletions(-)
+> 
+> diff --git a/fs/erofs/data.c b/fs/erofs/data.c
+> index fc3a8d8064f8..82ebcee9d178 100644
+> --- a/fs/erofs/data.c
+> +++ b/fs/erofs/data.c
+> @@ -280,47 +280,36 @@ static int erofs_raw_access_readpage(struct file *file, struct page *page)
+>  	return 0;
+>  }
+>  
+> -static int erofs_raw_access_readpages(struct file *filp,
+> -				      struct address_space *mapping,
+> -				      struct list_head *pages,
+> -				      unsigned int nr_pages)
+> +static void erofs_raw_access_readahead(struct readahead_control *rac)
+>  {
+>  	erofs_off_t last_block;
+>  	struct bio *bio = NULL;
+> -	gfp_t gfp = readahead_gfp_mask(mapping);
+> -	struct page *page = list_last_entry(pages, struct page, lru);
+> -
+> -	trace_erofs_readpages(mapping->host, page, nr_pages, true);
+> +	struct page *page;
+>  
+> -	for (; nr_pages; --nr_pages) {
+> -		page = list_entry(pages->prev, struct page, lru);
+> +	trace_erofs_readpages(rac->mapping->host, readahead_index(rac),
+> +			readahead_count(rac), true);
+>  
+> +	readahead_for_each(rac, page) {
+>  		prefetchw(&page->flags);
+> -		list_del(&page->lru);
+>  
+> -		if (!add_to_page_cache_lru(page, mapping, page->index, gfp)) {
+> -			bio = erofs_read_raw_page(bio, mapping, page,
+> -						  &last_block, nr_pages, true);
+> +		bio = erofs_read_raw_page(bio, rac->mapping, page, &last_block,
+> +				readahead_count(rac), true);
+>  
+> -			/* all the page errors are ignored when readahead */
+> -			if (IS_ERR(bio)) {
+> -				pr_err("%s, readahead error at page %lu of nid %llu\n",
+> -				       __func__, page->index,
+> -				       EROFS_I(mapping->host)->nid);
+> +		/* all the page errors are ignored when readahead */
+> +		if (IS_ERR(bio)) {
+> +			pr_err("%s, readahead error at page %lu of nid %llu\n",
+> +			       __func__, page->index,
+> +			       EROFS_I(rac->mapping->host)->nid);
+>  
+> -				bio = NULL;
+> -			}
+> +			bio = NULL;
+>  		}
+>  
+> -		/* pages could still be locked */
+>  		put_page(page);
+>  	}
+> -	DBG_BUGON(!list_empty(pages));
+>  
+>  	/* the rare case (end in gaps) */
+>  	if (bio)
+>  		submit_bio(bio);
+> -	return 0;
+>  }
+>  
+>  static int erofs_get_block(struct inode *inode, sector_t iblock,
+> @@ -358,7 +347,7 @@ static sector_t erofs_bmap(struct address_space *mapping, sector_t block)
+>  /* for uncompressed (aligned) files and raw access for other files */
+>  const struct address_space_operations erofs_raw_access_aops = {
+>  	.readpage = erofs_raw_access_readpage,
+> -	.readpages = erofs_raw_access_readpages,
+> +	.readahead = erofs_raw_access_readahead,
+>  	.bmap = erofs_bmap,
+>  };
+>  
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 80e47f07d946..17f45fcb8c5c 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1315,7 +1315,7 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+>  	struct page *head = NULL;
+>  	LIST_HEAD(pagepool);
+>  
+> -	trace_erofs_readpages(mapping->host, lru_to_page(pages),
+> +	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
+>  			      nr_pages, false);
+>  
+>  	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+> diff --git a/include/trace/events/erofs.h b/include/trace/events/erofs.h
+> index 27f5caa6299a..bf9806fd1306 100644
+> --- a/include/trace/events/erofs.h
+> +++ b/include/trace/events/erofs.h
+> @@ -113,10 +113,10 @@ TRACE_EVENT(erofs_readpage,
+>  
+>  TRACE_EVENT(erofs_readpages,
+>  
+> -	TP_PROTO(struct inode *inode, struct page *page, unsigned int nrpage,
+> +	TP_PROTO(struct inode *inode, pgoff_t start, unsigned int nrpage,
+>  		bool raw),
+>  
+> -	TP_ARGS(inode, page, nrpage, raw),
+> +	TP_ARGS(inode, start, nrpage, raw),
+>  
+>  	TP_STRUCT__entry(
+>  		__field(dev_t,		dev	)
+> @@ -129,7 +129,7 @@ TRACE_EVENT(erofs_readpages,
+>  	TP_fast_assign(
+>  		__entry->dev	= inode->i_sb->s_dev;
+>  		__entry->nid	= EROFS_I(inode)->nid;
+> -		__entry->start	= page->index;
+> +		__entry->start	= start;
+>  		__entry->nrpage	= nrpage;
+>  		__entry->raw	= raw;
+>  	),
+> -- 
+> 2.25.0
+> 
+> 
