@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F72C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 852CFC5ACC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2A8D24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5006C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EUfXc2dj"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IsyusbAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBSVdT (ORCPT
+        id S1727827AbgBSVdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:33:19 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58403 "EHLO
+        Wed, 19 Feb 2020 16:33:24 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:49136 "EHLO
         mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727648AbgBSVdS (ORCPT
+        by vger.kernel.org with ESMTP id S1727775AbgBSVdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:33:18 -0500
+        Wed, 19 Feb 2020 16:33:23 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582147997; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1582148002; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=czO2p/B2uggnsY629WYpUQFeKB4TZChcSP7Dbrrg8vo=; b=EUfXc2djjbazwLoO8prhdEZuMWn5koZBCx3bNlnCNeTqa59R4X5C7SBM2rpsP5kk2yTLhq+s
- qETQEtCTuVAuLpuhARfK1L3QC2cNJVEHZkL3GWqdyS6U277BxRV251oy/c1ULvbwb6jV859K
- hWmbtUVPQsp1EEQPN9NCfxk0UrE=
+ bh=bhsJb7HicDLjaH3zB60iJ72a18KQ/U1jBQRM2V9JZUY=; b=IsyusbAc+bf8vKPzrMFEorr567pWX50QFsKTCMBg+KYc8/i+5SxRnPxA9IqfUU1aYBy+85hw
+ Fj1igKAKyAyrhPhQiJA7juPyU5b4e93b9TFtZUs9d3vlEzeCrzQlMBSalnF3otZEymV6BoMS
+ rkedyjlWNBCJf3i1C6T3PxNfy6Q=
 X-Mailgun-Sending-Ip: 104.130.122.27
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4da995.7fdbd5dfa378-smtp-out-n01;
- Wed, 19 Feb 2020 21:33:09 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4da992.7f03af40e3e8-smtp-out-n03;
+ Wed, 19 Feb 2020 21:33:06 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7D656C447A4; Wed, 19 Feb 2020 21:33:09 +0000 (UTC)
+        id DF98AC447A0; Wed, 19 Feb 2020 21:33:05 +0000 (UTC)
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7BA99C4479D;
-        Wed, 19 Feb 2020 21:33:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7BA99C4479D
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7455C4479F;
+        Wed, 19 Feb 2020 21:33:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7455C4479F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     John Stultz <john.stultz@linaro.org>, Sean Paul <sean@poorly.run>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
         Rob Clark <robdclark@gmail.com>,
         David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
         freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 4/4] drm/msm/a6xx: Use the DMA API for GMU memory objects
-Date:   Wed, 19 Feb 2020 14:32:58 -0700
-Message-Id: <1582147978-31475-5-git-send-email-jcrouse@codeaurora.org>
+Subject: [PATCH v1 1/4] dt-bindings: display: msm: Convert GMU bindings to YAML
+Date:   Wed, 19 Feb 2020 14:32:55 -0700
+Message-Id: <1582147978-31475-2-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
 References: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
@@ -66,208 +65,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The GMU has very few memory allocations and uses a flat memory space so
-there is no good reason to go out of our way to bypass the DMA APIs which
-were basically designed for this exact secnario.
+Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+text bindings.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 107 ++--------------------------------
- drivers/gpu/drm/msm/adreno/a6xx_gmu.h |   5 +-
- 2 files changed, 7 insertions(+), 105 deletions(-)
+ .../devicetree/bindings/display/msm/gmu.txt        | 116 ------------------
+ .../devicetree/bindings/display/msm/gmu.yaml       | 130 +++++++++++++++++++++
+ 2 files changed, 130 insertions(+), 116 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+ create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-index 983afea..97c9ddf 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
-@@ -2,6 +2,7 @@
- /* Copyright (c) 2017-2019 The Linux Foundation. All rights reserved. */
- 
- #include <linux/clk.h>
-+#include <linux/dma-mapping.h>
- #include <linux/interconnect.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_opp.h>
-@@ -895,21 +896,10 @@ int a6xx_gmu_stop(struct a6xx_gpu *a6xx_gpu)
- 
- static void a6xx_gmu_memory_free(struct a6xx_gmu *gmu, struct a6xx_gmu_bo *bo)
- {
--	int count, i;
--	u64 iova;
+diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+deleted file mode 100644
+index bf9c7a2..0000000
+--- a/Documentation/devicetree/bindings/display/msm/gmu.txt
++++ /dev/null
+@@ -1,116 +0,0 @@
+-Qualcomm adreno/snapdragon GMU (Graphics management unit)
 -
- 	if (IS_ERR_OR_NULL(bo))
- 		return;
- 
--	count = bo->size >> PAGE_SHIFT;
--	iova = bo->iova;
+-The GMU is a programmable power controller for the GPU. the CPU controls the
+-GMU which in turn handles power controls for the GPU.
 -
--	for (i = 0; i < count; i++, iova += PAGE_SIZE) {
--		iommu_unmap(gmu->domain, iova, PAGE_SIZE);
--		__free_pages(bo->pages[i], 0);
--	}
+-Required properties:
+-- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
+-    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+-  Note that you need to list the less specific "qcom,adreno-gmu"
+-  for generic matches and the more specific identifier to identify
+-  the specific device.
+-- reg: Physical base address and length of the GMU registers.
+-- reg-names: Matching names for the register regions
+-  * "gmu"
+-  * "gmu_pdc"
+-  * "gmu_pdc_seg"
+-- interrupts: The interrupt signals from the GMU.
+-- interrupt-names: Matching names for the interrupts
+-  * "hfi"
+-  * "gmu"
+-- clocks: phandles to the device clocks
+-- clock-names: Matching names for the clocks
+-   * "gmu"
+-   * "cxo"
+-   * "axi"
+-   * "mnoc"
+-- power-domains: should be:
+-	<&clock_gpucc GPU_CX_GDSC>
+-	<&clock_gpucc GPU_GX_GDSC>
+-- power-domain-names: Matching names for the power domains
+-- iommus: phandle to the adreno iommu
+-- operating-points-v2: phandle to the OPP operating points
 -
--	kfree(bo->pages);
-+	dma_free_attrs(gmu->dev, bo->size, bo->virt, bo->iova, bo->attrs);
- 	kfree(bo);
- }
- 
-@@ -917,94 +907,23 @@ static struct a6xx_gmu_bo *a6xx_gmu_memory_alloc(struct a6xx_gmu *gmu,
- 		size_t size)
- {
- 	struct a6xx_gmu_bo *bo;
--	int ret, count, i;
- 
- 	bo = kzalloc(sizeof(*bo), GFP_KERNEL);
- 	if (!bo)
- 		return ERR_PTR(-ENOMEM);
- 
- 	bo->size = PAGE_ALIGN(size);
-+	bo->attrs = DMA_ATTR_WRITE_COMBINE;
- 
--	count = bo->size >> PAGE_SHIFT;
-+	bo->virt = dma_alloc_attrs(gmu->dev, bo->size, &bo->iova, GFP_KERNEL,
-+		bo->attrs);
- 
--	bo->pages = kcalloc(count, sizeof(struct page *), GFP_KERNEL);
--	if (!bo->pages) {
-+	if (!bo->virt) {
- 		kfree(bo);
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	for (i = 0; i < count; i++) {
--		bo->pages[i] = alloc_page(GFP_KERNEL);
--		if (!bo->pages[i])
--			goto err;
--	}
+-Optional properties:
+-- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+-        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
 -
--	bo->iova = gmu->uncached_iova_base;
+-Example:
 -
--	for (i = 0; i < count; i++) {
--		ret = iommu_map(gmu->domain,
--			bo->iova + (PAGE_SIZE * i),
--			page_to_phys(bo->pages[i]), PAGE_SIZE,
--			IOMMU_READ | IOMMU_WRITE);
+-/ {
+-	...
 -
--		if (ret) {
--			DRM_DEV_ERROR(gmu->dev, "Unable to map GMU buffer object\n");
+-	gmu: gmu@506a000 {
+-		compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
 -
--			for (i = i - 1 ; i >= 0; i--)
--				iommu_unmap(gmu->domain,
--					bo->iova + (PAGE_SIZE * i),
--					PAGE_SIZE);
+-		reg = <0x506a000 0x30000>,
+-			<0xb280000 0x10000>,
+-			<0xb480000 0x10000>;
+-		reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
 -
--			goto err;
--		}
--	}
+-		interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+-		     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "hfi", "gmu";
 -
--	bo->virt = vmap(bo->pages, count, VM_IOREMAP,
--		pgprot_writecombine(PAGE_KERNEL));
--	if (!bo->virt)
--		goto err;
+-		clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+-			<&gpucc GPU_CC_CXO_CLK>,
+-			<&gcc GCC_DDRSS_GPU_AXI_CLK>,
+-			<&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+-		clock-names = "gmu", "cxo", "axi", "memnoc";
 -
--	/* Align future IOVA addresses on 1MB boundaries */
--	gmu->uncached_iova_base += ALIGN(size, SZ_1M);
+-		power-domains = <&gpucc GPU_CX_GDSC>,
+-				<&gpucc GPU_GX_GDSC>;
+-		power-domain-names = "cx", "gx";
 -
- 	return bo;
+-		iommus = <&adreno_smmu 5>;
 -
--err:
--	for (i = 0; i < count; i++) {
--		if (bo->pages[i])
--			__free_pages(bo->pages[i], 0);
--	}
+-		operating-points-v2 = <&gmu_opp_table>;
+-	};
+-};
 -
--	kfree(bo->pages);
--	kfree(bo);
+-a3xx example with OCMEM support:
 -
--	return ERR_PTR(-ENOMEM);
--}
+-/ {
+-	...
 -
--static int a6xx_gmu_memory_probe(struct a6xx_gmu *gmu)
--{
--	int ret;
+-	gpu: adreno@fdb00000 {
+-		compatible = "qcom,adreno-330.2",
+-		             "qcom,adreno";
+-		reg = <0xfdb00000 0x10000>;
+-		reg-names = "kgsl_3d0_reg_memory";
+-		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupt-names = "kgsl_3d0_irq";
+-		clock-names = "core",
+-		              "iface",
+-		              "mem_iface";
+-		clocks = <&mmcc OXILI_GFX3D_CLK>,
+-		         <&mmcc OXILICX_AHB_CLK>,
+-		         <&mmcc OXILICX_AXI_CLK>;
+-		sram = <&gmu_sram>;
+-		power-domains = <&mmcc OXILICX_GDSC>;
+-		operating-points-v2 = <&gpu_opp_table>;
+-		iommus = <&gpu_iommu 0>;
+-	};
 -
--	/*
--	 * The GMU address space is hardcoded to treat the range
--	 * 0x60000000 - 0x80000000 as un-cached memory. All buffers shared
--	 * between the GMU and the CPU will live in this space
--	 */
--	gmu->uncached_iova_base = 0x60000000;
+-	ocmem@fdd00000 {
+-		compatible = "qcom,msm8974-ocmem";
 -
+-		reg = <0xfdd00000 0x2000>,
+-		      <0xfec00000 0x180000>;
+-		reg-names = "ctrl",
+-		             "mem";
 -
--	gmu->domain = iommu_domain_alloc(&platform_bus_type);
--	if (!gmu->domain)
--		return -ENODEV;
+-		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+-		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+-		clock-names = "core",
+-		              "iface";
 -
--	ret = iommu_attach_device(gmu->domain, gmu->dev);
+-		#address-cells = <1>;
+-		#size-cells = <1>;
 -
--	if (ret) {
--		iommu_domain_free(gmu->domain);
--		gmu->domain = NULL;
--	}
--
--	return ret;
- }
- 
- /* Return the 'arc-level' for the given frequency */
-@@ -1264,10 +1183,6 @@ void a6xx_gmu_remove(struct a6xx_gpu *a6xx_gpu)
- 
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
- 
--	iommu_detach_device(gmu->domain, gmu->dev);
--
--	iommu_domain_free(gmu->domain);
--
- 	free_irq(gmu->gmu_irq, gmu);
- 	free_irq(gmu->hfi_irq, gmu);
- 
-@@ -1300,11 +1215,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- 	if (ret)
- 		goto err_put_device;
- 
--	/* Set up the IOMMU context bank */
--	ret = a6xx_gmu_memory_probe(gmu);
--	if (ret)
--		goto err_put_device;
--
- 	/* Allocate memory for for the HFI queues */
- 	gmu->hfi = a6xx_gmu_memory_alloc(gmu, SZ_16K);
- 	if (IS_ERR(gmu->hfi))
-@@ -1350,11 +1260,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
- err_memory:
- 	a6xx_gmu_memory_free(gmu, gmu->hfi);
- 
--	if (gmu->domain) {
--		iommu_detach_device(gmu->domain, gmu->dev);
--
--		iommu_domain_free(gmu->domain);
--	}
- 	ret = -ENODEV;
- 
- err_put_device:
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-index 2af91ed..31bd1987 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
-@@ -13,7 +13,7 @@ struct a6xx_gmu_bo {
- 	void *virt;
- 	size_t size;
- 	u64 iova;
--	struct page **pages;
-+	unsigned long attrs;
- };
- 
- /*
-@@ -49,9 +49,6 @@ struct a6xx_gmu {
- 	int hfi_irq;
- 	int gmu_irq;
- 
--	struct iommu_domain *domain;
--	u64 uncached_iova_base;
--
- 	struct device *gxpd;
- 
- 	int idle_level;
+-		gmu_sram: gmu-sram@0 {
+-			reg = <0x0 0x100000>;
+-			ranges = <0 0 0xfec00000 0x100000>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+new file mode 100644
+index 0000000..776ff92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
+@@ -0,0 +1,130 @@
++# SPDX-License-Identifier: GPL-2.0-only
++# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
++%YAML 1.2
++---
++
++$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Devicetree bindings for the GMU attached to certain Adreno GPUs
++
++maintainers:
++  - Rob Clark <robdclark@gmail.com>
++
++description: |
++  These bindings describe the Graphics Management Unit (GMU) that is attached
++  to members of the Adreno A6xx GPU family. The GMU provides on-device power
++  management and support to improve power efficiency and reduce the load on
++  the CPU.
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - qcom,adreno-gmu-630.2
++      - const: qcom,adreno-gmu
++
++  reg:
++    items:
++      - description: Core GMU registers
++      - description: GMU PDC registers
++      - description: GMU PDC sequence registers
++
++  reg-names:
++    items:
++      - const: gmu
++      - const: gmu_pdc
++      - const: gmu_pdc_seq
++
++  clocks:
++    items:
++     - description: GMU clock
++     - description: GPU CX clock
++     - description: GPU AXI clock
++     - description: GPU MEMNOC clock
++
++  clock-names:
++    items:
++      - const: gmu
++      - const: cxo
++      - const: axi
++      - const: memnoc
++
++  interrupts:
++    items:
++     - description: GMU HFI interrupt
++     - description: GMU interrupt
++
++
++  interrupt-names:
++    items:
++      - const: hfi
++      - const: gmu
++
++  power-domains:
++     items:
++       - description: CX power domain
++       - description: GX power domain
++
++  power-domain-names:
++     items:
++       - const: cx
++       - const: gx
++
++  iommus:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    description:
++       Phandle to a IOMMU device and stream ID. Refer to ../../iommu/iommu.txt
++       for more information.
++
++  operating-points-v2:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the OPP table for the available GMU frequencies. Refer to
++      ../../opp/opp.txt for more information.
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - clock-names
++  - interrupts
++  - interrupt-names
++  - power-domains
++  - power-domain-names
++  - iommus
++  - operating-points-v2
++
++examples:
++ - |
++   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
++   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++   #include <dt-bindings/interrupt-controller/irq.h>
++   #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++   gmu: gmu@506a000 {
++        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
++
++        reg = <0x506a000 0x30000>,
++              <0xb280000 0x10000>,
++              <0xb480000 0x10000>;
++        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
++
++        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
++                 <&gpucc GPU_CC_CXO_CLK>,
++                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
++                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
++        clock-names = "gmu", "cxo", "axi", "memnoc";
++
++        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
++                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "hfi", "gmu";
++
++        power-domains = <&gpucc GPU_CX_GDSC>,
++                        <&gpucc GPU_GX_GDSC>;
++        power-domain-names = "cx", "gx";
++
++        iommus = <&adreno_smmu 5>;
++        operating-points-v2 = <&gmu_opp_table>;
++   };
 -- 
 2.7.4
