@@ -2,75 +2,116 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6B7C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC7CC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D84024656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ndhB4WdC"
+	by mail.kernel.org (Postfix) with ESMTP id 3D44224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgBSOn2 (ORCPT
+        id S1726779AbgBSOnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:43:28 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36210 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgBSOn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:43:28 -0500
-Received: from zn.tnic (p200300EC2F095500AC4EBF6CAFE7BFD1.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:ac4e:bf6c:afe7:bfd1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B5761EC0CD2;
-        Wed, 19 Feb 2020 15:43:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582123403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=R9S+fJZVrq50eOUEF8rI2ReG0g4IgbKjuDpJyo13/3Q=;
-        b=ndhB4WdCd1C0ZRq2oXpWB2XKP5QMzeL088a1yk5T+moEorrOuGn2Nh3lNpwzND5OmEKkn1
-        GDFVkhdW8uvHTQ7jOgkpZIh/Fl2UHcMnVvGlj59JcUJS9roGbpmYse1rqRubEEF/23vKCb
-        sTyXT2r7yLOSqUnhXxGOenE4jedPSp0=
-Date:   Wed, 19 Feb 2020 15:43:18 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] #MC mess
-Message-ID: <20200219144318.GD30966@zn.tnic>
-References: <20200218173150.GK14449@zn.tnic>
- <CALCETrXbitwGKcEbCF84y0aEGz+B4LL_bj-_njgyXBJA74abOA@mail.gmail.com>
- <20200219081541.GG14914@hirez.programming.kicks-ass.net>
- <20200219092115.3b3cccd9@gandalf.local.home>
+        Wed, 19 Feb 2020 09:43:37 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39487 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSOng (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:43:36 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so343737oty.6;
+        Wed, 19 Feb 2020 06:43:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uI+CJ/G50gsVNVKzRUAej0N+x0HPvxzRhBEt0CmEOv4=;
+        b=O4kaAy7AIhR1NLc6+2vVsQ01doofABLF10YOp8B2IzClQuf2KeE/D8D1loW9kykCjO
+         fWIIx1a6vpgt9ZvnJ7mYe0+gHuK/WsmybGR4v1+ga2dQkesUhCLA9+NQPfOcz9M8wtE/
+         AQOIPIXOwzBXF0NAxY35aI9oHYRMHArwXpQRpc0cy6iq0KjEV99QKhTY68wutH5OphFt
+         WUgCHSnMuylxN5w6M10dyX0cyJmi8KKkspss3tgQHD9Q780qh7BgkkuC0aPy8Nd2yS0G
+         Xf9U/MXAlFttpTxz/qRTSp3Yrq/B9kDabvbPVCuP7QXdRS9L9as+UZbRJ0jBMx9OcJJb
+         tLwg==
+X-Gm-Message-State: APjAAAXt0ipIuVxNaAGU6oE6id8duxoa6mpiBcFd40S18CRjgv1i2n6i
+        kNTj0n5m5wCmCF59HaAzN/kXmsZM+dvWaF8Ji24=
+X-Google-Smtp-Source: APXvYqz6vvsBuRLR7XGtF/ZPU030W55DJK8XF7uQ8QaeNP2kBIMaRgUkAoRiWtPgZhb0bZcUYYMNnN6xisPOAfgtI0E=
+X-Received: by 2002:a05:6830:1d4:: with SMTP id r20mr5686997ota.107.1582123415662;
+ Wed, 19 Feb 2020 06:43:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200219092115.3b3cccd9@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 19 Feb 2020 15:43:24 +0100
+Message-ID: <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:21:15AM -0500, Steven Rostedt wrote:
-> What would be nice is to have a NMI_IRET, that is defined as something
-> that wont break legacy CPUs. Where it could be just a nop iret, or maybe
-> if possible a "lock iret"? That is, not have a IRET_NON_NMI, as that
-> would be all over the place, but just the iret for NMI itself. As
-> that's in one place.
+Hi David,
 
-You mean, we could keep the nested NMI thing but it won't practically
-get executed on NMI_IRET CPUs because there won't be any NMI nesting
-anymore?
+On Wed, Feb 19, 2020 at 3:36 PM David Howells <dhowells@redhat.com> wrote:
+> Add system calls to create and remove mountpoints().  These are modelled
+> after mkdir and rmdir inside the VFS.  Currently they use the same security
+> hooks which probably needs fixing.
+>
+> The calls look like:
+>
+>  long create_mountpoint(int dfd, const char *path,
+>                         const char *fstype, const char *source,
+>                         const char *params);
+>  long remove_mountpoint(int dfd, const char *path);
+>
+> Creation takes an fstype, source and params which the filesystem that owns
+> the mountpoint gets to filter/interpret.  It is free to reject any
+> combination of fstype, source and params it cannot store.  source and
+> params are both optional.
+>
+> Removal could probably be left to rmdir(), but this gives the option of
+> applying tighter security checks and also allows me to prevent rmdir from
+> removing them by accident.
+>
+> The AFS filesystem is then altered to use these system calls to create and
+> remove persistent mountpoints in an AFS volume.  create_automount() is
+> something that AFS needs, but cannot be implemented with, say, symlink().
+> These substitute for the lack of pioctl() on Linux, supplying the
+> functionality of VIOC_AFS_CREATE_MT_PT and VIOC_AFS_DELETE_MT_PT.
+>
+> Also make them usable with tmpfs for testing.  I'm not sure if this is
+> useful in practice, but I've made tmpfs store the three parameters and just
+> pass them to mount when triggered.  Note that it doesn't look up the target
+> filesystem until triggered so as not to load lots of modules until
+> necessary.
+>
+> I suspect they're of little of use to NFS, CIFS and autofs, but probably
+> Coda and maybe Btrfs can make use of them.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+
+Thanks for your patch!
+
+The above nicely explains what the patch does.
+However, unless I'm missing something, this fails to explain the "why"
+(except for the vague "[...] is something that AFS needs ...".
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Regards/Gruss,
-    Boris.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-https://people.kernel.org/tglx/notes-about-netiquette
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
