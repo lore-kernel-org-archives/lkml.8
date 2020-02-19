@@ -2,101 +2,123 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B3AC3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD5CC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37448208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D579C21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:15:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G8eRdLuM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgBSVPT (ORCPT
+        id S1727683AbgBSVPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:15:19 -0500
-Received: from muru.com ([72.249.23.125]:56186 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSVPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:15:18 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 09A4980F3;
-        Wed, 19 Feb 2020 21:16:00 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 13:15:13 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com
-Subject: Re: [PATCH] backlight: add led-backlight driver
-Message-ID: <20200219211513.GE37466@atomide.com>
-References: <20200219191412.GA15905@amd>
- <20200219194540.GD37466@atomide.com>
- <20200219205322.GA1227@duo.ucw.cz>
+        Wed, 19 Feb 2020 16:15:43 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34805 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSVPn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 16:15:43 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j16so1621888otl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:15:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rn6lqpy2jbhI+4TQPpiGx1EVg5+LdG8VFa+KXdjd7b4=;
+        b=G8eRdLuM89b1NNURLorTSBZTffrCPXsn6FetEjS1ZTtf9uC0kq+IPC23B1Mi7S3cJi
+         3g1qYTuHmfiDr4xQ+7VzA/bA+RlQ++Xlw0cFCCZDW6MhUDveDUk3FDA3fvaTxp0dHldp
+         j7tc3/dS+NoDHR5jJ4mCOjZcWlJHN0Lr33YecbqZBxdVkjomf6O6ChSa+nmASKMGa/FP
+         nLoq5eF7PqH6Qo5rSdmoZM+9+USBwuOOF44DVR2MZz4ecMz2yUqcfkrtg3QB7cPFOOfH
+         3BSVmZ7sF0M3/crcI6k3ua2uWoN2O9zIrHknueSV52p6q+PP7B+kDSUBamZMYq0Sq4fu
+         3beA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rn6lqpy2jbhI+4TQPpiGx1EVg5+LdG8VFa+KXdjd7b4=;
+        b=mjU4IaZbqYbGgPDJB2fi88jhF9jkSxZPk8PNPoc+46goXFuBB13swiy1SxRSw27Ht8
+         H9WgVMdqZzGE5ysssgk1/IUP3dszAJtQjnZ2KT0CTQu+mYWnd99LsU8M6VY6aqWAuyXT
+         zKAHnamPqDotLyiXigmoQuVCtGVy+G6/6Q98c45Cmtjc4nH+9J3vrgV+q8Khqh4YQ0v4
+         HQMIyDZQij4KP0ZjMa7BK4p5zqBTLCuYWJSdLv/xq+uqtfdi0whqRGCiTRJdPjTSNbda
+         Mw7UDrhlJUMpp3GRNq8WPpniUs/TKeasP4I3LhnkMpN2X9Ya0rI1rfKOl2v5B82iz99p
+         At6w==
+X-Gm-Message-State: APjAAAVQHq+bVo6GfF0qxXUH5US22pDsBQNg5CSahoBlbgbIb6Q7ThRy
+        pfW+SE/fln4zpqE50EoLCeP4tO4K/tPibq5+kLCW3w==
+X-Google-Smtp-Source: APXvYqwlFRnbgU0X3saTQedLkbl14HONJoNTX45B07otBFNw/JuCsPnAdd0vy3Ql9apgEyoc/5dUXdiy/YZ3p1rvVa0=
+X-Received: by 2002:a9d:634c:: with SMTP id y12mr7306829otk.12.1582146941111;
+ Wed, 19 Feb 2020 13:15:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219205322.GA1227@duo.ucw.cz>
+References: <20200218220748.54823-1-john.stultz@linaro.org>
+ <20200218220748.54823-2-john.stultz@linaro.org> <20200219115942.GA4488@sirena.org.uk>
+In-Reply-To: <20200219115942.GA4488@sirena.org.uk>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 19 Feb 2020 13:15:29 -0800
+Message-ID: <CALAqxLU3k-pqG0C92RCg6_fgeF7f5iGo8uos6ZcJpYGc3ZryfA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] driver core: Make deferred_probe_timeout global so
+ it can be shared
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Pavel Machek <pavel@ucw.cz> [200219 20:54]:
-> Hi!
-> 
-> > > This patch adds a led-backlight driver (led_bl), which is similar to
-> > > pwm_bl except the driver uses a LED class driver to adjust the
-> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
-> > > 
-> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > Acked-by: Tony Lindgren <tony@atomide.com>
-> > > Tested-by: Tony Lindgren <tony@atomide.com>
-> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > > ---
-> > >  drivers/video/backlight/Kconfig  |   7 ++
-> > >  drivers/video/backlight/Makefile |   1 +
-> > >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 268 insertions(+)
-> > >  create mode 100644 drivers/video/backlight/led_bl.c
-> 
-> > > Here's the version of the driver I have. AFAICT
-> > > default-brightness-level handling is ok, so does not need to be
-> > > changed.
-> > > 
-> > > Lee, it would be easiest for me if you could apply it to your tree and
-> > > push, but given enough time I can push it to Linus, too.
-> > 
-> > Oh you're using quoted-printable for patches.. Got it applied now,
-> > and it still works. Below is also the related dts change that
-> > I tested with.
-> > 
-> > Feel free to pick the dts change too, naturally that should
-> > not be applied before the driver.
-> > 
-> > If you guys instead want me to pick these both into my fixes
-> > branch, just let me know and I'll do the explaining why these
-> > are needed as fixes. Basically we no longer have a way to enable
-> > the LCD backlight for droid4 manually starting with v5.6-rc1
-> > unlike earlier.
-> 
-> If you are willing to do that, it looks like good solution from my
-> point of view.
+On Wed, Feb 19, 2020 at 3:59 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Feb 18, 2020 at 10:07:48PM +0000, John Stultz wrote:
+> > This patch, suggested by Rob, allows deferred_probe_timeout to
+> > be global so other substems can use it.
+>
+> > This also sets the default to 30 instead of -1 (no timeout) and
+> > modifies the regulator code to make use of it instead of its
+> > hard-coded 30 second interval.
+>
+> This is at least two patches, one adding the new feature and the other
+> adding a user of that feature.
 
-OK. I'll apply them but won't push out yet in case Lee is already
-applying the driver change..
+Yea, agreed. I combined it here just to get input at this point
+without flooding folks with a ton of small patches.
 
-Pavel, care to ack the dts patch?
+> > @@ -5767,18 +5772,17 @@ static int __init regulator_init_complete(void)
+> >               has_full_constraints = true;
+> >
+> >       /*
+> > -      * We punt completion for an arbitrary amount of time since
+> > +      * We punt completion for deferred_probe_timeout seconds since
+> >        * systems like distros will load many drivers from userspace
+> >        * so consumers might not always be ready yet, this is
+> >        * particularly an issue with laptops where this might bounce
+>
+> While I don't see it doing any harm I'm not 100% convinced by this
+> change - we're not really doing anything directly to do with deferred
+> probe here, we're shutting off regulators that remain unused late in
+> boot but even then they'll still be available for use.  It feels a bit
+> unclear and the way you've adapted the code to always have a timeout
+> even if the deferred probe timeout gets changed feels a bit off.  If
+> nothing else this comment needs more of an update than you've done.
 
-Regards,
+This was mostly spurred by Rob's suggestion, as it seemed both
+subsystems were doing similar timeouts that may need to be customized
+(likely around the same amount of time).  I agree it doesn't quite map
+perfectly, but I imagine it would be useful to align those in some
+way.
 
-Tony
+I'll likely take a swing first at getting the driver core bits to make
+sense, and then I'll come and revisit this shared timeout issue.
+
+thanks
+-john
