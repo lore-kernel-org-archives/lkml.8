@@ -2,102 +2,95 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92055C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9164C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC4324654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:49:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582116549;
-	bh=58bXY9q6mlP2sQSs8i7U387PVjegj463Lo2cND9YXOM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SoDjek7rMct5NiUFgAexy8V7kmT+m78Tex8cSSqSyez+E3FYUcrSxklLpw5GuB8q8
-	 D7sKbeS/TjJIjFzP599QvlKPnd8E7sMbUZHrbhq0G2rRkLwCz9lWDdNL5tdPeBWzj7
-	 BXssQd/Wl8sQ7zrGb/AtGxzkrlUMvFTMR5ziA++I=
+	by mail.kernel.org (Postfix) with ESMTP id 9972124654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbgBSMtI (ORCPT
+        id S1727656AbgBSMtq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:49:08 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39937 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgBSMtH (ORCPT
+        Wed, 19 Feb 2020 07:49:46 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42392 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726491AbgBSMtq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:49:07 -0500
-Received: by mail-lf1-f67.google.com with SMTP id c23so17347623lfi.7;
-        Wed, 19 Feb 2020 04:49:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c4IZGpTAiNI/MqpzST2+IXgvoSC5bM5KD7bSza2xjkg=;
-        b=NAICxQe2DIF/hLG5UTYxHPxbC+XLDC4ccO4b+4UZ5aY58C/SnY3tYe/oSHMxgdv/CU
-         s69En5N61+WCGdSL9YrcIBsMHoMBJB4Q/THE7jd9JARwgsYXvUXA/TRmQqEvh5n5/j4Y
-         5IJdHI2/rgNghRyMvSrlrhOU2U97jlknXvaoYlwgJbP1tCqgzUYlT1T6avrboFZpiWJW
-         qq0C7k12iiI8X1AKSfigmXd5Y/i10B9lw8c3uEw1ufHhLsC2ZVzNlJnQWuQUc3oaeMEj
-         Pmlv0CfcDeUOXLpaSC9UzoVMKJh5BLYt35SgjoPciS3GcXyTWK1aaLt8puRPmILmg3PR
-         L7PQ==
-X-Gm-Message-State: APjAAAXUwW1FxSW7abEzkdhEqwyP79WRcTuHwZmQ9zLHl12xXERulYLi
-        LXBRLkFmpQD5ThMbt05tgnw=
-X-Google-Smtp-Source: APXvYqx7jMm3SXNV5f1xhHX5oxfd9Wq+q/tT0PPzUs29Vkrs1MRxvQ83Ykbc8URnUGMar9i54Q/j0w==
-X-Received: by 2002:a19:f519:: with SMTP id j25mr13281499lfb.41.1582116544565;
-        Wed, 19 Feb 2020 04:49:04 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id o188sm1235568lfa.50.2020.02.19.04.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 04:49:03 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j4Omh-00021O-RY; Wed, 19 Feb 2020 13:48:59 +0100
-Date:   Wed, 19 Feb 2020 13:48:59 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 4/4] leds: trigger: implement a tty trigger
-Message-ID: <20200219124859.GC32540@localhost>
-References: <20200213091600.554-1-uwe@kleine-koenig.org>
- <20200213091600.554-5-uwe@kleine-koenig.org>
- <20200219105239.GA32540@localhost>
- <20200219110306.k5jndutalll64esu@pengutronix.de>
- <20200219111913.GB32540@localhost>
+        Wed, 19 Feb 2020 07:49:46 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JCin4U120055
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:49:45 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubnbcdx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 07:49:44 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Wed, 19 Feb 2020 12:49:43 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 12:49:41 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JCneuB45940794
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 12:49:40 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16235AE051;
+        Wed, 19 Feb 2020 12:49:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF97FAE055;
+        Wed, 19 Feb 2020 12:49:39 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.204])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 19 Feb 2020 12:49:39 +0000 (GMT)
+Date:   Wed, 19 Feb 2020 13:49:38 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: remove obsolete ieee_emulation_warnings
+References: <20200214172628.3598516-1-steve@sk2.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219111913.GB32540@localhost>
+In-Reply-To: <20200214172628.3598516-1-steve@sk2.org>
+X-TM-AS-GCONF: 00
+x-cbid: 20021912-4275-0000-0000-000003A3717E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021912-4276-0000-0000-000038B77B58
+Message-Id: <your-ad-here.call-01582116578-ext-5731@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=1 spamscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=667 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 12:19:13PM +0100, Johan Hovold wrote:
-> On Wed, Feb 19, 2020 at 12:03:06PM +0100, Uwe Kleine-König wrote:
-> > On Wed, Feb 19, 2020 at 11:52:39AM +0100, Johan Hovold wrote:
-
-> > If I understand correctly calling tty_kopen_shared() doesn't open the
-> > device, just keep it referenced which prevents it to disappear. Unless I
-> > miss something it doesn't result in the tty's .open() being called.
+On Fri, Feb 14, 2020 at 06:26:28PM +0100, Stephen Kitt wrote:
+> s390 math emulation was removed with commit 5a79859ae0f3 ("s390:
+> remove 31 bit support"), rendering ieee_emulation_warnings useless.
+> The code still built because it was protected by CONFIG_MATHEMU, which
+> was no longer selectable.
 > 
-> So tty_kopen_shared() is something you added. Judging from a quick look
-> it seems you can only attach a trigger to an already open port, but the
-> trigger will then keep the port open (again, consider modem control,
-> power).
+> This patch removes the sysctl_ieee_emulation_warnings declaration and
+> the sysctl entry declaration.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
+> ---
+>  arch/s390/include/asm/processor.h | 1 -
+>  kernel/sysctl.c                   | 9 ---------
+>  2 files changed, 10 deletions(-)
 
-Sorry, my bad; this reference shouldn't prevent the port from being
-closed.
+Applied, thanks!
 
-The fact that you need the port to be open before you can attach a
-trigger does sound like a problem though (e.g. consider udev rules).
-
-Johan
