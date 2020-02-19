@@ -2,110 +2,65 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF03CC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F31BEC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61FFA20801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582132746;
-	bh=pdkNY2hNSnY9gfk2NzrHjgF6xJM4H9Y/ewvIWmreT30=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sLYwoSzFyxH0zDCericBVAJgCjQYcx2evrrjE0pztqf7UItmbJlCOncgZc4gzkID+
-	 3Tva69Z3jJ5dyFKaeh63ulEo+1agS2alTBaHZyhnFjqp331RrJDctM/PvSkpihfsNc
-	 WaHP9ihvlOQMNxB/Thkbgybr4wfwMMuXKZYaohLM=
+	by mail.kernel.org (Postfix) with ESMTP id D6CD42467A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgBSRTF (ORCPT
+        id S1726764AbgBSRTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:19:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 12:19:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgBSRTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:19:04 -0500
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726707AbgBSRTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:19:53 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BB072465D
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 17:19:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582132744;
-        bh=pdkNY2hNSnY9gfk2NzrHjgF6xJM4H9Y/ewvIWmreT30=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vnO2O4ARZ57+m2WKOUb7GhddjqaoDXVsuMXfiNZeEGx2CUEhSrcOLwk7vQ6jehuVY
-         7ZAQf5jzJfdbS7ByhaI5MGieQG5Akj0KliXYRwXHNlnQNEhGb87pr//Tw8tqFq6uyH
-         kyfrK/detgBoqWdOmwxa2BWw5+K7YNOlQZ/t1UXw=
-Received: by mail-wm1-f44.google.com with SMTP id c84so1514522wme.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:19:04 -0800 (PST)
-X-Gm-Message-State: APjAAAX8loCQ14oE7f8nDpoHtcUhdqFv03xMT2dHFAJAqIatPlEvSJx/
-        FZKrd7XDyE/HWxicn0d1pQXh/moFzH1fk2Z6rDLxlQ==
-X-Google-Smtp-Source: APXvYqzBqeT3cBwt5QLq0QxxbNo0Ff+khHeTRw3LvaqWbB7JAMELbBnkX4mD5JEjB+jVyyVW16JjTf+gEg/eDtdINSk=
-X-Received: by 2002:a1c:b0c3:: with SMTP id z186mr10898715wme.36.1582132742597;
- Wed, 19 Feb 2020 09:19:02 -0800 (PST)
+        by mail.kernel.org (Postfix) with ESMTPSA id A92FC24673;
+        Wed, 19 Feb 2020 17:19:51 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 12:19:50 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 07/22] rcu: Mark rcu_dynticks_curr_cpu_in_eqs()
+ inline
+Message-ID: <20200219121950.678dfd08@gandalf.local.home>
+In-Reply-To: <20200219163934.GA2935@paulmck-ThinkPad-P72>
+References: <20200219144724.800607165@infradead.org>
+        <20200219150744.775936989@infradead.org>
+        <20200219163934.GA2935@paulmck-ThinkPad-P72>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
- <20200218143411.2389182-10-christian.brauner@ubuntu.com> <20200219024233.GA19334@mail.hallyn.com>
- <20200219120604.vqudwaeppebvisco@wittgenstein>
-In-Reply-To: <20200219120604.vqudwaeppebvisco@wittgenstein>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 19 Feb 2020 09:18:51 -0800
-X-Gmail-Original-Message-ID: <CALCETrW-XPkBMs30vk+Aiv+jA5i7TjHOYCgz0Ud6d0geaYte=g@mail.gmail.com>
-Message-ID: <CALCETrW-XPkBMs30vk+Aiv+jA5i7TjHOYCgz0Ud6d0geaYte=g@mail.gmail.com>
-Subject: Re: [PATCH v3 09/25] fs: add is_userns_visible() helper
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        =?UTF-8?Q?St=C3=A9phane_Graber?= <stgraber@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
-        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Phil Estes <estesp@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 4:06 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Tue, Feb 18, 2020 at 08:42:33PM -0600, Serge Hallyn wrote:
-> > On Tue, Feb 18, 2020 at 03:33:55PM +0100, Christian Brauner wrote:
-> > > Introduce a helper which makes it possible to detect fileystems whose
-> > > superblock is visible in multiple user namespace. This currently only
-> > > means proc and sys. Such filesystems usually have special semantics so their
-> > > behavior will not be changed with the introduction of fsid mappings.
-> >
-> > Hi,
-> >
-> > I'm afraid I've got a bit of a hangup about the terminology here.  I
-> > *think* what you mean is that SB_I_USERNS_VISIBLE is an fs whose uids are
-> > always translated per the id mappings, not fsid mappings.  But when I see
->
-> Correct!
->
-> > the name it seems to imply that !SB_I_USERNS_VISIBLE filesystems can't
-> > be seen by other namespaces at all.
-> >
-> > Am I right in my first interpretation?  If so, can we talk about the
-> > naming?
->
-> Yep, your first interpretation is right. What about: wants_idmaps()
+On Wed, 19 Feb 2020 08:39:34 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-Maybe fsidmap_exempt()?
+> There was some controversy over inline vs. notrace, leading me to
+> ask whether we should use both inline and notrace here.  ;-)
 
-I still haven't convinced myself that any of the above is actually
-correct behavior, especially when people do things like creating
-setuid binaries.
+"inline" implicitly suggests "notrace". The reason being is that there
+were "surprises" when gcc decided not to inline various functions
+marked as "inline" which caused ftrace to break. I figured, if someone
+marks something as "inline" that it should not be traced regardless if
+gcc decided to inline it or not.
+
+-- Steve
