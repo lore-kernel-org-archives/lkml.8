@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABDEC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B9CC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ED1224655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7FCA24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582076694;
-	bh=o0k1i8LR+2j+sq5ZUmduCOhaYXaMIshAzdEIiIZWoH8=;
+	s=default; t=1582076700;
+	bh=aVQwG9WbHNNYU4OqvOToBzjPL2hM+OZFJ3Hcvpg3sqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kRyP7blfAVnpwKS1LCB6nTtgwWGoZwnEPAakOxCC6UOtS2TshKRoxJFWvu15qwrRf
-	 w5I6R9YC2kC/HiZhBa6wKcLlUFT9Xd0iVGEcC3JGUXjxAN6wmfIWssCOCAmsNYGnrS
-	 ewo2F+UJ+CGvxVOm2L9GUeElvA6Vc3zWgL+u2MKI=
+	b=bNbwm6pnczYstUsKHJdZBa0lXffGiy5DbJgftSTfcWP+e/7UIc1Wq8iAvarWE4vNb
+	 ohwZojm7JOCH+E4OGta4sN6ZhaOy5BjR1+x7l0OR9Y8uScHtlm9LrPh8HG6kk4p+Nl
+	 K+vQKAutVdVS5fLqNvub1OIx+axQ+njltYCLl67w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgBSBow (ORCPT
+        id S1728144AbgBSBo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:44:52 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34626 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbgBSBou (ORCPT
+        Tue, 18 Feb 2020 20:44:58 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46273 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgBSBos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:44:50 -0500
-Received: by mail-pf1-f196.google.com with SMTP id i6so11656831pfc.1;
-        Tue, 18 Feb 2020 17:44:50 -0800 (PST)
+        Tue, 18 Feb 2020 20:44:48 -0500
+Received: by mail-pl1-f194.google.com with SMTP id y8so8842798pll.13;
+        Tue, 18 Feb 2020 17:44:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1scw6AX0QdFLv3QhbE20elC6cFG9ULuE6N92X44brJw=;
-        b=H6fLGsg2j4PmTw3SItfmAmcqvkvaIG3s5xSjQFvJtLfGEss07bBJGio+X/KLry8eDb
-         3of397TcAuTYOfo72or2nw1YG+7ZRabRZNJpup3S4vrdMouvHDJOTAv6Pxc7GfNR0Bwe
-         blIMw1KBPy7QVkpINhoirPf72oM2gT3KRqDJ4YFwQtsaY0WYzYeZ2i6ro5LfpAfsbXPj
-         osVnUSsQr/acQmJOrN/DtYiXzUJDqzDhSUt2tc3mJLCPD3K4QUzagSsD/XXGVNUtMVp+
-         hXXTA2+BOdSzcH+RoGXH7VosRcAp00hFbxtoGwNnyTeNo8o0XKOhn0m58Z/P6g33gfXW
-         B/8Q==
+        bh=/6BKpu6I9GWZilmKCDR/xIEf9kb10U/fQ/hS1RFxo/E=;
+        b=AeiF/BUIODJ7Elpdb3GXCCzXBoQS9IDbCw9VSMC/jL+pPhcr/hr375CchvyTPhz7Pw
+         0UOfnIko0AblDWL/yTdmeiTlRoIfhMWdWFD3hNHRiqveweEiIFdLmzsDjyssGqVlyrTi
+         febRwSW0h0+kaMkhfKy6efdR7uMe5zL+d+KmyIKLPs0rgr5VxIwjrVpWWZEPFxsMwZ23
+         J/8duxiMxzzsojGZ4V6XQhchtynRJdtbiMasGQl4+ZCJDiom8Qude7YarbGY5V0fKzVt
+         AFoKRAVeNBBiW7zrGGHfvJ2A02+p1VpXuF6g0cnYJV37hKbKe7v2cv28gZItVOFqnAa3
+         aTPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=1scw6AX0QdFLv3QhbE20elC6cFG9ULuE6N92X44brJw=;
-        b=EA4B+v5SJ/GZpTSrNjY8vlpg6WkYGlj8PmpA9+V9/30h/MTrqBSD/Rayx6hFj9+Pwf
-         mjFWMIR94Z4SRRhJqIIndFQbmYr1jl6Eh+f6YpQ9TKqgTQaDuBB6n1ZWte4wvvUodVFk
-         jz7a96ZIZ7jrRKGFAsgwHYd86lO9i1a5kfPzjWAdKAEiovgoivWR8KHZGmnhn/RKbzTL
-         1XUZEAdcoeFlf0L6wGMIApcWZypNIy83pkZJUo1Grw4AniKddzPURLOJ4Cdqr4jDIXKc
-         odWIgEVpaJNdG6FrixXUtQ6WzQPRidZhvpFYNHH7omDNDISx5ElWddVXpZScPl1Tjuxd
-         FhUg==
-X-Gm-Message-State: APjAAAUEgsCq/XZJYiCEogssgISH0wYzVG2bBVhvrMTXlyfvVZb+UHwM
-        zHB3DjxnWsTHoX0DfxEgxxU=
-X-Google-Smtp-Source: APXvYqyz3X7WGwptvOEiJxwSNXqqwTYv3ZYeA8KT5pni5GmwVfEADCKS6SJfoeyphY2Axu5WL8Tqpg==
-X-Received: by 2002:a63:5818:: with SMTP id m24mr25869925pgb.358.1582076690066;
-        Tue, 18 Feb 2020 17:44:50 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id t186sm221192pgd.26.2020.02.18.17.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=/6BKpu6I9GWZilmKCDR/xIEf9kb10U/fQ/hS1RFxo/E=;
+        b=X6bBqnh+Vay65Dt7+KWdz9qnZChyqpyeUDcRs7GFRhcmfLQAx2d7p4lEGWnGDNymss
+         lv0zIO013ayjHzwaSbKZPtbQeTbclxZGqpOwDVepQp80JTv3/tHNdLx0gw0FdKEou29k
+         qqgdy7uAsxaN0p+xjZwFfta+A5huVscI/LkyQqYg3aIivb+0P9xCLTuRRl2GzC05Ww52
+         X45s/K0kTz6CX7g0AW8uM0rcKQRxq5AavjKvqvj2AP8Uwsyf57Eq0Kr6zFA5tcyIFBt3
+         /JUhCXydd6fmqqSV6NoO/0iq9ubCSEBQVnp9xe88bxcwEmy27Ehix2Dp7Zk5+u7gEr5L
+         oW3A==
+X-Gm-Message-State: APjAAAXIuviPlr27hGfTalXtCPJlW1GjgkcAdLgGXic2bXtoLmgarRma
+        Liee8CgWhDjrefZ6idchxRQ=
+X-Google-Smtp-Source: APXvYqwwKle6VVN2am3/CWIym5vOlHdjzCyQZW3QPgCSqnuGkU97ImrWpOZRQFtL2HjvnrD66h8CEw==
+X-Received: by 2002:a17:902:8f8e:: with SMTP id z14mr24068362plo.195.1582076688168;
         Tue, 18 Feb 2020 17:44:48 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id t186sm221192pgd.26.2020.02.18.17.44.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 17:44:46 -0800 (PST)
 From:   Minchan Kim <minchan@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
@@ -77,11 +77,10 @@ Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
         John Dias <joaodias@google.com>,
         Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
         alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: [PATCH v6 7/7] mm/madvise: allow KSM hints for remote API
-Date:   Tue, 18 Feb 2020 17:44:33 -0800
-Message-Id: <20200219014433.88424-8-minchan@kernel.org>
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v6 6/7] mm/madvise: employ mmget_still_valid for write lock
+Date:   Tue, 18 Feb 2020 17:44:32 -0800
+Message-Id: <20200219014433.88424-7-minchan@kernel.org>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 In-Reply-To: <20200219014433.88424-1-minchan@kernel.org>
 References: <20200219014433.88424-1-minchan@kernel.org>
@@ -94,70 +93,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oleksandr Natalenko <oleksandr@redhat.com>
 
-It all began with the fact that KSM works only on memory that is marked
-by madvise(). And the only way to get around that is to either:
+Do the very same trick as we already do since 04f5866e41fb. KSM hints
+will require locking mmap_sem for write since they modify vm_flags, so
+for remote KSM hinting this additional check is needed.
 
-  * use LD_PRELOAD; or
-  * patch the kernel with something like UKSM or PKSM.
-
-(i skip ptrace can of worms here intentionally)
-
-To overcome this restriction, lets employ a new remote madvise API. This
-can be used by some small userspace helper daemon that will do auto-KSM
-job for us.
-
-I think of two major consumers of remote KSM hints:
-
-  * hosts, that run containers, especially similar ones and especially in
-    a trusted environment, sharing the same runtime like Node.js;
-
-  * heavy applications, that can be run in multiple instances, not
-    limited to opensource ones like Firefox, but also those that cannot be
-    modified since they are binary-only and, maybe, statically linked.
-
-Speaking of statistics, more numbers can be found in the very first
-submission, that is related to this one [1]. For my current setup with
-two Firefox instances I get 100 to 200 MiB saved for the second instance
-depending on the amount of tabs.
-
-1 FF instance with 15 tabs:
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   410
-
-2 FF instances, second one has 12 tabs (all the tabs are different):
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   592
-
-At the very moment I do not have specific numbers for containerised
-workload, but those should be comparable in case the containers share
-similar/same runtime.
-
-[1] https://lore.kernel.org/patchwork/patch/1012142/
-
-Reviewed-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
 Signed-off-by: Minchan Kim <minchan@kernel.org>
 ---
- mm/madvise.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ mm/madvise.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/mm/madvise.c b/mm/madvise.c
-index c55a18fe71f9..b97c7e1a5cab 100644
+index f6d9b9e66243..c55a18fe71f9 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -1005,6 +1005,10 @@ process_madvise_behavior_valid(int behavior)
- 	switch (behavior) {
- 	case MADV_COLD:
- 	case MADV_PAGEOUT:
-+#ifdef CONFIG_KSM
-+	case MADV_MERGEABLE:
-+	case MADV_UNMERGEABLE:
-+#endif
- 		return true;
- 	default:
- 		return false;
+@@ -1118,6 +1118,8 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+ 	if (write) {
+ 		if (down_write_killable(&mm->mmap_sem))
+ 			return -EINTR;
++		if (current->mm != mm && !mmget_still_valid(mm))
++			goto skip_mm;
+ 	} else {
+ 		down_read(&mm->mmap_sem);
+ 	}
+@@ -1169,6 +1171,7 @@ int do_madvise(struct task_struct *target_task, struct mm_struct *mm,
+ 	}
+ out:
+ 	blk_finish_plug(&plug);
++skip_mm:
+ 	if (write)
+ 		up_write(&mm->mmap_sem);
+ 	else
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
