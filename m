@@ -2,339 +2,176 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354C7C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451CAC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF02C22B48
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FD5206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:39:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UHca1o/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgBSCjN (ORCPT
+        id S1728156AbgBSCjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:39:13 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24920 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbgBSCjN (ORCPT
+        Tue, 18 Feb 2020 21:39:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40816 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbgBSCjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:39:13 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J2Y824013073
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 21:39:12 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ube9edw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 21:39:12 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 19 Feb 2020 02:39:09 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 02:39:03 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01J2d2Gg36503836
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 02:39:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 116B052050;
-        Wed, 19 Feb 2020 02:39:02 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 646D35204E;
-        Wed, 19 Feb 2020 02:39:01 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id D431FA00DF;
-        Wed, 19 Feb 2020 13:38:56 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-Date:   Wed, 19 Feb 2020 13:39:00 +1100
-In-Reply-To: <20200203124942.00003b68@Huawei.com>
-References: <20191203034655.51561-1-alastair@au1.ibm.com>
-         <20191203034655.51561-8-alastair@au1.ibm.com>
-         <20200203124942.00003b68@Huawei.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Tue, 18 Feb 2020 21:39:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id c23so16099453lfi.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 18:39:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=60VIe0tObFe5ZoC97rjmVnguUIDOMQa1br+X3tRbe10=;
+        b=UHca1o/SHo7SCNMRYI5uY8DaMu5GNllMTWkGXc5MS7P+s59msv88R2RviPw2CrOdtu
+         CBYu4sbldJnVT1FZ4EGw/g0beAcwJZibwEdKWreHa7YxWkDE+ddKocoIZ9UR7ShdnQVZ
+         d0rJP2X2GMfBDkIsJTqnqbDLsagB+KbZGkN4sIy6+SQyvunqj6whX/S3KiHe+CCAuSUe
+         V8V6ErHKDlLBVBklt76W8/t2SyUb3RxNGmYwe/GRHBAp/LmO2TRDnCr8tJNL5x5W3OeH
+         aN2WCvS1jho5+x6IQlq90GqSRdcEHfB7aS4FipQh2m0FegTyCBpi43myQ0pZrYyZekNQ
+         3Baw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=60VIe0tObFe5ZoC97rjmVnguUIDOMQa1br+X3tRbe10=;
+        b=ZMpn5JTuW8twY2L2xCa2REAzTSxby3Qb/+cf7I8nZtWe9t+bkMz95vL6CX8C9e4krN
+         ORN9LaKoTnrsqJxwTu+qnqRW2+YoTD2Eh2Y883lfVa7d9oArn0AspoTVeURANfbnsCTu
+         XpXlSrq6Y5uPRsmtpLr92JsaK1FRY7TdeiRPwv8qLmrtqU8CemKT5oJ+cJ3sGEUb2JQT
+         aADExrHG/tRJbbGIlBLIExxE5qGLhtMlBe1vwMXpxomax1y14nLxy3DNAUyfWR5pYCD7
+         TlB07FElmqPZwLYA43KEKHvFwgjsN9RAl4IVYljay9050FyyrUaAzZWUwml3K/8uFt/f
+         9bjQ==
+X-Gm-Message-State: APjAAAUjde0nA3xqwyfJDf8cX4Ku07eqJJOAcN0pNat0g2h/yom8QRPn
+        wRYvcwG9vhhUWQk0xXc+sZgJ8aCZyEWK0l/iQXusIdWvrmc=
+X-Google-Smtp-Source: APXvYqzJM6Bp8/duZfOtgIHDfdILC0e0bJjneyJsmVwnnJSvPRPpbhC+jzIEaDDX+lRvrEHkDYny86gzlmRYtk6cP2U=
+X-Received: by 2002:ac2:5467:: with SMTP id e7mr11383861lfn.74.1582079955688;
+ Tue, 18 Feb 2020 18:39:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021902-4275-0000-0000-000003A34DCB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021902-4276-0000-0000-000038B75661
-Message-Id: <d8c4cbeb65ad87d6ca5a3867bbd94852f8a404f1.camel@au1.ibm.com>
-Subject: RE: [PATCH v2 07/27] ocxl: Add functions to map/unmap LPC memory
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_08:2020-02-18,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 spamscore=0 impostorscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190017
+References: <20200218190418.536430858@linuxfoundation.org>
+In-Reply-To: <20200218190418.536430858@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 19 Feb 2020 08:09:04 +0530
+Message-ID: <CA+G9fYsdcDkYdinGRW+0dtEz-qojZi67dsbnuiOF1=LiWKaUYw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/38] 4.19.105-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-03 at 12:49 +0000, Jonathan Cameron wrote:
-> On Tue, 3 Dec 2019 14:46:35 +1100
-> Alastair D'Silva <alastair@au1.ibm.com> wrote:
-> 
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Add functions to map/unmap LPC memory
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  drivers/misc/ocxl/config.c        |  4 +++
-> >  drivers/misc/ocxl/core.c          | 50
-> > +++++++++++++++++++++++++++++++
-> >  drivers/misc/ocxl/ocxl_internal.h |  3 ++
-> >  include/misc/ocxl.h               | 18 +++++++++++
-> >  4 files changed, 75 insertions(+)
-> > 
-> > diff --git a/drivers/misc/ocxl/config.c
-> > b/drivers/misc/ocxl/config.c
-> > index c8e19bfb5ef9..fb0c3b6f8312 100644
-> > --- a/drivers/misc/ocxl/config.c
-> > +++ b/drivers/misc/ocxl/config.c
-> > @@ -568,6 +568,10 @@ static int read_afu_lpc_memory_info(struct
-> > pci_dev *dev,
-> >  		afu->special_purpose_mem_size =
-> >  			total_mem_size - lpc_mem_size;
-> >  	}
-> > +
-> > +	dev_info(&dev->dev, "Probed LPC memory of %#llx bytes and
-> > special purpose memory of %#llx bytes\n",
-> > +		afu->lpc_mem_size, afu->special_purpose_mem_size);
-> > +
-> 
-> If we are being fussy, this block has nothing todo with the rest of
-> the patch
-> so we should be seeing it here.
+On Wed, 19 Feb 2020 at 01:27, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.105 release.
+> There are 38 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 20 Feb 2020 19:03:19 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.105-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Agreed
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> 
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
-> > index 2531c6cf19a0..98611faea219 100644
-> > --- a/drivers/misc/ocxl/core.c
-> > +++ b/drivers/misc/ocxl/core.c
-> > @@ -210,6 +210,55 @@ static void unmap_mmio_areas(struct ocxl_afu
-> > *afu)
-> >  	release_fn_bar(afu->fn, afu->config.global_mmio_bar);
-> >  }
-> >  
-> > +int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu)
-> > +{
-> > +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> > +
-> > +	if ((afu->config.lpc_mem_size + afu-
-> > >config.special_purpose_mem_size) == 0)
-> > +		return 0;
-> > +
-> > +	afu->lpc_base_addr = ocxl_link_lpc_map(afu->fn->link, dev);
-> > +	if (afu->lpc_base_addr == 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (afu->config.lpc_mem_size) {
-> 
-> I was happy with the explicit check on 0 above, but we should be
-> consistent.  Either
-> we make use of 0 == false, or we don't and explicitly check vs 0.
-> 
-> Hence
-> 
-> if (afu->config.pc_mem_size != 0) { 
-> 
-> here or
-> 
-> if (!(afu->config.pc_mem_size + afu-
-> >config.special_purpose_mem_size))
-> 	return 0;
-> 
-> above.
+Summary
+------------------------------------------------------------------------
 
-This feels a bit niggly, but sure, changed to a '> 0' check.
+kernel: 4.19.105-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 85265e81d664e50b5da918dbdf02b5bbb926b2ea
+git describe: v4.19.104-39-g85265e81d664
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.104-39-g85265e81d664
 
-> 
-> > +		afu->lpc_res.start = afu->lpc_base_addr + afu-
-> > >config.lpc_mem_offset;
-> > +		afu->lpc_res.end = afu->lpc_res.start + afu-
-> > >config.lpc_mem_size - 1;
-> > +	}
-> > +
-> > +	if (afu->config.special_purpose_mem_size) {
-> > +		afu->special_purpose_res.start = afu->lpc_base_addr +
-> > +						 afu-
-> > >config.special_purpose_mem_offset;
-> > +		afu->special_purpose_res.end = afu-
-> > >special_purpose_res.start +
-> > +					       afu-
-> > >config.special_purpose_mem_size - 1;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ocxl_afu_map_lpc_mem);
-> > +
-> > +struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu)
-> > +{
-> > +	return &afu->lpc_res;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ocxl_afu_lpc_mem);
-> > +
-> > +static void unmap_lpc_mem(struct ocxl_afu *afu)
-> > +{
-> > +	struct pci_dev *dev = to_pci_dev(afu->fn->dev.parent);
-> > +
-> > +	if (afu->lpc_res.start || afu->special_purpose_res.start) {
-> > +		void *link = afu->fn->link;
-> > +
-> > +		ocxl_link_lpc_release(link, dev);
-> > +
-> > +		afu->lpc_res.start = 0;
-> > +		afu->lpc_res.end = 0;
-> > +		afu->special_purpose_res.start = 0;
-> > +		afu->special_purpose_res.end = 0;
-> > +	}
-> > +}
-> > +
-> >  static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct
-> > pci_dev *dev)
-> >  {
-> >  	int rc;
-> > @@ -251,6 +300,7 @@ static int configure_afu(struct ocxl_afu *afu,
-> > u8 afu_idx, struct pci_dev *dev)
-> >  
-> >  static void deconfigure_afu(struct ocxl_afu *afu)
-> >  {
-> > +	unmap_lpc_mem(afu);
-> 
-> Hmm. This breaks the existing balance between configure_afu and
-> deconfigure_afu.
-> 
-> Given comments below on why we don't do map_lpc_mem in the afu bring
-> up
-> (as it's a shared operation) it seems to me that we should be doing
-> this
-> outside of the afu deconfigure.  Perhaps ocxl_function_close is
-> appropriate?
-> I don't know this infrastructure well enough to be sure.
-> 
-> If it does need to be here, then a comment to give more info on
-> why would be great!
-> 
+No regressions (compared to build v4.19.104)
 
-Sure, I've added a comment in unmap_lpc_mem explaining that lpc_release
-only releases the memory on the link when the last consumer calls
-release.
+No fixes (compared to build v4.19.104)
 
-It's in deconfigure_afu as the LPC memory is registered and reported
-per-AFU (even though it has to be allocated all at once across the
-link).
 
-> >  	unmap_mmio_areas(afu);
-> >  	reclaim_afu_pasid(afu);
-> >  	reclaim_afu_actag(afu);
-> > diff --git a/drivers/misc/ocxl/ocxl_internal.h
-> > b/drivers/misc/ocxl/ocxl_internal.h
-> > index 20b417e00949..9f4b47900e62 100644
-> > --- a/drivers/misc/ocxl/ocxl_internal.h
-> > +++ b/drivers/misc/ocxl/ocxl_internal.h
-> > @@ -52,6 +52,9 @@ struct ocxl_afu {
-> >  	void __iomem *global_mmio_ptr;
-> >  	u64 pp_mmio_start;
-> >  	void *private;
-> > +	u64 lpc_base_addr; /* Covers both LPC & special purpose memory
-> > */
-> > +	struct resource lpc_res;
-> > +	struct resource special_purpose_res;
-> >  };
-> >  
-> >  enum ocxl_context_status {
-> > diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> > index 06dd5839e438..6f7c02f0d5e3 100644
-> > --- a/include/misc/ocxl.h
-> > +++ b/include/misc/ocxl.h
-> > @@ -212,6 +212,24 @@ int ocxl_irq_set_handler(struct ocxl_context
-> > *ctx, int irq_id,
-> >  
-> >  // AFU Metadata
-> >  
-> > +/**
-> > + * Map the LPC system & special purpose memory for an AFU
-> > + *
-> > + * Do not call this during device discovery, as there may me
-> > multiple
-> > + * devices on a link, and the memory is mapped for the whole link,
-> > not
-> > + * just one device. It should only be called after all devices
-> > have
-> > + * registered their memory on the link.
-> > + *
-> > + * afu: The AFU that has the LPC memory to map
-> Run kernel-doc over these files and fix all the errors + warnings.
-> 
-Ok.
+Ran 23734 total tests in the following environments and test suites.
 
-> @afu: ..
-> 
-> and missing function name etc.
-> 
-> 
-> > + */
-> > +extern int ocxl_afu_map_lpc_mem(struct ocxl_afu *afu);
-> > +
-> > +/**
-> > + * Get the physical address range of LPC memory for an AFU
-> > + * afu: The AFU associated with the LPC memory
-> > + */
-> > +extern struct resource *ocxl_afu_lpc_mem(struct ocxl_afu *afu);
-> > +
-> >  /**
-> >   * Get a pointer to the config for an AFU
-> >   *
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
