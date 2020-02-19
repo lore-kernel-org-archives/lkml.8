@@ -2,95 +2,84 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C01C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B408C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8498424656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="KHQvflBu"
+	by mail.kernel.org (Postfix) with ESMTP id D0EF324677
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582148218;
+	bh=bex3ia3o7ks1qLsY7UOubSYiyKKJtXT/h4183Oe1kGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T7waKzYak40JT5mos/0hDyklrMxJeFPgZzxNMVrKo42jduDdSbHZhaI/y11/JVb83
+	 KXVHK4frHXU2pqs/DpK+mkBSkdPOFna4CnobK5cyISHM3z6PPUbu31zzZKxp3mWEgh
+	 rtCnqOIV4pPaGoDkLIeuDEQzTjrl2tBxgsFhNX+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBSVdj (ORCPT
+        id S1727485AbgBSVg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:33:39 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:39871 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727775AbgBSVdi (ORCPT
+        Wed, 19 Feb 2020 16:36:57 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36164 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSVg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:33:38 -0500
-Received: by mail-qv1-f65.google.com with SMTP id y8so912127qvk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:33:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JVkD5nxiTD0qf2+tDsHsfNYWqcQb37JvAO77tIsuHko=;
-        b=KHQvflBumvT9ocn+DUGF92g5qIEYXn4RpN+sBAiiGI7qDTLMDNvmMXdzmPx07tdVC5
-         Z0jvJ9KvD3Oz7dzhrCjSoFhzzkkoRZ5cfSGee6fXlC4SGMn+qcgJb69EApxW+QV0Ithg
-         yFxee/9aU7GZEi96Gqkjtz9aGbnDEFfrQR2RtxW3VYOlLw45JSNOGyp0Qo2KHPO4KTEF
-         fO+TS/HO2EgULbw5hfQWr8Ui6ZzSceXUwwZI2AQcNjv8OJCCdE9TwIsToHxrKor4ndV+
-         a4UIjjq/mOCYYiNdlRbZawGhrrSJpjoQsKrEzSmsPSJkWMOrGT7A5yXMxtog1VXEBgr6
-         GCOQ==
+        Wed, 19 Feb 2020 16:36:57 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so25388236oic.3;
+        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JVkD5nxiTD0qf2+tDsHsfNYWqcQb37JvAO77tIsuHko=;
-        b=GaqoR9xmnohbOD99HPaAJRPIHFK3nfVCwCQnZaHBidRStPTJ+/UnRIRoaXJdhJfR7V
-         SUHZ60EKFDkOHeAEcdl9eRzkbrMUdQNSMAnn4fwCNFTSDbZkR8nh3jSoFOIA1R4Eaq+T
-         Hppu9j9GlfPhGbIppLFwcXuPUjgWPXmJihbFZIswk3IqRCHNmDVKYNOJbnlQVlDR6+PR
-         QWafH6BtCJ9PvvE84nQbxWPhRL3kA1yYnfOwxWWCpge+tsNJz1lAfsx2uw/OsX80dmcR
-         YSYzpOyhwaG+vAnwmQT3WCnKwah/7K67yYUOBME6AnXW7X1SpzwwjlT053tM3KRHCVqE
-         xO9A==
-X-Gm-Message-State: APjAAAWAPipuMhyVc99780Oi2mtz2uaGe67DPd8qg3a9NQajOVD9Bu4i
-        N5I743Nf/z/SuWXMM5rhbkT6Kw==
-X-Google-Smtp-Source: APXvYqzEXXsR5u3FJN/PyxBmZtf/Z8ndTXA0RM2zBRR4GY9UMh7JsgHW89x2UTENdKZ+5MLtTmbR5A==
-X-Received: by 2002:a0c:e2d1:: with SMTP id t17mr23178016qvl.25.1582148017323;
-        Wed, 19 Feb 2020 13:33:37 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:3bde])
-        by smtp.gmail.com with ESMTPSA id g62sm512111qkd.25.2020.02.19.13.33.36
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DuxIjKakUovTLWJrrUy0F4nZWjjNRF7r2EzINrOf4VY=;
+        b=WFnj8wcK2eJUrrcffgSbAbUaJmMo0hIvmQBKS6hYhbtdPspLvhRy4oypUjEzYDYdIK
+         rV3SKnBnTC7q6rSAAyXuWrGMjZTUuQSJtZxl9CUvGhMV4jH2KmfePB43pNRzLxpO5bEq
+         FqDaXGdYYjJiXlRh/tpRlYC+/tvj6ThIlWNAP8amBFEAtsh0Gyga4zDKSn7QYf4A7hQ1
+         9qGzanL5Yxn6zdHknzITGlGx5Ok0c1wpbmm+A8lRfy6VnHPPV1swY46VzYCGklw+XWpq
+         UowhmPdRpJnJ/YEQTscTsf8Tm8J38aKx2PhWw99Hm0WZAp9qzzkRM2bpKl4aoEyictmt
+         qO7g==
+X-Gm-Message-State: APjAAAXrjjihOQhe789sq2V4o7nurKj8SNAVRQz3BSPVTxYsgDawFbqm
+        i5VLCYg9bQjiHE6L6fWsvg==
+X-Google-Smtp-Source: APXvYqzr/vS7d9QJGh+dXQuTXIewzPQA3FFO3+dnNCb8cuSi1tgLl4sdiFnz8tCgRMksqfyJUey8Rg==
+X-Received: by 2002:aca:100e:: with SMTP id 14mr6121071oiq.88.1582148216399;
+        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p65sm380817oif.47.2020.02.19.13.36.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 13:33:36 -0800 (PST)
-Date:   Wed, 19 Feb 2020 16:33:35 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200219213335.GE54486@cmpxchg.org>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219113139.ee60838bc7eb35747eb330fa@linux-foundation.org>
+        Wed, 19 Feb 2020 13:36:55 -0800 (PST)
+Received: (nullmailer pid 13132 invoked by uid 1000);
+        Wed, 19 Feb 2020 21:36:55 -0000
+Date:   Wed, 19 Feb 2020 15:36:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add fsl,ls1028a-dspi compatible
+Message-ID: <20200219213655.GA13076@bogus>
+References: <20200218171418.18297-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219113139.ee60838bc7eb35747eb330fa@linux-foundation.org>
+In-Reply-To: <20200218171418.18297-1-michael@walle.cc>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:31:39AM -0800, Andrew Morton wrote:
-> But what was the nature of these stalls?  If they were "stuck in D
-> state waiting for something" then that's throttling.  If they were
-> "unexpected bursts of in-kernel CPU activity" then I see a better case.
+On Tue, 18 Feb 2020 18:14:17 +0100, Michael Walle wrote:
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+> changes since v1:
+>  - none, this is a new patch
+> 
+>  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-It was both.
-
-However, the workload was able to perform with no direct reclaim
-activity and no stalls, while memory.high semantics were never
-violated. This means that allocation rate was not outstripping reclaim
-rate, just that both of these things happened in bursts and sputters.
-
-If the workload isn't exceeding the memory.high grace buffer, it seems
-unnecessary to make it wait behind a reclaim invocation that gets
-delayed on IO but will succeed before the workload comes back for the
-next allocation. We can just let it get on with its thing, actually
-work with the memory it just obtained, while background reclaim will
-free pages as they become reclaimable. This is a win-win situation.
+Acked-by: Rob Herring <robh@kernel.org>
