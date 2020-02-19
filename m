@@ -2,117 +2,107 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA8CC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBB4C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B96D24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F6224670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjlV42MR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XepYboAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgBSRyp (ORCPT
+        id S1726717AbgBSRzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:54:45 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42715 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbgBSRyo (ORCPT
+        Wed, 19 Feb 2020 12:55:46 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27080 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726659AbgBSRzp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:54:44 -0500
-Received: by mail-io1-f68.google.com with SMTP id z1so1513748iom.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:54:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pVM5w8pWHIZ/EotHHbfztVooGI8DcUzurZWsF1GVlv8=;
-        b=DjlV42MRt2LwvsGMIDSNfx2AlWBIF4tJPASkfQu/VLpaQu1yL754QGU09InNr6NAgu
-         8g5fJpIsH7COZk6EB0zw9/ige/4dde1ABsmKYLgBVu/sSXqHOe+gja1sJDFqOpL9WNFv
-         526qHK1l63cPNl2V1Nu/KQqfb2fSFZhFc7uAd7yb116KZFlpmb3P3fHT/jxuUtzSavc/
-         sKbiVxVfwUbPfYuxoX7dGZfaWG6ZGVSzyoUD6b1+cmHdDgfzJVqHfuOEUqzSPU6M4gm1
-         Ln42OI5fF0o8b5vsQpoESRmVpSwuIBs95MtyHTVicm5IeehmlyEC5ip8PQjf2Wwh6zuK
-         /C3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pVM5w8pWHIZ/EotHHbfztVooGI8DcUzurZWsF1GVlv8=;
-        b=TxljV1qLU9LmEAWJkU3uwn5PAU6Exd7acX1B5vua4jWllFuYKChTI/oWLeiG4PQ2yJ
-         x8xy8mcS5BEaUzgizzhZdibbL3CmJJy4zUHF/BZhcfx42z2arQz5FCXGa2GoZLyZxsC1
-         silZXotE6xRRvGeXzSO5ex1WWc0+qd4uPE4Xxek/PysthIgMMYisvW1BZp4JxkH8CB/p
-         Gi5Fi3Fcv2VA+FZF9pR8yexnuoETaqY9DdbwygfkEr2/vk0+SFHhEDej82LCblXVMNJB
-         LncpkS6cz0YlqorGRARkdPfu/HLPmZG4t5kUFBLLbg3fdazm9yC0skQFHfSurlzwKgUj
-         Rnwg==
-X-Gm-Message-State: APjAAAVETZvjzvODk5hjwAdjJnzTpbk1x1jc9Cb+SCFyLXg68os7hdoY
-        PZgRWEAGFSjRWSv5Iu3+hpYz1QfMsHKtMBw7A7kVwA==
-X-Google-Smtp-Source: APXvYqyEGn6UgaT8QtFCfYkVsiskjTsIBKforpsX1D9r0PUsg1QeeVDhcVZuIx+0X0pl880b5xsgT9bsErLOym9p26Q=
-X-Received: by 2002:a02:a48e:: with SMTP id d14mr21577724jam.30.1582134882789;
- Wed, 19 Feb 2020 09:54:42 -0800 (PST)
+        Wed, 19 Feb 2020 12:55:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582134944;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=woJrYBQ5G1rIzUoBIxisrRt/fHuFNb6jWX81Ut30+Bc=;
+        b=XepYboAfsQQNWtCx50VGEyzOfnRussqI55aiEJLCIQoTbXH/A4+DO9cuY7zKEfrg59NDwz
+        8R0pIs4iH2CM8+DG1WWzKdFgmr0BqASAIZz9G3Fzl2Y8fq6RhJc+opDkAy1sPD4fK+fKbm
+        eNhMkdgnTas7RhkhjGNRfn7WFeAQMrE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-29-c4VgchpyOW2sfzE38trctg-1; Wed, 19 Feb 2020 12:55:36 -0500
+X-MC-Unique: c4VgchpyOW2sfzE38trctg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DBF413F9;
+        Wed, 19 Feb 2020 17:55:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 64AC21001920;
+        Wed, 19 Feb 2020 17:55:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
+References: <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com> <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk> <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com> <227117.1582124888@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
+        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        linux-btrfs <linux-btrfs@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
 MIME-Version: 1.0
-References: <CAKUOC8VN5n+YnFLPbQWa1hKp+vOWH26FKS92R+h4EvS=e11jFA@mail.gmail.com>
- <20200213082643.GB9144@ming.t460p> <d2c77921-fdcd-4667-d21a-60700e6a2fa5@acm.org>
- <CAKUOC8U1H8qJ+95pcF-fjeu9hag3P3Wm6XiOh26uXOkvpNngZg@mail.gmail.com>
- <de7b841c-a195-1b1e-eb60-02cbd6ba4e0a@acm.org> <CACVXFVP114+QBhw1bXqwgKRw_s4tBM_ZkuvjdXEU7nwkbJuH1Q@mail.gmail.com>
- <CAKUOC8Xss0YPefhKfwBiBar-7QQ=QrVh3d_8NBfidCCxUuxcgg@mail.gmail.com>
- <20200215034652.GA19867@ming.t460p> <CAJmaN=miqzhnZUTqaTOPp+OWY8+QYhXoE=h5apSucMkEU4nvtA@mail.gmail.com>
- <20200219025456.GD31488@ming.t460p>
-In-Reply-To: <20200219025456.GD31488@ming.t460p>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Wed, 19 Feb 2020 09:54:31 -0800
-Message-ID: <CAKUOC8UceQ_cDQC8ckvUio0AZHhasi7Np-PQ09e-dQ3fechKoA@mail.gmail.com>
-Subject: Re: BLKSECDISCARD ioctl and hung tasks
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Jesse Barnes <jsbarnes@google.com>,
-        Ming Lei <tom.leiming@gmail.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Gwendal Grignou <gwendal@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <241567.1582134931.1@warthog.procyon.org.uk>
+Date:   Wed, 19 Feb 2020 17:55:31 +0000
+Message-ID: <241568.1582134931@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 6:55 PM Ming Lei <ming.lei@redhat.com> wrote:
->
-> On Tue, Feb 18, 2020 at 08:11:53AM -0800, Jesse Barnes wrote:
-> > On Fri, Feb 14, 2020 at 7:47 PM Ming Lei <ming.lei@redhat.com> wrote:
-> > > What are the 'other operations'? Are they block IOs?
-> > >
-> > > If yes, that is why I suggest to fix submit_bio_wait(), which should cover
-> > > most of sync bio submission.
-> > >
-> > > Anyway, the fix is simple & generic enough, I'd plan to post a formal
-> > > patch if no one figures out better doable approaches.
-> >
-> > Yeah I think any block I/O operation that occurs after the
-> > BLKSECDISCARD is submitted will also potentially be affected by the
-> > hung task timeouts, and I think your patch will address that.  My only
-> > concern with it is that it might hide some other I/O "hangs" that are
-> > due to device misbehavior instead.  Yes driver and device timeouts
-> > should generally catch those, but with this in place we might miss a
-> > few bugs.
-> >
-> > Given the nature of these types of storage devices though, I think
-> > that's a minor issue and not worth blocking the patch on, given that
-> > it should prevent a lot of false positive hang reports as Salman
-> > demonstrated.
->
-> Hello Jesse and Salman,
->
-> One more question about this issue, do you enable BLK_WBT on your test
-> kernel?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-It doesn't exist on the original 4.4-based kernel where we reproduced
-this bug.  I am curious how this interacts with this bug.
+> What are the insane pioctl semantics you want?
 
->
-> Thanks,
-> Ming
->
+There's a file type beyond file, dir and symlink that AFS supports:
+mountpoint.  It appears as a directory with no lookup op in Linux - though it
+does support readlink.  When a client walks over it, it causes an automount of
+the volume named by the content of the mountpoint "file" on that point.  NFS
+and CIFS have similar things.
+
+AFS allows the user to create them and remove them:
+
+	http://docs.openafs.org/Reference/1/fs_mkmount.html
+	http://docs.openafs.org/Reference/1/fs_rmmount.html
+
+provided the server grants permission to do so.
+
+OpenAFS, Coda, etc. do this by means of a pair of pioctl() functions (at
+least, I think Coda does - it ships the pioctl parameters off to userspace to
+handle, so the handling is not actually in the kernel).
+
+> If you can't even open a file on the filesystem, you damn well
+> shouldn't be able to to "pioctl" on it.
+> 
+> And if you *can* open a file on the filesystem, why can't you just use
+> ioctl on it?
+
+Directory, not file.  You can do mkdir (requiring write and execute), for
+example, in a directory you cannot open (which would require read).  If you
+cannot open it, you cannot do ioctl on it.
+
+open(O_PATH) doesn't help because that doesn't let you do ioctl.
+
+David
+
