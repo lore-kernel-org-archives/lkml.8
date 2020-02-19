@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E0C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00294C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1F824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB37422B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cu/THgoI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MxFF3Jv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBSAIi (ORCPT
+        id S1727885AbgBSAIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:08:38 -0500
-Received: from mail-qv1-f74.google.com ([209.85.219.74]:43835 "EHLO
-        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgBSAIh (ORCPT
+        Tue, 18 Feb 2020 19:08:42 -0500
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:44131 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgBSAIk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:08:37 -0500
-Received: by mail-qv1-f74.google.com with SMTP id z9so13488318qvo.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:36 -0800 (PST)
+        Tue, 18 Feb 2020 19:08:40 -0500
+Received: by mail-ua1-f73.google.com with SMTP id 108so4386129uad.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:08:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0f/RzoyEatytyatThC+F3eOfN2v+QCCQ4NfkPjtyieo=;
-        b=cu/THgoI4tMw6Hv/cnWQTiNWXWXUr6AKTVvfgPfzSMLj0kWYcpifZKdSq6w1+DteE0
-         kXx8mLdQVe2X1IQWWOSR6Mh+Qa+NPbQfhsSgJqX39vvszx480CLksDEmmIFQd2vxoqY3
-         1dP0HJ2lDnH66hEZo0ZFi1oE3hkU0IZ8oCsB7mmk/3IFcSboHkCVWkxpT1HW+h7VC1n7
-         yOmJd+ZtmnwfszU5a6Kt86Lcv2GGAwqezGTfzkaF0JiBJgiasqm6vEx4C8j7oNaglBnU
-         JfJ9UsRRTrbO7JD+RSG6YqwZQYiUQK+KI9Aw/1esMS/y9pSezRReN3CDnTr6Mdf4Z3gi
-         lu3A==
+        bh=l6scMayGLTv8i90n5kl1qjpFIVxp1ij4wxIMmOxT7WY=;
+        b=MxFF3Jv/EWuhcxvZl8W5ImYcIiftihQ17JrQuHbGUe20LeBqGWlX0Vs6EqB8LFvumk
+         b4ZoyiHXFOiODzyJoXD5yx1cna013lW8Pi2WUil5kfKJ4aedq1jjXZg4P8fML2UAyTyQ
+         /uNIUrr21WgVaMdydYT05C0JnLFxVqjKAJsDDyn+vQuSScdem6mYvmOJiF6hb0qLTEw0
+         Smd2xgO77Gu1gxaZmS0EyOZN3oetuc1I+tCOXl2LodF41Ek5dZApBYffEvCiAu/ywSMJ
+         +XuBMpKej6buzdbjJGHsVoEc5I0LNkBH4XpX2SCaya8u2R9u8a9PAO1CbeaL1bxUo0gF
+         FQbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0f/RzoyEatytyatThC+F3eOfN2v+QCCQ4NfkPjtyieo=;
-        b=iw8tXt2eENStRnai0dhBC3O7oWIJy9Cjea69NiZx8sKPXgw1ptY1IgR/zezc9EWYy5
-         qLGCewqRBt4Mpi9utdBbFYNhpDSheZ+suEPBoFr12yWH22EGC0llEuqrAjkNoRrEoMva
-         xTJXNM86+CSxiigpQveIbj6Gqi3xEBw44fy9iK3u8g74+z/+cH7exHCySNHpt7aszeyE
-         nDXwZVjkbMk41vlY9k0QkfbbdsT8GIo5ohFZccQCx2Cbu1SIsdHEOVXL4SgmWgllrUIl
-         XgLwJ0S36l6bPezj/SQkjxduRguKoJQS24WmHjw5pY/e08UZ213OX3UYN1Pz7zbSLJUn
-         z7uA==
-X-Gm-Message-State: APjAAAVO31rnC9iz7Uaa5hco7qG6Oib6k4Do4XJOu+UjBZLdZ4GAQ7+e
-        dIDrWWzEtodBVGR1jZpMsusrRzSBuGV47O/5dFE=
-X-Google-Smtp-Source: APXvYqw4ER8WovKBYQVVrHd0oyLZvkEq3WR7WVWTpyENeUeptJ25rnbegEbU6hsEORKa9iiI1OoS973GsI/tCw23qS4=
-X-Received: by 2002:a37:4e89:: with SMTP id c131mr22333834qkb.5.1582070915273;
- Tue, 18 Feb 2020 16:08:35 -0800 (PST)
-Date:   Tue, 18 Feb 2020 16:08:08 -0800
+        bh=l6scMayGLTv8i90n5kl1qjpFIVxp1ij4wxIMmOxT7WY=;
+        b=Nm9dGyGMfPaDMjQqKgfjUGBKtRwEhd12RGyDdl7I5O85Lli/iLW48kQE/JcdOzfyKO
+         AfWABFanU5h3qGUmuFvCX6ZeXskkcwQ8lDruSI2YwMHskD9BC40HxxNH/2eKoMNL090C
+         3mAIfKUzXHZWGAlggNDddXemyK+JBg2QCnvg+1P+m9jv8xKil0PpsajDNTC2qyC0zlVQ
+         FUAUl1Nb7lIEkoOvMaJ/0qM4a2RjWdwF9bLKZIWTDNGNUz1wYy7LwC0+42Co3gFFyCJ5
+         W2r8CE5EfNuJAX1eynr++sz5isIYU0FRh1i6BZ4k6zLeA7t73SwQayV8xkcnqwALPuGV
+         K+DQ==
+X-Gm-Message-State: APjAAAXrBBNOHeqTeDYhwE416bogOOxEg1LmITfqYQ8RYzIC59b64a1r
+        4e9jW7n4vNh/1oDm0Ja/eg3LCpt6OMz1iwi4OyY=
+X-Google-Smtp-Source: APXvYqy3zHVo0z8Du/q8/Or94E/PkF5YNEjibMIbCyb79vcUFl2W+utvk9qo3cjFU6si1C3cTLmny5LfSy/puV4ifSs=
+X-Received: by 2002:a67:f144:: with SMTP id t4mr12321250vsm.36.1582070919665;
+ Tue, 18 Feb 2020 16:08:39 -0800 (PST)
+Date:   Tue, 18 Feb 2020 16:08:09 -0800
 In-Reply-To: <20200219000817.195049-1-samitolvanen@google.com>
-Message-Id: <20200219000817.195049-4-samitolvanen@google.com>
+Message-Id: <20200219000817.195049-5-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20200219000817.195049-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v8 03/12] scs: add support for stack usage debugging
+Subject: [PATCH v8 04/12] scs: disable when function graph tracing is enabled
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -85,72 +85,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implements CONFIG_DEBUG_STACK_USAGE for shadow stacks. When enabled,
-also prints out the highest shadow stack usage per process.
+The graph tracer hooks returns by modifying frame records on the
+(regular) stack, but with SCS the return address is taken from the
+shadow stack, and the value in the frame record has no effect. As we
+don't currently have a mechanism to determine the corresponding slot
+on the shadow stack (and to pass this through the ftrace
+infrastructure), for now let's disable SCS when the graph tracer is
+enabled.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- kernel/scs.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ arch/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 5245e992c692..ad74d13f2c0f 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -184,6 +184,44 @@ int scs_prepare(struct task_struct *tsk, int node)
- 	return 0;
- }
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 66b34fd0df54..4102b8e0eea9 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -535,6 +535,7 @@ config ARCH_SUPPORTS_SHADOW_CALL_STACK
  
-+#ifdef CONFIG_DEBUG_STACK_USAGE
-+static inline unsigned long scs_used(struct task_struct *tsk)
-+{
-+	unsigned long *p = __scs_base(tsk);
-+	unsigned long *end = scs_magic(p);
-+	unsigned long s = (unsigned long)p;
-+
-+	while (p < end && READ_ONCE_NOCHECK(*p))
-+		p++;
-+
-+	return (unsigned long)p - s;
-+}
-+
-+static void scs_check_usage(struct task_struct *tsk)
-+{
-+	static DEFINE_SPINLOCK(lock);
-+	static unsigned long highest;
-+	unsigned long used = scs_used(tsk);
-+
-+	if (used <= highest)
-+		return;
-+
-+	spin_lock(&lock);
-+
-+	if (used > highest) {
-+		pr_info("%s (%d): highest shadow stack usage: %lu bytes\n",
-+			tsk->comm, task_pid_nr(tsk), used);
-+		highest = used;
-+	}
-+
-+	spin_unlock(&lock);
-+}
-+#else
-+static inline void scs_check_usage(struct task_struct *tsk)
-+{
-+}
-+#endif
-+
- bool scs_corrupted(struct task_struct *tsk)
- {
- 	unsigned long *magic = scs_magic(__scs_base(tsk));
-@@ -200,6 +238,7 @@ void scs_release(struct task_struct *tsk)
- 		return;
- 
- 	WARN_ON(scs_corrupted(tsk));
-+	scs_check_usage(tsk);
- 
- 	scs_account(tsk, -1);
- 	task_set_scs(tsk, NULL);
+ config SHADOW_CALL_STACK
+ 	bool "Clang Shadow Call Stack"
++	depends on !FUNCTION_GRAPH_TRACER
+ 	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
+ 	help
+ 	  This option enables Clang's Shadow Call Stack, which uses a
 -- 
 2.25.0.265.gbab2e86ba0-goog
 
