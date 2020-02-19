@@ -2,100 +2,216 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A164C34051
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0ADFC34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08C4E206ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582124105;
-	bh=yUZXolpqCAZH46QWupdgcTiTf30FDecbps3Oweo/RYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=C78w70/FIqDIBJqosvx7GK2bywoGnacYiyT4P8+MuBUKQzw31XyAnIx3PyC91j0qx
-	 QHDzIICb3GYCueiZbc7sK3u7vIB6WA8Ikv+X6OxyygGt4fa+5NQ8ZQsP0sOtExmDnH
-	 k9FkS9VYU24YEXjwCosNjDLp+0EzgcxyrZ5WDApM=
+	by mail.kernel.org (Postfix) with ESMTP id C14812465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 14:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgBSOzD (ORCPT
+        id S1726756AbgBSOzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 09:55:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:50528 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgBSOzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 09:55:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED8391FB;
-        Wed, 19 Feb 2020 06:55:02 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 725113F68F;
-        Wed, 19 Feb 2020 06:55:02 -0800 (PST)
-Date:   Wed, 19 Feb 2020 14:55:00 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/2] ASoC: meson: add t9015 internal DAC driver
-Message-ID: <20200219145500.GC4488@sirena.org.uk>
-References: <20200219133646.1035506-1-jbrunet@baylibre.com>
- <20200219133646.1035506-3-jbrunet@baylibre.com>
+        Wed, 19 Feb 2020 09:55:17 -0500
+Received: from outbound-smtp20.blacknight.com ([46.22.139.247]:32804 "EHLO
+        outbound-smtp20.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726528AbgBSOzR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 09:55:17 -0500
+Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
+        by outbound-smtp20.blacknight.com (Postfix) with ESMTPS id EAE911C1C46
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 14:55:13 +0000 (GMT)
+Received: (qmail 5516 invoked from network); 19 Feb 2020 14:55:13 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 14:55:13 -0000
+Date:   Wed, 19 Feb 2020 14:55:11 +0000
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
+        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
+        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
+        osalvador@suse.de
+Subject: Re: [PATCH v17 4/9] mm: Introduce Reported pages
+Message-ID: <20200219145511.GS3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+ <20200211224635.29318.19750.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KN5l+BnMqAQyZLvT"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200219133646.1035506-3-jbrunet@baylibre.com>
-X-Cookie: FORTH IF HONK THEN
+In-Reply-To: <20200211224635.29318.19750.stgit@localhost.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Feb 11, 2020 at 02:46:35PM -0800, Alexander Duyck wrote:
+> diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> new file mode 100644
+> index 000000000000..1047c6872d4f
+> --- /dev/null
+> +++ b/mm/page_reporting.c
+> @@ -0,0 +1,319 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/mm.h>
+> +#include <linux/mmzone.h>
+> +#include <linux/page_reporting.h>
+> +#include <linux/gfp.h>
+> +#include <linux/export.h>
+> +#include <linux/delay.h>
+> +#include <linux/scatterlist.h>
+> +
+> +#include "page_reporting.h"
+> +#include "internal.h"
+> +
+> +#define PAGE_REPORTING_DELAY	(2 * HZ)
 
---KN5l+BnMqAQyZLvT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I assume there is nothing special about 2 seconds other than "do some
+progress every so often".
 
-On Wed, Feb 19, 2020 at 02:36:46PM +0100, Jerome Brunet wrote:
+> +static struct page_reporting_dev_info __rcu *pr_dev_info __read_mostly;
+> +
+> +enum {
+> +	PAGE_REPORTING_IDLE = 0,
+> +	PAGE_REPORTING_REQUESTED,
+> +	PAGE_REPORTING_ACTIVE
+> +};
+> +
+> +/* request page reporting */
+> +static void
+> +__page_reporting_request(struct page_reporting_dev_info *prdev)
+> +{
+> +	unsigned int state;
+> +
+> +	/* Check to see if we are in desired state */
+> +	state = atomic_read(&prdev->state);
+> +	if (state == PAGE_REPORTING_REQUESTED)
+> +		return;
+> +
+> +	/*
+> +	 *  If reporting is already active there is nothing we need to do.
+> +	 *  Test against 0 as that represents PAGE_REPORTING_IDLE.
+> +	 */
+> +	state = atomic_xchg(&prdev->state, PAGE_REPORTING_REQUESTED);
+> +	if (state != PAGE_REPORTING_IDLE)
+> +		return;
+> +
+> +	/*
+> +	 * Delay the start of work to allow a sizable queue to build. For
+> +	 * now we are limiting this to running no more than once every
+> +	 * couple of seconds.
+> +	 */
+> +	schedule_delayed_work(&prdev->work, PAGE_REPORTING_DELAY);
+> +}
 
-Looks good, couple of small things below:
+Seems a fair use of atomics.
 
-> +static const struct snd_kcontrol_new t9015_snd_controls[] = {
-> +	/* Volume Controls */
-> +	SOC_SINGLE("Playback Mute", VOL_CTRL1, DAC_SOFT_MUTE, 1, 0),
+> +static int
+> +page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+> +		     unsigned int order, unsigned int mt,
+> +		     struct scatterlist *sgl, unsigned int *offset)
+> +{
+> +	struct free_area *area = &zone->free_area[order];
+> +	struct list_head *list = &area->free_list[mt];
+> +	unsigned int page_len = PAGE_SIZE << order;
+> +	struct page *page, *next;
+> +	int err = 0;
+> +
+> +	/*
+> +	 * Perform early check, if free area is empty there is
+> +	 * nothing to process so we can skip this free_list.
+> +	 */
+> +	if (list_empty(list))
+> +		return err;
+> +
+> +	spin_lock_irq(&zone->lock);
+> +
+> +	/* loop through free list adding unreported pages to sg list */
+> +	list_for_each_entry_safe(page, next, list, lru) {
+> +		/* We are going to skip over the reported pages. */
+> +		if (PageReported(page))
+> +			continue;
+> +
+> +		/* Attempt to pull page from list */
+> +		if (!__isolate_free_page(page, order))
+> +			break;
+> +
 
-This should be Switch (see control-names.rst).
+Might want to note that you are breaking because the only reason to fail
+the isolation is that watermarks are not met and we are likely under
+memory pressure. It's not a big issue.
 
-> +	SOC_SINGLE("Volume Ramp Enable", VOL_CTRL1, VC_RAMP_MODE, 1, 0),
-> +	SOC_SINGLE("Mute Ramp Enable", VOL_CTRL1, MUTE_MODE, 1, 0),
-> +	SOC_SINGLE("Unmute Ramp Enable", VOL_CTRL1, UNMUTE_MODE, 1, 0),
+However, while I think this is correct, it's hard to follow. This loop can
+be broken out of with pages still on the scatter gather list. The current
+flow guarantees that err will not be set at this point so the caller
+cleans it up so we always drain the list either here or in the caller.
 
-These too.
+While I think it works, it's a bit fragile. I recommend putting a comment
+above this noting why it's safe and put a VM_WARN_ON_ONCE(err) before the
+break in case someone tries to change this in a years time and does not
+spot that the flow to reach page_reporting_drain *somewhere* is critical.
 
-> +	/* Channel Src */
-> +	SOC_ENUM("Right DAC Source", dacr_in_enum),
-> +	SOC_ENUM("Left DAC Source",  dacl_in_enum),
+> +		/* Add page to scatter list */
+> +		--(*offset);
+> +		sg_set_page(&sgl[*offset], page, page_len, 0);
+> +
+> +		/* If scatterlist isn't full grab more pages */
+> +		if (*offset)
+> +			continue;
+> +
+> +		/* release lock before waiting on report processing */
+> +		spin_unlock_irq(&zone->lock);
+> +
+> +		/* begin processing pages in local list */
+> +		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
+> +
+> +		/* reset offset since the full list was reported */
+> +		*offset = PAGE_REPORTING_CAPACITY;
+> +
+> +		/* reacquire zone lock and resume processing */
+> +		spin_lock_irq(&zone->lock);
+> +
+> +		/* flush reported pages from the sg list */
+> +		page_reporting_drain(prdev, sgl, PAGE_REPORTING_CAPACITY, !err);
+> +
+> +		/*
+> +		 * Reset next to first entry, the old next isn't valid
+> +		 * since we dropped the lock to report the pages
+> +		 */
+> +		next = list_first_entry(list, struct page, lru);
+> +
+> +		/* exit on error */
+> +		if (err)
+> +			break;
+> +	}
+> +
+> +	spin_unlock_irq(&zone->lock);
+> +
+> +	return err;
+> +}
 
-Ideally these would be moved into DAPM (using an AIF_IN widget for the
-DAI).
+I complained about the use of zone lock before but in this version, I
+think I'm ok with it. The lock is held for the free list manipulations
+which is what it's for. The state management with atomics seems
+reasonable.
 
---KN5l+BnMqAQyZLvT
-Content-Type: application/pgp-signature; name="signature.asc"
+Otherwise I think this is ok and I think the implementation right. Of
+great importance to me was the allocator fast paths but they seem to be
+adequately protected by a static branch so
 
------BEGIN PGP SIGNATURE-----
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NTEQACgkQJNaLcl1U
-h9Dlbwf9G+Zx9LnUXQiK9vVqNnfJy5o7uz95sBnsBro99NHp8ldxwtBqNpYjnE5w
-AT6qUKHSPUuGzRcTYuvILXhcp16Pmcl9TARppPrU3dnOxy+CMf4UfCdQvkU2Z+9z
-nVgs2o0WHFrwJaJb1LP8w9onR7Dj0sDx5q63FqSwkp5nTOjxDiwWtnFNcHx8aozG
-tL/ADQlqRABlDjvNz+/knxzF3ZIIbIbyYvGMrHTUWCCP8sn2oOUBeqg1wbJ2pFLf
-iFSl0OFtrYfRAlAMGwxLZl5utpkWU5DG94EceGpx/fK9hXuomNoeLscr+24dnqko
-f/W3R4gTxgSNrt43vmW2os6ejWa6Yg==
-=+YY/
------END PGP SIGNATURE-----
+The ack applies regardless of whether you decide to document and
+defensively protect page_reporting_cycle against losing pages on the
+scatter/gather list but I do recommend it.
 
---KN5l+BnMqAQyZLvT--
+-- 
+Mel Gorman
+SUSE Labs
