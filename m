@@ -6,79 +6,78 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A33C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8B3C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1556824656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3583F2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582116376;
-	bh=HQv/hCM1qUUqyPZSyfsNzd0vfsAlFzJduxoWeJPzwZY=;
+	s=default; t=1582116435;
+	bh=78L7q3X7/Zxk9esBo61a/shxQzMYU6nTCnPnkYfB+2E=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=sw0SUiqJ0WyFuBsTttEq7vKNLSEi5GxZg8WENyG+PK76MNLEHiQHro5a9H6ggHGDQ
-	 9AZQvG2KNdEbQ9ReDfCTVkyh0/jehK60/YN/O1RWXgcLNS3mfREOn2yOgbSiFEvX+h
-	 oZixyTVRGNG/FiSoo8dHkOXsRFv3ZDraof8zP5yw=
+	b=MdejMmLXvrBXzLsNY3lDtzWcWqGnolyWdPDcYxfrgRR+2/qICHgMJ0c3EGx9V1NeJ
+	 rwWlWChhjdz3fgXn8VrOgNoNyJUe2NmD0fOLtR6AqwtYG5z6N/H8Hg3G6Jp2VPo8+a
+	 SvD+AmDBDfHGzV2+zvRN0++0iEUlVQy8Tl+tpZsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727515AbgBSMqP (ORCPT
+        id S1727637AbgBSMrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:46:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50120 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 07:47:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgBSMqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:46:14 -0500
+        id S1726491AbgBSMrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:47:13 -0500
 Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4928724654;
-        Wed, 19 Feb 2020 12:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 454C024654;
+        Wed, 19 Feb 2020 12:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582116374;
-        bh=HQv/hCM1qUUqyPZSyfsNzd0vfsAlFzJduxoWeJPzwZY=;
+        s=default; t=1582116433;
+        bh=78L7q3X7/Zxk9esBo61a/shxQzMYU6nTCnPnkYfB+2E=;
         h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YHtCaZf29YP2Sy1hvl5gP7bgjMIvhsvAMzQFlj0nD65rkdz3+kd3WHukcwYR1V1Pp
-         dhv83JfDTNUpa16QBXDxgmfBzACeMp0JLxvmE1hpVqxYPOSM7xQlSPLZpIzNulp6aD
-         9aDyox6Fw87UN0ucp5Mvmi30xPvaOmBTz1czMADY=
+        b=hdwT7jwDCL5ZqQeaRjVdSYu3jP9wC7ywHEszxyECjNhODNCOWO/jdTrdN/TGO8Kw/
+         iNKq3SBrMzxKe4QcElRQHoD8SJkqLj6UKXd0KzIZM+iwcWfLUOy2jOAHx9O46Ma8Ny
+         OcmmNN29hL1xJorshLjE+GHcL7gPtAHmxirgx1EY=
 Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 29DB935229ED; Wed, 19 Feb 2020 04:46:14 -0800 (PST)
-Date:   Wed, 19 Feb 2020 04:46:14 -0800
+        id 1E9FE35229ED; Wed, 19 Feb 2020 04:47:13 -0800 (PST)
+Date:   Wed, 19 Feb 2020 04:47:13 -0800
 From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com
-Subject: Re: [PATCH v2 3/9] rcu,tracing: Create trace_rcu_{enter,exit}()
-Message-ID: <20200219124614.GT2935@paulmck-ThinkPad-P72>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Amol Grover <frextrite@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Subject: Re: [PATCH] cfg80211: Pass lockdep expression to RCU lists
+Message-ID: <20200219124713.GU2935@paulmck-ThinkPad-P72>
 Reply-To: paulmck@kernel.org
-References: <20200213082716.GI14897@hirez.programming.kicks-ass.net>
- <20200213135138.GB2935@paulmck-ThinkPad-P72>
- <20200213164031.GH14914@hirez.programming.kicks-ass.net>
- <20200213185612.GG2935@paulmck-ThinkPad-P72>
- <20200213204444.GA94647@google.com>
- <20200218195831.GD11457@worktop.programming.kicks-ass.net>
- <20200218201728.GH2935@paulmck-ThinkPad-P72>
- <20200218204021.GJ11457@worktop.programming.kicks-ass.net>
- <20200218213925.GL2935@paulmck-ThinkPad-P72>
- <20200219095743.GA18400@hirez.programming.kicks-ass.net>
+References: <20200219091102.10709-1-frextrite@gmail.com>
+ <ff8a005c68e512cb3f338b7381853e6b3a3ab293.camel@sipsolutions.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219095743.GA18400@hirez.programming.kicks-ass.net>
+In-Reply-To: <ff8a005c68e512cb3f338b7381853e6b3a3ab293.camel@sipsolutions.net>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:57:43AM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 18, 2020 at 01:39:25PM -0800, Paul E. McKenney wrote:
-> > OK.  I will drop it later today, but leave tag in_nmi.2020.02.18a
-> > pointing at it for future reference.
+On Wed, Feb 19, 2020 at 10:13:36AM +0100, Johannes Berg wrote:
+> On Wed, 2020-02-19 at 14:41 +0530, Amol Grover wrote:
+> >  
+> > -	WARN_ON_ONCE(!rcu_read_lock_held() && !lockdep_rtnl_is_held());
+> > -
+> > -	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list) {
+> > +	list_for_each_entry_rcu(pos, &rdev->sched_scan_req_list, list,
+> > +				lockdep_rtnl_is_held()) {
 > 
-> Thanks, I've picked it up in my series.
+> Huh, I didn't even know you _could_ do that :)
 
-Very good, thank you!
+It is a fairly recent addition, courtesy of Joel Fernandes.  ;-)
 
 							Thanx, Paul
