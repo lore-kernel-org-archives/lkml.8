@@ -2,192 +2,140 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A0C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A36C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF01921D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:07:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwnW4WNh"
+	by mail.kernel.org (Postfix) with ESMTP id 89BE024656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgBSJHN (ORCPT
+        id S1726528AbgBSJI3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:07:13 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44358 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgBSJHN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:07:13 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so22384661otj.11;
-        Wed, 19 Feb 2020 01:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hl9R42S7bTmTIImSyFBNArkLnawsxqytbv3I5jer4iE=;
-        b=XwnW4WNhvn8JGvbdWoY7h4s3J9zIhVUWIk9heioPvbq/FxrffWd1t6dLCIQSjYfwps
-         SBSwawhTSiUw5UEU0m4jchppkrSpXXRgSDXT84Brg5JQg0XZbUWhvnLkAidZSr+beN7D
-         Dv1TjI6UmRs1GjZE2LaBCmoWAZVdPHTrEwoKM0k9vyRI1Avn+zIO+EF3ulIvlpqHw479
-         F2m/agZ1clfz1bpokaCGjmvVI+Tih4XM+li1o/gG0o/WiDoMBarpoP9Vm7EICL9mVaGg
-         +fmatW0lJPsQPnyHwIwyoGswfjj3TxNOV4c1OPY1PC36OyMuSDDGzdhoJt1n+ije6i7h
-         ilew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hl9R42S7bTmTIImSyFBNArkLnawsxqytbv3I5jer4iE=;
-        b=UUnRQMKMVzKVE1+6nAtS+Atl9SPTjdBBWGkGlLWYZZITry6iWqdYFuyfvAp1EqqBF3
-         P+Op8mFhArK9TgkLR6zQ12hNystynDxEtpjM9pZI+wHnHbpmGf/s51hUZ+Ism8q932IX
-         cX6SoNwlokjogPxr/MeYkYBUZtR9JfmMg6qCqylVPL0iwmmi+Ia7PNirhrQS92szviUY
-         BY3SctepMmvqpf0rnJt0htx4pk0mXKINUGollX9JcofLGCgjCPX9Zv6nFydH8iGhErEZ
-         6IXxCyVveSk53k9Rkkb1Lwuy1t6w964h5ehdd+GXzVQwLDguMCbycuHpQwPRH+9CjCs9
-         Jv8g==
-X-Gm-Message-State: APjAAAXK1Ln6o8IAdvShk2WlDYEFdM55wQKADJNCL5AA3qWKzNmQ7o9D
-        yjyFP0dMKlsB8BOA9dyS4yipc1/Fn2HYkyBACkk=
-X-Google-Smtp-Source: APXvYqxHKoYOKLSVj2I0oZVyHx/701r0aK9W1LUqkpwYs0YWVF09ezzLoeZkXL7bRk/YGzWf/TnmQEwIspJzwjO/ZWo=
-X-Received: by 2002:a9d:d06:: with SMTP id 6mr19535224oti.176.1582103232048;
- Wed, 19 Feb 2020 01:07:12 -0800 (PST)
+        Wed, 19 Feb 2020 04:08:29 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60612 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgBSJI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:08:28 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id DC0A8AF33;
+        Wed, 19 Feb 2020 09:08:25 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 09:08:22 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        linux-kernel@vger.kernel.org, pauld@redhat.com,
+        parth@linux.ibm.com, hdanton@sina.com
+Subject: Re: [PATCH v2 4/5] sched/pelt: Add a new runnable average signal
+Message-ID: <20200219090822.GH3420@suse.de>
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-5-vincent.guittot@linaro.org>
+ <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
 MIME-Version: 1.0
-References: <20200208183641.6674-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200212140127.GA127398@google.com>
-In-Reply-To: <20200212140127.GA127398@google.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Wed, 19 Feb 2020 09:06:45 +0000
-Message-ID: <CA+V-a8sBPT-RLvzRFFFwbNghD9X26P5qPntoUvgNHQ6_eUzQBg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] PCI: rcar: Preparation for adding endpoint support
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <4cda8dc3-f6bb-2896-c899-65eadd5c839d@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Tue, Feb 18, 2020 at 09:19:16PM +0000, Valentin Schneider wrote:
+> On 14/02/2020 15:27, Vincent Guittot wrote:
+> > Now that runnable_load_avg has been removed, we can replace it by a new
+> > signal that will highlight the runnable pressure on a cfs_rq. This signal
+> > track the waiting time of tasks on rq and can help to better define the
+> > state of rqs.
+> > 
+> > At now, only util_avg is used to define the state of a rq:
+> >   A rq with more that around 80% of utilization and more than 1 tasks is
+> >   considered as overloaded.
+> > 
+> > But the util_avg signal of a rq can become temporaly low after that a task
+> > migrated onto another rq which can bias the classification of the rq.
+> > 
+> > When tasks compete for the same rq, their runnable average signal will be
+> > higher than util_avg as it will include the waiting time and we can use
+> > this signal to better classify cfs_rqs.
+> > 
+> > The new runnable_avg will track the runnable time of a task which simply
+> > adds the waiting time to the running time. The runnable _avg of cfs_rq
+> > will be the /Sum of se's runnable_avg and the runnable_avg of group entity
+> > will follow the one of the rq similarly to util_avg.
+> > 
+> 
+> I did a bit of playing around with tracepoints and it seems to be behaving
+> fine. For instance, if I spawn 12 always runnable tasks (sysbench --test=cpu)
+> on my Juno (6 CPUs), I get to a system-wide runnable value (\Sum cpu_runnable())
+> of about 12K. I've only eyeballed them, but migration of the signal values
+> seem fine too.
+> 
+> I have a slight worry that the rq-wide runnable signal might be too easy to
+> inflate, since we aggregate for *all* runnable tasks, and that may not play
+> well with your group_is_overloaded() change (despite having the imbalance_pct
+> on the "right" side).
+> 
+> In any case I'll need to convince myself of it with some messing around, and
+> this concerns patch 5 more than patch 4. So FWIW for this one:
+> 
+> Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+> 
+> I also have one (two) more nit(s) below.
+> 
 
-Thank you for the review.
+Thanks.
 
-On Wed, Feb 12, 2020 at 2:01 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> To make the changelog from "git log --oneline" read nicely, the
-> subject should begin with a verb, e.g.,
->
->   PCI: rcar: Move shareable code to a common file
->
-> On Sat, Feb 08, 2020 at 06:36:36PM +0000, Lad Prabhakar wrote:
-> > Prepare for adding endpoint support to rcar controller, there are no
-> > functional changes with this patch, a common file is created so that
-> > it can be shared with endpoint driver.
->
-> This commit log doesn't tell us what this patch does.  "Prepare"
-> conveys no real information.  It's a giant patch and it's difficult
-> to verify that there's no functional change.
->
-> I *think* what you did was move most of the #defines from pcie-rcar.c
-> to pcie-rcar.h and most of the code from pcie-rcar.c to
-> pcie-rcar-host.c.  And in both case, these were strict *moves* without
-> any changes.  If that's the case, please say that explicitly in the
-> commit log.
->
-> That's good; thanks for making this a separate patch so it's not
-> mingled with real changes.
->
-Agreed I shall split this patch further more, first patch just
-renaming the file from
-pcie-rcar.c to pcie-rcar-host.c along with Makefile/Kconfig/defconfig
-changes and
-the second patch pulling out common code that shall be share between
-two drivers.
-This shall make it more easier to review.
-
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 > > ---
-> >  arch/arm64/configs/defconfig            |    2 +-
-> >  drivers/pci/controller/Kconfig          |    4 +-
-> >  drivers/pci/controller/Makefile         |    2 +-
-> >  drivers/pci/controller/pcie-rcar-host.c | 1044 ++++++++++++++++++++++++++
-> >  drivers/pci/controller/pcie-rcar.c      | 1229 ++-----------------------------
-> >  drivers/pci/controller/pcie-rcar.h      |  126 ++++
-> >  6 files changed, 1227 insertions(+), 1180 deletions(-)
-> >  create mode 100644 drivers/pci/controller/pcie-rcar-host.c
-> >  create mode 100644 drivers/pci/controller/pcie-rcar.h
-> >
-> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > index b2f6673..8a1f51d 100644
-> > --- a/arch/arm64/configs/defconfig
-> > +++ b/arch/arm64/configs/defconfig
-> > @@ -182,7 +182,7 @@ CONFIG_HOTPLUG_PCI=y
-> >  CONFIG_HOTPLUG_PCI_ACPI=y
-> >  CONFIG_PCI_AARDVARK=y
-> >  CONFIG_PCI_TEGRA=y
-> > -CONFIG_PCIE_RCAR=y
-> > +CONFIG_PCIE_RCAR_HOST=y
-> >  CONFIG_PCI_HOST_GENERIC=y
-> >  CONFIG_PCI_XGENE=y
-> >  CONFIG_PCIE_ALTERA=y
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > index f84e5ff..94bb5e9 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -54,12 +54,12 @@ config PCI_RCAR_GEN2
-> >         There are 3 internal PCI controllers available with a single
-> >         built-in EHCI/OHCI host controller present on each one.
-> >
-> > -config PCIE_RCAR
-> > +config PCIE_RCAR_HOST
->
-> The config symbol change should be mentioned in the commit log.  In
-> general we try to avoid changing config symbols because it's likely to
-> confuse people who keep their .config and update their kernel.  But I
-> guess your audience is probably pretty small.
->
-I shall mention it in my commit message.
+> > diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> > @@ -227,14 +231,14 @@ ___update_load_sum(u64 now, struct sched_avg *sa,
+> >  	 * Step 1: accumulate *_sum since last_update_time. If we haven't
+> >  	 * crossed period boundaries, finish.
+> >  	 */
+> > -	if (!accumulate_sum(delta, sa, load, running))
+> > +	if (!accumulate_sum(delta, sa, load, runnable, running))
+> >  		return 0;
+> >  
+> >  	return 1;
+> >  }
+> >  
+> >  static __always_inline void
+> > -___update_load_avg(struct sched_avg *sa, unsigned long load)
+> > +___update_load_avg(struct sched_avg *sa, unsigned long load, unsigned long runnable)
+> >  {
+> >  	u32 divider = LOAD_AVG_MAX - 1024 + sa->period_contrib;
+> >  
+> > @@ -242,6 +246,7 @@ ___update_load_avg(struct sched_avg *sa, unsigned long load)
+> >  	 * Step 2: update *_avg.
+> >  	 */
+> >  	sa->load_avg = div_u64(load * sa->load_sum, divider);
+> > +	sa->runnable_avg =	div _u64(runnable * sa->runnable_sum, divider);
+>                           ^^^^^^        ^^^^^^^^
+>                             a)             b)
+> a) That's a tab
+> 
 
-> >       bool "Renesas R-Car PCIe controller"
->
-> The description needs to be updated, too.  This is what people will
-> see in menuconfig.
->
-I shall update it accordingly.
+Fixed and I'll post a v4 of my own series with Vincent's included.
 
-> >       depends on ARCH_RENESAS || COMPILE_TEST
-> >       depends on PCI_MSI_IRQ_DOMAIN
-> >       help
-> > -       Say Y here if you want PCIe controller support on R-Car SoCs.
-> > +       Say Y here if you want PCIe controller support on R-Car SoCs in host mode.
->
-> Wrap this so it fits in 80 columns like the rest of the file.
->
-Will fix that.
+> b) The value being passed is always 1, do we really need it to expose it as a
+>    parameter?
 
-Cheers,
---Prabhakar Lad
+This does appear to be an oversight but I'm not familiar enough with
+pelt to be sure.
 
-> Bjorn
+___update_load_avg() is called when sum of the load has changed because
+a pelt period has passed and it has lost sight and does not care if an
+individual sched entity is runnable or not. The parameter was added by
+this patch but I cannot find any useful meaning for it.
+
+Vincent, what was your thinking here? Should the parameter be removed?
+
+-- 
+Mel Gorman
+SUSE Labs
