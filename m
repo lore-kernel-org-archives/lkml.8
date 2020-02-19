@@ -2,149 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1005FC3404C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA77C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E644F24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9209224655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8brOLYu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbgBSBEi (ORCPT
+        id S1727476AbgBSBGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:04:38 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:33068 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726422AbgBSBEi (ORCPT
+        Tue, 18 Feb 2020 20:06:03 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39462 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgBSBGC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:04:38 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 832B83A331C;
-        Wed, 19 Feb 2020 12:04:32 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4Dmx-0004dF-Ul; Wed, 19 Feb 2020 12:04:31 +1100
-Date:   Wed, 19 Feb 2020 12:04:31 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
-Message-ID: <20200219010431.GW10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-14-willy@infradead.org>
- <20200218062147.GN10776@dread.disaster.area>
- <20200218161004.GR7778@bombadil.infradead.org>
+        Tue, 18 Feb 2020 20:06:02 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a141so11657134qkg.6;
+        Tue, 18 Feb 2020 17:06:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OwfuP5nGjqxy79JMZZiigB23bcGhIb7riQCt1QZquPY=;
+        b=i8brOLYuPtuxuL6R0n667/ZUqpFTCCpewfMKnl/XDjdTDO5M6ebkK8Uf+vUTjKUC5Z
+         YgCQljZuCf7fh3grRa0glhcFtyiZo7vTZbPeBZyWl/dWwBfvmjRJw+7CA3N10hgl4IAs
+         WA5AQw8j02wgCmVu2YpXkLtIUABvUHyOGP35KejxM5mk43OqXTguPRQd9ME4WMsWm69I
+         Jzqf7SmIzDpdJ1idCvBR74zxFTKoTsv/Aww5SvJQPhVjuXiz9lq4rQ8GpuPX/cWmHQ+J
+         UbzFi4RhGhIHaUQ4i/7PsckLQXsEMHyIx4nKnEWe4rn+mqWUoMAP8Nu46Ok7xsGqUKep
+         kbtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OwfuP5nGjqxy79JMZZiigB23bcGhIb7riQCt1QZquPY=;
+        b=Cc7FPzNXw3zaO+PGFSZjZzZVK6eIC6qW6T3Fxy/McFP5PzGsUfbXlVe3Og9H3SALEk
+         PcBLHuPrU9yvQrtiMLmgVLzmllIoUgBKprKay1m7vQYnuFp4znH/zr6gzDa8/BqhHAJw
+         Opb8CQ7lL4UhrFjFWRdxfQbQSNgwhSXbhlHReOFmX6iRDQO72HCJ+HXOHLkkjtnpZ20Z
+         KWvK49n1VvGtpVYdzE7qfU4+dSSqSOuGcKduNSHTcG9438pGhMyTXs1u0sqYbb6ZUQLQ
+         fHofB/nHktLwWsQ5V2ZYXner6hi6RrY74AM6RJ+ZboCV6RvBmHVKck5+VRPeYJBfnj+h
+         w5mg==
+X-Gm-Message-State: APjAAAVg2ZDda89Kbjx98Zxaufp+nC1vrYwiLVmXLVxLQ6cFcBk8PJSp
+        rN+IWKXTR2xEZb0O9jaeVJg=
+X-Google-Smtp-Source: APXvYqx/zjFkEC8bz2JJmFlSRjhc4MJJfniyQ6Fjav3IyHnUNf7sVst+AnbkK6KVfJeDi9SH7hMzVA==
+X-Received: by 2002:a37:e81:: with SMTP id 123mr17873898qko.193.1582074361074;
+        Tue, 18 Feb 2020 17:06:01 -0800 (PST)
+Received: from ?IPv6:2601:282:803:7700:5af:31c:27bd:ccb5? ([2601:282:803:7700:5af:31c:27bd:ccb5])
+        by smtp.googlemail.com with ESMTPSA id g11sm130191qtc.48.2020.02.18.17.05.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 17:06:00 -0800 (PST)
+Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
+To:     Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
+        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
+        paolo.lungaroni@cnit.it
+References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+ <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
+ <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
+ <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
+Date:   Tue, 18 Feb 2020 18:05:58 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218161004.GR7778@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=J8tHrh_ofsGOLyDWh6kA:9
-        a=ffwTswad_GV-5CZc:21 a=o0rOaByW-dbbsVyy:21 a=CjuIK1q_8ugA:10
-        a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 08:10:04AM -0800, Matthew Wilcox wrote:
-> On Tue, Feb 18, 2020 at 05:21:47PM +1100, Dave Chinner wrote:
-> > On Mon, Feb 17, 2020 at 10:45:54AM -0800, Matthew Wilcox wrote:
-> > > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > > 
-> > > This replaces ->readpages with a saner interface:
-> > >  - Return void instead of an ignored error code.
-> > >  - Pages are already in the page cache when ->readahead is called.
-> > 
-> > Might read better as:
-> > 
-> >  - Page cache is already populates with locked pages when
-> >    ->readahead is called.
+On 2/18/20 4:50 PM, Carmine Scarpitta wrote:
+> Indeed both call fib_table_lookup and rt_dst_alloc are exported for modules. 
+> However, several functions defined in route.c are not exported:
+> - the two functions rt_cache_valid and rt_cache_route required to handle the routing cache
+> - find_exception, required to support fib exceptions.
+> This would require duplicating a lot of the IPv4 routing code. 
+> The reason behind this change is really to reuse the IPv4 routing code instead of doing a duplication. 
 > 
-> Will do.
-> 
-> > >  - Implementation looks up the pages in the page cache instead of
-> > >    having them passed in a linked list.
-> > 
-> > Add:
-> > 
-> >  - cleanup of unused readahead handled by ->readahead caller, not
-> >    the method implementation.
-> 
-> The readpages caller does that cleanup too, so it's not an advantage
-> to the readahead interface.
+> For the fi member of the struct fib_result, we will fix it by initializing before "if (!tbl_known)"
 
-Right. I kinda of read the list as "the reasons the new API is sane"
-not as "how readahead is different to readpages"....
-
-> > >  ``readpages``
-> > >  	called by the VM to read pages associated with the address_space
-> > >  	object.  This is essentially just a vector version of readpage.
-> > >  	Instead of just one page, several pages are requested.
-> > >  	readpages is only used for read-ahead, so read errors are
-> > >  	ignored.  If anything goes wrong, feel free to give up.
-> > > +	This interface is deprecated; implement readahead instead.
-> > 
-> > What is the removal schedule for the deprecated interface? 
-> 
-> I mentioned that in the cover letter; once Dave Howells has the fscache
-> branch merged, I'll do the remaining filesystems.  Should be within the
-> next couple of merge windows.
-
-Sure, but I like to see actual release tags with the deprecation
-notice so that it's obvious to the reader as to whether this is
-something new and/or when they can expect it to go away.
-
-> > > +/* The byte offset into the file of this readahead block */
-> > > +static inline loff_t readahead_offset(struct readahead_control *rac)
-> > > +{
-> > > +	return (loff_t)rac->_start * PAGE_SIZE;
-> > > +}
-> > 
-> > Urk. Didn't an early page use "offset" for the page index? That
-> > was was "mm: Remove 'page_offset' from readahead loop" did, right?
-> > 
-> > That's just going to cause confusion to have different units for
-> > readahead "offsets"....
-> 
-> We are ... not consistent anywhere in the VM/VFS with our naming.
-> Unfortunately.
-> 
-> $ grep -n offset mm/filemap.c 
-> 391: * @start:	offset in bytes where the range starts
-> ...
-> 815:	pgoff_t offset = old->index;
-> ...
-> 2020:	unsigned long offset;      /* offset into pagecache page */
-> ...
-> 2257:	*ppos = ((loff_t)index << PAGE_SHIFT) + offset;
-> 
-> That last one's my favourite.  Not to mention the fine distinction you
-> and I discussed recently between offset_in_page() and page_offset().
-> 
-> Best of all, even our types encode the ambiguity of an 'offset'.  We have
-> pgoff_t and loff_t (replacing the earlier off_t).
-> 
-> So, new rule.  'pos' is the number of bytes into a file.  'index' is the
-> number of PAGE_SIZE pages into a file.  We don't use the word 'offset'
-> at all.  'length' as a byte count and 'count' as a page count seem like
-> fine names to me.
-
-That sounds very reasonable to me. Another patchset in the making? :)
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+The route.c code does not need to know about the fib table or fib
+policy. Why do all of the existing policy options (mark, L3 domains,
+uid) to direct the lookup to the table of interest not work for this use
+case?
