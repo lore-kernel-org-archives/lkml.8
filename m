@@ -2,114 +2,93 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A97DC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED16AC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 417B524670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C694C24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pr/tai/M"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TudCOrdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgBSSVh (ORCPT
+        id S1726708AbgBSSWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:21:37 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54478 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726582AbgBSSVg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:21:36 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JILIGk015406;
-        Wed, 19 Feb 2020 12:21:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582136478;
-        bh=au41jVMNZVVyoK32FVyeoksJNT9R9w3OPUwvi6D1Si4=;
-        h=From:To:CC:Subject:Date;
-        b=pr/tai/MepQMv1hq/68bmruqZS4r2VeiJe5znF5PCGp5MFKwpT/0XQ9b6+h39BCYY
-         btXqQ1zKR2cxPMdcg/NKYZ6sTDBrd519NNsSm78MNsYTnnPKeXq7MHuTRfpeRK6CAf
-         Onw/xbYRDHYihDkmNttWWEbNuhtmSvTmlSSgV8V4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JILIM1065394
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 12:21:18 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 12:21:18 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 12:21:18 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JILILv036974;
-        Wed, 19 Feb 2020 12:21:18 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH net-master] net: phy: dp83848: Add the TI TLK05/06 PHY ID
-Date:   Wed, 19 Feb 2020 12:16:13 -0600
-Message-ID: <20200219181613.5898-1-dmurphy@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 13:22:30 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:42938 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbgBSSWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:22:30 -0500
+Received: from zn.tnic (p200300EC2F095500C57DC876B1A4488F.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:c57d:c876:b1a4:488f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1BCF81EC0CD9;
+        Wed, 19 Feb 2020 19:22:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1582136549;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lmGikz7Q/Yq4MxVd8jpfVZwtYUz5dkwZIJ5oO0ns5X4=;
+        b=TudCOrdnDYBvOHcXxzjmLIGuZTvzfGiI+0vqVO8NEPF9zblw6YIFWGvXG+IE6116JlU2M7
+        onbwkIvlL7/KBl7wNVLkAIFR7iNQhJk56Ue1tV9vcb05JM4mck+A94LNwrB7GTrwRwr3Cr
+        VS/jU26z4AsPWwNDJuaceo+UhVo8a0I=
+Date:   Wed, 19 Feb 2020 19:22:30 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] x86/boot/compressed/64: Remove .bss/.pgtable from
+ bzImage
+Message-ID: <20200219182230.GG30966@zn.tnic>
+References: <20200109150218.16544-1-nivedita@alum.mit.edu>
+ <20200205162921.GA318609@rani.riverdale.lan>
+ <20200218180353.GA930230@rani.riverdale.lan>
+ <20200219120938.GB30966@zn.tnic>
+ <20200219175717.GA1892094@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219175717.GA1892094@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the TLK05/06 PHY ID to the DP83848 driver.  The TI website indicates
-that the DP83822 device is a drop in replacement for the TLK05 device
-but the TLK device does not have WoL support.  The TLK device is
-register compatible to the DP83848 and the DP83848 does not support WoL
-either.  So this PHY can be associated with the DP83848 driver.
+On Wed, Feb 19, 2020 at 12:57:17PM -0500, Arvind Sankar wrote:
+> There isn't any particular urgency (at least until fg-kaslr patches try
 
-The initial TLKx PHY ID in the driver is a legacy ID and the public data
-sheet indicates a new PHY ID.  So not to break any kernels out there
-both IDs will continue to be supported in this driver.
+Ok, I was just making sure you're not pinging because there's something
+more urgent here. See below.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/dp83848.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> to make it 64MiB bigger), but it's unclear how long to wait before
+> sending a reminder -- Documentation/process suggests that comments
+> should be received in a week or so, pinging after 4 and 6 weeks seemed
+> reasonable. If x86 has a longer queue, might be worth documenting that
+> somewhere?
 
-diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
-index 54c7c1b44e4d..66907cfa816a 100644
---- a/drivers/net/phy/dp83848.c
-+++ b/drivers/net/phy/dp83848.c
-@@ -12,6 +12,7 @@
- #define TI_DP83620_PHY_ID		0x20005ce0
- #define NS_DP83848C_PHY_ID		0x20005c90
- #define TLK10X_PHY_ID			0x2000a210
-+#define TLK105_06_PHY_ID		0x2000a211
- 
- /* Registers */
- #define DP83848_MICR			0x11 /* MII Interrupt Control Register */
-@@ -85,6 +86,7 @@ static struct mdio_device_id __maybe_unused dp83848_tbl[] = {
- 	{ NS_DP83848C_PHY_ID, 0xfffffff0 },
- 	{ TI_DP83620_PHY_ID, 0xfffffff0 },
- 	{ TLK10X_PHY_ID, 0xfffffff0 },
-+	{ TLK105_06_PHY_ID, 0xfffffff0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
-@@ -115,6 +117,8 @@ static struct phy_driver dp83848_driver[] = {
- 			   dp83848_config_init),
- 	DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY",
- 			   NULL),
-+	DP83848_PHY_DRIVER(TLK105_06_PHY_ID, "TI TLK105/06 10/100 Mbps PHY",
-+			   NULL),
- };
- module_phy_driver(dp83848_driver);
- 
+We try to track all stuff but x86 is super crazy most of the time,
+especially currently, so stuff gets prioritized based on urgency and we
+also try to round-robin through all submitters so that stuff doesn't get
+left out.
+
+Thus the one-week thing will never work with x86. Once a month ping
+maybe.
+
+In your case, since it is an improvement which is good to have but not
+absolutely a must and not a bugfix, it is understandable that it would
+get pushed back in priority.
+
+But stuff usually won't be forgotten and we'll get to it eventually - it
+is just that we're mega swamped all the time. :-\
+
 -- 
-2.25.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
