@@ -2,99 +2,122 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB06C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D56C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75D0E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA8C121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AkzCwOOM"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Z05PqepO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgBSIpZ (ORCPT
+        id S1726604AbgBSIps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:45:25 -0500
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:40742 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgBSIpY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:45:24 -0500
-Received: by mail-pf1-f169.google.com with SMTP id b185so1829287pfb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w7YXXPrjv0swolztGRRXXsVERSqdfE5ws09bwwHXbAM=;
-        b=AkzCwOOM9iV/wba/KmNiKXDQYn8VyVEaoxrCMbBrWjk3TYIhMorbj0O4714xrL4Ldk
-         OeV6RZvINWRxzG16nKHP8ARbTASTlGinofwrOq45IfH7HF/UqvYdk386zijReJ5dJ7BA
-         leIYMPQtWfGrwkmW1HzYdISCOWppQNL+2uk2I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w7YXXPrjv0swolztGRRXXsVERSqdfE5ws09bwwHXbAM=;
-        b=kZCKrhQRjHdlteLOeyFhIbUYdqU7rjRsM+n0zmvhuymbB4qLl6BK2FUaiw3apvHMsb
-         nSxbShiFu6/eYsI2YRl3WyH73A+lDzjvvMRMj7dpEVPQSwPHzWOKL9kBkSvuF7vZNoXc
-         aOuPupy7Th/eIcoJKmHxED3qp4V0SUcWoB0CUiHMjjHUx2P8zrWfDIMDmtE5kN7Cmwbc
-         lKHyeV5Ascxme8pLQbGIbkEI/h9PjdtDZHyynK2YTTklaZ+yd21bT9W2GeqbOU+gSC0G
-         9CzrRS9MqZ1xO182HiMddWQ8FAlLdD4pcXhysJx45KsMWTCcJW2rdRTKJuz7W4z3UaYX
-         QHZw==
-X-Gm-Message-State: APjAAAUuCtCKaDTViPaRQ0Pepyl4qH+8+U/4vjeK7We75OkumFYgFNTn
-        8pij7h54gixp5SoWRsgl3MLbbQ==
-X-Google-Smtp-Source: APXvYqyV8+Z9aH1FsbTn2QqzC4e/hC2uwFNEmIHF7xi8WUMrQaRxZPRZs2r0DiSHvWuqXUZkiEF99w==
-X-Received: by 2002:a63:2842:: with SMTP id o63mr27636968pgo.317.1582101923757;
-        Wed, 19 Feb 2020 00:45:23 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id u11sm1646492pjn.2.2020.02.19.00.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 00:45:23 -0800 (PST)
-Date:   Wed, 19 Feb 2020 17:45:21 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCHv2 09/12] videobuf2: let user-space know if driver
- supports cache hints
-Message-ID: <20200219084521.GD122464@google.com>
-References: <20200204025641.218376-1-senozhatsky@chromium.org>
- <20200204025641.218376-10-senozhatsky@chromium.org>
- <2a00bf5c-462e-8d35-844c-55ce2383b8e2@xs4all.nl>
+        Wed, 19 Feb 2020 03:45:48 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:29343 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726265AbgBSIps (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:45:48 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48MrsP1rpLz9v6b8;
+        Wed, 19 Feb 2020 09:45:45 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Z05PqepO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id keiKTMYSteB4; Wed, 19 Feb 2020 09:45:45 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48MrsN71T3z9v6b7;
+        Wed, 19 Feb 2020 09:45:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582101945; bh=5A070PBG/NLKWQpTrZybAuA+otVPzj/KnbWKO2e8w8o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Z05PqepONeujNziQ5YL8gnf1Z3+G6cb6ihOxmxz8uWdJtZ5jvdl2W5nDGv6hQ627P
+         yeH79Ly2Y6BDHEAClz4F0Sl7Ug7F7nBhocpqGaYZNQCnKXBAU1M4joGRYAVfpvCCT5
+         7XWc5FDRGFtiGRD1v2TVtmoHayh/6+4PxTcYWAOs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 055918B829;
+        Wed, 19 Feb 2020 09:45:46 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 39Yl18DznLEK; Wed, 19 Feb 2020 09:45:45 +0100 (CET)
+Received: from [172.25.230.102] (unknown [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BA9888B756;
+        Wed, 19 Feb 2020 09:45:45 +0100 (CET)
+Subject: Re: Surprising code generated for vdso_read_begin()
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>
+References: <cover.1577111363.git.christophe.leroy@c-s.fr>
+ <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr>
+ <20200109200733.GS3191@gate.crashing.org>
+ <77a8bf25-6615-6c0a-56d4-eae7aa8a8f09@c-s.fr>
+ <20200111113328.GX3191@gate.crashing.org>
+ <CAK8P3a11wX1zJ+TAacDTkYsrzvfdVmNrcB6OC23aFvCxF57opQ@mail.gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <305fcee5-2e1b-ea4d-9a2a-a0e8034d40a8@c-s.fr>
+Date:   Wed, 19 Feb 2020 09:45:45 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2a00bf5c-462e-8d35-844c-55ce2383b8e2@xs4all.nl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAK8P3a11wX1zJ+TAacDTkYsrzvfdVmNrcB6OC23aFvCxF57opQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/02/19 09:33), Hans Verkuil wrote:
-> On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
-> > Add V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS to fill_buf_caps(), which
-> > is set when queue supports user-space cache management hints.
+
+
+Le 16/02/2020 à 19:10, Arnd Bergmann a écrit :
+> On Sat, Jan 11, 2020 at 12:33 PM Segher Boessenkool
+> <segher@kernel.crashing.org> wrote:
+>>
+>> On Fri, Jan 10, 2020 at 07:45:44AM +0100, Christophe Leroy wrote:
+>>> Le 09/01/2020 à 21:07, Segher Boessenkool a écrit :
+>>>> It looks like the compiler did loop peeling.  What GCC version is this?
+>>>> Please try current trunk (to become GCC 10), or at least GCC 9?
+>>>
+>>> It is with GCC 5.5
+>>>
+>>> https://mirrors.edge.kernel.org/pub/tools/crosstool/ doesn't have more
+>>> recent than 8.1
+>>
+>> Arnd, can you update the tools?  We are at 8.3 and 9.2 now :-)  Or is
+>> this hard and/or painful to do?
 > 
-> Ah, you add the capability here :-)
+> To follow up on this older thread, I have now uploaded 6.5, 7.5, 8.3 and 9.2
+> binaries, as well as a recent 10.0 snapshot.
 > 
-> This should be moved forward in the series. Actually, I think this should
-> be merged with the first patch of the series.
 
-OK, can squash. This way I don't have to split 03/12.
+Thanks Arnd,
 
-I can also update V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/CLEAN in 01/12 then.
-Would that work?
+I have built the VDSO with 9.2, I get less performant result than with 
+8.2 (same performance as with 5.5).
 
-	-ss
+After a quick look, I see:
+- Irrelevant NOPs to align loops and stuff, allthough -mpcu=860 should 
+avoid that.
+- A stack frame is set for saving r31 in __c_kernel_clock_gettime. GCC 
+8.1 don't need that, all VDSO functions are frameless with 8.1
+
+Christophe
