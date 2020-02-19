@@ -2,152 +2,156 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64FDC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E6C34051
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C27620801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA50208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:33:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zzcA9hwk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Lita4j8V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBSK3i (ORCPT
+        id S1726643AbgBSKdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:29:38 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42552 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726671AbgBSK3i (ORCPT
+        Wed, 19 Feb 2020 05:33:46 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54681 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726514AbgBSKdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:29:38 -0500
-Received: by mail-vs1-f67.google.com with SMTP id b79so14728511vsd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 02:29:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=N/FWsOslLeWJ8wc9PPiLEWzxti0Lz4tyLMKB84GK8Qg=;
-        b=zzcA9hwk8oBqEzK/Sk5smaykWWWhkqLgdN2ggNaL0cspzNwa1q+GoinNOOoh2h9V51
-         Lv7ZUcQx+nj4ydcgo+MumePOIXyd+adldZYvoZGHUzMACLER4enSZC94mRb28MJr6c1A
-         J0zDWaHD7YQ525Kl6Y1gatEtQ406L9F6WgmgJkakqPk8Q+C9ZZgLDbcn0PVAxkoeaFBp
-         u1Zh99N7KbfqvYQDnfJFNmIip0HZ15FT2UcLc3U/w813BeSgu1q8swKVqPbRLuHM9XJ3
-         Uxz065dq2yY9KSl+injyEt5q+2tCcO4d067fxfYm7S/GKS+XZflxxlWeTWxnoNcErJqI
-         wpGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=N/FWsOslLeWJ8wc9PPiLEWzxti0Lz4tyLMKB84GK8Qg=;
-        b=MeKWpMJQJ6KoUy8dmN+nWjLEERrbKo5apubV1r4jtV7n1jCNyd/8m5H3oaMYKYPN+W
-         D0a9Zn7CWu0UQdY7UiGXz0tXlzehM230jsTDyjxJuFFqLtW6IM1XHtNwzbSSFW0UTsQe
-         vHe8oXFG6LWtmuAAtt6MsmGI6l68ily808unUwZkq0NCHixNlNDL2TucyxzI7t3Cdwsk
-         XzxlLUXLMsDjgNigA1dD190I6AIHy1BSrZ36QVJbFfwav0cz0HMSP4nn4c1ju0oO6nFr
-         ZvoFsl6l86Ot3dXjINjkzExLhJ4JLAD2kU9AusJZqN9XX8bdJHVfVCZGTzB2EZdcBvvu
-         KbaQ==
-X-Gm-Message-State: APjAAAWxle6CW0+csjYh0LJ82aCDX/PZBA5tVf0qx4QZ+bIjDIHA4dJo
-        d7RiZ1cmo5ZPXjNnPUsFNlOeBca2L5cHf3B7sAIkaQ==
-X-Google-Smtp-Source: APXvYqwdd1WVvropN/Ah9GWZ4j1iP+qWglk6pATFnqpFpANspIETm+lPq1ohJHYuPnh9a1IcHgjcTAcwzRPQ36OkB7Q=
-X-Received: by 2002:a67:5e45:: with SMTP id s66mr13897757vsb.200.1582108175469;
- Wed, 19 Feb 2020 02:29:35 -0800 (PST)
+        Wed, 19 Feb 2020 05:33:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582108425; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=rw6UHf0KTPLkHoH94qTywzRb5mw/2w3OWlPPBjvpPNw=;
+ b=Lita4j8Vo+12yohtKUda38CRGo4YiaVYzSNZoQr1muQKs2rqct7K7PEzHmgEML0VHW1/kePF
+ 1X5eiT+YKfWfwmuXH5KeLvhQe7RH+h9DXRjIkERHYvobZnmU+60JENE8t/eetP7Ud1XWj474
+ rWkHxQSQ6y2AXIc9djTI1UDdyQk=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4d0eff.7f3c98b57f80-smtp-out-n01;
+ Wed, 19 Feb 2020 10:33:35 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 40509C4479C; Wed, 19 Feb 2020 10:33:35 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 75BA6C43383;
+        Wed, 19 Feb 2020 10:33:34 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200128090636.13689-1-ludovic.barre@st.com> <20200128090636.13689-10-ludovic.barre@st.com>
- <853f4b14-a188-f329-34e5-8e88fcafa775@st.com>
-In-Reply-To: <853f4b14-a188-f329-34e5-8e88fcafa775@st.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 19 Feb 2020 11:28:59 +0100
-Message-ID: <CAPDyKFrKunZ1nDiSR-6ZgZNxkxs=_R-i3N9QWNovnZ4iY=DP=g@mail.gmail.com>
-Subject: Re: [PATCH V2 9/9] mmc: mmci: add sdmmc variant revision 2.0
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 19 Feb 2020 18:33:34 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        Asutosh Das <asutoshd@codeaurora.org>, hongwus@codeaurora.org,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
+ reference clock
+In-Reply-To: <1582103495.26304.42.camel@mtksdccf07>
+References: <20200217093559.16830-1-stanley.chu@mediatek.com>
+ <20200217093559.16830-2-stanley.chu@mediatek.com>
+ <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
+ <1581945168.26304.4.camel@mtksdccf07>
+ <e518c4d1d94ec15e9c4c31c34a9e42d1@codeaurora.org>
+ <1581946449.26304.15.camel@mtksdccf07>
+ <56c1fc80919491d058d904fcc7301835@codeaurora.org>
+ <a8cd5beee0a1e12a40da752c6cd9b5de@codeaurora.org>
+ <1582103495.26304.42.camel@mtksdccf07>
+Message-ID: <bbb0b0637d9667d4691a9a28f9988dea@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 at 15:44, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> Le 1/28/20 =C3=A0 10:06 AM, Ludovic Barre a =C3=A9crit :
-> > This patch adds a sdmmc variant revision 2.0.
-> > This revision is backward compatible with 1.1, and adds dma
-> > link list support.
-> >
-> > Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> > ---
-> >   drivers/mmc/host/mmci.c | 30 ++++++++++++++++++++++++++++++
-> >   1 file changed, 30 insertions(+)
-> >
-> > diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> > index 24e630183ed4..a774c329c212 100644
-> > --- a/drivers/mmc/host/mmci.c
-> > +++ b/drivers/mmc/host/mmci.c
-> > @@ -275,6 +275,31 @@ static struct variant_data variant_stm32_sdmmc =3D=
- {
-> >       .init                   =3D sdmmc_variant_init,
-> >   };
-> >
-> > +static struct variant_data variant_stm32_sdmmcv2 =3D {
-> > +     .fifosize               =3D 16 * 4,
-> > +     .fifohalfsize           =3D 8 * 4,
-> > +     .f_max                  =3D 208000000,
-> > +     .stm32_clkdiv           =3D true,
-> > +     .cmdreg_cpsm_enable     =3D MCI_CPSM_STM32_ENABLE,
-> > +     .cmdreg_lrsp_crc        =3D MCI_CPSM_STM32_LRSP_CRC,
-> > +     .cmdreg_srsp_crc        =3D MCI_CPSM_STM32_SRSP_CRC,
-> > +     .cmdreg_srsp            =3D MCI_CPSM_STM32_SRSP,
-> > +     .cmdreg_stop            =3D MCI_CPSM_STM32_CMDSTOP,
-> > +     .data_cmd_enable        =3D MCI_CPSM_STM32_CMDTRANS,
-> > +     .irq_pio_mask           =3D MCI_IRQ_PIO_STM32_MASK,
-> > +     .datactrl_first         =3D true,
-> > +     .datacnt_useless        =3D true,
-> > +     .datalength_bits        =3D 25,
-> > +     .datactrl_blocksz       =3D 14,
-> > +     .datactrl_any_blocksz   =3D true,
-> > +     .stm32_idmabsize_mask   =3D GENMASK(16, 5),
-> > +     .dma_lli                =3D true,
-> > +     .busy_timeout           =3D true,
->
-> I forget "busy_detect           =3D true," property
-> I add this in next patch set
+Hi Stanley,
 
-No need for a re-send, I amended this when I applied it.
+On 2020-02-19 17:11, Stanley Chu wrote:
+> Hi Can,
+> 
+> On Wed, 2020-02-19 at 10:35 +0800, Can Guo wrote:
+> 
+>> Since we all need this delay here, how about put the delay in the
+>> entrence of ufshcd_setup_clocks(), before vops_setup_clocks()?
+>> If so, we can remove all the delays we added in our vops since the
+>> delay anyways delays everything inside ufshcd_setup_clocks().
+>> 
+> 
+> Always putting the delay in the entrance of ufshcd_setup_clocks() may
+> add unwanted delay for vendors, just like your current implementation,
+> or some other vendors who do not want to disable the reference clock.
+> 
+> I think current patch is more reasonable because the delay is applied 
+> to
+> clock only named as "ref_clk" specifically.
+> 
+> If you needs to keep "ref_clk" in DT, would you consider to remove the
+> delay in your ufs_qcom_dev_ref_clk_ctrl() and let the delay happens via
+> common ufshcd_setup_clocks() only? However you may still need delay if
+> call path comes from ufs_qcom_pwr_change_notify().
+> 
+> What do you think?
+> 
 
->
-> > +     .busy_detect_flag       =3D MCI_STM32_BUSYD0,
-> > +     .busy_detect_mask       =3D MCI_STM32_BUSYD0ENDMASK,
-> > +     .init                   =3D sdmmc_variant_init,
-> > +};
-> > +
-> >   static struct variant_data variant_qcom =3D {
-> >       .fifosize               =3D 16 * 4,
-> >       .fifohalfsize           =3D 8 * 4,
-> > @@ -2343,6 +2368,11 @@ static const struct amba_id mmci_ids[] =3D {
-> >               .mask   =3D 0xf0ffffff,
-> >               .data   =3D &variant_stm32_sdmmc,
-> >       },
-> > +     {
-> > +             .id     =3D 0x00253180,
-> > +             .mask   =3D 0xf0ffffff,
-> > +             .data   =3D &variant_stm32_sdmmcv2,
-> > +     },
-> >       /* Qualcomm variants */
-> >       {
-> >               .id     =3D 0x00051180,
-> >
+I agree current change is more reasonable from what it looks, but the 
+fact
+is that I canont remove the delay in ufs_qcom_dev_ref_clk_ctrl() even 
+with
+this change. On our platforms, ref_clk in DT serves multipule purposes,
+the ref_clk provided to UFS device is actually controlled in
+ufs_qcom_dev_ref_clk_ctrl(), which comes before where this change kicks 
+start,
+so if I remove the delay in ufs_qcom_dev_ref_clk_ctrl(), this change 
+cannot
+provide us the correct delay before gate the ref_clk provided to UFS 
+device.
 
-Kind regards
-Uffe
+> Always putting the delay in the entrance of ufshcd_setup_clocks() may
+> add unwanted delay for vendors, just like your current implementation,
+> or some other vendors who do not want to disable the reference clock.
+
+I meant if we put the delay in the entrance, I will be able to remove
+the delay in ufs_qcom_dev_ref_clk_ctrl(). Meanwhile, we can add proper
+checks before the delay to make sure it is initiated only if ref_clk 
+needs
+to be disabled, i.e:
+
+if(!on && !skip_ref_clk && hba->dev_info.clk_gating_wait_us)
+     usleep_range();
+
+Does this look better to you?
+
+Anyways, we will see regressions with this change on our platforms, can 
+we
+have more discussions before get it merged? It should be OK if you go 
+with
+patch #2 alone first, right? Thanks.
+
+Best regards,
+Can Guo.
+
+>> Meanwhile, if you want to modify the delay
+>> (hba->dev_info.clk_gating_wait_us) for some reasons, say for specific
+>> UFS devices, you still can do it in vops_apply_dev_quirks().
+>> 
+>> What do you say?
+>> 
+>> Thanks,
+>> Can Guo.
+> 
+> Thanks,
+> Stanley Chu
