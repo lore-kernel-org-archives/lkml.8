@@ -2,139 +2,103 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57265C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9F2C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D859206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:37:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEbSTUvh"
+	by mail.kernel.org (Postfix) with ESMTP id 5F056206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgBSRhi (ORCPT
+        id S1726760AbgBSRiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:37:38 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:32862 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbgBSRhh (ORCPT
+        Wed, 19 Feb 2020 12:38:03 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37578 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbgBSRiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:37:37 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m7so303966pjs.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:37:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b3mPqc+Wc2BYmBfLm7UX6uarTjFea9zBCaFrXja1Tvo=;
-        b=dEbSTUvhj5Wof544xqUrjSNCVduSag+cy0MWcJ98tVnM5IcWp+rXtWy3EFzn8LAe8c
-         yOg//K+GcogUWXYrLJqb1JFx1sybxZr/3ImJaqH0shlX7NF4irZNtX41TETebHxm04Hl
-         jNwgjHeM4Ep6o4PZhD22Gj/ZMOrgDitYLrR+Ubx34KvSVKg5jQbEZm/tKhlH5fDaRWss
-         8OTa8fj98ZAZP6oj9PDmAHGmoXyM6ATt7lUNQhV8j5sOgg1jGpotDldsjkBK+gj7ZqVK
-         Y+MDxJPFVE0fhtLJH3f++ovQTVvAac1OkPdDBJtNOX3VU5I3JERRkDt7vo/3W0QbBsJx
-         Y/6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b3mPqc+Wc2BYmBfLm7UX6uarTjFea9zBCaFrXja1Tvo=;
-        b=RpNJGC+bQCZc2RVS+DV85Z4j9ipzIxZYiQEMpJvBuNazkhzAahoLELfAHqMdC0grRs
-         YpXlqv7VXiCf9Q9bETV6aWF7R4UUEBOi0XviXB/PUWJvcXX+dCnGaaQgxzY8rKxcmK9m
-         A2dHk49a6ImtmjdO6CW1HGb8zBfxom7aTwPh+nB2QrmVT9j3/wpIJOoCJSd/+iDblyum
-         2g3mBH3N32FrJgMY389DJM8JHQFIGhlF25MlC7OhTyP9BLjgXWSPWeVW7arDFOdVmE0U
-         eCtQ2f/v9heLy8fDjFhr1wBIvirLiw8WppK8+6nr6pUTMQKgqeE0e4vCAoVT4UF2n2Hi
-         fuag==
-X-Gm-Message-State: APjAAAXccJmQY+VU5jJJq5TEKjoeMtA3PiDmHoPwrFLE3AcktsyU65cC
-        c0IDhb6MiHcA63kVbonw+nSKBk7/d4tQM+OrOfU=
-X-Google-Smtp-Source: APXvYqzsCIa6bh8M6vrNCAjhd3hZMzPwYj1lXsLQpDBhz3AucbjGgW+6blclSlx9ntQ6O1SYbxyfninNyf4f6+pj/pg=
-X-Received: by 2002:a17:90a:b10b:: with SMTP id z11mr10416494pjq.132.1582133857025;
- Wed, 19 Feb 2020 09:37:37 -0800 (PST)
+        Wed, 19 Feb 2020 12:38:02 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id DEC5628DC70
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v5 0/6] media: rockchip: Add the rkvdec driver
+Date:   Wed, 19 Feb 2020 14:37:44 -0300
+Message-Id: <20200219173750.26453-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200219171225.5547-1-idryomov@gmail.com>
-In-Reply-To: <20200219171225.5547-1-idryomov@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 19 Feb 2020 19:37:29 +0200
-Message-ID: <CAHp75Vf24yNeLEweq_70AUzKwbdyurB6ze9739Qy9djA9dSefg@mail.gmail.com>
-Subject: Re: [PATCH v2] vsprintf: don't obfuscate NULL and error pointers
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 7:13 PM Ilya Dryomov <idryomov@gmail.com> wrote:
->
-> I don't see what security concern is addressed by obfuscating NULL
-> and IS_ERR() error pointers, printed with %p/%pK.  Given the number
-> of sites where %p is used (over 10000) and the fact that NULL pointers
-> aren't uncommon, it probably wouldn't take long for an attacker to
-> find the hash that corresponds to 0.  Although harder, the same goes
-> for most common error values, such as -1, -2, -11, -14, etc.
->
-> The NULL part actually fixes a regression: NULL pointers weren't
-> obfuscated until commit 3e5903eb9cff ("vsprintf: Prevent crash when
-> dereferencing invalid pointers") which went into 5.2.  I'm tacking
-> the IS_ERR() part on here because error pointers won't leak kernel
-> addresses and printing them as pointers shouldn't be any different
-> from e.g. %d with PTR_ERR_OR_ZERO().  Obfuscating them just makes
-> debugging based on existing pr_debug and friends excruciating.
->
-> Note that the "always print 0's for %pK when kptr_restrict == 2"
-> behaviour which goes way back is left as is.
->
-> Example output with the patch applied:
->
->                             ptr         error-ptr              NULL
-> %p:            0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> %pK, kptr = 0: 0000000001f8cc5b  fffffffffffffff2  0000000000000000
-> %px:           ffff888048c04020  fffffffffffffff2  0000000000000000
-> %pK, kptr = 1: ffff888048c04020  fffffffffffffff2  0000000000000000
-> %pK, kptr = 2: 0000000000000000  0000000000000000  0000000000000000
+Hello,
 
-...
+This is v5 of Boris' rkvdec driver.
 
-> +/*
-> + * NULL pointers aren't hashed.
-> + */
->  static void __init
->  null_pointer(void)
->  {
-> -       test_hashed("%p", NULL);
-> +       test(ZEROS "00000000", "%p", NULL);
->         test(ZEROS "00000000", "%px", NULL);
->         test("(null)", "%pE", NULL);
->  }
->
-> +/*
-> + * Error pointers aren't hashed.
-> + */
-> +static void __init
-> +error_pointer(void)
-> +{
-> +       test(ONES "fffffff5", "%p", ERR_PTR(-EAGAIN));
-> +       test(ONES "fffffff5", "%px", ERR_PTR(-EAGAIN));
+This version corrects wrong copyright notices and then adds
+a TODO file for the staging driver. The only reason to keep the
+driver in staging are the staging uAPI controls.
 
-> +       test("(efault)", "%pE", ERR_PTR(-EAGAIN));
+Thanks,
+Ezequiel
 
-Hmm... Is capital E on purpose here?
-Maybe we may use something else ('%ph'?) for sake of deviation?
+Boris Brezillon (5):
+  media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
+  media: hantro: h264: Use the generic H264 reflist builder
+  media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
+  media: rkvdec: Add the rkvdec driver
+  arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
 
-> +}
+Jonas Karlman (1):
+  media: uapi: h264: Add DPB entry field reference flags
+
+ .../bindings/media/rockchip,vdec.yaml         |   71 +
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
+ drivers/media/v4l2-core/Kconfig               |    4 +
+ drivers/media/v4l2-core/Makefile              |    1 +
+ drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/hantro/Kconfig          |    1 +
+ drivers/staging/media/hantro/hantro_h264.c    |  237 +---
+ drivers/staging/media/rkvdec/Kconfig          |   15 +
+ drivers/staging/media/rkvdec/Makefile         |    3 +
+ drivers/staging/media/rkvdec/TODO             |   11 +
+ drivers/staging/media/rkvdec/rkvdec-h264.c    | 1154 +++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec-regs.h    |  223 ++++
+ drivers/staging/media/rkvdec/rkvdec.c         | 1134 ++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec.h         |  123 ++
+ include/media/h264-ctrls.h                    |    2 +
+ include/media/v4l2-h264.h                     |   86 ++
+ 19 files changed, 3126 insertions(+), 230 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+ create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/Kconfig
+ create mode 100644 drivers/staging/media/rkvdec/Makefile
+ create mode 100644 drivers/staging/media/rkvdec/TODO
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
+ create mode 100644 include/media/v4l2-h264.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.0
