@@ -2,127 +2,194 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22D3C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89762C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7E8208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:34:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WEyoNVp0"
+	by mail.kernel.org (Postfix) with ESMTP id 5FF4D24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 00:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBSAeA (ORCPT
+        id S1727206AbgBSAhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 19:34:00 -0500
-Received: from mail-eopbgr1410139.outbound.protection.outlook.com ([40.107.141.139]:45922
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726488AbgBSAd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 19:33:59 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EdyXniQISawmwZ/F87KSx/I6+WIAjLG6hDtF+TJCIOrkUxSaDxYSE8CQAUQR/r6XvZk9Gsv23e92e+a37aU09sFs8XWEVH3e+DBRgXHmppaO2Hf+ckCusxJygMGJNh6bHpAnB/ucvAPFsAdOs1pbtMlAXYaN1DGWudVEJV0uq3foi/oSIoPhh0nOnxeEUecPl3NS8FdVnMn/pY6Com5IBkHJ4exzG0V2ylyLIQ/l3mXjQDI+EnVQa3R4pQSu3z0spAockp7szMES0xj6533hh1N4T0EVGxdCUrzY5r3brPCnz98I1laGr5zaDAscDW9s871tewjnhHhz63qlh3kJaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqMOXwCIA4YmSfN3xI2nBLaoNruTAwS5pdIF+xD9+y4=;
- b=HaOwocAM527WHDlTPKz/i6A9pkkfwyNLaK5c87OTYl+H9blBTzW0UWHJ61wnVcm5O6FORTNwErOsXURKqz++7mrYsS+szKdlyGcGqZ/RoYtYKo8M9j2kAKFj6ms3V4pCSXC8CwEGnUK7wFp7A8OoldBwVBzlifpNAmyUPmDQ/7LrZnG2iYpxDj2REMHjov+f6QUSgtJfMW1ysslaYh9ywrhr3Nw1qUFZ6HVX6uycxqAunsrXEzZnbgSe5+BXffjbP2n0fSzRkErbwxGqlm78TJNNqHObCFDzErgDSBE+rwnsLhUhuFcdyuzS7xMEQCzzx8WWWMnlWvCW5DQ09WBrHw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oqMOXwCIA4YmSfN3xI2nBLaoNruTAwS5pdIF+xD9+y4=;
- b=WEyoNVp0NpptqIo0bfbBQej/38MYsVLNYyrvNaAT3bNxZF91PMz28vDPGvqRy58qhJSwZGpvWhm9yKbJUi9nCSr4gTMPSowYZf4s6ifkmg0CFWmuSUpNUoYFsG4uR3XFbtpb3enmp923C3353uzkD8eCMY/4M7AaXFSk4beMmSk=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4383.jpnprd01.prod.outlook.com (20.179.174.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.27; Wed, 19 Feb 2020 00:33:56 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::318b:31aa:4212:bd49%7]) with mapi id 15.20.2729.032; Wed, 19 Feb 2020
- 00:33:56 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Corentin Labbe <clabbe@baylibre.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "b-liu@ti.com" <b-liu@ti.com>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "mathias.nyman@intel.com" <mathias.nyman@intel.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "slemieux.tyco@gmail.com" <slemieux.tyco@gmail.com>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "vz@mleia.com" <vz@mleia.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH 14/20] usb: gadget: renesas_usb3: remove useless cast for
- driver.name
-Thread-Topic: [PATCH 14/20] usb: gadget: renesas_usb3: remove useless cast for
- driver.name
-Thread-Index: AQHV5pJjlc+xczpn3U64bn6qmWQNnqghqx0w
-Date:   Wed, 19 Feb 2020 00:33:56 +0000
-Message-ID: <TYAPR01MB45442877135FCCE97570E2BBD8100@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <1582054383-35760-1-git-send-email-clabbe@baylibre.com>
- <1582054383-35760-15-git-send-email-clabbe@baylibre.com>
-In-Reply-To: <1582054383-35760-15-git-send-email-clabbe@baylibre.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: da2a68e8-f36b-43ab-6780-08d7b4d3676a
-x-ms-traffictypediagnostic: TYAPR01MB4383:
-x-microsoft-antispam-prvs: <TYAPR01MB43834029F4DE4D023C2DEDDFD8100@TYAPR01MB4383.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0318501FAE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(189003)(199004)(110136005)(4326008)(186003)(55016002)(9686003)(76116006)(316002)(478600001)(71200400001)(26005)(5660300002)(55236004)(66446008)(6506007)(64756008)(66476007)(66946007)(66556008)(33656002)(86362001)(7696005)(2906002)(54906003)(4744005)(81166006)(81156014)(8936002)(8676002)(52536014)(7416002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4383;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I1U7aIJT3ENhL0xDGC2VEcfWcahvdi156dLcN9sv2nrv0KPeUQ9AQoBgKcmx+fiVCEeLwo7EGwVM4ps53lE8aPNwjDs6NWDzFbzcisuKHI7H1CPpiDFqm/yT0/ebmZ4K57ye1uKENBNKgjqTIgfskkeZG6zdHcjUXxis5R0jlmkAEfwCpXtlh4/IgHUXQTNOhMldiFsynCHxs+tAHF1/ZHMhIZ1KeT1OT36wl7fGAlYUvrjfWzd3bEmYkrzHXBfTceFa95ciElHo8qYC5voEOQwRdG3UdRXjbi8KEEfHrGkh66ScUb96x2bh3hC6m0IgxP8pYrTUg504t6zpXAJbcZIcdLhXof4eYw6P847Pcr5WR6hGS/ccssv9bSdmApwvV8Esq5cAkAvagjU9+XCzJcPLvG46A2L7njW5yxVnPKZbH71Zy8X+lL76Qixeb5MvErcc2HzpWFXuILC5NAn74BvLImtl6Kmz/fv5qeP3+qQXy5gAGB237HjpU7lgSNK7
-x-ms-exchange-antispam-messagedata: VX3lC1QpfpUmzqlnH+fZlv0plpW4JOJj5BTke8GTRAhO6xc6Zjql392ZuY3k5uL9BSuVbnJVvPkC6FhJkPiXrKuExkYv7W3qozr51u7GCNkX92th7WFtLsGpkT3+qyh66dqJvuu+73pZSV40E1aWKg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Feb 2020 19:37:17 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:35011 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726616AbgBSAhP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 19:37:15 -0500
+Received: by mail-il1-f200.google.com with SMTP id h18so18611595ilc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 16:37:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=G0UMOdy6Hx8tmKoct5pIw4vcRna5accTPF/IPfYBhh8=;
+        b=FSR0LxCATgb6YiYGgy4CJUirl3lNrZF/auel8U0tbajvjWAnPO2TIGHDeMesvEyGIe
+         8XgasrK9iG7r6zZHdVyobJjO4xCP782k9AvnCO380IXv4PsnDRfStnB96cDSenDBqaX2
+         mFFQwbaXYLAC7nnpCWpa66Fwf4MUNnObn/93NBoOYORYUTylJemBrJ20HGL1nMEjTLkn
+         d4LRAsWarueK1TuSS8PZArS7IeuGw30etwUmXT8pMRNLm3HJGks4YV4QRg7fyYReuZp6
+         nSWd3lpCTjaMp1o0SuD7xhSvrrEc8ZhZdNuHgF6s7PSIyqxoNDWW3x9MAuBjNQhb+clf
+         fM5w==
+X-Gm-Message-State: APjAAAVF5VF9BNEXhTCPCfuvBmAS3BjifKvelUYe2PPSovCt3qfd58IN
+        sz1URJ4r0+ZiiV4wFTI7h3cXIO0ZfaLtc9imEYSJYGvXwlML
+X-Google-Smtp-Source: APXvYqxOg5ZusHJNKTp/6eLXbbdM4Rp9vPcRFhbcxm0I2XjrAgydk5UUE1yoPNaa6Fjw6Hh2aQjFeU4NrVNqHINA9iSJrgBj5SuJ
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da2a68e8-f36b-43ab-6780-08d7b4d3676a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Feb 2020 00:33:56.1330
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qkbZccuKt5+73KAF6K1o/PLSOOjVSgSLKvpdCI9YqJObrldbfr6ENm/TTuKPbtZ0QcppPUHGLfBd6h6VVvXwQKUo+m1swrMrPlu2TUCyUQOuYovUe0BumIP+jPZ/f+mU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4383
+X-Received: by 2002:a6b:e411:: with SMTP id u17mr18784050iog.39.1582072633265;
+ Tue, 18 Feb 2020 16:37:13 -0800 (PST)
+Date:   Tue, 18 Feb 2020 16:37:13 -0800
+In-Reply-To: <0000000000000973ee059eaf4de6@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000509454059ee2fd96@google.com>
+Subject: Re: possible deadlock in bpf_lru_push_free
+From:   syzbot <syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com>
+To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, hdanton@sina.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+syzbot has found a reproducer for the following crash on:
 
-> From: Corentin Labbe, Sent: Wednesday, February 19, 2020 4:33 AM
->=20
-> device_driver name is const char pointer, so it not useful to cast
-> udc_name (which is already const char).
->=20
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+HEAD commit:    e20d3a05 bpf, offload: Replace bitwise AND by logical AND ..
+git tree:       bpf
+console output: https://syzkaller.appspot.com/x/log.txt?x=1491c481e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e7d35de59001df38
+dashboard link: https://syzkaller.appspot.com/bug?extid=122b5421d14e68f29cd1
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16ca6c45e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=134bae29e00000
 
-Thank you for the patch!
+Bisection is inconclusive: the first bad commit could be any of:
 
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+36a375c6 mailmap: add entry for Tiezhu Yang
+95c472ff Documentation/ko_KR/howto: Update a broken link
+ff1e81a7 Documentation: build warnings related to missing blank lines after explicit markups has been fixed
+5549c202 Documentation/ko_KR/howto: Update broken web addresses
+599e6f8d Documentation: changes.rst: update several outdated project URLs
+4bfdebd6 docs/locking: Fix outdated section names
+d1c9038a Allow git builds of Sphinx
+41dcd67e Merge tag 'docs-5.6-2' of git://git.lwn.net/linux
 
-Best regards,
-Yoshihiro Shimoda
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17c6c36ee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+122b5421d14e68f29cd1@syzkaller.appspotmail.com
+
+IPVS: ftp: loaded support on port[0] = 21
+======================================================
+WARNING: possible circular locking dependency detected
+5.5.0-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor198/9748 is trying to acquire lock:
+ffffe8ffffc49158 (&l->lock){....}, at: bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
+ffffe8ffffc49158 (&l->lock){....}, at: bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
+ffffe8ffffc49158 (&l->lock){....}, at: bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
+
+but task is already holding lock:
+ffff88809f6c3b60 (&htab->buckets[i].lock){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (&htab->buckets[i].lock){....}:
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+       htab_lru_map_delete_node+0xce/0x2f0 kernel/bpf/hashtab.c:593
+       __bpf_lru_list_shrink_inactive kernel/bpf/bpf_lru_list.c:220 [inline]
+       __bpf_lru_list_shrink+0xf9/0x470 kernel/bpf/bpf_lru_list.c:266
+       bpf_percpu_lru_pop_free kernel/bpf/bpf_lru_list.c:416 [inline]
+       bpf_lru_pop_free+0xa9f/0x1670 kernel/bpf/bpf_lru_list.c:497
+       prealloc_lru_pop+0x2c/0xa0 kernel/bpf/hashtab.c:132
+       __htab_lru_percpu_map_update_elem+0x67e/0xa90 kernel/bpf/hashtab.c:1069
+       bpf_percpu_hash_update+0x16e/0x210 kernel/bpf/hashtab.c:1585
+       bpf_map_update_value.isra.0+0x2d7/0x8e0 kernel/bpf/syscall.c:181
+       map_update_elem kernel/bpf/syscall.c:1089 [inline]
+       __do_sys_bpf+0x3163/0x41e0 kernel/bpf/syscall.c:3384
+       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
+       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&l->lock){....}:
+       check_prev_add kernel/locking/lockdep.c:2475 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+       validate_chain kernel/locking/lockdep.c:2970 [inline]
+       __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+       lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+       __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+       _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+       bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
+       bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
+       bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
+       __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
+       htab_lru_percpu_map_lookup_and_delete_batch+0x37/0x40 kernel/bpf/hashtab.c:1474
+       bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
+       __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
+       __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
+       __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
+       do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+       entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&htab->buckets[i].lock);
+                               lock(&l->lock);
+                               lock(&htab->buckets[i].lock);
+  lock(&l->lock);
+
+ *** DEADLOCK ***
+
+2 locks held by syz-executor198/9748:
+ #0: ffffffff89bac200 (rcu_read_lock){....}, at: __htab_map_lookup_and_delete_batch+0x54b/0x1540 kernel/bpf/hashtab.c:1308
+ #1: ffff88809f6c3b60 (&htab->buckets[i].lock){....}, at: __htab_map_lookup_and_delete_batch+0x617/0x1540 kernel/bpf/hashtab.c:1322
+
+stack backtrace:
+CPU: 0 PID: 9748 Comm: syz-executor198 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1684
+ check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1808
+ check_prev_add kernel/locking/lockdep.c:2475 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2580 [inline]
+ validate_chain kernel/locking/lockdep.c:2970 [inline]
+ __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3954
+ lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+ __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
+ _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
+ bpf_lru_list_push_free kernel/bpf/bpf_lru_list.c:313 [inline]
+ bpf_common_lru_push_free kernel/bpf/bpf_lru_list.c:532 [inline]
+ bpf_lru_push_free+0xe5/0x5b0 kernel/bpf/bpf_lru_list.c:555
+ __htab_map_lookup_and_delete_batch+0x8d4/0x1540 kernel/bpf/hashtab.c:1374
+ htab_lru_percpu_map_lookup_and_delete_batch+0x37/0x40 kernel/bpf/hashtab.c:1474
+ bpf_map_do_batch+0x3f5/0x510 kernel/bpf/syscall.c:3348
+ __do_sys_bpf+0x1f7d/0x41e0 kernel/bpf/syscall.c:3456
+ __se_sys_bpf kernel/bpf/syscall.c:3355 [inline]
+ __x64_sys_bpf+0x73/0xb0 kernel/bpf/syscall.c:3355
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x440c09
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff14512e08 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00000000004a2390 RCX: 0000000000440c09
+RDX: 0000000000000038 RSI: 0000000020000100 RDI: 0000000000000019
+RBP: 00000000006cb018 R08: 0000000120080522 R09: 0000000120080522
+R10: 0000000120080522 R11: 0000000000000246 R12: 0000000000402110
+R13: 00000000004021a0 R14: 0000000000000000 R15: 0000000000000000
 
