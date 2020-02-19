@@ -2,100 +2,74 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1645C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DE8C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B67F2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:47:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="RoGEQR6+"
+	by mail.kernel.org (Postfix) with ESMTP id 1121C2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:49:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbgBSJrH (ORCPT
+        id S1726582AbgBSJtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:47:07 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33141 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726469AbgBSJrG (ORCPT
+        Wed, 19 Feb 2020 04:49:02 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:60568 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbgBSJtB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:47:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id u6so27459260wrt.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:47:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZSaOE1Qu/PM45Zep27V+i+rAGmMBianqxHPUxijGniA=;
-        b=RoGEQR6+uEBeEhZkN+YFjpt4d7LT6G0ht2pkOT2ruGlhJI+dbNRYMwBlFGHQ1YUzIs
-         +viyQVEKmxvuXb8EbXWEmstpROHR/KznqnVK9El5RKd8sIcfMP9Jhpq5mG+cVSig80WM
-         y3NTwylBFmXRdWl9oSFmfpg60/n8LBwfcuG3hgNSohre8WBIscoFX+YJcROQ5qr98Snr
-         kW1EHZGljfVf+OrgXOK7c83BZSw1CZKDKdCuxYj9lTIHkH4fCqdI187fPDoHaFE7A/JQ
-         yRVgIJJZceLiqbS57laRbM/plKasZUaD/utPVUstGzjriP/5SMTg1EA4l6x/O6Wu+hjD
-         qK2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZSaOE1Qu/PM45Zep27V+i+rAGmMBianqxHPUxijGniA=;
-        b=KcT9VF9cwas09sa7PPPwyJmv6RUESYqzlQ+yn765eVAsxdP9fJHLBtWMWAuet/GElf
-         1D4tWRBJxL6Cw3PTaxThJzNse9SmEQMhYSoyrx9VvVVyzG9aPP0HCutrOOf+SHtL0H9k
-         NAzeK0vaR8Ypv6Ur6JPIXt/DvSYz8b+Au8EquBGZ9VlHMbo7u/Sw/F1ObeFw5j5O6lxy
-         rqevknX0ozsVdwbdOv4xg+XwgMkYOJodZYiCY/5hcbM+MECtmYXuHR7s7e6gQAiB016X
-         jIdInr/77ipEAaSrN9BTbqlvompeeoKIDj/ZaVEtGP3XE9ABYqztR9j9ATl3joHAneD3
-         FFpg==
-X-Gm-Message-State: APjAAAU2CDyoh6pNimtL1eaCN5/pf2KoLFhWCoJ3mC858pPjehX2Ed64
-        X5YMKRo7H83AET7keRrtcR2FR1Qll9A=
-X-Google-Smtp-Source: APXvYqxE8JIxqFn+JsIZXr2z1XTvUwEMzRNPle7Eb2m5gt9NpGFBroR3+Wsds7aTN91RKZGXNlgutQ==
-X-Received: by 2002:adf:ff8c:: with SMTP id j12mr23976923wrr.354.1582105624478;
-        Wed, 19 Feb 2020 01:47:04 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id s8sm2320308wmf.45.2020.02.19.01.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 01:47:04 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpiolib: use gpiochip_get_desc() where applicable
-Date:   Wed, 19 Feb 2020 10:47:02 +0100
-Message-Id: <20200219094702.6463-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 04:49:01 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01J9mnsY029951, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01J9mnsY029951
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Feb 2020 17:48:49 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 19 Feb 2020 17:48:49 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 19 Feb 2020 17:48:48 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 19 Feb 2020 17:48:48 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        nic_swsd <nic_swsd@realtek.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux USB Mailing List <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH net-next v2 12/13] r8152: use new helper tcp_v6_gso_csum_prep
+Thread-Topic: [PATCH net-next v2 12/13] r8152: use new helper
+ tcp_v6_gso_csum_prep
+Thread-Index: AQHV5phMsUMHsElpxUaoxEMxm3ymXagiRPkw
+Date:   Wed, 19 Feb 2020 09:48:48 +0000
+Message-ID: <42d3acd04d79422aa37715f136497369@realtek.com>
+References: <fffc8b6d-68ed-7501-18f1-94cf548821fb@gmail.com>
+ <1dd1668a-b3c6-d441-681d-6cbe3ab22fa4@gmail.com>
+In-Reply-To: <1dd1668a-b3c6-d441-681d-6cbe3ab22fa4@gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Whenever retrieving a descriptor from a gpiochip: use the provided
-helper which checks for errors.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpiolib.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4d0106ceeba7..5c761a738065 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2953,7 +2953,9 @@ const char *gpiochip_is_requested(struct gpio_chip *chip, unsigned offset)
- 	if (offset >= chip->ngpio)
- 		return NULL;
- 
--	desc = &chip->gpiodev->descs[offset];
-+	desc = gpiochip_get_desc(chip, offset);
-+	if (IS_ERR(desc))
-+		return NULL;
- 
- 	if (test_bit(FLAG_REQUESTED, &desc->flags) == 0)
- 		return NULL;
--- 
-2.25.0
-
+SGVpbmVyIEthbGx3ZWl0IFttYWlsdG86aGthbGx3ZWl0MUBnbWFpbC5jb21dDQo+IFNlbnQ6IFdl
+ZG5lc2RheSwgRmVicnVhcnkgMTksIDIwMjAgNDoxMyBBTQ0KPiBTdWJqZWN0OiBbUEFUQ0ggbmV0
+LW5leHQgdjIgMTIvMTNdIHI4MTUyOiB1c2UgbmV3IGhlbHBlcg0KPiB0Y3BfdjZfZ3NvX2NzdW1f
+cHJlcA0KPiANCj4gVXNlIG5ldyBoZWxwZXIgdGNwX3Y2X2dzb19jc3VtX3ByZXAgaW4gYWRkaXRp
+b25hbCBuZXR3b3JrIGRyaXZlcnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBIZWluZXIgS2FsbHdl
+aXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPg0KDQpBY2tlZC1ieTogSGF5ZXMgV2FuZyA8aGF5ZXN3
+YW5nQHJlYWx0ZWsuY29tPg0KDQpCZXN0IFJlZ2FyZHMsDQpIYXllcw0KDQo=
