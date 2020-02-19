@@ -2,121 +2,203 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A4CC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8D7C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47EDE2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:12:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZp2sja7"
+	by mail.kernel.org (Postfix) with ESMTP id A1A53208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBSXMW (ORCPT
+        id S1726756AbgBSXTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:12:22 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42764 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXMV (ORCPT
+        Wed, 19 Feb 2020 18:19:52 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:47800 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:12:21 -0500
-Received: by mail-lj1-f195.google.com with SMTP id d10so2161859ljl.9;
-        Wed, 19 Feb 2020 15:12:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wWdZgMsswVvJQU2MierpIWKnEFD04FeEgnx6asgVYnI=;
-        b=WZp2sja7wA3CR4NIL6OyZNdn7QmZHOUFWiYV+dkja9uSHKew/+bKSEoWrRnL4FOiqN
-         NGKZ4lkj83ixJoxxqYMgH7q+tRSNqs/cV0YQugYHYC6+zecrm6XFLsvmzH/6VoY2M6DH
-         YNyynBe/YBVf54qhOuBgRSG0BduKg2rd+Gi9nZfJ+ShsciOYfrDHTibht+8oGOG8wO2i
-         C6Mmp0pSF3V8ndb4C8RNL5DKFVNkzFNa4ps+1Uswgqj7AgLHsbDJUrCqc/ZnY1fnbNkT
-         TFIojIeyAX77RzBMv0GTNM7oCJsteTdQAglUGUpH1pvd7ycS+nb4V0fsW8NgEVIWhmIY
-         iydg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wWdZgMsswVvJQU2MierpIWKnEFD04FeEgnx6asgVYnI=;
-        b=IoyEC68NEy2B9YxLveA561cB1QlNGnv9l+4aHQr3/vSr8aCZu540C0hOz3ApJFtd4E
-         maHWFUz5YTZXEVtSqM3kRM129bPQrSuUaDteQXCJRbyJ/2EacT7XRPCN5wXpzzTMvteD
-         w39ZuBWvWofJWMVM/ajfTxEtslUzsjFPQTpXa8f1CM6U2KtVmDrqvEUJK9FMns0Vgdtv
-         /j5444GS1hoVvQLpHN+dvNcXrtUQeNk7zUD6Mx5p+WiM1mDEb1slua+tUI0WvDOWtdnQ
-         O6uW/UCbG+5HxwEFAbDfOT6wSJSdDvIWEYR7kiQHARlzx4VgvSuIOOFtP28JaVCQ7KN9
-         5swA==
-X-Gm-Message-State: APjAAAWukbffjjmctfRkVxE6NfHQUOI3IuSmGTGQrO+uwJNtuSIduaQd
-        GCXPJ6zE524VyvNMplzo+VoRCRCH/+XCA84rt3Y=
-X-Google-Smtp-Source: APXvYqwPuJO1pn4qVz8SRf9ExBqbylkQAOl355R6sC3iaV5KVqsifvyxlpaZ5kyrxsscgSt0NeEvY1Pp6dOu7d2MFu8=
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr17395927ljh.138.1582153938706;
- Wed, 19 Feb 2020 15:12:18 -0800 (PST)
+        Wed, 19 Feb 2020 18:19:51 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=rjones.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <rjones@gateworks.com>)
+        id 1j4Ydv-0005r2-FZ; Wed, 19 Feb 2020 23:20:35 +0000
+From:   Robert Jones <rjones@gateworks.com>
+To:     Sunil Goutham <sgoutham@marvell.com>,
+        Robert Richter <rrichter@marvell.com>,
+        David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
+        Robert Jones <rjones@gateworks.com>
+Subject: [PATCH net v3] net: thunderx: workaround BGX TX Underflow issue
+Date:   Wed, 19 Feb 2020 15:19:36 -0800
+Message-Id: <20200219231936.5531-1-rjones@gateworks.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200218172552.215077-1-brianvv@google.com> <c31be4c5-d4c7-5979-215e-de23b9ca0549@fb.com>
-In-Reply-To: <c31be4c5-d4c7-5979-215e-de23b9ca0549@fb.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Feb 2020 15:12:06 -0800
-Message-ID: <CAADnVQJofPTYg73qoY6e-SwgyrtqPwU9JKx8DQ-9+L_uW6=X9g@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf] bpf: Do not grab the bucket spinlock by default on
- htab batch ops
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Brian Vazquez <brianvv@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 1:23 PM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 2/18/20 9:25 AM, Brian Vazquez wrote:
-> > Grabbing the spinlock for every bucket even if it's empty, was causing
-> > significant perfomance cost when traversing htab maps that have only a
-> > few entries. This patch addresses the issue by checking first the
-> > bucket_cnt, if the bucket has some entries then we go and grab the
-> > spinlock and proceed with the batching.
-> >
-> > Tested with a htab of size 50K and different value of populated entries.
-> >
-> > Before:
-> >    Benchmark             Time(ns)        CPU(ns)
-> >    ---------------------------------------------
-> >    BM_DumpHashMap/1       2759655        2752033
-> >    BM_DumpHashMap/10      2933722        2930825
-> >    BM_DumpHashMap/200     3171680        3170265
-> >    BM_DumpHashMap/500     3639607        3635511
-> >    BM_DumpHashMap/1000    4369008        4364981
-> >    BM_DumpHashMap/5k     11171919       11134028
-> >    BM_DumpHashMap/20k    69150080       69033496
-> >    BM_DumpHashMap/39k   190501036      190226162
-> >
-> > After:
-> >    Benchmark             Time(ns)        CPU(ns)
-> >    ---------------------------------------------
-> >    BM_DumpHashMap/1        202707         200109
-> >    BM_DumpHashMap/10       213441         210569
-> >    BM_DumpHashMap/200      478641         472350
-> >    BM_DumpHashMap/500      980061         967102
-> >    BM_DumpHashMap/1000    1863835        1839575
-> >    BM_DumpHashMap/5k      8961836        8902540
-> >    BM_DumpHashMap/20k    69761497       69322756
-> >    BM_DumpHashMap/39k   187437830      186551111
-> >
-> > Fixes: 057996380a42 ("bpf: Add batch ops to all htab bpf map")
-> > Cc: Yonghong Song <yhs@fb.com>
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
->
-> Thanks for the fix.
-> Acked-by: Yonghong Song <yhs@fb.com>
+From: Tim Harvey <tharvey@gateworks.com>
 
-Applied. Thanks
+While it is not yet understood why a TX underflow can easily occur
+for SGMII interfaces resulting in a TX wedge. It has been found that
+disabling/re-enabling the LMAC resolves the issue.
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Robert Jones <rjones@gateworks.com>
+---
+Changes in v2:
+ - Changed bgx_register_intr() to a void return
+ - Added pci_free_irq_vectors() calls to free irq if named/allocated
+ - Use snprintf instead of sprintf for irq names
+
+Changes in v3:
+ - Use pci_err() instead of dev_err() calls
+ - Use pci_alloc_irq_vectors() for minimum vectors with PCI_IRQ_ALL_TYPES
+ - Use pci_request_irq() instead of request_irq() with stored name
+ - Move interrupt enable (and add disable) to bgx_lmac_rx_tx_enable()
+ - Add pcim_enable_device(), pci_free_irq() calls and remove vector free calls
+
+ .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
+ .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
+ 2 files changed, 68 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index c4f6ec0cd183..00751771f662 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -410,10 +410,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
+ 	lmac = &bgx->lmac[lmacid];
+ 
+ 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
+-	if (enable)
++	if (enable) {
+ 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
+-	else
++
++		/* enable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
++			       GMI_TXX_INT_UNDFLW);
++	} else {
+ 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
++
++		/* Disable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
++			       GMI_TXX_INT_UNDFLW);
++	}
+ 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
+ 
+ 	if (bgx->is_rgx)
+@@ -1535,6 +1544,48 @@ static int bgx_init_phy(struct bgx *bgx)
+ 	return bgx_init_of_phy(bgx);
+ }
+ 
++static irqreturn_t bgx_intr_handler(int irq, void *data)
++{
++	struct bgx *bgx = (struct bgx *)data;
++	u64 status, val;
++	int lmac;
++
++	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
++		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
++		if (status & GMI_TXX_INT_UNDFLW) {
++			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
++				bgx->bgx_id, lmac);
++			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
++			val &= ~CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++			val |= CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++		}
++		/* clear interrupts */
++		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void bgx_register_intr(struct pci_dev *pdev)
++{
++	struct bgx *bgx = pci_get_drvdata(pdev);
++	int ret;
++
++	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
++				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
++	if (ret < 0) {
++		pci_err(pdev, "Req for #%d msix vectors failed\n",
++			BGX_LMAC_VEC_OFFSET);
++		return;
++	}
++	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
++			      bgx, "BGX%d", bgx->bgx_id);
++	if (ret)
++		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++}
++
+ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int err;
+@@ -1550,7 +1601,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	pci_set_drvdata(pdev, bgx);
+ 
+-	err = pci_enable_device(pdev);
++	err = pcim_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(dev, "Failed to enable PCI device\n");
+ 		pci_set_drvdata(pdev, NULL);
+@@ -1604,6 +1655,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	bgx_init_hw(bgx);
+ 
++	bgx_register_intr(pdev);
++
+ 	/* Enable all LMACs */
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+ 		err = bgx_lmac_enable(bgx, lmac);
+@@ -1620,6 +1673,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ err_enable:
+ 	bgx_vnic[bgx->bgx_id] = NULL;
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
+ err_release_regions:
+ 	pci_release_regions(pdev);
+ err_disable_device:
+@@ -1637,6 +1691,8 @@ static void bgx_remove(struct pci_dev *pdev)
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
+ 		bgx_lmac_disable(bgx, lmac);
+ 
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++
+ 	bgx_vnic[bgx->bgx_id] = NULL;
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+index 25888706bdcd..cdea49392185 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+@@ -180,6 +180,15 @@
+ #define BGX_GMP_GMI_TXX_BURST		0x38228
+ #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
+ #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
++#define BGX_GMP_GMI_TXX_INT		0x38500
++#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
++#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
++#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
++#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
++#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
++#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
++#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
++#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+ 
+ #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
+ #define BGX_MSIX_VEC_0_29_CTL		0x400008
+-- 
+2.25.0
+
