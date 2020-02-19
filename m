@@ -2,101 +2,273 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A18B0C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B981C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A04524654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582127069;
-	bh=dMrXMbrs9gNU7fLzRfLtwAolv6etgSudzWhW2W2FRn8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IFumII8YAU9hH0FHNJIPdR4JdN3eV1O4bvU/ItJ1mqukZDNMYtk8lKH91+TOB6WiU
-	 Ct2ftwGaIpfcW05bFRH7CdHgeikxoEe/Ur9sNtmIav8HD9JyY6W4FWpgNUsVnonpgu
-	 mnB5EzjV206/FIM2FU6tNndYDIYNjTHsJKr3vXv0=
+	by mail.kernel.org (Postfix) with ESMTP id 2EC9A2464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgBSPo2 (ORCPT
+        id S1726764AbgBSPpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:44:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:51514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbgBSPo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:44:27 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D0061FB;
-        Wed, 19 Feb 2020 07:44:27 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5C233F68F;
-        Wed, 19 Feb 2020 07:44:26 -0800 (PST)
-Date:   Wed, 19 Feb 2020 15:44:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/2] ASoC: meson: add t9015 internal DAC driver
-Message-ID: <20200219154425.GD4488@sirena.org.uk>
-References: <20200219133646.1035506-1-jbrunet@baylibre.com>
- <20200219133646.1035506-3-jbrunet@baylibre.com>
- <20200219145500.GC4488@sirena.org.uk>
- <1ja75ey4vj.fsf@starbuckisacylon.baylibre.com>
+        Wed, 19 Feb 2020 10:45:02 -0500
+Received: from 1.mo178.mail-out.ovh.net ([178.33.251.53]:33007 "EHLO
+        1.mo178.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgBSPpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:45:01 -0500
+Received: from player739.ha.ovh.net (unknown [10.108.35.210])
+        by mo178.mail-out.ovh.net (Postfix) with ESMTP id 108A08EAB3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:35:13 +0100 (CET)
+Received: from sk2.org (cre33-1_migr-88-122-126-116.fbx.proxad.net [88.122.126.116])
+        (Authenticated sender: steve@sk2.org)
+        by player739.ha.ovh.net (Postfix) with ESMTPSA id B14AEB8813C7;
+        Wed, 19 Feb 2020 15:35:00 +0000 (UTC)
+From:   Stephen Kitt <steve@sk2.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Stephen Kitt <steve@sk2.org>
+Subject: [PATCH v3] docs: add a script to check sysctl docs
+Date:   Wed, 19 Feb 2020 16:34:42 +0100
+Message-Id: <20200219153442.10205-1-steve@sk2.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
-Content-Disposition: inline
-In-Reply-To: <1ja75ey4vj.fsf@starbuckisacylon.baylibre.com>
-X-Cookie: FORTH IF HONK THEN
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 6174716565579910533
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrkedtgdejlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecukfhppedtrddtrddtrddtpdekkedruddvvddruddviedrudduieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhhouggvpehsmhhtphdqohhuthdphhgvlhhopehplhgrhigvrhejfeelrdhhrgdrohhvhhdrnhgvthdpihhnvghtpedtrddtrddtrddtpdhmrghilhhfrhhomhepshhtvghvvgesshhkvddrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This script allows sysctl documentation to be checked against the
+kernel source code, to identify missing or obsolete entries. Running
+it against 5.5 shows for example that sysctl/kernel.rst has two
+obsolete entries and is missing 52 entries.
 
---JwB53PgKC5A7+0Ej
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stephen Kitt <steve@sk2.org>
+---
+Changes since v2:
+* drop UTF-8 characters
+* fix license identifier
+* fix example invocation to include path as well as table
 
-On Wed, Feb 19, 2020 at 04:27:12PM +0100, Jerome Brunet wrote:
-> On Wed 19 Feb 2020 at 15:55, Mark Brown <broonie@kernel.org> wrote:
+v2 was the initial submission (in v2 of the sysctl/kernel.rst patch
+set).
+---
+ Documentation/admin-guide/sysctl/kernel.rst |   3 +
+ scripts/check-sysctl-docs                   | 181 ++++++++++++++++++++
+ 2 files changed, 184 insertions(+)
+ create mode 100755 scripts/check-sysctl-docs
 
-> >> +	/* Channel Src */
-> >> +	SOC_ENUM("Right DAC Source", dacr_in_enum),
-> >> +	SOC_ENUM("Left DAC Source",  dacl_in_enum),
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index 6fbfa497388a..ba4b51bb1f3e 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -2,6 +2,9 @@
+ Documentation for /proc/sys/kernel/
+ ===================================
+ 
++.. See scripts/check-sysctl-docs to keep this up to date
++
++
+ Copyright (c) 1998, 1999,  Rik van Riel <riel@nl.linux.org>
+ 
+ Copyright (c) 2009,        Shen Feng<shen@cn.fujitsu.com>
+diff --git a/scripts/check-sysctl-docs b/scripts/check-sysctl-docs
+new file mode 100755
+index 000000000000..8bcb9e26c7bc
+--- /dev/null
++++ b/scripts/check-sysctl-docs
+@@ -0,0 +1,181 @@
++#!/usr/bin/gawk -f
++# SPDX-License-Identifier: GPL-2.0
++
++# Script to check sysctl documentation against source files
++#
++# Copyright (c) 2020 Stephen Kitt
++
++# Example invocation:
++#	scripts/check-sysctl-docs -vtable="kernel" \
++#		Documentation/admin-guide/sysctl/kernel.rst \
++#		$(git grep -l register_sysctl_)
++#
++# Specify -vdebug=1 to see debugging information
++
++BEGIN {
++    if (!table) {
++	print "Please specify the table to look for using the table variable" > "/dev/stderr"
++	exit 1
++    }
++}
++
++# The following globals are used:
++# children: maps ctl_table names and procnames to child ctl_table names
++# documented: maps documented entries (each key is an entry)
++# entries: maps ctl_table names and procnames to counts (so
++#          enumerating the subkeys for a given ctl_table lists its
++#          procnames)
++# files: maps procnames to source file names
++# paths: maps ctl_path names to paths
++# curpath: the name of the current ctl_path struct
++# curtable: the name of the current ctl_table struct
++# curentry: the name of the current proc entry (procname when parsing
++#           a ctl_table, constructed path when parsing a ctl_path)
++
++
++# Remove punctuation from the given value
++function trimpunct(value) {
++    while (value ~ /^["&]/) {
++	value = substr(value, 2)
++    }
++    while (value ~ /[]["&,}]$/) {
++	value = substr(value, 1, length(value) - 1)
++    }
++    return value
++}
++
++# Print the information for the given entry
++function printentry(entry) {
++    seen[entry]++
++    printf "* %s from %s", entry, file[entry]
++    if (documented[entry]) {
++	printf " (documented)"
++    }
++    print ""
++}
++
++
++# Stage 1: build the list of documented entries
++FNR == NR && /^=+$/ {
++    if (prevline ~ /Documentation for/) {
++	# This is the main title
++	next
++    }
++
++    # The previous line is a section title, parse it
++    $0 = prevline
++    if (debug) print "Parsing " $0
++    inbrackets = 0
++    for (i = 1; i <= NF; i++) {
++	if (length($i) == 0) {
++	    continue
++	}
++	if (!inbrackets && substr($i, 1, 1) == "(") {
++	    inbrackets = 1
++	}
++	if (!inbrackets) {
++	    token = trimpunct($i)
++	    if (length(token) > 0 && token != "and") {
++		if (debug) print trimpunct($i)
++		documented[trimpunct($i)]++
++	    }
++	}
++	if (inbrackets && substr($i, length($i), 1) == ")") {
++	    inbrackets = 0
++	}
++    }
++}
++
++FNR == NR {
++    prevline = $0
++    next
++}
++
++
++# Stage 2: process each file and find all sysctl tables
++BEGINFILE {
++    delete children
++    delete entries
++    delete paths
++    curpath = ""
++    curtable = ""
++    curentry = ""
++    if (debug) print "Processing file " FILENAME
++}
++
++/^static struct ctl_path/ {
++    match($0, /static struct ctl_path ([^][]+)/, tables)
++    curpath = tables[1]
++    if (debug) print "Processing path " curpath
++}
++
++/^static struct ctl_table/ {
++    match($0, /static struct ctl_table ([^][]+)/, tables)
++    curtable = tables[1]
++    if (debug) print "Processing table " curtable
++}
++
++/^};$/ {
++    curpath = ""
++    curtable = ""
++    curentry = ""
++}
++
++curpath && /\.procname[\t ]*=[\t ]*".+"/ {
++    match($0, /.procname[\t ]*=[\t ]*"([^"]+)"/, names)
++    if (curentry) {
++	curentry = curentry "/" names[1]
++    } else {
++	curentry = names[1]
++    }
++    if (debug) print "Setting path " curpath " to " curentry
++    paths[curpath] = curentry
++}
++
++curtable && /\.procname[\t ]*=[\t ]*".+"/ {
++    match($0, /.procname[\t ]*=[\t ]*"([^"]+)"/, names)
++    curentry = names[1]
++    if (debug) print "Adding entry " curentry " to table " curtable
++    entries[curtable][curentry]++
++    file[curentry] = FILENAME
++}
++
++/\.child[\t ]*=/ {
++    child = trimpunct($NF)
++    if (debug) print "Linking child " child " to table " curtable " entry " curentry
++    children[curtable][curentry] = child
++}
++
++/register_sysctl_table\(.*\)/ {
++    match($0, /register_sysctl_table\(([^)]+)\)/, tables)
++    if (debug) print "Registering table " tables[1]
++    if (children[tables[1]][table]) {
++	for (entry in entries[children[tables[1]][table]]) {
++	    printentry(entry)
++	}
++    }
++}
++
++/register_sysctl_paths\(.*\)/ {
++    match($0, /register_sysctl_paths\(([^)]+), ([^)]+)\)/, tables)
++    if (debug) print "Attaching table " tables[2] " to path " tables[1]
++    if (paths[tables[1]] == table) {
++	for (entry in entries[tables[2]]) {
++	    printentry(entry)
++	}
++    }
++    split(paths[tables[1]], components, "/")
++    if (length(components) > 1 && components[1] == table) {
++	# Count the first subdirectory as seen
++	seen[components[2]]++
++    }
++}
++
++
++END {
++    for (entry in documented) {
++	if (!seen[entry]) {
++	    print "No implementation for " entry
++	}
++    }
++}
+-- 
+2.20.1
 
-> > Ideally these would be moved into DAPM (using an AIF_IN widget for the
-> > DAI).
-
-> I can (I initially did) but I don't think it is worth it.
-
-> I would split Playback into 2 AIF for Left and Right, then add a mux to
-> select one them if front of both DAC. It will had 4 widgets and 6 routes
-> but it won't allow turn anything on or off. There is no PM improvement.
-
-> Do you still want me to change this ?
-
-It can help us track things like external amps connected to the DACs,
-especially when we manage to get to the point of tracking individual
-audio streams over DAI links.
-
---JwB53PgKC5A7+0Ej
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5NV9gACgkQJNaLcl1U
-h9B1bggAg2Hke5eWreSl3h32yjHnSqSd3PP0FGDmBKiB8wwIidEnFIVCpcMesE/D
-a6aM9T+fI+H0uiiAhroMreYDklRU+cJaTcDHBfEHMiTB7p8WPTUiGjUz8ZwqbmTM
-rn93VmzRm+hGQj9oj6QGxUxpXQ2j3UKh/iXEa/SItvNP7/cGs/mPjpFZ5PLJjSvO
-2glHbvcvqLgm54cNrHsC/Wx4LbpVMznw1dXRXNkzi4sWgcpBNwVm6Rph32EijKuE
-W4klrGqOa2Oj0ha5e97b+cZbTONpIPgVrDfegcbcPf+EHsYevSyPS4Pzdk0mGNXI
-36fS/u8fbsdVLyq3L89UxhOXP6vvMw==
-=bIhx
------END PGP SIGNATURE-----
-
---JwB53PgKC5A7+0Ej--
