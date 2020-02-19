@@ -2,337 +2,264 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE35C3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72947C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7C824654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmGex7Ew"
+	by mail.kernel.org (Postfix) with ESMTP id 3F1E924670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582145808;
+	bh=+In/NbRaxzWP5JEHpIxQZEOzgN7oCp+SmLGOHSb95rg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=xa7mdBKk0l42Vqk1SgThBNHNW+848G9ZReTIeIo9c4d5ZIaH2jvuALHiWrF0PbjEA
+	 BmUCeJjxvo2chp4N3mziH8LJgn/ROvq8i+BFscirKUL047rkTzc32BMiBB4ZGFMooS
+	 tFJFanodcpBUglO3uBSfVs/wBet6mj4YCy27CSGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgBSU4k (ORCPT
+        id S1727727AbgBSU4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:56:40 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37384 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSU4k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:56:40 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so2158555ioc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:56:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BXtUYAMk2yypjpr2fiXAWRzmutEB5OJ96VfTvfe+/6c=;
-        b=AmGex7EwESJoGdxW/IK7RUt6DGyfpn9qvcWIBv9ejozvqo1awYekRr/sUSbXHAJZds
-         gvoKJSwsCWNdl18wq5WRb94mDmtvp47TpLG2/5Mala4om3G+9O4TvRx5UQXU+K7jaoxM
-         Un5HR8Yuzv3g17d1n3SfkNqqYZrWJQsH8AWJGebHrEB/vMcUoG5XPV1ohv1br3Hk9sXD
-         tSYamsf5SsI28O2RV6klxBb5vENMnfcLIOvGsuKRXVl4CPIgOJ4PpaSCTgBNb85ioQ3S
-         +RBsspW71MhyarciJf9fWRYrJ5jGP1nVXrVZ0pBI7XjzZGI+T88wHhNi7QGXTZi3QpTy
-         LGLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BXtUYAMk2yypjpr2fiXAWRzmutEB5OJ96VfTvfe+/6c=;
-        b=jNPGKAhOaWa6wuz1zR2ZmNZ5VcS4ZHVCRdMIDMOR7OGC7/QWtghy4fGa2xosP5XXT1
-         /YiuxW9ug8sVLmpns7YpQQb7As2fis7q7IGnA5YfE8jTzwphzwXqkMwxrUPuA7Ho2sal
-         BRl7cY6/9/LOTZls6UC4SjSxF6I196padfE5kKnMwuFr8sq2f2JZQSgOr6ks47OgX2hC
-         GImGlgo9HIqcSQ4Cg1rljqKfWmkK86KkUHnLlT6aiVJCWCCw+mV8OzVjABwhWyw6iraH
-         juJzbKF+2RQRgngl2I0iTMpXKJPINACIngV94P4kXOs/puEfBXuIum0Qz78LI1CEHbFX
-         dVHg==
-X-Gm-Message-State: APjAAAWGn3D6rJoUbzxwr6j3k/6nb40Gr+TUMqVXaX94FTO6pDFiVHnz
-        bIu3k/9G20VQFJP1ZsZRleYJoFEpk5dpHNv13H0dkjWzYJA=
-X-Google-Smtp-Source: APXvYqyrfEJ75AkhgQEHrQ7440cuVEkH4ehytEjs4RWSvQcSM27eEcC9Sbt5xvxu/vjhwPrzEfjtBsP9MAIbTuE7ezI=
-X-Received: by 2002:a5e:d616:: with SMTP id w22mr20390545iom.57.1582145798058;
- Wed, 19 Feb 2020 12:56:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
- <20200211174205.22247-2-arnaud.pouliquen@st.com> <20200213200813.GA14415@xps15>
- <24947b31-bef6-cfb3-686e-80bef6f974e3@st.com> <CANLsYkxhWWgVFVe3=5WOYkYGQgV7g+3FvDKRDKi7y9kuk4_G8w@mail.gmail.com>
- <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
-In-Reply-To: <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 19 Feb 2020 13:56:27 -0700
-Message-ID: <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
- and booted before kernel
-To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Feb 2020 15:56:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:56622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbgBSU4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:56:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 491D61FB;
+        Wed, 19 Feb 2020 12:56:46 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C17EF3F68F;
+        Wed, 19 Feb 2020 12:56:45 -0800 (PST)
+Date:   Wed, 19 Feb 2020 20:56:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        lgirdwood@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, olivier.moysan@st.com, perex@perex.cz,
+        robh@kernel.org, tiwai@suse.com
+Subject: Applied "ASoC: dt-bindings: stm32: convert i2s to json-schema" to the asoc tree
+In-Reply-To:  <20200207120345.24672-1-olivier.moysan@st.com>
+Message-Id:  <applied-20200207120345.24672-1-olivier.moysan@st.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Arnaud,
+The patch
 
-On Tue, 18 Feb 2020 at 10:31, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
->
-> Hi Mathieu, Bjorn,
->
-> On 2/17/20 7:40 PM, Mathieu Poirier wrote:
-> > On Fri, 14 Feb 2020 at 09:33, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
-> >>
-> >> Hi Mathieu,
-> >>
-> >> On 2/13/20 9:08 PM, Mathieu Poirier wrote:
-> >>> Good day,
-> >>>
-> >>> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
-> >>>> From: Loic Pallardy <loic.pallardy@st.com>
-> >>>>
-> >>>> Remote processor could boot independently or be loaded/started before
-> >>>> Linux kernel by bootloader or any firmware.
-> >>>> This patch introduces a new property in rproc core, named skip_fw_load,
-> >>>> to be able to allocate resources and sub-devices like vdev and to
-> >>>> synchronize with current state without loading firmware from file system.
-> >>>> It is platform driver responsibility to implement the right firmware
-> >>>> load ops according to HW specificities.
-> >>>>
-> >>>> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> >>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> >>>> ---
-> >>>>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
-> >>>>  include/linux/remoteproc.h           |  2 +
-> >>>>  2 files changed, 55 insertions(+), 14 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> >>>> index 097f33e4f1f3..876b5420a32b 100644
-> >>>> --- a/drivers/remoteproc/remoteproc_core.c
-> >>>> +++ b/drivers/remoteproc/remoteproc_core.c
-> >>>> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
-> >>>>      return ret;
-> >>>>  }
-> >>>>
-> >>>> -/*
-> >>>> - * take a firmware and boot a remote processor with it.
-> >>>> +/**
-> >>>> + * rproc_fw_boot() - boot specified remote processor according to specified
-> >>>> + * firmware
-> >>>> + * @rproc: handle of a remote processor
-> >>>> + * @fw: pointer on firmware to handle
-> >>>> + *
-> >>>> + * Handle resources defined in resource table, load firmware and
-> >>>> + * start remote processor.
-> >>>> + *
-> >>>> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
-> >>>> + * core, but under the responsibility of platform driver.
-> >>>> + *
-> >>>> + * Returns 0 on success, and an appropriate error value otherwise.
-> >>>>   */
-> >>>>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
-> >>>>  {
-> >>>> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
-> >>>>      if (ret)
-> >>>>              return ret;
-> >>>>
-> >>>> -    dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
-> >>>> +    if (fw)
-> >>>> +            dev_info(dev, "Booting fw image %s, size %zd\n", name,
-> >>>> +                     fw->size);
-> >>>> +    else
-> >>>> +            dev_info(dev, "Synchronizing with preloaded co-processor\n");
-> >>>>
-> >>>>      /*
-> >>>>       * if enabling an IOMMU isn't relevant for this rproc, this is
-> >>>> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
-> >>>>   * rproc_boot() - boot a remote processor
-> >>>>   * @rproc: handle of a remote processor
-> >>>>   *
-> >>>> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
-> >>>> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
-> >>>> + * different contexts:
-> >>>> + * - power off
-> >>>> + * - preloaded firmware
-> >>>> + * - started before kernel execution
-> >>>> + * The different operations are selected thanks to properties defined by
-> >>>> + * platform driver.
-> >>>>   *
-> >>>> - * If the remote processor is already powered on, this function immediately
-> >>>> - * returns (successfully).
-> >>>> + * If the remote processor is already powered on at rproc level, this function
-> >>>> + * immediately returns (successfully).
-> >>>>   *
-> >>>>   * Returns 0 on success, and an appropriate error value otherwise.
-> >>>>   */
-> >>>>  int rproc_boot(struct rproc *rproc)
-> >>>>  {
-> >>>> -    const struct firmware *firmware_p;
-> >>>> +    const struct firmware *firmware_p = NULL;
-> >>>>      struct device *dev;
-> >>>>      int ret;
-> >>>>
-> >>>> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
-> >>>>
-> >>>>      dev_info(dev, "powering up %s\n", rproc->name);
-> >>>>
-> >>>> -    /* load firmware */
-> >>>> -    ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> >>>> -    if (ret < 0) {
-> >>>> -            dev_err(dev, "request_firmware failed: %d\n", ret);
-> >>>> -            goto downref_rproc;
-> >>>> +    if (!rproc->skip_fw_load) {
-> >>>> +            /* load firmware */
-> >>>> +            ret = request_firmware(&firmware_p, rproc->firmware, dev);
-> >>>> +            if (ret < 0) {
-> >>>> +                    dev_err(dev, "request_firmware failed: %d\n", ret);
-> >>>> +                    goto downref_rproc;
-> >>>> +            }
-> >>>> +    } else {
-> >>>> +            /*
-> >>>> +             * Set firmware name pointer to null as remoteproc core is not
-> >>>> +             * in charge of firmware loading
-> >>>> +             */
-> >>>> +            kfree(rproc->firmware);
-> >>>> +            rproc->firmware = NULL;
-> >>>
-> >>> If the MCU with pre-loaded FW crashes request_firmware() in
-> >>> rproc_trigger_recovery() will return an error and rproc_start()
-> >>> never called.
-> >>
-> >> Right, something is missing in the recovery function to prevent request_firmware call if skip_fw_load is set
-> >>
-> >> We also identify an issue if recovery fails:
-> >> In case of recovery issue the rproc state is RPROC_CRASHED, so that it is no more possible to load a new firmware from
-> >> user space.
-> >> This issue is not linked to this patchset. We have patches on our shelves for this.
-> >>
-> >>>>      }
-> >>>>
-> >>>>      ret = rproc_fw_boot(rproc, firmware_p);
-> >>>> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
-> >>>>      /* create debugfs entries */
-> >>>>      rproc_create_debug_dir(rproc);
-> >>>>
-> >>>> -    /* if rproc is marked always-on, request it to boot */
-> >>>> -    if (rproc->auto_boot) {
-> >>>> +    if (rproc->skip_fw_load) {
-> >>>> +            /*
-> >>>> +             * If rproc is marked already booted, no need to wait
-> >>>> +             * for firmware.
-> >>>> +             * Just handle associated resources and start sub devices
-> >>>> +             */
-> >>>> +            ret = rproc_boot(rproc);
-> >>>> +            if (ret < 0)
-> >>>> +                    return ret;
-> >>>> +    } else if (rproc->auto_boot) {
-> >>>> +            /* if rproc is marked always-on, request it to boot */
-> >>>
-> >>> I spent way too much time staring at this modification...  I can't decide if a
-> >>> system where the FW has been pre-loaded should be considered "auto_boot".
-> >>> Indeed the result is the same, i.e the MCU is started at boot time without user
-> >>> intervention.
-> >>
-> >> The main difference is that the firmware is loaded by the Linux remote proc in case of auto-boot.
-> >> In auto-boot mode the remoteproc loads a firmware, on probe, with a specified name without any request from user space.
-> >> One constraint of this mode is that the file system has to be accessible before the rproc probe.
-> >
-> > Indeed, but in both cases the MCU is booted automatically.  In one
-> > case the FW is loaded by the framework and in the other it is not.  As
-> > such both scenarios are "auto_boot", they simply have different
-> > flavours.
-> Regarding your concerns i would like to propose an alternative that will answer to following use cases:
->
-> In term of use cases we can start the remote proc firmware in following modes:
-> - auto boot with FW loading, resource table parsing and FW start/stop
-> - auto boot without FW loading, with FW resource table parsing and FW start/stop
-> - auto boot with FW attachment and  resource table parsing
-> - boot on userspace request with FW loading, resource table parsing and FW start/stop
-> - boot on userspace request without FW loading, with FW resource table parsing and FW start/stop
-> - boot on userspace request with FW attachment and  resource table parsing
->
-> I considered the recovery covered by these use cases...
->
-> I tried to concatenate all use case to determine the behavior of the core and platform driver:
-> - "auto-boot" used to decide if boot is from driver or user space request (independently from fw loading and live cycle management)
-> - "skip_fw_load" allows to determine if a firmware has to be loaded or not.
-> - remote Firmware live cycle (start,stop,...) are managed by the platform driver, it would have to determine the manage the remote proc depending on the mode detected.
->
-> If i apply this for stm32mp1 driver:
-> normal boot( FW started on user space request):
->   - auto-boot = 0
->   - skip_fw_load = 0
-> FW loaded and started by the bootloader
->   - auto-boot = 1
->   - skip_firmware = 1;
->
-> => on a stop: the "auto-boot" and "skip_firmware flag will be reset by the stm32rproc driver, to allow user space to load a new firmware or reste the system.
-> this is considered as a ack by Bjorn today, if you have an alternative please share.
+   ASoC: dt-bindings: stm32: convert i2s to json-schema
 
-I wonder if we can achieve the same results without needing
-rproc::skip_fw_load...  For cases where the FW would have been loaded
-and the MCU started by another entity we could simply set rproc->state
-= RPROC_RUNNING in the platform driver.  That way when the MCU is
-stopped or crashes, there is no flag to reset, rproc->state is simply
-set correctly by the current code.
+has been applied to the asoc tree at
 
-I would also set auto_boot =1 in order to start the AP synchronisation
-as quickly as possible and add a check in rproc_trigger_auto_boot() to
-see if rproc->state == RPROC_RUNNING.  If so simply call rproc_boot()
-where platform specific rproc_ops would be tailored to handle a
-running processor.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-In my opinion the above would represent the state of the MCU rather
-than the state of the FW used by the MCU.  It would also provide an
-opening for supporting systems where the MCU is not the life cycle
-manager.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Let me know what you think...
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
->
-> I need to rework the patchset in consequence but i would appreciate your feedback on this proposal before, to be sure that i well interpreted your concerns...
->
-> Regards,
-> Arnaud
->
-> >
-> >> This is not necessary the case, even if EPROBE_DEFER is used. In this case the driver has to be build as kernel module.
-> >>
-> >> Thanks,
-> >> Arnaud
-> >>>
-> >>> I'd welcome other people's opinion on this.
-> >>>
-> >>>>              ret = rproc_trigger_auto_boot(rproc);
-> >>>>              if (ret < 0)
-> >>>>                      return ret;
-> >>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-> >>>> index 16ad66683ad0..4fd5bedab4fa 100644
-> >>>> --- a/include/linux/remoteproc.h
-> >>>> +++ b/include/linux/remoteproc.h
-> >>>> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
-> >>>>   * @table_sz: size of @cached_table
-> >>>>   * @has_iommu: flag to indicate if remote processor is behind an MMU
-> >>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
-> >>>> + * @skip_fw_load: remote processor has been preloaded before start sequence
-> >>>>   * @dump_segments: list of segments in the firmware
-> >>>>   * @nb_vdev: number of vdev currently handled by rproc
-> >>>>   */
-> >>>> @@ -512,6 +513,7 @@ struct rproc {
-> >>>>      size_t table_sz;
-> >>>>      bool has_iommu;
-> >>>>      bool auto_boot;
-> >>>> +    bool skip_fw_load;
-> >>>>      struct list_head dump_segments;
-> >>>>      int nb_vdev;
-> >>>>  };
-> >>>> --
-> >>>> 2.17.1
-> >>>>
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 95e9e205fcbe34d003c558e0a98e6ae6f9ab3a61 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Fri, 7 Feb 2020 13:03:45 +0100
+Subject: [PATCH] ASoC: dt-bindings: stm32: convert i2s to json-schema
+
+Convert the STM32 I2S bindings to DT schema format using json-schema.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/r/20200207120345.24672-1-olivier.moysan@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/st,stm32-i2s.txt           | 62 -------------
+ .../bindings/sound/st,stm32-i2s.yaml          | 87 +++++++++++++++++++
+ 2 files changed, 87 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt b/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
+deleted file mode 100644
+index cbf24bcd1b8d..000000000000
+--- a/Documentation/devicetree/bindings/sound/st,stm32-i2s.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-STMicroelectronics STM32 SPI/I2S Controller
+-
+-The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
+-Only some SPI instances support I2S.
+-
+-Required properties:
+-  - compatible: Must be "st,stm32h7-i2s"
+-  - reg: Offset and length of the device's register set.
+-  - interrupts: Must contain the interrupt line id.
+-  - clocks: Must contain phandle and clock specifier pairs for each entry
+-	in clock-names.
+-  - clock-names: Must contain "i2sclk", "pclk", "x8k" and "x11k".
+-	"i2sclk": clock which feeds the internal clock generator
+-	"pclk": clock which feeds the peripheral bus interface
+-	"x8k": I2S parent clock for sampling rates multiple of 8kHz.
+-	"x11k": I2S parent clock for sampling rates multiple of 11.025kHz.
+-  - dmas: DMA specifiers for tx and rx dma.
+-    See Documentation/devicetree/bindings/dma/stm32-dma.txt.
+-  - dma-names: Identifier for each DMA request line. Must be "tx" and "rx".
+-  - pinctrl-names: should contain only value "default"
+-  - pinctrl-0: see Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+-
+-Optional properties:
+-  - resets: Reference to a reset controller asserting the reset controller
+-
+-The device node should contain one 'port' child node with one child 'endpoint'
+-node, according to the bindings defined in Documentation/devicetree/bindings/
+-graph.txt.
+-
+-Example:
+-sound_card {
+-	compatible = "audio-graph-card";
+-	dais = <&i2s2_port>;
+-};
+-
+-i2s2: audio-controller@40003800 {
+-	compatible = "st,stm32h7-i2s";
+-	reg = <0x40003800 0x400>;
+-	interrupts = <36>;
+-	clocks = <&rcc PCLK1>, <&rcc SPI2_CK>, <&rcc PLL1_Q>, <&rcc PLL2_P>;
+-	clock-names = "pclk", "i2sclk",  "x8k", "x11k";
+-	dmas = <&dmamux2 2 39 0x400 0x1>,
+-           <&dmamux2 3 40 0x400 0x1>;
+-	dma-names = "rx", "tx";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_i2s2>;
+-
+-	i2s2_port: port@0 {
+-		cpu_endpoint: endpoint {
+-			remote-endpoint = <&codec_endpoint>;
+-			format = "i2s";
+-		};
+-	};
+-};
+-
+-audio-codec {
+-	codec_port: port@0 {
+-		codec_endpoint: endpoint {
+-			remote-endpoint = <&cpu_endpoint>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+new file mode 100644
+index 000000000000..f32410890589
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/st,stm32-i2s.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/st,stm32-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 SPI/I2S Controller
++
++maintainers:
++  - Olivier Moysan <olivier.moysan@st.com>
++
++description:
++  The SPI/I2S block supports I2S/PCM protocols when configured on I2S mode.
++  Only some SPI instances support I2S.
++
++properties:
++  compatible:
++    enum:
++      - st,stm32h7-i2s
++
++  "#sound-dai-cells":
++    const: 0
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock feeding the peripheral bus interface.
++      - description: clock feeding the internal clock generator.
++      - description: I2S parent clock for sampling rates multiple of 8kHz.
++      - description: I2S parent clock for sampling rates multiple of 11.025kHz.
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: i2sclk
++      - const: x8k
++      - const: x11k
++
++  interrupts:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: audio capture DMA.
++      - description: audio playback DMA.
++
++  dma-names:
++    items:
++      - const: rx
++      - const: tx
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - "#sound-dai-cells"
++  - reg
++  - clocks
++  - clock-names
++  - interrupts
++  - dmas
++  - dma-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    i2s2: audio-controller@4000b000 {
++        compatible = "st,stm32h7-i2s";
++        #sound-dai-cells = <0>;
++        reg = <0x4000b000 0x400>;
++        clocks = <&rcc SPI2>, <&rcc SPI2_K>, <&rcc PLL3_Q>, <&rcc PLL3_R>;
++        clock-names = "pclk", "i2sclk", "x8k", "x11k";
++        interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++        dmas = <&dmamux1 39 0x400 0x01>,
++               <&dmamux1 40 0x400 0x01>;
++        dma-names = "rx", "tx";
++        pinctrl-names = "default";
++        pinctrl-0 = <&i2s2_pins_a>;
++    };
++
++...
+-- 
+2.20.1
+
