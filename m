@@ -2,81 +2,177 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3272DC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A01C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0785424654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F28CB24654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:44:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582076680;
+	bh=HiYuYK2GhDay0vxsyTtx/s1VhqSVYEA3kRYkKskGnow=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eQwfgeNqLtNXLmPCVFn365aORiBWpW38MZF69b0z39lItCsGaIE2EhAHnsneQEQUu
+	 X3rCVIp8LPsz4vFlF/xRlhhkJNSEHmzVpWE4aRJZ5CO+KRXoZUpFvrFuRG2MGXVRbw
+	 fqZNe+iLroq2iapLn8c0fCbarsiA0xf5OtZY2XFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728059AbgBSBki convert rfc822-to-8bit (ORCPT
+        id S1727940AbgBSBoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:40:38 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2965 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727936AbgBSBkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:40:37 -0500
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 380D1C5D9E679ABB5E3D;
-        Wed, 19 Feb 2020 09:40:34 +0800 (CST)
-Received: from dggeme704-chm.china.huawei.com (10.1.199.100) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 19 Feb 2020 09:40:33 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme704-chm.china.huawei.com (10.1.199.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 19 Feb 2020 09:40:33 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
- Wed, 19 Feb 2020 09:40:33 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Joe Perches <joe@perches.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH] KVM: VMX: replace "fall through" with "return true" to
- indicate different case
-Thread-Topic: [PATCH] KVM: VMX: replace "fall through" with "return true" to
- indicate different case
-Thread-Index: AdXmJiHJM/GSstynQgiSQknhAf056w==
-Date:   Wed, 19 Feb 2020 01:40:33 +0000
-Message-ID: <f103e04e215a47789cc316ada7efbf2c@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 18 Feb 2020 20:44:38 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51911 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727533AbgBSBoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 20:44:38 -0500
+Received: by mail-pj1-f68.google.com with SMTP id fa20so1861729pjb.1;
+        Tue, 18 Feb 2020 17:44:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jexvvsJg+MaDHz4Tc7pcFF//GHPzAbjYjk1o03WxMjk=;
+        b=OOtOyOOiA/Z2sEg/9aLi0DEKLDWgMMh0gloywbMYa0ILzbiUUwIiNhq9/UmbTaKmN1
+         fHvjq++7nDH89D9L/zUWlcWbDaUZ77cSQ1FLA8bHVVHDqBcvA7HDC/dzjGwTo9UTydB8
+         oGCSX7p3/ykmkgnUlhOrPIy9NG8TGJLvT0fh0xqgIKi+kIFllCpzN8shnF6XXHa29Jpk
+         owOEf5MIcd1jBbBTehuxfxDAu40WX3QPMzKj9QnidLPDBsHND2lYL82hjXp9r5k2LeUJ
+         o6MYQxk4C/GFDCapJAaHhDCsjAIc/wz96owcRuNe/Qg4QiA/JmiyOlT7YoBGuag74qYF
+         OCYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=jexvvsJg+MaDHz4Tc7pcFF//GHPzAbjYjk1o03WxMjk=;
+        b=Jku3RgMAwWbDMejBlVcDHci2Z+V4o+vTxx1UnyqNDn2EC3//ShHl8ekpSkOFXLXclT
+         YZ8EbdQ/mDEtV1n+EOrWz2Fo+bK5NWm9egzujyiHyMXAwmHO/2Y/YGoKYIEynhThe8QW
+         95KvsRG7L+IJ9eu4v4uBsU3tE+Gvm2Ta7BhzBYRSnWewVHd9HzCuVTl1IPAu8kxrNEPS
+         IqMOFgySZ5nCBtmja9yCIlBNCcgCuExxztR3nOPSlB/mNzofGVUAs1Kei5893BSes51H
+         yyN2LMKX7VDvwkG6MOIfO0+ZCvuQGl9vmn/3Xhenw2iDq5EXVKLP60ePRa4iRAOxndWA
+         0avg==
+X-Gm-Message-State: APjAAAUr27ovScddgXaEUlCCWpRNOOaXtRAEcP1/2nkExH+rtO2so6KB
+        BAeEkiWelVO4dKpZ0T2HByM=
+X-Google-Smtp-Source: APXvYqzSzVk5xtTCn6Y0eWG7homfmpB0LfjG1wXXG9Gh5SqfXEE4253LF8S/uxor/szQK15/b1qCnw==
+X-Received: by 2002:a17:90a:8b82:: with SMTP id z2mr6336196pjn.59.1582076677219;
+        Tue, 18 Feb 2020 17:44:37 -0800 (PST)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id t186sm221192pgd.26.2020.02.18.17.44.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 17:44:36 -0800 (PST)
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v6 0/7] introduce memory hinting API for external process
+Date:   Tue, 18 Feb 2020 17:44:26 -0800
+Message-Id: <20200219014433.88424-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote:
->On Tue, 2020-02-18 at 11:39 +0800, linmiaohe wrote:
->> The second "/* fall through */" in rmode_exception() makes code harder 
->> to read. Replace it with "return true" to indicate they are different 
->> cases and also this improves the readability.
->
->perhaps
->		return !(vcpu->guest_debug & (KVM_GUESTDBG_SINGLESTEP | KVM_GUESTDBG_USE_HW_BP));
->
+Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+application could give hints to kernel what memory range are preferred to be
+reclaimed. However, in some platform(e.g., Android), the information
+required to make the hinting decision is not known to the app.
+Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+and that daemon must be able to initiate reclaim on its own without any app
+involvement.
 
-Will do. Thanks for your advice.
+To solve the concern, this patch introduces new syscall - process_madvise(2).
+Bascially, it's same with madvise(2) syscall but it has some differences.
+
+1. It needs pidfd of target process to provide the hint
+2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
+   Other hints in madvise will be opened when there are explicit requests from
+   community to prevent unexpected bugs we couldn't support.
+3. Only privileged processes can do something for other process's address
+   space.
+
+For more detail of the new API, please see "mm: introduce external memory hinting API"
+description in this patchset.
+
+* from v5 - https://lore.kernel.org/linux-mm/20200214170520.160271-1-minchan@kernel.org/
+  * use null task and requestor's mm for io_madvise - Jann and Jens
+  * use right commit description for moving pidfd_get_pid - Christoph
+
+* from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
+  * pass mm down to functions, not accessing task->mm - Jann
+  * clean up - Alexander
+  * add Reviewed-by - Alexander, SeongJae
+  * patch reordering
+
+* from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
+  * verify task->mm aftere access_mm - Oleg
+  * split some patches for easy review - Alexander
+  * clean up fatal signal checking - Suren
+
+* from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+  * check signal callee and caller to bail out - Kirill Tkhai
+  * put more clarification for justification of new API
+
+* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+  * fix syscall number - SeongJae
+  * use get_pid_task - Kirill Tkhai
+  * extend API to support pid as well as pidfd - Kirill Tkhai
+
+
+Minchan Kim (5):
+  mm: pass task and mm to do_madvise
+  mm: introduce external memory hinting API
+  mm: check fatal signal pending of target process
+  pid: move pidfd_get_pid function to pid.c
+  mm: support both pid and pidfd for process_madvise
+
+Oleksandr Natalenko (2):
+  mm/madvise: employ mmget_still_valid for write lock
+  mm/madvise: allow KSM hints for remote API
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/io_uring.c                               |   2 +-
+ include/linux/mm.h                          |   3 +-
+ include/linux/pid.h                         |   1 +
+ include/linux/syscalls.h                    |   3 +
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/exit.c                               |  17 ---
+ kernel/pid.c                                |  17 +++
+ kernel/sys_ni.c                             |   1 +
+ mm/madvise.c                                | 144 ++++++++++++++++----
+ 26 files changed, 167 insertions(+), 44 deletions(-)
+
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
