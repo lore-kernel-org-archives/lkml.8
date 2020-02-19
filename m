@@ -2,165 +2,153 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E638C18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD8C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32530207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142243;
-	bh=pyWHAxHUy06nRNZr4ZHe54BVql1Gar+S2v4+rgt09UE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zDdQBk+MPoML81CWF3cLB8wHng6yplav4zt+oB9PpNt1fteWBvpexVWfkd6JtoYMH
-	 vNTAbrX4rdz6GF61qFy6OGTE7kp8JYmRq35ZSzJ4uKABOUncpi3zhaW953HeNfKOrf
-	 VQEVhf+hRL4v4xsIiyNqNPiOgsI0lJmu7AAm6byc=
+	by mail.kernel.org (Postfix) with ESMTP id 682FD207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:58:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dS806upT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgBST5W (ORCPT
+        id S1727211AbgBST6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:57:22 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45080 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgBST5V (ORCPT
+        Wed, 19 Feb 2020 14:58:13 -0500
+Received: from gateway31.websitewelcome.com ([192.185.144.28]:20255 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726648AbgBST6N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:57:21 -0500
-Received: by mail-oi1-f195.google.com with SMTP id v19so25041611oic.12;
-        Wed, 19 Feb 2020 11:57:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X7Cntp4AOEoOd/QDouJIkpO3jkbcftTYGpmm5Cp5JQk=;
-        b=UrFGWGwgEhHQq/tpb0chPcc75O4/SpRHXRjF4rOE0It+dFZJAEOLSAuE5BKw8ca5TS
-         gJVIviU/u/7cydAyRMiBSOxqGdJIXn/3HtZ/tiNY/Oq8HTg7OmqhMN225YUycBI4BDmT
-         zYWwQhYnZ9Ra2RuiRvzDQuJIM+Ib5Q9ELUX/PPBovbyxYEKJL983kiQ+AfMLgGCkKIjc
-         FFWEsLgHMst6+U62PhJbGevqSKa0dYR/dr9tO5J8pWXSX/zt9nWESzDxxMb0+uz2x+Fp
-         8GGQYoLAI7LPNRvRULRYojHNYGHaKeq7jrSJHqnefVWXl9NZcMouEwo9G+vY4VnDJsv8
-         9Ehw==
-X-Gm-Message-State: APjAAAXZmY1xFU5By/7Dkv4bxU4TsVKvs/wUSLSpkAwj7zJtCYSMyILC
-        WWgdk16Ip4cI9ZjQfrhOSxsaT+olYA==
-X-Google-Smtp-Source: APXvYqyD1fcoT1v/CiA2afjT5AB1aLfNBKse86anVISECPyrP3b78rWCg2sxIHL54q38S6YenlzRPA==
-X-Received: by 2002:aca:4789:: with SMTP id u131mr5446385oia.43.1582142241093;
-        Wed, 19 Feb 2020 11:57:21 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id t132sm303349oie.8.2020.02.19.11.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:57:20 -0800 (PST)
-Received: (nullmailer pid 4616 invoked by uid 1000);
-        Wed, 19 Feb 2020 19:57:19 -0000
-Date:   Wed, 19 Feb 2020 13:57:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, mikko.mutanen@fi.rohmeurope.com,
-        markus.laine@fi.rohmeurope.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/5] dt-bindings: battry: add new battery
- parameters
-Message-ID: <20200219195719.GA3096@bogus>
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
- <205c01fe0555fe89226521a89a5b20933578780d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
+        Wed, 19 Feb 2020 14:58:13 -0500
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 23E775D58E
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:58:11 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 4VU3jYDGc8vkB4VU3jUlgh; Wed, 19 Feb 2020 13:58:11 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=UYAsQma8WMMEgfFGTxq8KR7cZgkcLup2CpQWS1oHj6o=; b=dS806upTQpFVtK0Uu4+ezniKEV
+        4++S0aMc0sSjVOgj9q4xVUuLKFQhDLAwLZ9OOVvVuafxEs27N5t0jB4HwEbJnKLfOhABHclYOSq/s
+        dwf3GTY8Da5ltm1OCHR4n9e9PkF9QaxDxx0mA0cLrIwmuj19C8UXacpqwMtG8N8nlciSD9J00o5Gt
+        7+oARQ/X+m0j0DcuAEJeCCFiec+kusya7V/81cQfcGoP6rGZeV2rwgccM4h1ReZwzVC5CBcrqRWQF
+        9I0NuMMvCwTEsb1EF4qPvZO1i4dqNshRLjkLvsCdwRbEL4v6aqHjnseehoxmsQ58XmLOhxSWNa3u+
+        nlN0c19Q==;
+Received: from [200.68.141.28] (port=7911 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j4VU2-003UKX-MV; Wed, 19 Feb 2020 13:58:10 -0600
+Subject: Re: [PATCH][next] net/mlx5e: Replace zero-length array with
+ flexible-array member
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Saeed Mahameed <saeedm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Boris Pismenny <borisp@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200218203114.GA27096@embeddedor>
+ <20200219071435.GE15239@unreal>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <a077354c-8bbc-fd1f-6799-09778df4ec40@embeddedor.com>
+Date:   Wed, 19 Feb 2020 14:00:52 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <205c01fe0555fe89226521a89a5b20933578780d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200219071435.GE15239@unreal>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.28
+X-Source-L: No
+X-Exim-ID: 1j4VU2-003UKX-MV
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [200.68.141.28]:7911
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 12
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 09:30:05AM +0200, Matti Vaittinen wrote:
-> Add:
-> 
->  - tricklecharge-current-microamp:
-> 
-> Some chargers have 3 charging stages. First one when battery is almost
-> empty is often called as trickle-charge. Last state when battery has been
-> "woken up" is usually called as fast-charge. In addition to this some
-> chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
-> pre-charge. Some batteries can benefit from this 3-phase charging
-> [citation needed].
 
-For car batteries at least, trickle charge is to keep battery full. But 
-maybe in that context, it would be 'charge-term-current-microamp'.
 
-I'm just concerned that we end up with multiple properties that mean the 
-same thing. I think you're okay here.
+On 2/19/20 01:14, Leon Romanovsky wrote:
 
-> Introduce tricklecharge-current-microamp so that batteries can give
-> charging current limit for all three states.
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/net/ethernet/mellanox/mlx5/core/en.h          | 2 +-
+>>  drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c  | 2 +-
+>>  drivers/net/ethernet/mellanox/mlx5/core/fs_counters.c | 2 +-
+>>  drivers/net/ethernet/mellanox/mlx5/core/ipoib/ipoib.h | 4 ++--
+>>  4 files changed, 5 insertions(+), 5 deletions(-)
+>>
 > 
->  - precharge-upper-limit-microvolt:
+> Thanks, applied to mlx5-next.
 > 
-> When battery voltage has reached certain limit we change from
-> trickle-charge to next charging state (pre-charge for BD99954). Allow
-> battery to specify this limit.
-> 
->  - re-charge-voltage-microvolt:
-> 
-> Allow giving a battery specific voltage limit for chargers which can
-> automatically re-start charging when battery has discharghed down to
-> this limit.
-> 
-> - over-voltage-threshold-microvolt
-> 
-> Allow specifying voltage threshold after which the battery is assumed to
-> be faulty.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 5c913d4cf36c..7da044273e08 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
->  behavior should a replacement that changes the battery type occur
->  without a corresponding update to the dtb.
->  
-> +Please note that not all charger drivers respect all of the properties.
-> +
->  Required Properties:
->   - compatible: Must be "simple-battery"
->  
->  Optional Properties:
-> + - over-voltage-threshold-microvolt: battery over-voltage limit
-> + - re-charge-voltage-microvolt: limit to automatically start charging again
->   - voltage-min-design-microvolt: drained battery voltage
->   - voltage-max-design-microvolt: fully charged battery voltage
->   - energy-full-design-microwatt-hours: battery design energy
->   - charge-full-design-microamp-hours: battery design capacity
-> + - tricklecharge-current-microamp: current for trickle-charge phase
 
-trickle-charge-...
+Thank you.
 
->   - precharge-current-microamp: current for pre-charge phase
-> + - precharge-upper-limit-microvolt: limit when to change to constant charging
->   - charge-term-current-microamp: current for charge termination phase
->   - constant-charge-current-max-microamp: maximum constant input current
->   - constant-charge-voltage-max-microvolt: maximum constant input voltage
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+--
+Gustavo
