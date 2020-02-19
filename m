@@ -2,94 +2,104 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FFAC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EB5C18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00CFE206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC22206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:40:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I8/0v7pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgBSTkJ (ORCPT
+        id S1726871AbgBSTk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:40:09 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35329 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbgBSTkJ (ORCPT
+        Wed, 19 Feb 2020 14:40:58 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31779 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726651AbgBSTk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:40:09 -0500
-Received: by mail-pg1-f194.google.com with SMTP id v23so617684pgk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 11:40:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xk3FQWFLEA9Ivw7eQtk1E45ebBr0l+OsXJaKdMkwewM=;
-        b=BNI586195ZP8T82iJbf2C4Sl/o1HqxAbd92AUN1QIWxx/EXBfK0Kx5AAqhzBsK5w6G
-         vW4oKRzRhSyJALzQHRUNoG4KPFMuwBitA9QxGC0C7gjDbvRsegbsENC53K+RBZjhF5Pc
-         5UHu0dkbmzl5MzdUfqhL+bjD8jdPGZupUj+NtjSveDhBwAKYi9pYOuztaIYPCZrYYPrn
-         IPiSd9cRyXY9GIlA3kfHVJKkW4hsvOkBAXzTSIKmr47j7f9VPte8C22mxpAfKwr7fk5d
-         Zf1mFi3cbLU4loFzzgW0XOz7SHn3VKeX18i22iwJxgyjeOAeJPBpKvuHMSltnAyh8QZG
-         R0sA==
-X-Gm-Message-State: APjAAAUdpn/KP1FkNSF45ZrC24Xyyf5bztHWvM9CdV6bXegO8+q9Lg4z
-        CmydayL7zQND9/9EnMtsuAw=
-X-Google-Smtp-Source: APXvYqw2c5Lr90FnrKjZBh1E37nvLIczFX0XDP5GUvh7AyvJ4X/KbXpJ3bdQxra43uC9r6BfB0duVQ==
-X-Received: by 2002:a62:486:: with SMTP id 128mr28636963pfe.236.1582141208801;
-        Wed, 19 Feb 2020 11:40:08 -0800 (PST)
-Received: from sultan-book.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id c8sm510530pgq.30.2020.02.19.11.40.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 11:40:08 -0800 (PST)
-Date:   Wed, 19 Feb 2020 11:40:06 -0800
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200219194006.GA3075@sultan-book.localdomain>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
+        Wed, 19 Feb 2020 14:40:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582141255;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=B2NE/NbXNx0huOaDg+XnsSaVKEiOIkqXx5nv2J9kK4E=;
+        b=I8/0v7pNqysRL6BL9CupyLS/pbvSZxwz0S+vv0TREcky8dYrD2mJStvQFZurqWTgHuqzYX
+        7tlink4if0S3v6Scv9P1XpAHF+abTOWkCDbXYQQxJm/KqZQCup2NBbIpIncvwETVox7JuA
+        W3B9cpmXjfrcSykXxEUUbk7COS2qYn4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-Ap-53oU3O-CVBm3QmAVMkA-1; Wed, 19 Feb 2020 14:40:51 -0500
+X-MC-Unique: Ap-53oU3O-CVBm3QmAVMkA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 684878017CC;
+        Wed, 19 Feb 2020 19:40:49 +0000 (UTC)
+Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DC73B5DA76;
+        Wed, 19 Feb 2020 19:40:40 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 20:40:39 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4?= =?UTF-8?B?cmdlbnNlbg==?= 
+        <toke@redhat.com>, brouer@redhat.com
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Message-ID: <20200219204039.121f10d2@carbon>
+In-Reply-To: <20200219181250.GA2852230@kroah.com>
+References: <20200219133012.7cb6ac9e@carbon>
+        <20200219132856.GA2836367@kroah.com>
+        <20200219144254.36c3921b@carbon>
+        <20200219181250.GA2852230@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:13:21AM -0800, Dave Hansen wrote:
-> On 2/19/20 10:25 AM, Sultan Alsawaf wrote:
-> > Keeping kswapd running when all the failed allocations that invoked it
-> > are satisfied incurs a high overhead due to unnecessary page eviction
-> > and writeback, as well as spurious VM pressure events to various
-> > registered shrinkers. When kswapd doesn't need to work to make an
-> > allocation succeed anymore, stop it prematurely to save resources.
+On Wed, 19 Feb 2020 19:12:50 +0100
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+> On Wed, Feb 19, 2020 at 02:42:54PM +0100, Jesper Dangaard Brouer wrote:
+> > On Wed, 19 Feb 2020 14:28:56 +0100
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> >   
+> > > On Wed, Feb 19, 2020 at 01:30:12PM +0100, Jesper Dangaard Brouer wrote:  
+> > > > Hi Andrii,
+> > > > 
+> > > > Downloaded tarball for kernel release 5.5.4, and I cannot compile
+> > > > tools/testing/selftests/bpf/ with latest LLVM release version 9.    
+> > > 
+[...]
+> > > And has llvm 9 always worked here?  
+> > 
+> > Yes, llvm-9 used to work for tools/testing/selftests/bpf/.  
 > 
-> But kswapd isn't just to provide memory to waiters.  It also serves to
-> get free memory back up to the high watermark.  This seems like it might
-> result in more frequent allocation stalls and kswapd wakeups, which
-> consumes extra resources.
-> 
-> I guess I'd wonder what positive effects you have observed as a result
-> of this patch and whether you've gone looking for any negative effects.
+> As of when?
 
-This patch essentially stops kswapd from going overboard when a failed
-allocation fires up kswapd. Otherwise, when memory pressure is really high,
-kswapd just chomps through CPU time freeing pages nonstop when it isn't needed.
-On a constrained system I tested (mem=2G), this patch had the positive effect of
-improving overall responsiveness at high memory pressure.
+Kernel v5.4 works when compiling BPF-selftests with LLVM 9.0.1.
 
-On systems with more memory I tested (>=4G), kswapd becomes more expensive to
-run at its higher scan depths, so stopping kswapd prematurely when there aren't
-any memory allocations waiting for it prevents it from reaching the *really*
-expensive scan depths and burning through even more resources.
+-- 
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
 
-Combine a large amount of memory with a slow CPU and the current problematic
-behavior of kswapd at high memory pressure shows. My personal test scenario for
-this was an arm64 CPU with a variable amount of memory (up to 4G RAM + 2G swap).
-
-Sultan
