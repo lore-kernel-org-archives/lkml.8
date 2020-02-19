@@ -2,68 +2,90 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7FEC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB50C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F197E24670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950AE24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582137980;
+	bh=V0/0RXn2CjSi+e6U4mKdjZ80KfPSNX+qhYddvJb3vKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J+HG3GSxGcCY24QIiVHur9+sfo2EvA+5qOrKDA8Hqt0n4Qnz/qtVASXa+XuqOwxqy
+	 qAHJdsouif0a/qBSahmDpSZ1dqRelNmIEkr3o5wosCADAJwk0Rl9Aeb5Bvc0229L5V
+	 /zCNfVFQdVeCwXQnU7Oo61LN6rzcnD0hB+fTudOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726677AbgBSSmc (ORCPT
+        id S1726681AbgBSSqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:42:32 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53458 "EHLO mx2.suse.de"
+        Wed, 19 Feb 2020 13:46:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbgBSSmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:42:32 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C0348B22A;
-        Wed, 19 Feb 2020 18:42:30 +0000 (UTC)
-Subject: Re: [PATCH V2] xen: Enable interrupts when calling _cond_resched()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <87tv3mq1rm.fsf@nanos.tec.linutronix.de>
- <8808612b-11c2-f7b8-f027-7ff92e992c50@suse.com>
- <87h7zmpr1k.fsf@nanos.tec.linutronix.de>
- <878skypjrh.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <a2dee352-409b-1c6b-e7f0-bcbbf5d71a95@suse.com>
-Date:   Wed, 19 Feb 2020 19:42:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726634AbgBSSqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:46:19 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 209BB24670;
+        Wed, 19 Feb 2020 18:46:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582137978;
+        bh=V0/0RXn2CjSi+e6U4mKdjZ80KfPSNX+qhYddvJb3vKc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rLFw+mv5jHMginBd7XU0pCop7fnJiuFjCusQ4+LY5MMMXsaMJr2qw7hnT9nfOnGLJ
+         u9S3wmmP1JgMmnw9O7OhHmlQhuVqajyWaIEA/0cUGwrCRlXfBG1v5WhH0Pf6YvtmuJ
+         SZKGF0zPYo0QkDy0yFTM9fxxTEoDfTW2kb7BcPkM=
+Date:   Wed, 19 Feb 2020 19:46:16 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: comedi: change CamelCase to CAPS
+Message-ID: <20200219184616.GA2854654@kroah.com>
+References: <20200219174646.GA27559@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-In-Reply-To: <878skypjrh.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219174646.GA27559@kaaira-HP-Pavilion-Notebook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.02.20 18:30, Thomas Gleixner wrote:
-> xen_maybe_preempt_hcall() is called from the exception entry point
-> xen_do_hypervisor_callback with interrupts disabled.
-> 
-> _cond_resched() evades the might_sleep() check in cond_resched() which
-> would have caught that and schedule_debug() unfortunately lacks a check
-> for irqs_disabled().
-> 
-> Enable interrupts around the call and use cond_resched() to catch future
-> issues.
-> 
-> Fixes: fdfd811ddde3 ("x86/xen: allow privcmd hypercalls to be preempted")
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On Wed, Feb 19, 2020 at 11:16:46PM +0530, Kaaira Gupta wrote:
+> fix checkpatch.pl check of 'Avoid CamelCase' by changing NI_CtrSource to
+> NI_CTRSOURCE in all the files. Change it to CAPS because it is a MICRO
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+What is a "MICRO"?
 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 
-Juergen
+Are you sure this is ok?  I think this comes directly from a spec sheet
+so changing it might not be good.
 
+as proof:
+
+> @@ -104,7 +104,7 @@ struct ni_device_routes ni_pci_6070e_device_routes = {
+>  		{
+>  			.dest = TRIGGER_LINE(0),
+>  			.src = (int[]){
+> -				NI_CtrSource(0),
+> +				NI_CTRSOURCE(0),
+>  				NI_CtrGate(0),
+>  				NI_CtrInternalOutput(0),
+>  				NI_CtrOut(0),
+
+Looks like all of these are CamelCase, why are you changing only one?
+They all should be the same, and odds are, how they are today is fine,
+right?
+
+Look at the git history of these files to be sure.
+
+thanks,
+
+greg k-h
