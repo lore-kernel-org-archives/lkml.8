@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E9FC3405F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DD4C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDFE24677
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F9A24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gPoKimKT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajPOejSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbgBSSKF (ORCPT
+        id S1726821AbgBSSKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:10:05 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35653 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSSKC (ORCPT
+        Wed, 19 Feb 2020 13:10:07 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36124 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbgBSSKF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:10:02 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so1372700ljb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:10:00 -0800 (PST)
+        Wed, 19 Feb 2020 13:10:05 -0500
+Received: by mail-lj1-f196.google.com with SMTP id r19so1374256ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:10:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=VHRaRIY6VC0lr/bsxS9DFYm2vnnWlx5lRwPcPyEFXY8=;
-        b=gPoKimKTfqXeaHb/8TGnGKiKadlA4zsOW1otR4I/sil7LU1xLql4X/Z5B+MFOfsTop
-         w/ibtafB1NiWhq7Xv+8ILNm+hTBM7E5IUfN32t5XlIVVJZnNzZudtvHPYZsBq5discGm
-         LiJIoaqOEoHn0bJVztnhrUFEPj05q727TXZxPFRHiCZOVpOeq27877/zTFYAKzu2BpGd
-         DsfcQMHPnzI39piTrkm80ut5XZ+iY96UV+eMlAofUXDvtjNFZHAEg9M8pXTNOvGpkBNv
-         pDB11JGdX4pDVm+AyNGSP4d3Q8pDUUU40G41Spc9gd35dTl7Mgia6V15oP6akiDPas1S
-         8cMQ==
+        bh=4SdNyJxLKQOIopt47a2aKS0SgVzGo+LdVLFJnDNkr60=;
+        b=ajPOejSF29nBVw6tbuq0GHQZOGRuvjPON14D3VaeaF1LH6vjeWwa6p0cWZgH6zesTO
+         J1Ui38ijhxOoRdm3TfKDF4R7H0HmmLturnRvJa/QM09PzVlT2w1VMf00jpAGKNaPVMda
+         I85l8KSzkxhJVo2F6blZ9iRu5HDzG9TpVxzSlDWUcSJJsNw115wPlajnlTjfu3T8/MB/
+         um2nDZOxV7QVt9wg+SvolsJC9JibUC3jLBBcslW5qtJwHX3jUQMqxRwef/cxypmFvGGA
+         pgEGAO5K85Kz4wINQicpr22O37S0uYBbibEPUUZ84Ss2H83dCNenjyM3p/98A/6tqqie
+         LybQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=VHRaRIY6VC0lr/bsxS9DFYm2vnnWlx5lRwPcPyEFXY8=;
-        b=R8cCgYTt2ogTkopeMBGh/mIR0hjHuVjbj6qX+6+piqOGQCNRPEx0YlmhJPk5eFnrp7
-         8HC/3+YgSwELkVICEDVQoPrw8oWQIBlrLepU3AIVJmBTp6QbKrrjjNvmSDm58+XODFEe
-         GTU3JHr2fokNUNTjG417GuHDyzJuHb5ei+t+uDiyh0zU0RN+5qEUiTn+PjcKNm69mLip
-         CKHETjSfrvM7YD2ZV+KuKj+LypmQjRGPSvaeydTvUgV8QG4alF19RK+nRE3EV8U7yqGU
-         v+Sfu45OMmwfc+7+WEQgmpxlvVuveSExYtG3f08m/cFF46KfESUE0etnaNuShV/f5x8b
-         AQfg==
-X-Gm-Message-State: APjAAAU7bnQFDMFFXe+FYvf4f+OlJtGIPqwnvkJDHkueryWVbSBnOh7D
-        tfPuogqyY0+h2C34Wa+35JE=
-X-Google-Smtp-Source: APXvYqxvm4JywuwtvNksBuTIyRXNkm+Tp130I25jlGLt/f+T62qAbvOhoYaS6P/K1V7awdKdjw1/Hg==
-X-Received: by 2002:a2e:3608:: with SMTP id d8mr16524098lja.152.1582135800094;
-        Wed, 19 Feb 2020 10:10:00 -0800 (PST)
+        bh=4SdNyJxLKQOIopt47a2aKS0SgVzGo+LdVLFJnDNkr60=;
+        b=T9hi4l3E3ujXSre8CEw7ciQviqhbAMAgu5nmzyjEYsk+ooNj6Z9HITEZx4jtmgjprQ
+         iyAWbZAb7LyodpkAlpR3BaBjnHvHx+AYqq7JQY4xiSd7B7CzQuQ0e+hSfj3SKR2r801N
+         gdRPoLDdD00qPXW/xt7FVCxpOs+cvhEjUr7eZF019xlCEOI3LwElKgCrzeezZwFbQI0O
+         Ezf2oiSpwAieGVUU4y4ewrk4VpXKpkNPwPWKLt5RVL8ITPFQ2aPnSjEcvn622c6t9sZ+
+         XgcQlvDUonavrVjSlnO4u0wGo843lJeYmrrisI8JZ3jPHCqPH2tYJyEzRyMqTDuXcpf0
+         Jm7A==
+X-Gm-Message-State: APjAAAXNAgHIUbq/Bq+s7HFmAsFM4MJ0eWnIjNvFAMx31+9MTKL3yxqA
+        XiKoxmurXkHE1Qlx0uFoOZw=
+X-Google-Smtp-Source: APXvYqz6P5Gs4MdtlOwx7++w+qdzCPpaUxoDvbr0krs2YjnjQqicU5hmCYwRTr1W7tVRPTxgCIWT0Q==
+X-Received: by 2002:a2e:9a04:: with SMTP id o4mr16930038lji.214.1582135802940;
+        Wed, 19 Feb 2020 10:10:02 -0800 (PST)
 Received: from localhost.localdomain ([5.20.204.163])
-        by smtp.gmail.com with ESMTPSA id 14sm183942lfz.47.2020.02.19.10.09.58
+        by smtp.gmail.com with ESMTPSA id 14sm183942lfz.47.2020.02.19.10.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 10:09:59 -0800 (PST)
+        Wed, 19 Feb 2020 10:10:02 -0800 (PST)
 From:   Andrey Lebedev <andrey.lebedev@gmail.com>
 To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
         daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: [PATCH 2/5] drm/sun4i: tcon: Separate quirks for tcon0 and tcon1 on A20
-Date:   Wed, 19 Feb 2020 20:08:55 +0200
-Message-Id: <20200219180858.4806-3-andrey.lebedev@gmail.com>
+Subject: [PATCH 4/5] dt-bindings: display: sun4i: New compatibles for A20 tcons
+Date:   Wed, 19 Feb 2020 20:08:57 +0200
+Message-Id: <20200219180858.4806-5-andrey.lebedev@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200219180858.4806-1-andrey.lebedev@gmail.com>
 References: <20200210195633.GA21832@kedthinkpad>
@@ -78,28 +78,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrey Lebedev <andrey@lebedev.lt>
 
-Timing controllers on A20 are not equivalent: tcon0 on A20 supports
-LVDS output and tcon1 does not. Separate the capabilities by
-introducing independent set of quirks for each of the tcons.
+Document new compatibles used to differentiate between timing
+controllers on A20 (sun7i)
 
 Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/display/allwinner,sun4i-a10-tcon.yaml          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index cc6b05ca2c69..b7234eef3c7b 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -1508,6 +1508,8 @@ const struct of_device_id sun4i_tcon_of_table[] = {
- 	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
- 	{ .compatible = "allwinner,sun6i-a31-tcon", .data = &sun6i_a31_quirks },
- 	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
-+	{ .compatible = "allwinner,sun7i-a20-tcon0", .data = &sun7i_a20_quirks },
-+	{ .compatible = "allwinner,sun7i-a20-tcon1", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun7i-a20-tcon", .data = &sun7i_a20_quirks },
- 	{ .compatible = "allwinner,sun8i-a23-tcon", .data = &sun8i_a33_quirks },
- 	{ .compatible = "allwinner,sun8i-a33-tcon", .data = &sun8i_a33_quirks },
+diff --git a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+index 86ad617d2327..c0f6bb16fa34 100644
+--- a/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
++++ b/Documentation/devicetree/bindings/display/allwinner,sun4i-a10-tcon.yaml
+@@ -46,6 +46,12 @@ properties:
+           - allwinner,sun50i-h6-tcon-tv
+         - const: allwinner,sun8i-a83t-tcon-tv
+ 
++      - items:
++        - enum:
++          - allwinner,sun7i-a20-tcon0
++          - allwinner,sun7i-a20-tcon1
++        - const: allwinner,sun7i-a20-tcon
++
+   reg:
+     maxItems: 1
+ 
 -- 
 2.20.1
 
