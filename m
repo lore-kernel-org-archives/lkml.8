@@ -2,105 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE11C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A97DC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ECE924670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:16:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582136218;
-	bh=7crgeJqOXjvpVZqlMX7ni5vWNV3EHF/0EQ0glLP1wVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0ewXSBpBtP497xIfHOOiwscwKF7F58YcBZWHjaQ2QXBndI/Gz3H7N6M+IwaNwasZj
-	 g5CV5xis83jheWi6z1c2iJsXmnUOK7w+6yL/lbjZXQPBT0XNPh4XNRR+9MdRh9Z2ih
-	 4F2H1jNV5A0LHljEZwM2qlOjQc/ark3cfGejMFUw=
+	by mail.kernel.org (Postfix) with ESMTP id 417B524670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:21:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pr/tai/M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBSSQ5 (ORCPT
+        id S1726691AbgBSSVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:16:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbgBSSQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:16:56 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D420C24656;
-        Wed, 19 Feb 2020 18:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582136216;
-        bh=7crgeJqOXjvpVZqlMX7ni5vWNV3EHF/0EQ0glLP1wVo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YFYds0gXOo7Pn45RvT16No9BzJ28dvhr3iXd/o2uMXprsiGXz884d33e7lTxiY3dC
-         gLCnwsKGTPCUCHv2+Aip38hTuA80WHAhboMjTMzPJIRRfcTH5ZQ1BpNmxIjAfJI+NG
-         PMPXhfcnpxUpDfHsf5Y+nOzoXzYrl0OCqJ6CNItw=
-Date:   Wed, 19 Feb 2020 10:16:54 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     catalin.marinas@arm.com, davem@davemloft.net,
-        herbert@gondor.apana.org.au, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] crypto: arm64: CE: implement export/import
-Message-ID: <20200219181654.GB2312@sol.localdomain>
-References: <1582128037-18644-1-git-send-email-clabbe@baylibre.com>
+        Wed, 19 Feb 2020 13:21:37 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:54478 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSSVg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:21:36 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JILIGk015406;
+        Wed, 19 Feb 2020 12:21:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582136478;
+        bh=au41jVMNZVVyoK32FVyeoksJNT9R9w3OPUwvi6D1Si4=;
+        h=From:To:CC:Subject:Date;
+        b=pr/tai/MepQMv1hq/68bmruqZS4r2VeiJe5znF5PCGp5MFKwpT/0XQ9b6+h39BCYY
+         btXqQ1zKR2cxPMdcg/NKYZ6sTDBrd519NNsSm78MNsYTnnPKeXq7MHuTRfpeRK6CAf
+         Onw/xbYRDHYihDkmNttWWEbNuhtmSvTmlSSgV8V4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JILIM1065394
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Feb 2020 12:21:18 -0600
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
+ Feb 2020 12:21:18 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 19 Feb 2020 12:21:18 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JILILv036974;
+        Wed, 19 Feb 2020 12:21:18 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
+CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <afd@ti.com>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH net-master] net: phy: dp83848: Add the TI TLK05/06 PHY ID
+Date:   Wed, 19 Feb 2020 12:16:13 -0600
+Message-ID: <20200219181613.5898-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1582128037-18644-1-git-send-email-clabbe@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 04:00:37PM +0000, Corentin Labbe wrote:
-> When an ahash algorithm fallback to another ahash and that fallback is
-> shaXXX-CE, doing export/import lead to error like this:
-> alg: ahash: sha1-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\"
-> 
-> This is due to the descsize of shaxxx-ce larger than struct shaxxx_state off by an u32.
-> For fixing this, let's implement export/import which rip the finalize
-> variant instead of using generic export/import.
-> 
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  arch/arm64/crypto/sha1-ce-glue.c | 20 ++++++++++++++++++++
->  arch/arm64/crypto/sha2-ce-glue.c | 23 +++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/arch/arm64/crypto/sha1-ce-glue.c b/arch/arm64/crypto/sha1-ce-glue.c
-> index 63c875d3314b..dc44d48415cd 100644
-> --- a/arch/arm64/crypto/sha1-ce-glue.c
-> +++ b/arch/arm64/crypto/sha1-ce-glue.c
-> @@ -91,12 +91,32 @@ static int sha1_ce_final(struct shash_desc *desc, u8 *out)
->  	return sha1_base_finish(desc, out);
->  }
->  
-> +static int sha1_ce_export(struct shash_desc *desc, void *out)
-> +{
-> +	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +	memcpy(out, sctx, sizeof(struct sha1_state));
-> +	return 0;
-> +}
-> +
-> +static int sha1_ce_import(struct shash_desc *desc, const void *in)
-> +{
-> +	struct sha1_ce_state *sctx = shash_desc_ctx(desc);
-> +
-> +	memcpy(sctx, in, sizeof(struct sha1_state));
-> +	sctx->finalize = 0;
-> +	return 0;
-> +}
+Add the TLK05/06 PHY ID to the DP83848 driver.  The TI website indicates
+that the DP83822 device is a drop in replacement for the TLK05 device
+but the TLK device does not have WoL support.  The TLK device is
+register compatible to the DP83848 and the DP83848 does not support WoL
+either.  So this PHY can be associated with the DP83848 driver.
 
-Can you use '&sctx->sst' instead of 'sctx' so that we aren't relying on the
-'struct sha1_state' being located at the beginning of the struct?
+The initial TLKx PHY ID in the driver is a legacy ID and the public data
+sheet indicates a new PHY ID.  So not to break any kernels out there
+both IDs will continue to be supported in this driver.
 
-Likewise for SHA-2.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/dp83848.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-- Eric
+diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
+index 54c7c1b44e4d..66907cfa816a 100644
+--- a/drivers/net/phy/dp83848.c
++++ b/drivers/net/phy/dp83848.c
+@@ -12,6 +12,7 @@
+ #define TI_DP83620_PHY_ID		0x20005ce0
+ #define NS_DP83848C_PHY_ID		0x20005c90
+ #define TLK10X_PHY_ID			0x2000a210
++#define TLK105_06_PHY_ID		0x2000a211
+ 
+ /* Registers */
+ #define DP83848_MICR			0x11 /* MII Interrupt Control Register */
+@@ -85,6 +86,7 @@ static struct mdio_device_id __maybe_unused dp83848_tbl[] = {
+ 	{ NS_DP83848C_PHY_ID, 0xfffffff0 },
+ 	{ TI_DP83620_PHY_ID, 0xfffffff0 },
+ 	{ TLK10X_PHY_ID, 0xfffffff0 },
++	{ TLK105_06_PHY_ID, 0xfffffff0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
+@@ -115,6 +117,8 @@ static struct phy_driver dp83848_driver[] = {
+ 			   dp83848_config_init),
+ 	DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY",
+ 			   NULL),
++	DP83848_PHY_DRIVER(TLK105_06_PHY_ID, "TI TLK105/06 10/100 Mbps PHY",
++			   NULL),
+ };
+ module_phy_driver(dp83848_driver);
+ 
+-- 
+2.25.0
+
