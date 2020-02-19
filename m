@@ -2,172 +2,101 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26965C3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1840C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA9420801
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D382176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmFigD35"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axwuXCS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbgBSEXW (ORCPT
+        id S1726610AbgBSE3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:23:22 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34548 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbgBSEXW (ORCPT
+        Tue, 18 Feb 2020 23:29:37 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41933 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726477AbgBSE3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:23:22 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j16so21896423otl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 20:23:21 -0800 (PST)
+        Tue, 18 Feb 2020 23:29:36 -0500
+Received: by mail-qt1-f193.google.com with SMTP id l21so16276419qtr.8;
+        Tue, 18 Feb 2020 20:29:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/7SLwa6rrwxpfTtL0bXLJZfcEfVfrOJVu8RT2yguxu8=;
-        b=TmFigD35LCKnZvhGHDH34L5P/d+/RjHyfyqH2kLH9QCMYnkbeYjlHLwrOmOd5ky8pG
-         dmvoNfkVsBm4DQlXdVpMKlA2erdn7rSPaMcPh4uCyacPwoh5qlk1Qp9IJq9Sza/lgv8D
-         8W7giZXLH2Sg0HbZB4pUNVSxONQDJmZAVmvUbSbKmLHyICE4NnnNjk7+Q5e3MXUyI1Fl
-         xdBU3V3fb/hISfNu3QJ7SYZFtX96vS7Fr6wgjXl1xXYIMTPEg0Ci11vZO1crOuOV1uj0
-         D86GefSPDdkRdPV/WAx+fdlb2sT8CTyIvxK1GCCCb4r4CWP5LCn6RDDcZKbfLepFxH+T
-         +vqQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LOsFROh7MBsaKs8scMakdC0ZnZhWfyNZ1EStpa5BtiE=;
+        b=axwuXCS9P4EpdvRhgQZTeLjVUacCYvwK5ey27xcZ+EFDIQIwnKUH/4HIzFUE6wK8bN
+         6n7Dx5sREdoeD8krOleaDuRL5eCz3C4RdWp/hIiDF1gBCXMDmBVA/8Mxvg3M3sKZhrm6
+         x7cPg0HNnpxtpZKiKG3o2tZL98i0jEwZwTQqOdee5aPEQc04Rra97rsrtDhJ3PkxvLW/
+         7S29lUbY/zAF2Ml6WeBhcizH56qR9vq2sObSUIXWUOCiAVBIOmDfia4cGPSsOgMGmqoR
+         HEtCk7yRxUTSQJoBvWSjNK5o/PnyJ7CjRBeqn6IC0j2AdlXbFVY4SyzY/8qF9w12Z6wU
+         ctXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/7SLwa6rrwxpfTtL0bXLJZfcEfVfrOJVu8RT2yguxu8=;
-        b=TCxygV76nQZab33MQYP00KI3KlX19dZHmW/DHWFcafhl7Yk90d7QHJfvVqJRi8qRen
-         r7uN0J7wISziNbKnkLq9jgGMMpmALOoFZi2ezelQXYDpYKBx1PmmH0piKeFJdPEQUVYC
-         B2TqIQgN4S8ngbPHgfNs8JQbbCrGilscJSD+mbk2MR6R7L9uldVHTS/9hjqaEfCH2bi5
-         zIN0NTyC+sRp/8P7DFcvMnjznxnBpVE/88KAK1pM8pQyjSVZg6LCmdRn+qSZxmdaCbPx
-         lvLRuyCWyCK+cLFwa05+oRlpOSLUdhvWdYj3EGNJkyiwUmSOZkGZnMdEBYcZ66xBJDFl
-         SaGg==
-X-Gm-Message-State: APjAAAWu+u4hkCMd2mb8jZiLqBnxGQNoYzm+tn85Ig6IVlJcTUKeJpMb
-        ASoIRpahWD1xcb2qXLnYvzfgNtQXEMHwFPKai0tLLA==
-X-Google-Smtp-Source: APXvYqzTSjT9/xhIYTjQNNao1IXP26vaK/cfEUj5cWME8N34ik1V0niHrLTda2e9yGguG+46/XbtPMDm/Aj4jFiZ2P0=
-X-Received: by 2002:a9d:4e82:: with SMTP id v2mr4360065otk.352.1582086201006;
- Tue, 18 Feb 2020 20:23:21 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LOsFROh7MBsaKs8scMakdC0ZnZhWfyNZ1EStpa5BtiE=;
+        b=L5PauHPFpbUpR4HcOziIb3gdKSTgSEWNtLscpVTB9u6hZU/Xd9VetQ4gD50TvVZT41
+         B7vs2TbOUvbCu5EY3D+GYK2tHBQlIYiGDoc1QSKdqxJkQid3/VRM79AnDXGfIUazhbYz
+         MwtrRy6WlWAt5vBZWCdfL3N/g21Rk7pCf+faeIzVUCuU3JykrXOSZqK11L1YqATDSjkN
+         FgD8FkfxfoPmkCqgRyhIGuRHBQtfwUv8dAzvpimJRBjyOIicVDj+FOptCAZ/87QMuI/S
+         Y/rHfnbA+eK4q7OdRq1gMLLxpGGr38UuOJWnpReGMdHgQLz8LHp8zpBwOqi4eChG9Mro
+         FnOg==
+X-Gm-Message-State: APjAAAXnkdlCIxPAuafWcfgSwO//idEqXA3RU+yQiMFT2BPKBx3qjOoU
+        9Z1PCa4gek0hrh+IrYa3bsc=
+X-Google-Smtp-Source: APXvYqyt8bFtso1ZwlQSj4yN05ejgvR5VkA3leXjVnvOF8VfkdkjhAnUJMkt19oS3BnKKkc2x8el7A==
+X-Received: by 2002:ac8:65ce:: with SMTP id t14mr20191553qto.72.1582086575558;
+        Tue, 18 Feb 2020 20:29:35 -0800 (PST)
+Received: from ?IPv6:2601:284:8202:10b0:e144:c166:6873:61aa? ([2601:284:8202:10b0:e144:c166:6873:61aa])
+        by smtp.googlemail.com with ESMTPSA id x28sm413266qkx.104.2020.02.18.20.29.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2020 20:29:34 -0800 (PST)
+Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB table
+To:     Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
+        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
+        paolo.lungaroni@cnit.it, hiroki.shirokura@linecorp.com
+References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
+ <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
+ <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
+ <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
+ <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
+ <20200219034924.272d991505ee68d95566ff8d@uniroma2.it>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
+Date:   Tue, 18 Feb 2020 21:29:31 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <CAHp75VcPL7DYp9hjgMu+d=CE=g+V7ZxT9ZyXX-OjEW_JQ4m_nA@mail.gmail.com>
- <CALAqxLWtYfwCzDRVecWF8yRQSKQZh-N2g0SifageUaG0QhBGJg@mail.gmail.com>
- <CALAqxLW-Z=sut+A5Ezg4PkZ0HzM-np3PY_gAn0r=Ef0+FDBQDA@mail.gmail.com> <CAL_JsqJQRa5PNgms_jJ8bdsJqscW8dsKUtbzhGVLNvsAt0qMAQ@mail.gmail.com>
-In-Reply-To: <CAL_JsqJQRa5PNgms_jJ8bdsJqscW8dsKUtbzhGVLNvsAt0qMAQ@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 18 Feb 2020 20:23:08 -0800
-Message-ID: <CALAqxLUCfegDoBUfa6ZNd7dQaiz-ujeVk=RxJcu5NanfDj=bRg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200219034924.272d991505ee68d95566ff8d@uniroma2.it>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 6:07 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Feb 18, 2020 at 7:11 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Tue, Feb 18, 2020 at 4:19 PM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > On Tue, Feb 18, 2020 at 4:06 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Wednesday, February 19, 2020, John Stultz <john.stultz@linaro.org> wrote:
-> > > >> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> > > >> index b25bcab2a26b..9d916a7b56a6 100644
-> > > >> --- a/drivers/base/dd.c
-> > > >> +++ b/drivers/base/dd.c
-> > > >> @@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
-> > > >>
-> > > >>  static int __driver_deferred_probe_check_state(struct device *dev)
-> > > >>  {
-> > > >> -       if (!initcalls_done)
-> > > >> -               return -EPROBE_DEFER;
-> > > >
-> > > >
-> > > > Why to touch this? Can't you simple add a new condition here 'if (deferred_probe_timeout > 0)'... ?
-> > >
-> > > I think that might work. I'll give it a spin later tonight and double check it.
-> > >
-> > > The main thing I wanted to do is fix the logic hole in the current
-> > > code where after initcalls_done=true but before deferred_probe_timeout
-> > > has expired we just fall through and return 0, which results in an
-> > > ENODEV being returned from the calling function.
-> >
-> >
-> > So on IRC Bjorn sort of clarified a point I think Rob was trying to
-> > make on the earlier iteration of this patch, that it seems like
-> > Thierry's patch here:
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=62a6bc3a1e4f4ee9ae0076fa295f9af1c3725ce3
-> > *seems* to be trying to address the exact same issue, and maybe we
-> > should just have the genpd code use that instead?
->
-> Looking at it some more, I think the change to the pinctrl code there
-> breaks the case I care about (pinctrl described in DT and no driver on
-> a system that previously worked without pinctrl). Maybe if I set the
-> timeout to 0 it will still work (which would be fine).
->
-> > The main question though, is why do we need both?  As mentioned above,
-> > the existing logic in __driver_deferred_probe_check_state() seems
-> > wrong: Until late_initcall it returns EPROBE_DEFER, then after
-> > initcalls_done==true returns 0 (in which case the caller then
-> > translates to ENODEV), until the timeout expires which it then returns
-> > ETIMEDOUT.
-> >
-> > I suspect what is really wanted is EPROBE_DEFER -> (0) ENODEV (when
-> > timeout is not set) or EPROBE_DEFER -> ETIMEOUT (when the timeout is
-> > set), instead of the two state transitions it currently makes.
->
-> Yes. There's never any reason to return 0. It should be one of 3
-> errnos. If we're moving to always having a timeout, then maybe ENODEV
-> isn't even needed. I guess it's a stronger "we're done with init and
-> there's never going to be another driver" which maybe we should do for
-> !CONFIG_MODULES.
->
-> > So I still think my patch is needed, but I also suspect a better fix
-> > would be to kill driver_deferred_probe_check_state() and just replace
-> > its usage with driver_deferred_probe_check_state_continue(). Or am I
-> > still missing something?
->
-> I think those should be merged. They now do almost the same thing.
-> Only in the timeout==-1 case do they differ.
+On 2/18/20 7:49 PM, Carmine Scarpitta wrote:
+> Hi David,
+> Thanks for the reply.
+> 
+> The problem is not related to the table lookup. Calling fib_table_lookup and then rt_dst_alloc from seg6_local.c is good.
+> 
 
-Well.. almost..  in addition to that different after late_initcall but
-before the timeout driver_deferred_probe_check_state() will return
-ENODEV, where as driver_deferred_probe_check_state_continue() returns
-EPROBE_DEFER until the timeout happens.
+you did not answer my question. Why do all of the existing policy
+options (mark, L3 domains, uid) to direct the lookup to the table of
+interest not work for this use case?
 
-> The original intent was that driver_deferred_probe_check_state()
-> simply returned what state we're in and the caller would decide what
-> to do with that. IOW, each caller could implement their own policy
-> possibly based on other information. Pinctrl factored in a DT hint.
-> IOMMU relied on everything was built-in.
-
-I'm not super opinionated here, having the subsystem opt in and decide
-what to do with the check_state() return value seems sane.  But I
-suspect that we can consolidate the two cases down and simplify some
-of the logic here.
-
-I'll take another spin on this.
-
-thanks
--john
+What you want is not unique. There are many ways to make it happen.
+Bleeding policy details to route.c and adding a flag that is always
+present and checked even when not needed (e.g.,
+CONFIG_IP_MULTIPLE_TABLES is disabled) is not the right way to do it.
