@@ -2,126 +2,121 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F064BC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82E3C3405F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C561524670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s9VaJVcp"
+	by mail.kernel.org (Postfix) with ESMTP id 7DDCB24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582137695;
+	bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Q+fnhHeOQK7+XVcEc+QOyGHQSYz4P5Ob/sTni5Sbc8BKDdnfTFMzAzncFjD9NMfao
+	 eo+g8gGbKid5vBEFPdeMZEKughutZlFoaW1c1Z294mtHy1AvtnXhEDe583VKOzC10L
+	 4yAB1PxhYPkw0VONMPLvpJRPO3J534rcoDeQdCbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgBSSkf (ORCPT
+        id S1726719AbgBSSle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:40:35 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41410 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSSkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:40:35 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JIeIVq103516;
-        Wed, 19 Feb 2020 12:40:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582137618;
-        bh=xdQBLr+CfP+yaUwUQ2EMZd7UoeNHkQT4qEh1vOrBwsw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=s9VaJVcpExyYbY/s14r9Sc+PPu9gg7a4OBHabJ5Cmi3WRq5bR2B5yKzCkj3M5vdDU
-         IIV/7Px+sO/CLaxCbA7jVUGFOBwzrSiL7zi6V2Wrpl/oWoFKUljU4ePA2cQFZ8IBVK
-         KMwOGMymnZqVQtT/LaIFqc8iI6zPE6DNLLLDTp+w=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JIeIcH083901
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 12:40:18 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 12:40:18 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 12:40:18 -0600
-Received: from [10.250.73.201] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JIeHjw041691;
-        Wed, 19 Feb 2020 12:40:17 -0600
-Subject: Re: [PATCH net-master] net: phy: dp83848: Add the TI TLK05/06 PHY ID
-To:     Dan Murphy <dmurphy@ti.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20200219181613.5898-1-dmurphy@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <f0020418-05d2-8991-0b1c-d99863ce140e@ti.com>
-Date:   Wed, 19 Feb 2020 13:40:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200219181613.5898-1-dmurphy@ti.com>
+        Wed, 19 Feb 2020 13:41:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35280 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726638AbgBSSle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:41:34 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A62B24670;
+        Wed, 19 Feb 2020 18:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582137693;
+        bh=y154k2uuTbGD94Zlk02vS2B19qqnUVB2EVKv7l94kNw=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=Pg2nZ4uoohWZjP+BIMtpi2NMG9sPU8dIIUTvOC22OSIqGA70OfJB/rzFiJCYjpeww
+         DvQL878DwOMYisPb3aPKrLmjbuIOnIjYLwJaVOs1g/vlRJxfuyG+hZApM+W0rTipbe
+         QcDbarV7quXlg7jGtGql29sX3o8CfyG29JO0ztAU=
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
+References: <1581067250-12744-1-git-send-email-macpaul.lin@mediatek.com> <158155109134.184098.10100489231587620578@swboyd.mtv.corp.google.com> <bf5e1a64-1aaa-e1e0-00bf-c0e750dd27ed@gmail.com> <1581999138.19053.21.camel@mtkswgap22> <2c6728a5-7789-4ca2-a173-67df57fe5f1e@gmail.com>
+Subject: Re: [PATCH v7 0/7] Add basic SoC support for mt6765
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Fabien Parent <fparent@baylibre.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mars Cheng <mars.cheng@mediatek.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        Sean Wang <Sean.Wang@mediatek.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Will Deacon <will@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        mtk01761 <wendell.lin@mediatek.com>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>,
+        Mediatek WSD Upstream <wsd_upstream@mediatek.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Wed, 19 Feb 2020 10:41:32 -0800
+Message-ID: <158213769281.184098.14491216159423631295@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 1:16 PM, Dan Murphy wrote:
-> Add the TLK05/06 PHY ID to the DP83848 driver.  The TI website indicates
-> that the DP83822 device is a drop in replacement for the TLK05 device
-> but the TLK device does not have WoL support.  The TLK device is
-> register compatible to the DP83848 and the DP83848 does not support WoL
-> either.  So this PHY can be associated with the DP83848 driver.
-> 
-> The initial TLKx PHY ID in the driver is a legacy ID and the public data
-> sheet indicates a new PHY ID.  So not to break any kernels out there
-> both IDs will continue to be supported in this driver.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  drivers/net/phy/dp83848.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
-> index 54c7c1b44e4d..66907cfa816a 100644
-> --- a/drivers/net/phy/dp83848.c
-> +++ b/drivers/net/phy/dp83848.c
-> @@ -12,6 +12,7 @@
->  #define TI_DP83620_PHY_ID		0x20005ce0
->  #define NS_DP83848C_PHY_ID		0x20005c90
->  #define TLK10X_PHY_ID			0x2000a210
-> +#define TLK105_06_PHY_ID		0x2000a211
->  
->  /* Registers */
->  #define DP83848_MICR			0x11 /* MII Interrupt Control Register */
-> @@ -85,6 +86,7 @@ static struct mdio_device_id __maybe_unused dp83848_tbl[] = {
->  	{ NS_DP83848C_PHY_ID, 0xfffffff0 },
->  	{ TI_DP83620_PHY_ID, 0xfffffff0 },
->  	{ TLK10X_PHY_ID, 0xfffffff0 },
-> +	{ TLK105_06_PHY_ID, 0xfffffff0 },
+Quoting Matthias Brugger (2020-02-18 08:45:42)
+>=20
+>=20
+> On 18/02/2020 05:12, Macpaul Lin wrote:
+> > On Sat, 2020-02-15 at 02:47 +0100, Matthias Brugger wrote:
+> >=20
+> > Hi Stephen,
+> >=20
+> >> Hi Stephen,
+> >>
+> >> On 13/02/2020 00:44, Stephen Boyd wrote:
+> >>> Quoting Macpaul Lin (2020-02-07 01:20:43)
+> >>>> This patch adds basic SoC support for Mediatek's new 8-core SoC,
+> >>>> MT6765, which is mainly for smartphone application.
+> >>>
+> >>> Clock patches look OK to me. Can you resend them without the defconfig
+> >>> and dts patches and address Matthias' question?
+> >>>
+> >>
+> >> I'm not sure if I understand you. Do you prefer to have just the clock=
+ parts
+> >> send as an independent version so that you can easier apply the patche=
+s to your
+> >> tree?
+> >>
+> >> Patch 2, 5, 6 and 7 should go through my tree.
+> >> So do you want a series with patches 1, 3 and 4?
+> >>
+> >> Regards,
+> >> Matthias
+> >=20
+> > Yup, I've got a little bit confused, too.
+> > Should I separate and resend these patches into 2 patch sets?
+> > The 1st patch set includes #1, #3, and #4?
+> > And the other includes #2, #5, #6, and #7?
+> >=20
+>=20
+> Yes please do so. I think that's what Stephen referred to.
+>=20
 
-
-If the PHY ID masks out the lowest 4 bits here (they are just revision),
-wont we still always match on the base TLK10X_PHY_ID? Does this patch
-change anything?
-
-Andrew
-
-
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
-> @@ -115,6 +117,8 @@ static struct phy_driver dp83848_driver[] = {
->  			   dp83848_config_init),
->  	DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY",
->  			   NULL),
-> +	DP83848_PHY_DRIVER(TLK105_06_PHY_ID, "TI TLK105/06 10/100 Mbps PHY",
-> +			   NULL),
->  };
->  module_phy_driver(dp83848_driver);
->  
-> 
+If those are the ones that aren't dts or defconfig patches sounds good
+to me.
