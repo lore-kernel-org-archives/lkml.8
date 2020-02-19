@@ -2,132 +2,106 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AD7C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6BEC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 855B724654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BF02465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:42:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sxDHcG/y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/7npCVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgBSVlM (ORCPT
+        id S1727747AbgBSVmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:41:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39526 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727434AbgBSVlM (ORCPT
+        Wed, 19 Feb 2020 16:42:02 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32846 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgBSVmB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:41:12 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JLd8nA160959;
-        Wed, 19 Feb 2020 21:41:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=CQ02yU9L3CkVYagd27UoMk+0f7/E/ZNIr/nEAq4qgrw=;
- b=sxDHcG/yZ7tARteJZLWRhuw/VLnSv4leEPcXRJi3NZ+rCWIjaQvL9MA7Pqx5SAJgDXYf
- JYr+sc9bDHvQurCSebh7BiToCjjNSk2x/iBUElo6gEHtg12l1rMC4anPIQk8cKFjS5n5
- lNMbkVKIkoo9b8mCoDT3KGJaABUq2SFJ3rhdr9zLU5kckXRdAw1E+rlCvmLT+j3fe+v5
- be10TpttHzkVZWrrzO+n0arB/B2uHEMqu0b3IJFPcxlACUCRCxpIK1/pF3md66xyVuhf
- NWU+mptwvt9mBA1cIAOcFjYW4CXe1BwCEf6jXOTPmOLrdvXtncoRaLRu0VWQaiXjS0R3 mw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y8udd61ne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 21:41:03 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01JLbrdH055467;
-        Wed, 19 Feb 2020 21:41:03 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y8ud49sjv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 21:41:02 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01JLf0LX012739;
-        Wed, 19 Feb 2020 21:41:01 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Feb 2020 13:40:59 -0800
-Date:   Wed, 19 Feb 2020 16:41:12 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219191618.GB54486@cmpxchg.org>
- <20200219195332.GE11847@dhcp22.suse.cz>
+        Wed, 19 Feb 2020 16:42:01 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so1366641lfl.0;
+        Wed, 19 Feb 2020 13:41:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VEk1jczyN0OI7UPJElzxYnut4DWzleHzhCa3whUE/CU=;
+        b=S/7npCVFJFbsTkochGFmBPTlrGIJaY7oXM9SGAEuujzbQJYcVKLD4qB2hMsBNLQ6D1
+         1qbBNi24oKyWaBR/faUh9QiZ7f7UAuDZfzmYk0Ckf3OreL+EI48f0txeWiz2n+1uNtRl
+         Ct7TZ6PU7/iesTYju+4FtJawwbOID9IoWeWQlPSjp0EQ08gAgn4qNkUro0CbFDJeNXeS
+         JyO3MCSi48tVG6+gShp5M6y2vl5YgjtULhS6nKw8pwT+iQpyIdyJhnf5FDR+MPmTRn+i
+         JkcjHJNJiPLvTBp5D1BD7TVGVUE6zos1eXhAliOzRjTsYKymLbp6OQ6WQrQ44r7MrQ/I
+         KCMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VEk1jczyN0OI7UPJElzxYnut4DWzleHzhCa3whUE/CU=;
+        b=RcjxlHAUL2KqN++jnlJ1grEvuRC3ZcZCYcylBFO7Y7m43OF6WyQjZQ+1BCYfeY3h/+
+         Oa88r4MovB+e77JVRkmdffBadeAKP+JlmXE5riLtWg88AGyqAio/XnzQI8TJWbqCj+Zo
+         7LsgVrzTvbQgYCN06xG3/bJLKrvGdAzmXtoVQzec4PysKUXsWDODM2ungKnp+lWkMsHn
+         BO4c+oPEiCdOzkgLjCsS8sN/CRJ9MLQO3+6J6HVv1b+USNx2RRRguFwfv7FsOSevkPKj
+         EI+2fWAIn8x4ZZpKNT1XZBzHR6Ek9Bbyb5EvqFeP2tqvbvHGH3YtTxo/m/eVsZbgvX9C
+         HpiA==
+X-Gm-Message-State: APjAAAUSlEvHWdHwer2BHl4FFD5UGKCZB16CorrImeC3sImsDihcc81o
+        b1uRnLsISSvyI80zs6iLERm0a5fi
+X-Google-Smtp-Source: APXvYqzpG6cs12Rq8hl94132hyOOS/pxFQUZtufPNFB7XWQgAC1lHrRFOlMN0zDX9fZ1O1r0Lyl+fA==
+X-Received: by 2002:a19:c3c2:: with SMTP id t185mr14600751lff.56.1582148518536;
+        Wed, 19 Feb 2020 13:41:58 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id m24sm546736ljb.81.2020.02.19.13.41.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 13:41:57 -0800 (PST)
+Subject: Re: [PATCH v1] nfc: pn544: Fix occasional HW initialization failure
+To:     David Miller <davem@davemloft.net>
+Cc:     sameo@linux.intel.com, david@ixit.cz, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200219150122.31524-1-digetx@gmail.com>
+ <20200219.111130.5189327548859835.davem@davemloft.net>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7723e3ad-e004-a691-6605-50ce05132162@gmail.com>
+Date:   Thu, 20 Feb 2020 00:41:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219195332.GE11847@dhcp22.suse.cz>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190160
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002190160
+In-Reply-To: <20200219.111130.5189327548859835.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 08:53:32PM +0100, Michal Hocko wrote:
-> On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
-> > On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
-> > > On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
-> > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
-> > > > while keeping direct reclaim as a fallback. In our testing, this
-> > > > eliminated all direct reclaim from the affected workload.
-> > > 
-> > > Who is accounted for all the work? Unless I am missing something this
-> > > just gets hidden in the system activity and that might hurt the
-> > > isolation. I do see how moving the work to a different context is
-> > > desirable but this work has to be accounted properly when it is going to
-> > > become a normal mode of operation (rather than a rare exception like the
-> > > existing irq context handling).
-> > 
-> > Yes, the plan is to account it to the cgroup on whose behalf we're
-> > doing the work.
-
-How are you planning to do that?
-
-I've been thinking about how to account a kernel thread's CPU usage to a cgroup
-on and off while working on the parallelizing Michal mentions below.  A few
-approaches are described here:
-
-https://lore.kernel.org/linux-mm/20200212224731.kmss6o6agekkg3mw@ca-dmjordan1.us.oracle.com/
-
-> shows that the amount of the work required for the high limit reclaim
-> can be non-trivial. Somebody has to do that work and we cannot simply
-> allow everybody else to pay for that.
+19.02.2020 22:11, David Miller пишет:
+> From: Dmitry Osipenko <digetx@gmail.com>
+> Date: Wed, 19 Feb 2020 18:01:22 +0300
 > 
-> > The problem is that we have a general lack of usable CPU control right
-> > now - see Rik's work on this: https://lkml.org/lkml/2019/8/21/1208.
-> > For workloads that are contended on CPU, we cannot enable the CPU
-> > controller because the scheduling latencies are too high. And for
-> > workloads that aren't CPU contended, well, it doesn't really matter
-> > where the reclaim cycles are accounted to.
-> > 
-> > Once we have the CPU controller up to speed, we can add annotations
-> > like these to account stretches of execution to specific
-> > cgroups. There just isn't much point to do it before we can actually
-> > enable CPU control on the real workloads where it would matter.
+>> The PN544 driver checks the "enable" polarity during of driver's probe and
+>> it's doing that by turning ON and OFF NFC with different polarities until
+>> enabling succeeds. It takes some time for the hardware to power-down, and
+>> thus, to deassert the IRQ that is raised by turning ON the hardware.
+>> Since the delay after last power-down of the polarity-checking process is
+>> missed in the code, the interrupt may trigger immediately after installing
+>> the IRQ handler (right after the checking is done), which results in IRQ
+>> handler trying to touch the disabled HW and ends with marking NFC as
+>> 'DEAD' during of the driver's probe:
+>>
+>>   pn544_hci_i2c 1-002a: NFC: nfc_en polarity : active high
+>>   pn544_hci_i2c 1-002a: NFC: invalid len byte
+>>   shdlc: llc_shdlc_recv_frame: NULL Frame -> link is dead
+>>
+>> This patch fixes the occasional NFC initialization failure on Nexus 7
+>> device.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> 
+> Applied and queued up for -stable, thanks.
+> 
 
-Which annotations do you mean?  I didn't see them when skimming through Rik's
-work or in this patch.
+Awesome, thanks!
