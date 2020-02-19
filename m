@@ -2,92 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC44C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9B3C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E47E52465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFCDC206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:50:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kFjM/xGB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgBSStV (ORCPT
+        id S1726717AbgBSSuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:49:21 -0500
-Received: from muru.com ([72.249.23.125]:56096 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgBSStV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:49:21 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 9CA2B80F3;
-        Wed, 19 Feb 2020 18:50:03 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 10:49:16 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>
-Subject: Re: [PATCH] ASoC: cpcap: Implement set_tdm_slot for voice call
- support
-Message-ID: <20200219184916.GB37466@atomide.com>
-References: <ae2b7d9e-d05e-54ac-4f18-27cc8c4e81a0@ti.com>
- <20200212144620.GJ64767@atomide.com>
- <9a060430-5a3e-61e1-3d2c-f89819d9436f@ti.com>
- <20200217232325.GD35972@atomide.com>
- <8fc1dded-6d28-f5cd-f2f9-3a6810571119@ti.com>
- <20200218153211.GI35972@atomide.com>
- <20200218170628.r47xc3yydg6xx2yh@earth.universe>
- <20200218174258.GK4232@sirena.org.uk>
- <20200219173902.GA37466@atomide.com>
- <20200219174600.GH4488@sirena.org.uk>
+        Wed, 19 Feb 2020 13:50:16 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55922 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgBSSuQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:50:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id q9so1814741wmj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:50:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YHDo6SDUmBGIxFcFU0zxdkAV/KCatUOT545wU/6CJe8=;
+        b=kFjM/xGBPVT9Bvo5YAdNyJF/hCra0fKDPQKYo1VPlXU5spMr96xpLM3ste5KHplcom
+         tsGQirjLmLTV22Xm+g2bBZP3Gp7ZLfumXC/+SNTsxKadBKg2l1WTHhhEEaSSk3/Pr+2N
+         tyFIoycWoHDN7x/8I5NYkBjQtsH9iQ2vJJcmadT9TI7JTUKGg6qlJ/mX/AKEnvvs30eW
+         5rsFEy7anYsOUUPf4OobfgV6pM4SfwMJlXxuNDHho/AoPbSshGMl6xFMDsHVwayezK2/
+         lpxVjtnd6Cbta+q5rEv6xFYQJNAbJNEAiVVpDSafXsU3GF4GfrtyDacRKroFU5WbE/gI
+         abYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YHDo6SDUmBGIxFcFU0zxdkAV/KCatUOT545wU/6CJe8=;
+        b=BO27qRSVxCVl+S/GN1EkcQivnAiPD91oUA818trN7hYzotem8HyS0HmlyvdfxU494Y
+         0to2eST6JoCl8sVwDPd7NdRLBJ2i1A2zWVnS46JGBwTQAzFfu2KRClRzDN1NOg5q+Sp1
+         xnT/gtbksT5r5d8nIgKlSJjhUMyNOG193FZFvgu9PH2fD3HG9Lg3Y/7GgmOHvH0atL1l
+         mD/BVS6hFET73n6Vzv5fs57HKLt21Y8FX9tAg78uJ4IOh5p5SHqY5BjrvnHVxO0ZyFBZ
+         jMWe+Rrn4A6Vt3FoScGy8xWequJrAYOxs5emGGIAX2/MyPMj+p1f2wkCrghrOY5E8WAg
+         DVCA==
+X-Gm-Message-State: APjAAAXNN3xkPOxkzCDgRsGJ2sESsyYWUdmBgkCA49v5j3zpLJPta80g
+        9CZIYWbZ1ydrbNxA4UVi+z3zYsM=
+X-Google-Smtp-Source: APXvYqxPpk0DNTUoejDUEoqV5lH/v1/qKE86kFFEEIyMHAbMKZFZm5CgZA3BpkTUNeerW7XboAP7Og==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr10927400wmg.147.1582138214189;
+        Wed, 19 Feb 2020 10:50:14 -0800 (PST)
+Received: from avx2 ([46.53.251.159])
+        by smtp.gmail.com with ESMTPSA id o15sm864695wra.83.2020.02.19.10.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 10:50:13 -0800 (PST)
+Date:   Wed, 19 Feb 2020 21:50:12 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] ELF: allocate less for static executable
+Message-ID: <20200219185012.GB4871@avx2>
+References: <20200219184847.GA4871@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200219174600.GH4488@sirena.org.uk>
+In-Reply-To: <20200219184847.GA4871@avx2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mark Brown <broonie@kernel.org> [200219 17:46]:
-> On Wed, Feb 19, 2020 at 09:39:02AM -0800, Tony Lindgren wrote:
-> > * Mark Brown <broonie@kernel.org> [200218 17:43]:
-> 
-> > > you to address for system enablement.  OTOH if you manage to get one of
-> > > the generic cards working well that'd be excellent!
-> 
-> > Well to me it seems that we just already have all the data needed with
-> > the graph binding and snd-soc-audio-graph-card + codec2codec support.
-> 
-> > I don't think we have cases where the cpcap codec is not the master,
-> > so as long as the cpcap codec knows what's going on then there
-> > may not be a need for machine driver.
-> 
-> > I guess the the bluetooth to modem path is the one to check to see
-> > what provides the clocks..
-> 
-> Usually in telephony cases it's the modem that's the clock master FWIW.
+PT_INTERP ELF header can be spared if executable is static.
 
-Well at least the samplerate needs to be configured in the cpcap
-codec driver for voice calls, and we're setting CPCAP_BIT_CDC_CLK_EN
-bit for voice call which is the "Voice DAI Clock". It's also set when
-just playing audio using the voice channel is used. And we also have
-a similar bit for CPCAP_BIT_ST_CLK_EN for "HiFi DAI Clock" for the
-hifi channel. So these would seem to hit that it is really the cpcap
-that's the clock master for voice calls in this case.
+Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+---
 
-But I guess the test to do there would be to just clear the bit
-for CPCAP_BIT_CDC_CLK_EN during a voice call and see if it still
-works.
+ fs/binfmt_elf.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-Regards,
-
-Tony
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -698,17 +698,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	unsigned long reloc_func_desc __maybe_unused = 0;
+ 	int executable_stack = EXSTACK_DEFAULT;
+ 	struct elfhdr *elf_ex = (struct elfhdr *)bprm->buf;
+-	struct elfhdr *interp_elf_ex;
++	struct elfhdr *interp_elf_ex = NULL;
+ 	struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
+ 	struct mm_struct *mm;
+ 	struct pt_regs *regs;
+ 
+-	interp_elf_ex = kmalloc(sizeof(*interp_elf_ex), GFP_KERNEL);
+-	if (!interp_elf_ex) {
+-		retval = -ENOMEM;
+-		goto out_ret;
+-	}
+-
+ 	retval = -ENOEXEC;
+ 	/* First of all, some simple consistency checks */
+ 	if (memcmp(elf_ex->e_ident, ELFMAG, SELFMAG) != 0)
+@@ -768,6 +762,12 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 		 */
+ 		would_dump(bprm, interpreter);
+ 
++		interp_elf_ex = kmalloc(sizeof(*interp_elf_ex), GFP_KERNEL);
++		if (!interp_elf_ex) {
++			retval = -ENOMEM;
++			goto out_free_ph;
++		}
++
+ 		/* Get the exec headers */
+ 		retval = elf_read(interpreter, interp_elf_ex,
+ 				  sizeof(*interp_elf_ex), 0);
+@@ -1073,6 +1073,8 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 
+ 		allow_write_access(interpreter);
+ 		fput(interpreter);
++
++		kfree(interp_elf_ex);
+ 	} else {
+ 		elf_entry = e_entry;
+ 		if (BAD_ADDR(elf_entry)) {
+@@ -1151,12 +1153,11 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	start_thread(regs, elf_entry, bprm->p);
+ 	retval = 0;
+ out:
+-	kfree(interp_elf_ex);
+-out_ret:
+ 	return retval;
+ 
+ 	/* error cleanup */
+ out_free_dentry:
++	kfree(interp_elf_ex);
+ 	kfree(interp_elf_phdata);
+ 	allow_write_access(interpreter);
+ 	if (interpreter)
