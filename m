@@ -2,130 +2,133 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7C2C3404E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481CDC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C2C21D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DAD24671
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 05:49:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcJvnBF7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="gUDoMSdW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbgBSFjd (ORCPT
+        id S1726469AbgBSFtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 00:39:33 -0500
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:42078 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgBSFjd (ORCPT
+        Wed, 19 Feb 2020 00:49:08 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.167]:11182 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgBSFtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 00:39:33 -0500
-Received: by mail-yb1-f193.google.com with SMTP id z125so11802163ybf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 21:39:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d6qeSHn0R8eb7oUSh15TXKxMRyNgkmSfzopxI3yp3FM=;
-        b=RcJvnBF7TNNpu0kEihSEJQdZW95fpfOgZ8O3iNQbqQAgROzILUpdP+uVsm/rcl1j+J
-         pjHjdUQD8jTt8MxZmqU2s6sl3TKCO/vW71rwrEK/UNzllPgXKlnfv5KaYhTHQQZhpq0q
-         JzCLLmRVQWZMfwLNHqdwVTUvsX+P25oawWZv8lgqmJqQxFnKmdRsV7u5bPjM+hGEOwQW
-         jbjIL2+JuT+a7/TcxjKhX4/fI4aVB7FYyLDvxHe0mCM5rGF8gzWRiVHauRngciMbMnGR
-         5cuP6muvicfgeDgvGntE9eVb9lOsAigqLa/NwsuMIcUXZjY07CHLO43xs3HWFA8ufjwd
-         gpMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d6qeSHn0R8eb7oUSh15TXKxMRyNgkmSfzopxI3yp3FM=;
-        b=XJiU1Rkr+N3WQ/uwAmW2T1gX0YQVCANzWViOiciBOwA1IVwdjOcRo1CMLXB4Q6sNuB
-         5S1CTm0/hf5irsss/FfL0Uxgj5PJoZj4+xFaKBYcz+oZTqyV0a46q53uWK2RUd1dWQO8
-         QxDkUptyj6f/u5Q7t3iqNqGJK6bac3YkeZn3XXA3+qkCe3TEf71Z0WZpcnDo4Qro/E9O
-         ETNmHsFO9ZvrrtxcVOiqm3SlhpvJqO43/6yQnSWiAyEbwMM72C+hwd42PIvXATdTVbKp
-         njtPjRPHev2fVAT7ICm+wWPtuu4+2jW0ICUJSqECnUUg7Ilj397XAgY700TL257mHr3b
-         XMDw==
-X-Gm-Message-State: APjAAAVYST8QjuQvv48ADXwUnpo1MWCSqXFCNXbkc2mNCkhTOqpNq/k2
-        1WDFWnI8dMcTAq4iBC2JM5gd2+it+2EhYX9iSu0D2xWw
-X-Google-Smtp-Source: APXvYqw7XK3ql/hUSl5JmamnqXChYaKmxXHXPH/aXXM9HWgu2rFUFD7ZrvlJDTyhaeZmP6y0+qG8Ip7GA1hGQ3aztoo=
-X-Received: by 2002:a25:42ca:: with SMTP id p193mr20880605yba.147.1582090771031;
- Tue, 18 Feb 2020 21:39:31 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218172821.18378-1-wambui.karugax@gmail.com> <20200218172821.18378-6-wambui.karugax@gmail.com>
-In-Reply-To: <20200218172821.18378-6-wambui.karugax@gmail.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Wed, 19 Feb 2020 15:39:20 +1000
-Message-ID: <CACAvsv4fWZWqQozMFPnyk7nXVyGPvszhY33qEQ74D0eAHofp2Q@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH] drm/nouveau: remove checks for return value of
- debugfs functions
-To:     Wambui Karuga <wambui.karugax@gmail.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Feb 2020 00:49:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1582091344;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=alpNl+QogLXB42TE03qgaGa0z0wDQj+d62gUywp3S5A=;
+        b=gUDoMSdW6YuIkmZ1jMtThaM78Tob0DWmoyyzqlDnevMz5t8SNbCVClfVXfAH11WihO
+        PpDjA4HRPc2U2ua1q4/Q6PTwI0Hdzvpziq6MgEoiNDvJkhFuFfTQ6EOu1ZkYfphIud7w
+        08eNoGYbNp0O731QDLTK+CBQZO7INRXmfLHajgvrF0z/GrUuBgavlV5ax2OW5pIeAptq
+        U2/AkE/s7/fjhLh+XykUEmVwuByJCcbbSju/BlW7oE1uFOW84ksd4EH73LV0b7FQ8ATp
+        DpJ29TpFG9cRlw+qKhIV1zrJ9bPl9ZncIDdmT4d9X9TR5kEN40JML91XPV9tlHqPdlbY
+        Qglw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj5Qpw97WFDlSZXA4LLQg="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.1.12 DYNA|AUTH)
+        with ESMTPSA id U06217w1J5mvVzS
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Wed, 19 Feb 2020 06:48:57 +0100 (CET)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v4 2/6] Bindings: nvmem: add bindings for JZ4780 efuse
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200218212609.GA30081@bogus>
+Date:   Wed, 19 Feb 2020 06:48:56 +0100
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+References: <cover.1581958529.git.hns@goldelico.com> <86b78db4d607e0bdda6def018bc7f73207ce82e8.1581958529.git.hns@goldelico.com> <20200218212609.GA30081@bogus>
+To:     PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 at 03:28, Wambui Karuga <wambui.karugax@gmail.com> wrote:
->
-> As there is no need to check for the return value of debugfs_create_file
-> and drm_debugfs_create_files, remove unnecessary checks and error
-> handling in nouveau_drm_debugfs_init.
-Thanks!
 
->
-> Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
-> ---
->  drivers/gpu/drm/nouveau/nouveau_debugfs.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_debugfs.c b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-> index 7dfbbbc1beea..15a3d40edf02 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_debugfs.c
-> @@ -222,22 +222,18 @@ nouveau_drm_debugfs_init(struct drm_minor *minor)
->  {
->         struct nouveau_drm *drm = nouveau_drm(minor->dev);
->         struct dentry *dentry;
-> -       int i, ret;
-> +       int i;
->
->         for (i = 0; i < ARRAY_SIZE(nouveau_debugfs_files); i++) {
-> -               dentry = debugfs_create_file(nouveau_debugfs_files[i].name,
-> -                                            S_IRUGO | S_IWUSR,
-> -                                            minor->debugfs_root, minor->dev,
-> -                                            nouveau_debugfs_files[i].fops);
-> -               if (!dentry)
-> -                       return -ENOMEM;
-> +               debugfs_create_file(nouveau_debugfs_files[i].name,
-> +                                   S_IRUGO | S_IWUSR,
-> +                                   minor->debugfs_root, minor->dev,
-> +                                   nouveau_debugfs_files[i].fops);
->         }
->
-> -       ret = drm_debugfs_create_files(nouveau_debugfs_list,
-> -                                      NOUVEAU_DEBUGFS_ENTRIES,
-> -                                      minor->debugfs_root, minor);
-> -       if (ret)
-> -               return ret;
-> +       drm_debugfs_create_files(nouveau_debugfs_list,
-> +                                NOUVEAU_DEBUGFS_ENTRIES,
-> +                                minor->debugfs_root, minor);
->
->         /* Set the size of the vbios since we know it, and it's confusing to
->          * userspace if it wants to seek() but the file has a length of 0
-> --
-> 2.25.0
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+> Am 18.02.2020 um 22:26 schrieb Rob Herring <robh@kernel.org>:
+>=20
+> On Mon, Feb 17, 2020 at 05:55:26PM +0100, H. Nikolaus Schaller wrote:
+>> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>>=20
+>> This patch brings support for the JZ4780 efuse. Currently it only =
+expose
+>> a read only access to the entire 8K bits efuse memory.
+>>=20
+>> Tested-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: PrasannaKumar Muralidharan =
+<prasannatsmkumar@gmail.com>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> .../bindings/nvmem/ingenic,jz4780-efuse.txt     | 17 =
++++++++++++++++++
+>> 1 file changed, 17 insertions(+)
+>> create mode 100644 =
+Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>=20
+> Please convert to a DT schema.
+
+Is there someone of you who can help to do that?
+
+DT schemas are still like a Chinese dialect for me (i.e. I can decipher =
+with help but neither speak nor write).
+
+BR and thanks,
+Nikolaus
+
+>=20
+>> diff --git =
+a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>> new file mode 100644
+>> index 000000000000..339e74daa9a9
+>> --- /dev/null
+>> +++ =
+b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.txt
+>> @@ -0,0 +1,17 @@
+>> +Ingenic JZ EFUSE driver bindings
+>> +
+>> +Required properties:
+>> +- "compatible"		Must be set to "ingenic,jz4780-efuse"
+>> +- "reg"			Register location and length
+>> +- "clocks"		Handle for the ahb clock for the efuse.
+>> +- "clock-names"		Must be "bus_clk"
+>=20
+> 'clk' is redundant. How about 'ahb'?
+>=20
+>> +
+>> +Example:
+>> +
+>> +efuse: efuse@134100d0 {
+>> +	compatible =3D "ingenic,jz4780-efuse";
+>> +	reg =3D <0x134100d0 0x2c>;
+>> +
+>> +	clocks =3D <&cgu JZ4780_CLK_AHB2>;
+>> +	clock-names =3D "bus_clk";
+>> +};
+>> --=20
+>> 2.23.0
+>>=20
+
