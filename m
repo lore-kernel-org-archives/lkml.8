@@ -2,118 +2,139 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A2C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F863C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0036C24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DC224656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="CCiBJDOQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A+oniFco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgBSJXX (ORCPT
+        id S1726948AbgBSJXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:23:23 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45048 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgBSJXX (ORCPT
+        Wed, 19 Feb 2020 04:23:35 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35822 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSJXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:23:23 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q8so26201306ljj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 01:23:21 -0800 (PST)
+        Wed, 19 Feb 2020 04:23:34 -0500
+Received: by mail-pg1-f196.google.com with SMTP id v23so9019981pgk.2;
+        Wed, 19 Feb 2020 01:23:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VYACtOJzFbdHHzYAV0uoJeRPRBCCx7IkeDn63MpNOyk=;
-        b=CCiBJDOQ5P0k1bJLD9sFKDMpZF6oQoNIKRBF2hY/zXle6ThFUJbx+Uw8FDu0XhSKfM
-         OuqwMUedhFw6kO9+gKhw/6icCcP+A1cD3RRqIU+Ltyo+5MXfiNboB6NEenFFQkECXJSw
-         HlqWyXSXGIYk7hjq0bEsC0KfXWoorwMeFCYx5lS9L+O2m1PrE/Mxpv9BiEvaaYuzmkCO
-         7KkriufHpAT98/br77i3qzpcE9ZZG4qN3h5EIF9lJTl/9rGRYzUQHtq41R/8I0ruZ9VH
-         WItNmhMtbZVQ9Byk+iw+zfqs7wj3lJgUVGnUyEJC4J7jpW874hnI2f7thaU/GlZFqFVm
-         rVTQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Htpt6hc+U4jo4mvJTHmuoosdO86KCt7hpmhoJ1OllKc=;
+        b=A+oniFcopSeS7/z7U8aO7Kzd+s5dqq3cODDtSQatqjv2wnCdJaoUvD+6myGsB/RJbe
+         hUxktseNgkTOtHJAAiH7/yLdPeXsQ+7rH0PehbIQkuysv/b/0xovFdw+zJl0qxRrZ1Ff
+         jtBLSrSM5Q1fYFCJT3lsti6sbNKZnEr4vjAaU9t5y/QgbgqbKyox/3vXNpc4XS/0HMFj
+         ykaCNJGzHOY64OzvjQMw2tGV9fSKcHELOAsMgndF/lkqBrq5pnNrqWZQO/zFMt4PyTDy
+         5o9bfCShHs9ncMRDmC/Iwns5PmDGoHGPSs54wjldlp4IDOSOEMKVnEea7bTI7vvjEJLe
+         w3Mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VYACtOJzFbdHHzYAV0uoJeRPRBCCx7IkeDn63MpNOyk=;
-        b=th5RTAYoJW1GRx3nRBZG3hAXSvLADDppVFJg18dYGznPVbymsxB9x7sNureqg9oun1
-         qgM79AvnWxUTWAVULt2QZUgpAARtZbtnuCHLZly85KWaOcT+iskydOmGOQKyn8MBex3i
-         8YDSjOXyUe63mufA2RQzWpSKTtgbl7BedHLaCpXHOQ6FGMN8Ym/uY+Oa2iuJdWXfx+5F
-         fQxIlY/0Smn+lHbp9iKQyvrntC7JO/mmmWsIkb6PQ7pv9zlil3x54DSzdFSkrtnM/51l
-         QWF3fWG5Q5/94cNtllmXQWEWYJQYdR/q1UvC1AlNUTT1WAulUArSOMYnZmxC9BhV9vfG
-         uhBA==
-X-Gm-Message-State: APjAAAV59M1ot69HT4Wj4t6R6GTsftHfgkKSDL8Jp6ov4Qf5olHZef3K
-        EellQaEgSN1yh0EmuUMK7qpfRw==
-X-Google-Smtp-Source: APXvYqwYpw0gDCHzJar4JQhf+hD+uQHtynXxiIGrOaO+rkxoRcCGQ2R/zdsyaYtZedMgWq+L5SluAA==
-X-Received: by 2002:a2e:b044:: with SMTP id d4mr14981358ljl.159.1582104201028;
-        Wed, 19 Feb 2020 01:23:21 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:26e:a51f:ed1d:2717:41f:4f76? ([2a00:1fa0:26e:a51f:ed1d:2717:41f:4f76])
-        by smtp.gmail.com with ESMTPSA id q26sm843539lfp.85.2020.02.19.01.23.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 01:23:20 -0800 (PST)
-Subject: Re: [PATCH v6 21/22] KVM: x86/mmu: Use ranged-based TLB flush for
- dirty log memslot flush
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-References: <20200218210736.16432-1-sean.j.christopherson@intel.com>
- <20200218210736.16432-22-sean.j.christopherson@intel.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <fdb72ab9-18d4-5719-2863-78cde4e97fae@cogentembedded.com>
-Date:   Wed, 19 Feb 2020 12:22:58 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Htpt6hc+U4jo4mvJTHmuoosdO86KCt7hpmhoJ1OllKc=;
+        b=AM4yWwsfUUt2XSHb/ldaTgU7ulnXU2AdlTb+OSoxDQa9kZ1/oLB4Oe7TB686Ox8wMH
+         1Y5n1U8IGoYiBqgZgGxzV76RAK3a4AJmkuebL0o2MsXwOIacczUCRkZumP1yM/VVr8Rq
+         gYovhkYhZE6T3iDi5e0xZKuHzyzCsQ18rs5xAlj2DX3tmHd1E1Dz0cc1VkV8KyUu0UPh
+         Lnuxyro86K2vo9SKJrzg9Lo3QrKTWAGc0lfTz4NR64hHJwVZN/m6Oa8Cdod/UntJAUF8
+         I5E9/+3/cifr2wqEK0lOs7ciFov5J4PCEzXNimBzCaOS6hvbYZtPJOCtT/5yxKezhgHm
+         8p9A==
+X-Gm-Message-State: APjAAAXJ6sL+oxVJmAW1pfg4wTlQqaac33OmDRadJ3ccvU+7mljd1RHf
+        HamY7A59o63H+x2oiGDyx1ALY9EhNY+jYIIv/RLPG8bYArI=
+X-Google-Smtp-Source: APXvYqyZB8y/PoR6EyWvk2I2q3P6m+Qxy2sBfmbxGBYaiQKh8j/+PEjxZUkjgviLMNTrR7qlh4S3/ToK8sJu4Tu82FM=
+X-Received: by 2002:a62:52d0:: with SMTP id g199mr25153719pfb.241.1582104213420;
+ Wed, 19 Feb 2020 01:23:33 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218210736.16432-22-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYtnwFVPQxgHOU2Bi9y5+q4sSsww47yxK+_3ZAQ9=kyhUg@mail.gmail.com>
+ <20200219013824.GB8602@b29397-desktop> <20200219024534.GB10078@jackp-linux.qualcomm.com>
+In-Reply-To: <20200219024534.GB10078@jackp-linux.qualcomm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Feb 2020 11:23:25 +0200
+Message-ID: <CAHp75VfY1Y-jNr=YTfAO+eUOy3xUy9+AgtyJuhEk2ngrxMg5JA@mail.gmail.com>
+Subject: Re: msm_hsusb 78d9000.usb: failed to create device link to ci_hdrc.0.ulpi
+To:     Jack Pham <jackp@codeaurora.org>,
+        Alexandre TORGUE <alexandre.torgue@st.com>
+Cc:     Peter Chen <peter.chen@nxp.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Wed, Feb 19, 2020 at 4:46 AM Jack Pham <jackp@codeaurora.org> wrote:
+>
+> On Wed, Feb 19, 2020 at 01:38:22AM +0000, Peter Chen wrote:
+> > On 20-02-17 14:02:57, Naresh Kamboju wrote:
+> > > arm64 APQ 8016 SBC ( Dragonboard 410c)  device running Linux next boot
+> > > failed due to below error.
+> > >
+> > > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
+> > > [    0.000000] Linux version 5.6.0-rc2-next-20200217 (oe-user@oe-host)
+> > > (gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Mon Feb 17 04:27:31 UTC 2020
+> > > [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+> > > <>
+> > > [    4.439291] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.448891] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.457879] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.467331] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.475636] mmc0: new HS200 MMC card at address 0001
+> > > [    4.478895] mmcblk0: mmc0:0001 DS2008 7.28 GiB
+> > > [    4.480629] mmcblk0boot0: mmc0:0001 DS2008 partition 1 4.00 MiB
+> > > [    4.484719] mmcblk0boot1: mmc0:0001 DS2008 partition 2 4.00 MiB
+> > > [    4.492247] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.502611] mmcblk0rpmb: mmc0:0001 DS2008 partition 3 4.00 MiB,
+> > > chardev (234:0)
+> > > [    4.506949] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.517901] random: fast init done
+> > > [    4.521420] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
+> > > [    4.523400] mmcblk1: mmc1:aaaa SL16G 14.8 GiB
+> > > [    4.532843] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.539131]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14
+> > > [    4.542309]  mmcblk1: p1
+> > > [    4.561843] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.573481] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.585283] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.592622] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.600074] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.607204] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> > > [    4.614679] msm_hsusb 78d9000.usb: failed to create device link to
+> > > ci_hdrc.0.ulpi
+> >
+> > The chipidea USB code hasn't changed recently. Would you please bisect
+> > which commit affect it?
+>
+> Probably same cause as for this:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206435
 
-On 19.02.2020 0:07, Sean Christopherson wrote:
+Yes, it's the same. I dunno why no fix yet available.
 
-> Use the with_address() variant to when performing a TLB flush for a
-                                  ^^ is it really needed here?
-
-> specific memslot via kvm_arch_flush_remote_tlbs_memslot(), i.e. when
-> flushing after clearing dirty bits during KVM_{GET,CLEAR}_DIRTY_LOG.
-> This aligns all dirty log memslot-specific TLB flushes to use the
-> with_address() variant and paves the way for consolidating the relevant
-> code.
-> 
-> Note, moving to the with_address() variant only affects functionality
-> when running as a HyperV guest.
-> 
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-[...]
-
-MBR, Sergei
+-- 
+With Best Regards,
+Andy Shevchenko
