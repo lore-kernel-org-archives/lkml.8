@@ -2,199 +2,113 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F97DC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09AAC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11676207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B60207FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cIKU5Kpw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M2AFVg5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBSVDh (ORCPT
+        id S1727709AbgBSVFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:03:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35878 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727326AbgBSVBF (ORCPT
+        Wed, 19 Feb 2020 16:05:41 -0500
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:34227 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgBSVFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:01:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=AGxKmS7KKU/Z5k56hEU84InQBf+iQs56/nj8mKasb1o=; b=cIKU5Kpwk9KlEscN5+Gci4tcco
-        8fMFrpvRO1llrlqdQvvSOB8mkMBDBnLacRPpiS5w/2OKm0SM3itVgEOsy32GFqgwD0qAalBAfMGtp
-        892Fh7q2TFf+HRQZMBqvy30yc/A03NbYuWqZsVPMT96O8/2I9DphDnpsQqJ9gaLpCQG5JcRma2aVE
-        FBV6wBWZajGvNNOZSac8JSYLYeM6H8T9pD5Uk/5J+NRNnXmY45F9EdhNj/SNL6CuaPvVxjN2rlkWH
-        Dr0yXdBHL0ft2mpFkhC3P9p130KZbQCvlyaN9xFgVakv2nHfpD/GAIG11j25ZEA401a1aWvvohV/l
-        QaSd9gNA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4WSu-0008TW-Tg; Wed, 19 Feb 2020 21:01:04 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, ocfs2-devel@oss.oracle.com,
-        linux-xfs@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v7 05/24] mm: Use readahead_control to pass arguments
-Date:   Wed, 19 Feb 2020 13:00:44 -0800
-Message-Id: <20200219210103.32400-6-willy@infradead.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200219210103.32400-1-willy@infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
+        Wed, 19 Feb 2020 16:05:41 -0500
+Received: by mail-ua1-f66.google.com with SMTP id 1so770414uao.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:05:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rt+9TBr746y3EZMJw1I5B3EZu8arYEFN5BR+od/TLHk=;
+        b=M2AFVg5vlnRB3u0UzpK+hLhHk2mzBcRqt/6FJ1ZyF5r+AaBEx1gUxnRQSBOb0rzsyC
+         OssyBFfAp6/IEb4RBw90uXsOGquHbiFdA522MeNyJB2f0frsziq3ldDADScxoHLDOIwK
+         V6W4VIH3P43aqTC6dt4/ggCcYIxhLquDhGx5xo1MqBsqpvRW/rhYSUp3QnE1p/lrXuCX
+         b5nzo1aS57ZMpuIbqh9o7gzTrOVuJzKHSZ4CHNyd/sCj/RRJlLgIqp2U4gPtkxn7CE2H
+         Tk4t2hC5GVNf6S+sByLpwSYMsqe98h4r5qbRn0K4c6HsXz/6EDPWGEeKleNSQu5oF+vG
+         qiCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rt+9TBr746y3EZMJw1I5B3EZu8arYEFN5BR+od/TLHk=;
+        b=iwC2Hke/376Egt+tKUkcMXtj7SYraoW6HeYaaLP9N9Kr9uo96RkMOXe9mHe8PPYe9g
+         1cIU/yZkSeCBW4bylnK060IaWg+/wT+v9R30Kq+zO99Z15mjzICPatYLvqqVDPBgO5ze
+         PXVg2fWi+aCByQSmHev1K3ecNwCGdIgZJzHAYLie3o6ixI0nqplb4LHpMiaIzlINntQD
+         OtNfFGB9fJvvneARO2qAK6xpWDtZBwhCeBHGZCwtrGo3lBDdIYXQ/MAhauJmTYUOItoo
+         ROMvnPdQu2q0iQ5FuwC7yLxig/+ZWyKZvdVRZUCw0FSY3lBxdtvVfkV1xYMHsJ3F3+EG
+         xtiw==
+X-Gm-Message-State: APjAAAXC/pyaSg+L0+vYrAZrk6caKJxTr/P6fwc6fRdUcJAK6eWgsXSf
+        QyccYtVuRgbYeZDaYJbVVGhmmxghn7m4tgiagJkYZQ==
+X-Google-Smtp-Source: APXvYqyF757Ew+pQ4E0xwgB8qcfQWw35zjjmEjMj+nIZ6Tie14cLrBVfS3I6x1GGc2ULc3K0ofDrC/N30QBzYaDoDsk=
+X-Received: by 2002:ab0:32cf:: with SMTP id f15mr14592717uao.42.1582146338347;
+ Wed, 19 Feb 2020 13:05:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200219014433.88424-1-minchan@kernel.org> <20200219120123.07dda51c29006a892059ccde@linux-foundation.org>
+In-Reply-To: <20200219120123.07dda51c29006a892059ccde@linux-foundation.org>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Wed, 19 Feb 2020 13:05:27 -0800
+Message-ID: <CAJuCfpEAk+kD=Wxn3t9VKZxr5CovvdExL47qkEosyEAMEQ6t+Q@mail.gmail.com>
+Subject: Re: [PATCH v6 0/7] introduce memory hinting API for external process
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, sj38.park@gmail.com,
+        alexander.h.duyck@linux.intel.com, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Wed, Feb 19, 2020 at 12:01 PM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Tue, 18 Feb 2020 17:44:26 -0800 Minchan Kim <minchan@kernel.org> wrote:
+>
+> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> > application could give hints to kernel what memory range are preferred to be
+> > reclaimed. However, in some platform(e.g., Android), the information
+> > required to make the hinting decision is not known to the app.
+> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without any app
+> > involvement.
+> >
+>
+> This patchset doesn't seem to be getting a lot of interest from other
+> potential users?  It seems very specialized.  Are there or will there
+> ever be any users of this apart from one Android daemon?
 
-In this patch, only between __do_page_cache_readahead() and
-read_pages(), but it will be extended in upcoming patches.  Also add
-the readahead_count() accessor.  The read_pages() function becomes aops
-centric, as this makes the most sense by the end of the patchset.
+Don't know if this can be considered another user since it's still in
+the Android realm of things.
+I'm interested in extending process_madvise() to support MADV_DONTNEED
+to expedite memory ripping of a process killed by Android Low Memory
+Killer. But for that I need process_madvise() to be accepted first.
+IIRC Crome team was interested in these madv hints as well at some point...
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
----
- include/linux/pagemap.h | 17 +++++++++++++++++
- mm/readahead.c          | 34 ++++++++++++++++++++--------------
- 2 files changed, 37 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 24894b9b90c9..55fcea0249e6 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -638,6 +638,23 @@ static inline int add_to_page_cache(struct page *page,
- 	return error;
- }
- 
-+/*
-+ * Readahead is of a block of consecutive pages.
-+ */
-+struct readahead_control {
-+	struct file *file;
-+	struct address_space *mapping;
-+/* private: use the readahead_* accessors instead */
-+	pgoff_t _index;
-+	unsigned int _nr_pages;
-+};
-+
-+/* The number of pages in this readahead block */
-+static inline unsigned int readahead_count(struct readahead_control *rac)
-+{
-+	return rac->_nr_pages;
-+}
-+
- static inline unsigned long dir_pages(struct inode *inode)
- {
- 	return (unsigned long)(inode->i_size + PAGE_SIZE - 1) >>
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 9fcd4e32b62d..6a9d99229bd6 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -113,29 +113,32 @@ int read_cache_pages(struct address_space *mapping, struct list_head *pages,
- 
- EXPORT_SYMBOL(read_cache_pages);
- 
--static void read_pages(struct address_space *mapping, struct file *filp,
--		struct list_head *pages, unsigned int nr_pages, gfp_t gfp)
-+static void read_pages(struct readahead_control *rac, struct list_head *pages,
-+		gfp_t gfp)
- {
-+	const struct address_space_operations *aops = rac->mapping->a_ops;
- 	struct blk_plug plug;
- 	unsigned page_idx;
- 
--	if (!nr_pages)
-+	if (!readahead_count(rac))
- 		return;
- 
- 	blk_start_plug(&plug);
- 
--	if (mapping->a_ops->readpages) {
--		mapping->a_ops->readpages(filp, mapping, pages, nr_pages);
-+	if (aops->readpages) {
-+		aops->readpages(rac->file, rac->mapping, pages,
-+				readahead_count(rac));
- 		/* Clean up the remaining pages */
- 		put_pages_list(pages);
- 		goto out;
- 	}
- 
--	for (page_idx = 0; page_idx < nr_pages; page_idx++) {
-+	for (page_idx = 0; page_idx < readahead_count(rac); page_idx++) {
- 		struct page *page = lru_to_page(pages);
- 		list_del(&page->lru);
--		if (!add_to_page_cache_lru(page, mapping, page->index, gfp))
--			mapping->a_ops->readpage(filp, page);
-+		if (!add_to_page_cache_lru(page, rac->mapping, page->index,
-+				gfp))
-+			aops->readpage(rac->file, page);
- 		put_page(page);
- 	}
- 
-@@ -143,6 +146,7 @@ static void read_pages(struct address_space *mapping, struct file *filp,
- 	blk_finish_plug(&plug);
- 
- 	BUG_ON(!list_empty(pages));
-+	rac->_nr_pages = 0;
- }
- 
- /*
-@@ -160,9 +164,13 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	unsigned long end_index;	/* The last page we want to read */
- 	LIST_HEAD(page_pool);
- 	int page_idx;
--	unsigned int nr_pages = 0;
- 	loff_t isize = i_size_read(inode);
- 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-+	struct readahead_control rac = {
-+		.mapping = mapping,
-+		.file = filp,
-+		._nr_pages = 0,
-+	};
- 
- 	if (isize == 0)
- 		return;
-@@ -185,9 +193,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 			 * contiguous pages before continuing with the next
- 			 * batch.
- 			 */
--			read_pages(mapping, filp, &page_pool, nr_pages,
--						gfp_mask);
--			nr_pages = 0;
-+			read_pages(&rac, &page_pool, gfp_mask);
- 			continue;
- 		}
- 
-@@ -198,7 +204,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 		list_add(&page->lru, &page_pool);
- 		if (page_idx == nr_to_read - lookahead_size)
- 			SetPageReadahead(page);
--		nr_pages++;
-+		rac._nr_pages++;
- 	}
- 
- 	/*
-@@ -206,7 +212,7 @@ void __do_page_cache_readahead(struct address_space *mapping,
- 	 * uptodate then the caller will launch readpage again, and
- 	 * will then handle the error.
- 	 */
--	read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
-+	read_pages(&rac, &page_pool, gfp_mask);
- }
- 
- /*
--- 
-2.25.0
-
+>
+> Also, it doesn't terribly hard for ActivityManagerService to tell
+> another process "now run madvise with these arguments".  Please explain
+> why this is not practical in ActivityManagerService and also within
+> other potential users of this syscall.
+>
+>
