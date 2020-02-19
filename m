@@ -2,171 +2,152 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369B8C18E00
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAE9C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049EC2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AC6324677
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aphIdvxL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f0K7xq+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbgBSSxo (ORCPT
+        id S1726851AbgBSSyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:53:44 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44332 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbgBSSxn (ORCPT
+        Wed, 19 Feb 2020 13:54:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45456 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726638AbgBSSyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:53:43 -0500
-Received: by mail-wr1-f67.google.com with SMTP id m16so1762245wrx.11;
-        Wed, 19 Feb 2020 10:53:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ghgXYpoQgkOpnQL9griV2O/D69vhRotKDSv69SC7wTw=;
-        b=aphIdvxLLQVuRbuh8CtOwlBazoYgwcHZy07FPMUO6+2MqV8kxkfNSAarAeZjvroZDQ
-         JvJOUQbS7Scj1xgIuIG2Mv73dBl7xHp6l5/RoDVbYSG/kMhvHRV0CWUfYMzIlacXy/iF
-         hR1kWKV++qaMpYS4FtwoEZyc9FnV/wLFRGVJgz1Hm6f3vO7EzQ2FjOxvfm4gVT0ReJxA
-         N3/VwuJ2hwshqDLk4Q7II3hrgCu2Pkr7NgZHUOWA0ogNdBQ4/MqEmfrKCTY5OyUEZ/Rn
-         eY8FqHf8uL1GxxtvgbwSpql8OiBDM5eQ4YB13CdPMJPpFHqSuj8CF3dNjhV6wgu4ieYN
-         hs1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ghgXYpoQgkOpnQL9griV2O/D69vhRotKDSv69SC7wTw=;
-        b=bPokfOpfIJIwzSloQngBPPpn9VdBoRu+qypxwIHI092QNHDN2ORp40whbnuwjj/hKn
-         juWSwoASvUlgEH6FVXiJ+Yq/AEAm4DcmIMklhGqDITrp1wr72Wetl9oykdwRCAqQQkb6
-         /URG6ytOEiNjcmh0l0y0dVaN9I5HaSD5BP777XIFPlAc1RAtCxfBJILw/xwI1pbD30oj
-         hrw5dTshrHkuuHcYXSeikyQ4lBEZNPmWM1qqRZY+JiUp8BPZKJlUcIhvEBLMwb+m7hrr
-         OvPl31pu80B2Cy/pNpyC9iO8FC0roZAu5ONIuOPBbNbQMwdMIt+dRB4Yxa2Kwo+rIuqh
-         3G6Q==
-X-Gm-Message-State: APjAAAUQn8I3m1F7CzEbONFDZuSNeDkiDZnqpVcPQXtb6VjFFowdEmUO
-        clX2RpX1VlfTkcIGsFjkD7Y=
-X-Google-Smtp-Source: APXvYqzJBbPpR1y0eUU/KS69tU3ktGU6cgCfyAySvGRWiN2smoZm7JCv//IyN+xeGyLOH2xgXULwqQ==
-X-Received: by 2002:adf:df90:: with SMTP id z16mr36589917wrl.273.1582138421671;
-        Wed, 19 Feb 2020 10:53:41 -0800 (PST)
-Received: from Ansuel-XPS.localdomain ([5.170.105.173])
-        by smtp.googlemail.com with ESMTPSA id y131sm981452wmc.13.2020.02.19.10.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 10:53:40 -0800 (PST)
-From:   Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Date:   Wed, 19 Feb 2020 19:52:25 +0100
-Message-Id: <20200219185226.1236-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 19 Feb 2020 13:54:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582138439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ooAVZmPqmpejcE1lho8HJzD9Jr6TIc1QTP2vQodr9hU=;
+        b=f0K7xq+LeM606qSil19DG9S5dj/1amqAZ4qg7UOgu7YLpKSztO8jfCDBu5569uQ2i2VVk4
+        Bb2WGPKOJkxeiroy2KATa2jeU3A7eNkX1BzbXSunzxvRv5LmRZQ3YvwZp84d7kHtcuYJSy
+        t+Llpt5awRO9xbZ6JJORJFbRml7i70I=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-JYUDF0GWNu6vXN8CwF6baQ-1; Wed, 19 Feb 2020 13:53:51 -0500
+X-MC-Unique: JYUDF0GWNu6vXN8CwF6baQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F401107ACC5;
+        Wed, 19 Feb 2020 18:53:50 +0000 (UTC)
+Received: from gimli.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 80B505C1B0;
+        Wed, 19 Feb 2020 18:53:46 +0000 (UTC)
+Subject: [PATCH v2 0/7] vfio/pci: SR-IOV support
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dev@dpdk.org, mtosatti@redhat.com, thomas@monjalon.net,
+        bluca@debian.org, jerinjacobk@gmail.com,
+        bruce.richardson@intel.com, cohuck@redhat.com
+Date:   Wed, 19 Feb 2020 11:53:46 -0700
+Message-ID: <158213716959.17090.8399427017403507114.stgit@gimli.home>
+User-Agent: StGit/0.19-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing definition of rpm clk for ipq806x soc
+Changes since v1 are primarily to patch 3/7 where the commit log is
+rewritten, along with option parsing and failure logging based on
+upstream discussions.  The primary user visible difference is that
+option parsing is now much more strict.  If a vf_token option is
+provided that cannot be used, we generate an error.  As a result of
+this, opening a PF with a vf_token option will serve as a mechanism of
+setting the vf_token.  This seems like a more user friendly API than
+the alternative of sometimes requiring the option (VFs in use) and
+sometimes rejecting it, and upholds our desire that the option is
+always either used or rejected.
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+This also means that the VFIO_DEVICE_FEATURE ioctl is not the only
+means of setting the VF token, which might call into question whether
+we absolutely need this new ioctl.  Currently I'm keeping it because I
+can imagine use cases, for example if a hypervisor were to support
+SR-IOV, the PF device might be opened without consideration for a VF
+token and we'd require the hypservisor to close and re-open the PF in
+order to set a known VF token, which is impractical.
+
+Series overview (same as provided with v1):
+
+The synopsis of this series is that we have an ongoing desire to drive
+PCIe SR-IOV PFs from userspace with VFIO.  There's an immediate need
+for this with DPDK drivers and potentially interesting future use
+cases in virtualization.  We've been reluctant to add this support
+previously due to the dependency and trust relationship between the
+VF device and PF driver.  Minimally the PF driver can induce a denial
+of service to the VF, but depending on the specific implementation,
+the PF driver might also be responsible for moving data between VFs
+or have direct access to the state of the VF, including data or state
+otherwise private to the VF or VF driver.
+
+To help resolve these concerns, we introduce a VF token into the VFIO
+PCI ABI, which acts as a shared secret key between drivers.  The
+userspace PF driver is required to set the VF token to a known value
+and userspace VF drivers are required to provide the token to access
+the VF device.  If a PF driver is restarted with VF drivers in use, it
+must also provide the current token in order to prevent a rogue
+untrusted PF driver from replacing a known driver.  The degree to
+which this new token is considered secret is left to the userspace
+drivers, the kernel intentionally provides no means to retrieve the
+current token.
+
+Note that the above token is only required for this new model where
+both the PF and VF devices are usable through vfio-pci.  Existing
+models of VFIO drivers where the PF is used without SR-IOV enabled
+or the VF is bound to a userspace driver with an in-kernel, host PF
+driver are unaffected.
+
+The latter configuration above also highlights a new inverted scenario
+that is now possible, a userspace PF driver with in-kernel VF drivers.
+I believe this is a scenario that should be allowed, but should not be
+enabled by default.  This series includes code to set a default
+driver_override for VFs sourced from a vfio-pci user owned PF, such
+that the VFs are also bound to vfio-pci.  This model is compatible
+with tools like driverctl and allows the system administrator to
+decide if other bindings should be enabled.  The VF token interface
+above exists only between vfio-pci PF and VF drivers, once a VF is
+bound to another driver, the administrator has effectively pronounced
+the device as trusted.  The vfio-pci driver will note alternate
+binding in dmesg for logging and debugging purposes.
+
+Please review, comment, and test.  The example QEMU implementation
+provided with the RFC is still current for this version.  Thanks,
+
+Alex
+
+RFC: https://lore.kernel.org/lkml/158085337582.9445.17682266437583505502.stgit@gimli.home/
+v1: https://lore.kernel.org/lkml/158145472604.16827.15751375540102298130.stgit@gimli.home/
+
 ---
- .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
- drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
- include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
- 3 files changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 944719bd586f..dd0def465c79 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -16,6 +16,7 @@ Required properties :
- 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
- 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
-+			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
- 			"qcom,rpmcc-msm8998", "qcom,rpmcc"
- 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
- 
-diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
-index 9e3110a71f12..f71d228fd6bd 100644
---- a/drivers/clk/qcom/clk-rpm.c
-+++ b/drivers/clk/qcom/clk-rpm.c
-@@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
- 	.num_clks = ARRAY_SIZE(apq8064_clks),
- };
- 
-+/* ipq806x */
-+DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
-+DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
-+DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
-+
-+static struct clk_rpm *ipq806x_clks[] = {
-+	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
-+	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
-+	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
-+	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
-+	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
-+	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
-+	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
-+	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
-+	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
-+	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
-+	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
-+	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
-+	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
-+	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
-+	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
-+	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
-+};
-+
-+static const struct rpm_clk_desc rpm_clk_ipq806x = {
-+	.clks = ipq806x_clks,
-+	.num_clks = ARRAY_SIZE(ipq806x_clks),
-+};
-+
- static const struct of_device_id rpm_clk_match_table[] = {
- 	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
- 	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
-+	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
-diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
-index 8e3095720552..ae74c43c485d 100644
---- a/include/dt-bindings/clock/qcom,rpmcc.h
-+++ b/include/dt-bindings/clock/qcom,rpmcc.h
-@@ -37,6 +37,10 @@
- #define RPM_XO_A0				27
- #define RPM_XO_A1				28
- #define RPM_XO_A2				29
-+#define RPM_NSS_FABRIC_0_CLK			30
-+#define RPM_NSS_FABRIC_0_A_CLK			31
-+#define RPM_NSS_FABRIC_1_CLK			32
-+#define RPM_NSS_FABRIC_1_A_CLK			33
- 
- /* SMD RPM clocks */
- #define RPM_SMD_XO_CLK_SRC				0
--- 
-2.25.0
+Alex Williamson (7):
+      vfio: Include optional device match in vfio_device_ops callbacks
+      vfio/pci: Implement match ops
+      vfio/pci: Introduce VF token
+      vfio: Introduce VFIO_DEVICE_FEATURE ioctl and first user
+      vfio/pci: Add sriov_configure support
+      vfio/pci: Remove dev_fmt definition
+      vfio/pci: Cleanup .probe() exit paths
+
+
+ drivers/vfio/pci/vfio_pci.c         |  383 +++++++++++++++++++++++++++++++++--
+ drivers/vfio/pci/vfio_pci_private.h |   10 +
+ drivers/vfio/vfio.c                 |   20 +-
+ include/linux/vfio.h                |    4 
+ include/uapi/linux/vfio.h           |   37 +++
+ 5 files changed, 426 insertions(+), 28 deletions(-)
 
