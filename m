@@ -2,89 +2,72 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5638C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF2C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B448D208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CD61208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgBSI3o (ORCPT
+        id S1726680AbgBSIaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:29:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37240 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726202AbgBSI3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:29:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 15EADAD46;
-        Wed, 19 Feb 2020 08:29:42 +0000 (UTC)
-Subject: Re: [PATCH] x86/ioperm: add new paravirt function update_io_bitmap
-To:     =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     xen-devel@lists.xenproject.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "VMware, Inc." <pv-drivers@vmware.com>, stable@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-References: <20200218154712.25490-1-jgross@suse.com>
- <87mu9fr4ky.fsf@nanos.tec.linutronix.de>
- <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
-From:   Jan Beulich <jbeulich@suse.com>
-Message-ID: <e1617641-2106-cd81-628f-569b1a8cf1f7@suse.com>
-Date:   Wed, 19 Feb 2020 09:29:41 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Wed, 19 Feb 2020 03:30:25 -0500
+Received: from out28-98.mail.aliyun.com ([115.124.28.98]:40100 "EHLO
+        out28-98.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726495AbgBSIaY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:30:24 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4939859|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.236101-0.0277202-0.736179;DS=CONTINUE|ham_regular_dialog|0.0107653-0.000613517-0.988621;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03294;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.Gpe8RV3_1582100997;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gpe8RV3_1582100997)
+          by smtp.aliyun-inc.com(10.147.40.2);
+          Wed, 19 Feb 2020 16:30:13 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     linux-mips@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, tglx@linutronix.de, maz@kernel.org,
+        jason@lakedaemon.net, sboyd@kernel.org, mturquette@baylibre.com,
+        mark.rutland@arm.com, robh+dt@kernel.org,
+        daniel.lezcano@linaro.org, paul@crapouillou.net,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
+        dongsheng.qiu@ingenic.com
+Subject: [PATCH 1/4] dt-bindings: timer: Add X1000 bindings.
+Date:   Wed, 19 Feb 2020 16:29:31 +0800
+Message-Id: <1582100974-129559-3-git-send-email-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <b0f33786-79b1-f8ee-24ae-ce9f9f4791af@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.02.2020 06:35, Jürgen Groß wrote:
-> On 18.02.20 22:03, Thomas Gleixner wrote:
->> Juergen Gross <jgross@suse.com> writes:
->>> Commit 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control
->>> ioperm() as well") reworked the iopl syscall to use I/O bitmaps.
->>>
->>> Unfortunately this broke Xen PV domains using that syscall as there
->>> is currently no I/O bitmap support in PV domains.
->>>
->>> Add I/O bitmap support via a new paravirt function update_io_bitmap
->>> which Xen PV domains can use to update their I/O bitmaps via a
->>> hypercall.
->>>
->>> Fixes: 111e7b15cf10f6 ("x86/ioperm: Extend IOPL config to control ioperm() as well")
->>> Reported-by: Jan Beulich <jbeulich@suse.com>
->>> Cc: <stable@vger.kernel.org> # 5.5
->>> Signed-off-by: Juergen Gross <jgross@suse.com>
->>> Reviewed-by: Jan Beulich <jbeulich@suse.com>
->>> Tested-by: Jan Beulich <jbeulich@suse.com>
->>
->> Duh, sorry about that and thanks for fixing it.
->>
->> BTW, why isn't stuff like this not catched during next or at least
->> before the final release? Is nothing running CI on upstream with all
->> that XEN muck active?
-> 
-> This problem showed up by not being able to start the X server (probably
-> not the freshest one) in dom0 on a moderate aged AMD system.
+Add the timer bindings for the X1000 Soc from Ingenic.
 
-Not the freshest one, yes, but also on a system where KMS would not
-be available (my success rate with KMS is rather low overall, and
-with newer Linux I see rather more systems to stop working than ones
-to become working, but I simply don't have the time to investigate).
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+ Documentation/devicetree/bindings/timer/ingenic,tcu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Jan
+diff --git a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+index 0b63ceb..91f7049 100644
+--- a/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
++++ b/Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+@@ -10,6 +10,7 @@ Required properties:
+   * ingenic,jz4740-tcu
+   * ingenic,jz4725b-tcu
+   * ingenic,jz4770-tcu
++  * ingenic,x1000-tcu
+   followed by "simple-mfd".
+ - reg: Should be the offset/length value corresponding to the TCU registers
+ - clocks: List of phandle & clock specifiers for clocks external to the TCU.
+-- 
+2.7.4
+
