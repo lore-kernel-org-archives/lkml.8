@@ -2,122 +2,78 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D60BC3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4196C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF022465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E8E2465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbgBSMDF (ORCPT
+        id S1727069AbgBSMGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:03:05 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:57487 "EHLO
+        Wed, 19 Feb 2020 07:06:24 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57574 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbgBSMDC (ORCPT
+        with ESMTP id S1726495AbgBSMGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:03:02 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein.fritz.box)
+        Wed, 19 Feb 2020 07:06:24 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j4O4A-00028x-UM; Wed, 19 Feb 2020 12:02:59 +0000
+        id 1j4O7B-0002If-8k; Wed, 19 Feb 2020 12:06:05 +0000
+Date:   Wed, 19 Feb 2020 13:06:04 +0100
 From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Haw Loeung <haw.loeung@canonical.com>
-Subject: [PATCH net-next] net/ipv4/sysctl: show tcp_{allowed,available}_congestion_control in non-initial netns
-Date:   Wed, 19 Feb 2020 13:02:53 +0100
-Message-Id: <20200219120253.2667548-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.25.0
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     =?utf-8?B?U3TDqXBoYW5l?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 09/25] fs: add is_userns_visible() helper
+Message-ID: <20200219120604.vqudwaeppebvisco@wittgenstein>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+ <20200218143411.2389182-10-christian.brauner@ubuntu.com>
+ <20200219024233.GA19334@mail.hallyn.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200219024233.GA19334@mail.hallyn.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is currenty possible to switch the TCP congestion control algorithm
-in non-initial network namespaces:
+On Tue, Feb 18, 2020 at 08:42:33PM -0600, Serge Hallyn wrote:
+> On Tue, Feb 18, 2020 at 03:33:55PM +0100, Christian Brauner wrote:
+> > Introduce a helper which makes it possible to detect fileystems whose
+> > superblock is visible in multiple user namespace. This currently only
+> > means proc and sys. Such filesystems usually have special semantics so their
+> > behavior will not be changed with the introduction of fsid mappings.
+> 
+> Hi,
+> 
+> I'm afraid I've got a bit of a hangup about the terminology here.  I
+> *think* what you mean is that SB_I_USERNS_VISIBLE is an fs whose uids are
+> always translated per the id mappings, not fsid mappings.  But when I see
 
-unshare -U --map-root --net --fork --pid --mount-proc
-echo "reno" > /proc/sys/net/ipv4/tcp_congestion_control
+Correct!
 
-works just fine. But currently non-initial network namespaces have no
-way of kowing which congestion algorithms are available or allowed other
-than through trial and error by writing the names of the algorithms into
-the aforementioned file.
-Since we already allow changing the congestion algorithm in non-initial
-network namespaces by exposing the tcp_congestion_control file there is
-no reason to not also expose the
-tcp_{allowed,available}_congestion_control files to non-initial network
-namespaces. After this change a container with a separate network
-namespace will show:
+> the name it seems to imply that !SB_I_USERNS_VISIBLE filesystems can't
+> be seen by other namespaces at all.
+> 
+> Am I right in my first interpretation?  If so, can we talk about the
+> naming?
 
-root@f1:~# ls -al /proc/sys/net/ipv4/tcp_* | grep congestion
--rw-r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_allowed_congestion_control
--r--r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_available_congestion_control
--rw-r--r-- 1 root root 0 Feb 19 11:54 /proc/sys/net/ipv4/tcp_congestion_control
-
-Link: https://github.com/lxc/lxc/issues/3267
-Reported-by: Haw Loeung <haw.loeung@canonical.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- net/ipv4/sysctl_net_ipv4.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index 9684af02e0a5..d9531b4b33f2 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -554,18 +554,6 @@ static struct ctl_table ipv4_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif /* CONFIG_NETLABEL */
--	{
--		.procname	= "tcp_available_congestion_control",
--		.maxlen		= TCP_CA_BUF_MAX,
--		.mode		= 0444,
--		.proc_handler   = proc_tcp_available_congestion_control,
--	},
--	{
--		.procname	= "tcp_allowed_congestion_control",
--		.maxlen		= TCP_CA_BUF_MAX,
--		.mode		= 0644,
--		.proc_handler   = proc_allowed_congestion_control,
--	},
- 	{
- 		.procname	= "tcp_available_ulp",
- 		.maxlen		= TCP_ULP_BUF_MAX,
-@@ -885,6 +873,18 @@ static struct ctl_table ipv4_net_table[] = {
- 		.maxlen		= TCP_CA_NAME_MAX,
- 		.proc_handler	= proc_tcp_congestion_control,
- 	},
-+	{
-+		.procname	= "tcp_available_congestion_control",
-+		.maxlen		= TCP_CA_BUF_MAX,
-+		.mode		= 0444,
-+		.proc_handler   = proc_tcp_available_congestion_control,
-+	},
-+	{
-+		.procname	= "tcp_allowed_congestion_control",
-+		.maxlen		= TCP_CA_BUF_MAX,
-+		.mode		= 0644,
-+		.proc_handler   = proc_allowed_congestion_control,
-+	},
- 	{
- 		.procname	= "tcp_keepalive_time",
- 		.data		= &init_net.ipv4.sysctl_tcp_keepalive_time,
-
-base-commit: bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9
--- 
-2.25.0
-
+Yep, your first interpretation is right. What about: wants_idmaps()
