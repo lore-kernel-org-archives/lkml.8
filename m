@@ -2,137 +2,133 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36ECC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D195C3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A9B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 770C32176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 06:45:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PnuQ7Svk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgBSGkM (ORCPT
+        id S1726514AbgBSGp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 01:40:12 -0500
-Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:48643 "EHLO
-        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726156AbgBSGkL (ORCPT
+        Wed, 19 Feb 2020 01:45:26 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:39387 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726156AbgBSGp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 01:40:11 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 93B223A38C1;
-        Wed, 19 Feb 2020 17:40:06 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j4J1h-0006cP-MZ; Wed, 19 Feb 2020 17:40:05 +1100
-Date:   Wed, 19 Feb 2020 17:40:05 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v6 17/19] iomap: Restructure iomap_readpages_actor
-Message-ID: <20200219064005.GL10776@dread.disaster.area>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-31-willy@infradead.org>
- <20200219032900.GE10776@dread.disaster.area>
- <20200219060415.GO24185@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219060415.GO24185@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=r7nCFNou5KQKI5VhP1MA:9 a=-52OSV3k6aGjHW0a:21
-        a=qFaRso0K34Rwt0Du:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+        Wed, 19 Feb 2020 01:45:26 -0500
+Received: by mail-pf1-f202.google.com with SMTP id o1so14890425pfg.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 22:45:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=JFI3+kM1LWruGVLKeVPFO/XZwyOSYT/vDPiEnVdBj2U=;
+        b=PnuQ7SvkJrwFsCkOr3rvHKfrDrwUoHQwrQQitEv/ezWelIifCVoD7E3e/i+/2TbM+X
+         IwDtLxTnUEfVdwcl86OnwvXOLU70wOEw5HjL0v/xxm5717Pb45kjxTcUhUMbrmdsyP+C
+         SBKE6mym4PF3P72mIY7hikh8i3a0aESWh+EGXRwooJhSJ8OYdGDoz+hXpRSaw0axM8Ex
+         lC+0iV0uJuKu1tSimojwsqaUaYK/Ci5C2h9tZDxNlL3m1P3aB2xekQ91IYnZXgMP5WR2
+         +0hlJJr0F5xYVtjxQjNN5VJvD2bkr1IH8Z41iOCRcsbF8sY6i5hUm+rC3ZHfqAgUC51h
+         Ua+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=JFI3+kM1LWruGVLKeVPFO/XZwyOSYT/vDPiEnVdBj2U=;
+        b=uTqxPRx3BO+XhdyeEe6mF0Vc6b3r5Re3zmlwr+8drSwJqA7y1EQ3FlLeQupZ6pGj0V
+         mcGyK2yficf5RtoZAAStOX2h0E0uO83mPVYTNU1XklGx+5vI3z0ijiD94zD+0zn1EOTf
+         sIcOqiPtrJvcUMc6hiT2geV/RxPdkdxu/faHetlulBNwBGL1qCtg9CZfF/XR3A5GwEa7
+         jAjQsOdJgCiDuYzDl139nVmpeeVHZngPBJeDJQG8NlCeXxoJPEMfkmMjxdFB0ULX+jKn
+         VLxduNQTnhr6x2tEpq1Xxv7EALe51xHK6zJDCl77okO7eIHFkvepEYCqGlSFtKjZh9xc
+         uZvg==
+X-Gm-Message-State: APjAAAVIAvyWxygHz4zQRMAyremfDqhFNzjKD7VNP2IsLF0+9LRPUdLd
+        ZpUmqzaw2uHv/cWoV5e39LZz4MCLIybNnJ271Q==
+X-Google-Smtp-Source: APXvYqz+J/xwCfFRMD1shS+tndghawrwzI7Yd0VrboY//9yoBvjkbC42tNq4IbmZInjyjU6RkwV+tCIPByJGmiAtag==
+X-Received: by 2002:a63:5443:: with SMTP id e3mr20602878pgm.245.1582094725566;
+ Tue, 18 Feb 2020 22:45:25 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:45:19 +0800
+Message-Id: <20200219144442.Bluez.v2.1.I145f6c5bbf2437a6f6afc28d3db2b876c034c2d8@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [Bluez PATCH v2] bluetooth: fix passkey uninitialized when used
+From:   Howard Chung <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Howard Chung <howardchung@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 10:04:15PM -0800, Matthew Wilcox wrote:
-> On Wed, Feb 19, 2020 at 02:29:00PM +1100, Dave Chinner wrote:
-> > On Mon, Feb 17, 2020 at 10:46:11AM -0800, Matthew Wilcox wrote:
-> > > @@ -418,6 +412,15 @@ iomap_readpages_actor(struct inode *inode, loff_t pos, loff_t length,
-> > >  		}
-> > >  		ret = iomap_readpage_actor(inode, pos + done, length - done,
-> > >  				ctx, iomap, srcmap);
-> > > +		if (WARN_ON(ret == 0))
-> > > +			break;
-> > 
-> > This error case now leaks ctx->cur_page....
-> 
-> Yes ... and I see the consequence.  I mean, this is a "shouldn't happen",
-> so do we want to put effort into cleanup here ...
+This issue cause a warning here
+https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
 
-Well, the normal thing for XFS is that a production kernel cleans up
-and handles the error gracefully with a WARN_ON_ONCE, while a debug
-kernel build will chuck a tanty and burn the house down so to make
-the developers aware that there is a "should not happen" situation
-occurring....
+Signed-off-by: Howard Chung <howardchung@google.com>
 
-> > > @@ -451,11 +454,7 @@ iomap_readpages(struct address_space *mapping, struct list_head *pages,
-> > >  done:
-> > >  	if (ctx.bio)
-> > >  		submit_bio(ctx.bio);
-> > > -	if (ctx.cur_page) {
-> > > -		if (!ctx.cur_page_in_bio)
-> > > -			unlock_page(ctx.cur_page);
-> > > -		put_page(ctx.cur_page);
-> > > -	}
-> > > +	BUG_ON(ctx.cur_page);
-> > 
-> > And so will now trigger both a warn and a bug....
-> 
-> ... or do we just want to run slap bang into this bug?
-> 
-> Option 1: Remove the check for 'ret == 0' altogether, as we had it before.
-> That puts us into endless loop territory for a failure mode, and it's not
-> parallel with iomap_readpage().
-> 
-> Option 2: Remove the WARN_ON from the check.  Then we just hit the BUG_ON,
-> but we don't know why we did it.
-> 
-> Option 3: Set cur_page to NULL.  We'll hit the WARN_ON, avoid the BUG_ON,
-> might end up with a page in the page cache which is never unlocked.
+---
 
-None of these are appealing.
+Changes in v2:
+- refactor code
 
-> Option 4: Do the unlock/put page dance before setting the cur_page to NULL.
-> We might double-unlock the page.
+ net/bluetooth/smp.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-why would we double unlock the page?
-
-Oh, the readahead cursor doesn't handle the case of partial page
-submission, which would result in IO completion unlocking the page.
-
-Ok, that's what the ctx.cur_page_in_bio check is used to detect i.e.
-if we've got a page that the readahead cursor points at, and we
-haven't actually added it to a bio, then we can leave it to the
-read_pages() to unlock and clean up. If it's in a bio, then IO
-completion will unlock it and so we only have to drop the submission
-reference and move the readahead cursor forwards so read_pages()
-doesn't try to unlock this page. i.e:
-
-	/* clean up partial page submission failures */
-	if (ctx.cur_page && ctx.cur_page_in_bio) {
-		put_page(ctx.cur_page);
-		readahead_next(rac);
-	}
-
-looks to me like it will handle the case of "ret == 0" in the actor
-function just fine.
-
-Cheers,
-
-Dave.
-
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index 50e0ac692ec4..929e0bebaf80 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -2115,7 +2115,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 	struct l2cap_chan *chan = conn->smp;
+ 	struct smp_chan *smp = chan->data;
+ 	struct hci_conn *hcon = conn->hcon;
+-	u8 *pkax, *pkbx, *na, *nb;
++	u8 *pkax, *pkbx, *na, *nb, confirm_hint;
+ 	u32 passkey;
+ 	int err;
+ 
+@@ -2179,13 +2179,12 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 		 */
+ 		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+ 				 hcon->role)) {
+-			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+-							hcon->type,
+-							hcon->dst_type,
+-							passkey, 1);
+-			if (err)
+-				return SMP_UNSPECIFIED;
+-			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
++			/* Set passkey to 0. The value can be any number since
++			 * it'll be ignored anyway.
++			 */
++			passkey = 0;
++			confirm_hint = 1;
++			goto confirm;
+ 		}
+ 	}
+ 
+@@ -2206,9 +2205,11 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 	err = smp_g2(smp->tfm_cmac, pkax, pkbx, na, nb, &passkey);
+ 	if (err)
+ 		return SMP_UNSPECIFIED;
++	confirm_hint = 0;
+ 
++confirm:
+ 	err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
+-					hcon->dst_type, passkey, 0);
++					hcon->dst_type, passkey, confirm_hint);
+ 	if (err)
+ 		return SMP_UNSPECIFIED;
+ 
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.0.265.gbab2e86ba0-goog
+
