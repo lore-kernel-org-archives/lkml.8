@@ -2,100 +2,143 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAD2C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C1DC34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FB324654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26D924654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:37:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnCJByyi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8r7fYcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgBSQhk (ORCPT
+        id S1726717AbgBSQht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:37:40 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33055 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgBSQhj (ORCPT
+        Wed, 19 Feb 2020 11:37:49 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37314 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbgBSQhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:37:39 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so652611lfl.0;
-        Wed, 19 Feb 2020 08:37:37 -0800 (PST)
+        Wed, 19 Feb 2020 11:37:48 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so1313695wru.4;
+        Wed, 19 Feb 2020 08:37:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Iu8Su62Lx6G7NQ7VTXQB00i29wr5tuhT9NpagmWKkGs=;
-        b=rnCJByyiPYNjDhjdfTZp5+OjAkMgvmj/vL+JE4lRnGBxTjAClFJyXErfVglS/EsHej
-         Oqr/vzk62telFtUak6fnwIA0C7MrM0/M4ay8jT6k7KKJF5OGqUKaaxSKYG8JoJzaFygm
-         xhX09nbLseabDhp7kDci5Nb5VXDi8MgKI4zQFsqGmCEyNnGVy8GY30xah450ETBlw16k
-         ikX4kCQi7Fa8ZGHL9G1l7CnV6DfKtaF6Jil+wiG9udbu3zP6j3cZK908bgRkvQiKuisu
-         UJL05LixhhyZBWzGptIP9iw7c8hU+XzPS+ZDXFXXaycvtMQlqwD7oJHh03eyl19WH555
-         pUUQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KPmxyNATaLVpAQvuOpd2h7IWbWbQsEMr8UgAvD2qu28=;
+        b=n8r7fYcXZK3E7JRs7OI9Y36fSnz6WoXlC7/tv+WMU15W1F3Z4yXVuy1v1ew/0JocM+
+         EFWeELkDAfXJyviTQ/6Io0GTve7zs1Rf45gpbgpCpf5gKgvG5vx4K33PNaqPJz7O68O5
+         m8/0IYvZBdrswT7rINpiZ/muEulYNErEQR+Nojeq/kgtLFEDLnSLCFNkNvjBjKEgWfPr
+         Rix/6YVJ/9kYaKRfz21zWwM1Cxc97fOsHh6CFhv+R65xOA5TC7HgJZXphzXM9Ao+s58e
+         P+sRZmkek8nooJPJZIHp4ff7pLcj2PfElXb4fXHOgJvxV0tqNGkcTiCkMfSfg3SaHUMU
+         gyiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Iu8Su62Lx6G7NQ7VTXQB00i29wr5tuhT9NpagmWKkGs=;
-        b=YnxOX3zpluOnMh+8Ll44o1wwc6v3KX+eTlmfzLdnTKFmsc1yNZQEteXuB/vGTU5mwe
-         aVNqWkSRVvvEfJR04fzbF3N94xVUMJHow+8KFtbs7yk9WgOmH+pzyFBEahfViEgxtlHO
-         adeK0CP24ue1ZN54NZVhPUlLBCc1klsKTVTrOSO6hjGyUAO5/z/ac0kqMdg2YmXT4xAD
-         JdUw5KdDKrvll2MCGpdb7sfzY+F1A6zhRQDWhHyEeNBGnOIGR+ozB46YzAGpjcHSHw4e
-         mYi9nsHUwrR3ofTskdr7PhMrWMnCy/i6d5iQ5E58i1FC/QhI65n2rJCqzeb5/EVsZiik
-         CZSA==
-X-Gm-Message-State: APjAAAXF5QhAdnWdEcBx6JL82KwsrwmizJQA4+AN2P+IdcRe0Tf8PAks
-        Um9r/Pnqou/TDkoIduBejJPosVShVTSU46gM0l56cg==
-X-Google-Smtp-Source: APXvYqyZXXgGUsrmB7smOwrThCKSrBFcNYDQijyrqFmYfRiO/UeECbjs/x+Qj5rKUxiIW1iHEOBmCPU0Dz2L7rg/HF8=
-X-Received: by 2002:ac2:515b:: with SMTP id q27mr13400289lfd.119.1582130257014;
- Wed, 19 Feb 2020 08:37:37 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KPmxyNATaLVpAQvuOpd2h7IWbWbQsEMr8UgAvD2qu28=;
+        b=MhOYpCkDXSYxdhy8HVNSdS9uOHLh3LXJr0GmF+fQFTKN9pFHAvNMq7aOMSXCJhwnj+
+         M+IV1PM6PNhqxa724x4s/S2dmPZgwV4+kHROxhWLnQ9gA+GnboW3Pi8NSG17BSKN+4st
+         N/t6AX2yKATJCzZ9UYIA+YJb0OIC6qD5dyl1xntZLElA+tuKmsJaFVerlkl6xHkgYetM
+         IND9aSOJfYwgb5zKzr7f8AO9DUYIL+X/h6nBogiV6tszjPq6TfzhYjbm3mXT48MJ+jbk
+         otSGyjdM0AK5wePYIsNs0+oCr+gCW8wbHRr9mhQvafQLCK4PnjtpNY7sbI6ss6knUbzh
+         mW8Q==
+X-Gm-Message-State: APjAAAUVHt5ZmC6O/a7TGsoET5NCEVK2IU6ltrIRX3smuOtt7Dx9OBtP
+        3XblfYX4hP6Noqz2B8Pb7fA=
+X-Google-Smtp-Source: APXvYqzBGnSioRanirnIZ0fE6WCyTMzNuZS5g3Y2HNi1JOITTZdsNv9JQf10ibvZsl0eUnru5u5vgA==
+X-Received: by 2002:a5d:5007:: with SMTP id e7mr37079257wrt.228.1582130266405;
+        Wed, 19 Feb 2020 08:37:46 -0800 (PST)
+Received: from Ansuel-XPS.localdomain ([5.170.104.247])
+        by smtp.googlemail.com with ESMTPSA id i204sm464895wma.44.2020.02.19.08.37.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 08:37:45 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Adrian Panella <ianchi74@outlook.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: add smb208 support
+Date:   Wed, 19 Feb 2020 17:37:11 +0100
+Message-Id: <20200219163711.479-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200218190224.22508-1-mrostecki@opensuse.org>
- <CAADnVQJm_tvMGjhHyVn66feA3rHLSXTdzqCCABu+9tKer89LVA@mail.gmail.com> <06ae3070-0d35-df49-9310-d1fb7bfb3e67@opensuse.org>
-In-Reply-To: <06ae3070-0d35-df49-9310-d1fb7bfb3e67@opensuse.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Feb 2020 08:37:25 -0800
-Message-ID: <CAADnVQLhEaV=dWMZC83g5QHit7Qvu4H84Dh--K3aOTiUNeEd4g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 0/6] bpftool: Allow to select sections and filter probes
-To:     Michal Rostecki <mrostecki@opensuse.org>
-Cc:     bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 4:33 AM Michal Rostecki <mrostecki@opensuse.org> wrote:
->
-> On 2/19/20 4:02 AM, Alexei Starovoitov wrote:
-> > The motivation is clear, but I think the users shouldn't be made
-> > aware of such implementation details. I think instead of filter_in/out
-> > it's better to do 'full or safe' mode of probing.
-> > By default it can do all the probing that doesn't cause
-> > extra dmesgs and in 'full' mode it can probe everything.
->
-> Alright, then I will send later v2 where the "internal" implementation
-> (filtering out based on regex) stays similar (filter_out will stay in
-> the code without being exposed to users, filter_in will be removed). And
-> the exposed option of "safe" probing will just apply the
-> "(trace|write_user)" filter_out pattern. Does it sound good?
+Smb208 regulators are used on some ipq806x soc.
+Add support for it to make it avaiable on some routers
+that use it.
 
-yes. If implementation is doing filter_in and applying 'trace_printk|write_user'
-strings hidden within bpftool than I think it should be good.
-What do you think the default should be?
-It feels to me that the default should not be causing dmesg prints.
-So only addition flag for bpftool command line will be 'bpftool
-feature probe full'
+Signed-off-by: Adrian Panella <ianchi74@outlook.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 4 ++++
+ drivers/regulator/qcom_rpm-regulator.c             | 9 +++++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+index 3c91ad430eea..b823b8625243 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
++++ b/Documentation/devicetree/bindings/mfd/qcom-rpm.txt
+@@ -61,6 +61,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8901-regulators"
+ 		    "qcom,rpm-pm8921-regulators"
+ 		    "qcom,rpm-pm8018-regulators"
++		    "qcom,rpm-smb208-regulators"
+ 
+ - vdd_l0_l1_lvs-supply:
+ - vdd_l2_l11_l12-supply:
+@@ -171,6 +172,9 @@ pm8018:
+ 	s1, s2, s3, s4, s5, , l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11,
+ 	l12, l14, lvs1
+ 
++smb208:
++	s1a, s1b, s2a, s2b
++
+ The content of each sub-node is defined by the standard binding for regulators -
+ see regulator.txt - with additional custom properties described below:
+ 
+diff --git a/drivers/regulator/qcom_rpm-regulator.c b/drivers/regulator/qcom_rpm-regulator.c
+index 7407cd5a1b74..7fc97f23fcf4 100644
+--- a/drivers/regulator/qcom_rpm-regulator.c
++++ b/drivers/regulator/qcom_rpm-regulator.c
+@@ -925,12 +925,21 @@ static const struct rpm_regulator_data rpm_pm8921_regulators[] = {
+ 	{ }
+ };
+ 
++static const struct rpm_regulator_data rpm_smb208_regulators[] = {
++	{ "s1a",  QCOM_RPM_SMB208_S1a, &smb208_smps, "vin_s1a" },
++	{ "s1b",  QCOM_RPM_SMB208_S1b, &smb208_smps, "vin_s1b" },
++	{ "s2a",  QCOM_RPM_SMB208_S2a, &smb208_smps, "vin_s2a" },
++	{ "s2b",  QCOM_RPM_SMB208_S2b, &smb208_smps, "vin_s2b" },
++	{ }
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8018-regulators",
+ 		.data = &rpm_pm8018_regulators },
+ 	{ .compatible = "qcom,rpm-pm8058-regulators", .data = &rpm_pm8058_regulators },
+ 	{ .compatible = "qcom,rpm-pm8901-regulators", .data = &rpm_pm8901_regulators },
+ 	{ .compatible = "qcom,rpm-pm8921-regulators", .data = &rpm_pm8921_regulators },
++	{ .compatible = "qcom,rpm-smb208-regulators", .data = &rpm_smb208_regulators },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpm_of_match);
+-- 
+2.25.0
+
