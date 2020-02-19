@@ -2,132 +2,131 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60006C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DD0C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A7F206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nnU0eJ7y"
+	by mail.kernel.org (Postfix) with ESMTP id 98CA9206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 19:04:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582139041;
+	bh=O/wptZbwH6lCTAW0BlYdcGSm/OnF3rYeqOOZMqY4Tkw=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=09CypLnVUdcWuzKxXLI09hvQZrY5eKPjT9mIz4orhK5qzI25OdnhLY1mjzA6sNDGN
+	 C24RkHTQjPdlHmP8W75cm3EC8SHBchr3VXqwsa+hiBqtw+B3++2FgfGcugd9CXq3Yp
+	 mTtTV9DEo+58zp2+jas+a6sfjRLgq8mc9sNQyrI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgBSTDu (ORCPT
+        id S1726768AbgBSTEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 14:03:50 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:60288 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgBSTDu (ORCPT
+        Wed, 19 Feb 2020 14:04:00 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43960 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726643AbgBSTD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 14:03:50 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01JJ3fWj081890;
-        Wed, 19 Feb 2020 13:03:41 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582139021;
-        bh=PdP8o3LePLb06Tf/GSMcpBK5khtA63IgL9abPaFPLnE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nnU0eJ7yBDLsLSx5IRHXyo0FGmb2NnTyOaruSSIERsrn6odGaDwEDyagmA9FHRKN9
-         gbrZ/f0OThJ0qPx7YoBdHpg+Aqfu+gW0e99IGShwVv3nDwcVRgIMOSnJcYbw39sL4L
-         AJBlJlm8SmBeSH7p3oTFxB2Hw0VidfQPd5Xl3J6I=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01JJ3fh7127964
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Feb 2020 13:03:41 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 19
- Feb 2020 13:03:41 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 19 Feb 2020 13:03:41 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01JJ3eYB115217;
-        Wed, 19 Feb 2020 13:03:40 -0600
-Subject: Re: [PATCH net-master] net: phy: dp83848: Add the TI TLK05/06 PHY ID
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <afd@ti.com>
-References: <20200219181613.5898-1-dmurphy@ti.com>
- <20200219184847.GD3281@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <81b0e285-8a2a-2370-ecf5-2540bc30f1ed@ti.com>
-Date:   Wed, 19 Feb 2020 12:58:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200219184847.GD3281@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 19 Feb 2020 14:03:59 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so548405pgb.10;
+        Wed, 19 Feb 2020 11:03:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=DiJoVOfQs//1PaWZFtx2QcGxz7nAwr47TsQFS3rNJQE=;
+        b=PyBg1YXmPsU3qt0mtm2/q/MSn94DN4XK1POgkvqYJu429EAvsawZzE1HpBWRX1egmg
+         dRZZPCeaMXU9ZgUWXs7zqprC0a2NnvmFijj/7OmTkpavVkyQ9nLlwto5Co4nE/aDUP5Y
+         vN5wAzRKNWZ8mIfyyKQW5wneAsVFcN3uCVtudwEyUrvn3wa6W/eD6GDQ29OaOqr5eUtf
+         zoDFmfPy6GjKRRcypnGpZCRnQ+TxEZZYrWIuoARB9VLQ60TE5tNIu6CGJeKobaNAeTde
+         95cN6TiagLo08ClC07owTTL9pbL1MTBEgHBk1BOhv5Vx4aoRidqtK1jgiA+Iax5cmA+4
+         NSRg==
+X-Gm-Message-State: APjAAAVljcdgMQmWzsznfBHLNAKFqXFc8ihKNNRVZEkKh0r2Ly4VqWQF
+        NLtweieTxM9aPVVbrKLmjN7MsrSFLyPePA==
+X-Google-Smtp-Source: APXvYqx7/YKjuAjwK+VacNMDKFITTSWWqrTmLtv3O6oHG+s4MiEScrKPPtXEjw473ZTHkP0IX51N7Q==
+X-Received: by 2002:a63:ec07:: with SMTP id j7mr28908332pgh.187.1582139038703;
+        Wed, 19 Feb 2020 11:03:58 -0800 (PST)
+Received: from localhost ([2601:646:8a00:9810:5af3:56d9:f882:39d4])
+        by smtp.gmail.com with ESMTPSA id p23sm428286pgn.92.2020.02.19.11.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 11:03:57 -0800 (PST)
+Message-ID: <5e4d869d.1c69fb81.aa02.151b@mx.google.com>
+Date:   Wed, 19 Feb 2020 11:03:52 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Finn Thain <fthain@telegraphics.com.au>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        =?utf-8?q?Philippe_Math?= =?utf-8?q?ieu-Daud=C3=A9?= 
+        <f4bug@amsat.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Improve MIPS Magnum support
+References:  <cover.1581030073.git.fthain@telegraphics.com.au>
+In-Reply-To:  <cover.1581030073.git.fthain@telegraphics.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew(s)
+Hello,
 
-On 2/19/20 12:48 PM, Andrew Lunn wrote:
-> On Wed, Feb 19, 2020 at 12:16:13PM -0600, Dan Murphy wrote:
->> Add the TLK05/06 PHY ID to the DP83848 driver.  The TI website indicates
->> that the DP83822 device is a drop in replacement for the TLK05 device
->> but the TLK device does not have WoL support.  The TLK device is
->> register compatible to the DP83848 and the DP83848 does not support WoL
->> either.  So this PHY can be associated with the DP83848 driver.
->>
->> The initial TLKx PHY ID in the driver is a legacy ID and the public data
->> sheet indicates a new PHY ID.  So not to break any kernels out there
->> both IDs will continue to be supported in this driver.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/net/phy/dp83848.c | 4 ++++
->>   1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/net/phy/dp83848.c b/drivers/net/phy/dp83848.c
->> index 54c7c1b44e4d..66907cfa816a 100644
->> --- a/drivers/net/phy/dp83848.c
->> +++ b/drivers/net/phy/dp83848.c
->> @@ -12,6 +12,7 @@
->>   #define TI_DP83620_PHY_ID		0x20005ce0
->>   #define NS_DP83848C_PHY_ID		0x20005c90
->>   #define TLK10X_PHY_ID			0x2000a210
->> +#define TLK105_06_PHY_ID		0x2000a211
->>   
->>   /* Registers */
->>   #define DP83848_MICR			0x11 /* MII Interrupt Control Register */
->> @@ -85,6 +86,7 @@ static struct mdio_device_id __maybe_unused dp83848_tbl[] = {
->>   	{ NS_DP83848C_PHY_ID, 0xfffffff0 },
->>   	{ TI_DP83620_PHY_ID, 0xfffffff0 },
->>   	{ TLK10X_PHY_ID, 0xfffffff0 },
->> +	{ TLK105_06_PHY_ID, 0xfffffff0 },
->>   	{ }
->>   };
->>   MODULE_DEVICE_TABLE(mdio, dp83848_tbl);
->> @@ -115,6 +117,8 @@ static struct phy_driver dp83848_driver[] = {
->>   			   dp83848_config_init),
->>   	DP83848_PHY_DRIVER(TLK10X_PHY_ID, "TI TLK10X 10/100 Mbps PHY",
->>   			   NULL),
->> +	DP83848_PHY_DRIVER(TLK105_06_PHY_ID, "TI TLK105/06 10/100 Mbps PHY",
->> +			   NULL),
-> I'm pretty sure Andrew's comment is correct. Due to the mask, the
-> TLK10X_PHY_ID entry will hit.
-Yes Andrew D is correct.
-> What you can do is change the order and the mask. Put TLK105_06_PHY_ID
-> before TLK10X_PHY_ID and have an exact match, no mask.
+Finn Thain wrote:
+> A few minor patches are needed to more easily boot a MIPS Magnum build
+> under QEMU. This series fixes a build failure in the g364fb driver and
+> modifies jazz_defconfig for use with 'qemu-system-mips64el -M magnum'.
+> 
+> Note that QEMU's dp8393x implementation has bugs, one of which prevents
+> the Linux jazzsonic driver from probing the chip. I have fixed the bugs
+> that I know of in a series of patches at,
+> https://github.com/fthain/qemu/commits/sonic
+> 
+> Changed since v1:
+>  - Added reviewed-by and tested-by tags from Philippe Mathieu-Daudé.
+>  - Rebased.
+> 
+> 
+> Finn Thain (3):
+>   fbdev/g364fb: Fix build failure
+>   mips/jazz: Remove redundant settings and shrink jazz_defconfig
+>   mips/jazz: Update jazz_defconfig for MIPS Magnum
 
-I don't think we need a patch then for this ID.
+Series applied to mips-next.
 
-As Andrew D pointed out it will match the current ID since the lower 
-nibble of the ID is masked off.
+> fbdev/g364fb: Fix build failure
+>   commit c584f9532115
+>   https://git.kernel.org/mips/c/c584f9532115
+>   
+>   Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+>   Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>   Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> mips/jazz: Remove redundant settings and shrink jazz_defconfig
+>   commit a7047b8dd098
+>   https://git.kernel.org/mips/c/a7047b8dd098
+>   
+>   Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> mips/jazz: Update jazz_defconfig for MIPS Magnum
+>   commit 91f40e896444
+>   https://git.kernel.org/mips/c/91f40e896444
+>   
+>   Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+>   Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
-Dan
->
->         Andrew
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
