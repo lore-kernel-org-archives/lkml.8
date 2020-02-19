@@ -2,154 +2,125 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE63C34055
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D28C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220AC2465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2362465D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:26:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q0KvBn7A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="INN9ZHKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgBSQZ3 (ORCPT
+        id S1726771AbgBSQ0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:25:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46566 "EHLO
+        Wed, 19 Feb 2020 11:26:25 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36333 "EHLO
         mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbgBSQZ3 (ORCPT
+        with ESMTP id S1726514AbgBSQ0Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:25:29 -0500
-Received: by mail-lj1-f194.google.com with SMTP id x14so958693ljd.13;
-        Wed, 19 Feb 2020 08:25:27 -0800 (PST)
+        Wed, 19 Feb 2020 11:26:25 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r19so1026071ljg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 08:26:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LGUcIpTbEbd2gKzVZah8ywZm+EFWRECsbgMwE4dPkmc=;
-        b=q0KvBn7A14JQWVR1QGa6Q4b8U95+mkJ2Huoy2MrpQLM+x3CC3hwCOoVa/kQCAa2W7e
-         3kjdB16EuvFpGvPNgwlDpVjhHCwgfyWIiw1IaGYXn1MSNL8IF1a1JjNAYTJc+172PpxZ
-         5Z7vqbxPTifdCh9BU79UqIkJLfQlOn9qwxbCAR6Y6bIYX48nmkIJrhr87EWUuP0cRAb1
-         nPTwI8k4maeYJnZeaHiA4yp3J1yLLkAkwPGFGHeMP8H9vTGdP7OdDBpI4g3rkVJ/FpVq
-         d9m3b/L3RLClnokebu6bmvS9R0qn1q+RO2Ih2ptmAuXi2bVjMCusV2prdez3VivLhmuN
-         AoAA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iAUIgzNVSjCaZCZcVDjF9RShTwUDVddbn/sJaXgNE8Q=;
+        b=INN9ZHKLYkbuQDSc9NqdIbYEvtoq0e4O4ocezXGSkkhSbjDYYzOZCGAQohSP5zbdgz
+         9G8r36hoOz6xjQ2NN3etzcC9G3WN1YULT4hS8bRbJZHCRRHjDlmIQufClyj4SzfjHYht
+         Une46e/kNZwrEKhEgj1e9IVk7AsHp6pKIDTD4YnuRnOb4bbhl9KnGtmBpWz88ZYvTQMN
+         PK7WasPJRSa0Mt9jPRgQnLPbDSsgf2zA3mgyKjzH+jTv86w0iEnl6mOMQTDfUI2PxnPJ
+         2G5Q1AgcOeO+lqKkvctm2LfbjuE4GRFGOPopgeM7alpGtSQVSYd00pHZRAHespg56RJn
+         znKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LGUcIpTbEbd2gKzVZah8ywZm+EFWRECsbgMwE4dPkmc=;
-        b=g5WZT/6mRjPY9xhI6zebnx+kYzTg0le6DugGvUo70NNVjyPNa0zMLoxZClzlyxziW2
-         K1xhLlBStU32Y/543boK6ghgI9CSmWJQrqfWxHSGw+FQfuaOAsDdGchZg/E88mhCgRN0
-         wnjpZQMQzoaxobpB8ObsBA06n0x9ICK8rg0YRTSLY0FFvirUJKcRBPfq0AAVhLyd+GN9
-         ldRWpkLun/T41fwlHO5cbl87VoB1dvx9jD/wj8o8oHkefcmX4CdYffwSb69ZZx3Gmy83
-         kdEGJ8UWvR/OPoQkQl4j1DdBn8HLIysSD7kvL7dNIU1I7TlYW0EWR+K11WIvpKuqrqor
-         LErA==
-X-Gm-Message-State: APjAAAUaWjwToWqca0sUCObsG/gyBjzrWFYQWHAV0XZYOOp19uxiWDqQ
-        vlO1QklsqYo0cW/lAh9Iv+jVrNUN
-X-Google-Smtp-Source: APXvYqzgQTpVrzmYj7+xZaS9PwsyHhb4+lZha07RnRL0jtLKr12a2UhG+kDKXAbBvaNwDh566wCCjg==
-X-Received: by 2002:a2e:b536:: with SMTP id z22mr15860746ljm.259.1582129526316;
-        Wed, 19 Feb 2020 08:25:26 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id i67sm26819lfd.38.2020.02.19.08.25.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 08:25:25 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
-        Colin Cross <ccross@android.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>
-Cc:     linux-efi@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline parameter
-Date:   Wed, 19 Feb 2020 19:23:39 +0300
-Message-Id: <20200219162339.16192-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iAUIgzNVSjCaZCZcVDjF9RShTwUDVddbn/sJaXgNE8Q=;
+        b=Xdpzlo1ijSaamJzBvTX88hXKxx2lVKhBmYESGTD+Qkk2uqTxpB+3fdOpJl9UcD5TwW
+         otYAelaHCNlhlEG/lzwbURq3s+NM+yAQeNWfF/dzNQLSa0XO/ZhBplLU14+iQ7vfxL7b
+         ucIHo1IawPsbxNK0s6z/FJQEdaV4spQWOCC0oZb180LRhH9EfBXhVVyQc6xNhbafmpML
+         uex8vNyaQil1/SCj39DI9sqeR6Q3fwV9p7eFAujJnSKWTYCas7sKD2zS82O52izMDUh0
+         +q0JuSJtiAB+COZdyZyBQaIbhyKEcOkntOTX2lK6dN7YvFHffsyQKhRYN+Td0hiAFqz7
+         Pw/g==
+X-Gm-Message-State: APjAAAWeY1rvPioBOB9EkiU/SsjcA4rsPpguMsSX517PywDwFX0d2AS6
+        bYoQadKkacGNESxBX5+d21BBMBSXDNqL7naNDXeBbg==
+X-Google-Smtp-Source: APXvYqwd3Ij/qe0jrmbzLccktLVoAyjYRagZSX3FKkkwZZxk27y0FE1/6fm1cUOC+rsnWtGh1fCTbdK+7pgC73JF54Q=
+X-Received: by 2002:a2e:8eda:: with SMTP id e26mr16518252ljl.65.1582129582999;
+ Wed, 19 Feb 2020 08:26:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-2-vincent.guittot@linaro.org> <ee38d205-b356-9474-785e-e514d81b7d7f@arm.com>
+ <20200218132203.GB14914@hirez.programming.kicks-ass.net> <CAKfTPtB3qudK8aMq2cx==4RW8t1pz6ymz1Ti0r8oO4TefWzMRw@mail.gmail.com>
+ <c18ab89e-d635-e370-6cbb-6015b404d906@arm.com>
+In-Reply-To: <c18ab89e-d635-e370-6cbb-6015b404d906@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 19 Feb 2020 17:26:11 +0100
+Message-ID: <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] sched/fair: Reorder enqueue/dequeue_task_fair path
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The gpt_sector=<sector> causes the GPT partition search to look at the
-specified sector for a valid GPT header if the GPT is not found at the
-beginning or the end of block device.
+On Wed, 19 Feb 2020 at 12:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 18/02/2020 15:15, Vincent Guittot wrote:
+> > On Tue, 18 Feb 2020 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
+> >>
+> >> On Tue, Feb 18, 2020 at 01:37:37PM +0100, Dietmar Eggemann wrote:
+> >>> On 14/02/2020 16:27, Vincent Guittot wrote:
+> >>>> The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+> >>>> is split in 2 distinct parts for throttled cfs_rq without any added value
+> >>>> but making code less readable.
+> >>>>
+> >>>> Change the code ordering such that everything related to a cfs_rq
+> >>>> (throttled or not) will be done in the same loop.
+> >>>>
+> >>>> In addition, the same steps ordering is used when updating a cfs_rq:
+> >>>> - update_load_avg
+> >>>> - update_cfs_group
+> >>>> - update *h_nr_running
+> >>>
+> >>> Is this code change really necessary? You pay with two extra goto's. We
+> >>> still have the two for_each_sched_entity(se)'s because of 'if
+> >>> (se->on_rq); break;'.
+> >>
+> >> IIRC he relies on the presented ordering in patch #5 -- adding the
+> >> running_avg metric.
+> >
+> > Yes, that's the main reason, updating load_avg before h_nr_running
+>
+> My hunch is you refer to the new function:
+>
+> static inline void se_update_runnable(struct sched_entity *se)
+> {
+>         if (!entity_is_task(se))
+>                 se->runnable_weight = se->my_q->h_nr_running;
+> }
+>
+> I don't see the dependency to the 'update_load_avg -> h_nr_running'
+> order since it operates on se->my_q, not cfs_rq = cfs_rq_of(se), i.e.
+> se->cfs_rq.
+>
+> What do I miss here?
 
-In particular this is needed for NVIDIA Tegra consumer-grade Android
-devices in order to make them usable with the upstream kernel because
-these devices use a proprietary / closed-source partition table format
-for the EMMC and it's impossible to change the partition's format. Luckily
-there is a GPT table in addition to the proprietary table, which is placed
-in uncommon location of the EMMC storage and bootloader passes the
-location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
-
-This patch is based on the original work done by Colin Cross for the
-downstream Android kernel.
-
-Cc: Colin Cross <ccross@android.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- block/partitions/efi.c                          | 15 +++++++++++++++
- 2 files changed, 20 insertions(+)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 50138e6826a1..ee4781daa379 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1382,6 +1382,11 @@
- 			primary GPT is corrupted, it enables the backup/alternate
- 			GPT to be used instead.
- 
-+	gpt_sector	[EFI] Forces GPT partition search to look at the
-+			specified sector for a valid GPT header if the GPT is
-+			not found at the beginning or the end of the block
-+			device.
-+
- 	grcan.enable0=	[HW] Configuration of physical interface 0. Determines
- 			the "Enable 0" bit of the configuration register.
- 			Format: 0 | 1
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index db2fef7dfc47..0c8926d76d7a 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -103,6 +103,17 @@ force_gpt_fn(char *str)
- }
- __setup("gpt", force_gpt_fn);
- 
-+/* This allows a kernel command line option 'gpt_sector=<sector>' to
-+ * enable GPT header lookup at a non-standard location.
-+ */
-+static u64 force_gpt_sector;
-+static int __init
-+force_gpt_sector_fn(char *str)
-+{
-+	WARN_ON(kstrtoull(str, 10, &force_gpt_sector) < 0);
-+	return 1;
-+}
-+__setup("gpt_sector=", force_gpt_sector_fn);
- 
- /**
-  * efi_crc32() - EFI version of crc32 function
-@@ -621,6 +632,10 @@ static int find_valid_gpt(struct parsed_partitions *state, gpt_header **gpt,
-         if (!good_agpt && force_gpt)
-                 good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
- 
-+	if (!good_agpt && force_gpt && force_gpt_sector)
-+		good_agpt = is_gpt_valid(state, force_gpt_sector,
-+					 &agpt, &aptes);
-+
-         /* The obviously unsuccessful case */
-         if (!good_pgpt && !good_agpt)
-                 goto fail;
--- 
-2.24.0
-
+update_load_avg() updates both se and cfs_rq so if you update
+cfs_rq->h_nr_running before calling update_load_avg() like in the 2nd
+for_each_sched_entity, you will update cfs_rq runnable_avg for the
+past time slot with the new h_nr_running value instead of the previous
+value.
