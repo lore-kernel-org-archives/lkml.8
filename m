@@ -2,116 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E0C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF19C3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:55:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0D0206DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F64C24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:55:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582084554;
+	bh=ra63ctCM03qQ/yjMX6m08SRFO6UdUhDwmhqww51jeug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=13P/0V+Ex0a1civrFXbSLGqkWun9kh2/Sq7Z8rVy25a4QC6CtP2h4PB24gIqco6Tv
+	 n7NFMa34Wi4Ab0gaoU+UNBT7Ny9iScFiz+3NP1D63yK40LZYyl7Xe3R27qfJw4R2bk
+	 kWY3AFWE4uud4ABJYANiGSaUzlQjnXBeHbIjfpuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgBSDyh (ORCPT
+        id S1726636AbgBSDzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:54:37 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58866 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726439AbgBSDyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:54:37 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2E7D78F300AE887A7AEF;
-        Wed, 19 Feb 2020 11:54:34 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
- 2020 11:54:28 +0800
-Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
- called
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200214185855.217360-1-jaegeuk@kernel.org>
- <20200214185855.217360-3-jaegeuk@kernel.org>
- <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
- <20200218232714.GB10213@google.com>
- <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
- <20200219030425.GA102063@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <266f233b-e084-cccd-d07e-96d8438d5b74@huawei.com>
-Date:   Wed, 19 Feb 2020 11:54:28 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 18 Feb 2020 22:55:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726439AbgBSDzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:55:53 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCEB206DB;
+        Wed, 19 Feb 2020 03:55:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582084552;
+        bh=ra63ctCM03qQ/yjMX6m08SRFO6UdUhDwmhqww51jeug=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cHpc7qeSZ/gAs6+Ko/Z9/c8wDmwW8WTd6Y9ysIVgBbEI5SGfvT8WdEDSgJvrnpRtd
+         JfJgLR87X7pDZj1ZfCs4p5yM6PqBSZH+kh5NSfb+dGb2Fgl12LstCggu8oVIaphCC5
+         XsxYNaY/zixWmZHQTqiVBZLArwLDm8F1awAYyw38=
+Date:   Tue, 18 Feb 2020 19:55:50 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
+        linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v6 10/19] fs: Convert mpage_readpages to mpage_readahead
+Message-ID: <20200219035550.GE1075@sol.localdomain>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-18-willy@infradead.org>
+ <20200219032826.GB1075@sol.localdomain>
+ <20200219034741.GK24185@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200219030425.GA102063@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219034741.GK24185@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/19 11:04, Jaegeuk Kim wrote:
-> On 02/19, Chao Yu wrote:
->> On 2020/2/19 7:27, Jaegeuk Kim wrote:
->>> On 02/17, Chao Yu wrote:
->>>> On 2020/2/15 2:58, Jaegeuk Kim wrote:
->>>>> FG_GC needs to move entire section more quickly.
->>>>>
->>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>> ---
->>>>>  fs/f2fs/gc.c | 2 +-
->>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>>> index bbf4db3f6bb4..1676eebc8c8b 100644
->>>>> --- a/fs/f2fs/gc.c
->>>>> +++ b/fs/f2fs/gc.c
->>>>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
->>>>>  
->>>>>  		if (get_valid_blocks(sbi, segno, false) == 0)
->>>>>  			goto freed;
->>>>> -		if (__is_large_section(sbi) &&
->>>>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
->>>>>  				migrated >= sbi->migration_granularity)
->>>>
->>>> I knew migrating one large section is a more efficient way, but this can
->>>> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
->>>> extreme fragmented space.
->>>
->>> FG_GC requires to wait for whole section migration which shows the entire
->>> latency.
->>
->> That will cause long-tail latency for single f2fs_balance_fs() procedure,
->> which it looks a very long hang when userspace call f2fs syscall, so why
->> not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
+On Tue, Feb 18, 2020 at 07:47:41PM -0800, Matthew Wilcox wrote:
+> On Tue, Feb 18, 2020 at 07:28:26PM -0800, Eric Biggers wrote:
+> > On Mon, Feb 17, 2020 at 10:45:58AM -0800, Matthew Wilcox wrote:
+> > > diff --git a/include/linux/mpage.h b/include/linux/mpage.h
+> > > index 001f1fcf9836..f4f5e90a6844 100644
+> > > --- a/include/linux/mpage.h
+> > > +++ b/include/linux/mpage.h
+> > > @@ -13,9 +13,9 @@
+> > >  #ifdef CONFIG_BLOCK
+> > >  
+> > >  struct writeback_control;
+> > > +struct readahead_control;
+> > >  
+> > > -int mpage_readpages(struct address_space *mapping, struct list_head *pages,
+> > > -				unsigned nr_pages, get_block_t get_block);
+> > > +void mpage_readahead(struct readahead_control *, get_block_t get_block);
+> > >  int mpage_readpage(struct page *page, get_block_t get_block);
+> > >  int mpage_writepages(struct address_space *mapping,
+> > >  		struct writeback_control *wbc, get_block_t get_block);
+> > 
+> > Can you name the 'struct readahead_control *' parameter?
 > 
-> Then, other ops can easily make more dirty segments. The intention of FG_GC is
+> What good would that do?  I'm sick of seeing 'struct page *page'.
+> Well, no shit it's a page.  Unless there's some actual information to
+> convey, leave the argument unnamed.  It should be a crime to not name
+> an unsigned long, but not naming the struct address_space pointer is
+> entirely reasonable.
 
-Yup, that's a problem, if there are more dirty datas being made, reserved segments
-may be ran out during FG_GC.
+It's the coding style the community has agreed on, so the tools check for.
 
-> to block everything and make min. free segments as a best shot.
+I don't care that much myself; it just appeared like this was a mistake rather
+than intentional so I thought I'd point it out.
 
-I just try to simulate write GC's logic in FTL to mitigate single op's max latency,
-otherwise benchmark looks hang during FG_GC (in a 500mb+ section).
-
-Thanks,
-
-> 
->>
->> Thanks,
->>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>  			goto skip;
->>>>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
->>>>>
->>> .
->>>
-> .
-> 
+- Eric
