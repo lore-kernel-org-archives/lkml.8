@@ -2,124 +2,131 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEDC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF46C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABBB24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:58:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782CD24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dp80u7+h"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUJdLC5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgBSR6H (ORCPT
+        id S1726647AbgBSSAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:58:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47064 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726609AbgBSR6H (ORCPT
+        Wed, 19 Feb 2020 13:00:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37088 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbgBSSAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:58:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582135081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=osE6Os536TzWa3Iu36fjeW3PyeJPL+4fg4AlWyJ2Fe8=;
-        b=Dp80u7+h+NTPn25UgqJgIBHJYRTbYliLbwoPnDMF7kwC2v4UcREtqWfWyASQb40Zn0wjST
-        aAdSMHsMMgwQ860VpueDOkOteDc6vyBwcVYnmNKUl3VtAvnkkFWhRtNzkKo6P0LXaxG8FI
-        7wiBctcke6Jk02q1NqKK46rGw4G5xTc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-313-Bt2leHTQP2q-fUD22d082g-1; Wed, 19 Feb 2020 12:57:59 -0500
-X-MC-Unique: Bt2leHTQP2q-fUD22d082g-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1470D100550E;
-        Wed, 19 Feb 2020 17:57:57 +0000 (UTC)
-Received: from localhost (unknown [10.36.118.184])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE60648;
-        Wed, 19 Feb 2020 17:57:53 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 15:11:34 +0000
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
-Message-ID: <20200219151134.GI1078625@stefanha-x1.localdomain>
-References: <20200213123728.61216-1-pasic@linux.ibm.com>
+        Wed, 19 Feb 2020 13:00:11 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a6so1673128wme.2;
+        Wed, 19 Feb 2020 10:00:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wh9nIcj0w2M3FqQot+njucHn0Ra0ZI6Wx7pQ2i4JMoY=;
+        b=HUJdLC5hopKYknC4eZLjSnebhG/JcwdeTl3Xb5S6oKAqHmzxMjL00GkwJpHWhibfAS
+         5X//CwXj0lCgW2hszTgKl1wgOgNJqU8yRvBb+K0UPYC2XWghy31Ob/rzOxrm5SPIBZgK
+         rZuMJtRzlwEG2e/EsEforx/60C+nVb4BIjE1/zxhyyk7dcmoOLx9twQ2+dLv3ovAUDZk
+         XTwGCDrxKvTgivsXyU007uY7gNFao085ZI1nJZKNTuNOn+BEQ+voSgqF7LFwBn8ppgdB
+         4TsIaF/O4RLjAiLWr6jLtI7SonSaeqXpValX1FqtQZ8Iam46oaCY+aW4dsCFXLXdKeXL
+         LULQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wh9nIcj0w2M3FqQot+njucHn0Ra0ZI6Wx7pQ2i4JMoY=;
+        b=IwC/eeUgLD5uQHjmTzv9ELcN96yipgasmp0tfjcJLFTdAx+fKKxFa/okm0jttOuJgI
+         Vjb1S02I53Het5C4aQVjbq8EjFwRybGR1buLCYfWcRdhLNd+F+RlwQ4aqPFmvbr3Zw8I
+         xX5LXu2b5NHDUzHFTucF6ZaRB/p6X2HhlDT9lTA0v54ABgvS3MX4pXkJf2gqWZz2yp9X
+         1q7v2AOHMtHgIfk69m6u2dAvFlDlp6LP/fynxaD6ZUEZWnkdvkV+/9qFKsv5L5t5BSXW
+         cdIhR+RocnGPZeDpys9z0hD5O2vKb9p81G48SE816eDkzZ//56MfraP3xiRstisdTVHL
+         y+vg==
+X-Gm-Message-State: APjAAAXUL8NiCVdBQqTJxaMKhGgKGO+mcGN+vggzf3V4l+zYRNDMpQjO
+        O10gVCpFOxNolce3+m+j4S0=
+X-Google-Smtp-Source: APXvYqwWSiOJ5tvblLJlOInc5jk1+KI712XO9RsPsQ8tcWz2r4+JQJ9HYITKEe0Hd1mulV68sNDT6Q==
+X-Received: by 2002:a1c:7915:: with SMTP id l21mr10859413wme.112.1582135209882;
+        Wed, 19 Feb 2020 10:00:09 -0800 (PST)
+Received: from Ansuel-XPS.localdomain ([5.170.105.173])
+        by smtp.googlemail.com with ESMTPSA id v5sm674946wrv.86.2020.02.19.10.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 10:00:09 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Ram Chandra Jangir <rjangir@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ipq8064: pinctrl: Fixed missing RGMII pincontrol definitions
+Date:   Wed, 19 Feb 2020 18:59:39 +0100
+Message-Id: <20200219175940.744-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---zqjkMoGlbUJ91oFe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add missing gpio definition for mdio and rgmii2.
 
-On Thu, Feb 13, 2020 at 01:37:26PM +0100, Halil Pasic wrote:
-> Two patches are handling new edge cases introduced by doing DMA mappings
-> (which can fail) in virtio core.
->=20
-> I stumbled upon this while stress testing I/O for Protected Virtual
-> Machines. I deliberately chose a tiny swiotlb size and have generated
-> load with fio. With more than one virtio-blk disk in use I experienced
-> hangs.
->=20
-> The goal of this series is to fix those hangs.
->=20
-> Halil Pasic (2):
->   virtio-blk: fix hw_queue stopped on arbitrary error
->   virtio-blk: improve virtqueue error to BLK_STS
->=20
->  drivers/block/virtio_blk.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->=20
->=20
-> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
-> --=20
-> 2.17.1
->=20
+Signed-off-by: Ram Chandra Jangir <rjangir@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/pinctrl/qcom/pinctrl-ipq8064.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
-
---zqjkMoGlbUJ91oFe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5NUCYACgkQnKSrs4Gr
-c8j5Pgf+MI41fd9a93cz9zlmiW7E/b+B99Zg/shlPYBcQXo0INymDnvknnpzLpqK
-uHn5ZGq85kM6+ls29Zhh4w7bxiJlBBNRzCkIIRxe5CwyOptQPcKHONreD1suCGT0
-boXaZtrbU1Wt1bWRBK4F9OLZcyIFxUESQ36b1r1VddZsKeFETUXAwjpSEU9bVCZ6
-qJfDp9RLYVvFISB17avVnsqyw8xO9mVI3RyIdzQATERL9W3DVxaacULruMmlBHvq
-T3nt4WcQjbTHEmTjvpnwGg2Oz4uvaRGm617bv082XAOP+Xr0h9uNU119WKCYk1Qk
-VML23VMN5owhMcib+gUXV3/9bQQkYQ==
-=GsRc
------END PGP SIGNATURE-----
-
---zqjkMoGlbUJ91oFe--
+diff --git a/drivers/pinctrl/qcom/pinctrl-ipq8064.c b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
+index c2fb1ddf2f22..ac717ee38416 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ipq8064.c
++++ b/drivers/pinctrl/qcom/pinctrl-ipq8064.c
+@@ -299,7 +299,7 @@ static const char * const gpio_groups[] = {
+ };
+ 
+ static const char * const mdio_groups[] = {
+-	"gpio0", "gpio1", "gpio10", "gpio11",
++	"gpio0", "gpio1", "gpio2", "gpio10", "gpio11", "gpio66",
+ };
+ 
+ static const char * const mi2s_groups[] = {
+@@ -403,8 +403,8 @@ static const char * const usb2_hsic_groups[] = {
+ };
+ 
+ static const char * const rgmii2_groups[] = {
+-	"gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
+-	"gpio51", "gpio52", "gpio59", "gpio60", "gpio61", "gpio62",
++	"gpio2", "gpio27", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
++	"gpio51", "gpio52", "gpio59", "gpio60", "gpio61", "gpio62", "gpio66",
+ };
+ 
+ static const char * const sata_groups[] = {
+@@ -539,7 +539,7 @@ static const struct msm_function ipq8064_functions[] = {
+ static const struct msm_pingroup ipq8064_groups[] = {
+ 	PINGROUP(0, mdio, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(1, mdio, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(2, gsbi5_spi_cs3, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(2, gsbi5_spi_cs3, rgmii2, mdio, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(3, pcie1_rst, pcie1_prsnt, pdm, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(4, pcie1_pwren_n, pcie1_pwren, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(5, pcie1_clk_req, pcie1_pwrflt, NA, NA, NA, NA, NA, NA, NA, NA),
+@@ -603,7 +603,7 @@ static const struct msm_pingroup ipq8064_groups[] = {
+ 	PINGROUP(63, pcie3_rst, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(64, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(65, pcie3_clk_req, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(66, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(66, rgmii2, mdio, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(67, usb2_hsic, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(68, usb2_hsic, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	SDC_PINGROUP(sdc3_clk, 0x204a, 14, 6),
+-- 
+2.25.0
 
