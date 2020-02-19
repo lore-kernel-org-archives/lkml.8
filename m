@@ -2,142 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4022C7114E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CEC34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CA02465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAB820656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="W7yNuWHa"
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="c7TWOHvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBSVzp (ORCPT
+        id S1727786AbgBSV4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:55:45 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34708 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbgBSVzo (ORCPT
+        Wed, 19 Feb 2020 16:56:33 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39079 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBSV4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:55:44 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c20so1708524qkm.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:55:43 -0800 (PST)
+        Wed, 19 Feb 2020 16:56:33 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so638160plp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:56:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oXUWpHjcjyL4pSSPcqAy+aUHyOM86zgY+JkKG4C5ctI=;
-        b=W7yNuWHaso4wSD6j2o5+l5mVwMu9RJEBlknWjo7qilDmUG0xrNgU/CCQ2z+5CLdugK
-         3w0HKJ/k3ChIh1hbkERSWPCbctvcD7KzwHbYCb5L+JfoxnOLxQUhkJCzaiwaRoaXP/jU
-         QckrX373TLmPxqD9ygxVWvZVp6+pwtA6GwnfkVyemHw1+199XPSHk7s8/oarWvBrFOHE
-         HedqezkTVG23hiBpZqK7aBlSH3SR4buAuuWkk3tYLMGQApiHYLYHdncRq8Trg/DegAGa
-         Lr6J8GO/oP2Fa/uWSQF/fYy2jLSDFDxzXBxrI3+Urz1lzYT9glxIdZ5FQVf3RQFPMOyN
-         uDig==
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Azu2hLv1JxMDvmUxRW44SGEWy8s3ld4pghrW56XCt6M=;
+        b=c7TWOHvdXbs8XVMlR8ak2j2dOVotN58THB1IoCFTfPwhfZYSyCThOf4Uwt/h/YiwTP
+         C4f4cNiGmf3g+/JTB/nmySLtHFkNcbsTdphZ/X3OO5zOvQh31wXuIUh6Td8HLEdp4YOv
+         fslV+YGcPP6RMcuohrbQMoofsTra+Jk2AU22gjMavwfOBgJ74L81QUv6AEgDr5xRGvkA
+         3Ki/uS5ldmhYscfAaN0autLmj3+AAsssZVj4lH2DjcGS/hNAljyhttLK9TX0XHRtl4TP
+         LsjsfAVYCa9xD1tl6Wb8kuejT/AlU9opB8F2FNk7IVwCJO3Dc5E+cFU9JrwID4No3Pkr
+         ATjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oXUWpHjcjyL4pSSPcqAy+aUHyOM86zgY+JkKG4C5ctI=;
-        b=CxT6i4mg205Za886/OdFbGlLunbHoDPzLXUR58oAE0RiSFgVMxO1+83MmzhrghVLlX
-         lwfn7m5VKOXBZqBpiq4MVNGW/rwR5yNxySH1LtCUTy+cGxIoWspYlRaTP9vBoVAFYErz
-         qbN9tjbTM8B0V+Whp68tejGBjm9fwo4xi/6NvSePXNiLFlJVJk+pHQpJldjaUZ7eNonl
-         WFChbScLgaUrlugi/erIabdixI9OsoBL0dLZcKKDH5+0a8MDjw5DlMrZn8VpNUM4eoVk
-         bweJO5twyZs2KMc8ubtust230P42UYCNzvlXJjTsIxn61oTl3LBIpDnV8EjXoykpi3qB
-         pJHA==
-X-Gm-Message-State: APjAAAXTK7hYqvpM1TnlPhPAkXF0ilDFulidGM2MJ55rqi9tXMpJcRds
-        Agtp1ncTgZW322YUDQY/p1irHQ==
-X-Google-Smtp-Source: APXvYqzY/nMwCyJtH8MQqZfF5V4++1XVUG9pp0fuYGJTlO+mA1LnWn3bx0Nt6VcYLFuCcH2eJ+fEVw==
-X-Received: by 2002:a05:620a:13a7:: with SMTP id m7mr25240325qki.500.1582149342702;
-        Wed, 19 Feb 2020 13:55:42 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 193sm581254qki.38.2020.02.19.13.55.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Feb 2020 13:55:42 -0800 (PST)
-Message-ID: <1582149340.7365.103.camel@lca.pw>
-Subject: Re: [PATCH -next v2] mm: annotate a data race in page_zonenum()
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     John Hubbard <jhubbard@nvidia.com>, paulmck@kernel.org,
-        elver@google.com, david@redhat.com, jack@suse.cz,
-        ira.weiny@intel.com, dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 19 Feb 2020 16:55:40 -0500
-In-Reply-To: <c1b1b448-ec64-c245-896c-462c55d94b3b@nvidia.com>
-References: <1581619089-14472-1-git-send-email-cai@lca.pw>
-         <c1b1b448-ec64-c245-896c-462c55d94b3b@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Azu2hLv1JxMDvmUxRW44SGEWy8s3ld4pghrW56XCt6M=;
+        b=tSjs9l3cnZY8a8f34YwHhX39iTege1yRFXlPYZiwBm2tBZC3Fyz6DEpk0zCsMFF/Dx
+         TRiDBrbMShiqNNEnCgODfooFng95yY+OcMuksLmFDEgWmFCJ9BlBy+pfUZyWhxyqwrJK
+         6R0NdOjLb/hoOVi3Pgj7Fg2zOweGZnudvciY5UkoZFRSC4yqvGo3yhhTynF6W14VlNKI
+         6ftXYk+CgL9fh3sEOYV+HrHI1m6KCmBwv23vf+tMUPEJnJ1U2b0Mkl9s2957ATfXTtot
+         JPrTNsrsCMaTeIignvYozHnWJTjFfBs7oAY8SgUvrxw+2AG/AxWC/5c6VO5+Yxan8xeX
+         +JDw==
+X-Gm-Message-State: APjAAAWl8+jshSPxNQjLZ4hiWdnThWLBhN8/wmrDXHB2bECItyiS92jZ
+        gQbP15wA62Zc68ASO5ES9+nY7g==
+X-Google-Smtp-Source: APXvYqymQ0qEvxoVB2HEtnEL4mIJWhCSks7TQ64jqXAFKrZw2Hqz77cp9KHgLn9ttxGpF6k20Rhu0Q==
+X-Received: by 2002:a17:90a:3841:: with SMTP id l1mr11289750pjf.108.1582149392531;
+        Wed, 19 Feb 2020 13:56:32 -0800 (PST)
+Received: from cisco ([2001:420:c0c8:1007::7a1])
+        by smtp.gmail.com with ESMTPSA id f8sm608035pfn.2.2020.02.19.13.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 13:56:31 -0800 (PST)
+Date:   Wed, 19 Feb 2020 14:56:23 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, linux-api@vger.kernel.org
+Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
+Message-ID: <20200219215623.GA11724@cisco>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+ <20200219193558.GA27641@mail.hallyn.com>
+ <20200219214837.GA29159@mail.hallyn.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219214837.GA29159@mail.hallyn.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew, since you had picked the similar one which also depends
-on ASSERT_EXCLUSIVE_*, can you pick up this patch as well?
+On Wed, Feb 19, 2020 at 03:48:37PM -0600, Serge E. Hallyn wrote:
+> On Wed, Feb 19, 2020 at 01:35:58PM -0600, Serge E. Hallyn wrote:
+> > On Tue, Feb 18, 2020 at 03:33:46PM +0100, Christian Brauner wrote:
+> > > With fsid mappings we can solve this by writing an id mapping of 0
+> > > 100000 100000 and an fsid mapping of 0 300000 100000. On filesystem
+> > > access the kernel will now lookup the mapping for 300000 in the fsid
+> > > mapping tables of the user namespace. And since such a mapping exists,
+> > > the corresponding files will have correct ownership.
+> > 
+> > So if I have
+> > 
+> > /proc/self/uid_map: 0 100000 100000
+> > /proc/self/fsid_map: 1000 1000 1
+> 
+> Oh, sorry.  Your explanation in 20/25 i think set me straight, though I need
+> to think through a few more examples.
+> 
+> ...
+> 
+> > 3. If I create a new file, as nsuid 1000, what will be the inode owning kuid?
+> 
+> (Note - I edited the quoted txt above to be more precise)
+> 
+> I'm still not quite clear on this.  I believe the fsid mapping will take
+> precedence so it'll be uid 1000 ?  Per mount behavior would be nice there,
+> but perhaps unwieldy.
 
-On Thu, 2020-02-13 at 13:20 -0800, John Hubbard wrote:
-> On 2/13/20 10:38 AM, Qian Cai wrote:
-> >  BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
-> > 
-> >  write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
-> >   page_cpupid_xchg_last+0x51/0x80
-> >   page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
-> >   wp_page_reuse+0x3e/0xc0
-> >   wp_page_reuse at mm/memory.c:2453
-> >   do_wp_page+0x472/0x7b0
-> >   do_wp_page at mm/memory.c:2798
-> >   __handle_mm_fault+0xcb0/0xd00
-> >   handle_pte_fault at mm/memory.c:4049
-> >   (inlined by) __handle_mm_fault at mm/memory.c:4163
-> >   handle_mm_fault+0xfc/0x2f0
-> >   handle_mm_fault at mm/memory.c:4200
-> >   do_page_fault+0x263/0x6f9
-> >   do_user_addr_fault at arch/x86/mm/fault.c:1465
-> >   (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
-> >   page_fault+0x34/0x40
-> > 
-> >  read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
-> >   put_page+0x15a/0x1f0
-> >   page_zonenum at include/linux/mm.h:923
-> >   (inlined by) is_zone_device_page at include/linux/mm.h:929
-> >   (inlined by) page_is_devmap_managed at include/linux/mm.h:948
-> >   (inlined by) put_page at include/linux/mm.h:1023
-> >   wp_page_copy+0x571/0x930
-> >   wp_page_copy at mm/memory.c:2615
-> >   do_wp_page+0x107/0x7b0
-> >   __handle_mm_fault+0xcb0/0xd00
-> >   handle_mm_fault+0xfc/0x2f0
-> >   do_page_fault+0x263/0x6f9
-> >   page_fault+0x34/0x40
-> > 
-> >  Reported by Kernel Concurrency Sanitizer on:
-> >  CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
-> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> > 
-> > A page never changes its zone number. The zone number happens to be
-> > stored in the same word as other bits which are modified, but the zone
-> > number bits will never be modified by any other write, so it can accept
-> > a reload of the zone bits after an intervening write and it don't need
-> > to use READ_ONCE(). Thus, annotate this data race using
-> > ASSERT_EXCLUSIVE_BITS() to also assert that there are no concurrent
-> > writes to it.
-> > 
-> > Suggested-by: Marco Elver <elver@google.com>
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> > 
-> > v2: use ASSERT_EXCLUSIVE_BITS().
-> 
-> 
-> Much cleaner, thanks to this new macro. You can add:
-> 
-> 
->     Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> 
-> thanks,
+The is_userns_visible() bits seems to be an attempt at understanding
+what people would want per-mount, with a policy hard coded in the
+kernel.
+
+But maybe per-mount behavior can be solved more elegantly with shifted
+bind mounts, so we can drop all that from this series, and ignore
+per-mount settings here?
+
+Tycho
