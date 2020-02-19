@@ -2,136 +2,172 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69923C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26965C3404E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCE924658
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA9420801
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:23:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MTrRstBO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TmFigD35"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgBSEUC (ORCPT
+        id S1726571AbgBSEXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:20:02 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40186 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbgBSEUC (ORCPT
+        Tue, 18 Feb 2020 23:23:22 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34548 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbgBSEXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:20:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=w1v42JIbxbTQaj+IwxBJakhg/k+j4nNZQJZ/BeGoer0=; b=MTrRstBOnZxCNBLpVqArac2zI8
-        ZRetyXVcg2qmFGkwhf9hvQWNslqjh/oAAitsy1+jMz53ikunqAwVlwMaeK7TcENEcJIYL/l0QGCu/
-        6ev7PfkAFxCp2mWpw+t5vQUez2oMrhh1H48QMRf0Izn7mrv4NsxRSZydBhENC5MBgcjyB09N+twpr
-        ZSZBaVElmIt4rCHc+D97/8V7RvU2aD5qvXjVm2aNwmda0HqwSVTZpRsU/20Z6xVP7fx3nhgJ7BfNZ
-        6K4uCdk7Op/UDWyhUlRMFMxfC2kUkb/+ou7Sg4o1Fg+/bUmrNjML9RkRUmykXGkaG7AvFe1ss+rHL
-        AI/pl1xA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4Gq7-0003eb-PE; Wed, 19 Feb 2020 04:19:59 +0000
-Subject: Re: [PATCH v8 01/12] add support for Clang's Shadow Call Stack (SCS)
-To:     Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>, james.morse@arm.com
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200219000817.195049-1-samitolvanen@google.com>
- <20200219000817.195049-2-samitolvanen@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <60ec3a49-7b71-df31-f231-b48ff135b718@infradead.org>
-Date:   Tue, 18 Feb 2020 20:19:56 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 18 Feb 2020 23:23:22 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j16so21896423otl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 20:23:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/7SLwa6rrwxpfTtL0bXLJZfcEfVfrOJVu8RT2yguxu8=;
+        b=TmFigD35LCKnZvhGHDH34L5P/d+/RjHyfyqH2kLH9QCMYnkbeYjlHLwrOmOd5ky8pG
+         dmvoNfkVsBm4DQlXdVpMKlA2erdn7rSPaMcPh4uCyacPwoh5qlk1Qp9IJq9Sza/lgv8D
+         8W7giZXLH2Sg0HbZB4pUNVSxONQDJmZAVmvUbSbKmLHyICE4NnnNjk7+Q5e3MXUyI1Fl
+         xdBU3V3fb/hISfNu3QJ7SYZFtX96vS7Fr6wgjXl1xXYIMTPEg0Ci11vZO1crOuOV1uj0
+         D86GefSPDdkRdPV/WAx+fdlb2sT8CTyIvxK1GCCCb4r4CWP5LCn6RDDcZKbfLepFxH+T
+         +vqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/7SLwa6rrwxpfTtL0bXLJZfcEfVfrOJVu8RT2yguxu8=;
+        b=TCxygV76nQZab33MQYP00KI3KlX19dZHmW/DHWFcafhl7Yk90d7QHJfvVqJRi8qRen
+         r7uN0J7wISziNbKnkLq9jgGMMpmALOoFZi2ezelQXYDpYKBx1PmmH0piKeFJdPEQUVYC
+         B2TqIQgN4S8ngbPHgfNs8JQbbCrGilscJSD+mbk2MR6R7L9uldVHTS/9hjqaEfCH2bi5
+         zIN0NTyC+sRp/8P7DFcvMnjznxnBpVE/88KAK1pM8pQyjSVZg6LCmdRn+qSZxmdaCbPx
+         lvLRuyCWyCK+cLFwa05+oRlpOSLUdhvWdYj3EGNJkyiwUmSOZkGZnMdEBYcZ66xBJDFl
+         SaGg==
+X-Gm-Message-State: APjAAAWu+u4hkCMd2mb8jZiLqBnxGQNoYzm+tn85Ig6IVlJcTUKeJpMb
+        ASoIRpahWD1xcb2qXLnYvzfgNtQXEMHwFPKai0tLLA==
+X-Google-Smtp-Source: APXvYqzTSjT9/xhIYTjQNNao1IXP26vaK/cfEUj5cWME8N34ik1V0niHrLTda2e9yGguG+46/XbtPMDm/Aj4jFiZ2P0=
+X-Received: by 2002:a9d:4e82:: with SMTP id v2mr4360065otk.352.1582086201006;
+ Tue, 18 Feb 2020 20:23:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219000817.195049-2-samitolvanen@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200218220748.54823-1-john.stultz@linaro.org>
+ <CAHp75VcPL7DYp9hjgMu+d=CE=g+V7ZxT9ZyXX-OjEW_JQ4m_nA@mail.gmail.com>
+ <CALAqxLWtYfwCzDRVecWF8yRQSKQZh-N2g0SifageUaG0QhBGJg@mail.gmail.com>
+ <CALAqxLW-Z=sut+A5Ezg4PkZ0HzM-np3PY_gAn0r=Ef0+FDBQDA@mail.gmail.com> <CAL_JsqJQRa5PNgms_jJ8bdsJqscW8dsKUtbzhGVLNvsAt0qMAQ@mail.gmail.com>
+In-Reply-To: <CAL_JsqJQRa5PNgms_jJ8bdsJqscW8dsKUtbzhGVLNvsAt0qMAQ@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 18 Feb 2020 20:23:08 -0800
+Message-ID: <CALAqxLUCfegDoBUfa6ZNd7dQaiz-ujeVk=RxJcu5NanfDj=bRg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
+ to allow EPROBE_DEFER to be returned for longer
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sami,
+On Tue, Feb 18, 2020 at 6:07 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Feb 18, 2020 at 7:11 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Tue, Feb 18, 2020 at 4:19 PM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > On Tue, Feb 18, 2020 at 4:06 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Wednesday, February 19, 2020, John Stultz <john.stultz@linaro.org> wrote:
+> > > >> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > >> index b25bcab2a26b..9d916a7b56a6 100644
+> > > >> --- a/drivers/base/dd.c
+> > > >> +++ b/drivers/base/dd.c
+> > > >> @@ -237,13 +237,12 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+> > > >>
+> > > >>  static int __driver_deferred_probe_check_state(struct device *dev)
+> > > >>  {
+> > > >> -       if (!initcalls_done)
+> > > >> -               return -EPROBE_DEFER;
+> > > >
+> > > >
+> > > > Why to touch this? Can't you simple add a new condition here 'if (deferred_probe_timeout > 0)'... ?
+> > >
+> > > I think that might work. I'll give it a spin later tonight and double check it.
+> > >
+> > > The main thing I wanted to do is fix the logic hole in the current
+> > > code where after initcalls_done=true but before deferred_probe_timeout
+> > > has expired we just fall through and return 0, which results in an
+> > > ENODEV being returned from the calling function.
+> >
+> >
+> > So on IRC Bjorn sort of clarified a point I think Rob was trying to
+> > make on the earlier iteration of this patch, that it seems like
+> > Thierry's patch here:
+> >   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=62a6bc3a1e4f4ee9ae0076fa295f9af1c3725ce3
+> > *seems* to be trying to address the exact same issue, and maybe we
+> > should just have the genpd code use that instead?
+>
+> Looking at it some more, I think the change to the pinctrl code there
+> breaks the case I care about (pinctrl described in DT and no driver on
+> a system that previously worked without pinctrl). Maybe if I set the
+> timeout to 0 it will still work (which would be fine).
+>
+> > The main question though, is why do we need both?  As mentioned above,
+> > the existing logic in __driver_deferred_probe_check_state() seems
+> > wrong: Until late_initcall it returns EPROBE_DEFER, then after
+> > initcalls_done==true returns 0 (in which case the caller then
+> > translates to ENODEV), until the timeout expires which it then returns
+> > ETIMEDOUT.
+> >
+> > I suspect what is really wanted is EPROBE_DEFER -> (0) ENODEV (when
+> > timeout is not set) or EPROBE_DEFER -> ETIMEOUT (when the timeout is
+> > set), instead of the two state transitions it currently makes.
+>
+> Yes. There's never any reason to return 0. It should be one of 3
+> errnos. If we're moving to always having a timeout, then maybe ENODEV
+> isn't even needed. I guess it's a stronger "we're done with init and
+> there's never going to be another driver" which maybe we should do for
+> !CONFIG_MODULES.
+>
+> > So I still think my patch is needed, but I also suspect a better fix
+> > would be to kill driver_deferred_probe_check_state() and just replace
+> > its usage with driver_deferred_probe_check_state_continue(). Or am I
+> > still missing something?
+>
+> I think those should be merged. They now do almost the same thing.
+> Only in the timeout==-1 case do they differ.
 
-a couple of minor tweaks:
+Well.. almost..  in addition to that different after late_initcall but
+before the timeout driver_deferred_probe_check_state() will return
+ENODEV, where as driver_deferred_probe_check_state_continue() returns
+EPROBE_DEFER until the timeout happens.
 
-On 2/18/20 4:08 PM, Sami Tolvanen wrote:
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 98de654b79b3..66b34fd0df54 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -526,6 +526,40 @@ config STACKPROTECTOR_STRONG
->  	  about 20% of all kernel functions, which increases the kernel code
->  	  size by about 2%.
->  
-> +config ARCH_SUPPORTS_SHADOW_CALL_STACK
-> +	bool
-> +	help
-> +	  An architecture should select this if it supports Clang's Shadow
-> +	  Call Stack, has asm/scs.h, and implements runtime support for shadow
-> +	  stack switching.
-> +
-> +config SHADOW_CALL_STACK
-> +	bool "Clang Shadow Call Stack"
-> +	depends on ARCH_SUPPORTS_SHADOW_CALL_STACK
-> +	help
-> +	  This option enables Clang's Shadow Call Stack, which uses a
-> +	  shadow stack to protect function return addresses from being
-> +	  overwritten by an attacker. More information can be found from
+> The original intent was that driver_deferred_probe_check_state()
+> simply returned what state we're in and the caller would decide what
+> to do with that. IOW, each caller could implement their own policy
+> possibly based on other information. Pinctrl factored in a DT hint.
+> IOMMU relied on everything was built-in.
 
-	                                                      found in
+I'm not super opinionated here, having the subsystem opt in and decide
+what to do with the check_state() return value seems sane.  But I
+suspect that we can consolidate the two cases down and simplify some
+of the logic here.
 
-> +	  Clang's documentation:
-> +
-> +	    https://clang.llvm.org/docs/ShadowCallStack.html
-> +
-> +	  Note that security guarantees in the kernel differ from the ones
-> +	  documented for user space. The kernel must store addresses of shadow
-> +	  stacks used by other tasks and interrupt handlers in memory, which
-> +	  means an attacker capable reading and writing arbitrary memory may
+I'll take another spin on this.
 
-	                    capable of
-
-> +	  be able to locate them and hijack control flow by modifying shadow
-> +	  stacks that are not currently in use.
-> +
-> +config SHADOW_CALL_STACK_VMAP
-> +	bool "Use virtually mapped shadow call stacks"
-> +	depends on SHADOW_CALL_STACK
-> +	help
-> +	  Use virtually mapped shadow call stacks. Selecting this option
-> +	  provides better stack exhaustion protection, but increases per-thread
-> +	  memory consumption as a full page is allocated for each shadow stack.
-> +
-> +
->  config HAVE_ARCH_WITHIN_STACK_FRAMES
->  	bool
->  	help
-
-
-thanks.
--- 
-~Randy
-
+thanks
+-john
