@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40840C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F9EC3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF3A24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18AC24655
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 04:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/5vGB1w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLyMPGSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgBSEKM (ORCPT
+        id S1726710AbgBSEKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 23:10:12 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35871 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726439AbgBSEKL (ORCPT
+        Tue, 18 Feb 2020 23:10:16 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40558 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726439AbgBSEKP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 23:10:11 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 185so11818316pfv.3;
-        Tue, 18 Feb 2020 20:10:11 -0800 (PST)
+        Tue, 18 Feb 2020 23:10:15 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so1959478pjb.5;
+        Tue, 18 Feb 2020 20:10:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HcHZ0x70/qK7NXMoSBHV+1QL/bUky1H1SggR4DxRjDU=;
-        b=n/5vGB1w/mK+zOmoMLT8VzA2uMe09KGQembwgj653i3bCs9wpT4tFYmWQ/6YV4dVtW
-         98/nX0yu2LoVTYwtsay2y72OnH+kFajxVMQIfAK90znYSUuNiOc8xrYRUVHUZ6nCu6T2
-         mz1UirTYMCTwEEBYfuSSXfu/Y1uU3MYUPJf33cosKeZNVB4JuVAB265V/xM3wrMZB1f4
-         +n4TRUWMJWBqPNBMuhMRjnHROkGRyZ7D+yYqma0gW4fyP13LW5yPwSGs4OX6HokXASy5
-         iIXYXmy+4BNbk2WmExKDjXN7cI59JDwkMThc3lc6yCRxu4VpdQRLZLJKQIc3tC38Mra5
-         pwjA==
+        bh=9Gs8xOV9REFN752Csx9CR2qaFoIT578nSg5oH4PWWVU=;
+        b=vLyMPGSJt+lHmUwpSvxy7BpwgUeatvKf9++z2u7QG9F3XAEqyLLmYTi9i22YEBuDCb
+         nnOWtqjysHSgwKPkPQxhah9RKmYlOKhcfcvvPwl9wAZth2PGbXVXG/hLQSUf4XXZFmb6
+         vE7cLNJ1sA7DOKAFSWWMh6tmCclD+lnYfD1r0J+vt3tV1v/iR8onx0JFwEafSFCnTkqF
+         dvPP+kVRFcnLJMVMTJ4HaOgd+HydrSbFQ1aZEFMwXcx/OE0aukK7/gven8xyWffL47gh
+         BbLIAm98PSOZqutfIbAz/n3jo3h7fB58HIUXqN+Nb/hIBl5lpt0em6wm5nGsNUs0eo30
+         EOJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HcHZ0x70/qK7NXMoSBHV+1QL/bUky1H1SggR4DxRjDU=;
-        b=m8FS/HuIuZor4QglA1Eexgy9oh3d6p4S0NPO8xs+mbr9mMhsPPklJFSM5BPll1Hphu
-         k8V/fWoyPrbTilb/mtX2PwVPBej2w/Gnep8tRp+SlFeoeGgM2v5vJS2SaCQxTOs5sxMv
-         X4Ay945XvLgbYy1c0XVCEwwotMtN+o71zCKvv27KNvMt/NpIaGm/HwOwKAG8Gry3ORiA
-         CzMA3NXrjutFC8MXiSKnvXKTOisIIhkLx2SBRow7udo45Kp/MlgvrjnBu4kG4updVXGe
-         QPJtwbOXKbAiOJW8zHPS2y1s1zvi9OHhaJUQAgl8T48bOIK8k7w4bAd0BqS1htT6GEj5
-         xOtA==
-X-Gm-Message-State: APjAAAWVXBkRvxkL2IWQKAqz4gJl36hK0cRkim8hT2Kd07LCZiKmzk5c
-        2TqdUXYs/VVY8G8kDXgySco=
-X-Google-Smtp-Source: APXvYqwJM+B7TF6k/dlhX50zKlju/QjZK91P5faZ02exUSelxFSEsGz57of9SBSFKed/Hd5mKDpHlw==
-X-Received: by 2002:aa7:971c:: with SMTP id a28mr25164631pfg.152.1582085410670;
-        Tue, 18 Feb 2020 20:10:10 -0800 (PST)
+        bh=9Gs8xOV9REFN752Csx9CR2qaFoIT578nSg5oH4PWWVU=;
+        b=VHgPksJlHu/oBiAnaNvnMeh9rmYuMtxqMsAuEQdSSIioNuwG3tc7p60KeCbhTtYX3t
+         Vdiy0SwT8LK5wxpOG/rl4fnzSGYQnwSzCHDON8hE7AE6u1QE7+vin9vKal7AqEwRWxDW
+         GBgZ3yHeRfafIx6eM0bbgBowja8ej0+R0LVp1JXq776JyVUvsRjb0ar49TJf9jPmT7pE
+         f5uXDNpHpf+jvazoHI8iKUqoVLHEfE4MUEKZtsGNpF1B40MF8Fj70rl0yBHp+tKBrm1h
+         LyaS5SlBWRpmW9/VSHyscIWZ/tCB94pb2+80EsLn9rs63MgOExjCktu/DrwCvB5wT1NE
+         yhwQ==
+X-Gm-Message-State: APjAAAUcLa5H7qCjdmzuW/NB1nCHCLLBZPEZLI1dzuh4zuEr4giG1ahA
+        kKAfEZH+OiULQwQqV5gKBvI=
+X-Google-Smtp-Source: APXvYqxAicWm/tKrK+rxINEefsUWz/ugxNUI5I+nENIlMM3af6gWzoMdNjBGVpUFVlZEZ+iy/raodw==
+X-Received: by 2002:a17:902:264:: with SMTP id 91mr24696850plc.335.1582085414568;
+        Tue, 18 Feb 2020 20:10:14 -0800 (PST)
 Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id q66sm578748pfq.27.2020.02.18.20.10.07
+        by smtp.gmail.com with ESMTPSA id q66sm578748pfq.27.2020.02.18.20.10.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2020 20:10:10 -0800 (PST)
+        Tue, 18 Feb 2020 20:10:13 -0800 (PST)
 From:   Chunyan Zhang <zhang.lyra@gmail.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -67,9 +67,9 @@ Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
         Baolin Wang <baolin.wang7@gmail.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v5 1/7] clk: sprd: add gate for pll clocks
-Date:   Wed, 19 Feb 2020 12:09:09 +0800
-Message-Id: <20200219040915.2153-2-zhang.lyra@gmail.com>
+Subject: [PATCH v5 2/7] dt-bindings: clk: sprd: rename the common file name sprd.txt to SoC specific
+Date:   Wed, 19 Feb 2020 12:09:10 +0800
+Message-Id: <20200219040915.2153-3-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200219040915.2153-1-zhang.lyra@gmail.com>
 References: <20200219040915.2153-1-zhang.lyra@gmail.com>
@@ -80,110 +80,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolong Zhang <xiaolong.zhang@unisoc.com>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Some sprd's gate clocks are used to the switch of pll, which
-need to wait a certain time for stable after being enabled.
+Only SC9860 clocks were described in sprd.txt, rename it with a SoC
+specific name, so that we can add more SoC support.
 
-Signed-off-by: Xiaolong Zhang <xiaolong.zhang@unisoc.com>
 Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/sprd/gate.c | 17 +++++++++++++++++
- drivers/clk/sprd/gate.h | 21 +++++++++++++++++++--
- 2 files changed, 36 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/clock/{sprd.txt => sprd,sc9860-clk.txt} (98%)
 
-diff --git a/drivers/clk/sprd/gate.c b/drivers/clk/sprd/gate.c
-index f59d1936b412..574cfc116bbc 100644
---- a/drivers/clk/sprd/gate.c
-+++ b/drivers/clk/sprd/gate.c
-@@ -79,6 +79,17 @@ static int sprd_sc_gate_enable(struct clk_hw *hw)
+diff --git a/Documentation/devicetree/bindings/clock/sprd.txt b/Documentation/devicetree/bindings/clock/sprd,sc9860-clk.txt
+similarity index 98%
+rename from Documentation/devicetree/bindings/clock/sprd.txt
+rename to Documentation/devicetree/bindings/clock/sprd,sc9860-clk.txt
+index e9d179e882d9..aaaf02ca2a6a 100644
+--- a/Documentation/devicetree/bindings/clock/sprd.txt
++++ b/Documentation/devicetree/bindings/clock/sprd,sc9860-clk.txt
+@@ -1,4 +1,4 @@
+-Spreadtrum Clock Binding
++Spreadtrum SC9860 Clock Binding
+ ------------------------
  
- 	return 0;
- }
-+
-+static int sprd_pll_sc_gate_prepare(struct clk_hw *hw)
-+{
-+	struct sprd_gate *sg = hw_to_sprd_gate(hw);
-+
-+	clk_sc_gate_toggle(sg, true);
-+	udelay(sg->udelay);
-+
-+	return 0;
-+}
-+
- static int sprd_gate_is_enabled(struct clk_hw *hw)
- {
- 	struct sprd_gate *sg = hw_to_sprd_gate(hw);
-@@ -109,3 +120,9 @@ const struct clk_ops sprd_sc_gate_ops = {
- };
- EXPORT_SYMBOL_GPL(sprd_sc_gate_ops);
- 
-+const struct clk_ops sprd_pll_sc_gate_ops = {
-+	.unprepare	= sprd_sc_gate_disable,
-+	.prepare	= sprd_pll_sc_gate_prepare,
-+	.is_enabled	= sprd_gate_is_enabled,
-+};
-+EXPORT_SYMBOL_GPL(sprd_pll_sc_gate_ops);
-diff --git a/drivers/clk/sprd/gate.h b/drivers/clk/sprd/gate.h
-index dc352ea55e1f..d380d77b8dce 100644
---- a/drivers/clk/sprd/gate.h
-+++ b/drivers/clk/sprd/gate.h
-@@ -14,16 +14,19 @@ struct sprd_gate {
- 	u32			enable_mask;
- 	u16			flags;
- 	u16			sc_offset;
-+	u16			udelay;
- 
- 	struct sprd_clk_common	common;
- };
- 
--#define SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
--			     _enable_mask, _flags, _gate_flags, _ops)	\
-+#define SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
-+				    _sc_offset, _enable_mask, _flags,	\
-+				    _gate_flags, _udelay, _ops)		\
- 	struct sprd_gate _struct = {					\
- 		.enable_mask	= _enable_mask,				\
- 		.sc_offset	= _sc_offset,				\
- 		.flags		= _gate_flags,				\
-+		.udelay		= _udelay,				\
- 		.common	= {						\
- 			.regmap		= NULL,				\
- 			.reg		= _reg,				\
-@@ -34,6 +37,12 @@ struct sprd_gate {
- 		}							\
- 	}
- 
-+#define SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, _sc_offset,	\
-+			     _enable_mask, _flags, _gate_flags, _ops)	\
-+	SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
-+				    _sc_offset, _enable_mask, _flags,	\
-+				    _gate_flags, 0, _ops)
-+
- #define SPRD_GATE_CLK(_struct, _name, _parent, _reg,			\
- 		      _enable_mask, _flags, _gate_flags)		\
- 	SPRD_SC_GATE_CLK_OPS(_struct, _name, _parent, _reg, 0,		\
-@@ -46,6 +55,13 @@ struct sprd_gate {
- 			     _enable_mask, _flags, _gate_flags,		\
- 			     &sprd_sc_gate_ops)
- 
-+#define SPRD_PLL_SC_GATE_CLK(_struct, _name, _parent, _reg, _sc_offset,	\
-+			    _enable_mask, _flags, _gate_flags, _udelay)	\
-+	SPRD_SC_GATE_CLK_OPS_UDELAY(_struct, _name, _parent, _reg,	\
-+				    _sc_offset,	_enable_mask, _flags,	\
-+				    _gate_flags, _udelay,		\
-+				    &sprd_pll_sc_gate_ops)
-+
- static inline struct sprd_gate *hw_to_sprd_gate(const struct clk_hw *hw)
- {
- 	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
-@@ -55,5 +71,6 @@ static inline struct sprd_gate *hw_to_sprd_gate(const struct clk_hw *hw)
- 
- extern const struct clk_ops sprd_gate_ops;
- extern const struct clk_ops sprd_sc_gate_ops;
-+extern const struct clk_ops sprd_pll_sc_gate_ops;
- 
- #endif /* _SPRD_GATE_H_ */
+ Required properties:
 -- 
 2.20.1
 
