@@ -2,74 +2,115 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EEDC3524E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23018C3524E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7C124656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89D22176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582142895;
-	bh=K/D5JbPk2+EBYp2gmQA0q9ditYqXaZ6u/jNNJaQQNeU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=wL5yNyn/8S06rXwE0lekz9GtNmHJ1FqO3CBFNuofCk7hESRY7QS1dwajr8AIDZYau
-	 y5wXzQfNAkWt3t6gyy0Mbs9iMp9RuPZKhc4p2/bHSohVaz+iDaYwKL3RDfiMZfhjOZ
-	 cYKNJJqIlTkIs+SpIa7+CCqFvVG6N9NOXK3w2pw4=
+	s=default; t=1582142913;
+	bh=B+URaWUwbmhp2bgB4ltDeJRPJgbno5ec0TATawN0L78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LcLFQKSJmOJGE286pKbx6gz+x+caGBx5icBKIdl1YKCGBb1Rma1F9CC9sXesfyGaL
+	 p11RI5m39CRWAPQy1/OsUk3K2Bbrkt9bVt6kAOUsEX4P3vNcDSsY4oSnw2CutP1Ae5
+	 iT97ZV8HB1d3z5JhVSPdFR24Wym9fGBe+J7WlaH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBSUIN (ORCPT
+        id S1727291AbgBSUIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:08:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726634AbgBSUIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:08:13 -0500
-Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842F32176D;
-        Wed, 19 Feb 2020 20:08:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582142891;
-        bh=K/D5JbPk2+EBYp2gmQA0q9ditYqXaZ6u/jNNJaQQNeU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U4t0+1H9+T91595fwF5FJlrfN5hAP7b2OvyDrCSy3zwLJrvS07mTsYuEM5DXHnFGp
-         4qFSz1jxRax7qvwJ19FfAf+jYHr05omtkY3xWKa9Bat7iEgGBVKKyg8tHE6D0KUotm
-         JV5ctKrnTkl+82JgBHttCq5MEna+P72IO2uvUTbE=
-Date:   Wed, 19 Feb 2020 12:08:10 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        rientjes@google.com, mhocko@kernel.org
-Subject: Re: [Patch v4] mm/vmscan.c: remove cpu online notification for now
-Message-Id: <20200219120810.c7677fa58594f5423549f59d@linux-foundation.org>
-In-Reply-To: <20200218224422.3407-1-richardw.yang@linux.intel.com>
-References: <20200218224422.3407-1-richardw.yang@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 19 Feb 2020 15:08:31 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45377 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgBSUIb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 15:08:31 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so1368409otp.12;
+        Wed, 19 Feb 2020 12:08:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nXxtRM6f2jt8ayWG1c/acsbNLpFxWVreueJEPdmTXOo=;
+        b=HoX5TEXOyJef6vEvLY011bvOl/RQLcliPl5ZdJzR37bmX0HGHB3YxeNErAIMYayFHz
+         oLf9ZMkDRHqAnkNgtRYp83pQJ1eRmL67434gxV37HTg4hqyjY0YuELxBGBCebWgO26WT
+         3SzkOn2ITuugibAem/aClId2oJW2CgZGEUEMb0jaelLGNJH0fV/g9JmXW9KBIOWQgEJQ
+         P+3JAkQGkZQS+wlxozKalCu3qk2BTxRHbIELQC5MZiIUs+24Yl7cc+1UpNZpAcyhJ0l6
+         bM35fn92iiQ/osefNw1pFOmx37rywrix6EY93tZ7cEM9MaCKypNEGW2FrG9RCu6fx8U0
+         UwBw==
+X-Gm-Message-State: APjAAAWqlGw/ZbrvfM6DWKntuFD3WLtDqmeZC4IzsljPyhJDUiRZpDfW
+        NDabsSFCc8D39bRQeg0fUw==
+X-Google-Smtp-Source: APXvYqyoLoGDEXegS/LPzNhi25kf+RBpBzucu+O+846cQ9H0W1aDtu/TkotCfT99oMMTTJ6zWGpszA==
+X-Received: by 2002:a05:6830:139a:: with SMTP id d26mr21679753otq.75.1582142908897;
+        Wed, 19 Feb 2020 12:08:28 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x22sm263707otk.23.2020.02.19.12.08.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 12:08:28 -0800 (PST)
+Received: (nullmailer pid 20348 invoked by uid 1000);
+        Wed, 19 Feb 2020 20:08:27 -0000
+Date:   Wed, 19 Feb 2020 14:08:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        cang@codeaurora.org, rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V2] dt-bindings: mmc: sdhci-msm: Add CQE reg map
+Message-ID: <20200219200827.GA17094@bogus>
+References: <1581434955-11087-1-git-send-email-vbadigan@codeaurora.org>
+ <1581680753-9067-1-git-send-email-vbadigan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581680753-9067-1-git-send-email-vbadigan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 06:44:22 +0800 Wei Yang <richardw.yang@linux.intel.com> wrote:
-
-> kswapd kernel thread starts either with a CPU affinity set to the full
-> cpu mask of its target node or without any affinity at all if the node
-> is CPUless. There is a cpu hotplug callback (kswapd_cpu_online) that
-> implements an elaborate way to update this mask when a cpu is onlined.
+On Fri, Feb 14, 2020 at 05:15:52PM +0530, Veerabhadrarao Badiganti wrote:
+> CQE feature has been enabled on sdhci-msm. Add CQE reg map
+> that needs to be supplied for supporting CQE feature.
 > 
-> It is not really clear whether there is any actual benefit from this
-> scheme. Completely CPU-less NUMA nodes rarely gain a new CPU during
-> runtime.
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+> 
+> Changes since V1:
+> 	- Updated description for more clarity & Fixed typos.
+> ---
+>  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> index 7ee639b..ad0ee83 100644
+> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+> @@ -26,7 +26,13 @@ Required properties:
+>  
+>  - reg: Base address and length of the register in the following order:
+>  	- Host controller register map (required)
+> -	- SD Core register map (required for msm-v4 and below)
+> +	- SD Core register map (required for controllers earlier than msm-v5)
+> +	- CQE register map (Optional, CQE support is present on SDHC instance meant
+> +	                    for eMMC and version v4.2 and above)
+> +- reg-names: When CQE register map is supplied, below reg-names are required
+> +	- "hc_mem" for Host controller register map
+> +	- "core_mem" for SD core register map
+> +	- "cqhci_mem" for CQE register map
 
-This is the case across all platforms, all architectures, all users for
-the next N years?  I'm surprised that we know this with sufficient
-confidence.  Can you explain how you came to make this assertion?
+'_mem' is redundant, so drop.
 
-> Drop the code for that reason. If there is a real usecase then
-> we can resurrect and simplify the code.
+>  - interrupts: Should contain an interrupt-specifiers for the interrupts:
+>  	- Host controller interrupt (required)
+>  - pinctrl-names: Should contain only one value - "default".
+> -- 
+> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+> 
