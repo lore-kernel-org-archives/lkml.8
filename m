@@ -2,112 +2,75 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DC7C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBD0C34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E856224655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582081468;
-	bh=DP/qxwF6iAUNhhTZiDV7zdMbqJqUcrKE5bdIhYfJA54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UegJ8qyTwmck11T1JlddWQTmQVCPDrFsERpOXSzbMhRPGyhW3/lYF340tebQWgiM0
-	 2On6x3eEkYs9psM99DXSYB5TIptX7RtBtjtlnvJSjURK8OW+8tzNflGhAEWaV2QtFA
-	 S7FEOtx6kTDRAWREUeewW/F1ODuAeOCYJmXmVxGs=
+	by mail.kernel.org (Postfix) with ESMTP id C3C3E22B48
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:05:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbgBSDE0 (ORCPT
+        id S1728337AbgBSDFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:04:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbgBSDE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:04:26 -0500
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8900922B48;
-        Wed, 19 Feb 2020 03:04:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582081465;
-        bh=DP/qxwF6iAUNhhTZiDV7zdMbqJqUcrKE5bdIhYfJA54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KIysn+oagpaBb+AHuGgZhZhrqZcEQaF08vrhLBy6xj0C06c1F2Jebp2DRmUlirUxQ
-         dNN+D5EmdaVhGtm0iKUtXaQXpbD64a5LjhElZbGtO2GLQZwvdSNH3VGB9U4SSKi5kb
-         BRAvRxSitohp/AKScApFzKGtbozpq2qqKQjejc6U=
-Date:   Tue, 18 Feb 2020 19:04:25 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH 3/3] f2fs: skip migration only when BG_GC is
- called
-Message-ID: <20200219030425.GA102063@google.com>
-References: <20200214185855.217360-1-jaegeuk@kernel.org>
- <20200214185855.217360-3-jaegeuk@kernel.org>
- <9c497f3e-3399-e4a6-f81c-6c4a1f35e5bb@huawei.com>
- <20200218232714.GB10213@google.com>
- <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
+        Tue, 18 Feb 2020 22:05:04 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:58285 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727999AbgBSDFE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:05:04 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D80197E86A5;
+        Wed, 19 Feb 2020 14:04:59 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4FfW-0005L3-BM; Wed, 19 Feb 2020 14:04:58 +1100
+Date:   Wed, 19 Feb 2020 14:04:58 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 12/19] erofs: Convert uncompressed files from
+ readpages to readahead
+Message-ID: <20200219030458.GA10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-21-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <117a927f-7128-b5a1-a961-22934bb62ec5@huawei.com>
+In-Reply-To: <20200217184613.19668-21-willy@infradead.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=X6os11be c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=jp2tMEKC6bofvDcTq6oA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/19, Chao Yu wrote:
-> On 2020/2/19 7:27, Jaegeuk Kim wrote:
-> > On 02/17, Chao Yu wrote:
-> >> On 2020/2/15 2:58, Jaegeuk Kim wrote:
-> >>> FG_GC needs to move entire section more quickly.
-> >>>
-> >>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> >>> ---
-> >>>  fs/f2fs/gc.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-> >>> index bbf4db3f6bb4..1676eebc8c8b 100644
-> >>> --- a/fs/f2fs/gc.c
-> >>> +++ b/fs/f2fs/gc.c
-> >>> @@ -1203,7 +1203,7 @@ static int do_garbage_collect(struct f2fs_sb_info *sbi,
-> >>>  
-> >>>  		if (get_valid_blocks(sbi, segno, false) == 0)
-> >>>  			goto freed;
-> >>> -		if (__is_large_section(sbi) &&
-> >>> +		if (gc_type == BG_GC && __is_large_section(sbi) &&
-> >>>  				migrated >= sbi->migration_granularity)
-> >>
-> >> I knew migrating one large section is a more efficient way, but this can
-> >> increase long-tail latency of f2fs_balance_fs() occasionally, especially in
-> >> extreme fragmented space.
-> > 
-> > FG_GC requires to wait for whole section migration which shows the entire
-> > latency.
+On Mon, Feb 17, 2020 at 10:46:01AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> That will cause long-tail latency for single f2fs_balance_fs() procedure,
-> which it looks a very long hang when userspace call f2fs syscall, so why
-> not splitting total elapsed time into several f2fs_balance_fs() to avoid that.
+> Use the new readahead operation in erofs
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/erofs/data.c              | 39 +++++++++++++-----------------------
+>  fs/erofs/zdata.c             |  2 +-
+>  include/trace/events/erofs.h |  6 +++---
+>  3 files changed, 18 insertions(+), 29 deletions(-)
 
-Then, other ops can easily make more dirty segments. The intention of FG_GC is
-to block everything and make min. free segments as a best shot.
+Looks fine from the perspective of page iteration and error handling.
 
-> 
-> Thanks,
-> 
-> > 
-> >>
-> >> Thanks,
-> >>
-> >>>  			goto skip;
-> >>>  		if (!PageUptodate(sum_page) || unlikely(f2fs_cp_error(sbi)))
-> >>>
-> > .
-> > 
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+
+-- 
+Dave Chinner
+david@fromorbit.com
