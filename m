@@ -2,157 +2,110 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64154C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06390C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E2D2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36B121D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 10:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Sn+9Xhit"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h1LWdc/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgBSKAv (ORCPT
+        id S1726750AbgBSKBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 05:00:51 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57684 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbgBSKAv (ORCPT
+        Wed, 19 Feb 2020 05:01:35 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:47093 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726450AbgBSKBf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 05:00:51 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01J9wZjc011866;
-        Wed, 19 Feb 2020 11:00:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=z1m2XzYdCC2EaIAOcE3eSxjEb3D78KxFwI9M6TVol+c=;
- b=Sn+9XhitQzasfJTKQ0SbQjEp9IuAz8JOhnhQvKQj6ZUMg4bGFllAXN5CuYaMooooQ/dt
- 8d4R9Hf2qrASI3VJ2wpdd3ZxYB9qsB4gS2fAGeqp4JQKEtO7FLn0ftSgyg2FpEpFF7Hx
- IicR5Uv+IXa1YLWhbl6P6X7NVJ/73tkDAiIBa/qGaOKSg6FlhK/zzv8enr4kvVs1vWwo
- yHcmcWqmqFHZDmQ9clL89WDoI6RmdcYXJppthNBOJp7cv7dO/YpBokspmtbDoQ5aY8Ae
- qXH7oHyqP5tTX30uu4a9uEP0mLSTFhlv542gg0X6POMzDVmaBZzc4GHVx3nJjPfG6N1l OA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8uafj8rw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 11:00:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3846D100038;
-        Wed, 19 Feb 2020 11:00:35 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B22C621F697;
-        Wed, 19 Feb 2020 11:00:34 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 19 Feb
- 2020 11:00:33 +0100
-Subject: Re: msm_hsusb 78d9000.usb: failed to create device link to
- ci_hdrc.0.ulpi
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jack Pham <jackp@codeaurora.org>
-CC:     Peter Chen <peter.chen@nxp.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-References: <CA+G9fYtnwFVPQxgHOU2Bi9y5+q4sSsww47yxK+_3ZAQ9=kyhUg@mail.gmail.com>
- <20200219013824.GB8602@b29397-desktop>
- <20200219024534.GB10078@jackp-linux.qualcomm.com>
- <CAHp75VfY1Y-jNr=YTfAO+eUOy3xUy9+AgtyJuhEk2ngrxMg5JA@mail.gmail.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <c39584b0-302e-d1bb-2e97-ffc017755bf2@st.com>
-Date:   Wed, 19 Feb 2020 11:00:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Feb 2020 05:01:35 -0500
+Received: by mail-pg1-f196.google.com with SMTP id y30so835430pga.13;
+        Wed, 19 Feb 2020 02:01:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1EXylD9M9pyp6RCZrxC0U5DPcWHq62ndaaHnByK73qg=;
+        b=h1LWdc/XtVhfk8KjtHhg4fU8weGskZPlQRBh5/dxOKJooTKO6sqSyQcabvn/E5pfPB
+         qHxDiS5im9Rv2NXhglKKTBJTlmdcA0rbXMb047X51M63ZYkgcvE0TkwB8AjRTrc7NY56
+         oMd4FQer5pztQ+WEc5OGCV7FqpisfkCYzn38geyLlsWd3JCFiZ0abJEuKkhqrEVSlEpd
+         q8oxbcP8n7mp0YPGJwVfWvhylm2poJO0QdF06EbcTHUcgZ7PsxE9ZCrwPEDysmzvq5vt
+         sfkfnoppF867VfHRaOASJ+AF7D5p1VcnWpGqyfHIAZkq+YQ3fu/HlP6yIXQ/IPet6sY2
+         8Ftw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1EXylD9M9pyp6RCZrxC0U5DPcWHq62ndaaHnByK73qg=;
+        b=Kb/aseEtxL/DiKoWClPtk829VR+v0+EJ7QSrG+7dR5u2OOXGyuhBzdAmtQdXrgIVE/
+         LOiCqQzz2i5KtkvITmEaa6TYlMoZq4opNhr8pMn7nRu9klpexiv8j4pVIiItrNiGBnBM
+         h96Tl987rafVAhJWoB0g/PXIyUuGu83kahb0HNJp7HmQwU/U5Fsq3N6Vt8LSVVYcM+N3
+         VnWTASb/vKaivKq6qd1mv+wWNAO4aQ8peJ02tRCggdhJ5Ggex5iSQu5m50gLGn3EhQDE
+         DulomWlEZuHRZyDHTAYR1jzFiwT8lCV4tV/MzknISECtA8DEjN3KYlosbYQkWJOab4Kf
+         Kumg==
+X-Gm-Message-State: APjAAAWFHkK8BrAFibsfejh/7OmcXSFyIaAwBPjSba6sgGFa6sCnAlUo
+        DoZfGP4lSQb4br03nRfIyJY=
+X-Google-Smtp-Source: APXvYqxUF3j/7VaJSopwF5M/zdTNKYwnecAFNAI6SMP/6B46CpsqGYOYKoKBjr2bnTQZ6Mht9Uj5Nw==
+X-Received: by 2002:a62:ac03:: with SMTP id v3mr25792332pfe.17.1582106494797;
+        Wed, 19 Feb 2020 02:01:34 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.220])
+        by smtp.googlemail.com with ESMTPSA id q17sm2040779pgn.94.2020.02.19.02.01.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 02:01:34 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH RESEND] net: hsr: Pass lockdep expression to RCU lists
+Date:   Wed, 19 Feb 2020 15:30:11 +0530
+Message-Id: <20200219100010.23264-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VfY1Y-jNr=YTfAO+eUOy3xUy9+AgtyJuhEk2ngrxMg5JA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_02:2020-02-19,2020-02-19 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy
+node_db is traversed using list_for_each_entry_rcu
+outside an RCU read-side critical section but under the protection
+of hsr->list_lock.
 
-On 2/19/20 10:23 AM, Andy Shevchenko wrote:
-> On Wed, Feb 19, 2020 at 4:46 AM Jack Pham <jackp@codeaurora.org> wrote:
->>
->> On Wed, Feb 19, 2020 at 01:38:22AM +0000, Peter Chen wrote:
->>> On 20-02-17 14:02:57, Naresh Kamboju wrote:
->>>> arm64 APQ 8016 SBC ( Dragonboard 410c)  device running Linux next boot
->>>> failed due to below error.
->>>>
->>>> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
->>>> [    0.000000] Linux version 5.6.0-rc2-next-20200217 (oe-user@oe-host)
->>>> (gcc version 7.3.0 (GCC)) #1 SMP PREEMPT Mon Feb 17 04:27:31 UTC 2020
->>>> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
->>>> <>
->>>> [    4.439291] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.448891] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.457879] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.467331] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.475636] mmc0: new HS200 MMC card at address 0001
->>>> [    4.478895] mmcblk0: mmc0:0001 DS2008 7.28 GiB
->>>> [    4.480629] mmcblk0boot0: mmc0:0001 DS2008 partition 1 4.00 MiB
->>>> [    4.484719] mmcblk0boot1: mmc0:0001 DS2008 partition 2 4.00 MiB
->>>> [    4.492247] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.502611] mmcblk0rpmb: mmc0:0001 DS2008 partition 3 4.00 MiB,
->>>> chardev (234:0)
->>>> [    4.506949] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.517901] random: fast init done
->>>> [    4.521420] mmc1: new ultra high speed SDR104 SDHC card at address aaaa
->>>> [    4.523400] mmcblk1: mmc1:aaaa SL16G 14.8 GiB
->>>> [    4.532843] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.539131]  mmcblk0: p1 p2 p3 p4 p5 p6 p7 p8 p9 p10 p11 p12 p13 p14
->>>> [    4.542309]  mmcblk1: p1
->>>> [    4.561843] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.573481] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.585283] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.592622] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.600074] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.607204] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>> [    4.614679] msm_hsusb 78d9000.usb: failed to create device link to
->>>> ci_hdrc.0.ulpi
->>>
->>> The chipidea USB code hasn't changed recently. Would you please bisect
->>> which commit affect it?
->>
->> Probably same cause as for this:
->> https://bugzilla.kernel.org/show_bug.cgi?id=206435
-> 
-> Yes, it's the same. I dunno why no fix yet available.
-> 
+Hence, add corresponding lockdep expression to silence false-positive
+warnings, and harden RCU lists.
 
-Kishon has posted a patch yesterday for device link issue in phy core. 
-Please see:
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+Resend:
+- Remove failed delivery recipients
 
-https://lkml.org/lkml/2020/2/18/272
+ net/hsr/hsr_framereg.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-regards
-Alex
-
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 27dc65d7de67..cc8fcfd3918d 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -156,7 +156,8 @@ static struct hsr_node *hsr_add_node(struct hsr_priv *hsr,
+ 		new_node->seq_out[i] = seq_out;
+ 
+ 	spin_lock_bh(&hsr->list_lock);
+-	list_for_each_entry_rcu(node, node_db, mac_list) {
++	list_for_each_entry_rcu(node, node_db, mac_list,
++				lockdep_is_held(&hsr->list_lock)) {
+ 		if (ether_addr_equal(node->macaddress_A, addr))
+ 			goto out;
+ 		if (ether_addr_equal(node->macaddress_B, addr))
+-- 
+2.24.1
 
