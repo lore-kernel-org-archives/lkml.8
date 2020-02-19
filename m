@@ -2,199 +2,125 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1130C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BBBC3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6B224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="dvGcwYJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 8D3E2206EF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgBSMO1 (ORCPT
+        id S1726823AbgBSMSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:14:27 -0500
-Received: from vps.xff.cz ([195.181.215.36]:36372 "EHLO vps.xff.cz"
+        Wed, 19 Feb 2020 07:18:24 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36674 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726495AbgBSMO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:14:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1582114465; bh=LBA0OH0LGSn5q2o3L6sg17qe8iS+vJij63Yj2IJHsB0=;
-        h=Date:From:To:Cc:Subject:References:X-My-GPG-KeyId:From;
-        b=dvGcwYJJZLS/xFu1ybo56J0BAjHKnrYfVUk3M+k4oXa0oOJ+vK/r+mmexvgN/O3+7
-         V4ZYYZ970DFyi3RfWCLmndM3lhr8HDwymiDHyO/HXJP9xib7xnnjK77E0/9tpT9p1T
-         T7QrfHCKnH+F5eHduStJqxSTxzYMELJI1oPd1y24=
-Date:   Wed, 19 Feb 2020 13:14:24 +0100
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bus: sunxi-rsb: Return correct data when mixing 16-bit
- and 8-bit reads
-Message-ID: <20200219121424.dfvrwfcavupmwbvw@core.my.home>
-Mail-Followup-To: Chen-Yu Tsai <wens@csie.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200219010951.395599-1-megous@megous.com>
- <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
+        id S1726491AbgBSMSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 07:18:23 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 342B7B0E6;
+        Wed, 19 Feb 2020 12:18:21 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id A715FDA838; Wed, 19 Feb 2020 13:18:04 +0100 (CET)
+Date:   Wed, 19 Feb 2020 13:18:04 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Marco Elver <elver@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Qian Cai <cai@lca.pw>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fs: fix a data race in i_size_write/i_size_read
+Message-ID: <20200219121804.GV2902@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Marco Elver <elver@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Qian Cai <cai@lca.pw>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200219045228.GO23230@ZenIV.linux.org.uk>
+ <EDCBB5B9-DEE4-4D4B-B2F4-F63179977D6C@lca.pw>
+ <20200219052329.GP23230@ZenIV.linux.org.uk>
+ <CANpmjNM=+y-OwKjtsjsEkwPjpHXpt7ywaE48JyiND6dKt=Vf1Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67BLODmDmQOJH-m-KWVtXS2EGrnPxi9czj6oipHPDTfjw@mail.gmail.com>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
+In-Reply-To: <CANpmjNM=+y-OwKjtsjsEkwPjpHXpt7ywaE48JyiND6dKt=Vf1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 10:49:18AM +0800, Chen-Yu Tsai wrote:
-> On Wed, Feb 19, 2020 at 9:10 AM Ondrej Jirman <megous@megous.com> wrote:
-> >
-> > When doing a 16-bit read that returns data in the MSB byte, the
-> > RSB_DATA register will keep the MSB byte unchanged when doing
-> > the following 8-bit read. sunxi_rsb_read() will then return
-> > a result that contains high byte from 16-bit read mixed with
-> > the 8-bit result.
-> >
-> > The consequence is that after this happens the PMIC's regmap will
-> > look like this: (0x33 is the high byte from the 16-bit read)
-> >
-> > % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-> > 00: 33
-> > 01: 33
-> > 02: 33
-> > 03: 33
-> > 04: 33
-> > 05: 33
-> > 06: 33
-> > 07: 33
-> > 08: 33
-> > 09: 33
-> > 0a: 33
-> > 0b: 33
-> > 0c: 33
-> > 0d: 33
-> > 0e: 33
-> > [snip]
-> >
-> > Fix this by masking the result of the read with the correct mask
-> > based on the size of the read. There are no 16-bit users in the
-> > mainline kernel, so this doesn't need to get into the stable tree.
-> >
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+On Wed, Feb 19, 2020 at 10:21:46AM +0100, Marco Elver wrote:
+> Right. In reality, for mainstream architectures, it appears quite unlikely.
 > 
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> There may be other valid reasons, such as documenting the fact the
+> write can happen concurrently with loads.
 > 
-> for the fix, however it's not entirely clear to me how the MSB 0x33
-> value got into the regmap. Looks like I expected the regmap core to
-> handle any overflows, or didn't expect the lingering MSB from 16-bit
-> reads, as I didn't have any 16-bit register devices back when I wrote
-> this.
-
-Now I feel like I masked some other bug. Though explanation may be quite simple.
-
-For example when AXP core does regmap_read on some values for showing charging
-current or battery voltage, because regmap_read works with unsigned int, it
-will simply get a number that's too big. And that was the major symptom
-I observed. I got readings from sysfs that my tablet is consuming 600A or 200A,
-etc. And this value was jumping around based on AC100 activity (as the MSB
-byte got changed).
-
-In other places where the driver does regmap_update_bits, I think nothing bad
-happened. The write after the read would simply discard the MSB byte.
-
-And for the debugfs/regmap/*/registers, those are printed such:
-
-https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L256
-
-	snprintf(buf + buf_pos, count - buf_pos,
-		"%.*x", map->debugfs_val_len, val);
-	
-This doesn't truncate values, so the larger number gets printed to (for example):
-
-        33fe
-
-But regmap debugfs code truncates this by cutting off the formatted string to
-this length:
-
-  https://elixir.bootlin.com/linux/latest/source/drivers/base/regmap/regmap-debugfs.c#L189
-
-So in the end, only:
-
-        00: 33
-
-remains, instead of the correct value of:
-
-        00: fe
-
-So in the case of debugfs this is just a cosmetic/formatting issue, that didn't
-affect anything else.
-
-I think regmap_bus->reg_read API simply expects the returned value to not exceed
-the sensible range.
-
-regards,
-	o.
-
-
-> ChenYu
+> Let's assume the WRITE_ONCE can be dropped.
 > 
+> The load is a different story. While load tearing may not be an issue,
+> it's more likely that other optimizations can break the code. For
+> example load fusing can break code that expects repeated loads in a
+> loop. E.g. I found these uses of i_size_read in loops:
 > 
-> > ---
-> >  drivers/bus/sunxi-rsb.c | 6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-> > index b8043b58568ac..8ab6a3865f569 100644
-> > --- a/drivers/bus/sunxi-rsb.c
-> > +++ b/drivers/bus/sunxi-rsb.c
-> > @@ -316,6 +316,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
-> >  {
-> >         u32 cmd;
-> >         int ret;
-> > +       u32 mask;
-> >
-> >         if (!buf)
-> >                 return -EINVAL;
-> > @@ -323,12 +324,15 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
-> >         switch (len) {
-> >         case 1:
-> >                 cmd = RSB_CMD_RD8;
-> > +               mask = 0xffu;
-> >                 break;
-> >         case 2:
-> >                 cmd = RSB_CMD_RD16;
-> > +               mask = 0xffffu;
-> >                 break;
-> >         case 4:
-> >                 cmd = RSB_CMD_RD32;
-> > +               mask = 0xffffffffu;
-> >                 break;
-> >         default:
-> >                 dev_err(rsb->dev, "Invalid access width: %zd\n", len);
-> > @@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
-> >         if (ret)
-> >                 goto unlock;
-> >
-> > -       *buf = readl(rsb->regs + RSB_DATA);
-> > +       *buf = readl(rsb->regs + RSB_DATA) & mask;
-> >
-> >  unlock:
-> >         mutex_unlock(&rsb->lock);
-> > --
-> > 2.25.1
-> >
+> git grep -E '(for|while) \(.*i_size_read'
+> fs/ocfs2/dir.c: while (ctx->pos < i_size_read(inode)) {
+> fs/ocfs2/dir.c:                 for (i = 0; i < i_size_read(inode) &&
+> i < offset; ) {
+> fs/ocfs2/dir.c: while (ctx->pos < i_size_read(inode)) {
+> fs/ocfs2/dir.c:         while (ctx->pos < i_size_read(inode)
+> fs/squashfs/dir.c:      while (length < i_size_read(inode)) {
+> fs/squashfs/namei.c:    while (length < i_size_read(dir)) {
+> 
+> Can i_size writes happen concurrently, and if so will these break if
+> the compiler decides to just do i_size_read's load once, and keep the
+> result in a register?
+
+It depends on the semantics and the behaviour when the value is not
+cached in a register might be the wrong one. A concrete example with
+assembly and analysis can be found in d98da49977f6 ("btrfs: save i_size
+to avoid double evaluation of i_size_read in compress_file_range"),
+which is the workardound mentioned in the my other mail.
+
+C:
+    actual_end = min_t(u64, i_size_read(inode), end + 1);
+
+Asm:
+
+        mov    0x20(%rsp),%rax
+        cmp    %rax,0x48(%r15)           # read
+        movl   $0x0,0x18(%rsp)
+        mov    %rax,%r12
+        mov    %r14,%rax
+        cmovbe 0x48(%r15),%r12           # eval
+    
+      Where r15 is inode and 0x48 is offset of i_size.
+    
+      The original fix was to revert 62b37622718c that would do an
+      intermediate assignment and this would also avoid the doulble
+      evaluation but is not future-proof, should the compiler merge the
+      stores and call i_size_read anyway.
+    
+      There's a patch adding READ_ONCE to i_size_read but that's not being
+      applied at the moment and we need to fix the bug. Instead, emulate
+      READ_ONCE by two barrier()s that's what effectively happens. The
+      assembly confirms single evaluation:
+    
+        mov    0x48(%rbp),%rax          # read once
+        mov    0x20(%rsp),%rcx
+        mov    $0x20,%edx
+        cmp    %rax,%rcx
+        cmovbe %rcx,%rax
+        mov    %rax,(%rsp)
+        mov    %rax,%rcx
+        mov    %r14,%rax
+    
+      Where 0x48(%rbp) is inode->i_size stored to %eax.
