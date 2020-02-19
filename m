@@ -2,75 +2,125 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C29C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864CDC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7ABD24671
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BEE0208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sMELI4Dv";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="sMELI4Dv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbgBSPgS (ORCPT
+        id S1726851AbgBSPge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:36:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42162 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726645AbgBSPgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:36:18 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        Wed, 19 Feb 2020 10:36:34 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:50724 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726645AbgBSPgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:36:33 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id C8E7E8EE3C5;
+        Wed, 19 Feb 2020 07:36:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582126592;
+        bh=Olisob633QW5LfExi8a7Lh6PWpLjGpBMyExTbRd7Pdk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sMELI4Dv6IfAbGlqQCjDKaFb+F5bS8Ikx7LEV6RQPYrgTG4tqtMwI5n/x9AHlu21V
+         lji/5z5uQav4OvhsoGGnbM5e7HpCKAkv91/3YIL5FJT1M2FMitGqNkAydb+5BoQaWT
+         gT0awUIFgCzQyD8Bw/W27GG1ZGAzxGF5C2fA5Qro=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DuU4QiKOBDg9; Wed, 19 Feb 2020 07:36:32 -0800 (PST)
+Received: from jarvis.ext.hansenpartnership.com (jarvis.ext.hansenpartnership.com [153.66.160.226])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 403CE2465D;
-        Wed, 19 Feb 2020 15:36:16 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 10:36:14 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: Re: [PATCH v3 04/22] x86/doublefault: Make memmove()
- notrace/NOKPROBE
-Message-ID: <20200219103614.2299ff61@gandalf.local.home>
-In-Reply-To: <20200219150744.604459293@infradead.org>
-References: <20200219144724.800607165@infradead.org>
-        <20200219150744.604459293@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id DC9F58EE144;
+        Wed, 19 Feb 2020 07:36:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1582126592;
+        bh=Olisob633QW5LfExi8a7Lh6PWpLjGpBMyExTbRd7Pdk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sMELI4Dv6IfAbGlqQCjDKaFb+F5bS8Ikx7LEV6RQPYrgTG4tqtMwI5n/x9AHlu21V
+         lji/5z5uQav4OvhsoGGnbM5e7HpCKAkv91/3YIL5FJT1M2FMitGqNkAydb+5BoQaWT
+         gT0awUIFgCzQyD8Bw/W27GG1ZGAzxGF5C2fA5Qro=
+Message-ID: <1582126590.10671.18.camel@HansenPartnership.com>
+Subject: Re: [PATCH v3 00/25] user_namespace: introduce fsid mappings
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     =?ISO-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, smbarber@chromium.org,
+        Seth Forshee <seth.forshee@canonical.com>,
+        linux-security-module@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>
+Date:   Wed, 19 Feb 2020 07:36:30 -0800
+In-Reply-To: <20200219122752.jalnsmsotigwxwsw@wittgenstein>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+         <1582069856.16681.59.camel@HansenPartnership.com>
+         <20200219122752.jalnsmsotigwxwsw@wittgenstein>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 15:47:28 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, 2020-02-19 at 13:27 +0100, Christian Brauner wrote:
+> On Tue, Feb 18, 2020 at 03:50:56PM -0800, James Bottomley wrote:
+> > On Tue, 2020-02-18 at 15:33 +0100, Christian Brauner wrote:
+[...]
+> > > With fsid mappings we can solve this by writing an id mapping of
+> > > 0 100000 100000 and an fsid mapping of 0 300000 100000. On
+> > > filesystem access the kernel will now lookup the mapping for
+> > > 300000 in the fsid mapping tables of the user namespace. And
+> > > since such a mapping exists, the corresponding files will have
+> > > correct ownership.
+> > 
+> > So I did compile this up in order to run the shiftfs tests over it
+> > to see how it coped with the various corner cases.  However, what I
+> > find is it simply fails the fsid reverse mapping in the
+> > setup.  Trying to use a simple uid of 0 100000 1000 and a fsid of
+> > 100000 0 1000 fails the entry setuid(0) call because of this code:
+> 
+> This is easy to fix. But what's the exact use-case?
 
-> --- a/arch/x86/lib/memcpy_32.c
-> +++ b/arch/x86/lib/memcpy_32.c
-> @@ -21,7 +21,7 @@ __visible void *memset(void *s, int c, s
->  }
->  EXPORT_SYMBOL(memset);
->  
-> -__visible void *memmove(void *dest, const void *src, size_t n)
-> +__visible notrace void *memmove(void *dest, const void *src, size_t n)
->  {
->  	int d0,d1,d2,d3,d4,d5;
->  	char *ret = dest;
-> @@ -207,3 +207,8 @@ __visible void *memmove(void *dest, cons
->  
->  }
->  EXPORT_SYMBOL(memmove);
+Well, the use case I'm looking to solve is the same one it's always
+been: getting a deprivileged fake root in a user_ns to be able to write
+an image at fsuid 0.
 
-Hmm, for things like this, which is adding notrace because of a single
-instance of it (although it is fine to trace in any other instance), it
-would be nice to have a gcc helper that could call "memmove+5" which
-would skip the tracing portion.
+I don't think it's solvable in your current framework, although
+allowing the domain to be disjoint might possibly hack around it.  The
+problem with the proposed framework is that there are no backshifts
+from the filesystem view, there are only forward shifts to the
+filesystem view.  This means that to get your framework to write a
+filesystem at fsuid 0 you have to have an identity map for fsuid. Which
+I can do: I tested uid shift 0 100000 1000 and fsuid shift 0 0 1000. 
+It does all work, as you'd expect because the container has real fs
+root not a fake root.  And that's the whole problem:  Firstly, I'm fs
+root for any filesystem my userns can see, so any imprecision in
+setting up the mount namespace of the container and I own your host and
+secondly any containment break and I'm privileged with respect to the
+fs uid wherever I escape to so I will likewise own your host.
 
--- Steve
+The only way to keep containment is to have a zero fsuid inside the
+container corresponding to a non-zero one outside.  And the only way to
+solve the imprecision in mount namespace issue is to strictly control
+the entry point at which the writing at fsuid 0 becomes active.
+
+James
+
+
+
