@@ -2,163 +2,150 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25CDC34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6467C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C677B2176D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:35:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TyqEqJrq"
+	by mail.kernel.org (Postfix) with ESMTP id B9E792176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 02:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgBSCfa (ORCPT
+        id S1728116AbgBSCfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 21:35:30 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:21494 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbgBSCfa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 21:35:30 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582079729; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=jXPj6BmmHK1fbvzmEuD+DaWJ8U2v+ztHn2qwHyzklAE=;
- b=TyqEqJrqReb0laK8uveazUTV41WxKHrDrr+aIrMmZBq2lLOZlRM3zP6Cp6a63eqBT78627j0
- 8dNE+drBbN8BUqTR+GvQk3Xv8cUTYrvSP4v0IHRwzePZBVZJEsMHhOtj6eArYDsbAhdakpUw
- sq5G8iaJDM8ycLzUkspQLPg5KFI=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c9ef0.7f5b20aab3e8-smtp-out-n03;
- Wed, 19 Feb 2020 02:35:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 706D4C447A2; Wed, 19 Feb 2020 02:35:28 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90523C433A2;
-        Wed, 19 Feb 2020 02:35:27 +0000 (UTC)
+        Tue, 18 Feb 2020 21:35:46 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3016 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726768AbgBSCfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 21:35:45 -0500
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 83358F8D75B7100BDEA5;
+        Wed, 19 Feb 2020 10:35:42 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Feb 2020 10:35:42 +0800
+Received: from architecture4 (10.160.196.180) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 19 Feb 2020 10:35:41 +0800
+Date:   Wed, 19 Feb 2020 10:34:22 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v6 11/16] erofs: Convert compressed files from readpages
+ to readahead
+Message-ID: <20200219023422.GA83440@architecture4>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-20-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Feb 2020 10:35:27 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v1 1/2] scsi: ufs: add required delay after gating
- reference clock
-In-Reply-To: <56c1fc80919491d058d904fcc7301835@codeaurora.org>
-References: <20200217093559.16830-1-stanley.chu@mediatek.com>
- <20200217093559.16830-2-stanley.chu@mediatek.com>
- <c6874825dd60ea04ed401fbd1b5cb568@codeaurora.org>
- <1581945168.26304.4.camel@mtksdccf07>
- <e518c4d1d94ec15e9c4c31c34a9e42d1@codeaurora.org>
- <1581946449.26304.15.camel@mtksdccf07>
- <56c1fc80919491d058d904fcc7301835@codeaurora.org>
-Message-ID: <a8cd5beee0a1e12a40da752c6cd9b5de@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-20-willy@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.160.196.180]
+X-ClientProxiedBy: dggeme706-chm.china.huawei.com (10.1.199.102) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanely,
-
-On 2020-02-17 21:42, Can Guo wrote:
-> On 2020-02-17 21:34, Stanley Chu wrote:
->> Hi Can,
->> 
->> On Mon, 2020-02-17 at 21:22 +0800, Can Guo wrote:
->>> On 2020-02-17 21:12, Stanley Chu wrote:
->>> > Hi Can,
->>> >
->>> >
->>> >> >  			} else if (!on && clki->enabled) {
->>> >> >  				clk_disable_unprepare(clki->clk);
->>> >> > +				wait_us = hba->dev_info.clk_gating_wait_us;
->>> >> > +				if (ref_clk && wait_us)
->>> >> > +					usleep_range(wait_us, wait_us + 10);
->>> >>
->>> >> Hi St,anley,
->>> >>
->>> >> If wait_us is 1us, it would be inappropriate to use usleep_range()
->>> >> here.
->>> >> You have checks of the delay in patch #2, but why it is not needed
->>> >> here?
->>> >>
->>> >> Thanks,
->>> >> Can Guo.
->>> >
->>> > You are right. I could make that delay checking as common function so
->>> > it
->>> > can be used here as well to cover all possible values.
->>> >
->>> > Thanks for suggestion.
->>> > Stanley
->>> 
->>> Hi Stanley,
->>> 
->>> One more thing, as in patch #2, you have already added delays in your
->>> ufshcd_vops_setup_clocks(OFF, PRE_CHANGE) path, plus this delay here,
->>> don't you delay for 2*bRefClkGatingWaitTime in ufshcd_setup_clocks()?
->>> As the delay added in your vops also delays the actions of turning
->>> off all the other clocks in ufshcd_setup_clocks(), you don't need the
->>> delay here again, do you agree?
->> 
->> MediaTek driver is not using reference clocks named as "ref_clk" 
->> defined
->> in device tree, thus the delay specific for "ref_clk" in
->> ufshcd_setup_clocks() will not be applied in MediaTek platform.
->> 
->> This patch is aimed to add delay for this kind of "ref_clk" used by 
->> any
->> future vendors.
->> 
->> Anyway thanks for the reminding : )
->> 
->>> 
->>> Thanks,
->>> Can Guo.
->> 
->> 
->> Thanks,
->> Stanley
+On Mon, Feb 17, 2020 at 10:46:00AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> Hi Stanley,
+> Use the new readahead operation in erofs.
 > 
-> Then we are unluckily hit by this change. We have ref_clk in DT, thus
-> this change would add unwanted delays to our platforms. but still we
-> disable device's ref_clk in vops. :)
-> 
-> Could you please hold on patch #1 first? I need sometime to have a
-> dicussion with my colleagues on this.
-> 
-> Thanks.
-> Can Guo.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Since we all need this delay here, how about put the delay in the
-entrence of ufshcd_setup_clocks(), before vops_setup_clocks()?
-If so, we can remove all the delays we added in our vops since the
-delay anyways delays everything inside ufshcd_setup_clocks().
+It looks good to me, although some further optimization exists
+but we could make a straight-forward transform first, and
+I haven't tested the whole series for now...
+Will test it later.
 
-Meanwhile, if you want to modify the delay
-(hba->dev_info.clk_gating_wait_us) for some reasons, say for specific
-UFS devices, you still can do it in vops_apply_dev_quirks().
-
-What do you say?
+Acked-by: Gao Xiang <gaoxiang25@huawei.com>
 
 Thanks,
-Can Guo.
+Gao Xiang
+
+> ---
+>  fs/erofs/zdata.c | 29 +++++++++--------------------
+>  1 file changed, 9 insertions(+), 20 deletions(-)
+> 
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 17f45fcb8c5c..7c02015d501d 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -1303,28 +1303,23 @@ static bool should_decompress_synchronously(struct erofs_sb_info *sbi,
+>  	return nr <= sbi->max_sync_decompress_pages;
+>  }
+>  
+> -static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+> -			     struct list_head *pages, unsigned int nr_pages)
+> +static void z_erofs_readahead(struct readahead_control *rac)
+>  {
+> -	struct inode *const inode = mapping->host;
+> +	struct inode *const inode = rac->mapping->host;
+>  	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+>  
+> -	bool sync = should_decompress_synchronously(sbi, nr_pages);
+> +	bool sync = should_decompress_synchronously(sbi, readahead_count(rac));
+>  	struct z_erofs_decompress_frontend f = DECOMPRESS_FRONTEND_INIT(inode);
+> -	gfp_t gfp = mapping_gfp_constraint(mapping, GFP_KERNEL);
+> -	struct page *head = NULL;
+> +	struct page *page, *head = NULL;
+>  	LIST_HEAD(pagepool);
+>  
+> -	trace_erofs_readpages(mapping->host, lru_to_page(pages)->index,
+> -			      nr_pages, false);
+> +	trace_erofs_readpages(inode, readahead_index(rac),
+> +			readahead_count(rac), false);
+>  
+> -	f.headoffset = (erofs_off_t)lru_to_page(pages)->index << PAGE_SHIFT;
+> -
+> -	for (; nr_pages; --nr_pages) {
+> -		struct page *page = lru_to_page(pages);
+> +	f.headoffset = readahead_offset(rac);
+>  
+> +	readahead_for_each(rac, page) {
+>  		prefetchw(&page->flags);
+> -		list_del(&page->lru);
+>  
+>  		/*
+>  		 * A pure asynchronous readahead is indicated if
+> @@ -1333,11 +1328,6 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+>  		 */
+>  		sync &= !(PageReadahead(page) && !head);
+>  
+> -		if (add_to_page_cache_lru(page, mapping, page->index, gfp)) {
+> -			list_add(&page->lru, &pagepool);
+> -			continue;
+> -		}
+> -
+>  		set_page_private(page, (unsigned long)head);
+>  		head = page;
+>  	}
+> @@ -1366,11 +1356,10 @@ static int z_erofs_readpages(struct file *filp, struct address_space *mapping,
+>  
+>  	/* clean up the remaining free pages */
+>  	put_pages_list(&pagepool);
+> -	return 0;
+>  }
+>  
+>  const struct address_space_operations z_erofs_aops = {
+>  	.readpage = z_erofs_readpage,
+> -	.readpages = z_erofs_readpages,
+> +	.readahead = z_erofs_readahead,
+>  };
+>  
+> -- 
+> 2.25.0
+> 
+> 
