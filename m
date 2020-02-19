@@ -2,102 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31668C34031
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B5BC34031
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0275F24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED8224654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 01:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jCnEFdP9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipHlH/Al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBSB5W (ORCPT
+        id S1728085AbgBSB62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 20:57:22 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:51246 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727811AbgBSB5V (ORCPT
+        Tue, 18 Feb 2020 20:58:28 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37512 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727811AbgBSB62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 20:57:21 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582077441; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=YcNZbJFJfQvxvpBXUgrKzCwdLhDCfSRbsPpwRd/fJ3g=;
- b=jCnEFdP9VI5UbkPRAPAoCa7Xw0z9kJmiB40Unaz7Yaa65rO0OLbLYQBsKr1uJdFlflmBMTkn
- I5D8qPW3ybwpbLiqRIoFNCK7rJYM9s7bivL8CjIHDCfRSKmI+juQSKwZe6jMn4g8aEOALVQv
- ezjvyYchuV9yW+lz3RhLEeOtHZo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4c9600.7f24b588bf80-smtp-out-n02;
- Wed, 19 Feb 2020 01:57:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E5C36C4479D; Wed, 19 Feb 2020 01:57:19 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6337C43383;
-        Wed, 19 Feb 2020 01:57:18 +0000 (UTC)
+        Tue, 18 Feb 2020 20:58:28 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so11914390pgl.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Feb 2020 17:58:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=q/nY1Mf51kH8KT0v62tDiqkFUg4146cYnGwpmJwHyYo=;
+        b=ipHlH/AlxVQ/IulE7p5AjzOFHiVR1RBrVYYtMyUoV1UQoG/6dZkSxq2PGqL2fniBgm
+         p2Y3huDQAm29/M/8lvlIqo28KOk7mjIsnca2skalBXejbHNR1Lrgos+j48iiEPvhqLDw
+         N6lchqBHGjjVN/a0DsS4yGeBI/RdwNASQm1aspA3tBfW0yDxxMFQxIwSs8xp7NcmY1D/
+         lCOit0ez4+qPD2E7FNkgD5GxN4hi4xESTM/cOe6e6LQV233A0JernCGhcyycJGO0ApCc
+         c7wG+rJ1X+e7UIgAO7ZZ+RZZExBkp5m2WFgdAws1sbupJEUXH/dcteNZKPo27wy5uELj
+         Mwmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=q/nY1Mf51kH8KT0v62tDiqkFUg4146cYnGwpmJwHyYo=;
+        b=UU1n/HKofy7l3OeOFEZPZ5SftLshorFB174oAnuGvTQyhLTChkZN8BkRzipDdbonp8
+         wc8KLK5e6tbA9tWcPpdVIaYI2u2gxtTALedNgSMcAx+7t1bIlWJeTy4mIOLdUhy4yXLl
+         /AxnqeNSS1Dk0Ov9CJ21wJRL+bP3J5mQmSYbwX6YR0fMv39w78IuCAAeczhsatBX4Iiv
+         mh4hbt06uegmd/HLE3Gh9UTRklweCalnyeiwP/wDhyhXGdI2RCdKm3tEW77PoemR17sk
+         N712pZO+9bbQ4SO7ACxFJUWmlFOnpXL/sKAy3zdL4R0X/ukwU6/f+FXNkT9FOit1FgAW
+         V04g==
+X-Gm-Message-State: APjAAAXm27/wpinLsuB21Jp3Xc3D4RaN0a385uJe4MVwnvCemQgtIRlP
+        PqrTSW1MtvSEld133LpXHGE=
+X-Google-Smtp-Source: APXvYqzFJQ7t+g8cJNhe0uBXgIH3F++H+a+3qLANXSylYjhWNApUO0k8Gw5fe0DVzEJDNArl3M7gpg==
+X-Received: by 2002:aa7:9629:: with SMTP id r9mr24801465pfg.51.1582077507872;
+        Tue, 18 Feb 2020 17:58:27 -0800 (PST)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id e2sm206430pjs.25.2020.02.18.17.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2020 17:58:27 -0800 (PST)
+Date:   Wed, 19 Feb 2020 09:58:19 +0800
+From:   Murphy Zhou <jencce.kernel@gmail.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Murphy Zhou <jencce.kernel@gmail.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Jia He <justin.he@arm.com>, Linux MM <linux-mm@kvack.org>,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: get rid of WARN if failed to cow user pages
+Message-ID: <20200219015819.otdnknxpyo52txy7@xzhoux.usersys.redhat.com>
+References: <20191225054227.gii6ctjkuddjnprs@xzhoux.usersys.redhat.com>
+ <CAPcyv4hMPh0C+_OV+vuiYQikb8ZvRanna4vXfKN=10yrAyCjDA@mail.gmail.com>
+ <x49imk3bo1h.fsf@segfault.boston.devel.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 18 Feb 2020 17:57:18 -0800
-From:   isaacm@codeaurora.org
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, pratikp@codeaurora.org,
-        linux-kernel@vger.kernel.org, Liam Mark <lmark@codeaurora.org>,
-        iommu@lists.linux-foundation.org, kernel-team@android.com
-Subject: Re: [RFC PATCH] iommu/dma: Allow drivers to reserve an iova range
-In-Reply-To: <c58fd502-52a4-cb0f-6e7f-e9cc00627313@arm.com>
-References: <1581721096-16235-1-git-send-email-isaacm@codeaurora.org>
- <20200217080138.GB10342@infradead.org>
- <c58fd502-52a4-cb0f-6e7f-e9cc00627313@arm.com>
-Message-ID: <fc6e1b6689bca7a00e6b12d2bc877d20@codeaurora.org>
-X-Sender: isaacm@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <x49imk3bo1h.fsf@segfault.boston.devel.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-17 07:50, Robin Murphy wrote:
-> On 17/02/2020 8:01 am, Christoph Hellwig wrote:
->> On Fri, Feb 14, 2020 at 02:58:16PM -0800, Isaac J. Manjarres wrote:
->>> From: Liam Mark <lmark@codeaurora.org>
->>> 
->>> Some devices have a memory map which contains gaps or holes.
->>> In order for the device to have as much IOVA space as possible,
->>> allow its driver to inform the DMA-IOMMU layer that it should
->>> not allocate addresses from these holes.
->> 
->> Layering violation.  dma-iommu is the translation layer between the
->> DMA API and the IOMMU API.  And calls into it from drivers performing
->> DMA mappings need to go through the DMA API (and be documented there).
+On Tue, Feb 18, 2020 at 04:09:30PM -0500, Jeff Moyer wrote:
+> Dan Williams <dan.j.williams@intel.com> writes:
 > 
-> +1
+> > [ drop Ross, add Kirill, linux-mm, and lkml ]
+> >
+> > On Tue, Dec 24, 2019 at 9:42 PM Murphy Zhou <jencce.kernel@gmail.com> wrote:
+> >>
+> >> By running xfstests with fsdax enabled, generic/437 always hits this
+> >> warning[1] since this commit:
+> >>
+> >> commit 83d116c53058d505ddef051e90ab27f57015b025
+> >> Author: Jia He <justin.he@arm.com>
+> >> Date:   Fri Oct 11 22:09:39 2019 +0800
+> >>
+> >>     mm: fix double page fault on arm64 if PTE_AF is cleared
+> >>
+> >> Looking at the test program[2] generic/437 uses, it's pretty easy
+> >> to hit this warning. Remove this WARN as it seems not necessary.
+> >
+> > This is not sufficient justification. Does this same test fail without
+> > DAX? If not, why not? At a minimum you need to explain why this is not
+> > indicating a problem.
 > 
-> More than that, though, we already have "holes in the address space"
-> support for the sake of PCI host bridge windows - assuming this is the
-> same kind of thing (i.e. the holes are between memory regions and
-> other resources in PA space, so are only relevant once address
-> translation comes into the picture), then this is IOMMU API level
-To make sure that we're on the same page, this support alludes to the 
-handling in
-dma-iommu.c that reserves portions of the IOVA space for the PCI host 
-bridge windows,
-correct? If so, then yes, this is similar.
-> stuff, so even a DMA API level interface would be inappropriate.
-Does this mean that the driver should be managing the IOVA space and 
-mappings for this device using the IOMMU API? If so, is the rationale 
-for this because the device driver can have the information of what IOVA 
-ranges can and cannot be used? Shouldn't there be a generic way of 
-informing an IOMMU driver about these reserved ranges? Perhaps through a 
-device tree property, instead of deferring this type of management to 
-the driver?
+> I ran into this, too, and Kirill has posted a patch[1] to fix the issue.
+> Note that it's a potential data corrupter, so just removing the warning
+> is NOT the right approach.  :)
+
+Agree :) Thanks!
+
 > 
-> Robin.
+> -Jeff
+> 
+> [1] https://lore.kernel.org/linux-mm/20200218154151.13349-1-kirill.shutemov@linux.intel.com/T/#u
+> 
