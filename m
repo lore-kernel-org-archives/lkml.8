@@ -2,110 +2,163 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D79C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9F3C34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F02924654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20D8124654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:38:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvD2WyXL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqh4bs39"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgBSQif (ORCPT
+        id S1727460AbgBSQir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:38:35 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:42310 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbgBSQie (ORCPT
+        Wed, 19 Feb 2020 11:38:47 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43754 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726717AbgBSQir (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:38:34 -0500
-Received: by mail-lf1-f67.google.com with SMTP id y19so612954lfl.9;
-        Wed, 19 Feb 2020 08:38:32 -0800 (PST)
+        Wed, 19 Feb 2020 11:38:47 -0500
+Received: by mail-lj1-f193.google.com with SMTP id a13so1020662ljm.10;
+        Wed, 19 Feb 2020 08:38:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oc1iG+0sFqJJpFuBmYp8D6jIrAENImR/n43R/TFZnyw=;
-        b=BvD2WyXLCVUryS3IROysHumXd7lOaFWsK5xX8FY7TszpdKrxg87K22WgG22BFXbTW9
-         SDZEOU3LHeFx3Hqhw9XUnVlMICmren3S8VPcyidelhDD8qiQuTnIa55EpyT9yb+Cw1M9
-         YSJQrKeDxDx7S4DVf6XHTgNNjeHZgJrVHjYX+IJphxq5s1L7Huv6qnN7ScnWmh0szmfS
-         zQ5L5Jr6jjCAYyqPMDxDcVpxDAst9f0l4gmaHXSrlMkaAtqLknDxeN1+0nUFfJvPGAQv
-         2P8JZZj33zSE4ewTQqorNetCc9CtjWqaH/7RHECd8BOadTgnVcYulx+Jw2ksL1nPFQqv
-         q2nA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1BusTSWHZd4iZhqbIKlYBvbWdX7TmPHyP4IOzI8LiCY=;
+        b=bqh4bs39engdAvKvgFF0Zq2hPV28q+L7t9AlNPVJj2fqn3XcGBoy+rUUkCCeL32Xi3
+         OeWL2FthjZuAJLQaXc3UOE/IgsF0Jnv5Sx1GPD4767AKTekJe+6lZikAAw7BpV4VCnin
+         Hln5vKrlY87pHkmHFJPdBEbklM0G+cpBZGnM1RldqR+QupyhnE4ZZCUNFxPimXiAuYkt
+         1Qt2ITISl728KQy0MCMc+gYpcgOHkIOQqgE33ZqAbhkdUhWe6LRf9AFJbtObzSL7jUtJ
+         qDmF+IV1Vw+XmPYdv24jE/9v8BMVWyLvDug601UYkL5L3yZ/Zl8iynnTRtYScSJuPdSj
+         f0dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oc1iG+0sFqJJpFuBmYp8D6jIrAENImR/n43R/TFZnyw=;
-        b=EjhwbyqWWKL0+7H+hHUuRl30pJzFMz1ZsSx1Scji8GXtGaaQgopZH/LM84Sq91m/Z3
-         kcinN4O8wC9I9YlneAN2Ydk8P0BATOSPlIDyXLc3+Wtv0f7pM5sK8hjoRxdB1f57v0I9
-         EYPmtFFpqLf8lcN9Irb++dFBs5W71/buWXJGj5O7mzmBbHAyy1sxuWI4nRBn3oFAV9us
-         NUw1TDKluCr5JCenWPd3SJISLnG5cE2WEZkve3IBYZuU6GQM2rbNZzqcuuZdtUYhmuHA
-         g7GAGpsszcAFxZd/AQ3UwGmJCQyXRY2MqE5Aoer1Kad7zp47ZyiwVqhNvPVrWHVVUPxg
-         WpdA==
-X-Gm-Message-State: APjAAAVK+Wyl4jUNtfIznblaoZvIyvzO7Weh9jNiRvTxQ7b6E3A5BijB
-        g9XPUyOkIxCxwTMp67/+6+jakhMN
-X-Google-Smtp-Source: APXvYqx6W6H73i4GCMqbHQV8ZP9n8MEmNzglcNRDvno5D2hF3kFde722JXZXZYwB//bVHj8V+qSFcw==
-X-Received: by 2002:ac2:5964:: with SMTP id h4mr13913125lfp.213.1582130311784;
-        Wed, 19 Feb 2020 08:38:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id u16sm54074lfi.36.2020.02.19.08.38.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 08:38:31 -0800 (PST)
-Subject: Re: [PATCH v1] partitions/efi: Add 'gpt_sector' kernel cmdline
- parameter
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Davidlohr Bueso <dave@stgolabs.net>,
-        Colin Cross <ccross@android.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-efi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200219162339.16192-1-digetx@gmail.com>
- <20200219162738.GA10644@infradead.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <d0df41ca-e14a-1bbf-5632-781d3e46f279@gmail.com>
-Date:   Wed, 19 Feb 2020 19:38:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1BusTSWHZd4iZhqbIKlYBvbWdX7TmPHyP4IOzI8LiCY=;
+        b=tZGGdSwGXm07qpt++bskoqhvYyHnCPyG9zwhdSLkVO/z+zOAbIQPgy+GKpWoIOOuSV
+         5gk6uvT/8N0bOpzpiq3LLJG48vHJNgBYqNOVTOvux9EeQ9Q7bZvF/OmubsHjPMyr9ne7
+         lfvHJRVNibKMOf0FaTwJ7BlVOcy+HVM7uaYOBauJnV0YpSVY4wUXdPFrFwTUU2obQ8fb
+         YHz2s/kFvwAaXmuzIrCRo0qdfJ7vKNb9Ci2tPFLlEVih7XZJeDfLe0x3/7xgDHm1JIFI
+         axkG7nAbzwILO6tTZzBTZANDWXmg5Qse+hdPdSxxZUc14P9pOsD8aI0NkmdDg/WDlQCc
+         GCkQ==
+X-Gm-Message-State: APjAAAX1ORkQJ8J8NAOJbeB2XXUXcUSrj5WhU7Pu0UT7ss9WBslRNuFE
+        +hw3hUR2PKZLTSsTCMp8lDTSdAIhh2G8uwl2D5k=
+X-Google-Smtp-Source: APXvYqzMMZMnixr5rsqY/fP8O2JFDCDwpwfXCjfmgaU+YylBAsv9qXiKUG6cCv/c0LQblPf/mhGidILCwMduX/S9iNw=
+X-Received: by 2002:a2e:a404:: with SMTP id p4mr16827752ljn.234.1582130324319;
+ Wed, 19 Feb 2020 08:38:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219162738.GA10644@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200214133917.304937432@linutronix.de> <20200214161503.804093748@linutronix.de>
+ <87a75ftkwu.fsf@linux.intel.com> <875zg3q7cn.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <875zg3q7cn.fsf@nanos.tec.linutronix.de>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Feb 2020 08:38:33 -0800
+Message-ID: <CAADnVQ+Q6hZNFZyKSQm1vPYNszH9T6Krz4K8Eu9f3Dy5UQPsag@mail.gmail.com>
+Subject: Re: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple
+ call sites.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>, bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.02.2020 19:27, Christoph Hellwig пишет:
-> On Wed, Feb 19, 2020 at 07:23:39PM +0300, Dmitry Osipenko wrote:
->> The gpt_sector=<sector> causes the GPT partition search to look at the
->> specified sector for a valid GPT header if the GPT is not found at the
->> beginning or the end of block device.
->>
->> In particular this is needed for NVIDIA Tegra consumer-grade Android
->> devices in order to make them usable with the upstream kernel because
->> these devices use a proprietary / closed-source partition table format
->> for the EMMC and it's impossible to change the partition's format. Luckily
->> there is a GPT table in addition to the proprietary table, which is placed
->> in uncommon location of the EMMC storage and bootloader passes the
->> location to kernel using "gpt gpt_sector=<sector>" cmdline parameters.
->>
->> This patch is based on the original work done by Colin Cross for the
->> downstream Android kernel.
-> 
-> I don't think a magic command line is the way to go.  The best would be
-> to reverse-engineer the proprietary partition table format.  If that is
-> too hard we can at least key off the odd GPT location based of it's
-> magic number.
+On Wed, Feb 19, 2020 at 1:01 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Vinicius Costa Gomes <vinicius.gomes@intel.com> writes:
+>
+> Cc+: seccomp folks
+>
+> > Thomas Gleixner <tglx@linutronix.de> writes:
+> >
+> >> From: David Miller <davem@davemloft.net>
+>
+> Leaving content for reference
+>
+> >> All of these cases are strictly of the form:
+> >>
+> >>      preempt_disable();
+> >>      BPF_PROG_RUN(...);
+> >>      preempt_enable();
+> >>
+> >> Replace this with BPF_PROG_RUN_PIN_ON_CPU() which wraps BPF_PROG_RUN()
+> >> with:
+> >>
+> >>      migrate_disable();
+> >>      BPF_PROG_RUN(...);
+> >>      migrate_enable();
+> >>
+> >> On non RT enabled kernels this maps to preempt_disable/enable() and on RT
+> >> enabled kernels this solely prevents migration, which is sufficient as
+> >> there is no requirement to prevent reentrancy to any BPF program from a
+> >> preempting task. The only requirement is that the program stays on the same
+> >> CPU.
+> >>
+> >> Therefore, this is a trivially correct transformation.
+> >>
+> >> [ tglx: Converted to BPF_PROG_RUN_PIN_ON_CPU() ]
+> >>
+> >> Signed-off-by: David S. Miller <davem@davemloft.net>
+> >> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> >>
+> >> ---
+> >>  include/linux/filter.h    |    4 +---
+> >>  kernel/seccomp.c          |    4 +---
+> >>  net/core/flow_dissector.c |    4 +---
+> >>  net/core/skmsg.c          |    8 ++------
+> >>  net/kcm/kcmsock.c         |    4 +---
+> >>  5 files changed, 6 insertions(+), 18 deletions(-)
+> >>
+> >> --- a/include/linux/filter.h
+> >> +++ b/include/linux/filter.h
+> >> @@ -713,9 +713,7 @@ static inline u32 bpf_prog_run_clear_cb(
+> >>      if (unlikely(prog->cb_access))
+> >>              memset(cb_data, 0, BPF_SKB_CB_LEN);
+> >>
+> >> -    preempt_disable();
+> >> -    res = BPF_PROG_RUN(prog, skb);
+> >> -    preempt_enable();
+> >> +    res = BPF_PROG_RUN_PIN_ON_CPU(prog, skb);
+> >>      return res;
+> >>  }
+> >>
+> >> --- a/kernel/seccomp.c
+> >> +++ b/kernel/seccomp.c
+> >> @@ -268,16 +268,14 @@ static u32 seccomp_run_filters(const str
+> >>       * All filters in the list are evaluated and the lowest BPF return
+> >>       * value always takes priority (ignoring the DATA).
+> >>       */
+> >> -    preempt_disable();
+> >>      for (; f; f = f->prev) {
+> >> -            u32 cur_ret = BPF_PROG_RUN(f->prog, sd);
+> >> +            u32 cur_ret = BPF_PROG_RUN_PIN_ON_CPU(f->prog, sd);
+> >>
+> >
+> > More a question really, isn't the behavior changing here? i.e. shouldn't
+> > migrate_disable()/migrate_enable() be moved to outside the loop? Or is
+> > running seccomp filters on different cpus not a problem?
+>
+> In my understanding this is a list of filters and they are independent
+> of each other.
 
-I'll try to take a look at RE, pretty sure somebody tried to do that before.
+Yes. It's fine to be preempted between filters.
