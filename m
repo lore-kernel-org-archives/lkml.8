@@ -2,111 +2,251 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E66AC34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A69C34056
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57ED02465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E57E206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 17:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="cZiQCPVU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S0BybC/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgBSRmc (ORCPT
+        id S1726736AbgBSRnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 12:42:32 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:33670 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726518AbgBSRmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 12:42:32 -0500
-Received: from zn.tnic (p200300EC2F095500C57DC876B1A4488F.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:5500:c57d:c876:b1a4:488f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9FFFF1EC0591;
-        Wed, 19 Feb 2020 18:42:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582134150;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=DpvCtMjqcX25XbMiHHt7/X8aEcXXE9Ghl88YlkXaLKo=;
-        b=cZiQCPVUp+LrsSX1QyqrebwJk24EqpWZK+j7W+aJxC8JJ1UoTV5ioerAUuCl7iI1p2CQ/k
-        vQfI+wh/l37W+kADEV+CXvgpbnqMlhoNanR//2X50YNLOLzAiWRVfAYKjTDtCHAKBs3tis
-        Hmrq69Zv7llUJmARUzJoTwtkd6FarZk=
-Date:   Wed, 19 Feb 2020 18:42:23 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
-        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
-Message-ID: <20200219174223.GE30966@zn.tnic>
-References: <20200219144724.800607165@infradead.org>
- <20200219150744.488895196@infradead.org>
- <20200219171309.GC32346@zn.tnic>
- <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
+        Wed, 19 Feb 2020 12:43:10 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35763 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgBSRnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 12:43:10 -0500
+Received: by mail-il1-f196.google.com with SMTP id g12so21309041ild.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 09:43:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8VamPOzOFp0h6bF9coMhzVUXDhZEhY+KJ39znRhBSOQ=;
+        b=S0BybC/LcwM+sMXNhjhATGff7wWVLyrPSQrUSaCM5vM2OcxdjgEZnxw+EsfMo7Tlbx
+         4629wCbGvAbknrmn7sFJSA8n3p/qLh69icwvTKlbfJk3ku4Uws/koWFDUyJkeuCuh88r
+         HZXS5ScmU41sVch/O2LCdfnkeqI81iLkm1LNk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8VamPOzOFp0h6bF9coMhzVUXDhZEhY+KJ39znRhBSOQ=;
+        b=ne9afjodVl5+BbmlpP/4VghGByvvTcMdiTMWeNeXO/NSa2zp1xPMVSLZmYMvnIZnEH
+         voa9LahY2QixRl/MdbPBkkD6D0/TgKoS3rYbMsjok8S2FhaEd6VwTAWYmG1CAbtkRVko
+         4cJH1y/AdyCHFpTRff0nXCLh7x7ktha4G9kTbLsg49mlkr7NfGbCSkHwWHJ/3ay0dD7T
+         THzwUzzYkdObSjSTp+Us9b775xpY/kqmSSYyTsQUVXVJMf8UaBhqQH+tu7OJtY4DHW72
+         CzQQaD6FwfFkvMDxZ/mXd8eUrTolgNLCqzIAK5jtX0OAbqTmrolfjCQKiut91DZkCxRG
+         Fl3w==
+X-Gm-Message-State: APjAAAU+mZo92VUGx12gcsqniHtGcN9HzI43sgasXTCMMH1Qs4po6bo+
+        BjuJ4gCG5HFqhFz5sHWRO/KxSA==
+X-Google-Smtp-Source: APXvYqwevqK6J8wLASlbM0W/NAsY85ngNqbvK6WaR5nDhBNGalMr/6g1gnP6s1SYxdqDux5vi2L1OA==
+X-Received: by 2002:a92:3989:: with SMTP id h9mr23430181ilf.156.1582134189162;
+        Wed, 19 Feb 2020 09:43:09 -0800 (PST)
+Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
+        by smtp.gmail.com with ESMTPSA id a21sm60355ioh.29.2020.02.19.09.43.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 19 Feb 2020 09:43:08 -0800 (PST)
+From:   Drew Davenport <ddavenport@chromium.org>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Drew Davenport <ddavenport@chromium.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] drm/msm/dpu: Remove unused function arguments
+Date:   Wed, 19 Feb 2020 10:42:24 -0700
+Message-Id: <20200219104148.1.I0183a464f2788d41e6902f3535941f69c594b4c1@changeid>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:21:48AM -0800, Andy Lutomirski wrote:
-> Unless there is a signal pending and the signal setup code is about to
-> hit the same failed memory.  I suppose we can just treat cases like
-> this as "oh well, time to kill the whole system".
->
-> But we should genuinely agree that we're okay with deferring this handling.
+Several functions arguments in the resource manager are unused, so
+remove them.
 
-Good catch!
+Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+---
 
-static void exit_to_usermode_loop(struct pt_regs *regs, u32 cached_flags)
-{
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c | 37 ++++++++++----------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
 
-	...
-
-		/* deal with pending signal delivery */
-                if (cached_flags & _TIF_SIGPENDING)
-                        do_signal(regs);
-
-                if (cached_flags & _TIF_NOTIFY_RESUME) {
-                        clear_thread_flag(TIF_NOTIFY_RESUME);
-                        tracehook_notify_resume(regs);
-                        rseq_handle_notify_resume(NULL, regs);
-                }
-
-
-Err, can we make task_work run before we handle signals? Or there's a
-reason it is run in this order?
-
-Comment over task_work_add() says:
-
- * This is like the signal handler which runs in kernel mode, but it doesn't
- * try to wake up the @task.
-
-which sounds to me like this should really run before the signal
-handlers...
-
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+index 23f5b1433b357..dea1dba441fe7 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
+@@ -144,8 +144,7 @@ static int _dpu_rm_hw_blk_create(
+ 		const struct dpu_mdss_cfg *cat,
+ 		void __iomem *mmio,
+ 		enum dpu_hw_blk_type type,
+-		uint32_t id,
+-		const void *hw_catalog_info)
++		uint32_t id)
+ {
+ 	struct dpu_rm_hw_blk *blk;
+ 	void *hw;
+@@ -223,7 +222,7 @@ int dpu_rm_init(struct dpu_rm *rm,
+ 		}
+ 
+ 		rc = _dpu_rm_hw_blk_create(rm, cat, mmio, DPU_HW_BLK_LM,
+-				cat->mixer[i].id, &cat->mixer[i]);
++				cat->mixer[i].id);
+ 		if (rc) {
+ 			DPU_ERROR("failed: lm hw not available\n");
+ 			goto fail;
+@@ -244,7 +243,7 @@ int dpu_rm_init(struct dpu_rm *rm,
+ 
+ 	for (i = 0; i < cat->pingpong_count; i++) {
+ 		rc = _dpu_rm_hw_blk_create(rm, cat, mmio, DPU_HW_BLK_PINGPONG,
+-				cat->pingpong[i].id, &cat->pingpong[i]);
++				cat->pingpong[i].id);
+ 		if (rc) {
+ 			DPU_ERROR("failed: pp hw not available\n");
+ 			goto fail;
+@@ -258,7 +257,7 @@ int dpu_rm_init(struct dpu_rm *rm,
+ 		}
+ 
+ 		rc = _dpu_rm_hw_blk_create(rm, cat, mmio, DPU_HW_BLK_INTF,
+-				cat->intf[i].id, &cat->intf[i]);
++				cat->intf[i].id);
+ 		if (rc) {
+ 			DPU_ERROR("failed: intf hw not available\n");
+ 			goto fail;
+@@ -267,7 +266,7 @@ int dpu_rm_init(struct dpu_rm *rm,
+ 
+ 	for (i = 0; i < cat->ctl_count; i++) {
+ 		rc = _dpu_rm_hw_blk_create(rm, cat, mmio, DPU_HW_BLK_CTL,
+-				cat->ctl[i].id, &cat->ctl[i]);
++				cat->ctl[i].id);
+ 		if (rc) {
+ 			DPU_ERROR("failed: ctl hw not available\n");
+ 			goto fail;
+@@ -293,7 +292,6 @@ static bool _dpu_rm_needs_split_display(const struct msm_display_topology *top)
+  *	pingpong
+  * @rm: dpu resource manager handle
+  * @enc_id: encoder id requesting for allocation
+- * @reqs: proposed use case requirements
+  * @lm: proposed layer mixer, function checks if lm, and all other hardwired
+  *      blocks connected to the lm (pp) is available and appropriate
+  * @pp: output parameter, pingpong block attached to the layer mixer.
+@@ -305,7 +303,6 @@ static bool _dpu_rm_needs_split_display(const struct msm_display_topology *top)
+ static bool _dpu_rm_check_lm_and_get_connected_blks(
+ 		struct dpu_rm *rm,
+ 		uint32_t enc_id,
+-		struct dpu_rm_requirements *reqs,
+ 		struct dpu_rm_hw_blk *lm,
+ 		struct dpu_rm_hw_blk **pp,
+ 		struct dpu_rm_hw_blk *primary_lm)
+@@ -384,7 +381,7 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
+ 		lm[lm_count] = iter_i.blk;
+ 
+ 		if (!_dpu_rm_check_lm_and_get_connected_blks(
+-				rm, enc_id, reqs, lm[lm_count],
++				rm, enc_id, lm[lm_count],
+ 				&pp[lm_count], NULL))
+ 			continue;
+ 
+@@ -399,7 +396,7 @@ static int _dpu_rm_reserve_lms(struct dpu_rm *rm, uint32_t enc_id,
+ 				continue;
+ 
+ 			if (!_dpu_rm_check_lm_and_get_connected_blks(
+-					rm, enc_id, reqs, iter_j.blk,
++					rm, enc_id, iter_j.blk,
+ 					&pp[lm_count], iter_i.blk))
+ 				continue;
+ 
+@@ -480,20 +477,19 @@ static int _dpu_rm_reserve_ctls(
+ static int _dpu_rm_reserve_intf(
+ 		struct dpu_rm *rm,
+ 		uint32_t enc_id,
+-		uint32_t id,
+-		enum dpu_hw_blk_type type)
++		uint32_t id)
+ {
+ 	struct dpu_rm_hw_iter iter;
+ 	int ret = 0;
+ 
+ 	/* Find the block entry in the rm, and note the reservation */
+-	dpu_rm_init_hw_iter(&iter, 0, type);
++	dpu_rm_init_hw_iter(&iter, 0, DPU_HW_BLK_INTF);
+ 	while (_dpu_rm_get_hw_locked(rm, &iter)) {
+ 		if (iter.blk->id != id)
+ 			continue;
+ 
+ 		if (RESERVED_BY_OTHER(iter.blk, enc_id)) {
+-			DPU_ERROR("type %d id %d already reserved\n", type, id);
++			DPU_ERROR("intf id %d already reserved\n", id);
+ 			return -ENAVAIL;
+ 		}
+ 
+@@ -504,7 +500,7 @@ static int _dpu_rm_reserve_intf(
+ 
+ 	/* Shouldn't happen since intfs are fixed at probe */
+ 	if (!iter.hw) {
+-		DPU_ERROR("couldn't find type %d id %d\n", type, id);
++		DPU_ERROR("couldn't find intf id %d\n", id);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -523,8 +519,7 @@ static int _dpu_rm_reserve_intf_related_hw(
+ 		if (hw_res->intfs[i] == INTF_MODE_NONE)
+ 			continue;
+ 		id = i + INTF_0;
+-		ret = _dpu_rm_reserve_intf(rm, enc_id, id,
+-				DPU_HW_BLK_INTF);
++		ret = _dpu_rm_reserve_intf(rm, enc_id, id);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -535,7 +530,6 @@ static int _dpu_rm_reserve_intf_related_hw(
+ static int _dpu_rm_make_reservation(
+ 		struct dpu_rm *rm,
+ 		struct drm_encoder *enc,
+-		struct drm_crtc_state *crtc_state,
+ 		struct dpu_rm_requirements *reqs)
+ {
+ 	int ret;
+@@ -560,9 +554,7 @@ static int _dpu_rm_make_reservation(
+ }
+ 
+ static int _dpu_rm_populate_requirements(
+-		struct dpu_rm *rm,
+ 		struct drm_encoder *enc,
+-		struct drm_crtc_state *crtc_state,
+ 		struct dpu_rm_requirements *reqs,
+ 		struct msm_display_topology req_topology)
+ {
+@@ -621,14 +613,13 @@ int dpu_rm_reserve(
+ 
+ 	mutex_lock(&rm->rm_lock);
+ 
+-	ret = _dpu_rm_populate_requirements(rm, enc, crtc_state, &reqs,
+-					    topology);
++	ret = _dpu_rm_populate_requirements(enc, &reqs, topology);
+ 	if (ret) {
+ 		DPU_ERROR("failed to populate hw requirements\n");
+ 		goto end;
+ 	}
+ 
+-	ret = _dpu_rm_make_reservation(rm, enc, crtc_state, &reqs);
++	ret = _dpu_rm_make_reservation(rm, enc, &reqs);
+ 	if (ret) {
+ 		DPU_ERROR("failed to reserve hw resources: %d\n", ret);
+ 		_dpu_rm_release_reservation(rm, enc->base.id);
 -- 
-Regards/Gruss,
-    Boris.
+2.24.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
