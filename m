@@ -2,120 +2,98 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3C8C34056
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B539C18E00
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C26A207FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02FC24670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 20:42:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfNCQIIH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbgBSUmY (ORCPT
+        id S1727429AbgBSUm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 15:42:24 -0500
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:44508 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSUmX (ORCPT
+        Wed, 19 Feb 2020 15:42:29 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:42542 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbgBSUm3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 15:42:23 -0500
-Received: by mail-pl1-f182.google.com with SMTP id d9so543796plo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 12:42:23 -0800 (PST)
+        Wed, 19 Feb 2020 15:42:29 -0500
+Received: by mail-il1-f193.google.com with SMTP id x2so12950779ila.9;
+        Wed, 19 Feb 2020 12:42:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=xMDNRqXigFwE5mAPTxNYoRMwFlx8Rk5qiR4uZXsscw4=;
+        b=qfNCQIIH2j6wCkLKQ2mqWetFZntTRzqNjtBUM8anjzkPqf4Ynd0oWZWBb6hyrQPdCF
+         uN3+mto+zq5HiY0xnelQ4PTO7z5fp0Jptf5qhcMwXW26QHdu1ppBMrN3gLdBGvkz9+7T
+         uRGr6xPSZ2CPQYBvje7dwuPnzGTMvObbihSz3JgDRUVY/mlY9r1FmcAbwILshnrGxHoV
+         YQ7XIWi0j7DxuapC2Mxf0BgFsQfhqPDfPdS4oL0kZVxd1wsk1YdXR26HaffZljlbj16u
+         HGigXFMIMG0GQvDQ1WBnBaABCa1Y1CGM0wnxF/ut7KE88BxGE0dzo71L5H0o2zyYBRH3
+         /9hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XlRxO87zkf/AZ6fh20OMIQSRLp7vbnlHaFnZNks6GNI=;
-        b=Ig8pEXnfIemutf1UORp3od6pTyBx+vB6yNXBdb37XWyLJE7Yakc2GbtyI4XVC0MAqh
-         s6C0cntb5Fz5iRb7jtLefJaUDRsljpg6/VujCR5sJdbJiBX+1D8KsiARIgnF8MqVrSZy
-         j5IB28fYyxj7vHhZH7s96Pzr1icE5rNNRl6FsL1KyI83ULFkAK3gmWGBXBmx/n5JM7vX
-         t2oH2iYEaVWpG0j/Wybk41mCG3GZ6l3VOCjNcJHTyD2UKtU3V+Sc5thZohTWgkXXc+Ej
-         6uHhwpKNdOqetvKOy/8Rrg4g4YV0QYcVzqs3lvF0lVCtyzDmSxH2bddUJ91k5CqAI8Cf
-         xy5g==
-X-Gm-Message-State: APjAAAXrJkeKlfzylyMLpK0f41xusEdk9VquQ36A7+1/K17W0GWopH0f
-        JIL618BZn+sOfftOvl/6oHw=
-X-Google-Smtp-Source: APXvYqwkDymfw8D/L9PhjjHvG7D/OoNLTVBSTKhGrP8xP+IqgehdJyfbntSfF/pc3LWqhSUHIAKqPQ==
-X-Received: by 2002:a17:90a:fd85:: with SMTP id cx5mr10894444pjb.80.1582144943130;
-        Wed, 19 Feb 2020 12:42:23 -0800 (PST)
-Received: from sultan-book.localdomain ([104.200.129.62])
-        by smtp.gmail.com with ESMTPSA id q8sm713147pje.2.2020.02.19.12.42.22
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=xMDNRqXigFwE5mAPTxNYoRMwFlx8Rk5qiR4uZXsscw4=;
+        b=Zqt/maHMHrjlYLj1DRb19O1RYnSCUOdo3R2aXSoZCT5MXyulP0P0zJ520p03SI93zB
+         4c1gbX+96TVxfwSc+eCB7op+bO4hX8MkLc23BMyvDGLj6cT2ABvk5gP2ze9vkA8o84pc
+         qlvUIC1JGYyvH+wWAuHF66sDurWk12X7eQJOTqyyodH4h/cJMaAOtl6/KoqqovisZY5J
+         Qwb2aHbz0ZKzV5h//F+yS/T9KD7WYKcKnhUhR8A2MWTcqhbIjwJyw4KYdbOB7icguLX+
+         /8R5EGpf2lUTeyvvuQuZ2j17NF4DiKbun46KJfvLEZz7xVubiNP6Y2hKl6gxA7nqePxP
+         TOrw==
+X-Gm-Message-State: APjAAAUJJnuAe+hG2YWkwPSuXHZqmhMEpYKy0Fv0jqdflwRmrrcIUYLx
+        7vXKtrI3jdjnUoajnrq4M0Q=
+X-Google-Smtp-Source: APXvYqxamlA1ssz9lk4Vdd4EvOofQze/gD2b+EfZA1Xkq+0ovJF0gt8l+vaKreCew2We51oCAM8OcA==
+X-Received: by 2002:a92:35c9:: with SMTP id c70mr26726162ilf.79.1582144947299;
+        Wed, 19 Feb 2020 12:42:27 -0800 (PST)
+Received: from OLA-8C37N23.ad.garmin.com ([204.77.163.55])
+        by smtp.gmail.com with ESMTPSA id l81sm305023ild.87.2020.02.19.12.42.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 12:42:22 -0800 (PST)
-Date:   Wed, 19 Feb 2020 12:42:20 -0800
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200219204220.GA3488@sultan-book.localdomain>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219200527.GF11847@dhcp22.suse.cz>
+        Wed, 19 Feb 2020 12:42:26 -0800 (PST)
+From:   Joshua Watt <jpewhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Joshua Watt <JPEWhacker@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] ARM: dts: rockchip: Keep rk3288-tinker SD card IO powered during reboot
+Date:   Wed, 19 Feb 2020 14:42:20 -0600
+Message-Id: <20200219204224.34154-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:05:27PM +0100, Michal Hocko wrote:
-> Could you be more specific please? kspwad should stop as soon as the
-> high watermark is reached. If that is not the case then there is a bug
-> which should be fixed.
+IO voltage regulator for the SD card must be kept on all the time,
+otherwise when the board reboots the SD card can't be read by the
+bootloader.
 
-No, there is no bug causing kswapd to continue beyond the high watermark.
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-tinker.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Sure it is quite possible that kswapd is busy for extended amount of
-> time if the memory pressure is continuous.
-> 
-> > On a constrained system I tested (mem=2G), this patch had the positive effect of
-> > improving overall responsiveness at high memory pressure.
-> 
-> Again, do you have more details about the workload and what was the
-> cause of responsiveness issues? Because I would expect that the
-> situation would be quite opposite because it is usually the direct
-> reclaim that is a source of stalls visible from userspace. Or is this
-> about a single CPU situation where kswapd saturates the single CPU and
-> all other tasks are just not getting enough CPU cycles?
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dtsi b/arch/arm/boot/dts/rk3288-tinker.dtsi
+index 312582c1bd37..acfaa12ec239 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -276,6 +276,7 @@
+ 			};
+ 
+ 			vccio_sd: LDO_REG5 {
++				regulator-always-on;
+ 				regulator-boot-on;
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+-- 
+2.17.1
 
-The workload was having lots of applications open at once. At a certain point
-when memory ran low, my system became sluggish and kswapd CPU usage skyrocketed.
-I added printks into kswapd with this patch, and my premature exit in kswapd
-kicked in quite often.
-
-> > On systems with more memory I tested (>=4G), kswapd becomes more expensive to
-> > run at its higher scan depths, so stopping kswapd prematurely when there aren't
-> > any memory allocations waiting for it prevents it from reaching the *really*
-> > expensive scan depths and burning through even more resources.
-> > 
-> > Combine a large amount of memory with a slow CPU and the current problematic
-> > behavior of kswapd at high memory pressure shows. My personal test scenario for
-> > this was an arm64 CPU with a variable amount of memory (up to 4G RAM + 2G swap).
-> 
-> But still, somebody has to put the system into balanced state so who is
-> going to do all the work?
-
-All the work will be done by kswapd of course, but only if it's needed.
-
-The real problem is that a single memory allocation failure, and free memory
-being some amount below the high watermark, are not good heuristics to predict
-*future* memory allocation needs. They are good for determining how to steer
-kswapd to help satisfy a failed allocation in the present, but anything more is
-pure speculation (which turns out to be wrong speculation, since this behavior
-causes problems).
-
-If there are outstanding failed allocations that won't go away, then it's
-perfectly reasonable to keep kswapd running until it frees pages up to the high
-watermark. But beyond that is unnecessary, since there's no way to know if or
-when kswapd will need to fire up again. This makes sense considering how kswapd
-is currently invoked: it's fired up due to a failed allocation of some sort, not
-because the amount of free memory dropped below the high watermark.
-
-Sultan
