@@ -2,109 +2,173 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FE9C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5380C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1DC24654
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QlJeS/Ww"
+	by mail.kernel.org (Postfix) with ESMTP id C4AF024654
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBSLu7 (ORCPT
+        id S1727158AbgBSLvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Feb 2020 06:51:01 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34714 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726495AbgBSLu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Feb 2020 06:50:59 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55721 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgBSLu6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:50:58 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q9so288799wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 03:50:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=13koyGRfSI36B094w+YJ/HafK6KqgQmhuR18/pfh9NY=;
-        b=QlJeS/WwAZ1oyQx8kTcmP7FFIOZmvhu6bpQ73FDD+kRCkIqNiJoQWbCB1lILOHaNdX
-         ccRBFDlCOD4z6eUkgQPmhe4ShjrQSjlX1OaoICSfj2gEuySpV1cyuxEPx9SVXpmJoCu6
-         K7b5s7pQAW9gEQTl5I6OH9RDtlv8q0M6Iw7AM+H0PsYr1yCvVUIkcGWEw+l6BaiAp99A
-         w8JaRcOjStRwOSkvHv/CYTuoO5fNxKGLAi3MKbZv7+ZzH/amgBY14OdfFcKtX3qKttH8
-         Bb62rS9cUFOStgbqNjeuQKnZ0M2mbQhcVwUVm4jpomvXs+RakwNcdWz3+vq7yu/keYvQ
-         cj8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=13koyGRfSI36B094w+YJ/HafK6KqgQmhuR18/pfh9NY=;
-        b=fm4ceu6nxRmCCVE2aegZfImonW4CQ4kuRub7yrnVmKpe+U4NBLtAIkQ9yeqi5AZ+/N
-         IoUZNfGjdI7lESOwfc5udFD2ZvmqurAC6TwlxT9BuH5P5Rrjl0TN2mdnX/+OntfFPrW5
-         NKBM8tnVgh8XBYyMmCKexaBMnASLOw+JaeEgNycWQmZFJVBEGnADxSj9msQuhB/PLRqi
-         8sEJMMA7WG3wJry7SMaoQUQ7Yd+3KGqfd3I9l9KTnuWfdglNyuksKy0mh8+m7lcRp41a
-         8EXzztPtnKHcWSHqHVjhzsQrvbvcU7J5rAvln7ksxjUru26DgO680nc6/hPXVmx38ZXy
-         hmTg==
-X-Gm-Message-State: APjAAAVnp6tN1J0IxSpiPGBkAKkchxbKc8ds8ALuWAmKy5BwmHdapOgw
-        2FETL2WmKMsr4y0v3+q4FPOHFA==
-X-Google-Smtp-Source: APXvYqzQI4jfpHJN/5WPr1SSQOvLgeK/S64Itpix079YcW1KNtXmMgZuqHhXGf/bMC11dLJcOMSu6w==
-X-Received: by 2002:a1c:5f06:: with SMTP id t6mr9808280wmb.32.1582113056786;
-        Wed, 19 Feb 2020 03:50:56 -0800 (PST)
-Received: from localhost.localdomain (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id b10sm2628851wrw.61.2020.02.19.03.50.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 03:50:56 -0800 (PST)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Subject: [PATCH] ASoC: dpcm: remove confusing trace in dpcm_get_be()
-Date:   Wed, 19 Feb 2020 12:50:48 +0100
-Message-Id: <20200219115048.934678-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.24.1
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 79B762677E22060FC49B;
+        Wed, 19 Feb 2020 19:50:54 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Feb 2020
+ 19:50:47 +0800
+Subject: Re: [PATCH v4 08/20] irqchip/gic-v4.1: Plumb get/set_irqchip_state
+ SGI callbacks
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        "Robert Richter" <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Julien Thierry" <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200214145736.18550-1-maz@kernel.org>
+ <20200214145736.18550-9-maz@kernel.org>
+ <4b7f71f1-5e7f-e6af-f47d-7ed0d3a8739f@huawei.com>
+ <75597af0d2373ac4d92d8162a1338cbb@kernel.org>
+ <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <8db95a86-0981-710b-6c82-be7f7f844151@huawei.com>
+Date:   Wed, 19 Feb 2020 19:50:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <19a7c193f0e4b97343e822a35f0911ed@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that dpcm_get_be() is used in dpcm_end_walk_at_be(), it is not a error
-if this function does not find a BE for the provided widget. Remove the
-related dev_err() trace which is confusing since things might be working
-as expected.
+Hi Marc,
 
-When called from dpcm_add_paths(), it is an error if dpcm_get_be() fails to
-find a BE for the provided widget. The necessary error trace is already
-done in this case.
+On 2020/2/18 23:31, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2020-02-18 09:27, Marc Zyngier wrote:
+>> Hi Zenghui,
+>>
+>> On 2020-02-18 07:00, Zenghui Yu wrote:
+>>> Hi Marc,
+> 
+> [...]
+> 
+>>> There might be a race on reading the 'vpe->col_idx' against a concurrent
+>>> vPE schedule (col_idx will be modified in its_vpe_set_affinity)? Will we
+>>> end up accessing the GICR_VSGI* registers of the old redistributor,
+>>> while the vPE is now resident on the new one? Or is it harmful?
+>>
+>> Very well spotted. There is a potential problem if old and new RDs are 
+>> not part
+>> of the same CommonLPIAff group.
+>>
+>>> The same question for direct_lpi_inv(), where 'vpe->col_idx' will be
+>>> used in irq_to_cpuid().
+>>
+>> Same problem indeed. We need to ensure that no VMOVP operation can 
+>> occur whilst
+>> we use col_idx to access a redistributor. This means a vPE lock of 
+>> some sort
+>> that will protect the affinity.
 
-Fixes: 027a48387183 ("ASoC: soc-pcm: use dpcm_get_be() at dpcm_end_walk_at_be()")
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- sound/soc/soc-pcm.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Yeah, I had the same view here, a vPE level lock might help.
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index 63f67eb7c077..aff27c8599ef 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -1270,9 +1270,7 @@ static struct snd_soc_pcm_runtime *dpcm_get_be(struct snd_soc_card *card,
- 		}
- 	}
- 
--	/* dai link name and stream name set correctly ? */
--	dev_err(card->dev, "ASoC: can't get %s BE for %s\n",
--		stream ? "capture" : "playback", widget->name);
-+	/* Widget provided is not a BE */
- 	return NULL;
- }
- 
--- 
-2.24.1
+>> But I think there is a slightly more general problem here, which we 
+>> failed to
+>> see initially: the same issue exists for physical LPIs, as col_map[] 
+>> can be
+>> updated (its_set_affinity()) in parallel with a direct invalidate.
+>>
+>> The good old invalidation through the ITS does guarantee that the two 
+>> operation
+>> don't overlap, but direct invalidation breaks it.
+
+Agreed!
+
+>> Let me have a think about it.
+> 
+> So I've thought about it, wrote a patch, and I don't really like the 
+> look of it.
+> This is pretty invasive, and we end-up serializing a lot more than we 
+> used to
+> (the repurposing of vlpi_lock to a general "lpi mapping lock" is 
+> probably too
+> coarse).
+> 
+> It of course needs splitting over at least three patches, but it'd be 
+> good if
+> you could have a look (applies on top of the whole series).
+
+So the first thing is that
+
+1. there're races on choosing the RD against a concurrent LPI/vPE
+affinity changing.
+
+And sure, I will have a look on the following patch! But I'd first
+talk about some other issues I've seen today...
+
+2. Another potential race is on accessing the same RD by different
+CPUs, which gets more obvious after introducing the GICv4.1.
+We can as least take two registers for example:
+
+  - GICR_VSGIR:
+    Let's assume that vPE0 is just descheduled from CPU0 and then vPE1
+    is scheduled on. CPU0 is writing its GICR_VSGIR with vpeid1 to serve
+    vPE1's GICR_ISPENDR0 read trap, whilst userspace is getting vSGI's
+    pending state of vPE0 (i.e., by a debugfs read) thus another CPU
+    will try to write the same GICR_VSGIR with vpeid0... without waiting
+    GICR_VSGIPENDR.Busy reads as 0.
+    This is a CONSTRAINED UNPREDICTABLE behavior from the spec and at
+    least one of the queries will fail.
+  - GICR_INV{LPI,ALL}R:
+    Multiple LPIs can be targeted to the same RD, thus multiple writes to
+    the same GICR_INVLPIR (with different INITID, even with different V)
+    can happen concurrently...
+
+Above comes from the fact that the same redistributor can be accessed
+(concurrently) by multiple CPUs but we don't have a mechanism to ensure
+some extent of serialization. I also had a look at how KVM will handle
+this kind of access, but
+
+3. it looks like KVM makes the assumption that the per-RD MMIO region
+will only be accessed by the associated VCPU?  But I think this's not
+restricted by the architecture, we can do it better.  Or I've just
+missed some important points here.
+
+
+I will look at the following patch asap but may need some time to
+think about all above, and do some fix if possible :-)
+
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+> b/drivers/irqchip/irq-gic-v3-its.c
+> index 7656b353a95f..0ed286dba827 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+
+[...]
+
+
+Thanks,
+Zenghui
 
