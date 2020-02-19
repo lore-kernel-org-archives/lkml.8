@@ -2,194 +2,113 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F78C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A566C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2951121D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3055221D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 12:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QDp5sC3r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iuoJJ18K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbgBSMab (ORCPT
+        id S1727438AbgBSMbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 07:30:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21558 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726491AbgBSMab (ORCPT
+        Wed, 19 Feb 2020 07:31:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46457 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgBSMbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 07:30:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582115430;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FlQCARZ1FbwRbU2uJuzeHmBQSyIgJVmrLI3UOgbvB+8=;
-        b=QDp5sC3rmNx8RQcPsOP68t+WeC9RkcsbljuXBTgMGWK55HNWSP5IkUoEL9PZaNObq/N6rE
-        mfvj//PZk7hKtNTjnocwQLFQajk12Bnun5uOySwxYUm5OrrJCt/8YHT9PC0Xwr+1xAyGHd
-        djNGH3gYWbULIxbQJQXKjrtsegL6irY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-Q4_uj_NHPDK7p6ZkD_KXvA-1; Wed, 19 Feb 2020 07:30:24 -0500
-X-MC-Unique: Q4_uj_NHPDK7p6ZkD_KXvA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DB191107ACCC;
-        Wed, 19 Feb 2020 12:30:22 +0000 (UTC)
-Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B7E819E9C;
-        Wed, 19 Feb 2020 12:30:13 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 13:30:12 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     brouer@redhat.com, Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>
-Subject: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-Message-ID: <20200219133012.7cb6ac9e@carbon>
+        Wed, 19 Feb 2020 07:31:06 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so258535wrl.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 04:31:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=xWzztMTzhqfpMp/oxkFfq6/jzPcps3NnPgi8EJQA1qU=;
+        b=iuoJJ18K2W1MdBJOFUOoIv+RAmQbMi1/+2amFZ68XZzhA2ydvwyWzwb3cnyMs6M0nq
+         EjQ0bJ8Kd6VFpN7T47eKHwNEWG9koVSDNuSH0E3DOxl4wUBlPxhEDbxGHxTeQ/y2cr7u
+         Qhl/A1h35CdccaG6txx1HTzPH3/RnYnMazrYlauKJn4k0Qarn4mancJIq5VhPbdhjJJg
+         mstJdE39eCWKzohs0cxiiy5dFAEdzQs/SYX9AuDTKyVDnWxbiswelBeYN2mE/qi25YPK
+         6uGgF8Lw/8dUSrwY/za/FTs16IbHTD9oD+z90ZE0rJZvLEwrhALHlaNd75C6eN6iMqAM
+         X0wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xWzztMTzhqfpMp/oxkFfq6/jzPcps3NnPgi8EJQA1qU=;
+        b=Ekn6xOWtDZYv4KbUX87FSl77BNu0+DwDQItrFodLk4eTv4K03FKFkTQtTFJYHlt/Ox
+         AzosO8kEAVWGvA0+2VChyJ4kvdO3+7wp3RkOeB8stH4Bs87PiMyPgcgb4KoD+dSVS3kO
+         dgutXRwqWePURQKg/hi1mfKhtGWLc83khCQozrQ1/yo/lxJXvsyt1GMir+Rd0xHTXxlu
+         mTjnHsDnlDj+JdUWTxBXm/APtYcxCZz2oVZFYq6TqAiEbulhclAqLjo30+/5903Zk1tt
+         Pfsv/swI4GD77YHkFdizrukrQmESvdnQMYakTNEoMCBQ4R/NkKavNvD3WWIBjOv9ahrK
+         niPQ==
+X-Gm-Message-State: APjAAAVnrKKlPcLH98IbwHpeK25+ZzQRZOkP6oTGkoNFOGkTbyL2IvOD
+        JAQ2+extD2vngi+xhKya6eIpGQ==
+X-Google-Smtp-Source: APXvYqw2N0uh7U0WFn+dX6qGxFk0SOMqL1r7sW2kuNzsK6krw72sZejr4NG0O/o50wMY7lQjMEbaew==
+X-Received: by 2002:a5d:4052:: with SMTP id w18mr35221069wrp.112.1582115464128;
+        Wed, 19 Feb 2020 04:31:04 -0800 (PST)
+Received: from dell ([2.31.163.122])
+        by smtp.gmail.com with ESMTPSA id k10sm2736543wrd.68.2020.02.19.04.31.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 04:31:03 -0800 (PST)
+Date:   Wed, 19 Feb 2020 12:31:30 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH RESEND 1/2] regulator: arizona-ldo1: Improve handling of
+ regulator unbinding
+Message-ID: <20200219123130.GE3494@dell>
+References: <20200122110842.10702-1-ckeepax@opensource.cirrus.com>
+ <20200122131149.GE3833@sirena.org.uk>
+ <20200123092639.GC4098@ediswmail.ad.cirrus.com>
+ <20200123114805.GA5440@sirena.org.uk>
+ <20200123120240.GD4098@ediswmail.ad.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200123120240.GD4098@ediswmail.ad.cirrus.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrii,
+On Thu, 23 Jan 2020, Charles Keepax wrote:
 
-Downloaded tarball for kernel release 5.5.4, and I cannot compile
-tools/testing/selftests/bpf/ with latest LLVM release version 9.
+> On Thu, Jan 23, 2020 at 11:48:05AM +0000, Mark Brown wrote:
+> > On Thu, Jan 23, 2020 at 09:26:39AM +0000, Charles Keepax wrote:
+> > 
+> > > 3) We could look at doing something in regmap IRQ to change when
+> > > it does PM runtime calls, it is regmap doing runtime gets when
+> > > drivers remove IRQs that causes the issue. But my accessment was
+> > > that what regmap is doing makes perfect sense, so I don't think
+> > > this is a good approach.
+> > 
+> > Why do you even care about the errors?  It's not like this device is
+> > going to get removed in a production system and the primary IRQ will be
+> > disabled when the core is removed, this is just something that happens
+> > during development isn't it?
+> 
+> I am more than happy to do the leg work if we really don't like
+> this solution. Do either you or Lee have any thoughts on my
+> selective MFD remove helpers? That seemed like the most promising
+> alternative solution to me.
 
-Looking closer at the build error messages, I can see that this is
-caused by using LLVM features that (I assume) will be avail in release
-10. I find it very strange that we can release a kernel that have build
-dependencies on a unreleased version of LLVM.
-
-I'm willing to help out, such that we can do either version or feature
-detection, to either skip compiling specific test programs or at least
-give users a proper warning of they are using a too "old" LLVM version.
-
-
-I love the new LLVM BTF features, but we cannot break users/CI-systems
-that wants to run the BPF-selftests.
+It's hard to say without seeing your implementation, but it sounds
+okay in principle.  Depends how messy it all ends up getting.  Sounds
+like a scenario where a reverse -EDEFER_PROBE could be useful.
 
 -- 
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
-http://releases.llvm.org/download.html
-
-Compile error message:
- unknown builtin '__builtin_preserve_field_info'
-
-Full:
-
-make -C /home/jbrouer/build/linux-5.5.4/tools/lib/bpf OUTPUT=/home/jbrouer/build/linux-5.5.4/tools/testing/selftests/bpf/
-make[1]: Entering directory '/home/jbrouer/build/linux-5.5.4/tools/lib/bpf'
-make[1]: Leaving directory '/home/jbrouer/build/linux-5.5.4/tools/lib/bpf'
-(clang  -I. -I/home/jbrouer/build/linux-5.5.4/tools/testing/selftests/bpf -g -D__TARGET_ARCH_x86 -mlittle-endian -I. -I./include/uapi -I/home/jbrouer/build/linux-5.5.4/tools/include/uapi -I/home/jbrouer/build/linux-5.5.4/tools/lib/bpf -I/home/jbrouer/build/linux-5.5.4/tools/testing/selftests/usr/include -idirafter /usr/local/include -idirafter /usr/lib64/clang/9.0.0/include -idirafter /usr/include -Wno-compare-distinct-pointer-types -O2 -target bpf -emit-llvm -c progs/test_core_reloc_bitfields_probed.c -o - || echo "BPF obj compilation failed") | llc -mattr=dwarfris -march=bpf -mcpu=probe  -mattr=+alu32 -filetype=obj -o /home/jbrouer/build/linux-5.5.4/tools/testing/selftests/bpf/test_core_reloc_bitfields_probed.o
-progs/test_core_reloc_bitfields_probed.c:47:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->ub1 = BPF_CORE_READ_BITFIELD_PROBED(in, ub1);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:48:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->ub2 = BPF_CORE_READ_BITFIELD_PROBED(in, ub2);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:49:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->ub7 = BPF_CORE_READ_BITFIELD_PROBED(in, ub7);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:50:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->sb4 = BPF_CORE_READ_BITFIELD_PROBED(in, sb4);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:51:14: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->sb20 = BPF_CORE_READ_BITFIELD_PROBED(in, sb20);
-                    ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:52:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->u32 = BPF_CORE_READ_BITFIELD_PROBED(in, u32);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-progs/test_core_reloc_bitfields_probed.c:53:13: error: use of unknown builtin '__builtin_preserve_field_info' [-Wimplicit-function-declaration]
-        out->s32 = BPF_CORE_READ_BITFIELD_PROBED(in, s32);
-                   ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:52:2: note: expanded from macro 'BPF_CORE_READ_BITFIELD_PROBED'
-        __CORE_BITFIELD_PROBE_READ(&val, s, field);                           \
-        ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:28:10: note: expanded from macro '__CORE_BITFIELD_PROBE_READ'
-                       __CORE_RELO(src, fld, BYTE_SIZE),                      \
-                       ^
-/home/jbrouer/build/linux-5.5.4/tools/lib/bpf/bpf_core_read.h:23:2: note: expanded from macro '__CORE_RELO'
-        __builtin_preserve_field_info((src)->field, BPF_FIELD_##info)
-        ^
-7 errors generated.
-llc: error: llc: <stdin>:1:1: error: expected top-level entity
-BPF obj compilation failed
-^
-make: *** [Makefile:281: /home/jbrouer/build/linux-5.5.4/tools/testing/selftests/bpf/test_core_reloc_bitfields_probed.o] Error 1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
