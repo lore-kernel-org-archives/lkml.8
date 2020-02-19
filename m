@@ -2,120 +2,145 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A50C169F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2F7C169F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D78BB2064C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:56:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582138575;
-	bh=RO+SxjwCSx2/qFP/8QJ2kYpYtpfH4O8dJvv2BSr0Efg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BPU3nl6rAaCRGGoZmAbmx74b8u1bNgqqEAGdJOP7SdYCoFwuruNcZSjdcnLM7U5eV
-	 2NFQ1yzP/jGOZ83u31v440ksEEv44s6kMFqqKuE9dE0FVPMaXAiPFc9iIyESXGgW8A
-	 lZkqEWAMVm+iXGi/GshlL5VUre3ZtnRwqOEXL31Q=
+	by mail.kernel.org (Postfix) with ESMTP id A0208206DB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 18:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBSS4O (ORCPT
+        id S1726710AbgBSS6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 13:56:14 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:44361 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbgBSS4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 13:56:12 -0500
-Received: by mail-lf1-f65.google.com with SMTP id v201so943070lfa.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:56:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4/btNie2yJSHTlvtkEMVrzLJ5p+2iau4ZxcsT8Kh+V8=;
-        b=OANlOLlls14aKMkL1WjVjo8f/tVbYdtb8Nt9MCvon8MWsZkBp2wf0M4h4HkivP25SY
-         Lor+Pn5WeqeFiam04EJmGY4IF6tW7qKCzkRZwxbdgjj0f2w6R9Z2iIpFLl/G1lsUeweh
-         z+TQEaepT45ebjzQ5n9r3U+GEMxGXZG+BGf8c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4/btNie2yJSHTlvtkEMVrzLJ5p+2iau4ZxcsT8Kh+V8=;
-        b=MUkHB9qX6rTRlFa3+pLuUL+LQcURgWEGhr07DH56Jg2VMiwZQUncJLxqQisccvqwW1
-         A10MwKBiqwM2yAnYnoltF2msnHgxJjq6L32tzqVAJxaAkryp6f0vQgAAJGdQGf3dBP1u
-         GTKI9apowk3i9Th1wg9u6MadXOi52FMf6yQrt/fybnhxozeZn15QG6zA6TVonavDx8wO
-         oHmOggSK1cnw3KGoyt4B+xCpi5T8L2HGtyaHh/dGcbN80VP5w1PIIew7Ya342OoDxoPF
-         faIusMTVcD63wsRFm53vhI8U4Hg26EsUhc43FzQ3iY9BqoSZKvJoQUapaR9x59vdEQh9
-         lNZg==
-X-Gm-Message-State: APjAAAWFQcWkoYuo77D3shl61aRcBIQrNyvlV2fr0KyD6sUwapbNa3HW
-        QVnF+jVd9cVDozF+kcSbJKJ9xI0Xn6Q=
-X-Google-Smtp-Source: APXvYqyreObVDgUP0qKmEbckqat24SPOdz0RaBn7pPDBhUzETH7qngW9Pn6vNY+eN3PIEl9VsDZ82g==
-X-Received: by 2002:a19:4884:: with SMTP id v126mr2919742lfa.112.1582138568759;
-        Wed, 19 Feb 2020 10:56:08 -0800 (PST)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id c27sm253428lfh.62.2020.02.19.10.56.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 10:56:08 -0800 (PST)
-Received: by mail-lj1-f171.google.com with SMTP id a13so1468749ljm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 10:56:07 -0800 (PST)
-X-Received: by 2002:a2e:88c5:: with SMTP id a5mr16927004ljk.201.1582138567368;
- Wed, 19 Feb 2020 10:56:07 -0800 (PST)
+        Wed, 19 Feb 2020 13:58:41 -0500
+Received: from nbd.name ([46.4.11.11]:57748 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726609AbgBSS6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 13:58:41 -0500
+Received: from [2a04:4540:1400:dd00:2cb7:e0af:5551:a051]
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1j4UYQ-00057x-UZ; Wed, 19 Feb 2020 19:58:39 +0100
+Subject: Re: [PATCH] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200219185226.1236-1-ansuelsmth@gmail.com>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <3c2bdeaf-c54b-142b-367e-6573de700803@phrozen.org>
+Date:   Wed, 19 Feb 2020 19:58:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <158212290024.224464.862376690360037918.stgit@warthog.procyon.org.uk>
- <CAMuHMdV+H0p3qFV=gDz0dssXVhzd+L_eEn6s0jzrU5M79_50HQ@mail.gmail.com>
- <227117.1582124888@warthog.procyon.org.uk> <CAHk-=wjFwT-fRw0kH-dYS9M5eBz3Jg0FeUfhf6VnGrPMVDDCBg@mail.gmail.com>
- <241568.1582134931@warthog.procyon.org.uk>
-In-Reply-To: <241568.1582134931@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 19 Feb 2020 10:55:51 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
-Message-ID: <CAHk-=wi=UbOwm8PMQUB1xaXRWEhhoVFdsKDSz=bX++rMQOUj0w@mail.gmail.com>
-Subject: Re: [RFC PATCH] vfs: syscalls: Add create_automount() and remove_automount()
-To:     David Howells <dhowells@redhat.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, coda@cs.cmu.edu,
-        linux-afs@lists.infradead.org, CIFS <linux-cifs@vger.kernel.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200219185226.1236-1-ansuelsmth@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:55 AM David Howells <dhowells@redhat.com> wrote:
->
-> There's a file type beyond file, dir and symlink that AFS supports:
-> mountpoint.  It appears as a directory with no lookup op in Linux - though it
-> does support readlink.  When a client walks over it, it causes an automount of
-> the volume named by the content of the mountpoint "file" on that point.  NFS
-> and CIFS have similar things.
+On 19/02/2020 19:52, Ansuel Smith wrote:
+> Add missing definition of rpm clk for ipq806x soc
+> 
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Thanks for sending this upstream,
+Acked-by: John Crispin <john@phrozen.org>
 
-Honestly, AFS isn't common or relevant enough to make this worth a new
-special system call etc.
+> ---
+>   .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>   drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+>   include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+>   3 files changed, 40 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> index 944719bd586f..dd0def465c79 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+> @@ -16,6 +16,7 @@ Required properties :
+>   			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+>   			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+>   			"qcom,rpmcc-msm8996", "qcom,rpmcc"
+> +			"qcom,rpmcc-ipq806x", "qcom,rpmcc"
+>   			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+>   			"qcom,rpmcc-qcs404", "qcom,rpmcc"
+>   
+> diff --git a/drivers/clk/qcom/clk-rpm.c b/drivers/clk/qcom/clk-rpm.c
+> index 9e3110a71f12..f71d228fd6bd 100644
+> --- a/drivers/clk/qcom/clk-rpm.c
+> +++ b/drivers/clk/qcom/clk-rpm.c
+> @@ -543,10 +543,45 @@ static const struct rpm_clk_desc rpm_clk_apq8064 = {
+>   	.num_clks = ARRAY_SIZE(apq8064_clks),
+>   };
+>   
+> +/* ipq806x */
+> +DEFINE_CLK_RPM(ipq806x, afab_clk, afab_a_clk, QCOM_RPM_APPS_FABRIC_CLK);
+> +DEFINE_CLK_RPM(ipq806x, cfpb_clk, cfpb_a_clk, QCOM_RPM_CFPB_CLK);
+> +DEFINE_CLK_RPM(ipq806x, daytona_clk, daytona_a_clk, QCOM_RPM_DAYTONA_FABRIC_CLK);
+> +DEFINE_CLK_RPM(ipq806x, ebi1_clk, ebi1_a_clk, QCOM_RPM_EBI1_CLK);
+> +DEFINE_CLK_RPM(ipq806x, sfab_clk, sfab_a_clk, QCOM_RPM_SYS_FABRIC_CLK);
+> +DEFINE_CLK_RPM(ipq806x, sfpb_clk, sfpb_a_clk, QCOM_RPM_SFPB_CLK);
+> +DEFINE_CLK_RPM(ipq806x, nss_fabric_0_clk, nss_fabric_0_a_clk, QCOM_RPM_NSS_FABRIC_0_CLK);
+> +DEFINE_CLK_RPM(ipq806x, nss_fabric_1_clk, nss_fabric_1_a_clk, QCOM_RPM_NSS_FABRIC_1_CLK);
+> +
+> +static struct clk_rpm *ipq806x_clks[] = {
+> +	[RPM_APPS_FABRIC_CLK] = &ipq806x_afab_clk,
+> +	[RPM_APPS_FABRIC_A_CLK] = &ipq806x_afab_a_clk,
+> +	[RPM_CFPB_CLK] = &ipq806x_cfpb_clk,
+> +	[RPM_CFPB_A_CLK] = &ipq806x_cfpb_a_clk,
+> +	[RPM_DAYTONA_FABRIC_CLK] = &ipq806x_daytona_clk,
+> +	[RPM_DAYTONA_FABRIC_A_CLK] = &ipq806x_daytona_a_clk,
+> +	[RPM_EBI1_CLK] = &ipq806x_ebi1_clk,
+> +	[RPM_EBI1_A_CLK] = &ipq806x_ebi1_a_clk,
+> +	[RPM_SYS_FABRIC_CLK] = &ipq806x_sfab_clk,
+> +	[RPM_SYS_FABRIC_A_CLK] = &ipq806x_sfab_a_clk,
+> +	[RPM_SFPB_CLK] = &ipq806x_sfpb_clk,
+> +	[RPM_SFPB_A_CLK] = &ipq806x_sfpb_a_clk,
+> +	[RPM_NSS_FABRIC_0_CLK] = &ipq806x_nss_fabric_0_clk,
+> +	[RPM_NSS_FABRIC_0_A_CLK] = &ipq806x_nss_fabric_0_a_clk,
+> +	[RPM_NSS_FABRIC_1_CLK] = &ipq806x_nss_fabric_1_clk,
+> +	[RPM_NSS_FABRIC_1_A_CLK] = &ipq806x_nss_fabric_1_a_clk,
+> +};
+> +
+> +static const struct rpm_clk_desc rpm_clk_ipq806x = {
+> +	.clks = ipq806x_clks,
+> +	.num_clks = ARRAY_SIZE(ipq806x_clks),
+> +};
+> +
+>   static const struct of_device_id rpm_clk_match_table[] = {
+>   	{ .compatible = "qcom,rpmcc-msm8660", .data = &rpm_clk_msm8660 },
+>   	{ .compatible = "qcom,rpmcc-apq8060", .data = &rpm_clk_msm8660 },
+>   	{ .compatible = "qcom,rpmcc-apq8064", .data = &rpm_clk_apq8064 },
+> +	{ .compatible = "qcom,rpmcc-ipq806x", .data = &rpm_clk_ipq806x },
+>   	{ }
+>   };
+>   MODULE_DEVICE_TABLE(of, rpm_clk_match_table);
+> diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+> index 8e3095720552..ae74c43c485d 100644
+> --- a/include/dt-bindings/clock/qcom,rpmcc.h
+> +++ b/include/dt-bindings/clock/qcom,rpmcc.h
+> @@ -37,6 +37,10 @@
+>   #define RPM_XO_A0				27
+>   #define RPM_XO_A1				28
+>   #define RPM_XO_A2				29
+> +#define RPM_NSS_FABRIC_0_CLK			30
+> +#define RPM_NSS_FABRIC_0_A_CLK			31
+> +#define RPM_NSS_FABRIC_1_CLK			32
+> +#define RPM_NSS_FABRIC_1_A_CLK			33
+>   
+>   /* SMD RPM clocks */
+>   #define RPM_SMD_XO_CLK_SRC				0
+> 
 
-Why don't you just use mkdir with S_ISVTX set, or something like that?
-Maybe we can even add a new mode bit and allow you to set that one.
-
-And why would removal be any different from rmdir()?
-
-Or just do a perfectly regular mkdir(), followed by a ioctl().
-
-> Directory, not file.  You can do mkdir (requiring write and execute), for
-> example, in a directory you cannot open (which would require read).  If you
-> cannot open it, you cannot do ioctl on it.
-
-Honestly, who cares?
-
-Seriously. Just make the rule be that you need read permission on the
-directory too in order to do that ioctl() that is your magical "make
-special node".
-
-What makes this all *SO* special, and *SO* important that you need to
-follow somebody elses rules that absolutely nobody cares about?
-
-              Linus
