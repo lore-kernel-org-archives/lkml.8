@@ -2,105 +2,114 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B1DC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5880C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88A7D24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:10:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582081848;
-	bh=+z7KkP//J/UyJ36xlsIoqcFUH/Jfs5y+BREf1Vh0pOQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZFzcVyl6PUWdTxDsdor/ZVFX5V8k9Uxg68zNWWXSRclr2pqmjzIBEN8bE9hpl00my
-	 Jxq/FZ0Ko2ERo9vzsDZefcNTsi4/Fsk4N2MeL8E3KGsUA0p3UFNaMHweaC7Uj8nAcA
-	 nt4TFzfVyUvPBBxaAtuTpDZXk7nGwnuwsr2sILXU=
+	by mail.kernel.org (Postfix) with ESMTP id AB6F62176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:13:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgBSDKr (ORCPT
+        id S1728279AbgBSDNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:10:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgBSDKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:10:47 -0500
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C25D02176D;
-        Wed, 19 Feb 2020 03:10:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582081846;
-        bh=+z7KkP//J/UyJ36xlsIoqcFUH/Jfs5y+BREf1Vh0pOQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xohwgk2QG5tvLYMrLa5W6KYoeoixjneJ8R68r7nk/sL00PH6Wcz+epEQQXtUSH/SY
-         dwE777Hz4Bn6KBu2rtmu5FImDWOhXEfHmk622/WQkEj14uuWbvkMxoOMJo59Ka2mcn
-         wgYL1H+yiSctZQzbmYXGu4bWezIpNQUGBp3ZkGP8=
-Date:   Tue, 18 Feb 2020 19:10:44 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, ocfs2-devel@oss.oracle.com,
-        linux-ext4@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH v6 08/19] mm: Add readahead address space operation
-Message-ID: <20200219031044.GA1075@sol.localdomain>
-References: <20200217184613.19668-1-willy@infradead.org>
- <20200217184613.19668-14-willy@infradead.org>
+        Tue, 18 Feb 2020 22:13:00 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10215 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728219AbgBSDNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:13:00 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B6A5C55E6B2C8D28D29B;
+        Wed, 19 Feb 2020 11:12:58 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Feb
+ 2020 11:12:53 +0800
+Subject: Re: [PATCH 1/3] f2fs: avoid __GFP_NOFAIL in f2fs_bio_alloc
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200218102136.32150-1-yuchao0@huawei.com>
+ <20200219024928.GA96609@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <52705a9b-306b-c6b0-0f48-c12149e7b915@huawei.com>
+Date:   Wed, 19 Feb 2020 11:12:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200217184613.19668-14-willy@infradead.org>
+In-Reply-To: <20200219024928.GA96609@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 10:45:54AM -0800, Matthew Wilcox wrote:
-> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-> index 7d4d09dd5e6d..81ab30fbe45c 100644
-> --- a/Documentation/filesystems/vfs.rst
-> +++ b/Documentation/filesystems/vfs.rst
-> @@ -706,6 +706,7 @@ cache in your filesystem.  The following members are defined:
->  		int (*readpage)(struct file *, struct page *);
->  		int (*writepages)(struct address_space *, struct writeback_control *);
->  		int (*set_page_dirty)(struct page *page);
-> +		void (*readahead)(struct readahead_control *);
->  		int (*readpages)(struct file *filp, struct address_space *mapping,
->  				 struct list_head *pages, unsigned nr_pages);
->  		int (*write_begin)(struct file *, struct address_space *mapping,
-> @@ -781,12 +782,24 @@ cache in your filesystem.  The following members are defined:
->  	If defined, it should set the PageDirty flag, and the
->  	PAGECACHE_TAG_DIRTY tag in the radix tree.
->  
-> +``readahead``
-> +	Called by the VM to read pages associated with the address_space
-> +	object.  The pages are consecutive in the page cache and are
-> +	locked.  The implementation should decrement the page refcount
-> +	after starting I/O on each page.  Usually the page will be
-> +	unlocked by the I/O completion handler.  If the function does
-> +	not attempt I/O on some pages, the caller will decrement the page
-> +	refcount and unlock the pages for you.	Set PageUptodate if the
-> +	I/O completes successfully.  Setting PageError on any page will
-> +	be ignored; simply unlock the page if an I/O error occurs.
-> +
+On 2020/2/19 10:49, Jaegeuk Kim wrote:
+> On 02/18, Chao Yu wrote:
+>> __f2fs_bio_alloc() won't fail due to memory pool backend, remove unneeded
+>> __GFP_NOFAIL flag in __f2fs_bio_alloc().
+> 
+> It it safe for old kernels as well when thinking backports?
 
-This is unclear about how "not attempting I/O" works and how that affects who is
-responsible for putting and unlocking the pages.  How does the caller know which
-pages were not attempted?  Can any arbitrary subset of pages be not attempted,
-or just the last N pages?
+^1da177e4c3f4 (Linus Torvalds     2005-04-16 15:20:36 -0700  134)       struct bio *bio = mempool_alloc(bs->bio_pool, gfp_mask);
 
-In the code, the caller actually uses readahead_for_each() to iterate through
-and put+unlock the pages.  That implies that ->readahead() must also use
-readahead_for_each() as well, in order for the iterator to be advanced
-correctly... Right?  And the ownership of each page is transferred to the callee
-when the callee advances the iterator past that page.
+It looks if we have a backend mempool, we will never fail to allocate bio
+for very long time, we don't need to backport to 2.6.x kernel, right?
 
-I don't see how ext4_readahead() and f2fs_readahead() can work at all, given
-that they don't advance the iterator.
+Thanks,
 
-- Eric
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/data.c | 12 ++++--------
+>>  fs/f2fs/f2fs.h |  2 +-
+>>  2 files changed, 5 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index baf12318ec64..3a4ece26928c 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -54,17 +54,13 @@ static inline struct bio *__f2fs_bio_alloc(gfp_t gfp_mask,
+>>  	return bio_alloc_bioset(gfp_mask, nr_iovecs, &f2fs_bioset);
+>>  }
+>>  
+>> -struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail)
+>> +struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool noio)
+>>  {
+>> -	struct bio *bio;
+>> -
+>> -	if (no_fail) {
+>> +	if (noio) {
+>>  		/* No failure on bio allocation */
+>> -		bio = __f2fs_bio_alloc(GFP_NOIO, npages);
+>> -		if (!bio)
+>> -			bio = __f2fs_bio_alloc(GFP_NOIO | __GFP_NOFAIL, npages);
+>> -		return bio;
+>> +		return __f2fs_bio_alloc(GFP_NOIO, npages);
+>>  	}
+>> +
+>>  	if (time_to_inject(sbi, FAULT_ALLOC_BIO)) {
+>>  		f2fs_show_injection_info(sbi, FAULT_ALLOC_BIO);
+>>  		return NULL;
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 5316ac3eacdf..65f569949d42 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -3343,7 +3343,7 @@ void f2fs_destroy_checkpoint_caches(void);
+>>   */
+>>  int __init f2fs_init_bioset(void);
+>>  void f2fs_destroy_bioset(void);
+>> -struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool no_fail);
+>> +struct bio *f2fs_bio_alloc(struct f2fs_sb_info *sbi, int npages, bool noio);
+>>  int f2fs_init_bio_entry_cache(void);
+>>  void f2fs_destroy_bio_entry_cache(void);
+>>  void f2fs_submit_bio(struct f2fs_sb_info *sbi,
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
