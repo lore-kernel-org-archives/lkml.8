@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E87EC34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E3CC34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3B324677
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21A2224676
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgBSPvC (ORCPT
+        id S1726707AbgBSPvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:51:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46448 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 10:51:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbgBSPvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:51:01 -0500
+        id S1726528AbgBSPva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 10:51:30 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE58624671;
-        Wed, 19 Feb 2020 15:50:59 +0000 (UTC)
-Date:   Wed, 19 Feb 2020 10:50:58 -0500
+        by mail.kernel.org (Postfix) with ESMTPSA id A19F824656;
+        Wed, 19 Feb 2020 15:51:28 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 10:51:27 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
@@ -33,14 +33,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org,
-        "Steven Rostedt (VMware)" <rosted@goodmis.org>
-Subject: Re: [PATCH v3 09/22] sched,rcu,tracing: Avoid tracing before
- in_nmi() is correct
-Message-ID: <20200219105058.3b844e10@gandalf.local.home>
-In-Reply-To: <20200219150744.888917422@infradead.org>
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 10/22] x86,tracing: Add comments to do_nmi()
+Message-ID: <20200219105127.0351096b@gandalf.local.home>
+In-Reply-To: <20200219150744.945913022@infradead.org>
 References: <20200219144724.800607165@infradead.org>
-        <20200219150744.888917422@infradead.org>
+        <20200219150744.945913022@infradead.org>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -50,22 +48,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 15:47:33 +0100
+On Wed, 19 Feb 2020 15:47:34 +0100
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> If we call into a tracer before in_nmi() becomes true, the tracer can
-> no longer detect it is called from NMI context and behave correctly.
+> Add a few comments to do_nmi() as a result of the audit.
 > 
-> Therefore change nmi_{enter,exit}() to use __preempt_count_{add,sub}()
-> as the normal preempt_count_{add,sub}() have a (desired) function
-> trace entry.
-> 
-> This fixes a potential issue with current code; AFAICT when the
-> function-tracer has stack-tracing enabled __trace_stack() will
-> malfunction when it hits the preempt_count_add() function entry from
-> NMI context.
-> 
-> Suggested-by: Steven Rostedt (VMware) <rosted@goodmis.org>
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
 
