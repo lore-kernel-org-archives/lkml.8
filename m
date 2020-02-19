@@ -2,106 +2,68 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA1EC34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CE7C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C434B24656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582128747;
-	bh=ISFDuZqrU1iy6plytkDpmtpnseOIWIg0WPXGebcjJY8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0lAa9LlVrKqP+EtmrdLi87xB7QzK3ySyclEskJHNVmSlvqhRUD/HC/gcHnt5kaBFx
-	 cHPyVEDeYKILXeshs8heZUCiXzJxZ0uBquFwG9hw74z4Dji4lY2MBZHKSCxJVCBsiC
-	 lDjAUuuiCI2sYMYZGe0Uo0xKNYagtY/n5RBEfhKE=
+	by mail.kernel.org (Postfix) with ESMTP id 5DF5D24656
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:12:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgBSQM0 (ORCPT
+        id S1726783AbgBSQMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:12:26 -0500
-Received: from mail-qv1-f53.google.com ([209.85.219.53]:45776 "EHLO
-        mail-qv1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgBSQM0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:12:26 -0500
-Received: by mail-qv1-f53.google.com with SMTP id l14so407396qvu.12;
-        Wed, 19 Feb 2020 08:12:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Vu5V5rWZHyaueFfLFkEzCLEhOtHzeZSUWOLy/RNDYxo=;
-        b=fWD0BpDlqjIvBRJjxFbuwfxPTi9xvRf58lXoOBdijX4wsvutNd7gBZtp/BuDfPcGfg
-         QRY3Kyh5b7R0i/9gzorKY6Lh5L1wJTmDQY/3u4KIybAc206Ujo1rKsoUZgWlqEjLTbwg
-         5qMIAz9gG7ke+PkPchTBy/Xx4F/OWSz7dviJnzyczN1sHo6xWJmPEHkl/z3qehySpQT6
-         2YFQgdXnPD57KPnU3Pz1f3qZgTT9+6afevkoDpKxZW850MzDMZBsET9mvMKmYLtthANn
-         wVQEUWUrronURe4HGk3bIHkZq5r0xkPuxwffXu1TAdxc8DfbDzMxzQ1icJi+MttU+cxJ
-         EalQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Vu5V5rWZHyaueFfLFkEzCLEhOtHzeZSUWOLy/RNDYxo=;
-        b=Kb+KvvagBU4wzCeoD9XotEiE6sDflaS4v2uuvgyMEtWPzYRlumeoJrYf/cH0dkMZNl
-         CieAqjR3ykgn2NXoySAPxsRsW2moNX/zuaseQwfVZjKu0U7d+SB62Y12yRtq1+1eFOjk
-         2jEp/ryplI8j6esdiJUhK3slvrKtpGEGRJBYYyyxuYN2N2RNdnNHdjVZ8NUUlHqHbBR2
-         iURbkd75dhqauaVhMCjCnuwxvtFdrafq1/jmDVA54Pjd+utR/FByXlnnMbSIf/TzoqWq
-         GkAQVoXwcv2lixi1e5kH79HSrG5TNDFV/3fhWES8FUrwU5BrHHI/PHVLIxt1TMRbtDk5
-         oGWQ==
-X-Gm-Message-State: APjAAAUkHSNrihKIRsBeIGA+e293rP9xgaOKnweMTKl6pU9lwpoMuw3Q
-        4ewNQmlNk6Ry6sm34K1tLkIRCE398Ro=
-X-Google-Smtp-Source: APXvYqzK2N1iOHIKrA82Tl49sCBgNLUSLZlY1PZ0D5JQz2oMqybSMjtAITpUNCchUQbFTaanxsR3uw==
-X-Received: by 2002:a0c:a998:: with SMTP id a24mr22155326qvb.11.1582128743419;
-        Wed, 19 Feb 2020 08:12:23 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:e7ce])
-        by smtp.gmail.com with ESMTPSA id c21sm34629qkj.130.2020.02.19.08.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 08:12:22 -0800 (PST)
-Date:   Wed, 19 Feb 2020 11:12:22 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
-Message-ID: <20200219161222.GF698990@mtj.thefacebook.com>
-References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
- <1317969050.4131.1581955387909.JavaMail.zimbra@efficios.com>
- <20200219151922.GB698990@mtj.thefacebook.com>
- <1589496945.670.1582126985824.JavaMail.zimbra@efficios.com>
- <20200219154740.GD698990@mtj.thefacebook.com>
- <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
- <20200219155202.GE698990@mtj.thefacebook.com>
- <1358308409.804.1582128519523.JavaMail.zimbra@efficios.com>
+        Wed, 19 Feb 2020 11:12:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726731AbgBSQMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:12:31 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BCEF24654;
+        Wed, 19 Feb 2020 16:12:29 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 11:12:28 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 04/22] x86/doublefault: Make memmove()
+ notrace/NOKPROBE
+Message-ID: <20200219111228.44c2999b@gandalf.local.home>
+In-Reply-To: <20200219160442.GE14946@hirez.programming.kicks-ass.net>
+References: <20200219144724.800607165@infradead.org>
+        <20200219150744.604459293@infradead.org>
+        <20200219103614.2299ff61@gandalf.local.home>
+        <20200219154031.GE18400@hirez.programming.kicks-ass.net>
+        <20200219155715.GD14946@hirez.programming.kicks-ass.net>
+        <20200219160442.GE14946@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1358308409.804.1582128519523.JavaMail.zimbra@efficios.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:08:39AM -0500, Mathieu Desnoyers wrote:
-> I wonder if applying the online cpu masks to the per-thread affinity mask
-> is the correct approach ? I suspect what we may be looking for here is to keep
+On Wed, 19 Feb 2020 17:04:42 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Oh, the whole thing is wrong.
+> > -		memmove(&gpregs->ip, (void *)regs->sp, 5*8);
+> > +		for (i = 0; i < count; i++) {
+> > +			int idx = (dst <= src) ? i : count - i;  
+> 
+> That's an off-by-one for going backward; 'count - 1 - i' should work
+> better, or I should just stop typing for today ;-)
 
-> the affinity mask independent of cpu hotplug, and look-up both the per-thread
-> affinity mask and the online cpu mask whenever the scheduler needs to perform
-> "is_cpu_allowed()" to check task placement.
+Or, we could just cut and paste the current memmove and make a notrace
+version too. Then we don't need to worry bout bugs like this.
 
-Yes, that's what it should have done from the get-go. The way it's
-implemented now, maybe we can avoid some specific cases like cpuset
-not being used at all but it'll constantly get in the way if you're
-expecting thread affinity to retain its value across offlines.
-
--- 
-tejun
+-- Steve
