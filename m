@@ -2,84 +2,124 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B408C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238A6C5ACC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EF324677
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:36:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582148218;
-	bh=bex3ia3o7ks1qLsY7UOubSYiyKKJtXT/h4183Oe1kGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T7waKzYak40JT5mos/0hDyklrMxJeFPgZzxNMVrKo42jduDdSbHZhaI/y11/JVb83
-	 KXVHK4frHXU2pqs/DpK+mkBSkdPOFna4CnobK5cyISHM3z6PPUbu31zzZKxp3mWEgh
-	 rtCnqOIV4pPaGoDkLIeuDEQzTjrl2tBxgsFhNX+s=
+	by mail.kernel.org (Postfix) with ESMTP id EDB4324670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 21:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZEuMXL1F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgBSVg5 (ORCPT
+        id S1727695AbgBSVib (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 16:36:57 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36164 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbgBSVg5 (ORCPT
+        Wed, 19 Feb 2020 16:38:31 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33587 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBSVia (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 16:36:57 -0500
-Received: by mail-oi1-f193.google.com with SMTP id c16so25388236oic.3;
-        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
+        Wed, 19 Feb 2020 16:38:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id z8so2311830ioh.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 13:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BpJxLBHatawnfc/YTxNMD/ucEUM4syoJPqlp+g1Kz8Q=;
+        b=ZEuMXL1FtfM73aI3r2twzf1ImxMIVuXVXsNvfr/Xv2L9cj6yOITb2an36KFoQYK665
+         IV5F52dUV5ZV+lgSd5AxnM2CTVBpgWlaDa0WZx2ZxgX8eaW0ikLCNZfem6s5mEZPCoUJ
+         4H+YQ6ZApf5Kd3lltfN9JAkMKrRcyK4JH4wrIfOmnuxwy8gqGBuCB16vuIgfg9e5PKpR
+         gY5avyjLUFyc4drTwAq7AJGse85GPvxZ61qNJnaDh2YRGX1+lBWg20/gwJAns6dRr5+S
+         0agFIbGbeSsK62DYfOdfqnEGWiKwnWpyaNVl854LdFQEOCfi+OTXPcq7Q81IGPPz7YFm
+         c+ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DuxIjKakUovTLWJrrUy0F4nZWjjNRF7r2EzINrOf4VY=;
-        b=WFnj8wcK2eJUrrcffgSbAbUaJmMo0hIvmQBKS6hYhbtdPspLvhRy4oypUjEzYDYdIK
-         rV3SKnBnTC7q6rSAAyXuWrGMjZTUuQSJtZxl9CUvGhMV4jH2KmfePB43pNRzLxpO5bEq
-         FqDaXGdYYjJiXlRh/tpRlYC+/tvj6ThIlWNAP8amBFEAtsh0Gyga4zDKSn7QYf4A7hQ1
-         9qGzanL5Yxn6zdHknzITGlGx5Ok0c1wpbmm+A8lRfy6VnHPPV1swY46VzYCGklw+XWpq
-         UowhmPdRpJnJ/YEQTscTsf8Tm8J38aKx2PhWw99Hm0WZAp9qzzkRM2bpKl4aoEyictmt
-         qO7g==
-X-Gm-Message-State: APjAAAXrjjihOQhe789sq2V4o7nurKj8SNAVRQz3BSPVTxYsgDawFbqm
-        i5VLCYg9bQjiHE6L6fWsvg==
-X-Google-Smtp-Source: APXvYqzr/vS7d9QJGh+dXQuTXIewzPQA3FFO3+dnNCb8cuSi1tgLl4sdiFnz8tCgRMksqfyJUey8Rg==
-X-Received: by 2002:aca:100e:: with SMTP id 14mr6121071oiq.88.1582148216399;
-        Wed, 19 Feb 2020 13:36:56 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p65sm380817oif.47.2020.02.19.13.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 13:36:55 -0800 (PST)
-Received: (nullmailer pid 13132 invoked by uid 1000);
-        Wed, 19 Feb 2020 21:36:55 -0000
-Date:   Wed, 19 Feb 2020 15:36:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add fsl,ls1028a-dspi compatible
-Message-ID: <20200219213655.GA13076@bogus>
-References: <20200218171418.18297-1-michael@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BpJxLBHatawnfc/YTxNMD/ucEUM4syoJPqlp+g1Kz8Q=;
+        b=uDbqLszZ66q9CeLc6U1VOQAxZ+4GqaF497sVCa8tv+QpBMvBoLO9+Q3R3xuAJbWd63
+         vb4RHLdLB/idsCI5F0HnZZVSF4kwF+MIR703N7P3mNbHIkOKGpCF6wbws16pjNr107sR
+         ElI1LOX7WFuw5TMJqNAJHFM37ofCZH6zAxcaQKygvJrWattB8o7bJIOyJnsjxYNFP2jB
+         SV4QDZxcrVSQQ2Qlp+uee87Q9o//gnmwhakT9Tq8EJH43ernitXYP4kchRemDyfi+O9x
+         jIFId5zM5qeeQLdDJpnCZzNGlvESVNLmP1Gk5ayi5q7U+YDQUl99H6tiCzZ+HO+wQR8P
+         ZPfg==
+X-Gm-Message-State: APjAAAWGyn0WFFvRK00wIAS8E1yvwL7/iXVfj7RBn+WFE8jUq/xyzLr9
+        bpMEDnVEBGXQcjGur0Icu/AwBUoCRj9e0kh9j3PNEg==
+X-Google-Smtp-Source: APXvYqwS2+y+j0s1eJlgR262ndskG+GNgdkwNc6r3zFLCDHDsMtkOVp/1i9VaZZGb4LIbmoe909gUhg90CJigN/88MM=
+X-Received: by 2002:a02:780f:: with SMTP id p15mr22552578jac.91.1582148309586;
+ Wed, 19 Feb 2020 13:38:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218171418.18297-1-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200218173221.237674-1-bgeffon@google.com> <20200219123955.dc97c43524d6e6ab92722650@linux-foundation.org>
+In-Reply-To: <20200219123955.dc97c43524d6e6ab92722650@linux-foundation.org>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Wed, 19 Feb 2020 13:38:18 -0800
+Message-ID: <CA+EESO6KCyn54hYs1dZgN5bwDi2fZGGTbgX17-XAhDw65GnaNQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Brian Geffon <bgeffon@google.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Feb 2020 18:14:17 +0100, Michael Walle wrote:
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
-> changes since v1:
->  - none, this is a new patch
-> 
->  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+I've validated the change, that it works for me, through manual
+testing. The android runtime changes will follow shortly.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Tested-by: Lokesh Gidra <lokeshgidra@google.com>
+
+
+
+On Wed, Feb 19, 2020 at 12:39 PM Andrew Morton
+<akpm@linux-foundation.org> wrote:
+>
+> On Tue, 18 Feb 2020 09:32:20 -0800 Brian Geffon <bgeffon@google.com> wrote:
+>
+> > When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> > set, the source mapping will not be removed. The remap operation
+> > will be performed as it would have been normally by moving over the
+> > page tables to the new mapping. The old vma will have any locked
+> > flags cleared, have no pagetables, and any userfaultfds that were
+> > watching that range will continue watching it.
+> >
+> > For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+> > the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> > a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+> > equally sized VMAs where the destination contains the PTEs of the source.
+> >
+> > We hope to use this in Chrome OS where with userfaultfd we could write
+> > an anonymous mapping to disk without having to STOP the process or worry
+> > about VMA permission changes.
+> >
+> > This feature also has a use case in Android, Lokesh Gidra has said
+> > that "As part of using userfaultfd for GC, We'll have to move the physical
+> > pages of the java heap to a separate location. For this purpose mremap
+> > will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> > heap, its virtual mapping will be removed as well. Therefore, we'll
+> > require performing mmap immediately after. This is not only time consuming
+> > but also opens a time window where a native thread may call mmap and
+> > reserve the java heap's address range for its own usage. This flag
+> > solves the problem."
+>
+> Thanks.
+>
+> We're a bit thin on review activity on this one.  Has Lokesh been able
+> to review and preferably test the code?  Are you able to identify other
+> potential users?  perhaps even glibc?
