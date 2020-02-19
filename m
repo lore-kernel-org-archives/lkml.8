@@ -2,136 +2,99 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDDEC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB06C34022
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D79A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D0E208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 08:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AkzCwOOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgBSIoP (ORCPT
+        id S1726512AbgBSIpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 03:44:15 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2442 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726297AbgBSIoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 03:44:15 -0500
-Received: from lhreml706-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id C88BB11341989E321FC8;
-        Wed, 19 Feb 2020 08:44:13 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml706-cah.china.huawei.com (10.201.108.47) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 19 Feb 2020 08:44:13 +0000
-Received: from [127.0.0.1] (10.210.170.116) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 19 Feb
- 2020 08:44:11 +0000
-Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
- system PMUs
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     "ak@linux.intel.com" <ak@linux.intel.com>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Will Deacon" <will@kernel.org>, Linuxarm <linuxarm@huawei.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "james.clark@arm.com" <james.clark@arm.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <20200218125707.GB20212@willie-the-truck>
- <a40903fe-d52f-96c6-a06a-fe834d71d625@huawei.com>
- <20200218133943.GF20212@willie-the-truck>
- <627cbc50-4b36-7f7f-179d-3d27d9e0215a@huawei.com>
- <20200218170803.GA9968@lakrids.cambridge.arm.com>
- <cb004f43-b2a4-ae23-9fd3-0f70bd69701b@huawei.com>
- <20200218181331.GB9968@lakrids.cambridge.arm.com>
- <DB7PR04MB46188F06D6CEA1430712E648E6100@DB7PR04MB4618.eurprd04.prod.outlook.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b6781341-3d28-bda8-621b-aeca413dc8ae@huawei.com>
-Date:   Wed, 19 Feb 2020 08:44:10 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 19 Feb 2020 03:45:25 -0500
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:40742 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgBSIpY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 03:45:24 -0500
+Received: by mail-pf1-f169.google.com with SMTP id b185so1829287pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 00:45:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w7YXXPrjv0swolztGRRXXsVERSqdfE5ws09bwwHXbAM=;
+        b=AkzCwOOM9iV/wba/KmNiKXDQYn8VyVEaoxrCMbBrWjk3TYIhMorbj0O4714xrL4Ldk
+         OeV6RZvINWRxzG16nKHP8ARbTASTlGinofwrOq45IfH7HF/UqvYdk386zijReJ5dJ7BA
+         leIYMPQtWfGrwkmW1HzYdISCOWppQNL+2uk2I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w7YXXPrjv0swolztGRRXXsVERSqdfE5ws09bwwHXbAM=;
+        b=kZCKrhQRjHdlteLOeyFhIbUYdqU7rjRsM+n0zmvhuymbB4qLl6BK2FUaiw3apvHMsb
+         nSxbShiFu6/eYsI2YRl3WyH73A+lDzjvvMRMj7dpEVPQSwPHzWOKL9kBkSvuF7vZNoXc
+         aOuPupy7Th/eIcoJKmHxED3qp4V0SUcWoB0CUiHMjjHUx2P8zrWfDIMDmtE5kN7Cmwbc
+         lKHyeV5Ascxme8pLQbGIbkEI/h9PjdtDZHyynK2YTTklaZ+yd21bT9W2GeqbOU+gSC0G
+         9CzrRS9MqZ1xO182HiMddWQ8FAlLdD4pcXhysJx45KsMWTCcJW2rdRTKJuz7W4z3UaYX
+         QHZw==
+X-Gm-Message-State: APjAAAUuCtCKaDTViPaRQ0Pepyl4qH+8+U/4vjeK7We75OkumFYgFNTn
+        8pij7h54gixp5SoWRsgl3MLbbQ==
+X-Google-Smtp-Source: APXvYqyV8+Z9aH1FsbTn2QqzC4e/hC2uwFNEmIHF7xi8WUMrQaRxZPRZs2r0DiSHvWuqXUZkiEF99w==
+X-Received: by 2002:a63:2842:: with SMTP id o63mr27636968pgo.317.1582101923757;
+        Wed, 19 Feb 2020 00:45:23 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id u11sm1646492pjn.2.2020.02.19.00.45.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 00:45:23 -0800 (PST)
+Date:   Wed, 19 Feb 2020 17:45:21 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCHv2 09/12] videobuf2: let user-space know if driver
+ supports cache hints
+Message-ID: <20200219084521.GD122464@google.com>
+References: <20200204025641.218376-1-senozhatsky@chromium.org>
+ <20200204025641.218376-10-senozhatsky@chromium.org>
+ <2a00bf5c-462e-8d35-844c-55ce2383b8e2@xs4all.nl>
 MIME-Version: 1.0
-In-Reply-To: <DB7PR04MB46188F06D6CEA1430712E648E6100@DB7PR04MB4618.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="gbk"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.170.116]
-X-ClientProxiedBy: lhreml743-chm.china.huawei.com (10.201.108.193) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2a00bf5c-462e-8d35-844c-55ce2383b8e2@xs4all.nl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 01:55, Joakim Zhang wrote:
+On (20/02/19 09:33), Hans Verkuil wrote:
+> On 2/4/20 3:56 AM, Sergey Senozhatsky wrote:
+> > Add V4L2_BUF_CAP_SUPPORTS_CACHE_HINTS to fill_buf_caps(), which
+> > is set when queue supports user-space cache management hints.
 > 
->> -----Original Message-----
->> From: Mark Rutland <mark.rutland@arm.com>
->> Sent: 2020Äê2ÔÂ19ÈÕ 2:14
->> To: John Garry <john.garry@huawei.com>
->> Cc: ak@linux.intel.com; Joakim Zhang <qiangqing.zhang@nxp.com>;
->> suzuki.poulose@arm.com; peterz@infradead.org; Will Deacon
->> <will@kernel.org>; Linuxarm <linuxarm@huawei.com>; acme@kernel.org;
->> linux-kernel@vger.kernel.org; Zhangshaokun <zhangshaokun@hisilicon.com>;
->> alexander.shishkin@linux.intel.com; mingo@redhat.com;
->> james.clark@arm.com; namhyung@kernel.org; jolsa@redhat.com;
->> linux-arm-kernel@lists.infradead.org; robin.murphy@arm.com; Sudeep Holla
->> <sudeep.holla@arm.com>
->> Subject: Re: [PATCH RFC 0/7] perf pmu-events: Support event aliasing for
->> system PMUs
+> Ah, you add the capability here :-)
 > 
-> [...]
->>> And typically most PMU HW would have no ID reg, so where to even get
->>> this identification info? Joakim Zhang seems to have this problem for
->>> the imx8 DDRC PMU driver.
->>
->> For imx8, the DT compat string or additional properties on the DDRC node
->> could be used to imply the id.
-> 
-> Hi Mark,
-> 
-> Yes, actually we can expose something like DDRC_ID to indicate each specific DDR controller, to point out the filter feature.
-> But, even the SoCs integrated the same DDRC_ID, just say that they have the same DDRC controller.
-> 
->  From user space, the usage is different, for example:
-> 
-> i.MX8MM and i.MX8MN, they use the same driver(DDRC_ID) and cortex-a53 integrated.
-> 
-> If we want to monitor VPU, their *master id* is different from SoCs.
-> On i.MX8MM, event is imx8_ddr0/axid-read,axi_id=0x08/
-> On i.MX8MN, event is imx8_ddr0/axid-read,axi_id=0x12/
-> 
-> I try to write a JSON file to use these events, for now, I only can locate the file at the directory: tools/perf/pmu-events/arch/arm64/arm/cortex-a53/
-> 
-> Perf tool loads all events when CPUID matched, which is now unreasonable, we want related events are loaded for specific SoC.
+> This should be moved forward in the series. Actually, I think this should
+> be merged with the first patch of the series.
 
-so we could have a folder like .../arch/arm64/nxp/system for these 
-JSONs. The perf tool can be updated to handle CPU and system events in 
-separate folders.
+OK, can squash. This way I don't have to split 03/12.
 
-> 
-> All events will also be loaded if we use DDRC_ID to match in the future, this seems to not be a good ideal.
+I can also update V4L2_BUF_FLAG_NO_CACHE_INVALIDATE/CLEAN in 01/12 then.
+Would that work?
 
-The important part is knowing which events are supported per 
-implementation. Is there any method in the driver of knowing the 
-specific implementation, like any DT compat string? Least preferred 
-option would be DT machine ID.
-
-> 
-
-John
+	-ss
