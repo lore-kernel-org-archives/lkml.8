@@ -2,198 +2,110 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACD8C34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16872C3404D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C031C2464E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E26C42464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 09:02:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+MvosDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726659AbgBSJBs (ORCPT
+        id S1726691AbgBSJCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 04:01:48 -0500
-Received: from mga09.intel.com ([134.134.136.24]:35860 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgBSJBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 04:01:48 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 01:01:47 -0800
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="229051702"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.174.165]) ([10.249.174.165])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 19 Feb 2020 01:01:44 -0800
-Subject: Re: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is
- triggered by a page fault
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-2-sean.j.christopherson@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
-Date:   Wed, 19 Feb 2020 17:01:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 04:02:35 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41403 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbgBSJCf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 04:02:35 -0500
+Received: by mail-vs1-f67.google.com with SMTP id k188so14600110vsc.8;
+        Wed, 19 Feb 2020 01:02:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=TSVyOEZZlUXcItl/vOCqMLuW1ofkxTSLhKQ7okp+WUw=;
+        b=W+MvosDDNezGY0Xz11wcWD5F1iPFX3ljmRkbHSfE1anrFuYDdb5UEvX8Fd8FSEH9fK
+         g8XNmermebanajz8wUzJv6E7+Lpo9m7pUKQ8ZjMH8YxkLRrPGILV6HWQ4eHw5XDZ53IT
+         JtSiHbAegJIwYSLSM1i75JFwskZoZYZmkoHBZr3guFZvzpisQLR5P/3OZjhatToz49LT
+         W008XH5uN98RYQ5w1FVVPIiAj2mk8Kqji8aeT4695uKAsTwWkkJCOIw992VqU97Pyepv
+         JZaJ0Dnq2IVvJ2db4U3xYnlHdTyVasQ1eT9IhbblNbuRuTspOSdoXH7PKohvp1PxIh0S
+         FggA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=TSVyOEZZlUXcItl/vOCqMLuW1ofkxTSLhKQ7okp+WUw=;
+        b=TlmEhK8ARvxQkU8jlX5bg7aNkDbWxL8i/WnNwIFGPnh9Ib+TD7y4dsaKre2HRsHSkV
+         V7+V+exlO+8l9wXqaKTpWC2HaXLWnqUSJ99gI/lnMcGsd4esdyX7qhE6w+LG06Llh7Pa
+         xJ/C3rmCgEACwpdDS8K1bLfDCCOIO8psOn8Z9NdbQFzhyS3BnTlfvmFES2exo44yb6+x
+         cHH0KxP57XLuJLiW77fcwPCv3UcXXXUXTooMN3pbPL+39NZoQkfcj91BGbXina/FpZ38
+         iavDo8OMjhh/+rJdxK6zJNAqUm1C1HFAILdpfVQyJ24S3H6t+DFjlURbjKHdmeyf1vom
+         GukA==
+X-Gm-Message-State: APjAAAUP+NucwGvTHrsMpGC4Ubmc6J8JFKXDwmB30EyRVrvESFjVeuK+
+        zcGUmP/J4ON01HMxKQmF42nYF4rQ4lFstlbf3uk=
+X-Google-Smtp-Source: APXvYqyYPlXGS2nEIB0nWEpd2b1ixbT/+c7Z/cOCKib+7XtifVu0NFO4zmvfJR/Et/9/RC0y/ZQ/vXXzv9FEqzt3KWQ=
+X-Received: by 2002:a67:eac5:: with SMTP id s5mr13315040vso.148.1582102954243;
+ Wed, 19 Feb 2020 01:02:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200218230310.29410-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Martin Haass <vvvrrooomm@gmail.com>
+Date:   Wed, 19 Feb 2020 10:02:17 +0100
+Message-ID: <CAH3oDPzeu_bzYa3fOUpcjQk4HJ5K2Rx+Qf+qbqxSrmTdrWHm5g@mail.gmail.com>
+Subject: [PATCH] module support: during lockdown, log name of unsigned module
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/2020 7:03 AM, Sean Christopherson wrote:
-> Add a new emulation type flag to explicitly mark emulation related to a
-> page fault.  Move the propation of the GPA into the emulator from the
-> page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
-> indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
-> exception.address when it's *not* valid.
-> 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   arch/x86/include/asm/kvm_host.h | 12 +++++++++---
->   arch/x86/kvm/mmu/mmu.c          | 10 ++--------
->   arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
->   3 files changed, 30 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 4dffbc10d3f8..10c1e8f472b6 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
->    *		   decode the instruction length.  For use *only* by
->    *		   kvm_x86_ops->skip_emulated_instruction() implementations.
->    *
-> - * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
-> - *			  retry native execution under certain conditions.
-> + * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
-> + *			     retry native execution under certain conditions,
-> + *			     Can only be set in conjunction with EMULTYPE_PF.
->    *
->    * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
->    *			     triggered by KVM's magic "force emulation" prefix,
-> @@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
->    *			backdoor emulation, which is opt in via module param.
->    *			VMware backoor emulation handles select instructions
->    *			and reinjects the #GP for all other cases.
-> + *
-> + * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
-> + *		 case the CR2/GPA value pass on the stack is valid.
->    */
->   #define EMULTYPE_NO_DECODE	    (1 << 0)
->   #define EMULTYPE_TRAP_UD	    (1 << 1)
->   #define EMULTYPE_SKIP		    (1 << 2)
-> -#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
-> +#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
+during lockdown loading of unsigned modules is restricted to signed
+modules only. The old error message does not show which module misses
+the signature, making it very difficult for a user to determine which
+module is at fault.
+This patch adds a line to the logs which additionally contains the
+module name that caused the error message. The old message cannot
+be replaced as it is generated by lockdown_is_locked_down
+---
+ kernel/module.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-How about naming it as EMULTYPE_PF_ALLOW_RETRY and exchanging the bit 
-position with EMULTYPE_PF ?
+diff --git a/kernel/module.c b/kernel/module.c
+index 33569a01d6e..6dcb28139a0 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2807,7 +2807,8 @@ static int module_sig_check(struct load_info *info,
+int flags)
+  const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+  const char *reason;
+  const void *mod = info->hdr;
+-
++ int is_locked = -EPERM;
++
+  /*
+  * Require flags == 0, as a module with version information
+  * removed is no longer the module that was signed
+@@ -2843,7 +2844,12 @@ static int module_sig_check(struct load_info *info,
+int flags)
+  return -EKEYREJECTED;
+  }
 
->   #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
->   #define EMULTYPE_VMWARE_GP	    (1 << 5)
-> +#define EMULTYPE_PF		    (1 << 6)
-> +
->   int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
->   int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
->   					void *insn, int insn_len);
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 7011a4e54866..258624d46588 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
->   int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
->   		       void *insn, int insn_len)
->   {
-> -	int r, emulation_type = 0;
-> +	int r, emulation_type = EMULTYPE_PF;
->   	bool direct = vcpu->arch.mmu->direct_map;
->   
->   	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
->   		return RET_PF_RETRY;
->   
-> -	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
-> -	if (vcpu->arch.mmu->direct_map) {
-> -		vcpu->arch.gpa_available = true;
-> -		vcpu->arch.gpa_val = cr2_or_gpa;
-> -	}
-> -
->   	r = RET_PF_INVALID;
->   	if (unlikely(error_code & PFERR_RSVD_MASK)) {
->   		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-> @@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
->   	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
->   	 */
->   	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
-> -		emulation_type = EMULTYPE_ALLOW_RETRY;
-> +		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
->   emulate:
->   	/*
->   	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fbabb2f06273..92af6c5a69e3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->   	gpa_t gpa = cr2_or_gpa;
->   	kvm_pfn_t pfn;
->   
-> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
->   		return false;
->   
-> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
->   		return false;
->   
->   	if (!vcpu->arch.mmu->direct_map) {
-> @@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
->   	 */
->   	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
->   
-> -	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-> +	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
->   		return false;
->   
-> -	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-> +	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-> +	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
->   		return false;
->   
->   	if (x86_page_table_writing_insn(ctxt))
-> @@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->   	}
->   
->   restart:
-> -	/* Save the faulting GPA (cr2) in the address field */
-> -	ctxt->exception.address = cr2_or_gpa;
-> +	if (emulation_type & EMULTYPE_PF) {
-> +		/* Save the faulting GPA (cr2) in the address field */
-> +		ctxt->exception.address = cr2_or_gpa;
-> +
-> +		/* With shadow page tables, cr2 contains a GVA or nGPA. */
-> +		if (vcpu->arch.mmu->direct_map) {
-> +			vcpu->arch.gpa_available = true;
-> +			vcpu->arch.gpa_val = cr2_or_gpa;
-> +		}
-> +	} else {
-> +		/* Sanitize the address out of an abundance of paranoia. */
-> +		ctxt->exception.address = 0;
-> +	}
->   
->   	r = x86_emulate_insn(ctxt);
->   
-> 
+- return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++ is_locked = security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
++ if (is_locked == -EPERM) {
++ pr_notice("Lockdown: %s: rejected module '%s' cause: %s",
++ current->comm, info->name, reason);
++ }
++ return is_locked;
 
+  /* All other errors are fatal, including nomem, unparseable
+  * signatures and signature check failures - even if signatures
+-- 
+2.25.0
