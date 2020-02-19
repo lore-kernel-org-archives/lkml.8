@@ -2,96 +2,78 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E998C3404D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB23DC34050
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63A32465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582110926;
-	bh=AvRb/PmmipD49Co7Ex6q8IW7ShT2DIm81mwAMV5K3Vk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gSof2sEX891JN77b7TpznAR77pDGX8IpHRi5ChrEw5AfNdpp5zy+67PgueXCUX10V
-	 ZqGaVSLbmN4EvhHv2OlM2QGia01wNe89CUHVhO9Llo3EPlvIjzUjPUi5eDEMMcnSMh
-	 mIFANszHlXbkolqG9mgXhIQojTUh2hlaGr+i+j2w=
+	by mail.kernel.org (Postfix) with ESMTP id 86B4D206E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 11:18:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgBSLPY (ORCPT
+        id S1726731AbgBSLSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 06:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 06:18:08 -0500
+Received: from ms.lwn.net ([45.79.88.28]:33982 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726636AbgBSLPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:15:24 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726469AbgBSLSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:18:08 -0500
+Received: from localhost.localdomain (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E426F2067D;
-        Wed, 19 Feb 2020 11:15:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582110922;
-        bh=AvRb/PmmipD49Co7Ex6q8IW7ShT2DIm81mwAMV5K3Vk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zYg3iJ4Nsu4lS0v5lCBYbeVo3c3VnvtlQBXZrkqILUQz08qlbItCwafIkdGN77Uwt
-         541+KEAyYkxvX3GadCpLYKBG9UFMjmv8/4BlvDHmQsEa17cQaJgYViDmhgEp0mHNWg
-         CTXu4V4Izi3NZDTk+01HlRSLq26BmYrDCA2fnyok=
-Date:   Wed, 19 Feb 2020 12:15:19 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
-Cc:     Rob Herring <robh@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] serdev: Fix detection of UART devices on Apple machines.
-Message-ID: <20200219111519.GB2814125@kroah.com>
-References: <20200211194723.486217-1-ronald@innovation.ch>
+        by ms.lwn.net (Postfix) with ESMTPSA id 5CECF2E5;
+        Wed, 19 Feb 2020 11:18:03 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 04:17:58 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] docs: ubifs-authentication: fix Sphinx warning
+Message-ID: <20200219041758.3b7316b8@lwn.net>
+In-Reply-To: <20200214170833.25803-4-j.neuschaefer@gmx.net>
+References: <20200214170833.25803-1-j.neuschaefer@gmx.net>
+        <20200214170833.25803-4-j.neuschaefer@gmx.net>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200211194723.486217-1-ronald@innovation.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:47:23AM -0800, Ronald Tschal‰r wrote:
-> On Apple devices the _CRS method returns an empty resource template, and
-> the resource settings are instead provided by the _DSM method. But
-> commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
-> devices by ResourceSource field) changed the search for serdev devices
-> to require valid, non-empty resource template, thereby breaking Apple
-> devices and causing bluetooth devices to not be found.
+On Fri, 14 Feb 2020 18:08:07 +0100
+Jonathan Neusch√§fer <j.neuschaefer@gmx.net> wrote:
+
+> This fixes the following warning:
 > 
-> This expands the check so that if we don't find a valid template, and
-> we're on an Apple machine, then just check for the device being an
-> immediate child of the controller and having a "baud" property.
+> Documentation/filesystems/ubifs-authentication.rst:98: WARNING:
+>   Inline interpreted text or phrase reference start-string without end-string.
 > 
-> Cc: <stable@vger.kernel.org> # 5.5
-> Signed-off-by: Ronald Tschal‰r <ronald@innovation.ch>
-> ---
->  drivers/tty/serdev/core.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index ce5309d00280..0f64a10ba51f 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -18,6 +18,7 @@
->  #include <linux/sched.h>
->  #include <linux/serdev.h>
->  #include <linux/slab.h>
-> +#include <linux/platform_data/x86/apple.h>
+> Signed-off-by: Jonathan Neusch√§fer <j.neuschaefer@gmx.net>
 
-Why is this needed?  Just for the x86_apple_machine variable?
+So this, IMO, should be fixed in patch #2, when you're touching the file
+anyway.  I don't see a lot of value in adding a warning to the docs build
+then immediately removing it.
 
-Why do we still have platform_data for new systems anymore?  Can't this
-go into a much more generic location?  Like as an inline function?
+Also, please send a cover letter with multi-part sets like this so we
+know what the overall objective is.
 
-thanks,
+Note also that Mauro is also playing with this file (and ubifs.txt, which
+really should be included as well) at the same time.
 
-greg k-h
+Thanks,
+
+jon
