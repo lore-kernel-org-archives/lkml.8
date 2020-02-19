@@ -2,121 +2,73 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83ACDC34022
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE8DC3402F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6343F24655
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95FA02176D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 03:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgBSDPm (ORCPT
+        id S1728319AbgBSDQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Feb 2020 22:15:42 -0500
-Received: from mga11.intel.com ([192.55.52.93]:7614 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728203AbgBSDPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Feb 2020 22:15:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 19:15:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,459,1574150400"; 
-   d="scan'208";a="253956967"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.213.252]) ([10.254.213.252])
-  by orsmga002.jf.intel.com with ESMTP; 18 Feb 2020 19:15:38 -0800
-Subject: Re: [PATCH] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for
- huge page
-To:     Yonghyun Hwang <yonghyun@google.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Deepa Dinamani <deepadinamani@google.com>,
-        Moritz Fischer <moritzf@google.com>
-References: <20200218222324.231915-1-yonghyun@google.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <8efc6ea2-d51e-624c-5cc2-4049bb224122@linux.intel.com>
-Date:   Wed, 19 Feb 2020 11:15:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 18 Feb 2020 22:16:32 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:49905 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728203AbgBSDQc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Feb 2020 22:16:32 -0500
+Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 0C8703A2239;
+        Wed, 19 Feb 2020 14:16:28 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4Fqc-0005MI-Kp; Wed, 19 Feb 2020 14:16:26 +1100
+Date:   Wed, 19 Feb 2020 14:16:26 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 14/19] ext4: Convert from readpages to readahead
+Message-ID: <20200219031626.GC10776@dread.disaster.area>
+References: <20200217184613.19668-1-willy@infradead.org>
+ <20200217184613.19668-25-willy@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200218222324.231915-1-yonghyun@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200217184613.19668-25-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8 a=gdF_tSV0u4M_20XL-lkA:9
+        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yonghyun,
-
-Thanks for the patch.
-
-On 2020/2/19 6:23, Yonghyun Hwang wrote:
-> intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a huge
-> page onto its corresponding physical address. This commit fixes the bug by
-> accomodating the level of page entry for the IOVA and adds IOVA's lower
-> address to the physical address. >
-> Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
-> ---
->   drivers/iommu/intel-iommu.c | 11 +++++++++--
->   1 file changed, 9 insertions(+), 2 deletions(-)
+On Mon, Feb 17, 2020 at 10:46:05AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 0c8d81f56a30..ed6e69adb578 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5555,13 +5555,20 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
->   	struct dma_pte *pte;
->   	int level = 0;
->   	u64 phys = 0;
-> +	const unsigned long pfn = iova >> VTD_PAGE_SHIFT;
+> Use the new readahead operation in ext4
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Why do you need a "const unsigned long" here?
+There's nothing I can see in this that would cause that list
+corruption I saw with ext4.
 
->   
->   	if (dmar_domain->flags & DOMAIN_FLAG_LOSE_CHILDREN)
->   		return 0;
->   
-> -	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
-> -	if (pte)
-> +	pte = pfn_to_dma_pte(dmar_domain, pfn, &level);
-> +	if (pte) {
->   		phys = dma_pte_addr(pte);
-> +		if (level > 1)
-> +			phys += (pfn &
-> +				((1UL << level_to_offset_bits(level)) - 1))
-> +				<< VTD_PAGE_SHIFT;
-> +		phys += iova & (VTD_PAGE_SIZE - 1);
+I'll re-introduce the patch and see if it falls over again.
 
-How about
+Cheers,
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 9dc37672bf89..bd17c2510bb2 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5693,8 +5693,14 @@ static phys_addr_t 
-intel_iommu_iova_to_phys(struct iommu_domain *domain,
-         u64 phys = 0;
-
-         pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
--       if (pte)
-+       if (pte) {
-+               unsigned long offset_mask;
-+
-+               offset_mask = BIT_MASK(level_to_offset_bits(level) +
-+                                      VTD_PAGE_SHIFT) - 1;
-                 phys = dma_pte_addr(pte);
-+               phys += iova & (bitmask - 1);
-+       }
-
-         return phys;
-  }
-
-Best regards,
-baolu
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
