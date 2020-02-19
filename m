@@ -2,120 +2,251 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD298C761A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C870BC5ACC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9500C208C4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F10208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 23:08:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVlwwu2r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qIlUYzd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBSXH3 (ORCPT
+        id S1726710AbgBSXIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 18:07:29 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:33019 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbgBSXH3 (ORCPT
+        Wed, 19 Feb 2020 18:08:38 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33508 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbgBSXIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 18:07:29 -0500
-Received: by mail-pj1-f66.google.com with SMTP id m7so532902pjs.0;
-        Wed, 19 Feb 2020 15:07:28 -0800 (PST)
+        Wed, 19 Feb 2020 18:08:38 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w6so1910596otk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 15:08:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=B5o43CHmKfB5WT/Bs5/VID/7xQx6JihjpasEkUB+yOs=;
-        b=LVlwwu2rkRP+U/gcnGAWlcNcfA+6JKORjE8/L38OpwdFiGelOmo6w17KS+7ibVNib2
-         rEyBcUnyu5fthGLWHrZsPjtnO1icAuRgSCTOSGdE/d0RWlwE/4WiCfTL93rXLjvtmoLs
-         RkJ6avsnpFwhyQG9SW2ds6ZwKele4dS+ss1AtZGSc5ODWtSgW7hFCbeRpSIDFMJpX7Nn
-         sMRRwSwOMgsqE/4sR4XZQUol5oo/XDaEdeJCSxKPGyubYoYUyh9dXdRWFddflhaIz7tI
-         0tEyDjJjpUHCvJMLUlFJdz+NlJTmrYShgBw6Rb/6H8h0YV8WEucnjczz+r0TgP7mAYFQ
-         aZdQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+b/hnzT2EVX6PsP41apCreu0TLShLliK5hvUBXDcdhg=;
+        b=qIlUYzd/1xNdQTWozr3rnyU8nrLQyoqiBCS7An0VMpC+1xLFH+/vQkw0MpeRYPX3kV
+         DMYkRfYvJs4yNdOPs62dxOgs0L0eJTu/Kn5rfdZz4c2nN4aRvBSbol5Rd5ltHkWE2j/r
+         DHJKOv3OxVQfbCyg49Ja1bbxVoV5AJBbe0QN+iqpdt1pygJCis+5/wnc2VAuIp2Rudxp
+         K28hrmMkh3mpLyFNVv2bFwANNfaM6JMFhcqkhWu8jZJVlNhETSr78kdLxgpz8aLH49UG
+         FnEAH7GZ4+M6lrxmZ7Uphk+aNvThaOx45Bj7DcXlwmqFY2aYKMp3S62d+FmsPvyrYAj5
+         SOEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=B5o43CHmKfB5WT/Bs5/VID/7xQx6JihjpasEkUB+yOs=;
-        b=b9xQtNxuer3jjPS33X3Vy85/x8iZfzZr8Q7tGevx40zr4/Pz08iat7ZRSFHdQhKmXE
-         i2R4S3Xwx1X2vtklj4zeRqehlPWLD6MoBbhPVH43q1+83J1emduC2AL0HX47uY2H/0mY
-         waMeRt0aZ1rW3fmGO1xCa/1wS0Ry7fkk1oa9PSlVAvUNRACvazp0cQA0YCjR3fAoUtV1
-         +i89V4L3lR5mA9gkbCv4YZK0YT6Ugcwj7wTtzYjRpqfFTRHrmiAdO4SM1Ta7wqlUkP6B
-         6cfX/tF+I92Bfc6WHVSbyATcnGa1vwTFrKoOsIMUJMLtCI26CSPJO5xXKe2hVIxHF3vm
-         dPuA==
-X-Gm-Message-State: APjAAAUJcBo/Yt6w7CqInmAR8CnYFZCCXa+ccCfPjwqSjYD03VjIeNR6
-        dAY0yNzWEKEcoSyoCHrvG/vvnaOE
-X-Google-Smtp-Source: APXvYqwpMjAjqEhaKlm6LiE6pYaPBSJevu7vlGaTS9CdaYgi3tTDQegz/tQhdvJCwx8x1LHozv9rEQ==
-X-Received: by 2002:a17:902:9a8f:: with SMTP id w15mr29521500plp.30.1582153648341;
-        Wed, 19 Feb 2020 15:07:28 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 76sm679118pfx.97.2020.02.19.15.07.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Feb 2020 15:07:27 -0800 (PST)
-Date:   Wed, 19 Feb 2020 15:07:27 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Henry Shen <henry.shen@alliedtelesis.co.nz>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        guillaume.ligneul@gmail.com, jdelvare@suse.com, trivial@kernel.org,
-        venture@google.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] hwmon: (lm73) Add support for of_match_table
-Message-ID: <20200219230726.GA9285@roeck-us.net>
-References: <20200212030615.28537-1-henry.shen@alliedtelesis.co.nz>
- <20200212030615.28537-3-henry.shen@alliedtelesis.co.nz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+b/hnzT2EVX6PsP41apCreu0TLShLliK5hvUBXDcdhg=;
+        b=VLO2jIIU6j784nzEeBEvIjqY5MMGP5wIjSrwO5D+OX4HZn1e7OS6oVLUdrolMs5nke
+         29T/JVJ0POJSV9Sb2/HSv9z89Ra4j0GX602lJrUizJHeVDixUzCb26+1YTLF/IZrGUsG
+         tQ9dBGqFYx5PmcUtDzxRUzqq7e8eKuAx+NoRAYeY8/JfJZDJ9RF9tJgUlKD3/ny7gez8
+         TmAt9QdmhNDInOTR/I7TO7KqLbkNBz1Rt26K1KDZLbECf0XgsY1ICibsdN8Kz+9eTiFH
+         WuGWmvMIv9uWdNYtZnVAdRYvBn9kwRqaSF+trlxvg3RjD+LfzTlnQYzhyMEvyWRTSK3a
+         Rjog==
+X-Gm-Message-State: APjAAAU5pc+dHM5kPJkyjSu2kXHbQYI8stKlKMZASFEeMG8BvlPdhY9B
+        CIZVj6zexSnNTL/in2DLnmbdvV6rAz7LEJ4XAh3vvdgoe20XZA==
+X-Google-Smtp-Source: APXvYqymq8C+IWZykVtXoDYEl/sBsbLdmJzjVdXLfHaGCka/F3YZemVTX4DcJK0wIaWoPsEJf0m8EHdynLmhmXHKNgc=
+X-Received: by 2002:a05:6830:13c3:: with SMTP id e3mr6694844otq.180.1582153717156;
+ Wed, 19 Feb 2020 15:08:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212030615.28537-3-henry.shen@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 20 Feb 2020 00:08:11 +0100
+Message-ID: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com>
+Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 04:06:15PM +1300, Henry Shen wrote:
-> Add the of_match_table.
-> 
-> Signed-off-by: Henry Shen <henry.shen@alliedtelesis.co.nz>
-
-Applied to hwmon-next.
-
-Thanks,
-Guenter
-
-> ---
-> Change in v2:
-> - add missing sign-off
-> 
->  drivers/hwmon/lm73.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/drivers/hwmon/lm73.c b/drivers/hwmon/lm73.c
-> index 1eeb9d7de2a0..733c48bf6c98 100644
-> --- a/drivers/hwmon/lm73.c
-> +++ b/drivers/hwmon/lm73.c
-> @@ -262,10 +262,20 @@ static int lm73_detect(struct i2c_client *new_client,
->  	return 0;
->  }
->  
-> +static const struct of_device_id lm73_of_match[] = {
-> +	{
-> +		.compatible = "ti,lm73",
-> +	},
-> +	{ },
-> +};
+On Tue, Feb 18, 2020 at 6:07 PM David Howells <dhowells@redhat.com> wrote:
+> Add a superblock event notification facility whereby notifications about
+> superblock events, such as I/O errors (EIO), quota limits being hit
+> (EDQUOT) and running out of space (ENOSPC) can be reported to a monitoring
+> process asynchronously.  Note that this does not cover vfsmount topology
+> changes.  watch_mount() is used for that.
+[...]
+> @@ -354,6 +356,10 @@ void deactivate_locked_super(struct super_block *s)
+>  {
+>         struct file_system_type *fs = s->s_type;
+>         if (atomic_dec_and_test(&s->s_active)) {
+> +#ifdef CONFIG_SB_NOTIFICATIONS
+> +               if (s->s_watchers)
+> +                       remove_watch_list(s->s_watchers, s->s_unique_id);
+> +#endif
+>                 cleancache_invalidate_fs(s);
+>                 unregister_shrinker(&s->s_shrink);
+>                 fs->kill_sb(s);
+[...]
+> +/**
+> + * sys_watch_sb - Watch for superblock events.
+> + * @dfd: Base directory to pathwalk from or fd referring to superblock.
+> + * @filename: Path to superblock to place the watch upon
+> + * @at_flags: Pathwalk control flags
+> + * @watch_fd: The watch queue to send notifications to.
+> + * @watch_id: The watch ID to be placed in the notification (-1 to remove watch)
+> + */
+> +SYSCALL_DEFINE5(watch_sb,
+> +               int, dfd,
+> +               const char __user *, filename,
+> +               unsigned int, at_flags,
+> +               int, watch_fd,
+> +               int, watch_id)
+> +{
+> +       struct watch_queue *wqueue;
+> +       struct super_block *s;
+> +       struct watch_list *wlist = NULL;
+> +       struct watch *watch = NULL;
+> +       struct path path;
+> +       unsigned int lookup_flags =
+> +               LOOKUP_DIRECTORY | LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT;
+> +       int ret;
+[...]
+> +       wqueue = get_watch_queue(watch_fd);
+> +       if (IS_ERR(wqueue))
+> +               goto err_path;
 > +
-> +MODULE_DEVICE_TABLE(of, lm73_of_match);
+> +       s = path.dentry->d_sb;
+> +       if (watch_id >= 0) {
+> +               ret = -ENOMEM;
+> +               if (!s->s_watchers) {
+
+READ_ONCE() ?
+
+> +                       wlist = kzalloc(sizeof(*wlist), GFP_KERNEL);
+> +                       if (!wlist)
+> +                               goto err_wqueue;
+> +                       init_watch_list(wlist, NULL);
+> +               }
 > +
->  static struct i2c_driver lm73_driver = {
->  	.class		= I2C_CLASS_HWMON,
->  	.driver = {
->  		.name	= "lm73",
-> +		.of_match_table = lm73_of_match,
->  	},
->  	.probe		= lm73_probe,
->  	.id_table	= lm73_ids,
+> +               watch = kzalloc(sizeof(*watch), GFP_KERNEL);
+> +               if (!watch)
+> +                       goto err_wlist;
+> +
+> +               init_watch(watch, wqueue);
+> +               watch->id               = s->s_unique_id;
+> +               watch->private          = s;
+> +               watch->info_id          = (u32)watch_id << 24;
+> +
+> +               ret = security_watch_sb(watch, s);
+> +               if (ret < 0)
+> +                       goto err_watch;
+> +
+> +               down_write(&s->s_umount);
+> +               ret = -EIO;
+> +               if (atomic_read(&s->s_active)) {
+> +                       if (!s->s_watchers) {
+> +                               s->s_watchers = wlist;
+> +                               wlist = NULL;
+> +                       }
+> +
+> +                       ret = add_watch_to_object(watch, s->s_watchers);
+> +                       if (ret == 0) {
+> +                               spin_lock(&sb_lock);
+> +                               s->s_count++;
+> +                               spin_unlock(&sb_lock);
+
+Where is the corresponding decrement of s->s_count? I'm guessing that
+it should be in the ->release_watch() handler, except that there isn't
+one...
+
+> +                               watch = NULL;
+> +                       }
+> +               }
+> +               up_write(&s->s_umount);
+> +       } else {
+> +               ret = -EBADSLT;
+> +               if (READ_ONCE(s->s_watchers)) {
+
+(Nit: I don't get why you do a lockless check here before taking the
+lock - it'd be more straightforward to take the lock first, and it's
+not like you want to optimize for the case where someone calls
+sys_watch_sb() with invalid arguments...)
+
+> +                       down_write(&s->s_umount);
+> +                       ret = remove_watch_from_object(s->s_watchers, wqueue,
+> +                                                      s->s_unique_id, false);
+> +                       up_write(&s->s_umount);
+> +               }
+> +       }
+> +
+> +err_watch:
+> +       kfree(watch);
+> +err_wlist:
+> +       kfree(wlist);
+> +err_wqueue:
+> +       put_watch_queue(wqueue);
+> +err_path:
+> +       path_put(&path);
+> +       return ret;
+> +}
+> +#endif
+[...]
+> +/**
+> + * notify_sb: Post simple superblock notification.
+> + * @s: The superblock the notification is about.
+> + * @subtype: The type of notification.
+> + * @info: WATCH_INFO_FLAG_* flags to be set in the record.
+> + */
+> +static inline void notify_sb(struct super_block *s,
+> +                            enum superblock_notification_type subtype,
+> +                            u32 info)
+> +{
+> +#ifdef CONFIG_SB_NOTIFICATIONS
+> +       if (unlikely(s->s_watchers)) {
+
+READ_ONCE() ?
+
+> +               struct superblock_notification n = {
+> +                       .watch.type     = WATCH_TYPE_SB_NOTIFY,
+> +                       .watch.subtype  = subtype,
+> +                       .watch.info     = watch_sizeof(n) | info,
+> +                       .sb_id          = s->s_unique_id,
+> +               };
+> +
+> +               post_sb_notification(s, &n);
+> +       }
+> +
+> +#endif
+> +}
+> +
+> +/**
+> + * notify_sb_error: Post superblock error notification.
+> + * @s: The superblock the notification is about.
+> + * @error: The error number to be recorded.
+> + */
+> +static inline int notify_sb_error(struct super_block *s, int error)
+> +{
+> +#ifdef CONFIG_SB_NOTIFICATIONS
+> +       if (unlikely(s->s_watchers)) {
+
+READ_ONCE() ?
+
+> +               struct superblock_error_notification n = {
+> +                       .s.watch.type   = WATCH_TYPE_SB_NOTIFY,
+> +                       .s.watch.subtype = NOTIFY_SUPERBLOCK_ERROR,
+> +                       .s.watch.info   = watch_sizeof(n),
+> +                       .s.sb_id        = s->s_unique_id,
+> +                       .error_number   = error,
+> +                       .error_cookie   = 0,
+> +               };
+> +
+> +               post_sb_notification(s, &n.s);
+> +       }
+> +#endif
+> +       return error;
+> +}
