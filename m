@@ -2,94 +2,112 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEF7C34050
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A757C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4A62465D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C7E4208C4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 15:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kr4uhcHM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbgBSPCV (ORCPT
+        id S1726808AbgBSPCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 10:02:21 -0500
-Received: from outbound-smtp04.blacknight.com ([81.17.249.35]:57717 "EHLO
-        outbound-smtp04.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726703AbgBSPCV (ORCPT
+        Wed, 19 Feb 2020 10:02:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41620 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726703AbgBSPCc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:02:21 -0500
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp04.blacknight.com (Postfix) with ESMTPS id CFD23BEB53
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 15:02:18 +0000 (GMT)
-Received: (qmail 8528 invoked from network); 19 Feb 2020 15:02:18 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 19 Feb 2020 15:02:18 -0000
-Date:   Wed, 19 Feb 2020 15:02:15 +0000
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
-        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
-        alexander.h.duyck@linux.intel.com, vbabka@suse.cz,
-        osalvador@suse.de
-Subject: Re: [PATCH v17 8/9] mm/page_reporting: Add budget limit on how many
- pages can be reported per pass
-Message-ID: <20200219150215.GU3466@techsingularity.net>
-References: <20200211224416.29318.44077.stgit@localhost.localdomain>
- <20200211224719.29318.72113.stgit@localhost.localdomain>
+        Wed, 19 Feb 2020 10:02:32 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so691872ljc.8;
+        Wed, 19 Feb 2020 07:02:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jI8b92MXgk0efhak9gk6FrgPJCPT1ISTWrmOifLTsoU=;
+        b=Kr4uhcHMWJ8Uzx91/pGTmRC+NMYgl0iwH+UcWMlpZRrSPIFUHcdEt8iyXsiwNzgtbj
+         Ll8ehpL+88BYPc2RzEvrxQjK7jtS/KAud3YBv7S+CE1BglxJwRa54gnqqMgaUcKvisW1
+         zHBSCfc0DWwnq9o1LQM/kxT4aRYK2Vfy9LR+euFwQXZ/HAFzgtF9fGqUe9dvOUxUSykh
+         PdtUDakmFzKmZZsbgIGTBp5PrLW5g3bdLvAtHsQ4OyvVUlnT/3OJzKGxM/jPhP2qstDb
+         jPMyZJnLqzzK+HW7uLxLWw0YsZxnxc9NUWHEb/cJT0TmIXrGmp8bibYSq9suMRmseWmZ
+         A7nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jI8b92MXgk0efhak9gk6FrgPJCPT1ISTWrmOifLTsoU=;
+        b=Er2cPS5ETpJdRQm2Vh5Q9wBc1wwSIJItpOlNsjYM+qC5uTddPvjlU0e3oPO2bVqguO
+         jfOxVAQxq65PLjYZQGgDOTOzoh53T9kHZROfgPexWfdczDJQars2d1SeJoefuwGhRkLX
+         DfEgYvKHzMTwMKBxhp0bVrvI/tP/USc+vH6klMT5pKpL6VgkSZxit1ov58mDaV/AEi8f
+         vC7uWiH2btfo+Z2YgX4h8C6ERRMYFgGd2RBfT9oWV9EOnHdiyAWa8v+BvlFsVnI7nHPH
+         WzAQQ9FxRkfGNCItjAvFAbRFfG802GMH/YqMsR3QSGN+s1wRTDfb7YkyxAR84dd60svE
+         b0XA==
+X-Gm-Message-State: APjAAAWm/s6Qb4wRA7oak4w++JpkT6FmNTd6SXBZiMPZiTOHZDGcHAvx
+        DAMDvhnxtfIHzUe70/RAl+M=
+X-Google-Smtp-Source: APXvYqxx5v5g8sUuYN9vbyRJSlE7QZVKB3360ZXmfF6Oc0N7a7eAUxjubXZsj4q9V+iquV3uw21rgw==
+X-Received: by 2002:a2e:7812:: with SMTP id t18mr16855004ljc.289.1582124550514;
+        Wed, 19 Feb 2020 07:02:30 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id v5sm1345848ljk.67.2020.02.19.07.02.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 07:02:27 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        David Heidelberg <david@ixit.cz>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1] nfc: pn544: Fix occasional HW initialization failure
+Date:   Wed, 19 Feb 2020 18:01:22 +0300
+Message-Id: <20200219150122.31524-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20200211224719.29318.72113.stgit@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:47:19PM -0800, Alexander Duyck wrote:
-> From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> 
-> In order to keep ourselves from reporting pages that are just going to be
-> reused again in the case of heavy churn we can put a limit on how many
-> total pages we will process per pass. Doing this will allow the worker
-> thread to go into idle much more quickly so that we avoid competing with
-> other threads that might be allocating or freeing pages.
-> 
-> The logic added here will limit the worker thread to no more than one
-> sixteenth of the total free pages in a given area per list. Once that limit
-> is reached it will update the state so that at the end of the pass we will
-> reschedule the worker to try again in 2 seconds when the memory churn has
-> hopefully settled down.
-> 
-> Again this optimization doesn't show much of a benefit in the standard case
-> as the memory churn is minmal. However with page allocator shuffling
-> enabled the gain is quite noticeable. Below are the results with a THP
-> enabled version of the will-it-scale page_fault1 test showing the
-> improvement in iterations for 16 processes or threads.
-> 
-> Without:
-> tasks   processes       processes_idle  threads         threads_idle
-> 16      8283274.75      0.17            5594261.00      38.15
-> 
-> With:
-> tasks   processes       processes_idle  threads         threads_idle
-> 16      8767010.50      0.21            5791312.75      36.98
-> 
-> Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+The PN544 driver checks the "enable" polarity during of driver's probe and
+it's doing that by turning ON and OFF NFC with different polarities until
+enabling succeeds. It takes some time for the hardware to power-down, and
+thus, to deassert the IRQ that is raised by turning ON the hardware.
+Since the delay after last power-down of the polarity-checking process is
+missed in the code, the interrupt may trigger immediately after installing
+the IRQ handler (right after the checking is done), which results in IRQ
+handler trying to touch the disabled HW and ends with marking NFC as
+'DEAD' during of the driver's probe:
 
-Seems fair. The test case you used would have been pounding on the zone
-lock at fairly high frequency so it represents a worst-case scenario but
-not necessarily an unrealistic one
+  pn544_hci_i2c 1-002a: NFC: nfc_en polarity : active high
+  pn544_hci_i2c 1-002a: NFC: invalid len byte
+  shdlc: llc_shdlc_recv_frame: NULL Frame -> link is dead
 
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+This patch fixes the occasional NFC initialization failure on Nexus 7
+device.
 
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/nfc/pn544/i2c.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/nfc/pn544/i2c.c b/drivers/nfc/pn544/i2c.c
+index 720c89d6066e..4ac8cb262559 100644
+--- a/drivers/nfc/pn544/i2c.c
++++ b/drivers/nfc/pn544/i2c.c
+@@ -225,6 +225,7 @@ static void pn544_hci_i2c_platform_init(struct pn544_i2c_phy *phy)
+ 
+ out:
+ 	gpiod_set_value_cansleep(phy->gpiod_en, !phy->en_polarity);
++	usleep_range(10000, 15000);
+ }
+ 
+ static void pn544_hci_i2c_enable_mode(struct pn544_i2c_phy *phy, int run_mode)
 -- 
-Mel Gorman
-SUSE Labs
+2.24.0
+
