@@ -2,106 +2,130 @@ Return-Path: <SRS0=ZTvs=4H=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B90C34047
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BF2C34047
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA84224656
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582131022;
-	bh=kOXZCZKenNSD9wrjdQ1BdQRHvBQn6jUQq/YNOfpaiQI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=e7un82jNQk/arCJinoHSeHWLBDXQqmduPasLcD06s4zUr13tyXERQVMOVAOR3qwCQ
-	 tn/sHCO+0YTCyD1RSqlVlmFWrW2YKjo9X3vbOBY4ZYE6NS6rM9BCGSvA2tF4PFleq6
-	 3onmiHyeeKu4osEfBt1bBW7Z/9RC9KJkK0fypNUI=
+	by mail.kernel.org (Postfix) with ESMTP id B51122464E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Feb 2020 16:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgBSQuV (ORCPT
+        id S1726725AbgBSQvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 11:50:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35442 "EHLO mail.kernel.org"
+        Wed, 19 Feb 2020 11:51:25 -0500
+Received: from 8bytes.org ([81.169.241.247]:55022 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgBSQuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 11:50:21 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3AC720578;
-        Wed, 19 Feb 2020 16:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582131020;
-        bh=kOXZCZKenNSD9wrjdQ1BdQRHvBQn6jUQq/YNOfpaiQI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=tabKOyUUDIEk+mcMZmV4P2vFUQPjgX8ZHvwTq9MnBMeuUY1U7/xv6u73vcU0T1LEI
-         HzsmSmTpvbEEJ8KFZNgFPHkW9bs7OXAZvdMMs1IGnU2H4LHoHr4/cvalrZh3rnNKTW
-         2+GB4sMHmoKxV6TKLm/RMbDbeP2Up/AA8ehMCfgU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 645D335209B0; Wed, 19 Feb 2020 08:50:20 -0800 (PST)
-Date:   Wed, 19 Feb 2020 08:50:20 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, mingo@kernel.org,
-        joel@joelfernandes.org, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, tglx@linutronix.de, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org,
-        Marco Elver <elver@google.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 16/22] locking/atomics, kcsan: Add KCSAN
- instrumentation
-Message-ID: <20200219165020.GF2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200219144724.800607165@infradead.org>
- <20200219150745.299217979@infradead.org>
- <20200219104626.633f0650@gandalf.local.home>
- <20200219160318.GG18400@hirez.programming.kicks-ass.net>
+        id S1726518AbgBSQvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 11:51:25 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 2BA8833E; Wed, 19 Feb 2020 17:51:24 +0100 (CET)
+Date:   Wed, 19 Feb 2020 17:51:22 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [git pull] IOMMU Fixes for Linux v5.6-rc1
+Message-ID: <20200219165116.GA7503@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
 Content-Disposition: inline
-In-Reply-To: <20200219160318.GG18400@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 05:03:18PM +0100, Peter Zijlstra wrote:
-> On Wed, Feb 19, 2020 at 10:46:26AM -0500, Steven Rostedt wrote:
-> > On Wed, 19 Feb 2020 15:47:40 +0100
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > From: Marco Elver <elver@google.com>
-> > > 
-> > > This adds KCSAN instrumentation to atomic-instrumented.h.
-> > > 
-> > > Signed-off-by: Marco Elver <elver@google.com>
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > [peterz: removed the actual kcsan hooks]
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > > ---
-> > >  include/asm-generic/atomic-instrumented.h |  390 +++++++++++++++---------------
-> > >  scripts/atomic/gen-atomic-instrumented.sh |   14 -
-> > >  2 files changed, 212 insertions(+), 192 deletions(-)
-> > > 
-> > 
-> > 
-> > Does this and the rest of the series depend on the previous patches in
-> > the series? Or can this be a series on to itself (patches 16-22)?
-> 
-> It can probably stand on its own, but it very much is related in so far
-> that it's fallout from staring at all this nonsense.
-> 
-> Without these the do_int3() can actually have accidental tracing before
-> reaching it's nmi_enter().
 
-The original is already in -tip, so some merge magic will be required.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-							Thanx, Paul
+Hi Linus,
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.6-rc2
+
+for you to fetch changes up to ab362fffa0feb0da23191111e60b641d39130053:
+
+  iommu/arm-smmu: Restore naming of driver parameter prefix (2020-02-19 12:03:21 +0100)
+
+----------------------------------------------------------------
+IOMMU Fixes for Linux v5.6-rc2
+
+Including:
+
+	- Compile warning fix for the Intel IOMMU driver
+
+	- Fix kdump boot with Intel IOMMU enabled and in passthrough
+	  mode
+
+	- Disable AMD IOMMU on a Laptop/Embedded platform because the
+	  delay in introduces in DMA transactions causes screen
+	  flickering there with 4k monitors
+
+	- Make domain_free function in QCOM IOMMU driver robust and not
+	  leak memory/dereference NULL pointers
+
+	- Fix ARM-SMMU module parameter prefix names
+
+----------------------------------------------------------------
+Joerg Roedel (6):
+      iommu/vt-d: Fix compile warning from intel-svm.h
+      iommu/vt-d: Add attach_deferred() helper
+      iommu/vt-d: Move deferred device attachment into helper function
+      iommu/vt-d: Do deferred attachment in iommu_need_mapping()
+      iommu/vt-d: Remove deferred_attach_domain()
+      iommu/vt-d: Simplify check in identity_mapping()
+
+Kai-Heng Feng (1):
+      iommu/amd: Disable IOMMU on Stoney Ridge systems
+
+Robin Murphy (1):
+      iommu/qcom: Fix bogus detach logic
+
+Will Deacon (1):
+      iommu/arm-smmu: Restore naming of driver parameter prefix
+
+ drivers/iommu/Makefile         |  4 ++--
+ drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
+ drivers/iommu/intel-iommu.c    | 41 ++++++++++++++++++++++++-----------------
+ drivers/iommu/qcom_iommu.c     | 28 ++++++++++++----------------
+ include/linux/intel-svm.h      |  2 +-
+ 5 files changed, 51 insertions(+), 37 deletions(-)
+
+Please pull.
+
+Thanks,
+
+	Joerg
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl5NZ4QACgkQK/BELZcB
+GuOe4w//a/2D9GfQeOZAfFZwlvWvvI7z7OrwlpOQK07cY1eCygcT8C/aFh+cBpzH
+cXikuzdNUZm7O78MqRy9AJ92diPBde/wn2ldZrFqI0EGP37BOXMeOdxKhv4Tw4Qz
+6fukIrs2UivLRHvCQteSdOhvjvmBO29HiykDTx0zXfzJSlgmS1Ae6FxipGr21fp5
+RwSjT+JfAcCajLop/MaM9T/CKJxcedgzrf+smr97DX5Ux92tTD1ym+vQ6AwTfA3Y
+jzA09JZGBPmcypS8+XI0kEFEhEJNmK2+vTub1JOza/NH9RBQ5b3GB95KyxqraBgj
+gH7Ff1Mkef07IbI8PH1U9QWeoI+9j8U9cgL19TBRkhnJFDOraOeeLA2hK1aDYtJw
+wuB9G5jA3G9a/ETUj1r/p8CljIxtE1oMuhdFFNwInxC5xHLFLGuolIE+wEhMZdYt
+/7xGvzMD82yi2cDUqFjLbCAt+OyDBqXx2UgDs/88NSBGXiyiG3gigt7gGTySGS6E
+mX+xMcfBbn0+fmtF+1P8oLb9UqVD51XfgXg+VQALBMrHvJj+bLuhv9Syp4tLN3sC
+ZZ5sQhtKPkweqspjR0Av4nkvItkoD0ilAVNgI0LBjAJ5/VHazujvbighh1tFFCd5
+nNzC1ldL66Kd9AwhVutY7quMq3FMxmRoUwW02/lXvrcFhHYlD3I=
+=+M+m
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
