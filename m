@@ -2,101 +2,119 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C78C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F87C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E8D206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F45E207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:07:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VK+0jpev"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VuM35CN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726945AbgBTAFx (ORCPT
+        id S1726820AbgBTAHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:05:53 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44128 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbgBTAFw (ORCPT
+        Wed, 19 Feb 2020 19:07:25 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48678 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726647AbgBTAHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:05:52 -0500
-Received: by mail-oi1-f194.google.com with SMTP id d62so25684960oia.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:05:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=On4/X6XTdlAfrZHKoVhgecOTEOux4GHMdiEnySmBdt8=;
-        b=VK+0jpevVkZp/UHyagl40Y2dezLtobNOAkPWNA2EFwgtAnqWXAvRKL2fUDYjIIYuOX
-         5sD5qSv5bL+cr76lEQf4F46fwYdhqauQO/x/HQNTZ0vVr6HL9LZOVD6/suQ3H0O7Caep
-         qwIOgwYDsQ9Dgev+b1WryYQ43HfiGsFPeyaTa2mBQ9iRyhI96dyn+5Msdo/n+suooF0w
-         b+VcqixzW9m6IGvKS6k2wPw3kiwfoRYj6ynaXhaSWThUHIR+lDRULTcPDalnZsalZW69
-         X6syUyxegauMHYLgPzslGiMCLpScqFt1HGn7ExxFY9FrlOAiKd+ceTkoGJ2L7dqWkMOa
-         4jBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=On4/X6XTdlAfrZHKoVhgecOTEOux4GHMdiEnySmBdt8=;
-        b=YK1C/ud4O0eBz4SDM6oyDFlmwNL4X8LzgTCYsuEIvRQaH+EIi9X8vug6ZjChxs8Ha1
-         cNI8dUATUl/fhkCao8DPF8/6Cq4SeUuqh/D/AqZA635VVeRybVRdz0fZPkip2WIFxsLy
-         4BECCbvrJ7xCqDFs15Ir3T/ZTwL8rBe4nZu4OaQJxKmgYVx28ZRq75+0nY71jwVzYE09
-         HzDYa6rW9JyX5OCUGaDvzvApCseUBNrjOfqt9yA4My2YWxGqnANBfRRT1JTF9k4gh2+z
-         pl22QCo5SJCZqQt69Wu3d6rTbHdvNAELqWKyp70Zm4CNnL6Lh4Coo8dj9FpkjdG1QmII
-         ORAg==
-X-Gm-Message-State: APjAAAVNSNyFRJHQrYx9a/FNZ+4IfK+69p6mYrvzyg/RUq+7HuPozfac
-        AzrdN32V3qw8jfW+oLelZfhUQFc9YATK5jFdf0Ikng==
-X-Google-Smtp-Source: APXvYqx7kVH16uapNvK9tOipvAvk7gTbvKB9LtiGZMaNftmOXBmHqRRY9147oKxDVcrMXpx3fHZc1RbJlcQ1qSDu6Mg=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr183736oig.103.1582157151087;
- Wed, 19 Feb 2020 16:05:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20200211213128.73302-1-almasrymina@google.com>
- <20200211213128.73302-8-almasrymina@google.com> <37a49c35-567f-1663-33cd-3dac150020a0@linux.ibm.com>
-In-Reply-To: <37a49c35-567f-1663-33cd-3dac150020a0@linux.ibm.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Wed, 19 Feb 2020 16:05:40 -0800
-Message-ID: <CAHS8izOumQZJw9yDLSJz8buYc8oUL8oiex8Ji62QcpTX4J6G_g@mail.gmail.com>
-Subject: Re: [PATCH v12 8/9] hugetlb_cgroup: Add hugetlb_cgroup reservation tests
-To:     Sandipan Das <sandipan@linux.ibm.com>
-Cc:     Mike Kravetz <mike.kravetz@oracle.com>, shuah <shuah@kernel.org>,
-        David Rientjes <rientjes@google.com>,
+        Wed, 19 Feb 2020 19:07:24 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K04BQT194613;
+        Thu, 20 Feb 2020 00:07:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=3aT7epndnvHOqxfRhKxEGkq1oPJFl97KJ9zSmkPfAGI=;
+ b=VuM35CN9btm1xWOt5CyZnr6lyZBvCWi8B26oHpcT0aJAMPC5hYY94SGZ+ojmod41gLsK
+ L/B1vBC/TaKiY0o1/TUUW9VDjbrnbZtz2ymx7M/N+O7BaOckY1US6/4kfHn/9ZQp7aAV
+ HNeqnPubR6HgUN6G/ZDWO3X9Er3j2lnQJpBpF8L3T3BQecKV9Oea5VghtKSS5mmzxacS
+ B01FgInrXptM+Lx3vtG/6JhcORzLA9Lst5ULjuY4oRtH4TlWPSxs6uILxvuN3MOGixu7
+ cN+AKZiY3DGPyhrzPQ9PvBump/U7MJcdwLkU/xuLnHU31n5soeDpA1eNxq8W9h2RrjE4 EA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2y8ud16h7c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 00:07:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K02SNm181708;
+        Thu, 20 Feb 2020 00:07:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2y8ud8pbrv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 00:07:18 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01K07HtU002816;
+        Thu, 20 Feb 2020 00:07:18 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 16:07:17 -0800
+Subject: Re: [PATCH] hugetlb: Remove check_coalesce_bug debug code
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     David Rientjes <rientjes@google.com>,
         Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <cb402ae6-8424-c1f7-35ff-6acc68f9a23b@oracle.com>
+ <20200219233610.13808-1-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <a0d7b8e1-cb43-3b43-68c3-55631f2ce199@oracle.com>
+Date:   Wed, 19 Feb 2020 16:07:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200219233610.13808-1-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002190175
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 12:50 AM Sandipan Das <sandipan@linux.ibm.com> wrote:
->
->
->
-> On 12/02/20 3:01 am, Mina Almasry wrote:
-> > The tests use both shared and private mapped hugetlb memory, and
-> > monitors the hugetlb usage counter as well as the hugetlb reservation
-> > counter. They test different configurations such as hugetlb memory usage
-> > via hugetlbfs, or MAP_HUGETLB, or shmget/shmat, and with and without
-> > MAP_POPULATE.
-> >
-> > Also add test for hugetlb reservation reparenting, since this is
-> > a subtle issue.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> > Cc: sandipan@linux.ibm.com
+On 2/19/20 3:36 PM, Mina Almasry wrote:
+> Commit b5f16a533ce8a ("hugetlb: support file_region coalescing
+> again") made changes to the resv_map code which are hard to test, it
+> so added debug code guarded by CONFIG_DEBUG_VM which conducts an
+> expensive operation that loops over the resv_map and checks it for
+> errors.
+> 
+> Unfortunately, some distros have CONFIG_DEBUG_VM on in their default
+> kernels, and we don't want this debug code behind CONFIG_DEBUG_VM
+> and called each time a file region is added. This patch removes this
+> debug code. I may look into making it a test or leave it for my local
+> testing.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> 
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Mike Kravetz <mike.kravetz@oracle.com>
+> Cc: Shakeel Butt <shakeelb@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Fixes: b5f16a533ce8a ("hugetlb: support file_region coalescing again")
 
-Hi folks,
+Thanks!
 
-Sandipan provided a Tested-by but this is more or less the only patch
-in the series that is awaiting review. Can someone take a look?
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-Shuah, you started reviewing this months ago and I addressed the
-comments. Maybe you can take another look?
-
-Thanks in advance!
+The review also applies to the original patch with the removal of
+this code.
+-- 
+Mike Kravetz
