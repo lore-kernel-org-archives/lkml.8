@@ -2,114 +2,619 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EDDC11D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8286CC11D01
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C036B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E3120801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="MruqT/lL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hx3M+tXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgBTGM7 (ORCPT
+        id S1727091AbgBTGNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:12:59 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54073 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726198AbgBTGM5 (ORCPT
+        Thu, 20 Feb 2020 01:13:08 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26217 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726550AbgBTGNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:12:57 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so684255wmh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:12:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8LXBy0Uexw62kag86kt07J2cNSFL92+mtSCX46spkX8=;
-        b=MruqT/lLwSAY/zZMkWPYyZnUdokPOkKShNCtKtMf/VykASByq7CcqXkeJtyAFtaE9d
-         mO5avU+Ye1J1rSsVQYiZYzVTh2UcMw4oSNd88QTH2ZnWcqW0y7X903SrT2LBN6Ueo7Ak
-         O5/k8vc51viBHlk9Pst4jGvSCHEng4S2zFufuqaWQfdgxgF9RbTM9i1kKH49Pq3Jd9rD
-         axORqzyd3aaOYT00FJIWvjhDCfrUDCcjo5qiuTg6N764cg04CVA5hMMv2EwNCak1jiYg
-         rYWGXwLF4qexYdwemsf2asYFk6VP4ARRR5pqJKviz3lLKi4EhKWXt2ktUm+WEMyDy1sq
-         +7Kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8LXBy0Uexw62kag86kt07J2cNSFL92+mtSCX46spkX8=;
-        b=FGvoXFgWcohuLZ3mapnwnsp4BK2MsDvVWU+RLkmcOGHycs+/EQK+HPzDJrscpjmhgc
-         ijOPi5yj8ZnPdgTUV+NHXOXs1ofVPu78yjcxbo9vQtIMamrfT2j9CyvUiDK+87upK2pI
-         my9J8fFS1Mjs8Wnkegnr4h5xsLwv2vCJjDVSHaTS2NZnslHo3cS1/aQOs1WZ/DhUhf5w
-         7ij61WemRh20lU06vofqSMitVc041TyKJLh8ksPKQctQW3l1bNyFqAF+p7Y6QgvmITnv
-         tfkwxXVyGgVz+MTSp8O3ZrlDRHM/Wn+jDfSaPIsLfH1lJM6p0SbAUEjzHzabEV4C/CCp
-         mgBw==
-X-Gm-Message-State: APjAAAXtIYBSHW1iwC4uWHbFc3sNKKbwWsx2Jx4P3jpmGwwueMY8hO8B
-        OmFL6KP3MacjSOeC93giQyNwj0LcVLxmOyPRJ0Li4A==
-X-Google-Smtp-Source: APXvYqzeQceJiDvtYYc92q/YMWZtyrFqJ1ahaVG9IrTJOyiVw37zCRGbeNeYXxtFFERU8m8iCnxSB/q+gcv23p72kzA=
-X-Received: by 2002:a1c:1984:: with SMTP id 126mr2342646wmz.78.1582179175373;
- Wed, 19 Feb 2020 22:12:55 -0800 (PST)
+        Thu, 20 Feb 2020 01:13:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582179184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5zZ4CMhaAM+ZzrqFMRMnWSMRIIU4NhUDEjPGgtwCRgo=;
+        b=hx3M+tXxEjdcxzwayY5DueFEpI/9u5KptBb9OsRHtSNmwhCyx+9iX7Ns51jYl35Geg1obd
+        ksAkznT7y5S2gErzX9xpKKDsd3Bt+ThilPN33l7y4uvuPv+JOKU3TnnplyTDLCXXggwT38
+        oWH/cYC6ieZSkbMMMA8BleHjUJNK1V4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-75-HqzhQc_SMPyMXQSuhm7_RA-1; Thu, 20 Feb 2020 01:13:02 -0500
+X-MC-Unique: HqzhQc_SMPyMXQSuhm7_RA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C180F8010EB;
+        Thu, 20 Feb 2020 06:12:59 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-159.pek2.redhat.com [10.72.12.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B7DB5D9E2;
+        Thu, 20 Feb 2020 06:12:41 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V4 3/5] vDPA: introduce vDPA bus
+Date:   Thu, 20 Feb 2020 14:11:39 +0800
+Message-Id: <20200220061141.29390-4-jasowang@redhat.com>
+In-Reply-To: <20200220061141.29390-1-jasowang@redhat.com>
+References: <20200220061141.29390-1-jasowang@redhat.com>
 MIME-Version: 1.0
-References: <20200220061023.958-1-alex@ghiti.fr>
-In-Reply-To: <20200220061023.958-1-alex@ghiti.fr>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 20 Feb 2020 11:42:44 +0530
-Message-ID: <CAAhSdy1=xwzcJuKtyyv_d1fL6=v2kB_rq2F06081Bc68WGXH_A@mail.gmail.com>
-Subject: Re: [PATCH] riscv: Use p*d_leaf macros to define p*d_huge
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:41 AM Alexandre Ghiti <alex@ghiti.fr> wrote:
->
-> The newly introduced p*d_leaf macros allow to check if an entry of the
-> page table map to a physical page instead of the next level. To avoid
-> duplication of code, use those macros to determine if a page table entry
-> points to a hugepage.
->
-> Suggested-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->  arch/riscv/mm/hugetlbpage.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-> index 0d4747e9d5b5..a6189ed36c5f 100644
-> --- a/arch/riscv/mm/hugetlbpage.c
-> +++ b/arch/riscv/mm/hugetlbpage.c
-> @@ -4,14 +4,12 @@
->
->  int pud_huge(pud_t pud)
->  {
-> -       return pud_present(pud) &&
-> -               (pud_val(pud) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-> +       return pud_leaf(pud);
->  }
->
->  int pmd_huge(pmd_t pmd)
->  {
-> -       return pmd_present(pmd) &&
-> -               (pmd_val(pmd) & (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC));
-> +       return pmd_leaf(pmd);
->  }
->
->  static __init int setup_hugepagesz(char *opt)
-> --
-> 2.20.1
->
+vDPA device is a device that uses a datapath which complies with the
+virtio specifications with vendor specific control path. vDPA devices
+can be both physically located on the hardware or emulated by
+software. vDPA hardware devices are usually implemented through PCIE
+with the following types:
 
-Looks good to me.
+- PF (Physical Function) - A single Physical Function
+- VF (Virtual Function) - Device that supports single root I/O
+  virtualization (SR-IOV). Its Virtual Function (VF) represents a
+  virtualized instance of the device that can be assigned to different
+  partitions
+- ADI (Assignable Device Interface) and its equivalents - With
+  technologies such as Intel Scalable IOV, a virtual device (VDEV)
+  composed by host OS utilizing one or more ADIs. Or its equivalent
+  like SF (Sub function) from Mellanox.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+From a driver's perspective, depends on how and where the DMA
+translation is done, vDPA devices are split into two types:
 
-Regards,
-Anup
+- Platform specific DMA translation - From the driver's perspective,
+  the device can be used on a platform where device access to data in
+  memory is limited and/or translated. An example is a PCIE vDPA whose
+  DMA request was tagged via a bus (e.g PCIE) specific way. DMA
+  translation and protection are done at PCIE bus IOMMU level.
+- Device specific DMA translation - The device implements DMA
+  isolation and protection through its own logic. An example is a vDPA
+  device which uses on-chip IOMMU.
+
+To hide the differences and complexity of the above types for a vDPA
+device/IOMMU options and in order to present a generic virtio device
+to the upper layer, a device agnostic framework is required.
+
+This patch introduces a software vDPA bus which abstracts the
+common attributes of vDPA device, vDPA bus driver and the
+communication method (vdpa_config_ops) between the vDPA device
+abstraction and the vDPA bus driver. This allows multiple types of
+drivers to be used for vDPA device like the virtio_vdpa and vhost_vdpa
+driver to operate on the bus and allow vDPA device could be used by
+either kernel virtio driver or userspace vhost drivers as:
+
+   virtio drivers  vhost drivers
+          |             |
+    [virtio bus]   [vhost uAPI]
+          |             |
+   virtio device   vhost device
+   virtio_vdpa drv vhost_vdpa drv
+             \       /
+            [vDPA bus]
+                 |
+            vDPA device
+            hardware drv
+                 |
+            [hardware bus]
+                 |
+            vDPA hardware
+
+With the abstraction of vDPA bus and vDPA bus operations, the
+difference and complexity of the under layer hardware is hidden from
+upper layer. The vDPA bus drivers on top can use a unified
+vdpa_config_ops to control different types of vDPA device.
+
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ MAINTAINERS                  |   1 +
+ drivers/virtio/Kconfig       |   2 +
+ drivers/virtio/Makefile      |   1 +
+ drivers/virtio/vdpa/Kconfig  |   8 ++
+ drivers/virtio/vdpa/Makefile |   2 +
+ drivers/virtio/vdpa/vdpa.c   | 167 +++++++++++++++++++++++++
+ include/linux/vdpa.h         | 232 +++++++++++++++++++++++++++++++++++
+ 7 files changed, 413 insertions(+)
+ create mode 100644 drivers/virtio/vdpa/Kconfig
+ create mode 100644 drivers/virtio/vdpa/Makefile
+ create mode 100644 drivers/virtio/vdpa/vdpa.c
+ create mode 100644 include/linux/vdpa.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0fb645b5a7df..2b8d9fa38d9a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17701,6 +17701,7 @@ F:	tools/virtio/
+ F:	drivers/net/virtio_net.c
+ F:	drivers/block/virtio_blk.c
+ F:	include/linux/virtio*.h
++F:	include/linux/vdpa.h
+ F:	include/uapi/linux/virtio_*.h
+ F:	drivers/crypto/virtio/
+ F:	mm/balloon_compaction.c
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 078615cf2afc..9c4fdb64d9ac 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -96,3 +96,5 @@ config VIRTIO_MMIO_CMDLINE_DEVICES
+ 	 If unsure, say 'N'.
+=20
+ endif # VIRTIO_MENU
++
++source "drivers/virtio/vdpa/Kconfig"
+diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+index 3a2b5c5dcf46..fdf5eacd0d0a 100644
+--- a/drivers/virtio/Makefile
++++ b/drivers/virtio/Makefile
+@@ -6,3 +6,4 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
+ virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
+ obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
+ obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
++obj-$(CONFIG_VDPA) +=3D vdpa/
+diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/virtio/vdpa/Kconfig
+new file mode 100644
+index 000000000000..9aac904a9515
+--- /dev/null
++++ b/drivers/virtio/vdpa/Kconfig
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config VDPA
++	tristate
++	help
++	  Enable this module to support vDPA device that uses a
++	  datapath which complies with virtio specifications with
++	  vendor specific control path.
++
+diff --git a/drivers/virtio/vdpa/Makefile b/drivers/virtio/vdpa/Makefile
+new file mode 100644
+index 000000000000..ee6a35e8a4fb
+--- /dev/null
++++ b/drivers/virtio/vdpa/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_VDPA) +=3D vdpa.o
+diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
+new file mode 100644
+index 000000000000..31dcd38d5390
+--- /dev/null
++++ b/drivers/virtio/vdpa/vdpa.c
+@@ -0,0 +1,167 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * vDPA bus.
++ *
++ * Copyright (c) 2020, Red Hat. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/idr.h>
++#include <linux/slab.h>
++#include <linux/vdpa.h>
++
++static DEFINE_IDA(vdpa_index_ida);
++
++static int vdpa_dev_probe(struct device *d)
++{
++	struct vdpa_device *vdev =3D dev_to_vdpa(d);
++	struct vdpa_driver *drv =3D drv_to_vdpa(vdev->dev.driver);
++	int ret =3D 0;
++
++	if (drv && drv->probe)
++		ret =3D drv->probe(vdev);
++
++	return ret;
++}
++
++static int vdpa_dev_remove(struct device *d)
++{
++	struct vdpa_device *vdev =3D dev_to_vdpa(d);
++	struct vdpa_driver *drv =3D drv_to_vdpa(vdev->dev.driver);
++
++	if (drv && drv->remove)
++		drv->remove(vdev);
++
++	return 0;
++}
++
++static struct bus_type vdpa_bus =3D {
++	.name  =3D "vdpa",
++	.probe =3D vdpa_dev_probe,
++	.remove =3D vdpa_dev_remove,
++};
++
++static void vdpa_release_dev(struct device *d)
++{
++	struct vdpa_device *vdev =3D dev_to_vdpa(d);
++
++	ida_simple_remove(&vdpa_index_ida, vdev->index);
++	kfree(vdev);
++}
++
++/**
++ * vdpa_alloc_device - allocate and initilaize a vDPA device
++ * This allows driver to some prepartion after device is
++ * initialized but before registered.
++ * @parent: the parent device
++ * @dma_dev: the actual device that is performing DMA
++ * @config: the bus operations that is supported by this device
++ *
++ * Returns an error when parent/config/dma_dev is not set or fail to get
++ * ida.
++ */
++struct vdpa_device *vdpa_alloc_device(struct device *parent,
++				      struct device *dma_dev,
++				      const struct vdpa_config_ops *config)
++{
++	struct vdpa_device *vdev;
++	int err =3D -ENOMEM;
++
++	if (!parent || !dma_dev || !config)
++		goto err;
++
++	vdev =3D kzalloc(sizeof(*vdev), GFP_KERNEL);
++	if (!vdev)
++		goto err;
++
++	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
++	if (err < 0)
++		goto err_ida;
++
++	vdev->dev.bus =3D &vdpa_bus;
++	vdev->dev.parent =3D parent;
++	vdev->dev.release =3D vdpa_release_dev;
++
++	device_initialize(&vdev->dev);
++
++	vdev->index =3D err;
++	vdev->dma_dev =3D dma_dev;
++	vdev->config =3D config;
++
++	dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
++
++	return vdev;
++
++err_ida:
++	kfree(vdev);
++err:
++	return ERR_PTR(err);
++}
++EXPORT_SYMBOL_GPL(vdpa_alloc_device);
++
++/**
++ * vdpa_register_device - register a vDPA device
++ * Callers must have a succeed call of vdpa_init_device() before.
++ * @vdev: the vdpa device to be registered to vDPA bus
++ *
++ * Returns an error when fail to add to vDPA bus
++ */
++int vdpa_register_device(struct vdpa_device *vdev)
++{
++	return device_add(&vdev->dev);
++}
++EXPORT_SYMBOL_GPL(vdpa_register_device);
++
++/**
++ * vdpa_unregister_device - unregister a vDPA device
++ * @vdev: the vdpa device to be unregisted from vDPA bus
++ */
++void vdpa_unregister_device(struct vdpa_device *vdev)
++{
++	device_unregister(&vdev->dev);
++}
++EXPORT_SYMBOL_GPL(vdpa_unregister_device);
++
++/**
++ * __vdpa_register_driver - register a vDPA device driver
++ * @drv: the vdpa device driver to be registered
++ * @owner: module owner of the driver
++ *
++ * Returns an err when fail to do the registration
++ */
++int __vdpa_register_driver(struct vdpa_driver *drv, struct module *owner=
+)
++{
++	drv->driver.bus =3D &vdpa_bus;
++	drv->driver.owner =3D owner;
++
++	return driver_register(&drv->driver);
++}
++EXPORT_SYMBOL_GPL(__vdpa_register_driver);
++
++/**
++ * vdpa_unregister_driver - unregister a vDPA device driver
++ * @drv: the vdpa device driver to be unregistered
++ */
++void vdpa_unregister_driver(struct vdpa_driver *drv)
++{
++	driver_unregister(&drv->driver);
++}
++EXPORT_SYMBOL_GPL(vdpa_unregister_driver);
++
++static int vdpa_init(void)
++{
++	return bus_register(&vdpa_bus);
++}
++
++static void __exit vdpa_exit(void)
++{
++	bus_unregister(&vdpa_bus);
++	ida_destroy(&vdpa_index_ida);
++}
++core_initcall(vdpa_init);
++module_exit(vdpa_exit);
++
++MODULE_AUTHOR("Jason Wang <jasowang@redhat.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
+new file mode 100644
+index 000000000000..7cb8ef32e2e8
+--- /dev/null
++++ b/include/linux/vdpa.h
+@@ -0,0 +1,232 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_VDPA_H
++#define _LINUX_VDPA_H
++
++#include <linux/device.h>
++#include <linux/interrupt.h>
++#include <linux/vhost_iotlb.h>
++
++/**
++ * vDPA callback definition.
++ * @callback: interrupt callback function
++ * @private: the data passed to the callback function
++ */
++struct vdpa_callback {
++	irqreturn_t (*callback)(void *data);
++	void *private;
++};
++
++/**
++ * vDPA device - representation of a vDPA device
++ * @dev: underlying device
++ * @dma_dev: the actual device that is performing DMA
++ * @config: the configuration ops for this device.
++ * @index: device index
++ */
++struct vdpa_device {
++	struct device dev;
++	struct device *dma_dev;
++	const struct vdpa_config_ops *config;
++	unsigned int index;
++};
++
++/**
++ * vDPA_config_ops - operations for configuring a vDPA device.
++ * Note: vDPA device drivers are required to implement all of the
++ * operations unless it is mentioned to be optional in the following
++ * list.
++ *
++ * @set_vq_address:		Set the address of virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				@desc_area: address of desc area
++ *				@driver_area: address of driver area
++ *				@device_area: address of device area
++ *				Returns integer: success (0) or error (< 0)
++ * @set_vq_num:			Set the size of virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				@num: the size of virtqueue
++ * @kick_vq:			Kick the virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ * @set_vq_cb:			Set the interrupt callback function for
++ *				a virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				@cb: virtio-vdev interrupt callback structure
++ * @set_vq_ready:		Set ready status for a virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				@ready: ready (true) not ready(false)
++ * @get_vq_ready:		Get ready status for a virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				Returns boolean: ready (true) or not (false)
++ * @set_vq_state:		Set the state for a virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				@state: virtqueue state (last_avail_idx)
++ *				Returns integer: success (0) or error (< 0)
++ * @get_vq_state:		Get the state for a virtqueue
++ *				@vdev: vdpa device
++ *				@idx: virtqueue index
++ *				Returns virtqueue state (last_avail_idx)
++ * @get_vq_align:		Get the virtqueue align requirement
++ *				for the device
++ *				@vdev: vdpa device
++ *				Returns virtqueue algin requirement
++ * @get_features:		Get virtio features supported by the device
++ *				@vdev: vdpa device
++ *				Returns the virtio features support by the
++ *				device
++ * @set_features:		Set virtio features supported by the driver
++ *				@vdev: vdpa device
++ *				@features: feature support by the driver
++ *				Returns integer: success (0) or error (< 0)
++ * @set_config_cb:		Set the config interrupt callback
++ *				@vdev: vdpa device
++ *				@cb: virtio-vdev interrupt callback structure
++ * @get_vq_num_max:		Get the max size of virtqueue
++ *				@vdev: vdpa device
++ *				Returns u16: max size of virtqueue
++ * @get_device_id:		Get virtio device id
++ *				@vdev: vdpa device
++ *				Returns u32: virtio device id
++ * @get_vendor_id:		Get id for the vendor that provides this device
++ *				@vdev: vdpa device
++ *				Returns u32: virtio vendor id
++ * @get_status:			Get the device status
++ *				@vdev: vdpa device
++ *				Returns u8: virtio device status
++ * @set_status:			Set the device status
++ *				@vdev: vdpa device
++ *				@status: virtio device status
++ * @get_config:			Read from device specific configuration space
++ *				@vdev: vdpa device
++ *				@offset: offset from the beginning of
++ *				configuration space
++ *				@buf: buffer used to read to
++ *				@len: the length to read from
++ *				configuration space
++ * @set_config:			Write to device specific configuration space
++ *				@vdev: vdpa device
++ *				@offset: offset from the beginning of
++ *				configuration space
++ *				@buf: buffer used to write from
++ *				@len: the length to write to
++ *				configuration space
++ * @get_generation:		Get device config generation (optional)
++ *				@vdev: vdpa device
++ *				Returns u32: device generation
++ * @set_map:			Set device memory mapping (optional)
++ *				and only needed for device that using
++ *				device specific DMA translation
++ *				(on-chip IOMMU)
++ *				@vdev: vdpa device
++ *				@iotlb: vhost memory mapping to be
++ *				used by the vDPA
++ *				Returns integer: success (0) or error (< 0)
++ * @dma_map:			Map an area of PA to IOVA
++ *				@vdev: vdpa device
++ *				@iova: iova to be mapped
++ *				@size: size of the area
++ *				@pa: physical address for the map
++ *				@perm: device access permission (VHOST_MAP_XX)
++ *				Returns integer: success (0) or error (< 0)
++ * @dma_unmap:			Unmap an area of IOVA
++ *				@vdev: vdpa device
++ *				@iova: iova to be unmapped
++ *				@size: size of the area
++ *				Returns integer: success (0) or error (< 0)
++ */
++struct vdpa_config_ops {
++	/* Virtqueue ops */
++	int (*set_vq_address)(struct vdpa_device *vdev,
++			      u16 idx, u64 desc_area, u64 driver_area,
++			      u64 device_area);
++	void (*set_vq_num)(struct vdpa_device *vdev, u16 idx, u32 num);
++	void (*kick_vq)(struct vdpa_device *vdev, u16 idx);
++	void (*set_vq_cb)(struct vdpa_device *vdev, u16 idx,
++			  struct vdpa_callback *cb);
++	void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool ready);
++	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
++	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx, u64 state);
++	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
++
++	/* Device ops */
++	u16 (*get_vq_align)(struct vdpa_device *vdev);
++	u64 (*get_features)(struct vdpa_device *vdev);
++	int (*set_features)(struct vdpa_device *vdev, u64 features);
++	void (*set_config_cb)(struct vdpa_device *vdev,
++			      struct vdpa_callback *cb);
++	u16 (*get_vq_num_max)(struct vdpa_device *vdev);
++	u32 (*get_device_id)(struct vdpa_device *vdev);
++	u32 (*get_vendor_id)(struct vdpa_device *vdev);
++	u8 (*get_status)(struct vdpa_device *vdev);
++	void (*set_status)(struct vdpa_device *vdev, u8 status);
++	void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
++			   void *buf, unsigned int len);
++	void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
++			   const void *buf, unsigned int len);
++	u32 (*get_generation)(struct vdpa_device *vdev);
++
++	/* DMA ops */
++	int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb *iotlb);
++	int (*dma_map)(struct vdpa_device *vdev, u64 iova, u64 size,
++		       u64 pa, u32 perm);
++	int (*dma_unmap)(struct vdpa_device *vdev, u64 iova, u64 size);
++};
++
++struct vdpa_device *vdpa_alloc_device(struct device *parent,
++				      struct device *dma_dev,
++				      const struct vdpa_config_ops *config);
++int vdpa_register_device(struct vdpa_device *vdev);
++void vdpa_unregister_device(struct vdpa_device *vdev);
++
++/**
++ * vdpa_driver - operations for a vDPA driver
++ * @driver: underlying device driver
++ * @probe: the function to call when a device is found.  Returns 0 or -e=
+rrno.
++ * @remove: the function to call when a device is removed.
++ */
++struct vdpa_driver {
++	struct device_driver driver;
++	int (*probe)(struct vdpa_device *vdev);
++	void (*remove)(struct vdpa_device *vdev);
++};
++
++#define vdpa_register_driver(drv) \
++	__vdpa_register_driver(drv, THIS_MODULE)
++int __vdpa_register_driver(struct vdpa_driver *drv, struct module *owner=
+);
++void vdpa_unregister_driver(struct vdpa_driver *drv);
++
++#define module_vdpa_driver(__vdpa_driver) \
++	module_driver(__vdpa_driver, vdpa_register_driver,	\
++		      vdpa_unregister_driver)
++
++static inline struct vdpa_driver *drv_to_vdpa(struct device_driver *driv=
+er)
++{
++	return container_of(driver, struct vdpa_driver, driver);
++}
++
++static inline struct vdpa_device *dev_to_vdpa(struct device *_dev)
++{
++	return container_of(_dev, struct vdpa_device, dev);
++}
++
++static inline void *vdpa_get_drvdata(const struct vdpa_device *vdev)
++{
++	return dev_get_drvdata(&vdev->dev);
++}
++
++static inline void vdpa_set_drvdata(struct vdpa_device *vdev, void *data=
+)
++{
++	dev_set_drvdata(&vdev->dev, data);
++}
++
++static inline struct device *vdpa_get_dma_dev(struct vdpa_device *vdev)
++{
++	return vdev->dma_dev;
++}
++#endif /* _LINUX_VDPA_H */
+--=20
+2.19.1
+
