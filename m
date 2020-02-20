@@ -2,272 +2,195 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B49DC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6BFC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41090206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE321206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JGkUCdur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbgBTUhe (ORCPT
+        id S1729072AbgBTUjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:37:34 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:45126 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgBTUhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:37:01 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sZ8-0005cd-KG; Thu, 20 Feb 2020 13:37:00 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sZ8-0006yS-Ee; Thu, 20 Feb 2020 13:36:58 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Date:   Thu, 20 Feb 2020 13:36:51 -0700
-Message-Id: <20200220203652.26734-9-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200220203652.26734-1-logang@deltatee.com>
-References: <20200220203652.26734-1-logang@deltatee.com>
+        Thu, 20 Feb 2020 15:39:31 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2750 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbgBTUjb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:39:31 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4eee740000>; Thu, 20 Feb 2020 12:39:16 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 12:39:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 12:39:30 -0800
+Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 20:39:28 +0000
+Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Frank Chen <frankc@nvidia.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Helen Koike <helen.koike@collabora.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
+ <20200218231503.GA19099@bogus>
+ <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
+ <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <a41f3a6c-c6ed-4148-7af8-faf0cf36d67d@nvidia.com>
+Date:   Thu, 20 Feb 2020 12:39:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v11 8/9] nvmet-passthru: Add enable/disable helpers
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582231156; bh=x3FSVTVnhy0xB8qhuAdvyWzG3JHJZQd1kGDJjAzQz10=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=JGkUCdurxr3SkgI7EvyQXUJOStOj4UBsFhEsTLa+UzobiHEdc3aeqclPmBz/gvmw4
+         Po68btgzdIaJcFU+TLyh5wSyJMb1p9ZJz7uX6trq82O0ZZty0cxWxslWrkCLzn6NI5
+         xGh+cykLu5ZrNO5KykmA7iWfhcyYF70HswLrckY1mTkcprmMYK0096OdOyhDqfdVaj
+         32LFT1p4VyTEMIy6G5sF1cS2eGRISg9XhIw6nxx9uyUz/kA1xM7gHMlaCd1SHDTzt4
+         th8HnIaKVzDwjsGxuPILSGf34/lzeVrajG/+IHKkqXJCdrWvzbKq4xWmjAL//nJwgy
+         XBoH+5OqJ7wNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds helper functions which are used in the NVMeOF configfs
-when the user is configuring the passthru subsystem. Here we ensure
-that only one subsys is assigned to each nvme_ctrl by using an xarray
-on the cntlid.
 
-The subsystem's version number is overridden by the passed through
-controller's version. However, if that version is less than 1.2.1,
-then we bump the advertised version to that and print a warning
-in dmesg.
+On 2/20/20 11:45 AM, Rob Herring wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Tue, Feb 18, 2020 at 9:28 PM Sowjanya Komatineni
+> <skomatineni@nvidia.com> wrote:
+>>
+>> On 2/18/20 3:15 PM, Rob Herring wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
+>>>> Tegra contains VI controller which can support up to 6 MIPI CSI
+>>>> camera sensors.
+>>>>
+>>>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
+>>>> VI channel and can capture from an external camera sensor or
+>>>> from built-in test pattern generator.
+>>>>
+>>>> This patch adds dt-bindings for Tegra VI and CSI.
+>>>>
+>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>> ---
+>>>>    .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
+>>>>    1 file changed, 47 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> index 9999255ac5b6..3d0ed540a646 100644
+>>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
+>>>> @@ -40,14 +40,24 @@ of the following host1x client modules:
+>>>>
+>>>>      Required properties:
+>>>>      - compatible: "nvidia,tegra<chip>-vi"
+>>>> -  - reg: Physical base address and length of the controller's registers.
+>>>> +  - reg: Physical base address and length of the controller registers.
+>>>>      - interrupts: The interrupt outputs from the controller.
+>>>> -  - clocks: Must contain one entry, for the module clock.
+>>>> +  - clocks: Must contain an entry for the module clock "vi"
+>>>>        See ../clocks/clock-bindings.txt for details.
+>>>>      - resets: Must contain an entry for each entry in reset-names.
+>>>>        See ../reset/reset.txt for details.
+>>>> -  - reset-names: Must include the following entries:
+>>>> -    - vi
+>>>> +  - reset-names: Must include the entry "vi"
+>>>> +
+>>>> +  Tegra210 has CSI part of VI sharing same host interface and register
+>>>> +  space. So, VI device node should have CSI child node.
+>>>> +
+>>>> +  - csi: mipi csi interface to vi
+>>>> +
+>>>> +    Required properties:
+>>>> +    - compatible: "nvidia,tegra<chip>-csi"
+>>>> +    - reg: Physical base address and length of the controller registers.
+>>>> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
+>>>> +      See ../clocks/clock-bindings.txt for details.
+>>>>
+>>>>    - epp: encoder pre-processor
+>>>>
+>>>> @@ -310,12 +320,41 @@ Example:
+>>>>                 };
+>>>>
+>>>>                 vi {
+>>>> -                     compatible = "nvidia,tegra20-vi";
+>>>> -                     reg = <0x54080000 0x00040000>;
+>>>> +                     compatible = "nvidia,tegra210-vi";
+>>>> +                     reg = <0x0 0x54080000 0x0 0x700>;
+>>>>                         interrupts = <0 69 0x04>;
+>>>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
+>>>> -                     resets = <&tegra_car 100>;
+>>>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
+>>>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
+>>>> +                     clock-names = "vi";
+>>>> +                     resets = <&tegra_car 20>;
+>>>>                         reset-names = "vi";
+>>>> +
+>>>> +                     #address-cells = <2>;
+>>>> +                     #size-cells = <2>;
+>>>> +
+>>>> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
+>>>> +
+>>>> +                     csi@0x54080838 {
+>>> Drop '0x'
+>> Will fix in v4
+>>>> +                             compatible = "nvidia,tegra210-csi";
+>>>> +                             reg = <0x0 0x54080838 0x0 0x2000>;
+>>> Kind of odd that this address and ranges address are not the same. And
+>>> also wrong that the size here exceeds the bounds of ranges.
+>>>
+>>> Also, best practice is to make the child address 0 or relative to the
+>>> parent.
+>> Actual CSI starts at offset 0x808 but we don't use couple of registers
+>> at offset 0x808.
+>>
+>> Will update ranges in v4 to start from 0x838 offset and will make child
+>> address relative to parent.
+> Seems odd, but okay. And you will never, ever need to use those
+> registers no matter what, and we can reject any DT change trying to
+> change it later?
+>
+> Rob
 
-Based-on-a-patch-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/target/configfs.c |  3 ++
- drivers/nvme/target/core.c     | 10 +++-
- drivers/nvme/target/nvmet.h    | 12 +++++
- drivers/nvme/target/passthru.c | 87 ++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+), 1 deletion(-)
+Yes not required to access them by driver.
 
-diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
-index 98613a45bd3b..354d43fab8db 100644
---- a/drivers/nvme/target/configfs.c
-+++ b/drivers/nvme/target/configfs.c
-@@ -828,6 +828,9 @@ static ssize_t nvmet_subsys_attr_version_store(struct config_item *item,
- 	int major, minor, tertiary = 0;
- 	int ret;
- 
-+	/* passthru subsystems use the underlying controller's version */
-+	if (nvmet_passthru_ctrl(subsys))
-+		return -EINVAL;
- 
- 	ret = sscanf(page, "%d.%d.%d\n", &major, &minor, &tertiary);
- 	if (ret != 2 && ret != 3)
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 40998b514439..b282fb4e45ed 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -522,6 +522,12 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
- 
- 	mutex_lock(&subsys->lock);
- 	ret = 0;
-+
-+	if (nvmet_passthru_ctrl(subsys)) {
-+		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
-+		goto out_unlock;
-+	}
-+
- 	if (ns->enabled)
- 		goto out_unlock;
- 
-@@ -1418,7 +1424,7 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
- 	if (!subsys)
- 		return ERR_PTR(-ENOMEM);
- 
--	subsys->ver = NVME_VS(1, 3, 0); /* NVMe 1.3.0 */
-+	subsys->ver = NVMET_DEFAULT_VS;
- 	/* generate a random serial number as our controllers are ephemeral: */
- 	get_random_bytes(&subsys->serial, sizeof(subsys->serial));
- 
-@@ -1459,6 +1465,8 @@ static void nvmet_subsys_free(struct kref *ref)
- 
- 	WARN_ON_ONCE(!list_empty(&subsys->namespaces));
- 
-+	nvmet_passthru_subsys_free(subsys);
-+
- 	kfree(subsys->subsysnqn);
- 	kfree(subsys);
- }
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index 6e632d0a88ca..7c247d803015 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -20,6 +20,8 @@
- #include <linux/blkdev.h>
- #include <linux/radix-tree.h>
- 
-+#define NVMET_DEFAULT_VS		NVME_VS(1, 3, 0)
-+
- #define NVMET_ASYNC_EVENTS		4
- #define NVMET_ERROR_LOG_SLOTS		128
- #define NVMET_NO_ERROR_LOC		((u16)-1)
-@@ -230,6 +232,7 @@ struct nvmet_subsys {
- 
- #ifdef CONFIG_NVME_TARGET_PASSTHRU
- 	struct nvme_ctrl	*passthru_ctrl;
-+	char			*passthru_ctrl_path;
- #endif /* CONFIG_NVME_TARGET_PASSTHRU */
- };
- 
-@@ -512,6 +515,9 @@ static inline u32 nvmet_dsm_len(struct nvmet_req *req)
- }
- 
- #ifdef CONFIG_NVME_TARGET_PASSTHRU
-+void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys);
-+int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys);
-+void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys);
- u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req);
- u16 nvmet_setup_passthru_command(struct nvmet_req *req);
- static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
-@@ -519,6 +525,12 @@ static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
- 	return subsys->passthru_ctrl;
- }
- #else /* CONFIG_NVME_TARGET_PASSTHRU */
-+static inline void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
-+{
-+}
-+static inline void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
-+{
-+}
- static inline u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
- {
- 	return 0;
-diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
-index 01127bfa6c8a..0705f4ff8b16 100644
---- a/drivers/nvme/target/passthru.c
-+++ b/drivers/nvme/target/passthru.c
-@@ -11,6 +11,11 @@
- #include "../host/nvme.h"
- #include "nvmet.h"
- 
-+/*
-+ * xarray to maintain one passthru subsystem per nvme controller.
-+ */
-+static DEFINE_XARRAY(passthru_subsystems);
-+
- static void nvmet_passthru_execute_cmd_work(struct work_struct *w)
- {
- 	struct nvmet_req *req = container_of(w, struct nvmet_req, p.work);
-@@ -346,3 +351,85 @@ u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
- 		return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
- 	}
- }
-+
-+int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys)
-+{
-+	struct nvme_ctrl *ctrl;
-+	int ret = -EINVAL;
-+	void *old;
-+
-+	mutex_lock(&subsys->lock);
-+	if (!subsys->passthru_ctrl_path)
-+		goto out_unlock;
-+	if (subsys->passthru_ctrl)
-+		goto out_unlock;
-+
-+	if (subsys->nr_namespaces) {
-+		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
-+		goto out_unlock;
-+	}
-+
-+	ctrl = nvme_ctrl_get_by_path(subsys->passthru_ctrl_path);
-+	if (IS_ERR(ctrl)) {
-+		ret = PTR_ERR(ctrl);
-+		pr_err("failed to open nvme controller %s\n",
-+		       subsys->passthru_ctrl_path);
-+
-+		goto out_unlock;
-+	}
-+
-+	old = xa_cmpxchg(&passthru_subsystems, ctrl->cntlid, NULL,
-+			 subsys, GFP_KERNEL);
-+	if (xa_is_err(old)) {
-+		ret = xa_err(old);
-+		goto out_put_ctrl;
-+	}
-+
-+	if (old)
-+		goto out_put_ctrl;
-+
-+	subsys->passthru_ctrl = ctrl;
-+	subsys->ver = ctrl->vs;
-+
-+	if (subsys->ver < NVME_VS(1, 2, 1)) {
-+		pr_warn("nvme controller version is too old: %d.%d.%d, advertising 1.2.1\n",
-+			(int)NVME_MAJOR(subsys->ver),
-+			(int)NVME_MINOR(subsys->ver),
-+			(int)NVME_TERTIARY(subsys->ver));
-+		subsys->ver = NVME_VS(1, 2, 1);
-+	}
-+
-+	mutex_unlock(&subsys->lock);
-+	return 0;
-+
-+out_put_ctrl:
-+	nvme_put_ctrl(ctrl);
-+out_unlock:
-+	mutex_unlock(&subsys->lock);
-+	return ret;
-+}
-+
-+static void __nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
-+{
-+	if (subsys->passthru_ctrl) {
-+		xa_erase(&passthru_subsystems, subsys->passthru_ctrl->cntlid);
-+		nvme_put_ctrl(subsys->passthru_ctrl);
-+	}
-+	subsys->passthru_ctrl = NULL;
-+	subsys->ver = NVMET_DEFAULT_VS;
-+}
-+
-+void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
-+{
-+	mutex_lock(&subsys->lock);
-+	__nvmet_passthru_ctrl_disable(subsys);
-+	mutex_unlock(&subsys->lock);
-+}
-+
-+void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
-+{
-+	mutex_lock(&subsys->lock);
-+	__nvmet_passthru_ctrl_disable(subsys);
-+	kfree(subsys->passthru_ctrl_path);
-+	mutex_unlock(&subsys->lock);
-+}
--- 
-2.20.1
+On T210, CSI registers under VI starts from location 0x54080808
+
+SW don't need to access initial 3 registers at 0x54080808, 0x54080818, 
+0x54080828
+
+Actual CSI registers that are needed for SW starts from 0x54080838.
 
