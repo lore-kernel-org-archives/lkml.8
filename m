@@ -2,145 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61169C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7F0C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32798208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C92208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gwuR9dK7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Ni1qflRZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgBTOvr (ORCPT
+        id S1728364AbgBTOwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:51:47 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53701 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728079AbgBTOvh (ORCPT
+        Thu, 20 Feb 2020 09:52:12 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4631 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbgBTOwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:51:37 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200220145136euoutp016396646b4cfcd40082f149e4a1df9df6~1I_Gt3jtY0503305033euoutp01X
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:51:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200220145136euoutp016396646b4cfcd40082f149e4a1df9df6~1I_Gt3jtY0503305033euoutp01X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1582210296;
-        bh=YqMtfkiBvVHazwIHeJte8dn8ntnJBx4eD3U4pauHQgA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gwuR9dK7TdjAucm5jXqEcHYLlB25aRBgFYlMIRKkpp3h0+jFSk8b1/M8f3R6OESWX
-         k6pjGBTMBxvNxpx3PEIdhDwB/npPpVHzja+xWNoeo3toIwObly9cQKBvLwgpGAiWBW
-         4G5jOBp3Tchbk1YoLhdMJ8pWH67gAP7hORi3F9NY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200220145136eucas1p2157af29c7f8ac975cec9c637e6f09227~1I_GfsEhs1366513665eucas1p2R;
-        Thu, 20 Feb 2020 14:51:36 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2B.E9.61286.7FC9E4E5; Thu, 20
-        Feb 2020 14:51:35 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08~1I_GHmd8a0784307843eucas1p1q;
-        Thu, 20 Feb 2020 14:51:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200220145135eusmtrp1c6139c2fac24f47dfd1498dabfdcea47~1I_GHBU3K1377513775eusmtrp1i;
-        Thu, 20 Feb 2020 14:51:35 +0000 (GMT)
-X-AuditID: cbfec7f2-f0bff7000001ef66-3b-5e4e9cf7113d
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 1A.C7.07950.7FC9E4E5; Thu, 20
-        Feb 2020 14:51:35 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200220145135eusmtip1533674ec21b81c7b6fc98ae954eb47e2~1I_FsqLqD1163211632eusmtip1h;
-        Thu, 20 Feb 2020 14:51:35 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 3/3] power: charger: max14577: Add proper dt-compatible
- strings
-Date:   Thu, 20 Feb 2020 15:51:27 +0100
-Message-Id: <20200220145127.21273-3-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200220145127.21273-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNIsWRmVeSWpSXmKPExsWy7djPc7rf5/jFGazYZWWxccZ6VoupD5+w
-        WVz/8pzV4vz5DewWl3fNYbP43HuE0WLtkbvsFrcbV7BZnN5d4sDpsWlVJ5tH35ZVjB6fN8kF
-        MEdx2aSk5mSWpRbp2yVwZfyaN42tYDdnRV/fK7YGxn6OLkZODgkBE4kJW7vZQWwhgRWMEgs3
-        h3YxcgHZXxgltnS2s0A4nxklfj+eAFTFAdbx6Y4uRHw5o8TJD69Z4TqeTJ3KAjKKTcBQoutt
-        FxuILSJgJXH6fwczSBGzwAomiY+/PzGBJIQFAiXerXsKZrMIqErM27mVFcTmFbCV+D9tGTvE
-        ffISqzccYAaxOQXsJCZNmAA2SELgPZvE3vUr2SCKXCSWT/zFCGELS7w6vgWqWUbi9OQeFoiG
-        ZkaJh+fWskM4PYwSl5tmQHVYS9w594sN5DlmAU2J9bv0IcKOEi0z1zNC/MwnceOtIEiYGcic
-        tG06M0SYV6KjTQiiWk1i1vF1cGsPXrjEDGF7SCz6PIsREkITGSVerTrGPoFRfhbCsgWMjKsY
-        xVNLi3PTU4sN81LL9YoTc4tL89L1kvNzNzECk8Tpf8c/7WD8einpEKMAB6MSD29Fg1+cEGti
-        WXFl7iFGCQ5mJRFeNR6gEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KL
-        YLJMHJxSDYxcgltZK5aUuBxnmq+85pF6Uqimpu8kDbW7f1dsvjzHdLFjZvANncXHpk9f2H/k
-        5WvbEK6fJwM9VdSSTHe+ObPkbsVm71WH1n3S95dyP+L87AELH8Ms9Y9ipf+7922KFvxUlJLy
-        u5OPt2/nrP60j2WcEv92qDS2Ohx4X+zAZvT8x4btv1bXrL+sxFKckWioxVxUnAgAdhy0yg4D
-        AAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrDLMWRmVeSWpSXmKPExsVy+t/xu7rf5/jFGfxvULHYOGM9q8XUh0/Y
-        LK5/ec5qcf78BnaLy7vmsFl87j3CaLH2yF12i9uNK9gsTu8uceD02LSqk82jb8sqRo/Pm+QC
-        mKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0Mn7N
-        m8ZWsJuzoq/vFVsDYz9HFyMHh4SAicSnO7pdjFwcQgJLGSW+vJ7M2sXICRSXkTg5rQHKFpb4
-        c62LDaLoE6PEzX+7WUASbAKGEl1vQRKcHCICNhJ3F19jASliFljDJNHw8CMTSEJYwF/i+o5z
-        7CA2i4CqxLydW8Gm8grYSvyftowdYoO8xOoNB5hBbE4BO4lJEyaA2UJANXs2HmWfwMi3gJFh
-        FaNIamlxbnpusZFecWJucWleul5yfu4mRmDIbjv2c8sOxq53wYcYBTgYlXh4Kxr84oRYE8uK
-        K3MPMUpwMCuJ8KrxAIV4UxIrq1KL8uOLSnNSiw8xmgIdNZFZSjQ5HxhPeSXxhqaG5haWhubG
-        5sZmFkrivB0CB2OEBNITS1KzU1MLUotg+pg4OKUaGE/Vza74Nk9/VsXBq2dn1lZ8PFpT9sX2
-        nF7uNyO59RWzVnXxWQmkyoisC+tfmFI4MUdYlrV9rqCPa/yE6V3vv7gnrPu0N332n//9x9wE
-        V3ZxntNlUk3kcdovUJ6998CzDZv0npkGevO+8N1edLU5P+HwryvWwu/3Wszc8HKihXtVY8ER
-        nlqTSCWW4oxEQy3mouJEAIuZGm1vAgAA
-X-CMS-MailID: 20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08
-X-Msg-Generator: CA
+        Thu, 20 Feb 2020 09:52:12 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4e9cd30000>; Thu, 20 Feb 2020 06:50:59 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 06:52:11 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 06:52:11 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 14:52:07 +0000
+Subject: Re: [PATCH v3 09/10] arm64: tegra: enable AHUB modules for few Tegra
+ chips
+To:     Sameer Pujar <spujar@nvidia.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-10-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b55acd02-a492-77cd-833c-d3b18f230037@nvidia.com>
+Date:   Thu, 20 Feb 2020 14:52:05 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1582180492-25297-10-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08
-References: <20200220145127.21273-1-m.szyprowski@samsung.com>
-        <CGME20200220145135eucas1p1ba181cef65c7a4f91a254ee35e022f08@eucas1p1.samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582210259; bh=DZHlCZb018d/zo5xDroBdpIDW9ip6fqXfYqSSOWT/JQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Ni1qflRZzYz34vqKivqunhS7MmM24P5AmcqRfHIF+urTDCRwA+1GD3Os5R7bkZ3wr
+         yKxy/GmEZC39B4VNlcz4m/FcqVYoXLfnZkXvBtfLZir27PA0hoJrtTRjzaF3IxAXMI
+         OQ02s+Ll0uT+jeoYrQZKyKef8w+CVks05D4tmLshLSlsBlajjqIRprsKaBOd7hrnan
+         oEyGs0LvDyHUR26XD5/zcVfaJApqutMsmydojfD/VmuQLj1r3xMBKazFnSQnkL3/38
+         uG6iuQTar7mhxAm5N3yCcNIhXQl1SJMr7NdklhHAn7/QeDqwOHhU91fc4Gsv1EbjtL
+         CcUhf/Xs1arWA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree compatible strings and create proper modalias structures
-to let this driver load automatically if compiled as module, because
-max14577 MFD driver creates MFD cells with such compatible strings.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/power/supply/max14577_charger.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 20/02/2020 06:34, Sameer Pujar wrote:
+> This patch enables AHUB, ADMAIF modules for following Tegra platforms.
+> Along with this specific instances of I/O modules are enabled as per
+> the board design.
+> 
+>  * Jetson TX1
+>    - I2S1, I2S2, I2S3, I2S4 and I2S5
+>    - DMIC1, DMIC2 and DMIC3
+> 
+>  * Jetson TX2
+>    - I2S1, I2S2, I2S3, I2S4, I2S5 and I2S6
+>    - DMIC1, DMIC2 and DMIC3
+>    - DSPK2
+> 
+>  * Jetson AGX Xavier
+>    - I2S1, I2S2, I2S4 and I2S6
+>    - DMIC2 and DMIC3
+>    - DSPK1
+> 
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts | 48 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts | 36 ++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 40 ++++++++++++++++++
+>  3 files changed, 124 insertions(+)
+Thanks!
 
-diff --git a/drivers/power/supply/max14577_charger.c b/drivers/power/supply/max14577_charger.c
-index 8a59feac6468..891ba9f6f295 100644
---- a/drivers/power/supply/max14577_charger.c
-+++ b/drivers/power/supply/max14577_charger.c
-@@ -623,6 +623,15 @@ static const struct platform_device_id max14577_charger_id[] = {
- };
- MODULE_DEVICE_TABLE(platform, max14577_charger_id);
- 
-+static const struct of_device_id of_max14577_charger_dt_match[] = {
-+	{ .compatible = "maxim,max77836-charger",
-+	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
-+	{ .compatible = "maxim,max14577-charger",
-+	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_max14577_charger_dt_match);
-+
- static struct platform_driver max14577_charger_driver = {
- 	.driver = {
- 		.name	= "max14577-charger",
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
