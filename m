@@ -2,126 +2,76 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4109C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E81C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B316F207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:34:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC43207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="2+ttcKBp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgBTPeh (ORCPT
+        id S1728515AbgBTPfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:34:37 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:59448 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728351AbgBTPeh (ORCPT
+        Thu, 20 Feb 2020 10:35:12 -0500
+Received: from forward501p.mail.yandex.net ([77.88.28.111]:59269 "EHLO
+        forward501p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728276AbgBTPfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:34:37 -0500
-Received: (qmail 1597 invoked by uid 2102); 20 Feb 2020 10:34:36 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Feb 2020 10:34:36 -0500
-Date:   Thu, 20 Feb 2020 10:34:36 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kees Cook <keescook@chromium.org>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: gadget: net2280: Distribute switch variables for
- initialization
-In-Reply-To: <20200220062315.69253-1-keescook@chromium.org>
-Message-ID: <Pine.LNX.4.44L0.2002201028070.1453-100000@iolanthe.rowland.org>
+        Thu, 20 Feb 2020 10:35:12 -0500
+X-Greylist: delayed 382 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 10:35:10 EST
+Received: from mxback8o.mail.yandex.net (mxback8o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::22])
+        by forward501p.mail.yandex.net (Yandex) with ESMTP id 046E43500294;
+        Thu, 20 Feb 2020 18:28:47 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback8o.mail.yandex.net (mxback/Yandex) with ESMTP id GVR8Slzjn4-SiLuPZj7;
+        Thu, 20 Feb 2020 18:28:46 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1582212526;
+        bh=k/p2VUDosGYu66ErCK1cPAKJ+mVO7o9ELRCaJtjIexc=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=2+ttcKBpiXC21CcREE3+BPQNUeZ51CmWkc+4uVPoc+qHwQv5WcAmaqKS/CZ4kczw/
+         Dnvak8IPS7uQb+4wI8627YdrHeRu+RoGmZ7sQOoYTiZjJluI+iA8RfFbHQVhuvhXbH
+         JVb0lWtfbJ9M4F0gUDQ1VHQVSgailQdS5RoQXSDc=
+Authentication-Results: mxback8o.mail.yandex.net; dkim=pass header.i=@golovin.in
+Received: by sas8-7ec005b03c91.qloud-c.yandex.net with HTTP;
+        Thu, 20 Feb 2020 18:28:44 +0300
+From:   Dmitry Golovin <dima@golovin.in>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        "f4bug@amsat.org" <f4bug@amsat.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+In-Reply-To: <CAKwvOdkaLRE0Ek3PnmqE2P3Urn4+pwfAp-qQdsLurwERcqNXfQ@mail.gmail.com>
+References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
+         <CAAdtpL5Tf-8O=xMKO33DWDs=2_Hsdk=FQSNO5Gsrx=9hWvENdg@mail.gmail.com>
+         <8e852d84c8b0c6b35faa3b3f2a1034d93a6e8967.camel@alliedtelesis.co.nz> <8cb14684e2f774d9573c062f2d82ad5348c5fee7.camel@alliedtelesis.co.nz> <CAKwvOdkaLRE0Ek3PnmqE2P3Urn4+pwfAp-qQdsLurwERcqNXfQ@mail.gmail.com>
+Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Thu, 20 Feb 2020 17:28:44 +0200
+Message-Id: <37043091582212524@sas8-7ec005b03c91.qloud-c.yandex.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020, Kees Cook wrote:
+18.02.2020, 20:37, "'Nick Desaulniers' via Clang Built Linux" <clang-built-linux@googlegroups.com>:
+>>  There is an effort underway to build the kernel with clang[1]. I'm not
+>>  sure what that ends up using for an assembler or if it'll even be able
+>>  to target mips64 anytime soon.
 
-> Variables declared in a switch statement before any case statements
-> cannot be automatically initialized with compiler instrumentation (as
-> they are not part of any execution flow). With GCC's proposed automatic
-> stack variable initialization feature, this triggers a warning (and they
-> don't get initialized). Clang's automatic stack variable initialization
-> (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-> doesn't initialize such variables[1]. Note that these warnings (or silent
-> skipping) happen before the dead-store elimination optimization phase,
-> so even when the automatic initializations are later elided in favor of
-> direct initializations, the warnings remain.
-> 
-> To avoid these problems, move such variables into the "case" where
-> they're used or lift them up into the main function body.
-> 
-> drivers/usb/gadget/udc/net2280.c: In function ‘handle_stat0_irqs_superspeed’:
-> drivers/usb/gadget/udc/net2280.c:2871:22: warning: statement will never be executed [-Wswitch-unreachable]
->  2871 |   struct net2280_ep *e;
->       |                      ^
-> 
-> [1] https://bugs.llvm.org/show_bug.cgi?id=44916
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/usb/gadget/udc/net2280.c |   10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-> index 1fd1b9186e46..cc5869363298 100644
-> --- a/drivers/usb/gadget/udc/net2280.c
-> +++ b/drivers/usb/gadget/udc/net2280.c
-> @@ -2861,6 +2861,7 @@ static void ep_clear_seqnum(struct net2280_ep *ep)
->  static void handle_stat0_irqs_superspeed(struct net2280 *dev,
->  		struct net2280_ep *ep, struct usb_ctrlrequest r)
->  {
-> +	struct net2280_ep *e;
->  	int tmp = 0;
->  
->  #define	w_value		le16_to_cpu(r.wValue)
-> @@ -2868,14 +2869,13 @@ static void handle_stat0_irqs_superspeed(struct net2280 *dev,
->  #define	w_length	le16_to_cpu(r.wLength)
->  
->  	switch (r.bRequest) {
-> -		struct net2280_ep *e;
-> -		u16 status;
-> -
->  	case USB_REQ_SET_CONFIGURATION:
->  		dev->addressed_state = !w_value;
->  		goto usb3_delegate;
->  
-> -	case USB_REQ_GET_STATUS:
-> +	case USB_REQ_GET_STATUS: {
-> +		u16 status;
-> +
->  		switch (r.bRequestType) {
->  		case (USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE):
->  			status = dev->wakeup_enable ? 0x02 : 0x00;
-> @@ -2905,7 +2905,7 @@ static void handle_stat0_irqs_superspeed(struct net2280 *dev,
->  			goto usb3_delegate;
->  		}
->  		break;
-> -
-> +	}
+I have a working build for MIPS64 (only mips64r6 at the moment), the
+config is based on malta_defconfig and it boots in qemu. I still don't
+have a matching buildroot image, but it shouldn't be a problem.
 
-This is an unusual use of nested blocks (i.e., a block immediately 
-following a "case" label, and it throws the indentation off -- there 
-will now be two nested closing braces at the same indentation level: 
-this one and the one preceding do_stall3:.
-
-Just define status at the function level, along with e, and don't 
-worry about it.
-
-Alan Stern
-
->  	case USB_REQ_CLEAR_FEATURE:
->  		switch (r.bRequestType) {
->  		case (USB_DIR_OUT | USB_TYPE_STANDARD | USB_RECIP_DEVICE):
-> 
-> 
-> 
-
+Regards,
+Dima
