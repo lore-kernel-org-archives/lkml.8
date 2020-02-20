@@ -2,119 +2,235 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61E4C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C016DC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9121120801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891FF20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaeTz0nz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgBTGLy (ORCPT
+        id S1726787AbgBTGMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:11:54 -0500
-Received: from mga12.intel.com ([192.55.52.136]:62141 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgBTGLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:11:54 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 22:11:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,463,1574150400"; 
-   d="scan'208";a="434727879"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Feb 2020 22:11:51 -0800
-Date:   Thu, 20 Feb 2020 14:11:51 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        david@redhat.com, osalvador@suse.de, dan.j.williams@intel.com,
-        mhocko@suse.com, rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 1/7] mm/hotplug: fix hot remove failure in
- SPARSEMEM|!VMEMMAP case
-Message-ID: <20200220061151.GA32521@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220043316.19668-2-bhe@redhat.com>
+        Thu, 20 Feb 2020 01:12:19 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36039 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725942AbgBTGMS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 01:12:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582179138;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=mxrixuESiDQRJPG0EpTDwZw9g3MXQYNX4XsMJSeZOaU=;
+        b=ZaeTz0nzADqnvf08TJjK/XSBssyY4dOU8EYVhHdbFbFJT8KPLUP9zFDU8kY+LOcJgLManF
+        lM++bozSehGXfgcQ8w5qlT/qVOgR5mpiaOuHOrYvQIma+quMYEGZrVd2VwMqbLjRR2zY2B
+        vH1mXsbJsvcx3nEiOikO0i8oiXxGuq4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-90-rDP2EHaaNniTRj94Y4QgYA-1; Thu, 20 Feb 2020 01:12:03 -0500
+X-MC-Unique: rDP2EHaaNniTRj94Y4QgYA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C2B5F801E5C;
+        Thu, 20 Feb 2020 06:12:00 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-159.pek2.redhat.com [10.72.12.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F7375D9E2;
+        Thu, 20 Feb 2020 06:11:44 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V4 0/5] vDPA support
+Date:   Thu, 20 Feb 2020 14:11:36 +0800
+Message-Id: <20200220061141.29390-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220043316.19668-2-bhe@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:33:10PM +0800, Baoquan He wrote:
->In section_deactivate(), pfn_to_page() doesn't work any more after
->ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
->It caused hot remove failure:
->
->kernel BUG at mm/page_alloc.c:4806!
->invalid opcode: 0000 [#1] SMP PTI
->CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
->Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
->Workqueue: kacpi_hotplug acpi_hotplug_work_fn
->RIP: 0010:free_pages+0x85/0xa0
->Call Trace:
-> __remove_pages+0x99/0xc0
-> arch_remove_memory+0x23/0x4d
-> try_remove_memory+0xc8/0x130
-> ? walk_memory_blocks+0x72/0xa0
-> __remove_memory+0xa/0x11
-> acpi_memory_device_remove+0x72/0x100
-> acpi_bus_trim+0x55/0x90
-> acpi_device_hotplug+0x2eb/0x3d0
-> acpi_hotplug_work_fn+0x1a/0x30
-> process_one_work+0x1a7/0x370
-> worker_thread+0x30/0x380
-> ? flush_rcu_work+0x30/0x30
-> kthread+0x112/0x130
-> ? kthread_create_on_node+0x60/0x60
-> ret_from_fork+0x35/0x40
->
->Let's move the ->section_mem_map resetting after depopulate_section_memmap()
->to fix it.
->
->Signed-off-by: Baoquan He <bhe@redhat.com>
+Hi all:
 
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+This is an update version of vDPA support in kernel.
 
->---
-> mm/sparse.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/mm/sparse.c b/mm/sparse.c
->index 596b2a45b100..b8e52c8fed7f 100644
->--- a/mm/sparse.c
->+++ b/mm/sparse.c
->@@ -779,13 +779,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> 			ms->usage = NULL;
-> 		}
-> 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
->-		ms->section_mem_map = (unsigned long)NULL;
-> 	}
-> 
-> 	if (section_is_early && memmap)
-> 		free_map_bootmem(memmap);
-> 	else
-> 		depopulate_section_memmap(pfn, nr_pages, altmap);
->+
->+	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
->+		ms->section_mem_map = (unsigned long)NULL;
-> }
-> 
-> static struct page * __meminit section_activate(int nid, unsigned long pfn,
->-- 
->2.17.2
+vDPA device is a device that uses a datapath which complies with the
+virtio specifications with vendor specific control path. vDPA devices
+can be both physically located on the hardware or emulated by
+software. vDPA hardware devices are usually implemented through PCIE
+with the following types:
 
--- 
-Wei Yang
-Help you, Help me
+- PF (Physical Function) - A single Physical Function
+- VF (Virtual Function) - Device that supports single root I/O
+  virtualization (SR-IOV). Its Virtual Function (VF) represents a
+  virtualized instance of the device that can be assigned to different
+  partitions
+- ADI (Assignable Device Interface) and its equivalents - With
+  technologies such as Intel Scalable IOV, a virtual device (VDEV)
+  composed by host OS utilizing one or more ADIs. Or its equivalent
+  like SF (Sub function) from Mellanox.
+
+From a driver's perspective, depends on how and where the DMA
+translation is done, vDPA devices are split into two types:
+
+- Platform specific DMA translation - From the driver's perspective,
+  the device can be used on a platform where device access to data in
+  memory is limited and/or translated. An example is a PCIE vDPA whose
+  DMA request was tagged via a bus (e.g PCIE) specific way. DMA
+  translation and protection are done at PCIE bus IOMMU level.
+- Device specific DMA translation - The device implements DMA
+  isolation and protection through its own logic. An example is a vDPA
+  device which uses on-chip IOMMU.
+
+To hide the differences and complexity of the above types for a vDPA
+device/IOMMU options and in order to present a generic virtio device
+to the upper layer, a device agnostic framework is required.
+
+This series introduces a software vDPA bus which abstracts the
+common attributes of vDPA device, vDPA bus driver and the
+communication method, the bus operations (vdpa_config_ops) between the
+vDPA device abstraction and the vDPA bus driver. This allows multiple
+types of drivers to be used for vDPA device like the virtio_vdpa and
+vhost_vdpa driver to operate on the bus and allow vDPA device could be
+used by either kernel virtio driver or userspace vhost drivers as:
+
+   virtio drivers  vhost drivers
+          |             |
+    [virtio bus]   [vhost uAPI]
+          |             |
+   virtio device   vhost device
+   virtio_vdpa drv vhost_vdpa drv
+             \       /
+            [vDPA bus]
+                 |
+            vDPA device
+            hardware drv
+                 |
+            [hardware bus]
+                 |
+            vDPA hardware
+
+virtio_vdpa driver is a transport implementation for kernel virtio
+drivers on top of vDPA bus operations. An alternative is to refactor
+virtio bus which is sub-optimal since the bus and drivers are designed
+to be use by kernel subsystem, a non-trivial major refactoring is
+needed which may impact a brunches of drivers and devices
+implementation inside the kernel. Using a new transport may grealy
+simply both the design and changes.
+
+vhost_vdpa driver is a new type of vhost device which allows userspace
+vhost drivers to use vDPA devices via vhost uAPI (with minor
+extension). This help to minimize the changes of existed vhost drivers
+for using vDPA devices.
+
+With the abstraction of vDPA bus and vDPA bus operations, the
+difference and complexity of the under layer hardware is hidden from
+upper layer. The vDPA bus drivers on top can use a unified
+vdpa_config_ops to control different types of vDPA device.
+
+This series contains the bus and virtio_vdpa implementation. We are
+working on the vhost part and IFCVF (vDPA driver from Intel) which
+will be posted in future few days.
+
+Thanks
+
+Changes from V3:
+
+- various Kconfig fixes (Randy)
+
+Changes from V2:
+
+- release idr in the release function for put_device() unwind (Jason)
+- don't panic when fail to register vdpa bus (Jason)
+- use unsigned int instead of int for ida (Jason)
+- fix the wrong commit log in virito_vdpa patches (Jason)
+- make vdpa_sim depends on RUNTIME_TESTING_MENU (Michael)
+- provide a bus release function for vDPA device (Jason)
+- fix the wrong unwind when creating devices for vDPA simulator (Jason)
+- move vDPA simulator to a dedicated directory (Lingshan)
+- cancel the work before release vDPA simulator
+
+Changes from V1:
+
+- drop sysfs API, leave the management interface to future development
+  (Michael)
+- introduce incremental DMA ops (dma_map/dma_unmap) (Michael)
+- introduce dma_device and use it instead of parent device for doing
+  IOMMU or DMA from bus driver (Michael, Jason, Ling Shan, Tiwei)
+- accept parent device and dma device when register vdpa device
+- coding style and compile fixes (Randy)
+- using vdpa_xxx instead of xxx_vdpa (Jason)
+- ove vDPA accessors to header and make it static inline (Jason)
+- split vdp_register_device() into two helpers vdpa_init_device() and
+  vdpa_register_device() which allows intermediate step to be done (Jason=
+)
+- warn on invalidate queue state when fail to creating virtqueue (Jason)
+- make to_virtio_vdpa_device() static (Jason)
+- use kmalloc/kfree instead of devres for virtio vdpa device (Jason)
+- avoid using cast in vdpa bus function (Jason)
+- introduce module_vdpa_driver and fix module refcnt (Jason)
+- fix returning freed address in vdapsim coherent DMA addr allocation (Da=
+n)
+- various other fixes and tweaks
+
+V3: https://lkml.org/lkml/2020/2/19/1347
+V2: https://lkml.org/lkml/2020/2/9/275
+V1: https://lkml.org/lkml/2020/1/16/353
+
+Jason Wang (5):
+  vhost: factor out IOTLB
+  vringh: IOTLB support
+  vDPA: introduce vDPA bus
+  virtio: introduce a vDPA based transport
+  vdpasim: vDPA device simulator
+
+ MAINTAINERS                             |   2 +
+ drivers/vhost/Kconfig                   |   6 +
+ drivers/vhost/Kconfig.vringh            |   1 +
+ drivers/vhost/Makefile                  |   2 +
+ drivers/vhost/net.c                     |   2 +-
+ drivers/vhost/vhost.c                   | 221 +++-----
+ drivers/vhost/vhost.h                   |  36 +-
+ drivers/vhost/vhost_iotlb.c             | 171 ++++++
+ drivers/vhost/vringh.c                  | 421 ++++++++++++++-
+ drivers/virtio/Kconfig                  |  15 +
+ drivers/virtio/Makefile                 |   2 +
+ drivers/virtio/vdpa/Kconfig             |  26 +
+ drivers/virtio/vdpa/Makefile            |   3 +
+ drivers/virtio/vdpa/vdpa.c              | 167 ++++++
+ drivers/virtio/vdpa/vdpa_sim/Makefile   |   2 +
+ drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c | 660 ++++++++++++++++++++++++
+ drivers/virtio/virtio_vdpa.c            | 392 ++++++++++++++
+ include/linux/vdpa.h                    | 232 +++++++++
+ include/linux/vhost_iotlb.h             |  45 ++
+ include/linux/vringh.h                  |  36 ++
+ 20 files changed, 2238 insertions(+), 204 deletions(-)
+ create mode 100644 drivers/vhost/vhost_iotlb.c
+ create mode 100644 drivers/virtio/vdpa/Kconfig
+ create mode 100644 drivers/virtio/vdpa/Makefile
+ create mode 100644 drivers/virtio/vdpa/vdpa.c
+ create mode 100644 drivers/virtio/vdpa/vdpa_sim/Makefile
+ create mode 100644 drivers/virtio/vdpa/vdpa_sim/vdpa_sim.c
+ create mode 100644 drivers/virtio/virtio_vdpa.c
+ create mode 100644 include/linux/vdpa.h
+ create mode 100644 include/linux/vhost_iotlb.h
+
+--=20
+2.19.1
+
