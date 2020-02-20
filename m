@@ -2,139 +2,100 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F91C11D01
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A56C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BB920801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F19320801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nN5J0iDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgBTHiB (ORCPT
+        id S1726859AbgBTHix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:38:01 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36867 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgBTHiB (ORCPT
+        Thu, 20 Feb 2020 02:38:53 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:21909 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbgBTHix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:38:01 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q23so3147380ljm.4;
-        Wed, 19 Feb 2020 23:37:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uigwYHxU5jqQSo9ZHCSgPRPA1LdoPZqY742MGPvWnH0=;
-        b=Fj9wQJkofm2W/at8w3cgXX5XxhLKSou/oxFlTfk/1yCjRYnkfJuGhOwgjNushH2YqH
-         QrzQwChyc76kDaisfK0k8KPQhpN3SjZXWwzidZSu3u02THbUB/FmRXl2HLq6JegMY5Mv
-         t/71y0Wf3Hn2NXF5Bb2Y8DJ+5LUJZbFTm8/BKcFPRlllLupVXtiNd0UEASqMOd0gSdZH
-         czu0F9eEZJW0qjDdFcSlY29V5jntXrspYyDlvS+L0BeBxl5yN9Uujdj102SmFhWzjLnO
-         sCL1XzNNlnFWIdjp6zNJ9fhp+8lRtvLkrcA9/NIF1zhk99bMvtG0wU8ZcKwrsV0UZS3o
-         KdkA==
-X-Gm-Message-State: APjAAAVx/h397FnzV+1QG6Kks3iWXYGeh1NILS9nxjEMRfF7TX5Xdsx5
-        a9SbnTlARpEUwADoXISl35M=
-X-Google-Smtp-Source: APXvYqzT9iEmd6Ly86CVJZq2SpbZg+Zk9JLg/U/E1RSIJmC/qmdhkvE2PqFbBNY9CdPzAb6iQyrkdA==
-X-Received: by 2002:a2e:9218:: with SMTP id k24mr17554469ljg.262.1582184278844;
-        Wed, 19 Feb 2020 23:37:58 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id f9sm1182368ljp.62.2020.02.19.23.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 23:37:58 -0800 (PST)
-Date:   Thu, 20 Feb 2020 09:37:51 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "GitAuthor: Matti Vaittinen" <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: [RFC PATCH v3 7/8] power: supply: add battery parameters
-Message-ID: <1bc9241259c89c9429f6a162758f5607a1dbca72.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+        Thu, 20 Feb 2020 02:38:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582184333; x=1613720333;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=oTbUz7ad+lxKA3pu5K3OeA9Qrfs1WDg7rWJbe6s8SN8=;
+  b=nN5J0iDjN42HNmj0aa1xR/FKNfZUiilZIxHwzJXPJ3m3W3SEZ7jzj6LI
+   Iaf9a3HdI+RepUlWTmd6SI6cKfKv2yukdxC4w6OPPCS20ZuLJT6eFScVF
+   KaaWTn5JTAkRf/vlgfFu7IzUkDQLZu7xFQF+yqXLDJJrrYNxa8fLqHWwg
+   U=;
+IronPort-SDR: 7oia2wUGTnZSKhBsUHoyFHSu4XYOms7J8LTwX6c8QbdH3mOgpX/FUSxZkCcb291HIO2wy49XeQ
+ +TIudoxoYDrg==
+X-IronPort-AV: E=Sophos;i="5.70,463,1574121600"; 
+   d="scan'208";a="27647351"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Feb 2020 07:38:50 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id D2639A3168;
+        Thu, 20 Feb 2020 07:38:48 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Thu, 20 Feb 2020 07:38:48 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.235) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 20 Feb 2020 07:38:44 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Brendan Higgins <brendanhiggins@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        SeongJae Park <sjpark@amazon.de>
+Subject: Re: Re: [PATCH] docs/kunit/start: Use '_KUNIT_TEST' config name suffix
+Date:   Thu, 20 Feb 2020 08:38:29 +0100
+Message-ID: <20200220073829.18382-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAFd5g444shArgbdwaCdM3VBb9c7M1s7BJ5Dho7KEBU_fCsaJOw@mail.gmail.com> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.235]
+X-ClientProxiedBy: EX13D24UWB003.ant.amazon.com (10.43.161.222) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add parsing of new device-tree battery bindings.
+On Wed, 19 Feb 2020 14:16:03 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
 
-     - trickle-charge-current-microamp
-     - precharge-upper-limit-microvolt
-     - re-charge-voltage-microvolt
-     - over-voltage-threshold-microvolt
+> Sorry, I didn't see this until now.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/power/supply/power_supply_core.c | 8 ++++++++
- include/linux/power_supply.h             | 4 ++++
- 2 files changed, 12 insertions(+)
+Even I also almost forgot this.
 
-diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/supply/power_supply_core.c
-index 5c36c430ce8b..a8589b6e28f1 100644
---- a/drivers/power/supply/power_supply_core.c
-+++ b/drivers/power/supply/power_supply_core.c
-@@ -617,10 +617,18 @@ int power_supply_get_battery_info(struct power_supply *psy,
- 			     &info->voltage_min_design_uv);
- 	of_property_read_u32(battery_np, "voltage-max-design-microvolt",
- 			     &info->voltage_max_design_uv);
-+	of_property_read_u32(battery_np, "trickle-charge-current-microamp",
-+			     &info->tricklecharge_current_ua);
- 	of_property_read_u32(battery_np, "precharge-current-microamp",
- 			     &info->precharge_current_ua);
-+	of_property_read_u32(battery_np, "precharge-upper-limit-microvolt",
-+			     &info->precharge_voltage_max_uv);
- 	of_property_read_u32(battery_np, "charge-term-current-microamp",
- 			     &info->charge_term_current_ua);
-+	of_property_read_u32(battery_np, "re-charge-voltage-microvolt",
-+			     &info->charge_restart_voltage_uv);
-+	of_property_read_u32(battery_np, "over-voltage-threshold-microvolt",
-+			     &info->overvoltage_limit_uv);
- 	of_property_read_u32(battery_np, "constant-charge-current-max-microamp",
- 			     &info->constant_charge_current_max_ua);
- 	of_property_read_u32(battery_np, "constant-charge-voltage-max-microvolt",
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 28413f737e7d..44c727f30669 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -341,8 +341,12 @@ struct power_supply_battery_info {
- 	int charge_full_design_uah;	    /* microAmp-hours */
- 	int voltage_min_design_uv;	    /* microVolts */
- 	int voltage_max_design_uv;	    /* microVolts */
-+	int tricklecharge_current_ua;	    /* microAmps */
- 	int precharge_current_ua;	    /* microAmps */
-+	int precharge_voltage_max_uv;	    /* microVolts */
- 	int charge_term_current_ua;	    /* microAmps */
-+	int charge_restart_voltage_uv;	    /* microVolts */
-+	int overvoltage_limit_uv;	    /* microVolts */
- 	int constant_charge_current_max_ua; /* microAmps */
- 	int constant_charge_voltage_max_uv; /* microVolts */
- 	int factory_internal_resistance_uohm;   /* microOhms */
--- 
-2.21.0
+> 
+> On Mon, Jan 27, 2020 at 7:32 AM <sjpark@amazon.com> wrote:
+> >
+> > From: SeongJae Park <sjpark@amazon.de>
+> >
+> > It is recommended to use '_KUNIT_TEST' config name suffix for kunit
+> > tests but the example is using only '_TEST' suffix.  This commit fixes
+> > it to also use '_KUNIT_TEST' suffix.
+> >
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> 
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+
+Thanks for finding this! :D
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+Thanks,
+SeongJae Park
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+> 
+> Thanks!
+> 
