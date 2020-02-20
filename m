@@ -2,129 +2,198 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD55C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B602C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFCE20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1091A208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:40:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="YWHTXkfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgBTNjE (ORCPT
+        id S1728180AbgBTNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:39:04 -0500
-Received: from foss.arm.com ([217.140.110.172]:43132 "EHLO foss.arm.com"
+        Thu, 20 Feb 2020 08:40:35 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:15436 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728145AbgBTNjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:39:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0860331B;
-        Thu, 20 Feb 2020 05:39:03 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37CD83F703;
-        Thu, 20 Feb 2020 05:39:01 -0800 (PST)
-Subject: Re: [PATCH v2 1/5] sched/fair: Reorder enqueue/dequeue_task_fair path
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-References: <20200214152729.6059-1-vincent.guittot@linaro.org>
- <20200214152729.6059-2-vincent.guittot@linaro.org>
- <ee38d205-b356-9474-785e-e514d81b7d7f@arm.com>
- <20200218132203.GB14914@hirez.programming.kicks-ass.net>
- <CAKfTPtB3qudK8aMq2cx==4RW8t1pz6ymz1Ti0r8oO4TefWzMRw@mail.gmail.com>
- <c18ab89e-d635-e370-6cbb-6015b404d906@arm.com>
- <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <274ebb9a-9328-e312-f554-34da8b183932@arm.com>
-Date:   Thu, 20 Feb 2020 14:38:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1728028AbgBTNkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:40:35 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48NbM36ysPz9txrk;
+        Thu, 20 Feb 2020 14:40:31 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=YWHTXkfG; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id hbJhFWvUXX38; Thu, 20 Feb 2020 14:40:31 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48NbM35T14z9txrh;
+        Thu, 20 Feb 2020 14:40:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1582206031; bh=Ey2+g9lGzZa+YpnSVqQPtdcZpHXPa/MkjNUS6tI4A50=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YWHTXkfGYULWjCzpxJ4aJed4CCe5/NvB7c8ruOxwGI+oYB+UydgpWU1vNgwzK6FLr
+         sBjuADkg+TKg8Z6wwsthh+MM6O2FfXnhIO1BuKLrWqWnQRuKDl7MTd9LotDr3wUyYa
+         uz4yBBQmY4PrMwGmIrFxxpTLToGtdK9nM4+QDwlQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id F33388B86E;
+        Thu, 20 Feb 2020 14:40:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id SxQ2wcihBuVZ; Thu, 20 Feb 2020 14:40:32 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B52B28B866;
+        Thu, 20 Feb 2020 14:40:31 +0100 (CET)
+Subject: Re: [PATCH v3 1/6] powerpc/fsl_booke/kaslr: refactor
+ kaslr_legal_offset() and kaslr_early_init()
+To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
+        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com,
+        oss@buserror.net
+Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+ <20200206025825.22934-2-yanaijie@huawei.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <6c0b0720-6998-f43a-a2b6-0632d4df1126@c-s.fr>
+Date:   Thu, 20 Feb 2020 14:40:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200206025825.22934-2-yanaijie@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 17:26, Vincent Guittot wrote:
-> On Wed, 19 Feb 2020 at 12:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->>
->> On 18/02/2020 15:15, Vincent Guittot wrote:
->>> On Tue, 18 Feb 2020 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
->>>>
->>>> On Tue, Feb 18, 2020 at 01:37:37PM +0100, Dietmar Eggemann wrote:
->>>>> On 14/02/2020 16:27, Vincent Guittot wrote:
->>>>>> The walk through the cgroup hierarchy during the enqueue/dequeue of a task
->>>>>> is split in 2 distinct parts for throttled cfs_rq without any added value
->>>>>> but making code less readable.
->>>>>>
->>>>>> Change the code ordering such that everything related to a cfs_rq
->>>>>> (throttled or not) will be done in the same loop.
->>>>>>
->>>>>> In addition, the same steps ordering is used when updating a cfs_rq:
->>>>>> - update_load_avg
->>>>>> - update_cfs_group
->>>>>> - update *h_nr_running
->>>>>
->>>>> Is this code change really necessary? You pay with two extra goto's. We
->>>>> still have the two for_each_sched_entity(se)'s because of 'if
->>>>> (se->on_rq); break;'.
->>>>
->>>> IIRC he relies on the presented ordering in patch #5 -- adding the
->>>> running_avg metric.
->>>
->>> Yes, that's the main reason, updating load_avg before h_nr_running
->>
->> My hunch is you refer to the new function:
->>
->> static inline void se_update_runnable(struct sched_entity *se)
->> {
->>         if (!entity_is_task(se))
->>                 se->runnable_weight = se->my_q->h_nr_running;
->> }
->>
->> I don't see the dependency to the 'update_load_avg -> h_nr_running'
->> order since it operates on se->my_q, not cfs_rq = cfs_rq_of(se), i.e.
->> se->cfs_rq.
->>
->> What do I miss here?
+
+
+Le 06/02/2020 à 03:58, Jason Yan a écrit :
+> Some code refactor in kaslr_legal_offset() and kaslr_early_init(). No
+> functional change. This is a preparation for KASLR fsl_booke64.
 > 
-> update_load_avg() updates both se and cfs_rq so if you update
-> cfs_rq->h_nr_running before calling update_load_avg() like in the 2nd
-> for_each_sched_entity, you will update cfs_rq runnable_avg for the
-> past time slot with the new h_nr_running value instead of the previous
-> value.
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Diana Craciun <diana.craciun@nxp.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> ---
+>   arch/powerpc/mm/nohash/kaslr_booke.c | 40 ++++++++++++++--------------
+>   1 file changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+> index 4a75f2d9bf0e..07b036e98353 100644
+> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
+> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+> @@ -25,6 +25,7 @@ struct regions {
+>   	unsigned long pa_start;
+>   	unsigned long pa_end;
+>   	unsigned long kernel_size;
+> +	unsigned long linear_sz;
+>   	unsigned long dtb_start;
+>   	unsigned long dtb_end;
+>   	unsigned long initrd_start;
+> @@ -260,11 +261,23 @@ static __init void get_cell_sizes(const void *fdt, int node, int *addr_cells,
+>   		*size_cells = fdt32_to_cpu(*prop);
+>   }
+>   
+> -static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long index,
+> -					       unsigned long offset)
+> +static unsigned long __init kaslr_legal_offset(void *dt_ptr, unsigned long random)
+>   {
+>   	unsigned long koffset = 0;
+>   	unsigned long start;
+> +	unsigned long index;
+> +	unsigned long offset;
+> +
+> +	/*
+> +	 * Decide which 64M we want to start
+> +	 * Only use the low 8 bits of the random seed
+> +	 */
+> +	index = random & 0xFF;
+> +	index %= regions.linear_sz / SZ_64M;
+> +
+> +	/* Decide offset inside 64M */
+> +	offset = random % (SZ_64M - regions.kernel_size);
+> +	offset = round_down(offset, SZ_16K);
+>   
+>   	while ((long)index >= 0) {
+>   		offset = memstart_addr + index * SZ_64M + offset;
+> @@ -289,10 +302,9 @@ static inline __init bool kaslr_disabled(void)
+>   static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size,
+>   						  unsigned long kernel_sz)
+>   {
+> -	unsigned long offset, random;
+> +	unsigned long random;
+>   	unsigned long ram, linear_sz;
+>   	u64 seed;
+> -	unsigned long index;
+>   
+>   	kaslr_get_cmdline(dt_ptr);
+>   	if (kaslr_disabled())
+> @@ -333,22 +345,12 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
+>   	regions.dtb_start = __pa(dt_ptr);
+>   	regions.dtb_end = __pa(dt_ptr) + fdt_totalsize(dt_ptr);
+>   	regions.kernel_size = kernel_sz;
+> +	regions.linear_sz = linear_sz;
+>   
+>   	get_initrd_range(dt_ptr);
+>   	get_crash_kernel(dt_ptr, ram);
+>   
+> -	/*
+> -	 * Decide which 64M we want to start
+> -	 * Only use the low 8 bits of the random seed
+> -	 */
+> -	index = random & 0xFF;
+> -	index %= linear_sz / SZ_64M;
+> -
+> -	/* Decide offset inside 64M */
+> -	offset = random % (SZ_64M - kernel_sz);
+> -	offset = round_down(offset, SZ_16K);
+> -
+> -	return kaslr_legal_offset(dt_ptr, index, offset);
+> +	return kaslr_legal_offset(dt_ptr, random);
+>   }
+>   
+>   /*
+> @@ -358,8 +360,6 @@ static unsigned long __init kaslr_choose_location(void *dt_ptr, phys_addr_t size
+>    */
+>   notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+>   {
+> -	unsigned long tlb_virt;
+> -	phys_addr_t tlb_phys;
+>   	unsigned long offset;
+>   	unsigned long kernel_sz;
+>   
+> @@ -375,8 +375,8 @@ notrace void __init kaslr_early_init(void *dt_ptr, phys_addr_t size)
+>   	is_second_reloc = 1;
+>   
+>   	if (offset >= SZ_64M) {
+> -		tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
+> -		tlb_phys = round_down(kernstart_addr, SZ_64M);
+> +		unsigned long tlb_virt = round_down(kernstart_virt_addr, SZ_64M);
+> +		phys_addr_t tlb_phys = round_down(kernstart_addr, SZ_64M);
 
-Ah, now I see:
+That looks like cleanup unrelated to the patch itself.
 
-update_load_avg()
-  update_cfs_rq_load_avg()
-    __update_load_avg_cfs_rq()
-       ___update_load_sum(..., cfs_rq->h_nr_running, ...)
+>   
+>   		/* Create kernel map to relocate in */
+>   		create_kaslr_tlb_entry(1, tlb_virt, tlb_phys);
+> 
 
-                               ^^^^^^^^^^^^^^^^^^^^
-
-Not really obvious IMHO, since the code is introduced only in 4/5.
-
-Could you add a comment to this patch header?
-
-I see you mentioned this dependency already in v1 discussion
-
-https://lore.kernel.org/r/CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com
-
-"... But the following patches make PELT using h_nr_running ...".
-
-IMHO it would be helpful to have this explanation in the 1/5 patch
-header so people stop wondering why this is necessary.
+Christophe
