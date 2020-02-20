@@ -2,161 +2,102 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1F1C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0A5C11D0F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916B0206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582216198;
-	bh=Fl5b1M8aQF/dc4zCmF+VqqEQsdYSGpDy8IGB5qqX4QQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rKC4v2wAuw5/CIWnS7ZBlNnFhfgC1by5EiyMjVUTt3VfClkBVE0gW+MGWrD/pfXNP
-	 GF9f7pn38CxE1w8zsBvLxAtiD6uVzCm3M/5ZElOPh68OVBnqJy0dLaWNoKRfEOhreX
-	 rn4j05KCc90FmX3oTDzTxHVCNJuJ2nVV29tH8vhM=
+	by mail.kernel.org (Postfix) with ESMTP id 7DAE0206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgBTQ35 (ORCPT
+        id S1728506AbgBTQa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:29:57 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:39293 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbgBTQ35 (ORCPT
+        Thu, 20 Feb 2020 11:30:28 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47946 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbgBTQa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:29:57 -0500
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01KGTiiE007836;
-        Fri, 21 Feb 2020 01:29:45 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01KGTiiE007836
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582216185;
-        bh=4JUspooC+NZxkKFY0nYPp/gx6LLrbQ4SDK0Yfj3PlZ0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Kx+c9ZAtqOKgbKaQvaRWRc6sfstjEFfXNZjzqArSIfoFWs3mPtsyQj7vFMg5d+Np3
-         DlCGQUocakiYIYTYemrRBU7oNQCRy1vvABXuNJXBTPMMXdY45FlfqH68MMMNRJClzW
-         VcWbnyB2bie/AxK8UW4zjOUVWSfhNJTtgmB5X5HVjk1Zww0nL3m+v8c6yMMjJpqFMk
-         vVeLtNWv//KEURh0J5fDmnlUTn9bzmnfwroizoOR9WJWYrCBjF6K2NcKIcm5FBa6vm
-         gqJRCJBjPr9McvrBAEqUCKelqOSvtJOLFKMDsuzozBTLVhzLuFO84G260Wykx8RrQi
-         86TszsXy/1P2g==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id p2so1779017uao.9;
-        Thu, 20 Feb 2020 08:29:44 -0800 (PST)
-X-Gm-Message-State: APjAAAU2DiFh0/D9X15mgUIxogsFoIXIVHKI0MAG9YZ03r9apg6wS29U
-        JuGSieBercgc2hJL1cG5k4GH+FIxPsG9rzLg7X0=
-X-Google-Smtp-Source: APXvYqxpbu2HWc1p2HMTZMytzt9kyUBZzySB7o969hlLofl2kTAqxkM+xDa2q4wwUr0lXUyHK49/B9YBgWtsUuc7sSw=
-X-Received: by 2002:ab0:2881:: with SMTP id s1mr16564013uap.95.1582216183578;
- Thu, 20 Feb 2020 08:29:43 -0800 (PST)
+        Thu, 20 Feb 2020 11:30:28 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 59C3328DE96
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v6 0/6] media: rockchip: Add the rkvdec driver
+Date:   Thu, 20 Feb 2020 13:30:10 -0300
+Message-Id: <20200220163016.21708-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200215075020.10426-1-masahiroy@kernel.org>
-In-Reply-To: <20200215075020.10426-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 21 Feb 2020 01:29:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASCoR_KrVA-7+HOTkgFSx-hZbboYbtMPfN1GdookT8DUw@mail.gmail.com>
-Message-ID: <CAK7LNASCoR_KrVA-7+HOTkgFSx-hZbboYbtMPfN1GdookT8DUw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: remove the owner check in mkcompile_h
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 4:50 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> This reverts a very old commit, which dates back to the pre-git era:
->
-> |commit 5d1cfb5b12f72145d30ba0f53c9f238144b122b8
-> |Author: Kai Germaschewski <kai@tp1.ruhr-uni-bochum.de>
-> |Date:   Sat Jul 27 02:53:19 2002 -0500
-> |
-> |    kbuild: Fix compiling/installing as different users
-> |
-> |    "make bzImage && sudo make install" had the problem that during
-> |    the "sudo make install" the build system would notice that the information
-> |    in include/linux/compile.h is not accurate (it says "compiled by <user>",
-> |    but we are root), thus causing compile.h to be updated and leading to
-> |    some recompiles.
-> |
-> |    We now only update "compile.h" if the current user is the owner of
-> |    include/linux/autoconf.h, i.e. the user who did the "make *config". So the
-> |    above sequence will correctly state "compiled by <user>".
-> |
-> |diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-> |index 6313db96172..cd956380978 100755
-> |--- a/scripts/mkcompile_h
-> |+++ b/scripts/mkcompile_h
-> |@@ -3,6 +3,17 @@ ARCH=$2
-> | SMP=$3
-> | CC=$4
-> |
-> |+# If compile.h exists already and we don't own autoconf.h
-> |+# (i.e. we're not the same user who did make *config), don't
-> |+# modify compile.h
-> |+# So "sudo make install" won't change the "compiled by <user>"
-> |+# do "compiled by root"
-> |+
-> |+if [ -r $TARGET -a ! -O ../include/linux/autoconf.h ]; then
-> |+  echo ' (not modified)'
-> |+  exit 0
-> |+fi
-> |+
-> | if [ -r ../.version ]; then
-> |   VERSION=`cat ../.version`
-> | else
->
-> The 'make bzImage && sudo make install' problem no longer happens
-> because commit 1648e4f80506 ("x86, kbuild: make "make install" not
-> depend on vmlinux") fixed the root cause.
->
-> Commit 19514fc665ff ("arm, kbuild: make "make install" not depend on
-> vmlinux") fixed the similar issue on ARM, with detailed explanation.
->
-> So, the rule is that the installation targets should never trigger
-> the builds of any build artifact. By following it, this check is
-> unneeded.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Hello,
 
-Applied to linux-kbuild.
+This is v6 of Boris' rkvdec driver. This addresses the feedback
+provided by Hans on v5.
 
+Thanks,
+Ezequiel
 
-> ---
->
->  scripts/mkcompile_h | 11 -----------
->  1 file changed, 11 deletions(-)
->
-> diff --git a/scripts/mkcompile_h b/scripts/mkcompile_h
-> index 3a5a4b210c86..3ff26e5b2eac 100755
-> --- a/scripts/mkcompile_h
-> +++ b/scripts/mkcompile_h
-> @@ -10,17 +10,6 @@ CC=$6
->
->  vecho() { [ "${quiet}" = "silent_" ] || echo "$@" ; }
->
-> -# If compile.h exists already and we don't own autoconf.h
-> -# (i.e. we're not the same user who did make *config), don't
-> -# modify compile.h
-> -# So "sudo make install" won't change the "compiled by <user>"
-> -# do "compiled by root"
-> -
-> -if [ -r $TARGET -a ! -O include/generated/autoconf.h ]; then
-> -  vecho "  SKIPPED $TARGET"
-> -  exit 0
-> -fi
-> -
->  # Do not expand names
->  set -f
->
-> --
-> 2.17.1
->
+Boris Brezillon (5):
+  media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
+  media: hantro: h264: Use the generic H264 reflist builder
+  media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
+  media: rkvdec: Add the rkvdec driver
+  arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
 
+Jonas Karlman (1):
+  media: uapi: h264: Add DPB entry field reference flags
+
+ .../bindings/media/rockchip,vdec.yaml         |   71 +
+ .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
+ MAINTAINERS                                   |    7 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
+ drivers/media/v4l2-core/Kconfig               |    4 +
+ drivers/media/v4l2-core/Makefile              |    1 +
+ drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/hantro/Kconfig          |    1 +
+ drivers/staging/media/hantro/hantro_h264.c    |  237 +---
+ drivers/staging/media/rkvdec/Kconfig          |   15 +
+ drivers/staging/media/rkvdec/Makefile         |    3 +
+ drivers/staging/media/rkvdec/TODO             |   11 +
+ drivers/staging/media/rkvdec/rkvdec-h264.c    | 1153 +++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec-regs.h    |  223 ++++
+ drivers/staging/media/rkvdec/rkvdec.c         | 1134 ++++++++++++++++
+ drivers/staging/media/rkvdec/rkvdec.h         |  123 ++
+ include/media/h264-ctrls.h                    |    2 +
+ include/media/v4l2-h264.h                     |   85 ++
+ 20 files changed, 3131 insertions(+), 230 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+ create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/Kconfig
+ create mode 100644 drivers/staging/media/rkvdec/Makefile
+ create mode 100644 drivers/staging/media/rkvdec/TODO
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
+ create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
+ create mode 100644 include/media/v4l2-h264.h
 
 -- 
-Best Regards
-Masahiro Yamada
+2.25.0
+
