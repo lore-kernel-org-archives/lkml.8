@@ -2,110 +2,92 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F55EC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9F2C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64D8C2068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:56:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W9j3iw7p"
+	by mail.kernel.org (Postfix) with ESMTP id 878B72068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582196241;
+	bh=Zn1Lb3yQmJpeLKOyRscBdWNwYHqb6RetCMQK8g96jAM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ljtzKzqJ++h/BKMunyupVFOH/nOkXUx7ogddqpy4ljF5ooX92aA2ivU/lMnmNDiLN
+	 gbyK7TSWtlXV83/hR/llN+0rVs9oPJZG9wQUunfAtbC73SviKCu9NpotVzew1q97hg
+	 L8DkVw4h1Pptq7LrtVjLPgjYGUnJ3fJ6j+UZZrNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbgBTK46 (ORCPT
+        id S1727637AbgBTK5U convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:56:58 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:20605 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726882AbgBTK45 (ORCPT
+        Thu, 20 Feb 2020 05:57:20 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45916 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgBTK5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:56:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582196216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TEJcc92FXgviReBjRemrl4fnoayV9MImYJJA2MdtkA8=;
-        b=W9j3iw7p3rAQCtL7DEsLWSsVj/g9kr4vZCS9iR6GlqK5D8lcfKYDAISFtr8GKHUda+PjG+
-        UPnb2SniojVulmufbI6YmkKwuyMythRPJkv3DOGHX6HQvkksaAABROSO5aB85J85pioS91
-        lFabcUivT6aloMa+s+655maOUIft54E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-gHhh2198Nh2MoK5K6rM03w-1; Thu, 20 Feb 2020 05:56:52 -0500
-X-MC-Unique: gHhh2198Nh2MoK5K6rM03w-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C44F7107B267;
-        Thu, 20 Feb 2020 10:56:50 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 505CB90F7E;
-        Thu, 20 Feb 2020 10:56:48 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 11:56:45 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v5] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Message-ID: <20200220105645.GB553812@krava>
-References: <20200220050104.14094-1-kjain@linux.ibm.com>
+        Thu, 20 Feb 2020 05:57:20 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 59so3198658otp.12;
+        Thu, 20 Feb 2020 02:57:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oUm7pdkP7Z40yNU0+bCa9A5eNVIQpdLnF23GrSn2iwk=;
+        b=f3hXWZR3Hgc9JoPdVd35B4XTpiRolop8/siUgtSvyl6YikTULe5f0Q1VKRustk1AZK
+         Cor8gVk2TL0UX0iBI0u6F58X6/XCNn2ruI+JC6lTig0MN6qMwvViH4vi++2/iFps9L+D
+         kyNcGJ7xjIMm5j6j/HLLkKqTDhCpW9FfRdbBal2WKe26N6FOcLmimSyKJVzTUNIX4p5k
+         7OScjqydnM2YNtSagwE0DK/BR/6Yg+eJKtaDzkpVYoMImGK8OLZqggTQiLuWUtI4BoJR
+         9VfzK3gX/T9jktdxpA5rVLmSqeVFSJHhQhEN9ar2yAsBJrrzfXUYlB83Xo2oYdGhJ6pL
+         0nAw==
+X-Gm-Message-State: APjAAAUe3BqjKOMXVp4sngwxWQpnfc9bpMXTv7EnvWCNbc0dP1BSe9/R
+        oOwp7iIwy9IPabNeoWM/mKnkz/n7koA1zMG86jOneA==
+X-Google-Smtp-Source: APXvYqxqJppIyUd/OfZTqFpjgRZ7wJ/a32QzOMfYY2RxFL5PJ9ad0sUNFLEOiPEbk+atTo+IHeVpWl+zX0CASNRcELw=
+X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr21822924otr.167.1582196239475;
+ Thu, 20 Feb 2020 02:57:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220050104.14094-1-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200218145819.17314-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20200218145819.17314-1-j.neuschaefer@gmx.net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Feb 2020 11:57:08 +0100
+Message-ID: <CAJZ5v0gQsZjHn4A2aSRL1Ap2PiUN0SC3h0Csfqd87aS9e6VpxA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] docs: power: Drop reference to interface.rst
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:31:04AM +0530, Kajol Jain wrote:
+On Tue, Feb 18, 2020 at 3:59 PM Jonathan Neuschäfer
+<j.neuschaefer@gmx.net> wrote:
+>
+> It has been merged into sleep-states.rst.
+>
+> Fixes: c21502efdaed ("Documentation: admin-guide: PM: Update sleep states documentation")
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+>  Documentation/power/index.rst | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/Documentation/power/index.rst b/Documentation/power/index.rst
+> index 002e42745263..ced8a8007434 100644
+> --- a/Documentation/power/index.rst
+> +++ b/Documentation/power/index.rst
+> @@ -13,7 +13,6 @@ Power Management
+>      drivers-testing
+>      energy-model
+>      freezing-of-tasks
+> -    interface
+>      opp
+>      pci
+>      pm_qos_interface
+> --
 
-SNIP
-
-> +				i++;
-> +				if (i == idnum)
-> +					break;
->  			}
->  		}
->  	}
-> @@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->  			    !strcmp(ev->name, metric_events[i]->name)) {
->  				ev->metric_leader = metric_events[i];
->  			}
-> +			j++;
->  		}
-> +		ev = metric_events[i];
-> +		evlist_used[ev->idx] = true;
->  	}
->  
->  	return metric_events[0];
-> @@ -160,6 +161,14 @@ static int metricgroup__setup_events(struct list_head *groups,
->  	int ret = 0;
->  	struct egroup *eg;
->  	struct evsel *evsel;
-> +	bool *evlist_used;
-> +
-> +	evlist_used = (bool *)calloc(perf_evlist->core.nr_entries,
-> +				     sizeof(bool));
-
-no need for the (bool *) cast
-
-other than that
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
+Applied as a fix for 5.6, thanks!
