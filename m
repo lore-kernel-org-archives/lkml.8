@@ -2,107 +2,94 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055FCC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00D0C11D1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FA2208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LAPmdFJ/"
+	by mail.kernel.org (Postfix) with ESMTP id 856BD208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:29:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgBTT2j (ORCPT
+        id S1728927AbgBTT3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:28:39 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53048 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728596AbgBTT2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:28:39 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KJRs19059352;
-        Thu, 20 Feb 2020 13:27:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582226874;
-        bh=bQZBs4R8I7SS5K4xnJzvOySpsb0IN5aljouYPVfbqJE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=LAPmdFJ/We64GPO2f7Rw7VcZ6mNHuZ8mOvNP8+YMK6vVjiz4Lfz1fHEY5hY3YoZC6
-         Gn3VDyX0J1d8jdHfhwBQh2U2ey+p55+j9TsGwLa8MZ7+V8rggIlD/qyQWZ1ym9Rpen
-         z+pM99r/DaxeHvY12codHvrgMvR0gDlCIgSTq6Bc=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KJRsfB000862;
-        Thu, 20 Feb 2020 13:27:54 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 13:27:54 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 13:27:54 -0600
-Received: from [128.247.59.107] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KJRdtc041257;
-        Thu, 20 Feb 2020 13:27:39 -0600
-Subject: Re: [PATCH] ASoC: tas2562: Add support for digital volume control
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200220172721.10547-1-dmurphy@ti.com>
- <20200220184507.GF3926@sirena.org.uk>
- <de0e8a5b-8c2a-ee04-856f-f0d678a3c66b@ti.com>
- <20200220191803.GH3926@sirena.org.uk>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <6f3ff810-5e75-cb33-10d6-198a7c5cd202@ti.com>
-Date:   Thu, 20 Feb 2020 13:22:34 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 14:29:38 -0500
+Received: from mga01.intel.com ([192.55.52.88]:16662 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728248AbgBTT3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:29:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 11:29:37 -0800
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="228993647"
+Received: from ykim6-mobl1.amr.corp.intel.com (HELO arch-ashland-svkelley.intel.com) ([10.254.188.97])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 20 Feb 2020 11:29:36 -0800
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+To:     tglx@linutronix.de, bhelgaas@google.com, corbet@lwn.net,
+        mingo@redhat.com, bp@alien8.de
+Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        kar.hin.ong@ni.com, sassmann@kpanic.de,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>
+Subject: [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets
+Date:   Thu, 20 Feb 2020 11:29:28 -0800
+Message-Id: <20200220192930.64820-1-sean.v.kelley@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200220191803.GH3926@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark
+Changes since v1 [1]:
 
-On 2/20/20 1:18 PM, Mark Brown wrote:
-> On Thu, Feb 20, 2020 at 12:46:57PM -0600, Dan Murphy wrote:
->> On 2/20/20 12:45 PM, Mark Brown wrote:
->>> Is there a reason not to use the chip default here?  Otherwise this
->>> looks good.
->> Chip default is set to 0dB full blast+ 0x40400000.  This sets the volume to
->> -110dB.
-> OK...  that's a policy decision the same as all other volume changes and
-> so shouldn't be done by the driver - as ever we don't know how the
-> system is set up and what values make sense and keeping things out of
-> the driver means we don't end up with competing system integration
-> decisions causing changes in the driver.  The system may have an
-> external amplifier they prefer to use for hardware volume control, may
-> prefer to do entirely soft volume control in their sound server or
-> something like that.
+- Correct Documentation section title for 6300ESB chipset.
+(Jonathan Derrick)
 
-But this is an amplifier.  Not sure why the system designer would design 
-cascading amplifiers.
+- Use consistent abbreviations in comments for IO-APIC and Core IO.
+(Andy Shevchenko)
 
-And if that was the case wouldn't you want the output to be low so you 
-don't overdrive the ext amplifier front end?
+- Retained Reviewed-by tag due to no technical changes.
 
-I mean I have no qualms with removing the init from the driver. I will 
-send v3 tomorrow after a 24 hour review cycle.
+[1]: https://lore.kernel.org/lkml/20200214213313.66622-1-sean.v.kelley@linux.intel.com/
 
-I was considering safety in that the device is on at full blast (not 
-sure why the HW is defaulted that way but it is).
+Bjorn, I'm open for it to go to stable as well.
 
-But if volume is adjusted prior to playback then this is not an issue.  
-But if volume is not adjusted then it plays full blast.
+--
 
-Dan
+When IRQ lines on secondary or higher IO-APICs are masked (e.g.,
+Real-Time threaded interrupts), many chipsets redirect IRQs on
+this line to the legacy PCH and in turn the base IO-APIC in the
+system. The unhandled interrupts on the base IO-APIC will be
+identified by the Linux kernel as Spurious Interrupts and can
+lead to disabled IRQ lines.
+
+Disabling this legacy PCI interrupt routing is chipset-specific and
+varies in mechanism between chipset vendors and across generations.
+In some cases the mechanism is exposed to BIOS but not all BIOS
+vendors chose to pick it up. With the increasing usage of RT as it
+marches towards mainline, additional issues have been raised with
+more recent Xeon chipsets.
+
+This patchset disables the boot interrupt on these Xeon chipsets where
+this is possible with an additional mechanism. In addition, this
+patchset includes documentation covering the background of this quirk.
+
+
+Sean V Kelley (2):
+  pci: Add boot interrupt quirk mechanism for Xeon chipsets
+  Documentation:PCI: Add background on Boot Interrupts
+
+ Documentation/PCI/boot-interrupts.rst | 153 ++++++++++++++++++++++++++
+ Documentation/PCI/index.rst           |   1 +
+ drivers/pci/quirks.c                  |  80 ++++++++++++--
+ 3 files changed, 227 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/PCI/boot-interrupts.rst
+
+--
+2.25.1
 
