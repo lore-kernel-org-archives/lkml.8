@@ -2,315 +2,642 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65448C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3EDC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30CCD207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E62207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="YYVr8eaY"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="FFyNWc2a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgBTP1n (ORCPT
+        id S1728446AbgBTP3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:27:43 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33312 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgBTP1m (ORCPT
+        Thu, 20 Feb 2020 10:29:11 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1532 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727709AbgBTP3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:27:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=u51Nto9igCBtbuyupOWgk1to6lNZK/qHzDFuuUKRomA=; b=YYVr8eaYD4kv0Tws0wpTUEPkP
-        TRiOs55AP72vwzg4o7PPkygyh00RnD1/UHL28UUecsCROQRl8LdG79A+O2Q0f3pjDKdVH+yHGjX0r
-        hwGHqyLJx3/Tpjmwah9Wa6d2/zbu8p629RgRw/Nk1iIZdGCc3MRc4kBSvEsszfTVJDmWjGY7s5cEe
-        lJRB3lUsc0hcFYpF36oWDa7n3j4c/gAKlU0Gkrw+HtXb/M1bOR53REEbg2A1wHi5oklrPA6dSROfr
-        DsKH237QT4rgJmMI8Icmf5UXoltZX1fzzYgBLESeTnWv0f8eo9+VCv7BCOOnZWGiyMt0bKF7dkyls
-        PNck98Evw==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:42920)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j4njd-000420-BM; Thu, 20 Feb 2020 15:27:29 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j4njY-0002ca-SX; Thu, 20 Feb 2020 15:27:24 +0000
-Date:   Thu, 20 Feb 2020 15:27:24 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] net: mdio: add ipq8064 mdio driver
-Message-ID: <20200220152724.GA25745@shell.armlinux.org.uk>
-References: <20200220151301.10564-1-ansuelsmth@gmail.com>
+        Thu, 20 Feb 2020 10:29:10 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KFE3dj024212;
+        Thu, 20 Feb 2020 16:28:39 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Fy1O3FiBqnXHQlNWwWVrutdZ76t2LI0UlpBFThHgpUY=;
+ b=FFyNWc2aS0mYM6DP+2yGX12RuDPw7WijjYiEC4uljyeGuKXpzDzjF8UXsO01L5QExTcK
+ PvzzY7WNyuV1NaeXJCbAH0vqL252qlWnVnPgDq7HzJwMttFpVPcL+7rqhW7KNoNavEUO
+ j9v0xtOJwwhW0SFvKLRS31owQIvsWySzGeVYZ4TyV4i2Yj+kzjvkk+23g4cldXOaBSAW
+ fYGy2q9U9ErRf9ZOaJw26Nn90kusvZMx6L6WazuSHtpMbhGbAKGjdzWtvfZzpAMM/JoT
+ Mm5p7lgxOp9VoOWG4k1gxq5+q4DdKIO4ZpbG5U+9+oxdMvCZLWTvfZhRXJRsro2dE57x Ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub09sge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Feb 2020 16:28:39 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6E932100042;
+        Thu, 20 Feb 2020 16:28:34 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AB092BEC44;
+        Thu, 20 Feb 2020 16:28:34 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 20 Feb 2020 16:28:33
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <wim@linux-watchdog.org>, <linux@roeck-us.net>, <p.paillet@st.com>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
+Date:   Thu, 20 Feb 2020 16:28:31 +0100
+Message-ID: <20200220152831.18614-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220151301.10564-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:12:55PM +0100, Ansuel Smith wrote:
-> Currently ipq806x soc use generi bitbang driver to
-> comunicate with the gmac ethernet interface.
-> Add a dedicated driver created by chunkeey to fix this.
-> 
-> Christian Lamparter <chunkeey@gmail.com>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  drivers/net/phy/Kconfig        |   8 ++
->  drivers/net/phy/Makefile       |   1 +
->  drivers/net/phy/mdio-ipq8064.c | 163 +++++++++++++++++++++++++++++++++
->  3 files changed, 172 insertions(+)
->  create mode 100644 drivers/net/phy/mdio-ipq8064.c
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index 9dabe03a668c..ec2a5493a7e8 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -157,6 +157,14 @@ config MDIO_I2C
->  
->  	  This is library mode.
->  
-> +config MDIO_IPQ8064
-> +	tristate "Qualcomm IPQ8064 MDIO interface support"
-> +	depends on HAS_IOMEM && OF_MDIO
-> +	depends on MFD_SYSCON
-> +	help
-> +	  This driver supports the MDIO interface found in the network
-> +	  interface units of the IPQ8064 SoC
-> +
->  config MDIO_MOXART
->  	tristate "MOXA ART MDIO interface support"
->  	depends on ARCH_MOXART || COMPILE_TEST
-> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-> index fe5badf13b65..8f02bd2089f3 100644
-> --- a/drivers/net/phy/Makefile
-> +++ b/drivers/net/phy/Makefile
-> @@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
->  obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
->  obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
->  obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
-> +obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
->  obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
->  obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
->  obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
-> diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
-> new file mode 100644
-> index 000000000000..c76e6a647787
-> --- /dev/null
-> +++ b/drivers/net/phy/mdio-ipq8064.c
-> @@ -0,0 +1,163 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Qualcomm IPQ8064 MDIO interface driver
-> +//
-> +// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
-> +
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_mdio.h>
-> +#include <linux/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/syscon.h>
-> +
-> +/* MII address register definitions */
-> +#define MII_ADDR_REG_ADDR                       0x10
-> +#define MII_BUSY                                BIT(0)
-> +#define MII_WRITE                               BIT(1)
-> +#define MII_CLKRANGE_60_100M                    (0 << 2)
-> +#define MII_CLKRANGE_100_150M                   (1 << 2)
-> +#define MII_CLKRANGE_20_35M                     (2 << 2)
-> +#define MII_CLKRANGE_35_60M                     (3 << 2)
-> +#define MII_CLKRANGE_150_250M                   (4 << 2)
-> +#define MII_CLKRANGE_250_300M                   (5 << 2)
-> +#define MII_CLKRANGE_MASK			GENMASK(4, 2)
-> +#define MII_REG_SHIFT				6
-> +#define MII_REG_MASK				GENMASK(10, 6)
-> +#define MII_ADDR_SHIFT				11
-> +#define MII_ADDR_MASK				GENMASK(15, 11)
-> +
-> +#define MII_DATA_REG_ADDR                       0x14
-> +
-> +#define MII_MDIO_DELAY                          (1000)
-> +#define MII_MDIO_RETRY                          (10)
-> +
-> +struct ipq8064_mdio {
-> +	struct regmap *base; /* NSS_GMAC0_BASE */
-> +};
-> +
-> +static int
-> +ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < MII_MDIO_RETRY; i++) {
-> +		unsigned int busy;
-> +
-> +		regmap_read(priv->base, MII_ADDR_REG_ADDR, &busy);
-> +		if (!(busy & MII_BUSY))
-> +			return 0;
-> +
-> +		udelay(MII_MDIO_DELAY);
-> +	}
+Convert stpmic1 bindings to json-schema.
 
-On the last loop, this will delay MII_MDIO_DELAY and then return
--ETIMEDOUT, which is not nice behaviour.  Have you considered using
-regmap_read_poll_timeout() here?
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 3:
+- put $erf under allOf keyword
+- for each regulator node add the list of supported regulator properties
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
+ .../devicetree/bindings/mfd/st,stpmic1.yaml        | 354 +++++++++++++++++++++
+ .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
+ 5 files changed, 354 insertions(+), 164 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
 
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
-> +{
-> +	struct ipq8064_mdio *priv = bus->priv;
-> +	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
-> +	u32 ret_val;
-> +	int err;
-> +
-> +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-
-This looks like it only supports Clause 22 accesses, so shouldn't it
-reject Clause 45 accesses (signified by reg_offset & MII_ADDR_C45) ?
-
-> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> +	usleep_range(10, 20);
-> +
-> +	err = ipq8064_mdio_wait_busy(priv);
-> +	if (err)
-> +		return err;
-> +
-> +	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
-> +	return (int)ret_val;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
-> +{
-> +	struct ipq8064_mdio *priv = bus->priv;
-> +	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
-> +
-> +	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
-> +
-> +	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
-> +		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
-
-Same here as for ipq8064_mdio_read().
-
-> +
-> +	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
-> +	usleep_range(10, 20);
-> +
-> +	return ipq8064_mdio_wait_busy(priv);
-> +}
-> +
-> +static int
-> +ipq8064_mdio_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct ipq8064_mdio *priv;
-> +	struct mii_bus *bus;
-> +	int ret;
-> +
-> +	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
-> +	if (!bus)
-> +		return -ENOMEM;
-> +
-> +	bus->name = "ipq8064_mdio_bus";
-> +	bus->read = ipq8064_mdio_read;
-> +	bus->write = ipq8064_mdio_write;
-> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
-> +	bus->parent = &pdev->dev;
-> +
-> +	priv = bus->priv;
-> +	priv->base = syscon_node_to_regmap(np);
-> +	if (IS_ERR_OR_NULL(priv->base)) {
-> +		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
-> +		if (IS_ERR_OR_NULL(priv->base)) {
-> +			pr_err("master phandle not found\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-
-Does syscon_node_to_regmap() return NULL?  From what I can see in
-drivers/mfd/syscon.c, both that and syscon_regmap_lookup_by_phandle()
-returns an error pointer, and if there's an error code, it should be
-propagated.
-
-Using dev_err(&pdev->dev, ...) for that error print is also nice -
-imagine a kernel log where you have a line appear that only says
-"master phandle not found" - you don't know where in the kernel it
-came from, or even what device it's referring to.
-
-> +
-> +	ret = of_mdiobus_register(bus, np);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, bus);
-> +	return 0;
-> +}
-> +
-> +static int
-> +ipq8064_mdio_remove(struct platform_device *pdev)
-> +{
-> +	struct mii_bus *bus = platform_get_drvdata(pdev);
-> +
-> +	mdiobus_unregister(bus);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ipq8064_mdio_dt_ids[] = {
-> +	{ .compatible = "qcom,ipq8064-mdio" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
-> +
-> +static struct platform_driver ipq8064_mdio_driver = {
-> +	.probe = ipq8064_mdio_probe,
-> +	.remove = ipq8064_mdio_remove,
-> +	.driver = {
-> +		.name = "ipq8064-mdio",
-> +		.of_match_table = ipq8064_mdio_dt_ids,
-> +	},
-> +};
-> +
-> +module_platform_driver(ipq8064_mdio_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
-> +MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.25.0
-> 
-> 
-
+diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+deleted file mode 100644
+index eb8e83736c02..000000000000
+--- a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-STMicroelectronics STPMIC1 Onkey
+-
+-Required properties:
+-
+-- compatible = "st,stpmic1-onkey";
+-- interrupts: interrupt line to use
+-- interrupt-names = "onkey-falling", "onkey-rising"
+-	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
+-	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
+-
+-Optional properties:
+-
+-- st,onkey-clear-cc-flag: onkey is able power on after an
+-  over-current shutdown event.
+-- st,onkey-pu-inactive: onkey pull up is not active
+-- power-off-time-sec: Duration in seconds which the key should be kept
+-        pressed for device to power off automatically (from 1 to 16 seconds).
+-        see See Documentation/devicetree/bindings/input/input.yaml
+-
+-Example:
+-
+-onkey {
+-	compatible = "st,stpmic1-onkey";
+-	interrupt-parent = <&pmic>;
+-	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+-	interrupt-names = "onkey-falling", "onkey-rising";
+-	power-off-time-sec = <10>;
+-};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+deleted file mode 100644
+index afd45c089585..000000000000
+--- a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-* STMicroelectronics STPMIC1 Power Management IC
+-
+-Required properties:
+-- compatible:		: "st,stpmic1"
+-- reg:			: The I2C slave address for the STPMIC1 chip.
+-- interrupts:		: The interrupt line the device is connected to.
+-- #interrupt-cells:	: Should be 1.
+-- interrupt-controller:	: Marks the device node as an interrupt controller.
+-			    Interrupt numbers are defined at
+-			    dt-bindings/mfd/st,stpmic1.h.
+-
+-STPMIC1 consists in a varied group of sub-devices.
+-Each sub-device binding is be described in own documentation file.
+-
+-Device			 Description
+-------			------------
+-st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
+-st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
+-st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
+-
+-Example:
+-
+-#include <dt-bindings/mfd/st,stpmic1.h>
+-
+-pmic: pmic@33 {
+-	compatible = "st,stpmic1";
+-	reg = <0x33>;
+-	interrupt-parent = <&gpioa>;
+-	interrupts = <0 2>;
+-
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-
+-	onkey {
+-		compatible = "st,stpmic1-onkey";
+-		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+-		interrupt-names = "onkey-falling", "onkey-rising";
+-		power-off-time-sec = <10>;
+-	};
+-
+-	watchdog {
+-		compatible = "st,stpmic1-wdt";
+-	};
+-
+-	regulators {
+-		compatible = "st,stpmic1-regulators";
+-
+-		vdd_core: buck1 {
+-			regulator-name = "vdd_core";
+-			regulator-boot-on;
+-			regulator-min-microvolt = <700000>;
+-			regulator-max-microvolt = <1200000>;
+-		};
+-		vdd: buck3 {
+-			regulator-name = "vdd";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-boot-on;
+-			regulator-pull-down;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+new file mode 100644
+index 000000000000..92b0ac8ddfde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+@@ -0,0 +1,354 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectonics STPMIC1 Power Management IC bindings
++
++description: STMicroelectronics STPMIC1 Power Management IC
++
++maintainers:
++  - pascal Paillet <p.paillet@st.com>
++
++properties:
++  compatible:
++    const: st,stpmic1
++
++  reg:
++    const: 0x33
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  onkey:
++    type: object
++
++    allOf:
++      - $ref: ../input/input.yaml
++
++    properties:
++      compatible:
++        const: st,stpmic1-onkey
++
++      interrupts:
++        items:
++          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
++          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
++
++      interrupt-names:
++        items:
++          - const: onkey-falling
++          - const: onkey-rising
++
++      st,onkey-clear-cc-flag:
++        description: onkey is able power on after an over-current shutdown event.
++        $ref: /schemas/types.yaml#/definitions/flag
++
++      st,onkey-pu-inactive:
++        description: onkey pull up is not active
++        $ref: /schemas/types.yaml#/definitions/flag
++
++      power-off-time-sec:
++        minimum: 1
++        maximum: 16
++
++    required:
++      - compatible
++      - interrupts
++      - interrupt-names
++
++    additionalProperties: false
++
++  watchdog:
++    type: object
++
++    allOf:
++      - $ref: ../watchdog/watchdog.yaml
++
++    properties:
++      compatible:
++        const: st,stpmic1-wdt
++
++      timeout-sec: true
++
++    required:
++      - compatible
++
++    additionalProperties: false
++
++  regulators:
++    type: object
++
++    description: |
++      Available Regulators in STPMIC1 device are:
++        - buck1 for Buck BUCK1
++        - buck2 for Buck BUCK2
++        - buck3 for Buck BUCK3
++        - buck4 for Buck BUCK4
++        - ldo1 for LDO LDO1
++        - ldo2 for LDO LDO2
++        - ldo3 for LDO LDO3
++        - ldo4 for LDO LDO4
++        - ldo5 for LDO LDO5
++        - ldo6 for LDO LDO6
++        - vref_ddr for LDO Vref DDR
++        - boost for Buck BOOST
++        - pwr_sw1 for VBUS_OTG switch
++        - pwr_sw2 for SW_OUT switch
++      Switches are fixed voltage regulators with only enable/disable capability.
++
++    properties:
++      compatible:
++        const: st,stpmic1-regulators
++
++    patternProperties:
++      "^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
++        description: STPMIC1 voltage regulators supplies
++
++      "^(ldo[1-2,5-6])$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-over-current-protection: true
++          regulator-enable-ramp-delay: true
++
++        additionalProperties: false
++
++      "^(ldo3)$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-allow-bypass: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++      "^(ldo4)$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++      "^(buck[1-4])$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-initial-mode: true
++          regulator-pull-down: true
++          regulator-over-current-protection: true
++          regulator-enable-ramp-delay: true
++
++        additionalProperties: false
++
++      "^(vref_ddr)$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++
++        additionalProperties: false
++
++      "^(boost)$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++      "^(pwr_sw[1-2])$":
++        type: object
++
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++          regulator-active-discharge: true
++
++        additionalProperties: false
++
++    required:
++      - compatible
++
++    additionalProperties: false
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#interrupt-cells"
++  - interrupt-controller
++
++examples:
++  - |
++    #include <dt-bindings/mfd/st,stpmic1.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      pmic@33 {
++        compatible = "st,stpmic1";
++        reg = <0x33>;
++        interrupt-parent = <&gpioa>;
++        interrupts = <0 2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        onkey {
++          compatible = "st,stpmic1-onkey";
++          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
++          interrupt-names = "onkey-falling", "onkey-rising";
++          power-off-time-sec = <10>;
++        };
++
++        watchdog {
++          compatible = "st,stpmic1-wdt";
++        };
++
++        regulators {
++          compatible = "st,stpmic1-regulators";
++
++          ldo6-supply = <&v3v3>;
++
++          buck1 {
++            regulator-name = "vdd_core";
++            interrupts = <IT_CURLIM_BUCK1 0>;
++            st,mask-reset;
++            regulator-boot-on;
++            regulator-min-microvolt = <700000>;
++            regulator-max-microvolt = <1200000>;
++          };
++
++          buck3 {
++            regulator-name = "vdd";
++            regulator-min-microvolt = <3300000>;
++            regulator-max-microvolt = <3300000>;
++            regulator-boot-on;
++            regulator-pull-down;
++          };
++
++          buck4 {
++            regulator-name = "v3v3";
++            interrupts = <IT_CURLIM_BUCK4 0>;
++            regulator-min-microvolt = <3300000>;
++            regulator-max-microvolt = <3300000>;
++          };
++
++          ldo6 {
++            regulator-name = "v1v8";
++            regulator-min-microvolt = <1800000>;
++            regulator-max-microvolt = <1800000>;
++            regulator-over-current-protection;
++          };
++        };
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+deleted file mode 100644
+index 6189df71ea98..000000000000
+--- a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
++++ /dev/null
+@@ -1,64 +0,0 @@
+-STMicroelectronics STPMIC1 Voltage regulators
+-
+-Regulator Nodes are optional depending on needs.
+-
+-Available Regulators in STPMIC1 device are:
+-  - buck1 for Buck BUCK1
+-  - buck2 for Buck BUCK2
+-  - buck3 for Buck BUCK3
+-  - buck4 for Buck BUCK4
+-  - ldo1 for LDO LDO1
+-  - ldo2 for LDO LDO2
+-  - ldo3 for LDO LDO3
+-  - ldo4 for LDO LDO4
+-  - ldo5 for LDO LDO5
+-  - ldo6 for LDO LDO6
+-  - vref_ddr for LDO Vref DDR
+-  - boost for Buck BOOST
+-  - pwr_sw1 for VBUS_OTG switch
+-  - pwr_sw2 for SW_OUT switch
+-
+-Switches are fixed voltage regulators with only enable/disable capability.
+-
+-Optional properties:
+-- st,mask-reset: mask reset for this regulator: the regulator configuration
+-  is maintained during pmic reset.
+-- regulator-over-current-protection:
+-    if set, all regulators are switched off in case of over-current detection
+-    on this regulator,
+-    if not set, the driver only sends an over-current event.
+-- interrupts: index of current limit detection interrupt
+-- <regulator>-supply: phandle to the parent supply/regulator node
+-	each regulator supply can be described except vref_ddr.
+-- regulator-active-discharge: can be used on pwr_sw1 and pwr_sw2.
+-
+-Example:
+-regulators {
+-	compatible = "st,stpmic1-regulators";
+-
+-	ldo6-supply = <&v3v3>;
+-
+-	vdd_core: buck1 {
+-		regulator-name = "vdd_core";
+-		interrupts = <IT_CURLIM_BUCK1 0>;
+-		st,mask-reset;
+-		regulator-pull-down;
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1200000>;
+-	};
+-
+-	v3v3: buck4 {
+-		regulator-name = "v3v3";
+-		interrupts = <IT_CURLIM_BUCK4 0>;
+-
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	v1v8: ldo6 {
+-		regulator-name = "v1v8";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-over-current-protection;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt b/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+deleted file mode 100644
+index 7cc1407f15cb..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
++++ /dev/null
+@@ -1,11 +0,0 @@
+-STMicroelectronics STPMIC1 Watchdog
+-
+-Required properties:
+-
+-- compatible : should be "st,stpmic1-wdt"
+-
+-Example:
+-
+-watchdog {
+-	compatible = "st,stpmic1-wdt";
+-};
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.15.0
+
