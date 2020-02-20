@@ -7,88 +7,86 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96491C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23501C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC91208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0786206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582230913;
-	bh=hEfTzqQj6aYWVOY28/Etyh9/K8+dcj7YgFk1enzmpy8=;
+	s=default; t=1582230948;
+	bh=/9T7dM3ynqv582oz9IYwEd91hzL2OSGoHLJrmjRuNMs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qCo8ticFlwR+4hpAjvaQN9ZfrV8CAM9oOMB5/zlmq2XCJ8geyETtGlNJKTNbqMUWE
-	 qpHror886rQOOxSRQCnwCvwfDTHWSCSExl/jH2tR86iKGRU/HI7jobQk6ch6mNovuC
-	 3K6tsbR84icZvLqRNwXDBlv9y8QloUfty+gk3uYc=
+	b=M8Qg94z1wqUDXOzmn2sV3LZN6kysRPkwzZ4eWbSJddABBt8ufll7ZQqOU0ytH1QkY
+	 fnZKGp2nqfsED0iXgi6dVC38P/+s/l7VjNsqYJwXiCofAZaCpqnegeKAkdsEg8d45/
+	 kSMmwiDUlKEnk56q1UaDIDR5c3zALQPbkBZmtnkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgBTUfM (ORCPT
+        id S1729078AbgBTUfr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:35:12 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45048 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTUfL (ORCPT
+        Thu, 20 Feb 2020 15:35:47 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38737 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgBTUfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:35:11 -0500
-Received: by mail-oi1-f196.google.com with SMTP id d62so28879700oia.11;
-        Thu, 20 Feb 2020 12:35:11 -0800 (PST)
+        Thu, 20 Feb 2020 15:35:46 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z9so4967544oth.5;
+        Thu, 20 Feb 2020 12:35:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dj2rW5WH1XuuP/JPuEpJptUF9hTbGtr1qjFfIR5yvb8=;
-        b=a/4JLjgY/SWobmQX4TKwmiHuGGIrs/92IxMdk3X4eaTJJwQM0dI3aZ2nKNgng3Wiym
-         HW1sY+c0qAAadC8EjdDaBcmhTzovB6N0674JoZX9r/0gONJrSAbA+2Z92qyib2m3vLB+
-         pBRQEMHOtW5kenInzZhPw+JHBHoieBBtvXWnTb1hxUzmz9K63yrwK6S2eqLc/RN9Opju
-         L38LOOd/f2BwCYDRarQLUzBbXbO7C59KSNF+SNvVPo7yOGo9b9NoqeJ1XFauZhUEusVL
-         kzjLXylo3MvYNfjp8NnEuCRr82ULStQV3V5Z4FFMT75c64bOkYsfeABmH0lZW8abco+A
-         sCUA==
-X-Gm-Message-State: APjAAAX5WYgnfjBRBbJ928vuv6veHzRUhVOfq4lBQqjA8Qe1PAfCpgEt
-        HqmC+QPeecWhn0Xd8vTOlg==
-X-Google-Smtp-Source: APXvYqxwJ/2yGaYe0f1ffh3BnhSHPhuRw7WYXDEqylBf6OGb/cfcQC8kdGy9BeTH3mgWz4ApoOvUbg==
-X-Received: by 2002:a05:6808:249:: with SMTP id m9mr3532186oie.5.1582230910787;
-        Thu, 20 Feb 2020 12:35:10 -0800 (PST)
+        bh=KLnJ2EE9HqdFMPyrdHWAOuSgD0DwRRaG+D+VHL9b57U=;
+        b=SJ2Cpo4KA6Slb7rS7qPsvImvqFIn/XSx9nsgRYcEZ0wcDC/9EJIxK2/LAQJopw7noV
+         HwyPyoHw8UlMICpGbl89lrnR4oc0bA3fMd/TirB3ar+/NgprWD/cNSGeqsmYL53e1Vv7
+         oyennKyzJvCmw+wOqqCGzdOQ7cmUTGbtSLPbDcIz/LrCrhFVSSsMKs0PsThSHM2cs0KP
+         vh1D2uP9r+8fwUwTsOfpPmTFVvClM8/vChYCImVFozHQIYQl57+rw/VDC6eSb5Khthz3
+         uHMGQmaBntaL+KUnnJ9bO8hFQubBYlaOYMFW/cW5oJwjjGJSRvzIMEUV//7CHtGw8LkR
+         rERg==
+X-Gm-Message-State: APjAAAUZXg9q6VvxalYF/VtF3rU6cOHBpihVF4MkT0fcLzatJ8Nw/var
+        IeKTrqvsFb5uhxKb9OOO/w==
+X-Google-Smtp-Source: APXvYqzQH1PDEUlkxlXZKR+oblsgRN0d0bEGqr3qPtpW3gEw37fTDHySMP/2voWU7bjHwF7y7XO48w==
+X-Received: by 2002:a9d:74c4:: with SMTP id a4mr25941884otl.119.1582230945309;
+        Thu, 20 Feb 2020 12:35:45 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e5sm182426otk.74.2020.02.20.12.35.09
+        by smtp.gmail.com with ESMTPSA id p184sm129046oic.40.2020.02.20.12.35.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:35:10 -0800 (PST)
-Received: (nullmailer pid 15161 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:35:09 -0000
-Date:   Thu, 20 Feb 2020 14:35:09 -0600
+        Thu, 20 Feb 2020 12:35:44 -0800 (PST)
+Received: (nullmailer pid 16012 invoked by uid 1000);
+        Thu, 20 Feb 2020 20:35:43 -0000
+Date:   Thu, 20 Feb 2020 14:35:43 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        mka@chromium.org, dri-devel@freedesktop.org
-Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
-Message-ID: <20200220203509.GA14697@bogus>
-References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
- <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: Re: [PATCH 3/5] dt-bindings: iio: adc: add bindings doc for AXI ADC
+ driver
+Message-ID: <20200220203543.GA15406@bogus>
+References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
+ <20200220150317.1864-3-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+In-Reply-To: <20200220150317.1864-3-alexandru.ardelean@analog.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
-> This patch adds a clock definition needed for powering on the GPU TBUs
-> and the GPU TCU.
+On Thu, 20 Feb 2020 17:03:15 +0200, Alexandru Ardelean wrote:
+> This change adds the bindings documentation for the AXI ADC driver.
 > 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 > ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/iio/adc/adi,axi-adc.yaml         | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.example.dt.yaml: axi-adc@44a00000: 'dma-names' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-See https://patchwork.ozlabs.org/patch/1241297
+See https://patchwork.ozlabs.org/patch/1241489
 Please check and re-submit.
