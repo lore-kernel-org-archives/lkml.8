@@ -2,287 +2,201 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5357AC11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F1DC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2153E2467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PX10VKnp"
+	by mail.kernel.org (Postfix) with ESMTP id 185EF206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582224714;
+	bh=BIb7muBRiTMmDaTPFIJ2G/FP0hMlkSebaL/qJ/Le4dQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jgX6GSrcwYnmjG122PVdgtKaIuvKAuDrcPMItGombgtCQYvRDufuJiGESe1wUYAAh
+	 3RZDFiH+SlB6OzpE7CMBr/5YXsKUzIfAFn6gOMHto0WIvVHZnxxPsJzOZ2koLOnytl
+	 p+x80qRV+TbpYlJ2y3dD62pq4ZPk66j0/PRmb1CQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgBTSvZ (ORCPT
+        id S1728939AbgBTSvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:51:25 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:43404 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgBTSvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:51:24 -0500
-Received: by mail-yw1-f68.google.com with SMTP id f204so2337820ywc.10;
-        Thu, 20 Feb 2020 10:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QyEIW5Fj/40dQEKm2fYt2i3VhFvcZxvOSMEG0h0NhNI=;
-        b=PX10VKnpcoFUXWnJgQSXnAle6E6vLe10/OXfCysq6j5ZAEoO63QbyJRWA5EY4pINi2
-         +0455lyG/C725/D4oec/PtrQVOab5P/DFeQq64eoeuvSNV+lBI+g4odPFMJh+4HSKrG6
-         cqZIPgaRiwx1hsXLScKSz0vO6/BcZ1phjxAFaCIHdIo+ww/7ZB2c1vhuoQKlsdWYGl28
-         XoCyP+CS+Ca8fxn26dMx/xTJcnDx2XyDn4qzSNW2y42e9LB5ONpn0gCw1EdIsHq7S8N5
-         6cDg3WOD4saXwg8gUaDF0bf2Wt7Q1Rl4h6aX6aFRu84H7pX2AH0by1xCKOBwCm4BvnR2
-         sdGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QyEIW5Fj/40dQEKm2fYt2i3VhFvcZxvOSMEG0h0NhNI=;
-        b=CnlB02JAPpn2Xx513N++iq3Q6fnjidywcgFbgRFgl/rzmiSGOghPswo5mDxr3LbEg+
-         lxZ8QyEJdDL7xoytoG8pc43e76NazdxjcHN7R7u9qYFjzrtaJJewDoiusxf9eKfaBHpK
-         5Bjp+Db47BFNdLPc8j2FzjN4HhxscLNa4n3VjZBGUqpb8Fp3GtakHX1L9Vlahe0rQHg7
-         9L6FBifNL3zThV56XoXKyhowQxXUNGy11hEZ+uVylT4egq3cH8nHRKL1gEOp7oK68b8F
-         OTM8rSLDJ/mQud8ByTjpwXDPIjLB3mrxp44FJ7oanuoVqm6On/4ykOgNNOsYHcCW4MZm
-         rN4g==
-X-Gm-Message-State: APjAAAU67g3jw21dzXNEEaAIz+Azpf9vpUh+wkWMx7DYDTjiJsyV/9tC
-        y8oqiw9mqE4hCYXrazztR8g=
-X-Google-Smtp-Source: APXvYqw15QsyY7O/HWTE/8TUcz5JFtB+7xCuwyeCWSq3RGCUB5Hcaz36CrLy8lBCsWOsb2wP5YNQrQ==
-X-Received: by 2002:a0d:dd0e:: with SMTP id g14mr26284974ywe.13.1582224683318;
-        Thu, 20 Feb 2020 10:51:23 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id r12sm237748ywg.26.2020.02.20.10.51.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 10:51:23 -0800 (PST)
-Subject: Re: [PATCH v2 2/2] gpio: of: Add DT overlay support for GPIO hogs
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>
-References: <20200220130149.26283-1-geert+renesas@glider.be>
- <20200220130149.26283-3-geert+renesas@glider.be>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <cad0d0a1-9838-55d3-a13e-29d8d5ae7f12@gmail.com>
-Date:   Thu, 20 Feb 2020 12:51:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 13:51:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728217AbgBTSvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:51:52 -0500
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0C6024687
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 18:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582224711;
+        bh=BIb7muBRiTMmDaTPFIJ2G/FP0hMlkSebaL/qJ/Le4dQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IgQMqpweoIv/kUDzsl9CIjVqxdzBRhoNct5ut+/3c/1W+bp4IzRC93ES5d/Q6qJp/
+         LUBa1hF5XZyH4Y7787+lNucQDReqAwCt2GAEglW2y7I/GPE7vuVwwYgCsJzO8WPHkb
+         j3rBW+QzM8+0tyzkAB3FCqGRt6XWTAYNgHWFMFpk=
+Received: by mail-wr1-f54.google.com with SMTP id r11so5783484wrq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:51:50 -0800 (PST)
+X-Gm-Message-State: APjAAAWwcDvhtwQ9W/o9GCrk2ZuDMTSvcHKjUbGZDPQ0SAm00FhI5+AG
+        38RtPSDj9HLVeKqfUmiNe+LlmanraEkIRhL89uk0LQ==
+X-Google-Smtp-Source: APXvYqxegNzYJn6ARUk+PJRm7v093kishGL72Bi413I9Bqd/49GjAa+reA0TGzaRyvGBRYkR2gwg9ESP1UT6PDqC+jg=
+X-Received: by 2002:adf:a354:: with SMTP id d20mr43299256wrb.257.1582224709127;
+ Thu, 20 Feb 2020 10:51:49 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200220130149.26283-3-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com> <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+In-Reply-To: <20200220181345.GD3972@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 20 Feb 2020 10:51:37 -0800
+X-Gmail-Original-Message-ID: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
+Message-ID: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Andrew Lutomirski <luto@kernel.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>, puiterwijk@redhat.com,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 7:01 AM, Geert Uytterhoeven wrote:
-> As GPIO hogs are configured at GPIO controller initialization time,
-> adding/removing GPIO hogs in DT overlays does not work.
-> 
-> Add support for GPIO hogs described in DT overlays by registering an OF
-> reconfiguration notifier, to handle the addition and removal of GPIO hog
-> subnodes to/from a GPIO controller device node.
-> 
-> Note that when a GPIO hog device node is being removed, its "gpios"
-> properties is no longer available, so we have to keep track of which
-> node a hog belongs to, which is done by adding a pointer to the hog's
-> device node to struct gpio_desc.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - Drop RFC state,
->   - Document that modifying existing gpio-hog nodes is not supported.
-> ---
->  drivers/gpio/gpiolib-of.c | 90 +++++++++++++++++++++++++++++++++++++++
->  drivers/gpio/gpiolib-of.h |  2 +
->  drivers/gpio/gpiolib.c    | 14 ++++--
->  drivers/gpio/gpiolib.h    |  3 ++
->  4 files changed, 106 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 2b47f93886075294..ccc449df3792ae97 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -628,6 +628,10 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
->  		ret = gpiod_hog(desc, name, lflags, dflags);
->  		if (ret < 0)
->  			return ret;
-> +
-> +#ifdef CONFIG_OF_DYNAMIC
-> +		desc->hog = hog;
-> +#endif
->  	}
->  
->  	return 0;
-> @@ -655,11 +659,97 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
->  			of_node_put(np);
->  			return ret;
->  		}
-> +
-> +		of_node_set_flag(np, OF_POPULATED);
->  	}
->  
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF_DYNAMIC
-> +/**
-> + * of_gpiochip_remove_hog - Remove all hogs in a hog device node
-> + * @chip:	gpio chip to act on
-> + * @hog:	device node describing the hogs
-> + */
-> +static void of_gpiochip_remove_hog(struct gpio_chip *chip,
-> +				   struct device_node *hog)
-> +{
-> +	struct gpio_desc *descs = chip->gpiodev->descs;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < chip->ngpio; i++) {
-> +		if (test_bit(FLAG_IS_HOGGED, &descs[i].flags) &&
-> +		    descs[i].hog == hog)
-> +			gpiochip_free_own_desc(&descs[i]);
-> +	}
-> +}
-> +
-> +static int of_gpiochip_match_node(struct gpio_chip *chip, void *data)
-> +{
-> +	return chip->gpiodev->dev.of_node == data;
-> +}
-> +
-> +static struct gpio_chip *of_find_gpiochip_by_node(struct device_node *np)
-> +{
-> +	return gpiochip_find(np, of_gpiochip_match_node);
-> +}
-> +
-> +static int of_gpio_notify(struct notifier_block *nb, unsigned long action,
-> +			  void *arg)
-> +{
-> +	struct of_reconfig_data *rd = arg;
-> +	struct gpio_chip *chip;
-> +	int ret;
-> +
-> +	/*
-> +	 * This only supports adding and removing complete gpio-hog nodes.
-> +	 * Modifying an existing gpio-hog node is not supported (except for
-> +	 * changing its "status" property, which is treated the same as
-> +	 * addition/removal).
-> +	 */
-> +	switch (of_reconfig_get_state_change(action, arg)) {
-> +	case OF_RECONFIG_CHANGE_ADD:
-> +		if (!of_property_read_bool(rd->dn, "gpio-hog"))
-> +			return NOTIFY_OK;	/* not for us */
-> +
-> +		if (of_node_test_and_set_flag(rd->dn, OF_POPULATED))
-> +			return NOTIFY_OK;
-> +
-> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
-> +		if (chip == NULL)
-> +			return NOTIFY_OK;	/* not for us */
-> +
-> +		ret = of_gpiochip_add_hog(chip, rd->dn);
-> +		if (ret < 0) {
-> +			pr_err("%s: failed to add hogs for %pOF\n", __func__,
-> +			       rd->dn);
-> +			of_node_clear_flag(rd->dn, OF_POPULATED);
-> +			return notifier_from_errno(ret);
-> +		}
-> +		break;
-> +
-> +	case OF_RECONFIG_CHANGE_REMOVE:
-> +		if (!of_node_check_flag(rd->dn, OF_POPULATED))
-> +			return NOTIFY_OK;	/* already depopulated */
-> +
-> +		chip = of_find_gpiochip_by_node(rd->dn->parent);
-> +		if (chip == NULL)
-> +			return NOTIFY_OK;	/* not for us */
-> +
-> +		of_gpiochip_remove_hog(chip, rd->dn);
-> +		of_node_clear_flag(rd->dn, OF_POPULATED);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +struct notifier_block gpio_of_notifier = {
-> +	.notifier_call = of_gpio_notify,
-> +};
-> +#endif /* CONFIG_OF_DYNAMIC */
-> +
->  /**
->   * of_gpio_simple_xlate - translate gpiospec to the GPIO number and flags
->   * @gc:		pointer to the gpio_chip structure
-> diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-> index 9768831b1fe2f25b..ed26664f153782fc 100644
-> --- a/drivers/gpio/gpiolib-of.h
-> +++ b/drivers/gpio/gpiolib-of.h
-> @@ -35,4 +35,6 @@ static inline bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
->  }
->  #endif /* CONFIG_OF_GPIO */
->  
-> +extern struct notifier_block gpio_of_notifier;
-> +
->  #endif /* GPIOLIB_OF_H */
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 56de871060ea211e..6f312220fe80acaf 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2925,6 +2925,9 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
->  		clear_bit(FLAG_PULL_DOWN, &desc->flags);
->  		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
->  		clear_bit(FLAG_IS_HOGGED, &desc->flags);
-> +#ifdef CONFIG_OF_DYNAMIC
-> +		desc->hog = NULL;
-> +#endif
->  		ret = true;
->  	}
->  
-> @@ -5126,10 +5129,15 @@ static int __init gpiolib_dev_init(void)
->  	if (ret < 0) {
->  		pr_err("gpiolib: failed to allocate char dev region\n");
->  		bus_unregister(&gpio_bus_type);
-> -	} else {
-> -		gpiolib_initialized = true;
-> -		gpiochip_setup_devs();
-> +		return ret;
->  	}
-> +
-> +	gpiolib_initialized = true;
-> +	gpiochip_setup_devs();
-> +
-> +	if (IS_ENABLED(CONFIG_OF_DYNAMIC))
-> +		WARN_ON(of_reconfig_notifier_register(&gpio_of_notifier));
-> +
->  	return ret;
->  }
->  core_initcall(gpiolib_dev_init);
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 3e0aab2945d82974..18c75e83fd7679ec 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -119,6 +119,9 @@ struct gpio_desc {
->  	const char		*label;
->  	/* Name of the GPIO */
->  	const char		*name;
-> +#ifdef CONFIG_OF_DYNAMIC
-> +	struct device_node	*hog;
-> +#endif
->  };
->  
->  int gpiod_request(struct gpio_desc *desc, const char *label);
-> 
+On Thu, Feb 20, 2020 at 10:13 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Feb 18, 2020 at 07:26:31PM -0800, Jordan Hand wrote:
+> > I ran our validation tests for the Open Enclave SDK against this patch
+> > set and came across a potential issue.
+> >
+> > On 2/9/20 1:25 PM, Jarkko Sakkinen wrote:
+> > > +/**
+> > > + * sgx_encl_may_map() - Check if a requested VMA mapping is allowed
+> > > + * @encl:          an enclave
+> > > + * @start:         lower bound of the address range, inclusive
+> > > + * @end:           upper bound of the address range, exclusive
+> > > + * @vm_prot_bits:  requested protections of the address range
+> > > + *
+> > > + * Iterate through the enclave pages contained within [@start, @end) to verify
+> > > + * the permissions requested by @vm_prot_bits do not exceed that of any enclave
+> > > + * page to be mapped.  Page addresses that do not have an associated enclave
+> > > + * page are interpreted to zero permissions.
+> > > + *
+> > > + * Return:
+> > > + *   0 on success,
+> > > + *   -EACCES if VMA permissions exceed enclave page permissions
+> > > + */
+> > > +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+> > > +                unsigned long end, unsigned long vm_prot_bits)
+> > > +{
+> > > +   unsigned long idx, idx_start, idx_end;
+> > > +   struct sgx_encl_page *page;
+> > > +
+> > > +   /* PROT_NONE always succeeds. */
+> > > +   if (!vm_prot_bits)
+> > > +           return 0;
+> > > +
+> > > +   idx_start = PFN_DOWN(start);
+> > > +   idx_end = PFN_DOWN(end - 1);
+> > > +
+> > > +   for (idx = idx_start; idx <= idx_end; ++idx) {
+> > > +           mutex_lock(&encl->lock);
+> > > +           page = radix_tree_lookup(&encl->page_tree, idx);
+> > > +           mutex_unlock(&encl->lock);
+> > > +
+> > > +           if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
+> > > +                   return -EACCES;
+> > > +   }
+> > > +
+> > > +   return 0;
+> > > +}
+> > > +static struct sgx_encl_page *sgx_encl_page_alloc(struct sgx_encl *encl,
+> > > +                                            unsigned long offset,
+> > > +                                            u64 secinfo_flags)
+> > > +{
+> > > +   struct sgx_encl_page *encl_page;
+> > > +   unsigned long prot;
+> > > +
+> > > +   encl_page = kzalloc(sizeof(*encl_page), GFP_KERNEL);
+> > > +   if (!encl_page)
+> > > +           return ERR_PTR(-ENOMEM);
+> > > +
+> > > +   encl_page->desc = encl->base + offset;
+> > > +   encl_page->encl = encl;
+> > > +
+> > > +   prot = _calc_vm_trans(secinfo_flags, SGX_SECINFO_R, PROT_READ)  |
+> > > +          _calc_vm_trans(secinfo_flags, SGX_SECINFO_W, PROT_WRITE) |
+> > > +          _calc_vm_trans(secinfo_flags, SGX_SECINFO_X, PROT_EXEC);
+> > > +
+> > > +   /*
+> > > +    * TCS pages must always RW set for CPU access while the SECINFO
+> > > +    * permissions are *always* zero - the CPU ignores the user provided
+> > > +    * values and silently overwrites them with zero permissions.
+> > > +    */
+> > > +   if ((secinfo_flags & SGX_SECINFO_PAGE_TYPE_MASK) == SGX_SECINFO_TCS)
+> > > +           prot |= PROT_READ | PROT_WRITE;
+> > > +
+> > > +   /* Calculate maximum of the VM flags for the page. */
+> > > +   encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
+> >
+> > During mprotect (in mm/mprotect.c line 525) the following checks if
+> > READ_IMPLIES_EXECUTE and a PROT_READ is being requested. If so and
+> > VM_MAYEXEC is set, it also adds PROT_EXEC to the request.
+> >
+> >       if (rier && (vma->vm_flags & VM_MAYEXEC))
+> >               prot |= PROT_EXEC;
+> >
+> > But if we look at sgx_encl_page_alloc(), we see vm_max_prot_bits is set
+> > without taking VM_MAYEXEC into account:
+> >
+> >       encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
+> >
+> > sgx_encl_may_map() checks that the requested protection can be added with:
+> >
+> >       if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
+> >               return -EACCESS
+> >
+> > This means that for any process where READ_IMPLIES_EXECUTE is set and
+> > page where (vma->vm_flags & VM_MAYEXEC) == true, mmap/mprotect calls to
+> > that request PROT_READ on a page that was not added with PROT_EXEC will
+> > fail.
+>
+> I could've sworn this was discussed on the SGX list at one point, but
+> apparently we only discussed it internally.  Anyways...
+>
+> More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
+> because part of the enclave loader is written in assembly.  Unless
+> explicitly told otherwise, the linker assumes that any program with
+> assembly code may need an executable stack, which leads to the RIE
+> personality being set for the process.  Here's a fantastic write up for
+> more details: https://www.airs.com/blog/archives/518
+>
+> There are essentially two paths we can take:
+>
+>  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
+>     PROT_EXEC for enclaves.
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Seems reasonable.
+
+Honestly, it probably makes sense to try to exempt almost everything
+from RIE.  I'd be a bit surprised if RIE is actually useful for
+anything other than plain anonymous pages and private file mappings.
