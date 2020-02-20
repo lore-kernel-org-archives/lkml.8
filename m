@@ -2,117 +2,109 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CABFC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D592C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4322068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA5A2068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdAg/woS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgBTOmQ (ORCPT
+        id S1728300AbgBTOm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:42:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:55065 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgBTOmQ (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:42:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 06:42:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="228921229"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.254.215.155]) ([10.254.215.155])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Feb 2020 06:42:12 -0800
-Subject: Re: [PATCH v1 0/2] perf report: Support annotation of code without
- symbols
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200220005902.8952-1-yao.jin@linux.intel.com>
- <20200220115629.GC565976@krava>
- <ca3fa091-f407-51e2-d617-90a842b36295@linux.intel.com>
- <20200220120655.GA586895@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <1fc1c4f5-ca94-ebd7-fae0-28765070662f@linux.intel.com>
-Date:   Thu, 20 Feb 2020 22:42:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 09:42:57 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38169 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBTOm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:42:56 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so975728pjz.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:42:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RxnSL1NXcKi7I7bNcJCdW9on2O0BYdTsZJtPIT2pvYw=;
+        b=KdAg/woSNMrUJKRcLFFlI+Q+hVITLMcpG7XScyuKG/rch8DT0ixv0D566k0F6Otle5
+         cwUJ9HRiFzGxwadC2OGhYKlbi8DY37VVlVByUznCM/ePQqloA5GZa8o7dH6LoSlCXELI
+         xHiS0Znal9Y94kgjTYg3T4vhf7VfZdwXuuPNSPTmiXi4+qhzVsVlHLDZkmlgCghwM4Qa
+         v/WrYtjYP4COBB8qs8urercROMOjnOGNsoVyT/j5NP0Fb21SDV41DG9fE+HNMOMetTAQ
+         XgnS9s+qEWkZbksqv0i8KVXCGOJjkUmEpAupdro45WGRn4iCF6kChpGXyfcBCSocK02A
+         s3bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RxnSL1NXcKi7I7bNcJCdW9on2O0BYdTsZJtPIT2pvYw=;
+        b=HmNyh+r24fZ9RSh8WlBS40g+zFzZrQ2IUYJn+iJbq4RbLPchNGuf8kH1qBj0hpHxcg
+         sJqOgrk1635PLppXaDsWYLI7pNPv+tnw+nBWaSTzwpsQI43Se3ggktQdxVNoUmQsCvug
+         zPkiT0teiRoRVtVgDJaL+x+zQRt3FCHii+3TImZkww9BYryoNd529W8w/LtVNh9wTkiw
+         50K+MONTFqxt48EYvKSDma22TsCFUYcRz3Ahdsokrr7zwqqUTD8+OCrecjyEKUrss4B/
+         voDDd2EDGIbOrGuNL8GtGTAMnSzOIqBTMWOhLKlRtRSHtlHEnN3c9YSM9BabB6vVUXN2
+         g9EA==
+X-Gm-Message-State: APjAAAVSTf32Quh+NFLzHUPLnB0+1kaluaypx4EpQo7oHmSQwpUdvHP7
+        i3Onc+FpB03/Ph+bwfTnJlw=
+X-Google-Smtp-Source: APXvYqz3wBILWTKaw7OWLHGCjDgI2EKdZTlM2RKtM4tMDi6g9DoPS8Zonk8MclzuCyaioif8icLXpA==
+X-Received: by 2002:a17:90a:a385:: with SMTP id x5mr4099539pjp.102.1582209774753;
+        Thu, 20 Feb 2020 06:42:54 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id b5sm3770299pfb.179.2020.02.20.06.42.53
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Thu, 20 Feb 2020 06:42:54 -0800 (PST)
+Date:   Thu, 20 Feb 2020 22:42:51 +0800
+From:   chenqiwu <qiwuchen55@gmail.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        chenqiwu <chenqiwu@xiaomi.com>
+Subject: Re: [PATCH] sched/fair: add !se->on_rq check before dequeue entity
+Message-ID: <20200220144251.GA15604@cqw-OptiPlex-7050>
+References: <1582183784-13502-1-git-send-email-qiwuchen55@gmail.com>
+ <CAKfTPtDzb9XD5wrMhcvGn+dz27nh58taDrdp36YHKNusp739Og@mail.gmail.com>
+ <20200220100915.GA14721@cqw-OptiPlex-7050>
+ <CAKfTPtCm-Vn1YAC8j-XFLritQxQ-B7d=pqO9U6=c2vCuTNUpsg@mail.gmail.com>
+ <CAKfTPtBS=HhBvp2ps1SZXc--WoXO_ZOY=+5o7RJ9vDgi9eLAqA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220120655.GA586895@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBS=HhBvp2ps1SZXc--WoXO_ZOY=+5o7RJ9vDgi9eLAqA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/20/2020 8:06 PM, Jiri Olsa wrote:
-> On Thu, Feb 20, 2020 at 08:03:18PM +0800, Jin, Yao wrote:
->>
->>
->> On 2/20/2020 7:56 PM, Jiri Olsa wrote:
->>> On Thu, Feb 20, 2020 at 08:59:00AM +0800, Jin Yao wrote:
->>>> For perf report on stripped binaries it is currently impossible to do
->>>> annotation. The annotation state is all tied to symbols, but there are
->>>> either no symbols, or symbols are not covering all the code.
->>>>
->>>> We should support the annotation functionality even without symbols.
->>>>
->>>> The first patch uses al_addr to print because it's easy to dump
->>>> the instructions from this address in binary for branch mode.
->>>>
->>>> The second patch supports the annotation on stripped binary.
->>>>
->>>> Jin Yao (2):
->>>>     perf util: Print al_addr when symbol is not found
->>>>     perf annotate: Support interactive annotation of code without symbols
->>>
->>> looks good, but I'm getting crash when annotating unresolved kernel address:
->>>
->>> jirka
->>>
->>>
->>
->> Thanks for reporting the issue.
->>
->> I guess you are trying the "0xffffffff81c00ae7", let me try to reproduce
->> this issue.
 > 
-> yes, I also checked and it did not happen before
-> 
-> jirka
-> 
+> Hmm i have been too quick in my reply. I wanted to say:
+> AFAICT, there is no other way to dequeue a task from a cfs_rq for
+> which the group entity is not enqueued
 
-Hi Jiri,
+But we should notice the potential racy pathes called by deactivate_task().
+For example:
+One path is dequeue a task from its cfs_rq called by schedule():
+__schedule
+	deactivate_task
+		dequeue_task
+			dequeue_task_fair
 
-Can you try this fix?
+Another path is trying to migrate the same task to a CPU on the preferred node:
+numa_migrate_preferred
+	task_numa_migrate	
+		migrate_swap
+			stop_two_cpus
+				migrate_swap_stop
+					__migrate_swap_task
+						deactivate_task
+							dequeue_task_fair
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index ff5711899234..5144528b2931 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2497,7 +2497,7 @@ add_annotate_opt(struct hist_browser *browser,
-                  struct map_symbol *ms,
-                  u64 addr)
-  {
--       if (ms->map->dso->annotate_warned)
-+       if (!ms->map || !ms->map->dso || ms->map->dso->annotate_warned)
-                 return 0;
-
-         if (!ms->sym) {
-
-It's tested OK at my side.
-
-Thanks
-Jin Yao
-
+There could be a racy if the task is dequeued form its cfs_rq in parallel.
