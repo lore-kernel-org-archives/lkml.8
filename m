@@ -2,84 +2,111 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C77C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A90C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B69C121D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5553524671
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:52:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5klrh3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBTCtm (ORCPT
+        id S1727756AbgBTCwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:49:42 -0500
-Received: from mga09.intel.com ([134.134.136.24]:43079 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbgBTCtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:49:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 18:49:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="228782315"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.162.231]) ([10.249.162.231])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Feb 2020 18:49:39 -0800
-Subject: Re: question about iommu_need_mapping
-To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200219235516.zl44y7ydgqqja6x5@cantor>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <af5a148e-76bc-4aa4-dd1c-b04a5ffc56b1@linux.intel.com>
-Date:   Thu, 20 Feb 2020 10:49:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 19 Feb 2020 21:52:46 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35605 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgBTCwp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:52:45 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w12so2926224wrt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:52:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IuWiXIN7XrPBswL6JTvBTnA9S2sBls11R96m1WANlyo=;
+        b=o5klrh3/3wd1oTH83CHITX2HjsAgiUZqzzfFNQYgD/25JUi2xTL73kpzR38ZYkjqC2
+         YvWVsIYC/WwQ7fGUCnMee68k1n0KICdiLNLuHlFvosd/ZIRqWJR0M9SFK4V4oPauadKL
+         ishStQZPADOyqb+g3oHC+JiGaX7vk5WiCRcqflJsQNvc3ZuPYHMxS3eXrSzRbK/m1duB
+         DIJKPAgccYfsk7mC4eJOYMP4Zk/2NYGBWlWbFIO9UitHsgqhCBUoq6psvoCP84nQhqj8
+         Jd0XLJrFx/8BikrYAELAwKnEC8q3Msd9WCTgTdLuGeHdmRV7yCryU0RcxIpZ58scazWr
+         XK9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IuWiXIN7XrPBswL6JTvBTnA9S2sBls11R96m1WANlyo=;
+        b=QVSq8BBQIM8zRu5c04lrENvVC/2EHhJptO1A5ciNM9UX/ejodML5Y9C1OQskyWhus4
+         swFW2Jw8DiRLj1VzVJpf6SZS0UX0lihGRSEqun7Ab1rJkbIePtQEJNKavY3/DJegFCqo
+         C0Mpt/l+17eN7woNErdZWU8TgwLxUsJvD+3yurT2Nx0PynHBPS9MCIpFZ3Te99pSCThW
+         S2rfsJWHGDidHJTxaQtxhCD55uaaNlDBxn7A6MrOpgyz+x/5x6FHQ5qstHoIwimLIk5K
+         aC0Rv5wPFsxsbv/+wvWxg70PXq0t6xb/xEKDtuPKb9uPK21/1GxXYSMUqGRbMsh8sAA4
+         G41w==
+X-Gm-Message-State: APjAAAVXoR0rAfpoYz6bgPULszjTkeSjVshYBQwQwVjttK9y40U4R8cZ
+        enm4Nu1h5dIzhUL3mg9FDGpQvk2Wj3GmD/X2gmO9Sw==
+X-Google-Smtp-Source: APXvYqxCjFBBhSBoM7ZiaO3hBmW4TV2UmaN3lmngAU+dIZ63atObMRwgd6ZEif74hNS3w/ghnG/Gi6HpzHjjtuHGurs=
+X-Received: by 2002:adf:b254:: with SMTP id y20mr38664106wra.362.1582167163536;
+ Wed, 19 Feb 2020 18:52:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219235516.zl44y7ydgqqja6x5@cantor>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200220004232.GA28048@paulmck-ThinkPad-P72>
+In-Reply-To: <20200220004232.GA28048@paulmck-ThinkPad-P72>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 19 Feb 2020 21:52:32 -0500
+Message-ID: <CADnq5_OJSHV5XotA6hORgQSrC4A-ZFzfXN_NRMGYFka+MTyjGg@mail.gmail.com>
+Subject: Re: drm_dp_mst_topology.c and old compilers
+To:     paulmck@kernel.org
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerry,
+On Wed, Feb 19, 2020 at 7:42 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> Hello!
+>
+> A box with GCC 4.8.3 compiler didn't like drm_dp_mst_topology.c.  The
+> following (lightly tested) patch makes it happy and seems OK for newer
+> compilers as well.
+>
+> Is this of interest?
 
-On 2020/2/20 7:55, Jerry Snitselaar wrote:
-> Is it possible for a device to end up with dev->archdata.iommu == NULL
-> on iommu_need_mapping in the following instance:
-> 
-> 1. iommu_group has dma domain for default
-> 2. device gets private identity domain in intel_iommu_add_device
-> 3. iommu_need_mapping gets called with that device.
-> 4. dmar_remove_one_dev_info sets dev->archdata.iommu = NULL via 
-> unlink_domain_info.
-> 5. request_default_domain_for_dev exits after checking that 
-> group->default_domain
->     exists, and group->default_domain->type is dma.
-> 6. iommu_request_dma_domain_for_dev returns 0 from 
-> request_default_domain_for_dev
->     and a private dma domain isn't created for the device.
-> 
+How about a memset instead?  That should be consistent across compilers.
 
-Yes. It's possible.
+Alex
 
-> The case I was seeing went away with commit 9235cb13d7d1 ("iommu/vt-d:
-> Allow devices with RMRRs to use identity domain"), because it changed
-> which domain the group and devices were using, but it seems like it is
-> still a possibility with the code. Baolu, you mentioned possibly
-> removing the domain switch. Commit 98b2fffb5e27 ("iommu/vt-d: Handle
-> 32bit device with identity default domain") makes it sound like the
-> domain switch is required.
 
-It's more "nice to have" than "required" if the iommu driver doesn't
-disable swiotlb explicitly. The device access of system memory higher
-than the device's addressing capability could go through the bounced
-buffer implemented in swiotlb.
-
-Best regards,
-baolu
+>
+>                                                         Thanx, Paul
+>
+> -----------------------------------------------------------------------
+>
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index 20cdaf3..232408a 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -5396,7 +5396,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
+>  {
+>         struct drm_dp_mst_port *immediate_upstream_port;
+>         struct drm_dp_mst_port *fec_port;
+> -       struct drm_dp_desc desc = { 0 };
+> +       struct drm_dp_desc desc = {{{ 0 }}};
+>         u8 endpoint_fec;
+>         u8 endpoint_dsc;
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
