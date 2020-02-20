@@ -3,63 +3,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C040C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E91C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1878424656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 207BC24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:30:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVdjzWqF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Hp///StS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgBTC3n (ORCPT
+        id S1727830AbgBTCaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:29:43 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38513 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbgBTC3n (ORCPT
+        Wed, 19 Feb 2020 21:30:52 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40217 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbgBTCaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:29:43 -0500
-Received: by mail-pg1-f194.google.com with SMTP id d6so1131983pgn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:29:43 -0800 (PST)
+        Wed, 19 Feb 2020 21:30:52 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z7so1127072pgk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:30:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:content-transfer-encoding:in-reply-to:references
          :subject:from:cc:to:date:message-id:user-agent;
-        bh=EEVYOjfi5PbSHH+WdgPROxvm0gDkTQzR92KMTQUcWvE=;
-        b=HVdjzWqFiZCI8G1rH0pU2pp39Y7AS6KZZ/rK62HCDFZoE/pVrjKzbD1LJ0cd57Fe2m
-         4gpf93cOUw7g3ErlADetf3lBMXp3jieq7XE3cW8gn0LeM/x/MgNoSSh3yJ/ZkXuhiQM+
-         TUKWPSPk8ExLDq7fWpN6yNYwhj7nG+U1NqQY4=
+        bh=2xhrwQviTomzj/0fU6jHXjC8RaazAr+9nr9rIvva37U=;
+        b=Hp///StSFNDmabhiBJZofs78699fSOAHSNe6zLrXA7M2hyLOxa3a0Ygi6HVn5lETmu
+         /HoY2FjCYrlBjYcn9uvUP+uC43wI9zgb67Hknh2mVyjfTr5GGw3llqw8UNeOQhQhOMKS
+         3//sWtboNU2F5iAQLTkzRMmiRTvJ3k/F9YU3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:content-transfer-encoding
          :in-reply-to:references:subject:from:cc:to:date:message-id
          :user-agent;
-        bh=EEVYOjfi5PbSHH+WdgPROxvm0gDkTQzR92KMTQUcWvE=;
-        b=AOaha1Ea7y+czwM+LVAWlA1qu+Q73kK20d2q1+mW0oQH++BJ/vtA/0tF+7hLhuplu6
-         4BUadNVNq0T48QmTsNLWopJaJaeW3plrOxtYr2qfIN30IgQstO1hqgNHZFWVt7M7fC2N
-         thDX6f5Com3rzOcdf17toZAT+UsduoUXnIaTXlxhWo6/bHZiOn06DbJpx3ptt1uGVZUX
-         1sJl+hfRjuCUotj/wtSYBW/0cAiADEDgNRTMLR4us3iQ301+UQgxicvoM61YhfqMZuM6
-         GKcQyYUGVaQqeFxUqCwTvGus2EOMcnZrKY0lUb8EyobmqgjyWkbhr1oyEH3ZytlNbIlv
-         1B+g==
-X-Gm-Message-State: APjAAAW2nQ5O3MYe3fdehMXPRRxmqYkp8aPnrx956p1Tm8EbU2E+GdZR
-        aEamf0F+TZv2JUYdE7hGLE9TcA==
-X-Google-Smtp-Source: APXvYqyC9WwG78kMU3KSSI/fRicHSjd1baiiC4/yYeU0mSsTDEQzzD+lr9QkKMTXu3yunzvr7OmjIg==
-X-Received: by 2002:a63:1a50:: with SMTP id a16mr30180925pgm.389.1582165782692;
-        Wed, 19 Feb 2020 18:29:42 -0800 (PST)
+        bh=2xhrwQviTomzj/0fU6jHXjC8RaazAr+9nr9rIvva37U=;
+        b=H9P47/ZQYRbcDdBHnxNLdSrqRflZideUPtiMSVg1Hq7PqZnJUzxmiWmvKBtn8n7T63
+         xYwSVH6EG61JZhntQk8FRFBIevGNs/z2YWmzdftQdbTzPSsgdsTLoRwDz9CvmZBWMviM
+         vSRGkeMeeY+O4elHDPz9RCLuGHDGR/0vgnpSJ6g7ex0eTtUJeptSXF4RcA9Ia6Hp7ias
+         Nmngfy7+vcFerLRzTJ8nXcnEAYYwBE0BL8rd+1DQq1QJY5P6UjNVpV1hh2pvZyVy2VaZ
+         rU+N2ZP1SPQ2XruQ4iCDn3tFS5l3hqX0ooErP1Q9ezbkD9alPUGYlo03TPZcR2w8B1QK
+         g3qw==
+X-Gm-Message-State: APjAAAXVrhcpAvQXGrN4MK2Z5sIUl93pSg5+SZTjUKiSXLM/PuoybZ4I
+        Rv5qXCZtIhj1YK+xUUe7/QnFQw==
+X-Google-Smtp-Source: APXvYqyqR/j5YTlyk7mPPllz5VnOKlmRZem93IGnshNp2h/Zrxs8wbPD10c413ZLvO8K7rxkd709fg==
+X-Received: by 2002:a63:e218:: with SMTP id q24mr4515412pgh.244.1582165851831;
+        Wed, 19 Feb 2020 18:30:51 -0800 (PST)
 Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id 76sm952903pfx.97.2020.02.19.18.29.41
+        by smtp.gmail.com with ESMTPSA id b186sm389624pgc.46.2020.02.19.18.30.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 18:29:42 -0800 (PST)
+        Wed, 19 Feb 2020 18:30:51 -0800 (PST)
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
-References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org> <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+In-Reply-To: <1581932974-21654-3-git-send-email-akashast@codeaurora.org>
+References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org> <1581932974-21654-3-git-send-email-akashast@codeaurora.org>
+Subject: Re: [PATCH 2/2] dt-bindings: spi: Add interconnect binding for QSPI
 From:   Stephen Boyd <swboyd@chromium.org>
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
@@ -67,142 +67,19 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Akash Asthana <akashast@codeaurora.org>
 To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
         mark.rutland@arm.com, robh+dt@kernel.org
-Date:   Wed, 19 Feb 2020 18:29:41 -0800
-Message-ID: <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+Date:   Wed, 19 Feb 2020 18:30:50 -0800
+Message-ID: <158216585051.184098.12834695664812457422@swboyd.mtv.corp.google.com>
 User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Akash Asthana (2020-02-17 01:49:33)
-> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yam=
-l b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
-> new file mode 100644
-> index 0000000..977070a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
-> @@ -0,0 +1,89 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Quad Serial Peripheral Interface (QSPI)
-> +
-> +maintainers:
-> + - Mukesh Savaliya <msavaliy@codeaurora.org>
-> + - Akash Asthana <akashast@codeaurora.org>
-> +
-> +description: |
+Quoting Akash Asthana (2020-02-17 01:49:34)
+> Add documentation for the interconnect and interconnect-names
+> properties for QSPI.
+>=20
+> Signed-off-by: Akash Asthana <akashast@codeaurora.org>
+> ---
 
-Drop the | because it doesn't look like any formatting needs to be
-maintained in the text for the description.
-
-> + The QSPI controller allows SPI protocol communication in single, dual, =
-or quad
-> + wire transmission modes for read/write access to slaves such as NOR fla=
-sh.
-> +
-> +allOf:
-> +  - $ref: /spi/spi-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: qcom,sdm845-qspi
-> +      - const: qcom,qspi-v1
-> +
-> +  reg:
-> +    description: Base register location and length.
-
-Drop description? It doesn't seem useful.
-
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: iface
-> +      - const: core
-> +
-> +  clocks:
-> +    items:
-> +      - description: AHB clock
-> +      - description: QSPI core clock.
-
-Please drop the full-stop on core clock.
-
-> +
-> +  "#address-cells":
-> +     const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-
-Aren't these two unnecessary because they're covered by the
-spi-controller.yaml binding?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clock-names
-> +  - clocks
-> +  - "#address-cells"
-> +  - "#size-cells"
-
-These last two are also covered by spi-controller binding.
-
-> +
-> +
-
-Why two newlines instead of one?
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc: soc@0 {
-
-Remove this node from example please.
-
-> +        #address-cells =3D <2>;
-> +        #size-cells =3D <2>;
-> +
-> +        qspi: spi@88df000 {
-> +            compatible =3D "qcom,sdm845-qspi", "qcom,qspi-v1";
-> +            reg =3D <0 0x88df000 0 0x600>;
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +            interrupts =3D <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +            clock-names =3D "iface", "core";
-> +            clocks =3D <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
-> +                <&gcc GCC_QSPI_CORE_CLK>;
-
-Weird tabbing here. Just use spaces and align it up.
-
-> +
-> +                flash@0 {
-> +                    compatible =3D "jedec,spi-nor";
-> +                    reg =3D <0>;
-> +                    spi-max-frequency =3D <25000000>;
-> +                    spi-tx-bus-width =3D <2>;
-> +                    spi-rx-bus-width =3D <2>;
-> +                };
-
-Is this flash node necessary for the example?
-
-> +        };
-> +    };
-> +
-
-Nitpick: Why newline here?
-
-> +...
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
