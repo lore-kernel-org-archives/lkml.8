@@ -2,65 +2,66 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD641C11D0F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E488C11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC7224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EC924673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UmW0izfZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XrCWY6F+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgBTPyJ (ORCPT
+        id S1728629AbgBTPyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:54:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29559 "EHLO
+        Thu, 20 Feb 2020 10:54:10 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35651 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728528AbgBTPyE (ORCPT
+        by vger.kernel.org with ESMTP id S1728602AbgBTPyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:54:04 -0500
+        Thu, 20 Feb 2020 10:54:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582214043;
+        s=mimecast20190719; t=1582214048;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bt1+d0titgQLhNFh5svjyDyx7KYPhkET1LH3nLMC49s=;
-        b=UmW0izfZLbcjgiMDwbCgc/wK0VGH4myeTlJ67f6zzgcCg8E/Eh4KWdnGFjwYyRRcqiOBO6
-        8MwxeWkSgQGHR1E3/Q4gTQtB3PeKoMohICIM+F/TIAUy42Oh9o63tdnaZPEcFiljhZkYLC
-        ALfz0hl0Ilvfsd06mYcll5P7JH918AM=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-oY2ZP7HiOgGwYA985LMV_g-1; Thu, 20 Feb 2020 10:53:57 -0500
-X-MC-Unique: oY2ZP7HiOgGwYA985LMV_g-1
-Received: by mail-qv1-f69.google.com with SMTP id v19so2818273qvk.16
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:53:57 -0800 (PST)
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3cu+nCrF0vUC0DWPMISJ46Dyo+A/qgWPAj0jcXPlop0=;
+        b=XrCWY6F+Ap676vKabppYeOI/HFR35R5yPNA7Tr+SwJ5/DpHv8ZgTSYu6Fbu3DNwOl2DTT6
+        LBFOvibm7RL4PTalMW4xzi7gClWC8eI7Ybz1znEHX8qop/0Fm28fe3nPSrmXpfOgqvx1WT
+        VeNbVjBdcapgDMwsCutUoy1iJVerm2k=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-yaqCZDlTOxyx1LO4_uJ8fQ-1; Thu, 20 Feb 2020 10:54:07 -0500
+X-MC-Unique: yaqCZDlTOxyx1LO4_uJ8fQ-1
+Received: by mail-qt1-f198.google.com with SMTP id t4so2885424qtd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:54:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bt1+d0titgQLhNFh5svjyDyx7KYPhkET1LH3nLMC49s=;
-        b=GZAn/IwHQbHQ9HJCCTUJ7iAaRkZjLE/9W57tQ7S2QYsMzJ2zxmL71KPj2RHu2jTBGq
-         PmWHnsTHw3fczEtf8ZiWzFOIUJQush3Wk2e9mnX5Ta4+D+cWngWTp0yyDb+/5NaJaduO
-         /8xwAAgo3atKnUlmVbnA4p2CI/WspAmNxn5HZSvu+qbV5ooXdLN+Fhaqp1/NHxtJH3Ww
-         BgprewACFno+5bGHe1XGyQtDUkZ+JtwSqRFWEGYOuj49m6bMVkAqwUyfmUfiSAC3qkit
-         qb6HyCVIlrvfgmW0Qlh6KkhBTE2vfGlvyC9CdVw5BoQ4VEJdYKAaBYW06Rhg3mj2aDG5
-         P6SQ==
-X-Gm-Message-State: APjAAAWEnaG8ZmqJhcoNZvO7DmODBqc283fOwYuNaz2x0mGtKLkjjRsg
-        mH7dKgBsXJi3zyzXzd5iQ/pjmBd3gneRR1LIgo/2SaRi4TrUAEFQxdu7Pn/jt6NBEHD7IKQssjl
-        44IZgt6UPgKKnXibQelfmVANg
-X-Received: by 2002:a37:742:: with SMTP id 63mr28733637qkh.31.1582214036700;
-        Thu, 20 Feb 2020 07:53:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw9VCY2D+VSq59waXKZrbNuFOOodktVtmIMdjUJndOOkfNMPF5sQK84kzKhe5Pjf4jsVs0qLg==
-X-Received: by 2002:a37:742:: with SMTP id 63mr28733594qkh.31.1582214036304;
-        Thu, 20 Feb 2020 07:53:56 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3cu+nCrF0vUC0DWPMISJ46Dyo+A/qgWPAj0jcXPlop0=;
+        b=Ez4ASygG4u04JqMMc6N0s8padNLHlEFr3ESHqKSOcl8yMQt+xraKAAL8Bu/oqY9IkB
+         UrjeeAQfC+JfxiI824rcBvCeFKarhoVfeMpHmwFkucjTPI/lJCSit44VWsVL+oCUOf8c
+         L5N715JUdfqnw7wxdVW6+gGmYk5JIJ61wfC9QEtakCVPh+njWh7sbbliwR2vC/GFEr8r
+         O0a+/iwHFDIGJtH++lI8lO8Wz7saAFA8oqOXYJjzFH63g4DV66u6k0S5bCxuqcbM/uke
+         8Scg7lm4Ns5LT22oI5pNIvSr4i4Vcd+1d6V8fLEidAkv8l3V/YHlsivENRoCvlGBJpa4
+         drrw==
+X-Gm-Message-State: APjAAAWTn6bbIvDd3vy8/xKlR5eyaWwxdceHtGbESg+yrxFPdFH5LNfV
+        YqT1rvFk+uOBVZmTSi/gjs7e2eekEiGnYRKn43gawRsUxxDZwAgNvBU93ilHETeR7IGcOyh/U5h
+        6Z2aSJm1v8TaSMWzF2Zd/oal/
+X-Received: by 2002:ae9:e003:: with SMTP id m3mr8332088qkk.250.1582214044027;
+        Thu, 20 Feb 2020 07:54:04 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzqBbfVrw6oW5Uq7giseK/Asl8XiArti83tm8uh5tXmEmh2Vf3Qyj45T3Pp+ZWIGYPfmKisVw==
+X-Received: by 2002:ae9:e003:: with SMTP id m3mr8332062qkk.250.1582214043787;
+        Thu, 20 Feb 2020 07:54:03 -0800 (PST)
 Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id h20sm1807430qkk.64.2020.02.20.07.53.54
+        by smtp.gmail.com with ESMTPSA id h20sm1807430qkk.64.2020.02.20.07.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 07:53:55 -0800 (PST)
+        Thu, 20 Feb 2020 07:54:03 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Andrea Arcangeli <aarcange@redhat.com>,
@@ -82,10 +83,12 @@ Cc:     Andrea Arcangeli <aarcange@redhat.com>,
         Brian Geffon <bgeffon@google.com>,
         Denis Plotnikov <dplotnikov@virtuozzo.com>,
         Pavel Emelyanov <xemul@virtuozzo.com>
-Subject: [PATCH RESEND v6 00/16] mm: Page fault enhancements
-Date:   Thu, 20 Feb 2020 10:53:37 -0500
-Message-Id: <20200220155353.8676-1-peterx@redhat.com>
+Subject: [PATCH RESEND v6 04/16] x86/mm: Use helper fault_signal_pending()
+Date:   Thu, 20 Feb 2020 10:53:41 -0500
+Message-Id: <20200220155353.8676-5-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200220155353.8676-1-peterx@redhat.com>
+References: <20200220155353.8676-1-peterx@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -93,169 +96,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Resend v6]
+Let's move the fatal signal check even earlier so that we can directly
+use the new fault_signal_pending() in x86 mm code.
 
-This is v6 of the series.  It is majorly a rebase to 5.6-rc2, nothing
-else to be expected (plus some tests after the rebase).  Instead of
-rewrite the cover letter I decided to use what we have for v5.
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/x86/mm/fault.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
 
-Adding extra CCs for both Bobby Powers <bobbypowers@gmail.com> and
-Brian Geffon <bgeffon@google.com>.
-
-Online repo: https://github.com/xzpeter/linux/tree/mm-pf-signal-retry
-
-Any review comment is appreciated.  Thanks,
-
-=============== v5 cover letter ==================
-
-This is v5 of the series.  As Matthew suggested, I split the previous
-patch "mm: Return faster for non-fatal signals in user mode faults"
-into a few smaller ones:
-
-  1. One patch to introduce fatal_signal_pending(), and use it in
-     archs that can directly apply
-
-  2. A few more patches to let the rest archs to use the new helper.
-     With that we can have an unified entry for signal detection
-
-  3. One last patch to change fatal_signal_pending() to detect
-     userspace non-fatal signal
-
-Nothing should have changed in the rest patches.  Because the fault
-retry patches will depend on the previous ones, I decided to simply
-repost all the patches.
-
-Here's the new patchset layout:
-
-Patch 1-2:      cleanup, and potential bugfix of hugetlbfs on fault retry
-
-Patch 3-9:      let page fault to respond to non-fatal signals faster
-
-Patch 10:       remove the userfaultfd NOPAGE emulation
-
-Patch 11-14:    allow page fault to retry more than once
-
-Patch 15-16:    let gup code to use FAULT_FLAG_KILLABLE too
-
-I would really appreciate any review comments for the series,
-especially for the first two patches which IMHO are even not related
-to this patchset and they should either cleanup or fix things.
-
-Smoke tested on x86 only.
-
-Thanks,
-
-v5:
-- split "mm: Return faster for non-fatal signals in user mode faults"
-  into a few more patches, let all archs to use an unified entry for
-  fast signal handling (fatal_signal_pending)
-
-v4:
-- use lore.kernel.org for all the links in commit messages [Kirill]
-- one more patch ("mm/gup: Fix __get_user_pages() on fault retry of
-  hugetlb") to fix hugetlb path on fault retry
-- one more patch ("mm/gup: Allow to react to fatal signals") to:
-  - use down_read_killable() properly [Linus]
-  - pass in FAULT_FLAG_KILLABLE for all GUP [Linus]
-- one more patch ("mm/userfaultfd: Honor FAULT_FLAG_KILLABLE in fault
-  path") to let handle_userfaultfd() respect FAULT_FLAG_KILLABLE.
-  Should have no functional change after previous two new patches.
-
-v3:
-- check fatal signals in __get_user_page_locked() [Linus]
-- add r-bs
-
-v2:
-- resent previous version, rebase only
-
-=============== v1 cover letter ==================
-
-This series is split out of userfaultfd-wp series to only cover the
-general page fault changes, since it seems to make sense itself.
-
-Basically it does two things:
-
-  (a) Allows the page fault handlers to be more interactive on not
-      only SIGKILL, but also the rest of userspace signals (especially
-      for user-mode faults), and,
-
-  (b) Allows the page fault retry (VM_FAULT_RETRY) to happen for more
-      than once.
-
-I'm keeping the CC list as in uffd-wp v5, hopefully I'm not sending
-too much spams...
-
-And, instead of writting again the cover letter, I'm just copy-pasting
-my previous link here which has more details on why we do this:
-
-  https://patchwork.kernel.org/cover/10691991/
-
-The major change from that latest version should be that we introduced
-a new page fault flag FAULT_FLAG_INTERRUPTIBLE as suggested by Linus
-[1] to represents that we would like the fault handler to respond to
-non-fatal signals.  Also, we're more careful now on when to do the
-immediate return of the page fault for such signals.  For example, now
-we'll only check against signal_pending() for user-mode page faults
-and we keep the kernel-mode page fault patch untouched for it.  More
-information can be found in separate patches.
-
-The patchset is only lightly tested on x86.
-
-All comments are greatly welcomed.  Thanks,
-
-[1] https://lkml.org/lkml/2019/6/25/1382
-
-Peter Xu (16):
-  mm/gup: Rename "nonblocking" to "locked" where proper
-  mm/gup: Fix __get_user_pages() on fault retry of hugetlb
-  mm: Introduce fault_signal_pending()
-  x86/mm: Use helper fault_signal_pending()
-  arc/mm: Use helper fault_signal_pending()
-  arm64/mm: Use helper fault_signal_pending()
-  powerpc/mm: Use helper fault_signal_pending()
-  sh/mm: Use helper fault_signal_pending()
-  mm: Return faster for non-fatal signals in user mode faults
-  userfaultfd: Don't retake mmap_sem to emulate NOPAGE
-  mm: Introduce FAULT_FLAG_DEFAULT
-  mm: Introduce FAULT_FLAG_INTERRUPTIBLE
-  mm: Allow VM_FAULT_RETRY for multiple times
-  mm/gup: Allow VM_FAULT_RETRY for multiple times
-  mm/gup: Allow to react to fatal signals
-  mm/userfaultfd: Honor FAULT_FLAG_KILLABLE in fault path
-
- arch/alpha/mm/fault.c           |  6 +--
- arch/arc/mm/fault.c             | 35 +++++--------
- arch/arm/mm/fault.c             |  7 +--
- arch/arm64/mm/fault.c           | 26 +++------
- arch/hexagon/mm/vm_fault.c      |  5 +-
- arch/ia64/mm/fault.c            |  5 +-
- arch/m68k/mm/fault.c            |  7 +--
- arch/microblaze/mm/fault.c      |  5 +-
- arch/mips/mm/fault.c            |  5 +-
- arch/nds32/mm/fault.c           |  5 +-
- arch/nios2/mm/fault.c           |  7 +--
- arch/openrisc/mm/fault.c        |  5 +-
- arch/parisc/mm/fault.c          |  8 ++-
- arch/powerpc/mm/fault.c         | 20 ++-----
- arch/riscv/mm/fault.c           |  9 +---
- arch/s390/mm/fault.c            | 10 ++--
- arch/sh/mm/fault.c              | 13 +++--
- arch/sparc/mm/fault_32.c        |  5 +-
- arch/sparc/mm/fault_64.c        |  5 +-
- arch/um/kernel/trap.c           |  3 +-
- arch/unicore32/mm/fault.c       |  8 ++-
- arch/x86/mm/fault.c             | 30 +++++------
- arch/xtensa/mm/fault.c          |  5 +-
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 12 +++--
- fs/userfaultfd.c                | 62 ++++++++++------------
- include/linux/mm.h              | 81 ++++++++++++++++++++++++----
- include/linux/sched/signal.h    | 14 +++++
- mm/filemap.c                    |  2 +-
- mm/gup.c                        | 93 +++++++++++++++++++++------------
- mm/hugetlb.c                    | 17 +++---
- mm/internal.h                   |  6 +--
- 31 files changed, 281 insertions(+), 240 deletions(-)
-
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index fa4ea09593ab..6a00bc8d047f 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1442,27 +1442,25 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	fault = handle_mm_fault(vma, address, flags);
+ 	major |= fault & VM_FAULT_MAJOR;
+ 
++	/* Quick path to respond to signals */
++	if (fault_signal_pending(fault, regs)) {
++		if (!user_mode(regs))
++			no_context(regs, hw_error_code, address, SIGBUS,
++				   BUS_ADRERR);
++		return;
++	}
++
+ 	/*
+ 	 * If we need to retry the mmap_sem has already been released,
+ 	 * and if there is a fatal signal pending there is no guarantee
+ 	 * that we made any progress. Handle this case first.
+ 	 */
+-	if (unlikely(fault & VM_FAULT_RETRY)) {
++	if (unlikely((fault & VM_FAULT_RETRY) &&
++		     (flags & FAULT_FLAG_ALLOW_RETRY))) {
+ 		/* Retry at most once */
+-		if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-			flags &= ~FAULT_FLAG_ALLOW_RETRY;
+-			flags |= FAULT_FLAG_TRIED;
+-			if (!fatal_signal_pending(tsk))
+-				goto retry;
+-		}
+-
+-		/* User mode? Just return to handle the fatal exception */
+-		if (flags & FAULT_FLAG_USER)
+-			return;
+-
+-		/* Not returning to user mode? Handle exceptions or die: */
+-		no_context(regs, hw_error_code, address, SIGBUS, BUS_ADRERR);
+-		return;
++		flags &= ~FAULT_FLAG_ALLOW_RETRY;
++		flags |= FAULT_FLAG_TRIED;
++		goto retry;
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
 -- 
 2.24.1
 
