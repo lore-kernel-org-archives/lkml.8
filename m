@@ -2,135 +2,141 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602F6C11D0A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56565C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FD3208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5CF208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:51:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OTm36WjV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KMYMBdsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgBTOvi (ORCPT
+        id S1728334AbgBTOvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 20 Feb 2020 09:51:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727705AbgBTOvh (ORCPT
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44622 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbgBTOvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 09:51:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582210295;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DB3P7vdAYjoAi869m4yzbBnWq2u+p0yaiGICWG9KAUA=;
-        b=OTm36WjVyDlMpuMPruwjzN7iPwq2ffuodfdJd2r18nJdOQRREIENDQqVpG6x2fIRwpHIxE
-        LdOwGeFO7/Zn8s92WxLhURlZ5HqeH+/SPjpEMBHMK82tyKJyfgZzJGHgAd6itbSlelqhhj
-        e0JUIg2sy2d+Ah2aTlylHywEZJDTang=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-443-POOatf21PcC75W18DL_G3Q-1; Thu, 20 Feb 2020 09:51:31 -0500
-X-MC-Unique: POOatf21PcC75W18DL_G3Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0121800D48;
-        Thu, 20 Feb 2020 14:51:28 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD5DA5DA76;
-        Thu, 20 Feb 2020 14:51:26 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 15:51:24 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 0/2] perf report: Support annotation of code without
- symbols
-Message-ID: <20200220145124.GD586895@krava>
-References: <20200220005902.8952-1-yao.jin@linux.intel.com>
- <20200220115629.GC565976@krava>
- <ca3fa091-f407-51e2-d617-90a842b36295@linux.intel.com>
- <20200220120655.GA586895@krava>
- <1fc1c4f5-ca94-ebd7-fae0-28765070662f@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1fc1c4f5-ca94-ebd7-fae0-28765070662f@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200220145135euoutp024b9ddc5168ea9b896633f2b8fa8b310b~1I_GH-NWI1163011630euoutp02c
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:51:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200220145135euoutp024b9ddc5168ea9b896633f2b8fa8b310b~1I_GH-NWI1163011630euoutp02c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1582210295;
+        bh=31rmtxOfkOASOvw2DeQhk/to6JwtWb8Z/jmhWawXvnI=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KMYMBdsgtt2BjBkAfSqfTuonQOXaWRv02vYejms4G1IzMvgD8cMAjm8QioH39ntng
+         16vYfefuCY/wdDrFhliAOKOcTO7QNoCsyskdb/+iHsyJPXbUhbLeVJgz7oMvXxvHVz
+         UgRh3wVjsovsSmNjIbG4FUoNWflbcWMP4M2jsY9E=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200220145135eucas1p1c3c6c3fd13e5580cb159722a3d8efeb2~1I_F177Uc0784807848eucas1p1w;
+        Thu, 20 Feb 2020 14:51:35 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 29.E9.61286.7FC9E4E5; Thu, 20
+        Feb 2020 14:51:35 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45~1I_FTtluh1480814808eucas1p2S;
+        Thu, 20 Feb 2020 14:51:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200220145134eusmtrp102faa4c0b7c8c492e2d69a25198fc0b7~1I_FTDkBX1371113711eusmtrp19;
+        Thu, 20 Feb 2020 14:51:34 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-36-5e4e9cf7e0cf
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id BE.5A.08375.6FC9E4E5; Thu, 20
+        Feb 2020 14:51:34 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200220145134eusmtip18cbc83e1398035c3526bcf8ab5ba9057~1I_E3Vml21164811648eusmtip1i;
+        Thu, 20 Feb 2020 14:51:34 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 1/3] regulator: max14577: Add proper dt-compatible strings
+Date:   Thu, 20 Feb 2020 15:51:25 +0100
+Message-Id: <20200220145127.21273-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDIsWRmVeSWpSXmKPExsWy7djPc7rf5/jFGRz+wWuxccZ6VoupD5+w
+        WVz/8pzV4vz5DewWl3fNYbP43HuE0WLtkbvsFrcbV7BZnN5d4sDpsWlVJ5tH35ZVjB6fN8kF
+        MEdx2aSk5mSWpRbp2yVwZTQcusZWcJKzor2xgb2BcRZHFyMnh4SAicSetVMYuxi5OIQEVjBK
+        fOjfAuV8YZRYsmY+M4TzmVHi4eMpTDAtj+eeYwaxhQSWM0qceMwB19G06jJYgk3AUKLrbRcb
+        iC0iYCVx+n8H2CRmgRVMEh9/fwKaxMEhLOAl8fsOJ4jJIqAqMWELD0g5r4CtRM+z+6wQu+Ql
+        Vm84ANYqIXCdTeLSu4vsEAkXidaemSwQtrDEq+NboOIyEqcn97BANDQDXX1uLTuE08Mocblp
+        BiNElbXEnXO/2EA2MwtoSqzfpQ8RdpS4MOUc2G0SAnwSN94KgoSZgcxJ26YzQ4R5JTrahCCq
+        1SRmHV8Ht/bghUvMELaHROeZT+wg5UICsRL3jjNNYJSbhbBqASPjKkbx1NLi3PTUYsO81HK9
+        4sTc4tK8dL3k/NxNjMA0cPrf8U87GL9eSjrEKMDBqMTDW9HgFyfEmlhWXJl7iFGCg1lJhFeN
+        ByjEm5JYWZValB9fVJqTWnyIUZqDRUmc13jRy1ghgfTEktTs1NSC1CKYLBMHp1QD49yLSuVu
+        L3dHlF1tW25ho1iXbi+Xv5DnbXmPesmyBJ6UvxbL7Z7wr8lf16/tWtRwzn2bhsIzjl+TvcSm
+        sGavimGpPlt/oU5bOpZN4b82o1LqtmlvbxattDPWLZ/8zVBz7eKq0odiJW83LsjnXXJTQaF7
+        iq5XUuL2EybfijOSos4X/XRuc1mjxFKckWioxVxUnAgAUE/fp/8CAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsVy+t/xu7rf5vjFGfy5rGWxccZ6VoupD5+w
+        WVz/8pzV4vz5DewWl3fNYbP43HuE0WLtkbvsFrcbV7BZnN5d4sDpsWlVJ5tH35ZVjB6fN8kF
+        MEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZTQc
+        usZWcJKzor2xgb2BcRZHFyMnh4SAicTjueeYQWwhgaWMEjPulULEZSROTmtghbCFJf5c62Lr
+        YuQCqvnEKHHr6yoWkASbgKFE11uQBCeHiICNxN3F11hAipgF1jBJNDz8yNTFyMEhLOAl8fsO
+        J4jJIqAqMWELD0g5r4CtRM+z+1Dz5SVWbzjAPIGRZwEjwypGkdTS4tz03GJDveLE3OLSvHS9
+        5PzcTYzA8Nt27OfmHYyXNgYfYhTgYFTi4a1o8IsTYk0sK67MPcQowcGsJMKrxgMU4k1JrKxK
+        LcqPLyrNSS0+xGgKtHsis5Rocj4wNvJK4g1NDc0tLA3Njc2NzSyUxHk7BA7GCAmkJ5akZqem
+        FqQWwfQxcXBKNTBGd3eExi9d2r5I7KoQd8scRxOxKU0fn1b473iyRH71nbPzjoneUl63r83T
+        1ym4u8778IITr5foLH4/85FJfC53b5P3plmbElrN9ni8MJKo6Gr1UNe8sIvpvQ7Th2sLn23W
+        cpizWIz7+8ZDPNKbK889qvt4mWvB2kfJfdMDl7/TOuhnyeQlGTxNiaU4I9FQi7moOBEAEdSR
+        dlUCAAA=
+X-CMS-MailID: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45
+References: <CGME20200220145134eucas1p288ae1910d3e8d12dc12f010ed0b07b45@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:42:11PM +0800, Jin, Yao wrote:
-> 
-> 
-> On 2/20/2020 8:06 PM, Jiri Olsa wrote:
-> > On Thu, Feb 20, 2020 at 08:03:18PM +0800, Jin, Yao wrote:
-> > > 
-> > > 
-> > > On 2/20/2020 7:56 PM, Jiri Olsa wrote:
-> > > > On Thu, Feb 20, 2020 at 08:59:00AM +0800, Jin Yao wrote:
-> > > > > For perf report on stripped binaries it is currently impossible to do
-> > > > > annotation. The annotation state is all tied to symbols, but there are
-> > > > > either no symbols, or symbols are not covering all the code.
-> > > > > 
-> > > > > We should support the annotation functionality even without symbols.
-> > > > > 
-> > > > > The first patch uses al_addr to print because it's easy to dump
-> > > > > the instructions from this address in binary for branch mode.
-> > > > > 
-> > > > > The second patch supports the annotation on stripped binary.
-> > > > > 
-> > > > > Jin Yao (2):
-> > > > >     perf util: Print al_addr when symbol is not found
-> > > > >     perf annotate: Support interactive annotation of code without symbols
-> > > > 
-> > > > looks good, but I'm getting crash when annotating unresolved kernel address:
-> > > > 
-> > > > jirka
-> > > > 
-> > > > 
-> > > 
-> > > Thanks for reporting the issue.
-> > > 
-> > > I guess you are trying the "0xffffffff81c00ae7", let me try to reproduce
-> > > this issue.
-> > 
-> > yes, I also checked and it did not happen before
-> > 
-> > jirka
-> > 
-> 
-> Hi Jiri,
-> 
-> Can you try this fix?
-> 
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index ff5711899234..5144528b2931 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -2497,7 +2497,7 @@ add_annotate_opt(struct hist_browser *browser,
->                  struct map_symbol *ms,
->                  u64 addr)
->  {
-> -       if (ms->map->dso->annotate_warned)
-> +       if (!ms->map || !ms->map->dso || ms->map->dso->annotate_warned)
->                 return 0;
-> 
->         if (!ms->sym) {
-> 
-> It's tested OK at my side.
+Add device tree compatible strings and create proper modalias structures
+to let this driver load automatically if compiled as module, because
+max14577 MFD driver creates MFD cells with such compatible strings.
 
-yep, the crash is gone
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/regulator/max14577-regulator.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-thanks,
-jirka
+diff --git a/drivers/regulator/max14577-regulator.c b/drivers/regulator/max14577-regulator.c
+index 07a150c9bbf2..19e779dd961e 100644
+--- a/drivers/regulator/max14577-regulator.c
++++ b/drivers/regulator/max14577-regulator.c
+@@ -238,6 +238,15 @@ static const struct platform_device_id max14577_regulator_id[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, max14577_regulator_id);
+ 
++static const struct of_device_id of_max14577_regulator_dt_match[] = {
++	{ .compatible = "maxim,max77836-regulator",
++	  .data = (void *)MAXIM_DEVICE_TYPE_MAX77836, },
++	{ .compatible = "maxim,max14577-regulator",
++	  .data = (void *)MAXIM_DEVICE_TYPE_MAX14577, },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_max14577_regulator_dt_match);
++
+ static struct platform_driver max14577_regulator_driver = {
+ 	.driver = {
+ 		   .name = "max14577-regulator",
+-- 
+2.17.1
 
