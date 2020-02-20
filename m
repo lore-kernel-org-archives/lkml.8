@@ -2,106 +2,127 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58337C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCAAC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FCA206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582231001;
-	bh=q+xU5bB1UGhpVmWLgVQhOQ3cg6LjDCdHAIrxmWLv7PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pd7+bJFywwKs/UhwIJBFfwADs4BdUFOq1zBY6zdnyWWn09Mszfe7b7I2NgFH/clfK
-	 I+dZJJS56XlIL89lnSG/Ad62tAKdl04YGZgc61qzFxyS7TytrL3JUi17S/BBXr7fyb
-	 JqGwFvmYSK0N64z5rSskmypMLZoKimRd21ekDpx8=
+	by mail.kernel.org (Postfix) with ESMTP id F420B207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgBTUgk (ORCPT
+        id S1729111AbgBTUhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:36:40 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36738 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBTUgj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:36:39 -0500
-Received: by mail-oi1-f194.google.com with SMTP id c16so28956650oic.3;
-        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dTWnQ3lvBmB7ErgPURmWXOoQ/e5ybUtPY0ge36pNzVk=;
-        b=ObtDcSwNnPoxbsU2S/HdnbRZjp4ejrkGrPdcYNIfPj2ghI6Oqf99H8WSK0FWCEYvJD
-         x/g8CFsEEAccr0MF8eHrJXenKeKHOvSgsb3FilscNjmAhU0MsmwnaaIB8JrQwNZZn1Pn
-         rgCos8WjHmiivlRgXLpZxC4+aUTtdslctEMrBe9PumqMP/q+2jLfD5xtYXbAgALavpey
-         MVKTdpOQg+KkihgTffwYnL6Q21EflfEn9qem/t4S9m58eCw6SIKp11t+jDIXm6jQN+dR
-         DJVadjn0bcRhOrPlfu/CrHHn4yvdsxJ7AE4zS4DurutPYnByNzVe12qUR/mtxgu2skIq
-         w5Ww==
-X-Gm-Message-State: APjAAAWBll/5KuzMcZjF3pDws2LDnTbrQw9zLgD5EKQruKO6Zg/3aSkw
-        2QEvzr2uTlaQO+fspLBPNA==
-X-Google-Smtp-Source: APXvYqxq6Fef/uB5nvq/j1hNavakwK21btDjib4pkIuE15IOqq9rtqlxMlELf9zdDMgdlOB20Qhzew==
-X-Received: by 2002:aca:d502:: with SMTP id m2mr3358601oig.41.1582230999091;
-        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k18sm120714oiw.44.2020.02.20.12.36.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:36:38 -0800 (PST)
-Received: (nullmailer pid 17428 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:36:37 -0000
-Date:   Thu, 20 Feb 2020 14:36:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] Documentation: devictree: Add ipq806x mdio
- bindings
-Message-ID: <20200220203637.GA16998@bogus>
-References: <20200220170732.12741-1-ansuelsmth@gmail.com>
- <20200220170732.12741-2-ansuelsmth@gmail.com>
+        Thu, 20 Feb 2020 15:37:00 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:45112 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgBTUhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:37:00 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j4sZ8-0005cP-BW; Thu, 20 Feb 2020 13:36:59 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j4sZ7-0006yA-QL; Thu, 20 Feb 2020 13:36:57 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 20 Feb 2020 13:36:45 -0700
+Message-Id: <20200220203652.26734-3-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200220203652.26734-1-logang@deltatee.com>
+References: <20200220203652.26734-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220170732.12741-2-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH v11 2/9] nvme: Create helper function to obtain command effects
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 18:07:29 +0100, Ansuel Smith wrote:
-> Add documentations for ipq806x mdio driver.
-> 
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> ---
->  .../bindings/net/qcom,ipq8064-mdio.yaml       | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-> 
+Separate the code to obtain command effects from the code
+to start a passthru request and open code nvme_known_admin_effects()
+in the new helper.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The new helper function will be necessary for nvmet passthru
+code to determine if we need to change out of interrupt context
+to handle the effects.
 
-warning: no schema found in file: Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: ignoring, error in schema: $id
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: $id: 'http://devicetree.org/schemas/net/qcom,ipq8064-mdio.txt' does not match 'http://devicetree.org/schemas/.*\\.yaml#'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: 'maintainers' is a required property
-Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts] Error 1
-Makefile:1263: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/host/core.c | 39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
-See https://patchwork.ozlabs.org/patch/1241574
-Please check and re-submit.
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 330b05ef1b16..101137bdfece 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1300,22 +1300,8 @@ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ 			metadata, meta_len, lower_32_bits(io.slba), NULL, 0);
+ }
+ 
+-static u32 nvme_known_admin_effects(u8 opcode)
+-{
+-	switch (opcode) {
+-	case nvme_admin_format_nvm:
+-		return NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
+-					NVME_CMD_EFFECTS_CSE_MASK;
+-	case nvme_admin_sanitize_nvm:
+-		return NVME_CMD_EFFECTS_CSE_MASK;
+-	default:
+-		break;
+-	}
+-	return 0;
+-}
+-
+-static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+-								u8 opcode)
++static u32 nvme_command_effects(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++				u8 opcode)
+ {
+ 	u32 effects = 0;
+ 
+@@ -1331,7 +1317,26 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 
+ 	if (ctrl->effects)
+ 		effects = le32_to_cpu(ctrl->effects->acs[opcode]);
+-	effects |= nvme_known_admin_effects(opcode);
++
++	switch (opcode) {
++	case nvme_admin_format_nvm:
++		effects |= NVME_CMD_EFFECTS_CSUPP | NVME_CMD_EFFECTS_LBCC |
++			NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	case nvme_admin_sanitize_nvm:
++		effects |= NVME_CMD_EFFECTS_CSE_MASK;
++		break;
++	default:
++		break;
++	}
++
++	return effects;
++}
++
++static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
++			       u8 opcode)
++{
++	u32 effects = nvme_command_effects(ctrl, ns, opcode);
+ 
+ 	/*
+ 	 * For simplicity, IO to all namespaces is quiesced even if the command
+-- 
+2.20.1
+
