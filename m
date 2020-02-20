@@ -2,84 +2,79 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1E7C11D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5286FC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D512465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Cj+GpElC"
+	by mail.kernel.org (Postfix) with ESMTP id 32D5121D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgBTBgR (ORCPT
+        id S1727677AbgBTBg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:36:17 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:9219 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727135AbgBTBgP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:36:15 -0500
-X-UUID: 8822993177144f7cae617536a7168d95-20200220
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=M86BLgqozbH/Kl6AgJIXd8CaALScxACbiWE+AGXHu0M=;
-        b=Cj+GpElCDUUggrUPzXSWal+0LBXA/Js6cHOFqPE/HSfaiaFT5cQVqGJOVhIk4xx0Y8hcHvzyj1y6Q9oTXDtHHS3Uj3fqXFw9iZpkhY6n4ouBXRHWRSCrFNfZ8aENxznZvMCINcJKXhRTUIxqURVMkFU95xxb1IPgavATLujoa7g=;
-X-UUID: 8822993177144f7cae617536a7168d95-20200220
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 23207877; Thu, 20 Feb 2020 09:36:09 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 20 Feb 2020 09:36:08 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 20 Feb 2020 09:35:31 +0800
-Message-ID: <1582162568.24713.0.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: component type MTK_DISP_OVL_2L is not
- correctly handled
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Phong LE <ple@baylibre.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Thu, 20 Feb 2020 09:36:08 +0800
-In-Reply-To: <20200219141324.29299-1-ple@baylibre.com>
-References: <20200219141324.29299-1-ple@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 19 Feb 2020 20:36:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:8059 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbgBTBgz (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:36:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 17:36:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
+   d="scan'208";a="259114739"
+Received: from kbl.sh.intel.com ([10.239.159.24])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Feb 2020 17:36:52 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v7 0/3] perf report: Support sorting by a given event in group
+Date:   Thu, 20 Feb 2020 09:36:13 +0800
+Message-Id: <20200220013616.19916-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFBob25nOg0KDQpPbiBXZWQsIDIwMjAtMDItMTkgYXQgMTU6MTMgKzAxMDAsIFBob25nIExF
-IHdyb3RlOg0KPiBUaGUgbGFyYiBkZXZpY2UgcmVtYWlucyBOVUxMIGlmIHRoZSB0eXBlIGlzIE1U
-S19ESVNQX09WTF8yTC4NCj4gQSBrZXJuZWwgcGFuaWMgaXMgcmFpc2VkIHdoZW4gYSBjcnRjIHVz
-ZXMgbXRrX3NtaV9sYXJiX2dldCBvcg0KPiBtdGtfc21pX2xhcmJfcHV0Lg0KPiANCg0KUmV2aWV3
-ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogUGhv
-bmcgTEUgPHBsZUBiYXlsaWJyZS5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0
-aW9uKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-cm1fZGRwX2NvbXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21w
-LmMNCj4gaW5kZXggMWY1YTExMmJiMDM0Li41N2M4OGRlOWEzMjkgMTAwNjQ0DQo+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYw0KPiBAQCAtNDcxLDYgKzQ3MSw3
-IEBAIGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbm9kZSwNCj4gIAkvKiBPbmx5IERNQSBjYXBhYmxlIGNvbXBvbmVudHMgbmVlZCB0
-aGUgTEFSQiBwcm9wZXJ0eSAqLw0KPiAgCWNvbXAtPmxhcmJfZGV2ID0gTlVMTDsNCj4gIAlpZiAo
-dHlwZSAhPSBNVEtfRElTUF9PVkwgJiYNCj4gKwkgICAgdHlwZSAhPSBNVEtfRElTUF9PVkxfMkwg
-JiYNCj4gIAkgICAgdHlwZSAhPSBNVEtfRElTUF9SRE1BICYmDQo+ICAJICAgIHR5cGUgIT0gTVRL
-X0RJU1BfV0RNQSkNCj4gIAkJcmV0dXJuIDA7DQoNCg==
+When performing "perf report --group", it shows the event group information
+together. By default, the output is sorted by the first event in group.
+It would be nice for user to select any event for sorting.
+
+The patch 1/3 introduces a new option "--group-sort-idx" to sort the
+output by the event at the index n in event group.
+
+The patch 2/3 creates a new key K_RELOAD to reload the browser.
+
+The patch 3/3 supports hotkeys in browser to select a event to
+sort.
+
+ v7:
+ ---
+ v6 was posted two months ago and all comments were fixed.
+
+ v7 just rebases to perf/core, no other change.
+
+Jin Yao (3):
+  perf report: Change sort order by a specified event in group
+  perf report: Support a new key to reload the browser
+  perf report: support hotkey to let user select any event for sorting
+
+ tools/perf/Documentation/perf-report.txt |   5 ++
+ tools/perf/builtin-report.c              |  16 +++-
+ tools/perf/ui/browsers/hists.c           |  29 ++++++-
+ tools/perf/ui/hist.c                     | 104 +++++++++++++++++++----
+ tools/perf/ui/keysyms.h                  |   1 +
+ tools/perf/util/hist.h                   |   1 +
+ tools/perf/util/symbol_conf.h            |   1 +
+ 7 files changed, 138 insertions(+), 19 deletions(-)
+
+-- 
+2.17.1
 
