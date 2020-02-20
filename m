@@ -2,35 +2,35 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFFB8C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBD4C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A18C120679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F8620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgBTU6J (ORCPT
+        id S1729508AbgBTU6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:58:09 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44157 "EHLO
+        Thu, 20 Feb 2020 15:58:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44160 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729178AbgBTU4j (ORCPT
+        with ESMTP id S1729181AbgBTU4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 15:56:39 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j4sra-0007T1-Ix; Thu, 20 Feb 2020 21:56:02 +0100
+        id 1j4srf-0007Uk-7c; Thu, 20 Feb 2020 21:56:07 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id DFF49104085;
-        Thu, 20 Feb 2020 21:56:01 +0100 (CET)
-Message-Id: <20200220204517.863202864@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id B760110408F;
+        Thu, 20 Feb 2020 21:56:04 +0100 (CET)
+Message-Id: <20200220204618.518678842@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 20 Feb 2020 21:45:17 +0100
+Date:   Thu, 20 Feb 2020 21:45:29 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,10 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 00/20] bpf: Make BPF and PREEMPT_RT co-exist
+Subject: [patch V2 12/20] bpf: Use migrate_disable/enabe() in trampoline code.
+References: <20200220204517.863202864@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -54,62 +57,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+From: David Miller <davem@davemloft.net>
 
-This is the second version of the BPF/RT patch set which makes both coexist
-nicely. The long explanation can be found in the cover letter of the V1
-submission:
+Instead of preemption disable/enable to reflect the purpose. This allows
+PREEMPT_RT to substitute it with an actual migration disable
+implementation. On non RT kernels this is still mapped to
+preempt_disable/enable().
 
-  https://lore.kernel.org/r/20200214133917.304937432@linutronix.de
-
-The following changes vs. V1 have been made:
-
-  - New patch to enforce preallocation for all instrumentation type
-    programs
-
-  - New patches which make the recursion protection safe against preemption
-    on RT (Mathieu)
-
-  - New patch which removes the unnecessary recursion protection around
-    the rcu_free() invocation
-
-  - Converted macro to inline (Mathieu)
-
-  - Added explanation about the seccomp loop to the changelog (Vinicius)
-
-  - Fixed the explicitely typos (Jakub)
-
-  - Dropped the migrate* stubs patches and merged them into the tip
-    tree. See below.
-
-The series applies on top of:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-for-bpf-2020-02-20
-
-This tag contains only the two migrate stub commits on top of 5.6-rc2 and
-can be pulled into BPF. The commits are immutable and will be carried also
-in tip so further changes in this area can be applied.
-
-Thanks,
-
-	tglx
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- include/linux/bpf.h          |   38 ++++++++-
- include/linux/filter.h       |   33 ++++++--
- kernel/bpf/hashtab.c         |  172 ++++++++++++++++++++++++++++++-------------
- kernel/bpf/lpm_trie.c        |   12 +--
- kernel/bpf/percpu_freelist.c |   20 ++---
- kernel/bpf/stackmap.c        |   18 +++-
- kernel/bpf/syscall.c         |   27 ++----
- kernel/bpf/trampoline.c      |    9 +-
- kernel/bpf/verifier.c        |   18 ++--
- kernel/events/core.c         |    2 
- kernel/seccomp.c             |    4 -
- kernel/trace/bpf_trace.c     |    6 -
- lib/test_bpf.c               |    4 -
- net/bpf/test_run.c           |    8 +-
- net/core/flow_dissector.c    |    4 -
- net/core/skmsg.c             |    8 --
- net/kcm/kcmsock.c            |    4 -
- 17 files changed, 252 insertions(+), 135 deletions(-)
+ kernel/bpf/trampoline.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -367,8 +367,9 @@ void bpf_trampoline_put(struct bpf_tramp
+ 	mutex_unlock(&trampoline_mutex);
+ }
+ 
+-/* The logic is similar to BPF_PROG_RUN, but with explicit rcu and preempt that
+- * are needed for trampoline. The macro is split into
++/* The logic is similar to BPF_PROG_RUN, but with an explicit
++ * rcu_read_lock() and migrate_disable() which are required
++ * for the trampoline. The macro is split into
+  * call _bpf_prog_enter
+  * call prog->bpf_func
+  * call __bpf_prog_exit
+@@ -378,7 +379,7 @@ u64 notrace __bpf_prog_enter(void)
+ 	u64 start = 0;
+ 
+ 	rcu_read_lock();
+-	preempt_disable();
++	migrate_disable();
+ 	if (static_branch_unlikely(&bpf_stats_enabled_key))
+ 		start = sched_clock();
+ 	return start;
+@@ -401,7 +402,7 @@ void notrace __bpf_prog_exit(struct bpf_
+ 		stats->nsecs += sched_clock() - start;
+ 		u64_stats_update_end(&stats->syncp);
+ 	}
+-	preempt_enable();
++	migrate_enable();
+ 	rcu_read_unlock();
+ }
+ 
+
