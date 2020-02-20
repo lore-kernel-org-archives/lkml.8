@@ -2,157 +2,92 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18428C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9520DC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B6720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6090220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fgz01I+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgBTJ2d (ORCPT
+        id S1726952AbgBTJ2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:28:33 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23722 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726637AbgBTJ2d (ORCPT
+        Thu, 20 Feb 2020 04:28:44 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38203 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgBTJ2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:28:33 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K9DxMu003931;
-        Thu, 20 Feb 2020 04:28:31 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8uduknk8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Feb 2020 04:28:31 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01K9SU1L037385
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 20 Feb 2020 04:28:30 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 20 Feb
- 2020 04:28:26 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 20 Feb 2020 04:28:26 -0500
-Received: from analog.ad.analog.com ([10.48.65.180])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01K9SN4x013030;
-        Thu, 20 Feb 2020 04:28:23 -0500
-From:   Sergiu <sergiu.cuciurean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, Sergiu <sergiu.cuciurean@analog.com>
-Subject: [PATCH] iio: amplifiers: ad8366: add support for HMC1119 Attenuator
-Date:   Thu, 20 Feb 2020 11:28:21 +0200
-Message-ID: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Feb 2020 04:28:43 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so2506781lfm.5;
+        Thu, 20 Feb 2020 01:28:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aXBYI7iN04ln6Ion90FgCxJnmbc7ifsuLMedAnCxmZg=;
+        b=Fgz01I+qAuo3DyELQn4YOkmmqdbZG0GyFC0OM551PnYPk0qWHczUrMpYYKUKJiPI4g
+         iEc3V4+CzggO/N5X4p3T1ke0BzSBUvUsrfXSt8xvRgx9AhbQ8kSTtWcp+0UtcNTJLtzp
+         jo3xbT0JiMidrEoSaZMPPP1+pJhaotHe5GlbjapHTvN13jyXawb1yuQA4H4aqb3bgjX5
+         tj+0nCcCQASUvGIr5ueSo9yxS/zn+iGnsX8pA1DlPO1DOGgEPaIopjlfryIflIKGjX6K
+         wwPFOb0DQByw0cGYJ9eG0hnfrSREMghHAxvzV+VU2SuJsjziF60f+vDrQ5RB+tB0pe8O
+         CHWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aXBYI7iN04ln6Ion90FgCxJnmbc7ifsuLMedAnCxmZg=;
+        b=F8xP31rlgWn6GJuCu13IdGBmioOlc1l41YjipAgJ5WUjuGgGr+MGXbtLwvDaq1qpg+
+         o6kMcl6YaDGnhPtK7r0xOsX+bpXk58hnAZz01xtgsNqDwtbS2dIvxsmCHLCHRWqXaQIP
+         H5JdCNCXenbkwfVhtJzEts1f2zL55WT8WMDz7r0AcM1TeRtlQ1AvSp5PzvAAp0bSDGel
+         VUT+ebvnnwguB/bjAyqh6X2w/67YrOqH3jDJx283+gEcBo/PJY4SS3a2XElA+yvKZ11i
+         2YsPcGjm+0VYaoyQZfGGM+OR2lk0FYyiqxYX3XkZTqY4U/62BB+LDWTmPPcB6USWLhqm
+         1/4g==
+X-Gm-Message-State: APjAAAUwSHiu0Xkm2k6X4CLJElb3TzzWh5nKE/FeSeMpDAsUx8bS4ij0
+        as60Z1grVMH2Rl+6EuDl0fGJcZLZT3dob0ByDDE=
+X-Google-Smtp-Source: APXvYqzqPQ9BCBt2x2OiYVmwTljlYndEM577r2iYLn7YqzpJ1YQgQCYJ1SjotvYnvWD0v8GZKl4r3TDCXgAkgUM7iSc=
+X-Received: by 2002:a05:6512:78:: with SMTP id i24mr16504662lfo.10.1582190921659;
+ Thu, 20 Feb 2020 01:28:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_02:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1011 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200069
+References: <20200220071140.14080-1-masahiroy@kernel.org>
+In-Reply-To: <20200220071140.14080-1-masahiroy@kernel.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 20 Feb 2020 10:28:30 +0100
+Message-ID: <CANiq72kqxdGrZO7NokY6Zkh=e8owBVJCpK5DxWLnwiuxyzCybg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] vdso: remove meaningless undefining CONFIG_OPTIMIZE_INLINING
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        sparclinux@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for the HMC1119 Silicon Digial Attenuator. The
-HMC1119 is a broadband, highly accurate, 7-bit digital attenuator,
-operating from 0.1 GHz to 6.0 GHz with 31.5 dB attenuation control range
-in 0.25 dB steps.
+On Thu, Feb 20, 2020 at 8:12 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> It it about two years since 28128c61e08e. Nobody has reported a
 
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/hmc1119.pdf
+Nit: "It it" -> "it is"
 
-Signed-off-by: Sergiu <sergiu.cuciurean@analog.com>
----
- drivers/iio/amplifiers/ad8366.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+> It is ugly and unreliable to attempt to undefine a CONFIG option from
+> C files, and anyway the inlining heuristic is up to the compiler.
 
-diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-index 95972ab60f42..62167b87caea 100644
---- a/drivers/iio/amplifiers/ad8366.c
-+++ b/drivers/iio/amplifiers/ad8366.c
-@@ -5,6 +5,7 @@
-  *   AD8366 Dual-Digital Variable Gain Amplifier (VGA)
-  *   ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
-  *   ADL5240 Digitally controlled variable gain amplifier (VGA)
-+ *   HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
-  *
-  * Copyright 2012-2019 Analog Devices Inc.
-  */
-@@ -27,6 +28,7 @@ enum ad8366_type {
- 	ID_AD8366,
- 	ID_ADA4961,
- 	ID_ADL5240,
-+	ID_HMC1119,
- };
- 
- struct ad8366_info {
-@@ -62,6 +64,10 @@ static struct ad8366_info ad8366_infos[] = {
- 		.gain_min = -11500,
- 		.gain_max = 20000,
- 	},
-+	[ID_HMC1119] = {
-+		.gain_min = -31750,
-+		.gain_max = 0,
-+	},
- };
- 
- static int ad8366_write(struct iio_dev *indio_dev,
-@@ -84,6 +90,9 @@ static int ad8366_write(struct iio_dev *indio_dev,
- 	case ID_ADL5240:
- 		st->data[0] = (ch_a & 0x3F);
- 		break;
-+	case ID_HMC1119:
-+		st->data[0] = ch_a;
-+		break;
- 	}
- 
- 	ret = spi_write(st->spi, st->data, indio_dev->num_channels);
-@@ -118,6 +127,9 @@ static int ad8366_read_raw(struct iio_dev *indio_dev,
- 		case ID_ADL5240:
- 			gain = 20000 - 31500 + code * 500;
- 			break;
-+		case ID_HMC1119:
-+			gain = -1 * code * 250;
-+			break;
- 		}
- 
- 		/* Values in dB */
-@@ -164,6 +176,9 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
- 	case ID_ADL5240:
- 		code = ((gain - 500 - 20000) / 500) & 0x3F;
- 		break;
-+	case ID_HMC1119:
-+		code = (abs(gain) / 250) & 0x7F;
-+		break;
- 	}
- 
- 	mutex_lock(&st->lock);
-@@ -246,6 +261,7 @@ static int ad8366_probe(struct spi_device *spi)
- 		break;
- 	case ID_ADA4961:
- 	case ID_ADL5240:
-+	case ID_HMC1119:
- 		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
- 			GPIOD_OUT_HIGH);
- 		indio_dev->channels = ada4961_channels;
-@@ -298,6 +314,7 @@ static const struct spi_device_id ad8366_id[] = {
- 	{"ad8366",  ID_AD8366},
- 	{"ada4961", ID_ADA4961},
- 	{"adl5240", ID_ADL5240},
-+	{"hmc1119", ID_HMC1119},
- 	{}
- };
- MODULE_DEVICE_TABLE(spi, ad8366_id);
--- 
-2.17.1
++1
 
+Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+
+Cheers,
+Miguel
