@@ -2,184 +2,94 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36AF7C11D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A746C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AFE24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:53:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582185185;
-	bh=LykCzXjJkCMwbbh+Gw9s82BtfDJb9IualA+/QWv+QIQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i/4kHxT5jvzIPKmxrYmnYzzYu5gaWVwkv66kLnZai4oxCBKSm4+2GJwVmkpMfREhA
-	 wjElsqZIAvWDC+vwt0qaTfK+oSVUAX5w9Lfwv7BpkCW+y+eE0TZA+UvzD4HNs1SZTW
-	 biLvfoxn29b4ZEitwRg/RkDIEj9eBW63MJJcrSwQ=
+	by mail.kernel.org (Postfix) with ESMTP id EEB2924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:56:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="ILKrNT93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbgBTHxD (ORCPT
+        id S1726802AbgBTH4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:53:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbgBTHxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:53:03 -0500
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C519524673
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582185182;
-        bh=LykCzXjJkCMwbbh+Gw9s82BtfDJb9IualA+/QWv+QIQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Szecd76bZ+d4eoYfnhOGncBZwXvNNvLPuPtKmzI96kpm4DhUe4J0cv0Q+LQyBy0Cx
-         Y70Rkb+gPtKko37eOpHA+aja1AqAlTspW3o9pPUoLEksWEgAlR0SSd3QJ62OZBVVsc
-         EmSUGL5HXnkstnYgQBe0nxMUT4aUQdomjUTYsjV8=
-Received: by mail-wm1-f49.google.com with SMTP id q9so894631wmj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 23:53:01 -0800 (PST)
-X-Gm-Message-State: APjAAAUej9dAef1KyS8Yp8ILywYfYAr+WCA1UW5385ky3q0bQLp8dcmp
-        thfMbNwM2qHY3QzvCQpi01C5pinoKH6rIJhUcopOGQ==
-X-Google-Smtp-Source: APXvYqyabUj41A0pBwBLgb5xOjJ9QmNHeJJ1dr9qa7YeLfOPG0cvAaJ8/hp7/WtM9uitoGU7gkWhcCeGeYUATYOvd+c=
-X-Received: by 2002:a1c:bc46:: with SMTP id m67mr2765906wmf.40.1582185180146;
- Wed, 19 Feb 2020 23:53:00 -0800 (PST)
+        Thu, 20 Feb 2020 02:56:40 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17950 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726541AbgBTH4k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 02:56:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582185365;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=vDUle+bK9nzmqA7ZpDE8hM/Wdy0/mDXfft5rPIpoVc4=;
+        b=ILKrNT93qUbRKgQJ4HfWwuDw3BjRJmv4M2hUbdDHWbVg96M76uVMUmkd6DntmP2v
+        SL7DXbSroEAL2EMn0FMqi46OuFTItDP2WFG9tvX6lsXShS2vYjtVP/w6TGBJ95IMUsj
+        Dl/bbcrIEXxYbVdqJabWKK7kZz+ns7l1kcSVpYDo=
+Received: from [26.26.26.1] (183.156.46.156 [183.156.46.156]) by mx.zoho.com.cn
+        with SMTPS id 1582185359940116.59226967139227; Thu, 20 Feb 2020 15:55:59 +0800 (CST)
+Date:   Thu, 20 Feb 2020 15:55:58 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAAhV-H62BKFeh3h7xE3LQLYwLRukG5dE3gu4F7RGZdJcdoNCjg@mail.gmail.com>
+References: <20200219191730.1277800-1-paulburton@kernel.org> <20200219191730.1277800-3-paulburton@kernel.org> <cfeab22c0f332418d25e56fa86f5420f5470e4ee.camel@perches.com> <CAAhV-H62BKFeh3h7xE3LQLYwLRukG5dE3gu4F7RGZdJcdoNCjg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200220065317.9096-1-xypron.glpk@gmx.de> <9687832d-e9a9-ca47-34d5-7b912b2f718a@infradead.org>
-In-Reply-To: <9687832d-e9a9-ca47-34d5-7b912b2f718a@infradead.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 20 Feb 2020 08:52:48 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu8ZvxPdgz9d2ZrbO1vaCrUZs8WW8Bc2sxsrvrCtXtviqg@mail.gmail.com>
-Message-ID: <CAKv+Gu8ZvxPdgz9d2ZrbO1vaCrUZs8WW8Bc2sxsrvrCtXtviqg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: describe efi_relocate_kernel()
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     Huacai Chen <chenhuacai@gmail.com>
+CC:     Paul Burton <paulburton@kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, ysu@wavecomp.com
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <2A286117-5B5C-4B4D-ADC7-86850AE1FA39@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 08:02, Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> Hi,
-> Mostly looks good.  One comment below:
->
-> On 2/19/20 10:53 PM, Heinrich Schuchardt wrote:
-> > Update the description of of efi_relocate_kernel() to match Sphinx style.
-> >
-> > Update parameter references in the description of other memory functions
-> > to use @param style.
-> >
-> > Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> > ---
-> >  drivers/firmware/efi/libstub/mem.c | 38 +++++++++++++++++++-----------
-> >  1 file changed, 24 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> > index 0d57078e5e62..7efe3ed2d5a6 100644
-> > --- a/drivers/firmware/efi/libstub/mem.c
-> > +++ b/drivers/firmware/efi/libstub/mem.c
-> > @@ -86,7 +86,7 @@ efi_status_t efi_get_memory_map(struct efi_boot_memmap *map)
-> >   *
-> >   * Allocate pages as EFI_LOADER_DATA. The allocated pages are aligned according
-> >   * to EFI_ALLOC_ALIGN. The last allocated page will not exceed the address
-> > - * given by 'max'.
-> > + * given by @max.
-> >   *
-> >   * Return:   status code
-> >   */
-> > @@ -126,10 +126,10 @@ efi_status_t efi_allocate_pages(unsigned long size, unsigned long *addr,
-> >   * @addr:    on exit the address of the allocated memory
-> >   * @min:     minimum address to used for the memory allocation
-> >   *
-> > - * Allocate at the lowest possible address that is not below 'min' as
-> > - * EFI_LOADER_DATA. The allocated pages are aligned according to 'align' but at
-> > + * Allocate at the lowest possible address that is not below @min as
-> > + * EFI_LOADER_DATA. The allocated pages are aligned according to @align but at
-> >   * least EFI_ALLOC_ALIGN. The first allocated page will not below the address
-> > - * given by 'min'.
-> > + * given by @min.
-> >   *
-> >   * Return:   status code
-> >   */
-> > @@ -214,7 +214,7 @@ efi_status_t efi_low_alloc_above(unsigned long size, unsigned long align,
-> >   * @addr:    start of the memory area to free (must be EFI_PAGE_SIZE
-> >   *           aligned)
-> >   *
-> > - * 'size' is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
-> > + * @size is rounded up to a multiple of EFI_ALLOC_ALIGN which is an
-> >   * architecture specific multiple of EFI_PAGE_SIZE. So this function should
-> >   * only be used to return pages allocated with efi_allocate_pages() or
-> >   * efi_low_alloc_above().
-> > @@ -230,15 +230,25 @@ void efi_free(unsigned long size, unsigned long addr)
-> >       efi_bs_call(free_pages, addr, nr_pages);
-> >  }
-> >
-> > -/*
-> > - * Relocate a kernel image, either compressed or uncompressed.
-> > - * In the ARM64 case, all kernel images are currently
-> > - * uncompressed, and as such when we relocate it we need to
-> > - * allocate additional space for the BSS segment. Any low
-> > - * memory that this function should avoid needs to be
-> > - * unavailable in the EFI memory map, as if the preferred
-> > - * address is not available the lowest available address will
-> > - * be used.
-> > +/**
-> > + * efi_relocate_kernel() - copy memory area
-> > + * @image_addr:              address of memory area to copy, on exit target address
->
-> The "on exit target address" is a little bit confusing IMO.
-> Is it like this?
->
->   On exit, @image_addr is updated to the target copy address that was used.
->
-
-Agreed.
-
-> ?  or some other better description?
->
-> Thanks.
->
-> Acked-by: Randy Dunlap <rdunlap@infradead.org>
->
-
-Applied to efi/next with Randy's suggestion folded in
-
-Heinrich: I folded the first few hunks into the respective changes of
-yours that were already queued up
-
-Thanks,
 
 
+=E4=BA=8E 2020=E5=B9=B42=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=882=
+:44:03, Huacai Chen <chenhuacai@gmail=2Ecom> =E5=86=99=E5=88=B0:
+>Hi, all,
 >
-> > + * @image_size:              size of memory area to copy
-> > + * @alloc_size:              minimum size of memory to allocate, must be greater or
-> > + *                   equal to image_size
-> > + * @preferred_addr:  preferred target address
-> > + * @alignment:               minimum alignment of the allocated memory area. It
-> > + *                   should be a power of two.
-> > + * @min_addr:                minimum target address
-> > + *
-> > + * Copy a memory area to a newly allocated memory area aligned according
-> > + * to @alignment but at least EFI_ALLOC_ALIGN. If the preferred address
-> > + * is not available, the allocated address will not be below @min_addr.
-> > + *
-> > + * This function is used to copy the Linux kernel verbatim. It does not apply
-> > + * any relocation changes.
-> > + *
-> > + * Return:           status code
-> >   */
-> >  efi_status_t efi_relocate_kernel(unsigned long *image_addr,
-> >                                unsigned long image_size,
-> > --
-> > 2.25.0
-> >
+>I suggest Jiaxun Yang to be the new Linux/MIPS maintainer because of
+>the following reasons:
 >
+>1=2E He is familiar with Linux kernel & MIPS architecture=2E
+>2=2E He is active and has already contributed many patches=2E
+>3=2E He is not an employee of any corporation, so people can expect him
+>to be neutral=2E
+>4=2E He is young and has enough free time to follow the mainstream
+>development closely=2E
+>5=2E His English is good and is willing to maintain a good level of
+>communication with other contributors=2E
 >
-> --
-> ~Randy
+>Jiaxun, what's your opinion?
+
+Thanks for your recommendation=2E
+
+It's my pleasure to take this duty if I'm eligible=2E
+
+I have experience in MIPS chips and have already involved in some review p=
+rocesses=2E
+i=2Ee=2Eloongson, Ingenic/MediaTec & etc=2E
+
+As what Huacai has said, I'm a pure contributor from community,
+which means I will able to be neutral
+to MIPS family members=2E
+
+[Also added Yunqiang Su to Cc list as he is the
+only current MIPS company employee I know=2E]
+
+Thanks=2E
 >
+>Regards,
+>Huacai Chen
+--=20
+Jiaxun Yang
