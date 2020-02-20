@@ -2,207 +2,115 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E096C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302BFC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AF92465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:37:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vr6Q6uK0"
+	by mail.kernel.org (Postfix) with ESMTP id 09E08206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582159081;
+	bh=wVkJ6ZeLNIZiy6+11L33texKMe0DidKfbB80UOC5yMU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rcwsFGBPJbEO6JS26UUi4/fO/8Uiybyxr119KcsL+LBUm3rfL1yE6xWWVdiyO8LQ1
+	 aHfgzlKQT5cG1PnKwKgFS84JyBXDnudUihQh0bKBGOXDlYxZ6TajYqXd3HUN8P3zsm
+	 c/jGuTBUE2kMgov7jN2Rx7TCf35YdFai+wHOC6eQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgBTAhM (ORCPT
+        id S1727488AbgBTAh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:37:12 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44885 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbgBTAhJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:37:09 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so798861plo.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:37:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pLE4I3o8jdwDvZKVU55StRKqxAvQ7TlkptivTca4Ny4=;
-        b=Vr6Q6uK0kl5NcofH4ISt9CiKdHe7ophokugjLDVEsbzHItf0SRuPltxv2eNshnaFnX
-         tzXWw7G7ZPeV48mFn3GKA+YCgJpWxuBx0a0ItFomklLbv9foIetJ5LQ9uxRnm71oZxMM
-         3JPQNn4MzoiKGpng/VXK89odXM9H0BOgHZXHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=pLE4I3o8jdwDvZKVU55StRKqxAvQ7TlkptivTca4Ny4=;
-        b=Kij09HRwvoyuU6Ys516qSTQqEeBfZvDVlt7NudK7xRzA29V0tIJvU9hf7UQXJy3bIG
-         IIySNNJgrAStBcBXIOsfz+tl94LyV+AOGMrAcv+czJ8cfvKqrQpQQzORuECL04NdrBnJ
-         Z/ntjESGlh8aHoZOM7YcgSwjPwAWCi5UPrNEB8lqN0+iPWgUe3pwCvYUnQbljmkkTchx
-         6aayjnvBjUNfdXS4wk9jLc2ayhhV2/3Tqx+Qu5DY6ZODPNnPP65yOHiQHEaB3pmAKpnE
-         2Jr2Zq8quGfQ9gOjndm4QlorP1bDeyoR9zny2pG2Pfb0sRWMC0XWLs3J5KUqm9sbeswu
-         pN9w==
-X-Gm-Message-State: APjAAAXi1vAQ9pNHb/FvORvpIYPkTbBvIEzOmqZhBoSTQKsaAD9bJ5fX
-        sWXo52DCblLKNbmrAUw4gr+tEPbOV5c=
-X-Google-Smtp-Source: APXvYqwaEmiwYs193DX5Hllk0uSWLf8xyMKiFwgGAeMwRH5GmXZrxWaaubXFUZQDM/BtqGFUQfRq5A==
-X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr419652pjv.57.1582159026908;
-        Wed, 19 Feb 2020 16:37:06 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id g24sm788773pfk.92.2020.02.19.16.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 16:37:06 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
-        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v3 4/4] platform/chrome: typec: Update port info from EC
-Date:   Wed, 19 Feb 2020 16:36:32 -0800
-Message-Id: <20200220003631.206078-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200220003631.206078-1-pmalani@chromium.org>
-References: <20200220003631.206078-1-pmalani@chromium.org>
+        Wed, 19 Feb 2020 19:37:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbgBTAh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 19:37:59 -0500
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D964524671;
+        Thu, 20 Feb 2020 00:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582159079;
+        bh=wVkJ6ZeLNIZiy6+11L33texKMe0DidKfbB80UOC5yMU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JvX8juVh7tpKnAmn/OnSmnaV1SywCv8p99C7KMYuMuHchY1f3H9mbVcavJ5WDnIDx
+         fd+LRfCcjhWysTgGbamLuebqnSq3BvPmfgPMFn0qDXokqCkHRWDJPwS+cfv2x5o2Ex
+         chnRTRGQGmTzPo9HAVCm/o/09yN/GqdL8fcXlZ7E=
+Received: by mail-qk1-f175.google.com with SMTP id h4so2046277qkm.0;
+        Wed, 19 Feb 2020 16:37:58 -0800 (PST)
+X-Gm-Message-State: APjAAAVwevOxJXxYdKlGiQcANqwW9Eso1hf9U65pd9oxC9lyTPb6MN4D
+        ff9gnYdbpZHoJA5aUSGaObbhzwRMq8JzhFHDvQ==
+X-Google-Smtp-Source: APXvYqxK/YCRP+U9ZJ5s6W0p8TrvM7fN8CRsbqJZJ6kYIYqE9CGU40AmveoZ5T5GaZM7MUrQWu/w4Dbohg3zeMtMQ3A=
+X-Received: by 2002:ae9:f205:: with SMTP id m5mr26414050qkg.152.1582159078007;
+ Wed, 19 Feb 2020 16:37:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-2-git-send-email-peng.fan@nxp.com> <20200219140921.GA7031@bogus>
+ <AM0PR04MB44814713955807D7BB3E2CD088100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB44814713955807D7BB3E2CD088100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 19 Feb 2020 18:37:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJWzax7eAc=qzWiSWtNtDuSyZ9OsnZ_rZNBSUgOQ7+fiQ@mail.gmail.com>
+Message-ID: <CAL_JsqJWzax7eAc=qzWiSWtNtDuSyZ9OsnZ_rZNBSUgOQ7+fiQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to json-schema
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After registering the ports at probe, get the current port information
-from EC and update the Type C connector class ports accordingly.
+On Wed, Feb 19, 2020 at 8:34 AM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> > Subject: Re: [PATCH 1/9] dt-bindings: remoteproc: Convert imx-rproc to
+> > json-schema
+> >
+> > On Wed, 19 Feb 2020 15:27:37 +0800, peng.fan@nxp.com wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Convert the i.MX remoteproc binding to DT schema format using
+> > > json-schema
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ------------
+> > >  .../devicetree/bindings/remoteproc/imx-rproc.yaml  | 61
+> > > ++++++++++++++++++++++
+> > >  2 files changed, 61 insertions(+), 33 deletions(-)  delete mode
+> > > 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+>
+> My command:
+> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+>
+> and output:
+>
+>   CHKDT   Documentation/devicetree/bindings/remoteproc/imx-rproc.yaml
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.yaml
+>   DTC     Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dt.yaml
+>   CHECK   Documentation/devicetree/bindings/remoteproc/imx-rproc.example.dt.yaml
 
-Co-developed-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
+Make sure dtschema is up to date though I'm not sure this could have
+ever passed. 'items' value is clearly wrong.
 
-Changes in v3:
-- No changes.
-
-Changes in v2:
-- No changes.
-
- drivers/platform/chrome/cros_ec_typec.c | 89 ++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 5e025c3442bed1..eebe526155a9c3 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -155,6 +155,81 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
- }
- 
-+static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!resp->enabled)
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+
-+	typec_set_pwr_role(port, resp->role ? TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_orientation(port, polarity);
-+}
-+
-+static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control_v1 *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+	typec_set_orientation(port, polarity);
-+	typec_set_data_role(port, resp->role & PD_CTRL_RESP_ROLE_DATA ?
-+			TYPEC_HOST : TYPEC_DEVICE);
-+	typec_set_pwr_role(port, resp->role & PD_CTRL_RESP_ROLE_POWER ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+}
-+
-+static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-+{
-+	struct ec_params_usb_pd_control req;
-+	struct ec_response_usb_pd_control_v1 resp;
-+	int ret;
-+
-+	if (port_num < 0 || port_num >= typec->num_ports) {
-+		dev_err(typec->dev, "cannot get status for invalid port %d\n",
-+			port_num);
-+		return -EINVAL;
-+	}
-+
-+	req.port = port_num;
-+	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-+	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-+	req.swap = USB_PD_CTRL_SWAP_NONE;
-+
-+	ret = cros_typec_ec_command(typec, typec->cmd_ver,
-+				    EC_CMD_USB_PD_CONTROL, &req, sizeof(req),
-+				    &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, resp.enabled);
-+	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, resp.role);
-+	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, resp.polarity);
-+	dev_dbg(typec->dev, "State %d: %s\n", port_num, resp.state);
-+
-+	if (typec->cmd_ver == 1)
-+		cros_typec_set_port_params_v1(typec, port_num, &resp);
-+	else
-+		cros_typec_set_port_params_v0(typec, port_num,
-+			(struct ec_response_usb_pd_control *) &resp);
-+
-+	return 0;
-+}
-+
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
- {
- 	struct ec_params_get_cmd_versions_v1 req_v1;
-@@ -201,7 +276,7 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct cros_typec_data *typec;
- 	struct ec_response_usb_pd_ports resp;
--	int ret;
-+	int ret, i;
- 
- 	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
- 	if (!typec)
-@@ -234,7 +309,19 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	for (i = 0; i < typec->num_ports; i++) {
-+		ret = cros_typec_port_update(typec, i);
-+		if (ret < 0)
-+			goto unregister_ports;
-+	}
-+
- 	return 0;
-+
-+unregister_ports:
-+	for (i = 0; i < typec->num_ports; i++)
-+		if (typec->ports[i])
-+			typec_unregister_port(typec->ports[i]);
-+	return ret;
- }
- 
- static struct platform_driver cros_typec_driver = {
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+Rob
