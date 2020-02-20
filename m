@@ -2,147 +2,210 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FE9C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B2BC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE5624654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90CB02467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cW0vjpFh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jA55lcjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBTKhg (ORCPT
+        id S1727795AbgBTKhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:37:36 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55592 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726885AbgBTKhg (ORCPT
+        Thu, 20 Feb 2020 05:37:46 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42440 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTKhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:37:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wTU5l9FvaA2rRfBZg5Cv1qrtrncw1gjr41DJZ8a0ehs=; b=cW0vjpFh5KhHj4GcOsfAMPLZtI
-        PPF2znrUvqek0EerLMwl3kva1X/c+EfmuCOnhciWLM4SOWT3mHRSvz2obQQnzb+HedsfXrdTMYVSO
-        jBA3usm2fqTlB0zQlopm6SbjQoVhPXgvpWmPbflb22C9v4N3RLODfbLty+r7V/Nsc4mcJ3gPhnCSt
-        K2ErnrU1NYL4P7WnROyXd03R2WkrSPKH9D2V9ddRm91EBm/ffkNWDQEvEWyWPfn6syQ9INL8p8/Gn
-        syLFB+/Lj6blPxk6Y9lg2wKXZds8YY/kixj8lXVAdih9BRxe4X6cnWxbL/CQ8I9dHPqRMCGGNnzrm
-        21wLu5Mg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4jCz-0002XD-Bo; Thu, 20 Feb 2020 10:37:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FF0C30008D;
-        Thu, 20 Feb 2020 11:35:34 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2DAE02B47417C; Thu, 20 Feb 2020 11:37:27 +0100 (CET)
-Date:   Thu, 20 Feb 2020 11:37:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Carter Li =?utf-8?B?5p2O6YCa5rSy?= <carter.li@eoitek.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic/atomic: Add try_cmpxchg() fallbacks
-Message-ID: <20200220103727.GW18400@hirez.programming.kicks-ass.net>
-References: <addcd44e-ed9b-5f82-517d-c1ed3ee2d85c@kernel.dk>
- <b8069e62-7ea4-c7f3-55a3-838241951068@kernel.dk>
- <20200217120920.GQ14914@hirez.programming.kicks-ass.net>
- <53de3581-b902-89ba-3f53-fd46b052df40@kernel.dk>
- <43c066d1-a892-6a02-82e7-7be850d9454d@kernel.dk>
- <20200217174610.GU14897@hirez.programming.kicks-ass.net>
- <592cf069-41ee-0bc1-1f83-e058e5dd53ff@kernel.dk>
- <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
- <20200218142700.GB14946@hirez.programming.kicks-ass.net>
- <20200220103044.GA13608@willie-the-truck>
+        Thu, 20 Feb 2020 05:37:45 -0500
+Received: by mail-qt1-f193.google.com with SMTP id r5so2482448qtt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:37:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+L7+FQcGBr8q70euhVbn25PNyS+UmjbMnhO14ByiE0w=;
+        b=jA55lcjyKchTjKedLP1Wj0EVdUaYmPyaSRofNRJZYIMyBkdwfDu2zKEAG3/YWxQ99w
+         nz3cOyoo4/3epPmSFOF4VQt4TFbLGxzPtbksWAAKpx2+tKkZn+qCN0jkwVZSCMlQFAkG
+         Uf6s1v909+xdLurZ3YSirXD4CT+ejRhw86LaavcvgITFXkpNAm0PXUcRYdbAzkshbO7f
+         vxp5jtRfNxvUG7955zn+hTm9K/Zcz1YjuERzRmHGqKIlsetT2Z0T3r6j2rp0R2L1zBBO
+         bMtwudyrb62KTOXC2FOHR2wlZz/N0dJnFmaWy+1fkxqQcn0fKNb2+tjPgvtlV+GTo7lv
+         Z0Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+L7+FQcGBr8q70euhVbn25PNyS+UmjbMnhO14ByiE0w=;
+        b=n87Fro+1kLYg4esD5ArWWbHCiIrE55ThbVQ5yzQHum/cGr18j4x+jp39mu0QE5YJch
+         ZP3Blyw83SxgTnUOdrYgs1WUU5rKf1scZ36AMi2PXWFjCAkS2uzUSzocFOqQJx8fe5cO
+         mKq69GRdSNxZTcKXT34VkFK0RBkLpxEJN+RT+Ink3pTXRaRsp6G3ibUQswIRc/kbJ5jb
+         GU37yH4Ke0hCFbl2AelQsXWSce21KiXwJ9ogU61CSqrbPRY0u0P0qCrHsKPfWao+zzVk
+         GuDXvOYGrJY3gVA2g/1kfPX66Mrai3lqSTvXbNw22j52cNSwclxbmD0IdaaekCiM7Q0b
+         JCYw==
+X-Gm-Message-State: APjAAAXlwYfQBS+gEVio1myXwiMemdun+zlILd2PncQdSrTSpPMu2gOr
+        LoewEn+cS8M4yRKbXWthzUROpHvrTor3oeSLMUuBnw==
+X-Google-Smtp-Source: APXvYqyfb7yOWKobd/t82hIUD1+XI++wuCcNV55LY8LnxBBwkaX0UMRW6CI35HdCB5KAi21LZP1we98OnRawhnsYxc4=
+X-Received: by 2002:ac8:340c:: with SMTP id u12mr25564787qtb.257.1582195063751;
+ Thu, 20 Feb 2020 02:37:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220103044.GA13608@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200219144724.800607165@infradead.org> <20200219150745.651901321@infradead.org>
+ <CACT4Y+Y+nPcnbb8nXGQA1=9p8BQYrnzab_4SvuPwbAJkTGgKOQ@mail.gmail.com>
+ <20200219163025.GH18400@hirez.programming.kicks-ass.net> <20200219172014.GI14946@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200219172014.GI14946@hirez.programming.kicks-ass.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 20 Feb 2020 11:37:32 +0100
+Message-ID: <CACT4Y+ZfxqMuiL_UF+rCku628hirJwp3t3vW5WGM8DWG6OaCeg@mail.gmail.com>
+Subject: Re: [PATCH v3 22/22] x86/int3: Ensure that poke_int3_handler() is not sanitized
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:30:45AM +0000, Will Deacon wrote:
-> On Tue, Feb 18, 2020 at 03:27:00PM +0100, Peter Zijlstra wrote:
-> > On Tue, Feb 18, 2020 at 02:13:10PM +0100, Peter Zijlstra wrote:
-> > > (with the caveat that try_cmpxchg() doesn't seem available on !x86 -- I
-> > > should go fix that)
-> > 
-> > Completely untested (lemme go do that shortly), but something like so I
-> > suppose.
-> > 
-> > ---
-> > Subject: asm-generic/atomic: Add try_cmpxchg() fallbacks
-> > 
-> > Only x86 provides try_cmpxchg() outside of the atomic_t interfaces,
-> > provide generic fallbacks to create this interface from the widely
-> > available cmpxchg() function.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> > diff --git a/include/linux/atomic-fallback.h b/include/linux/atomic-fallback.h
-> > index 656b5489b673..243f61d6c35f 100644
-> > --- a/include/linux/atomic-fallback.h
-> > +++ b/include/linux/atomic-fallback.h
-> > @@ -77,6 +77,50 @@
-> >  
-> >  #endif /* cmpxchg64_relaxed */
-> >  
-> > +#ifndef try_cmpxchg
-> > +#define try_cmpxchg(_ptr, _oldp, _new) \
-> > +({ \
-> > +	typeof(*ptr) ___r, ___o = *(_oldp); \
-> 
-> Probably worth pointing out that this will have the nasty behaviour
-> for volatile pointers that we're tackling for READ_ONCE. Obviously no
-> need to hold this up, but just mentioning it here in the hope that one
-> of us remembers to fix it later on.
+On Wed, Feb 19, 2020 at 6:20 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Wed, Feb 19, 2020 at 05:30:25PM +0100, Peter Zijlstra wrote:
+>
+> > By inlining everything in poke_int3_handler() (except bsearch :/) we can
+> > mark the whole function off limits to everything and call it a day. That
+> > simplicity has been the guiding principle so far.
+> >
+> > Alternatively we can provide an __always_inline variant of bsearch().
+>
+> This reduces the __no_sanitize usage to just the exception entry
+> (do_int3) and the critical function: poke_int3_handler().
+>
+> Is this more acceptible?
 
-Right :/
+Let's say it's more acceptable.
 
-> > diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
-> > index b6c6f5d306a7..3c9be8d550e0 100755
-> > --- a/scripts/atomic/gen-atomic-fallback.sh
-> > +++ b/scripts/atomic/gen-atomic-fallback.sh
-> > @@ -140,6 +140,32 @@ cat <<EOF
-> >  EOF
-> >  }
-> >  
-> > +gen_try_cmpxchg_fallback()
-> > +{
-> > +	local order="$1"; shift;
-> > +
-> > +cat <<EOF
-> > +#ifndef try_cmpxchg${order}
-> > +#define try_cmpxchg${order}(_ptr, _oldp, _new) \\
-> > +({ \\
-> > +	typeof(*ptr) ___r, ___o = *(_oldp); \\
-> > +	___r = cmpxchg${order}((_ptr), ___o, (_new)); \\
-> > +	if (unlikely(___r != ___o)) \\
-> > +		*(_old) = ___r; \\
-> 
-> This doesn't compile because _old isn't declared. Probably best to avoid
-> evaluating _oldp twice though.
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
 
-Compiler had already spotted that, I'll make it something like:
+I guess there is no ideal solution here.
 
-	typeof(*ptr) *___op = (_oldp), ___o = *___op;
+Just a straw man proposal: expected number of elements is large enough
+to make bsearch profitable, right? I see 1 is a common case, but the
+other case has multiple entries.
 
-	...
-
-		*___op = ___r;
-
-Which avoids the double eval.
+> --- a/arch/x86/kernel/alternative.c
+> +++ b/arch/x86/kernel/alternative.c
+> @@ -979,7 +979,7 @@ static __always_inline void *text_poke_a
+>         return _stext + tp->rel_addr;
+>  }
+>
+> -static int notrace __no_sanitize patch_cmp(const void *key, const void *elt)
+> +static __always_inline int patch_cmp(const void *key, const void *elt)
+>  {
+>         struct text_poke_loc *tp = (struct text_poke_loc *) elt;
+>
+> @@ -989,7 +989,6 @@ static int notrace __no_sanitize patch_c
+>                 return 1;
+>         return 0;
+>  }
+> -NOKPROBE_SYMBOL(patch_cmp);
+>
+>  int notrace __no_sanitize poke_int3_handler(struct pt_regs *regs)
+>  {
+> @@ -1024,9 +1023,9 @@ int notrace __no_sanitize poke_int3_hand
+>          * Skip the binary search if there is a single member in the vector.
+>          */
+>         if (unlikely(desc->nr_entries > 1)) {
+> -               tp = bsearch(ip, desc->vec, desc->nr_entries,
+> -                            sizeof(struct text_poke_loc),
+> -                            patch_cmp);
+> +               tp = __bsearch(ip, desc->vec, desc->nr_entries,
+> +                              sizeof(struct text_poke_loc),
+> +                              patch_cmp);
+>                 if (!tp)
+>                         goto out_put;
+>         } else {
+> --- a/include/linux/bsearch.h
+> +++ b/include/linux/bsearch.h
+> @@ -4,7 +4,29 @@
+>
+>  #include <linux/types.h>
+>
+> -void *bsearch(const void *key, const void *base, size_t num, size_t size,
+> -             cmp_func_t cmp);
+> +static __always_inline
+> +void *__bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
+> +{
+> +       const char *pivot;
+> +       int result;
+> +
+> +       while (num > 0) {
+> +               pivot = base + (num >> 1) * size;
+> +               result = cmp(key, pivot);
+> +
+> +               if (result == 0)
+> +                       return (void *)pivot;
+> +
+> +               if (result > 0) {
+> +                       base = pivot + size;
+> +                       num--;
+> +               }
+> +               num >>= 1;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +extern void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp);
+>
+>  #endif /* _LINUX_BSEARCH_H */
+> --- a/lib/bsearch.c
+> +++ b/lib/bsearch.c
+> @@ -28,27 +28,9 @@
+>   * the key and elements in the array are of the same type, you can use
+>   * the same comparison function for both sort() and bsearch().
+>   */
+> -void __no_sanitize *bsearch(const void *key, const void *base, size_t num, size_t size,
+> -             cmp_func_t cmp)
+> +void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
+>  {
+> -       const char *pivot;
+> -       int result;
+> -
+> -       while (num > 0) {
+> -               pivot = base + (num >> 1) * size;
+> -               result = cmp(key, pivot);
+> -
+> -               if (result == 0)
+> -                       return (void *)pivot;
+> -
+> -               if (result > 0) {
+> -                       base = pivot + size;
+> -                       num--;
+> -               }
+> -               num >>= 1;
+> -       }
+> -
+> -       return NULL;
+> +       __bsearch(key, base, num, size, cmp);
+>  }
+>  EXPORT_SYMBOL(bsearch);
+>  NOKPROBE_SYMBOL(bsearch);
