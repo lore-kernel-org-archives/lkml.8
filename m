@@ -2,104 +2,101 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47ACC761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D3CC34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8328E24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09C524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="fLH5IrYz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aSdz011n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgBTGdg (ORCPT
+        id S1726669AbgBTGew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:33:36 -0500
-Received: from chill.innovation.ch ([216.218.245.220]:40544 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbgBTGdg (ORCPT
+        Thu, 20 Feb 2020 01:34:52 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:44680 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726198AbgBTGev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:33:36 -0500
-Date:   Wed, 19 Feb 2020 22:33:35 -0800
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 542756412C7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1582180415;
-        bh=vhZWh+2Ztj0g9xXmISjjSlOG2XuQ/opDLS+2Tm7NtT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fLH5IrYzS0EdMc1N/kj00Tub4ak+6tCwmXHiPFqLdxUZbWsIVAnbLAU1JPXwtXDbk
-         Ifv0uXnKrK01hHrLJn2xEwuAJYXk42kdKJ07HfyaoSWUn9tH0aonajEPOF0NvRlyVp
-         jzFfdliaDxUJV/a1+mNUFRXw7xM7hiWjcTLFfY28veVyXxrmCcxmvXJb3TMMGEQQnr
-         hTAvLHPRyueeegtBGah99+fgGBDLRTisUeSr1r5O2Gv8trIfmzxq1NWHXKqVZyV9go
-         uY5wh58pVFBBZzduOXCCSaatN+YRhwct+dQ5/gIZ4cwaU9GtbGpfMYd/Zf1B04w27k
-         pEbxHdB+gpmFQ==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rob Herring <robh@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] serdev: Fix detection of UART devices on Apple machines.
-Message-ID: <20200220063335.GA9421@innovation.ch>
-References: <20200211194723.486217-1-ronald@innovation.ch>
- <20200219111519.GB2814125@kroah.com>
+        Thu, 20 Feb 2020 01:34:51 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582180490; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=sVo+Sl7faQqaCYyB29lBwLjWrgSdpJiLU0kKGcEC8no=;
+ b=aSdz011n+VIO3gKoUSbVh5XrhuQ7VVc/spT2AkyDWGkMs1CXz0r+ELAoGCEAphJZlW93dmBx
+ lr6wGjUrnoktufVZjDc+RLJ90ml9Xyhk0CCWX/RfwFWuel/H26iaCivoCciTe5t7gU4vHri+
+ P6R72Dmn6umssj+fO6kTNJ8g4ls=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e2880.7f1eea9446c0-smtp-out-n03;
+ Thu, 20 Feb 2020 06:34:40 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 533B5C447AA; Thu, 20 Feb 2020 06:34:40 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A991C4479C;
+        Thu, 20 Feb 2020 06:34:39 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219111519.GB2814125@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 14:34:39 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: ufs: Enable HOST_PA_TACTIVATE quirk for WDC UFS
+ devices
+In-Reply-To: <MN2PR04MB6991569990279CA1985BE92DFC130@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1580977315-19321-1-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB6991569990279CA1985BE92DFC130@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <382c4c44e04c48ddc1682b3d3b0c6256@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Wed, Feb 19, 2020 at 12:15:19PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 11, 2020 at 11:47:23AM -0800, Ronald Tschalär wrote:
-> > On Apple devices the _CRS method returns an empty resource template, and
-> > the resource settings are instead provided by the _DSM method. But
-> > commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
-> > devices by ResourceSource field) changed the search for serdev devices
-> > to require valid, non-empty resource template, thereby breaking Apple
-> > devices and causing bluetooth devices to not be found.
-> > 
-> > This expands the check so that if we don't find a valid template, and
-> > we're on an Apple machine, then just check for the device being an
-> > immediate child of the controller and having a "baud" property.
-> > 
-> > Cc: <stable@vger.kernel.org> # 5.5
-> > Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
-> > ---
-> >  drivers/tty/serdev/core.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> > index ce5309d00280..0f64a10ba51f 100644
-> > --- a/drivers/tty/serdev/core.c
-> > +++ b/drivers/tty/serdev/core.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/sched.h>
-> >  #include <linux/serdev.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/platform_data/x86/apple.h>
+On 2020-02-20 14:20, Avri Altman wrote:
+> Hi,
 > 
-> Why is this needed?  Just for the x86_apple_machine variable?
+>> 
+>>  /**
+>>   * ufs_dev_fix - ufs device quirk info
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 1fe0a97..a066f00 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -239,6 +239,8 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
+>>                 UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME),
+>>         UFS_FIX(UFS_VENDOR_SKHYNIX, "hB8aL1" /*H28U62301AMR*/,
+>>                 UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME),
+>> +       UFS_FIX(UFS_VENDOR_WDC, UFS_ANY_MODEL,
+>> +               UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE),
+> We are objecting to apply this quirk categorically for all SOC vendors.
+> Please use a vendor-specific quirk for that.
+> 
+> Thanks,
+> Avri
 
-Yes.
-
-> Why do we still have platform_data for new systems anymore?  Can't this
-> go into a much more generic location?  Like as an inline function?
-
-I'm not sure I follow you. What exactly would you like to see in the
-function? The check that sets this variable? Note that this was
-originally pulled out into a variable that is set once for performance
-reasons - see commit 630b3aff8a51c.
-
-
-  Cheers,
-
-  Ronald
-
+Yeah, as we discussed, I will apply it in ufshcd_vops_apply_dev_quirks()
+in next version and this is agreed by Stanley as well.
