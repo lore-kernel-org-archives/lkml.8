@@ -2,54 +2,53 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E56AC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07DABC11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EE424676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D54A92465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgBTJ6h (ORCPT
+        id S1727274AbgBTJ6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:58:37 -0500
-Received: from mga01.intel.com ([192.55.52.88]:37319 "EHLO mga01.intel.com"
+        Thu, 20 Feb 2020 04:58:45 -0500
+Received: from mga06.intel.com ([134.134.136.31]:16156 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726799AbgBTJ6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:58:37 -0500
+        id S1726799AbgBTJ6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:58:45 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 01:58:36 -0800
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 01:58:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="259225619"
+   d="scan'208";a="239971150"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Feb 2020 01:58:36 -0800
+  by orsmga006.jf.intel.com with ESMTP; 20 Feb 2020 01:58:44 -0800
 Received: from [10.226.39.49] (unknown [10.226.39.49])
-        by linux.intel.com (Postfix) with ESMTP id 8A86E580270;
-        Thu, 20 Feb 2020 01:58:33 -0800 (PST)
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add YAML schemas for Intel
- Combophy
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
+        by linux.intel.com (Postfix) with ESMTP id 40882580270;
+        Thu, 20 Feb 2020 01:58:42 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] phy: intel: Add driver support for Combophy
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
 References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
- <CAL_JsqL56Ucpm2FK4BPKS+N=5Zxn1iQht7OdJK1pE7cPxtWL-w@mail.gmail.com>
-Message-ID: <6f4cad61-b094-78e5-9921-9de0a1d7dbd7@linux.intel.com>
-Date:   Thu, 20 Feb 2020 17:58:32 +0800
+ <b49e2f94631da003fb4b1409adc42fb81f77877b.1582021248.git.eswara.kota@linux.intel.com>
+ <20200219101435.GM10400@smile.fi.intel.com>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <3c73c805-55a6-dcc0-4cd4-dd452f1d002d@linux.intel.com>
+Date:   Thu, 20 Feb 2020 17:58:41 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL56Ucpm2FK4BPKS+N=5Zxn1iQht7OdJK1pE7cPxtWL-w@mail.gmail.com>
+In-Reply-To: <20200219101435.GM10400@smile.fi.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,148 +56,309 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/19/2020 10:42 PM, Rob Herring wrote:
-> On Tue, Feb 18, 2020 at 9:31 PM Dilip Kota<eswara.kota@linux.intel.com>  wrote:
->> Combophy subsystem provides PHY support to various
->> controllers, viz. PCIe, SATA and EMAC.
->> Adding YAML schemas for the same.
->>
->> Signed-off-by: Dilip Kota<eswara.kota@linux.intel.com>
->> ---
->> Changes on v2:
->>
->>   Add custom 'select'
->>   Pass hardware instance entries with phandles and
->>     remove cell-index and bid entries
->>   Clock, register address space, are same for the children.
->>     So move them to parent node.
->>   Two PHY instances cannot run in different modes,
->>     so move the phy-mode entry to parent node.
->>   Add second child entry in the DT example.
->>
->>   .../devicetree/bindings/phy/intel,combo-phy.yaml   | 138 +++++++++++++++++++++
->>   1 file changed, 138 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->> new file mode 100644
->> index 000000000000..8e65a2a71e7f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->> @@ -0,0 +1,138 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id:http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
->> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+On 2/19/2020 6:14 PM, Andy Shevchenko wrote:
+> On Wed, Feb 19, 2020 at 11:31:30AM +0800, Dilip Kota wrote:
+>> Combophy subsystem provides PHYs for various
+>> controllers like PCIe, SATA and EMAC.
+> ...
+>
+>> +static const char *const intel_iphy_names[] = {"pcie", "xpcs", "sata"};
+> + blank line
+Typo, will fix it.
+>
+>> +#define CLK_100MHZ		100000000
+>> +#define CLK_156_25MHZ		156250000
+> ...
+>
+>> +enum {
+>> +	PHY_0 = 0,
+> Aren't enum:s start with 0 by the standard?
+> Ditto for all enum:s.
+> (Or, if it represents value from hardware, perhaps makes sense to put a comment
+>   to each of such enum and then all values must be explicit)
+Values are related to h/w registers, will add the description in the 
+comments.
+>
+>> +	PHY_1,
+>> +	PHY_MAX_NUM,
+>> +};
+> ...
+>
+>> +struct intel_cbphy_iphy {
+>> +	struct phy		*phy;
+>> +	struct device		*dev;
+> Can dev be derived from phy? Or phy from dev?
+I see, there is no need of storing phy. Will remove it in the next patch 
+version.
+>
+>> +	bool			enable;
+>> +	struct intel_combo_phy	*parent;
+>> +	struct reset_control	*app_rst;
+>> +	u32			id;
+>> +};
+> ...
+>
+>> +static int intel_cbphy_iphy_enable(struct intel_cbphy_iphy *iphy, bool set)
+>> +{
+>> +	struct intel_combo_phy *cbphy = iphy->parent;
+>> +	u32 val, bitn;
 >> +
->> +title: Intel Combophy Subsystem
+>> +	bitn = cbphy->phy_mode * 2 + iphy->id;
+> Why not
+>
+> 	u32 mask = BIT(cbphy->phy_mode * 2 + iphy->id);
+> 	u32 val;
+Looks more better, i will update it.
+>
+>> +	/* Register: 0 is enable, 1 is disable */
+>> +	val =  set ? 0 : BIT(bitn);
+> 	val = set ? 0 : mask;
+>
+> (why double space?)
+Typo error. Will correct it.
+>
 >> +
->> +maintainers:
->> +  - Dilip Kota<eswara.kota@linux.intel.com>
+>> +	return regmap_update_bits(cbphy->hsiocfg, REG_CLK_DISABLE(cbphy->bid),
+>> +				 BIT(bitn), val);
+> 	return regmap_update_bits(..., mask, val);
+>
+> ?
+Still it is taking more than 80 characters with mask, need to be in 2 lines
+
+return regmap_update_bits(...,
+                                                      mask, val);
+
+>
+>> +}
 >> +
->> +description: |
->> +  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
->> +  controllers. A single Combophy provides two PHY instances.
+>> +static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
+>> +{
+>> +	struct intel_combo_phy *cbphy = iphy->parent;
+>> +	const u32 pad_dis_cfg_off = 0x174;
+>> +	u32 val, bitn;
 >> +
->> +# We need a select here so we don't match all nodes with 'simple-bus'
->> +select:
->> +  properties:
->> +    compatible:
->> +      contains:
->> +        const: intel,combo-phy
->> +  required:
->> +    - compatible
+>> +	bitn = cbphy->id * 2 + iphy->id;
 >> +
->> +properties:
->> +  $nodename:
->> +    pattern: "^combophy@[0-9]+$"
-> Unit addresses are hex.
+>> +	/* Register: 0 is enable, 1 is disable */
+>> +	val = set ? 0 : BIT(bitn);
+>> +
+>> +	return regmap_update_bits(cbphy->syscfg, pad_dis_cfg_off, BIT(bitn),
+>> +				 val);
+> Ditto.
+Here it can with go in single line with mask,
+>
+>> +}
+> ...
+>
+>> +static int intel_cbphy_iphy_cfg(struct intel_cbphy_iphy *iphy,
+>> +				int (*phy_cfg)(struct intel_cbphy_iphy *))
+>> +{
+>> +	struct intel_combo_phy *cbphy = iphy->parent;
+>> +	struct intel_cbphy_iphy *sphy;
+>> +	int ret;
+>> +
+>> +	ret = phy_cfg(iphy);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	if (cbphy->aggr_mode == PHY_DL_MODE) {
+> 	if (x != y)
+> 		return 0;
+>
+>> +		sphy = &cbphy->iphy[PHY_1];
+>> +		ret = phy_cfg(sphy);
+>> +	}
+>> +
+>> +	return ret;
+> 	return phy_cfg(...);
+>
+>> +}
+> ...
+>
+>> +	switch (mode) {
+>> +	case PHY_PCIE_MODE:
+>> +		cb_mode = (aggr == PHY_DL_MODE) ?
+>> +			  PCIE_DL_MODE : PCIE0_PCIE1_MODE;
+> I think one line is okay here.
+
+its taking 82 characters.
+
+>
+>> +		break;
+>> +
+>> +	case PHY_XPCS_MODE:
+>> +		cb_mode = (aggr == PHY_DL_MODE) ? RXAUI_MODE : XPCS0_XPCS1_MODE;
+>> +		break;
+>> +
+>> +	case PHY_SATA_MODE:
+>> +		if (aggr == PHY_DL_MODE) {
+>> +			dev_err(dev, "CBPHY%u mode:%u not support dual lane!\n",
+>> +				cbphy->id, mode);
+>> +			return -EINVAL;
+>> +		}
+>> +
+>> +		cb_mode = SATA0_SATA1_MODE;
+>> +		break;
+>> +
+>> +	default:
+>> +		dev_err(dev, "CBPHY%u mode:%u not supported!\n",
+>> +			cbphy->id, mode);
+>> +		return -EINVAL;
+>> +	}
+> ...
+>
+>
+>> +	if (!atomic_read(&cbphy->init_cnt)) {
+> Here it can be 0.
+>
+>> +		ret = clk_prepare_enable(cbphy->core_clk);
+>> +		if (ret) {
+>> +			dev_err(cbphy->dev, "Clock enable failed!\n");
+>> +			return ret;
+>> +		}
+>> +
+>> +		ret = clk_set_rate(cbphy->core_clk, cbphy->clk_rate);
+>> +		if (ret) {
+>> +			dev_err(cbphy->dev, "Clock freq set to %lu failed!\n",
+>> +				cbphy->clk_rate);
+>> +			goto clk_err;
+>> +		}
+>> +
+>> +		intel_cbphy_rst_assert(cbphy);
+>> +		ret = intel_cbphy_set_mode(cbphy);
+>> +		if (ret)
+>> +			goto clk_err;
+>> +	}
+>> +
+>> +	ret = intel_cbphy_iphy_enable(iphy, true);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed enabling Phy core\n");
+>> +		goto clk_err;
+>> +	}
+>> +
+>> +	if (!atomic_read(&cbphy->init_cnt))
+> Here it can be 1.
+True,
+I will fix this.
+Thanks for pointing it.
+>
+>> +		intel_cbphy_rst_deassert(cbphy);
+> Is it correct way to go?
+>
+>> +	ret = reset_control_deassert(iphy->app_rst);
+>> +	if (ret) {
+>> +		dev_err(dev, "PHY(%u:%u) phy deassert failed!\n",
+>> +			COMBO_PHY_ID(iphy), PHY_ID(iphy));
+>> +		goto clk_err;
+>> +	}
+> ...
+>
+>> +		ret = intel_cbphy_iphy_cfg(iphy,
+>> +					   intel_cbphy_pcie_en_pad_refclk);
+> One line is fine here.
+It is taking 81 characters, so kept in 2 lines.
+>
+>> +		if (ret)
+>> +			return ret;
+> ...
+>
+>> +		ret = intel_cbphy_iphy_cfg(iphy,
+>> +					   intel_cbphy_pcie_dis_pad_refclk);
+> Ditto.
+82 characters here.
+>
+>> +		if (ret)
+>> +			return ret;
+> ...
+>
+>> +		return ret;
+>> +	}
+>> +
+>> +	iphy->enable = true;
+>> +	platform_set_drvdata(pdev, iphy);
+>> +
+>> +	return 0;
+>> +}
+> ...
+>
+>> +	if (cbphy->aggr_mode == PHY_DL_MODE) {
+>> +		if (!iphy0->enable || !iphy1->enable) {
+> 	if (a) {
+> 		if (b) {
+> 			...
+> 		}
+> 	}
+>
+> is the same as
+> 	if (a && b) {
+> 		...
+> 	}
+>
+> We have it many times discussed internally.
 Will fix it.
 >
->> +
->> +  compatible:
->> +    items:
->> +      - const: intel,combo-phy
-> Needs to be an SoC specific compatible.
-Sure, will update it to intel, combophy-lgm
+>> +			dev_err(cbphy->dev,
+>> +				"Dual lane mode but lane0: %s, lane1: %s\n",
+>> +				iphy0->enable ? "on" : "off",
+>> +				iphy1->enable ? "on" : "off");
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+> ...
 >
->> +      - const: simple-bus
+>> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
+>> +						 "intel,syscfg", NULL, 1, 0,
+>> +						 &ref);
+>> +	if (ret < 0)
+>> +		return ret;
 >> +
->> +  clocks:
->> +    description: |
->> +      List of phandle and clock specifier pairs as listed
->> +      in clock-names property. Configure the clocks according
->> +      to the PHY mode.
-> How many?
->
-> No need to redefine a common property name, drop description. Plus,
-> where's clock-names?
-Its only one clock, i will add maxItems:1 and remove the description.
->
->> +
->> +  reg:
->> +    items:
->> +      - description: ComboPhy core registers
->> +      - description: PCIe app core control registers
->> +
->> +  reg-names:
->> +    items:
->> +      - const: core
->> +      - const: app
->> +
->> +  resets:
->> +    maxItems: 2
->> +
->> +  reset-names:
->> +    items:
->> +      - const: phy
->> +      - const: core
->> +
->> +  intel,syscfg:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: Chip configuration registers handle and ComboPhy instance id
->> +
->> +  intel,hsio:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description: HSIO registers handle and ComboPhy instance id on NOC
->> +
->> +  intel,aggregation:
->> +    description: |
->> +      Specify the flag to confiure ComboPHY in dual lane mode.
->> +    type: boolean
->> +
->> +  intel,phy-mode:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    minimum: 0
->> +    maximum: 2
->> +    description: |
->> +      Configure the mode of the PHY.
->> +        0 - PCIe
->> +        1 - xpcs
->> +        2 - sata
-> Doesn't this need to be per PHY? Or the 2 PHYs have to be the same mode?
->
-> Use the types defined in include/dt-bindings/phy/phy.h. You'll need to
-Sure, will define the types in header file.
-> add XPCS which maybe should be more specific to distinguish 1G, 10G,
-> etc. Also, we typically put the mode into the 'phys' cells so the mode
-> lives with the client node.
-Two PHYs must be in same mode.
-actual mode configuration is done for the ComboPhy to work as a two 
-individual PHYs in PCIe/XPCS/SATA mode or as a single PHY providing dual 
-physical lanes in PCIe/XPCS.
-And mode configuration is dependent on the 'intel,aggregation' flag.
-So, placed the phy-mode here itself, to make sure all the mode related 
-parameters are at one location. Also, avoids setting individual PHYs in 
-different modes.
+>> +	fwnode_handle_put(ref.fwnode);
+> Why here?
 
->> +
->> +patternProperties:
->> +  "^cb[0-9]phy@[0-9]+$":
-> ^phy@...
+Instructed to do:
 
-Sure, will fix it.
+" Caller is responsible to call fwnode_handle_put() on the returned   
+args->fwnode pointer"
+
+>
+>> +	cbphy->id = ref.args[0];
+>> +	cbphy->syscfg = device_node_to_regmap(ref.fwnode->dev->of_node);
+> You rather need to have fwnode_to_regmap(). It's easy to add as a preparatory patch.
+Sure, I will add it.
+>
+>> +
+>> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev), "intel,hsio",
+>> +						 NULL, 1, 0, &ref);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	fwnode_handle_put(ref.fwnode);
+>> +	cbphy->bid = ref.args[0];
+>> +	cbphy->hsiocfg = device_node_to_regmap(ref.fwnode->dev->of_node);
+> Ditto.
+>
+>> +	if (!device_property_read_u32(dev, "intel,phy-mode", &prop)) {
+> Hmm... Why to mix device_property_*() vs. fwnode_property_*() ?
+device_property_* are wrapper functions to fwnode_property_*().
+Calling the fwnode_property_*() ending up doing the same work of 
+device_property_*().
+
+If the best practice is to maintain symmetry, will call fwnode_property_*().
+
+>
+>> +		cbphy->phy_mode = prop;
+>> +		if (cbphy->phy_mode >= PHY_MAX_MODE) {
+>> +			dev_err(dev, "PHY mode: %u is invalid\n",
+>> +				cbphy->phy_mode);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+> ...
+>
+>> +	.owner =	THIS_MODULE,
+> Do we still need this?
+Present in all the PHY drivers,
+Please let me know if it need to be removed.
 
 Regards,
 Dilip
