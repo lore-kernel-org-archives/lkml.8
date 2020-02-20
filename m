@@ -2,221 +2,154 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCC3C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABBFC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214C820679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C721520679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:07:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADowgW++"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BIv2J+5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgBTMHI (ORCPT
+        id S1728059AbgBTMHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:07:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34654 "EHLO
+        Thu, 20 Feb 2020 07:07:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37441 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727233AbgBTMHI (ORCPT
+        with ESMTP id S1727649AbgBTMHU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:07:08 -0500
+        Thu, 20 Feb 2020 07:07:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582200426;
+        s=mimecast20190719; t=1582200438;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=35IbEvyuyiQjZXT481tnciBNqGjvMglDb7zG2wVM1tU=;
-        b=ADowgW++H578Cx9fh4jnGuzcKUBZ7tQLr/prApoCmlFlI0O0NKKWOQop6RJTFDsdDFFp4e
-        Ooc5LSKgKDcKPBu9yOVu6ug9KIRzVViVi3EAivk6xShPCKhR1/S8xZKJYUIXDLYbCP+gQr
-        0uBNSaY7SbGm5t9ZTNHudAkV7sjEmjg=
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=730b/mAipH8Ufbthyk+kFC6k6QxPvg9Ch8ebYyLNFI4=;
+        b=BIv2J+5n5IM5C/V7A/iL4Z5r8AiaZf9a38KQti3HfNDt1sd8W2kUFCbcvkWcqHrZZ65ZsS
+        s8kOzWDFV9IYQX3lRL9SwIE2/pXtgR+Z2jbuH6qIeHQ0fuhP2dU6RmELQHeqbEgpCLt5Fg
+        je0H3EApckga4pak4tuHvXtJcanbsJw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-273-LP7aKZasPEGCN1WYTYooYg-1; Thu, 20 Feb 2020 07:07:01 -0500
-X-MC-Unique: LP7aKZasPEGCN1WYTYooYg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-424-DRb8ST1OOw2Yn7actTBTLA-1; Thu, 20 Feb 2020 07:07:16 -0500
+X-MC-Unique: DRb8ST1OOw2Yn7actTBTLA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26EEF107ACC5;
-        Thu, 20 Feb 2020 12:07:00 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E82E8863A5;
-        Thu, 20 Feb 2020 12:06:57 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 13:06:55 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v1 0/2] perf report: Support annotation of code without
- symbols
-Message-ID: <20200220120655.GA586895@krava>
-References: <20200220005902.8952-1-yao.jin@linux.intel.com>
- <20200220115629.GC565976@krava>
- <ca3fa091-f407-51e2-d617-90a842b36295@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F6F018B9FC1;
+        Thu, 20 Feb 2020 12:07:14 +0000 (UTC)
+Received: from [10.36.118.29] (unknown [10.36.118.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 527BE10027AF;
+        Thu, 20 Feb 2020 12:07:09 +0000 (UTC)
+Subject: Re: [PATCH v2 1/7] mm/hotplug: fix hot remove failure in
+ SPARSEMEM|!VMEMMAP case
+To:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        richardw.yang@linux.intel.com, osalvador@suse.de,
+        dan.j.williams@intel.com, mhocko@suse.com, rppt@linux.ibm.com,
+        robin.murphy@arm.com
+References: <20200220043316.19668-1-bhe@redhat.com>
+ <20200220043316.19668-2-bhe@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <4535ac89-3ece-a665-dbe6-ea766a618135@redhat.com>
+Date:   Thu, 20 Feb 2020 13:07:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200220043316.19668-2-bhe@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ca3fa091-f407-51e2-d617-90a842b36295@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 08:03:18PM +0800, Jin, Yao wrote:
->=20
->=20
-> On 2/20/2020 7:56 PM, Jiri Olsa wrote:
-> > On Thu, Feb 20, 2020 at 08:59:00AM +0800, Jin Yao wrote:
-> > > For perf report on stripped binaries it is currently impossible to do
-> > > annotation. The annotation state is all tied to symbols, but there are
-> > > either no symbols, or symbols are not covering all the code.
-> > >=20
-> > > We should support the annotation functionality even without symbols.
-> > >=20
-> > > The first patch uses al_addr to print because it's easy to dump
-> > > the instructions from this address in binary for branch mode.
-> > >=20
-> > > The second patch supports the annotation on stripped binary.
-> > >=20
-> > > Jin Yao (2):
-> > >    perf util: Print al_addr when symbol is not found
-> > >    perf annotate: Support interactive annotation of code without symb=
-ols
-> >=20
-> > looks good, but I'm getting crash when annotating unresolved kernel add=
-ress:
-> >=20
-> > jirka
-> >=20
-> >=20
->=20
-> Thanks for reporting the issue.
->=20
-> I guess you are trying the "0xffffffff81c00ae7", let me try to reproduce
-> this issue.
+On 20.02.20 05:33, Baoquan He wrote:
+> In section_deactivate(), pfn_to_page() doesn't work any more after
+> ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
+> It caused hot remove failure:
+> 
+> kernel BUG at mm/page_alloc.c:4806!
+> invalid opcode: 0000 [#1] SMP PTI
+> CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+> RIP: 0010:free_pages+0x85/0xa0
+> Call Trace:
+>  __remove_pages+0x99/0xc0
+>  arch_remove_memory+0x23/0x4d
+>  try_remove_memory+0xc8/0x130
+>  ? walk_memory_blocks+0x72/0xa0
+>  __remove_memory+0xa/0x11
+>  acpi_memory_device_remove+0x72/0x100
+>  acpi_bus_trim+0x55/0x90
+>  acpi_device_hotplug+0x2eb/0x3d0
+>  acpi_hotplug_work_fn+0x1a/0x30
+>  process_one_work+0x1a7/0x370
+>  worker_thread+0x30/0x380
+>  ? flush_rcu_work+0x30/0x30
+>  kthread+0x112/0x130
+>  ? kthread_create_on_node+0x60/0x60
+>  ret_from_fork+0x35/0x40
+> 
+> Let's move the ->section_mem_map resetting after depopulate_section_memmap()
+> to fix it.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-yes, I also checked and it did not happen before
+-- 
+Thanks,
 
-jirka
-
->=20
-> Thanks
-> Jin Yao
->=20
-> > Samples: 14  of event 'cycles:u', Event count (approx.): 1822321
-> > Overhead  Command  Shared Object     Symbol
-> >    26.86%  ls       libc-2.30.so      [.] __strcoll_l                  =
-                                                                           =
-                                                                  =E2=96=92
-> >    17.03%  ls       ls                [.] 0x0000000000008968           =
-                                                                           =
-                                                                  =E2=96=92
-> >    13.10%  ls       [unknown]         [k] 0xffffffff81c00ae7           =
-                                                                           =
-                                                                  =E2=96=92
-> >    13.02%  ls       ld-2.30.so        [.] _dl_cache_libcmp             =
-                                                                           =
-                                                                  =E2=96=92
-> >    12.84%  ls       libc-2.30.so      [.] _int_malloc                  =
-                                                                           =
-                                                                  =E2=96=92
-> >    11.94%  ls       libc-2.30.so      [.] __memcpy_chk                 =
-                                                                           =
-                                                                  =E2=96=92
-> >     5.21%  ls       ld-2.30.so        [.] __GI___tunables_init         =
-                                                                           =
-                                                                  =E2=96=92
-> >                                                                        =
-                                                                           =
-                                                                  =E2=96=92
-> >                                                                        =
-                                                                           =
-                                                                  Program r=
-eceived signal SIGSEGV, Segmentation fault.                                =
-                                                                           =
-                                                     =E2=96=92
-> >                                                     add_annotate_opt (b=
-rowser=3D0xec34a0, act=3D0x7fffffffabf0, optstr=3D0x7fffffffab70, ms=3D0xdb=
-db60, addr=3D18446744071591430887) at ui/browsers/hists.c:2500             =
- =E2=96=92
-> > 2500            if (ms->map->dso->annotate_warned)                     =
-                                                                           =
-                                                                 =E2=96=92
-> > Missing separate debuginfos, use: dnf debuginfo-install brotli-1.0.7-6.=
-fc31.x86_64 bzip2-libs-1.0.8-1.fc31.x86_64 cyrus-sasl-lib-2.1.27-2.fc31.x86=
-_64 elfutils-debuginfod-client-0.178-7.fc31.x86_64 elfutils-libelf-0.178-7.=
-fc31.x86_64 elfutils-libs-0.178-7.fc31.x86_64 glib2-2.62.5-1.fc31.x86_64 ke=
-yutils-libs-1.6-3.fc31.x86_64 krb5-libs-1.17-46.fc31.x86_64 libbabeltrace-1=
-=2E5.7-2.fc31.x86_64 libcap-2.26-6.fc31.x86_64 libcom_err-1.45.5-1.fc31.x86=
-_64 libcurl-7.66.0-1.fc31.x86_64 libgcc-9.2.1-1.fc31.x86_64 libidn2-2.3.0-1=
-=2Efc31.x86_64 libnghttp2-1.40.0-1.fc31.x86_64 libpsl-0.21.0-2.fc31.x86_64 =
-libselinux-2.9-5.fc31.x86_64 libssh-0.9.3-1.fc31.x86_64 libunwind-1.3.1-5.f=
-c31.x86_64 libuuid-2.34-4.fc31.x86_64 libxcrypt-4.4.14-1.fc31.x86_64 libzst=
-d-1.4.4-1.fc31.x86_64 openldap-2.4.47-3.fc31.x86_64 openssl-libs-1.1.1d-2.f=
-c31.x86_64 pcre-8.43-3.fc31.x86_64 pcre2-10.34-6.fc31.x86_64 perl-libs-5.30=
-=2E1-449.fc31.x86_64 popt-1.16-18.fc31.x86_64 python2-libs-2.7.17-1.fc31.x8=
-6_64 slang-2.3.2-6.fc31.x86_64 xz-libs-5.2.4-6.fc31.x86_64 zlib-1.2.11-20.f=
-c31.x86_64         =E2=96=92
-> > (gdb) bt                                                               =
-                                                                           =
-                                                                 =E2=96=92
-> > #0  add_annotate_opt (browser=3D0xec34a0, act=3D0x7fffffffabf0, optstr=
-=3D0x7fffffffab70, ms=3D0xdbdb60, addr=3D18446744071591430887) at ui/browse=
-rs/hists.c:2500                                                            =
- =E2=96=92
-> > #1  0x000000000061caf9 in perf_evsel__hists_browse (evsel=3D0xc58860, n=
-r_events=3D1, helpline=3D0xef69f0 "Tip: Show current config key-value pairs=
-: perf config --list", left_exits=3Dfalse, hbt=3D0x0, min_pcnt=3D0,        =
-  =E2=96=92
-> >      env=3D0xc5c7b0, warn_lost_event=3Dtrue, annotation_opts=3D0x7fffff=
-ffb518) at ui/browsers/hists.c:3265                                        =
-                                                                        =E2=
-=96=92
-> > #2  0x000000000061dbc2 in perf_evlist__tui_browse_hists (evlist=3D0xc55=
-ed0, help=3D0xef69f0 "Tip: Show current config key-value pairs: perf config=
- --list", hbt=3D0x0, min_pcnt=3D0, env=3D0xc5c7b0, warn_lost_event=3Dtrue, =
-  =E2=96=92
-> >      annotation_opts=3D0x7fffffffb518) at ui/browsers/hists.c:3569     =
-                                                                           =
-                                                                    =E2=96=
-=92
-> > #3  0x00000000004511e4 in report__browse_hists (rep=3D0x7fffffffb380) a=
-t builtin-report.c:630                                                     =
-                                                                   =E2=96=92
-> > #4  0x00000000004521db in __cmd_report (rep=3D0x7fffffffb380) at builti=
-n-report.c:975                                                             =
-                                                                   =E2=96=92
-> > #5  0x000000000045444a in cmd_report (argc=3D0, argv=3D0x7fffffffd820) =
-at builtin-report.c:1540                                                   =
-                                                                     =E2=96=
-=92
-> > #6  0x00000000004e384a in run_builtin (p=3D0xa5b370 <commands+240>, arg=
-c=3D1, argv=3D0x7fffffffd820) at perf.c:312                                =
-                                                                       =E2=
-=96=92
-> > #7  0x00000000004e3ab7 in handle_internal_command (argc=3D1, argv=3D0x7=
-fffffffd820) at perf.c:364                                                 =
-                                                                     =E2=96=
-=92
-> > #8  0x00000000004e3bfe in run_argv (argcp=3D0x7fffffffd67c, argv=3D0x7f=
-ffffffd670) at perf.c:408                                                  =
-                                                                     =E2=96=
-=92
-> > #9  0x00000000004e3fca in main (argc=3D1, argv=3D0x7fffffffd820) at per=
-f.c:538                                                                    =
-                                                                     =E2=96=
-=92
-> > (gdb)                                                                  =
-                                                                           =
-                                                                 =E2=96=92
-> >=20
-> >=20
-> >=20
-> >=20
+David / dhildenb
 
