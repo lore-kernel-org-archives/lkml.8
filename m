@@ -2,124 +2,101 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332CBC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B42C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B1024654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jXYZt7ec"
+	by mail.kernel.org (Postfix) with ESMTP id 81FA82465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582190244;
+	bh=bWixAGMKU8jAr6IWwbDseU4VCSvdbKE6KK8Sbxd6ZgQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=z7qrTjCQKMRa8vOsxnZeNv7fyrE7BiQt2QphAW3t2etpOj9LRkVghB7wdU6IS4ipN
+	 Q1m4MDtSaJa5f7yySRHXo+9dgqoVxwL0PYGu90t3zavc1kTgPxyvU469TzCUmAK7WH
+	 IlILXXxsGH6YRu1JI9lZY9m4zwXxTInMpHvJpkJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgBTJRK (ORCPT
+        id S1726948AbgBTJRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:17:10 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:50344 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726803AbgBTJRK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:17:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582190230; x=1613726230;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=3DR/UH6MEPv43yGUiIRitijjOdGjwQGa0V2AAfInCYM=;
-  b=jXYZt7ecjO//M2DtZFe7S/88uwuivVGtxYP3w9IjYHXziFkxMPac4syI
-   EWmZDMaR9G5fERwQUBrT8aq1hlnq/C56fODq1+OFLaBVuHjywne3dGBe2
-   s0fI66AolilQBh16dLwToq9TucNLCTg5tAkg8aALGNMMjwtU/fB+aoGNf
-   M=;
-IronPort-SDR: wz79lME026lmGTeEOVhzNMQUXbePBwBbna1HEI5VzRyyhMCftsQsZad6YIlel6EqMNx4l17IFr
- UdYdDtsWdvnQ==
-X-IronPort-AV: E=Sophos;i="5.70,463,1574121600"; 
-   d="scan'208";a="18729860"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 20 Feb 2020 09:16:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 537CAA2660;
-        Thu, 20 Feb 2020 09:16:54 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Thu, 20 Feb 2020 09:16:54 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.45) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 20 Feb 2020 09:16:45 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Minchan Kim <minchan@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
-        <oleksandr@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>, <sj38.park@gmail.com>,
-        <alexander.h.duyck@linux.intel.com>, Jann Horn <jannh@google.com>
-Subject: Re: Re: [PATCH v6 0/7] introduce memory hinting API for external process
-Date:   Thu, 20 Feb 2020 10:16:31 +0100
-Message-ID: <20200220091631.31949-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200219120123.07dda51c29006a892059ccde@linux-foundation.org> (raw)
+        Thu, 20 Feb 2020 04:17:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726756AbgBTJRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:17:23 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40A6A24654;
+        Thu, 20 Feb 2020 09:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582190242;
+        bh=bWixAGMKU8jAr6IWwbDseU4VCSvdbKE6KK8Sbxd6ZgQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oJYUJB6wiSoeEmvNcEfS3X7VfOLuHVjdjpsoUFRkT/spgki8coClO8V4oD4Dal1bU
+         JiDCIS1NSjQvu9qOYE1c8wHBlgz1p7hfeOA4hnjgAmI3ENkHLFMEH2DjofD322hQ3z
+         CCAioEScjF2KXmXZ8Kk9QFf2wlc4rC8O0Tes1TdQ=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j4hxQ-006gyh-Gj; Thu, 20 Feb 2020 09:17:20 +0000
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.45]
-X-ClientProxiedBy: EX13D06UWA002.ant.amazon.com (10.43.160.143) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 09:17:20 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
+ gpio irq chip
+In-Reply-To: <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
+References: <20200219143229.18084-1-alexandre.torgue@st.com>
+ <20200219143229.18084-3-alexandre.torgue@st.com>
+ <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
+Message-ID: <c991edca3e8925cf0489c0a5676f77b2@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, alexandre.torgue@st.com, tglx@linutronix.de, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, marex@denx.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 12:01:23 -0800 Andrew Morton <akpm@linux-foundation.org> wrote:
-
-> On Tue, 18 Feb 2020 17:44:26 -0800 Minchan Kim <minchan@kernel.org> wrote:
+On 2020-02-20 09:04, Linus Walleij wrote:
+> On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
+> <alexandre.torgue@st.com> wrote:
 > 
-> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
-> > application could give hints to kernel what memory range are preferred to be
-> > reclaimed. However, in some platform(e.g., Android), the information
-> > required to make the hinting decision is not known to the app.
-> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
-> > and that daemon must be able to initiate reclaim on its own without any app
-> > involvement.
-> > 
+>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>> external interrupts only on edge. To be able to handle GPIO interrupt 
+>> on
+>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq 
+>> chip)
+>> is retriggered following interrupt type and gpio line value.
+>> 
+>> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+>> Tested-by: Marek Vasut <marex@denx.de>
 > 
-> This patchset doesn't seem to be getting a lot of interest from other
-> potential users?  It seems very specialized.  Are there or will there
-> ever be any users of this apart from one Android daemon?
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> Also, it doesn't terribly hard for ActivityManagerService to tell
-> another process "now run madvise with these arguments".  Please explain
-> why this is not practical in ActivityManagerService and also within
-> other potential users of this syscall.
+> If Marc want to merge it with patch 1/2 go ahead!
 
-I personally have interest in and hope successful development/merge of this
-patchset.
-
-The interested usecases of 'madvise_process()' for me is optimizations of
-general memory-intensive workloads having dynamic data access patterns on
-hierarchical memory systems (e.g., multi-tier memory or fast storage based swap
-devices).  In more detail, I'm already using a part of this patchset for my RFC
-patchset implementing Data Access Monitoring-based Operation Schemes[1].  For
-my specific case, I don't need new system call but only target task argument,
-though.
-
-Once in a past, before joining my current company, I tried using 'madvise()' to
-optimize some scientific HPC programs.  The improvement results were clear, but
-optimizing each of the workloads was challenging and time-consuming.  I believe
-this new systemcall to be very helpful for such cases, either.
-
-[1] https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/
-
+I'll queue the whole thing for 5.7.
 
 Thanks,
-SeongJae Park
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
