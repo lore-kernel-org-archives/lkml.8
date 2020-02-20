@@ -2,128 +2,159 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AC6C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DFDC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9231206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56E99206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:23:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jYlXHI4X"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bl2pUaij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgBTQW1 (ORCPT
+        id S1728336AbgBTQXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:22:27 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:45030 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728021AbgBTQW1 (ORCPT
+        Thu, 20 Feb 2020 11:23:25 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60872 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgBTQXY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:22:27 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j23so3243733qtr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:22:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BxjPH3EKrwjdqvJZzEhss/or1cFxBJl747SKit3fjVY=;
-        b=jYlXHI4XuUHkbBKFFTHD5pozvgeTxolhwS1FHSg7CapmHEqP7QtnMCtDcpKqINrc+B
-         ziSq73euelc4iNJiiQvJMTCvINcEQQWt6MzkE1CWc/XcJ/EPNOQyAmTDBt4PiHXl0s07
-         ZqKSGffn7i8qxeb9ZM4feXBaT7tYbnAt+stDrBmAs6/B6KO5lyRloU77dfXuIEvK7Bk1
-         XizIgRwyAsWd4V4av0Wreugx1lBRroooh9U8nBzZ4ANGPvWDyFcStHeA7irS0UUDSefJ
-         LF3aZxrA7y+hmKksghM7hdZSIIwzw7o0c4oUpFxIFlCLYlPSbMj6AKR953pzg2ZB/Dde
-         pWVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BxjPH3EKrwjdqvJZzEhss/or1cFxBJl747SKit3fjVY=;
-        b=hDcBMWfQnHFIqSB7QCVwlKYRpes02eI5D1G0h5k0ZppZkrb0iXcYCzCLAxhV1Q7ZDU
-         FZBBfNEV1KzyFo5GkYGsOF4ZA1B9SR+8CP3mPXV4gJjp4zey3yLzbm7ocuvwDwI3MxVP
-         DkwgfOd49KW6hDgWz2YefHeDibq3swhV6f+f3yJMNWzmjWXqHFWLOIj7Vzn25B1YBBSW
-         nmbw3HgKCff2kKXhy/Fd/0y0yL+sDDjeaDL9woPBETVfIEFj8pqkWGhpAgrvfSpYO4K8
-         YZnhn4CbMreIYbZ5kTqnw+mlkXVn0OcQmx4IuSAYtDFDdsUgUmYqRpnnQvr/pZ1ujg7n
-         dkww==
-X-Gm-Message-State: APjAAAWq4qAud7+RYeuBilaI9/enHJYRHzk+chjhzNLC8XL7H63IIaND
-        wFwg0siNMRdX17ReYd++CLHxpmm+sHwcw20Q0t3LdA==
-X-Google-Smtp-Source: APXvYqza1eEnxPl1LnCg7HX1oJToV/DVBCAxwi8IXvCVDQa1gLTlGDIhz4sKEvXrv9VIyYXqOqBosOBKijh3tPCKmlY=
-X-Received: by 2002:ac8:1b18:: with SMTP id y24mr26811345qtj.158.1582215745116;
- Thu, 20 Feb 2020 08:22:25 -0800 (PST)
+        Thu, 20 Feb 2020 11:23:24 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KGNG9I086746;
+        Thu, 20 Feb 2020 10:23:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582215796;
+        bh=5k4n8OW5FfzWwH0LvpBRJ6sAEgOZzL5nL58JyY0CWoA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Bl2pUaijnjIGKdf0dstj1cYaG51cqVF0s/s4M52HaZeyPfxqmFVg1YI2keb/gU8kS
+         sv8WJzEw8aDsH1qqksBcbNs2dnlRQ/ARKbIJo8GXGWNKnHp9HAvpD5OIYV0I1xlP+F
+         f0GVw6nLN+PY9T1zlJ3zf/udhE/1OVSnYspayIiE=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KGNGOG102855
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Feb 2020 10:23:16 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
+ Feb 2020 10:23:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 20 Feb 2020 10:23:15 -0600
+Received: from [10.250.77.18] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KGNFv8017772;
+        Thu, 20 Feb 2020 10:23:15 -0600
+Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>,
+        <linux-omap@vger.kernel.org>
+References: <202002131856.VeW4PhBJ%lkp@intel.com>
+ <20200220155429.GH37466@atomide.com>
+ <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+ <20200220162012.GI37466@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+Date:   Thu, 20 Feb 2020 11:23:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200219144724.800607165@infradead.org> <20200219150745.651901321@infradead.org>
- <CACT4Y+Y+nPcnbb8nXGQA1=9p8BQYrnzab_4SvuPwbAJkTGgKOQ@mail.gmail.com>
- <20200219163025.GH18400@hirez.programming.kicks-ass.net> <20200219172014.GI14946@hirez.programming.kicks-ass.net>
- <CACT4Y+ZfxqMuiL_UF+rCku628hirJwp3t3vW5WGM8DWG6OaCeg@mail.gmail.com> <20200220120631.GX18400@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200220120631.GX18400@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 20 Feb 2020 17:22:14 +0100
-Message-ID: <CACT4Y+bj_Onff8jUP97AVRhmdeN0QRrGcd9KRPSfnFTHAHyxtA@mail.gmail.com>
-Subject: Re: [PATCH v3 22/22] x86/int3: Ensure that poke_int3_handler() is not sanitized
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200220162012.GI37466@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 1:06 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Feb 20, 2020 at 11:37:32AM +0100, Dmitry Vyukov wrote:
-> > On Wed, Feb 19, 2020 at 6:20 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > On Wed, Feb 19, 2020 at 05:30:25PM +0100, Peter Zijlstra wrote:
-> > >
-> > > > By inlining everything in poke_int3_handler() (except bsearch :/) we can
-> > > > mark the whole function off limits to everything and call it a day. That
-> > > > simplicity has been the guiding principle so far.
-> > > >
-> > > > Alternatively we can provide an __always_inline variant of bsearch().
-> > >
-> > > This reduces the __no_sanitize usage to just the exception entry
-> > > (do_int3) and the critical function: poke_int3_handler().
-> > >
-> > > Is this more acceptible?
-> >
-> > Let's say it's more acceptable.
-> >
-> > Acked-by: Dmitry Vyukov <dvyukov@google.com>
->
-> Thanks, I'll go make it happen.
->
-> > I guess there is no ideal solution here.
-> >
-> > Just a straw man proposal: expected number of elements is large enough
-> > to make bsearch profitable, right? I see 1 is a common case, but the
-> > other case has multiple entries.
->
-> Latency was the consideration; the linear search would dramatically
-> increase the runtime of the exception.
->
-> The current limit is 256 entries and we're hitting that quite often.
->
-> (we can trivially increase, but nobody has been able to show significant
-> benefits for that -- as of yet)
+On 2/20/20 11:20 AM, Tony Lindgren wrote:
+> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
+>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
+>>> Andrew,
+>>>
+>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
+>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
+>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
+>>>> date:   3 weeks ago
+>>>> config: arm-randconfig-a001-20200213 (attached as .config)
+>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+>>>> reproduce:
+>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>>>         chmod +x ~/bin/make.cross
+>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
+>>>>         # save the attached .config to linux build tree
+>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+>>>>
+>>>> If you fix the issue, kindly add following tag
+>>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>>>
+>>>> All errors (new ones prefixed by >>):
+>>>>
+>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
+>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
+>>>
+>>> Have you looked at this one? Looks like there's still an unhandled
+>>> randconfig build case.
+>>>
+>>
+>>
+>> I've had a quick look, all the ARM config does:
+>>
+>> select HAVE_ARM_SMCCC if CPU_V7
+>>
+>> so I don't think this will happen in any real config, but if we want to
+>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
+>> on it.
+> 
+> Seems to happen at least with omap2 only config where we don't have
+> CPU_V7. Something like below seems to fix it.
+> 
+> If that looks OK to you, I'll send out a proper fix.
+> 
 
-I see. Thanks for explaining. Just wanted to check because inlining a
-linear search would free us from all these unpleasant problems.
+
+This looks fine to me.
+
+A better later fix might be to later stub out the actual __arm_smccc_smc
+in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
+get the fix.
+
+Andrew
+
+
+> Regards,
+> 
+> Tony
+> 
+> 8< -----------------------
+> diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
+> --- a/arch/arm/mach-omap2/omap-secure.c
+> +++ b/arch/arm/mach-omap2/omap-secure.c
+> @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
+>  	return ret;
+>  }
+>  
+> +#ifdef CONFIG_HAVE_ARM_SMCCC
+>  void omap_smccc_smc(u32 fn, u32 arg)
+>  {
+>  	struct arm_smccc_res res;
+> @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
+>  		      0, 0, 0, 0, 0, 0, &res);
+>  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
+>  }
+> +#else
+> +void omap_smccc_smc(u32 fn, u32 arg)
+> +{
+> +}
+> +#endif
+>  
+>  void omap_smc1(u32 fn, u32 arg)
+>  {
+> 
