@@ -2,120 +2,420 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A8AC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C8C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8AE2467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:55:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="LxfK9xwM"
+	by mail.kernel.org (Postfix) with ESMTP id 01C8C24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBTMzw (ORCPT
+        id S1727996AbgBTM5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:55:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40430 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbgBTMzw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:55:52 -0500
-Received: by mail-lj1-f196.google.com with SMTP id n18so4089256ljo.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 04:55:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+DRsaTqEK5nsNqn790WfhY6ctsNbT89zfUUUM83iioM=;
-        b=LxfK9xwMlL1Sa2i6EUu6CcDdcjWDVxb6Bts+nN9/UoeVse7vT0RiNtmHBc7gdaAa2+
-         ueQmo7k0bsOfZshABNhzY00iH/HPY08UghihEIg5Pmumn/4Eef1MiIBsn70fp43zcOkM
-         kKcRlKdDIXPuI4ynO4Kz0phUluLFm8Wc0wexemibwMumT5tmzTwYnLvaqyxcSYVdcFgR
-         piacsu0qWaQfgEfw7BZ79qrKiNJ+w19ggNN13r4HXkuDez4bLPzlEXUL4dkFRd+MGGDE
-         yeI2vlskoIh7D1dV/UEwHngDyZ2mS8rppIB/G+SMBQfrtm+il+qBCdHwqekKY2vXIzkt
-         lRAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+DRsaTqEK5nsNqn790WfhY6ctsNbT89zfUUUM83iioM=;
-        b=NYxDACBxTGqkr122p4wfK3JywwCr3rNvA5iBiLz4qw5J+qjXKcBFQ7miSJGsauD1nk
-         t6Ir+yBfu1/i3qRGYnQ4TnpWu2iod+VFtpHxTFSt7y99BOUBqHe9qlA5Qv5IpK+i1tZh
-         2VKMTkuponHVi9vzWlk0HDaQeSnNVUm/QhLkae/RyqC/1TJ/oMH+NvtrwFoW2Ct73DMO
-         FhVsW5DfSywYBo5LNA7WcuqDxSFzgV/ECLDFRtU7RIGK7MYjJQ7LssOxityek0yM4T6F
-         ngiX66Tk11gTmv4op+HUizLv+iDNIehkA1XEFxJZVMYfMR++gr43M6mVHsi475VP+24E
-         GfTw==
-X-Gm-Message-State: APjAAAWNGsZFREOy9igDEZuXtqQQSvehF9c/y0mPW1d6PAJC5dQJGkoP
-        sN2v28Iuy9I+0YFbetosxl/Siw==
-X-Google-Smtp-Source: APXvYqxxYxSwkTEH5S43pu5FkPhBj48B96YRDECTaclr9+lcdudJbpqLcMvOemqKREfvtlqPKa0rUQ==
-X-Received: by 2002:a2e:8e70:: with SMTP id t16mr19036539ljk.73.1582203349910;
-        Thu, 20 Feb 2020 04:55:49 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id b20sm1763423ljp.20.2020.02.20.04.55.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 04:55:49 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 478CC100FBB; Thu, 20 Feb 2020 15:56:18 +0300 (+03)
-Date:   Thu, 20 Feb 2020 15:56:18 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Qian Cai <cai@lca.pw>
-Cc:     paulmck@kernel.org, akpm@linux-foundation.org, elver@google.com,
-        peterz@infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] fork: annotate a data race in vm_area_dup()
-Message-ID: <20200220125618.o2p6be2hjfgatynw@box>
-References: <1582122495-12885-1-git-send-email-cai@lca.pw>
+        Thu, 20 Feb 2020 07:57:12 -0500
+Received: from mx2.suse.de ([195.135.220.15]:56352 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbgBTM5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:57:11 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2C29DAC54;
+        Thu, 20 Feb 2020 12:57:09 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 13:57:07 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
+Message-ID: <20200220125707.hbcox3xgevpezq4l@pathway.suse.cz>
+References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
+ <20200219082155.6787-1-linux@rasmusvillemoes.dk>
+ <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
+ <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
+ <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
+ <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
+ <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
+ <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582122495-12885-1-git-send-email-cai@lca.pw>
+In-Reply-To: <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:28:15AM -0500, Qian Cai wrote:
-> struct vm_area_struct could be accessed concurrently as noticed by
-> KCSAN,
+On Wed 2020-02-19 16:40:08, Rasmus Villemoes wrote:
+> On 19/02/2020 15.45, Petr Mladek wrote:
+> > On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
+> >> On 19/02/2020 14.48, Petr Mladek wrote:
+> >>> On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
+> >>>> --- a/lib/vsprintf.c
+> >>>> +++ b/lib/vsprintf.c
+> >>> The test should go into null_pointer() instead of errptr().
+> >>
+> >> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
+> >> way. But I should add a #else section that tests how %pe behaves without
+> >> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
+> > 
+> > OK, we should agree on some structure first.
+> > 
+> > We already have two top level functions that test how a particular
+> > pointer is printed using different pointer modifiers:
+> > 
+> > 	null_pointer();     -> NULL with %p, %pX, %pE
+> > 	invalid_pointer();  -> random pointer with %p, %pX, %pE
+> > 
+> > Following this logic, errptr() should test how a pointer from IS_ERR() range
+> > is printed using different pointer formats.
 > 
->  write to 0xffff9cf8bba08ad8 of 8 bytes by task 14263 on cpu 35:
->   vma_interval_tree_insert+0x101/0x150:
->   rb_insert_augmented_cached at include/linux/rbtree_augmented.h:58
->   (inlined by) vma_interval_tree_insert at mm/interval_tree.c:23
->   __vma_link_file+0x6e/0xe0
->   __vma_link_file at mm/mmap.c:629
->   vma_link+0xa2/0x120
->   mmap_region+0x753/0xb90
->   do_mmap+0x45c/0x710
->   vm_mmap_pgoff+0xc0/0x130
->   ksys_mmap_pgoff+0x1d1/0x300
->   __x64_sys_mmap+0x33/0x40
->   do_syscall_64+0x91/0xc44
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
->  read to 0xffff9cf8bba08a80 of 200 bytes by task 14262 on cpu 122:
->   vm_area_dup+0x6a/0xe0
->   vm_area_dup at kernel/fork.c:362
->   __split_vma+0x72/0x2a0
->   __split_vma at mm/mmap.c:2661
->   split_vma+0x5a/0x80
->   mprotect_fixup+0x368/0x3f0
->   do_mprotect_pkey+0x263/0x420
->   __x64_sys_mprotect+0x51/0x70
->   do_syscall_64+0x91/0xc44
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> vm_area_dup() blindly copies all fields of original VMA to the new one.
-> This includes coping vm_area_struct::shared.rb which is normally
-> protected by i_mmap_lock. But this is fine because the read value will
-> be overwritten on the following __vma_link_file() under proper
-> protection. Thus, mark it as an intentional data race and insert a few
-> assertions for the fields that should not be modified concurrently.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Oh please. I wrote test_printf.c originally and structured it with one
+> helper for each %p<whatever>. How are your additions null_pointer and
+> invalid_pointer good examples for what the existing style is?
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+I see, I was the one who broke the style. Please, find below a patch
+that tries to fix it. If you agree with the approach then I could
+split it into smaller steps.
 
+Also it would make sense to add checks for NULL and ERR pointer
+into each existing %p modifier check. It will make sure that
+check_pointer() is called in all handlers.
+
+
+> So yeah, I'm going to continue testing the behaviour of %pe in errptr, TYVM.
+
+OK.
+
+> >>>> BTW., your original patch for %p lacks corresponding update of
+> >>>> test_vsprintf.c. Please add appropriate test cases.
+> >>>
+> >>> diff --git a/lib/test_printf.c b/lib/test_printf.c
+> >>> index 2d9f520d2f27..1726a678bccd 100644
+> >>> --- a/lib/test_printf.c
+> >>> +++ b/lib/test_printf.c
+> >>> @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
+> >>>  static void __init
+> >>>  null_pointer(void)
+> >>>  {
+> >>> -	test_hashed("%p", NULL);
+> >>> +	test(ZEROS "00000000", "%p", NULL);
+> >>
+> >> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
+> >> (where one of course has to use explicit integers and not E* constants).
+> > 
+> > Yes, it would be great to add checks for %p, %px for IS_ERR() range.
+> > But it is different story. The above change is for the original patch
+> > and it was about NULL pointer handling.
+> 
+> Wrong. The original patch (i.e. Ilya's) had subject "vsprintf: don't
+> obfuscate NULL and error pointers" and did
+> 
+> +	if (IS_ERR_OR_NULL(ptr))
+> 
+> so the tests that should be part of that patch very much need to cover
+> both NULL and ERR_PTRs passed to plain %p.
+
+Grr, I see. I was too fast yesterday. OK, I suggest to fix the
+structure of the tests first. All these patches are for 5.7
+anyway.
+
+
+Here is the proposed clean up:
+
+From 855909f2a1945d3a5bf490ddf4f2cca775ef967b Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 20 Feb 2020 12:53:43 +0100
+Subject: [PATCH] lib/test_printf: Clean up basic pointer testing
+
+The pointer testing has been originally split by the %p modifiers,
+for example, the function dentry() tested %pd and %pD handling.
+
+There were recently added tests that do not really fit into
+the existing structure, namely:
+
+  + hashed pointers tested by a maze of functions
+  + null and invalid pointer handling with various modifiers
+
+The hash pointer test is really special because the hash depends
+on a random key that is generated during boot. Though, it is
+still possible to check some aspects:
+
+  + output string length
+  + hash differs from the original pointer value
+  + top half bites are zeroed on 64-bit systems
+
+Let's put all these checks into test_hashed() function that has
+the same behavior as the test() functions for well-defined output.
+It increments the number of tests and eventual failures. It prints
+warnings/errors when some aspects of the output are not as expected.
+
+Most of these checks were there even before. The only addition is
+the check whether hash differs from the original pointer value.
+There is a small chance of a false error. It might be reduced
+by checking more pointers but let's keep it simple for now.
+
+The existing null_pointer() and invalid_pointer() checks are
+newly split per-format modifier. And there is also fixed
+difference between invalid pointer in the IS_ERR() range
+and invalid pointer that looks like a valid one.
+
+The invalid pointer Oxdeaddead00000000 should work on most
+architectures. But I am not able to check it everywhere.
+So there is a small chance of a false error. It might get
+fixed when anyone reports a problem.
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ lib/test_printf.c | 162 ++++++++++++++++++++----------------------------------
+ 1 file changed, 59 insertions(+), 103 deletions(-)
+
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 2d9f520d2f27..4e89b508def6 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -206,146 +206,101 @@ test_string(void)
+ }
+ 
+ #define PLAIN_BUF_SIZE 64	/* leave some space so we don't oops */
++#define PTR_ERROR ERR_PTR(-EFAULT)
++#define PTR_VAL_ERROR "fffffff2"
+ 
+ #if BITS_PER_LONG == 64
+ 
+ #define PTR_WIDTH 16
+ #define PTR ((void *)0xffff0123456789abUL)
+ #define PTR_STR "ffff0123456789ab"
++#define PTR_INVALID ((void *)0xdeaddead000000ab)
++#define PTR_VAL_INVALID "deaddead000000ab"
+ #define PTR_VAL_NO_CRNG "(____ptrval____)"
++#define ONES "ffffffff"		/* hex 32 one bits */
+ #define ZEROS "00000000"	/* hex 32 zero bits */
+ 
+-static int __init
+-plain_format(void)
+-{
+-	char buf[PLAIN_BUF_SIZE];
+-	int nchars;
+-
+-	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
+-
+-	if (nchars != PTR_WIDTH)
+-		return -1;
+-
+-	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
+-		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
+-			PTR_VAL_NO_CRNG);
+-		return 0;
+-	}
+-
+-	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+ #else
+ 
+ #define PTR_WIDTH 8
+ #define PTR ((void *)0x456789ab)
+ #define PTR_STR "456789ab"
++#define PTR_INVALID ((void *)0x000000ab)
++#define PTR_VAL_INVALID "000000ab"
+ #define PTR_VAL_NO_CRNG "(ptrval)"
++#define ONES ""
+ #define ZEROS ""
+ 
+-static int __init
+-plain_format(void)
+-{
+-	/* Format is implicitly tested for 32 bit machines by plain_hash() */
+-	return 0;
+-}
+-
+ #endif	/* BITS_PER_LONG == 64 */
+ 
+-static int __init
+-plain_hash_to_buffer(const void *p, char *buf, size_t len)
++static void __init
++test_hashed(const char *fmt, const void *p)
+ {
++	char pointer[PLAIN_BUF_SIZE];
++	char hash[PLAIN_BUF_SIZE];
+ 	int nchars;
+ 
+-	nchars = snprintf(buf, len, "%p", p);
+-
+-	if (nchars != PTR_WIDTH)
+-		return -1;
++	total_tests++;
+ 
+-	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
+-		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
+-			PTR_VAL_NO_CRNG);
+-		return 0;
++	nchars = snprintf(pointer, sizeof(pointer), "%px", p);
++	if (nchars != PTR_WIDTH) {
++		pr_err("error in test suite: vsprintf(\"%%px\", p) returned number of characters %d, expected %d\n",
++		       nchars, PTR_WIDTH);
++		goto err;
+ 	}
+ 
+-	return 0;
+-}
+-
+-static int __init
+-plain_hash(void)
+-{
+-	char buf[PLAIN_BUF_SIZE];
+-	int ret;
+-
+-	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
+-	if (ret)
+-		return ret;
+-
+-	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
+-		return -1;
+-
+-	return 0;
+-}
+-
+-/*
+- * We can't use test() to test %p because we don't know what output to expect
+- * after an address is hashed.
+- */
+-static void __init
+-plain(void)
+-{
+-	int err;
+-
+-	err = plain_hash();
+-	if (err) {
+-		pr_warn("plain 'p' does not appear to be hashed\n");
+-		failed_tests++;
+-		return;
++	nchars = snprintf(hash, sizeof(hash), fmt, p);
++	if (nchars != PTR_WIDTH) {
++		pr_warn("vsprintf(\"%s\", p) returned number of characters %d, expected %d\n",
++			fmt, nchars, PTR_WIDTH);
++		goto err;
+ 	}
+ 
+-	err = plain_format();
+-	if (err) {
+-		pr_warn("hashing plain 'p' has unexpected format\n");
+-		failed_tests++;
++	if (strncmp(hash, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
++		pr_warn_once("crng possibly not yet initialized. vsprinf(\"%s\", p) printed \"%s\"",
++			     fmt, hash);
++		total_tests--;
++		return;
+ 	}
+-}
+-
+-static void __init
+-test_hashed(const char *fmt, const void *p)
+-{
+-	char buf[PLAIN_BUF_SIZE];
+-	int ret;
+ 
+ 	/*
+-	 * No need to increase failed test counter since this is assumed
+-	 * to be called after plain().
++	 * There is a small chance of a false negative on 32-bit systems
++	 * when the hash is the same as the pointer value.
+ 	 */
+-	ret = plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
+-	if (ret)
+-		return;
++	if (strncmp(hash, pointer, PTR_WIDTH) == 0) {
++		pr_warn("vsprintf(\"%s\", p) returned %s, expected hashed pointer\n",
++			fmt, hash);
++		goto err;
++	}
++
++#if BITS_PER_LONG == 64
++	if (strncmp(hash, ZEROS, PTR_WIDTH / 2) != 0) {
++		pr_warn("vsprintf(\"%s\", p) returned %s, expected %s in the top half bits\n",
++			fmt, hash, ZEROS);
++		goto err;
++	}
++#endif
++	return;
+ 
+-	test(buf, fmt, p);
++err:
++	failed_tests++;
+ }
+ 
+ static void __init
+-null_pointer(void)
++plain_pointer(void)
+ {
+ 	test_hashed("%p", NULL);
+-	test(ZEROS "00000000", "%px", NULL);
+-	test("(null)", "%pE", NULL);
++	test_hashed("%p", PTR_ERROR);
++	test_hashed("%p", PTR_INVALID);
+ }
+ 
+-#define PTR_INVALID ((void *)0x000000ab)
+ 
+ static void __init
+-invalid_pointer(void)
++real_pointer(void)
+ {
+-	test_hashed("%p", PTR_INVALID);
+-	test(ZEROS "000000ab", "%px", PTR_INVALID);
+-	test("(efault)", "%pE", PTR_INVALID);
++	test(ZEROS "00000000", "%px", NULL);
++	test(ONES PTR_VAL_ERROR, "%px", PTR_ERROR);
++	test(PTR_VAL_INVALID, "%px", PTR_INVALID);
+ }
+ 
+ static void __init
+@@ -372,6 +327,8 @@ addr(void)
+ static void __init
+ escaped_str(void)
+ {
++	test("(null)", "%pE", NULL);
++	test("(efault)", "%pE", PTR_ERROR);
+ }
+ 
+ static void __init
+@@ -458,9 +415,9 @@ dentry(void)
+ 	test("foo", "%pd2", &test_dentry[0]);
+ 
+ 	test("(null)", "%pd", NULL);
+-	test("(efault)", "%pd", PTR_INVALID);
++	test("(efault)", "%pd", PTR_ERROR);
+ 	test("(null)", "%pD", NULL);
+-	test("(efault)", "%pD", PTR_INVALID);
++	test("(efault)", "%pD", PTR_ERROR);
+ 
+ 	test("romeo", "%pd", &test_dentry[3]);
+ 	test("alfa/romeo", "%pd2", &test_dentry[3]);
+@@ -647,9 +604,8 @@ errptr(void)
+ static void __init
+ test_pointer(void)
+ {
+-	plain();
+-	null_pointer();
+-	invalid_pointer();
++	plain_pointer();
++	real_pointer();
+ 	symbol_ptr();
+ 	kernel_ptr();
+ 	struct_resource();
 -- 
- Kirill A. Shutemov
+2.16.4
+
