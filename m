@@ -2,156 +2,174 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1358CC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4239EC11D0A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E32207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15D11207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+GFjCJ7"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FDT0nYs8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBTOgS (ORCPT
+        id S1728258AbgBTOgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:36:18 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37764 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgBTOgS (ORCPT
+        Thu, 20 Feb 2020 09:36:24 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2562 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbgBTOgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:36:18 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q23so4489103ljm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:36:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iNU2PjgDfv50dT32BqsNIp3wuvczGu9NfgNw5Wz+0pY=;
-        b=o+GFjCJ7hMUVDSOpBiJKWaA9NbCQkUqFuTiC+7rEs4lsOxiAiKLDvclu8NqCUl4NZg
-         8GzQARVM4I33hA4rnn9/xDyMzPxQBNrORgDkw89LYyMQUV2E+62HxTWdT5OTK+X4HULL
-         cbp3+aCk1YQKSXavJUFGFtaTsLSVj6UI53Si6gIINGHz5xk92NSixehK6rCg3S1HKdv6
-         pJKdnKYPKq8yt0UfP0COjU+G4ZmFECHbeSXmTLpvfgGMHE9vzehugxhn+gl9dKftFGQa
-         j+sycNZjHbiEQjxD3YjzUoKTRQf5ixLGvbuQi0PdV3VlPWux4vDB/U7z4XfH8v5HnNT3
-         pPLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iNU2PjgDfv50dT32BqsNIp3wuvczGu9NfgNw5Wz+0pY=;
-        b=E7e5HzOTGqcMTIFy6DotpJ7pCD0cfYWWbXkypWq6xQ+oh34VuDB6F+M1dYrmBbdJAY
-         /JW32FmZWfg4TEX8XkrEJVLDWllHZxAS9rFcwJz2Kn0FiQDmCPX08RRfhUOXxlCmDuic
-         iXNFXF9hiSPr11DLdZRQNur39U1Gz+cMQXfswcKyXpOW020Ek1WKaWOx/gZnb8V0AtbR
-         1/63rExVNA6v3mBjHbOq1ishSL44WgzvqhAXlE53fqQoUep84RtEOzojaQ2AocVmC8pD
-         WCZC/dYmx8+9KGAu2RFcT24bvuJGPzwgsf7jsRwoR80UkRE+53XuowgZOz1cGnaNG/SR
-         tzuw==
-X-Gm-Message-State: APjAAAUJahoLTgdBqwvq8Rawu7kXlILg2xG4+W35X9ec+ewIiNGCZ2Rk
-        zzv4bHvsl76zhzP1Ed1E7bCO02TU2sjLfDZ5TPqD6w==
-X-Google-Smtp-Source: APXvYqxokDPlwsh1WzUxaMAfMxMZhvCJynmBZe9AcagF42QPDYs3BfRga2gIxxwJ9drBSa4wYh0x2xZaiIAn6pbPwNM=
-X-Received: by 2002:a2e:80cc:: with SMTP id r12mr18113734ljg.154.1582209374674;
- Thu, 20 Feb 2020 06:36:14 -0800 (PST)
+        Thu, 20 Feb 2020 09:36:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4e99460000>; Thu, 20 Feb 2020 06:35:50 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 06:36:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 06:36:23 -0800
+Received: from [10.2.165.18] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 14:36:22 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-btrfs@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
+        <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v7 04/24] mm: Move readahead nr_pages check into
+ read_pages
+Date:   Thu, 20 Feb 2020 09:36:19 -0500
+X-Mailer: MailMate (1.13.1r5678)
+Message-ID: <DD2E8059-DA56-468F-9185-6C0082266067@nvidia.com>
+In-Reply-To: <20200219210103.32400-5-willy@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-5-willy@infradead.org>
 MIME-Version: 1.0
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org> <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
-In-Reply-To: <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 20 Feb 2020 15:36:02 +0100
-Message-ID: <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582209350; bh=SnJgwePGNz1KwP9XyCGDsyTNIXJm80RakRuVGnRNh2k=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=FDT0nYs8cnBGBsD6LKu9r++ThtzZy580JjSbKP96scj+mumshmfRQ2FjF9WE2bWgG
+         ZZd9Fkvay66NTmXX6GgKLwclVAHoCvF5uyeVrtd+8sdUsLUkbjdjbG8TvhaCarpiIx
+         JlVLlpbLLJJjFXv6LO/jrVsBsRX6mKL01/zN9gcaxnklD5XBnv+o9jI5hIeKrWeIFv
+         QY0c6t8P3/c4rXn9W5moLgbjwvi63enWEhSpHRtmkPjazAasGSOg2mg9+nm8O5ImLC
+         OSi8yuXPNFPHWC7TOSxXEFi3U+IFL3YDIgGIX1mnREWvHTr/ZC/ZmoovE5FHlDuD+z
+         N1sfrm/KY8NyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 at 21:10, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
+--=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+On 19 Feb 2020, at 16:00, Matthew Wilcox wrote:
+
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 >
-> On 19/02/2020 12:55, Vincent Guittot wrote:
-> > @@ -740,8 +740,10 @@ void init_entity_runnable_average(struct sched_entity *se)
-> >        * Group entities are initialized with zero load to reflect the fact that
-> >        * nothing has been attached to the task group yet.
-> >        */
-> > -     if (entity_is_task(se))
-> > +     if (entity_is_task(se)) {
-> > +             sa->runnable_avg = SCHED_CAPACITY_SCALE;
+> Simplify the callers by moving the check for nr_pages and the BUG_ON
+> into read_pages().
 >
-> So this is a comment that's more related to patch 5, but the relevant bit is
-> here. I'm thinking this initialization might be too aggressive wrt load
-> balance. This will also give different results between symmetric vs
-> asymmetric topologies - a single fork() will make a LITTLE CPU group (at the
-> base domain level) overloaded straight away. That won't happen for bigs or on
-> symmetric topologies because
->
->   // group_is_overloaded()
->   sgs->group_capacity * imbalance_pct) < (sgs->group_runnable * 100)
->
-> will be false - it would take more than one task for that to happen (due to
-> the imbalance_pct).
->
-> So maybe what we want here instead is to mimic what he have for utilization,
-> i.e. initialize to half the spare capacity of the local CPU. IOW,
-> conceptually something like this:
->
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 > ---
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 99249a2484b4..762717092235 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -740,10 +740,8 @@ void init_entity_runnable_average(struct sched_entity *se)
->          * Group entities are initialized with zero load to reflect the fact that
->          * nothing has been attached to the task group yet.
->          */
-> -       if (entity_is_task(se)) {
-> -               sa->runnable_avg = SCHED_CAPACITY_SCALE;
-> +       if (entity_is_task(se))
->                 sa->load_avg = scale_load_down(se->load.weight);
-> -       }
+>  mm/readahead.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
 >
->         /* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
->  }
-> @@ -796,6 +794,8 @@ void post_init_entity_util_avg(struct task_struct *p)
->                 }
->         }
+> diff --git a/mm/readahead.c b/mm/readahead.c
+> index 61b15b6b9e72..9fcd4e32b62d 100644
+> --- a/mm/readahead.c
+> +++ b/mm/readahead.c
+> @@ -119,6 +119,9 @@ static void read_pages(struct address_space *mappin=
+g, struct file *filp,
+>  	struct blk_plug plug;
+>  	unsigned page_idx;
 >
-> +       sa->runnable_avg = sa->util_avg;
+> +	if (!nr_pages)
+> +		return;
 > +
->         if (p->sched_class != &fair_sched_class) {
->                 /*
->                  * For !fair tasks do:
-> ---
+>  	blk_start_plug(&plug);
 >
-> The current approach has the merit of giving some sort of hint to the LB
-> that there is a bunch of new tasks that it could spread out, but I fear it
-> is too aggressive.
-
-I agree that setting by default to SCHED_CAPACITY_SCALE is too much
-for little core.
-The problem for little core can be fixed by using the cpu capacity instead
-
-@@ -796,6 +794,8 @@ void post_init_entity_util_avg(struct task_struct *p)
-                }
-        }
-
-+       sa->runnable_avg = cpu_scale;
-+
-        if (p->sched_class != &fair_sched_class) {
-                /*
-                 * For !fair tasks do:
+>  	if (mapping->a_ops->readpages) {
+> @@ -138,6 +141,8 @@ static void read_pages(struct address_space *mappin=
+g, struct file *filp,
 >
-> >               sa->load_avg = scale_load_down(se->load.weight);
-> > +     }
-> >
-> >       /* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
-> >  }
+>  out:
+>  	blk_finish_plug(&plug);
+> +
+> +	BUG_ON(!list_empty(pages));
+>  }
+>
+>  /*
+> @@ -180,8 +185,7 @@ void __do_page_cache_readahead(struct address_space=
+ *mapping,
+>  			 * contiguous pages before continuing with the next
+>  			 * batch.
+>  			 */
+> -			if (nr_pages)
+> -				read_pages(mapping, filp, &page_pool, nr_pages,
+> +			read_pages(mapping, filp, &page_pool, nr_pages,
+>  						gfp_mask);
+>  			nr_pages =3D 0;
+>  			continue;
+> @@ -202,9 +206,7 @@ void __do_page_cache_readahead(struct address_space=
+ *mapping,
+>  	 * uptodate then the caller will launch readpage again, and
+>  	 * will then handle the error.
+>  	 */
+> -	if (nr_pages)
+> -		read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
+> -	BUG_ON(!list_empty(&page_pool));
+> +	read_pages(mapping, filp, &page_pool, nr_pages, gfp_mask);
+>  }
+>
+>  /*
+> -- =
+
+> 2.25.0
+
+Looks good to me. Thanks.
+
+Reviewed-by: Zi Yan <ziy@nvidia.com>
+
+
+--
+Best Regards,
+Yan Zi
+
+--=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5OmWMPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKYawQAJnDCzvIOBkSaYYorEht2VZXHuWxGxkTwhkM
+TvpQUkB3Cff2onVNqU2DPF0usuD2Nr1qda6WHnPwGeTbxCokAwTsFkkn8JhJkqVf
+2/xydKKHCGEdaL5n8d86v6J0kQx6Do1jBCqLOIx0rGVuCL0apnya4jKfrNO4OCAb
+T4pwf6/Qm2E2bBj3ISvybn/TYKq9WPpAu/ryMLNPidYqMqJiX4iqJ/RnBZ7srPcH
+TutPMCYvOJ4oUtbTzYq6AHiFfANTGKnBBeiH3v9QdJAla6/7FeiL9G6fEwMK0C3g
+FnzbqkYnPf+nR7a6Yg5ZejT33u9g7CP18xykij7jYUxPe7G1P2gVFflDIzkDie0+
+LgYPICjmeYOKQxi2nrax2NpS+PqKq2mcGoZANosRwWvdlS0N/pUfOVZiCk2E8q7V
+UIi0c16u5lhuGpTCd2Y0rDxpItZ/eh912iqaxkjhKqlgxNdO1n78/2tiAXf/JqD9
+xt1LEjKMkDUxiqvvCvJNXONKWSyATDPWlwXZSdjMi0jjsdusO+74WDheJm9Y0ylN
+o8+lS74JyYFdmRRMlyfPDeNDdIjLJf5FL1Ke+8vR85rwt0yBRY7CGj37O6LlCHMM
+eo4carZ4q5rC3EnAG0+Lf3uYaQXCbr0R1vvZkqnLJZfJuhFdMjI0l7fb/02PBG3L
+f+4j17Gl
+=Jsz+
+-----END PGP SIGNATURE-----
+
+--=_MailMate_4CC2553B-18F9-4690-BE6D-05CCB84498AD_=--
