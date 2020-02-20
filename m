@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B84C5C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414DDC11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D3420679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B8720679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgBTU5s (ORCPT
+        id S1729477AbgBTU5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:57:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44162 "EHLO
+        Thu, 20 Feb 2020 15:57:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44163 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729186AbgBTU4j (ORCPT
+        with ESMTP id S1729189AbgBTU4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 15:56:39 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j4srn-0007e7-LJ; Thu, 20 Feb 2020 21:56:15 +0100
+        id 1j4srh-0007TP-HW; Thu, 20 Feb 2020 21:56:09 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id A4CEC10408E;
-        Thu, 20 Feb 2020 21:56:06 +0100 (CET)
-Message-Id: <20200220204619.325865496@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 0C90810408A;
+        Thu, 20 Feb 2020 21:56:04 +0100 (CET)
+Message-Id: <20200220204618.227182277@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 20 Feb 2020 21:45:37 +0100
+Date:   Thu, 20 Feb 2020 21:45:26 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 20/20] bpf/stackmap: Dont trylock mmap_sem with PREEMPT_RT and interrupts disabled
+Subject: [patch V2 09/20] bpf: Use bpf_prog_run_pin_on_cpu() at simple call sites.
 References: <20200220204517.863202864@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,59 +59,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Miller <davem@davemloft.net>
 
-In a RT kernel down_read_trylock() cannot be used from NMI context and
-up_read_non_owner() is another problematic issue.
+All of these cases are strictly of the form:
 
-So in such a configuration, simply elide the annotated stackmap and
-just report the raw IPs.
+	preempt_disable();
+	BPF_PROG_RUN(...);
+	preempt_enable();
 
-In the longer term, it might be possible to provide a atomic friendly
-versions of the page cache traversal which will at least provide the info
-if the pages are resident and don't need to be paged in.
+Replace this with bpf_prog_run_pin_on_cpu() which wraps BPF_PROG_RUN()
+with:
 
-[ tglx: Use IS_ENABLED() to avoid the #ifdeffery, fixup the irq work
-  	callback and add a comment ]
+	migrate_disable();
+	BPF_PROG_RUN(...);
+	migrate_enable();
+
+On non RT enabled kernels this maps to preempt_disable/enable() and on RT
+enabled kernels this solely prevents migration, which is sufficient as
+there is no requirement to prevent reentrancy to any BPF program from a
+preempting task. The only requirement is that the program stays on the same
+CPU.
+
+The seccomp loop does not need protection over the loop. It only needs
+protection per BPF filter program
+
+Therefore, this is a trivially correct transformation.
+
+[ tglx: Converted to bpf_prog_run_pin_on_cpu() ]
 
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
 ---
- kernel/bpf/stackmap.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+V2: No change. Amended changelog vs. seccomp
+---
+ include/linux/filter.h    |    4 +---
+ kernel/seccomp.c          |    4 +---
+ net/core/flow_dissector.c |    4 +---
+ net/core/skmsg.c          |    8 ++------
+ net/kcm/kcmsock.c         |    4 +---
+ 5 files changed, 6 insertions(+), 18 deletions(-)
 
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -40,6 +40,9 @@ static void do_up_read(struct irq_work *
- {
- 	struct stack_map_irq_work *work;
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -717,9 +717,7 @@ static inline u32 bpf_prog_run_clear_cb(
+ 	if (unlikely(prog->cb_access))
+ 		memset(cb_data, 0, BPF_SKB_CB_LEN);
  
-+	if (WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_RT)))
-+		return;
-+
- 	work = container_of(entry, struct stack_map_irq_work, irq_work);
- 	up_read_non_owner(work->sem);
- 	work->sem = NULL;
-@@ -288,10 +291,19 @@ static void stack_map_get_build_id_offse
- 	struct stack_map_irq_work *work = NULL;
+-	preempt_disable();
+-	res = BPF_PROG_RUN(prog, skb);
+-	preempt_enable();
++	res = bpf_prog_run_pin_on_cpu(prog, skb);
+ 	return res;
+ }
  
- 	if (irqs_disabled()) {
--		work = this_cpu_ptr(&up_read_work);
--		if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY)
--			/* cannot queue more up_read, fallback */
-+		if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
-+			work = this_cpu_ptr(&up_read_work);
-+			if (atomic_read(&work->irq_work.flags) & IRQ_WORK_BUSY) {
-+				/* cannot queue more up_read, fallback */
-+				irq_work_busy = true;
-+			}
-+		} else {
-+			/*
-+			 * PREEMPT_RT does not allow to trylock mmap sem in
-+			 * interrupt disabled context. Force the fallback code.
-+			 */
- 			irq_work_busy = true;
-+		}
+--- a/kernel/seccomp.c
++++ b/kernel/seccomp.c
+@@ -268,16 +268,14 @@ static u32 seccomp_run_filters(const str
+ 	 * All filters in the list are evaluated and the lowest BPF return
+ 	 * value always takes priority (ignoring the DATA).
+ 	 */
+-	preempt_disable();
+ 	for (; f; f = f->prev) {
+-		u32 cur_ret = BPF_PROG_RUN(f->prog, sd);
++		u32 cur_ret = bpf_prog_run_pin_on_cpu(f->prog, sd);
+ 
+ 		if (ACTION_ONLY(cur_ret) < ACTION_ONLY(ret)) {
+ 			ret = cur_ret;
+ 			*match = f;
+ 		}
  	}
+-	preempt_enable();
+ 	return ret;
+ }
+ #endif /* CONFIG_SECCOMP_FILTER */
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -920,9 +920,7 @@ bool bpf_flow_dissect(struct bpf_prog *p
+ 		     (int)FLOW_DISSECTOR_F_STOP_AT_ENCAP);
+ 	flow_keys->flags = flags;
  
- 	/*
+-	preempt_disable();
+-	result = BPF_PROG_RUN(prog, ctx);
+-	preempt_enable();
++	result = bpf_prog_run_pin_on_cpu(prog, ctx);
+ 
+ 	flow_keys->nhoff = clamp_t(u16, flow_keys->nhoff, nhoff, hlen);
+ 	flow_keys->thoff = clamp_t(u16, flow_keys->thoff,
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -628,7 +628,6 @@ int sk_psock_msg_verdict(struct sock *sk
+ 	struct bpf_prog *prog;
+ 	int ret;
+ 
+-	preempt_disable();
+ 	rcu_read_lock();
+ 	prog = READ_ONCE(psock->progs.msg_parser);
+ 	if (unlikely(!prog)) {
+@@ -638,7 +637,7 @@ int sk_psock_msg_verdict(struct sock *sk
+ 
+ 	sk_msg_compute_data_pointers(msg);
+ 	msg->sk = sk;
+-	ret = BPF_PROG_RUN(prog, msg);
++	ret = bpf_prog_run_pin_on_cpu(prog, msg);
+ 	ret = sk_psock_map_verd(ret, msg->sk_redir);
+ 	psock->apply_bytes = msg->apply_bytes;
+ 	if (ret == __SK_REDIRECT) {
+@@ -653,7 +652,6 @@ int sk_psock_msg_verdict(struct sock *sk
+ 	}
+ out:
+ 	rcu_read_unlock();
+-	preempt_enable();
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(sk_psock_msg_verdict);
+@@ -665,9 +663,7 @@ static int sk_psock_bpf_run(struct sk_ps
+ 
+ 	skb->sk = psock->sk;
+ 	bpf_compute_data_end_sk_skb(skb);
+-	preempt_disable();
+-	ret = BPF_PROG_RUN(prog, skb);
+-	preempt_enable();
++	ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 	/* strparser clones the skb before handing it to a upper layer,
+ 	 * meaning skb_orphan has been called. We NULL sk on the way out
+ 	 * to ensure we don't trigger a BUG_ON() in skb/sk operations
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -380,9 +380,7 @@ static int kcm_parse_func_strparser(stru
+ 	struct bpf_prog *prog = psock->bpf_prog;
+ 	int res;
+ 
+-	preempt_disable();
+-	res = BPF_PROG_RUN(prog, skb);
+-	preempt_enable();
++	res = bpf_prog_run_pin_on_cpu(prog, skb);
+ 	return res;
+ }
+ 
 
