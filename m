@@ -2,140 +2,168 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C6CC11D1E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0101CC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1156424650
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:13:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8F3E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgBTUNn (ORCPT
+        id S1729078AbgBTUOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:13:43 -0500
-Received: from muru.com ([72.249.23.125]:56612 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbgBTUNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:13:43 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 055CE8080;
-        Thu, 20 Feb 2020 20:14:25 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 12:13:38 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200220201338.GW37466@atomide.com>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
- <20200218152833.GH35972@atomide.com>
- <40a803e2-6a08-2c73-0312-666441716daa@ti.com>
+        Thu, 20 Feb 2020 15:14:00 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:56396 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbgBTUOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:14:00 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j4sCp-0007qP-UM; Thu, 20 Feb 2020 20:13:56 +0000
+Date:   Thu, 20 Feb 2020 21:13:54 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next v3 4/9] sysfs: add sysfs_change_owner()
+Message-ID: <20200220201354.j7yenup7unknqpih@wittgenstein>
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
+ <20200218162943.2488012-5-christian.brauner@ubuntu.com>
+ <20200220112314.GG3374196@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <40a803e2-6a08-2c73-0312-666441716daa@ti.com>
+In-Reply-To: <20200220112314.GG3374196@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [200220 14:08]:
-> On 18/02/2020 17.28, Tony Lindgren wrote:
-> > Right. I'm not attached to the dummy dai, but looks like currently
-> > snd-soc-audio-graph-card won't work without it.
+On Thu, Feb 20, 2020 at 12:23:14PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 18, 2020 at 05:29:38PM +0100, Christian Brauner wrote:
+> > Add a helper to change the owner of sysfs objects.
+> > This function will be used to correctly account for kobject ownership
+> > changes, e.g. when moving network devices between network namespaces.
+> > 
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> > /* v2 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add comment how ownership of sysfs object is changed.
+> > 
+> > /* v3 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add explicit uid/gid parameters.
+> > ---
+> >  fs/sysfs/file.c       | 39 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/sysfs.h |  6 ++++++
+> >  2 files changed, 45 insertions(+)
+> > 
+> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > index df5107d7b3fd..02f7e852aad4 100644
+> > --- a/fs/sysfs/file.c
+> > +++ b/fs/sysfs/file.c
+> > @@ -665,3 +665,42 @@ int sysfs_file_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
+> >  	return error;
+> >  }
+> >  EXPORT_SYMBOL_GPL(sysfs_file_change_owner);
+> > +
+> > +/**
+> > + *	sysfs_change_owner - change owner of the given object.
 > 
-> The generic cards will link up a dummy dai/codec when it is needed by DPMC.
-
-Not sure what should be fixed here..
-
-> > And we potentially
-> > do need a place to configure TDM slot specific stuff for mcbsp.
+> "and all of the files associated with this kobject", right?
 > 
-> Yes, but you still have one port and one endpoint should not change the
-> configuration which is already in used for the other endpoint.
-
-OK so what's the fix for snd-soc-audio-graph-card expecting a
-separate DAI then?
-
-> > Oh, I think there are Android apps to do that though.. Never tried
-> > if they work on droid4. But if they do, doing a register dump of
-> > mcbsp3 would show up how it's configured.
+> > + *	@kobj:	object.
+> > + *	@kuid:	new owner's kuid
+> > + *	@kgid:	new owner's kgid
+> > + */
+> > +int sysfs_change_owner(struct kobject *kobj, kuid_t kuid, kgid_t kgid)
+> > +{
+> > +	int error;
+> > +	const struct kobj_type *ktype;
+> > +
+> > +	if (!kobj->state_in_sysfs)
+> > +		return -EINVAL;
+> > +
+> > +	error = sysfs_file_change_owner(kobj, kuid, kgid);
 > 
-> I don't see how you could record the data from the line which is
-> connected to McBSP_DX pin (the pin is output).
+> Ok, this changes the attributes of the sysfs directory for the kobject
+> itself.
+
+Yes.
+
 > 
-> But I might be missing something.
-
-Yeah I don't know either, but the pins we have muxed for
-mcbsp3 are:
-
-/* 0x4a100106 abe_pdm_ul_data.abe_mcbsp3_dr ag25 */
-OMAP4_IOPAD(0x106, PIN_INPUT | MUX_MODE1)
-
-/* 0x4a100108 abe_pdm_dl_data.abe_mcbsp3_dx af25 */
-OMAP4_IOPAD(0x108, PIN_OUTPUT | MUX_MODE1)
-
-/* 0x4a10010a abe_pdm_frame.abe_mcbsp3_clkx ae25 */
-OMAP4_IOPAD(0x10a, PIN_INPUT | MUX_MODE1)
-
-/* 0x4a10010c abe_pdm_lb_clk.abe_mcbsp3_fsx af26 */
-OMAP4_IOPAD(0x10c, PIN_INPUT | MUX_MODE1)
-
-Isn't the data receive there as mcbsp3_dr?
-
-> > I think the link for the patches you posted is patching the
-> > snd-soc-audio-graph-card already?
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	ktype = get_ktype(kobj);
+> > +	if (ktype) {
+> > +		struct attribute **kattr;
+> > +
+> > +		for (kattr = ktype->default_attrs; kattr && *kattr; kattr++) {
+> > +			error = sysfs_file_change_owner_by_name(
+> > +				kobj, (*kattr)->name, kuid, kgid);
+> > +			if (error)
+> > +				return error;
+> > +		}
 > 
-> Yes it does, but the functionality is there via custom machine drivers.
-> What I afraid is that such a complex wiring as the Droid4 have it might
-> be not possible to use a generic - fits everything - driver without
-> making it a customized one ;)
+> And here you change all of the files of the kobject.
+
+This changes the default attributes associated with that ktype (if any)
+and mirrors how a kobject is registered in sysfs.
+
 > 
-> Otho, if the only thing is the machine level DAPM switching and linking
-> the paths then it might be relatively straight forward to extend the
-> simple-card family.
+> But what about files that have a subdir?  Does that also happen here?
 
-Yeah or maybe it just needs to be handled directly in the cpcap,
-mdm6600 codec drivers?
+Maybe that was all to brief on my end, sorry:
+So all of this mirrors how a kobject is added through driver core which
+in its guts is done via kobject_add_internal() which in summary does:
+- create the main directory via create_dir()
+- populate the directory with the groups associated with that ktype (if any)
+- populate the directory with the basic attributes associated with that
+  ktype (if any)
+These are the basic steps that are associated with adding a kobject in
+sysfs.
+Any additional properties are added by the specific subsystem
+itself (not by driver core) after it has registered the device. So for
+the example of network devices, a network device will e.g. register a
+queue subdirectory under the basic sysfs directory for the network
+device and than further subdirectories within that queues subdirectory.
+But that is all specific to network devices and they call the
+corresponding sysfs functions to do that directly when they create those
+queue objects. So anything that a subsystem adds outside of what driver
+core does must also be changed by them (That's already true for removal
+of files it created outside of driver core.) and it's the same for
+ownership changes. :)
 
-> > Right. So right now it seems that for snd-soc-audio-graph-card
-> > needs the dummy dai, but it's unclear what would need to be
-> > changed to not use a dummy dai for mcbsp.
+I'll document that.
+
 > 
-> Since simple-card family can and will connect up dummy dai/codec when
-> needed based on the setup, I would look at that and make it do so.
-
-Oh so make simple-card spin up the dummy dai instead of mcbsp?
-
-> > The dts snippets I posted earlier do follow the graph bindings
-> > as far as I know. But just to confirm, do you see any need to
-> > move things around there?
+> > +
+> > +		error = sysfs_groups_change_owner(kobj, ktype->default_groups,
+> > +						  kuid, kgid);
 > 
-> It also states that a port is a physical port which can have multiple
-> endpoints. But multiple endpoint != DAI. port == dai.
+> Then what are you changing here?
 
-I guess I'm getting really confused now.. Are you saying
-the dts needs to be changed too now?
+So this changes the default groups associated with the ktype for that
+kobject and again mirrors how a kobject is registered in sysfs.
 
-Regards,
+> 
+> I think the kerneldoc needs a lot more explaination as to what is going
+> on in this function and why you would call it, and not some of the other
+> functions you are adding.
 
-Tony
+Will do for sure.
+
+Thanks!
+Christian
