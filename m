@@ -2,76 +2,120 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E81C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F248EC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECC43207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A81207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=golovin.in header.i=@golovin.in header.b="2+ttcKBp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NqCJGygJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgBTPfM (ORCPT
+        id S1728524AbgBTPf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:35:12 -0500
-Received: from forward501p.mail.yandex.net ([77.88.28.111]:59269 "EHLO
-        forward501p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728276AbgBTPfM (ORCPT
+        Thu, 20 Feb 2020 10:35:56 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:43099 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728319AbgBTPf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:35:12 -0500
-X-Greylist: delayed 382 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 10:35:10 EST
-Received: from mxback8o.mail.yandex.net (mxback8o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::22])
-        by forward501p.mail.yandex.net (Yandex) with ESMTP id 046E43500294;
-        Thu, 20 Feb 2020 18:28:47 +0300 (MSK)
-Received: from localhost (localhost [::1])
-        by mxback8o.mail.yandex.net (mxback/Yandex) with ESMTP id GVR8Slzjn4-SiLuPZj7;
-        Thu, 20 Feb 2020 18:28:46 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=golovin.in; s=mail; t=1582212526;
-        bh=k/p2VUDosGYu66ErCK1cPAKJ+mVO7o9ELRCaJtjIexc=;
-        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
-        b=2+ttcKBpiXC21CcREE3+BPQNUeZ51CmWkc+4uVPoc+qHwQv5WcAmaqKS/CZ4kczw/
-         Dnvak8IPS7uQb+4wI8627YdrHeRu+RoGmZ7sQOoYTiZjJluI+iA8RfFbHQVhuvhXbH
-         JVb0lWtfbJ9M4F0gUDQ1VHQVSgailQdS5RoQXSDc=
-Authentication-Results: mxback8o.mail.yandex.net; dkim=pass header.i=@golovin.in
-Received: by sas8-7ec005b03c91.qloud-c.yandex.net with HTTP;
-        Thu, 20 Feb 2020 18:28:44 +0300
-From:   Dmitry Golovin <dima@golovin.in>
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        "f4bug@amsat.org" <f4bug@amsat.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>,
-        "paulburton@kernel.org" <paulburton@kernel.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
-In-Reply-To: <CAKwvOdkaLRE0Ek3PnmqE2P3Urn4+pwfAp-qQdsLurwERcqNXfQ@mail.gmail.com>
-References: <20200211212455.3307-1-mark.tomlinson@alliedtelesis.co.nz>
-         <CAAdtpL5Tf-8O=xMKO33DWDs=2_Hsdk=FQSNO5Gsrx=9hWvENdg@mail.gmail.com>
-         <8e852d84c8b0c6b35faa3b3f2a1034d93a6e8967.camel@alliedtelesis.co.nz> <8cb14684e2f774d9573c062f2d82ad5348c5fee7.camel@alliedtelesis.co.nz> <CAKwvOdkaLRE0Ek3PnmqE2P3Urn4+pwfAp-qQdsLurwERcqNXfQ@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: cavium_octeon: Fix syncw generation.
+        Thu, 20 Feb 2020 10:35:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582212955;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zJaV7/DZwvicawYxW2NkeFWBZ8k2VoRAdC8KEafaV2c=;
+        b=NqCJGygJi7DVorp2lcpdLwH3ftyrjGZ65wFejYIAXlPoE/Ef8IVuDD/kIxuJHBTsZgTHwf
+        rSezrjKrKi9Lkic5Ynb7LchK3+BtP0kFHN6wvcJylyJ7clAO93QFSEylZiiWdo5j3Qijo9
+        kW+3Z0HJ7tDA7H9B683t/AvCskUhJ5w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-27DWYv0vNgm8V8ZTZpf3Jw-1; Thu, 20 Feb 2020 10:35:53 -0500
+X-MC-Unique: 27DWYv0vNgm8V8ZTZpf3Jw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42F8B800D4E;
+        Thu, 20 Feb 2020 15:35:51 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-123-230.rdu2.redhat.com [10.10.123.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C366F5C1B0;
+        Thu, 20 Feb 2020 15:35:49 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] pinctrl: ingenic: Improve unreachable code generation
+Date:   Thu, 20 Feb 2020 09:35:09 -0600
+Message-Id: <bc20fdbcb826512cf76b7dfd0972740875931b19.1582212881.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-X-Mailer: Yamail [ http://yandex.ru ] 5.0
-Date:   Thu, 20 Feb 2020 17:28:44 +0200
-Message-Id: <37043091582212524@sas8-7ec005b03c91.qloud-c.yandex.net>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=utf-8
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.02.2020, 20:37, "'Nick Desaulniers' via Clang Built Linux" <clang-built-linux@googlegroups.com>:
->>  There is an effort underway to build the kernel with clang[1]. I'm not
->>  sure what that ends up using for an assembler or if it'll even be able
->>  to target mips64 anytime soon.
+In the second loop of ingenic_pinconf_set(), it annotates the switch
+default case as unreachable().  The annotation is technically correct,
+because that same case would have resulted in an early function return
+in the previous loop.
 
-I have a working build for MIPS64 (only mips64r6 at the moment), the
-config is based on malta_defconfig and it boots in qemu. I still don't
-have a matching buildroot image, but it shouldn't be a problem.
+However, the compiled code is suboptimal.  GCC seems to work extra hard
+to ensure that the unreachable code path triggers undefined behavior.
+The function would fall through to start executing whatever function
+happens to be next in the compilation unit.
 
-Regards,
-Dima
+This is problematic because:
+
+  a) it adds unnecessary 'ensure undefined behavior' logic, and
+     corresponding i-cache footprint; and
+
+  b) it's less robust -- if a bug were to be introduced, falling through
+     to the next function would be catastrophic.
+
+Yet another issue is that, while objtool normally understands
+unreachable() annotations, there's one special case where it doesn't:
+when the annotation occurs immediately after a 'ret' instruction.  That
+happens to be the case here because unreachable() is immediately before
+the return.
+
+Remove the unreachable() annotation and replace it with a comment.  This
+simplifies the code generation and changes the unreachable error path to
+just silently return instead of corrupting execution.
+
+This fixes the following objtool warning:
+
+  drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_se=
+t() falls through to next function ingenic_pinconf_group_set()
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+---
+ drivers/pinctrl/pinctrl-ingenic.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-=
+ingenic.c
+index 96f04d121ebd..13c7d3351ed5 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -2158,7 +2158,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *=
+pctldev, unsigned int pin,
+ 			break;
+=20
+ 		default:
+-			unreachable();
++			/* unreachable */
++			break;
+ 		}
+ 	}
+=20
+--=20
+2.21.1
+
