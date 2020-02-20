@@ -2,114 +2,143 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA61CC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC89C11D0E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB99B206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CAF206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBTQUQ (ORCPT
+        id S1728571AbgBTQUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:20:16 -0500
-Received: from muru.com ([72.249.23.125]:56326 "EHLO muru.com"
+        Thu, 20 Feb 2020 11:20:43 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56648 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgBTQUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:20:15 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C46C78080;
-        Thu, 20 Feb 2020 16:20:59 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 08:20:12 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>, linux-omap@vger.kernel.org
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200220162012.GI37466@atomide.com>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+        id S1727868AbgBTQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:20:42 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 08:20:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
+   d="scan'208";a="383183911"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga004.jf.intel.com with ESMTP; 20 Feb 2020 08:20:28 -0800
+Date:   Thu, 20 Feb 2020 08:20:28 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
+References: <20200213232923.GC22854@iweiny-DESK2.sc.intel.com>
+ <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
+ <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
+ <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+ <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+ <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
+ <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
+ <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
+ <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
+ <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+In-Reply-To: <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [200220 16:04]:
-> On 2/20/20 10:54 AM, Tony Lindgren wrote:
-> > Andrew,
+On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
+> On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
+> > Ira Weiny <ira.weiny@intel.com> writes:
+> > > If my disassembly of read_pages is correct it looks like readpage is null which
+> > > makes sense because all files should be IS_DAX() == true due to the mount option...
+> > >
+> > > But tracing code indicates that the patch:
+> > >
+> > > 	fs: remove unneeded IS_DAX() check
+> > >
+> > > ... may be the culprit and the following fix may work...
+> > >
+> > > diff --git a/mm/filemap.c b/mm/filemap.c
+> > > index 3a7863ba51b9..7eaf74a2a39b 100644
+> > > --- a/mm/filemap.c
+> > > +++ b/mm/filemap.c
+> > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+> > >         if (!count)
+> > >                 goto out; /* skip atime */
+> > >  
+> > > -       if (iocb->ki_flags & IOCB_DIRECT) {
+> > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
+> > >                 struct file *file = iocb->ki_filp;
+> > >                 struct address_space *mapping = file->f_mapping;
+> > >                 struct inode *inode = mapping->host;
 > > 
-> > * kbuild test robot <lkp@intel.com> [200213 10:27]:
-> >> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> >> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> >> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> >> date:   3 weeks ago
-> >> config: arm-randconfig-a001-20200213 (attached as .config)
-> >> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> >> reproduce:
-> >>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>         chmod +x ~/bin/make.cross
-> >>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
-> >>         # save the attached .config to linux build tree
-> >>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kbuild test robot <lkp@intel.com>
-> >>
-> >> All errors (new ones prefixed by >>):
-> >>
-> >>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> >>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
-> > 
-> > Have you looked at this one? Looks like there's still an unhandled
-> > randconfig build case.
-> > 
+> > Well, you'll have to up-level the inode variable instantiation,
+> > obviously.  That solves this particular issue.
 > 
+> Well...  This seems to be a random issue.  I've had BMC issues with
+> my server most of the day...  But even with this patch I still get the failure
+> in read_pages().  :-/
 > 
-> I've had a quick look, all the ARM config does:
-> 
-> select HAVE_ARM_SMCCC if CPU_V7
-> 
-> so I don't think this will happen in any real config, but if we want to
-> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
-> on it.
+> And I have gotten it to both succeed and fail with qemu...  :-/
 
-Seems to happen at least with omap2 only config where we don't have
-CPU_V7. Something like below seems to fix it.
+... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
+out factoring in the flag logic changes we have agreed upon...
 
-If that looks OK to you, I'll send out a proper fix.
-
-Regards,
-
-Tony
-
-8< -----------------------
-diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
---- a/arch/arm/mach-omap2/omap-secure.c
-+++ b/arch/arm/mach-omap2/omap-secure.c
-@@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
- 	return ret;
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 62d9f622bad1..d592949ad396 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
+                inode->i_flags |= S_NOATIME;
+        else
+                inode->i_flags &= ~S_NOATIME;
+-       if (xflags & FS_XFLAG_DAX)
++
++       if (xfs_inode_enable_dax(ip))
+                inode->i_flags |= S_DAX;
+        else
+                inode->i_flags &= ~S_DAX;
+-
  }
- 
-+#ifdef CONFIG_HAVE_ARM_SMCCC
- void omap_smccc_smc(u32 fn, u32 arg)
- {
- 	struct arm_smccc_res res;
-@@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
- 		      0, 0, 0, 0, 0, 0, &res);
- 	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
- }
-+#else
-+void omap_smccc_smc(u32 fn, u32 arg)
-+{
-+}
-+#endif
- 
- void omap_smc1(u32 fn, u32 arg)
- {
+
+But the one thing which tripped me up, and concerns me, is we have 2 functions
+which set the inode flags.
+
+xfs_diflags_to_iflags()
+xfs_diflags_to_linux()
+
+xfs_diflags_to_iflags() is geared toward initialization but logically they do
+the same thing.  I see no reason to keep them separate.  Does anyone?
+
+Based on this find, the discussion on behavior in this thread, and the comments
+from Dave I'm reworking the series because the flag check/set functions have
+all changed and I really want to be as clear as possible with both the patches
+and the resulting code.[*]  So v4 should be out today including attempting to
+document what we have discussed here and being as clear as possible on the
+behavior.  :-D
+
+Thanks so much for testing this!
+
+Ira
+
+[*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
+really don't see a reason to keep it.
+
