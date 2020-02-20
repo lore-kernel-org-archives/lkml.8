@@ -2,123 +2,142 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE4C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A24C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E0624654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051A724654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="eadWqpkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBTJIM (ORCPT
+        id S1726921AbgBTJJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:08:12 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:37540 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgBTJIM (ORCPT
+        Thu, 20 Feb 2020 04:09:02 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41326 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgBTJJC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:08:12 -0500
-Received: by mail-io1-f72.google.com with SMTP id p4so2161390ioo.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:08:12 -0800 (PST)
+        Thu, 20 Feb 2020 04:09:02 -0500
+Received: by mail-lf1-f65.google.com with SMTP id m30so2455132lfp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:09:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KFjjOM/ATxcLGNdaN9di1npOi28u97TQGyXHv0wmFXw=;
+        b=eadWqpkp5Vo1b81QGCZOyn4AynMqBeEj3XDArEaOELEQ3U0I0zewuEynz/bmC025ac
+         GycxMBYJad0D+XjtuJc1uRjnnMCx0rJuGW1I7LGzc3+spyoab2ZsFNYMtYSpU854pH+V
+         THZl66rl/WCzH1AGKSDVzE9Qt7MDZD70wH3fU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=4rw0gQpQnZk+CZTyqoVbFEYEdsf54WxpWJrLPHEp50A=;
-        b=lP1JWDkaY1/aB7YERdBDTy9XEdrBB/mpkASqadCs1ctDkNvdCBONs6r7xkuczLe5Iq
-         lUIZeGqoFCnx4FSXN/j6Fjx7DztkjKjT3Ngt9ATPvbqhpZWoxpPwgOgERtJJjSw48yUV
-         LXD59KAEnLtr/cPYq3jLEENqhrO3TkHJp6wfBLg257t7lnjAOTASBqR0MdCMIowq8HxI
-         q4xQREGbcd3zdlnjO3AhDW8ZldAtcyg7zI5R5QByDM/lWdeDXs3SYExx5cTNlWuZ9zod
-         dsYVrettkRVsaXn3MG7jPgGeOitxBxuDLBo2KjDnk73jI5l7gRCFjJaCW8nWf+khxYls
-         yCmQ==
-X-Gm-Message-State: APjAAAUTe+mTSXYAHgdCeoIypbftcwget2p4b+A539EJ4m3s/DAihyht
-        paxslT1UAdippcCyipSLGD8/06nOtvZfyDhh8oFaunBmexEY
-X-Google-Smtp-Source: APXvYqyLmWkWi+b/aUPbnHxTmdF61uLlxMshHPca4jVc5ZpYNLrxcJpI3pZeToN4IDHZuTNyz8nfLCPS4OwlSUoKtoKEka7eSakG
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KFjjOM/ATxcLGNdaN9di1npOi28u97TQGyXHv0wmFXw=;
+        b=Xcgl3oUeZXfwypP3EOWbwAMQ5kkc5Tc+fa3T1eU60BrkAuVFliwDwP7obdd5RgqudZ
+         LK3/CNik09d8UEGSwzBriT48OFYgPD1xBCVCeAjXAeC2HrjHN/EmsyF+4LZsXZUynZYK
+         I7IBMYTq0FL2ZiujAymPlj6fs2KWuAbP3EFHuqhC83nMcsqalgBIoygTLbOIQVMCkh0e
+         fzR2kXC1mV0mVXnS6iN4xgsqyx30YMfqLwTnZHYwpV41l7ykcB0oGZoSDjMuX5efQEl1
+         kWw/MtC80SCOD0t4ItOGnQqHzifvBClpDmM6YHlPidrKocZsOSWL1NOa74N/1sfVkWg2
+         ktOQ==
+X-Gm-Message-State: APjAAAVOSKW4m4YqRqBKiUvvJBMKguZI+W+c7v3QslZUDS4gkoKjM0Ze
+        h773HxhaBdu/a2dqNXIswX0TFQ==
+X-Google-Smtp-Source: APXvYqy45/4Ap6BjwajnmmM6G5U9Ws6yAE795RDfSZGhdc4380Z2tcYVCRQyqKGvGmzI8k/CRfGmKw==
+X-Received: by 2002:a05:6512:3284:: with SMTP id p4mr2007451lfe.166.1582189740582;
+        Thu, 20 Feb 2020 01:09:00 -0800 (PST)
+Received: from [192.168.0.109] (84-238-136-197.ip.btc-net.bg. [84.238.136.197])
+        by smtp.gmail.com with ESMTPSA id w8sm1457501lfk.75.2020.02.20.01.08.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 01:09:00 -0800 (PST)
+Subject: Re: [RFC net-next v3 03/10] net: bridge: mrp: Add MRP interface used
+ by netlink
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        "Allan W. Nielsen" <allan.nielsen@microchip.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org,
+        jiri@resnulli.us, ivecera@redhat.com, davem@davemloft.net,
+        roopa@cumulusnetworks.com, anirudh.venkataramanan@intel.com,
+        olteanv@gmail.com, jeffrey.t.kirsher@intel.com,
+        UNGLinuxDriver@microchip.com
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200124161828.12206-4-horatiu.vultur@microchip.com>
+ <20200124174315.GC13647@lunn.ch>
+ <20200125113726.ousbmm4n3ab4xnqt@soft-dev3.microsemi.net>
+ <20200125152023.GA18311@lunn.ch>
+ <20200125191612.5dlzlvb7g2bucqna@lx-anielsen.microsemi.net>
+ <20200126132843.k4rzn7vfti7lqvos@soft-dev3.microsemi.net>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <08c2d3f8-8d70-730c-95d5-8493e6919f3e@cumulusnetworks.com>
+Date:   Thu, 20 Feb 2020 11:08:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:9f1b:: with SMTP id u27mr28596712ili.173.1582189691814;
- Thu, 20 Feb 2020 01:08:11 -0800 (PST)
-Date:   Thu, 20 Feb 2020 01:08:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008c49b4059efe3e74@google.com>
-Subject: KMSAN: kernel-infoleak in video_usercopy (2)
-From:   syzbot <syzbot+c67f8c1e31d62912ff2f@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, glider@google.com, hverkuil-cisco@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200126132843.k4rzn7vfti7lqvos@soft-dev3.microsemi.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 26/01/2020 15:28, Horatiu Vultur wrote:
+> The 01/25/2020 20:16, Allan W. Nielsen wrote:
+>> On 25.01.2020 16:20, Andrew Lunn wrote:
+>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>>
+>>> On Sat, Jan 25, 2020 at 12:37:26PM +0100, Horatiu Vultur wrote:
+>>>> The 01/24/2020 18:43, Andrew Lunn wrote:
+>>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>>>>
+>>>>>> br_mrp_flush - will flush the FDB.
+>>>>>
+>>>>> How does this differ from a normal bridge flush? I assume there is a
+>>>>> way for user space to flush the bridge FDB.
+>>>>
+>>>> Hi,
+>>>>
+>>>> If I seen corectly the normal bridge flush will clear the entire FDB for
+>>>> all the ports of the bridge. In this case it is require to clear FDB
+>>>> entries only for the ring ports.
+>>>
+>>> Maybe it would be better to extend the current bridge netlink call to
+>>> be able to pass an optional interface to be flushed?  I'm not sure it
+>>> is a good idea to have two APIs doing very similar things.
+>> I agree.
+> I would look over this.
+> 
 
-syzbot found the following crash on:
+There's already a way to flush FDBs per-port - IFLA_BRPORT_FLUSH.
 
-HEAD commit:    8bbbc5cf kmsan: don't compile memmove
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=178f51b5e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
-dashboard link: https://syzkaller.appspot.com/bug?extid=c67f8c1e31d62912ff2f
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f39f95e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c423d9e00000
+>>
+>> And when looking at this again, I start to think that we should have
+>> extended the existing netlink interface with new commands, instead of
+>> adding a generic netlink.
+> We could do also that. The main reason why I have added a new generic
+> netlink was that I thought it would be clearer what commands are for MRP
+> configuration. But if you think that we should go forward by extending
+> existing netlink interface, that is perfectly fine for me.
+> 
+>>
+>> /Allan
+>>
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c67f8c1e31d62912ff2f@syzkaller.appspotmail.com
+I don't mind extending the current netlink interface but the bridge already has
+a huge (the largest) set of options and each time we add a new option we have
+to adjust RTNL_MAX_TYPE. If you do decide to go this way maybe look into nesting
+all the MRP options under one master MRP element into the bridge options, example:
+[IFLA_BR_MRP]
+  [IFLA_BR_MRP_X]
+  [IFLA_BR_MRP_Y]
+  ...
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
-CPU: 1 PID: 11474 Comm: syz-executor301 Not tainted 5.6.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
- kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
- _copy_to_user+0x15a/0x1f0 lib/usercopy.c:33
- copy_to_user include/linux/uaccess.h:174 [inline]
- video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3165 [inline]
- video_usercopy+0x248c/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
- video_ioctl2+0x9f/0xb0 drivers/media/v4l2-core/v4l2-ioctl.c:3274
- v4l2_ioctl+0x23f/0x270 drivers/media/v4l2-core/v4l2-dev.c:360
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0x2e9/0x410 fs/ioctl.c:770
- __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:770
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x440289
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffe00ee4fc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440289
-RDX: 00000000200000c0 RSI: 00000000c050560f RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401b10
-R13: 0000000000401ba0 R14: 0000000000000000 R15: 0000000000000000
+To avoid increasing the stack usage and bumping the max rtnl type too much.
 
-Local variable ----vb32.i@video_usercopy created at:
- video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3149 [inline]
- video_usercopy+0x20bf/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
- video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3149 [inline]
- video_usercopy+0x20bf/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
-
-Bytes 52-55 of 80 are uninitialized
-Memory access of size 80 starts at ffffa88f81563ce0
-Data copied to user address 00000000200000c0
-=====================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Cheers,
+ Nik
