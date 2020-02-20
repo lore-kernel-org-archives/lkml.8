@@ -2,187 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69A3C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F378AC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC36C2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582195334;
-	bh=6EmapAyNS4moIKZeV8wDU1IuYRJDzjfP1Veo5FDT7VU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LdbA+9e3EdqN5d4oSm7YvAbhJPk140L2EPcCoMPvxc7vvkT0Fo+XL3ac6SdTdGxoP
-	 zcf2mNzidZPqgRfXvwti7YCDXRMlG0mJCpHpgbfvWExhCehQXZLOQBRI60Gp9A5ySB
-	 3sAw4GjzWDbOc5ZYryW441eqkb9EjRuKnaaqhgxY=
+	by mail.kernel.org (Postfix) with ESMTP id C94972071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Np8DJaVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgBTKmN (ORCPT
+        id S1727894AbgBTKnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:42:13 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41589 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgBTKmN (ORCPT
+        Thu, 20 Feb 2020 05:43:03 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42995 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726893AbgBTKnD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:42:13 -0500
-Received: by mail-ot1-f66.google.com with SMTP id r27so3179667otc.8;
-        Thu, 20 Feb 2020 02:42:12 -0800 (PST)
+        Thu, 20 Feb 2020 05:43:03 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so1727940pfz.9;
+        Thu, 20 Feb 2020 02:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kxfpH7hofI2dT1EmNwZZMlMZMqhtSme6d7SbXx3CYq0=;
+        b=Np8DJaVuBXgINq398uI6JEI2yyXyGAh82e7JU+kt0/8soFTOF7YQwPC5PE0wGnizng
+         ue5XDE3A+y5lsbRnJzClaOJx6v6ZFg1wgwpYORYjNPerLUsWeb29Yh35FoYYmmI6JAj1
+         ZT2DAkdxv3Tiwb4WTCwqVqCinjAbA81UN604IN7J28r4b538GGiRZaoVmlD2tYfIvJmU
+         /rHaEx693IcAHpxrikt9vHfdi//+DyrLKz4trG/Dd/Mb2gekSeNATFmbId4UH+odFZaL
+         AJ4PR9y1fLZytpGX/rKF5f5KDyk52m9bfbwHZFakl1bsfjT0OqJxfx8EhXy6WM53xPBQ
+         QC2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u3XojZcftnIKJKyJV35y5TFgVfWUEqTDB1cGXtSJ7ss=;
-        b=WcqwXPMQjXS5thdEamJrLKhMcNvz52hxP2yHBOx6ofn1Y30uvZIHa2ioXHi6FCMBE8
-         rIND5U/E6PjZ42v1aFvjhWhdFtZgi8hwe65QBoUOzQ4U44gP/c/lKGBPohrpcsePHA0Q
-         9GtIWBMmf29NeKkgMS679JWgjY4phQ0CusBCDmj2jbuhWMZiAahY/txLmk3M9iViSsFv
-         s6XHhg60GAXgcgZjyhohJQ2c3fa9I4vC8WjELITtsCl09PwL8qcVv1ezravRSRXG92Ty
-         0Z3rFNol0TiTuLd21Vrea0hDi6sv8VwR09goPjcVdmTblmxkr/hOhhzlUjHkbOKjf+N6
-         sJeA==
-X-Gm-Message-State: APjAAAV7f7yAHu3UTz76/w6dJeTxCiLCzWkZhAFsQm2agDT07njNntYl
-        wyhy0Y8tY0EsWZzY4K9ImPBNpiCxFFe2XUd+0RQ=
-X-Google-Smtp-Source: APXvYqx7P9JcEQ3avtUpJ649mm+kpxTjDlbOod8QiB1WbzUtRl9JeH4PIotO/V2tMaE+9diGtnuPOXTmGDW2tCjJxSs=
-X-Received: by 2002:a05:6830:1651:: with SMTP id h17mr21787986otr.167.1582195332516;
- Thu, 20 Feb 2020 02:42:12 -0800 (PST)
+        bh=kxfpH7hofI2dT1EmNwZZMlMZMqhtSme6d7SbXx3CYq0=;
+        b=SAz8YUu1l9DeGNnfr6vyN1GnFqHYwXpm5LDRs7YOujjibdILQKBt6mp33Zs/v6XqqO
+         jf0HdL3TL86V8GBFHOlnF1FOUmb6IwALVs6CvzUaG0FM1V7G5uXdprEXs0fzB7Ybfs2G
+         dj64jDE3PoZmZfPJ23IBFwoSUXSNZTRgkJMgxedkFpwsvw/4qQIaD9qIvj05KGSrq418
+         729ChSNunLQvcO2Ji2r2Rwc+znAc76l/fpTrjKks+9AHb9eA8WesYOWw1gRJxatwvNN0
+         6dyFmI2F8EeJu4s7kvmBij7gU4GnywbUIZTQ7lalWYnzK8ySvipZlY05C5gtOjynci4F
+         dseQ==
+X-Gm-Message-State: APjAAAWWN0t45h8AcQY05nfBhtq7hXZhiG8c91Swe+RVTH7h+GRoC36P
+        6SRXDY5H3+aoL4kyADC76IZDE9h06Hd+1ZZdYcw=
+X-Google-Smtp-Source: APXvYqyHQqwt0fFFU50KayafdANVX58ZyOixQ8mFOe6NZ0nt1CDX7R20BmOadWkafwXoQFVKDWu+YMxD5wBWkSmoyOQ=
+X-Received: by 2002:a62:1a09:: with SMTP id a9mr31501241pfa.64.1582195381200;
+ Thu, 20 Feb 2020 02:43:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220050440.45878-1-john.stultz@linaro.org> <20200220050440.45878-6-john.stultz@linaro.org>
-In-Reply-To: <20200220050440.45878-6-john.stultz@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 Feb 2020 11:42:01 +0100
-Message-ID: <CAJZ5v0gTtz-Curdo-AY2UR6kXr9YSrnd8y=7JNVE9pxDu=pMtg@mail.gmail.com>
-Subject: Re: [PATCH v4 5/6] driver core: Rename deferred_probe_timeout and
- make it global
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20200220074637.7578-1-njoshi1@lenovo.com>
+In-Reply-To: <20200220074637.7578-1-njoshi1@lenovo.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 20 Feb 2020 12:42:53 +0200
+Message-ID: <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+Subject: Re: [PATCH] thinkpad_acpi: Add sysfs entry for lcdshadow feature
+To:     Nitin Joshi <nitjoshi@gmail.com>, Mat King <mathewk@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rajat Jain <rajatja@google.com>
+Cc:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        mpearson@lenovo.com, Nitin Joshi <njoshi1@lenovo.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 6:05 AM John Stultz <john.stultz@linaro.org> wrote:
+On Thu, Feb 20, 2020 at 9:48 AM Nitin Joshi <nitjoshi@gmail.com> wrote:
 >
-> Since other subsystems (like regulator) have similar arbitrary
-> timeouts for how long they try to resolve driver dependencies,
-> rename deferred_probe_timeout to driver_deferred_probe_timeout
-> and set it as global, so it can be shared.
+>   This feature is supported on some Thinkpad products like T490s, Thinkpad
+>   X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disabled
+>   when user press "Fn" + "D" key. Currently, no user feedback is given for
+>   this action. Adding as sysfs entry allows userspace to show an On Screen
+>   Display whenever the setting changes.
+>
+>   Summary of changes is mentioned below :
+>
+>  - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the driver
+>  - Added unmapped LCDSHADOW to keymap
+>  - Added lcdshadow_get function to read value using ACPI
+>  - Added lcdshadow_refresh function to re-read value and send notification
+>  - Added sysfs group creation to tpaci_lcdshadow_init
+>  - Added lcdshadow_exit to remove sysfs group again
+>  - Implemented lcdshadow_enable_show/lcdshadow_enable_store
+>  - Added handler to tpacpi_driver_event to update refresh lcdshadow
+>  - Explicitly call tpacpi_driver_event for extended keyset
 
-Fair enough.
+Adding custom PrivacyGuard support to this driver was my mistake,
+There is a discussion [1] how to do this in generic way to cover other
+possible users.
+I Cc this to people from that discussion.
 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Change-Id: I92ee3b392004ecc9217c5337b54eda48c2d7f3ee
+[1]: https://lore.kernel.org/dri-devel/CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail.gmail.com/
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> ---
-> v4:
-> * Split out into its own patch as suggested by Mark
-> * Renamed deferred_probe_timeout as suggested by Greg
-> ---
->  drivers/base/dd.c             | 18 ++++++++++--------
->  include/linux/device/driver.h |  1 +
->  2 files changed, 11 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 408e4da081da..39f1ce6d4f1c 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -229,17 +229,19 @@ DEFINE_SHOW_ATTRIBUTE(deferred_devs);
->   * In the case of modules, set the default probe timeout to
->   * 30 seconds to give userland some time to load needed modules
->   */
-> -static int deferred_probe_timeout = 30;
-> +int driver_deferred_probe_timeout = 30;
->  #else
->  /* In the case of !modules, no probe timeout needed */
-> -static int deferred_probe_timeout = -1;
-> +int driver_deferred_probe_timeout = -1;
->  #endif
-> +EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
-> +
->  static int __init deferred_probe_timeout_setup(char *str)
->  {
->         int timeout;
->
->         if (!kstrtoint(str, 10, &timeout))
-> -               deferred_probe_timeout = timeout;
-> +               driver_deferred_probe_timeout = timeout;
->         return 1;
->  }
->  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
-> @@ -259,10 +261,10 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
->   */
->  int driver_deferred_probe_check_state(struct device *dev)
->  {
-> -       if (!initcalls_done || deferred_probe_timeout > 0)
-> +       if (!initcalls_done || driver_deferred_probe_timeout > 0)
->                 return -EPROBE_DEFER;
->
-> -       if (!deferred_probe_timeout) {
-> +       if (!driver_deferred_probe_timeout) {
->                 dev_WARN(dev, "deferred probe timeout, ignoring dependency");
->                 return -ETIMEDOUT;
->         }
-> @@ -276,7 +278,7 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
->  {
->         struct device_private *private, *p;
->
-> -       deferred_probe_timeout = 0;
-> +       driver_deferred_probe_timeout = 0;
->         driver_deferred_probe_trigger();
->         flush_work(&deferred_probe_work);
->
-> @@ -310,9 +312,9 @@ static int deferred_probe_initcall(void)
->         driver_deferred_probe_trigger();
->         flush_work(&deferred_probe_work);
->
-> -       if (deferred_probe_timeout > 0) {
-> +       if (driver_deferred_probe_timeout > 0) {
->                 schedule_delayed_work(&deferred_probe_timeout_work,
-> -                       deferred_probe_timeout * HZ);
-> +                       driver_deferred_probe_timeout * HZ);
->         }
->         return 0;
->  }
-> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-> index 5242afabfaba..ee7ba5b5417e 100644
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -236,6 +236,7 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
->  }
->  #endif
->
-> +extern int driver_deferred_probe_timeout;
->  void driver_deferred_probe_add(struct device *dev);
->  int driver_deferred_probe_check_state(struct device *dev);
->  void driver_init(void);
-> --
-> 2.17.1
->
+--
+With Best Regards,
+Andy Shevchenko
