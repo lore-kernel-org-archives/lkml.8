@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F03C11D42
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C443EC11D44
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4BD2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B12D2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GtMY8VRr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZPJA/xX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbgBTGX1 (ORCPT
+        id S1727781AbgBTGXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:23:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45678 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727405AbgBTGXU (ORCPT
+        Thu, 20 Feb 2020 01:23:30 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42752 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727513AbgBTGXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:23:20 -0500
-Received: by mail-pg1-f194.google.com with SMTP id b9so1379489pgk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:19 -0800 (PST)
+        Thu, 20 Feb 2020 01:23:21 -0500
+Received: by mail-pl1-f193.google.com with SMTP id e8so1123786plt.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=r7W1IeYO5luNyCIfOI+KTpss0yVfj4B4P/bY+7anUj4=;
-        b=GtMY8VRryc4tgEAZGFnHgZwifnQLW90Ls2V3FbDv7DGB/HQqIksqO+WTqzfYGx9yL/
-         v0WMmt16AUT4OP+0CDmzqdVSg4knv8RD+RRV7JrC9tnF63W+hQyCQSJJLTvGjBPKR6AS
-         dgWP+eUZvmip3PM89KktbrcAIjM7V+++IHS2I=
+        bh=pK6zifq3Fj1hZPmmtdvS+UBS/FWrDP/7PRY/z1oHHl8=;
+        b=KZPJA/xXWgvj7+EDceNGW99DsMGfVsrwZtMNYFEQmEcfbi6t1Ltywm8yF3gRS+KFsW
+         YYa/KruX+agIH6tt/eZGI71UjpwjuT3jsuFYNKw+P7dbnGut/vUuytmTV4wCLvbb1OWN
+         mFx5qdjyKzEPpPz0IfGRUIg5ongLMg7FFfcz0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=r7W1IeYO5luNyCIfOI+KTpss0yVfj4B4P/bY+7anUj4=;
-        b=D2g3PT9oiglM3r0dNjq0i8XWjEJCLWdu39CA6uNhmWvBLa0q0V8C3jzoA1qIm3a+wG
-         KEiYXuBBGifzbySCJ0uSh8bH7FLvMxL+vK/sDKV1JkPlhdndnwwLtuge2K14JNa2gEK9
-         bFOng3hsqCbH46a9LKIv9Jl0QPUumFF0dXaHEYlqW2YtB843AAVoC2PBgMC+FABOLuVV
-         m4cR+vsJKw2+h5rXxuTBbOTjnpx+b9aUuZX4xK+wUVl+soru6Lj9Dr14cx2MHE5nGWM+
-         0J4ufuEIPJRXUUBo7TnFlWZT87YEKhP5t81nw44TPOrsT/xrbMFmFLJcjFQxXocg+w72
-         DdZw==
-X-Gm-Message-State: APjAAAXMRk4xGr8l0h65qu8Js1KcagdGmla2p+qs1yscuSKCnm/roYkK
-        a61uFluTArme4najDRjZLYnAwA==
-X-Google-Smtp-Source: APXvYqzyLQqVUdbOMVTIixpgCSWP3Hc4yP/kWSP5g3dy+5aQAi9rqzpohQ6OfqeemMzgq/kJqNBUFg==
-X-Received: by 2002:a62:7696:: with SMTP id r144mr30710610pfc.177.1582179799553;
-        Wed, 19 Feb 2020 22:23:19 -0800 (PST)
+        bh=pK6zifq3Fj1hZPmmtdvS+UBS/FWrDP/7PRY/z1oHHl8=;
+        b=fIAfK9Wun7gi8hl8GRY50FDfj9mKupG+5dn3ICs1aefnYhVheepKpOKhNkcyCOof5i
+         dDesHQVE0RVCMPV3f2FNGVzspcWPA6KU5xBvQatUCEEFN2WyBN5DEykVsYkHoLDgvRNl
+         bKz1w+aC1/2zs/VMjq7Z+rOMKX5tWPyiHOzbhJplH6Go0PNZppCzfiaGKfjzQQzgH/b5
+         XkzjL6A7CalPgj1kaQG2FfFymOOqQc2PN8DlAJyTJ0jqBkESQCHCky2rKDG0cGIEACKf
+         1x8Cpw38hVd3iPKgNZkICD+ZVKuVOl5Uo8DKFON+Qq0VFema2W+NlbdBru2Sz3ic1xPk
+         O0hA==
+X-Gm-Message-State: APjAAAXJLFNBtkyYhfKjMDG9/aekvTeZa1L41FT2xEvgbq+92SSq3vVD
+        HuXRS2dGLu1giTLed4t0Rx6jhQ==
+X-Google-Smtp-Source: APXvYqx1kik6D0tY4SYKS7j1S0Bqg7hWpfmaq2nth5vTea0tU8wMl9ddGmg2GgyqqThc+95RG3/LrA==
+X-Received: by 2002:a17:90a:f316:: with SMTP id ca22mr1759190pjb.59.1582179800527;
+        Wed, 19 Feb 2020 22:23:20 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x6sm1701090pfi.83.2020.02.19.22.23.18
+        by smtp.gmail.com with ESMTPSA id 3sm1760480pfi.13.2020.02.19.22.23.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 22:23:18 -0800 (PST)
+        Wed, 19 Feb 2020 22:23:19 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
 Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: net2280: Distribute switch variables for initialization
-Date:   Wed, 19 Feb 2020 22:23:15 -0800
-Message-Id: <20200220062315.69253-1-keescook@chromium.org>
+        Kees Cook <keescook@chromium.org>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/xen: Distribute switch variables for initialization
+Date:   Wed, 19 Feb 2020 22:23:18 -0800
+Message-Id: <20200220062318.69299-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -85,55 +86,39 @@ direct initializations, the warnings remain.
 To avoid these problems, move such variables into the "case" where
 they're used or lift them up into the main function body.
 
-drivers/usb/gadget/udc/net2280.c: In function ‘handle_stat0_irqs_superspeed’:
-drivers/usb/gadget/udc/net2280.c:2871:22: warning: statement will never be executed [-Wswitch-unreachable]
- 2871 |   struct net2280_ep *e;
-      |                      ^
+arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
+arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
+  904 |   unsigned which;
+      |            ^~~~~
 
 [1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/usb/gadget/udc/net2280.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/xen/enlighten_pv.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 1fd1b9186e46..cc5869363298 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -2861,6 +2861,7 @@ static void ep_clear_seqnum(struct net2280_ep *ep)
- static void handle_stat0_irqs_superspeed(struct net2280 *dev,
- 		struct net2280_ep *ep, struct usb_ctrlrequest r)
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 1f756ffffe8b..789dc12b7962 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -896,14 +896,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
+ static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
  {
-+	struct net2280_ep *e;
- 	int tmp = 0;
+ 	int ret;
++#ifdef CONFIG_X86_64
++	unsigned which;
++	u64 base;
++#endif
  
- #define	w_value		le16_to_cpu(r.wValue)
-@@ -2868,14 +2869,13 @@ static void handle_stat0_irqs_superspeed(struct net2280 *dev,
- #define	w_length	le16_to_cpu(r.wLength)
+ 	ret = 0;
  
- 	switch (r.bRequest) {
--		struct net2280_ep *e;
--		u16 status;
+ 	switch (msr) {
+ #ifdef CONFIG_X86_64
+-		unsigned which;
+-		u64 base;
 -
- 	case USB_REQ_SET_CONFIGURATION:
- 		dev->addressed_state = !w_value;
- 		goto usb3_delegate;
- 
--	case USB_REQ_GET_STATUS:
-+	case USB_REQ_GET_STATUS: {
-+		u16 status;
-+
- 		switch (r.bRequestType) {
- 		case (USB_DIR_IN | USB_TYPE_STANDARD | USB_RECIP_DEVICE):
- 			status = dev->wakeup_enable ? 0x02 : 0x00;
-@@ -2905,7 +2905,7 @@ static void handle_stat0_irqs_superspeed(struct net2280 *dev,
- 			goto usb3_delegate;
- 		}
- 		break;
--
-+	}
- 	case USB_REQ_CLEAR_FEATURE:
- 		switch (r.bRequestType) {
- 		case (USB_DIR_OUT | USB_TYPE_STANDARD | USB_RECIP_DEVICE):
+ 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
+ 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
+ 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
 
