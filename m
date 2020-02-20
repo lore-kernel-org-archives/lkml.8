@@ -6,237 +6,215 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5023C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE4C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FCF208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAACE208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="JycOTVBi"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="EiurU6QK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgBTPMY (ORCPT
+        id S1728461AbgBTPNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:12:24 -0500
-Received: from mail-vi1eur05on2063.outbound.protection.outlook.com ([40.107.21.63]:53185
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728079AbgBTPMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:12:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R1AS9DIBnc6Z+86E8NjJlkCHPVZmJegGmRTwaKZNnXjtrng9lDNmdGntGoM8Jf3ploNXYtA7YqUkJKY1e4q2P+zHQEwsVQ71TGF8XfjTqA10m+mug+arUV7ftCYjjg+6PLBLBrTPzE/Czyaimr1Qj90k/H30NJBRJRsgC/Hg34A+MmfwK47IV7zRtKynyIk2hoQcv/+NPUrYp2ib2YPbuSrXdU6xh9pM9OSeSbcEmHPvJiOrmkDRHo0BeJbJ1YZ92m+tPXSbhIPGLH/p0WEbrrcT1mxO8iVWiGt4DyxClPWlXK9Pqsugy5LaAPfmc8R8tA2D8PxTkcXaNhR3IksJ8A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CZH9ftVJglR/snWZrUTd41dkvh56vFT33EBMV4zawWk=;
- b=jI5qjqxVqCBf9meDTrd2YWqMqDZGmuIdlYCraPzFDPzTx2IdyIQ+1b23Md65Ph/VudH0Qor0sIoTBSLnfKAsbeCxVB1+XZ2Z8djRffdqk0nmfoqUwcqt/aTRoJ7pYyi/WqVPyPza4D90ooe50shNAL1GVafMcsiUo9/W8Z8ZiqKpr5Ri5ivI2V75tQxjadHCR6I4vZZMZrw/HNJB2ABcAmUrpXElMWpvOcK01RCBR17cO1N9+6qbEWkcMiKkb1nJ27BfIbfs7mBm1yMcKbCUzYTi6Zk+YvnWykpwiyffGKcX8wleVYnjKXzNQZC/S3IFIQFNtXjNy/6iNyMH6TloZA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CZH9ftVJglR/snWZrUTd41dkvh56vFT33EBMV4zawWk=;
- b=JycOTVBiTn4tQ+HfTPw3R6RxJSH5XM2F/pIlyTrijXfvHzPzUIfnix1QXcflIp1m+PfPmxPSJtkaDkPGfYLFJvJOuLoSC/6gzS6CwSqzZdk7eA56lE+HfITdI79ueb8Rp6ss+jKZuVb6WPmeCg3rxNh0uOIdufJlKQRhhSIGPb8=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4830.eurprd05.prod.outlook.com (20.177.48.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 20 Feb 2020 15:12:18 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
- 15:12:18 +0000
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR17CA0003.namprd17.prod.outlook.com (2603:10b6:208:15e::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 20 Feb 2020 15:12:17 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j4nUt-0002sj-4e; Thu, 20 Feb 2020 11:12:15 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-CC:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH V4 5/5] vdpasim: vDPA device simulator
-Thread-Topic: [PATCH V4 5/5] vdpasim: vDPA device simulator
-Thread-Index: AQHV57Tl/t7aCF25gE6qK0wpcX6V56gkMNqA
-Date:   Thu, 20 Feb 2020 15:12:18 +0000
-Message-ID: <20200220151215.GU23930@mellanox.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-6-jasowang@redhat.com>
-In-Reply-To: <20200220061141.29390-6-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR17CA0003.namprd17.prod.outlook.com
- (2603:10b6:208:15e::16) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.68.57.212]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 19be9418-cf9a-4595-655d-08d7b617467c
-x-ms-traffictypediagnostic: VI1PR05MB4830:|VI1PR05MB4830:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB48301A8E29CA9CA55333B25ECF130@VI1PR05MB4830.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:519;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(39850400004)(396003)(376002)(189003)(199004)(2616005)(6916009)(86362001)(52116002)(81156014)(71200400001)(8936002)(8676002)(4326008)(9746002)(81166006)(36756003)(9786002)(1076003)(478600001)(2906002)(5660300002)(186003)(33656002)(66446008)(66556008)(316002)(26005)(7416002)(66946007)(66476007)(64756008)(54906003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4830;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bCH8r5H6eoHo4wgDLqb5d0Sjeyqs03os+uRy2mobj91Co1bE2AcipEUy8NR/pAYyxfIoOSialteMtxvTgLlbyJZDXA0yC02SCag1vpezeX9WrSpO1aX2JQ+dJB3Ngla4JmRihqs+880JOF0Jm4G0m5X1O0JUyWpXS6KCEUmsyKs87QrGrUNWhkATDzvXoS1t510IFYoCFdVBhe8/RD7gDYpYoXMRgwvRbCMJFOf40aVZuSqmdiVhvg3hUJnMcC8T5KeArIWKSr7q5FG2EviDIkTY7IQgXktH15ZqfR6Flkie/mMLE0vbbVIyzStI05aNkWRElWroFZwlHWR+f9FytMNwGfEB1964Vl+rJ7yfrUJmnEGwnLmfeSf7M8g9+UrZOOrbJR8CpWYqgc9BRd+2Ij/u6P3NeaeWwGoB9pOrsx+a8mCq18tEp4SP2Bo1LCJfMxkvrdRA1S+JRUvr2ffgpVA7GKbZsIYDTPUqPO4XhULbmT7F7w+lQ2z7BovguSGv
-x-ms-exchange-antispam-messagedata: brKauSbNI0jj74DfPsEh3D2SMrswkbsa33ZOkMXPRkENK2rqKndQim/p32fEw7OUsh9k+flh3hQJWtn3SIO2bqC54AaW21+kB4cua0bMGr9N0UHZS+GOcwUj29tf74bpQMbv8PQ9msQVVLQwvU5omA==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <27D03B0CCFB76D4196FC8C2FF59A0D07@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 20 Feb 2020 10:13:04 -0500
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17864 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728385AbgBTPNE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:13:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582211542;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
+        bh=JRDtQsXpqUz7hsmkd0dK4lht0q0VWQmzqTzKRrMqjh0=;
+        b=EiurU6QK7jrqxanpBh2gS4bNHic3BztEaU/5KGB0lhv34MlDO5zaLfXfp1PiZj5K
+        oY/agn/b6K3fTACSKyRC7saahG3KzslxxSK4rOe4WEfcT9DBSlDCoLKtmVF4ac2OOlK
+        TGcDsYxdHabxhFeBtPLUAig4WusYdUxW3I7sepgg=
+Received: from mail.baihui.com by mx.zoho.com.cn
+        with SMTP id 1582211539685705.7136605582543; Thu, 20 Feb 2020 23:12:19 +0800 (CST)
+Date:   Thu, 20 Feb 2020 23:12:19 +0800
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     "John Garry" <john.garry@huawei.com>
+Cc:     "Wei Xu" <xuwei5@hisilicon.com>, "bhelgaas" <bhelgaas@google.com>,
+        "andyshevchenko" <andy.shevchenko@gmail.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "Linux Mips" <linux-mips@vger.kernel.org>
+Message-ID: <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
+In-Reply-To: <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
+References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
+ <5E4E55F7.70800@hisilicon.com>
+ <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
+ <17062738bc0.c380503c6222.6801557833645076299@flygoat.com> <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
+Subject: Re: Questions about logic_pio
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19be9418-cf9a-4595-655d-08d7b617467c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 15:12:18.2433
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1/uYslA456LI7zqcojZRMolOqxSlEfek5Xtspy/Wef0GJEw5J+Y5Ocib4REsTxKqegdxgqjOalOMUZhcP4LMaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4830
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Priority: Medium
+User-Agent: ZohoCN Mail
+X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 02:11:41PM +0800, Jason Wang wrote:
-> +static void vdpasim_device_release(struct device *dev)
-> +{
-> +	struct vdpasim *vdpasim =3D dev_to_sim(dev);
-> +
-> +	cancel_work_sync(&vdpasim->work);
-> +	kfree(vdpasim->buffer);
-> +	vhost_iotlb_free(vdpasim->iommu);
-> +	kfree(vdpasim);
-> +}
-> +
-> +static struct vdpasim *vdpasim_create(void)
-> +{
-> +	struct virtio_net_config *config;
-> +	struct vhost_iotlb *iommu;
-> +	struct vdpasim *vdpasim;
-> +	struct device *dev;
-> +	void *buffer;
-> +	int ret =3D -ENOMEM;
-> +
-> +	iommu =3D vhost_iotlb_alloc(2048, 0);
-> +	if (!iommu)
-> +		goto err;
-> +
-> +	buffer =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
-> +	if (!buffer)
-> +		goto err_buffer;
-> +
-> +	vdpasim =3D kzalloc(sizeof(*vdpasim), GFP_KERNEL);
-> +	if (!vdpasim)
-> +		goto err_alloc;
-> +
-> +	vdpasim->buffer =3D buffer;
-> +	vdpasim->iommu =3D iommu;
-> +
-> +	config =3D &vdpasim->config;
-> +	config->mtu =3D 1500;
-> +	config->status =3D VIRTIO_NET_S_LINK_UP;
-> +	eth_random_addr(config->mac);
-> +
-> +	INIT_WORK(&vdpasim->work, vdpasim_work);
-> +	spin_lock_init(&vdpasim->lock);
-> +
-> +	vringh_set_iotlb(&vdpasim->vqs[0].vring, vdpasim->iommu);
-> +	vringh_set_iotlb(&vdpasim->vqs[1].vring, vdpasim->iommu);
-> +
-> +	dev =3D &vdpasim->dev;
-> +	dev->release =3D vdpasim_device_release;
-> +	dev->coherent_dma_mask =3D DMA_BIT_MASK(64);
-> +	set_dma_ops(dev, &vdpasim_dma_ops);
-> +	dev_set_name(dev, "%s", VDPASIM_NAME);
-> +
-> +	ret =3D device_register(&vdpasim->dev);
-> +	if (ret)
-> +		goto err_init;
 
-It is a bit weird to be creating this dummy parent, couldn't this be
-done by just passing a NULL parent to vdpa_alloc_device, doing
-set_dma_ops() on the vdpasim->vdpa->dev and setting dma_device to
-vdpasim->vdpa->dev ?
+ ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=9B=9B, 2020-02-20 22:23:57 John Garry=
+ <john.garry@huawei.com> =E6=92=B0=E5=86=99 ----
+ > > Also Cc MIPS list to check other's opinions.
+ > >=20
+ > > Hi John.
+ > >=20
+ >=20
+ > Hi Jiaxun Yang,
+ >=20
+ > > Thanks for your kind explanation, however, I think this way is
+ > > violating how I/O ports supposed to work, at least in MIPS world.
+ >=20
+ > For a bit more history, please understand that the core PCI code was=20
+ > managing non-native IO port space in the same way before we added the=20
+ > logic PIO framework. The only real functional change here was that we=20
+ > introduced the indirect-io region within the IO port space, under=20
+ > CONFIG_INDIRECT_PIO.
 
-> +	vdpasim->vdpa =3D vdpa_alloc_device(dev, dev, &vdpasim_net_config_ops);
-> +	if (ret)
-> +		goto err_vdpa;
+I'm going to do more investigation. Thanks.=20
 
-> +	ret =3D vdpa_register_device(vdpasim->vdpa);
-> +	if (ret)
-> +		goto err_register;
-> +
-> +	return vdpasim;
-> +
-> +err_register:
-> +	put_device(&vdpasim->vdpa->dev);
-> +err_vdpa:
-> +	device_del(&vdpasim->dev);
-> +	goto err;
-> +err_init:
-> +	put_device(&vdpasim->dev);
-> +	goto err;
+ >=20
+ > >=20
+ > >   > >>
+ > >   > >> After dig into logic pio logic, I found that logic pio is tryin=
+g to "allocate" an io_start
+ > >   > >> for MMIO ranges, the allocation starts from 0x0. And later the =
+io_start is used to calculate
+ > >   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio =
+address should always
+ > >   > >> equal to hw address,
+ > >   >
+ > >   > I'm not sure what you mean by simply the hw address.
+ > >   >
+ > >=20
+ > > I meant  hw_start should always equal to io_start.
+ > >=20
+ > >=20
+ > > MIPS have their own wrapped inl/outl functions,=20
+ >=20
+ > Can you please point me to these? I could not find them in arch/mips
 
-If you do the vdmasim alloc first, and immediately do
-device_initialize() then all the failure paths can do put_device
-instead of having this ugly goto unwind split. Just check for
-vdpasim->iommu =3D=3D NULL during release.
+They are built by __BUILD_IOPORT_PFX(bus, bwlq, type) macro.
+Just using mips_io_port_base + offset to handle inl/outl, the same way PCI_=
+IOBASE.
 
-> +static int __init vdpasim_dev_init(void)
-> +{
-> +	vdpasim_dev =3D vdpasim_create();
-> +
-> +	if (!IS_ERR(vdpasim_dev))
-> +		return 0;
-> +
-> +	return PTR_ERR(vdpasim_dev);
-> +}
-> +
-> +static int vdpasim_device_remove_cb(struct device *dev, void *data)
-> +{
-> +	struct vdpa_device *vdpa =3D dev_to_vdpa(dev);
-> +
-> +	vdpa_unregister_device(vdpa);
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit vdpasim_dev_exit(void)
-> +{
-> +	device_for_each_child(&vdpasim_dev->dev, NULL,
-> +			      vdpasim_device_remove_cb);
+ >=20
+ > I will also note that arch/mips/include/asm/io.h does not include=20
+ > asm-generic io.h today
 
-Why the loop? There is only one device, and it is in the global
-varaible vdmasim_dev ?
+Yes, and I'm attempting to take advantage of asm-generic.
 
-Jason
+ >=20
+ > doing the samething with
+ > > PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
+ > >=20
+ > > Originally, the I/O ports layout seems like this:
+ > >=20
+ > > 00000020-00000021 : pic1
+ > > 00000060-0000006f : i8042
+ > > 00000070-00000077 : rtc0
+ > > 000000a0-000000a1 : pic2
+ > > 00000170-00000177 : pata_atiixp
+ > > 000001f0-000001f7 : pata_atiixp
+ > > 00000376-00000376 : pata_atiixp
+ > > 000003f6-000003f6 : pata_atiixp
+ > > 00000800-000008ff : acpi
+ > > 00001000-00001008 : piix4_smbus
+ > > 00004000-0003ffff : pci io space
+ > >    00004000-00004fff : PCI Bus 0000:01
+ > >      00004000-000040ff : 0000:01:05.0
+ > >    00005000-00005fff : PCI Bus 0000:03
+ > >      00005000-0000501f : 0000:03:00.0
+ > >=20
+ > > But with PCI_IOBASE defined, I got this:
+ > >=20
+ > > host bridge /bus@10000000/pci@10000000 ranges:
+ > >        MEM 0x0040000000..0x007fffffff -> 0x0040000000
+ > >         IO 0x0000004000..0x0000007fff -> 0x0000004000
+ > > resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x002=
+0-0x0021]
+ > >=20
+ > > Because io_start was allocated to 0x0 by Logic PIO.
+ > >=20
+ > > There are a lot of devices that have fixed ioports thanks to x86's leg=
+acy.
+ >=20
+ > Well, yes, I'm not so surprised.
+ >=20
+ > So if MIPS does not have native IO port access, then surely you need=20
+ > some host bridge to translate host CPU MMIO accesses to port I/O=20
+ > accesses, right? Where are these CPU addresses defined?
+
+It is defined by the variable mips_io_port_base.
+
+ >=20
+ > > For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveabl=
+e,
+ > > and they can't be managed by logic pio subsystem. > Also, the PCI Host=
+bridge got implied by DeviceTree that it's I/O range
+ > > started from 0x4000 in bus side
+ >=20
+ > which bus is this?
+
+They're all located under "ISA Range".  Just an MMIO range that will resend
+the request to ISA I/O. --ioports for both PCI and some legacy devices.
+
+In that range, base + 0x0000 to 0x4000 is preserved for PIO devices (e.g.) =
+I8259
+and base + 0x4000 to MMIO_LIMIT are for PCI devices under host bridge.
+For the host bridge, ioports it can decode starts from 0x4000.
+
+My intentional behavior is that when I'm specifying in dts that the IO Rang=
+e of PCI host
+bridge is 0x4000 to 0x7fff, it would request the IO_RESOURCE start from 0x4=
+000
+to 0x7fff, also tell the host driver to decode  0x4000 to 0x7fff in IO BAR,=
+ And let the drivers
+access 0x4000 to 0x7fff via inl/outl, rather than allocate from PIO 0x0 to =
+0x3fff.
+
+ >=20
+ > , but then, Logic PIO remapped to PCI_IOBASE + 0x0.
+ > > The real address should be PCI_IOBASE + 0x4000,
+ >=20
+ > You seem to be using two methods to manage IO port space, and they seem=
+=20
+ > to be conflicting.
+
+So... Are there any way to handle these unmoveable devices in logic pio wor=
+ld?
+
+ >=20
+ > > hardware never got correctly informed about that. And there is still n=
+o way to
+ > > transform to correct address as it's inside the MMIO_LIMIT.
+ > >=20
+ > > So the question comes to why we're allocating io_start for MMIO PCI_IO=
+BASE
+ > > rather than just check the range provided doesn't overlap each other o=
+r exceed
+ > > the MMIO_LIMIT.
+ >=20
+ > When PCI_IOBASE is defined, we work on the basis that any IO port range=
+=20
+ > in the system is registered for a logical PIO region, which manages the=
+=20
+ > actual IO port addresses - see logic_pio_trans_cpuaddr().
+
+The port is not the actual port.. It makes me confusing about what it's act=
+ually doing..
+Sorry but probably I'm still thinking in a vintage way -- need some hints a=
+bout how to
+deal with these legacy cases in a modern way.
+
+Thanks.
+
+ >=20
+ > Thanks,
+ > John
+ >
