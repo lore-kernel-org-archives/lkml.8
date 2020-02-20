@@ -2,165 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C60C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332CBC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC2824654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B1024654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="hcamI+q/"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="jXYZt7ec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBTJLn (ORCPT
+        id S1726906AbgBTJRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:11:43 -0500
-Received: from mout.web.de ([212.227.15.3]:33947 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgBTJLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:11:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1582189845;
-        bh=vbMpoLairqKsk7lsZ4zCd9hpbkL0beCHN/AzVweLNtI=;
-        h=X-UI-Sender-Class:From:Subject:To:Cc:Date;
-        b=hcamI+q/q5SSrm/QLuCC74ywkKTqKsPuKsSkHJmrFFwLCRJWO1khrkPUt8ZcTDN51
-         /fRIw+qs8rpxThXROZz9/i6lbySHlvMZSMG9OS/uSjkL4w79u06hTV3pMXUs9lDGCQ
-         zUtdNTwVATrVlYB6r6XSY2g7gVDw/q9/ln57tpmA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.175.64]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MLxrY-1j5oJV1UFA-007ifQ; Thu, 20
- Feb 2020 10:10:45 +0100
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [for-next][PATCH 12/26] Documentation: bootconfig: Add a doc for
- extended boot config
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Bird <Tim.Bird@sony.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
-Date:   Thu, 20 Feb 2020 10:10:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 04:17:10 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:50344 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbgBTJRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:17:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582190230; x=1613726230;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=3DR/UH6MEPv43yGUiIRitijjOdGjwQGa0V2AAfInCYM=;
+  b=jXYZt7ecjO//M2DtZFe7S/88uwuivVGtxYP3w9IjYHXziFkxMPac4syI
+   EWmZDMaR9G5fERwQUBrT8aq1hlnq/C56fODq1+OFLaBVuHjywne3dGBe2
+   s0fI66AolilQBh16dLwToq9TucNLCTg5tAkg8aALGNMMjwtU/fB+aoGNf
+   M=;
+IronPort-SDR: wz79lME026lmGTeEOVhzNMQUXbePBwBbna1HEI5VzRyyhMCftsQsZad6YIlel6EqMNx4l17IFr
+ UdYdDtsWdvnQ==
+X-IronPort-AV: E=Sophos;i="5.70,463,1574121600"; 
+   d="scan'208";a="18729860"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 20 Feb 2020 09:16:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 537CAA2660;
+        Thu, 20 Feb 2020 09:16:54 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Thu, 20 Feb 2020 09:16:54 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.45) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 20 Feb 2020 09:16:45 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Minchan Kim <minchan@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
+        <oleksandr@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>, <sj38.park@gmail.com>,
+        <alexander.h.duyck@linux.intel.com>, Jann Horn <jannh@google.com>
+Subject: Re: Re: [PATCH v6 0/7] introduce memory hinting API for external process
+Date:   Thu, 20 Feb 2020 10:16:31 +0100
+Message-ID: <20200220091631.31949-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200219120123.07dda51c29006a892059ccde@linux-foundation.org> (raw)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iz3EHkgef/ISzsnY3CSV+i+tHS29kp3ehQ7OyVu0j3Qh1MRjhD4
- 2kNZozsuSbfAVgfZQ2c1f2reumTrdl+tygGxGYptax/fHEDxIV9ypPacshUWYPuiPbdJ7Xi
- HaDH6A/4rRN83FCKqHZ9p/QzWzFKumXctso507UT6M+uKmV4+RRmqyydQTdtkiDdCLcex8y
- wWaG2+ug23HgJlgjioIMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GxZTiIb8TFo=:BgRUH9Ab/NRq4bHPkY/hrX
- ItkQAXfW7FOzZhvXJx47bwUUeKd+ouKyyneLmedUiDxakWbNC2yV/gMLLUltUVi3Lkr/JGHGh
- HAFDglKVWnP+7b2a8lladClky+tVXC5jFIuKLE4Bc4bZ7EGyEi7bYZ3t5ISlhl0/RSxpYSFSx
- DCwRbuBmUGfy/h9QQY3WNbrVkqbDDA0us/EeYeNUmDclafQTq6YFPdb+6rxBNwx8aQQJXItnD
- YN/55J6Ht/aVHkBdTm0iOn/Pkafz0cFJROASD29pxoKzj5QE+hpNOwXPFH0JiXLr0QuaJcaYC
- fhm50l3FN18mh4BXC/dYfSwZnHVpZ5R/fh0IWWQkk/feWavBkNzSK/Q5uNVObnN1tcxb2KvTE
- soGVJZ+JoI1DTiNzxkY9he7LoH4RjislsjMAb0oJw6Lhd353h9X/upz5ktZIFW/J8v1ofVHof
- WJmMuFOUNCIMKJlQTNhhqRuf9joLkyVCrlOipcwobSFjgGlkDYTtD+spTyELfvxdKCMnulD/h
- 7eODoGi9o05VhTFHfVMbuAP9IsR0da1D1TG9B18DQo+9gZ6VjyDrbl4t6OvaDWf5X0GlXWhVz
- j/x8XBwvsRnrVzFDvnDSdIq/EbPy6imT7/LFTNusay/cK7n2oE8QglPb7W90nVnGPnTS1Mbt6
- XTDX1cSbMXwH8hbsJRoVrElioQP9RTihacRVKGGMrg84AElwSpAOSLVmZUEXTG7aVobJKTImN
- DYMoixFt+QUM1sc6B7kHNmX+sLc0vqWAB7i5Q+OoGVAyYeK4W8opLinai4+02UmJbzkba314n
- cN2iB2K4DbaaNmitOdrJgp3UbRxohPJwSKTYL2TT0T5LxIizhbGlNQ+VoJARqFJAP5s2wDgQM
- NCW+aH22vdx8rAi5vwwKBe/LV4gl+Ii7/Uza0gf9VMjoZDIh4rsmYhH/JcRV08PkN+4avJkmY
- lWJkg+na3cAnKZ6WgGDge/TnGvhaRuispzGihU9XfTtDmN7V6nKUWTBqkHL5zuUTVH2/910YO
- 3n25tiopO1XpdFQnxsGgKh62VH0dKYu3nFyOr404GExcQRk34zvruHHTGXgwM8Lb3jBpjSOAz
- zGzgkbKcL/VtbhZnegBZWKbrJVH9GSGQHmgROq067ReqM3HxgkxczfcgoBP3wTAxs47d3BqWb
- V0BertZzXThSuFsfsFDxdf43FL4Ns5wt0/Iw8feluBycNpnMJ72pl1NK03tzac5WEa/G4VK40
- giw5iOUp8pffI6ohl
+Content-Type: text/plain
+X-Originating-IP: [10.43.161.45]
+X-ClientProxiedBy: EX13D06UWA002.ant.amazon.com (10.43.160.143) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I wonder about a few details in the added text.
+On Wed, 19 Feb 2020 12:01:23 -0800 Andrew Morton <akpm@linux-foundation.org> wrote:
+
+> On Tue, 18 Feb 2020 17:44:26 -0800 Minchan Kim <minchan@kernel.org> wrote:
+> 
+> > Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> > application could give hints to kernel what memory range are preferred to be
+> > reclaimed. However, in some platform(e.g., Android), the information
+> > required to make the hinting decision is not known to the app.
+> > Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without any app
+> > involvement.
+> > 
+> 
+> This patchset doesn't seem to be getting a lot of interest from other
+> potential users?  It seems very specialized.  Are there or will there
+> ever be any users of this apart from one Android daemon?
+> 
+> Also, it doesn't terribly hard for ActivityManagerService to tell
+> another process "now run madvise with these arguments".  Please explain
+> why this is not practical in ActivityManagerService and also within
+> other potential users of this syscall.
+
+I personally have interest in and hope successful development/merge of this
+patchset.
+
+The interested usecases of 'madvise_process()' for me is optimizations of
+general memory-intensive workloads having dynamic data access patterns on
+hierarchical memory systems (e.g., multi-tier memory or fast storage based swap
+devices).  In more detail, I'm already using a part of this patchset for my RFC
+patchset implementing Data Access Monitoring-based Operation Schemes[1].  For
+my specific case, I don't need new system call but only target task argument,
+though.
+
+Once in a past, before joining my current company, I tried using 'madvise()' to
+optimize some scientific HPC programs.  The improvement results were clear, but
+optimizing each of the workloads was challenging and time-consuming.  I believe
+this new systemcall to be very helpful for such cases, either.
+
+[1] https://lore.kernel.org/linux-mm/20200218085309.18346-1-sjpark@amazon.com/
 
 
-=E2=80=A6
-> +++ b/Documentation/admin-guide/bootconfig.rst
-=E2=80=A6
-> +C onfig File Limitation
-
-How do you think about to omit a space character at the beginning
-of this line?
-
-
-> +Currently the maximum config size size is 32KB =E2=80=A6
-
-Would you like to avoid a word duplication here?
-
-
-> +Note: this is not the number of entries but nodes, an entry must consum=
-e
-> +more than 2 nodes (a key-word and a value). =E2=80=A6
-
-I find the relevance of the term =E2=80=9Cnodes=E2=80=9D unclear at the mo=
-ment.
-
-
-Could an other wording be nicer than the abbreviation =E2=80=9Ca doc for =
-=E2=80=A6 config=E2=80=9D
-in the commit subject?
-
-Regards,
-Markus
+Thanks,
+SeongJae Park
