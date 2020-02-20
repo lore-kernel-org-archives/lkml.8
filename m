@@ -2,142 +2,169 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38BEC11D25
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A4FC11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2FC20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:48:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiBCIqXg"
+	by mail.kernel.org (Postfix) with ESMTP id 0191320801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgBTUss (ORCPT
+        id S1729086AbgBTUtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:48:48 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33792 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728936AbgBTUss (ORCPT
+        Thu, 20 Feb 2020 15:49:51 -0500
+Received: from out03.mta.xmission.com ([166.70.13.233]:33366 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728618AbgBTUtu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:48:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582231726;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ehW/C4q3o/MFSLK01WJohdnOjzA4tnd/QR6FiiqgjL0=;
-        b=PiBCIqXgmSIzCl7kHDzaajWmCrBDxQVnTa884V2pmBUcEHrWXk6qdyYGf5l+KPzVuObE7E
-        ygJ0vMIMFhd/k+eyw+I3tCHUsKOQng25f+stm7OEhfFWc8XOHpSfXYmAHoX0PXV8mZzwLc
-        Gk2dXIlpHvlcoH4ngXJUH18btLQoiMk=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-256-RzSLJYwkOc62S8CLlFoArw-1; Thu, 20 Feb 2020 15:48:44 -0500
-X-MC-Unique: RzSLJYwkOc62S8CLlFoArw-1
-Received: by mail-qt1-f197.google.com with SMTP id t9so25855qtn.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:48:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ehW/C4q3o/MFSLK01WJohdnOjzA4tnd/QR6FiiqgjL0=;
-        b=E+EaEyYUvzGFLq2sley12cAYfnJPt4jKKpS3A4ehpn4pJpPbEp9PeolbX19rM28zT1
-         quMnM07vIFEqsR2qLCZd0NINO5mSfmfjvVCGL4pXcaF67+n77n+cpFtmKHvGD3+Xfjhl
-         Gd0q7aVmKBzIXlbUwhTd2MKFLmLL//Ci1D9iAUalnnMgGEQ65737vqktm8p9VUMbBcLr
-         rgmuqj6CSW4VhBT4E6A2mYE/lecF7K06pY3+8FSy5Y7Q1uKG0UahinGEAIIGZlDOK9/J
-         RwaYZtJTsJj/ibHllzDc6nhGMImO82jlu4JF6ouqoyB5U2H93/lbaPDfT2tY4RupgHVs
-         b4Sw==
-X-Gm-Message-State: APjAAAX3/d9K+FnVJ1zdYKf68sSRL0OHhe5VlOBdnY7zM5kuNthlbtrk
-        IlNbYBjE5G+AHdeqNlgS+gBAlSUcWzvP6lafHP4+n/EcM7X/EorUdQZaZ46ggKLNxBzyGMkWskg
-        EPWIAy5l9BCgFnzMa5H79nKD6
-X-Received: by 2002:a05:620a:1279:: with SMTP id b25mr27577871qkl.385.1582231723839;
-        Thu, 20 Feb 2020 12:48:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx8/6ncIbfogJ3gGTu5AoGgDYIF/agRj+iWjgwKDztDiB0lAfpoI0718ywEcHd9ifb45n14Hw==
-X-Received: by 2002:a05:620a:1279:: with SMTP id b25mr27577859qkl.385.1582231723602;
-        Thu, 20 Feb 2020 12:48:43 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id p8sm358226qtn.71.2020.02.20.12.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:48:42 -0800 (PST)
-Date:   Thu, 20 Feb 2020 15:48:35 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200220154718-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        Thu, 20 Feb 2020 15:49:50 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j4slY-0006CP-Pt; Thu, 20 Feb 2020 13:49:48 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j4slX-0008I9-Sf; Thu, 20 Feb 2020 13:49:48 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
+        <87v9odlxbr.fsf@x220.int.ebiederm.org>
+        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
+        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
+        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
+        <87v9obipk9.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
+        <20200212200335.GO23230@ZenIV.linux.org.uk>
+        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+        <20200212203833.GQ23230@ZenIV.linux.org.uk>
+        <20200212204124.GR23230@ZenIV.linux.org.uk>
+        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+        <87lfp7h422.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+        <87pnejf6fz.fsf@x220.int.ebiederm.org>
+        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+Date:   Thu, 20 Feb 2020 14:47:47 -0600
+In-Reply-To: <871rqpaswu.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Thu, 20 Feb 2020 14:46:25 -0600")
+Message-ID: <87tv3l9ea4.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220160606.53156-1-pasic@linux.ibm.com>
+Content-Type: text/plain
+X-XM-SPF: eid=1j4slX-0008I9-Sf;;;mid=<87tv3l9ea4.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18FKktgO7yeajhH6EwOZZcjcqkyfTCGXi4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH 1/7] proc: Rename in proc_inode rename sysctl_inodes sibling_inodes
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:06:04PM +0100, Halil Pasic wrote:
-> Currently if one intends to run a memory protection enabled VM with
-> virtio devices and linux as the guest OS, one needs to specify the
-> VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
-> linux use the DMA API, which in turn handles the memory
-> encryption/protection stuff if the guest decides to turn itself into
-> a protected one. This however makes no sense due to multiple reasons:
-> * The device is not changed by the fact that the guest RAM is
-> protected. The so called IOMMU bypass quirk is not affected.
-> * This usage is not congruent with  standardised semantics of
-> VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> for using DMA API in virtio (orthogonal with respect to what is
-> expressed by VIRTIO_F_IOMMU_PLATFORM). 
-> 
-> This series aims to decouple 'have to use DMA API because my (guest) RAM
-> is protected' and 'have to use DMA API because the device told me
-> VIRTIO_F_IOMMU_PLATFORM'.
-> 
-> Please find more detailed explanations about the conceptual aspects in
-> the individual patches. There is however also a very practical problem
-> that is addressed by this series. 
-> 
-> For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> effect The vhost code assumes it the addresses on the virtio descriptor
-> ring are not guest physical addresses but iova's, and insists on doing a
-> translation of these regardless of what transport is used (e.g. whether
-> we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> "vhost: new device IOTLB API".) On s390 this results in severe
-> performance degradation (c.a. factor 10). BTW with ccw I/O there is
-> (architecturally) no IOMMU, so the whole address translation makes no
-> sense in the context of virtio-ccw.
 
-That's just a QEMU thing. It uses the same flag for VIRTIO_F_ACCESS_PLATFORM
-and vhost IOTLB. QEMU can separate them, no need to change linux.
+I about to need and use the same functionality for pid based
+inodes and there is no point in adding a second field when
+this field is already here and serving the same purporse.
 
+Just give the field a generic name so it is clear that
+it is no longer sysctl specific.
 
-> Halil Pasic (2):
->   mm: move force_dma_unencrypted() to mem_encrypt.h
->   virtio: let virtio use DMA API when guest RAM is protected
-> 
->  drivers/virtio/virtio_ring.c |  3 +++
->  include/linux/dma-direct.h   |  9 ---------
->  include/linux/mem_encrypt.h  | 10 ++++++++++
->  3 files changed, 13 insertions(+), 9 deletions(-)
-> 
-> 
-> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> -- 
-> 2.17.1
+Also for good measure initialize sibling_inodes when
+proc_inode is initialized.
+
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+---
+ fs/proc/inode.c       | 1 +
+ fs/proc/internal.h    | 2 +-
+ fs/proc/proc_sysctl.c | 8 ++++----
+ 3 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index 6da18316d209..bdae442d5262 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -68,6 +68,7 @@ static struct inode *proc_alloc_inode(struct super_block *sb)
+ 	ei->pde = NULL;
+ 	ei->sysctl = NULL;
+ 	ei->sysctl_entry = NULL;
++	INIT_HLIST_NODE(&ei->sibling_inodes);
+ 	ei->ns_ops = NULL;
+ 	return &ei->vfs_inode;
+ }
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 41587276798e..366cd3aa690b 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -91,7 +91,7 @@ struct proc_inode {
+ 	struct proc_dir_entry *pde;
+ 	struct ctl_table_header *sysctl;
+ 	struct ctl_table *sysctl_entry;
+-	struct hlist_node sysctl_inodes;
++	struct hlist_node sibling_inodes;
+ 	const struct proc_ns_operations *ns_ops;
+ 	struct inode vfs_inode;
+ } __randomize_layout;
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index c75bb4632ed1..42fbb7f3c587 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -279,9 +279,9 @@ static void proc_sys_prune_dcache(struct ctl_table_header *head)
+ 		node = hlist_first_rcu(&head->inodes);
+ 		if (!node)
+ 			break;
+-		ei = hlist_entry(node, struct proc_inode, sysctl_inodes);
++		ei = hlist_entry(node, struct proc_inode, sibling_inodes);
+ 		spin_lock(&sysctl_lock);
+-		hlist_del_init_rcu(&ei->sysctl_inodes);
++		hlist_del_init_rcu(&ei->sibling_inodes);
+ 		spin_unlock(&sysctl_lock);
+ 
+ 		inode = &ei->vfs_inode;
+@@ -483,7 +483,7 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+ 	}
+ 	ei->sysctl = head;
+ 	ei->sysctl_entry = table;
+-	hlist_add_head_rcu(&ei->sysctl_inodes, &head->inodes);
++	hlist_add_head_rcu(&ei->sibling_inodes, &head->inodes);
+ 	head->count++;
+ 	spin_unlock(&sysctl_lock);
+ 
+@@ -514,7 +514,7 @@ static struct inode *proc_sys_make_inode(struct super_block *sb,
+ void proc_sys_evict_inode(struct inode *inode, struct ctl_table_header *head)
+ {
+ 	spin_lock(&sysctl_lock);
+-	hlist_del_init_rcu(&PROC_I(inode)->sysctl_inodes);
++	hlist_del_init_rcu(&PROC_I(inode)->sibling_inodes);
+ 	if (!--head->count)
+ 		kfree_rcu(head, rcu);
+ 	spin_unlock(&sysctl_lock);
+-- 
+2.20.1
 
