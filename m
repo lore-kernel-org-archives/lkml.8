@@ -7,31 +7,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF761C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CA4C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA56420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E6120659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgBTP7l (ORCPT
+        id S1728692AbgBTP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:59:41 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47612 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728684AbgBTP7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 10:59:23 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47604 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728305AbgBTP7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:59:21 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 5A61C2951A3
+        with ESMTPSA id 17FE62951A1
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
         bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        pmalani@chromium.org
-Subject: [PATCH 6/8] platform/chrome: cros_ec_lightbar: Use cros_ec_cmd_xfer_status helper
-Date:   Thu, 20 Feb 2020 16:58:57 +0100
-Message-Id: <20200220155859.906647-7-enric.balletbo@collabora.com>
+        pmalani@chromium.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fei Shao <fshao@chromium.org>, linux-input@vger.kernel.org
+Subject: [PATCH 2/8] Input: cros_ec_keyb: Use cros_ec_cmd_xfer_status helper
+Date:   Thu, 20 Feb 2020 16:58:53 +0100
+Message-Id: <20200220155859.906647-3-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200220155859.906647-1-enric.balletbo@collabora.com>
 References: <20200220155859.906647-1-enric.balletbo@collabora.com>
@@ -43,146 +48,45 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 This patch makes use of cros_ec_cmd_xfer_status() instead of
-cros_ec_cmd_xfer(). It allows us to remove some redundand code. In this
-case, though, we are changing a bit the behaviour because of returning
--EINVAL on protocol error we propagate the error return for
-cros_ec_cmd_xfer_status() function, but I think it will be fine, even
-more clear as we don't mask the Linux error code.
+cros_ec_cmd_xfer(). In this case there is no advantage of doing this
+apart from that we want to make cros_ec_cmd_xfer() a private function
+for the EC protocol and let people only use the
+cros_ec_cmd_xfer_status() to return Linux standard error codes.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- drivers/platform/chrome/cros_ec_lightbar.c | 50 ++++++----------------
- 1 file changed, 13 insertions(+), 37 deletions(-)
+ drivers/input/keyboard/cros_ec_keyb.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-index b4c110c5fee0..b59180bff5a3 100644
---- a/drivers/platform/chrome/cros_ec_lightbar.c
-+++ b/drivers/platform/chrome/cros_ec_lightbar.c
-@@ -116,7 +116,7 @@ static int get_lightbar_version(struct cros_ec_dev *ec,
+diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
+index 2b71c5a51f90..fc1793ca2f17 100644
+--- a/drivers/input/keyboard/cros_ec_keyb.c
++++ b/drivers/input/keyboard/cros_ec_keyb.c
+@@ -347,18 +347,14 @@ static int cros_ec_keyb_info(struct cros_ec_device *ec_dev,
+ 	params->info_type = info_type;
+ 	params->event_type = event_type;
  
- 	param = (struct ec_params_lightbar *)msg->data;
- 	param->cmd = LIGHTBAR_CMD_VERSION;
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0) {
+-	ret = cros_ec_cmd_xfer(ec_dev, msg);
+-	if (ret < 0) {
+-		dev_warn(ec_dev->dev, "Transfer error %d/%d: %d\n",
+-			 (int)info_type, (int)event_type, ret);
+-	} else if (msg->result == EC_RES_INVALID_VERSION) {
++	ret = cros_ec_cmd_xfer_status(ec_dev, msg);
++	if (ret == -ENOTSUPP) {
+ 		/* With older ECs we just return 0 for everything */
+ 		memset(result, 0, result_size);
  		ret = 0;
- 		goto exit;
-@@ -193,15 +193,10 @@ static ssize_t brightness_store(struct device *dev,
- 	if (ret)
- 		goto exit;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0)
- 		goto exit;
- 
--	if (msg->result != EC_RES_SUCCESS) {
--		ret = -EINVAL;
--		goto exit;
--	}
--
- 	ret = count;
- exit:
- 	kfree(msg);
-@@ -258,13 +253,10 @@ static ssize_t led_rgb_store(struct device *dev, struct device_attribute *attr,
- 					goto exit;
- 			}
- 
--			ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+			ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 			if (ret < 0)
- 				goto exit;
- 
--			if (msg->result != EC_RES_SUCCESS)
--				goto exit;
--
- 			i = 0;
- 			ok = 1;
- 		}
-@@ -305,14 +297,13 @@ static ssize_t sequence_show(struct device *dev,
- 	if (ret)
- 		goto exit;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
--	if (ret < 0)
--		goto exit;
--
--	if (msg->result != EC_RES_SUCCESS) {
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret == -EPROTO) {
- 		ret = scnprintf(buf, PAGE_SIZE,
- 				"ERROR: EC returned %d\n", msg->result);
- 		goto exit;
+-	} else if (msg->result != EC_RES_SUCCESS) {
+-		dev_warn(ec_dev->dev, "Error getting info %d/%d: %d\n",
+-			 (int)info_type, (int)event_type, msg->result);
+-		ret = -EPROTO;
 +	} else if (ret < 0) {
-+		goto exit;
- 	}
- 
- 	resp = (struct ec_response_lightbar *)msg->data;
-@@ -344,13 +335,10 @@ static int lb_send_empty_cmd(struct cros_ec_dev *ec, uint8_t cmd)
- 	if (ret)
- 		goto error;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0)
- 		goto error;
--	if (msg->result != EC_RES_SUCCESS) {
--		ret = -EINVAL;
--		goto error;
--	}
-+
- 	ret = 0;
- error:
- 	kfree(msg);
-@@ -377,13 +365,10 @@ static int lb_manual_suspend_ctrl(struct cros_ec_dev *ec, uint8_t enable)
- 	if (ret)
- 		goto error;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0)
- 		goto error;
--	if (msg->result != EC_RES_SUCCESS) {
--		ret = -EINVAL;
--		goto error;
--	}
-+
- 	ret = 0;
- error:
- 	kfree(msg);
-@@ -425,15 +410,10 @@ static ssize_t sequence_store(struct device *dev, struct device_attribute *attr,
- 	if (ret)
- 		goto exit;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0)
- 		goto exit;
- 
--	if (msg->result != EC_RES_SUCCESS) {
--		ret = -EINVAL;
--		goto exit;
--	}
--
- 	ret = count;
- exit:
- 	kfree(msg);
-@@ -487,13 +467,9 @@ static ssize_t program_store(struct device *dev, struct device_attribute *attr,
- 	 */
- 	msg->outsize = count + extra_bytes;
- 
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
- 	if (ret < 0)
- 		goto exit;
--	if (msg->result != EC_RES_SUCCESS) {
--		ret = -EINVAL;
--		goto exit;
--	}
- 
- 	ret = count;
- exit:
++		dev_warn(ec_dev->dev, "Transfer error %d/%d: %d\n",
++			 (int)info_type, (int)event_type, ret);
+ 	} else if (ret != result_size) {
+ 		dev_warn(ec_dev->dev, "Wrong size %d/%d: %d != %zu\n",
+ 			 (int)info_type, (int)event_type,
 -- 
 2.25.0
 
