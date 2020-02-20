@@ -2,195 +2,118 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F9AC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1FCC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E300C20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582212072;
-	bh=Jr3BWrhsllQ1DF1MQCjfFXACRtqZmspAzYArSVEj5+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jWk0ZQP/DWQY8pTosHnAz+aACc7eSPctb5+yHxVOMa8daMeZFfbzp96UQ9tKTes7j
-	 LbO14wLT71ObNy8Yj/0ryExkFVAIkyPzK04w5/Nxk5nTUJ6Q9WbZUrX9Dx7DsP0xii
-	 yPgZKrNGDdZf7DTtp6tRaHcXQrneYrHjrF67odQ0=
+	by mail.kernel.org (Postfix) with ESMTP id 27D05207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xzHA3evs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBTPVK (ORCPT
+        id S1728435AbgBTPYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:21:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbgBTPVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:21:10 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF4C82465D;
-        Thu, 20 Feb 2020 15:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582212069;
-        bh=Jr3BWrhsllQ1DF1MQCjfFXACRtqZmspAzYArSVEj5+s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TL58v9oTxIh/6x3CPObWfQoagzAyUVKmsKLn2kVGkA3UArYNxrMP39+/hjF++rNgB
-         TpmrVN4xuwA16r3g4qvlIKi83oip3+KTooo3ojoCp4ibZnWwk3fSjiEtWCo99+qYFK
-         HRQUNJVyKyqlsL1s2cIMGGd6kQbGI1yR6ujFL050=
-Received: by mail-qt1-f178.google.com with SMTP id i14so3078589qtv.13;
-        Thu, 20 Feb 2020 07:21:08 -0800 (PST)
-X-Gm-Message-State: APjAAAUXk6Sfp/Oq3nxQWNd18Ylr8+5O8/e2sySCcTc+jkHbfilREZEH
-        BvhFPW8KWFzFkn4GcEUXjwn2i0z7z27mqsqVZA==
-X-Google-Smtp-Source: APXvYqxahB0DdtVXsXo8CCTblmFIGiLWE5gmtmpVH3sti1SnTFcPlL/14AbUA98nETeVV+5NRkq397jGl9D4wia5Rxs=
-X-Received: by 2002:ac8:1415:: with SMTP id k21mr27506651qtj.300.1582212067802;
- Thu, 20 Feb 2020 07:21:07 -0800 (PST)
+        Thu, 20 Feb 2020 10:24:55 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34676 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbgBTPYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:24:54 -0500
+Received: by mail-pj1-f66.google.com with SMTP id f2so1275701pjq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=x64IzpxQxgoD+epizuWhLq6VmBY0vv/CGFxkWQZpQEs=;
+        b=xzHA3evsbmbuNoQNBVN3xL96+3fHb4eHM6XCsq5SNnWSm9ZFv1oj4hjvgBmjYl0uFd
+         iWpzSc7739TGJepNYRkCO5DW+ju1PFJL9Qie7xNeQRJXRrVYoeqIYwqxecKVURKary9/
+         yRV1pZy3aN1EquYn1i/gNQmFvt2aT7WUNRS+pWc0g9qD2YZDkxZHROaP1ETKQ85hPnmv
+         5YjghAqzQSazmdx1ERFslgn1aMEvyiSz6JU1/4YJSSw715sVBw7/3ZlB1fjXcQa2mcw9
+         2+ILztPxlfdEJlYoybnkg+5p5mo45wYt7/DMjmDlVPSiVUJzhZBnqf7hpEpkFFQzv5Dh
+         vVzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=x64IzpxQxgoD+epizuWhLq6VmBY0vv/CGFxkWQZpQEs=;
+        b=XBXbXkVXorxSzCkvwtsuP8lvqWpz8Tc9AGuakk50Bx1dm7q4V8q67OzGdz9Iyq0Zjl
+         WHGWe2v3fLuJbfjkFSq5zElBecDLepk4O9T2IzVwQXpFEtH5JgU5Ne+Oz9pWdfGSUnsA
+         2cHbQkR6en6kKB4HmZTTqNoPL47pRJ8lMC59Grop18A+c+X2bIbCSCtIYn9NQsqgdLYX
+         ZzyYB27IUJ00b/XSBPE0uP41OkPeiRdQyl6Bwui0FuyBCpHifCKv6HZAZwVWC8jCGmlp
+         01i732LtiM7B7fRiJz4Uu6zmAZu/fMNnnUPn7nq2yNJnPHhQoY6fKGmos0hScSQ5nuBu
+         o6RQ==
+X-Gm-Message-State: APjAAAWCN6B4HYLmNsHH3STKti96j4Vh+5/khIKmtHQuLfYhQHvuuVrY
+        G5Q+z/gQ61KIiYVET6WrLDLVOg==
+X-Google-Smtp-Source: APXvYqx7FoRaaZ+BLfysstttTcWpdHJjdDonV5aa3Tld/CpF08uYFDpMPfbSWWYTQyUy9AHDsKP9lQ==
+X-Received: by 2002:a17:90a:c388:: with SMTP id h8mr4088982pjt.83.1582212293781;
+        Thu, 20 Feb 2020 07:24:53 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id b3sm3820107pjo.30.2020.02.20.07.24.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 07:24:53 -0800 (PST)
+Date:   Thu, 20 Feb 2020 07:23:56 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de, smohanad@codeaurora.org,
+        jhugo@codeaurora.org, kvalo@codeaurora.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 15/16] net: qrtr: Do not depend on ARCH_QCOM
+Message-ID: <20200220152356.GA955802@ripper>
+References: <20200220095854.4804-1-manivannan.sadhasivam@linaro.org>
+ <20200220095854.4804-16-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org> <20200220052739.87057-1-saravanak@google.com>
-In-Reply-To: <20200220052739.87057-1-saravanak@google.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 Feb 2020 09:20:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK-dd0deUWw43StoBdNOQM8E63axWRafwKZY2SGkdMzHw@mail.gmail.com>
-Message-ID: <CAL_JsqK-dd0deUWw43StoBdNOQM8E63axWRafwKZY2SGkdMzHw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Todd Kjos <tkjos@google.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220095854.4804-16-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 11:27 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Apologies in advance for replying to this one email but discussing the
-> points raised in all the other replies. I'm not cc'ed in this thread and
-> replying to each email individually is a pain.
->
-> On Tue, Feb 18, 2020 at 4:07 PM John Stultz wrote:
-> > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> > at the end of initcall"), along with commit 25b4e70dcce9
-> > ("driver core: allow stopping deferred probe after init") after
-> > late_initcall, drivers will stop getting EPROBE_DEFER, and
-> > instead see an error causing the driver to fail to load.
->
-> Both of those patches were the best solution at that point in time. But
-> the kernel has changed a lot since then. Power domain and IOMMU drivers
-> can work as modules now. We have of_devlink and sync_state().
->
-> So, while a delay might have been the ideal solution back then, I think
-> we need to work towards removing arbitrary timeouts instead of making
-> the timeout mechanism more elaborate.
+On Thu 20 Feb 01:58 PST 2020, Manivannan Sadhasivam wrote:
 
-If you don't have some way to say all the dependencies that can be
-resolved have been resolved already, how do you get away from a
-timeout? Nothing has changed in that respect.
+> IPC Router protocol is also used by external modems for exchanging the QMI
+> messages. Hence, it doesn't always depend on Qualcomm platforms. As a side
+> effect of removing the ARCH_QCOM dependency, it is going to miss the
+> COMPILE_TEST build coverage.
 
-If a dtb+kernel works, updating just the dtb with new dependencies
-should not break things.
+The COMPILE_TEST was there so that the code could be compile tested on
+other platforms, but without the ARCH_QCOM dependency this will always
+be the case. So I would suggest that you drop the last sentence. (Or
+write "With this we no longer need to depend on COMPILE_TEST, so remove
+that too.")
 
-> I think driver_deferred_probe_check_state() logic should boiled down
-> to something like:
->
-> int driver_deferred_probe_check_state(struct device *dev)
-> {
->         /* No modules and init done, deferred probes are pointless from
->          * now. */
->         if (!defined(CONFIG_MODULES) && initcall_done)
->                 return -ENODEV;
->
->         /* If modules and of_devlink then you clean want dependencies to
->          * be enforced.
->          */
->         if (defined(CONFIG_MODULES) && of_devlink)
->                 return -EPROBE_DEFER;
->
->         /* Whatever other complexity (including timeouts) we want to
->          * add. Hopefully none - we can discuss in this thread. */
->         if (.....)
->                 return -Exxxx;
->
->         /* When in doubt, allow probe deferral. */
->         return -EPROBE_DEFER;
-> }
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Mostly makes sense to me. I think using CONFIG_MODULES is good.
+Regards,
+Bjorn
 
-However, there is the case in pinctrl that we have a DT flag
-'pinctrl-use-default' and we stop deferring at the end of initcalls if
-set. With the above, there's no way to detect that. I'm pretty sure
-that's broken now with of_devlink and maybe from Thierry's change too.
-
-> Rob, for the original use case those two patches were added for, do they need
-> to support CONFIG_MODULES?
-
-At the time since the subsystems involved were not typically modules
-so using CONFIG_MODULES didn't really matter. As you said, that's
-changed now.
-
-> > That change causes trouble when trying to use many clk drivers
-> > as modules, as the clk modules may not load until much later
-> > after init has started. If a dependent driver loads and gets an
-> > error instead of EPROBE_DEFER, it won't try to reload later when
-> > the dependency is met, and will thus fail to load.
->
-> Once we add of_devlink support for power-domains, you won't even hit the
-> genpd error path if you have of_devlink enabled. I believe in the case
-> you are testing DB 845c, of_devlink is enabled?
->
-> If of_devlink is enabled, the devices depending on the unprobed power
-> domains would be deferred without even calling the driver's probe()
-> function.
->
-> Adding power-domain support to of_devlink is a 2 line change. I'll send
-> it out soon.
->
-> Also, regulator_init_complete() can be replaced by a sync_state() based
-> implementation. I have a downstream implementation that works. But it's
-> definitely not upstream ready. I plan to rewrite it and send it upstream
-> at some point, but it's fairly straightforward if anyone else want to
-> implement it. My main point being, we shouldn't have to make the timeout
-> logic more complex (or even need one) for regulator clean up either.
->
-> On Tue, Feb 18, 2020 at 6:07 PM Rob Herring wrote:
-> > The one complication which I mentioned already is with consoles. A
-> > timeout (and dependencies in modules) there doesn't work. You have to
-> > probe and register the console before init is done.
->
-> Rob,
->
-> I've seen you say this a couple of times before. But I don't think this
-> is true any more. With of_devlink enabled I've booted hardware countless
-> times with the console device probing after userspace comes up. The only
-> limitation for console drivers is that they need to be built-in if they
-> need to support earlycon. If you don't care to support earlycon (very
-> useful for bringup debugging), I think the console driver can even be a
-> module. I don't think even of_devlink needs to be enabled technically if
-> you load the modules in the right order.
-
-Every serial driver has to be built-in to enable console support.
-That's not because of earlycon. It's been that way for as long as I've
-worked on linux. Now of course, a driver could be built-in and still
-probe after userspace starts, but in my testing with the timeout that
-didn't work. I don't see how of_devlink changes that.
-
-It could depend on what userspace you have. Certainly, booting with
-'console=ttyS0 init=/bin/sh' would not work for example. What I
-probably tested with was a busybox based rootfs. What are you testing
-with? Android?
-
-Rob
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  net/qrtr/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
+> index 8eb876471564..f362ca316015 100644
+> --- a/net/qrtr/Kconfig
+> +++ b/net/qrtr/Kconfig
+> @@ -4,7 +4,6 @@
+>  
+>  config QRTR
+>  	tristate "Qualcomm IPC Router support"
+> -	depends on ARCH_QCOM || COMPILE_TEST
+>  	---help---
+>  	  Say Y if you intend to use Qualcomm IPC router protocol.  The
+>  	  protocol is used to communicate with services provided by other
+> -- 
+> 2.17.1
+> 
