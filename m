@@ -2,97 +2,71 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F99C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A903C11D14
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CD724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 351F924672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582220052;
+	bh=1c3CW2q7VFBSmddI0CyeRQXbfNNVbuUebZ1kdB+IYG0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KuqCW6G58NLRu64rLLlcAA3BQbbFDTo+OUh/0yJYEAzcafrsh23iZliqbtcPy+fxP
+	 Z6euQ0zt9puCjWWCso9oGr5OUpJjUyiK6kwfwVVm4BvQHEQRtx0NBYfHa5KbWCAhRC
+	 j6rBX7YYl4sby0KLOwahtGazGVPxOd3LjS6xUlYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgBTRdh (ORCPT
+        id S1728739AbgBTReL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:33:37 -0500
-Received: from mga04.intel.com ([192.55.52.120]:47644 "EHLO mga04.intel.com"
+        Thu, 20 Feb 2020 12:34:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgBTRdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:33:37 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 09:33:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="230190404"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 20 Feb 2020 09:33:36 -0800
-Date:   Thu, 20 Feb 2020 09:33:16 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/2] KVM: nVMX: fix apicv disablement for L1
-Message-ID: <20200220173316.GC3972@linux.intel.com>
-References: <20200220172205.197767-1-vkuznets@redhat.com>
+        id S1727709AbgBTReK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:34:10 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC29A24672;
+        Thu, 20 Feb 2020 17:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582220050;
+        bh=1c3CW2q7VFBSmddI0CyeRQXbfNNVbuUebZ1kdB+IYG0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CydWACu04SQXPcrHxR+KvmwQ0aaAQSOBGIsqALec7Ck6fevMttxeVp1HTsMm90Ab3
+         pQwnPu2gM0fkIhbcqlmlivf37fssrEpZPQ1uXsDwicidfDm0JZ7qma57JulqmeqNpX
+         gMQhJKoXy1tju088vIzqmFkWIjqGDgsQ7P0jbFhQ=
+Date:   Thu, 20 Feb 2020 12:34:08 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH AUTOSEL 5.5 389/542] clocksource/drivers/hyper-v: Reserve
+ PAGE_SIZE space for tsc page
+Message-ID: <20200220173408.GH1734@sasha-vm>
+References: <20200214154854.6746-1-sashal@kernel.org>
+ <20200214154854.6746-389-sashal@kernel.org>
+ <MW2PR2101MB10526693E43DF07E03D5EB0FD7150@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200220172205.197767-1-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <MW2PR2101MB10526693E43DF07E03D5EB0FD7150@MW2PR2101MB1052.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 06:22:03PM +0100, Vitaly Kuznetsov wrote:
-> It was found that fine-grained VMX feature enablement in QEMU is broken
-> when combined with SynIC:
-> 
->     qemu-system-x86_64 -machine q35,accel=kvm -cpu host,hv_vpindex,hv_synic -smp 2 -m 16384 -vnc :0
->     qemu-system-x86_64: error: failed to set MSR 0x48d to 0xff00000016
->     qemu-system-x86_64: <...>: kvm_buf_set_msrs: Assertion `ret == cpu->kvm_msr_buf->nmsrs' failed.
->     Aborted
-> 
-> QEMU thread: https://lists.gnu.org/archive/html/qemu-devel/2020-02/msg04838.html
-> 
-> Turns out, this is a KVM issue: when SynIC is enabled, PIN_BASED_POSTED_INTR
-> gets filtered out from VMX MSRs for all newly created (but not existent!)
-> vCPUS. Patch1 addresses this. Also, apicv disablement for L1 doesn't seem
-> to disable it for L2 (at least on CPU0) so unless there's a good reason
-> to not allow this we need to make it work. PATCH2, suggested by Paolo,
-> is supposed to do the job.
-> 
-> RFC: I looked at the code and ran some tests and nothing suspicious popped
-> out, however, I'm still not convinced this is a good idea to have apicv
-> enabled for L2 when it's disabled for L1...
+On Fri, Feb 14, 2020 at 04:11:03PM +0000, Michael Kelley wrote:
+>This patch does not need to be backported to any stable releases.  It is prep work for guests on Hyper-V ARM64 when the guest page size is 16K or 64K, and that functionality isn't upstream yet.
 
-Eh, if it works...  IMO, enabling apicv for both L1 and L2 is far more
-mindbending.
+Now dropped, thank you.
 
-> Also, we may prefer to merge or re-order these two patches.
-
-It does seem like patch 2 should be applied first.  
-
-> Vitaly Kuznetsov (2):
->   KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only
->     when apicv is globally disabled
->   KVM: nVMX: handle nested posted interrupts when apicv is disabled for
->     L1
-> 
->  arch/x86/include/asm/kvm_host.h |  2 +-
->  arch/x86/kvm/lapic.c            |  5 +----
->  arch/x86/kvm/svm.c              |  7 ++++++-
->  arch/x86/kvm/vmx/capabilities.h |  1 +
->  arch/x86/kvm/vmx/nested.c       |  5 ++---
->  arch/x86/kvm/vmx/nested.h       |  3 +--
->  arch/x86/kvm/vmx/vmx.c          | 23 +++++++++++++----------
->  7 files changed, 25 insertions(+), 21 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+-- 
+Thanks,
+Sasha
