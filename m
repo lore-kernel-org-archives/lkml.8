@@ -2,70 +2,123 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F2C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EF8C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8092824676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C401F2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBTA7h (ORCPT
+        id S1727756AbgBTA7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:59:37 -0500
+        Wed, 19 Feb 2020 19:59:39 -0500
 Received: from mga03.intel.com ([134.134.136.65]:8655 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbgBTA7e (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:59:34 -0500
+        id S1727648AbgBTA7g (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 19:59:36 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 16:59:33 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 16:59:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="349058319"
+   d="scan'208";a="349058325"
 Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2020 16:59:31 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2020 16:59:33 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 0/2] perf report: Support annotation of code without symbols
-Date:   Thu, 20 Feb 2020 08:59:00 +0800
-Message-Id: <20200220005902.8952-1-yao.jin@linux.intel.com>
+Subject: [PATCH v1 1/2] perf util: Print al_addr when symbol is not found
+Date:   Thu, 20 Feb 2020 08:59:01 +0800
+Message-Id: <20200220005902.8952-2-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220005902.8952-1-yao.jin@linux.intel.com>
+References: <20200220005902.8952-1-yao.jin@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For perf report on stripped binaries it is currently impossible to do
-annotation. The annotation state is all tied to symbols, but there are
-either no symbols, or symbols are not covering all the code.
+For branch mode, if the symbol is not found, it prints
+the address.
 
-We should support the annotation functionality even without symbols.
+For example, 0x0000555eee0365a0 in below output.
 
-The first patch uses al_addr to print because it's easy to dump
-the instructions from this address in binary for branch mode.
+Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
+  17.55%  div      libc-2.27.so          [.] __random                             [.] __random
+   6.11%  div      div                   [.] 0x0000555eee0365a0                   [.] rand
+   6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000555eee036769
+   5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
+   5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
+   5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
+   5.38%  div      libc-2.27.so          [.] __random                             [.] rand
+   4.56%  div      libc-2.27.so          [.] __random                             [.] __random
+   4.49%  div      div                   [.] 0x0000555eee036779                   [.] 0x0000555eee0365ff
+   4.25%  div      div                   [.] 0x0000555eee0365fa                   [.] 0x0000555eee036760
 
-The second patch supports the annotation on stripped binary.
+But it's not very easy to understand what the instructions
+are in the binary. So this patch uses the al_addr instead.
 
-Jin Yao (2):
-  perf util: Print al_addr when symbol is not found
-  perf annotate: Support interactive annotation of code without symbols
+With this patch, the output is
 
- tools/perf/ui/browsers/hists.c | 51 +++++++++++++++++++++++++++++-----
- tools/perf/util/annotate.h     |  2 ++
- tools/perf/util/sort.c         |  6 ++--
- 3 files changed, 50 insertions(+), 9 deletions(-)
+Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
+  17.55%  div      libc-2.27.so          [.] __random                             [.] __random
+   6.11%  div      div                   [.] 0x00000000000005a0                   [.] rand
+   6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000000000000769
+   5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
+   5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
+   5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
+   5.38%  div      libc-2.27.so          [.] __random                             [.] rand
+   4.56%  div      libc-2.27.so          [.] __random                             [.] __random
+   4.49%  div      div                   [.] 0x0000000000000779                   [.] 0x00000000000005ff
+   4.25%  div      div                   [.] 0x00000000000005fa                   [.] 0x0000000000000760
 
+Now we can use objdump to dump the object starting from 0x5a0.
+
+For example,
+objdump -d --start-address 0x5a0 div
+
+00000000000005a0 <rand@plt>:
+ 5a0:   ff 25 2a 0a 20 00       jmpq   *0x200a2a(%rip)        # 200fd0 <__cxa_finalize@plt+0x200a20>
+ 5a6:   68 02 00 00 00          pushq  $0x2
+ 5ab:   e9 c0 ff ff ff          jmpq   570 <srand@plt-0x10>
+ ...
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+---
+ tools/perf/util/sort.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index ab0cfd790ad0..e860595576c2 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -869,7 +869,8 @@ static int hist_entry__sym_from_snprintf(struct hist_entry *he, char *bf,
+ 	if (he->branch_info) {
+ 		struct addr_map_symbol *from = &he->branch_info->from;
+ 
+-		return _hist_entry__sym_snprintf(&from->ms, from->addr, he->level, bf, size, width);
++		return _hist_entry__sym_snprintf(&from->ms, from->al_addr,
++						 he->level, bf, size, width);
+ 	}
+ 
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+@@ -881,7 +882,8 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
+ 	if (he->branch_info) {
+ 		struct addr_map_symbol *to = &he->branch_info->to;
+ 
+-		return _hist_entry__sym_snprintf(&to->ms, to->addr, he->level, bf, size, width);
++		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
++						 he->level, bf, size, width);
+ 	}
+ 
+ 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
 -- 
 2.17.1
 
