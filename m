@@ -2,26 +2,26 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7109C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 870F5C11D13
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5B024672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6769F24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgBTRZ5 (ORCPT
+        id S1728217AbgBTRZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:25:57 -0500
-Received: from sauhun.de ([88.99.104.3]:35012 "EHLO pokefinder.org"
+        Thu, 20 Feb 2020 12:25:58 -0500
+Received: from sauhun.de ([88.99.104.3]:35088 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgBTRZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:25:54 -0500
+        id S1727709AbgBTRZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:25:55 -0500
 Received: from localhost (p5486CC48.dip0.t-ipconnect.de [84.134.204.72])
-        by pokefinder.org (Postfix) with ESMTPSA id 40FB52C07FE;
-        Thu, 20 Feb 2020 18:25:50 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 1ED662C1EBE;
+        Thu, 20 Feb 2020 18:25:52 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
@@ -33,10 +33,12 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
         Vladimir Zapolskiy <vz@mleia.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [RFC PATCH 0/7] i2c: of: reserve unknown and ancillary addresses
-Date:   Thu, 20 Feb 2020 18:23:56 +0100
-Message-Id: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
+Date:   Thu, 20 Feb 2020 18:23:59 +0100
+Message-Id: <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,82 +46,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One outcome of my dynamic address assignment RFC series[1] was that we
-need a way to describe an I2C bus in DT fully. This includes unknown
-devices and devices requiring multiple addresses. This series implements
-that.
+Sometimes, we have unknown devices in a system and still want to block
+their address. For that, we allow DT nodes with only a 'reg' property.
+These devices will be bound to the "dummy" driver but with the name
+"reserved". That way, we can distinguish them and even hand them over to
+the "dummy" driver later when they are really requested using
+i2c_new_ancillary_device().
 
-Patches 1+2 do some preparational refactoring. After patch 3, we can
-have child nodes with an address, but no compatible. Those addresses
-will be marked busy now. They are handled by the dummy driver as well,
-but named "reserved" instead of dummy. Patches 4+5 are again some
-preparational refactoring. After patch 6, all addresses in a 'reg' array
-are now blocked by the I2C core, also using the dummy driver but named
-"reserved". So, we can have something like this:
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 1 -
+ Documentation/devicetree/bindings/i2c/i2c.txt        | 4 +++-
+ drivers/i2c/i2c-core-base.c                          | 1 +
+ drivers/i2c/i2c-core-of.c                            | 8 +++-----
+ drivers/i2c/i2c-core.h                               | 1 +
+ 5 files changed, 8 insertions(+), 7 deletions(-)
 
-	dummy@13 {
-	       reg = <0x13>, <0x14>;
-	};
-
-After patch 7 then, i2c_new_ancillary_device is spiced up to look for
-such a reserved address and return it as a good-old "dummy" device.
-Sanity checks include that only a sibling from the same DT node can
-request such an ancillary address. Stealing addresses from other drivers
-is not possible anymore. This is something I envisioned for some time
-now and I am quite happy with the implementation and how things work
-
-There is only one thing giving me some headache now. There is a danger
-of a regression maybe. If someone has multiple 'reg' entries in the DT
-but never used i2c_new_ancillary_device but i2c_new_dummy_device, then
-things will break now because i2c_new_dummy_device has not enough
-information to convert a "reserved" device to a "dummy" one. It will
-just see the address as busy. However, all binding documentations I
-found which use 'reg' as an array correctly use
-i2c_new_ancillary_device. On the other hand, my search strategy for
-finding such bindings and DTs do not feel perfect to me. Maybe there are
-also some more corner cases in this area, so this series is still RFC.
-
-And some more documentation is needed. Before that, though, the generic
-I2C binding docs need some overhaul, too.
-
-All tested on a Renesas Lager board (R-Car H2). A git branch can be
-found here:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/topic/i2c_alias_device_v2
-
-The I3C list is on CC not only because there is 1-line change in their
-subsystem, but maybe also because they need to be aware of these changes
-for their I2C fallback? I don't really know, let me know if you are not
-interested.
-
-Looking forward to comments!
-
-Happy hacking,
-
-   Wolfram
-
-[1] https://www.spinics.net/lists/linux-i2c/msg43291.html
-
-
-Wolfram Sang (7):
-  i2c: add sanity check for parameter of i2c_verify_client()
-  i2c: use DEFINE for the dummy driver name
-  i2c: allow DT nodes without 'compatible'
-  i2c: of: remove superfluous parameter from exported function
-  i2c: of: error message unification
-  i2c: of: mark a whole array of regs as reserved
-  i2c: core: hand over reserved devices when requesting ancillary
-    addresses
-
- .../devicetree/bindings/i2c/i2c-ocores.txt    |  1 -
- Documentation/devicetree/bindings/i2c/i2c.txt |  4 +-
- drivers/i2c/i2c-core-base.c                   | 29 +++++--
- drivers/i2c/i2c-core-of.c                     | 86 +++++++++++--------
- drivers/i2c/i2c-core.h                        |  3 +
- drivers/i3c/master.c                          |  2 +-
- include/linux/i2c.h                           |  6 +-
- 7 files changed, 83 insertions(+), 48 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+index 6b25a80ae8d3..2762effdd270 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+@@ -50,7 +50,6 @@ Examples:
+ 		reg-io-width = <1>;	/* 8 bit read/write */
+ 
+ 		dummy@60 {
+-			compatible = "dummy";
+ 			reg = <0x60>;
+ 		};
+ 	};
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+index 9a53df4243c6..989b315e09dc 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+@@ -21,7 +21,9 @@ flags can be attached to the address. I2C_TEN_BIT_ADDRESS is used to mark a 10
+ bit address. It is needed to avoid the ambiguity between e.g. a 7 bit address
+ of 0x50 and a 10 bit address of 0x050 which, in theory, can be on the same bus.
+ Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we listen to
+-be devices ourselves.
++be devices ourselves. The 'reg' property of a child is required. The
++'compatible' property is not. Empty 'compatible' child entries can be used to
++describe unknown devices or addresses which shall be blocked for other reasons.
+ 
+ Optional properties
+ -------------------
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 8df2fa10c48a..4000a4384306 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -854,6 +854,7 @@ EXPORT_SYMBOL_GPL(i2c_unregister_device);
+ 
+ static const struct i2c_device_id dummy_id[] = {
+ 	{ I2C_DUMMY_DRV_NAME, 0 },
++	{ I2C_RESERVED_DRV_NAME, 0 },
+ 	{ },
+ };
+ 
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 6787c1f71483..d8d111ad6c85 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -27,17 +27,15 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+ 
+ 	memset(info, 0, sizeof(*info));
+ 
+-	if (of_modalias_node(node, info->type, sizeof(info->type)) < 0) {
+-		dev_err(dev, "of_i2c: modalias failure on %pOF\n", node);
+-		return -EINVAL;
+-	}
+-
+ 	ret = of_property_read_u32(node, "reg", &addr);
+ 	if (ret) {
+ 		dev_err(dev, "of_i2c: invalid reg on %pOF\n", node);
+ 		return ret;
+ 	}
+ 
++	if (of_modalias_node(node, info->type, sizeof(info->type)) < 0)
++		strlcpy(info->type, I2C_RESERVED_DRV_NAME, sizeof(I2C_RESERVED_DRV_NAME));
++
+ 	if (addr & I2C_TEN_BIT_ADDRESS) {
+ 		addr &= ~I2C_TEN_BIT_ADDRESS;
+ 		info->flags |= I2C_CLIENT_TEN;
+diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+index fb89fabf84d3..77b3a925ed95 100644
+--- a/drivers/i2c/i2c-core.h
++++ b/drivers/i2c/i2c-core.h
+@@ -23,6 +23,7 @@ int i2c_dev_irq_from_resources(const struct resource *resources,
+ 			       unsigned int num_resources);
+ 
+ #define I2C_DUMMY_DRV_NAME "dummy"
++#define I2C_RESERVED_DRV_NAME "reserved"
+ 
+ /*
+  * We only allow atomic transfers for very late communication, e.g. to send
 -- 
 2.20.1
 
