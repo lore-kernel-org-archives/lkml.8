@@ -6,130 +6,106 @@ X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6B7C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F7CC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6443820659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A8E220659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ibHAPK4d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="rOdYYUhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728541AbgBTPwD (ORCPT
+        id S1728583AbgBTPwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:52:03 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:54492 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbgBTPwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:52:02 -0500
-Received: by mail-pj1-f65.google.com with SMTP id dw13so1041643pjb.4;
-        Thu, 20 Feb 2020 07:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ee8gYjz2/NK3zQLUacTfzriK0f627854wQ+fW/DiGas=;
-        b=ibHAPK4dZOkBgSjnYOBBy1bLrcL86MaTk6ozB+/+/v8Xwo8BhyjNmuNYQm8JzD9Kg1
-         5qG1SG+eGRtqdVDZaRz3YBTeI3csa558ewIUOxhTilOF82ambXFO1eF3nzmQR7ROjkqH
-         DtQLxVIS4Hh/rcU2k45+k6FOjn4yqmDpidLwAps1ftNYSIYe0TMegSiW2c/aAGt/g+m2
-         E0wuYiXYNhNRh2R7je4UeLXVI7YDIRSX+pm4jUs7bzppXuX++6H0E/qUGwGWX9r31Jaa
-         eKLN3CuaVPywV1DXlfeAozmFoB6+G5Pwu/OHVikR1rZZqmjj3biGrCHtQYdAz4z+oPwM
-         w4BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ee8gYjz2/NK3zQLUacTfzriK0f627854wQ+fW/DiGas=;
-        b=hk68NHlYUl0byLAPBd5xxF2exl9A/458xjWSVRsWvSP/5R2B00NqVGYEYwkQc7flC0
-         ZLdpQ5hB6Y/MC7iWNzlNza2S/tbHy/3/9zyAgPzhQsm3Sd0+rQKOI8/gJl+02dCU8dJn
-         TY8FvrMIwmc8pv11bpwpfzb1+tr3GOktIG/eJX0pep6ZAXqfxuRbrCyl9OpjFRoSFzIE
-         +RExnVvXJXYI0DVw+sZHqsdmDs3Q7qRYaBMtEjisbT1arf3CqVKB/9sxa7+QeGqXCfRh
-         JaECTjY5G6aUrWBAQZ/n0hPrJPwQkYcxYnV0vXr/DYMST3gbWW5o0kcAMkMreO78n/Ki
-         TKRg==
-X-Gm-Message-State: APjAAAWJtbgITJGU4MwoeU6H44zu2RU6gUVHmxgSzD2E/w+uFJX5n6wr
-        XFINqrBSJYJgKRCIjPNxTF0=
-X-Google-Smtp-Source: APXvYqwEM87xdIwcka2RcS2+volC1263cunDaDInFyyuPNjsIvj3zzwsaqK+yOuYzvDmBnMgIWiUxA==
-X-Received: by 2002:a17:902:223:: with SMTP id 32mr32169684plc.167.1582213922023;
-        Thu, 20 Feb 2020 07:52:02 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f13sm4207582pgk.12.2020.02.20.07.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 07:52:00 -0800 (PST)
-Date:   Thu, 20 Feb 2020 07:52:00 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, linux-watchdog@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anson Huang <Anson.Huang@nxp.com>
-Subject: Re: [PATCH 2/2] watchdog: Add new arm_smc_wdt watchdog driver
-Message-ID: <20200220155159.GB29658@roeck-us.net>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.2.I7c8247c29891a538f258cb47828d58acf22c95a2@changeid>
- <804d3cc5-688d-7025-cb87-10b9616f4d9b@roeck-us.net>
- <CAKz_xw0fHgVBLdEoEoQ7OSAgBcvYBAowV0obWLsDUGNPotP55Q@mail.gmail.com>
+        Thu, 20 Feb 2020 10:52:10 -0500
+Received: from mx.treblig.org ([46.43.15.161]:58668 "EHLO mx.treblig.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728289AbgBTPwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:52:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
+        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=+C8IabH42Dpc9RVl6yu13ukx4iHkXHb1tLJu1omzXNc=; b=rOdYYUhY05kGc0rziD4apvUsNC
+        Mbz0U4MZ7Q9g0cuiRPegO7kcbp/luzXuaXKlWqnZNNs2bEXaJFpRR8BMnr8zitgrV5rE7lBtSNy4O
+        PNWLzXiaUUhy7TJaxI5lHv7qo9gcDXoNAJtVJGu/8owAsMzXjE4yPn34wNwFiIkeTALD6X+jTNbVs
+        F8dUVK8nJ6XH2CyasQH9wORrPwdqQEBxfc4NXSF18gObA7OJwdp+AHwBMGxVHgDsR7FUCb+Lbe/6x
+        z4wZ1Xjhfeb0WBgszkkV6bA4/eU1BydPPuehFga44C7mrfi1L3dpdQAHY+9uHgp+xHFeCpdXj8Zim
+        4h8033TA==;
+Received: from dg by mx.treblig.org with local (Exim 4.92)
+        (envelope-from <dg@treblig.org>)
+        id 1j4o7Q-0007el-Ow; Thu, 20 Feb 2020 15:52:04 +0000
+Date:   Thu, 20 Feb 2020 15:52:04 +0000
+From:   "Dr. David Alan Gilbert" <linux@treblig.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Meelis Roos <mroos@linux.ee>, linux-hwmon@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: Re: w83627ehf crash in 5.6.0-rc2-00055-gca7e1fd1026c
+Message-ID: <20200220155204.GC18071@gallifrey>
+References: <434212bb-4eb9-7366-3255-79826d0e65bc@linux.ee>
+ <20200220121451.GA18071@gallifrey>
+ <6050ed14-f7a6-cb99-7268-072129226d48@linux.ee>
+ <20200220135709.GB18071@gallifrey>
+ <ad023dc1-1878-dcd9-a183-06003ed698af@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKz_xw0fHgVBLdEoEoQ7OSAgBcvYBAowV0obWLsDUGNPotP55Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <ad023dc1-1878-dcd9-a183-06003ed698af@roeck-us.net>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/4.19.0-5-amd64 (x86_64)
+X-Uptime: 15:51:37 up 172 days, 16:12,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:50:03PM +1100, Evan Benn wrote:
-> > > +     if ((int)res->a0 == PSCI_RET_NOT_SUPPORTED)
-> > > +             return -ENOTSUPP;
-> >
-> > -ENODEV would be better here.
-> >
-> > > +     if ((int)res->a0 == PSCI_RET_INVALID_PARAMS)
-> > > +             return -EINVAL;
-> > > +     if ((int)res->a0 < 0)
-> > > +             return -EIO;
+* Guenter Roeck (linux@roeck-us.net) wrote:
+> On 2/20/20 5:57 AM, Dr. David Alan Gilbert wrote:
+> > * Meelis Roos (mroos@linux.ee) wrote:
+> > > > It looks like not all chips have temp_label, so I think we need to change w83627ehf_is_visible
+> > > > which has:
+> > > > 
+> > > >                   if (attr == hwmon_temp_input || attr == hwmon_temp_label)
+> > > >                           return 0444;
+> > > > 
+> > > > to
+> > > >                   if (attr == hwmon_temp_input)
+> > > >                           return 0444;
+> > > >                   if (attr == hwmon_temp_label) {
+> > > >                           if (data->temp_label)
+> > > > 				return 0444;
+> > > > 			else
+> > > > 				return 0;
 > 
-> In fixing this I found drivers/firmware/psci/psci.c:145
-> Which also translates psci codes to errno codes, but uses EOPNOTSUPP:
+> Nitpick: else after return isn't necessary. Too bad I didn't notice that before;
+> static analyzers will have a field day :-)
 > 
->     switch (errno) {
->     case PSCI_RET_SUCCESS:
->         return 0;
->     case PSCI_RET_NOT_SUPPORTED:
->         return -EOPNOTSUPP;
->     case PSCI_RET_INVALID_PARAMS:
->     case PSCI_RET_INVALID_ADDRESS:
->         return -EINVAL;
->     case PSCI_RET_DENIED:
->         return -EPERM;
->     };
+> > > >                   }
+> > > > 
+> > > > Does that work for you?
+> > > Yes, it works - sensors are displayed as they should be, with nothing in dmesg.
+> > > 
+> > > Thank you for so quick response!
+> > 
+> > Great, I need to turn that into a proper patch; (I might need to wait till
+> > Saturday for that, although if someone needs it before then please shout).
+> > 
 > 
->     return -EINVAL;
-> 
-> Are these more appropriate?
-> 
+> We'll want this fixed in the next stable release candidate, so I wrote one up
+> and submitted it.
 
-It is customary for driver probe functions to return -ENODEV if the
-device is not supported. I don't see a reason why this driver should
-behave any different. "but this other driver does it" is never a good
-argument.
+Thanks!
 
-Having said that, yet, with the exception of -EOPNOTSUPP the other
-return values would be more appropriate.
+Dave
 
-Guenter
+> Thanks,
+> Guenter
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
