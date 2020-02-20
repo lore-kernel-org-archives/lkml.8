@@ -2,143 +2,197 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A9C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D09C11D15
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EECC6208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A93C8208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="MEukQMfi"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SW1Wt5DP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w8pJuTV1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgBTRqS (ORCPT
+        id S1728384AbgBTRry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:46:18 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:54987 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727233AbgBTRqR (ORCPT
+        Thu, 20 Feb 2020 12:47:54 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49071 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726959AbgBTRry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:46:17 -0500
-Received: from mwalle01.sab.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id A0AFB23E3C;
-        Thu, 20 Feb 2020 18:46:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1582220774;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xj3LA1zTH4SsCJX7PLfeOExLfpbX8EjlKGUE5mqKsd8=;
-        b=MEukQMfiV14G/weO9PYFD4BkGkrXnCEd2ZGUufJFPC/3g9i9Wgvp5KMzva/nz1O0qvYQFY
-        qHO724Q8somCA5+jvxOdR3ToH3slHjS/S8HoxcXn4D5HRV7TIXDLrzIt4KMmhWqo3113Js
-        LV5oZGkmGyFeeusdSuvsXjvdmMFmRDQ=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jiri Slaby <jslaby@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] serial: earlycon: prefer EARLYCON_DECLARE() variant
-Date:   Thu, 20 Feb 2020 18:46:07 +0100
-Message-Id: <20200220174607.24285-1-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
+        Thu, 20 Feb 2020 12:47:54 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 29CCD21B82;
+        Thu, 20 Feb 2020 12:47:53 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:47:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=OzZ5s0/+nPTILqp5qR3suIDlHla
+        J5VfGwJdDzxiCG14=; b=SW1Wt5DPZub7FFigeTeXlQpSM8LZ6gVC61HOI9/kv1d
+        OpiZc95TH2v3BcTOXKnHryH58+qEPeJJXAi4wi6CPiG78w7BiAELymaNs7f44xrp
+        R74/kQwSh3Zlj4e3m8A03b1z3KAbWAX7mFXXKSA3PtHoFjaev/rCcHsfFgf3R/iM
+        jiXTX9y+Xl8oEJas6DXUse6MbdYUpals/GUrAydIEriJfowz20tAEyytMk/GMKa0
+        Te5ripKwZnUrU1xPxz0xrytRqdsMtVQxdKnd+TLXkIlT51/19NEV5nr7YW2smuCx
+        BoD41TLhg5v07UzrCjcDipofT/gzQdn9urEO0GrKuxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=OzZ5s0
+        /+nPTILqp5qR3suIDlHlaJ5VfGwJdDzxiCG14=; b=w8pJuTV132EgFBMoe2QE65
+        GESqRBWBAlWW4Foj4E3n9InYMPM89MlLcWdK4yLZhOXIJA+jDXYsCUnqLTh8DPU4
+        1QrRCcWhxIi8IHaA14peWCIh1GMgHWiGE3SaCMNSGcodK6sslyUBYq6ynlCdK01V
+        4KyZfW2y8Et1YIYppwvI3Rt6lV3kxg7P+lFb0szFIROkkzkbmBrk2xT8IXff3Sjp
+        vFNM9bTL50KyY39C9l5UEMPh7rOpfELFb7fn5ogPOFGJuR5wASFugDT2bJ7TNCl2
+        vjtKLi1TsLXE/W6glbtOlGA7TEiMG7csuys2yemPhrA5AV685MH5TNLxvohBWsug
+        ==
+X-ME-Sender: <xms:R8ZOXuTRwC9E3WP6cRy9axgkTnlp3ZOD0x0M5lMqyMVUwvv5e4Ve4A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtuggj
+    sehgtderredttdejnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimh
+    gvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpehigidrihhonecukfhppeeltddr
+    keelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:R8ZOXtFQZvJPU359f3JzCx8yJ0rxAANuubZGxec8WsTLgaFACDKGPw>
+    <xmx:R8ZOXoPuHeGQ0xiCv0zWqfUn406LPPunfI7firkigt6mtM_-ukia_g>
+    <xmx:R8ZOXhlglNRMFqx8QNA--N3h1kPm1O0LAERLbCxP0Jcl8uOo630rgA>
+    <xmx:ScZOXh8wSbiGXZfzswMdCmKY7XJc6tB5KYkH2OpAg6YSIbzHoLkrlA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 550143280060;
+        Thu, 20 Feb 2020 12:47:51 -0500 (EST)
+Date:   Thu, 20 Feb 2020 18:47:49 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
+Message-ID: <20200220174749.ih3pcj3oxiwvuurz@gilmour.lan>
+References: <20200213211427.33004-1-jernej.skrabec@siol.net>
+ <20200213211427.33004-2-jernej.skrabec@siol.net>
+ <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
+ <5326350.DvuYhMxLoT@jernej-laptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: A0AFB23E3C
-X-Spamd-Result: default: False [4.90 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         NEURAL_SPAM(0.00)[0.411];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         RCPT_COUNT_FIVE(0.00)[5];
-         DKIM_SIGNED(0.00)[];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE]
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qx7cvp6xg6zw344o"
+Content-Disposition: inline
+In-Reply-To: <5326350.DvuYhMxLoT@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a driver exposes early consoles with EARLYCON_DECLARE() and
-OF_EARLYCON_DECLARE(), pefer the non-OF variant if the user specifies it
-by
-  earlycon=<driver>,<options>
 
-The rationale behind this is that some drivers register multiple setup
-functions under the same driver name. Eg.
+--qx7cvp6xg6zw344o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OF_EARLYCON_DECLARE(lpuart, "fsl,vf610-lpuart", lpuart_early_console_setup);
-OF_EARLYCON_DECLARE(lpuart32, "fsl,ls1021a-lpuart", lpuart32_early_console_setup);
-OF_EARLYCON_DECLARE(lpuart32, "fsl,imx7ulp-lpuart", lpuart32_imx_early_console_setup);
-EARLYCON_DECLARE(lpuart, lpuart_early_console_setup);
-EARLYCON_DECLARE(lpuart32, lpuart32_early_console_setup);
+On Fri, Feb 14, 2020 at 05:42:13PM +0100, Jernej =C5=A0krabec wrote:
+> Hi Maxime,
+>
+> Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
+> > Hi Jernej,
+> >
+> > Thanks for taking care of this
+> >
+> > On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
+> > > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix =
+TX6
+> > > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
+> > > matter if external oscillator was enabled because HW detected error a=
+nd
+> > > fall back to internal one. H6 has same functionality but it's the fir=
+st
+> > > SoC which have "auto switch bypass" bit documented and always enabled=
+ in
+> > > driver. This prevents RTC to work correctly if external crystal is not
+> > > present on board. There are other side effects - all peripherals which
+> > > depends on this clock also don't work (HDMI CEC for example).
+> > >
+> > > Make clocks property optional. If it is present, select external
+> > > oscillator. If not, stay on internal.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > >
+> > >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
+> > >  1 file changed, 6 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> > > index 852f5f3b3592..538cf7e19034 100644
+> > > --- a/drivers/rtc/rtc-sun6i.c
+> > > +++ b/drivers/rtc/rtc-sun6i.c
+> > > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
+> > > device_node *node,>
+> > >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> > >
+> > >  	}
+> > >
+> > > -	/* Switch to the external, more precise, oscillator */
+> > > -	reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
+> > > -	if (rtc->data->has_losc_en)
+> > > -		reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > > +	/* Switch to the external, more precise, oscillator, if present */
+> > > +	if (of_get_property(node, "clocks", NULL)) {
+> > > +		reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
+> > > +		if (rtc->data->has_losc_en)
+> > > +			reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
+> > > +	}
+> > >
+> > >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
+> > >
+> > >  	/* Yes, I know, this is ugly. */
+> > >  	sun6i_rtc =3D rtc;
+> > >
+> > > -	/* Deal with old DTs */
+> > > -	if (!of_get_property(node, "clocks", NULL))
+> > > -		goto err;
+> > > -
+> >
+> > Doesn't that prevent the parents to be properly set if there's an
+> > external crystal?
+>
+> No, why?
+>
+> Check these two clk_summary:
+> http://ix.io/2bHY Tanix TX6 (no external crystal)
+> http://ix.io/2bI2 OrangePi 3 (external crystal present)
 
-It depends on the order of the entries which console_setup() actually
-gets called. To make things worse, I guess it also depends on the
-compiler how these are ordered. Thus always prefer the EARLYCON_DECLARE()
-ones.
+I was concerned about the "other" parent. In the case where you don't
+have a clocks property (so the check that you are removing), the code
+then registers a clock with two parents: the one that we create (the
+internal oscillator) and the one coming from the clocks property.
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/tty/serial/earlycon.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+clk_summary only shows the current parent, which is going to be right
+with your patch, but in the case where you have no clocks property,
+you still (attempts to) register two parents, the second one being
+non-functional.
 
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index c14873b67803..2ae9190b64bb 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -170,6 +170,7 @@ static int __init register_earlycon(char *buf, const struct earlycon_id *match)
- int __init setup_earlycon(char *buf)
- {
- 	const struct earlycon_id **p_match;
-+	bool empty_compatible = true;
- 
- 	if (!buf || !buf[0])
- 		return -EINVAL;
-@@ -177,6 +178,7 @@ int __init setup_earlycon(char *buf)
- 	if (early_con.flags & CON_ENABLED)
- 		return -EALREADY;
- 
-+again:
- 	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
- 	     p_match++) {
- 		const struct earlycon_id *match = *p_match;
-@@ -185,6 +187,10 @@ int __init setup_earlycon(char *buf)
- 		if (strncmp(buf, match->name, len))
- 			continue;
- 
-+		/* prefer entries with empty compatible */
-+		if (empty_compatible && *match->compatible)
-+			continue;
-+
- 		if (buf[len]) {
- 			if (buf[len] != ',')
- 				continue;
-@@ -195,6 +201,11 @@ int __init setup_earlycon(char *buf)
- 		return register_earlycon(buf, match);
- 	}
- 
-+	if (empty_compatible) {
-+		empty_compatible = false;
-+		goto again;
-+	}
-+
- 	return -ENOENT;
- }
- 
--- 
-2.20.1
+Further looking at it, we might be good because we allocate an array
+of two clocks, but only register of_clk_get_parent_count(node) + 1
+clocks, so 1 if clocks is missing.
 
+Still, I think this should be more obvious, through a comment or
+shuffling a bit the parent registration maybe?
+
+Maxime
+
+--qx7cvp6xg6zw344o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7GRQAKCRDj7w1vZxhR
+xQesAQC0dLTkjQRPv7nN8RoGvwkfQKD3MlJW0DS82ULs76MWzQD/XsYEwCgNWukt
+Jfxdu03CMK7a7R+nH2HNRolTJSWwpgQ=
+=5PFt
+-----END PGP SIGNATURE-----
+
+--qx7cvp6xg6zw344o--
