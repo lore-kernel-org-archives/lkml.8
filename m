@@ -2,129 +2,106 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C1AFC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58337C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 648E1208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FCA206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582230979;
-	bh=lsWeFSJp0EVG4n7XQRWMPhA9t02GXEgDNUpg/ZzQTWs=;
+	s=default; t=1582231001;
+	bh=q+xU5bB1UGhpVmWLgVQhOQ3cg6LjDCdHAIrxmWLv7PQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w+Byg4OhnuxpdBuLd5klbe+vUWs265oy6H2bDQBTpT8/ljkR7qFc9b0M77A0VqK75
-	 Id3pCPeEuJHbw96/kMwZ3Ve1QJ8M6iU8AMG6+tJM8Do2H7M+goJWN9Pqtiat0goXQj
-	 2VX+po5NQZW9NqPY7yXuAJtgBlDdmdT6zhLjUaT4=
+	b=pd7+bJFywwKs/UhwIJBFfwADs4BdUFOq1zBY6zdnyWWn09Mszfe7b7I2NgFH/clfK
+	 I+dZJJS56XlIL89lnSG/Ad62tAKdl04YGZgc61qzFxyS7TytrL3JUi17S/BBXr7fyb
+	 JqGwFvmYSK0N64z5rSskmypMLZoKimRd21ekDpx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgBTUgS (ORCPT
+        id S1729100AbgBTUgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:36:18 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44162 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBTUgS (ORCPT
+        Thu, 20 Feb 2020 15:36:40 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36738 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728582AbgBTUgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:36:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id d62so28882944oia.11;
-        Thu, 20 Feb 2020 12:36:17 -0800 (PST)
+        Thu, 20 Feb 2020 15:36:39 -0500
+Received: by mail-oi1-f194.google.com with SMTP id c16so28956650oic.3;
+        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ShEFa4zZeHsSz7b+o99yPPxnSH+QCBtaKE2TrjggqEE=;
-        b=K0OsmaTcUUgKR+D1Gtvi9nDBsjIELrOCttY2iWlzDgwwUUu2Qo+hMlejKuto/E5n7D
-         4jk4rDvNUsoaHryGfq9Vh/pKU48JB02/f9VXXVnpUolvVlxEh3gBK7269jqSfXqc8ryl
-         A4LKBlybYIZs0Y+tnhl1jWVKy/yk3FodNs6uJQkOk7nD9glEbjvcPEek2hC985Supgct
-         Q7qbjDMTdIZWLRMFgwL6ZqFt0g8ynK3Y2mMjX5RvegaJZd6EdacLhoYYbqfFgN/ue7ki
-         s6cJ7Ik9BrW13qPDBZ46BCOWZNReWB5udmhozlizQGjeWgPtK68b52JJCQKeIBYIw0q0
-         Yw7g==
-X-Gm-Message-State: APjAAAXbARDKTqn7mACOWfVuGN+BFmbPWP+ivyXo/ZqpuPCmvfmns8nc
-        /kFfpu4P3/n99+Nt1MiC1w==
-X-Google-Smtp-Source: APXvYqwsZC9OdPFsfZlgZtEEI/IUCzsOi5UHd/OpHtXIrYYZpQ2SRoTGUSJrAgGy1Ob63UNCR8Or4Q==
-X-Received: by 2002:aca:5f87:: with SMTP id t129mr3547367oib.36.1582230977204;
-        Thu, 20 Feb 2020 12:36:17 -0800 (PST)
+        bh=dTWnQ3lvBmB7ErgPURmWXOoQ/e5ybUtPY0ge36pNzVk=;
+        b=ObtDcSwNnPoxbsU2S/HdnbRZjp4ejrkGrPdcYNIfPj2ghI6Oqf99H8WSK0FWCEYvJD
+         x/g8CFsEEAccr0MF8eHrJXenKeKHOvSgsb3FilscNjmAhU0MsmwnaaIB8JrQwNZZn1Pn
+         rgCos8WjHmiivlRgXLpZxC4+aUTtdslctEMrBe9PumqMP/q+2jLfD5xtYXbAgALavpey
+         MVKTdpOQg+KkihgTffwYnL6Q21EflfEn9qem/t4S9m58eCw6SIKp11t+jDIXm6jQN+dR
+         DJVadjn0bcRhOrPlfu/CrHHn4yvdsxJ7AE4zS4DurutPYnByNzVe12qUR/mtxgu2skIq
+         w5Ww==
+X-Gm-Message-State: APjAAAWBll/5KuzMcZjF3pDws2LDnTbrQw9zLgD5EKQruKO6Zg/3aSkw
+        2QEvzr2uTlaQO+fspLBPNA==
+X-Google-Smtp-Source: APXvYqxq6Fef/uB5nvq/j1hNavakwK21btDjib4pkIuE15IOqq9rtqlxMlELf9zdDMgdlOB20Qhzew==
+X-Received: by 2002:aca:d502:: with SMTP id m2mr3358601oig.41.1582230999091;
+        Thu, 20 Feb 2020 12:36:39 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id r10sm200593otn.37.2020.02.20.12.36.15
+        by smtp.gmail.com with ESMTPSA id k18sm120714oiw.44.2020.02.20.12.36.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:36:16 -0800 (PST)
-Received: (nullmailer pid 16841 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:36:15 -0000
-Date:   Thu, 20 Feb 2020 14:36:15 -0600
+        Thu, 20 Feb 2020 12:36:38 -0800 (PST)
+Received: (nullmailer pid 17428 invoked by uid 1000);
+        Thu, 20 Feb 2020 20:36:37 -0000
+Date:   Thu, 20 Feb 2020 14:36:37 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org, jic23@kernel.org,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH 5/5] dt-bindings: iio: adc: add bindings doc for AD9467
- ADC
-Message-ID: <20200220203615.GA16178@bogus>
-References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
- <20200220150317.1864-5-alexandru.ardelean@analog.com>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] Documentation: devictree: Add ipq806x mdio
+ bindings
+Message-ID: <20200220203637.GA16998@bogus>
+References: <20200220170732.12741-1-ansuelsmth@gmail.com>
+ <20200220170732.12741-2-ansuelsmth@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220150317.1864-5-alexandru.ardelean@analog.com>
+In-Reply-To: <20200220170732.12741-2-ansuelsmth@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 17:03:17 +0200, Alexandru Ardelean wrote:
-> This change adds the binding doc for the AD9467 ADC.
+On Thu, 20 Feb 2020 18:07:29 +0100, Ansuel Smith wrote:
+> Add documentations for ipq806x mdio driver.
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
 > ---
->  .../bindings/iio/adc/adi,ad9467.yaml          | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+>  .../bindings/net/qcom,ipq8064-mdio.yaml       | 52 +++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
-Traceback (most recent call last):
-  File "/usr/local/bin/dt-mk-schema", line 32, in <module>
-    schemas = dtschema.process_schemas(args.schemas, core_schema=(not args.useronly))
-  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 475, in process_schemas
-    sch = process_schema(os.path.abspath(filename))
-  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 428, in process_schema
-    schema = load_schema(filename)
-  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 108, in load_schema
-    return do_load(os.path.join(schema_basedir, schema))
-  File "/usr/local/lib/python3.6/dist-packages/dtschema/lib.py", line 93, in do_load
-    return yaml.load(tmp)
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/main.py", line 343, in load
-    return constructor.get_single_data()
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 113, in get_single_data
-    return self.construct_document(node)
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 123, in construct_document
-    for _dummy in generator:
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 723, in construct_yaml_map
-    value = self.construct_mapping(node)
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 440, in construct_mapping
-    return BaseConstructor.construct_mapping(self, node, deep=deep)
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 257, in construct_mapping
-    if self.check_mapping_key(node, key_node, mapping, key, value):
-  File "/usr/local/lib/python3.6/dist-packages/ruamel/yaml/constructor.py", line 295, in check_mapping_key
-    raise DuplicateKeyError(*args)
-ruamel.yaml.constructor.DuplicateKeyError: while constructing a mapping
-  in "<unicode string>", line 20, column 3
-found duplicate key "clocks" with value "{}" (original value: "{}")
-  in "<unicode string>", line 30, column 3
-
-To suppress this check see:
-    http://yaml.readthedocs.io/en/latest/api.html#duplicate-keys
-
-Duplicate keys will become an error in future releases, and are errors
-by default when using the new API.
-
-Documentation/devicetree/bindings/Makefile:34: recipe for target 'Documentation/devicetree/bindings/processed-schema.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/processed-schema.yaml] Error 1
+warning: no schema found in file: Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: ignoring, error in schema: $id
+Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: $id: 'http://devicetree.org/schemas/net/qcom,ipq8064-mdio.txt' does not match 'http://devicetree.org/schemas/.*\\.yaml#'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.yaml: 'maintainers' is a required property
+Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts' failed
+make[1]: *** [Documentation/devicetree/bindings/net/qcom,ipq8064-mdio.example.dts] Error 1
 Makefile:1263: recipe for target 'dt_binding_check' failed
 make: *** [dt_binding_check] Error 2
 
-See https://patchwork.ozlabs.org/patch/1241490
+See https://patchwork.ozlabs.org/patch/1241574
 Please check and re-submit.
