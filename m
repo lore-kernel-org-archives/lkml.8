@@ -2,153 +2,129 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D470C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD55C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DE720658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ym2KXZVd"
+	by mail.kernel.org (Postfix) with ESMTP id 2BFCE20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgBTNjA (ORCPT
+        id S1728231AbgBTNjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:39:00 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39568 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgBTNjA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:39:00 -0500
-Received: by mail-vs1-f67.google.com with SMTP id p14so2652655vsq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:38:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9l++DCXufdLXm9XLDzVSaxos88atxrWAtSR1NHhF4gs=;
-        b=ym2KXZVdEHiCU8vHjy8My+7wkUnHMQG/cOhk0DsdnYxgZq41d4MVywXZMGA6KAEIAU
-         qMeqoITbdKNFQpjYOcsRmC1L3joYg4Taflrn+9aec4EMjAJ/iZZtFn+5GUZJqrEuus5m
-         ckNujPDaYhol+D3bRW3q1Os7Zzimc1zJ/rZJIumZGleJeYIUnDUREoc2sofXnV0vdc5t
-         78cNmFADz1TOyZ++mkMzNp/na3/0AiIv4fg8nDJUJEF8LbVMejm54oZ8+tY4w+GKY8Jx
-         JYJ1KdFJ9bk8G7Pl9JbEt495Ckf1IJrXaZouEjSu9t/PXA3f3ApFwcli8iWb1WKDv36h
-         DflA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9l++DCXufdLXm9XLDzVSaxos88atxrWAtSR1NHhF4gs=;
-        b=UqAwdOJTi7IMkk1VQnVcgvGHjE+1JyApQiuoDguv9j55aqlJVTaM2yxO/SNuU5etrH
-         1rwunu7nbEvBSgfmnBXGWDIkI1V7Tc1mlJCLx5vCLNRWH7TUk44NaeceUOGsYCMeDyed
-         cLvwOjV10muFx3ULfc1EYSB5vQS5MhBjrnq0HJBLUQwqTrAkoPpQ63In4jyrEkJJ+NQT
-         DH2e/HWPnW0PjJTTz7QryeeiLh4gdsnfHTIInHH6IhJ+QsTfxkRYsNUsG67OSpbdIpCd
-         6+CMNJ7GqctREvBsKumtFNn7OVkCM1FG6aVihgO2tTwKTK6lbVpEUiEKUonfDP5lqfxK
-         B3Og==
-X-Gm-Message-State: APjAAAX9+bN9LqSQYMOvZPq/dsij8MM9FUOj/VYqjzxeh097b1ckIElw
-        aQV2SiQ4DYlGAN1anRk0gmsfXnxzl93/b5xCrjIlOA==
-X-Google-Smtp-Source: APXvYqxXwVhO8u4M/slsd7HjlRfC2UHqCmjvtpaM3sw1gBHnKEOXllmPORh09cMFgvW5/XqEvtTgO/1fjfHMN2zKMO4=
-X-Received: by 2002:a05:6102:22d6:: with SMTP id a22mr16389607vsh.191.1582205937696;
- Thu, 20 Feb 2020 05:38:57 -0800 (PST)
+        Thu, 20 Feb 2020 08:39:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:43132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728145AbgBTNjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:39:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0860331B;
+        Thu, 20 Feb 2020 05:39:03 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37CD83F703;
+        Thu, 20 Feb 2020 05:39:01 -0800 (PST)
+Subject: Re: [PATCH v2 1/5] sched/fair: Reorder enqueue/dequeue_task_fair path
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-2-vincent.guittot@linaro.org>
+ <ee38d205-b356-9474-785e-e514d81b7d7f@arm.com>
+ <20200218132203.GB14914@hirez.programming.kicks-ass.net>
+ <CAKfTPtB3qudK8aMq2cx==4RW8t1pz6ymz1Ti0r8oO4TefWzMRw@mail.gmail.com>
+ <c18ab89e-d635-e370-6cbb-6015b404d906@arm.com>
+ <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <274ebb9a-9328-e312-f554-34da8b183932@arm.com>
+Date:   Thu, 20 Feb 2020 14:38:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200211160321.22124-1-paul@crapouillou.net> <20200211160321.22124-4-paul@crapouillou.net>
-In-Reply-To: <20200211160321.22124-4-paul@crapouillou.net>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 20 Feb 2020 14:38:20 +0100
-Message-ID: <CAPDyKFquXSB+ztXZQS4MPV20dRN_-CKJkmCF0A97pG+vJYRsbg@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] mmc: jz4740: Use pm_sleep_ptr() macro
-To:     Paul Cercueil <paul@crapouillou.net>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        od@zcrc.me, Linux PM <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKfTPtCbHb2X30gNqNp5sukrg9U-hC6rvWC0dj8d1DawNL4D3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 at 17:03, Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Use the newly introduced pm_sleep_ptr() macro to simplify the code.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/mmc/host/jz4740_mmc.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index fbae87d1f017..09554f9831de 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -1099,24 +1099,18 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> -#ifdef CONFIG_PM_SLEEP
-> -
-> -static int jz4740_mmc_suspend(struct device *dev)
-> +static int __maybe_unused jz4740_mmc_suspend(struct device *dev)
->  {
->         return pinctrl_pm_select_sleep_state(dev);
->  }
->
-> -static int jz4740_mmc_resume(struct device *dev)
-> +static int __maybe_unused jz4740_mmc_resume(struct device *dev)
->  {
->         return pinctrl_select_default_state(dev);
->  }
->
->  static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
->         jz4740_mmc_resume);
-> -#define JZ4740_MMC_PM_OPS (&jz4740_mmc_pm_ops)
-> -#else
-> -#define JZ4740_MMC_PM_OPS NULL
-> -#endif
+On 19/02/2020 17:26, Vincent Guittot wrote:
+> On Wed, 19 Feb 2020 at 12:07, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 18/02/2020 15:15, Vincent Guittot wrote:
+>>> On Tue, 18 Feb 2020 at 14:22, Peter Zijlstra <peterz@infradead.org> wrote:
+>>>>
+>>>> On Tue, Feb 18, 2020 at 01:37:37PM +0100, Dietmar Eggemann wrote:
+>>>>> On 14/02/2020 16:27, Vincent Guittot wrote:
+>>>>>> The walk through the cgroup hierarchy during the enqueue/dequeue of a task
+>>>>>> is split in 2 distinct parts for throttled cfs_rq without any added value
+>>>>>> but making code less readable.
+>>>>>>
+>>>>>> Change the code ordering such that everything related to a cfs_rq
+>>>>>> (throttled or not) will be done in the same loop.
+>>>>>>
+>>>>>> In addition, the same steps ordering is used when updating a cfs_rq:
+>>>>>> - update_load_avg
+>>>>>> - update_cfs_group
+>>>>>> - update *h_nr_running
+>>>>>
+>>>>> Is this code change really necessary? You pay with two extra goto's. We
+>>>>> still have the two for_each_sched_entity(se)'s because of 'if
+>>>>> (se->on_rq); break;'.
+>>>>
+>>>> IIRC he relies on the presented ordering in patch #5 -- adding the
+>>>> running_avg metric.
+>>>
+>>> Yes, that's the main reason, updating load_avg before h_nr_running
+>>
+>> My hunch is you refer to the new function:
+>>
+>> static inline void se_update_runnable(struct sched_entity *se)
+>> {
+>>         if (!entity_is_task(se))
+>>                 se->runnable_weight = se->my_q->h_nr_running;
+>> }
+>>
+>> I don't see the dependency to the 'update_load_avg -> h_nr_running'
+>> order since it operates on se->my_q, not cfs_rq = cfs_rq_of(se), i.e.
+>> se->cfs_rq.
+>>
+>> What do I miss here?
+> 
+> update_load_avg() updates both se and cfs_rq so if you update
+> cfs_rq->h_nr_running before calling update_load_avg() like in the 2nd
+> for_each_sched_entity, you will update cfs_rq runnable_avg for the
+> past time slot with the new h_nr_running value instead of the previous
+> value.
 
-All of the above code can be simplified in this way, without having to
-convert into using the new pm_sleep_ptr() macro, below.
+Ah, now I see:
 
-The only "penalty" would be that, the struct dev_pm_ops
-(jz4740_mmc_pm_ops) would then be referenced even when CONFIG_PM* is
-unset, thus the compiler would be able to throw it away.
+update_load_avg()
+  update_cfs_rq_load_avg()
+    __update_load_avg_cfs_rq()
+       ___update_load_sum(..., cfs_rq->h_nr_running, ...)
 
-Just wanted to point this out.
+                               ^^^^^^^^^^^^^^^^^^^^
 
->
->  static struct platform_driver jz4740_mmc_driver = {
->         .probe = jz4740_mmc_probe,
-> @@ -1124,7 +1118,7 @@ static struct platform_driver jz4740_mmc_driver = {
->         .driver = {
->                 .name = "jz4740-mmc",
->                 .of_match_table = of_match_ptr(jz4740_mmc_of_match),
-> -               .pm = JZ4740_MMC_PM_OPS,
-> +               .pm = pm_sleep_ptr(&jz4740_mmc_pm_ops),
+Not really obvious IMHO, since the code is introduced only in 4/5.
 
-If the driver would have runtime suspend/resume callbacks, then it
-would need the use the pm_ptr() macro instead, I guess.
+Could you add a comment to this patch header?
 
->         },
->  };
->
-> --
-> 2.25.0
->
+I see you mentioned this dependency already in v1 discussion
 
-My overall feeling is that this series improves the code/behaviour,
-but I am also a bit worried about adding yet another pair of macros
-for dealing with CONFIG_PM* callbacks as it could add more confusion.
+https://lore.kernel.org/r/CAKfTPtAM=kgF7Fz-JKFY+s_k5KFirs-8Bub3s1Eqtq7P0NMa0w@mail.gmail.com
 
-An option could be to introduce only the pm_ptr() macro, then skip the
-optimization that pm_sleep_ptr() gives. This could make it easier to
-use, as you wouldn't need to decide between two macros. Just a
-thought.
+"... But the following patches make PELT using h_nr_running ...".
 
-I don't know what Rafael's thinks about this, let's see if he has some
-other ideas.
-
-Kind regards
-Uffe
+IMHO it would be helpful to have this explanation in the 1/5 patch
+header so people stop wondering why this is necessary.
