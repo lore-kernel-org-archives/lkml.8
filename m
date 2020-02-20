@@ -2,132 +2,202 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC628C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6F6C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F4424673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8A1207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="rsy8BLO9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="R6+adF2r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cRR+U8eu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgBTRW3 (ORCPT
+        id S1728924AbgBTRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:22:29 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55503 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728926AbgBTRW0 (ORCPT
+        Thu, 20 Feb 2020 12:22:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54572 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728318AbgBTRWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:22:26 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8147D21DC4;
-        Thu, 20 Feb 2020 12:22:25 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:22:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Y/LbR6Gks9hLwTyOoP+fgUalI9X
-        hENSr9+HkBd7I4X0=; b=rsy8BLO9wTPt5VT1koKQ++7YX/JqNw2f4K45TBjw61K
-        NtrqK/J1EBgQYnqC7YFDQPkqZud22SIAPgJcoWT1ILayHtkQybaoMehemsVvBOBi
-        7i4cjcDq32I/E6S7ES4KB9TOOHVCGcgp/fyVvtwoQCfFifhSp5kciq5ibEkWYDe1
-        vBeJnDgdYC4kOTn0TAxST6lK9Q06nJmiz3J9CNHN5WTPfhIOA/RYaKUvmMSP7adg
-        6V/I3RyaRAUirYnz7zoHoz/3c16LsVMd7iYu8/WazO0hySSg26lrRksqXVPUTR0A
-        mrA0PIKjrsYYowLE9VSNMolVdQtSiK7ArAhC/FN9x9Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Y/LbR6
-        Gks9hLwTyOoP+fgUalI9XhENSr9+HkBd7I4X0=; b=R6+adF2rysmiZatF269DgT
-        q08nniKYJWkj3UoyZ3iJ+fY3LO725EKt5QN4tZKZDzjX6/k7+2GW7Spq18637cD7
-        U4AQd2t8kfp8TD5J/wEARU4iKSzOEpVC2/0PLbenrhZL82ERj3vWnSIATeOoEwpL
-        iwUGrGk2vslNFmYqiMW68Y97o29byM5cAEAeVBPpIYYTEmJaFy8+zz9/oo02k9Yp
-        FK+jow0+EK7+VqaIExL5nUyzcCtsXsyWzSH6x9gamO0KCyCJmEKXbX4adHxHPpLX
-        ixd0C4lGZKHLmllIMh8GwRnX3gVCU4Q70qnrgdbLG6s8AepecQpqApSTbkNjGJ4g
-        ==
-X-ME-Sender: <xms:UcBOXsPtVx0Kka06Pp2MdvillpDUXARbRezhJYZRxRyd50uUz3e8fg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:UcBOXsBjQCEDGuAQPtHvcaGoQYDBDoTV055YxBXU0LEHR3T7Flnw0A>
-    <xmx:UcBOXsVVdXtbCRvybu_vV20qG23UUQWSRJ_Qd1v8pAfqkFgtpAX1uw>
-    <xmx:UcBOXgcCgwQTIL6hBrah-yD2DId9vI6gCTT-bv9kTSOCkSnuzrcR5Q>
-    <xmx:UcBOXsQNGzQYx5UzJP61oxMDyeIbxa33Yk2aL31PWJoqbHgwtnGR8Q>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 331E03060BE4;
-        Thu, 20 Feb 2020 12:22:25 -0500 (EST)
-Date:   Thu, 20 Feb 2020 18:22:23 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Andrey Lebedev <andrey.lebedev@gmail.com>
-Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
-Subject: Re: [PATCH 2/5] drm/sun4i: tcon: Separate quirks for tcon0 and tcon1
- on A20
-Message-ID: <20200220172223.xoy6e3njmsb2vcon@gilmour.lan>
-References: <20200210195633.GA21832@kedthinkpad>
- <20200219180858.4806-1-andrey.lebedev@gmail.com>
- <20200219180858.4806-3-andrey.lebedev@gmail.com>
+        Thu, 20 Feb 2020 12:22:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582219333;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vXh0YutU9qoqkcD8FcXhGXyVijzyIFeaoys2bDNLpvY=;
+        b=cRR+U8euGAo2P1c8sobZKKqgT2DKXJ1b7SkygR9qcWoXoungC82zcXV7Oa238BddquTYMW
+        iMNKMpRhEQ2w3SfIiCxMip1YQnfUPUyz5byzPygAhuueDo5NGwLH+qt6pyu3lzTxkt8m1p
+        yIwHgSnXym9y8ms3o6mHnY/6Xhq28Fo=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-13-eM7pcB0eO1aiXlacJjb9iw-1; Thu, 20 Feb 2020 12:22:10 -0500
+X-MC-Unique: eM7pcB0eO1aiXlacJjb9iw-1
+Received: by mail-wr1-f71.google.com with SMTP id m15so2000834wrs.22
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:22:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=vXh0YutU9qoqkcD8FcXhGXyVijzyIFeaoys2bDNLpvY=;
+        b=P3Sz/pgV5Wyaz2sZlSomY8Pt+PcGtzKjVlU25mv/I0DNQ+yW0aZdk48m2w0NzS3wuP
+         wHxptdbaqlZtLrtvFLH4gXpqZ5IsdNSJJfmztUgyAtUCFzKcvk6SQjSJ8Q7rJL5Q6G4Y
+         vKnBzfRStfxQ2iZA+RMTVJyqmYbQMN1MSV57bNflD2a5N/w0JBvG/Q+XAgX4KaLWnI+U
+         a2c08D9CYHC7Ejpbo/wZ3Ox4DWk4uSNLNFo4QwfX9psHBRqlrLjppp+d6lpXqE6OcgmU
+         fzCMr037oR2fW7o6ljoIfLr4mdXY9p2xdORro00TQOF83ZY8qMpmC0ZQF9gTF4CUB/WB
+         5twQ==
+X-Gm-Message-State: APjAAAVJ5bOqr0EdcPxeyN8WEU6A8bSDOPohfRApsFNxQXENzVqt0Kvy
+        lNelRWqY0ph4Lvb0pqw0v5SDag7kxlGokY3Bq7yNWbZ0lEg4GwzzHPobjxPXbEw7EjD9/+i44o+
+        Eh7XQJFIHhBfKsfaRcXKBPJ1c
+X-Received: by 2002:a1c:4e02:: with SMTP id g2mr5738538wmh.131.1582219329474;
+        Thu, 20 Feb 2020 09:22:09 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwjPMNGd6W5n2fR2ezNTcPuzWvxZ6/kAyOLdN6JXfJNlYpHkQt54qct+8w0ddDZP86sZhBmQg==
+X-Received: by 2002:a1c:4e02:: with SMTP id g2mr5738512wmh.131.1582219329112;
+        Thu, 20 Feb 2020 09:22:09 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a184sm5355891wmf.29.2020.02.20.09.22.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:22:08 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 1/2] KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only when apicv is globally disabled
+Date:   Thu, 20 Feb 2020 18:22:04 +0100
+Message-Id: <20200220172205.197767-2-vkuznets@redhat.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200220172205.197767-1-vkuznets@redhat.com>
+References: <20200220172205.197767-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bi7wpjn7s3dhfi3c"
-Content-Disposition: inline
-In-Reply-To: <20200219180858.4806-3-andrey.lebedev@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When apicv is disabled on a vCPU (e.g. by enabling KVM_CAP_HYPERV_SYNIC*),
+nothing happens to VMX MSRs on the already existing vCPUs, however, all new
+ones are created with PIN_BASED_POSTED_INTR filtered out. This is very
+confusing and results in the following picture inside the guest:
 
---bi7wpjn7s3dhfi3c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+$ rdmsr -ax 0x48d
+ff00000016
+7f00000016
+7f00000016
+7f00000016
 
-On Wed, Feb 19, 2020 at 08:08:55PM +0200, Andrey Lebedev wrote:
-> From: Andrey Lebedev <andrey@lebedev.lt>
->
-> Timing controllers on A20 are not equivalent: tcon0 on A20 supports
-> LVDS output and tcon1 does not. Separate the capabilities by
-> introducing independent set of quirks for each of the tcons.
->
-> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index cc6b05ca2c69..b7234eef3c7b 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -1508,6 +1508,8 @@ const struct of_device_id sun4i_tcon_of_table[] = {
->  	{ .compatible = "allwinner,sun5i-a13-tcon", .data = &sun5i_a13_quirks },
->  	{ .compatible = "allwinner,sun6i-a31-tcon", .data = &sun6i_a31_quirks },
->  	{ .compatible = "allwinner,sun6i-a31s-tcon", .data = &sun6i_a31s_quirks },
-> +	{ .compatible = "allwinner,sun7i-a20-tcon0", .data = &sun7i_a20_quirks },
-> +	{ .compatible = "allwinner,sun7i-a20-tcon1", .data = &sun7i_a20_quirks },
+This is observed with QEMU and 4-vCPU guest: QEMU creates vCPU0, does
+KVM_CAP_HYPERV_SYNIC2 and then creates the remaining three.
 
-It wasn't ordered alphabetically, I've fixed it up while applying.
+L1 hypervisor may only check CPU0's controls to find out what features
+are available and it will be very confused later. Switch to setting
+PIN_BASED_POSTED_INTR control based on global 'enable_apicv' setting.
 
-Maxime
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/vmx/capabilities.h |  1 +
+ arch/x86/kvm/vmx/nested.c       |  5 ++---
+ arch/x86/kvm/vmx/nested.h       |  3 +--
+ arch/x86/kvm/vmx/vmx.c          | 10 ++++------
+ 4 files changed, 8 insertions(+), 11 deletions(-)
 
---bi7wpjn7s3dhfi3c
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 283bdb7071af..f486e2606247 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -12,6 +12,7 @@ extern bool __read_mostly enable_ept;
+ extern bool __read_mostly enable_unrestricted_guest;
+ extern bool __read_mostly enable_ept_ad_bits;
+ extern bool __read_mostly enable_pml;
++extern bool __read_mostly enable_apicv;
+ extern int __read_mostly pt_mode;
+ 
+ #define PT_MODE_SYSTEM		0
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 3589cd3c0fcc..d0462a035505 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5949,8 +5949,7 @@ void nested_vmx_set_vmcs_shadowing_bitmap(void)
+  * bit in the high half is on if the corresponding bit in the control field
+  * may be on. See also vmx_control_verify().
+  */
+-void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+-				bool apicv)
++void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
+ {
+ 	/*
+ 	 * Note that as a general rule, the high half of the MSRs (bits in
+@@ -5977,7 +5976,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+ 		PIN_BASED_EXT_INTR_MASK |
+ 		PIN_BASED_NMI_EXITING |
+ 		PIN_BASED_VIRTUAL_NMIS |
+-		(apicv ? PIN_BASED_POSTED_INTR : 0);
++		(enable_apicv ? PIN_BASED_POSTED_INTR : 0);
+ 	msrs->pinbased_ctls_high |=
+ 		PIN_BASED_ALWAYSON_WITHOUT_TRUE_MSR |
+ 		PIN_BASED_VMX_PREEMPTION_TIMER;
+diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
+index fc874d4ead0f..1c5fbff45d69 100644
+--- a/arch/x86/kvm/vmx/nested.h
++++ b/arch/x86/kvm/vmx/nested.h
+@@ -17,8 +17,7 @@ enum nvmx_vmentry_status {
+ };
+ 
+ void vmx_leave_nested(struct kvm_vcpu *vcpu);
+-void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+-				bool apicv);
++void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps);
+ void nested_vmx_hardware_unsetup(void);
+ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *));
+ void nested_vmx_set_vmcs_shadowing_bitmap(void);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3be25ecae145..946c74e661e2 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -95,7 +95,7 @@ module_param(emulate_invalid_guest_state, bool, S_IRUGO);
+ static bool __read_mostly fasteoi = 1;
+ module_param(fasteoi, bool, S_IRUGO);
+ 
+-static bool __read_mostly enable_apicv = 1;
++bool __read_mostly enable_apicv = 1;
+ module_param(enable_apicv, bool, S_IRUGO);
+ 
+ /*
+@@ -6757,8 +6757,7 @@ static int vmx_create_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	if (nested)
+ 		nested_vmx_setup_ctls_msrs(&vmx->nested.msrs,
+-					   vmx_capability.ept,
+-					   kvm_vcpu_apicv_active(vcpu));
++					   vmx_capability.ept);
+ 	else
+ 		memset(&vmx->nested.msrs, 0, sizeof(vmx->nested.msrs));
+ 
+@@ -6839,8 +6838,7 @@ static int __init vmx_check_processor_compat(void)
+ 	if (setup_vmcs_config(&vmcs_conf, &vmx_cap) < 0)
+ 		return -EIO;
+ 	if (nested)
+-		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept,
+-					   enable_apicv);
++		nested_vmx_setup_ctls_msrs(&vmcs_conf.nested, vmx_cap.ept);
+ 	if (memcmp(&vmcs_config, &vmcs_conf, sizeof(struct vmcs_config)) != 0) {
+ 		printk(KERN_ERR "kvm: CPU %d feature inconsistency!\n",
+ 				smp_processor_id());
+@@ -7702,7 +7700,7 @@ static __init int hardware_setup(void)
+ 
+ 	if (nested) {
+ 		nested_vmx_setup_ctls_msrs(&vmcs_config.nested,
+-					   vmx_capability.ept, enable_apicv);
++					   vmx_capability.ept);
+ 
+ 		r = nested_vmx_hardware_setup(kvm_vmx_exit_handlers);
+ 		if (r)
+-- 
+2.24.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7ATwAKCRDj7w1vZxhR
-xaxkAQC4slxXfrNAlNDduUqdbx09RyWm5i9BjI+oi87n++Sj7wEA+3wqikR7D1eY
-1FTAfdjEbPqk07Awe1jmsHs2OYbK2gQ=
-=Um74
------END PGP SIGNATURE-----
-
---bi7wpjn7s3dhfi3c--
