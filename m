@@ -2,92 +2,195 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EFEC11D09
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF29C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493B724672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:19:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086AF20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbgBTKTx (ORCPT
+        id S1727393AbgBTKVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:19:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41990 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726501AbgBTKTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:19:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 12DF2B285;
-        Thu, 20 Feb 2020 10:19:50 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 10:19:45 +0000
-From:   Mel Gorman <mgorman@suse.de>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200220101945.GN3420@suse.de>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
- <20200219214513.GL3420@suse.de>
- <20200219224231.GA5190@sultan-book.localdomain>
+        Thu, 20 Feb 2020 05:21:15 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39028 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbgBTKVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 05:21:15 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j4ixA-00032V-Nu; Thu, 20 Feb 2020 10:21:08 +0000
+Date:   Thu, 20 Feb 2020 11:21:07 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 6/9] drivers/base/power: add
+ dpm_sysfs_change_owner()
+Message-ID: <20200220102107.grkyypt7swrufzas@wittgenstein>
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
+ <20200218162943.2488012-7-christian.brauner@ubuntu.com>
+ <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200219224231.GA5190@sultan-book.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:42:31PM -0800, Sultan Alsawaf wrote:
-> On Wed, Feb 19, 2020 at 09:45:13PM +0000, Mel Gorman wrote:
-> > This could be watermark boosting run wild again. Can you test with
-> > sysctl vm.watermark_boost_factor=0 or the following patch? (preferably
-> > both to compare and contrast).
+On Thu, Feb 20, 2020 at 11:02:04AM +0100, Rafael J. Wysocki wrote:
+> On Tue, Feb 18, 2020 at 5:30 PM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > Add a helper to change the owner of a device's power entries. This
+> > needs to happen when the ownership of a device is changed, e.g. when
+> > moving network devices between network namespaces.
+> > This function will be used to correctly account for ownership changes,
+> > e.g. when moving network devices between network namespaces.
+> >
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> > /* v2 */
+> > - "Rafael J. Wysocki" <rafael@kernel.org>:
+> >   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
+> >      if (device_can_wakeup(dev)) check since the former can never be true if
+> >      the latter is false.
+> >
+> > - Christian Brauner <christian.brauner@ubuntu.com>:
+> >   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
+> >     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
+> >     when this config option is set.
+> >
+> > /* v3 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add explicit uid/gid parameters.
+> > ---
+> >  drivers/base/core.c        |  4 ++++
+> >  drivers/base/power/power.h |  3 +++
+> >  drivers/base/power/sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 49 insertions(+)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index ec0d5e8cfd0f..efec2792f5d7 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -3522,6 +3522,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> >         if (error)
+> >                 goto out;
+> >
+> > +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
+> > +       if (error)
+> > +               goto out;
+> > +
+> >  #ifdef CONFIG_BLOCK
+> >         if (sysfs_deprecated && dev->class == &block_class)
+> >                 goto out;
+> > diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+> > index 444f5c169a0b..54292cdd7808 100644
+> > --- a/drivers/base/power/power.h
+> > +++ b/drivers/base/power/power.h
+> > @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
+> >  extern void pm_qos_sysfs_remove_flags(struct device *dev);
+> >  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
+> >  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
+> > +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+> >
+> >  #else /* CONFIG_PM */
+> >
+> > @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
+> >
+> >  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
+> >  static inline void dpm_sysfs_remove(struct device *dev) {}
+> > +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
+> > +                                        kgid_t kgid) { return 0; }
+> >
+> >  #endif
+> >
+> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> > index d7d82db2e4bc..4e79afcd5ca8 100644
+> > --- a/drivers/base/power/sysfs.c
+> > +++ b/drivers/base/power/sysfs.c
+> > @@ -684,6 +684,48 @@ int dpm_sysfs_add(struct device *dev)
+> >         return rc;
+> >  }
+> >
+> > +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> > +{
+> > +       int rc;
+> > +
+> > +       if (device_pm_not_required(dev))
+> > +               return 0;
+> > +
+> > +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       if (pm_runtime_callbacks_present(dev)) {
+> > +               rc = sysfs_group_change_owner(
+> > +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+> > +               if (rc)
+> > +                       return rc;
+> > +       }
+> > +       if (device_can_wakeup(dev)) {
+> > +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
+> > +                                             kuid, kgid);
+> > +               if (rc)
+> > +                       return rc;
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> > +               if (dev->power.wakeup && dev->power.wakeup->dev) {
+> > +                       rc = device_change_owner(dev->power.wakeup->dev, kuid,
+> > +                                                kgid);
+> > +                       if (rc)
+> > +                               return rc;
+> > +               }
+> > +#endif
 > 
-> I can test that, but something to note is that I've been doing equal testing
-> with this on 4.4, which exhibits the same behavior, and that kernel doesn't have
-> watermark boosting in it, as far as I can tell.
+> First off, I don't particularly like #ifdefs in function bodies.  In
+> particular, there is a CONFIG_PM_SLEEP block in this file already and
+> you could define a new function in there to carry out the above
+> operations, and provide an empty stub of it for the "unset" case.
+> Failing to do so is somewhat on the "rushing things in" side in my
+> view.
+
+How ifdefines are used is highly dependent on the subsystem; networking
+ofen uses in-place ifdefines in some parts and not in others. That has
+nothing to do with rushing things. I'm happy to change it to your
+preferences. Thanks for pointing out your expectations. But please don't
+assume bad intentions on my part because I'm not meeting them right
+away. It often is the case that adding a helper that is called in one
+place is not well-received.
+
 > 
-> I don't think what we're addressing here is a "bug", but rather something
-> fundamental about how we've been thinking about kswapd lifetime. The argument
-> here is that it's not coherent to be letting kswapd run as it does, and instead
-> gating it on outstanding allocation requests provides much more reasonable
-> behavior, given real workloads and use patterns.
-> 
-> Does that make sense and seem reasonable?
-> 
+> Second, the #ifdef should cover the entire if (device_can_wakeup(dev))
+> {} block, because wakeup_sysfs_add() is only called if
+> device_can_wakeup(dev) returns 'true' for the device in question (and
+> arguably you could have checked that easily enough).
 
-I'm not entirely convinced. The reason the high watermark exists is to have
-kswapd work long enough to make progress without a process having to direct
-reclaim. The most straight-forward example would be a streaming reader of
-a large file. It'll keep pushing the zone towards the low watermark and
-kswapd has to keep ahead of the reader. If we cut kswapd off too quickly,
-the min watermark is hit and stalls occur. While kswapd could stop at the
-min watermark, it leaves a very short window for kswapd to make enough
-progress before the min watermark is hit.
+I've looked at the header definitions for device_can_wakeup() and with
+and without CONFIG_PM_SLEEP it is defined as:
 
-At minimum, any change in this area would need to include the /proc/vmstats
-on allocstat and pg*direct* to ensure that direct reclaim stalls are
-not worse.
+static inline bool device_can_wakeup(struct device *dev)
+{
+	return dev->power.can_wakeup;
+}
 
-I'm not a fan of the patch in question because kswapd can be woken between
-the low and min watermark without stalling but we really do expect kswapd
-to make progress and continue to make progress to avoid future stalls. The
-changelog had no information on the before/after impact of the patch and
-this is an area where intuition can disagree with real behaviour.
+which to me looks like it would neet to be called in all cases.
 
--- 
-Mel Gorman
-SUSE Labs
+I'll rework this to you preferences.
+
+Thanks!
+Christian
