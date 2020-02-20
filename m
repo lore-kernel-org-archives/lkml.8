@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC25C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A28FAC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FE824654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB7624672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b3u9Ja07"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVRLDXHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgBTIgH (ORCPT
+        id S1727285AbgBTIgJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:36:07 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43747 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbgBTIf7 (ORCPT
+        Thu, 20 Feb 2020 03:36:09 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36718 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgBTIf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 03:35:59 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p11so1264104plq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:35:57 -0800 (PST)
+Received: by mail-pl1-f193.google.com with SMTP id a6so1280975plm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:35:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ijTyB6ZR5pfL9IN/EaJ22u7Sp0djdDBIhKNgT7JvipY=;
-        b=b3u9Ja078tSmcCLcfoMQJDexdgyH/UZUnFYqU4ZxbLy6czS/yTF/tJ2B8Yy102S8sN
-         U35/QiLltRKbOx17qqhB/GkFDaJejvf4ImYkPJ25DMx7AXr1DiGNp1qeccXsGpTmPjUP
-         L6keUCh/INygIGP1TJB5/Vo/Z7pz9epIu2+IHkFdNt/rgqueYxtm0/ZTVnAUYhoJH5Ha
-         TOH7wvgMIqCYUNxrwLgoS2ReFdCSfBx6ddtW3rxgGGCW7Yyz+sfheNQqlsYX0SgdP2Ud
-         3/xrhFyrS6DTh24Z7fd2eRhzaA2g/EzfPLcCqvIVOr3owpGad3Hza66L98rZlOmnSkND
-         k14g==
+        bh=y/c4HnHL8fMAg6Wo4pqS2IgOW97h7pKxh9Qxew+UstU=;
+        b=jVRLDXHVy8oHPRXfBedHbTNAtkdvnd1bwk1Yk+NWpCm/JqBBDPwJ9SwMP2gddlZHrj
+         eiH61428+Mx0koFTtoxOq/ed6ErAnMpwyX7WLDs6BsLZWPf8+L676n0n1mW0E5emvZfg
+         F5+aCZiyNd8sYg4PTwDKiHu1mijlAYUvJpQz8nfG+2V/L6IjmvnzJCAi1B4rQjr4h4ez
+         r/SovY9JQefHPaXoUPLbLifoW/vfy8NtG2zCQMpExwlSLys2m17/ALM8umf1gXJFw2Fv
+         XFKAnroF69zdiP1fKBrCMTnf3hFwupOuxRSAJXIh8RaLVOk97vdz7/LqzngPSP3SZPVA
+         uHnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ijTyB6ZR5pfL9IN/EaJ22u7Sp0djdDBIhKNgT7JvipY=;
-        b=JWAvyJ5xOUxwOWeRiJq4yV2cpRD5WPpde3aEu/gfI1614axbH6YCVu/ZtX1AMzGY7X
-         Ny09+69+6htNQFCaPSwHSnolhezTkaMMSqvxtrh5C8T8HF1Cbvkc7YGA///xyJV8oLzw
-         eOXc1M3qnMqk8+AeUgMxDdAxpHNsVBQtye78JGDB4fwtPZY2gcktJSqwf1m6p5r5aTt1
-         DQglrNzKjZvgWnc6CVmYoUTpgeuyWJ5dvvzYTQqjbCyAaXXebW3iNByk2d1bs4D7wDPm
-         Ujjapx8xaqnAWB6hT876K5bsUbV8jbBAzEe2OHzBu7PuOsE7QuxjiUZV2dMKhlXEpLxT
-         gVMw==
-X-Gm-Message-State: APjAAAWi2I+1BLXwUvXwh/3VWi9jm4/EZBSuhVYLzON1ypm9TT7MUjDj
-        ljA+nUMdmhUp7kw0gThIIBM=
-X-Google-Smtp-Source: APXvYqx+XcOfE7rl34bx8Kj5W10tYHXxB9gA64KZqWfc1a/TzGmCwogwaY6RZV8h7YFo8hBwokFMIQ==
-X-Received: by 2002:a17:90a:b381:: with SMTP id e1mr2289733pjr.38.1582187757461;
-        Thu, 20 Feb 2020 00:35:57 -0800 (PST)
+        bh=y/c4HnHL8fMAg6Wo4pqS2IgOW97h7pKxh9Qxew+UstU=;
+        b=FWJZx89St8/Guq21jTqY1pM2p7FvWsQUT+udoeVqyk0NJzziMdEmd/JyHQsIdDc0oe
+         D1vDjcEm+35OV6HMusjUYYlUdOXcZ/TLVgRtakTBQyxda/Xe2cMxqrfPn/GzrrSZP3tD
+         7DJK7yDv/nANuOZRfZHcc9NDWlWHTIEYBnzOCBVRnAaOYR51NCtiRZRnGaCBKODr2J6G
+         Nglh9p4R9vUVLOpxr/g+NsdDuV2DPAsej2QXTWvcpz0qYVC0ZmnG8qAvTggkSFy15FPm
+         RalInIxjWDc+NRgmwlTWvEOTbLGaWYk9VyFcQrn3hdcxhcUQFGajLCy5Px4sEBG95Hz7
+         dHmg==
+X-Gm-Message-State: APjAAAVRk7rtT8oM2GNyp1qyUnNjXuAUwrDId3vXX/WN7tiCYOiswPMr
+        PU81IYoGpcV6CTtq+CowYz8=
+X-Google-Smtp-Source: APXvYqyYpW3EXASVj7XV5DEOPQswxo7hRbJnjHbgKCDrhVP4i9xGeNsgJjGu3JKIdyetfAZGHkiGCg==
+X-Received: by 2002:a17:90a:a48c:: with SMTP id z12mr2330695pjp.38.1582187758576;
+        Thu, 20 Feb 2020 00:35:58 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id l13sm2319038pjq.23.2020.02.20.00.35.56
+        by smtp.gmail.com with ESMTPSA id l13sm2319038pjq.23.2020.02.20.00.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 00:35:57 -0800 (PST)
+        Thu, 20 Feb 2020 00:35:58 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -81,9 +81,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 4/6] dt-bindings: display: simple: Add NewEast Optoelectronics WJFH116008A compatible
-Date:   Thu, 20 Feb 2020 00:35:06 -0800
-Message-Id: <20200220083508.792071-5-anarsoul@gmail.com>
+Subject: [PATCH 5/6] drm/panel: simple: Add NewEast Optoelectronics CO., LTD WJFH116008A panel support
+Date:   Thu, 20 Feb 2020 00:35:07 -0800
+Message-Id: <20200220083508.792071-6-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200220083508.792071-1-anarsoul@gmail.com>
 References: <20200220083508.792071-1-anarsoul@gmail.com>
@@ -94,27 +94,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds compatible for NewEast Optoelectronics WJFH116008A panel
-to panel-simple binding
+This commit adds support for the NewEast Optoelectronics CO., LTD
+WJFH116008A 11.6" 1920x1080 TFT LCD panel.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 ---
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/panel/panel-simple.c | 47 ++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 8fe60ee2531c..721de94cc80a 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -43,6 +43,8 @@ properties:
-       - satoz,sat050at40h12r2
-         # Sharp LS020B1DD01D 2.0" HQVGA TFT LCD panel
-       - sharp,ls020b1dd01d
-+        # NewEast Optoelectronics CO., LTD WJFH116008A eDP TFT LCD panel
-+      - neweast,wjfh116008a
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index e14c14ac62b5..aa04afaf3d26 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2224,6 +2224,50 @@ static const struct panel_desc netron_dy_e231732 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
  
-   backlight: true
-   enable-gpios: true
++static const struct drm_display_mode neweast_wjfh116008a_modes[] = {
++{
++	.clock = 138500,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 80,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 3,
++	.vsync_end = 1080 + 3 + 5,
++	.vtotal = 1080 + 3 + 5 + 23,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++}, {
++	.clock = 110920,
++	.hdisplay = 1920,
++	.hsync_start = 1920 + 48,
++	.hsync_end = 1920 + 48 + 32,
++	.htotal = 1920 + 48 + 32 + 80,
++	.vdisplay = 1080,
++	.vsync_start = 1080 + 3,
++	.vsync_end = 1080 + 3 + 5,
++	.vtotal = 1080 + 3 + 5 + 23,
++	.vrefresh = 48,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++} };
++
++static const struct panel_desc neweast_wjfh116008a = {
++	.modes = neweast_wjfh116008a_modes,
++	.num_modes = 2,
++	.bpc = 6,
++	.size = {
++		.width = 260,
++		.height = 150,
++	},
++	.delay = {
++		.prepare = 110,
++		.enable = 20,
++		.unprepare = 500,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++	.connector_type = DRM_MODE_CONNECTOR_eDP,
++};
++
+ static const struct drm_display_mode newhaven_nhd_43_480272ef_atxl_mode = {
+ 	.clock = 9000,
+ 	.hdisplay = 480,
+@@ -3399,6 +3443,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "netron-dy,e231732",
+ 		.data = &netron_dy_e231732,
++	}, {
++		.compatible = "neweast,wjfh116008a",
++		.data = &neweast_wjfh116008a,
+ 	}, {
+ 		.compatible = "newhaven,nhd-4.3-480272ef-atxl",
+ 		.data = &newhaven_nhd_43_480272ef_atxl,
 -- 
 2.25.0
 
