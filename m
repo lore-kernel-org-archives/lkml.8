@@ -2,102 +2,107 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77080C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2610C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B48F208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:29:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582230585;
-	bh=fNNsB5ino+La+/VeE+Cq/VqWJOnIIE5Z8PRYl3wsYkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AahZMVYBEbeHe31cIivifCbEEhiQoiHq0dYa03peI0nNxFnj4/GB6BwWU3gUxs41q
-	 5+8g7zx+O3R62Ihkj9m3Gx1BP4+NW3QvW2Vrnw8FrP2Z4gOPOqB8R1yWxNhp9QVVQ0
-	 0XDFA1sS1322sibTNKsRcH5i6+FO4LPotSPUHaSg=
+	by mail.kernel.org (Postfix) with ESMTP id C3DB9208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbgBTU3n (ORCPT
+        id S1729057AbgBTUaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:29:43 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40309 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTU3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:29:43 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so4934810otr.7;
-        Thu, 20 Feb 2020 12:29:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4y11Rw9Quj6ChkrwsaKBH1Q0T5iRPrjR3ZQy3ZsS7xA=;
-        b=FbWe4zUQWBCMiYMQk4Aq7wIpvwLessLCQtKFGEPG0mDAsiB9+V4L+koSYw0YOxcFwz
-         +kIHgw8RmN9eYNsvN3EDYdnwoq5MCfkr3+l9Xhrhh4d58h3jE2J1topti8d/DUZRXz7I
-         tJ6qWdLBbYHJD30VM88Rj8TyVieowdBM4jcIT6SK2RNFBNSJ8EzCSGIcyJVB2Qx/HjhD
-         4LZWxjDeT5w1NDlzBSTu4Df/uz8eGK9t470106G3BoUFq+vfo4rCJ6+xWqNHL1RSpyit
-         nkZ+EJrcS23jdQD1Me28oZbzz7o481t+QRSI/AES1A2UFEk2zg1m7d2FCVZ3mn0wUVAg
-         E76Q==
-X-Gm-Message-State: APjAAAUPaMTgebIYSJKt0fU5MDGb3u2RzxWkt8fvZD7Ql0XUu9mCIYcR
-        mY+tFHiJ4kwj4viMwaQJrA==
-X-Google-Smtp-Source: APXvYqxqNmvtY+8v4lmPFwBx32CjiYTpN6LA3c1fXpwH+kIAQ9BKjTQ21m1UkbGpGxeL1RGLpLDftw==
-X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr23581373oti.251.1582230581148;
-        Thu, 20 Feb 2020 12:29:41 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l207sm128716oih.25.2020.02.20.12.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:29:40 -0800 (PST)
-Received: (nullmailer pid 7275 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:29:39 -0000
-Date:   Thu, 20 Feb 2020 14:29:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alexandre.torgue@st.com, robh@kernel.org,
-        mark.rutland@arm.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Subject: Re: [PATCH v3] ASoC: dt-bindings: stm32: convert sai to json-schema
-Message-ID: <20200220202939.GA6480@bogus>
-References: <20200219161733.9317-1-olivier.moysan@st.com>
+        Thu, 20 Feb 2020 15:30:02 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:44994 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728400AbgBTUaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:30:02 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j4sSO-0005XN-Dz; Thu, 20 Feb 2020 13:30:01 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j4sSM-0006oK-Ry; Thu, 20 Feb 2020 13:29:58 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 20 Feb 2020 13:29:53 -0700
+Message-Id: <20200220202953.26139-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219161733.9317-1-olivier.moysan@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [PATCH] nvme-multipath: Fix memory leak with ana_log_buf
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 17:17:33 +0100, Olivier Moysan wrote:
-> Convert the STM32 SAI bindings to DT schema format using json-schema.
-> 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> ---
-> Changes in v2:
-> - use pattern for compatible of child nodes
-> - rework dmas and clocks properties
-> - add "additionalProperties"
-> 
-> Changes in v3:
-> - move clocks properties for st,stm32h7-sai compatible, to 'else' clause
-> ---
->  .../bindings/sound/st,stm32-sai.txt           | 107 ----------
->  .../bindings/sound/st,stm32-sai.yaml          | 193 ++++++++++++++++++
->  2 files changed, 193 insertions(+), 107 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.yaml
-> 
+kmemleak reports a memory leak with the ana_log_buf allocated by
+nvme_mpath_init():
 
-My bot found errors running 'make dt_binding_check' on your patch:
+unreferenced object 0xffff888120e94000 (size 8208):
+  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
+    hex dump (first 32 bytes):
+      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
+    backtrace:
+      [<00000000e2360188>] kmalloc_order+0x97/0xc0
+      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
+      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
+      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
+      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
+      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
+      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
+      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
+      [<000000004199f8d0>] __vfs_write+0x50/0xa0
+      [<0000000065466fef>] vfs_write+0xf3/0x280
+      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
+      [<0000000082156b91>] __x64_sys_write+0x43/0x50
+      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
+      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/sound/st,stm32-sai.example.dt.yaml: sai@4400a000: 'clock-names', 'clocks' do not match any of the regexes: '^audio-controller@[0-9a-f]+$', 'pinctrl-[0-9]+'
+nvme_mpath_init() is called by nvme_init_identify() which is called in
+multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
+means nvme_mpath_init() may be called multiple times before
+nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
 
-See https://patchwork.ozlabs.org/patch/1240792
-Please check and re-submit.
+When nvme_mpath_init() is called multiple times, it overwrites the
+ana_log_buf pointer with a new allocation, thus leaking the previous
+allocation.
+
+To fix this, free ana_log_buf before allocating a new one.
+
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/host/multipath.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 797c18337d96..a11900cf3a36 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -715,6 +715,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 	}
+ 
+ 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
++	kfree(ctrl->ana_log_buf);
+ 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
+ 	if (!ctrl->ana_log_buf) {
+ 		error = -ENOMEM;
+
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+-- 
+2.20.1
+
