@@ -2,122 +2,392 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50C5C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8DAC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B24820722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A76820722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+NPOgYc"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="mGn6YfF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgBTL5J (ORCPT
+        id S1728012AbgBTL5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:57:09 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37834 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbgBTL5J (ORCPT
+        Thu, 20 Feb 2020 06:57:20 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45093 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbgBTL5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:57:09 -0500
-Received: by mail-pj1-f65.google.com with SMTP id m13so802476pjb.2;
-        Thu, 20 Feb 2020 03:57:08 -0800 (PST)
+        Thu, 20 Feb 2020 06:57:20 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so3872843ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 03:57:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zyM10aVkzbQe75G/ZJhaQ8/QmMoTt48kSiKXx5MsLFY=;
-        b=t+NPOgYcqy+UyW8sYh55r1uJucl0R0ISFr1om7ivzNeBR80cnZTsLSQJjZedv8EDUY
-         mJkZ/Il8PA+a+XZIvFa9a6wCXBjYIE2+tYEL6g/jWB81xq+avNH28lqXLd6DLq0GA15B
-         jRoQ+H4ILyk3TLnkklRSMquZcU87U/D9CbI7mo2Q1gjJAIPQ0+eatMgpdXeOrfSLYVvr
-         N9f+SGN8L/XYj8mpwVHnpKBB2w31allwwIUjwgMYvBwcjVZIMjUdADBBcxw67BQaDXL8
-         UQkEsPepAez52j52P5JwVkXP12KuypSpoOPkxxP5slabflNDYkNtt49NE53cBy/+o7zQ
-         tnXw==
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=QyvKdU+O0UCRce/PS9aoM2vNJYjhVokBPfYewrwRru8=;
+        b=mGn6YfF7q9rCkiX4+l1Qn47reLmNosU5MhTzgScbW//Soy3bWKmtOX7V9gutVc1Xjt
+         vtmmAl3mJWtFGteKp1UiISF+s0A/vgebPCxHLO1ftvjEXsNyR/wKKOdniGyKaPH1J+HL
+         V3dKZ9b3qOTcv+384c2M0HpryQQaxzi1y0cp6uZKR7eH+8cFCiwbvptvUMMR6Pv7HXRo
+         OCco4uqmg97peuivlM0XdwhXEc1w7LuCF7dRLD91i8ZAOug7t4o92foGAvLWl3e5rgkp
+         VR5xYXP4Y0t4YSjYkYtQXO7CGLEKuHd1BiAnH/ouQyFhyQO0+P/41ZidfWQKYjWbk3dw
+         +rCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zyM10aVkzbQe75G/ZJhaQ8/QmMoTt48kSiKXx5MsLFY=;
-        b=qBnoD3Ywf4gFf7Fgvyd+DFj2xlVJKtjYQT+1+F26sPiHM4R+8gdWvYnJA1J7UGKIuT
-         meoqgkKz9ij3BcUcLuL2WQUA1GsPpEPQ7nfijAhj+QBTw6ERlBluBSdGgvrAwzO++eSp
-         gxjGSHssTXqFkM3C0ZMcdQGkJpR1UFOVmi4/zX4nHR9IsCk537kI+J3DCN/d17vkkoLs
-         9YcpVhXEru4nhEvL7aVjNoeJLbwX/tVPW/xkDE5FoYHPl3xiZnUlWTFH8QSPNRPBfi4X
-         ZyDDkSumFMU0kcAswH0HcVlQgU7x8nhA+EHR2hiFgu1k60oXj4wohJ7PoHlBADQHrfT/
-         MIFA==
-X-Gm-Message-State: APjAAAVhCholNPbx6P+XVYgXbQCz+ElFNgVGnRl0uEdLX7NfZMfZ/xIE
-        z2C2/Cs4DLkCjJPBO+7TIOZjlJWGZvBa2Zu2CmU=
-X-Google-Smtp-Source: APXvYqx3BKH3fNOcUKacWCjX06eA80jdskWX4Vw3qpgkDiMclpjW06DHofZcFYaUnd5JuQR2vJfpGhbeg4ah0+FP34U=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr30132442plf.255.1582199828503;
- Thu, 20 Feb 2020 03:57:08 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QyvKdU+O0UCRce/PS9aoM2vNJYjhVokBPfYewrwRru8=;
+        b=XhT184eAblIN1hqRptxRIn32+LtTb8MxG3sCZsxTFXXhHmgU46tu3nm/FAbJeHn45f
+         NU8kMzQ+YduURYQelx2wgnIwxQrz3lMMNSmvcGALktI3nbi2KCAN079+d//GqLrop7Rb
+         orMJcTp+/QPOmcU4E7SJJ917KYLwmlXLjKeD2/mbdCS162n2Hyz+RKdY6SylFpoOAJoh
+         9eQfGBgL6/GCArbamgTMXsGXvh/QG7gwhJD0lfwXaoL9oY9rau2rGAM4sFHgNf7hnLdy
+         h2y0tNoRnanGjLKa1FOk2mytIopAdDhQSLuP/v2TRmObX05b40hb0sPAqJRw+9lhZqL/
+         Uapg==
+X-Gm-Message-State: APjAAAV9wkhUnB8LOkOA0bB47lbwQdyV9vIerQFZL3iGhyTIODDberuw
+        2dqhbWlBJBH7nmgfP8wVy0FXRQ==
+X-Google-Smtp-Source: APXvYqwmGkVDPC7zOffw90TYoxDszMAB/RcERdKpqgWfQ0l6Dhcqa3L4Lwk2vYKNsZ/h0GUwrS+vKQ==
+X-Received: by 2002:a2e:e12:: with SMTP id 18mr19231969ljo.123.1582199836383;
+        Thu, 20 Feb 2020 03:57:16 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id l3sm1687238lja.78.2020.02.20.03.57.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 03:57:15 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id D1208100FBB; Thu, 20 Feb 2020 14:57:44 +0300 (+03)
+Date:   Thu, 20 Feb 2020 14:57:44 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v6 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200220115744.ummq6j5ejp5qojic@box>
+References: <20200218173221.237674-1-bgeffon@google.com>
 MIME-Version: 1.0
-References: <20200213091600.554-1-uwe@kleine-koenig.org> <20200213091600.554-2-uwe@kleine-koenig.org>
- <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
- <20200220074901.ohcrisjgd26555ya@pengutronix.de> <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
- <20200220105718.eoevd3kb63zzrotu@pengutronix.de> <CAHp75Vd3KN81qxOWJQ7v=GimSLtVymur_iPsf91pka1STc1nfA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd3KN81qxOWJQ7v=GimSLtVymur_iPsf91pka1STc1nfA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Feb 2020 13:57:00 +0200
-Message-ID: <CAHp75VcC2adjcPUiWaZhXZgocWDPoUJZwGMYNfJWSqyqDAY1Dg@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Sascha Hauer <kernel@pengutronix.de>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200218173221.237674-1-bgeffon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 1:46 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Feb 20, 2020 at 12:57 PM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Thu, Feb 20, 2020 at 12:22:36PM +0200, Andy Shevchenko wrote:
+On Tue, Feb 18, 2020 at 09:32:20AM -0800, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. The remap operation
+> will be performed as it would have been normally by moving over the
+> page tables to the new mapping. The old vma will have any locked
+> flags cleared, have no pagetables, and any userfaultfds that were
+> watching that range will continue watching it.
+> 
+> For a mapping that is shared or not anonymous, MREMAP_DONTUNMAP will cause
+> the mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+> equally sized VMAs where the destination contains the PTEs of the source.
+> 
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+> 
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+> 
+>   v5 -> v6:
+>     - Code cleanup suggested by Kirill.
+> 
+>   v4 -> v5:
+>     - Correct commit message to more accurately reflect the behavior.
+>     - Clear VM_LOCKED and VM_LOCKEDONFAULT on the old vma.
+>            
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> ---
+>  include/uapi/linux/mman.h |   5 +-
+>  mm/mremap.c               | 103 ++++++++++++++++++++++++++++++--------
+>  2 files changed, 85 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+> index fc1a64c3447b..923cc162609c 100644
+> --- a/include/uapi/linux/mman.h
+> +++ b/include/uapi/linux/mman.h
+> @@ -5,8 +5,9 @@
+>  #include <asm/mman.h>
+>  #include <asm-generic/hugetlb_encode.h>
+>  
+> -#define MREMAP_MAYMOVE	1
+> -#define MREMAP_FIXED	2
+> +#define MREMAP_MAYMOVE		1
+> +#define MREMAP_FIXED		2
+> +#define MREMAP_DONTUNMAP	4
+>  
+>  #define OVERCOMMIT_GUESS		0
+>  #define OVERCOMMIT_ALWAYS		1
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 1fc8a29fbe3f..fa27103502c5 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>  static unsigned long move_vma(struct vm_area_struct *vma,
+>  		unsigned long old_addr, unsigned long old_len,
+>  		unsigned long new_len, unsigned long new_addr,
+> -		bool *locked, struct vm_userfaultfd_ctx *uf,
+> -		struct list_head *uf_unmap)
+> +		bool *locked, unsigned long flags,
+> +		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct vm_area_struct *new_vma;
+> @@ -408,11 +408,46 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+>  	if (unlikely(vma->vm_flags & VM_PFNMAP))
+>  		untrack_pfn_moved(vma);
+>  
+> +	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
+> +		if (vm_flags & VM_ACCOUNT) {
+> +			/* Always put back VM_ACCOUNT since we won't unmap */
+> +			vma->vm_flags |= VM_ACCOUNT;
+> +
+> +			vm_acct_memory(vma_pages(new_vma));
+> +		}
+> +
+> +		/*
+> +		 * locked_vm accounting: if the mapping remained the same size
+> +		 * it will have just moved and we don't need to touch locked_vm
+> +		 * because we skip the do_unmap. If the mapping shrunk before
+> +		 * being moved then the do_unmap on that portion will have
+> +		 * adjusted vm_locked. Only if the mapping grows do we need to
+> +		 * do something special; the reason is locked_vm only accounts
+> +		 * for old_len, but we're now adding new_len - old_len locked
+> +		 * bytes to the new mapping.
+> +		 */
+> +		if (vm_flags & VM_LOCKED && new_len > old_len) {
+> +			mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
+> +			*locked = true;
+> +		}
+> +
+> +		/* We always clear VM_LOCKED[ONFAULT] on the old vma */
+> +		vma->vm_flags &= VM_LOCKED_CLEAR_MASK;
+> +
+> +		goto out;
+> +	}
+> +
+>  	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+>  		/* OOM: unable to split vma, just get accounts right */
+>  		vm_unacct_memory(excess >> PAGE_SHIFT);
+>  		excess = 0;
+>  	}
+> +
+> +	if (vm_flags & VM_LOCKED) {
+> +		mm->locked_vm += new_len >> PAGE_SHIFT;
+> +		*locked = true;
+> +	}
+> +out:
+>  	mm->hiwater_vm = hiwater_vm;
+>  
+>  	/* Restore VM_ACCOUNT if one or two pieces of vma left */
+> @@ -422,16 +457,12 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+>  			vma->vm_next->vm_flags |= VM_ACCOUNT;
+>  	}
+>  
+> -	if (vm_flags & VM_LOCKED) {
+> -		mm->locked_vm += new_len >> PAGE_SHIFT;
+> -		*locked = true;
+> -	}
+> -
+>  	return new_addr;
+>  }
+>  
+>  static struct vm_area_struct *vma_to_resize(unsigned long addr,
+> -	unsigned long old_len, unsigned long new_len, unsigned long *p)
+> +	unsigned long old_len, unsigned long new_len, unsigned long flags,
+> +	unsigned long *p)
+>  {
+>  	struct mm_struct *mm = current->mm;
+>  	struct vm_area_struct *vma = find_vma(mm, addr);
+> @@ -453,6 +484,10 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	if (flags & MREMAP_DONTUNMAP && (!vma_is_anonymous(vma) ||
+> +			vma->vm_flags & VM_SHARED))
+> +		return ERR_PTR(-EINVAL);
+> +
+>  	if (is_vm_hugetlb_page(vma))
+>  		return ERR_PTR(-EINVAL);
+>  
+> @@ -497,7 +532,7 @@ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+>  
+>  static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  		unsigned long new_addr, unsigned long new_len, bool *locked,
+> -		struct vm_userfaultfd_ctx *uf,
+> +		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+>  		struct list_head *uf_unmap_early,
+>  		struct list_head *uf_unmap)
+>  {
+> @@ -505,7 +540,7 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	struct vm_area_struct *vma;
+>  	unsigned long ret = -EINVAL;
+>  	unsigned long charged = 0;
+> -	unsigned long map_flags;
+> +	unsigned long map_flags = 0;
+>  
+>  	if (offset_in_page(new_addr))
+>  		goto out;
+> @@ -534,9 +569,11 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	if ((mm->map_count + 2) >= sysctl_max_map_count - 3)
+>  		return -ENOMEM;
+>  
+> -	ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+> -	if (ret)
+> -		goto out;
+> +	if (flags & MREMAP_FIXED) {
+> +		ret = do_munmap(mm, new_addr, new_len, uf_unmap_early);
+> +		if (ret)
+> +			goto out;
+> +	}
+>  
+>  	if (old_len >= new_len) {
+>  		ret = do_munmap(mm, addr+new_len, old_len - new_len, uf_unmap);
+> @@ -545,13 +582,26 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  		old_len = new_len;
+>  	}
+>  
+> -	vma = vma_to_resize(addr, old_len, new_len, &charged);
+> +	vma = vma_to_resize(addr, old_len, new_len, flags, &charged);
+>  	if (IS_ERR(vma)) {
+>  		ret = PTR_ERR(vma);
+>  		goto out;
+>  	}
+>  
+> -	map_flags = MAP_FIXED;
+> +	/*
+> +	 * MREMAP_DONTUNMAP expands by new_len - (new_len - old_len), we will
+> +	 * check that we can expand by new_len and vma_to_resize will handle
+> +	 * the vma growing which is (new_len - old_len).
+> +	 */
 
-...
+< Sorry for delay. >
 
-> > Also I don't understand yet, what you want me to do.
->
-> I have issues with kstrto() not playing with simple numbers (boolean
+I have hard time understanding the case when new_len != old_len.
 
-s/simple/simple and single/
+Correct me if I'm wrong, but looks like that you change the size of old
+mapping to be the new_len and then create a new of the same new_len.
 
-> is a special case, but still a number at the end).
-> I also don't feel good with too narrow usage of the newly introduced help=
-er
->
-> > Assume I'd be
-> > willing to use simple_strtoul, I'd still want to have a function that
-> > gives me a dev_t from a given string. Should I put this directly in my
-> > led-trigger driver?
->
-> I see the following possibilities:
+This doesn't look right to me.
 
-(above doesn't imply the necessity of simple_strto*() use)
+In my opinion, MREMAP_DONTUNMAP has to leave the old mapping intact. And
+create the new mapping adjusted to the new_len.
 
-> a) put it inside the caller and forget about generic helper
-> b) do a generic helper, but 1/ in string_*() namespace, 2/ with a
-> delimiter parameter and 3/ possibility to take negative numbers
->
-> In b) case, add to the commit message how many potential _existing_
-> users may be converted to this.
-> Also it would be good to have two versions strict (only \n at the end
-> is allowed) and non-strict (based on the amount of users for each
-> group).
+Other option is to force new_len == old_len if MREMAP_DONTUNMAP is
+specified. It would simplify the implementation. And I don't see why
+anybody would really want anything else.
 
-And don't forget to extend lib/test_string.c accordingly.
+> +	if (flags & MREMAP_DONTUNMAP &&
+> +		!may_expand_vm(mm, vma->vm_flags, new_len >> PAGE_SHIFT)) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	if (flags & MREMAP_FIXED)
+> +		map_flags |= MAP_FIXED;
+> +
+>  	if (vma->vm_flags & VM_MAYSHARE)
+>  		map_flags |= MAP_SHARED;
+>  
+> @@ -561,10 +611,16 @@ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+>  	if (offset_in_page(ret))
+>  		goto out1;
+>  
+> -	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
+> +	/* We got a new mapping */
+> +	if (!(flags & MREMAP_FIXED))
+> +		new_addr = ret;
+> +
+> +	ret = move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf,
+>  		       uf_unmap);
+> +
+>  	if (!(offset_in_page(ret)))
+>  		goto out;
 
---=20
-With Best Regards,
-Andy Shevchenko
+Not related to the effort directly, but do we really use offset_in_page()
+as a substitute for IS_ERR() here. That's disgusting.
+
+> +
+>  out1:
+>  	vm_unacct_memory(charged);
+>  
+> @@ -609,12 +665,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	addr = untagged_addr(addr);
+>  	new_addr = untagged_addr(new_addr);
+>  
+> -	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
+> +	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+>  		return ret;
+>  
+>  	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+>  		return ret;
+>  
+> +	/* MREMAP_DONTUNMAP is always a move */
+> +	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_MAYMOVE))
+> +		return ret;
+> +
+>  	if (offset_in_page(addr))
+>  		return ret;
+>  
+> @@ -632,9 +692,10 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	if (down_write_killable(&current->mm->mmap_sem))
+>  		return -EINTR;
+>  
+> -	if (flags & MREMAP_FIXED) {
+> +	if (flags & (MREMAP_FIXED | MREMAP_DONTUNMAP)) {
+>  		ret = mremap_to(addr, old_len, new_addr, new_len,
+> -				&locked, &uf, &uf_unmap_early, &uf_unmap);
+> +				&locked, flags, &uf, &uf_unmap_early,
+> +				&uf_unmap);
+>  		goto out;
+>  	}
+>  
+> @@ -662,7 +723,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  	/*
+>  	 * Ok, we need to grow..
+>  	 */
+> -	vma = vma_to_resize(addr, old_len, new_len, &charged);
+> +	vma = vma_to_resize(addr, old_len, new_len, flags, &charged);
+>  	if (IS_ERR(vma)) {
+>  		ret = PTR_ERR(vma);
+>  		goto out;
+> @@ -712,7 +773,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+>  		}
+>  
+>  		ret = move_vma(vma, addr, old_len, new_len, new_addr,
+> -			       &locked, &uf, &uf_unmap);
+> +			       &locked, flags, &uf, &uf_unmap);
+>  	}
+>  out:
+>  	if (offset_in_page(ret)) {
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
+
+-- 
+ Kirill A. Shutemov
