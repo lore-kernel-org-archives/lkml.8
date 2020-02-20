@@ -2,121 +2,134 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED40C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD933C11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B5A524681
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:46:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t/iabB7z"
+	by mail.kernel.org (Postfix) with ESMTP id A4D8024673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgBTSqN (ORCPT
+        id S1728836AbgBTSso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:46:13 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37694 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:46:12 -0500
-Received: by mail-ed1-f65.google.com with SMTP id t7so23310186edr.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3pzTOf6vYrNpBzwrv5P8vGUEMGl4yTghrNTGfR5M7Oc=;
-        b=t/iabB7zJkaoluyOjIOJfc2zOAmtCMc0F/y/TF2fj7jW83AkZqMCidXI1cWAbd1seh
-         NrPIkCTa7wgPP3M5+5W4Nd8wCviO86LJDU/66mUTKdZUNRZSGcNC+WNlPLabRaKp4SR+
-         orsRRi/sfSaMIAGI3SoDi7MDtWF06zukVhMxyMS8/yfYakd+jGja2CyT12U5oXkmI8sN
-         z5jMtx62wuJh4j4W5bIO2P70wW6bBQ278/BBWp++v1TyluKJlkdg9fCLT1VNOntUyF2q
-         Dp4wBg6EPgY/049JRWKGl3hU5FeH12hRn285BsTec8q28s4O1DhJH6apj0UVzQYbrXgZ
-         AeHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3pzTOf6vYrNpBzwrv5P8vGUEMGl4yTghrNTGfR5M7Oc=;
-        b=Yc3zVj9adW96Bg4Qr0s202qSM2F376FODoPQ4on7EawK6yY28XUOurYM9f8XTywMdp
-         bGoYEHt1RCqF+yp98IYIlHuKQG/Jt0swZJBvlnqVG9x4iD8ofTaybCpgqSV8hDjllB1R
-         KatsyYqiCRYwlatQ/m/2wv+wFsvYnu0R/5ipbchRJ6pEkg8AIxoikZ1HAZBN2jEXBogX
-         lFsaz0ZMPFUy+6A5mRUakwVnzf+rcqqSgMa+JBA1ZTzWNIvVuULvxGZEKw08Tpct740f
-         t6hEcP0Iumqjchy6EolOqduWuNkS/RoqZzXewsY2dwrfWwK4C9tCP4EMClF5F4VwSytV
-         tkYQ==
-X-Gm-Message-State: APjAAAW008hs5bTJJ7Z++gH4JCttcn+3Wke+UcCnWAEQwkJjEDdUU0Nq
-        w4lRcJE44bR7DD0f78LUT9ADWt2Bh5XvjaaLS/tmcA==
-X-Google-Smtp-Source: APXvYqxLLjMlzm9n1gTBdsGBP2Dd4mIMoNz+RxUJ/scsjYrcKm8cv5eKltlsAg/aIqFp91+eAChxVZYEb3UQBPTKYf4=
-X-Received: by 2002:a17:906:1e48:: with SMTP id i8mr28875694ejj.189.1582224370598;
- Thu, 20 Feb 2020 10:46:10 -0800 (PST)
+        Thu, 20 Feb 2020 13:48:44 -0500
+Received: from mga05.intel.com ([192.55.52.43]:46666 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbgBTSso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:48:44 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 10:48:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="436687206"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Feb 2020 10:48:42 -0800
+Date:   Thu, 20 Feb 2020 10:48:42 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jordan Hand <jorhand@linux.microsoft.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Message-ID: <20200220184842.GE3972@linux.intel.com>
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
+ <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+ <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
 MIME-Version: 1.0
-References: <20200218173221.237674-1-bgeffon@google.com> <20200220171554.GA44866@google.com>
- <CADyq12zUEq9kcyuR_Qm9MrU1ii-+9n8T2hK6QNzj=kH5zn0VrA@mail.gmail.com>
-In-Reply-To: <CADyq12zUEq9kcyuR_Qm9MrU1ii-+9n8T2hK6QNzj=kH5zn0VrA@mail.gmail.com>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Thu, 20 Feb 2020 10:45:44 -0800
-Message-ID: <CADyq12xz-g1geCBE5ie+Uffvp1YAgdsVq1yjQGydu=AZH-FxGA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry I should clarify that this is the behavior with MREMAP_FIXED is
-used, and to expand on that, it would potentially even have unmapped
-the region at the destination address and then fail in vma_to_resize
-too, so I hope that explains why that check landed there. But should
-these situations be considered a bug?
+On Thu, Feb 20, 2020 at 10:33:36AM -0800, Jordan Hand wrote:
+> On 2/20/20 10:13 AM, Sean Christopherson wrote:
+> > There are essentially two paths we can take:
+> > 
+> >  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
+> >     PROT_EXEC for enclaves.
+> > 
+> >  2) Punt the issue to userspace.
+> > 
+> > Option (1) is desirable in some ways:
+> > 
+> >   - Enclaves will get an executable stack if and only if the loader/creator
+> >     intentionally configures it to have an executable stack.
+> > 
+> >   - Separates enclaves from the personality of the loader.
+> > 
+> >   - Userspace doesn't have to do anything for the common case of not
+> >     wanting an executable stack for its enclaves.
+> > 
+> > The big down side to (1) is that it'd require an ugly hook in architecture
+> > agnostic code.  And arguably, it reduces the overall security of the
+> > platform (more below).
+> > 
+> > For (2), userspace has a few options:
+> > 
+> >  a) Tell the linker the enclave loader doesn't need RIE, either via a .note
+> >     in assembly files or via the global "-z noexecstack" flag.
+> > 
+> >  b) Spawn a separate process to run/map the enclave if the enclave loader
+> >     needs RIE.
+> > 
+> >  c) Require enclaves to allow PROT_EXEC on all pages.  Note, this is an
+> >     absolutely terrible idea and only included for completeness.
+> > 
+> > As shown by the lack of a mmap()/mprotect() hook in this series to squash
+> > RIE, we chose option (2).  Given that enclave loaders are not legacy code
+> > and hopefully following decent coding practices, option (2a) should suffice
+> > for all loaders.  The security benefit mentioned above is that forcing
+> > enclave loaders to squash RIE eliminates an exectuable stack as an attack
+> > vector on the loader.
+> 
+> I see your point and I do agree that there are security benefits to (2a)
+> and I think we could do that for our loader. That said, it does concern
+> me that this breaks perfectly valid userspace behavior. If a userspace
+> process decides to use RIE, I don't know that the SGX driver should
+> disobey that decision.
+> 
+> So option (3) would be to just honor RIE for enclave pages and when page
+> permissions are set to PROT_READ in sgx_encl_page_alloc and RIE is set,
+> also add PROT_EXEC.
 
-Brian
+Ah, right, IIRC that idea also came up in our internal discussions.  Note,
+SGX would need to implement this option by checking for RIE in
+sgx_encl_may_map(), as the process that built the enclave may not be the
+same process that is running the enclave.
 
-On Thu, Feb 20, 2020 at 10:36 AM Brian Geffon <bgeffon@google.com> wrote:
->
-> Hi Minchan,
->
-> > And here we got error if the addr is in non-anonymous-private vma so the
-> > syscall will fail but old vma is gone? I guess it's not your intention?
->
-> This is exactly what happens today in several situations, because
-> vma_to_resize is called unconditionally. For example if the old vma
-> has VM_HUGETLB and old_len < new_len it would have unmapped a portion
-> and then in vma_to_resize returned -EINVAL, similarly when old_len = 0
-> with a non-sharable mapping it will have called do_munmap only to fail
-> in vma_to_resize, if the vma has VM_DONTEXPAND set and you shrink the
-> size with old_len < new_len it would return -EFAULT after having done
-> the unmap on the decreased portion. So I followed the pattern to keep
-> the change simple and maintain consistency with existing behavior.
->
-> But with that being said, Kirill made the point that resizing a VMA
-> while also using MREMAP_DONTUNMAP doesn't have any clear use case and
-> I agree with that, I'm unable to think of a situation where you'd want
-> to resize a VMA and use MREMAP_DONTUNMAP. So I'm tempted to mail a new
-> version which returns -EINVAL if old_len != new_len that would resolve
-> this concern here as nothing would be unmapped ever at the old
-> position add it would clean up the change to very few lines of code.
->
-> What do you think?
->
-> Thank you for taking the time to review.
->
-> Brian
+> I understand your concerns that this using RIE is bad security practice
+> and I'm not convinced that (3) is the way to go, but from a philosophy
+> perspective I don't know that the kernel should be in the business of
+> stopping userspace from doing valid things.
+> 
+> If option (3) can't/shouldn't be done for some reason, option (1) at
+> least keeps from breaking expected userspace behavior. But I do agree
+> that (1) is ugly to implement.
+
+My biggest concern for allowing PROT_EXEC if RIE is that it would result
+in #PF(SGX) (#GP on Skylake) due to an EPCM violation if the enclave
+actually tried to execute from such a page.  This isn't a problem for the
+kernel as the fault will be reported cleanly through the vDSO (or get
+delivered as a SIGSEGV if the enclave isn't entered through the vDSO), but
+it's a bit weird for userspace as userspace will see the #PF(SGX) and
+likely assume the EPC was lost, e.g. silently restart the enclave instead
+of logging an error that the enclave is broken.
