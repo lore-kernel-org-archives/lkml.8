@@ -2,72 +2,155 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49416C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C35CC11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2114F2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:11:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2359824672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgBTSLD (ORCPT
+        id S1728841AbgBTSLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:11:03 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:56932 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbgBTSLC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:11:02 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 2F3A715AC0C32;
-        Thu, 20 Feb 2020 10:11:02 -0800 (PST)
-Date:   Thu, 20 Feb 2020 10:11:01 -0800 (PST)
-Message-Id: <20200220.101101.1993510182065744262.davem@davemloft.net>
-To:     esben@geanix.com
-Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, andrew@lunn.ch,
-        michal.simek@xilinx.com, ynezz@true.cz
-Subject: Re: [PATCH net 2/4] net: ll_temac: Add more error handling of
- dma_map_single() calls
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <87v9o18xqd.fsf@geanix.com>
-References: <65907810dd82de3fcaad9869f328ab32800c67ea.1582108989.git.esben@geanix.com>
-        <20200219.105954.1568022053134111448.davem@davemloft.net>
-        <87v9o18xqd.fsf@geanix.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 20 Feb 2020 10:11:02 -0800 (PST)
+        Thu, 20 Feb 2020 13:11:45 -0500
+Received: from muru.com ([72.249.23.125]:56452 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728812AbgBTSLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:11:45 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 951498080;
+        Thu, 20 Feb 2020 18:12:28 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 10:11:41 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
+Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
+Message-ID: <20200220181141.GR37466@atomide.com>
+References: <202002131856.VeW4PhBJ%lkp@intel.com>
+ <20200220155429.GH37466@atomide.com>
+ <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+ <20200220162012.GI37466@atomide.com>
+ <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+ <20200220163703.GK37466@atomide.com>
+ <20200220171305.GL37466@atomide.com>
+ <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
+ <20200220175744.GQ37466@atomide.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220175744.GQ37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Esben Haabendal <esben@geanix.com>
-Date: Thu, 20 Feb 2020 09:32:58 +0100
-
-> David Miller <davem@davemloft.net> writes:
+* Tony Lindgren <tony@atomide.com> [200220 17:58]:
+> * Andrew F. Davis <afd@ti.com> [200220 17:39]:
+> > On 2/20/20 12:13 PM, Tony Lindgren wrote:
+> > > * Tony Lindgren <tony@atomide.com> [200220 16:37]:
+> > >> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
+> > >>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
+> > >>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
+> > >>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
+> > >>>>>> Andrew,
+> > >>>>>>
+> > >>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
+> > >>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> > >>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
+> > >>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
+> > >>>>>>> date:   3 weeks ago
+> > >>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
+> > >>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> > >>>>>>> reproduce:
+> > >>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > >>>>>>>         chmod +x ~/bin/make.cross
+> > >>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
+> > >>>>>>>         # save the attached .config to linux build tree
+> > >>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> > >>>>>>>
+> > >>>>>>> If you fix the issue, kindly add following tag
+> > >>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+> > >>>>>>>
+> > >>>>>>> All errors (new ones prefixed by >>):
+> > >>>>>>>
+> > >>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
+> > >>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
+> > >>>>>>
+> > >>>>>> Have you looked at this one? Looks like there's still an unhandled
+> > >>>>>> randconfig build case.
+> > >>>>>>
+> > >>>>>
+> > >>>>>
+> > >>>>> I've had a quick look, all the ARM config does:
+> > >>>>>
+> > >>>>> select HAVE_ARM_SMCCC if CPU_V7
+> > >>>>>
+> > >>>>> so I don't think this will happen in any real config, but if we want to
+> > >>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
+> > >>>>> on it.
+> > >>>>
+> > >>>> Seems to happen at least with omap2 only config where we don't have
+> > >>>> CPU_V7. Something like below seems to fix it.
+> > >>>>
+> > >>>> If that looks OK to you, I'll send out a proper fix.
+> > >>>>
+> > >>>
+> > >>>
+> > >>> This looks fine to me.
+> > >>>
+> > >>> A better later fix might be to later stub out the actual __arm_smccc_smc
+> > >>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
+> > >>> get the fix.
+> > >>
+> > >> Yeah seems that might be better. Adding Aaro and Marc to Cc.
+> > > 
+> > > But if we can in theory have some arm11 machine with smccc, then this
+> > > local ifdef below is probably the way to go.
+> > > 
+> > 
+> > If the machine has SMCCC then it will also have the
+> > CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
 > 
->> From: Esben Haabendal <esben@geanix.com>
->> Date: Wed, 19 Feb 2020 11:54:00 +0100
->>
->>> @@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->>>  	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
->>>  				      skb_headlen(skb), DMA_TO_DEVICE);
->>>  	cur_p->len = cpu_to_be32(skb_headlen(skb));
->>> +	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
->>> +		return NETDEV_TX_BUSY;
->>
->> The appropriate behavior in this situation is to drop the packet and return
->> NETDEV_TX_OK.
-> 
-> Ok, and I guess the same goes for the error handling of dma_map_single()
-> of one of the fragments later in same function.
+> Hmm yeah good point.
 
-Yes.
+So the patch below seems like the way to go then. Anybody have issues
+with the patch below?
+
+Regards,
+
+Tony
+
+8< -------------------------
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -121,6 +121,7 @@ struct arm_smccc_quirk {
+ 	} state;
+ };
+ 
++#ifdef CONFIG_HAVE_ARM_SMCCC
+ /**
+  * __arm_smccc_smc() - make SMC calls
+  * @a0-a7: arguments passed in registers 0 to 7
+@@ -137,6 +138,14 @@ asmlinkage void __arm_smccc_smc(unsigned long a0, unsigned long a1,
+ 			unsigned long a2, unsigned long a3, unsigned long a4,
+ 			unsigned long a5, unsigned long a6, unsigned long a7,
+ 			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk);
++#else
++static inline void __arm_smccc_smc(unsigned long a0, unsigned long a1,
++			unsigned long a2, unsigned long a3, unsigned long a4,
++			unsigned long a5, unsigned long a6, unsigned long a7,
++			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk)
++{
++}
++#endif
+ 
+ /**
+  * __arm_smccc_hvc() - make HVC calls
