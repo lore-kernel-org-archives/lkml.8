@@ -2,183 +2,142 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761C8C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4993FC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F5B2467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB0E24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="yw55C4gf";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E/TUP4W+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HNepBQpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgBTRcS (ORCPT
+        id S1728714AbgBTRcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:32:18 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:54133 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbgBTRcR (ORCPT
+        Thu, 20 Feb 2020 12:32:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726959AbgBTRcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:32:17 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 862EC21AB4;
-        Thu, 20 Feb 2020 12:32:16 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:32:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=Ay1v4I3raYISAcTCBgfWLbl1z8B
-        K11fKSxA2zB0pXj8=; b=yw55C4gff4dd9drT8w4Q4u7N5Q0zhfB/9hoHZ9XoGyo
-        v6CvPSkKBlPsnJUEbiS7GM3aoW/M00z2cOAH3oPEFUQoHnG/0l8iZWC9dDMFIFS3
-        05ThvLt6MoRFpnwkuhQid6gbuGRqunZ30CnB4j/iqXQ2xSldiUmYLvGwaR6tOzVR
-        VOk+FezMjuKLib5pfMtUBIZhXiASx/XXMlBKzKG4OG5E+u6gUIX4ftDpy1F9UaKD
-        Dg+22JbBeEi4cm1L3mS3W57vWwkZTuqCM7NPenF3obLADklU0RVv4nNO++h7bcVN
-        fbqxjx17pPzjxJV/jGrbVaX6h+rxE3L3D9xAu6Syxag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Ay1v4I
-        3raYISAcTCBgfWLbl1z8BK11fKSxA2zB0pXj8=; b=E/TUP4W+gjBqbTrrQTK9Bu
-        tDzxiE2dMHFS89Zih1vemTPTbpLx0Tct0H3CeUFVUrJO1yioRS0EFTpaT9ntvJ/n
-        Sudrb1k8R5xNu6/8FVA//vBjJ7iDa7E+W5MPN9VJVEnXMGFxZASPSSZ1IxGVBSJ+
-        0+qlstr/Fb9xoNc0zuh669UIfncJ0E576HjsYEzMSUwtXi+lxyQWMz0LuDvn4AqB
-        e7nLmB+HD0bDzi1X6MIKLAo0kryLjI18+02wh8kfOtdrQGe5cfVy0VcBSfbizK0W
-        Vwsrvl2Hw3cV0VjVbNmhR8Rd+muTsGkdl12xcNPfjSPrlKjjUBPwUUDEvS89LEng
-        ==
-X-ME-Sender: <xms:n8JOXiiM3A93u8SHlXFFgbUXnF_UIDzJwFk21GT0a1-b02RrIs9oPQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
-    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:n8JOXutsVth5QITUpKCPwf4NneECws8jZhZV7sZT_zKPzNvUhZD53w>
-    <xmx:n8JOXkzbk5FwE4A4CRvAWtmTpMqGV0lWN0158ZgAFwfjrlphgGXjhg>
-    <xmx:n8JOXsPuNLMWK3osy2RHvSstRaz8-b_fXGxZDpoK9NJ8WF_CQ3vYxA>
-    <xmx:oMJOXiPuIzLV7FPq6YQRW6ykLphRz9PNUiz-4au70YZJ0wAd8FPGUQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 450D2328005E;
-        Thu, 20 Feb 2020 12:32:15 -0500 (EST)
-Date:   Thu, 20 Feb 2020 18:32:13 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Ondrej Jirman <megous@megous.com>
-Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bus: sunxi-rsb: Return correct data when mixing 16-bit
- and 8-bit reads
-Message-ID: <20200220173213.s2ytf3zdi6q3bxli@gilmour.lan>
-References: <20200219010951.395599-1-megous@megous.com>
+        Thu, 20 Feb 2020 12:32:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582219942;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qhtQcGBTl4nwp8gN4Hlxs7R2XI/3YERGs+eAbVjqzyU=;
+        b=HNepBQpK5p5wD9t8EY45sY1m5BeVZiQFgsJaIAia+jtlFLB5hgwxL6PLpwKkP2hRmAcvkj
+        BuTqK1RS4k1tCtgyptTCIK8DDwRwC4FQrZnnmnSBUX25ROk5iEKU+IzN+N8JmSTJLC2auk
+        Pb6S0E3J/+TFhv8cw6LsmE0ntYP3lsE=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-C4v2X6LRPTO6ofN5xEULvA-1; Thu, 20 Feb 2020 12:32:16 -0500
+X-MC-Unique: C4v2X6LRPTO6ofN5xEULvA-1
+Received: by mail-qv1-f69.google.com with SMTP id c1so3043783qvw.17
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:32:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to;
+        bh=qhtQcGBTl4nwp8gN4Hlxs7R2XI/3YERGs+eAbVjqzyU=;
+        b=NKrQxrZPqIOJiKeozfYfo6vjkir1dM5Y5q8UPiuDLl9KZ/thMZGkCHaGTC2mL+XU3u
+         61J9rz6dsTvJvZ/lbqZf6+fYZS8VsAnO7qwxLGIDbU78GC7XyHFUxinEodDbpA2p4gfD
+         sH1/0AT35k5e2hOqMld1dkOSQ1hIQns66B69/ozrfhs+AsxXJqqgEtTlaBNGddg2od4k
+         NgS+xBXMw7l39bcZLhSYvA89xHw8nYGve7GFNy1dfZkXio8GkBDlTIahnrxnBMT+bGcT
+         nlfLswCG+dg9nXAvbJBzvWTVv4Nxhhb2dq3fc52+AYEVTbUzl2Jjm11Ci2BgIBEqxBq6
+         +VkQ==
+X-Gm-Message-State: APjAAAXMptHXlfH7pyPumRkGQSA0naJOfWXe0SynKwNIKi+ZzuPrcrgX
+        HFNhGLWkTKj4vqm1bjsORQREt7QHJl4iElpy/KUPA5Yr2pMbsBrhiXZNYEOJODLjNlF+jEa3CB6
+        ZehVpyVjbpwZ3ecisR4vKSkkm
+X-Received: by 2002:ae9:c318:: with SMTP id n24mr30412679qkg.38.1582219936268;
+        Thu, 20 Feb 2020 09:32:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwhBKg1zI+voTYvvRjbz8lPgbIU+/Asipm4OXQD300Mfs8AbIlFl3jf+jI9oBXC1LvQU7lC9g==
+X-Received: by 2002:ae9:c318:: with SMTP id n24mr30412640qkg.38.1582219935836;
+        Thu, 20 Feb 2020 09:32:15 -0800 (PST)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id t187sm118485qke.85.2020.02.20.09.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:32:15 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:32:13 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: question about iommu_need_mapping
+Message-ID: <20200220173213.moynvygrdzc66zqg@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+References: <20200219235516.zl44y7ydgqqja6x5@cantor>
+ <af5a148e-76bc-4aa4-dd1c-b04a5ffc56b1@linux.intel.com>
+ <20200220162441.bhnpwgsmj4vlp3ve@cantor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4qmk5mkxpxvl2c2h"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200219010951.395599-1-megous@megous.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220162441.bhnpwgsmj4vlp3ve@cantor>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---4qmk5mkxpxvl2c2h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 19, 2020 at 02:09:50AM +0100, Ondrej Jirman wrote:
-> When doing a 16-bit read that returns data in the MSB byte, the
-> RSB_DATA register will keep the MSB byte unchanged when doing
-> the following 8-bit read. sunxi_rsb_read() will then return
-> a result that contains high byte from 16-bit read mixed with
-> the 8-bit result.
+On Thu Feb 20 20, Jerry Snitselaar wrote:
+>On Thu Feb 20 20, Lu Baolu wrote:
+>>Hi Jerry,
+>>
+>>On 2020/2/20 7:55, Jerry Snitselaar wrote:
+>>>Is it possible for a device to end up with dev->archdata.iommu == NULL
+>>>on iommu_need_mapping in the following instance:
+>>>
+>>>1. iommu_group has dma domain for default
+>>>2. device gets private identity domain in intel_iommu_add_device
+>>>3. iommu_need_mapping gets called with that device.
+>>>4. dmar_remove_one_dev_info sets dev->archdata.iommu = NULL via 
+>>>unlink_domain_info.
+>>>5. request_default_domain_for_dev exits after checking that 
+>>>group->default_domain
+>>>   exists, and group->default_domain->type is dma.
+>>>6. iommu_request_dma_domain_for_dev returns 0 from 
+>>>request_default_domain_for_dev
+>>>   and a private dma domain isn't created for the device.
+>>>
+>>
+>>Yes. It's possible.
+>>
+>>>The case I was seeing went away with commit 9235cb13d7d1 ("iommu/vt-d:
+>>>Allow devices with RMRRs to use identity domain"), because it changed
+>>>which domain the group and devices were using, but it seems like it is
+>>>still a possibility with the code. Baolu, you mentioned possibly
+>>>removing the domain switch. Commit 98b2fffb5e27 ("iommu/vt-d: Handle
+>>>32bit device with identity default domain") makes it sound like the
+>>>domain switch is required.
+>>
+>>It's more "nice to have" than "required" if the iommu driver doesn't
+>>disable swiotlb explicitly. The device access of system memory higher
+>>than the device's addressing capability could go through the bounced
+>>buffer implemented in swiotlb.
+>>
+>>Best regards,
+>>baolu
 >
-> The consequence is that after this happens the PMIC's regmap will
-> look like this: (0x33 is the high byte from the 16-bit read)
+>Hi Baolu,
 >
-> % cat /sys/kernel/debug/regmap/sunxi-rsb-3a3/registers
-> 00: 33
-> 01: 33
-> 02: 33
-> 03: 33
-> 04: 33
-> 05: 33
-> 06: 33
-> 07: 33
-> 08: 33
-> 09: 33
-> 0a: 33
-> 0b: 33
-> 0c: 33
-> 0d: 33
-> 0e: 33
-> [snip]
+>Would this mean switching to bounce_dma_ops instead?
 >
-> Fix this by masking the result of the read with the correct mask
-> based on the size of the read. There are no 16-bit users in the
-> mainline kernel, so this doesn't need to get into the stable tree.
+
+Never mind. I see that it would go into the dma_direct code.
+
+>Regards,
+>Jerry
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
-> ---
->  drivers/bus/sunxi-rsb.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-> index b8043b58568ac..8ab6a3865f569 100644
-> --- a/drivers/bus/sunxi-rsb.c
-> +++ b/drivers/bus/sunxi-rsb.c
-> @@ -316,6 +316,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
->  {
->  	u32 cmd;
->  	int ret;
-> +	u32 mask;
->
->  	if (!buf)
->  		return -EINVAL;
-> @@ -323,12 +324,15 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
->  	switch (len) {
->  	case 1:
->  		cmd = RSB_CMD_RD8;
-> +		mask = 0xffu;
->  		break;
->  	case 2:
->  		cmd = RSB_CMD_RD16;
-> +		mask = 0xffffu;
->  		break;
->  	case 4:
->  		cmd = RSB_CMD_RD32;
-> +		mask = 0xffffffffu;
->  		break;
->  	default:
->  		dev_err(rsb->dev, "Invalid access width: %zd\n", len);
-> @@ -345,7 +349,7 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
->  	if (ret)
->  		goto unlock;
->
-> -	*buf = readl(rsb->regs + RSB_DATA);
-> +	*buf = readl(rsb->regs + RSB_DATA) & mask;
+>>_______________________________________________
+>>iommu mailing list
+>>iommu@lists.linux-foundation.org
+>>https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-Thanks for debugging this and the extensive commit log.
-
-I guess it would be cleaner to just use GENMASK(len * 8, 0) here?
-
-Maxime
-
---4qmk5mkxpxvl2c2h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7CnQAKCRDj7w1vZxhR
-xYwdAQDlHMlf/FdIX+Eumbe45KdrYyQhhaHzGmbiyBwtrtgxMgEAnMJqK4ffi3Lb
-e+5SIgZ8ZAhD5GxFQ06Ui8UaoF4B+Qc=
-=g9qg
------END PGP SIGNATURE-----
-
---4qmk5mkxpxvl2c2h--
