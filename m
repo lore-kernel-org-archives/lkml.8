@@ -2,203 +2,104 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD45C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823CEC7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D6A24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4004124656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqLME2Up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbgBTCbG (ORCPT
+        id S1727930AbgBTCcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:31:06 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47978 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727576AbgBTCbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:31:06 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5DB5077F1D884EB94B3F;
-        Thu, 20 Feb 2020 10:31:03 +0800 (CST)
-Received: from [127.0.0.1] (10.177.246.209) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
- 10:30:56 +0800
-Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
-To:     Mike Kravetz <mike.kravetz@oracle.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-CC:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
-        <kvm@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
- <20200218203717.GE28156@linux.intel.com>
- <a041fdb4-bfd0-ac4b-2809-6fddfc4f8d83@huawei.com>
- <20200219015836.GM28156@linux.intel.com>
- <098a5dd6-e1da-f161-97d7-cfe735d14fd8@oracle.com>
-From:   "Longpeng (Mike)" <longpeng2@huawei.com>
-Message-ID: <502b5e52-060b-6864-d1b7-eab2dc951aed@huawei.com>
-Date:   Thu, 20 Feb 2020 10:30:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <098a5dd6-e1da-f161-97d7-cfe735d14fd8@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.246.209]
-X-CFilter-Loop: Reflected
+        Wed, 19 Feb 2020 21:32:05 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46007 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbgBTCcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:32:04 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 2so1105246pfg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:32:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=zr5u8Chlfff2X4LtdmxMDdWIdJ3E6W1Jd7u1xAH1pgY=;
+        b=YqLME2Upvbgry5x4ZwXh9NuaSkibHeECcLimobVcOq4rOxlslvdQi8bQpj47MPJpsT
+         XZtF06I6/FVkWNuddpU0pb2IaHw9VWTjxq8wbM85XIePqlc8tqUew/GVhGEinnKRLCpz
+         AswZ5COmSocVAf7kBzRzLtMgqRMw4d2zALjO31HxM/Bc97gieySrjgjX+Pr9z0JjyBz7
+         zc009QD4iwZcjRkF0Rzk0AyezUcy1IwKYG3kAH1vvIXeFdiZo0yBCMuZYYcMtgM8xkq0
+         a6GcBN8UlwayRhqvIdv5xrOXcR2p5NIBW9eDQjUc60ESzxdh2DbKy0NM3T43pDPM4SI3
+         9kFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=zr5u8Chlfff2X4LtdmxMDdWIdJ3E6W1Jd7u1xAH1pgY=;
+        b=Gn4CwqF6Uf9SwXyk74NQCR5uZQhmP533kzMfCgvA8UpLxZvXoucs0RSd+1Qd7vy5SH
+         Uyh798WwquavV++jXikFud6ysU0fXuO/SJHjEkO54pBROqxq7woQVVnWyffdwkJm5fg4
+         JPgnAC8QpzgWP1MaB+4Uk02BVh0IJvIlIkuf6ry6Lta48XXC0c5JwQUEpJ89MPCJoukA
+         f8qN9sSwd/lKQdoJHLol+AsAr84cjxTVQH4nV8QO5hOFq+beu3vdtc1CL7o24xZKFOP/
+         EiOwkPZ3nBu6KRACK+k1/tXBSuPDmxAH5FvxzWbO9cD0GiT32OZe6R02jod1RHymOFrC
+         T2Vg==
+X-Gm-Message-State: APjAAAXJyaB0jQHiLJoNx9BrLfROBb/Ycw2Klg7IXjUsl1jJ4/qdXqpR
+        uizahv6hfxxreaiuYS8BQ6k=
+X-Google-Smtp-Source: APXvYqyep9F5J3KoDhiCL/yaP5HvZoAj87AsHQagc3pwSgMRkO7tnGn55MApTjed/2XjmAO6L8mFMQ==
+X-Received: by 2002:a63:8c5c:: with SMTP id q28mr30401414pgn.324.1582165924216;
+        Wed, 19 Feb 2020 18:32:04 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l12sm1049427pgj.16.2020.02.19.18.32.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Feb 2020 18:32:03 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Michael S . Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH] virtio_balloon: Fix build error seen with CONFIG_BALLOON_COMPACTION=n
+Date:   Wed, 19 Feb 2020 18:31:56 -0800
+Message-Id: <20200220023156.20636-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020/2/20 3:33, Mike Kravetz 写道:
-> + Kirill
-> On 2/18/20 5:58 PM, Sean Christopherson wrote:
->> On Wed, Feb 19, 2020 at 09:39:59AM +0800, Longpeng (Mike) wrote:
->>> 在 2020/2/19 4:37, Sean Christopherson 写道:
->>>> On Tue, Feb 18, 2020 at 08:10:25PM +0800, Longpeng(Mike) wrote:
->>>>> Our machine encountered a panic after run for a long time and
->>>>> the calltrace is:
->>>>
->>>> What's the actual panic?  Is it a BUG() in hugetlb_fault(), a bad pointer
->>>> dereference, etc...?
->>>>
->>> A bad pointer dereference.
->>>
->>> pgd -> pud -> user 1G hugepage
->>> huge_pte_offset() wants to return NULL or pud (point to the entry), but it maybe
->>> return the a bad pointer of the user 1G hugepage.
->>>
->>>>> RIP: 0010:[<ffffffff9dff0587>]  [<ffffffff9dff0587>] hugetlb_fault+0x307/0xbe0
->>>>> RSP: 0018:ffff9567fc27f808  EFLAGS: 00010286
->>>>> RAX: e800c03ff1258d48 RBX: ffffd3bb003b69c0 RCX: e800c03ff1258d48
->>>>> RDX: 17ff3fc00eda72b7 RSI: 00003ffffffff000 RDI: e800c03ff1258d48
->>>>> RBP: ffff9567fc27f8c8 R08: e800c03ff1258d48 R09: 0000000000000080
->>>>> R10: ffffaba0704c22a8 R11: 0000000000000001 R12: ffff95c87b4b60d8
->>>>> R13: 00005fff00000000 R14: 0000000000000000 R15: ffff9567face8074
->>>>> FS:  00007fe2d9ffb700(0000) GS:ffff956900e40000(0000) knlGS:0000000000000000
->>>>> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>> CR2: ffffd3bb003b69c0 CR3: 000000be67374000 CR4: 00000000003627e0
->>>>> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>>>> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>>>> Call Trace:
->>>>>  [<ffffffff9df9b71b>] ? unlock_page+0x2b/0x30
->>>>>  [<ffffffff9dff04a2>] ? hugetlb_fault+0x222/0xbe0
->>>>>  [<ffffffff9dff1405>] follow_hugetlb_page+0x175/0x540
->>>>>  [<ffffffff9e15b825>] ? cpumask_next_and+0x35/0x50
->>>>>  [<ffffffff9dfc7230>] __get_user_pages+0x2a0/0x7e0
->>>>>  [<ffffffff9dfc648d>] __get_user_pages_unlocked+0x15d/0x210
->>>>>  [<ffffffffc068cfc5>] __gfn_to_pfn_memslot+0x3c5/0x460 [kvm]
->>>>>  [<ffffffffc06b28be>] try_async_pf+0x6e/0x2a0 [kvm]
->>>>>  [<ffffffffc06b4b41>] tdp_page_fault+0x151/0x2d0 [kvm]
->>>>>  [<ffffffffc075731c>] ? vmx_vcpu_run+0x2ec/0xc80 [kvm_intel]
->>>>>  [<ffffffffc0757328>] ? vmx_vcpu_run+0x2f8/0xc80 [kvm_intel]
->>>>>  [<ffffffffc06abc11>] kvm_mmu_page_fault+0x31/0x140 [kvm]
->>>>>  [<ffffffffc074d1ae>] handle_ept_violation+0x9e/0x170 [kvm_intel]
->>>>>  [<ffffffffc075579c>] vmx_handle_exit+0x2bc/0xc70 [kvm_intel]
->>>>>  [<ffffffffc074f1a0>] ? __vmx_complete_interrupts.part.73+0x80/0xd0 [kvm_intel]
->>>>>  [<ffffffffc07574c0>] ? vmx_vcpu_run+0x490/0xc80 [kvm_intel]
->>>>>  [<ffffffffc069f3be>] vcpu_enter_guest+0x7be/0x13a0 [kvm]
->>>>>  [<ffffffffc06cf53e>] ? kvm_check_async_pf_completion+0x8e/0xb0 [kvm]
->>>>>  [<ffffffffc06a6f90>] kvm_arch_vcpu_ioctl_run+0x330/0x490 [kvm]
->>>>>  [<ffffffffc068d919>] kvm_vcpu_ioctl+0x309/0x6d0 [kvm]
->>>>>  [<ffffffff9deaa8c2>] ? dequeue_signal+0x32/0x180
->>>>>  [<ffffffff9deae34d>] ? do_sigtimedwait+0xcd/0x230
->>>>>  [<ffffffff9e03aed0>] do_vfs_ioctl+0x3f0/0x540
->>>>>  [<ffffffff9e03b0c1>] SyS_ioctl+0xa1/0xc0
->>>>>  [<ffffffff9e53879b>] system_call_fastpath+0x22/0x27
->>>>>
->>>>> ( The kernel we used is older, but we think the latest kernel also has this
->>>>>   bug after dig into this problem. )
->>>>>
->>>>> For 1G hugepages, huge_pte_offset() wants to return NULL or pudp, but it
->>>>> may return a wrong 'pmdp' if there is a race. Please look at the following
->>>>> code snippet:
->>>>>     ...
->>>>>     pud = pud_offset(p4d, addr);
->>>>>     if (sz != PUD_SIZE && pud_none(*pud))
->>>>>         return NULL;
->>>>>     /* hugepage or swap? */
->>>>>     if (pud_huge(*pud) || !pud_present(*pud))
->>>>>         return (pte_t *)pud;
->>>>>
->>>>>     pmd = pmd_offset(pud, addr);
->>>>>     if (sz != PMD_SIZE && pmd_none(*pmd))
->>>>>         return NULL;
->>>>>     /* hugepage or swap? */
->>>>>     if (pmd_huge(*pmd) || !pmd_present(*pmd))
->>>>>         return (pte_t *)pmd;
->>>>>     ...
->>>>>
->>>>> The following sequence would trigger this bug:
->>>>> 1. CPU0: sz = PUD_SIZE and *pud = 0 , continue
->>>>> 1. CPU0: "pud_huge(*pud)" is false
->>>>> 2. CPU1: calling hugetlb_no_page and set *pud to xxxx8e7(PRESENT)
->>>>> 3. CPU0: "!pud_present(*pud)" is false, continue
->>>>> 4. CPU0: pmd = pmd_offset(pud, addr) and maybe return a wrong pmdp
->>>>> However, we want CPU0 to return NULL or pudp.
->>>>>
->>>>> We can avoid this race by read the pud only once.
->>>>
->>>> Are there any other options for avoiding the panic you hit?  I ask because
->>>> there are a variety of flows that use a very similar code pattern, e.g.
->>>> lookup_address_in_pgd(), and using READ_ONCE() in huge_pte_offset() but not
->>>> other flows could be confusing (or in my case, anxiety inducing[*]).  At
->>>> the least, adding a comment in huge_pte_offset() to explain the need for
->>>> READ_ONCE() would be helpful.
->>>>
->>> I hope the hugetlb and mm maintainers could give some other options if they
->>> approve this bug.
->>
->> The race and the fix make sense.  I assumed dereferencing garbage from the
->> huge page was the issue, but I wasn't 100% that was the case, which is why
->> I asked about alternative fixes.
->>
->>> We change the code from
->>> 	if (pud_huge(*pud) || !pud_present(*pud))
->>> to
->>> 	if (pud_huge(*pud)
->>> 		return (pte_t *)pud;
->>> 	busy loop for 500ms
->>> 	if (!pud_present(*pud))
->>> 		return (pte_t *)pud;
->>> and the panic will be hit quickly.
->>>
->>> ARM64 has already use READ/WRITE_ONCE to access the pagetable, look at this
->>> commit 20a004e7 (arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing page tables).
->>>
->>> The root cause is: 'if (pud_huge(*pud) || !pud_present(*pud))' read entry from
->>> pud twice and the *pud maybe change in a race, so if we only read the pud once.
->>> I use READ_ONCE here is just for safe, to prevents the complier mischief if
->>> possible.
->>
->> FWIW, I'd be in favor of going the READ/WRITE_ONCE() route for x86, e.g.
->> convert everything as a follow-up patch (or patches).  I'm fairly confident
->> that KVM's usage of lookup_address_in_mm() is safe, but I wouldn't exactly
->> bet my life on it.  I'd much rather the failing scenario be that KVM uses
->> a sub-optimal page size as opposed to exploding on a bad pointer.
-> 
-> Longpeng(Mike) asked in another e-mail specifically about making similar
-> changes to lookup_address_in_mm().  Replying here as there is more context.
-> 
-> I 'think' lookup_address_in_mm is safe from this issue.  Why?  IIUC, the
-> problem with the huge_pte_offset routine is that the pud changes from
-> pud_none() to pud_huge() in the middle of
-> 'if (pud_huge(*pud) || !pud_present(*pud))'.  In the case of
-> lookup_address_in_mm, we know pud was not pud_none() as it was previously
-> checked.  I am not aware of any other state transitions which could cause
-> us trouble.  However, I am no expert in this area.
-> 
-So... I need just fix huge_pte_offset in mm/hugetlb.c, right?
+0day reports:
 
-Is it possible the pud changes from pud_huge() to pud_none() while another CPU
-is walking the pagetable ?
+drivers//virtio/virtio_balloon.c: In function 'virtballoon_probe':
+drivers//virtio/virtio_balloon.c:960:1: error:
+	label 'out_del_vqs' defined but not used [-Werror=unused-label]
 
+This is seen with CONFIG_BALLOON_COMPACTION=n.
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ drivers/virtio/virtio_balloon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
+index 7bfe365d9372..341458fd95ca 100644
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -959,8 +959,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
+ 	iput(vb->vb_dev_info.inode);
+ out_kern_unmount:
+ 	kern_unmount(balloon_mnt);
+-#endif
+ out_del_vqs:
++#endif
+ 	vdev->config->del_vqs(vdev);
+ out_free_vb:
+ 	kfree(vb);
 -- 
-Regards,
-Longpeng(Mike)
+2.17.1
 
