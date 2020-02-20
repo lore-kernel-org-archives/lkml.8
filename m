@@ -2,100 +2,143 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3D2C11D15
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201A9C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A77208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECC6208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpD+X4Qo"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="MEukQMfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbgBTRo4 (ORCPT
+        id S1728461AbgBTRqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:44:56 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45093 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgBTRoz (ORCPT
+        Thu, 20 Feb 2020 12:46:18 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:54987 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727233AbgBTRqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:44:55 -0500
-Received: by mail-lj1-f193.google.com with SMTP id e18so5079478ljn.12;
-        Thu, 20 Feb 2020 09:44:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=rV1XEtpZtytxn3w6ko1TLTaLmkmnSDIr9qXrTQZTYWE=;
-        b=BpD+X4QoLKjyH6kvt/7+xt+hQM+Ik/EsvrfGiMB2TLbJwOalDuNR5oRZFE+j+0ZbA2
-         Ul1QzmJldYkEI2kww6ZJJjN4xHRpQHpfHZ/fPHAAsoDGfwXn8+AE1Rg+8Sc6gXudomGU
-         n9brCHReIYWA4PgsgfqflEVuZ4GJ6lWaF052D2aNHg/q0u28XvUgp2wdvdojQoPPl1Z9
-         BH/Vw66ZTsAqQBX6bVdWAdXvL+dQA7tIormQDbudqqY8Bi4AXJB1IZshFyY/N7xJNvQs
-         f9BFgyJKpYJxdLacpwYj1tI9DJa7n3YJ6Vnk/y2gAygvGdvJQtunhVU6JRTITS2gpMMG
-         XidQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=rV1XEtpZtytxn3w6ko1TLTaLmkmnSDIr9qXrTQZTYWE=;
-        b=r0/nKeTqLnD5ijKZEPov4Xrd5bGeo7JmhUwYdwq/klG30a7GzVYCxhh9t+4voT5b9M
-         vsVCSgCFBj0zciWLCKfL4sABN7CakYTwDfIzHvAZ7HA8vqsSTITm+dZAWTgSnbbL2YBX
-         pdxRFA4RX2vcqCyHeStt4FSi+i9fTl8YwsHjY7rS3N7aryvk/+b2ZcDsY40InHg+kvt+
-         xV1uO+xlhaRjKec8DnpwTYgCOwEOyNYc+TNnB+wV9ETfTTtyVstOPdde8QcJwL0XWP8C
-         +ETbtw/7AtR7mMCFXoryJOEAY1v4W6r97Jn7Y9GdKvLBafXDn0dwvFXDfgBE8o08a4xr
-         KLig==
-X-Gm-Message-State: APjAAAX/e35XaUa/vBwbtRVoCd5SReDxk5zr17mbrnk6SbU1hxprlT77
-        gNidEw5diEZ+VxzaPBKRhKM=
-X-Google-Smtp-Source: APXvYqw/tdEvgcTCzHUJeaGUS3Ai//UQlxfJJSIRykk/sUvdVtE3Xu/NJzzTIgnkC6/5Y8gKf4u+jw==
-X-Received: by 2002:a2e:b044:: with SMTP id d4mr18994708ljl.159.1582220693627;
-        Thu, 20 Feb 2020 09:44:53 -0800 (PST)
-Received: from localhost.localdomain ([87.200.95.144])
-        by smtp.gmail.com with ESMTPSA id v26sm74501ljh.90.2020.02.20.09.44.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 09:44:52 -0800 (PST)
-From:   Christian Hewitt <christianshewitt@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>,
-        Oleg Ivanov <balbes-150@yandex.ru>
-Subject: [PATCH v2] arm64: dts: meson-gxbb-vega-s95: fix bluetooth node
-Date:   Thu, 20 Feb 2020 21:44:02 +0400
-Message-Id: <1582220642-14133-1-git-send-email-christianshewitt@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Feb 2020 12:46:17 -0500
+Received: from mwalle01.sab.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id A0AFB23E3C;
+        Thu, 20 Feb 2020 18:46:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1582220774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xj3LA1zTH4SsCJX7PLfeOExLfpbX8EjlKGUE5mqKsd8=;
+        b=MEukQMfiV14G/weO9PYFD4BkGkrXnCEd2ZGUufJFPC/3g9i9Wgvp5KMzva/nz1O0qvYQFY
+        qHO724Q8somCA5+jvxOdR3ToH3slHjS/S8HoxcXn4D5HRV7TIXDLrzIt4KMmhWqo3113Js
+        LV5oZGkmGyFeeusdSuvsXjvdmMFmRDQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH] serial: earlycon: prefer EARLYCON_DECLARE() variant
+Date:   Thu, 20 Feb 2020 18:46:07 +0100
+Message-Id: <20200220174607.24285-1-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: A0AFB23E3C
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         NEURAL_SPAM(0.00)[0.411];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         RCPT_COUNT_FIVE(0.00)[5];
+         DKIM_SIGNED(0.00)[];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:12941, ipnet:213.135.0.0/19, country:DE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This was missed from the previous fix.
+If a driver exposes early consoles with EARLYCON_DECLARE() and
+OF_EARLYCON_DECLARE(), pefer the non-OF variant if the user specifies it
+by
+  earlycon=<driver>,<options>
 
-Fixes: b07a11dbdfeb ("arm64: dts: meson-gxbb-vega-s95: fix WiFi/BT module support")
+The rationale behind this is that some drivers register multiple setup
+functions under the same driver name. Eg.
 
-Suggested-by: Oleg Ivanov <balbes-150@yandex.ru>
-Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+OF_EARLYCON_DECLARE(lpuart, "fsl,vf610-lpuart", lpuart_early_console_setup);
+OF_EARLYCON_DECLARE(lpuart32, "fsl,ls1021a-lpuart", lpuart32_early_console_setup);
+OF_EARLYCON_DECLARE(lpuart32, "fsl,imx7ulp-lpuart", lpuart32_imx_early_console_setup);
+EARLYCON_DECLARE(lpuart, lpuart_early_console_setup);
+EARLYCON_DECLARE(lpuart32, lpuart32_early_console_setup);
+
+It depends on the order of the entries which console_setup() actually
+gets called. To make things worse, I guess it also depends on the
+compiler how these are ordered. Thus always prefer the EARLYCON_DECLARE()
+ones.
+
+Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/tty/serial/earlycon.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 5eab3df..45cb836 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -245,6 +245,9 @@
- 	bluetooth {
- 		compatible = "brcm,bcm43438-bt";
- 		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
-+		max-speed = <2000000>;
-+		clocks = <&wifi32k>;
-+		clock-names = "lpo";
- 	};
- };
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index c14873b67803..2ae9190b64bb 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -170,6 +170,7 @@ static int __init register_earlycon(char *buf, const struct earlycon_id *match)
+ int __init setup_earlycon(char *buf)
+ {
+ 	const struct earlycon_id **p_match;
++	bool empty_compatible = true;
+ 
+ 	if (!buf || !buf[0])
+ 		return -EINVAL;
+@@ -177,6 +178,7 @@ int __init setup_earlycon(char *buf)
+ 	if (early_con.flags & CON_ENABLED)
+ 		return -EALREADY;
+ 
++again:
+ 	for (p_match = __earlycon_table; p_match < __earlycon_table_end;
+ 	     p_match++) {
+ 		const struct earlycon_id *match = *p_match;
+@@ -185,6 +187,10 @@ int __init setup_earlycon(char *buf)
+ 		if (strncmp(buf, match->name, len))
+ 			continue;
+ 
++		/* prefer entries with empty compatible */
++		if (empty_compatible && *match->compatible)
++			continue;
++
+ 		if (buf[len]) {
+ 			if (buf[len] != ',')
+ 				continue;
+@@ -195,6 +201,11 @@ int __init setup_earlycon(char *buf)
+ 		return register_earlycon(buf, match);
+ 	}
+ 
++	if (empty_compatible) {
++		empty_compatible = false;
++		goto again;
++	}
++
+ 	return -ENOENT;
+ }
  
 -- 
-2.7.4
+2.20.1
 
