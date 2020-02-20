@@ -2,141 +2,117 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5041C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3EAC11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B41207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3481208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MqqtgYfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgBTOsA (ORCPT
+        id S1728218AbgBTOsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:48:00 -0500
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:5421 "EHLO
-        mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727705AbgBTOsA (ORCPT
+        Thu, 20 Feb 2020 09:48:43 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45358 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727705AbgBTOsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:48:00 -0500
-X-IronPort-AV: E=Sophos;i="5.70,464,1574118000"; 
-   d="scan'208";a="339865431"
-Received: from unknown (HELO hadrien) ([132.227.124.212])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 15:47:57 +0100
-Date:   Thu, 20 Feb 2020 15:47:56 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: julia@hadrien
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kbuild-all@lists.01.org
-Subject: Re: [PATCH] proc: faster open/read/close with "permanent" files
- (fwd)
-Message-ID: <alpine.DEB.2.21.2002201546100.2210@hadrien>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 20 Feb 2020 09:48:43 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so4464406ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:48:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VFsELfj9kJG75Pqbvz1ocn9qZImBer1nJRUwC4Q7bZY=;
+        b=MqqtgYfSSn3FHYbEg13WQb6BWeq4sbtryqg6cZPsn20u3rxkq6YEFBDAKvqJIFORbm
+         M1po1MNlQg90SORMlvuRTXHTALEgnixnZsrP1s5lpXbugJqoEfSx8o58UyRkAkmMVOJp
+         x+L3zNQohho2+EaJBd3pH+v8U8eiBJ1NTeZ6h9zMcQVEmoCiIdBjGjNBO8Pz95ppvPQ6
+         2tvTxNVaFFK5eyU6Onxv+Ad+n9MLSmCgPJ0u1C4VA1ZLT5alsQXwfPHcF+esY0xcjqP0
+         eTgvVT9GXk3/30zrL57T+5kp/4Np5rJTR2vAbph1f77RDtWaR3Oncv7yRHXuVt2MPSVY
+         oSaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VFsELfj9kJG75Pqbvz1ocn9qZImBer1nJRUwC4Q7bZY=;
+        b=WxBezHrkzDdWyVfj7XSAEMdLo/pVKUCV+FVfT88Goj8+Kbyolu4OqhOAv+jl5Kbq0d
+         dpX3MiWCtw1CPRdAr3nY9Js4n7HUmSL5Zph+4W7SVgQmITEOYBKORyXxRmz4hWcvhmqp
+         RV8otZdxy9CPy9kvewQgE18lxdt2q9GuKRYIQI2AnPNO0BKWs2TWhVtIzK1Y9yNjJ1hy
+         crdb3hhohhIXvIiSxViK0ufmKJTNJbyrPMH2H9lSle3/615UVGb1fJtlamLfnzb9YfWO
+         wOqU67bQNq0r+LV6tGqIoCjJB7JK+nVZDs8K1/LebyI2rU2OGXwClyAI+qsp1RctC76U
+         o0/g==
+X-Gm-Message-State: APjAAAWieoGVIu9XQjhZL4RkRPD9zDUKfs+HjTZXYiIguTpM9w/E0MBK
+        TnseyAOurY8bkqnt8q1Mup4O8j591ZwgRAdlo8ylzcpX194=
+X-Google-Smtp-Source: APXvYqzC9uvcXVQUMEqfFBmLgRYjVN2yaUx+FWOP5lrFQgxOH/VrI5JSlJHy+5NkZQj0tvezfPvYss2NMoiD7aj8evk=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr18661030ljg.168.1582210121456;
+ Thu, 20 Feb 2020 06:48:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com> <109d17402bc75ed186a2e151dfda1edf05463b5a.1581478324.git.afzal.mohd.ma@gmail.com>
+In-Reply-To: <109d17402bc75ed186a2e151dfda1edf05463b5a.1581478324.git.afzal.mohd.ma@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 20 Feb 2020 15:48:30 +0100
+Message-ID: <CACRpkda-k26bWR9EJMMPDz0S4xy3QW_+uABdmPRbaKPD0b4qfA@mail.gmail.com>
+Subject: Re: [PATCH 16/18] clocksource: Replace setup_irq() by request_irq()
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Barry Song <baohua@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tony Prisk <linux@prisktech.co.nz>,
+        Allison Randal <allison@lohutok.net>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Feb 12, 2020 at 9:05 AM afzal mohammed <afzal.mohd.ma@gmail.com> wrote:
 
-It looks like an unlock may be needed o lines 721 and 732.
+> request_irq() is preferred over setup_irq(). Existing callers of
+> setup_irq() reached mostly via 'init_IRQ()' & 'time_init()', while
+> memory allocators are ready by 'mm_init()'.
+>
+> Per tglx[1], setup_irq() existed in olden days when allocators were not
+> ready by the time early interrupts were initialized.
+>
+> Hence replace setup_irq() by request_irq().
+>
+> Seldom remove_irq() usage has been observed coupled with setup_irq(),
+> wherever that has been found, it too has been replaced by free_irq().
+>
+> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+>
+> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 
-julia
+This makes the kernel a better place.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
----------- Forwarded message ----------
-Hi Alexey,
-
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on jeyu/modules-next]
-[also build test WARNING on linus/master v5.6-rc2 next-20200218]
-[cannot apply to linux/master]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Alexey-Dobriyan/proc-faster-open-read-close-with-permanent-files/20200218-231203
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jeyu/linux.git modules-next
-:::::: branch date: 6 hours ago
-:::::: commit date: 6 hours ago
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-
->> fs/proc/generic.c:721:2-8: preceding lock on line 706
-   fs/proc/generic.c:732:4-10: preceding lock on line 706
-   fs/proc/generic.c:732:4-10: preceding lock on line 748
-
-# https://github.com/0day-ci/linux/commit/3cd4ad42ca7c52d1513e7ba9f08a06197a7380c8
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 3cd4ad42ca7c52d1513e7ba9f08a06197a7380c8
-vim +721 fs/proc/generic.c
-
-8ce584c7416d8a Al Viro         2013-03-30  699
-8ce584c7416d8a Al Viro         2013-03-30  700  int remove_proc_subtree(const char *name, struct proc_dir_entry *parent)
-8ce584c7416d8a Al Viro         2013-03-30  701  {
-8ce584c7416d8a Al Viro         2013-03-30  702  	struct proc_dir_entry *root = NULL, *de, *next;
-8ce584c7416d8a Al Viro         2013-03-30  703  	const char *fn = name;
-8ce584c7416d8a Al Viro         2013-03-30  704  	unsigned int len;
-8ce584c7416d8a Al Viro         2013-03-30  705
-ecf1a3dfff22bd Waiman Long     2015-09-09 @706  	write_lock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  707  	if (__xlate_proc_name(name, &parent, &fn) != 0) {
-ecf1a3dfff22bd Waiman Long     2015-09-09  708  		write_unlock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  709  		return -ENOENT;
-8ce584c7416d8a Al Viro         2013-03-30  710  	}
-8ce584c7416d8a Al Viro         2013-03-30  711  	len = strlen(fn);
-8ce584c7416d8a Al Viro         2013-03-30  712
-710585d4922fd3 Nicolas Dichtel 2014-12-10  713  	root = pde_subdir_find(parent, fn, len);
-8ce584c7416d8a Al Viro         2013-03-30  714  	if (!root) {
-ecf1a3dfff22bd Waiman Long     2015-09-09  715  		write_unlock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  716  		return -ENOENT;
-8ce584c7416d8a Al Viro         2013-03-30  717  	}
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  718  	if (unlikely(pde_is_permanent(root))) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  719  		WARN(1, "removing permanent /proc entry '%s/%s'",
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  720  			root->parent->name, root->name);
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16 @721  		return -EINVAL;
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  722  	}
-4f1134370a29a5 Alexey Dobriyan 2018-04-10  723  	rb_erase(&root->subdir_node, &parent->subdir);
-710585d4922fd3 Nicolas Dichtel 2014-12-10  724
-8ce584c7416d8a Al Viro         2013-03-30  725  	de = root;
-8ce584c7416d8a Al Viro         2013-03-30  726  	while (1) {
-710585d4922fd3 Nicolas Dichtel 2014-12-10  727  		next = pde_subdir_first(de);
-8ce584c7416d8a Al Viro         2013-03-30  728  		if (next) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  729  			if (unlikely(pde_is_permanent(root))) {
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  730  				WARN(1, "removing permanent /proc entry '%s/%s'",
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  731  					next->parent->name, next->name);
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  732  				return -EINVAL;
-3cd4ad42ca7c52 Alexey Dobriyan 2020-02-16  733  			}
-4f1134370a29a5 Alexey Dobriyan 2018-04-10  734  			rb_erase(&next->subdir_node, &de->subdir);
-8ce584c7416d8a Al Viro         2013-03-30  735  			de = next;
-8ce584c7416d8a Al Viro         2013-03-30  736  			continue;
-8ce584c7416d8a Al Viro         2013-03-30  737  		}
-8ce584c7416d8a Al Viro         2013-03-30  738  		next = de->parent;
-8ce584c7416d8a Al Viro         2013-03-30  739  		if (S_ISDIR(de->mode))
-8ce584c7416d8a Al Viro         2013-03-30  740  			next->nlink--;
-e06689bf57017a Alexey Dobriyan 2019-12-04  741  		write_unlock(&proc_subdir_lock);
-e06689bf57017a Alexey Dobriyan 2019-12-04  742
-e06689bf57017a Alexey Dobriyan 2019-12-04  743  		proc_entry_rundown(de);
-8ce584c7416d8a Al Viro         2013-03-30  744  		if (de == root)
-8ce584c7416d8a Al Viro         2013-03-30  745  			break;
-8ce584c7416d8a Al Viro         2013-03-30  746  		pde_put(de);
-8ce584c7416d8a Al Viro         2013-03-30  747
-ecf1a3dfff22bd Waiman Long     2015-09-09  748  		write_lock(&proc_subdir_lock);
-8ce584c7416d8a Al Viro         2013-03-30  749  		de = next;
-8ce584c7416d8a Al Viro         2013-03-30  750  	}
-8ce584c7416d8a Al Viro         2013-03-30  751  	pde_put(root);
-8ce584c7416d8a Al Viro         2013-03-30  752  	return 0;
-8ce584c7416d8a Al Viro         2013-03-30  753  }
-8ce584c7416d8a Al Viro         2013-03-30  754  EXPORT_SYMBOL(remove_proc_subtree);
-4a520d2769beb7 David Howells   2013-04-12  755
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
