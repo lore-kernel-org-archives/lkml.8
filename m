@@ -2,127 +2,104 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA79CC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47ACC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:33:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD6524672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8328E24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:33:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="fLH5IrYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgBTGbP (ORCPT
+        id S1726494AbgBTGdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:31:15 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:56110 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726393AbgBTGbP (ORCPT
+        Thu, 20 Feb 2020 01:33:36 -0500
+Received: from chill.innovation.ch ([216.218.245.220]:40544 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgBTGdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:31:15 -0500
-Received: by mail-io1-f69.google.com with SMTP id z21so1922785iob.22
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:31:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=DDqMJ8JPj7oJO/ZR8xGUg6VFAFuonxwUf5QT8gnpMlI=;
-        b=MAkelopB02icbiK4NbxVaHXoBrZ98GQcHLFDoelbiIkWH8Huhf17DaOBhinanqn4xe
-         kiMS0wb+7StfFvhwP9Ljwv91neKAsGFxTnQ9xsgG/hyWyAgLCrZ7de6Sz1SwNq6Fd7/b
-         lxmGMXWI0BaphGF2YeV5T+KCwZWMvT+h0WRJAxH2X3ts6l8J0gEoApiqazhw2h/Dpwt6
-         le4P37KAlCba3r3jAPItKSTp67bwRdRMyYVfE9fqfUOXN/O73Kc1wlT7C3Bv7URMUqfr
-         wicG8owJoTvHofy1Nm4FJpWgGi/XoU7Bh21E1f0mm4IH7fH+ZTnAVxD6NNTJpSbAG8y0
-         Hj2w==
-X-Gm-Message-State: APjAAAVjaG8pV90BLd66bC5YBApc+CaV+0kde9lT8qWXRdQbxltn1Ls8
-        qWBQGsWKpaPifRlwdBVroe0CyXnUKgFaV1RHwUz6IusOdxAD
-X-Google-Smtp-Source: APXvYqxOsNiTKh+qdqttr1Rz5Xoag30BA+Qf5UFs3ZfyNMV1nBh7iGpymuj0iWTB8mx5mFnbL62z472NbkKQFR/ecoPKcwCxKaZz
+        Thu, 20 Feb 2020 01:33:36 -0500
+Date:   Wed, 19 Feb 2020 22:33:35 -0800
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 542756412C7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1582180415;
+        bh=vhZWh+2Ztj0g9xXmISjjSlOG2XuQ/opDLS+2Tm7NtT8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fLH5IrYzS0EdMc1N/kj00Tub4ak+6tCwmXHiPFqLdxUZbWsIVAnbLAU1JPXwtXDbk
+         Ifv0uXnKrK01hHrLJn2xEwuAJYXk42kdKJ07HfyaoSWUn9tH0aonajEPOF0NvRlyVp
+         jzFfdliaDxUJV/a1+mNUFRXw7xM7hiWjcTLFfY28veVyXxrmCcxmvXJb3TMMGEQQnr
+         hTAvLHPRyueeegtBGah99+fgGBDLRTisUeSr1r5O2Gv8trIfmzxq1NWHXKqVZyV9go
+         uY5wh58pVFBBZzduOXCCSaatN+YRhwct+dQ5/gIZ4cwaU9GtbGpfMYd/Zf1B04w27k
+         pEbxHdB+gpmFQ==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Rob Herring <robh@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] serdev: Fix detection of UART devices on Apple machines.
+Message-ID: <20200220063335.GA9421@innovation.ch>
+References: <20200211194723.486217-1-ronald@innovation.ch>
+ <20200219111519.GB2814125@kroah.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cb8c:: with SMTP id z12mr26095480ilo.5.1582180274590;
- Wed, 19 Feb 2020 22:31:14 -0800 (PST)
-Date:   Wed, 19 Feb 2020 22:31:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003cdd26059efc0db3@google.com>
-Subject: KASAN: null-ptr-deref Write in kcm_tx_work
-From:   syzbot <syzbot+867331f5ea7690d840b4@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com,
-        jslaby@suse.cz, kafai@fb.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219111519.GB2814125@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+On Wed, Feb 19, 2020 at 12:15:19PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 11, 2020 at 11:47:23AM -0800, Ronald Tschalär wrote:
+> > On Apple devices the _CRS method returns an empty resource template, and
+> > the resource settings are instead provided by the _DSM method. But
+> > commit 33364d63c75d6182fa369cea80315cf1bb0ee38e (serdev: Add ACPI
+> > devices by ResourceSource field) changed the search for serdev devices
+> > to require valid, non-empty resource template, thereby breaking Apple
+> > devices and causing bluetooth devices to not be found.
+> > 
+> > This expands the check so that if we don't find a valid template, and
+> > we're on an Apple machine, then just check for the device being an
+> > immediate child of the controller and having a "baud" property.
+> > 
+> > Cc: <stable@vger.kernel.org> # 5.5
+> > Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
+> > ---
+> >  drivers/tty/serdev/core.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> > index ce5309d00280..0f64a10ba51f 100644
+> > --- a/drivers/tty/serdev/core.c
+> > +++ b/drivers/tty/serdev/core.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/sched.h>
+> >  #include <linux/serdev.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/platform_data/x86/apple.h>
+> 
+> Why is this needed?  Just for the x86_apple_machine variable?
 
-HEAD commit:    2019fc96 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=159f2701e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=735296e4dd620b10
-dashboard link: https://syzkaller.appspot.com/bug?extid=867331f5ea7690d840b4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Yes.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> Why do we still have platform_data for new systems anymore?  Can't this
+> go into a much more generic location?  Like as an inline function?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+867331f5ea7690d840b4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: null-ptr-deref in clear_bit include/asm-generic/bitops/instrumented-atomic.h:41 [inline]
-BUG: KASAN: null-ptr-deref in kcm_tx_work+0x10e/0x170 net/kcm/kcmsock.c:743
-Write of size 8 at addr 0000000000000008 by task kworker/u4:4/280
-
-CPU: 0 PID: 280 Comm: kworker/u4:4 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: kkcmd kcm_tx_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- __kasan_report.cold+0x5/0x32 mm/kasan/report.c:510
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
- __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
- clear_bit include/asm-generic/bitops/instrumented-atomic.h:41 [inline]
- kcm_tx_work+0x10e/0x170 net/kcm/kcmsock.c:743
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-==================================================================
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 280 Comm: kworker/u4:4 Tainted: G    B             5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: kkcmd kcm_tx_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- end_report+0x47/0x4f mm/kasan/report.c:96
- __kasan_report.cold+0xe/0x32 mm/kasan/report.c:513
- kasan_report+0x12/0x20 mm/kasan/common.c:641
- check_memory_region_inline mm/kasan/generic.c:185 [inline]
- check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
- __kasan_check_write+0x14/0x20 mm/kasan/common.c:101
- clear_bit include/asm-generic/bitops/instrumented-atomic.h:41 [inline]
- kcm_tx_work+0x10e/0x170 net/kcm/kcmsock.c:743
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+I'm not sure I follow you. What exactly would you like to see in the
+function? The check that sets this variable? Note that this was
+originally pulled out into a variable that is set once for performance
+reasons - see commit 630b3aff8a51c.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+  Cheers,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+  Ronald
+
