@@ -2,92 +2,146 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3615CC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:48:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABAC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B6124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:48:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51FAC2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:53:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgBTJsw (ORCPT
+        id S1726878AbgBTJx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:48:52 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10659 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726637AbgBTJsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:48:52 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5400122256452FC430FA;
-        Thu, 20 Feb 2020 17:48:49 +0800 (CST)
-Received: from [127.0.0.1] (10.57.101.250) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
- 17:48:39 +0800
-Subject: Re: Questions about logic_pio
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        yuanzhichang <yuanzhichang@hisilicon.com>,
-        <john.garry@huawei.com>,
-        gabrielepaoloni <gabriele.paoloni@huawei.com>,
-        bhelgaas <bhelgaas@google.com>,
-        andyshevchenko <andy.shevchenko@gmail.com>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <5E4E55F7.70800@hisilicon.com>
-Date:   Thu, 20 Feb 2020 17:48:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.2.0
+        Thu, 20 Feb 2020 04:53:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6530 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726803AbgBTJx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:53:57 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K9nHca087556
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 04:53:56 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubv0h6s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 04:53:55 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maddy@linux.ibm.com>;
+        Thu, 20 Feb 2020 09:53:52 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Feb 2020 09:53:47 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01K9rjAq48758894
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 09:53:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C260AE056;
+        Thu, 20 Feb 2020 09:53:45 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30CACAE051;
+        Thu, 20 Feb 2020 09:53:42 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.35.143])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Feb 2020 09:53:42 +0000 (GMT)
+Subject: Re: [PATCH 8/8] perf/tools/pmu-events/powerpc: Add hv_24x7
+ socket/chip level metric events
+To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com,
+        ravi.bangoria@linux.ibm.com, peterz@infradead.org,
+        yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org,
+        kan.liang@linux.intel.com, jmario@redhat.com,
+        alexander.shishkin@linux.intel.com, mingo@kernel.org,
+        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org
+References: <20200214110335.31483-1-kjain@linux.ibm.com>
+ <20200214110335.31483-9-kjain@linux.ibm.com>
+From:   maddy <maddy@linux.ibm.com>
+Date:   Thu, 20 Feb 2020 15:23:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.57.101.250]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200214110335.31483-9-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20022009-0012-0000-0000-000003888D03
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022009-0013-0000-0000-000021C5233A
+Message-Id: <276f2495-c838-cae4-d654-065e43b0323a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_02:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiaxun,
 
-On 2020/2/19 21:58, Jiaxun Yang wrote:
-> Hi there,
-> 
-> Logic PIO gives us a way to make indirect PIO access, however,
-> the way it handles direct (MMIO) I/O access confused me.
-> 
-> I was trying to create a PCI controller Driver and noticed that I/O range parsed
-> from DeviceTree will be added to the Logic PIO range by logic_pio_register_range. 
-> And than PCI subsystem will use the ioport obtained from `logic_pio_trans_cpuaddr`
-> to allocate resources for the host bridge. In my case, the range added to the logic pio
->  was set as hw_start 0x4000, size 0x4000. Later, `logic_pio_trans_cpuaddr` called
-> by `pci_address_to_pio` gives a ioport of 0x0, which is totally wrong.
-> 
-> After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
-> for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
-> cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
-> equal to hw address, because there is no way to translate address from logic pio address
-> to actual hw address in {in,out}{b,sb,w,sb,l,sl} operations.
-> 
-> How this mechanism intends to work? What is the reason that we are trying to
-> allocate a io_start for MMIO rather than take their hw_start ioport directly?
-> 
-> Thanks. 
 
-Corrected John's mail address.
-Maybe he can help.
+On 2/14/20 4:33 PM, Kajol Jain wrote:
+> The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
+> facility to continuously collect large numbers of hardware performance
+> metrics efficiently and accurately.
+> This patch adds hv_24x7 json metric file for different Socket/chip
+> resources.
+>
+> Result:
+>
+> power9 platform:
+>
+> command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0
+>             -I 1000 sleep 1
+>
+> time MB       Memory_RD_BW_Chip_0 MB   Memory_RD_BW_Chip_1 MB
+> 1.000192635                      0.4                      0.0
+> 1.001695883                      0.0                      0.0
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>   .../arch/powerpc/power9/hv_24x7_metrics.json  | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+>   create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/hv_24x7_metrics.json
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/hv_24x7_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/hv_24x7_metrics.json
+> new file mode 100644
+> index 000000000000..ac38f5540ac6
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/hv_24x7_metrics.json
 
-Best Regards,
-Wei
+Better to have it as nest_metrics.json instead.  Rest looks fine
 
-> 
-> --
-> Jiaxun Yang
-> 
-> 
-> 
-> .
-> 
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+
+> @@ -0,0 +1,19 @@
+> +[
+> +    {
+> +        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
+> +        "MetricName": "Memory_RD_BW_Chip",
+> +        "MetricGroup": "Memory_BW",
+> +        "ScaleUnit": "1.6e-2MB"
+> +    },
+> +    {
+> +    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
+> +        "MetricName": "Memory_WR_BW_Chip",
+> +        "MetricGroup": "Memory_BW",
+> +        "ScaleUnit": "1.6e-2MB"
+> +    },
+> +    {
+> +    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
+> +        "MetricName": "PowerBUS_Frequency",
+> +        "ScaleUnit": "2.5e-7GHz"
+> +    }
+> +]
 
