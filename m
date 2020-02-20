@@ -5,62 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE591C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93A8C11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 923B2206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8600C208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2fzHkSm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rQTVaInb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729230AbgBTVhz (ORCPT
+        id S1729236AbgBTViJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:37:55 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45312 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727561AbgBTVhz (ORCPT
+        Thu, 20 Feb 2020 16:38:09 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43594 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgBTViJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:37:55 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a2so5020180qko.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:37:54 -0800 (PST)
+        Thu, 20 Feb 2020 16:38:09 -0500
+Received: by mail-qt1-f195.google.com with SMTP id g21so4009287qtq.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:38:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mtH2MLidwl9++wyo68VivOeVZ1eKeqRlT2z3fduTibk=;
-        b=r2fzHkSmmhSOpPfv60LemDTCouA+wqlfydNS58a7/9b6oAvY7dvlVy0m1X9qfp6GFO
-         f8E4BulhWJ1JfqyMWvEnqCzi+E+mm+IjnNRN8kwLQaQiT9H+EvvnG/RhhzXYfJm7/1vG
-         xXgnpVsIPdwy1iPX/czKlk6DJtKpuMkcby6F3bYuSSj67Xe3d2tJM+maIgbKPxiF8Rxe
-         0qmU0XioEhfpkCjkSMaWNsAzW7rbkRERdPsFzUYmcbsAnXMnJZiF75GLubTl1qR6RRn0
-         Rc5Bky5Lyws72PzUbnl8udHa/xLeqLCTmPnIJbo3yEXex3g6FU/60garybwdad8FNYGg
-         f5ig==
+        bh=ya7BzNWkK/aNL6Tv2iIJrxyXJnuSHN2DAiGDBEKCFME=;
+        b=rQTVaInbOR0nNBRyjg7OUiy8zpk8uVI/C0yvF8JrYqzIEQXaLVgUUhJRN1dp8pKmNm
+         Gwz9SKu9e2EeGhGibjXdXOkIWcD65V5R0kSHQo/FV8h/yDspwYoe45a0PxLatb83l2R2
+         E+gKsNlBxI/ALyh7kYSXTVAZqLVIqD1E9iGgDyO2G+22xyqxeW2MvHdqZdc0W14QJYTg
+         2f96GaDm7RjwtN9iVrbBKVYzKK61yLmEFQTwQqwxAVhOpMiVh+lWjrYiqOjcNWiCuzsd
+         sjrS1O0nXJqPVxmVmzKMUoIMysA64KkWboAHu9Tn9hwDODRe1zlRhxtx+7BVuZW96B3M
+         t8fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mtH2MLidwl9++wyo68VivOeVZ1eKeqRlT2z3fduTibk=;
-        b=fWcgNaUlmw1Y4colUgDu4ObBLRGWVCol9lyjiv+4RUbGAO7HqYZBSHf35zzn8p2ZSK
-         dJccnDf+F0EbXGzcp6apXgh84gbGy9NHDryXaa26aWOiQG1RQd5gv7KBVxp4z+vnJIeT
-         po3bZG2c7DfNgHxjV7wAFMIobP9RxNJuVEcOR1tDoze8W3XTguHJYQISWcwMUgBKHilP
-         f/27llvpkNYZeOuL7g3Ilr9cZZ5HZeQclvLXd2KrobZMM0vMAFTgx8DIcwX07cuw8VA8
-         xLJandVGh3vUHENlNoaeGuNOt1I7It9x+s/Hch2X/FdxQUi8cCkMdAzfOBC44Q7vUOGy
-         CiyA==
-X-Gm-Message-State: APjAAAX2zBBAELPLjzPtbSr0nWTSP14mQ48YIC7PaI6Ia6bhQAKFrbdo
-        JZ4olIogdadw6y4MYH1fGjmrcQNaUNrpBvF5RFQ=
-X-Google-Smtp-Source: APXvYqzC17jJf8WSEQarDVhinql9TAMsf5KB/vSzhkgDO/I0O9wFO00fmXTLO3jktl0H/mpFHoh4KIlD6179zJYx+90=
-X-Received: by 2002:a37:b285:: with SMTP id b127mr3343845qkf.413.1582234673672;
- Thu, 20 Feb 2020 13:37:53 -0800 (PST)
+        bh=ya7BzNWkK/aNL6Tv2iIJrxyXJnuSHN2DAiGDBEKCFME=;
+        b=BixUIP5aigBGdqMU+K4vWF3NMqMeu0/kA6Zol1/cP91ovcdAT2A2tUhePtgLVTKr/0
+         Jq4I2vOqOdYWKYZrneMuJjphuen3syacCfeSrQE6CtMFJSwo/98yrrExc7uLiYs+7C1k
+         2+wI5NotV8EUUWNJSBvDsD0nUpCz2Rzudj6JaxVe5vOXAdVlYhF1ekMMJdtb7IMKPSs7
+         WY42OgvQ+hWNc47R/z07qfX0Ozo2uM2BAqvP2v3tq2Ot8xLGFhsutTdoQgM9Jm6s0z27
+         lDUdMlilANAZvw5+kgQuZ1yAS/HxdfXQCRpU9QYo9CNs2Yf1HU1Aw6p2PSRZ3TshgwSW
+         eo2Q==
+X-Gm-Message-State: APjAAAWBKtF5IThlYe+DYYxcSwWiK2KWa7sAZm7qD1CkNnzSyuS5/OPk
+        MQ+eN0XuV6n5sFRxX1NLQaVM+vMMrCCa+39Sg6M=
+X-Google-Smtp-Source: APXvYqx9EZC0JNyWfusuB4QXxIWZmS+pIpitlsLm35JVfJohfpkIicI2phemogyTKUpyQwwnIXHCmtWvSi7373Q46BM=
+X-Received: by 2002:aed:2510:: with SMTP id v16mr28785378qtc.306.1582234686749;
+ Thu, 20 Feb 2020 13:38:06 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220083508.792071-1-anarsoul@gmail.com> <20200220083508.792071-6-anarsoul@gmail.com>
- <20200220135929.GF4998@pendragon.ideasonboard.com>
-In-Reply-To: <20200220135929.GF4998@pendragon.ideasonboard.com>
+References: <20200220083508.792071-1-anarsoul@gmail.com> <20200220083508.792071-7-anarsoul@gmail.com>
+ <20200220141725.GG4998@pendragon.ideasonboard.com>
+In-Reply-To: <20200220141725.GG4998@pendragon.ideasonboard.com>
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Thu, 20 Feb 2020 13:37:40 -0800
-Message-ID: <CA+E=qVcNuYDHaz1WEbDqosEdwqtpte7hzL405LOw0rmraWCzWw@mail.gmail.com>
-Subject: Re: [PATCH 5/6] drm/panel: simple: Add NewEast Optoelectronics CO.,
- LTD WJFH116008A panel support
+Date:   Thu, 20 Feb 2020 13:37:53 -0800
+Message-ID: <CA+E=qVe7vMwK3m-AfTiK+mL=9+rD7dNWjYSXBLgZZnMU1zPeSg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] arm64: allwinner: a64: enable LCD-related hardware
+ for Pinebook
 To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -90,110 +90,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 5:59 AM Laurent Pinchart
+On Thu, Feb 20, 2020 at 6:17 AM Laurent Pinchart
 <laurent.pinchart@ideasonboard.com> wrote:
 >
 > Hi Vasily,
 
 Hi Laurent,
 
->
 > Thank you for the patch.
 >
-> On Thu, Feb 20, 2020 at 12:35:07AM -0800, Vasily Khoruzhick wrote:
-> > This commit adds support for the NewEast Optoelectronics CO., LTD
-> > WJFH116008A 11.6" 1920x1080 TFT LCD panel.
+> On Thu, Feb 20, 2020 at 12:35:08AM -0800, Vasily Khoruzhick wrote:
+> > From: Icenowy Zheng <icenowy@aosc.io>
 > >
+> > Pinebook has an ANX6345 bridge connected to the RGB666 LCD output and
+> > eDP panel input. The bridge is controlled via I2C that's connected to
+> > R_I2C bus.
+> >
+> > Enable all this hardware in device tree.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > > ---
-> >  drivers/gpu/drm/panel/panel-simple.c | 47 ++++++++++++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
+> >  .../dts/allwinner/sun50i-a64-pinebook.dts     | 69 ++++++++++++++++++-
+> >  1 file changed, 68 insertions(+), 1 deletion(-)
 > >
-> > diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> > index e14c14ac62b5..aa04afaf3d26 100644
-> > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > @@ -2224,6 +2224,50 @@ static const struct panel_desc netron_dy_e231732 = {
-> >       .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > index c06c540e6c08..f5633f550d8a 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> > @@ -48,6 +48,18 @@ lid_switch {
+> >               };
+> >       };
+> >
+> > +     panel_edp: panel-edp {
+> > +             compatible = "neweast,wjfh116008a";
+> > +             backlight = <&backlight>;
+> > +             power-supply = <&reg_dc1sw>;
+> > +
+> > +             port {
+> > +                     panel_edp_in: endpoint {
+> > +                             remote-endpoint = <&anx6345_out_edp>;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> >       reg_vbklt: vbklt {
+> >               compatible = "regulator-fixed";
+> >               regulator-name = "vbklt";
+> > @@ -109,6 +121,10 @@ &dai {
+> >       status = "okay";
 > >  };
 > >
-> > +static const struct drm_display_mode neweast_wjfh116008a_modes[] = {
-> > +{
-> > +     .clock = 138500,
-> > +     .hdisplay = 1920,
-> > +     .hsync_start = 1920 + 48,
-> > +     .hsync_end = 1920 + 48 + 32,
-> > +     .htotal = 1920 + 48 + 32 + 80,
-> > +     .vdisplay = 1080,
-> > +     .vsync_start = 1080 + 3,
-> > +     .vsync_end = 1080 + 3 + 5,
-> > +     .vtotal = 1080 + 3 + 5 + 23,
-> > +     .vrefresh = 60,
-> > +     .flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-> > +}, {
-> > +     .clock = 110920,
-> > +     .hdisplay = 1920,
-> > +     .hsync_start = 1920 + 48,
-> > +     .hsync_end = 1920 + 48 + 32,
-> > +     .htotal = 1920 + 48 + 32 + 80,
-> > +     .vdisplay = 1080,
-> > +     .vsync_start = 1080 + 3,
-> > +     .vsync_end = 1080 + 3 + 5,
-> > +     .vtotal = 1080 + 3 + 5 + 23,
-> > +     .vrefresh = 48,
-> > +     .flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-> > +} };
->
-> This should be indented one step to the right, see boe_nv101wxmn51_modes
-> for instance.
-
-Will do.
-
-> The only different between the two modes is the clock, leading to
-> different refresh rates. Are only those two clock frequencies supported,
-> or does the panel support anything in-between as well ? In the latter
-> case, would it make sense to use display_timing instead of
-> drm_display_mode ? See dlc_dlc0700yzg_1_timing for an example.
-
-These are coming from EDID. The datasheet [1] says typical frequency
-is 138.5MHz and min/max are not specified, so I'm not sure whether it
-supports anything in between. I did check that both modes work though.
-
-[1] http://files.pine64.org/doc/datasheet/pinebook/11.6inches-1080P-IPS-LCD-Panel-spec-WJFH116008A.pdf
-
-
-
-> > +
-> > +static const struct panel_desc neweast_wjfh116008a = {
-> > +     .modes = neweast_wjfh116008a_modes,
-> > +     .num_modes = 2,
-> > +     .bpc = 6,
-> > +     .size = {
-> > +             .width = 260,
-> > +             .height = 150,
-> > +     },
-> > +     .delay = {
-> > +             .prepare = 110,
-> > +             .enable = 20,
-> > +             .unprepare = 500,
-> > +     },
-> > +     .bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-> > +     .connector_type = DRM_MODE_CONNECTOR_eDP,
+> > +&de {
+> > +     status = "okay";
 > > +};
 > > +
-> >  static const struct drm_display_mode newhaven_nhd_43_480272ef_atxl_mode = {
-> >       .clock = 9000,
-> >       .hdisplay = 480,
-> > @@ -3399,6 +3443,9 @@ static const struct of_device_id platform_of_match[] = {
-> >       }, {
-> >               .compatible = "netron-dy,e231732",
-> >               .data = &netron_dy_e231732,
-> > +     }, {
-> > +             .compatible = "neweast,wjfh116008a",
-> > +             .data = &neweast_wjfh116008a,
-> >       }, {
-> >               .compatible = "newhaven,nhd-4.3-480272ef-atxl",
-> >               .data = &newhaven_nhd_43_480272ef_atxl,
+> >  &ehci0 {
+> >       phys = <&usbphy 0>;
+> >       phy-names = "usb";
+> > @@ -119,6 +135,10 @@ &ehci1 {
+> >       status = "okay";
+> >  };
+> >
+> > +&mixer0 {
+> > +     status = "okay";
+> > +};
+> > +
+> >  &mmc0 {
+> >       pinctrl-names = "default";
+> >       pinctrl-0 = <&mmc0_pins>;
+> > @@ -177,12 +197,45 @@ &pwm {
+> >       status = "okay";
+> >  };
+> >
+> > -/* The ANX6345 eDP-bridge is on r_i2c */
+> >  &r_i2c {
+> >       clock-frequency = <100000>;
+> >       pinctrl-names = "default";
+> >       pinctrl-0 = <&r_i2c_pl89_pins>;
+> >       status = "okay";
+> > +
+> > +     anx6345: anx6345@38 {
+> > +             compatible = "analogix,anx6345";
+> > +             reg = <0x38>;
+> > +             reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
+> > +             dvdd25-supply = <&reg_dldo2>;
+> > +             dvdd12-supply = <&reg_fldo1>;
+> > +
+> > +             ports {
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     anx6345_in: port@0 {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +                             reg = <0>;
+> > +                             anx6345_in_tcon0: endpoint@0 {
+> > +                                     reg = <0>;
+> > +                                     remote-endpoint = <&tcon0_out_anx6345>;
+> > +                             };
+>
+> As there's a single endpoint, you can drop the reg property, the @0
+> suffix, and the #address-cells and #size-cells property in the port@0
+> node (but not in the ports node).
+
+Will do
+
+> > +                     };
+> > +
+> > +                     anx6345_out: port@1 {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +                             reg = <1>;
+> > +
+> > +                             anx6345_out_edp: endpoint@0 {
+> > +                                     reg = <0>;
+> > +                                     remote-endpoint = <&panel_edp_in>;
+> > +                             };
+>
+> Same here.
+
+Will do
+
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Thanks for reviewing the series!
+
+
+>
+> > +                     };
+> > +             };
+> > +     };
+> >  };
+> >
+> >  &r_pio {
+> > @@ -357,6 +410,20 @@ &sound {
+> >                       "MIC2", "Internal Microphone Right";
+> >  };
+> >
+> > +&tcon0 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&lcd_rgb666_pins>;
+> > +
+> > +     status = "okay";
+> > +};
+> > +
+> > +&tcon0_out {
+> > +     tcon0_out_anx6345: endpoint@0 {
+> > +             reg = <0>;
+> > +             remote-endpoint = <&anx6345_in_tcon0>;
+> > +     };
+> > +};
+> > +
+> >  &uart0 {
+> >       pinctrl-names = "default";
+> >       pinctrl-0 = <&uart0_pb_pins>;
 >
 > --
 > Regards,
