@@ -2,234 +2,326 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D210C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FA7C11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE0A2467B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:58:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582225138;
-	bh=zcCx5HV82hy+hQvB+tfsctbkp54FJ0p1IwceVc+Lxp0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=RbZjYcWGeHd/gAFdMt0FpWWGhqJonFttVw6beiRMUy9bgN5+pSIvpWHqmmCfacLN0
-	 idJ/XOOh3F2RvzyeP3R/bNi+V27RjJmlKd76ZZw/lJO/e9d6z8k25r4AHgXbHQhahv
-	 bXfFGA2b1vCniQuuiNe3NAeMixbgPgw5Qg7D6ALw=
+	by mail.kernel.org (Postfix) with ESMTP id 83894206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T7e3KiNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgBTS65 (ORCPT
+        id S1728834AbgBTTBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:58:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52846 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbgBTS64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:58:56 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E29C92467A;
-        Thu, 20 Feb 2020 18:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582225135;
-        bh=zcCx5HV82hy+hQvB+tfsctbkp54FJ0p1IwceVc+Lxp0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=gBqcqMbNDW17go95BOOtcLtGXRyV/npt/dj13CN3iB0Nqj0tcYSnd7JJ6dOKLXEoT
-         /nKw5L7T4ApGOIVLK49P8REQagPNNzL8iWA926s97AKZlkjzQe/YzGGP9nu243uUWR
-         e0aDWP5MMSuoV2Qpnbb/3yJfImvBnBJ8BCSKlymg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id BADBF352034E; Thu, 20 Feb 2020 10:58:55 -0800 (PST)
-Date:   Thu, 20 Feb 2020 10:58:55 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     andreyknvl@google.com, glider@google.com, dvyukov@google.com,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kcsan: Add option to allow watcher interruptions
-Message-ID: <20200220185855.GY2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200220141551.166537-1-elver@google.com>
+        Thu, 20 Feb 2020 14:01:37 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39556 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgBTTBh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:01:37 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j15so2388558pgm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:01:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
+        b=T7e3KiNH986vMnDCiy0wyC/ghFGg2en/LWJYiahcTKMszCaf755LxaqdPFZjGxeWYU
+         BkfeMHu3J8vKosFTT/ORpiXxIGyuDeJhjXD+excqbQBwgye4AipYoGhPKLu9hhQaO1e0
+         +d0qEgRbdPtnJZ7gkqCAOPoOxLgs4+BoFJG1LzkRP4BQ7gRVvkfPHnqIDXR30PoLUagh
+         tLqjm133olDpXREX+3hmhlYuNdgqS7PTykMP+K6zliNZGq5Wno06bT6H15zQq2uMc/vr
+         aRQzZZ+1qYur1IFpQrKpBPs3Vma8tR510W7WZHEaZQQvVOqYtIwyonvL6KOsXRz/iNZK
+         xeLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8fVLwwPydfLuZNvYlHuH3T0ZHb/N6Ix0LIzIYC7dn20=;
+        b=rEZG8zaPn09AquM8lkhbc/7vKnMmbx1FApTnQQpkaQTSJQW+qnE10cApB8Wka0Byot
+         QNCRHKlTAoFoGIhcPsIkJ5gPvyLetz0gbjAUpOvgJHBLFzKF17iDmUaAwJJcSLUk2B4A
+         FkjcmuXZKFf2lwfCUjOtxf/rdPasHJ9FpBiZ8yRUUOLKG1BXPmF9QDZmplzzoF5pFgut
+         E8BsKe617oL7eL1xhtrEijRhGs6Qekj6cO/gPDx0dOVchImyrfpPmpYbFPsNDsVih5bc
+         KrdCxms0mCgVi8uS7e9E+RD/PILrpQ8d/X2CBYeZQd0pd9TlS9u2sXpV1xjapVNV1JDf
+         fZ3Q==
+X-Gm-Message-State: APjAAAXd4XTopfVYKumGlqF7xKv5Vxo3quwOkvvdi2F6vJ1ZGsVJzkPk
+        Q+ujjmTA5svXA9ymnc63gCSKgA==
+X-Google-Smtp-Source: APXvYqyLk4G4jwAFo2dw2ASIhOPGlFR06o9tgoOZEnRVjy3/weBLCZ2myICde4Qr6edvAP4itsFb8A==
+X-Received: by 2002:a63:9257:: with SMTP id s23mr35631559pgn.0.1582225296766;
+        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id 23sm349623pfh.28.2020.02.20.11.01.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 11:01:36 -0800 (PST)
+Date:   Thu, 20 Feb 2020 12:01:34 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200220190134.GB19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220141551.166537-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200211005059.1377279-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:15:51PM +0100, Marco Elver wrote:
-> Add option to allow interrupts while a watchpoint is set up. This can be
-> enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via the boot
-> parameter 'kcsan.interrupt_watcher=1'.
+On Mon, Feb 10, 2020 at 04:50:53PM -0800, Bjorn Andersson wrote:
+> A region in IMEM is used to communicate load addresses of remoteproc to
+> post mortem debug tools. Implement a driver that can be used to store
+> this information in order to enable these tools to process collected
+> ramdumps.
 > 
-> Note that, currently not all safe per-CPU access primitives and patterns
-> are accounted for, which could result in false positives. For example,
-> asm-generic/percpu.h uses plain operations, which by default are
-> instrumented. On interrupts and subsequent accesses to the same
-> variable, KCSAN would currently report a data race with this option.
-> 
-> Therefore, this option should currently remain disabled by default, but
-> may be enabled for specific test scenarios.
-> 
-> Signed-off-by: Marco Elver <elver@google.com>
-
-Queued for review and testing, thank you!
-
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
 > 
-> As an example, the first data race that this found:
+> Changes since v2:
+> - Sorted includes
+> - Replace use of stracpy (still not landed upstream)
+> - Fixed error handling in probe
+> - Return error from store, to allow clients to decide action
+> - Replace hard coded size with value read from reg property
 > 
-> write to 0xffff88806b3324b8 of 4 bytes by interrupt on cpu 0:
->  rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]
->  __rcu_read_lock+0x3c/0x50 kernel/rcu/tree_plugin.h:373
->  rcu_read_lock include/linux/rcupdate.h:599 [inline]
->  cpuacct_charge+0x36/0x80 kernel/sched/cpuacct.c:347
->  cgroup_account_cputime include/linux/cgroup.h:773 [inline]
->  update_curr+0xe2/0x1d0 kernel/sched/fair.c:860
->  enqueue_entity+0x130/0x5d0 kernel/sched/fair.c:4005
->  enqueue_task_fair+0xb0/0x420 kernel/sched/fair.c:5260
->  enqueue_task kernel/sched/core.c:1302 [inline]
->  activate_task+0x6d/0x110 kernel/sched/core.c:1324
->  ttwu_do_activate.isra.0+0x40/0x60 kernel/sched/core.c:2266
->  ttwu_queue kernel/sched/core.c:2411 [inline]
->  try_to_wake_up+0x3be/0x6c0 kernel/sched/core.c:2645
->  wake_up_process+0x10/0x20 kernel/sched/core.c:2669
->  hrtimer_wakeup+0x4c/0x60 kernel/time/hrtimer.c:1769
->  __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
->  __hrtimer_run_queues+0x274/0x5f0 kernel/time/hrtimer.c:1579
->  hrtimer_interrupt+0x22d/0x490 kernel/time/hrtimer.c:1641
->  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
->  smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1144
->  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
->  delay_tsc+0x38/0xc0 arch/x86/lib/delay.c:68                   <--- interrupt while delayed
->  __delay arch/x86/lib/delay.c:161 [inline]
->  __const_udelay+0x33/0x40 arch/x86/lib/delay.c:175
->  __udelay+0x10/0x20 arch/x86/lib/delay.c:181
->  kcsan_setup_watchpoint+0x17f/0x400 kernel/kcsan/core.c:428
->  check_access kernel/kcsan/core.c:550 [inline]
->  __tsan_read4+0xc6/0x100 kernel/kcsan/core.c:685               <--- Enter KCSAN runtime
->  rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]  <---+
->  __rcu_read_lock+0x2a/0x50 kernel/rcu/tree_plugin.h:373            |
->  rcu_read_lock include/linux/rcupdate.h:599 [inline]               |
->  lock_page_memcg+0x31/0x110 mm/memcontrol.c:1972                   |
->                                                                    |
-> read to 0xffff88806b3324b8 of 4 bytes by task 6131 on cpu 0:       |
->  rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]  ----+
->  __rcu_read_lock+0x2a/0x50 kernel/rcu/tree_plugin.h:373
->  rcu_read_lock include/linux/rcupdate.h:599 [inline]
->  lock_page_memcg+0x31/0x110 mm/memcontrol.c:1972
+>  drivers/remoteproc/Kconfig         |   3 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_pil_info.c | 168 +++++++++++++++++++++++++++++
+>  drivers/remoteproc/qcom_pil_info.h |   8 ++
+>  4 files changed, 180 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.c
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.h
 > 
-> The writer is doing 'current->rcu_read_lock_nesting++'. The read is as
-> vulnerable to compiler optimizations and would therefore conclude this
-> is a valid data race.
-
-Heh!  That one is a fun one!  It is on a very hot fastpath.  READ_ONCE()
-and WRITE_ONCE() are likely to be measurable at the system level.
-
-Thoughts on other options?
-
-							Thanx, Paul
-
-> ---
->  kernel/kcsan/core.c | 30 ++++++++----------------------
->  lib/Kconfig.kcsan   | 11 +++++++++++
->  2 files changed, 19 insertions(+), 22 deletions(-)
-> 
-> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-> index 589b1e7f0f253..43eb5f850c68e 100644
-> --- a/kernel/kcsan/core.c
-> +++ b/kernel/kcsan/core.c
-> @@ -21,6 +21,7 @@ static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
->  static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
->  static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
->  static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
-> +static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index de3862c15fcc..20c8194e610e 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -95,6 +95,9 @@ config KEYSTONE_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in the Keystone
+>  	  DSPs or just want to use a bare minimum kernel.
 >  
->  #ifdef MODULE_PARAM_PREFIX
->  #undef MODULE_PARAM_PREFIX
-> @@ -30,6 +31,7 @@ module_param_named(early_enable, kcsan_early_enable, bool, 0);
->  module_param_named(udelay_task, kcsan_udelay_task, uint, 0644);
->  module_param_named(udelay_interrupt, kcsan_udelay_interrupt, uint, 0644);
->  module_param_named(skip_watch, kcsan_skip_watch, long, 0644);
-> +module_param_named(interrupt_watcher, kcsan_interrupt_watcher, bool, 0444);
->  
->  bool kcsan_enabled;
->  
-> @@ -354,7 +356,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  	unsigned long access_mask;
->  	enum kcsan_value_change value_change = KCSAN_VALUE_CHANGE_MAYBE;
->  	unsigned long ua_flags = user_access_save();
-> -	unsigned long irq_flags;
-> +	unsigned long irq_flags = 0;
->  
->  	/*
->  	 * Always reset kcsan_skip counter in slow-path to avoid underflow; see
-> @@ -370,26 +372,9 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  		goto out;
->  	}
->  
-> -	/*
-> -	 * Disable interrupts & preemptions to avoid another thread on the same
-> -	 * CPU accessing memory locations for the set up watchpoint; this is to
-> -	 * avoid reporting races to e.g. CPU-local data.
-> -	 *
-> -	 * An alternative would be adding the source CPU to the watchpoint
-> -	 * encoding, and checking that watchpoint-CPU != this-CPU. There are
-> -	 * several problems with this:
-> -	 *   1. we should avoid stealing more bits from the watchpoint encoding
-> -	 *      as it would affect accuracy, as well as increase performance
-> -	 *      overhead in the fast-path;
-> -	 *   2. if we are preempted, but there *is* a genuine data race, we
-> -	 *      would *not* report it -- since this is the common case (vs.
-> -	 *      CPU-local data accesses), it makes more sense (from a data race
-> -	 *      detection point of view) to simply disable preemptions to ensure
-> -	 *      as many tasks as possible run on other CPUs.
-> -	 *
-> -	 * Use raw versions, to avoid lockdep recursion via IRQ flags tracing.
-> -	 */
-> -	raw_local_irq_save(irq_flags);
-> +	if (!kcsan_interrupt_watcher)
-> +		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
-> +		raw_local_irq_save(irq_flags);
->  
->  	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
->  	if (watchpoint == NULL) {
-> @@ -524,7 +509,8 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
->  
->  	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
->  out_unlock:
-> -	raw_local_irq_restore(irq_flags);
-> +	if (!kcsan_interrupt_watcher)
-> +		raw_local_irq_restore(irq_flags);
->  out:
->  	user_access_restore(ua_flags);
->  }
-> diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-> index ba9268076cfbc..0f1447ff8f558 100644
-> --- a/lib/Kconfig.kcsan
-> +++ b/lib/Kconfig.kcsan
-> @@ -101,6 +101,17 @@ config KCSAN_SKIP_WATCH_RANDOMIZE
->  	  KCSAN_WATCH_SKIP. If false, the chosen value is always
->  	  KCSAN_WATCH_SKIP.
->  
-> +config KCSAN_INTERRUPT_WATCHER
-> +	bool "Interruptible watchers"
-> +	help
-> +	  If enabled, a task that set up a watchpoint may be interrupted while
-> +	  delayed. This option will allow KCSAN to detect races between
-> +	  interrupted tasks and other threads of execution on the same CPU.
+> +config QCOM_PIL_INFO
+> +	tristate
 > +
-> +	  Currently disabled by default, because not all safe per-CPU access
-> +	  primitives and patterns may be accounted for, and therefore could
-> +	  result in false positives.
+>  config QCOM_RPROC_COMMON
+>  	tristate
+>  
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b15fbac..2ab32bd41b44 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
+> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+>  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+>  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+>  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> new file mode 100644
+> index 000000000000..398aeb957f3c
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019-2020 Linaro Ltd.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
 > +
->  config KCSAN_REPORT_ONCE_IN_MS
->  	int "Duration in milliseconds, in which any given race is only reported once"
->  	default 3000
+> +#define PIL_RELOC_NAME_LEN	8
+> +
+> +struct pil_reloc_entry {
+> +	char name[PIL_RELOC_NAME_LEN];
+> +	__le64 base;
+> +	__le32 size;
+> +} __packed;
+> +
+> +struct pil_reloc {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	size_t offset;
+> +	size_t num_entries;
+> +	int val_bytes;
+> +
+> +	struct pil_reloc_entry entries[];
+> +};
+> +
+> +static struct pil_reloc *_reloc;
+> +static DEFINE_MUTEX(reloc_mutex);
+> +
+> +/**
+> + * qcom_pil_info_store() - store PIL information of image in IMEM
+> + * @image:	name of the image
+> + * @base:	base address of the loaded image
+> + * @size:	size of the loaded image
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> +{
+> +	struct pil_reloc_entry *entry;
+> +	int idx = -1;
+> +	int ret;
+> +	int i;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	for (i = 0; i < _reloc->num_entries; i++) {
+> +		if (!_reloc->entries[i].name[0]) {
+> +			if (idx == -1)
+> +				idx = i;
+> +			continue;
+> +		}
+> +
+> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
+
+s/8/PIL_RELOC_NAME_LEN
+
+> +			idx = i;
+> +			goto found;
+> +		}
+> +	}
+> +
+> +	if (idx == -1) {
+> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> +		ret = -ENOMEM;
+> +		goto unlock;
+> +	}
+> +
+> +found:
+> +	entry = &_reloc->entries[idx];
+> +	strscpy(entry->name, image, ARRAY_SIZE(entry->name));
+> +	entry->base = base;
+> +	entry->size = size;
+> +
+> +	ret = regmap_bulk_write(_reloc->map,
+> +				_reloc->offset + idx * sizeof(*entry),
+> +				entry, sizeof(*entry) / _reloc->val_bytes);
+> +unlock:
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+> +
+> +/**
+> + * qcom_pil_info_available() - query if the pil info is probed
+> + *
+> + * Return: boolean indicating if the pil info device is probed
+> + */
+> +bool qcom_pil_info_available(void)
+> +{
+> +	return !!_reloc;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
+> +
+> +static int pil_reloc_probe(struct platform_device *pdev)
+> +{
+> +	unsigned int num_entries;
+> +	struct pil_reloc *reloc;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	num_entries = resource_size(res) / sizeof(struct pil_reloc_entry);
+> +
+> +	reloc = devm_kzalloc(&pdev->dev,
+> +			     struct_size(reloc, entries, num_entries),
+> +			     GFP_KERNEL);
+> +	if (!reloc)
+> +		return -ENOMEM;
+> +
+> +	reloc->dev = &pdev->dev;
+> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(reloc->map))
+> +		return PTR_ERR(reloc->map);
+> +
+> +	reloc->offset = res->start;
+> +	reloc->num_entries = num_entries;
+> +
+> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> +	if (reloc->val_bytes < 0)
+> +		return -EINVAL;
+> +
+> +	ret = regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> +				reloc->num_entries *
+> +				sizeof(struct pil_reloc_entry) /
+> +				reloc->val_bytes);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = reloc;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pil_reloc_remove(struct platform_device *pdev)
+> +{
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = NULL;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pil_reloc_of_match[] = {
+> +	{ .compatible = "qcom,pil-reloc-info" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> +
+> +static struct platform_driver pil_reloc_driver = {
+> +	.probe = pil_reloc_probe,
+> +	.remove = pil_reloc_remove,
+> +	.driver = {
+> +		.name = "qcom-pil-reloc-info",
+> +		.of_match_table = pil_reloc_of_match,
+> +	},
+> +};
+> +module_platform_driver(pil_reloc_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> new file mode 100644
+> index 000000000000..93aaaca8aed2
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __QCOM_PIL_INFO_H__
+> +#define __QCOM_PIL_INFO_H__
+> +
+> +int qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> +bool qcom_pil_info_available(void);
+> +
+> +#endif
 > -- 
-> 2.25.0.265.gbab2e86ba0-goog
+> 2.24.0
 > 
