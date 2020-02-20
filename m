@@ -3,169 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4F7C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758D4C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECC6206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E331206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="crFreDBE"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="K4vLOeea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgBTNLg (ORCPT
+        id S1728111AbgBTNM7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:11:36 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33210 "EHLO
+        Thu, 20 Feb 2020 08:12:59 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42703 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgBTNLg (ORCPT
+        with ESMTP id S1727088AbgBTNM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:11:36 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so4200392lji.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:11:34 -0800 (PST)
+        Thu, 20 Feb 2020 08:12:58 -0500
+Received: by mail-lj1-f196.google.com with SMTP id d10so4140628ljl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:12:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=95x/svoIHvKtwThYjiFAhoANuT+9jaK/n8hE5y8HQuM=;
-        b=crFreDBEqFDDkMhb8t3wiTSXcSXwcMBXrtLRBgy/EB6JgvFI6XWm7x1/wOie4gsbXL
-         QQ3QUTJ54ZQaY7DLyG0eMDhKW78NMtF0EpKV24KUqJAkpHjg8Unrzjo+h6ky+AFW6w2A
-         2cswn+BY3t7POXQu0hky4IgR2elmaN4migYzFs2WLjXV9imgcdbO5zf+rJEPXHq/b80S
-         DxB/WY+cbZK3AP5wy95Bxtl1lU+u53iV1tcCYhIPUmcdswhSOkvoqCu1k+2OFctN8IlA
-         oEYCzCmBsQCOym4VAMEm/FRo6zwAdtAGRmD61x+6BtVfCPZSk0yBaTr+Ih8D5DGdQUfE
-         u75A==
+        bh=GzNziDqoL/AUz4B68gds+Nqpq3Cs5xfNdbm3Hr7a7BQ=;
+        b=K4vLOeeal5lD62N5rp44dErrQJ/7YZhgd+S/o071QQuMO+lR5PNq/f5PuECNd0Ps3q
+         MDFxOM9hsuf/2N8nr6xRpX+q6eUKzDiIkACheNgp/epR22Dmsj6kg8hPT4IwAhrg8sbM
+         M0bnueZA88O5tbgFHu7UMcdwte23Yrr86E+JTLO6xc2nyJ+8KfdBxRJg11VJZH75W1re
+         8kRQR5K14xPczsg/eeg+nRKKi/7Q/pQvxSwxysUCo9U+MQXU7KAK7C0QW+pT/70uCUEC
+         m9P+xnzLHWkfhXmLd2mAV3KkScTdnSq7bGUrpKqXVUYVmieqMtdIFTNImeyN6SDIM+Bx
+         6Iqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=95x/svoIHvKtwThYjiFAhoANuT+9jaK/n8hE5y8HQuM=;
-        b=RksYfE/P1d7LDwWDHul6Q68I5FH6qis1jYA5z8wdJd/SEQh7OyWwtk512fDNTnMqUX
-         1Ot202+Xt4odeZ9XliGQGlGRPIgu+B8tREwZRdbRXh+WqymqdH4d1LuZDq6g5azmIJ0D
-         tOgX09GGwkxIxRk9fbJibgaQgPpmvf3cuy6NLs80iedOvPj/4iEPr0fZOUZ6PChJowTX
-         GFDh+NEG9QWbUggDidM+R+xAQt/KeNQOHDKSG5gmrimNKV1Ee2pqsnu0FDMLrUNdYbOc
-         qqOKf+R95UdVqvQ+Obfj6RlJAVqL4hf6MWDebM3OsSdNRavFatKPiB25P5uR3ulXEMTC
-         tJCw==
-X-Gm-Message-State: APjAAAVRjmp4YNuuziHfsLtRMzGAoFC2nPH7Ba9sPEv+NmP1cgKrhJiA
-        HG7/NfdiMkVk97DLejFWzEiPdA==
-X-Google-Smtp-Source: APXvYqwHcoB79WTtbZlwQ7P2hFgI1BkSfCjBHhn1dayq2xGKeB0Z18obfHCYvUiqt8PFH2LvliAXjw==
-X-Received: by 2002:a2e:8e84:: with SMTP id z4mr18170854ljk.207.1582204293381;
-        Thu, 20 Feb 2020 05:11:33 -0800 (PST)
+        bh=GzNziDqoL/AUz4B68gds+Nqpq3Cs5xfNdbm3Hr7a7BQ=;
+        b=R9pm1hg6gSPZzPqhSm+L3suU5cilAOsDLy/lMZ0mfgiSaHyx1A6W9E/acQXX0FL34Z
+         y63F8Kb6xEQNbmeiwf2eoylNNbbquuDv1yWInbdX0H+u7/DCnY/dVzbXfXjCvxP9FSDt
+         s0W7yHPkJjbUFsJjYv+gQUf9Uk4RhEq6K5ou5jJME9zN7m0rm/06sj1xSm8qkiL5rQAI
+         WlW57wybqFcLlUadQ0gApYKBe1Xb4P7UA88f5XI4zrB10nROAKUKikFT5k4DBQDcABB8
+         GCqzz0XwTUYlx/OEO+ONnl8QUkFsBojezLuT9s4c65c8Hleg0N9MNc0AG12TvKU2eMpf
+         4dow==
+X-Gm-Message-State: APjAAAWazj13mAHo4d+Bln2jO4NSmVNjWNoM9sX2emc/cBt0faoY16wk
+        0AZ2djUmIVfpjXr9M5xh3wNlFA==
+X-Google-Smtp-Source: APXvYqwaE144CzFHNPc2ptsLvuY5jTWwyOCULsFygaInuVevwoDVdizIDXa1G2ZI2dDqhPsffLZD1w==
+X-Received: by 2002:a2e:88c4:: with SMTP id a4mr19216575ljk.174.1582204376901;
+        Thu, 20 Feb 2020 05:12:56 -0800 (PST)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n13sm1784076lji.91.2020.02.20.05.11.32
+        by smtp.gmail.com with ESMTPSA id n11sm1851850ljg.15.2020.02.20.05.12.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 05:11:32 -0800 (PST)
+        Thu, 20 Feb 2020 05:12:56 -0800 (PST)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 0B508100FBB; Thu, 20 Feb 2020 16:12:02 +0300 (+03)
-Date:   Thu, 20 Feb 2020 16:12:02 +0300
+        id 7F899100FBB; Thu, 20 Feb 2020 16:13:25 +0300 (+03)
+Date:   Thu, 20 Feb 2020 16:13:25 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jeremy Cline <jcline@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [patch 1/2] mm, shmem: add thp fault alloc and fallback stats
-Message-ID: <20200220131202.i77zt3zj53mimrnu@box>
-References: <alpine.DEB.2.21.2002172139310.152060@chino.kir.corp.google.com>
- <alpine.DEB.2.21.2002181828070.108053@chino.kir.corp.google.com>
- <CAHbLzkrJ_=8f8STvZ2GPGH6Arup8cKgGqigj4FQXWpmD-C5wNQ@mail.gmail.com>
- <alpine.DEB.2.21.2002181942460.155180@chino.kir.corp.google.com>
- <CAHbLzkq20hzLdYM-EMOfWRqPOr+OQF8uq5yWR=Yb6vQY51LKwg@mail.gmail.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH] mm: Fix possible PMD dirty bit lost in
+ set_pmd_migration_entry()
+Message-ID: <20200220131325.e56ttzhjcvxyic7i@box>
+References: <20200220075220.2327056-1-ying.huang@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHbLzkq20hzLdYM-EMOfWRqPOr+OQF8uq5yWR=Yb6vQY51LKwg@mail.gmail.com>
+In-Reply-To: <20200220075220.2327056-1-ying.huang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:01:23AM -0800, Yang Shi wrote:
-> On Tue, Feb 18, 2020 at 7:44 PM David Rientjes <rientjes@google.com> wrote:
-> >
-> > On Tue, 18 Feb 2020, Yang Shi wrote:
-> >
-> > > > diff --git a/mm/shmem.c b/mm/shmem.c
-> > > > --- a/mm/shmem.c
-> > > > +++ b/mm/shmem.c
-> > > > @@ -1502,9 +1502,8 @@ static struct page *shmem_alloc_page(gfp_t gfp,
-> > > >         return page;
-> > > >  }
-> > > >
-> > > > -static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
-> > > > -               struct inode *inode,
-> > > > -               pgoff_t index, bool huge)
-> > > > +static struct page *shmem_alloc_and_acct_page(gfp_t gfp, struct inode *inode,
-> > > > +               pgoff_t index, bool fault, bool huge)
-> > > >  {
-> > > >         struct shmem_inode_info *info = SHMEM_I(inode);
-> > > >         struct page *page;
-> > > > @@ -1518,9 +1517,11 @@ static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
-> > > >         if (!shmem_inode_acct_block(inode, nr))
-> > > >                 goto failed;
-> > > >
-> > > > -       if (huge)
-> > > > +       if (huge) {
-> > > >                 page = shmem_alloc_hugepage(gfp, info, index);
-> > > > -       else
-> > > > +               if (!page && fault)
-> > > > +                       count_vm_event(THP_FAULT_FALLBACK);
-> > > > +       } else
-> > > >                 page = shmem_alloc_page(gfp, info, index);
-> > > >         if (page) {
-> > > >                 __SetPageLocked(page);
-> > > > @@ -1832,11 +1833,10 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-> > > >         }
-> > > >
-> > > >  alloc_huge:
-> > > > -       page = shmem_alloc_and_acct_page(gfp, inode, index, true);
-> > > > +       page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, true);
-> > > >         if (IS_ERR(page)) {
-> > > >  alloc_nohuge:
-> > > > -               page = shmem_alloc_and_acct_page(gfp, inode,
-> > > > -                                                index, false);
-> > > > +               page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, false);
-> > > >         }
-> > > >         if (IS_ERR(page)) {
-> > > >                 int retry = 5;
-> > > > @@ -1871,8 +1871,11 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-> > > >
-> > > >         error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg,
-> > > >                                             PageTransHuge(page));
-> > > > -       if (error)
-> > > > +       if (error) {
-> > > > +               if (vmf && PageTransHuge(page))
-> > > > +                       count_vm_event(THP_FAULT_FALLBACK);
-> > > >                 goto unacct;
-> > > > +       }
-> > > >         error = shmem_add_to_page_cache(page, mapping, hindex,
-> > > >                                         NULL, gfp & GFP_RECLAIM_MASK);
-> > > >         if (error) {
-> > > > @@ -1883,6 +1886,8 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-> > > >         mem_cgroup_commit_charge(page, memcg, false,
-> > > >                                  PageTransHuge(page));
-> > > >         lru_cache_add_anon(page);
-> > > > +       if (vmf && PageTransHuge(page))
-> > > > +               count_vm_event(THP_FAULT_ALLOC);
-> > >
-> > > I think shmem THP alloc is accounted to THP_FILE_ALLOC. And it has
-> > > been accounted by shmem_add_to_page_cache(). So, it sounds like a
-> > > double count.
-> > >
-> >
-> > I think we can choose to either include file allocations into both
-> > thp_fault_alloc and thp_fault_fallback or we can exclude them from both of
-> > them.  I don't think we can account for only one of them.
+On Thu, Feb 20, 2020 at 03:52:20PM +0800, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
 > 
-> How's about the 3rd option, adding THP_FILE_FALLBACK.
+> In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
+> atomically.  But the PMD is read before that with an ordinary memory
+> reading.  If the THP (transparent huge page) is written between the
+> PMD reading and pmdp_invalidate(), the PMD dirty bit may be lost, and
+> cause data corruption.  The race window is quite small, but still
+> possible in theory, so need to be fixed.
+> 
+> The race is fixed via using the return value of pmdp_invalidate() to
+> get the original content of PMD, which is a read/modify/write atomic
+> operation.  So no THP writing can occur in between.
+> 
+> The race has been introduced when the THP migration support is added
+> in the commit 616b8371539a ("mm: thp: enable thp migration in generic
+> path").  But this fix depends on the commit d52605d7cb30 ("mm: do not
+> lose dirty and accessed bits in pmdp_invalidate()").  So it's easy to
+> be backported after v4.16.  But the race window is really small, so it
+> may be fine not to backport the fix at all.
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
 
-I like this option.
-
-Problem with THP_FAULT_* is that shmem_getpage_gfp() is called not only
-from fault path, but also from syscalls.
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
  Kirill A. Shutemov
