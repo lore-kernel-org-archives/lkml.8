@@ -2,105 +2,106 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE6C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AAFC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C46F924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582219212;
-	bh=nISuG6svIwzof7JHQmMj7ZgoZJYtf5uXKsOvPPgXBsw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=B12Hu4sP3Gfl6T1NbH4Zue+pqqTNymTHPhU4et+KU9yzn8ClhGiSfYEEw3Cp4IajE
-	 Kg+hRBg8By48/gs+2I/BWs0dIvaggQnxEx4JgTIB4UBP4aXbZLpCBiWLC/vnV+JKLq
-	 2YN3r0m96Ia7YIpP82Af1wc3iQqqI9PTd1bBViI4=
+	by mail.kernel.org (Postfix) with ESMTP id 43D90208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgBTRUM (ORCPT
+        id S1728764AbgBTRUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:20:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 12:20:40 -0500
+Received: from mga03.intel.com ([134.134.136.65]:11467 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgBTRUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:20:11 -0500
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A15C9208E4;
-        Thu, 20 Feb 2020 17:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582219210;
-        bh=nISuG6svIwzof7JHQmMj7ZgoZJYtf5uXKsOvPPgXBsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HzXgcVxojD9fCltFKaqoYXkNdpoi4yaKM5Zv2RduL6TzvqtjeQf/FBNHxB/Aq1DBf
-         EV4WYvPyU7kHGli3k+0OKCwM1mWsB6ifYjh+es2/KnSm7R6+3Ep4W8BnQo5nydkjwC
-         MJzv1KyUBmeotowmCURgfjmzmk+9OV3eDp/zZACw=
-Date:   Thu, 20 Feb 2020 12:20:09 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Kevin Hao <haokexin@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.5 383/542] gpio: Fix the no return statement
- warning
-Message-ID: <20200220172009.GG1734@sasha-vm>
-References: <20200214154854.6746-1-sashal@kernel.org>
- <20200214154854.6746-383-sashal@kernel.org>
- <20200215004455.GA499724@pek-khao-d2.corp.ad.wrs.com>
+        id S1727979AbgBTRUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:20:39 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 09:20:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="236307882"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 20 Feb 2020 09:20:38 -0800
+Date:   Thu, 20 Feb 2020 09:20:38 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linmiaohe <linmiaohe@huawei.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, pbonzini@redhat.com,
+        rkrcmar@redhat.com, wanpengli@tencent.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: apic: avoid calculating pending eoi from an
+ uninitialized val
+Message-ID: <20200220172038.GB3972@linux.intel.com>
+References: <1582213006-488-1-git-send-email-linmiaohe@huawei.com>
+ <8736b56wxe.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200215004455.GA499724@pek-khao-d2.corp.ad.wrs.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8736b56wxe.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 15, 2020 at 08:44:55AM +0800, Kevin Hao wrote:
->On Fri, Feb 14, 2020 at 10:46:15AM -0500, Sasha Levin wrote:
->> From: Kevin Hao <haokexin@gmail.com>
->>
->> [ Upstream commit 9c6722d85e92233082da2b3623685bba54d6093e ]
->>
->> In commit 242587616710 ("gpiolib: Add support for the irqdomain which
->> doesn't use irq_fwspec as arg") we have changed the return type of
->> gpiochip_populate_parent_fwspec_twocell/fourcell() from void to void *,
->> but forgot to add a return statement for these two dummy functions.
->> Add "return NULL" to fix the build warnings.
->>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> Signed-off-by: Kevin Hao <haokexin@gmail.com>
->> Link: https://lore.kernel.org/r/20200116095003.30324-1-haokexin@gmail.com
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
->> ---
->>  include/linux/gpio/driver.h | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
->> index e2480ef94c559..5dce9c67a961e 100644
->> --- a/include/linux/gpio/driver.h
->> +++ b/include/linux/gpio/driver.h
->> @@ -553,6 +553,7 @@ static inline void gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *chi
->>  						    unsigned int parent_hwirq,
->>  						    unsigned int parent_type)
->>  {
->> +	return NULL;
->
->Hi Sasha,
->
->This commit shouldn't go to the v5.5.x kernel. This is a fix for the
->commit 242587616710, but that commit doesn't exist in the v5.5.x kernel,
->then it will trigger a build warning due to the wrong returning type.
+On Thu, Feb 20, 2020 at 05:33:17PM +0100, Vitaly Kuznetsov wrote:
+> linmiaohe <linmiaohe@huawei.com> writes:
+> 
+> > From: Miaohe Lin <linmiaohe@huawei.com>
+> >
+> > When get user eoi value failed, var val would be uninitialized and result
+> > in calculating pending eoi from an uninitialized val. Initialize var val
+> > to 0 to fix this case.
+> 
+> Let me try to suggest an alternative wording,
+> 
+> "When pv_eoi_get_user() fails, 'val' may remain uninitialized and the
+> return value of pv_eoi_get_pending() becomes random. Fix the issue by
+> initializing the variable."
+> 
+> >
+> > Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index 4f14ec7525f6..7e77e94f3176 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -626,7 +626,7 @@ static inline bool pv_eoi_enabled(struct kvm_vcpu *vcpu)
+> >  
+> >  static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
+> >  {
+> > -	u8 val;
+> > +	u8 val = 0;
 
-Now dropped, thank you.
+Rather than initialize @val, I'd prefer to explicitly handle the error,
+similar to pv_eoi_clr_pending() and pv_eoi_set_pending(), e.g.
 
--- 
-Thanks,
-Sasha
+	u8 val;
+
+	if (pv_eoi_get_user(vcpu, &val) < 0) {
+		printk(KERN_WARNING "Can't read EOI MSR value: 0x%llx\n",
+			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
+		return false;
+	}
+	return val & 0x1;
+
+> >  	if (pv_eoi_get_user(vcpu, &val) < 0)
+> >  		printk(KERN_WARNING "Can't read EOI MSR value: 0x%llx\n",
+> >  			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> But why compilers don't complain?
+
+Clang might?
