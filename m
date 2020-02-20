@@ -2,382 +2,80 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8909C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB170C11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F1E206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582239258;
-	bh=R6eSMc5PEQgxhx/tlA0MnSDDRu61U4/oSExAr1zJ7GU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=co+eYsP9TmGKREm6+4GJpv9kRU86iWzTs+GRvokyjV531mZQjxpGgb7Gqj4dLlGem
-	 bDrupwNJZPda3yVUL2m+swScRH+5M3SBUhEMGs/oq9uY52vKDb98KXIZEAEVhgd/sU
-	 FzVb3nJEFgbOo0kGbm/v4q6616lRZk++rbW2HsHU=
+	by mail.kernel.org (Postfix) with ESMTP id 8AE3F206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:54:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgBTWyR (ORCPT
+        id S1729308AbgBTWy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:54:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729130AbgBTWyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:54:16 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B657C206F4;
-        Thu, 20 Feb 2020 22:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582239255;
-        bh=R6eSMc5PEQgxhx/tlA0MnSDDRu61U4/oSExAr1zJ7GU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=uncKOvqN8bwYkq4Yipcl0PjQzzuTR5u4GskDFghYkREICuwUa8dJjumXJxMrhUMz8
-         A8P/1jSfLn0Ytvmuold2xRLi9vfrEpryXYaTxZ87RDyj6hMUlGZC6kgV6NqZAyysAl
-         7KrnEl5DD9/uyGnD8+Bv+F9wimMuBjmdSfwdCMo0=
-Message-ID: <98baa0940d2ffea3017a08ce31358f3326e38a1e.camel@kernel.org>
-Subject: Re: [PATCH] ceph: re-org copy_file_range and fix error handling
- paths
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, ceph-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 20 Feb 2020 17:54:03 -0500
-In-Reply-To: <20200220223630.GA9748@suse.com>
-References: <20200217123649.12316-1-lhenriques@suse.com>
-         <9282539b8efcaccdd8d19197edb289828803d39c.camel@kernel.org>
-         <20200220223630.GA9748@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Thu, 20 Feb 2020 17:54:29 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41104 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgBTWy2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 17:54:28 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4ui4-00G1j1-B7; Thu, 20 Feb 2020 22:54:20 +0000
+Date:   Thu, 20 Feb 2020 22:54:20 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
+Subject: Re: [PATCH 4/7] proc: Use d_invalidate in proc_prune_siblings_dcache
+Message-ID: <20200220225420.GR23230@ZenIV.linux.org.uk>
+References: <20200212200335.GO23230@ZenIV.linux.org.uk>
+ <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+ <20200212203833.GQ23230@ZenIV.linux.org.uk>
+ <20200212204124.GR23230@ZenIV.linux.org.uk>
+ <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+ <87lfp7h422.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+ <87pnejf6fz.fsf@x220.int.ebiederm.org>
+ <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+ <87blpt9e6m.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87blpt9e6m.fsf_-_@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-20 at 22:36 +0000, Luis Henriques wrote:
-> On Thu, Feb 20, 2020 at 03:41:14PM -0500, Jeff Layton wrote:
-> > On Mon, 2020-02-17 at 12:36 +0000, Luis Henriques wrote:
-> > > This patch re-organizes copy_file_range, trying to fix a few issues in
-> > > error handling.  Here's the summary:
-> > > 
-> > > - Abort copy if initial do_splice_direct() returns fewer bytes than
-> > >   requested.
-> > > 
-> > > - Move the 'size' initialization (with i_size_read()) further down in the
-> > >   code, after the initial call to do_splice_direct().  This avoids issues
-> > >   with a possibly stale value if a manual copy is done.
-> > > 
-> > > - Move the object copy loop into a separate function.  This makes it
-> > >   easier to handle errors (e.g, dirtying caps and updating the MDS
-> > >   metadata if only some objects have been copied before an error has
-> > >   occurred).
-> > > 
-> > > - Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
-> > >   and dst_oloc
-> > > 
-> > > - After the object copy loop, the new file size to be reported to the MDS
-> > >   (if there's file size change) is now the actual file size, and not the
-> > >   size after an eventual extra manual copy.
-> > > 
-> > > - Added a few dout() to show the number of bytes copied in the two manual
-> > >   copies and in the object copy loop.
-> > > 
-> > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> > > ---
-> > > Hi!
-> > > 
-> > > Initially I was going to have this patch split in a series, but then I
-> > > decided not to do that as this big patch allows (IMO) to better see the
-> > > whole picture.  But please let me know if you think otherwise and I can
-> > > split it in a few smaller patches.
-> > > 
-> > > I tried to cover all the issues that have been pointed out by Ilya, but I
-> > > may have missed something or, more likely, introduced new bugs ;-)
-> > > 
-> > > Cheers,
-> > > --
-> > > Luis
-> > > 
-> > 
-> > Sorry for the delay in review!
+On Thu, Feb 20, 2020 at 02:49:53PM -0600, Eric W. Biederman wrote:
 > 
-> No worries, I appreciate the feedback but I obviously don't expect it to
-> happen immediately :-)
+> The function d_prune_aliases has the problem that it will only prune
+> aliases thare are completely unused.  It will not remove aliases for
+> the dcache or even think of removing mounts from the dcache.  For that
+> behavior d_invalidate is needed.
 > 
-> > >  fs/ceph/file.c | 169 ++++++++++++++++++++++++++++---------------------
-> > >  1 file changed, 96 insertions(+), 73 deletions(-)
-> > > 
-> > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> > > index c3b8e8e0bf17..4d90a275f9a5 100644
-> > > --- a/fs/ceph/file.c
-> > > +++ b/fs/ceph/file.c
-> > > @@ -1931,6 +1931,71 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
-> > >  	return 0;
-> > >  }
-> > >  
-> > > +static ssize_t ceph_do_objects_copy(struct ceph_inode_info *src_ci, u64 *src_off,
-> > > +				    struct ceph_inode_info *dst_ci, u64 *dst_off,
-> > > +				    struct ceph_fs_client *fsc,
-> > > +				    size_t len, unsigned int flags)
-> > > +{
-> > > +	struct ceph_object_locator src_oloc, dst_oloc;
-> > > +	struct ceph_object_id src_oid, dst_oid;
-> > > +	size_t bytes = 0;
-> > > +	u64 src_objnum, src_objoff, dst_objnum, dst_objoff;
-> > > +	u32 src_objlen, dst_objlen;
-> > > +	u32 object_size = src_ci->i_layout.object_size;
-> > > +	int ret;
-> > > +
-> > > +	src_oloc.pool = src_ci->i_layout.pool_id;
-> > > +	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
-> > > +	dst_oloc.pool = dst_ci->i_layout.pool_id;
-> > > +	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
-> > > +
-> > > +	while (len >= object_size) {
-> > > +		ceph_calc_file_object_mapping(&src_ci->i_layout, *src_off,
-> > > +					      object_size, &src_objnum,
-> > > +					      &src_objoff, &src_objlen);
-> > > +		ceph_calc_file_object_mapping(&dst_ci->i_layout, *dst_off,
-> > > +					      object_size, &dst_objnum,
-> > > +					      &dst_objoff, &dst_objlen);
-> > > +		ceph_oid_init(&src_oid);
-> > > +		ceph_oid_printf(&src_oid, "%llx.%08llx",
-> > > +				src_ci->i_vino.ino, src_objnum);
-> > > +		ceph_oid_init(&dst_oid);
-> > > +		ceph_oid_printf(&dst_oid, "%llx.%08llx",
-> > > +				dst_ci->i_vino.ino, dst_objnum);
-> > > +		/* Do an object remote copy */
-> > > +		ret = ceph_osdc_copy_from(&fsc->client->osdc,
-> > > +					  src_ci->i_vino.snap, 0,
-> > > +					  &src_oid, &src_oloc,
-> > > +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-> > > +					  CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
-> > > +					  &dst_oid, &dst_oloc,
-> > > +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-> > > +					  CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > +					  dst_ci->i_truncate_seq,
-> > > +					  dst_ci->i_truncate_size,
-> > > +					  CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > +		if (ret) {
-> > > +			if (ret == -EOPNOTSUPP) {
-> > > +				fsc->have_copy_from2 = false;
-> > > +				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
-> > > +			}
-> > > +			dout("ceph_osdc_copy_from returned %d\n", ret);
-> > > +			if (!bytes)
-> > > +				bytes = ret;
-> > > +			goto out;
-> > > +		}
-> > > +		len -= object_size;
-> > > +		bytes += object_size;
-> > > +		*src_off += object_size;
-> > > +		*dst_off += object_size;
-> > > +	}
-> > > +
-> > > +out:
-> > > +	ceph_oloc_destroy(&src_oloc);
-> > > +	ceph_oloc_destroy(&dst_oloc);
-> > > +	return bytes;
-> > > +}
-> > > +
-> > >  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  				      struct file *dst_file, loff_t dst_off,
-> > >  				      size_t len, unsigned int flags)
-> > > @@ -1941,14 +2006,11 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
-> > >  	struct ceph_cap_flush *prealloc_cf;
-> > >  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
-> > > -	struct ceph_object_locator src_oloc, dst_oloc;
-> > > -	struct ceph_object_id src_oid, dst_oid;
-> > > -	loff_t endoff = 0, size;
-> > > -	ssize_t ret = -EIO;
-> > > +	loff_t size;
-> > > +	ssize_t ret = -EIO, bytes;
-> > >  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
-> > > -	u32 src_objlen, dst_objlen, object_size;
-> > > +	u32 src_objlen, dst_objlen;
-> > >  	int src_got = 0, dst_got = 0, err, dirty;
-> > > -	bool do_final_copy = false;
-> > >  
-> > >  	if (src_inode->i_sb != dst_inode->i_sb) {
-> > >  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
-> > > @@ -2026,22 +2088,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  	if (ret < 0)
-> > >  		goto out_caps;
-> > >  
-> > > -	size = i_size_read(dst_inode);
-> > > -	endoff = dst_off + len;
-> > > -
-> > >  	/* Drop dst file cached pages */
-> > >  	ret = invalidate_inode_pages2_range(dst_inode->i_mapping,
-> > >  					    dst_off >> PAGE_SHIFT,
-> > > -					    endoff >> PAGE_SHIFT);
-> > > +					    (dst_off + len) >> PAGE_SHIFT);
-> > >  	if (ret < 0) {
-> > >  		dout("Failed to invalidate inode pages (%zd)\n", ret);
-> > >  		ret = 0; /* XXX */
-> > >  	}
-> > > -	src_oloc.pool = src_ci->i_layout.pool_id;
-> > > -	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
-> > > -	dst_oloc.pool = dst_ci->i_layout.pool_id;
-> > > -	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
-> > > -
-> > >  	ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
-> > >  				      src_ci->i_layout.object_size,
-> > >  				      &src_objnum, &src_objoff, &src_objlen);
-> > > @@ -2060,6 +2114,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  	 * starting at the src_off
-> > >  	 */
-> > >  	if (src_objoff) {
-> > > +		dout("Initial partial copy of %u bytes\n", src_objlen);
-> > > +
-> > >  		/*
-> > >  		 * we need to temporarily drop all caps as we'll be calling
-> > >  		 * {read,write}_iter, which will get caps again.
-> > > @@ -2067,8 +2123,9 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  		put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
-> > >  		ret = do_splice_direct(src_file, &src_off, dst_file,
-> > >  				       &dst_off, src_objlen, flags);
-> > > -		if (ret < 0) {
-> > > -			dout("do_splice_direct returned %d\n", err);
-> > > +		/* Abort on short copies or on error */
-> > > +		if (ret < src_objlen) {
-> > > +			dout("Failed partial copy (%zd)\n", ret);
-> > >  			goto out;
-> > >  		}
-> > >  		len -= ret;
-> > > @@ -2081,62 +2138,29 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  		if (err < 0)
-> > >  			goto out_caps;
-> > >  	}
-> > > -	object_size = src_ci->i_layout.object_size;
-> > > -	while (len >= object_size) {
-> > > -		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
-> > > -					      object_size, &src_objnum,
-> > > -					      &src_objoff, &src_objlen);
-> > > -		ceph_calc_file_object_mapping(&dst_ci->i_layout, dst_off,
-> > > -					      object_size, &dst_objnum,
-> > > -					      &dst_objoff, &dst_objlen);
-> > > -		ceph_oid_init(&src_oid);
-> > > -		ceph_oid_printf(&src_oid, "%llx.%08llx",
-> > > -				src_ci->i_vino.ino, src_objnum);
-> > > -		ceph_oid_init(&dst_oid);
-> > > -		ceph_oid_printf(&dst_oid, "%llx.%08llx",
-> > > -				dst_ci->i_vino.ino, dst_objnum);
-> > > -		/* Do an object remote copy */
-> > > -		err = ceph_osdc_copy_from(
-> > > -			&src_fsc->client->osdc,
-> > > -			src_ci->i_vino.snap, 0,
-> > > -			&src_oid, &src_oloc,
-> > > -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-> > > -			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
-> > > -			&dst_oid, &dst_oloc,
-> > > -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
-> > > -			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
-> > > -			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
-> > > -			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
-> > > -		if (err) {
-> > > -			if (err == -EOPNOTSUPP) {
-> > > -				src_fsc->have_copy_from2 = false;
-> > > -				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
-> > > -			}
-> > > -			dout("ceph_osdc_copy_from returned %d\n", err);
-> > > -			if (!ret)
-> > > -				ret = err;
-> > > -			goto out_caps;
-> > > -		}
-> > > -		len -= object_size;
-> > > -		src_off += object_size;
-> > > -		dst_off += object_size;
-> > > -		ret += object_size;
-> > > -	}
-> > >  
-> > > -	if (len)
-> > > -		/* We still need one final local copy */
-> > > -		do_final_copy = true;
-> > > +	size = i_size_read(dst_inode);
-> > > +	bytes = ceph_do_objects_copy(src_ci, &src_off, dst_ci, &dst_off,
-> > > +				     src_fsc, len, flags);
-> > > +	if (bytes <= 0) {
-> > > +		if (!ret)
-> > > +			ret = bytes;
-> > > +		goto out_caps;
-> > > +	}
-> > 
-> > Suppose we did the front part with do_splice_direct (ret > 0), but then
-> > ceph_do_objects_copy fails (bytes < 0). We "goto out_caps" but then...
-> > 
-> > [...]
-> > 
-> > > @@ -2152,15 +2176,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
-> > >  out_caps:
-> > >  	put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
-> > >  
-> > > -	if (do_final_copy) {
-> > > -		err = do_splice_direct(src_file, &src_off, dst_file,
-> > > -				       &dst_off, len, flags);
-> > > -		if (err < 0) {
-> > > -			dout("do_splice_direct returned %d\n", err);
-> > > -			goto out;
-> > > -		}
-> > > -		len -= err;
-> > > -		ret += err;
-> > > +	if (len && (ret >= 0)) {
-> > 
-> > ...len is still positive and we do_splice_direct again (probably at the
-> > wrong offset?), instead of just returning a short copy. I think we
-> > probably want to just stop any copying if it fails at any point along
-> > the way, right?
-> 
-> Well... To be honest I deliberately wanted to try a do_splice_direct in
-> case the remote object copies fail (basically, reverting to something
-> similar to the generic_copy_file_range).  Now, I've been staring at this
-> code for some time and I may be missing the obvious (again!).  But:
-> 
->  - the offsets should be OK because ceph_do_objects_copy() only updates
->    them after each successful object copy
-> 
->  - len should also be consistent:
->    * If 'bytes' was <= 0, it should contain what was written by
->      do_splice_direct
->    * if 'bytes' was > 0, but possibly < expected (e.g. an OSD returned an
->      error after a few object copies), len should still be consistent
-> 
-> Anyway, I'm not too attached to this approach, and if you rather have this
-> function to return in the scenario you've described (and eventually have
-> the user to retry the operation) I'm OK with that.
-> 
+> To use d_invalidate replace d_prune_aliases with d_find_alias
+> followed by d_invalidate and dput.  This is safe and complete
+> because no inode in proc has any hardlinks or aliases.
 
-Yes, sorry. I wasn't disputing whether this would fall over, but whether
-it was intended behavior.
-
-I'm not sure we gain anything by doing a second splice once we've had a
-failure though. I think if this isn't going to (largely) use copy
-offloading then we probably ought to stop and just return to userland as
-quickly as we can.
-
-
-> > > +		dout("Final partial copy of %zu bytes\n", len);
-> > > +		bytes = do_splice_direct(src_file, &src_off, dst_file,
-> > > +					 &dst_off, len, flags);
-> > > +		if (bytes > 0)
-> > > +			ret += bytes;
-> > > +		else
-> > > +			dout("Failed partial copy (%zd)\n", bytes);
-> > >  	}
-> > >  
-> > >  out:
-> > 
-> > -- 
-> > Jeff Layton <jlayton@kernel.org>
-> > 
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+s/no inode.*/it's a fucking directory inode./
