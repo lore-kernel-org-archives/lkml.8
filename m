@@ -2,133 +2,180 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AFDC5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CEAC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86FB22465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 990EC24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582159647;
+	bh=IoyCu3Rfg36TnWgV/FX467X5fODdY0uZIig5iWzvj2Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mHTD4B9CGv0XKxqQIKYPximpVYEgW1RgU3GMSbwzlDRdhO7rI7rA/Plrqgylsji2B
+	 qPeVNnAMu40j9ad1d0xRexfkYh3UN/dKILb09KR21BKiccu00CJJzOH2HmaJ1e1U4r
+	 yf9F6RIQTgMmLLKUHBMUBfTNmh0MfXu9zNiFIsmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgBTAoS (ORCPT
+        id S1727295AbgBTAr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:44:18 -0500
-Received: from mga17.intel.com ([192.55.52.151]:34913 "EHLO mga17.intel.com"
+        Wed, 19 Feb 2020 19:47:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgBTAoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:44:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 16:44:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="382975586"
-Received: from pl-dbox.sh.intel.com (HELO intel.com) ([10.239.159.39])
-  by orsmga004.jf.intel.com with ESMTP; 19 Feb 2020 16:44:14 -0800
-Date:   Thu, 20 Feb 2020 08:44:34 +0800
-From:   Philip Li <philip.li@intel.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Chen Rong <rong.a.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        tip-bot2 for Josh Poimboeuf <tip-bot2@linutronix.de>,
-        linux-tip-commits@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Julien Thierry <jthierry@redhat.com>, x86 <x86@kernel.org>,
+        id S1726962AbgBTAr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 19:47:26 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 793792465D;
+        Thu, 20 Feb 2020 00:47:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582159645;
+        bh=IoyCu3Rfg36TnWgV/FX467X5fODdY0uZIig5iWzvj2Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dk0aWK516QpktQDynoQnd5IU3diktxkycW0Dz2cwfjo3LG73XXp9yPtJol9GJVjBE
+         mpyTvwkvUQD1H+YXNjkl9x5u6vrrnrEdrVHo6o6gKRjL732msJctzi9ekPggT78WRt
+         eGR9BGUQfx2yzpuFdPqTeoYIAkn68YZU+BfYT720=
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        =?UTF-8?Q?Daniel_D=c3=adaz?= <daniel.diaz@linaro.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
         LKML <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [tip: core/objtool] objtool: Fail the kernel build on fatal
- errors
-Message-ID: <20200220004434.GA5687@intel.com>
-References: <f18c3743de0fef673d49dd35760f26bdef7f6fc3.1581359535.git.jpoimboe@redhat.com>
- <158142525822.411.5401976987070210798.tip-bot2@tip-bot2>
- <20200213221100.odwg5gan3dwcpk6g@treble>
- <87sgjeghal.fsf@nanos.tec.linutronix.de>
- <20200214175758.s34rdwmwgiq6qwq7@treble>
- <CAKwvOdmJvWpmbP3GyzaZxyiuwooFXA8D7ui05QE7+f8Oaz+rXg@mail.gmail.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
+        shuah <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20200219133012.7cb6ac9e@carbon>
+ <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
+ <20200219180348.40393e28@carbon>
+ <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
+ <20200219192854.6b05b807@carbon>
+ <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
+ <20200219210609.20a097fb@carbon>
+ <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
+ <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
+From:   shuah <shuah@kernel.org>
+Message-ID: <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
+Date:   Wed, 19 Feb 2020 17:47:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdmJvWpmbP3GyzaZxyiuwooFXA8D7ui05QE7+f8Oaz+rXg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:43:39PM -0800, Nick Desaulniers wrote:
-> On Fri, Feb 14, 2020 at 9:58 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Fri, Feb 14, 2020 at 01:10:26AM +0100, Thomas Gleixner wrote:
-> > > Josh Poimboeuf <jpoimboe@redhat.com> writes:
-> > > > On Tue, Feb 11, 2020 at 12:47:38PM -0000, tip-bot2 for Josh Poimboeuf wrote:
-> > > >> The following commit has been merged into the core/objtool branch of tip:
-> > > >>
-> > > >> Commit-ID:     644592d328370af4b3e027b7b1ae9f81613782d8
-> > > >> Gitweb:        https://git.kernel.org/tip/644592d328370af4b3e027b7b1ae9f81613782d8
-> > > >> Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-> > > >> AuthorDate:    Mon, 10 Feb 2020 12:32:38 -06:00
-> > > >> Committer:     Borislav Petkov <bp@suse.de>
-> > > >> CommitterDate: Tue, 11 Feb 2020 13:27:03 +01:00
-> > > >>
-> > > >> objtool: Fail the kernel build on fatal errors
-> > > >>
-> > > >> When objtool encounters a fatal error, it usually means the binary is
-> > > >> corrupt or otherwise broken in some way.  Up until now, such errors were
-> > > >> just treated as warnings which didn't fail the kernel build.
-> > > >>
-> > > >> However, objtool is now stable enough that if a fatal error is
-> > > >> discovered, it most likely means something is seriously wrong and it
-> > > >> should fail the kernel build.
-> > > >>
-> > > >> Note that this doesn't apply to "normal" objtool warnings; only fatal
-> > > >> ones.
-> > > >
-> > > > Clang still has some toolchain issues which need to be sorted out, so
-> > > > upgrading the fatal errors is causing their CI to fail.
-> > >
-> > > Good. Last time we made it fail they just fixed their stuff.
-> > >
-> > > > So I think we need to drop this one for now.
-> > >
-> > > Why? It's our decision to define which level of toolchain brokeness is
-> > > tolerable.
-> > >
-> > > > Boris, are you able to just drop it or should I send a revert?
-> > >
-> > > I really want to see a revert which has a proper justification why the
-> > > issues of clang are tolerable along with a clear statement when this
-> > > fatal error will come back. And 'when' means a date, not 'when clang is
-> > > fixed'.
-> >
-> > Fair enough.  The root cause was actually a bug in binutils which gets
-> > triggered by a new clang feature.  So instead of reverting the above
-> > patch, I think I've figured out a way to work around the binutils bug,
-> > while also improving objtool at the same time (win-win).
-> >
-> > The binutils bug will be fixed in binutils 2.35.
-> >
-> > BTW, to be fair, this was less "Clang has issues" and more "Josh is
-> > lazy".  I didn't test the patch with Clang -- I tend to rely on 0-day
-> > bot reports because I don't have the bandwidth to test the
-> > kernel/config/toolchain combinations.  Nick tells me Clang will soon be
-> > integrated with the 0-day bot, which should help prevent this type of
-> > thing in the future.
+On 2/19/20 5:27 PM, Alexei Starovoitov wrote:
+> On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel Díaz wrote:
+>>>
+>>> When I download a specific kernel release, how can I know what LLVM
+>>> git-hash or version I need (to use BPF-selftests)?
 > 
-> Hi Rong, Philip,
-> Do you have any status updates on turning on the 0day bot emails to
-> the patch authors in production?  It's been quite handy in helping us
-> find issues, for the private mails we've been triaging daily.
-Hi Nick, this is on our schedule in a new 2-3 weeks, sorry not to update
-your in another mail loop earlier.
+> as discussed we're going to add documentation-like file that will
+> list required commits in tools.
+> This will be enforced for future llvm/pahole commits.
+> 
+>>> Do you think it is reasonable to require end-users to compile their own
+>>> bleeding edge version of LLVM, to use BPF-selftests?
+> 
+> absolutely.
 
-What I plan to do is to cc you for the clang reports when 0-day ci sends
-to kernel patch author. If you notice something may be related to clang (since
-we always integrate newer clang version), you can help filter it out. How
-do you think?
++ linux-kselftest@vger.kernel.org
 
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+End-users in this context are users and not necessarily developers.
+
+> If a developer wants to send a patch they must run all selftests and
+> all of them must pass in their environment.
+> "but I'm adding a tracing feature and don't care about networking tests
+> failing"... is not acceptable.
+
+This is a reasonable expectation when a developers sends bpf patches.
+
+> 
+>>> I do hope that some end-users of BPF-selftests will be CI-systems.
+>>> That also implies that CI-system maintainers need to constantly do
+>>> "latest built from sources" of LLVM git-tree to keep up.  Is that a
+>>> reasonable requirement when buying a CI-system in the cloud?
+> 
+> "buying CI-system in the cloud" ?
+> If I could buy such system I would pay for it out of my own pocket to save
+> maintainer's and developer's time.
+> 
+>> We [1] are end users of kselftests and many other test suites [2]. We
+>> run all of our testing on every git-push on linux-stable-rc, mainline,
+>> and linux-next -- approximately 1 million tests per week. We have a
+>> dedicated engineering team looking after this CI infrastructure and
+>> test results, and as such, I can wholeheartedly echo Jesper's
+>> sentiment here: We would really like to help kernel maintainers and
+>> developers by automatically testing their code in real hardware, but
+>> the BPF kselftests are difficult to work with from a CI perspective.
+>> We have caught and reported [3] many [4] build [5] failures [6] in the
+>> past for libbpf/Perf, but building is just one of the pieces. We are
+>> unable to run the entire BPF kselftests because only a part of the
+>> code builds, so our testing is very limited there.
+>>
+>> We hope that this situation can be improved and that our and everyone
+>> else's automated testing can help you guys too. For this to work out,
+>> we need some help.
+> 
+
+It would be helpful understand what "help" is in this context.
+
+> I don't understand what kind of help you need. Just install the latest tools.
+
+What would be helpful is to write bpf tests such that older tests that
+worked on older llvm versions continue to work and with some indication
+on which tests require new bleeding edge tools.
+
+> Both the latest llvm and the latest pahole are required.
+
+It would be helpful if you can elaborate why latest tools are a
+requirement.
+
+> If by 'help' you mean to tweak selftests to skip tests then it's a nack.
+> We have human driven CI. Every developer must run selftests/bpf before
+> emailing the patches. Myself and Daniel run them as well before applying.
+> These manual runs is the only thing that keeps bpf tree going.
+> If selftests get to skip tests humans will miss those errors.
+> When I don't see '0 SKIPPED, 0 FAILED' I go and investigate.
+> Anything but zero is a path to broken kernels.
+> 
+> Imagine the tests would get skipped when pahole is too old.
+> That would mean all of the kernel features from year 2019
+> would get skipped. Is there a point of running such selftests?
+> I think the value is not just zero. The value is negative.
+> Such selftests that run old stuff would give false believe
+> that they do something meaningful.
+> "but CI can do build only tests"... If 'helping' such CI means hurting the
+> key developer/maintainer workflow such CI is on its own.
+> 
+
+Skipping tests will be useless. I am with you on that. However,
+figuring out how to maintain some level of backward compatibility
+to run at least older tests and warn users to upgrade would be
+helpful.
+
+I suspect currently users are ignoring bpf failures because they
+are unable to keep up with the requirement to install newer tools
+to run the tests. This isn't great either.
+
+Users that care are sharing their pain to see if they can get some
+help or explanation on why new tools are required every so often.
+I don't think everybody understands why. :)
+
+thanks,
+-- Shuah
