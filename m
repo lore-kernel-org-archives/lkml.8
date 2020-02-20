@@ -2,101 +2,148 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A33AC11D15
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ECDC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F31E20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:54:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LUdFldeg"
+	by mail.kernel.org (Postfix) with ESMTP id DD03624673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbgBTRyp (ORCPT
+        id S1728426AbgBTR5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:54:45 -0500
-Received: from mail-lf1-f48.google.com ([209.85.167.48]:45014 "EHLO
-        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTRyp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:54:45 -0500
-Received: by mail-lf1-f48.google.com with SMTP id 7so2324623lfz.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:54:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EqMQTNTqAScrbbjAL00quzcLbXeMUXLVbynXt4e9wxY=;
-        b=LUdFldegpwqvpb6jUZ3KgoQ8St6ComRy2Mt0QI/Aro5+InOuut6omXAr9nQF3o2TGT
-         t8Rje9zNPB+Y70s2ziwN6pzj+GBEpkV/rj+BJvNjdp28MIoeLj+1ryQVtLHF44L1cElj
-         Fdmcu69yfiRlkdgybwGqgcdsYCwE0oNwuTzqYSVh4hXy5w1LwfsVrzdSuetsLJ3bp19V
-         hcU3wPT47l5uUfH5g7uN61Kbwnu99/puDW/sAY+BQHCP2flbDaG/hTysnOcQcpaznGVy
-         pTNhgGAGraAd+K2mXoQ4sfXQO/MBsz3Cee7NH71g9WoS+6nu0/qKW7/EQ9Eu1DGgnsoT
-         Dl0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EqMQTNTqAScrbbjAL00quzcLbXeMUXLVbynXt4e9wxY=;
-        b=MbvinDgq1wX0QG7HwiLaFZz7SW1kKueRSwfg0YIsvdx2ayDo8H8fC5WUQjD35A3v2Y
-         PLKkfYnXRclKlAUWAl4FfALJgh+tfHh9IKEIg8uZsYc1c7il8AF5UjBd+bezmwp1zC0s
-         tC809PuVawfJzc8p4GEdBn0dh8C05cBHhT5C7Ed3tByAwTxRHRFhAsfUN+jck1vpOIlK
-         wh5wc5ZDbP6BtY3FWMzvPSIg2/YVVNrIPVQWvWm5ka+h3U/yWk8ANXE0k5zsxmKGugSS
-         c7wJjZvn/atpbRKBnto3M2xJzzfMRfa6cAlypZ27NkUvMP+vF0ofVMkKbIwF2MVmDvsD
-         VGqg==
-X-Gm-Message-State: APjAAAW/vTsyAdTAO6RA9SrNJHKmJ6xehIyfPggmnBVCPHUzF/4OqP0d
-        Q8A4n8BmGBIlrfc/yLiCD71E3lJhHSxPcBPja20Cjg==
-X-Google-Smtp-Source: APXvYqw4jx+ECCaEc3pF2ddqAmUhWLsxs2tPv4F4B0Csslzt7ukoQ1EBe4t/LuTxKaPi4aNtoc+oNcCIYcIDitOBvUg=
-X-Received: by 2002:a19:6d13:: with SMTP id i19mr16812579lfc.6.1582221282402;
- Thu, 20 Feb 2020 09:54:42 -0800 (PST)
+        Thu, 20 Feb 2020 12:57:49 -0500
+Received: from muru.com ([72.249.23.125]:56428 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbgBTR5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:57:49 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 56B2D8080;
+        Thu, 20 Feb 2020 17:58:32 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 09:57:44 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        kbuild test robot <lkp@intel.com>,
+        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
+Message-ID: <20200220175744.GQ37466@atomide.com>
+References: <202002131856.VeW4PhBJ%lkp@intel.com>
+ <20200220155429.GH37466@atomide.com>
+ <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
+ <20200220162012.GI37466@atomide.com>
+ <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+ <20200220163703.GK37466@atomide.com>
+ <20200220171305.GL37466@atomide.com>
+ <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
-In-Reply-To: <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 20 Feb 2020 23:24:31 +0530
-Message-ID: <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
->
-> Try to restore the value for the cache flush timeout, by updating the
-> define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
+* Andrew F. Davis <afd@ti.com> [200220 17:39]:
+> On 2/20/20 12:13 PM, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [200220 16:37]:
+> >> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
+> >>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
+> >>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
+> >>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
+> >>>>>> Andrew,
+> >>>>>>
+> >>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
+> >>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> >>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
+> >>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
+> >>>>>>> date:   3 weeks ago
+> >>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
+> >>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+> >>>>>>> reproduce:
+> >>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >>>>>>>         chmod +x ~/bin/make.cross
+> >>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
+> >>>>>>>         # save the attached .config to linux build tree
+> >>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+> >>>>>>>
+> >>>>>>> If you fix the issue, kindly add following tag
+> >>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+> >>>>>>>
+> >>>>>>> All errors (new ones prefixed by >>):
+> >>>>>>>
+> >>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
+> >>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
+> >>>>>>
+> >>>>>> Have you looked at this one? Looks like there's still an unhandled
+> >>>>>> randconfig build case.
+> >>>>>>
+> >>>>>
+> >>>>>
+> >>>>> I've had a quick look, all the ARM config does:
+> >>>>>
+> >>>>> select HAVE_ARM_SMCCC if CPU_V7
+> >>>>>
+> >>>>> so I don't think this will happen in any real config, but if we want to
+> >>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
+> >>>>> on it.
+> >>>>
+> >>>> Seems to happen at least with omap2 only config where we don't have
+> >>>> CPU_V7. Something like below seems to fix it.
+> >>>>
+> >>>> If that looks OK to you, I'll send out a proper fix.
+> >>>>
+> >>>
+> >>>
+> >>> This looks fine to me.
+> >>>
+> >>> A better later fix might be to later stub out the actual __arm_smccc_smc
+> >>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
+> >>> get the fix.
+> >>
+> >> Yeah seems that might be better. Adding Aaro and Marc to Cc.
+> > 
+> > But if we can in theory have some arm11 machine with smccc, then this
+> > local ifdef below is probably the way to go.
+> > 
+> 
+> If the machine has SMCCC then it will also have the
+> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
 
-I have increased the timeout to 10 minutes but it did not help.
-Same error found.
-[  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
-[  608.684964] mmc1: cache flush error -110
-[  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
-4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
+Hmm yeah good point.
 
-OTOH, What best i could do for my own experiment to revert all three patches and
-now the reported error gone and device mount successfully [1].
+Regards,
 
-List of patches reverted,
-  mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
-  mmc: block: Use generic_cmd6_time when modifying
-    INAND_CMD38_ARG_EXT_CSD
-  mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
+Tony
 
-[1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
 
-- Naresh
+> >>>> 8< -----------------------
+> >>>> diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
+> >>>> --- a/arch/arm/mach-omap2/omap-secure.c
+> >>>> +++ b/arch/arm/mach-omap2/omap-secure.c
+> >>>> @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
+> >>>>  	return ret;
+> >>>>  }
+> >>>>  
+> >>>> +#ifdef CONFIG_HAVE_ARM_SMCCC
+> >>>>  void omap_smccc_smc(u32 fn, u32 arg)
+> >>>>  {
+> >>>>  	struct arm_smccc_res res;
+> >>>> @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
+> >>>>  		      0, 0, 0, 0, 0, 0, &res);
+> >>>>  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
+> >>>>  }
+> >>>> +#else
+> >>>> +void omap_smccc_smc(u32 fn, u32 arg)
+> >>>> +{
+> >>>> +}
+> >>>> +#endif
+> >>>>  
+> >>>>  void omap_smc1(u32 fn, u32 arg)
+> >>>>  {
+> >>>>
