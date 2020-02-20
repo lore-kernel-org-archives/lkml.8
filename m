@@ -2,233 +2,151 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34524C11D0F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C558C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02931207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E76207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:39:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UTRyRkSd"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="P91CGiLl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgBTQiC (ORCPT
+        id S1728336AbgBTQjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:38:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42820 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728133AbgBTQiA (ORCPT
+        Thu, 20 Feb 2020 11:39:31 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:47220 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728090AbgBTQjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:38:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582216679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JPLN0ouhhg0blmU2M9hGNXZisumAqDkHlC1AmG0Un74=;
-        b=UTRyRkSdntoX2PFaw8n1gjamNUbZ6/G+3s5quOm1upUdl/qonAfcK39Hx+wEBqrVHiLmkK
-        o0xVN+Sav/sI1PVbfc2pll3gMU5wGj8rAn/KlGNdbIus8t41k1nZcwco78oC4mOtJwso4J
-        dm9Ft5lMZYk/nr2ciZ7RhCwtmeS+qzA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-290-8c5kERyLNBuMfxt3ogkWqQ-1; Thu, 20 Feb 2020 11:37:55 -0500
-X-MC-Unique: 8c5kERyLNBuMfxt3ogkWqQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F529477;
-        Thu, 20 Feb 2020 16:37:53 +0000 (UTC)
-Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F41DF9051B;
-        Thu, 20 Feb 2020 16:37:42 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 17:37:40 +0100
-From:   Jesper Dangaard Brouer <brouer@redhat.com>
-To:     shuah <shuah@kernel.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Daniel =?UTF-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, brouer@redhat.com
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-Message-ID: <20200220173740.7a3f9ad7@carbon>
-In-Reply-To: <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
-References: <20200219133012.7cb6ac9e@carbon>
-        <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
-        <20200219180348.40393e28@carbon>
-        <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
-        <20200219192854.6b05b807@carbon>
-        <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
-        <20200219210609.20a097fb@carbon>
-        <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
-        <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
-        <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
+        Thu, 20 Feb 2020 11:39:31 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGXdxM054114;
+        Thu, 20 Feb 2020 16:35:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=7aZLNQP35QhFkj5lw6YZu/PAuEqphcnivyC1yq+L0zE=;
+ b=P91CGiLl+KUFIcTX4NWDqhE9PIWXHQev196tVNB9OC8IESW9qFyXKAj0P4ralImk8P6o
+ CrL7T7s6nuuuPm2RCUihLekSpoxkEZbaP+xFzY8BfqJZu2bxe39tB3sv74FEmitw0pA2
+ ekdUyrfgYCMnGzoC+jZC1D89aU346KzLnu8vHrcfM/PH/NkHF7pmLbHcwmIryqsYMiNV
+ 2rYCjIh7lJ4pDvpqsHLgqUm7crpFV/wyJuImjxIZTq1sF+gSoHjuObpVSbGA28vhrgaS
+ 7gGk20tB1i0cuhjPIX30Pa2+qfUbgDlOca8ILK23v0lcQFJZYlJavrt16fGawjNbMXoF Kg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udkjybh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 16:35:03 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGWRdv151155;
+        Thu, 20 Feb 2020 16:35:02 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2y8udd4dyj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 16:35:02 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01KGZ0r7024885;
+        Thu, 20 Feb 2020 16:35:00 GMT
+Received: from [192.168.0.195] (/69.207.174.138)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 08:34:59 -0800
+Subject: Re: [PATCH v3 0/3] Introduce per-task latency_nice for scheduler
+ hints
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Parth Shah <parth@linux.ibm.com>, vincent.guittot@linaro.org,
+        patrick.bellasi@matbug.net, valentin.schneider@arm.com,
+        dhaval.giani@oracle.com, dietmar.eggemann@arm.com,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@redhat.com, pavel@ucw.cz, qperret@qperret.net,
+        David.Laight@ACULAB.COM, pjt@google.com, tj@kernel.org
+References: <20200116120230.16759-1-parth@linux.ibm.com>
+ <8ed0f40c-eeb4-c487-5420-a8eb185b5cdd@linux.ibm.com>
+ <c7e5b9da-66a3-3d69-d7aa-0319de3aa736@oracle.com>
+ <971909ed-d4e0-6afa-d20b-365ede5a195e@linux.ibm.com>
+ <8e984496-e89b-d96c-d84e-2be7f0958ea4@oracle.com>
+ <1e216d18-7ec0-4a0d-e124-b730d6e03e6f@oracle.com>
+ <de5d8886-6f70-a3fa-8061-5877cd1d98f5@linux.ibm.com>
+ <7429e0ae-41ff-e9c4-dd65-3ef1919f5f50@linux.ibm.com>
+ <a332d633-7826-b85d-5d9f-5e34f9de084a@oracle.com>
+ <20200220150343.dvweamfnk257pg7z@e107158-lin.cambridge.arm.com>
+From:   chris hyser <chris.hyser@oracle.com>
+Message-ID: <9bb1437b-3de0-b0ca-6319-6be903b0758d@oracle.com>
+Date:   Thu, 20 Feb 2020 11:34:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200220150343.dvweamfnk257pg7z@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=2 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=2
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 17:47:23 -0700
-shuah <shuah@kernel.org> wrote:
+On 2/20/20 10:03 AM, Qais Yousef wrote:
+> On 02/20/20 09:30, chris hyser wrote:
+>>> The below diff works out well enough in-order to align permission checks
+>>> with NICE.
+>>>
+>>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+>>> index 2bfcff5623f9..ef4a397c9170 100644
+>>> --- a/kernel/sched/core.c
+>>> +++ b/kernel/sched/core.c
+>>> @@ -4878,6 +4878,10 @@ static int __sched_setscheduler(struct task_struct *p,
+>>>                           return -EINVAL;
+>>>                   if (attr->sched_latency_nice < MIN_LATENCY_NICE)
+>>>                           return -EINVAL;
+>>> +               /* Use the same security checks as NICE */
+>>> +               if (attr->sched_latency_nice < p->latency_nice &&
+>>> +                   !can_nice(p, attr->sched_latency_nice))
+>>> +                       return -EPERM;
+>>>           }
+>>>
+>>>           if (pi)
+>>>
+>>> With the above in effect,
+>>> A non-root user can only increase the value upto +19, and once increased
+>>> cannot be decreased. e.g., a user once sets the value latency_nice = 19,
+>>> the same user cannot set the value latency_nice = 18. This is the same
+>>> effect as with NICE.
+>>>
+>>> Is such permission checks required?
+>>>
+>>> Unlike NICE, we are going to use latency_nice for scheduler hints only, and
+>>> so won't it make more sense to allow a user to increase/decrease the values
+>>> of their owned tasks?
+>>
+>> Whether called a hint or not, it is a trade-off to reduce latency of select
+>> tasks at the expense of the throughput of the other tasks in the the system.
+> 
+> Does it actually affect the throughput of the other tasks? I thought this will
+> allow the scheduler to reduce latencies, for instance, when selecting which cpu
+> it should land on. I can't see how this could hurt other tasks.
 
-> On 2/19/20 5:27 PM, Alexei Starovoitov wrote:
-> > On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel D=C3=ADaz wrote: =20
-> >>>
-> >>> When I download a specific kernel release, how can I know what LLVM
-> >>> git-hash or version I need (to use BPF-selftests)? =20
-> >=20
-> > as discussed we're going to add documentation-like file that will
-> > list required commits in tools.
-> > This will be enforced for future llvm/pahole commits.
-> >  =20
-> >>> Do you think it is reasonable to require end-users to compile their o=
-wn
-> >>> bleeding edge version of LLVM, to use BPF-selftests? =20
-> >=20
-> > absolutely. =20
->=20
-> + linux-kselftest@vger.kernel.org
->=20
-> End-users in this context are users and not necessarily developers.
+This is why it is hard to argue about pure abstractions. The primary idea mentioned so far for how these latencies are 
+reduced is by short cutting the brute-force search for something idle. If you don't find an idle cpu because you didn't 
+spend the time to look, then you pre-empted a task, possibly with a large nice warm cache footprint that was cranking 
+away on throughput. It is ultimately going to be the usual latency vs throughput trade off. If latency reduction were 
+"free" we wouldn't need a per task attribute. We would just do the reduction for all tasks, everywhere, all the time.
 
-I agree.  And I worry that we are making it increasingly hard for
-non-developer users.
+> 
+> Can you expand on the scenario you have in mind please?
 
+Hopefully, the above helps. It was my original plan to introduce this with a data laden RFC on the topic, but I felt the 
+need to respond to Parth immediately. I'm not currently pushing any particular change.
 
-> > If a developer wants to send a patch they must run all selftests and
-> > all of them must pass in their environment.
-> > "but I'm adding a tracing feature and don't care about networking tests
-> > failing"... is not acceptable. =20
->=20
-> This is a reasonable expectation when a developers sends bpf patches.
-
-Sure. I have several versions on LLVM that I've compiled manually.
-
-> >  =20
-> >>> I do hope that some end-users of BPF-selftests will be CI-systems.
-> >>> That also implies that CI-system maintainers need to constantly do
-> >>> "latest built from sources" of LLVM git-tree to keep up.  Is that a
-> >>> reasonable requirement when buying a CI-system in the cloud? =20
-> >=20
-> > "buying CI-system in the cloud" ?
-> > If I could buy such system I would pay for it out of my own pocket to s=
-ave
-> > maintainer's and developer's time.
-
-And Daniel D=C3=ADaz want to provide his help below (to tests it on arch
-that you likely don't even have access to). That sounds like a good
-offer, and you don't even have to pay.
-
-> >  =20
-> >> We [1] are end users of kselftests and many other test suites [2]. We
-> >> run all of our testing on every git-push on linux-stable-rc, mainline,
-> >> and linux-next -- approximately 1 million tests per week. We have a
-> >> dedicated engineering team looking after this CI infrastructure and
-> >> test results, and as such, I can wholeheartedly echo Jesper's
-> >> sentiment here: We would really like to help kernel maintainers and
-> >> developers by automatically testing their code in real hardware, but
-> >> the BPF kselftests are difficult to work with from a CI perspective.
-> >> We have caught and reported [3] many [4] build [5] failures [6] in the
-> >> past for libbpf/Perf, but building is just one of the pieces. We are
-> >> unable to run the entire BPF kselftests because only a part of the
-> >> code builds, so our testing is very limited there.
-> >>
-> >> We hope that this situation can be improved and that our and everyone
-> >> else's automated testing can help you guys too. For this to work out,
-> >> we need some help. =20
-> >  =20
->=20
-> It would be helpful understand what "help" is in this context.
->=20
-> > I don't understand what kind of help you need. Just install the
-> > latest tools. =20
-
-I admire that you want to push *everybody* forward to use the latest
-LLVM, but saying latest is LLVM devel git tree HEAD is too extreme.
-I can support saying latest LLVM release is required.
-
-As soon as your LLVM patches are accepted into llvm-git-tree, you will
-add some BPF selftests that util this. Then CI-systems pull latest
-bpf-next they will start to fail to compile BPF-selftests, and CI
-stops.  Now you want to force CI-system maintainer to recompile LLVM
-from git.  This will likely take some time.  Until that happens
-CI-system doesn't catch stuff. E.g. I really want the ARM tests that
-Linaro can run for us (which isn't run before you apply patches...).
-
-
-> What would be helpful is to write bpf tests such that older tests that
-> worked on older llvm versions continue to work and with some indication
-> on which tests require new bleeding edge tools.
->=20
-> > Both the latest llvm and the latest pahole are required. =20
->=20
-> It would be helpful if you can elaborate why latest tools are a
-> requirement.
->=20
-> > If by 'help' you mean to tweak selftests to skip tests then it's a nack.
-> > We have human driven CI. Every developer must run selftests/bpf before
-> > emailing the patches. Myself and Daniel run them as well before applyin=
-g.
-> > These manual runs is the only thing that keeps bpf tree going.
-> > If selftests get to skip tests humans will miss those errors.
-> > When I don't see '0 SKIPPED, 0 FAILED' I go and investigate.
-> > Anything but zero is a path to broken kernels.
-> >=20
-> > Imagine the tests would get skipped when pahole is too old.
-> > That would mean all of the kernel features from year 2019
-> > would get skipped. Is there a point of running such selftests?
-> > I think the value is not just zero. The value is negative.
-> > Such selftests that run old stuff would give false believe
-> > that they do something meaningful.
-> > "but CI can do build only tests"... If 'helping' such CI means hurting =
-the
-> > key developer/maintainer workflow such CI is on its own.
-> >  =20
->=20
-> Skipping tests will be useless. I am with you on that. However,
-> figuring out how to maintain some level of backward compatibility
-> to run at least older tests and warn users to upgrade would be
-> helpful.
-
-What I propose is that a BPF-selftest that use a new LLVM feature,
-should return FAIL (or perhaps SKIP), when it is compiled with say one
-release old LLVM. This will allow new-tests to show up in CI-systems
-reports as FAIL, and give everybody breathing room to upgrade their LLVM
-compiler.
-
-> I suspect currently users are ignoring bpf failures because they
-> are unable to keep up with the requirement to install newer tools
-> to run the tests. This isn't great either.
-
-Yes, my worry is also that we are simply making it too difficult for
-non-developer users to run these tests.  And I specifically want to
-attract CI-systems to run these.  And especially Linaro, who have
-dedicated engineering team looking after their CI infrastructure, and
-they explicitly in this email confirm my worry.
-
-
-> Users that care are sharing their pain to see if they can get some
-> help or explanation on why new tools are required every so often.
-> I don't think everybody understands why. :)
-
---=20
-Best regards,
-  Jesper Dangaard Brouer
-  MSc.CS, Principal Kernel Engineer at Red Hat
-  LinkedIn: http://www.linkedin.com/in/brouer
-
+-chrish
