@@ -2,209 +2,231 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A437C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88686C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC7021D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5979421D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rSLPU/Ya"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SF1EjwU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgBTCjj (ORCPT
+        id S1727912AbgBTCkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:39:39 -0500
-Received: from mail-am6eur05on2080.outbound.protection.outlook.com ([40.107.22.80]:8901
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727211AbgBTCjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:39:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fzJd6IPHihFyM2hgNmdJG0qIlIp0e1rGX6FlrYlKd2j76J1gAxyuX78xNWNvXJbmKpQhwpWHP4hvkLKlunSdm/WnEezRaNjxS3yhh7NsD6RS0wbQE+5EXoLrd8Dwt/N2utcENC7T/B3ZATkNRxFQMWzrQKPLKlkOyxt8ojwofiqfJGp/65q9DCFG44JsO5xb315qW9Qt8ys/TAO1d2mJYX0EoGD2CPiJwiaLM4wAz1Rcc9yybdQHzqbFGXb063bErR7NGVrDs4ZnkXBWlIwrgTFMEiUAF7b6BZtzbb/gkM2fE24ntPhywvXiSdFtzn1fFG8vquWUSJ9ANLzgY2Oahw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1KTOr1iP/kIAlqGvhl4DH/spxvphVieU6DFladBJEOs=;
- b=jUawHdFPbAdkxwIbQez9CXOc/m9rs6Fui1/UY2FsGrj6fhXKf/a6bEoWAUsSW1CblnmAFaGOzXyJjtrS5BMKW91Hy72zYpab8K/fKL5ppNdp1Y0anXFUyVOQCJODdLfIowXZ3K8ORmbK8hnzr/8Mte3y/AMTUep+ghnCK60Tho8Xgercl6gdr4lXr14h91GRHpdWZ1QP3mkUV1LF5KvgIint+TaacXTdtuY3J073MIzQUy+1PzuPduf60Mg+NZAfQyy3wJn4GYbqBBnfht+S8DuAfI1QsHhHcPb67I1+4YXs41lGXp6YqNRXAmCHPYj9XsvaewGjDlLyJJg+ut4PAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1KTOr1iP/kIAlqGvhl4DH/spxvphVieU6DFladBJEOs=;
- b=rSLPU/YapJd0bl3iVxgXeY4pyXVU6KI+6ZUuqdl68lfMNuoF3bMh4uxXFNne6Am8brtGHOEPH6QP8eIXoN6mRiZqyD7HKf+CkmGU+VI61E03dzMkuSpN6DDApMEA+3nnkOHO3Hjuo1E/FM3cVA2B0JehlUTQBQuAi9AfqjGP35U=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6625.eurprd04.prod.outlook.com (20.179.252.223) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 20 Feb 2020 02:39:36 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2729.032; Thu, 20 Feb 2020
- 02:39:36 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Jailhouse <jailhouse-dev@googlegroups.com>
-CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alice Guo <alice.guo@nxp.com>
-Subject: RE: [ANNOUNCE] Jailhouse 0.12 released
-Thread-Topic: [ANNOUNCE] Jailhouse 0.12 released
-Thread-Index: AQHV22pP2CHHrSvkq0qL00iuCebA26gjdgjQ
-Date:   Thu, 20 Feb 2020 02:39:35 +0000
-Message-ID: <AM0PR04MB4481C65800CCE42E448B7D2788130@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <dd4344b9-ca04-0ef2-0810-6b98e30f68b4@siemens.com>
-In-Reply-To: <dd4344b9-ca04-0ef2-0810-6b98e30f68b4@siemens.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fee407a1-2541-4f6e-7f89-08d7b5ae1fe9
-x-ms-traffictypediagnostic: AM0PR04MB6625:|AM0PR04MB6625:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6625F471E4236A17E220B7B488130@AM0PR04MB6625.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(199004)(189003)(316002)(66476007)(86362001)(76116006)(66556008)(64756008)(66446008)(8676002)(33656002)(8936002)(81166006)(81156014)(66946007)(54906003)(7696005)(110136005)(44832011)(6506007)(4326008)(478600001)(52536014)(55016002)(9686003)(26005)(71200400001)(45080400002)(186003)(5660300002)(966005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6625;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SAUsS6SRqlim/yCaGnL8zkjxqqeiCCEPXLBj8jMVO3s5DzCPemqLIZ6gOJ5CN19kZCzqn4mNxT2pwUf1+gXi0Bsc8SrSaPRhOSkgn9UvEtWU9wBJoWwEZB621vUu0Nq9pAFEnUEXsSrflzI2zBWfrHbq5Yr/IW/YzNd54ASXu+LQSPCl+yG7YjwhwdWZWDBuOtX3PNImlJGQViZC+iKa5YLcq55dVKyEP+M9rJzzYin7e6Sa0mEUW1Os0rTzJuEozm/kO0r+rN9iQ9oBOpP42u0zCstNAbe6btYqGfbMN6cKB6TVoGQrQbDa+P5izumR2p9JuV4i0WuFGOeYcURXVKiWJ4YFHE6vTucVp8keySPgXIxtTpNbAWubz7uF+IkOWoC3GjphYcY7FoaISDToq1/r/g1fyprXv5cZVO0t7X67WN+E05mUur6860K1uBbTp6GZTNlJ4xdnNdObvvGHjwAcm7+qWPbsfSL6KG2hA4GMvqN2vsQe80mWsVF0X6SR6SZWiy47TNQZ3B/ElE3z3XeUMYjzTVi7SJnu3KvuiA7WB4jTNBD1ukjpnqaBfHHb3Tha5iFVKIw0wP8rZUF39fk7KvcAbtmjVr2gxzOxW1M98T4ORHKJuV4EyXKRTiax
-x-ms-exchange-antispam-messagedata: JVFfFwNckn/FZhu6Q1IfJcyR4yhRWKv7soyR93oaZtDPgg5qRbj2Dn+plB4vLr3/sAYO4fzBi/e3OI3BnMlLyiTjFQMRGcm6z3GXhe2IqUFQVAVxiVEtYWn0cSirDKgphYz+UUjw8K9c1n3wV1ZcKw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 19 Feb 2020 21:40:19 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33300 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbgBTCkT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:40:19 -0500
+Received: by mail-lf1-f67.google.com with SMTP id n25so1820862lfl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:40:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=otgZqvPq+4Pddd4R7R7YPMAxMkkLRo5HXUh0IOwXlqk=;
+        b=SF1EjwU+wv7TQ1r9W7sc/MbKsFb+dNEuYE1Cz+xl1hjeh+QxAkZ40uYWaiOb5u2lW+
+         AlJeBkWMZwtctxzQtcnCo0RouuTeEbTmxEXmIDMP15u5NkrajqRZiT3LQQ2LZXhhh+jp
+         OJ9CQ1AjqVEONuuK4U1znk5nxdfXCku9mhmttRV6u0rb9L0QL+pKL6FLLbcRG+lnq81r
+         EJOJOwzOSm76F2wc/0EaxxdzzfHjEt2AbTeCmAbGeWm5C7ngalydEGFWH5KZzYf7zPcO
+         npivYcTyN9aXZ0ArX6jFnoae0mp/7GpT9H3QxX8wfikhNXGGJH8tPRj48bj3tchk5pgb
+         QjzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=otgZqvPq+4Pddd4R7R7YPMAxMkkLRo5HXUh0IOwXlqk=;
+        b=PP12BCJTet7LtASqX3bjb0zX0cc3ygTjGokKbhm/aVS32YEr3SIq4cBcfUBrFftCAG
+         CR8noEjnPM/L1CMSfyXrxfF2zj4zxuTMPpDD4jSzwiTkGnqNv3+CMEEfQ7F0Pdy/mI1i
+         RoKuckG+n0qg+WVKrextU8McYXw7du21BGfO5AZ6eVVrsK0rDJZRu/kjZgr7hLgXFGF6
+         gAG7xyXNgUPj86QWeSlcIlc0suuY5sDLOgYLBHtL4TiNgDYb+ohnbd1kTWyituS5SBel
+         HWm5PkdVCo3LgM2+vOFNoy0lpXwFcW7LJXNI47w9UcccoS4PjrKN5sYzZrIi/8IM0z5d
+         fkhA==
+X-Gm-Message-State: APjAAAVk4ekwGMfZvx/6P5mpJWVpHpgLeDqc0ujSVdm5noF8b6TzmquX
+        ySoGjklosbPJAKqo9bNgvlQbEwJwvywMNAzzhQK2Q2vm18azqBVn
+X-Google-Smtp-Source: APXvYqxK9gpSv5HqVuYrGt/Qj2lVjO7gKfBDymep0cUYVz7aoV/+bAF6COx8tR7SmRFncvH85RNzIPXxZE84mV2nzJs=
+X-Received: by 2002:a19:f703:: with SMTP id z3mr14889612lfe.16.1582166416083;
+ Wed, 19 Feb 2020 18:40:16 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fee407a1-2541-4f6e-7f89-08d7b5ae1fe9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 02:39:35.9468
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8uNd+ttA2F1Wj0S/8v2U1rWphTnOdcVwASQNzJTE3a0cP+Gc4astfCW1LnTo8PAThLW7uZE2pplpn7QVF7n/1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6625
+References: <cover.1581555616.git.ashish.kalra@amd.com> <fc5e111e0a4eda0e6ea1ee3923327384906aff36.1581555616.git.ashish.kalra@amd.com>
+In-Reply-To: <fc5e111e0a4eda0e6ea1ee3923327384906aff36.1581555616.git.ashish.kalra@amd.com>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Wed, 19 Feb 2020 18:39:39 -0800
+Message-ID: <CABayD+fM-s0+j6JXN5qb0zce2Kqi6AC8+c+7qbqKr0NgC-QYiQ@mail.gmail.com>
+Subject: Re: [PATCH 08/12] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS hypercall
+To:     Ashish Kalra <Ashish.Kalra@amd.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, x86@kernel.org,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBbQU5OT1VOQ0VdIEphaWxob3VzZSAwLjEyIHJlbGVhc2VkDQo+IA0KPiBUaGlz
-IHJlbGVhc2UgaXMgYW4gaW1wb3J0YW50IG1pbGVzdG9uZSBmb3IgSmFpbGhvdXNlIGJlY2F1c2Ug
-aXQgY29tZXMgd2l0aCBhDQo+IHJld29ya2VkIGludGVyLWNlbGwgY29tbXVuaWNhdGlvbiBkZXZp
-Y2Ugd2l0aCBiZXR0ZXIgZHJpdmVyIHN1cHBvcnQgYW5kDQo+IGV2ZW4gYW4gZXhwZXJpbWVudGFs
-IHZpcnRpbyB0cmFuc3BvcnQgbW9kZWwgZm9yIHRoaXMuDQoNCkdyZWF0IHRvIGtub3cgdGhpcy4N
-Cg0KPiANCj4gV2hpbGUgdGhpcyBzaGFyZWQgbWVtb3J5IGRldmljZSBtb2RlbCBpcyBzdGlsbCBp
-biBkaXNjdXNzaW9uIHdpdGggdmlydGlvIGFuZA0KPiBRRU1VIGNvbW11bml0aWVzLCB0aHVzIG1h
-eSB1bmRlcmdvIHNvbWUgZnVydGhlciBzbWFsbGVyIGNoYW5nZXMsIGl0IHdhcw0KPiBpbXBvcnRh
-bnQgdG8gbW92ZSBmb3J3YXJkIHdpdGggaXQgYmVjYXVzZSB0aGVyZSBpcyBhbiBpbmNyZWFzaW5n
-IGRlbWFuZCBmb3INCj4gaXQgb24gdGhlIEphaWxob3VzZSBzaWRlLiBXZSBub3cgc3VwcG9ydCBt
-dWx0aS1wZWVyIGNvbm5lY3Rpb24sIGhhdmUgYSBzZWN1cmUNCj4gKHVucHJpdmlsZWdlZCkgYW5k
-IGVmZmljaWVudCBVSU8gZHJpdmVyIGFuZCBjYW4gZXZlbiBzdGFydCB3b3JraW5nIG9uIHZpcnRp
-bw0KPiBpbnRlZ3JhdGlvbiAtIHdpdGhvdXQgaGF2aW5nIHRvIHRvdWNoIHRoZSBoeXBlcnZpc29y
-IGFueSBmdXJ0aGVyLiBNb3JlDQo+IGluZm9ybWF0aW9uIGFsc28gaW4gWzFdLg0KDQpEbyB3ZSBu
-ZWVkIHRvIHVzZSBxZW11IGZvciB2aXJ0aW8gYmFja2VuZD8NCg0KPiANCj4gVGhlIHJlbGVhc2Ug
-aGFzIGFub3RoZXIgaW1wb3J0YW50IG5ldywgYW5kIHRoYXQgaXMgU01NVXYzIGZvciBBUk02NA0K
-PiB0YXJnZXQsIGFzIHdlbGwgYXMgdGhlIFRJLXNwZWNpZmljIE1QVS1saWtlIFBlcmlwaGVyYWwg
-VmlydHVhbGl6YXRpb24gVW5pdCAoUFZVKS4NCj4gU01NVXYyIHN1cHBvcnQgaXMgdW5mb3J0dW5h
-dGVseSBzdGlsbCB3YWl0aW5nIGluIHNvbWUgTlhQIGRvd25zdHJlYW0NCj4gYnJhbmNoIGZvciBi
-ZWluZyBwdXNoZWQgdXBzdHJlYW0uDQoNCkFsaWNlIGluIENjIGlzIGRvaW5nIHRoaXMgZWZmb3J0
-IHRvZ2V0aGVyIHdpdGggaS5NWDhRTSB1cHN0cmVhbWluZy4NCg0KPiANCj4gTm90ZSB0aGF0IHRo
-ZXJlIGFyZSBzZXZlcmFsIGNoYW5nZXMgdG8gdGhlIGNvbmZpZ3VyYXRpb24gZm9ybWF0IHRoYXQg
-cmVxdWlyZQ0KPiBhZGp1c3RtZW50cyBvZiBvd24gY29uZmlncy4gUGxlYXNlIHN0dWR5IHJlbGF0
-ZWQgY2hhbmdlcyBpbiBvdXIgcmVmZXJlbmNlDQo+IGNvbmZpZ3VyYXRpb25zIG9yLCBvbiB4ODYs
-IHJlLWdlbmVyYXRlIHRoZSBzeXN0ZW0gY29uZmlndXJhdGlvbi4NCj4gDQo+IER1ZSB0byBhbGwg
-dGhlc2Ugc2lnbmlmaWNhbnQgY2hhbmdlcywgc3RhdGlzdGljcyBmb3IgdGhpcyByZWxlYXNlIGxv
-b2sgYWJvdXQgbW9yZQ0KPiBoZWF2eXdlaWdodCB0aGFuIHVzdWFsOg0KPiAxOTUgZmlsZXMgY2hh
-bmdlZCwgNzE4NSBpbnNlcnRpb25zKCspLCAyNjEyIGRlbGV0aW9ucygtKQ0KDQpZZWFoISEgQmVz
-aWRlcyB0aGlzLCBhbnkgcGVvcGxlIHN0aWxsIGludGVyZXN0ZWQgaW4gYm9vdGluZyBqYWlsaG91
-c2UgYmVmb3JlIExpbnV4Pw0KSSBoYXZlIGFjaGlldmVkIHRoaXMgb24gaS5NWDhNTSB3aXRoIExp
-bnV4ICsgZ2ljLWRlbW8gY2VsbCwgd2l0aCBhIGJhcmVtZXRhbA0KcHJvZ3JhbSBhbmQgdXNpbmcg
-VS1Cb290IEZJVCB0byBsb2FkIGFsbCBpbWFnZXMuDQoNClJlZ2FyZHMsDQpQZW5nLg0KDQo+IA0K
-PiAtIE5ldyB0YXJnZXRzOg0KPiAgICAgLSBUZXhhcyBJbnN0cnVtZW50cyBKNzIxRS1FVk0NCj4g
-ICAgIC0gUmFzcGJlcnJ5IFBpIDQgTW9kZWwgQg0KPiAtIENyb3NzLWFyY2ggY2hhbmdlczoNCj4g
-ICAgIC0gcmV3b3JrIG9mIGl2c2htZW0gaW50ZXItY2VsbCBjb21tdW5pY2F0aW9uIGRldmljZQ0K
-PiAgICAgLSBmaXggaHVnZXBhZ2Ugc3BsaXR0aW5nIGluIHBhZ2luZ19kZXN0cm95DQo+ICAgICAt
-IGFsbG93IHRvIGRpc2FibGUgaHVnZXBhZ2UgY3JlYXRpb24NCj4gICAgICAgKHRvIHN0YXRpY2Fs
-bHkgbWl0aWdhdGUgQ1ZFLTIwMTgtMTIyMDcpDQo+IC0gQVJNIC8gQVJNNjQ6DQo+ICAgICAtIFNN
-TVV2MyBzdXBwb3J0DQo+ICAgICAtIFRJIFBWVSBzdXBwb3J0DQo+ICAgICAtIGZpeCByYWNlIHNl
-dmVyYWwgY29uZGl0aW9ucyBpbiBJUlEgaW5qZWN0aW9uDQo+ICAgICAtIGFkZCBzdXBwb3J0IGZv
-ciBQQ0kgaW4gYmFyZS1tZXRhbCBpbm1hdGVzDQo+IC0geDg2Og0KPiAgICAgLSBtb2RlbCBQSU8g
-YWNjZXNzIHZpYSB3aGl0ZWxpc3QgcmVnaW9ucywgcmF0aGVyIHRoYW4gYml0bWFwcw0KPiAgICAg
-LSB2dGQ6IFByb3RlY3QgYWdhaW5zdCBpbnZhbGlkIElRVCByZWdpc3RlciB2YWx1ZXMNCj4gICAg
-IC0gZml4IDEwMjR4NzY4IG1vZGUgb2YgRUZJIGZyYW1lYnVmZmVyDQo+ICAgICAtIHBlcm1pdCBy
-b290IGNlbGwgdG8gZW5hYmxlIENSNC5VTUlQDQo+IA0KPiBZb3UgY2FuIGRvd25sb2FkIHRoZSBu
-ZXcgcmVsZWFzZSBmcm9tDQo+IA0KPiANCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVj
-dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZ2l0aHViLg0KPiBjb20lMkZzaWVt
-ZW5zJTJGamFpbGhvdXNlJTJGYXJjaGl2ZSUyRnYwLjEyLnRhci5neiZhbXA7ZGF0YT0wMiU3QzAN
-Cj4gMSU3Q3BlbmcuZmFuJTQwbnhwLmNvbSU3Q2ViYjMwNDJhNzExNDRiMDc0ZWMxMDhkN2E5ODE3
-MWM2JTdDNg0KPiA4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzElN0M2Mzcx
-NjQyNDU3Mjk3MzcyMTAmDQo+IGFtcDtzZGF0YT1tYVBFJTJGQ0k4cUptSVloS0N6RmRuem45cm5w
-TmdIbVhqa3NBSFJkNnNFQTAlM0QmYW0NCj4gcDtyZXNlcnZlZD0wDQo+IA0KPiB0aGVuIGZvbGxv
-dyB0aGUgUkVBRE1FLm1kIGZvciBmaXJzdCBzdGVwcyBvbiByZWNvbW1lbmRlZCBldmFsdWF0aW9u
-DQo+IHBsYXRmb3JtcyBhbmQgY2hlY2sgdGhlIHR1dG9yaWFsIHNlc3Npb24gZnJvbSBFTEMtRSAy
-MDE2IFsyXVszXS4gVG8gdHJ5IG91dA0KPiBKYWlsaG91c2UgaW4gYSB2aXJ0dWFsIGVudmlyb25t
-ZW50IG9yIG9uIGEgZmV3IHJlZmVyZW5jZSBib2FyZHMsIHRoZXJlIGlzIGFuDQo+IGltYWdlIGdl
-bmVyYXRvciBhdmFpbGFibGUgWzRdLiBJdCB3aWxsIHNvb24gYmUgdXBkYXRlZCB0byB0aGUgbmV3
-IHJlbGVhc2UgYXMNCj4gd2VsbC4gRHJvcCB1cyBhIG5vdGUgb24gdGhlIG1haWxpbmcgbGlzdCBp
-ZiB5b3UgcnVuIGludG8gdHJvdWJsZS4NCj4gDQo+IEEgcXVpY2sgZm9yZWNhc3Qgb2Ygd2hhdCBp
-cyBiZWluZyB3b3JrZWQgb246IE9uZSBvZiB0aGUgbmV4dCBtYWpvciBjaGFuZ2VzDQo+IHdpbGwg
-YmUgYSByZXdvcmsgb2YgdGhlIENQVSBzZWxlY3Rpb24gaW4gY29uZmlncyAoc2VsZWN0aW9uIGJ5
-IHN0YWJsZSBwaHlzaWNhbA0KPiBJRHMpLCBhbG9uZyB3aXRoIHN1cHBvcnQgZm9yIEwyIENBVCBv
-biBJbnRlbCBwcm9jZXNzb3JzLg0KPiBUaGVyZSBpcyBhbHNvIG9uZ29pbmcgZGlzY3Vzc2lvbiB0
-byBleHRlbmQgc3ViLXBhZ2UgbWVtb3J5IHJlZ2lvbnMgd2l0aA0KPiBhY2Nlc3MgYml0bWFwcywg
-b24gYnl0ZSBvciBldmVuIHJlZ2lzdGVyIGJpdC1sZXZlbC4gVGhhdCB3aWxsIG1ha2UgYWNjZXNz
-DQo+IGNvbnRyb2wgbW9yZSBzY2FsYWJsZSwgZS5nLiB0byBwYXNzIHBpbm11eCByZWdpc3RlcnMg
-dG8gZGlmZmVyZW50IGNlbGxzLg0KPiANCj4gTGFzdCBidXQgbm90IGxlYXN0OiBXZSBhcmUgc3Rh
-cnRpbmcgYSBwb3J0IG9mIEphaWxob3VzZSB0byBSSVNDLVYsIGZpcnN0IGFnYWluc3QNCj4gUUVN
-VSwgdGhlbiBhZ2FpbnN0IGFuIEZQR0EgbW9kZWwgdGhhdCB3aWxsIGJlIGRldmVsb3BlZCB3aXRo
-aW4gdGhlDQo+IEVVLWZ1bmRlZCBTRUxFTkUgcHJvamVjdC4gU3RheSB0dW5lZCwgdGhlcmUgd2ls
-bCBiZSBtb3JlIGJlaGluZCBpdCENCj4gDQo+IFRoYW5rcyB0byBhbGwgdGhlIGNvbnRyaWJ1dG9y
-cyBhbmQgc3VwcG9ydGVycyENCj4gDQo+IEphbg0KPiANCj4gWzFdDQo+IGh0dHBzOi8vZXVyMDEu
-c2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnN0YXRp
-Yy4NCj4gc2NoZWQuY29tJTJGaG9zdGVkX2ZpbGVzJTJGa3ZtZm9ydW0yMDE5JTJGNGIlMkZLVk0t
-Rm9ydW0xOV9pdnNoDQo+IG1lbTIucGRmJmFtcDtkYXRhPTAyJTdDMDElN0NwZW5nLmZhbiU0MG54
-cC5jb20lN0NlYmIzMDQyYTcxMTQNCj4gNGIwNzRlYzEwOGQ3YTk4MTcxYzYlN0M2ODZlYTFkM2Jj
-MmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlNw0KPiBDMSU3QzYzNzE2NDI0NTcyOTczNzIxMCZh
-bXA7c2RhdGE9MnUwNFplQUlIVEtJMEtpUEFHVUhLV1VLS1Y4DQo+IElSRnlVTGlsa0IlMkIwWWN4
-ZyUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiBbMl0NCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJv
-dGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZXZlbnRzDQo+IC5zdGF0aWMu
-bGludXhmb3VuZC5vcmclMkZzaXRlcyUyRmV2ZW50cyUyRmZpbGVzJTJGc2xpZGVzJTJGRUxDRTIw
-MTYtSmFpbGgNCj4gb3VzZS1UdXRvcmlhbC5wZGYmYW1wO2RhdGE9MDIlN0MwMSU3Q3BlbmcuZmFu
-JTQwbnhwLmNvbSU3Q2ViYjMwNA0KPiAyYTcxMTQ0YjA3NGVjMTA4ZDdhOTgxNzFjNiU3QzY4NmVh
-MWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JQ0KPiA3QzAlN0MxJTdDNjM3MTY0MjQ1NzI5NzM3
-MjEwJmFtcDtzZGF0YT00a2V4dU5ZamRoRVYydzFSZWFyc2dkWg0KPiBqemxnb2NubyUyRktjOUNq
-QkV0ZjdzJTNEJmFtcDtyZXNlcnZlZD0wDQo+IFszXQ0KPiBodHRwczovL2V1cjAxLnNhZmVsaW5r
-cy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkZ5b3V0dS4NCj4gYmUl
-MkY3ZmlKYndtaG5SdyUzRmxpc3QlM0RQTGJ6b1ItcExyTDZwUkZQNlNPeXdWSldkRUhsbVFFNTFx
-Jg0KPiBhbXA7ZGF0YT0wMiU3QzAxJTdDcGVuZy5mYW4lNDBueHAuY29tJTdDZWJiMzA0MmE3MTE0
-NGIwNzRlYzEwOA0KPiBkN2E5ODE3MWM2JTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2
-MzUlN0MwJTdDMSU3QzYzNzE2DQo+IDQyNDU3Mjk3MzcyMTAmYW1wO3NkYXRhPWtBTG5WY3hGbGFB
-byUyRnZhOHdZZWFiMzRvbk9aczh2N0hGWlZydA0KPiBBUXpER0UlM0QmYW1wO3Jlc2VydmVkPTAN
-Cj4gWzRdDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
-P3VybD1odHRwcyUzQSUyRiUyRmdpdGh1Yi4NCj4gY29tJTJGc2llbWVucyUyRmphaWxob3VzZS1p
-bWFnZXMmYW1wO2RhdGE9MDIlN0MwMSU3Q3BlbmcuZmFuJTQwDQo+IG54cC5jb20lN0NlYmIzMDQy
-YTcxMTQ0YjA3NGVjMTA4ZDdhOTgxNzFjNiU3QzY4NmVhMWQzYmMyYjRjNmZhDQo+IDkyY2Q5OWM1
-YzMwMTYzNSU3QzAlN0MxJTdDNjM3MTY0MjQ1NzI5NzM3MjEwJmFtcDtzZGF0YT1TRnpmdWdwDQo+
-IG8lMkZqcnRwSXNJSWRPeXV2TXdYSkNYMlRwJTJCUGxUWjklMkZjN2gyMCUzRCZhbXA7cmVzZXJ2
-ZWQ9MA0KPiANCj4gLS0NCj4gU2llbWVucyBBRywgQ29ycG9yYXRlIFRlY2hub2xvZ3ksIENUIFJE
-QSBJT1QgU0VTLURFIENvcnBvcmF0ZQ0KPiBDb21wZXRlbmNlIENlbnRlciBFbWJlZGRlZCBMaW51
-eA0KPiANCj4gLS0NCj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUg
-c3Vic2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3Vwcw0KPiAiSmFpbGhvdXNlIiBncm91cC4NCj4g
-VG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFpbHMg
-ZnJvbSBpdCwgc2VuZCBhbg0KPiBlbWFpbCB0byBqYWlsaG91c2UtZGV2K3Vuc3Vic2NyaWJlQGdv
-b2dsZWdyb3Vwcy5jb20uDQo+IFRvIHZpZXcgdGhpcyBkaXNjdXNzaW9uIG9uIHRoZSB3ZWIgdmlz
-aXQNCj4gaHR0cHM6Ly9ldXIwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
-PWh0dHBzJTNBJTJGJTJGZ3JvdXBzDQo+IC5nb29nbGUuY29tJTJGZCUyRm1zZ2lkJTJGamFpbGhv
-dXNlLWRldiUyRmRkNDM0NGI5LWNhMDQtMGVmMi0wODEwLTYNCj4gYjk4ZTMwZjY4YjQlMjU0MHNp
-ZW1lbnMuY29tJmFtcDtkYXRhPTAyJTdDMDElN0NwZW5nLmZhbiU0MG54cC5jDQo+IG9tJTdDZWJi
-MzA0MmE3MTE0NGIwNzRlYzEwOGQ3YTk4MTcxYzYlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2QNCj4g
-OTljNWMzMDE2MzUlN0MwJTdDMSU3QzYzNzE2NDI0NTcyOTczNzIxMCZhbXA7c2RhdGE9c0FKdTBJ
-NFVTQw0KPiBUJTJGaVdOJTJCMFVoSDNkZHVuSU42JTJCdGtGOXIzNTB4JTJGdWF4cyUzRCZhbXA7
-cmVzZXJ2ZWQ9MC4NCg==
+On Wed, Feb 12, 2020 at 5:17 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> +static int sev_resize_page_enc_bitmap(struct kvm *kvm, unsigned long new_size)
+> +{
+> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +       unsigned long *map;
+> +       unsigned long sz;
+> +
+> +       if (sev->page_enc_bmap_size >= new_size)
+> +               return 0;
+> +
+> +       sz = ALIGN(new_size, BITS_PER_LONG) / 8;
+> +
+> +       map = vmalloc(sz);
+> +       if (!map) {
+> +               pr_err_once("Failed to allocate encrypted bitmap size %lx\n",
+> +                               sz);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       /* mark the page encrypted (by default) */
+> +       memset(map, 0xff, sz);
+> +
+> +       bitmap_copy(map, sev->page_enc_bmap, sev->page_enc_bmap_size);
+Personally, I would do the arithmetic and swap the `memset(map, 0xff,
+sz);` for `memset(map + sev->page_enc_bmap_size, 0xff, sz -
+sev->page_enc_bmap_size);`, but gcc might be smart enough to do this
+for you.
+
+> +       kvfree(sev->page_enc_bmap);
+> +
+> +       sev->page_enc_bmap = map;
+> +       sev->page_enc_bmap_size = new_size;
+> +
+> +       return 0;
+> +}
+> +
+> +static int svm_page_enc_status_hc(struct kvm *kvm, unsigned long gpa,
+> +                                 unsigned long npages, unsigned long enc)
+> +{
+> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+> +       gfn_t gfn_start, gfn_end;
+> +       int ret;
+> +
+> +       if (!sev_guest(kvm))
+> +               return -EINVAL;
+> +
+> +       if (!npages)
+> +               return 0;
+> +
+> +       gfn_start = gpa_to_gfn(gpa);
+> +       gfn_end = gfn_start + npages;
+> +
+> +       /* out of bound access error check */
+> +       if (gfn_end <= gfn_start)
+> +               return -EINVAL;
+> +
+> +       /* lets make sure that gpa exist in our memslot */
+> +       pfn_start = gfn_to_pfn(kvm, gfn_start);
+> +       pfn_end = gfn_to_pfn(kvm, gfn_end);
+I believe these functions assume as_id==0, which is probably fine in
+practice. If one were to want to migrate a VM with SMM support (which
+I believe is the only current usage of non-zero as_ids), it feels like
+SMM would need to be in control of its own c-bit tracking, but that
+doesn't seem super feasible (otherwise the guest kernel could corrupt
+SMM by passing invalid c-bit statuses). I'm not certain anyone wants
+SMM with SEV anyway?
+
+> +
+> +       if (is_error_noslot_pfn(pfn_start) && !is_noslot_pfn(pfn_start)) {
+> +               /*
+> +                * Allow guest MMIO range(s) to be added
+> +                * to the page encryption bitmap.
+> +                */
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (is_error_noslot_pfn(pfn_end) && !is_noslot_pfn(pfn_end)) {
+> +               /*
+> +                * Allow guest MMIO range(s) to be added
+> +                * to the page encryption bitmap.
+> +                */
+> +               return -EINVAL;
+> +       }
+> +
+> +       mutex_lock(&kvm->lock);
+> +       ret = sev_resize_page_enc_bitmap(kvm, gfn_end);
+> +       if (ret)
+> +               goto unlock;
+> +
+> +       if (enc)
+> +               __bitmap_set(sev->page_enc_bmap, gfn_start,
+> +                               gfn_end - gfn_start);
+> +       else
+> +               __bitmap_clear(sev->page_enc_bmap, gfn_start,
+> +                               gfn_end - gfn_start);
+> +
+> +unlock:
+> +       mutex_unlock(&kvm->lock);
+> +       return ret;
+> +}
+> +
+>  static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
+>  {
+>         struct kvm_sev_cmd sev_cmd;
+> @@ -7972,6 +8064,8 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
+>         .need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+>
+>         .apic_init_signal_blocked = svm_apic_init_signal_blocked,
+> +
+> +       .page_enc_status_hc = svm_page_enc_status_hc,
+>  };
+>
+>  static int __init svm_init(void)
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 9a6664886f2e..7963f2979fdf 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7879,6 +7879,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
+>         .nested_get_evmcs_version = NULL,
+>         .need_emulation_on_page_fault = vmx_need_emulation_on_page_fault,
+>         .apic_init_signal_blocked = vmx_apic_init_signal_blocked,
+> +       .page_enc_status_hc = NULL,
+>  };
+>
+>  static void vmx_cleanup_l1d_flush(void)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..298627fa3d39 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7547,6 +7547,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+>                 kvm_sched_yield(vcpu->kvm, a0);
+>                 ret = 0;
+>                 break;
+> +       case KVM_HC_PAGE_ENC_STATUS:
+> +               ret = -KVM_ENOSYS;
+> +               if (kvm_x86_ops->page_enc_status_hc)
+> +                       ret = kvm_x86_ops->page_enc_status_hc(vcpu->kvm,
+> +                                       a0, a1, a2);
+> +               break;
+>         default:
+>                 ret = -KVM_ENOSYS;
+>                 break;
+Add a cap to kvm_vm_ioctl_enable_cap so that the vmm can configure
+whether or not this hypercall is offered. Moving to an enable cap
+would also allow the vmm to pass down the expected size of the c-bit
+tracking buffer, so that you don't need to handle dynamic resizing in
+response to guest hypercall, otherwise KVM will sporadically start
+copying around large buffers when working with large VMs.
+
+Stepping back a bit, I'm a little surprised by the fact that you don't
+treat the c-bit buffers the same way as the dirty tracking buffers and
+put them alongside the memslots. That's probably more effort, and the
+strategy of using one large buffer should work fine (assuming you
+don't need to support non-zero as_ids).
