@@ -2,88 +2,95 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FF1C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E547FC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F70824654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6732465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582190371;
+	bh=odg0Ls4Jo2/nIPx4hfbXC/I9JWJmXoZHtSAzcHL2wmQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eYw4rAURWB8i2t62tlurflGOT69+lNggiNFQz7g07BYeKA4V98mqi84owxDqrYZLO
+	 m5h55eybmlcN92EuExYbH8dVZYNtdcP1+O8fK3GjfcGIe3/qtUL5OhxaE30sVbKFuA
+	 V9KUu1jxhM+pwgPajQYAybnDC2LThfndDzoTkaFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgBTJSi (ORCPT
+        id S1727069AbgBTJTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:18:38 -0500
-Received: from mx21.baidu.com ([220.181.3.85]:44128 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726759AbgBTJSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:18:38 -0500
-X-Greylist: delayed 1857 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 04:18:34 EST
-Received: from BJHW-Mail-Ex14.internal.baidu.com (unknown [10.127.64.37])
-        by Forcepoint Email with ESMTPS id 6299E3CC4DF0E1EDB5B5;
-        Thu, 20 Feb 2020 16:31:33 +0800 (CST)
-Received: from BJHW-Mail-Ex13.internal.baidu.com (10.127.64.36) by
- BJHW-Mail-Ex14.internal.baidu.com (10.127.64.37) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 20 Feb 2020 16:31:32 +0800
-Received: from BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) by
- BJHW-Mail-Ex13.internal.baidu.com ([100.100.100.36]) with mapi id
- 15.01.1713.004; Thu, 20 Feb 2020 16:31:32 +0800
-From:   "Li,Rongqing" <lirongqing@baidu.com>
-To:     linmiaohe <linmiaohe@huawei.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-CC:     Liran Alon <liran.alon@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXVtyZXNlbmRdIEtWTTogZml4IGVycm9yIGhhbmRsaW5n?=
- =?gb2312?B?IGluIHN2bV9jcHVfaW5pdA==?=
-Thread-Topic: [PATCH][resend] KVM: fix error handling in svm_cpu_init
-Thread-Index: AdXnxCuvQCn2ngYdSyKWLfuyXd13zwAA6TeA
-Date:   Thu, 20 Feb 2020 08:31:32 +0000
-Message-ID: <4d0b722be5cc4343a9fc9557dfbd00a1@baidu.com>
-References: <4cf5d767b570430a9e0b515a9d6d8fbd@huawei.com>
-In-Reply-To: <4cf5d767b570430a9e0b515a9d6d8fbd@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.21.156.28]
-x-baidu-bdmsfe-datecheck: 1_BJHW-Mail-Ex14_2020-02-20 16:31:33:229
-x-baidu-bdmsfe-viruscheck: BJHW-Mail-Ex14_GRAY_Inside_WithoutAtta_2020-02-20
- 16:31:33:198
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 20 Feb 2020 04:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53018 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbgBTJTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:19:30 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 692E424654;
+        Thu, 20 Feb 2020 09:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582190369;
+        bh=odg0Ls4Jo2/nIPx4hfbXC/I9JWJmXoZHtSAzcHL2wmQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tNwjx4/Js/7Z9lzy5NCgL0+In+nXgsvXnhURb15Ogtuubx6XOD5dHquCYbTWkgxWr
+         JrU2U6WdM/qI/f1kcvCxCCM+oAy17L1hcbAkX+WEdAl+djf5QKH3896aaloijVTOn8
+         KiaLTEJWAraqhlFEjS05Jag6VUFWWS4KpiHy8Atg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j4hzT-006h0X-K0; Thu, 20 Feb 2020 09:19:27 +0000
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 09:19:27 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 01/22] hardirq/nmi: Allow nested nmi_enter()
+In-Reply-To: <20200219150744.428764577@infradead.org>
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.428764577@infradead.org>
+Message-ID: <9af753c4d91f6a46d3121e72186cee03@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: peterz@infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org, gregkh@linuxfoundation.org, gustavo@embeddedor.com, tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org, mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com, luto@kernel.org, tony.luck@intel.com, frederic@kernel.org, dan.carpenter@oracle.com, mhiramat@kernel.org, will@kernel.org, mpe@ellerman.id.au, pmladek@suse.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS3Tyrz+1K28/i0tLS0tDQo+ILeivP7IyzogbGlubWlhb2hlIFttYWlsdG86bGlu
-bWlhb2hlQGh1YXdlaS5jb21dDQo+ILeiy83KsbzkOiAyMDIwxOoy1MIyMMjVIDE2OjE4DQo+IMrV
-vP7IyzogTGksUm9uZ3FpbmcgPGxpcm9uZ3FpbmdAYmFpZHUuY29tPjsgcGJvbnppbmlAcmVkaGF0
-LmNvbTsNCj4gdmt1em5ldHNAcmVkaGF0LmNvbQ0KPiCzrcvNOiBMaXJhbiBBbG9uIDxsaXJhbi5h
-bG9uQG9yYWNsZS5jb20+OyBrdm1Admdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyB4ODZAa2VybmVsLm9yZw0KPiDW98ziOiBSZTogW1BBVENIXVtyZXNlbmRd
-IEtWTTogZml4IGVycm9yIGhhbmRsaW5nIGluIHN2bV9jcHVfaW5pdA0KPiANCj4gSGksDQo+IExp
-IFJvbmdRaW5nIDxsaXJvbmdxaW5nQGJhaWR1LmNvbT4gd3JpdGVzOg0KPiA+DQo+ID5zZC0+c2F2
-ZV9hcmVhIHNob3VsZCBiZSBmcmVlZCBpbiBlcnJvciBwYXRoDQo+ID4NCj4gPkZpeGVzOiA3MGNk
-OTRlNjBjNzMzICgiS1ZNOiBTVk06IFZNUlVOIHNob3VsZCB1c2UgYXNzb2NpYXRlZCBBU0lEIHdo
-ZW4NCj4gPlNFViBpcyBlbmFibGVkIikNCj4gPlNpZ25lZC1vZmYtYnk6IExpIFJvbmdRaW5nIDxs
-aXJvbmdxaW5nQGJhaWR1LmNvbT4NCj4gPlJldmlld2VkLWJ5OiBCcmlqZXNoIFNpbmdoIDxicmlq
-ZXNoLnNpbmdoQGFtZC5jb20+DQo+ID5SZXZpZXdlZC1ieTogVml0YWx5IEt1em5ldHNvdiA8dmt1
-em5ldHNAcmVkaGF0LmNvbT4NCj4gPi0tLQ0KPiA+IGFyY2gveDg2L2t2bS9zdm0uYyB8IDggKysr
-KystLS0NCj4gPiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygt
-KQ0KPiANCj4gT2gsIGl0J3Mgc3RyYW5nZS4gVGhpcyBpcyBhbHJlYWR5IGZpeGVkIGluIG15IHBy
-ZXZpb3VzIHBhdGNoIDogW1BBVENIIHYyXSBLVk06DQo+IFNWTTogRml4IHBvdGVudGlhbCBtZW1v
-cnkgbGVhayBpbiBzdm1fY3B1X2luaXQoKS4NCj4gQW5kIFZpdGFseSBhbmQgTGlyYW4gZ2F2ZSBt
-ZSBSZXZpZXdlZC1ieSB0YWdzIGFuZCBQYW9sbyBxdWV1ZWQgaXQgb25lIG1vbnRoDQo+IGFnby4g
-QnV0IEkgY2FuJ3QgZm91bmQgaXQgaW4gbWFzdGVyIG9yIHF1ZXVlIGJyYW5jaC4gVGhlcmUgbWln
-aHQgYmUgc29tZXRoaW5nDQo+IHdyb25nLiA6KA0KDQoNCkluIGZhY3QsIEkgc2VuZCB0aGlzIHBh
-dGNoIDIwMTkvMDIvLCBhbmQgZ2V0IFJldmlld2VkLWJ5LCAgYnV0IGRpZCBub3QgcXVldWUNCg0K
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDg1Mzk3My8NCg0KYW5kIHJlc2Vu
-ZCBpdCAyMDE5LzA3DQoNCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEwMzIw
-ODEvDQoNCg0KLUxpDQoNCg0K
+On 2020-02-19 14:47, Peter Zijlstra wrote:
+> Since there are already a number of sites (ARM64, PowerPC) that
+> effectively nest nmi_enter(), lets make the primitive support this
+> before adding even more.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+Thanks for cleaning this up!
+
+Acked-by: Marc Zyngier <maz@kernel.org>
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
