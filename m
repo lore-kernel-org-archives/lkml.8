@@ -2,69 +2,442 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0238C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C02C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06D621D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF0F21D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727893AbgBTCoa (ORCPT
+        id S1727795AbgBTCsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:44:30 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:37488 "EHLO loongson.cn"
+        Wed, 19 Feb 2020 21:48:16 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50894 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727402AbgBTCo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:44:29 -0500
-Received: from [192.168.68.111] (unknown [111.18.94.191])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9108k1ev6IRAA--.27S3;
-        Thu, 20 Feb 2020 10:44:15 +0800 (CST)
-To:     jdelvare@suse.com, jdelvare@suse.de
-References: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v3 1/2] firmware: dmi: Add macro
- SMBIOS_ENTRY_POINT_SCAN_START
-Cc:     jiaxun.yang@flygoat.com, chenhc@lemote.com,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        lixuefeng@loongson.cn, paulburton@kernel.org, ralf@linux-mips.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8ee01022-d3d1-8145-1a0b-ba77c5bb7101@loongson.cn>
-Date:   Thu, 20 Feb 2020 10:43:56 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        id S1727211AbgBTCsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:48:16 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F1CCA9F985FD4C5CF48A;
+        Thu, 20 Feb 2020 10:48:12 +0800 (CST)
+Received: from architecture4.huawei.com (10.160.196.180) by smtp.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 20 Feb
+ 2020 10:48:02 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v3] erofs: convert workstn to XArray
+Date:   Thu, 20 Feb 2020 10:46:42 +0800
+Message-ID: <20200220024642.91529-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf9Dxz9108k1ev6IRAA--.27S3
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYz7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
-        80aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-        c7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
-        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
-        73UjIFyTuYvjfUoOJ5UUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain
+X-Originating-IP: [10.160.196.180]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+XArray has friendly APIs and it will replace the old radix
+tree in the near future.
 
-Since this patch is independent and it has no any negative influence,
-could you apply it to your DMI tree first?
+This convert makes use of __xa_cmpxchg when inserting on
+a just inserted item by other thread. In detail, instead
+of totally looking up again as what we did for the old
+radix tree, it will try to legitimize the current in-tree
+item in the XArray therefore more effective.
 
-Thanks,
+In addition, naming is rather a challenge for non-English
+speaker like me. The basic idea of workstn is to provide
+a runtime sparse array with items arranged in the physical
+block number order. Such items (was called workgroup) can be
+used to record compress clusters or for later new features.
 
-Tiezhu Yang
+However, both workgroup and workstn seem not good names from
+whatever point of view, so I'd like to rename them as pslot
+and managed_pslots to stand for physical slots. This patch
+handles the second as a part of the radix tree convert.
+
+Cc: Chao Yu <yuchao0@huawei.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+Changes since v2:
+ - add path to bail out all potential __xa_cmpxchg()
+   errors pointed out by Chao.
+
+ fs/erofs/internal.h |  8 ++---
+ fs/erofs/super.c    |  2 +-
+ fs/erofs/utils.c    | 88 +++++++++++++++++----------------------------
+ fs/erofs/zdata.c    | 76 ++++++++++++++++++++-------------------
+ 4 files changed, 76 insertions(+), 98 deletions(-)
+
+diff --git a/fs/erofs/internal.h b/fs/erofs/internal.h
+index c4c6dcdc89ad..5eead7fdc7a6 100644
+--- a/fs/erofs/internal.h
++++ b/fs/erofs/internal.h
+@@ -52,8 +52,8 @@ struct erofs_sb_info {
+ 	struct list_head list;
+ 	struct mutex umount_mutex;
+ 
+-	/* the dedicated workstation for compression */
+-	struct radix_tree_root workstn_tree;
++	/* managed XArray arranged in physical block number */
++	struct xarray managed_pslots;
+ 
+ 	/* threshold for decompression synchronously */
+ 	unsigned int max_sync_decompress_pages;
+@@ -402,8 +402,8 @@ static inline void *erofs_get_pcpubuf(unsigned int pagenr)
+ int erofs_workgroup_put(struct erofs_workgroup *grp);
+ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 					     pgoff_t index);
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp);
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp);
+ void erofs_workgroup_free_rcu(struct erofs_workgroup *grp);
+ void erofs_shrinker_register(struct super_block *sb);
+ void erofs_shrinker_unregister(struct super_block *sb);
+diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+index 057e6d7b5b7f..b514c67e5fc2 100644
+--- a/fs/erofs/super.c
++++ b/fs/erofs/super.c
+@@ -425,7 +425,7 @@ static int erofs_fill_super(struct super_block *sb, void *data, int silent)
+ 		sb->s_flags &= ~SB_POSIXACL;
+ 
+ #ifdef CONFIG_EROFS_FS_ZIP
+-	INIT_RADIX_TREE(&sbi->workstn_tree, GFP_ATOMIC);
++	xa_init(&sbi->managed_pslots);
+ #endif
+ 
+ 	/* get the root inode */
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index fddc5059c930..4396b424373f 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -37,9 +37,6 @@ void *erofs_get_pcpubuf(unsigned int pagenr)
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
+-#define __erofs_workgroup_get(grp)	atomic_inc(&(grp)->refcount)
+-#define __erofs_workgroup_put(grp)	atomic_dec(&(grp)->refcount)
+-
+ static int erofs_workgroup_get(struct erofs_workgroup *grp)
+ {
+ 	int o;
+@@ -66,7 +63,7 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 
+ repeat:
+ 	rcu_read_lock();
+-	grp = radix_tree_lookup(&sbi->workstn_tree, index);
++	grp = xa_load(&sbi->managed_pslots, index);
+ 	if (grp) {
+ 		if (erofs_workgroup_get(grp)) {
+ 			/* prefer to relax rcu read side */
+@@ -80,43 +77,37 @@ struct erofs_workgroup *erofs_find_workgroup(struct super_block *sb,
+ 	return grp;
+ }
+ 
+-int erofs_register_workgroup(struct super_block *sb,
+-			     struct erofs_workgroup *grp)
++struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
++					       struct erofs_workgroup *grp)
+ {
+-	struct erofs_sb_info *sbi;
+-	int err;
+-
+-	/* grp shouldn't be broken or used before */
+-	if (atomic_read(&grp->refcount) != 1) {
+-		DBG_BUGON(1);
+-		return -EINVAL;
+-	}
+-
+-	err = radix_tree_preload(GFP_NOFS);
+-	if (err)
+-		return err;
+-
+-	sbi = EROFS_SB(sb);
+-	xa_lock(&sbi->workstn_tree);
++	struct erofs_sb_info *const sbi = EROFS_SB(sb);
++	struct erofs_workgroup *pre;
+ 
+ 	/*
+-	 * Bump up reference count before making this workgroup
+-	 * visible to other users in order to avoid potential UAF
+-	 * without serialized by workstn_lock.
++	 * Bump up a reference count before making this visible
++	 * to others for the XArray in order to avoid potential
++	 * UAF without serialized by xa_lock.
+ 	 */
+-	__erofs_workgroup_get(grp);
+-
+-	err = radix_tree_insert(&sbi->workstn_tree, grp->index, grp);
+-	if (err)
+-		/*
+-		 * it's safe to decrease since the workgroup isn't visible
+-		 * and refcount >= 2 (cannot be freezed).
+-		 */
+-		__erofs_workgroup_put(grp);
++	atomic_inc(&grp->refcount);
+ 
+-	xa_unlock(&sbi->workstn_tree);
+-	radix_tree_preload_end();
+-	return err;
++repeat:
++	xa_lock(&sbi->managed_pslots);
++	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
++			   NULL, grp, GFP_NOFS);
++	if (pre) {
++		if (xa_is_err(pre)) {
++			pre = ERR_PTR(xa_err(pre));
++		} else if (erofs_workgroup_get(pre)) {
++			/* try to legitimize the current in-tree one */
++			xa_unlock(&sbi->managed_pslots);
++			cond_resched();
++			goto repeat;
++		}
++		atomic_dec(&grp->refcount);
++		grp = pre;
++	}
++	xa_unlock(&sbi->managed_pslots);
++	return grp;
+ }
+ 
+ static void  __erofs_workgroup_free(struct erofs_workgroup *grp)
+@@ -155,7 +146,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 
+ 	/*
+ 	 * Note that all cached pages should be unattached
+-	 * before deleted from the radix tree. Otherwise some
++	 * before deleted from the XArray. Otherwise some
+ 	 * cached pages could be still attached to the orphan
+ 	 * old workgroup when the new one is available in the tree.
+ 	 */
+@@ -169,7 +160,7 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ 	 * however in order to avoid some race conditions, add a
+ 	 * DBG_BUGON to observe this in advance.
+ 	 */
+-	DBG_BUGON(radix_tree_delete(&sbi->workstn_tree, grp->index) != grp);
++	DBG_BUGON(xa_erase(&sbi->managed_pslots, grp->index) != grp);
+ 
+ 	/*
+ 	 * If managed cache is on, last refcount should indicate
+@@ -182,22 +173,11 @@ static bool erofs_try_to_release_workgroup(struct erofs_sb_info *sbi,
+ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 					      unsigned long nr_shrink)
+ {
+-	pgoff_t first_index = 0;
+-	void *batch[PAGEVEC_SIZE];
++	struct erofs_workgroup *grp;
+ 	unsigned int freed = 0;
++	unsigned long index;
+ 
+-	int i, found;
+-repeat:
+-	xa_lock(&sbi->workstn_tree);
+-
+-	found = radix_tree_gang_lookup(&sbi->workstn_tree,
+-				       batch, first_index, PAGEVEC_SIZE);
+-
+-	for (i = 0; i < found; ++i) {
+-		struct erofs_workgroup *grp = batch[i];
+-
+-		first_index = grp->index + 1;
+-
++	xa_for_each(&sbi->managed_pslots, index, grp) {
+ 		/* try to shrink each valid workgroup */
+ 		if (!erofs_try_to_release_workgroup(sbi, grp))
+ 			continue;
+@@ -206,10 +186,6 @@ static unsigned long erofs_shrink_workstation(struct erofs_sb_info *sbi,
+ 		if (!--nr_shrink)
+ 			break;
+ 	}
+-	xa_unlock(&sbi->workstn_tree);
+-
+-	if (i && nr_shrink)
+-		goto repeat;
+ 	return freed;
+ }
+ 
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 80e47f07d946..c4b6c9aa87ec 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -67,16 +67,6 @@ static void z_erofs_pcluster_init_once(void *ptr)
+ 		pcl->compressed_pages[i] = NULL;
+ }
+ 
+-static void z_erofs_pcluster_init_always(struct z_erofs_pcluster *pcl)
+-{
+-	struct z_erofs_collection *cl = z_erofs_primarycollection(pcl);
+-
+-	atomic_set(&pcl->obj.refcount, 1);
+-
+-	DBG_BUGON(cl->nr_pages);
+-	DBG_BUGON(cl->vcnt);
+-}
+-
+ int __init z_erofs_init_zip_subsystem(void)
+ {
+ 	pcluster_cachep = kmem_cache_create("erofs_compress",
+@@ -341,26 +331,19 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 				     struct inode *inode,
+ 				     struct erofs_map_blocks *map)
+ {
+-	struct erofs_workgroup *grp;
+-	struct z_erofs_pcluster *pcl;
++	struct z_erofs_pcluster *pcl = clt->pcl;
+ 	struct z_erofs_collection *cl;
+ 	unsigned int length;
+ 
+-	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
+-	if (!grp)
+-		return -ENOENT;
+-
+-	pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	/* to avoid unexpected loop formed by corrupted images */
+ 	if (clt->owned_head == &pcl->next || pcl == clt->tailpcl) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+ 	cl = z_erofs_primarycollection(pcl);
+ 	if (cl->pageofs != (map->m_la & ~PAGE_MASK)) {
+ 		DBG_BUGON(1);
+-		erofs_workgroup_put(grp);
+ 		return -EFSCORRUPTED;
+ 	}
+ 
+@@ -368,7 +351,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	if (length & Z_EROFS_PCLUSTER_FULL_LENGTH) {
+ 		if ((map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) > length) {
+ 			DBG_BUGON(1);
+-			erofs_workgroup_put(grp);
+ 			return -EFSCORRUPTED;
+ 		}
+ 	} else {
+@@ -391,7 +373,6 @@ static int z_erofs_lookup_collection(struct z_erofs_collector *clt,
+ 	/* clean tailpcl if the current owned_head is Z_EROFS_PCLUSTER_TAIL */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+ 		clt->tailpcl = NULL;
+-	clt->pcl = pcl;
+ 	clt->cl = cl;
+ 	return 0;
+ }
+@@ -402,6 +383,7 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ {
+ 	struct z_erofs_pcluster *pcl;
+ 	struct z_erofs_collection *cl;
++	struct erofs_workgroup *grp;
+ 	int err;
+ 
+ 	/* no available workgroup, let's allocate one */
+@@ -409,7 +391,7 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	if (!pcl)
+ 		return -ENOMEM;
+ 
+-	z_erofs_pcluster_init_always(pcl);
++	atomic_set(&pcl->obj.refcount, 1);
+ 	pcl->obj.index = map->m_pa >> PAGE_SHIFT;
+ 
+ 	pcl->length = (map->m_llen << Z_EROFS_PCLUSTER_LENGTH_BIT) |
+@@ -429,19 +411,29 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	clt->mode = COLLECT_PRIMARY_FOLLOWED;
+ 
+ 	cl = z_erofs_primarycollection(pcl);
++
++	/* must be cleaned before freeing to slab */
++	DBG_BUGON(cl->nr_pages);
++	DBG_BUGON(cl->vcnt);
++
+ 	cl->pageofs = map->m_la & ~PAGE_MASK;
+ 
+ 	/*
+ 	 * lock all primary followed works before visible to others
+ 	 * and mutex_trylock *never* fails for a new pcluster.
+ 	 */
+-	mutex_trylock(&cl->lock);
++	DBG_BUGON(!mutex_trylock(&cl->lock));
+ 
+-	err = erofs_register_workgroup(inode->i_sb, &pcl->obj);
+-	if (err) {
+-		mutex_unlock(&cl->lock);
+-		kmem_cache_free(pcluster_cachep, pcl);
+-		return -EAGAIN;
++	grp = erofs_insert_workgroup(inode->i_sb, &pcl->obj);
++	if (IS_ERR(grp)) {
++		err = PTR_ERR(grp);
++		goto err_out;
++	}
++
++	if (grp != &pcl->obj) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
++		err = -EEXIST;
++		goto err_out;
+ 	}
+ 	/* used to check tail merging loop due to corrupted images */
+ 	if (clt->owned_head == Z_EROFS_PCLUSTER_TAIL)
+@@ -450,12 +442,18 @@ static int z_erofs_register_collection(struct z_erofs_collector *clt,
+ 	clt->pcl = pcl;
+ 	clt->cl = cl;
+ 	return 0;
++
++err_out:
++	mutex_unlock(&cl->lock);
++	kmem_cache_free(pcluster_cachep, pcl);
++	return err;
+ }
+ 
+ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 				   struct inode *inode,
+ 				   struct erofs_map_blocks *map)
+ {
++	struct erofs_workgroup *grp;
+ 	int ret;
+ 
+ 	DBG_BUGON(clt->cl);
+@@ -469,21 +467,25 @@ static int z_erofs_collector_begin(struct z_erofs_collector *clt,
+ 		return -EINVAL;
+ 	}
+ 
+-repeat:
+-	ret = z_erofs_lookup_collection(clt, inode, map);
+-	if (ret == -ENOENT) {
++	grp = erofs_find_workgroup(inode->i_sb, map->m_pa >> PAGE_SHIFT);
++	if (grp) {
++		clt->pcl = container_of(grp, struct z_erofs_pcluster, obj);
++	} else {
+ 		ret = z_erofs_register_collection(clt, inode, map);
+ 
+-		/* someone registered at the same time, give another try */
+-		if (ret == -EAGAIN) {
+-			cond_resched();
+-			goto repeat;
+-		}
++		if (!ret)
++			goto out;
++		if (ret != -EEXIST)
++			return ret;
+ 	}
+ 
+-	if (ret)
++	ret = z_erofs_lookup_collection(clt, inode, map);
++	if (ret) {
++		erofs_workgroup_put(&clt->pcl->obj);
+ 		return ret;
++	}
+ 
++out:
+ 	z_erofs_pagevec_ctor_init(&clt->vector, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  clt->cl->pagevec, clt->cl->vcnt);
+ 
+-- 
+2.17.1
 
