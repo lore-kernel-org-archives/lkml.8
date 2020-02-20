@@ -6,103 +6,306 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2610C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B452C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DB9208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE73207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgBTUaC (ORCPT
+        id S1728967AbgBTUbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:30:02 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:44994 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgBTUaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:30:02 -0500
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sSO-0005XN-Dz; Thu, 20 Feb 2020 13:30:01 -0700
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sSM-0006oK-Ry; Thu, 20 Feb 2020 13:29:58 -0700
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 20 Feb 2020 13:29:53 -0700
-Message-Id: <20200220202953.26139-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 20 Feb 2020 15:31:48 -0500
+Received: from smtprelay0049.hostedemail.com ([216.40.44.49]:35239 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728400AbgBTUbs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:31:48 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id C3767182CED5B;
+        Thu, 20 Feb 2020 20:31:46 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: jail73_66bdb5886c035
+X-Filterd-Recvd-Size: 7972
+Received: from joe-laptop.perches.com (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 20 Feb 2020 20:31:45 +0000 (UTC)
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     clang-built-linux@googlegroups.com
+Subject: [PATCH] cvt_fallthrough: A tool to convert /* fallthrough */ comments to fallthrough;
+Date:   Thu, 20 Feb 2020 12:30:21 -0800
+Message-Id: <b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe@perches.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH] nvme-multipath: Fix memory leak with ana_log_buf
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemleak reports a memory leak with the ana_log_buf allocated by
-nvme_mpath_init():
+Convert /* fallthrough */ style comments to the pseudo-keyword fallthrough
+to allow clang 10 and higher to work at finding missing fallthroughs too.
 
-unreferenced object 0xffff888120e94000 (size 8208):
-  comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
-    hex dump (first 32 bytes):
-      00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-      01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    backtrace:
-      [<00000000e2360188>] kmalloc_order+0x97/0xc0
-      [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
-      [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
-      [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
-      [<000000005802589e>] nvme_init_identify+0x75f/0x1600
-      [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
-      [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
-      [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
-      [<000000004199f8d0>] __vfs_write+0x50/0xa0
-      [<0000000065466fef>] vfs_write+0xf3/0x280
-      [<00000000b0db9a8b>] ksys_write+0xc6/0x160
-      [<0000000082156b91>] __x64_sys_write+0x43/0x50
-      [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
-      [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Requires a git repository and overwrites the input files.
 
-nvme_mpath_init() is called by nvme_init_identify() which is called in
-multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
-means nvme_mpath_init() may be called multiple times before
-nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
+Typical command use:
+    ./scripts/cvt_fallthrough.pl <path|file>
 
-When nvme_mpath_init() is called multiple times, it overwrites the
-ana_log_buf pointer with a new allocation, thus leaking the previous
-allocation.
+i.e.:
 
-To fix this, free ana_log_buf before allocating a new one.
+   $ ./scripts/cvt_fallthrough.pl block
+     converts all files in block and its subdirectories
+   $ ./scripts/cvt_fallthrough.pl drivers/net/wireless/zydas/zd1201.c
+     converts a single file
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+A fallthrough comment with additional comments is converted akin to:
+
+-		/* fall through - maybe userspace knows this conn_id. */
++		fallthrough;    /* maybe userspace knows this conn_id */
+
+A fallthrough comment or fallthrough; between successive case statements
+is deleted.
+
+e.g.:
+
+    case FOO:
+    	/* fallthrough */ (or fallthrough;)
+    case BAR:
+
+is converted to:
+
+    case FOO:
+    case BAR:
+
+Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/nvme/host/multipath.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/cvt_fallthrough.pl | 215 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 215 insertions(+)
+ create mode 100755 scripts/cvt_fallthrough.pl
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 797c18337d96..a11900cf3a36 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -715,6 +715,7 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 	}
- 
- 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-+	kfree(ctrl->ana_log_buf);
- 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
- 	if (!ctrl->ana_log_buf) {
- 		error = -ENOMEM;
-
-base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+diff --git a/scripts/cvt_fallthrough.pl b/scripts/cvt_fallthrough.pl
+new file mode 100755
+index 000000..6585e4
+--- /dev/null
++++ b/scripts/cvt_fallthrough.pl
+@@ -0,0 +1,215 @@
++#!/usr/bin/perl -w
++
++# script to modify /* fallthrough */ style comments to fallthrough;
++# use: perl cvt_fallthrough.pl <paths|files>
++# e.g.: perl cvtfallthrough.pl drivers/net/ethernet/intel
++
++use strict;
++
++my $P = $0;
++my $modified = 0;
++my $quiet = 0;
++
++sub expand_tabs {
++    my ($str) = @_;
++
++    my $res = '';
++    my $n = 0;
++    for my $c (split(//, $str)) {
++	if ($c eq "\t") {
++	    $res .= ' ';
++	    $n++;
++	    for (; ($n % 8) != 0; $n++) {
++		$res .= ' ';
++	    }
++	    next;
++	}
++	$res .= $c;
++	$n++;
++    }
++
++    return $res;
++}
++
++my $args = join(" ", @ARGV);
++my $output = `git ls-files -- $args`;
++my @files = split("\n", $output);
++
++foreach my $file (@files) {
++    my $f;
++    my $cvt = 0;
++    my $del = 0;
++    my $text;
++
++# read the file
++
++    next if ((-d $file));
++
++    open($f, '<', $file)
++	or die "$P: Can't open $file for read\n";
++    $text = do { local($/) ; <$f> };
++    close($f);
++
++    next if ($text eq "");
++
++    # for style:
++
++    # /* <fallthrough comment> */
++    # case FOO:
++
++    # while (comment has fallthrough and next non-blank, non-continuation line is (case or default:)) {
++    #   remove newline, whitespace before, fallthrough comment and whitespace after
++    #   insert newline, adjusted spacing and fallthrough; newline
++    # }
++
++    my $count = 0;
++    my @fallthroughs = (
++	'fallthrough',
++	'@fallthrough@',
++	'lint -fallthrough[ \t]*',
++	'[ \t.!]*(?:ELSE,? |INTENTIONAL(?:LY)? )?',
++	'intentional(?:ly)?[ \t]*fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)',
++	'(?:else,?\s*)?FALL(?:S | |-)?THR(?:OUGH|U|EW)[ \t.!]*(?:-[^\n\r]*)?',
++	'[ \t.!]*(?:Else,? |Intentional(?:ly)? )?',
++	'Fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)[ \t.!]*(?:-[^\n\r]*)?',
++	'[ \t.!]*(?:[Ee]lse,? |[Ii]ntentional(?:ly)? )?',
++	'fall(?:s | |-)?thr(?:ough|u|ew)[ \t.!]*(?:-[^\n\r]*)?',
++    );
++    do {
++	$count = 0;
++	pos($text) = 0;
++	foreach my $ft (@fallthroughs) {
++	    my $regex = '(((?:[ \t]*\n)*[ \t]*)(/\*\s*(?!\*/)?\b' . "$ft" . '\s*(?!\*/)?\*/(?:[ \t]*\n)*)([ \t]*))(?:case\s+|default\s*:)';
++
++	    while ($text =~ m{${regex}}i) {
++		my $all_but_case = $1;
++		my $space_before = $2;
++		my $fallthrough = $3;
++		my $space_after = $4;
++		my $pos_before = $-[1];
++		my $pos_after = $+[3];
++
++		# try to maintain any additional comment on the same line
++		my $comment = "";
++		if ($regex =~ /\\r/) {
++		    $comment = $fallthrough;
++		    $comment =~ s@^/\*\s*@@;
++		    $comment =~ s@\s*\*/\s*$@@;
++		    $comment =~ s@^\s*(?:intentional(?:ly)?\s+|else,?\s*)?fall[s\-]*\s*thr(?:ough|u|ew)[\s\.\-]*@@i;
++		    $comment =~ s@\s+$@@;
++		    $comment =~ s@\.*$@@;
++		    $comment = "\t/* $comment */" if ($comment ne "");
++		}
++		substr($text, $pos_before, $pos_after - $pos_before, "");
++		substr($text, $pos_before, 0, "\n${space_after}\tfallthrough;${comment}\n");
++		pos($text) = $pos_before;
++		$count++;
++	    }
++	}
++	$cvt += $count;
++        } while ($count > 0);
++
++    # Reset the fallthroughs types to a single regex
++
++    @fallthroughs = (
++	'fall(?:(?:s | |-)[Tt]|t)hr(?:ough|u|ew)'
++    );
++
++    # Convert the // <fallthrough> style comments followed by case/default:
++
++    do {
++	$count = 0;
++	pos($text) = 0;
++	foreach my $ft (@fallthroughs) {
++	    my $regex = '(((?:[ \t]*\n)*[ \t]*)(//[ \t]*(?!\n)?\b' . "$ft" . '[ \t]*(?!\n)?\n(?:[ \t]*\n)*)([ \t]*))(?:case\s+|default\s*:)';
++	    while ($text =~ m{${regex}}i) {
++		my $all_but_case = $1;
++		my $space_before = $2;
++		my $fallthrough = $3;
++		my $space_after = $4;
++		my $pos_before = $-[1];
++		my $pos_after = $+[3];
++
++		substr($text, $pos_before, $pos_after - $pos_before, "");
++		substr($text, $pos_before, 0, "\n${space_after}\tfallthrough;\n");
++		pos($text) = $pos_before;
++		$count++;
++	    }
++	}
++	$cvt += $count;
++    } while ($count > 0);
++
++    # Convert /* fallthrough */ comment macro lines with trailing \
++
++    do {
++	$count = 0;
++	pos($text) = 0;
++	foreach my $ft (@fallthroughs) {
++	    my $regex = '((?:[ \t]*\\\\\n)*([ \t]*)(/\*[ \t]*\b' . "$ft" . '[ \t]*\*/)([ \t]*))\\\\\n*([ \t]*(?:case\s+|default\s*:))';
++
++	    while ($text =~ m{${regex}}i) {
++		my $all_but_case = $1;
++		my $space_before = $2;
++		my $fallthrough = $3;
++		my $space_after = $4;
++		my $pos_before = $-[2];
++		my $pos_after = $+[4];
++
++		my $oldline = "${space_before}${fallthrough}${space_after}";
++		my $len = length(expand_tabs($oldline));
++
++		my $newline = "${space_before}fallthrough;${space_after}";
++		$newline .= "\t" while (length(expand_tabs($newline)) < $len);
++
++		substr($text, $pos_before, $pos_after - $pos_before, "");
++		substr($text, $pos_before, 0, "$newline");
++		pos($text) = $pos_before;
++		$count++;
++	    }
++	}
++	$cvt += $count;
++    } while ($count > 0);
++
++    # delete any unnecessary fallthrough; between successive cases and default:
++
++    do {
++	pos($text) = 0;
++	$count = $text =~ s/(case\s+\w+\s*:\n)[ \t]*fallthrough;\n((?:\s*default\s*:|\s*case\s+\w+\s*:))/$1$2/;
++	$del += $count;
++    } while ($count > 0);
++
++# write the file if something was changed
++
++    if ($cvt > 0 || $del > 0) {
++	$modified = 1;
++
++	open($f, '>', $file)
++	    or die "$P: Can't open $file for write\n";
++	print $f $text;
++	close($f);
++
++	if (!$quiet) {
++	    print "fallthroughs:";
++	    print "	converted: $cvt" if ($cvt > 0);
++	    print "	deleted: $del" if ($del > 0);
++	    print "	$file\n";
++	}
++    }
++}
++
++if ($modified && !$quiet) {
++    print <<EOT;
++
++Warning: these changes may not be correct.
++
++These changes should be carefully reviewed manually and not combined with
++any functional changes.
++
++Compile, build and test your changes.
++
++You should understand and be responsible for all object changes.
++
++Make sure you read Documentation/SubmittingPatches before sending
++any changes to reviewers, maintainers or mailing lists.
++EOT
++}
 -- 
-2.20.1
+2.24.0
 
