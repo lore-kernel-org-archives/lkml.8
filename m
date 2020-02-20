@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4599C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6CBC34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783BE24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 940C724656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fRDY4Kkr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hE28D14b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBTGWq (ORCPT
+        id S1726830AbgBTGXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:22:46 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52264 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBTGWq (ORCPT
+        Thu, 20 Feb 2020 01:23:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33564 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBTGXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:22:46 -0500
-Received: by mail-pj1-f68.google.com with SMTP id ep11so431415pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:22:45 -0800 (PST)
+        Thu, 20 Feb 2020 01:23:00 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n7so1405414pfn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:22:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4HmaMrg/A0ePGN0EoT7LOXLlO0HcR/QAQGKc66IQiBw=;
-        b=fRDY4KkruK7J3WvWuRYCMBR/HFq68axyRau9YhW75xxf3hmvY0zQZh0pHSJdxCvJX7
-         OQMw9MatyxS8oE7/oWzN1VFUJ+cdS3Iy4OW3bcuoCgn4/ByJ9PNnV6JA7ZyFauySNe/A
-         SAhzTtQ7YoXLrfvYJSrfL6HXeiIm/S7OEWuQw=
+        bh=KDL37BgDk/5hTL1aygm8F5m/3WsNy7EX3MegTZpHh8A=;
+        b=hE28D14boNTmJ1vj0aiii9wgqR4x726AYt0+Ugz1vZZxyNY/ZjRyjStYJ/E86o9UZQ
+         m+ILEBowROnzV6IEZacRqVHipZV2ubqx1exLZGnLz532+kkOuDI07VE0085ZhhSVT6BX
+         PBBz06hnw5jDBaa5zAzGTaC7k047+cizE829A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=4HmaMrg/A0ePGN0EoT7LOXLlO0HcR/QAQGKc66IQiBw=;
-        b=cnK78+1LOaI2lhUjWmANTEsLrL13VhawnZPzINyrmRpxMNk/JWBN7OFByGaxNf4OBz
-         EPPx9oRg9ZkSsqX00BpmOtGeJzynGF376ougmAlw6WghK3HP0Go+t1e52vkOa6dsylN+
-         J9Rrs/lptksDCHVmd3mM/+qZya5l9x2aeGHv0UbKEKwN//Yq+kjiQz7ec3X/rL01IuW0
-         0jtiUwhIqilw+Q7SdNlnTLEAUwSeIOSHCtczum003ovP3WE+wO02jTT5gz90pNSoMMba
-         DY6gahTjUp0KsdnoZE8z5rbHpsvA8GjyjCgKtc2olDNz/AqcByaiAU1m0rDmLVX35Jge
-         HEBg==
-X-Gm-Message-State: APjAAAUEp94npWaKjJvblmdEJ+D3D3TGMmDj4qrPgG10Ge2aLGU5toTG
-        wyaaAnoWHoYYcrtDP2umF/Jlzw==
-X-Google-Smtp-Source: APXvYqzUBh4ei9Kl84PAl7GiBD2O/P0w5AgGuNUUZTL7tvsylTFtzNcyGxmNyNSGpG+A0WeGLDo+4A==
-X-Received: by 2002:a17:90a:348a:: with SMTP id p10mr1787055pjb.120.1582179765345;
-        Wed, 19 Feb 2020 22:22:45 -0800 (PST)
+        bh=KDL37BgDk/5hTL1aygm8F5m/3WsNy7EX3MegTZpHh8A=;
+        b=mi7H9VFjOkPeHG7w3xmz6JU1PLq6hubvLYfsHYqzcnNEkgExMOF7vxcEa40fPTBjIr
+         4/Ve2188f/Yp6FH3m5HvutFfxazO+reWn88H16IU+QE4V6+MHu8iBg9rljkMSPNGtv0E
+         TuYbaZ9aUXJu+vx4SdiCXgms9bXVrtwvLkfhhNGQ/lNDTE62agep+u34TMm8iTlV7onb
+         obs3yHbzdxnhgxgO49qUGCLunteP+u0mLcWsDMRMPd27s43DUHSzY1yopC+IytJ0gr5u
+         fsD72aYdwOg9jfq7Qmj0i0ScemvlNZm+Oohm+dbonGKkjCx4RjHj6TWTNrmuVtscbhxq
+         x7Bg==
+X-Gm-Message-State: APjAAAWkxdGXf6ufunPWsIGRrqwkhAfNNmHPyVJw6lAT5Z000VgjoRu3
+        rneCyYfDRv2go76RDfHbU4Uq4w==
+X-Google-Smtp-Source: APXvYqwClzmaR771bSUMDQ76QXcQ9gHM+Y7s77UVkVWl9nHyOMS3rkIB6M1k/7iT21xhJ1goPJEBhg==
+X-Received: by 2002:a62:1cd6:: with SMTP id c205mr30460282pfc.179.1582179779343;
+        Wed, 19 Feb 2020 22:22:59 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k2sm1836863pgk.84.2020.02.19.22.22.44
+        by smtp.gmail.com with ESMTPSA id a35sm1886088pgl.20.2020.02.19.22.22.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 22:22:44 -0800 (PST)
+        Wed, 19 Feb 2020 22:22:58 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
 Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/edid: Distribute switch variables for initialization
-Date:   Wed, 19 Feb 2020 22:22:29 -0800
-Message-Id: <20200220062229.68762-1-keescook@chromium.org>
+        Kees Cook <keescook@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fcntl: Distribute switch variables for initialization
+Date:   Wed, 19 Feb 2020 22:22:43 -0800
+Message-Id: <20200220062243.68809-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -84,40 +85,40 @@ direct initializations, the warnings remain.
 To avoid these problems, move such variables into the "case" where
 they're used or lift them up into the main function body.
 
-drivers/gpu/drm/drm_edid.c: In function ‘drm_edid_to_eld’:
-drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be executed [-Wswitch-unreachable]
- 4395 |     int sad_count;
-      |         ^~~~~~~~~
+fs/fcntl.c: In function ‘send_sigio_to_task’:
+fs/fcntl.c:738:20: warning: statement will never be executed [-Wswitch-unreachable]
+  738 |   kernel_siginfo_t si;
+      |                    ^~
 
 [1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/gpu/drm/drm_edid.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/fcntl.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 805fb004c8eb..2941b65b427f 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -4392,9 +4392,9 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
- 			dbl = cea_db_payload_len(db);
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index 9bc167562ee8..2e4c0fa2074b 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -735,8 +735,9 @@ static void send_sigio_to_task(struct task_struct *p,
+ 		return;
  
- 			switch (cea_db_tag(db)) {
--				int sad_count;
-+			case AUDIO_BLOCK: {
- 
--			case AUDIO_BLOCK:
-+				int sad_count;
- 				/* Audio Data Block, contains SADs */
- 				sad_count = min(dbl / 3, 15 - total_sad_count);
- 				if (sad_count >= 1)
-@@ -4402,6 +4402,7 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
- 					       &db[1], sad_count * 3);
- 				total_sad_count += sad_count;
+ 	switch (signum) {
+-		kernel_siginfo_t si;
+-		default:
++		default: {
++			kernel_siginfo_t si;
++
+ 			/* Queue a rt signal with the appropriate fd as its
+ 			   value.  We use SI_SIGIO as the source, not 
+ 			   SI_KERNEL, since kernel signals always get 
+@@ -769,6 +770,7 @@ static void send_sigio_to_task(struct task_struct *p,
+ 			si.si_fd    = fd;
+ 			if (!do_send_sig_info(signum, &si, p, type))
  				break;
-+			}
- 			case SPEAKER_BLOCK:
- 				/* Speaker Allocation Data Block */
- 				if (dbl >= 1)
++		}
+ 		/* fall-through - fall back on the old plain SIGIO signal */
+ 		case 0:
+ 			do_send_sig_info(SIGIO, SEND_SIG_PRIV, p, type);
 
