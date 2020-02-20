@@ -2,146 +2,126 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2CC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336D1C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547AE20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582231658;
-	bh=zhAIqLnnnv+wodCzFnBPaFPLL1axodY6rIUf0WW6IXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i3j0ZwpyDrvZKTqLxjCH9c2/IN1FK0UCHQD5KNvNW2s4GDgYtiowk5t1GVKUkHAy0
-	 fqXRnURShunr2pIdgwYCOY9WwiAHcAEm7W78+kRGM3ibc4/KmxMVoxl15asYANC/f8
-	 aFGzl31kU13x+AMjAKSwhq0XK791HgL029KKQP6g=
+	by mail.kernel.org (Postfix) with ESMTP id 0C8F420801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jaF//ckA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgBTUrh (ORCPT
+        id S1729096AbgBTUrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:47:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728618AbgBTUrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:47:36 -0500
-Received: from earth.universe (unknown [185.62.205.105])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EF53208CD;
-        Thu, 20 Feb 2020 20:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582231655;
-        bh=zhAIqLnnnv+wodCzFnBPaFPLL1axodY6rIUf0WW6IXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d/MuCgRGhzj4SWM35SD0udulwCF++XSwdk6qoVb/vDe0O/IdUOopK+nJHPL2jApYF
-         FQYTrlZTy+tMMPncuKH3JAnyr06NbncLW1PbKANYkgvP8SPRCF1cYhFm0vWzGaDUSS
-         +adLvgsIyCqEdWHFTz5CCMEt613I5qcRUfgczAD0=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 1142E3C0C83; Thu, 20 Feb 2020 21:47:33 +0100 (CET)
-Date:   Thu, 20 Feb 2020 21:47:33 +0100
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-Message-ID: <20200220204733.ktzhmmaytnglr5nh@earth.universe>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
- <20200218211631.fxojsxzvttoidfed@earth.universe>
- <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
+        Thu, 20 Feb 2020 15:47:52 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42688 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728957AbgBTUrv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:47:51 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 4so2493398pfz.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:47:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Hkv6DOXu5fdybyXIzjRo7+04GtF2evxAJc5xRrDjbJ8=;
+        b=jaF//ckA9Yq4Vh+ca/r+NhybKNWW6ze+2UlwRWigULuox+Ken8q1+KvZPDzCv6iHYG
+         xcShEnwM2BcKYi+TQWEU69o9JK/JeCXbNDNyc/KdTYhEc3SnwM48KnmXNz/zn3AkxwV9
+         qy5YupuRRpb/l28O7x2Matqm96xTgKDJ6uC9rzBBvLXd3YgIRy6LRTxgr8qsSXhAZ/dx
+         mqZHEVQAlsGYqF81UiUIuStZv49XGPVq5qbyaiXM7Zg1IKUey4oXTzfGOX6nWxjsll0N
+         7xX7KbkE7wNZ3z8/BcETr7Sd+yEgyvtbgU3VrwRukkfdN06SUSjp7DEaHQzffZCoWVaD
+         KMEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hkv6DOXu5fdybyXIzjRo7+04GtF2evxAJc5xRrDjbJ8=;
+        b=V5CNh5fIKa/48/1B0SQoqEiou9rYuw7a58cunj25q68TpGTovxofaW/OhyRwKdYLXm
+         vZqttro9jNio61zZl80NOC30/5dp5+nyYjiTQbzx5Nt9Pmu9K13iJy9NkzA7y3CqhQGH
+         6+AI2m9PCFtHocHwo2aIT5n4AYjiaSBIhRtS5a/Cr1cUyFG4RRyVUsL2qpmcOmyHS6gy
+         BeQJ0eNMQCC1uJDm0xcqiyD5E7PM6CyJDaj61KkB9nHsGTA3I15yGM2URaSA01YpktjJ
+         oMDpbbVaOdOhcD6yDaxHAX8f2o33yu/gy7gDraLl+XwdgXuIn04MePwLjowM++Em0oU5
+         AAmA==
+X-Gm-Message-State: APjAAAUa/9AnsRGbt0xv5ncebae4yu81PvxIEXlf0e7WpPiCP/2zAyqN
+        wW3xZXmKsUyYyThktREOfHEj3g==
+X-Google-Smtp-Source: APXvYqx+aKyiXRkNTfl5Aq1gcOsCwd61wYCFHeHE3bYX5050kK3HcQXro3BICKybNa6XOZ4aygdYhw==
+X-Received: by 2002:a63:a741:: with SMTP id w1mr35769659pgo.131.1582231669323;
+        Thu, 20 Feb 2020 12:47:49 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id u23sm479779pfm.29.2020.02.20.12.47.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 12:47:48 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:47:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 4/8] arm64: dts: qcom: qcs404: Add IMEM and PIL info
+ region
+Message-ID: <20200220204746.GD19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-5-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dedczlb2yot6jtdy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
+In-Reply-To: <20200211005059.1377279-5-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 04:50:55PM -0800, Bjorn Andersson wrote:
+> Add a simple-mfd representing IMEM on QCS404 and define the PIL
+> relocation info region, so that post mortem tools will be able to locate
+> the loaded remoteprocs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Replace offset with reg
+> 
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> index 4ee1e3d5f123..f539293b875c 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> @@ -997,6 +997,19 @@ blsp2_spi0: spi@7af5000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		imem@8600000 {
+> +			compatible = "syscon", "simple-mfd";
+> +			reg = <0x08600000 0x1000>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			pil-reloc@94c {
+> +				compatible ="qcom,pil-reloc-info";
 
---dedczlb2yot6jtdy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+s/="/= "
 
-Hi,
-
-On Thu, Feb 20, 2020 at 04:15:22PM +0200, Peter Ujfalusi wrote:
-> > I suppose in the end its a question if generic card can provide TDM
-> > support.
->=20
-> Sure it can, but can it handle the switching between the paths based on
-> use cases?
-> There should be machine level DAPM widgets to kick codec2codec (MDM6600
-> - CPAC_voice for example) and also to make sure that when you switch
-> between them the system is not going to get misconfigured.
-> Switching between CPAC and BT route during call?
-> Not allowing VoIP while on call, etc.
-
-I think the main issue is, that based on the route configuration
-(which could be a simple DAPM widget generated by the simple-graph-card),
-we may need to configure different bitrates. Tony's hack adding
-this knowledge to the cpcap driver is very ugly.
-
-> >> In case of B/C you should not have a running stream imho.
-> >=20
-> > I would expect, that MDM6600 codec marks itself as running/stopped
-> > based on call state. That should enable DAPM widgets automatically
-> > when CPCAP_voice is routed to MDM6600?
-> >=20
-> >> In all cases CPCAP_voice should be able to run the clocks on i2s,
-> >> even if it is not used by the audio setup.
-> >> Not sure if you can just turn Wl1285 as master, but it is possible
-> >> that it is master, but silent when it is not used?
-> >=20
-> > I provided CPCAP registers for BT call, which should be enough to
-> > figure this out (I did not yet analyze the results myself).
->=20
-> I got the datasheet from NXP (thanks for the pointer!), I try to look at
-> it in a coming days.
-
-FWIW the datasheet is not for the same chip, but for a similar one.
-The audio part seems to be very similar though.
-
--- Sebastian
-
---dedczlb2yot6jtdy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5O8GEACgkQ2O7X88g7
-+pqQ/hAAgEqBO6UXtQnbUsOTqAxQ6FWYfr2uOwPllZ/qaDcYwXg4/JKMDlkdj/TN
-NVLSo98L3HRUIyVzofJJ8/mNuz26OnUDF+Jmp/NDVyWm494i284b4UcejTuq2QZF
-PIUBEuEZAbXjZssKqNiWLK0sIbhSfGGjFwKMHJL7u5hnQ4LTBtjIbiQ7hcIfZIR0
-wxpoMupM9HqVuw3Ulic8Vq8bIWWbVy2S8ockuZn5H9R6fACBGJA+gJCcv+jb0xDl
-18Nf/b/aYsufjaNuX+cxEI2h8xvzzzr/hOAhXoBTju6UPFr4bHUmDPhV3ycxRMib
-eRgZ96TX6Gur53dPVz2KxG1Xx6LDsLfqYAvojww6PL5O37xx531jk+z/5w4yUvB1
-zNOq8dEyJsPFfG3JH3racUr/GEkdllORvAn5T5Dbbt28kEFs7YuDujwe5yIXi/YR
-Ve557gjSI6/xWSTA4zlJjzffOYWBg67+JDRiw/V1C1sV+1Eqx+xGsGhq9QqNqyld
-lkAh3Z5FNPvQbgFofHn+7l7VPu2FH4SfVDow2DCa7gEee90Wwr8SxxaQ/+z6Tghw
-tOTTER2jXWCdZ74WxrJITLKVT4SRBXwNvcC9/jNMiHmb8q6T9Zr2lmJQ13GRyCoT
-2YBZjeEgOkLi8aKbqHMT3lgfK1r9j43SRZCGy2i/zCc0PiIN+L4=
-=d1zp
------END PGP SIGNATURE-----
-
---dedczlb2yot6jtdy--
+> +				reg = <0x94c 200>;
+> +			};
+> +		};
+> +
+>  		intc: interrupt-controller@b000000 {
+>  			compatible = "qcom,msm-qgic2";
+>  			interrupt-controller;
+> -- 
+> 2.24.0
+> 
