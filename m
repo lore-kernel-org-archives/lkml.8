@@ -7,103 +7,88 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F6C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96491C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC3D207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FC91208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582230888;
-	bh=+EmFFJ1MRh335cPdYWFUE2ZzK6oKXoynFyet10mAttU=;
+	s=default; t=1582230913;
+	bh=hEfTzqQj6aYWVOY28/Etyh9/K8+dcj7YgFk1enzmpy8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VmC+EUVS3G9dk2jEbN7UKNY1O//64tyQ1ahIp2xMMa9vjGbE0GvphzAqwc+bYJp5N
-	 TCvf7j8DhpeZJKi6vl5hsFjPx2c+NkEKSOYuz+4yWgxzDJAG0UNQ4G2GFMeN482BN1
-	 /XZKbQoJfKN5S7db4mU/Lwouelrg+uSk62XQfbWQ=
+	b=qCo8ticFlwR+4hpAjvaQN9ZfrV8CAM9oOMB5/zlmq2XCJ8geyETtGlNJKTNbqMUWE
+	 qpHror886rQOOxSRQCnwCvwfDTHWSCSExl/jH2tR86iKGRU/HI7jobQk6ch6mNovuC
+	 3K6tsbR84icZvLqRNwXDBlv9y8QloUfty+gk3uYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgBTUer (ORCPT
+        id S1729067AbgBTUfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:34:47 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39428 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTUer (ORCPT
+        Thu, 20 Feb 2020 15:35:12 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45048 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgBTUfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:34:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 77so4951157oty.6;
-        Thu, 20 Feb 2020 12:34:46 -0800 (PST)
+        Thu, 20 Feb 2020 15:35:11 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so28879700oia.11;
+        Thu, 20 Feb 2020 12:35:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HkO4EbLE6vSF3rVACMoGd9OQqI3Lp6oEscG+dy8NDxw=;
-        b=Hv2c1hY8K3HGQgOP0HvHa6OSmgQKqi1YEdm84FvQBEuz/vqdJlZ7EssRY4ltLSBDtD
-         woNEYTCKeWrBpMserKOmcFpD/IaT/neZdKvdCJQgeoEeOBwM456txa40s2lRDYEtV2kj
-         72rjh1yFVzd+34XzxmWRxZ+si2BAZXfJRNP5MLqtoKXV77QPyJmj2yOt/uMXZu5W2wG3
-         eV4nW2MSjKr95hRNs9HNsQxAb7ho4luhRqRs4gTsB0zoFE53zzI8bGcW0JBIR5I7VLwS
-         nkxoVdGuBpa5rYNkHNDTjzjUWqP4EVp5Gn2dApvnttWCytrCaNaFTSDRZjjbXU1k7N90
-         aKrg==
-X-Gm-Message-State: APjAAAUnv0/N6PSBf9ToNhY+6nVqbcXEUXiLg3hyxtwVPfn9+sPSTrXE
-        g/1H/d87ZYpZHP7Pj8nIrg==
-X-Google-Smtp-Source: APXvYqwJjInOWLpyeDUL/N/WJQNVacbR2Zz5eGti5BN0+Wkm5NOH7GKHc1ZLWuA1Aes7JnP1cVGmEQ==
-X-Received: by 2002:a9d:6b91:: with SMTP id b17mr23741274otq.235.1582230885833;
-        Thu, 20 Feb 2020 12:34:45 -0800 (PST)
+        bh=dj2rW5WH1XuuP/JPuEpJptUF9hTbGtr1qjFfIR5yvb8=;
+        b=a/4JLjgY/SWobmQX4TKwmiHuGGIrs/92IxMdk3X4eaTJJwQM0dI3aZ2nKNgng3Wiym
+         HW1sY+c0qAAadC8EjdDaBcmhTzovB6N0674JoZX9r/0gONJrSAbA+2Z92qyib2m3vLB+
+         pBRQEMHOtW5kenInzZhPw+JHBHoieBBtvXWnTb1hxUzmz9K63yrwK6S2eqLc/RN9Opju
+         L38LOOd/f2BwCYDRarQLUzBbXbO7C59KSNF+SNvVPo7yOGo9b9NoqeJ1XFauZhUEusVL
+         kzjLXylo3MvYNfjp8NnEuCRr82ULStQV3V5Z4FFMT75c64bOkYsfeABmH0lZW8abco+A
+         sCUA==
+X-Gm-Message-State: APjAAAX5WYgnfjBRBbJ928vuv6veHzRUhVOfq4lBQqjA8Qe1PAfCpgEt
+        HqmC+QPeecWhn0Xd8vTOlg==
+X-Google-Smtp-Source: APXvYqxwJ/2yGaYe0f1ffh3BnhSHPhuRw7WYXDEqylBf6OGb/cfcQC8kdGy9BeTH3mgWz4ApoOvUbg==
+X-Received: by 2002:a05:6808:249:: with SMTP id m9mr3532186oie.5.1582230910787;
+        Thu, 20 Feb 2020 12:35:10 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c21sm130245oiy.11.2020.02.20.12.34.44
+        by smtp.gmail.com with ESMTPSA id e5sm182426otk.74.2020.02.20.12.35.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:34:45 -0800 (PST)
-Received: (nullmailer pid 14557 invoked by uid 1000);
-        Thu, 20 Feb 2020 20:34:44 -0000
-Date:   Thu, 20 Feb 2020 14:34:44 -0600
+        Thu, 20 Feb 2020 12:35:10 -0800 (PST)
+Received: (nullmailer pid 15161 invoked by uid 1000);
+        Thu, 20 Feb 2020 20:35:09 -0000
+Date:   Thu, 20 Feb 2020 14:35:09 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com,
-        Sebastian Reichel <sre@kernel.org>,
-        "GitAuthor: Matti Vaittinen" <matti.vaittinen@fi.rohmeurope.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v3 2/8] dt_bindings: ROHM BD99954 Charger
-Message-ID: <20200220203444.GA13946@bogus>
-References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
- <f82f140cd758d435a1ab4e45fef4e17a5af2db5c.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dianders@chromium.org, linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        mka@chromium.org, dri-devel@freedesktop.org
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+Message-ID: <20200220203509.GA14697@bogus>
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f82f140cd758d435a1ab4e45fef4e17a5af2db5c.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 09:35:10 +0200, Matti Vaittinen wrote:
-> The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
-> secondary battery. Intended to be used in space-constraint equipment such
-> as Low profile Notebook PC, Tablets and other applications. BD99954
-> provides a Dual-source Battery Charger, two port BC1.2 detection and a
-> Battery Monitor.
+On Thu, 20 Feb 2020 13:42:22 +0530, Sharat Masetty wrote:
+> This patch adds a clock definition needed for powering on the GPU TBUs
+> and the GPU TCU.
 > 
-> Document the DT bindings for BD99954
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 > ---
->  .../bindings/power/supply/rohm,bd9995x.yaml   | 153 ++++++++++++++++++
->  1 file changed, 153 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dts:21.17-29: Warning (reg_format): /example-0/i2c/charger@9:reg: property has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dts:17.5-28.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #address-cells for I2C bus
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dts:17.5-28.11: Warning (i2c_bus_bridge): /example-0/i2c: incorrect #size-cells for I2C bus
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'i2c_bus_bridge'
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dts:18.23-27.15: Warning (avoid_default_addr_size): /example-0/i2c/charger@9: Relying on default #address-cells value
-Documentation/devicetree/bindings/power/supply/rohm,bd9995x.example.dts:18.23-27.15: Warning (avoid_default_addr_size): /example-0/i2c/charger@9: Relying on default #size-cells value
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clock-names: ['bus', 'iface'] is too short
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/iommu/arm,smmu.example.dt.yaml: iommu@d00000: clocks: [[4294967295, 123], [4294967295, 124]] is too short
 
-See https://patchwork.ozlabs.org/patch/1241291
+See https://patchwork.ozlabs.org/patch/1241297
 Please check and re-submit.
