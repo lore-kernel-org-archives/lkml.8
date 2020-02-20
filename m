@@ -2,206 +2,141 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17312C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CA0C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DF024676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAB021D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Y2F8BNU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgBTA7m (ORCPT
+        id S1727402AbgBTBEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:59:42 -0500
-Received: from mga03.intel.com ([134.134.136.65]:8655 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgBTA7j (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:59:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 16:59:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="349058332"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Feb 2020 16:59:36 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v1 2/2] perf annotate: Support interactive annotation of code without symbols
-Date:   Thu, 20 Feb 2020 08:59:02 +0800
-Message-Id: <20200220005902.8952-3-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200220005902.8952-1-yao.jin@linux.intel.com>
-References: <20200220005902.8952-1-yao.jin@linux.intel.com>
+        Wed, 19 Feb 2020 20:04:45 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37714 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgBTBEo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:04:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=3BHL21ZqYvf4cXWBd1/ab6+pZgwMbOograui/t2in4Q=; b=Y2F8BNU9IGvys2N2MQOenMYNwp
+        +IrnfcmBH0shv9ZUFezaJBrOrMWeJ56kYqWE/S2Co2mp3i1dhZ7D41EsTGAV/yzAHp6kmpl8pMx4y
+        Vz+b2TRxJIDtn63xKBdI/AxAsIUmmRSsdA0yrfu2DcbWpKDkCNyl11/OByWqIF3rNO4EpuEqokqvl
+        A+cSkuI1maBCBJMyQexlSpmMIWzduXQ5i5x6IDABAtR/jrqMXVlFPWizsED2mb2ICNUcnpIu4sfhS
+        DlNmlg3WSV+qRWWX67zw3p/LatenkuXdRZMB4pl0HHOBu8MAy/7r98fbw0e+OLYch2F8b73oqiTyz
+        XcLFyvyA==;
+Received: from [2603:3004:32:9a00::4074]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4aGe-0002wj-9E; Thu, 20 Feb 2020 01:04:40 +0000
+Subject: Re: [PATCH v2 6/7] misc: bcm-vk: add Broadcom VK driver
+To:     Scott Branden <scott.branden@broadcom.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Desmond Yan <desmond.yan@broadcom.com>,
+        James Hu <james.hu@broadcom.com>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-7-scott.branden@broadcom.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <827a4520-95ce-5264-90d9-ed730e5918e6@infradead.org>
+Date:   Wed, 19 Feb 2020 17:04:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220004825.23372-7-scott.branden@broadcom.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For perf report on stripped binaries it is currently impossible to do
-annotation. The annotation state is all tied to symbols, but there are
-either no symbols, or symbols are not covering all the code.
+Hi,
 
-We should support the annotation functionality even without symbols.
+On 2/19/20 4:48 PM, Scott Branden wrote:
+> diff --git a/drivers/misc/bcm-vk/Kconfig b/drivers/misc/bcm-vk/Kconfig
+> new file mode 100644
+> index 000000000000..c75dfb89a38d
+> --- /dev/null
+> +++ b/drivers/misc/bcm-vk/Kconfig
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# Broadcom VK device
+> +#
+> +config BCM_VK
+> +	tristate "Support for Broadcom VK Accelerators"
+> +	depends on PCI_MSI
+> +	default m
 
-This patch fakes a symbol and the symbol name is the string of address.
-After that, we just follow current annotation working flow.
+Need to justify default m. Normally we don't add drivers as enabled unless
+they are required for basic (boot) operation.
 
-For example,
+> +	help
+> +	  Select this option to enable support for Broadcom
+> +	  VK Accelerators.  VK is used for performing
+> +	  specific video offload processing.  This driver enables
+> +	  userspace programs to access these accelerators via /dev/bcm-vk.N
+> +	  devices.
+> +
+> +	  If unsure, say N.
+> +
+> +if BCM_VK
+> +
+> +config BCM_VK_H2VK_VERIFY_AND_RETRY
+> +	bool "Host To VK Verifiy Data and Retry"
 
-1. perf report
+	                 Verify
 
-Overhead  Command  Shared Object     Symbol
-  20.67%  div      libc-2.27.so      [.] __random_r
-  17.29%  div      libc-2.27.so      [.] __random
-  10.59%  div      div               [.] 0x0000000000000628
-   9.25%  div      div               [.] 0x0000000000000612
-   6.11%  div      div               [.] 0x0000000000000645
+> +	help
+> +	  Turn on to verify the data passed down to VK is good,
+> +	  and if not, do a retry until it succeeds.
 
-2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
+No timeout on that retry?
 
-Annotate 0x0000000000000628
-Zoom into div thread
-Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
-Browse map details
-Run scripts for samples of symbol [0x0000000000000628]
-Run scripts for all samples
-Switch to another data file in PWD
-Exit
+> +	  This is a debug/workaround on FPGA PCIe timing issues
+> +	  but may be found useful for debugging other PCIe hardware issues.
+> +	  Small performance loss by enabling this debug config.
+> +	  For properly operating PCIe hardware no need to enable this.
+> +
+> +	  If unsure, say N.
+> +
+> +config BCM_VK_QSTATS
+> +	bool "VK Queue Statistics"
+> +	help
+> +	  Turn on to enable Queue Statistics.
+> +	  These are useful for debugging purposes.
+> +	  Some performance loss by enabling this debug config.
+> +	  For properly operating PCIe hardware no need to enable this.
+> +
+> +	  If unsure, say N.
+> +
+> +endif
 
-3. Select the "Annotate 0x0000000000000628" and ENTER.
-
-Percent│
-       │
-       │
-       │     Disassembly of section .text:
-       │
-       │     0000000000000628 <.text+0x68>:
-       │       divsd %xmm4,%xmm0
-       │       divsd %xmm3,%xmm1
-       │       movsd (%rsp),%xmm2
-       │       addsd %xmm1,%xmm0
-       │       addsd %xmm2,%xmm0
-       │       movsd %xmm0,(%rsp)
-
-Now we can see the dump of object starting from 0x628.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/ui/browsers/hists.c | 51 +++++++++++++++++++++++++++++-----
- tools/perf/util/annotate.h     |  2 ++
- 2 files changed, 46 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index f36dee499320..ff5711899234 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2465,13 +2465,47 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
- 	return 0;
- }
- 
-+static struct symbol *new_annotate_sym(u64 addr, struct map *map,
-+				       struct annotation_options *opts)
-+{
-+	struct symbol *sym;
-+	struct annotated_source *src;
-+	char name[64];
-+
-+	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
-+
-+	sym = symbol__new(addr,
-+			  opts->annotate_dummy_len ?
-+			  opts->annotate_dummy_len : ANNOTATION_DUMMY_LEN,
-+			  0, 0, name);
-+	if (sym) {
-+		src = symbol__hists(sym, 1);
-+		if (!src) {
-+			symbol__delete(sym);
-+			return NULL;
-+		}
-+
-+		dso__insert_symbol(map->dso, sym);
-+	}
-+
-+	return sym;
-+}
-+
- static int
--add_annotate_opt(struct hist_browser *browser __maybe_unused,
-+add_annotate_opt(struct hist_browser *browser,
- 		 struct popup_action *act, char **optstr,
--		 struct map_symbol *ms)
-+		 struct map_symbol *ms,
-+		 u64 addr)
- {
--	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
--	    symbol__annotation(ms->sym)->src == NULL)
-+	if (ms->map->dso->annotate_warned)
-+		return 0;
-+
-+	if (!ms->sym) {
-+		ms->sym = new_annotate_sym(addr, ms->map,
-+					   browser->annotation_opts);
-+	}
-+
-+	if (ms->sym == NULL || symbol__annotation(ms->sym)->src == NULL)
- 		return 0;
- 
- 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
-@@ -3219,17 +3253,20 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			nr_options += add_annotate_opt(browser,
- 						       &actions[nr_options],
- 						       &options[nr_options],
--						       &bi->from.ms);
-+						       &bi->from.ms,
-+						       bi->from.al_addr);
- 			if (bi->to.ms.sym != bi->from.ms.sym)
- 				nr_options += add_annotate_opt(browser,
- 							&actions[nr_options],
- 							&options[nr_options],
--							&bi->to.ms);
-+							&bi->to.ms,
-+							bi->to.al_addr);
- 		} else {
- 			nr_options += add_annotate_opt(browser,
- 						       &actions[nr_options],
- 						       &options[nr_options],
--						       browser->selection);
-+						       browser->selection,
-+						       browser->he_selection->ip);
- 		}
- skip_annotation:
- 		nr_options += add_thread_opt(browser, &actions[nr_options],
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 455403e8fede..40ca4b58cd17 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -74,6 +74,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
- #define ANNOTATION__CYCLES_WIDTH 6
- #define ANNOTATION__MINMAX_CYCLES_WIDTH 19
- #define ANNOTATION__AVG_IPC_WIDTH 36
-+#define ANNOTATION_DUMMY_LEN	256
- 
- struct annotation_options {
- 	bool hide_src_code,
-@@ -97,6 +98,7 @@ struct annotation_options {
- 	const char *prefix;
- 	const char *prefix_strip;
- 	unsigned int percent_type;
-+	int  annotate_dummy_len;
- };
- 
- enum {
+cheers.
 -- 
-2.17.1
-
+~Randy
