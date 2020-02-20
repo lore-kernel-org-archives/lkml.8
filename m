@@ -2,102 +2,209 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1470DC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1A5C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC3E2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F492071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TBS2FZQF"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="uM5cDtY+";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HZMTb91b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBTLaO (ORCPT
+        id S1727930AbgBTLbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:30:14 -0500
-Received: from mail-wm1-f43.google.com ([209.85.128.43]:38484 "EHLO
-        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbgBTLaN (ORCPT
+        Thu, 20 Feb 2020 06:31:05 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:34625 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726882AbgBTLbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:30:13 -0500
-Received: by mail-wm1-f43.google.com with SMTP id a9so1651389wmj.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 03:30:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b+wRZx4HxDGTrVX8tv8l+pZ7aBqy+ZodwSNXn/rcfps=;
-        b=TBS2FZQFdHQPJBKBayU/HF0d9fN58NVtxR1uvO2bBvuGfmJHWTdzf4F8/iWhU0C/M+
-         qj7GLIUhnf7C6Dt0m6c6iI+cHl3kLZYOWUmzvMAJAnyvsJDkyzv0yInsSVCtM0rXYfDy
-         OSUxFfQhGUluetVlrC/qNNSWkrbj2x/zQ+L05Utnguig/Sp+sVDyx9TJpPJPZvrTjV8o
-         vIW4YXD6a2TATYcQ0WVoZRgvKC2v6h5MJ5ceR/BTYuVpjLWkWwa/4weTuZaRiBvP2UT0
-         P3/uoYWu7xJDl0Twd9SrPjMxNgiOAWDCTBLeZAl9EPFCZtkVWnKsJkMAqKaqX1FDutev
-         sAwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b+wRZx4HxDGTrVX8tv8l+pZ7aBqy+ZodwSNXn/rcfps=;
-        b=h1YJx38ylmF+FHgDvll4MweTHfDSA/XiseaG9vy7Sepz/UMcJ6NBzuvP0cj2QTv1dA
-         2SsG3lbigbcaS4kZK94FzihWRcc6JtxR1gZXs1EDBbjujVdr/vmCXcrkzUhQ3180WXl0
-         /Y4FDvjQUq/YjbPM3c65lx7jOr+TV0EpElD7vfblezyMo2B7GnIrIFMw9AbuIb1oAcMj
-         B7qa5W/wnrTq2mCqQpR0xn8uqmvcsGU89yRSKg8QTsaAL+KJW7uH17JjqNY06RcirPUv
-         RSxeJ7G2O5Vcm6ngE9dUrKt3oVqNwB/3K84S5+zoGfC3x3uKi4ny0WQq2WjNh54DnVXW
-         zhOQ==
-X-Gm-Message-State: APjAAAUsCqrV3MBu4t9qQKA8z/PjtXXRQwFZacsPnB3UqRVi/Ezz3FHk
-        0n/isC69VOMUtQMXqrnXT3mXIA==
-X-Google-Smtp-Source: APXvYqy9H3lwec8NoP9aUfbOc8xjm7ISPsnPY/kONVwgoe/MCMLyW08pjlXYrLYRa2DBeQz1u+A1lw==
-X-Received: by 2002:a1c:41c4:: with SMTP id o187mr3937616wma.24.1582198211821;
-        Thu, 20 Feb 2020 03:30:11 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id a9sm3997907wmm.15.2020.02.20.03.30.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 03:30:10 -0800 (PST)
-Subject: Re: [PATCH v4 1/4] nvmem: fix memory leak in error path
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200220100141.5905-1-brgl@bgdev.pl>
- <20200220100141.5905-2-brgl@bgdev.pl>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <965f715c-a714-00df-b496-a586969dd086@linaro.org>
-Date:   Thu, 20 Feb 2020 11:30:09 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 20 Feb 2020 06:31:05 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 95C1A327;
+        Thu, 20 Feb 2020 06:31:03 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Thu, 20 Feb 2020 06:31:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        eLiud/Rsy5p8XN8U+ILzeII/ojMGZfdK4TZW/by/ETA=; b=uM5cDtY+Tk/pn+Nz
+        phelYPraeZgfOzC/O1Gir8zTC4oVFFCl9lqApSg6y/6oZbpNDNcGIctYMXDKzyaz
+        U7xjpMlKdeHKUxXhXwuHgiTKN/2PRHdXFI7mOzzzc3X22Np6QhmWBoAgTGo9YZEj
+        E5gLduzKccjRYQsm/QAm3GHzIlQ+m50hPHY8HJG7rs+uKkfw9XyMJae0MmfDwm90
+        ngYYH3gY9pUGeicxKPpe5GM22LouA/cfcv6v3pxoJ7EtKfkNU3pMWpbS/4LENtGk
+        F4L8pYAR2+T+qVrYnWhgdaVUFiiVqO4da1OE0OWuvt3jMMGmo6Nfq2Ryi6S8P7mD
+        wbzXEw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=eLiud/Rsy5p8XN8U+ILzeII/ojMGZfdK4TZW/by/E
+        TA=; b=HZMTb91bgBRCQ9c0vzNcFiyYPfhFofjwN3wQiIjeJ4GbsXQ1MGE7Qnxha
+        Ja5C18UY0kFMv/WtOTKmU+6nRtXbYSzJc7gfCAMljdwIr8HT5i3rCO3pLuP3EBJo
+        wKmj58K7wlMvS9bB7DerkmnZW0maFDKYOePV/XOeWNylVFGK6L7LmYo+zEP82I6v
+        9grcrvHUYpzHGUWzNcMf6BfY7cUBKipV9qJkgTNE3CKP5eZZbY3elppP3xm1t5mk
+        EiMlwndlvLiJZsU7OG/bd64Lrgh22Dhg3ExJQyQEn2icdg52zM62Nx/cfHszZIqt
+        mPzG8/VobF8+xiIS1HLc8ORKs/FIQ==
+X-ME-Sender: <xms:9m1OXoz2FNs3ecB2yx2tuWzwpEjst1yim2H8UVvIOvR04kCABBUuDw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddvlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
+    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
+    duieefrdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:9m1OXrLo7tHFFS3GpyJEMjGLMHH71J5Fev23zZ0-IFlKxPAVwvAs8w>
+    <xmx:9m1OXquLV81nO7mM6AurtarK5fhBMllap-VqlVPrd4bXK4kinMUXVQ>
+    <xmx:9m1OXrgiq0zZrU_LQHY2DGnlyRJPK-J4xR-mQmDeo-1yUppHcei6jw>
+    <xmx:921OXqnwnjTkgrPApnIVqxjG5gU2VeEXS4tVmbo23cEphWauDJq4tA>
+Received: from mickey.themaw.net (unknown [118.208.163.32])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AAF1F3280060;
+        Thu, 20 Feb 2020 06:30:58 -0500 (EST)
+Message-ID: <80b70aa96c2e386719a7683d7627fc4d5a6caade.camel@themaw.net>
+Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications
+ [ver #16]
+From:   Ian Kent <raven@themaw.net>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 20 Feb 2020 19:30:54 +0800
+In-Reply-To: <20200220090939.4e2mpmdixcyruzda@wittgenstein>
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+         <20200219144613.lc5y2jgzipynas5l@wittgenstein>
+         <c9a6f929b57e0c21c8845c211d1e3eab09d09633.camel@themaw.net>
+         <20200220090939.4e2mpmdixcyruzda@wittgenstein>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20200220100141.5905-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-02-20 at 10:09 +0100, Christian Brauner wrote:
+> On Thu, Feb 20, 2020 at 12:42:15PM +0800, Ian Kent wrote:
+> > On Wed, 2020-02-19 at 15:46 +0100, Christian Brauner wrote:
+> > > On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
+> > > > Here are a set of patches that adds system calls, that (a)
+> > > > allow
+> > > > information about the VFS, mount topology, superblock and files
+> > > > to
+> > > > be
+> > > > retrieved and (b) allow for notifications of mount topology
+> > > > rearrangement
+> > > > events, mount and superblock attribute changes and other
+> > > > superblock
+> > > > events,
+> > > > such as errors.
+> > > > 
+> > > > ============================
+> > > > FILESYSTEM INFORMATION QUERY
+> > > > ============================
+> > > > 
+> > > > The first system call, fsinfo(), allows information about the
+> > > > filesystem at
+> > > > a particular path point to be queried as a set of attributes,
+> > > > some
+> > > > of which
+> > > > may have more than one value.
+> > > > 
+> > > > Attribute values are of four basic types:
+> > > > 
+> > > >  (1) Version dependent-length structure (size defined by type).
+> > > > 
+> > > >  (2) Variable-length string (up to 4096, including NUL).
+> > > > 
+> > > >  (3) List of structures (up to INT_MAX size).
+> > > > 
+> > > >  (4) Opaque blob (up to INT_MAX size).
+> > > 
+> > > I mainly have an organizational question. :) This is a huge
+> > > patchset
+> > > with lots and lots of (good) features. Wouldn't it make sense to
+> > > make
+> > > the fsinfo() syscall a completely separate patchset from the
+> > > watch_mount() and watch_sb() syscalls? It seems that they don't
+> > > need
+> > > to
+> > > depend on each other at all. This would make reviewing this so
+> > > much
+> > > nicer and likely would mean that fsinfo() could proceed a little
+> > > faster.
+> > 
+> > The remainder of the fsinfo() series would need to remain useful
+> > if this was done.
+> > 
+> > For context I want work on improving handling of large mount
+> > tables.
+> 
+> Yeah, I've talked to David about this; polling on a large mountinfo
+> file
+> is not great, I agree.
+> 
+> > Ultimately I expect to solve a very long standing autofs problem
+> > of using large direct mount maps without prohibitive performance
+> > overhead (and there a lot of rather challenging autofs changes to
+> > do for this too) and I believe the fsinfo() system call, and
+> > related bits, is the way to do this.
+> > 
+> > But improving the handling of large mount tables for autofs
+> > will have the side effect of improvements for other mount table
+> > users, even in the early stages of this work.
+> > 
+> > For example I want to use this for mount table handling
+> > improvements
+> > in libmount. Clearly that ultimately needs mount change
+> > notification
+> > in the end but ...
+> > 
+> > There's a bunch of things that need to be done alone the way
+> > to even get started.
+> > 
+> > One thing that's needed is the ability to call fsinfo() to get
+> > information on a mount to avoid constant reading of the proc based
+> > mount table, which happens a lot (since the mount info. needs
+> > to be up to date) so systemd (and others) would see an improvement
+> > with the fsinfo() system call alone able to be used in libmount.
+> > 
+> > But for the fsinfo() system call to be used for this the file
+> > system specific mount options need to also be obtained when
+> > using fsinfo(). That means the super block operation fsinfo uses
+> > to provide this must be implemented for at least most file systems.
+> > 
+> > So separating out the notifications part, leaving whatever is
+> > needed
+> > to still be able to do this, should be fine and the system call
+> > would be immediately useful once the super operation is implemented
+> > for the needed file systems.
+> > 
+> > Whether the implementation of the super operation should be done
+> > as part of this series is another question but would certainly
+> > be a challenge and make the series more complicated. But is needed
+> > for the change to be useful in my case.
+> 
+> I think what would might work - and what David had already brought up
+> briefly - is to either base the fsinfo branch on top of the mount
+> notificaiton branch or break the notification counters pieces into a
+> separate patch and base both mount notifications and fsinfo on top of
+> it.
 
+Possibly, but I'm pretty sure David has more fsinfo patches.
 
-On 20/02/2020 10:01, Bartosz Golaszewski wrote:
-> -	if (IS_ERR(nvmem->wp_gpio))
-> +	if (IS_ERR(nvmem->wp_gpio)) {
-> +		ida_simple_remove(&nvmem_ida, nvmem->id);
-> +		kfree(nvmem);
->   		return ERR_CAST(nvmem->wp_gpio);
-You freed nvmem just before this statement, how can nvmem->wp_gpio be 
-still be valid?
+So I suspect there will be a right time to post patches for the
+fsinfo super block operation that David doesn't already have. I'm
+going to have to find time for that ...
 
-Are you able to test this changes at your end?
-Or
-these are just compile tested?
+The post was more to let David know what my first goal is and what
+I need for it, and to let others know there is someone wanting to
+use this for user space improvements and give some initial insight
+into my longer term goals.
 
+Ian
 
---srini
-
-
-> +	}
->   
