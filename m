@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D87C11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE2C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 133CB20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC66E20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729527AbgBTU6X (ORCPT
+        id S1729279AbgBTU7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:58:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44154 "EHLO
+        Thu, 20 Feb 2020 15:59:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44155 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbgBTU4i (ORCPT
+        with ESMTP id S1729172AbgBTU4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 15:56:38 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j4srl-0007at-AL; Thu, 20 Feb 2020 21:56:13 +0100
+        id 1j4sre-0007U2-1G; Thu, 20 Feb 2020 21:56:06 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 72815104094;
-        Thu, 20 Feb 2020 21:56:05 +0100 (CET)
-Message-Id: <20200220204618.815084606@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7EBD710408E;
+        Thu, 20 Feb 2020 21:56:04 +0100 (CET)
+Message-Id: <20200220204618.426525659@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 20 Feb 2020 21:45:32 +0100
+Date:   Thu, 20 Feb 2020 21:45:28 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 15/20] bpf: Provide recursion prevention helpers
+Subject: [patch V2 11/20] bpf/tests: Use migrate disable instead of preempt disable
 References: <20200220204517.863202864@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,65 +57,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The places which need to prevent the execution of trace type BPF programs
-to prevent deadlocks on the hash bucket lock do this open coded.
+From: David Miller <davem@davemloft.net>
 
-Provide two inline functions, bpf_disable/enable_instrumentation() to
-replace these open coded protection constructs.
+Replace the preemption disable/enable with migrate_disable/enable() to
+reflect the actual requirement and to allow PREEMPT_RT to substitute it
+with an actual migration disable mechanism which does not disable
+preemption.
 
-Use migrate_disable/enable() instead of preempt_disable/enable() right away
-so this works on RT enabled kernels. On a !RT kernel migrate_disable /
-enable() are mapped to preempt_disable/enable().
+[ tglx: Switched it over to migrate disable ]
 
-These helpers use this_cpu_inc/dec() instead of __this_cpu_inc/dec() on an
-RT enabled kernel because migrate disabled regions are preemptible and
-preemption might hit in the middle of a RMW operation which can lead to
-inconsistent state.
-
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: New patch. Use this_cpu_inc/dec() as pointed out by Mathieu.
----
- include/linux/bpf.h |   30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -961,6 +961,36 @@ int bpf_prog_array_copy(struct bpf_prog_
- #ifdef CONFIG_BPF_SYSCALL
- DECLARE_PER_CPU(int, bpf_prog_active);
+---
+ lib/test_bpf.c     |    4 ++--
+ net/bpf/test_run.c |    8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/lib/test_bpf.c
++++ b/lib/test_bpf.c
+@@ -6660,14 +6660,14 @@ static int __run_one(const struct bpf_pr
+ 	u64 start, finish;
+ 	int ret = 0, i;
  
-+/*
-+ * Block execution of BPF programs attached to instrumentation (perf,
-+ * kprobes, tracepoints) to prevent deadlocks on map operations as any of
-+ * these events can happen inside a region which holds a map bucket lock
-+ * and can deadlock on it.
-+ *
-+ * Use the preemption safe inc/dec variants on RT because migrate disable
-+ * is preemptible on RT and preemption in the middle of the RMW operation
-+ * might lead to inconsistent state. Use the raw variants for non RT
-+ * kernels as migrate_disable() maps to preempt_disable() so the slightly
-+ * more expensive save operation can be avoided.
-+ */
-+static inline void bpf_disable_instrumentation(void)
-+{
+-	preempt_disable();
 +	migrate_disable();
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT))
-+		this_cpu_inc(bpf_prog_active);
-+	else
-+		__this_cpu_inc(bpf_prog_active);
-+}
-+
-+static inline void bpf_enable_instrumentation(void)
-+{
-+	if (IS_ENABLED(CONFIG_PREEMPT_RT))
-+		this_cpu_dec(bpf_prog_active);
-+	else
-+		__this_cpu_dec(bpf_prog_active);
-+	migrate_enable();
-+}
-+
- extern const struct file_operations bpf_map_fops;
- extern const struct file_operations bpf_prog_fops;
+ 	start = ktime_get_ns();
  
+ 	for (i = 0; i < runs; i++)
+ 		ret = BPF_PROG_RUN(fp, data);
+ 
+ 	finish = ktime_get_ns();
+-	preempt_enable();
++	migrate_enable();
+ 
+ 	*duration = finish - start;
+ 	do_div(*duration, runs);
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -37,7 +37,7 @@ static int bpf_test_run(struct bpf_prog
+ 		repeat = 1;
+ 
+ 	rcu_read_lock();
+-	preempt_disable();
++	migrate_disable();
+ 	time_start = ktime_get_ns();
+ 	for (i = 0; i < repeat; i++) {
+ 		bpf_cgroup_storage_set(storage);
+@@ -54,18 +54,18 @@ static int bpf_test_run(struct bpf_prog
+ 
+ 		if (need_resched()) {
+ 			time_spent += ktime_get_ns() - time_start;
+-			preempt_enable();
++			migrate_enable();
+ 			rcu_read_unlock();
+ 
+ 			cond_resched();
+ 
+ 			rcu_read_lock();
+-			preempt_disable();
++			migrate_disable();
+ 			time_start = ktime_get_ns();
+ 		}
+ 	}
+ 	time_spent += ktime_get_ns() - time_start;
+-	preempt_enable();
++	migrate_enable();
+ 	rcu_read_unlock();
+ 
+ 	do_div(time_spent, repeat);
 
