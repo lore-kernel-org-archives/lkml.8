@@ -2,95 +2,123 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D21DC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE4C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5697224656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:04:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vT3CEAkG"
+	by mail.kernel.org (Postfix) with ESMTP id D2E0624654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgBTJEY (ORCPT
+        id S1726829AbgBTJIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:04:24 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37403 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgBTJEY (ORCPT
+        Thu, 20 Feb 2020 04:08:12 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:37540 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgBTJIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:04:24 -0500
-Received: by mail-lj1-f194.google.com with SMTP id q23so3396652ljm.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:04:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EtwFUgXnzMG7xRSPK5ep4NdZQoJPGdlrXdQuPq3LaPs=;
-        b=vT3CEAkG5tcsFFbFsHJmyzP1bPuTG0lGWwl1/VHgibZrTrs+dGGrWXcCh6PlmIp5qj
-         aLgO0RmwGAPNzx4Nlh/SK0OT2bZRl+6Nbo728uQ5K/iZ81592QfwkpdE+20vagx4oR0+
-         eI0H1ro6G/lRK06d1YjZsqpf0VfyEkiY4d2QL659oZeFIX18QVpWALrSOP71+V1A4po0
-         t9o/0o+QOl5vxyAInUQI47v3hxI3qkAfCH4zZlcAh96LBiAHOgoWYyYe8xtZCw5UrOyc
-         S9BoCwWMrdEyXAoa2NPb5Et5PKm+203P6MtFZ6d6P1Vxz2ExgOVAtLusSPRKYp5NqXIP
-         UztQ==
+        Thu, 20 Feb 2020 04:08:12 -0500
+Received: by mail-io1-f72.google.com with SMTP id p4so2161390ioo.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:08:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EtwFUgXnzMG7xRSPK5ep4NdZQoJPGdlrXdQuPq3LaPs=;
-        b=A7yeabxY+qzm3XjKUlasw1wSd+w9codTaUNDM7e3g1x07PipVwQjhJ68PghA5wjVsg
-         c+0sRalVTXwcir6dfTep9CatCVZC0qTUYIh8DRXqlye5r1J8zuwGHXz6sWwlTilM9Xzs
-         YAwP21Qnb8W2e2hBoxKqleKXMYCz93nfiYyD1qF6ad4mC+PoZtI7OVvkchF6VH0CDpqs
-         0/TUG6c6k2xrdYYzDExswaDtPSj/5HDaXmUwOvzgEgRhm6LAYJG1YnBH9vMMYxs5YPfk
-         lLcEDH3t8dn4EGrt41YBllZE6C0Fz4qCz5T8WuFOvAFt60RfOVop/+eudp/9b8iVFj6q
-         4zZw==
-X-Gm-Message-State: APjAAAWn2/71bxISHMAqa3TCnZrHRbSo5Ia4NUynqm0ye1T4JkQPYiJK
-        SOhryc/h3DiSrTn3uxSJhefnR5fH4Q0ABG3ibjBOZg==
-X-Google-Smtp-Source: APXvYqykxTk2UJC6Vt5ZX+50V0sBVT8b6IEsTzEaCbxY0/TQGOpkj5sPXy865IF+LfcUD/8rZA4hCZqDPn22AA/jsNQ=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr19074270ljc.39.1582189462310;
- Thu, 20 Feb 2020 01:04:22 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=4rw0gQpQnZk+CZTyqoVbFEYEdsf54WxpWJrLPHEp50A=;
+        b=lP1JWDkaY1/aB7YERdBDTy9XEdrBB/mpkASqadCs1ctDkNvdCBONs6r7xkuczLe5Iq
+         lUIZeGqoFCnx4FSXN/j6Fjx7DztkjKjT3Ngt9ATPvbqhpZWoxpPwgOgERtJJjSw48yUV
+         LXD59KAEnLtr/cPYq3jLEENqhrO3TkHJp6wfBLg257t7lnjAOTASBqR0MdCMIowq8HxI
+         q4xQREGbcd3zdlnjO3AhDW8ZldAtcyg7zI5R5QByDM/lWdeDXs3SYExx5cTNlWuZ9zod
+         dsYVrettkRVsaXn3MG7jPgGeOitxBxuDLBo2KjDnk73jI5l7gRCFjJaCW8nWf+khxYls
+         yCmQ==
+X-Gm-Message-State: APjAAAUTe+mTSXYAHgdCeoIypbftcwget2p4b+A539EJ4m3s/DAihyht
+        paxslT1UAdippcCyipSLGD8/06nOtvZfyDhh8oFaunBmexEY
+X-Google-Smtp-Source: APXvYqyLmWkWi+b/aUPbnHxTmdF61uLlxMshHPca4jVc5ZpYNLrxcJpI3pZeToN4IDHZuTNyz8nfLCPS4OwlSUoKtoKEka7eSakG
 MIME-Version: 1.0
-References: <20200219143229.18084-1-alexandre.torgue@st.com> <20200219143229.18084-3-alexandre.torgue@st.com>
-In-Reply-To: <20200219143229.18084-3-alexandre.torgue@st.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Feb 2020 10:04:11 +0100
-Message-ID: <CACRpkdZ7uq4U6GBQQQh=pTLf4wW3KfH3Zrz9z_3ZQgoaJD9Ynw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: stm32: Add level interrupt support to
- gpio irq chip
-To:     Alexandre Torgue <alexandre.torgue@st.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Marek Vasut <marex@denx.de>
+X-Received: by 2002:a92:9f1b:: with SMTP id u27mr28596712ili.173.1582189691814;
+ Thu, 20 Feb 2020 01:08:11 -0800 (PST)
+Date:   Thu, 20 Feb 2020 01:08:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008c49b4059efe3e74@google.com>
+Subject: KMSAN: kernel-infoleak in video_usercopy (2)
+From:   syzbot <syzbot+c67f8c1e31d62912ff2f@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, glider@google.com, hverkuil-cisco@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        mchehab@kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 3:32 PM Alexandre Torgue
-<alexandre.torgue@st.com> wrote:
+Hello,
 
-> GPIO hardware block is directly linked to EXTI block but EXTI handles
-> external interrupts only on edge. To be able to handle GPIO interrupt on
-> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
-> is retriggered following interrupt type and gpio line value.
->
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-> Tested-by: Marek Vasut <marex@denx.de>
+syzbot found the following crash on:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+HEAD commit:    8bbbc5cf kmsan: don't compile memmove
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=178f51b5e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cd0e9a6b0e555cc3
+dashboard link: https://syzkaller.appspot.com/bug?extid=c67f8c1e31d62912ff2f
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f39f95e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14c423d9e00000
 
-If Marc want to merge it with patch 1/2 go ahead!
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c67f8c1e31d62912ff2f@syzkaller.appspotmail.com
 
-Alternatively I can merge both patches.
+=====================================================
+BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+CPU: 1 PID: 11474 Comm: syz-executor301 Not tainted 5.6.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+ _copy_to_user+0x15a/0x1f0 lib/usercopy.c:33
+ copy_to_user include/linux/uaccess.h:174 [inline]
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3165 [inline]
+ video_usercopy+0x248c/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
+ video_ioctl2+0x9f/0xb0 drivers/media/v4l2-core/v4l2-ioctl.c:3274
+ v4l2_ioctl+0x23f/0x270 drivers/media/v4l2-core/v4l2-dev.c:360
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl fs/ioctl.c:763 [inline]
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl+0x2e9/0x410 fs/ioctl.c:770
+ __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:770
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x440289
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe00ee4fc8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000440289
+RDX: 00000000200000c0 RSI: 00000000c050560f RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401b10
+R13: 0000000000401ba0 R14: 0000000000000000 R15: 0000000000000000
 
-Thanks to you & Marek for hashing this out, excellent work!
+Local variable ----vb32.i@video_usercopy created at:
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3149 [inline]
+ video_usercopy+0x20bf/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
+ video_put_user drivers/media/v4l2-core/v4l2-ioctl.c:3149 [inline]
+ video_usercopy+0x20bf/0x2b50 drivers/media/v4l2-core/v4l2-ioctl.c:3264
 
-Yours,
-Linus Walleij
+Bytes 52-55 of 80 are uninitialized
+Memory access of size 80 starts at ffffa88f81563ce0
+Data copied to user address 00000000200000c0
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
