@@ -2,102 +2,115 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D38C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F38C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69E4208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC35D208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwQ43G3L"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x6gNshAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgBTAbU (ORCPT
+        id S1727161AbgBTAb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:31:20 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36163 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgBTAbU (ORCPT
+        Wed, 19 Feb 2020 19:31:56 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35502 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgBTAb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:31:20 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so810332plm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:31:18 -0800 (PST)
+        Wed, 19 Feb 2020 19:31:56 -0500
+Received: by mail-pg1-f194.google.com with SMTP id v23so986514pgk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:31:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DABA29lvnKahjWN65Up4SMobg1WasA5eEpWwvMJgQ6c=;
-        b=MwQ43G3L6srlNwtHvkvQm7lWzatySi2qtRIS8jSsEzV/L1rc8pljgk7Y+GaBeB0a3g
-         g5tzG4g5+kBakUYEupMRcyj0AfFMZF7u4DIbkC8/KAL+JaJzUuiP6OCpEpq35cMyPpFm
-         FZpDUv7g7zh5JZUAn2AI5GXe4m6dfpUzjeCGs=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=nh/PXJt5LIK6knlDEBV+szof//jRNZ6d+fFEe23/31U=;
+        b=x6gNshASw2xBuVQruMd2+i0AlOaA3fYhjwWuGLZwAM7FObTbKD0cIU7WwozKq5LG9N
+         QKe9K0IhRl08tPACnnQqAKOjsAP0EKLwMIAAeFNX2Hqyfvw7ZwVtdqkytJgJfm05KkkU
+         vr+c3vvs34c/xw+v9D5qMrCQTjnyAFfRmsWviBm5E/xCjJm0Jvl8XsAwc1dricxMw+Lh
+         upktjdIBtqcUH1E7t80m8dTkzVHqMqBoiQ3tgZ8lvNovnpIuzSMNmUo1maXZzESmZFxB
+         5npZjsYrYatMHb+gEJLgHK9gx5nHlf9LGlzzGapKcmhf8UMyBdHYl7cBOl1diX66k54k
+         K6gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DABA29lvnKahjWN65Up4SMobg1WasA5eEpWwvMJgQ6c=;
-        b=p+x++6w9OiWgx7RPJkmj2WiJm5OXQLX3FpwGxjZ/geWjc3g0kI3Eg3VCJ0QvBEATLv
-         8VFXZX93KAS75seS3hkwSibdYXwSkt9LA2fqfCxKZZYOYMsEaodryu2RyxK+M5I3mdjU
-         W/b/Hxd7YwMPCL1q8iO34q8S/faXqKLKP14zAOUrVObt7m0P01mK3KkrBo0FmMhFxZJT
-         //uRG+8ecgc490PMYJDVmBeZDfeSJ57o166RneK3Ge1KFY08/BihIea8wPmu5RY6MSIy
-         DDPhg8tsmWBXwF/Zg9okRt0OYGFl4/5Cvxh/4HxceMaqzseceSI3Mi15//bhK7hmtf0q
-         s0mA==
-X-Gm-Message-State: APjAAAXjBg6H0W2m+OzTMFrd8FD/Cb9dfNLLTPmZKHc9fjcCEQcRsMzq
-        /zQTMNKggLe4Hdo2PgssBK/0emwP0pU=
-X-Google-Smtp-Source: APXvYqymv8vYYbZdsvczre9QEC7s9GoJR4iHu3CXG7yzljDmTeKtEZ7UkIZXpBWJCXWfZeZ4h5Zv0Q==
-X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr370789pjg.111.1582158677720;
-        Wed, 19 Feb 2020 16:31:17 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id d69sm815370pfd.72.2020.02.19.16.31.16
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nh/PXJt5LIK6knlDEBV+szof//jRNZ6d+fFEe23/31U=;
+        b=IO+zmcxzrX9LhpTxBbhdRMCbN4rM0rZuurM05lq8niCoP7ONYZglz7yLAx2O/QSwdG
+         mSBaYyJEzsqiagPO5E/IjqjDMH13cuYfG0pmkHqLHEBr5HO9MqAyG+AzSpb81wYhwUQ9
+         ZM86j6XzvrYdltgHQNRVnRhl/m5g3NE23fVpiicdj9IRGnQsUohyFhtGKMIouZNoA2mz
+         onWFNL3LTarIJc6z2voXdMnJLPKyTyKqi7tQMv02MM8KiVbdhisfCBu1u+mmli5qiKs7
+         UWLFDTeT5ZPEbo8G7ESTbAHCHxAVSq/XSnR4Hvg57HEvB1eGeR5xQ//K+XUBIg0GzcmF
+         i3Dw==
+X-Gm-Message-State: APjAAAUN5PjhQ0p7DlbGPjfFnp6qayTEPxHmeE9Z6oJ/cJJBvlUPmmop
+        o+8+thl5u+WQmsVqCN52RPaGVA==
+X-Google-Smtp-Source: APXvYqxoGLXHiH+nbn5V/5/GaH/0ND+3nZ09GJR+kv3Z8JEcxf2VsZSpJjwFzPRRtnBZkQZ+r9FL6w==
+X-Received: by 2002:a63:7417:: with SMTP id p23mr29631359pgc.277.1582158715148;
+        Wed, 19 Feb 2020 16:31:55 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id t186sm866470pgd.26.2020.02.19.16.31.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 16:31:17 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
-        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v3 0/4] platform/chrome: Add Type C connector class driver
-Date:   Wed, 19 Feb 2020 16:30:53 -0800
-Message-Id: <20200220003102.204480-1-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        Wed, 19 Feb 2020 16:31:54 -0800 (PST)
+Date:   Wed, 19 Feb 2020 16:31:52 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH] watchdog: qcom: Use irq flags from firmware
+Message-ID: <20200220003152.GC99370@yoga>
+References: <20200220002047.115000-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220002047.115000-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following series introduces a Type C port driver for Chrome OS devices
-that have an EC (Embedded Controller). It derives port information from
-ACPI or DT entries. This patch series adds basic support, including
-registering ports, and setting certain basic attributes.
+On Wed 19 Feb 16:20 PST 2020, Stephen Boyd wrote:
 
-v2: https://lkml.org/lkml/2020/2/7/646
-v1: https://lkml.org/lkml/2020/2/5/676
+> The DT or ACPI tables should tell the driver what the irq flags are.
+> Given that this driver probes only on DT based platforms and those DT
+> platforms specify the irq flags we can safely drop the forced irq flag
+> setting here.
+> 
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-Changes in v3:
-- Fix DT bindings entry in Documentation to use usb-connector binding.
-- Fixed minor code nits in driver file.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Prashant Malani (4):
-  dt-bindings: Add cros-ec Type C port driver
-  platform/chrome: Add Type C connector class driver
-  platform/chrome: typec: Get PD_CONTROL cmd version
-  platform/chrome: typec: Update port info from EC
+Regards,
+Bjorn
 
- .../bindings/chrome/google,cros-ec-typec.yaml |  86 +++++
- drivers/platform/chrome/Kconfig               |  11 +
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/cros_ec_typec.c       | 340 ++++++++++++++++++
- 4 files changed, 438 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
- create mode 100644 drivers/platform/chrome/cros_ec_typec.c
-
--- 
-2.25.0.265.gbab2e86ba0-goog
-
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  drivers/watchdog/qcom-wdt.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index eb47fe5ed280..c70e89013101 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -248,8 +248,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>  	/* check if there is pretimeout support */
+>  	irq = platform_get_irq_optional(pdev, 0);
+>  	if (irq > 0) {
+> -		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+> -				       IRQF_TRIGGER_RISING,
+> +		ret = devm_request_irq(dev, irq, qcom_wdt_isr, 0,
+>  				       "wdt_bark", &wdt->wdd);
+>  		if (ret)
+>  			return ret;
+> -- 
+> Sent by a computer, using git, on the internet
+> 
