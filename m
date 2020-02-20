@@ -2,175 +2,117 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF34C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BCDC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB7C20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582194524;
-	bh=0AUovQEohakI8fl8MC2WL3aI4Yz5s5YyTEzAOrhKnRc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=saQiBCmUevn+2AIM2yWloK+w2o74jYCXqYLD66YIrmJiS/WDLHlgH5Y1/5oV7NqrV
-	 dYzp9RrPxm8gNvlE82o8ODHXFEh2uUunx/8JNiMyKC1ZsCfucgwkauWcBIwUs047rL
-	 83ckHEh4F5gSZ7KZ29+zxXORGAUxTYJ9BqbdKu7M=
+	by mail.kernel.org (Postfix) with ESMTP id EE52F20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JbRmvJg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgBTK2m (ORCPT
+        id S1727495AbgBTK2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:28:42 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41142 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726801AbgBTK2m (ORCPT
+        Thu, 20 Feb 2020 05:28:52 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40123 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726801AbgBTK2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:28:42 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so26995252oie.8;
-        Thu, 20 Feb 2020 02:28:42 -0800 (PST)
+        Thu, 20 Feb 2020 05:28:52 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b7so3036660qkl.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:28:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=V+D+Oguuyj+RUr3A3Lx/J2MyIAXszwuZogb4QISizTY=;
+        b=JbRmvJg89oGETca2ebk+jHa32PMmkvyzx4Vp/pxwdvYV1A5Ybt+qcld0w9znyCHot3
+         z9lzzT5XaTtnksYFr1npZRvCz16QsXhrfzhRUG2xSRr/MZaC+MQXfrtqotJPuVbm9rFc
+         TfWFQN/wPoYNe/Hv2ZOK12WdZsdLZAjoAdV4Ly/9J0BpnNl4D3FBMLbeCWWfsnkHOR9Q
+         bfTuyeyaC5y9tZug9cBXCN1jaN0r63vjEcu6YDTl+/ktflr0ov5GPZ9cKLb4swkaJJKI
+         +InJc335F84vnbeQGPIAPBv7+sY57/x2lhtjSlA9cbXxMx8M1KD/OHZPhzFg1lGVN6E/
+         mzmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zFBAIbuDCjTjmW06WHYZexwuHI/VktjiadQxllE5tFo=;
-        b=HONQm9eIsvaRDW+4iW2uC9laW5HC6PIzQqVKQa1jDwpbeEfFfrNl1CBGiNNwKAbjvZ
-         PH5hOIsPnACwLDyztCxqEEhHk2EtSp9OB1TJlZknrktm5mO4u6Z3+0ObNxgKgpRHtnIm
-         QwaH4T302tYIIlu6/0ITMIafdwVix4zXBHSUrUb0leJ+eEb2qKnzLfAygL/7H0GGi/dh
-         31H259DhwYNh+0sE/4xLPgY+kcaWRCtaT2Eio6BH+PDF31YtJCM2a8w/ShK+O6Mmjesl
-         PAxg/l1XwNA680w5+JUsm9GdL3zNnJ8Fc7EQbf2e8L0DtQp02PhQgdyIueclgSP855us
-         GfNw==
-X-Gm-Message-State: APjAAAX3BHasixomluyuiUcUvgIB6fAjC2ge9uYQXwk4ibH5EONOuqpw
-        6Gwbip8jc2cP3OYTx4J7dpSvb3HJNZsL/pVOT1M=
-X-Google-Smtp-Source: APXvYqzZ6ybSzXMcdaP3OhqdQD94MQHqguLaLbx0WQl2FUi/mEWzifAg752SnrHoBp9RtMPM/JcmiG8RTEXRWlzY+0Q=
-X-Received: by 2002:aca:bfc2:: with SMTP id p185mr1503321oif.57.1582194521672;
- Thu, 20 Feb 2020 02:28:41 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=V+D+Oguuyj+RUr3A3Lx/J2MyIAXszwuZogb4QISizTY=;
+        b=E4ZJ+leONP0dzdd2CBMYHjMpUHOPT8SflpL7lDMFj/YFTnz2o8NLaUNDZ0/LAHAwQj
+         ZShga98ds5QPdXrqNEW22zHUbXDcONsRt35LPfJukUBmWPT8R6J0i5AyGip/pIVSi/uB
+         jNsJfQkgt4MqSkYwMEZv3pcZyMRAHX3T6jKNVU2BTxGiVEDgQRAc6+fhB8FgNN7rIezF
+         18vArS5nSVgcsCFUot/h7HM0mzK0DMkCLx+/zaR3L+eR3EdqHxHLcDDtT2Lsybmgx9Su
+         YuQtlgKfO6pJznGcv4lL7bs6o/tUvXjPtGm21wa+dToEnMLm5fpLt2MDOcD3tWzmNtaQ
+         eK7Q==
+X-Gm-Message-State: APjAAAUq0T5AsDpE2HvZUYeynwWxd9OGaML3hFGGVbPtiLGp/HmXKJOD
+        MpJRKf/62sbbuITBbkqTyDp5wr+/rGt9m+kLHFxclw==
+X-Google-Smtp-Source: APXvYqxykPihTXTgrIShZPQYasPSZbasbw4QwcYCWUECJz0hLDszKBzPXxvT3OnTzm3yGMIO8Ev1AxqGbckdQ1v1gYQ=
+X-Received: by 2002:a37:4808:: with SMTP id v8mr24745184qka.263.1582194531385;
+ Thu, 20 Feb 2020 02:28:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220050440.45878-1-john.stultz@linaro.org> <20200220050440.45878-2-john.stultz@linaro.org>
-In-Reply-To: <20200220050440.45878-2-john.stultz@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 Feb 2020 11:28:30 +0100
-Message-ID: <CAJZ5v0iotVcMU5R1vb+p1c-L3mY31iQ56nUNsEA110RMEVWbMg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] driver core: Fix driver_deferred_probe_check_state()
- logic
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
+In-Reply-To: <1581942793-19468-1-git-send-email-srinivas.neeli@xilinx.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 20 Feb 2020 11:28:40 +0100
+Message-ID: <CAMpxmJX1zTpeBGdd6DSe_o3mxUW7ObsFbRjptGQBZB1-4YE7UQ@mail.gmail.com>
+Subject: Re: [PATCH V3 0/7] gpio: zynq: Update on gpio-zynq driver
+To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        shubhrajyoti.datta@xilinx.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        arm-soc <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, git@xilinx.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 6:05 AM John Stultz <john.stultz@linaro.org> wrote:
+pon., 17 lut 2020 o 13:33 Srinivas Neeli <srinivas.neeli@xilinx.com> napisa=
+=C5=82(a):
 >
-> driver_deferred_probe_check_state() has some uninituitive behavior.
+> This patch series does the following:
+> -protect direction in/out with a spinlock
+> -Add binding for Versal gpio
+> -Add binding for pmc gpio node
+> -Add Versal support
+> -Disable the irq if it is not a wakeup source
+> -Add pmc gpio support
+> -Remove error prints in EPROBE_DEFER
 >
-> * From boot to late_initcall, it returns -EPROBE_DEFER
->
-> * From late_initcall to the deferred_probe_timeout (if set)
->   it returns -ENODEV
->
-> * If the deferred_probe_timeout it set, after it fires, it
->   returns -ETIMEDOUT
->
-> This is a bit confusing, as its useful to have the function
-> return -EPROBE_DEFER while the timeout is still running. This
-> behavior has resulted in the somwhat duplicative
-> driver_deferred_probe_check_state_continue() function being
-> added.
->
-> Thus this patch tries to improve the logic, so that it behaves
-> as such:
->
-> * If deferred_probe_timeout is set, it returns -EPROBE_DEFER
->   until the timeout, afterwhich it returns -ETIMEDOUT.
->
-> * If deferred_probe_timeout is not set (-1), it returns
->   -EPROBE_DEFER until late_initcall, after which it returns
->
-> This will make the deferred_probe_timeout value much more
-> functional, and will allow us to consolidate the
-> driver_deferred_probe_check_state() and
-> driver_deferred_probe_check_state_continue() logic in a later
-> patch.
->
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Change-Id: I8349b7a403ce8cbce485ea0a0a5512fddffb635c
 > ---
-> v4:
-> * Simplified logic suggested by Andy Shevchenko
-> * Clarified commit message to focus on logic change
+> Changes in V2:
+> - In previous series [PATCH 1/8] already applied on "linux-next".
+> - Fixed checkpatch warning for spinlock description.
+> - Added description for Versal PS_GPIO and PMC_GPIO.
+> Changes in V3:
+> - Updated commit description for PATCH 4 and 6.
 > ---
->  drivers/base/dd.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b25bcab2a26b..bb383dca39c1 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -237,7 +237,7 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+> Glenn Langedock (1):
+>   gpio: zynq: protect direction in/out with a spinlock
 >
->  static int __driver_deferred_probe_check_state(struct device *dev)
->  {
-> -       if (!initcalls_done)
-> +       if (!initcalls_done || deferred_probe_timeout > 0)
->                 return -EPROBE_DEFER;
-
-Makes sense to me.
-
+> Shubhrajyoti Datta (6):
+>   dt-bindings: gpio: Add binding for Versal gpio
+>   devicetree-binding: Add pmc gpio node
+>   gpio: zynq: Add Versal support
+>   gpio: zynq: Disable the irq if it is not a wakeup source
+>   gpio: zynq: Add pmc gpio support
+>   gpio: zynq: Remove error prints in EPROBE_DEFER
 >
->         if (!deferred_probe_timeout) {
-> @@ -252,9 +252,11 @@ static int __driver_deferred_probe_check_state(struct device *dev)
->   * driver_deferred_probe_check_state() - Check deferred probe state
->   * @dev: device to check
->   *
-> - * Returns -ENODEV if init is done and all built-in drivers have had a chance
-> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
-> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
-> + * Returnes -EPROBE_DEFER if initcalls have not completed, or the deferred
-
-s/Returnes/Returns/
-
-And I would write
-
-* Return:
-* -EPROBE_DEFER if initcalls have not completed, or the deferred
-*  probe timeout is set, but not expried.
-* -ETIMEDOUT if the deferred probe timeout was set and has expired.
-* -ENODEV if initcalls have completed and the deferred probe timeout
-was not set.
-
-> + * probe timeout is set, but not expried.
-> + * Returns -ETIMEDOUT if the probe timeout was set and has expired.
-> + * Returns -ENODEV if initcalls have completed and the deferred probe timeout
-> + * was not set.
->   *
->   * Drivers or subsystems can opt-in to calling this function instead of directly
->   * returning -EPROBE_DEFER.
+>  .../devicetree/bindings/gpio/gpio-zynq.txt         |  4 +-
+>  drivers/gpio/gpio-zynq.c                           | 66 ++++++++++++++++=
++++++-
+>  2 files changed, 67 insertions(+), 3 deletions(-)
+>
 > --
+> 2.7.4
+>
+
+Other than the commit messages, the series looks good to me.
+
+Bart
