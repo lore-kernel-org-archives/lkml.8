@@ -2,149 +2,97 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB22DC11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F9CC11D1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E90E208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 688E8208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582227540;
+	bh=IImhIpXQHLsVWHOTFfRjPqr3DNYlAfqdkTR10VY+v08=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rVJDuHvqmkIZTFPphmhj5Tw+qYHLFzky6TFM5Ou0h3mf7fGNtTdXNBEhmsVYVkcai
+	 maJuh6TFqJjGNEPcg5YyP4dDPwLzMOLDXJizTvZF8VWfTXDTeQIWqbSHewkt8K5PXh
+	 ut6MkX/ddMmiS/KsSZuZWrzF7HXeopqzJaqRtia8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgBTTim (ORCPT
+        id S1728941AbgBTTi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:38:42 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:54705 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgBTTil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:38:41 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j4reg-0005Xc-Ak; Thu, 20 Feb 2020 19:38:38 +0000
-Date:   Thu, 20 Feb 2020 20:38:37 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next v3 3/9] sysfs: add sysfs_group{s}_change_owner()
-Message-ID: <20200220193837.3agsi2idqirzpkiu@wittgenstein>
-References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
- <20200218162943.2488012-4-christian.brauner@ubuntu.com>
- <20200220111550.GE3374196@kroah.com>
+        Thu, 20 Feb 2020 14:38:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728248AbgBTTi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:38:59 -0500
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 842402465D;
+        Thu, 20 Feb 2020 19:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582227538;
+        bh=IImhIpXQHLsVWHOTFfRjPqr3DNYlAfqdkTR10VY+v08=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yexM5yuUfCHrhwQCWxbacWrejBJwLeYpC4gbEYNXidG5m7O5gIJKHk/a8FLE+few2
+         IJJj3tBU5nRKpumEqIJi07lyB+1CpG9+0Kw18eAbxEszu9oZPMiEWFE2y9k6dyOMvN
+         teJJ4C0NuI1YBa0uuXycY7pnBO71LRHZFwhWHCgI=
+Received: by mail-qk1-f182.google.com with SMTP id b7so4712698qkl.7;
+        Thu, 20 Feb 2020 11:38:58 -0800 (PST)
+X-Gm-Message-State: APjAAAUBGsEi/rnoQbAzjL0vRJRYOAH2Hu3yIiaU5RF7Qi+EBWpBfrv+
+        chceQJK80NIUm/2lByCRHj+MrDYRIbtQu1197Q==
+X-Google-Smtp-Source: APXvYqxK31PuR/mC2GifOubTB/mAdkh3PZjv+HTIqg9smA3ua/7xRkdCEU8fN2lAdCqevLlUfHaorEEVN8o3jWhflzE=
+X-Received: by 2002:a37:9d47:: with SMTP id g68mr24107540qke.119.1582227537683;
+ Thu, 20 Feb 2020 11:38:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200220111550.GE3374196@kroah.com>
+References: <87blq1zr8n.wl-kuninori.morimoto.gx@renesas.com>
+ <20200219155808.GA25095@bogus> <871rqqt0nj.wl-kuninori.morimoto.gx@renesas.com>
+In-Reply-To: <871rqqt0nj.wl-kuninori.morimoto.gx@renesas.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 Feb 2020 13:38:46 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJJMNr6BWiw=Sv-nN8zQ=C+TrwFua0zWrMYJdxoNoZ09Q@mail.gmail.com>
+Message-ID: <CAL_JsqJJMNr6BWiw=Sv-nN8zQ=C+TrwFua0zWrMYJdxoNoZ09Q@mail.gmail.com>
+Subject: Re: [PATCH v2] ASoC: dt-bindings: simple-card: switch to yaml base Documentation
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:15:50PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 18, 2020 at 05:29:37PM +0100, Christian Brauner wrote:
-> > Add helpers to change the owner of sysfs groups.
-> > This function will be used to correctly account for kobject ownership
-> > changes, e.g. when moving network devices between network namespaces.
-> > 
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add comment how ownership of sysfs object is changed.
-> > 
-> > /* v3 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add explicit uid/gid parameters.
-> > - Christian Brauner <christian.brauner@ubuntu.com>:
-> >   - Collapse groups ownership helper patches into a single patch.
-> > ---
-> >  fs/sysfs/group.c      | 117 ++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/sysfs.h |  20 ++++++++
-> >  2 files changed, 137 insertions(+)
-> > 
-> > diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
-> > index c4ab045926b7..bae562d3cba1 100644
-> > --- a/fs/sysfs/group.c
-> > +++ b/fs/sysfs/group.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/dcache.h>
-> >  #include <linux/namei.h>
-> >  #include <linux/err.h>
-> > +#include <linux/fs.h>
-> >  #include "sysfs.h"
-> >  
-> >  
-> > @@ -457,3 +458,119 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
-> >  	return PTR_ERR_OR_ZERO(link);
-> >  }
-> >  EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
-> > +
-> > +static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
-> > +					  const struct attribute_group *grp,
-> > +					  struct iattr *newattrs)
-> > +{
-> > +	struct kernfs_node *kn;
-> > +	int error;
-> > +
-> > +	if (grp->attrs) {
-> > +		struct attribute *const *attr;
-> > +
-> > +		for (attr = grp->attrs; *attr; attr++) {
-> > +			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
-> > +			if (!kn)
-> > +				return -ENOENT;
-> > +
-> > +			error = kernfs_setattr(kn, newattrs);
-> > +			kernfs_put(kn);
-> > +			if (error)
-> > +				return error;
-> > +		}
-> > +	}
-> > +
-> > +	if (grp->bin_attrs) {
-> > +		struct bin_attribute *const *bin_attr;
-> > +
-> > +		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
-> > +			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
-> > +			if (!kn)
-> > +				return -ENOENT;
-> > +
-> > +			error = kernfs_setattr(kn, newattrs);
-> > +			kernfs_put(kn);
-> > +			if (error)
-> > +				return error;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +/**
-> > + * sysfs_group_change_owner - change owner of an attribute group.
-> > + * @kobj:	The kobject containing the group.
-> > + * @grp:	The attribute group.
-> > + * @kuid:	new owner's kuid
-> > + * @kgid:	new owner's kgid
-> > + *
-> > + * Returns 0 on success or error code on failure.
-> 
-> This is fine to document, just funny it's the only one documented about
-> the return value so far in this series.
+On Wed, Feb 19, 2020 at 9:09 PM Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>
+>
+> Hi Rob
+>
+> > > From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > >
+> > > This patch switches from .txt base to .yaml base Document.
+> > >
+> > > Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> > > ---
+> (snip)
+> > > +  dai:
+> > > +    type: object
+> > > +    properties:
+> > > +      sound-dai:
+> > > +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> >
+> > This should have a common definition elsewhere which I'd prefer be in
+> > the dtschema repo. You can just assume there is and do 'maxItems: 1'
+> > here assuming it's only 1.
+>
+> I think dai and/or sound-dai are not common definition.
+> These are very simple-card specific property.
 
-I stuck to the documentation style common to the file. Most of the
-functions in fs/syfs/file.c did not mention return codes
-sysfs_remove_bin_file(), sysfs_create_bin_file(),
-sysfs_remove_file_from_group() etc. But I'll document all in this series
-with return codes now.
+Qcom platforms also use 'sound-dai' and they aren't simple-card.
 
-Thanks!
-Christian
+Rob
