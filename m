@@ -2,93 +2,211 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB27C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F6C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F5C20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C5A20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4dI7IVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgBTP7U (ORCPT
+        id S1728643AbgBTQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:59:20 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47586 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbgBTP7U (ORCPT
+        Thu, 20 Feb 2020 11:00:44 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42432 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728414AbgBTQAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:59:20 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id EC9B428E68F
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        pmalani@chromium.org, Enrico Granata <egranata@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Ting Shen <phoenixshen@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Fei Shao <fshao@chromium.org>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Evan Green <evgreen@chromium.org>, linux-input@vger.kernel.org
-Subject: [PATCH 0/8] Migrate all cros_ec_cmd_xfer() calls to cros_ec_cmd_xfer_status()
-Date:   Thu, 20 Feb 2020 16:58:51 +0100
-Message-Id: <20200220155859.906647-1-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.25.0
+        Thu, 20 Feb 2020 11:00:43 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w21so2134974pgl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wbab2MAyBGVFVIVKjVgIjH6RybCXv9GVcrcCbqRwpPY=;
+        b=O4dI7IVoeleTa/KTNc+v5co+jsDKZweNB2IF6C3xqrIzT0bxEB0NBuTB+MCDauj3Tz
+         EWQGjCZe10yjw2XC/dNUcCIzTxrtqZyn2plgoLERrMscLyewavaOoOb6hRVx/5n3a2cT
+         ehtRlLd0yRn5/udp5PrDlr1wWmYHfDa+kwFCU7LsqCZIBrW6UYvnVOdBDXL6spfk5SZm
+         fw03faaIcHXM6DmDRecW4lOuwAB+NlnE1wXF5KuqVTFSvDi5VfS766kzxhfb9XLPq3bW
+         3U7sFKREGC29PT99UYrxu/0SSp3YzvL4A2zqvKYcOOkg9sJ5de0Mp9/l+mBkZqxqk0AF
+         zdBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wbab2MAyBGVFVIVKjVgIjH6RybCXv9GVcrcCbqRwpPY=;
+        b=SmUEBjPDUx2oGczc1jaG1DtDM+oBmfKOpqr+PAquS1crvp37emvViHLZvBJgA4pykh
+         nKqF+mgebwrFd1lnsrv4mmlSUVgB9g4QGaYye+wD0aRW7us0/itktszCIY8BIrHb0x3b
+         YtdNALduCsi0iu4ma7sXEDXX5FkUCybSBvRrPejqumGt2WVHWRbVPhunA44aWeTSc3/C
+         FiBhT1nGk/bpZfuovCXIHwWH2KxzN2TTG2bopl0pW4sXCOklLemoiBicopstFOVuo8Ed
+         IuHxazs4M033KxuyOv/do8piZuX19QmXP81YCudRHlharK8UAW1iBQgjgd9uBNM0xSBo
+         atvg==
+X-Gm-Message-State: APjAAAXK12Fw7tcpVnsVormMMJyy/4PXUZRoUbldNYZ7gduGXe91+k73
+        tdMjd7iQa6yBTA/Skq47X1mpWw==
+X-Google-Smtp-Source: APXvYqyniQeB0JwM3bF6YAJywLFqtTnmJzv22eYSwTjFbne1ZebTYK1xGgrm2MzYxjPWpf3OBOZIBQ==
+X-Received: by 2002:a62:1456:: with SMTP id 83mr33251094pfu.186.1582214442159;
+        Thu, 20 Feb 2020 08:00:42 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 199sm41506pfu.71.2020.02.20.08.00.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 08:00:41 -0800 (PST)
+Date:   Thu, 20 Feb 2020 07:59:46 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] driver core: Remove
+ driver_deferred_probe_check_state_continue()
+Message-ID: <20200220155946.GF955802@ripper>
+References: <20200220050440.45878-1-john.stultz@linaro.org>
+ <20200220050440.45878-5-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220050440.45878-5-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On Wed 19 Feb 21:04 PST 2020, John Stultz wrote:
 
-The purpose of this series is get rid of the remaining places where the
-cros_ec_cmd_xfer() function is used in favour of the
-cros_ec_cmd_xfer_status() helper. This allows us to make the
-cros_ec_cmd_xfer() function private and only expose to the users a
-single way to send commands to the Embedded Controller.
+> Now that driver_deferred_probe_check_state() works better, and
+> we've converted the only user of
+> driver_deferred_probe_check_state_continue() we can simply
+> remove it and simplify some of the logic.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Change-Id: Id5cd5e9264cfb0fbd70a702715174cc4b10006f4
 
-With these changes we also want to help future improvements in the
-interface, like the Prashant's series (i.e [1]) to introduce a
-cros_ec_cmd() that will allow us to remove more duplicated code in
-different places.
+Change-Id...
 
-Best regards,
- Enric
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Note: Prashant, looks like you should fix your sendmail as the patches
-      are not threaded.
+Regards,
+Bjorn
 
-[1] https://lkml.org/lkml/2020/2/5/614
-
-Enric Balletbo i Serra (8):
-  platform/chrome: cros_ec_proto: Report command not supported
-  Input: cros_ec_keyb: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec_vbc: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec_chardev: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec_sysfs: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec_lightbar: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec: Use cros_ec_cmd_xfer_status helper
-  platform/chrome: cros_ec_proto: Do not export cros_ec_cmd_xfer()
-
- drivers/input/keyboard/cros_ec_keyb.c       | 14 +++---
- drivers/platform/chrome/cros_ec.c           |  2 +-
- drivers/platform/chrome/cros_ec_chardev.c   |  2 +-
- drivers/platform/chrome/cros_ec_lightbar.c  | 50 ++++++---------------
- drivers/platform/chrome/cros_ec_proto.c     | 14 ++++--
- drivers/platform/chrome/cros_ec_sysfs.c     | 36 +++++++--------
- drivers/platform/chrome/cros_ec_vbc.c       |  4 +-
- include/linux/platform_data/cros_ec_proto.h |  3 --
- 8 files changed, 50 insertions(+), 75 deletions(-)
-
--- 
-2.25.0
-
+> ---
+>  drivers/base/dd.c             | 49 +++++------------------------------
+>  include/linux/device/driver.h |  1 -
+>  2 files changed, 6 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index fa138f24e2d3..408e4da081da 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -244,19 +244,6 @@ static int __init deferred_probe_timeout_setup(char *str)
+>  }
+>  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>  
+> -static int __driver_deferred_probe_check_state(struct device *dev)
+> -{
+> -	if (!initcalls_done || deferred_probe_timeout > 0)
+> -		return -EPROBE_DEFER;
+> -
+> -	if (!deferred_probe_timeout) {
+> -		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> -		return -ETIMEDOUT;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+> @@ -272,43 +259,19 @@ static int __driver_deferred_probe_check_state(struct device *dev)
+>   */
+>  int driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -	int ret;
+> +	if (!initcalls_done || deferred_probe_timeout > 0)
+> +		return -EPROBE_DEFER;
+>  
+> -	ret = __driver_deferred_probe_check_state(dev);
+> -	if (ret < 0)
+> -		return ret;
+> +	if (!deferred_probe_timeout) {
+> +		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> +		return -ETIMEDOUT;
+> +	}
+>  
+>  	dev_warn(dev, "ignoring dependency for device, assuming no driver");
+>  
+>  	return -ENODEV;
+>  }
+>  
+> -/**
+> - * driver_deferred_probe_check_state_continue() - check deferred probe state
+> - * @dev: device to check
+> - *
+> - * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
+> - * -EPROBE_DEFER otherwise.
+> - *
+> - * Drivers or subsystems can opt-in to calling this function instead of
+> - * directly returning -EPROBE_DEFER.
+> - *
+> - * This is similar to driver_deferred_probe_check_state(), but it allows the
+> - * subsystem to keep deferring probe after built-in drivers have had a chance
+> - * to probe. One scenario where that is useful is if built-in drivers rely on
+> - * resources that are provided by modular drivers.
+> - */
+> -int driver_deferred_probe_check_state_continue(struct device *dev)
+> -{
+> -	int ret;
+> -
+> -	ret = __driver_deferred_probe_check_state(dev);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	return -EPROBE_DEFER;
+> -}
+> -
+>  static void deferred_probe_timeout_work_func(struct work_struct *work)
+>  {
+>  	struct device_private *private, *p;
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index 1188260f9a02..5242afabfaba 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -238,7 +238,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>  
+>  void driver_deferred_probe_add(struct device *dev);
+>  int driver_deferred_probe_check_state(struct device *dev);
+> -int driver_deferred_probe_check_state_continue(struct device *dev);
+>  void driver_init(void);
+>  
+>  /**
+> -- 
+> 2.17.1
+> 
