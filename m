@@ -2,86 +2,84 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F910C11D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186DCC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C78824656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E118C2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z15g5taC"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emykKyOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgBTHvw (ORCPT
+        id S1726934AbgBTHwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:51:52 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35972 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgBTHvw (ORCPT
+        Thu, 20 Feb 2020 02:52:11 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726248AbgBTHwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:51:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=fole7G1LoPJJ9Kcv9zicmaNbVVxxXaVUsyPoa8xBYzc=; b=Z15g5taCayUEDs5hVIno9ttZ01
-        PjaQ01TEtHw2ZaVVrn51LXxOguZLGkz7FDeYGEilWzrXtORRSpxVKFSv06iotvNL/vOBieIR0I+Ol
-        ANU+aEg/S5/LCz08yo6Rzd7dTzIr07sEPCXHd/kYbJUR+kBYXrgkmbv2V68x7XmmZ5qwc9BG73Ijo
-        mnrTye5wvV5jpbNKCULFQSaXHycid40JkkM1w1CwZpSOGgp/l54beXBGJYB2XDC8IkUZ7EVnerfHh
-        wYyKhavmQq4Ljp40JytCF1jcWeP3ZuH7FwfLisEvmFM8rDZHaqcJjQ108cpcACVUI1JTDmFRq71oK
-        iCByTUKA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4gch-0004qm-Kn; Thu, 20 Feb 2020 07:51:51 +0000
-Subject: Re: linux-next: Tree for Feb 20 (mmc/mmc_hsq.c)
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>
-References: <20200220144408.359a7e02@canb.auug.org.au>
- <dba0c486-46e9-0b96-bd71-b9e81b362c85@infradead.org>
- <CADBw62q08iYfm+g2y5GBUH74-TwTGRzforbuyZ_tTZQ6RQ9fzA@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <13aa04b3-c1d3-175d-bad7-a8ebd502f535@infradead.org>
-Date:   Wed, 19 Feb 2020 23:51:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 02:52:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582185130;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UKHnTXS8JHsJkGLe40P/26aUTaSDknlNIIOYz4XwZEQ=;
+        b=emykKyOq8s2GuvmKqKSePF6p5H7+tzAtGsCojaiv3Eg7BAXKu74T0fIYBeHoFBfpKslj/w
+        ofuZVxOAT1bgdytU4y0Vkpx4BVHwB6w0mXKYdif/EOVK1T+e3G8ZQMYTlIoxS+piziyr8c
+        H426l5S7s76nR2w/6jgeVyHgoo3yDVA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-WzSeYNV4P9u2xPZQedKB9Q-1; Thu, 20 Feb 2020 02:52:08 -0500
+X-MC-Unique: WzSeYNV4P9u2xPZQedKB9Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 510F313E4;
+        Thu, 20 Feb 2020 07:52:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A0B7863A5;
+        Thu, 20 Feb 2020 07:52:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=whOAg2EJycA=x=8RzBy3dnDFsgnyxrjREyNu6-8+eTTHA@mail.gmail.com>
+References: <CAHk-=whOAg2EJycA=x=8RzBy3dnDFsgnyxrjREyNu6-8+eTTHA@mail.gmail.com> <158215745745.386537.12978619503606431141.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-afs@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] afs: Create a mountpoint through symlink() and remove through rmdir()
 MIME-Version: 1.0
-In-Reply-To: <CADBw62q08iYfm+g2y5GBUH74-TwTGRzforbuyZ_tTZQ6RQ9fzA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <426584.1582185125.1@warthog.procyon.org.uk>
+Date:   Thu, 20 Feb 2020 07:52:05 +0000
+Message-ID: <426585.1582185125@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 10:01 PM, Baolin Wang wrote:
-> Hi Randy,
-> 
-> On Thu, Feb 20, 2020 at 1:55 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> On 2/19/20 7:44 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200219:
->>>
->>
->> on i386:
->>
->> WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o
-> 
-> I've already sent out a patch to fix the warning, can you try it?
-> Sorry for troubles.
-> https://lore.kernel.org/patchwork/patch/1196938/
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Yes, that works for me.  Thanks.
+> Your argument that if the prefix is made really long it couldn't be a
+> valid symlink at all on AFS is fair, but seems somewhat excessive.
 
--- 
-~Randy
+Normally, mountpoint creation and removal would be hidden behind the
+appropriate command line tool and not done directly with ln/rmdir.
+
+> The only issue I see with this interface is that you can now create
+> these kinds of things by untarring a tar-ball etc.
+
+That would be true with mknod approach too.  Even if tar couldn't do the
+second-stage write, it could still create a lot of half-formed mountpoints
+by extracting chardevs.
+
+David
 
