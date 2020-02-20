@@ -2,188 +2,134 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1928CC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C354DC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BC624673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949D42467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:41:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fet/hAJh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jB7Kf9eA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbgBTSjo (ORCPT
+        id S1728542AbgBTSlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:39:44 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38114 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728162AbgBTSjo (ORCPT
+        Thu, 20 Feb 2020 13:41:46 -0500
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:43145 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728162AbgBTSlp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:39:44 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so5303824ljh.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:39:40 -0800 (PST)
+        Thu, 20 Feb 2020 13:41:45 -0500
+Received: by mail-yb1-f193.google.com with SMTP id b141so2624513ybg.10;
+        Thu, 20 Feb 2020 10:41:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3vyjS+sSAn3HYPmeF1oEJkpsll37OiGUssC+8/K51/4=;
-        b=Fet/hAJhRQDtnDP9fg9J/Du5q7cM5Im1hzXwBAPqhu2dstZav58Aai8qQzGCEwopyz
-         zMPwaJnL1eR877ocln94AJ6Vpjh7ddFYahar/44+bdmjT5tB438dLnZx/xywAczqBiRD
-         igdNTNKR8Yze1Wl0UJPDmfdxu8eYKckGOqDfW1iOhhdPbn9kZv2BE5LoO8eTcyv+QrtC
-         tp2Tk4EuXHgorJDZ12DDHBsZ/lLGCqO41vga0yBfiQ5fxGgLuueeB6V5eAtnz6q2uYTm
-         QLlKStRRGLoPj2IWAXDSFUIG7hc2LlcmmjwAnXRUrNDn3nczFFgFAa04qDglWe+mey4t
-         C+Ug==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Q6NpLVKYuYi5r+jdGs6JgcjNvxF5K/nCtRTkokndCLM=;
+        b=jB7Kf9eATRokx4yVa67z5alKyMt7TcXh+Qfrk2lfkX+mrEoh7O5Hw2+J9XECgbHVmP
+         GodIvDCRYdyNpwvKSX/ftWtPZSHO7NSIQMyCKy7vyrNaz159hFqqrtlaVV57LQE4BeWF
+         ksTrlocT/Q+2Jygm8iGzH3d5aQYYKx/eIwNjebErDAn/4SFz7/grcb3UslDDh6bpffa5
+         NqsoRIuUGqVnqkObnG1nCYSfEGjTV7nyXJ8qu4hE8+R1+mMjmvvl0QsNt85Cc6ZK8c8S
+         q93eO1mzUoBN8mlOkuRwXEpPjI9QxmAMSoJM6E7v9vmx0ZE1I8PWUiaWQfv+R/HAwGLg
+         9uJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3vyjS+sSAn3HYPmeF1oEJkpsll37OiGUssC+8/K51/4=;
-        b=QgOgodfhMG08Pab/hHVXDHlVaBTHKw959S3R73cg7bOttEA43S5YPYtpnrfUGzzukt
-         kkfX3h6NzO5bYe9ZPxbGkq8PV5aAIyG6e/q3zSnDssvZtFculjrGb52BgbgnKTuJYCoN
-         V0qh0oE9jJmDVeH4Mu30z8DBPXk4Jxmd0N42ZNrsUr5KS8boj65wtB4SndOEN6zZOnoc
-         q1Udj1HeUTF2/wi//wugxR6Sopv0hLXnpvfgesYXQWNWg7tZP9PbMTFcLa4C1wATCn7V
-         dHblas3PPbHnbjMo/ZxTZPc2T3Z9suHN54xBP7v18HdD5Aw4NW+2a2MRioJvnaY1f6qB
-         AXEQ==
-X-Gm-Message-State: APjAAAWQn8zFL8UIm2/t8F5FNL/aObQKVXDiCP3AMBqfKikSMWlvbDJq
-        N1hx7kzPMOsGF9CvB3v1d4LSNeDPWXrvu+pLPKfdTw==
-X-Google-Smtp-Source: APXvYqys1CrHuhdls6fUzfaBKFoB6DGlWqs1OzjbcuZBdCWN4qR+/3UHYv/iiSDM7pzKg5S+L4o+VvdSv2sjVcwdDUo=
-X-Received: by 2002:a2e:94c8:: with SMTP id r8mr19894589ljh.28.1582223979390;
- Thu, 20 Feb 2020 10:39:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220074637.7578-1-njoshi1@lenovo.com> <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
- <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
-In-Reply-To: <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Thu, 20 Feb 2020 10:39:02 -0800
-Message-ID: <CACK8Z6GwuOnJUUscriGwKWGBp5PFKyuqUkFYC8tEXa0UEuEZww@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] thinkpad_acpi: Add sysfs entry for
- lcdshadow feature
-To:     Mark Pearson <mpearson@lenovo.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nitin Joshi <nitjoshi@gmail.com>,
-        Mat King <mathewk@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Nitin Joshi1 <njoshi1@lenovo.com>,
-        Benjamin Berg <bberg@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Q6NpLVKYuYi5r+jdGs6JgcjNvxF5K/nCtRTkokndCLM=;
+        b=QTY64saCPcqhcNaCz7mkCPjUmt1KpTykr3hsBD7Xiqh6XWlqrrWCZ39GgEUBp4zCk2
+         yaZDiAT9KhdDnA1hKcbcxTvn1nlAG4pdoMxWaYf9PbgQwOKCHwa78NQprglzmTqznffY
+         wAGxq+QFmlDUSdZB8CFW8ajuStimXRBoC5MqFBHaQFUHRqIUAMfbrp6tqEVCfhdJnHcp
+         dZvhCGUyoHB+5Qu5wAZeRoqK7MRlvxL/NYpHNwhec+bCni4m2S1ZMWhj3q7lMd5MEHt7
+         P9K2f0pTtZkXzSUEBpHZBPB4sWMrEGus4W57O3EiBZmV21vCRIRurFWp7ekBhu6DPkN8
+         s6Jg==
+X-Gm-Message-State: APjAAAWS/AbI/BTRkgUzJGj8Juatz078Y61vSa6kI9xL/0O0rcuTjj9x
+        xWcXmBXqp+McBakf1oEu/TAIev5p
+X-Google-Smtp-Source: APXvYqx3CwEaEHhpxLKjKq3vFV9xCWLqBYVre652RPmvaoc3Nx9spul/8rcTt+y/1Ia9/Abrc1MUEQ==
+X-Received: by 2002:a25:68cf:: with SMTP id d198mr27744979ybc.502.1582224104695;
+        Thu, 20 Feb 2020 10:41:44 -0800 (PST)
+Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id a74sm206875ywe.42.2020.02.20.10.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Feb 2020 10:41:44 -0800 (PST)
+From:   frowand.list@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        pantelis.antoniou@konsulko.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alan Tull <atull@kernel.org>
+Subject: [PATCH v2 0/2] of: unittest: add overlay gpio test to catch gpio hog problem
+Date:   Thu, 20 Feb 2020 12:40:19 -0600
+Message-Id: <1582224021-12827-1-git-send-email-frowand.list@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+From: Frank Rowand <frank.rowand@sony.com>
 
-On Thu, Feb 20, 2020 at 7:14 AM Mark Pearson <mpearson@lenovo.com> wrote:
->
-> Hi Andy
->
-> > -----Original Message-----
-> > From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Sent: Thursday, February 20, 2020 5:43 AM
-> >
-> > On Thu, Feb 20, 2020 at 9:48 AM Nitin Joshi <nitjoshi@gmail.com> wrote:
-> > >
-> > >   This feature is supported on some Thinkpad products like T490s, Thi=
-nkpad
-> > >   X1 yoga 4th Gen etc . The lcdshadow feature can be enabled and disa=
-bled
-> > >   when user press "Fn" + "D" key. Currently, no user feedback is give=
-n for
-> > >   this action. Adding as sysfs entry allows userspace to show an On S=
-creen
-> > >   Display whenever the setting changes.
-> > >
-> > >   Summary of changes is mentioned below :
-> > >
-> > >  - Added TP_HKEY_EV_LCDSHADOW_CHANGED for consistency inside the
-> > driver
-> > >  - Added unmapped LCDSHADOW to keymap
-> > >  - Added lcdshadow_get function to read value using ACPI
-> > >  - Added lcdshadow_refresh function to re-read value and send notific=
-ation
-> > >  - Added sysfs group creation to tpaci_lcdshadow_init
-> > >  - Added lcdshadow_exit to remove sysfs group again
-> > >  - Implemented lcdshadow_enable_show/lcdshadow_enable_store
-> > >  - Added handler to tpacpi_driver_event to update refresh lcdshadow
-> > >  - Explicitly call tpacpi_driver_event for extended keyset
-> >
-> > Adding custom PrivacyGuard support to this driver was my mistake,
-> > There is a discussion [1] how to do this in generic way to cover other
-> > possible users.
-> > I Cc this to people from that discussion.
-> >
-> > [1]: https://lore.kernel.org/dri-
-> > devel/CAL_quvRknSSVvXN3q_Se0hrziw2oTNS3ENNoeHYhvciCRq9Yww@mail
-> > .gmail.com/
-> >
-> Thanks for the pointer to that thread - really useful and interesting, we=
- weren't aware there was an ongoing exercise to do this.
->
-> I work with Nitin as part of the Linux team at Lenovo. We're trying to ge=
-t more directly and actively involved in the open source community to impro=
-ve the Linux experience on Lenovo devices and of course want to make sure w=
-e contribute the right way. We're all still pretty new so pointers and help=
- are very much appreciated (we've been getting some great support from the =
-distros to get us started).
->
-> For this particular issue what is the best way to contribute and get invo=
-lved? We'd like to make it so ePrivacy can be used more easily from Linux. =
-I agree a more generic way of controlling it would be good.
-> I looked at the proposed patch from Rajat (https://lkml.org/lkml/2019/10/=
-22/967) - it seems like a good solution to me. We can help with testing tha=
-t on our platforms if that would be useful.
+Geert reports that gpio hog nodes are not properly processed when
+the gpio hog node is added via an overlay reply and provides an
+patch to fix the problem [1].
 
-Thanks you, just so that you know, the latest patchset is at:
-https://lkml.org/lkml/2019/12/20/794
+Add a unittest that shows the problem.  Unittest will report "1 failed"
+test before applying Geert's patch and "0 failed" after applying
+Geert's patch.
 
-It would be great to get some additional testing if possible. I can
-send a sample ACPI (for our platform) in case it helps.
+I did not have a development system for which it would be easy to
+experiment with applying an overlay containing a gpio hog, so I
+instead created this unittest that uses a fake gpio node.
 
->
-> I need to understand how we connect that implementation with the ACPI con=
-trols we have (as I believe what we have are thinkpad specific and not to a=
- drm spec; we need to confirm that). We also have the ACPI events that noti=
-fy if ePrivacy was changed by the hotkeys and that seems like something tha=
-t should be done in thinkpad_acpi.c and not the drm code.
+Some tests in the devicetree unittests result in printk messages
+from the code being tested.  It can be difficult to determine
+whether the messages are the result of unittest or are potentially
+reporting bugs that should be fixed.  The most recent example of
+a person asking whether to be concerned about these messages is [2].
 
-Not sure if the two need to be connected somehow (or if handling the
-event is actually not important and polling is acceptable)?
+Patch 2 adds annotations for all messages triggered by unittests,
+except KERN_DEBUG messages.  (KERN_DEBUG is a special case due to the
+possible interaction of CONFIG_DYNAMIC_DEBUG.)
 
-So there was some brief discussion about this on my patches - but
-atleast on  the platforms I have seen, there was no way to change the
-privacy screen out of software / kernel control. Essentially, if there
-are hotkeys, they would send an input event to the kernel, who'd send
-them to userspace, who'd use the DRM method to toggle the privacy
-screen. Thus the current version of the patch only supports
-controlling the privacy screen via set() method. The get() method just
-returns the cached value.I hope that works for you.
+The annotations added in patch 2/2 add a small amount of verbosity
+to the console output.  I have created a proof of concept tool to
+explore (1) how test harnesses could use the annotations and
+(2) how to make the resulting console output easier to read and
+understand as a human being.  The tool 'of_unittest_expect' is
+available at https://github.com/frowand/dt_tools
 
-Jani, I'm waiting on your inputs here
-https://lkml.org/lkml/2020/1/24/1932 in order to send the next
-iteration of my patch. Can you please let me know if you have any
-comments.
+The format of the annotations is expected to change when unittests
+are converted to use the kunit infrastructure when the broader
+testing community has an opportunity to discuss the implementation
+of annotations of test triggered messages.
 
-Thanks & Best Regards,
+[1] https://lore.kernel.org/r/20200220130149.26283-1-geert+renesas@glider.be
+[2] https://lore.kernel.org/r/6021ac63-b5e0-ed3d-f964-7c6ef579cd68@huawei.com
 
-Rajat
 
->
-> As a note Nitin has been working with the Red Hat folk and is looking at =
-the user space aspect of this (in particularl gnome settings) as well.
->
-> Thanks
-> Mark Pearson
+Frank Rowand (2):
+  of: unittest: add overlay gpio test to catch gpio hog problem
+  of: unittest: annotate warnings triggered by unittest
+
+ drivers/of/unittest-data/Makefile             |   8 +-
+ drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +
+ drivers/of/unittest-data/overlay_gpio_02a.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_02b.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +
+ drivers/of/unittest-data/overlay_gpio_04a.dts |  16 +
+ drivers/of/unittest-data/overlay_gpio_04b.dts |  16 +
+ drivers/of/unittest.c                         | 628 ++++++++++++++++++++++++--
+ 8 files changed, 715 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
+ create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
+
+-- 
+Frank Rowand <frank.rowand@sony.com>
+
