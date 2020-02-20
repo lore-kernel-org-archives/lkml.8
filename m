@@ -2,155 +2,170 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E567C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71E8C11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE64720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB3D24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:52:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMVJvohK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgBTQuC (ORCPT
+        id S1728248AbgBTQwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:50:02 -0500
-Received: from mga17.intel.com ([192.55.52.151]:1257 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgBTQuC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:50:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 08:50:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="236298537"
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by orsmga003.jf.intel.com with ESMTP; 20 Feb 2020 08:49:57 -0800
-Date:   Thu, 20 Feb 2020 08:49:57 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200220164957.GB20772@iweiny-DESK2.sc.intel.com>
-References: <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
- <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
- <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
- <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
- <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
- <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
- <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
- <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
- <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
- <20200220163024.GV9506@magnolia>
+        Thu, 20 Feb 2020 11:52:24 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46704 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgBTQwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:52:24 -0500
+Received: by mail-qk1-f194.google.com with SMTP id u124so4153718qkh.13;
+        Thu, 20 Feb 2020 08:52:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6XRtdyMfa57xpaqGTGErpzosHOBJSLkhLdrjsJIgZOk=;
+        b=GMVJvohK6Uqosdx++Q1UIJDcIwc443iVBHapmNkU3PGw0Gp/Zvb4sb4UC5bp2Vqnjh
+         3CNcPOyt+wKRKUoubWndo5lXBiYketttaeW/0TFZNT506r2ehW2MDLqDwKxIN4eTRL6l
+         Bbe/9ss0aC0grEW3nn0C41VmK4UZ0iE4dj4Z897q8UHKgHY2T1n9bsgu9G2OYcIDvx+B
+         u5klU2+Lw4xtVQXGaop6kWnEt+i2w3JLr/ZPKKBW51NDmVrAy3ZO3uQda80EIss6Qyv+
+         H/1orrfd8yQMyvriQ2xSQnzBmiCfFYpDXHVpOfkmdv3fLAt2kdPWJQVF2RC+gEgheTWP
+         kuGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6XRtdyMfa57xpaqGTGErpzosHOBJSLkhLdrjsJIgZOk=;
+        b=G+EkzMfZLK8JIobcXun6VIP5s7QRHkO1Bv4yvlOk8MXrANg7RORytf8UoAF6LyO1Rr
+         6BMToaBWkhWcHosSTRoBPN6aydx2E864HdkWJh0ltLCVyZqg7xJnNXEyApZEPN17ItLO
+         HO91Eg4XB0emI85axoUGr+faTwdXXbqu0VHIm3SlBZdy9mvRo1Y9cPm96bUwd0JKhb5q
+         Ut9dyapJ1fc5TRPzT5MfFbfpE+hwxCb9THjz01T4pIyFLdX3ux9a6e5TRBfCw6c5Qb9Q
+         MyQiQDjmkl4eVRbIxEaQ7aZ1KgVx3MfBR0O9x+TaCXN0+PXQ7q7IhSTJy1JUk9eaOidf
+         seDw==
+X-Gm-Message-State: APjAAAUgs6fGLRLAL5hLdJjSKy14Cab87f2QoD26ARJjzgsupZpSX+Nm
+        XssfXb1fToPloa5MQwMS9PI=
+X-Google-Smtp-Source: APXvYqy4l4khgWGFmnhDAt5LoEZMVrOKFHi8JHSfYZBxEDUKoj4Q/uPqL9B528B9p2SSMSXiU0yT2A==
+X-Received: by 2002:a37:a08f:: with SMTP id j137mr28457353qke.467.1582217543184;
+        Thu, 20 Feb 2020 08:52:23 -0800 (PST)
+Received: from dschatzberg-fedora-PC0Y6AEN.thefacebook.com ([2620:10d:c091:500::3:edb0])
+        by smtp.gmail.com with ESMTPSA id t55sm43567qte.24.2020.02.20.08.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 08:52:22 -0800 (PST)
+From:   Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-block@vger.kernel.org (open list:BLOCK LAYER),
+        linux-kernel@vger.kernel.org (open list),
+        cgroups@vger.kernel.org (open list:CONTROL GROUP (CGROUP)),
+        linux-mm@kvack.org (open list:CONTROL GROUP - MEMORY RESOURCE
+        CONTROLLER (MEMCG))
+Subject: [PATCH v3 0/3] Charge loop device i/o to issuing cgroup
+Date:   Thu, 20 Feb 2020 11:51:50 -0500
+Message-Id: <cover.1582216294.git.schatzberg.dan@gmail.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220163024.GV9506@magnolia>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 08:30:24AM -0800, Darrick J. Wong wrote:
-> On Thu, Feb 20, 2020 at 08:20:28AM -0800, Ira Weiny wrote:
-> > On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
-> > > On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
-> > > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > > > If my disassembly of read_pages is correct it looks like readpage is null which
-> > > > > makes sense because all files should be IS_DAX() == true due to the mount option...
-> > > > >
-> > > > > But tracing code indicates that the patch:
-> > > > >
-> > > > > 	fs: remove unneeded IS_DAX() check
-> > > > >
-> > > > > ... may be the culprit and the following fix may work...
-> > > > >
-> > > > > diff --git a/mm/filemap.c b/mm/filemap.c
-> > > > > index 3a7863ba51b9..7eaf74a2a39b 100644
-> > > > > --- a/mm/filemap.c
-> > > > > +++ b/mm/filemap.c
-> > > > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-> > > > >         if (!count)
-> > > > >                 goto out; /* skip atime */
-> > > > >  
-> > > > > -       if (iocb->ki_flags & IOCB_DIRECT) {
-> > > > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
-> > > > >                 struct file *file = iocb->ki_filp;
-> > > > >                 struct address_space *mapping = file->f_mapping;
-> > > > >                 struct inode *inode = mapping->host;
-> > > > 
-> > > > Well, you'll have to up-level the inode variable instantiation,
-> > > > obviously.  That solves this particular issue.
-> > > 
-> > > Well...  This seems to be a random issue.  I've had BMC issues with
-> > > my server most of the day...  But even with this patch I still get the failure
-> > > in read_pages().  :-/
-> > > 
-> > > And I have gotten it to both succeed and fail with qemu...  :-/
-> > 
-> > ... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
-> > out factoring in the flag logic changes we have agreed upon...
-> > 
-> > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > index 62d9f622bad1..d592949ad396 100644
-> > --- a/fs/xfs/xfs_ioctl.c
-> > +++ b/fs/xfs/xfs_ioctl.c
-> > @@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
-> >                 inode->i_flags |= S_NOATIME;
-> >         else
-> >                 inode->i_flags &= ~S_NOATIME;
-> > -       if (xflags & FS_XFLAG_DAX)
-> > +
-> > +       if (xfs_inode_enable_dax(ip))
-> >                 inode->i_flags |= S_DAX;
-> >         else
-> >                 inode->i_flags &= ~S_DAX;
-> > -
-> >  }
-> > 
-> > But the one thing which tripped me up, and concerns me, is we have 2 functions
-> > which set the inode flags.
-> > 
-> > xfs_diflags_to_iflags()
-> > xfs_diflags_to_linux()
-> > 
-> > xfs_diflags_to_iflags() is geared toward initialization but logically they do
-> > the same thing.  I see no reason to keep them separate.  Does anyone?
-> > 
-> > Based on this find, the discussion on behavior in this thread, and the comments
-> > from Dave I'm reworking the series because the flag check/set functions have
-> > all changed and I really want to be as clear as possible with both the patches
-> > and the resulting code.[*]  So v4 should be out today including attempting to
-> > document what we have discussed here and being as clear as possible on the
-> > behavior.  :-D
-> > 
-> > Thanks so much for testing this!
-> > 
-> > Ira
-> > 
-> > [*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
-> > really don't see a reason to keep it.
-> > 
-> 
-> I prefer you keep the one in xfs_iops.c since ioctls are a higher level
-> function than general inode operations.
+Changes since V2:
 
-Makes sense.  Do you prefer the xfs_diflags_to_iflags() name as well?
+* Deferred destruction of workqueue items so in the common case there
+  is no allocation needed
 
-Ira
+Changes since V1:
 
-> 
-> --D
+* Split out and reordered patches so cgroup charging changes are
+  separate from kworker -> workqueue change
+
+* Add mem_css to struct loop_cmd to simplify logic
+
+The loop device runs all i/o to the backing file on a separate kworker
+thread which results in all i/o being charged to the root cgroup. This
+allows a loop device to be used to trivially bypass resource limits
+and other policy. This patch series fixes this gap in accounting.
+
+A simple script to demonstrate this behavior on cgroupv2 machine:
+
+'''
+#!/bin/bash
+set -e
+
+CGROUP=/sys/fs/cgroup/test.slice
+LOOP_DEV=/dev/loop0
+
+if [[ ! -d $CGROUP ]]
+then
+    sudo mkdir $CGROUP
+fi
+
+grep oom_kill $CGROUP/memory.events
+
+# Set a memory limit, write more than that limit to tmpfs -> OOM kill
+sudo unshare -m bash -c "
+echo \$\$ > $CGROUP/cgroup.procs;
+echo 0 > $CGROUP/memory.swap.max;
+echo 64M > $CGROUP/memory.max;
+mount -t tmpfs -o size=512m tmpfs /tmp;
+dd if=/dev/zero of=/tmp/file bs=1M count=256" || true
+
+grep oom_kill $CGROUP/memory.events
+
+# Set a memory limit, write more than that limit through loopback
+# device -> no OOM kill
+sudo unshare -m bash -c "
+echo \$\$ > $CGROUP/cgroup.procs;
+echo 0 > $CGROUP/memory.swap.max;
+echo 64M > $CGROUP/memory.max;
+mount -t tmpfs -o size=512m tmpfs /tmp;
+truncate -s 512m /tmp/backing_file
+losetup $LOOP_DEV /tmp/backing_file
+dd if=/dev/zero of=$LOOP_DEV bs=1M count=256;
+losetup -D $LOOP_DEV" || true
+
+grep oom_kill $CGROUP/memory.events
+'''
+
+Naively charging cgroups could result in priority inversions through
+the single kworker thread in the case where multiple cgroups are
+reading/writing to the same loop device. This patch series does some
+minor modification to the loop driver so that each cgroup can make
+forward progress independently to avoid this inversion.
+
+With this patch series applied, the above script triggers OOM kills
+when writing through the loop device as expected.
+
+Dan Schatzberg (3):
+  loop: Use worker per cgroup instead of kworker
+  mm: Charge active memcg when no mm is set
+  loop: Charge i/o to mem and blk cg
+
+ drivers/block/loop.c       | 229 +++++++++++++++++++++++++++++++------
+ drivers/block/loop.h       |  14 ++-
+ include/linux/memcontrol.h |   6 +
+ kernel/cgroup/cgroup.c     |   1 +
+ mm/memcontrol.c            |  11 +-
+ mm/shmem.c                 |   2 +-
+ 6 files changed, 217 insertions(+), 46 deletions(-)
+
+-- 
+2.17.1
+
