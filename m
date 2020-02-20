@@ -2,73 +2,93 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA716C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D9AC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BA1224673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888A224670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbgBTMo4 (ORCPT
+        id S1728123AbgBTMpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:44:56 -0500
-Received: from a.mx.secunet.com ([62.96.220.36]:50216 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728021AbgBTMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:44:56 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 8520720491;
-        Thu, 20 Feb 2020 13:44:54 +0100 (CET)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id iOePJampMJ7u; Thu, 20 Feb 2020 13:44:53 +0100 (CET)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 2FFAB2027C;
-        Thu, 20 Feb 2020 13:44:53 +0100 (CET)
-Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
- (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
- 13:44:52 +0100
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id CF65E318028C;
- Thu, 20 Feb 2020 13:44:52 +0100 (CET)
-Date:   Thu, 20 Feb 2020 13:44:52 +0100
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Yi Wang <wang.yi59@zte.com.cn>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <xue.zhihong@zte.com.cn>,
-        <wang.liang82@zte.com.cn>, Huang Zijiang <huang.zijiang@zte.com.cn>
-Subject: Re: [PATCH] xfrm: Use kmem_cache_zalloc() instead of
- kmem_cache_alloc() with flag GFP_ZERO.
-Message-ID: <20200220124452.GX8274@gauss3.secunet.de>
-References: <1581501276-5636-1-git-send-email-wang.yi59@zte.com.cn>
+        Thu, 20 Feb 2020 07:45:08 -0500
+Received: from out28-218.mail.aliyun.com ([115.124.28.218]:43039 "EHLO
+        out28-218.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgBTMpG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:45:06 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1386076|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.196715-0.0112271-0.792058;DS=CONTINUE|ham_regular_dialog|0.189735-0.00256273-0.807702;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03293;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.Gq8NPLt_1582202431;
+Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gq8NPLt_1582202431)
+          by smtp.aliyun-inc.com(10.147.41.138);
+          Thu, 20 Feb 2020 20:40:31 +0800
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     YunQiang Su <wzssyqa@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+References: <20200219191730.1277800-1-paulburton@kernel.org>
+ <20200219191730.1277800-3-paulburton@kernel.org>
+ <20200220112330.GA3053@alpha.franken.de>
+ <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, wayne.sun@cipunited.com,
+        chris.wang@neocore.cn, Yunqiang Su <ysu@wavecomp.com>,
+        dongsheng.qiu@ingenic.com, xuwanhao@wanyeetech.com
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E4E7E3E.6070608@wanyeetech.com>
+Date:   Thu, 20 Feb 2020 20:40:30 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1581501276-5636-1-git-send-email-wang.yi59@zte.com.cn>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 05:54:36PM +0800, Yi Wang wrote:
-> From: Huang Zijiang <huang.zijiang@zte.com.cn>
-> 
-> Use kmem_cache_zalloc instead of manually setting kmem_cache_alloc
-> with flag GFP_ZERO since kzalloc sets allocated memory
-> to zero.
-> 
-> Change in v2:
->      add indation
-> 
-> Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Hi,
 
-Applied to ipsec-next, thanks!
+CC people from Ingenic Semi and Wanyee Tech.
+
+On 2020年02月20日 20:11, YunQiang Su wrote:
+> CC people from NeoCore and CIP United, and my Wave Computing's mail address.
+>
+> Thomas Bogendoerfer <tsbogend@alpha.franken.de> 于2020年2月20日周四 下午7:23写道：
+>> On Wed, Feb 19, 2020 at 11:17:30AM -0800, Paul Burton wrote:
+>>> My time with MIPS the company has reached its end, and so at best I'll
+>>> have little time spend on maintaining arch/mips/. Reflect that in
+>>> MAINTAINERS by changing status to Odd Fixes. Hopefully this might spur
+>>> the involvement of someone with more time, but even if not it should
+>>> help serve to avoid unrealistic expectations.
+>> I'd like to jump in as MIPS maintainer. I'm doing Linux MIPS kernel
+> It is a great news that you are willing to act as maintainer as Linux-MIPS.
+>
+>> development since ages (started with an Olivetti M700 and kernel version
+>> 2.x) and right now time for doing the jobs isn't issue:-)
+>>
+> I noticed that you are mainly working some old machines.
+> And recently years, there are some new machines from Ingenic, Loongson, MTK etc.
+> MIPS Inc also have some MIPSr6 IPs.
+> I think that you need some of these machines.
+
+I can provide some new Ingenic platform machines as a gift to Thomas.
+Ingenic X1000 can be provided in a short time, it has been directly 
+supported by kernel 5.6.
+X1830 and X2000 will be available later.
+
+> In the last years, we see that the single maintainer is not enough as people may
+> quite busy.
+> Do you think that we need co-maintainers?
+>
+>> Thomas.
+>>
+>> --
+>> Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+>> good idea.                                                [ RFC1925, 2.3 ]
+>
+>
+
