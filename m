@@ -2,163 +2,69 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50D0C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DC3C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1D62467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F5524673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgBTR75 convert rfc822-to-8bit (ORCPT
+        id S1728596AbgBTSAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:59:57 -0500
-Received: from mailoutvs13.siol.net ([185.57.226.204]:57929 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727298AbgBTR75 (ORCPT
+        Thu, 20 Feb 2020 13:00:35 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:56714 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgBTSAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:59:57 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 925215246B1;
-        Thu, 20 Feb 2020 18:59:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 9gCUlovdAPR5; Thu, 20 Feb 2020 18:59:54 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 1F4BF524768;
-        Thu, 20 Feb 2020 18:59:54 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id EADDA5246B1;
-        Thu, 20 Feb 2020 18:59:52 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
-Date:   Thu, 20 Feb 2020 18:59:52 +0100
-Message-ID: <4534371.31r3eYUQgx@jernej-laptop>
-In-Reply-To: <20200220174749.ih3pcj3oxiwvuurz@gilmour.lan>
-References: <20200213211427.33004-1-jernej.skrabec@siol.net> <5326350.DvuYhMxLoT@jernej-laptop> <20200220174749.ih3pcj3oxiwvuurz@gilmour.lan>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Feb 2020 13:00:35 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 908F1104D1AAA;
+        Thu, 20 Feb 2020 10:00:34 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:00:32 -0800 (PST)
+Message-Id: <20200220.100032.1712605490922863986.davem@davemloft.net>
+To:     keescook@chromium.org
+Cc:     kuba@kernel.org, glider@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: core: Distribute switch variables for
+ initialization
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200220062304.68942-1-keescook@chromium.org>
+References: <20200220062304.68942-1-keescook@chromium.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-7
+Content-Transfer-Encoding: base64
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 20 Feb 2020 10:00:34 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne četrtek, 20. februar 2020 ob 18:47:49 CET je Maxime Ripard napisal(a):
-> On Fri, Feb 14, 2020 at 05:42:13PM +0100, Jernej Škrabec wrote:
-> > Hi Maxime,
-> > 
-> > Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
-> > > Hi Jernej,
-> > > 
-> > > Thanks for taking care of this
-> > > 
-> > > On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
-> > > > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix
-> > > > TX6
-> > > > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
-> > > > matter if external oscillator was enabled because HW detected error
-> > > > and
-> > > > fall back to internal one. H6 has same functionality but it's the
-> > > > first
-> > > > SoC which have "auto switch bypass" bit documented and always enabled
-> > > > in
-> > > > driver. This prevents RTC to work correctly if external crystal is not
-> > > > present on board. There are other side effects - all peripherals which
-> > > > depends on this clock also don't work (HDMI CEC for example).
-> > > > 
-> > > > Make clocks property optional. If it is present, select external
-> > > > oscillator. If not, stay on internal.
-> > > > 
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > > 
-> > > >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
-> > > >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > > > index 852f5f3b3592..538cf7e19034 100644
-> > > > --- a/drivers/rtc/rtc-sun6i.c
-> > > > +++ b/drivers/rtc/rtc-sun6i.c
-> > > > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
-> > > > device_node *node,>
-> > > > 
-> > > >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> > > >  	
-> > > >  	}
-> > > > 
-> > > > -	/* Switch to the external, more precise, oscillator */
-> > > > -	reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> > > > -	if (rtc->data->has_losc_en)
-> > > > -		reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > > > +	/* Switch to the external, more precise, oscillator, if present 
-*/
-> > > > +	if (of_get_property(node, "clocks", NULL)) {
-> > > > +		reg |= SUN6I_LOSC_CTRL_EXT_OSC;
-> > > > +		if (rtc->data->has_losc_en)
-> > > > +			reg |= SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > > > +	}
-> > > > 
-> > > >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> > > >  	
-> > > >  	/* Yes, I know, this is ugly. */
-> > > >  	sun6i_rtc = rtc;
-> > > > 
-> > > > -	/* Deal with old DTs */
-> > > > -	if (!of_get_property(node, "clocks", NULL))
-> > > > -		goto err;
-> > > > -
-> > > 
-> > > Doesn't that prevent the parents to be properly set if there's an
-> > > external crystal?
-> > 
-> > No, why?
-> > 
-> > Check these two clk_summary:
-> > http://ix.io/2bHY Tanix TX6 (no external crystal)
-> > http://ix.io/2bI2 OrangePi 3 (external crystal present)
-> 
-> I was concerned about the "other" parent. In the case where you don't
-> have a clocks property (so the check that you are removing), the code
-> then registers a clock with two parents: the one that we create (the
-> internal oscillator) and the one coming from the clocks property.
-> 
-> clk_summary only shows the current parent, which is going to be right
-> with your patch, but in the case where you have no clocks property,
-> you still (attempts to) register two parents, the second one being
-> non-functional.
-> 
-> Further looking at it, we might be good because we allocate an array
-> of two clocks, but only register of_clk_get_parent_count(node) + 1
-> clocks, so 1 if clocks is missing.
-
-Yes, my patch rely on "of_clk_get_parent_count(node) + 1". If there is no 
-property, it will return 1 thus only first parent (internal RC oscilator) will 
-be registered.
-
-Anyway, following line:
-parents[1] = of_clk_get_parent_name(node, 0);
-should evaluate to null. I didn't research further what clk framework does 
-with null parent because number of parents will be set to 1 and this null 
-value will be ignored anyway.
-
-> 
-> Still, I think this should be more obvious, through a comment or
-> shuffling a bit the parent registration maybe?
-
-I think code is in correct order, just maybe a bit more explanation in form of 
-comment(s) to make it more obvious how it works for either case.
-
-Best regards,
-Jernej
-
-
+RnJvbTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQpEYXRlOiBXZWQsIDE5IEZl
+YiAyMDIwIDIyOjIzOjA0IC0wODAwDQoNCj4gVmFyaWFibGVzIGRlY2xhcmVkIGluIGEgc3dpdGNo
+IHN0YXRlbWVudCBiZWZvcmUgYW55IGNhc2Ugc3RhdGVtZW50cw0KPiBjYW5ub3QgYmUgYXV0b21h
+dGljYWxseSBpbml0aWFsaXplZCB3aXRoIGNvbXBpbGVyIGluc3RydW1lbnRhdGlvbiAoYXMNCj4g
+dGhleSBhcmUgbm90IHBhcnQgb2YgYW55IGV4ZWN1dGlvbiBmbG93KS4gV2l0aCBHQ0MncyBwcm9w
+b3NlZCBhdXRvbWF0aWMNCj4gc3RhY2sgdmFyaWFibGUgaW5pdGlhbGl6YXRpb24gZmVhdHVyZSwg
+dGhpcyB0cmlnZ2VycyBhIHdhcm5pbmcgKGFuZCB0aGV5DQo+IGRvbid0IGdldCBpbml0aWFsaXpl
+ZCkuIENsYW5nJ3MgYXV0b21hdGljIHN0YWNrIHZhcmlhYmxlIGluaXRpYWxpemF0aW9uDQo+ICh2
+aWEgQ09ORklHX0lOSVRfU1RBQ0tfQUxMPXkpIGRvZXNuJ3QgdGhyb3cgYSB3YXJuaW5nLCBidXQg
+aXQgYWxzbw0KPiBkb2Vzbid0IGluaXRpYWxpemUgc3VjaCB2YXJpYWJsZXNbMV0uIE5vdGUgdGhh
+dCB0aGVzZSB3YXJuaW5ncyAob3Igc2lsZW50DQo+IHNraXBwaW5nKSBoYXBwZW4gYmVmb3JlIHRo
+ZSBkZWFkLXN0b3JlIGVsaW1pbmF0aW9uIG9wdGltaXphdGlvbiBwaGFzZSwNCj4gc28gZXZlbiB3
+aGVuIHRoZSBhdXRvbWF0aWMgaW5pdGlhbGl6YXRpb25zIGFyZSBsYXRlciBlbGlkZWQgaW4gZmF2
+b3Igb2YNCj4gZGlyZWN0IGluaXRpYWxpemF0aW9ucywgdGhlIHdhcm5pbmdzIHJlbWFpbi4NCj4g
+DQo+IFRvIGF2b2lkIHRoZXNlIHByb2JsZW1zLCBtb3ZlIHN1Y2ggdmFyaWFibGVzIGludG8gdGhl
+ICJjYXNlIiB3aGVyZQ0KPiB0aGV5J3JlIHVzZWQgb3IgbGlmdCB0aGVtIHVwIGludG8gdGhlIG1h
+aW4gZnVuY3Rpb24gYm9keS4NCj4gDQo+IG5ldC9jb3JlL3NrYnVmZi5jOiBJbiBmdW5jdGlvbiCh
+c2tiX2NoZWNrc3VtX3NldHVwX2lwojoNCj4gbmV0L2NvcmUvc2tidWZmLmM6NDgwOTo3OiB3YXJu
+aW5nOiBzdGF0ZW1lbnQgd2lsbCBuZXZlciBiZSBleGVjdXRlZCBbLVdzd2l0Y2gtdW5yZWFjaGFi
+bGVdDQo+ICA0ODA5IHwgICBpbnQgZXJyOw0KPiAgICAgICB8ICAgICAgIF5+fg0KPiANCj4gWzFd
+IGh0dHBzOi8vYnVncy5sbHZtLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9NDQ5MTYNCj4gDQo+IFNpZ25l
+ZC1vZmYtYnk6IEtlZXMgQ29vayA8a2Vlc2Nvb2tAY2hyb21pdW0ub3JnPg0KDQpBcHBsaWVkLg0K
