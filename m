@@ -2,124 +2,96 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB4AC11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A686DC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029F2208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E32424650
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hHW5gJeF"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsoqIRD4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgBTVAW (ORCPT
+        id S1729071AbgBTVCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:00:22 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31156 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729114AbgBTVAV (ORCPT
+        Thu, 20 Feb 2020 16:02:44 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46857 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbgBTVCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:00:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582232420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yiunvjhi0mmwDra9J4GOFZcEpSpxQietN0rDNA6NOEg=;
-        b=hHW5gJeF0dixcyT4l4oU/rgji0FKuHUawpxC0hckJsJOtOmYQMZT5tiEOEYtfhHT/4aHHq
-        GJ+rM2FUwOmm88EPBdKsoJx7jBZZmpBQBmYmtyzrz+53wrRXJxs2/mn+m/sl2Uwj1zUvIg
-        sUEzcjJgyjQFNVSCmiONgzUTjQndBWA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-yP3m1cQ0ODKoJg2CFqu37Q-1; Thu, 20 Feb 2020 16:00:16 -0500
-X-MC-Unique: yP3m1cQ0ODKoJg2CFqu37Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 713578017CC;
-        Thu, 20 Feb 2020 21:00:14 +0000 (UTC)
-Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D5BC75C114;
-        Thu, 20 Feb 2020 21:00:13 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 14:00:13 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com
-Subject: Re: [RFC PATCH v3 6/9] vfio/pci: export vfio_pci_setup_barmap
-Message-ID: <20200220140013.66a6b52c@w520.home>
-In-Reply-To: <20200211101419.21067-1-yan.y.zhao@intel.com>
-References: <20200211095727.20426-1-yan.y.zhao@intel.com>
-        <20200211101419.21067-1-yan.y.zhao@intel.com>
+        Thu, 20 Feb 2020 16:02:44 -0500
+Received: by mail-pg1-f194.google.com with SMTP id y30so2514655pga.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
+        b=JsoqIRD4xomQetfHM7XtcK7FHq/ipSAEkJsVnBvyST4DrAaAZF6BueSVgo/A0us1yb
+         ELSgSfno5PgHnoJm/NzqbsG8qQ02kmK3xDxajwkASRuGLEPI5+BMdVoxVksurm9wJ1Hp
+         6IrSh0MG+2h1RvRA1zHGLa4KQ8N8MtjmIgGKw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
+        b=M1TVTLtNyjzqMm3Jn+NfzZxXsprJrlGU8ytz5Iq5/0guuNa/gK/yXAVSVgoT2EkJzN
+         p2jPXQ6Mct6/wOjDoI66bI72JHipvZmT/9yGWDUi4QO95Gc+nulKxzLmedMugdbjLdmm
+         TtKrk5qwwEbbkmw2bw4mZjBFDXZxpreg2h9PEspJynQuRo9TT4NFCDOPHHLIQ1LREIDo
+         bTxN4Yl08HJMVzRL4HmwrGIMBz6XcJdjyoy1S7r/ALJ44GfONoyn2bPzuvQ3RhlZkOnD
+         dBGamHSCnu78f7OlLvWAR+Kdg1gdWGpG2L2CRcrIQVswVECNPGjtAgpj1D5dzOyWYbUI
+         Wc6Q==
+X-Gm-Message-State: APjAAAX7cSKhHBjictKEIoZW2D+IWRh/mpQB/I3myd3DoIYDIJroR9hC
+        yWHZ7LY9M/nhviaI4beEYUobLQ==
+X-Google-Smtp-Source: APXvYqybBEIA4/pqHt8cShquf8H+vaT94NLFSfun4J2uEKy/wjt157bBu3t/D8co6V54Gr/xmMNoZQ==
+X-Received: by 2002:a63:565e:: with SMTP id g30mr3053334pgm.206.1582232563637;
+        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id o73sm341592pje.7.2020.02.20.13.02.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:02:42 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Sharat Masetty <smasetty@codeaurora.org>
+Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, dianders@chromium.org
+Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
+Message-ID: <20200220210242.GC24720@google.com>
+References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
+ <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 05:14:19 -0500
-Yan Zhao <yan.y.zhao@intel.com> wrote:
-
-> This allows vendor driver to read/write to bars directly which is useful
-> in security checking condition.
+On Thu, Feb 20, 2020 at 01:42:22PM +0530, Sharat Masetty wrote:
+> This patch adds a clock definition needed for powering on the GPU TBUs
+> and the GPU TCU.
 > 
-> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
 > ---
->  drivers/vfio/pci/vfio_pci_rdwr.c | 26 +++++++++++++-------------
->  include/linux/vfio.h             |  2 ++
->  2 files changed, 15 insertions(+), 13 deletions(-)
+>  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
-> index a0ef1de4f74a..3ba85fb2af5b 100644
-> --- a/drivers/vfio/pci/vfio_pci_rdwr.c
-> +++ b/drivers/vfio/pci/vfio_pci_rdwr.c
-> @@ -129,7 +129,7 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
->  	return done;
->  }
->  
-> -static int vfio_pci_setup_barmap(struct vfio_pci_device *vdev, int bar)
-> +void __iomem *vfio_pci_setup_barmap(struct vfio_pci_device *vdev, int bar)
->  {
->  	struct pci_dev *pdev = vdev->pdev;
->  	struct vfio_pci_device_private *priv = VDEV_TO_PRIV(vdev);
-> @@ -137,22 +137,23 @@ static int vfio_pci_setup_barmap(struct vfio_pci_device *vdev, int bar)
->  	void __iomem *io;
->  
->  	if (priv->barmap[bar])
-> -		return 0;
-> +		return priv->barmap[bar];
->  
->  	ret = pci_request_selected_regions(pdev, 1 << bar, "vfio");
->  	if (ret)
-> -		return ret;
-> +		return NULL;
->  
->  	io = pci_iomap(pdev, bar, 0);
->  	if (!io) {
->  		pci_release_selected_regions(pdev, 1 << bar);
-> -		return -ENOMEM;
-> +		return NULL;
->  	}
->  
->  	priv->barmap[bar] = io;
->  
-> -	return 0;
-> +	return io;
->  }
-> +EXPORT_SYMBOL_GPL(vfio_pci_setup_barmap);
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> index 6515dbe..235c0df 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+> @@ -28,6 +28,7 @@ properties:
+>            - enum:
+>                - qcom,msm8996-smmu-v2
+>                - qcom,msm8998-smmu-v2
+> +              - qcom,sc7180-smmu-v2
 
-This should instead become a vfio_pci_get_barmap() function that tests
-for an optionally calls vfio_pci_setup_barmap before returning the
-pointer.  I'm now willing to lose the better error returns in the
-original.  Thanks,
-
-Alex
-
+The addition of the compatible string isn't (directly) related with $subject,
+this should be done in a separate patch.
