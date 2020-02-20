@@ -2,107 +2,94 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42B7C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1A3C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CDF208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D87206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:57:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k3zCKzyq"
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="P2WLVKSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729007AbgBTTzh (ORCPT
+        id S1728990AbgBTT5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:55:37 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:49684 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgBTTzh (ORCPT
+        Thu, 20 Feb 2020 14:57:01 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44347 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgBTT5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:55:37 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KJms1Z022382;
-        Thu, 20 Feb 2020 19:55:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=Oeqn/msELu44gc9TzxVpdR7IAGtxbC8EWYVF6nQT3jA=;
- b=k3zCKzyqek3pblqv98woSoLvFhc6jomamI50XiH6WcMl8o/NKBWg5FP45OC9wyyrA8DZ
- ewFwmrXB+/8Y/yEIhisarEHRnQCQ+Ugt/IOlO3UjjyzBotUQYa6Ih8LpO+fW45LQGa3h
- PHPNVxuiiUTWkbYIFAgC45rzzcmR3+1pqy4kfOevEf5bAxFt41h/4rAI53vYFRVikvpG
- M+C0OyuOz2qtmZkavplVeLA9HFE9h4AsybtU8FmZCOqN2ZGwoD4vg4dzehCeYnUH75I2
- wPiJuEOFoOAwFaH5ry2l8yosH4bV1KBA8GxHwjjrqJJ12nR6424UoBgU0LYqbtR/f09o 4Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y8uddc447-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 19:55:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KJm6Bb100952;
-        Thu, 20 Feb 2020 19:55:25 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2y8ud6v9fm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 19:55:25 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01KJtIre029033;
-        Thu, 20 Feb 2020 19:55:21 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 11:55:18 -0800
-Date:   Thu, 20 Feb 2020 14:55:35 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200220195535.7xblt45akld6eftj@ca-dmjordan1.us.oracle.com>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219191618.GB54486@cmpxchg.org>
- <20200219195332.GE11847@dhcp22.suse.cz>
- <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
- <20200219220859.GF54486@cmpxchg.org>
- <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
- <20200220155651.GG698990@mtj.thefacebook.com>
- <20200220182326.ubcjycaubgykiy6e@ca-dmjordan1.us.oracle.com>
- <20200220184545.GH698990@mtj.thefacebook.com>
+        Thu, 20 Feb 2020 14:57:00 -0500
+Received: by mail-pg1-f195.google.com with SMTP id g3so2442084pgs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:57:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=nAWUMwqWIY3D/+QdxFiIISW276z/h4/mNno+zWK07qg=;
+        b=P2WLVKSxLVE+j1O5y1/8R8pwftnXEN4wmqmnrbX8G62jgG7VL0X9hO/6YJtURSyR0/
+         L4HnS2KANSaFhLG6F5VcjMCfHlGJpLiTfVhx5qAL/ihQFtwbJJfzQ5utWx/gdlfWrRw+
+         WrcIimideYR1TlCO8Eh9Q0DGDHltWXvV5mmIO3bW9Rz+4iNnwvKOxcEMHzf7zTDsdpmB
+         PvbM7Xqmxl5CAzI4NIPn1atiowp9M4dFmnOrHwUnIE9Gsxbp2kSAkjUj8sH9NLopjEs1
+         im5CeXti/mz0O+Fld1KX12OS2PwrJ0JdT8qW+vSBWQmAoeNDVr+8/mhkKEeWQWhF44xW
+         VW/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=nAWUMwqWIY3D/+QdxFiIISW276z/h4/mNno+zWK07qg=;
+        b=tgPqUzbjrJKRhuVRZg0j7kmI7EMrsvIyigd8j4ehHKFGKV1rXjtqISbG1gJB+87dZ2
+         sH2IXtO07FNqS5hxXUxfjJJ27FpuoCTkK/xVQqQcOgXfPnB47vuIuGYbjuuo5wz56Atm
+         KvMvKbayv0Y3irJn0AkjyCVbB8SbsbRZL1cRq6iu+Ab/io8tkbnztAiKJEvcMhArqOva
+         Ja0bDeY8BVQQ7s5NSNb5u18uioNtDk8t4rDbrD3OYO2iF/jLOkh8m/pHhm+9jk/eIdbL
+         zWkYsOlJTOyM6ecAHdQD0v0JLsnFAYT27/+jq+qecl1orEVXoMEqZ3h/XGJLcoKmfUsN
+         SGkg==
+X-Gm-Message-State: APjAAAX2VxdfacD5+WQm7SBdI6+oW+tkKHyI5rLEviY+m9/9btesCRnZ
+        SnkW7/fM+zDCF+TArPSAlIrnMA==
+X-Google-Smtp-Source: APXvYqzU6fsfiC/IXBiENMa+SEW6bd33sb3C4yGSiGYNHLrfLFHW7InCbZ2ReCslsOL5Wox47MuSxw==
+X-Received: by 2002:a63:30b:: with SMTP id 11mr1935326pgd.275.1582228620091;
+        Thu, 20 Feb 2020 11:57:00 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.175])
+        by smtp.gmail.com with ESMTPSA id w18sm154305pge.4.2020.02.20.11.56.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 11:56:59 -0800 (PST)
+Date:   Fri, 21 Feb 2020 01:26:54 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: octeon: add blank line after union
+Message-ID: <20200220195654.GA14056@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220184545.GH698990@mtj.thefacebook.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=694 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200143
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=757 malwarescore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200143
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 01:45:45PM -0500, Tejun Heo wrote:
-> The setup cost can be lazy optimized but it'd still have to bounce the
-> tiny pieces of work to different threads instead of processing them in
-> one fell swoop from the same context, which most likely is gonna be
-> untenably expensive.
+add a blank line after union declaration to fix checkpatch.pl warning
 
-I see, your last mail is clearer now.  If it's easy to do, a pointer to where
-this happens would help so we're on the same page.
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+---
+ drivers/staging/octeon/octeon-stubs.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-thanks,
-Daniel
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+index d2bd379b1fd9..ea33c94fa12b 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -382,6 +382,7 @@ union cvmx_ipd_sub_port_qos_cnt {
+ 		uint64_t reserved_41_63:23;
+ 	} s;
+ };
++
+ typedef struct {
+ 	uint32_t dropped_octets;
+ 	uint32_t dropped_packets;
+-- 
+2.17.1
+
