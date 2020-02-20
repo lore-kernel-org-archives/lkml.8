@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADA8C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A48C11D0F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2438208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B10E2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EClCNMRV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dN6B0qAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgBTQbc (ORCPT
+        id S1728907AbgBTQbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:31:32 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32971 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728869AbgBTQb1 (ORCPT
+        Thu, 20 Feb 2020 11:31:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50874 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728354AbgBTQba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:31:27 -0500
+        Thu, 20 Feb 2020 11:31:30 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582216285;
+        s=mimecast20190719; t=1582216288;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7d584vpsqmF552ufSQ0oj+271PcbV3J+G1Y9hUcJJaw=;
-        b=EClCNMRVwkpPyxkAFueQeM7JPM4V54ZZFLq+Sq6EXuEoE99eBcqu6k47W+YE8Tx0E2Q6ur
-        W8yC0aT4Jf3zowmP7sqZpM8J1GSDd7rnor/JqjrI5wzYKAO3a+EYR5vvEAWJYay+SlZ6fN
-        JdS4I9+VRBSpuVF9MNSGZNv7Mk0n3Zs=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-8SSMJJnIMcGjIDdTONRatA-1; Thu, 20 Feb 2020 11:31:22 -0500
-X-MC-Unique: 8SSMJJnIMcGjIDdTONRatA-1
-Received: by mail-qk1-f198.google.com with SMTP id i11so3099369qki.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:31:22 -0800 (PST)
+        bh=TzxiNpJ74cm3apNvzVOkAuAMHa+8ebeRBqCgwj3NQos=;
+        b=dN6B0qAaX+zw409QeYT+n3Zwt6yMO1cueoipM2Xgzd5orAzGLV+46WddGe0h3aLme2b9O1
+        vIhLU6lEIvXkkn/IKn60wlW3Ur2eDyTAoRadrWLWrD4wYWRuWSfPwzIGdwhiey/49yLdzO
+        BhNQ8MNa6lefKTRyDBgJkbRTgWOlwPw=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-324-IwMc4V75NSy7u3Mg5dWRvg-1; Thu, 20 Feb 2020 11:31:26 -0500
+X-MC-Unique: IwMc4V75NSy7u3Mg5dWRvg-1
+Received: by mail-qk1-f197.google.com with SMTP id q123so3125788qkb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:31:26 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7d584vpsqmF552ufSQ0oj+271PcbV3J+G1Y9hUcJJaw=;
-        b=b3j6Bh0bev5vOhfkhGj4sl1EoWuwWAKeTuJF3OT2ArW0GcWkagIXQI6RMnIbQojpxa
-         kkaCzrespyF7mdEVm4fEiYPdpcYPPDLZzb88zrYT3aWK51vx0DNm4uGCNm/XOPF+gPBc
-         8fZRpSBV1RGvcXtYU7BfM2wP0ZO/pyFvM9pDNfFIWOmqwkJRbHgpuwWIKSMOV00j+4SE
-         Guy9hf4/IQkU1CRYvBS8+tdslVDMJzoSUGtAqDUoGDincermA7NFdp5b5L3ige38Uz2J
-         xEoZPWwekQheLPl8RXARBr34BnyVrfb7PWxhgdJp6cb6nKE+GPOkfD+zfsu+4mi1FlCc
-         +n1Q==
-X-Gm-Message-State: APjAAAWDqrTqi+DMxNBce9Li0pPPDdxHeOandliMVpk/V1uf8ZbeRy+W
-        Qw5o98OrrPgWAxP+KbyHU7KRvyf54sBmvgD/XtifWWtfiU0fklKSd9QLZ/L5VEkVX3viZcrrRTA
-        Xgfq4g7Kjw+y4ZAPfhe5+Dqd+
-X-Received: by 2002:a37:a687:: with SMTP id p129mr28937374qke.310.1582216280470;
-        Thu, 20 Feb 2020 08:31:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxpcQIM3G286rhkHKpQHKU9WSXWR3bLEaBtKD21o+ZbRl6RatF8cf5XiTJ/EJIKEX+HwIT5sw==
-X-Received: by 2002:a37:a687:: with SMTP id p129mr28937300qke.310.1582216280028;
-        Thu, 20 Feb 2020 08:31:20 -0800 (PST)
+        bh=TzxiNpJ74cm3apNvzVOkAuAMHa+8ebeRBqCgwj3NQos=;
+        b=eh3ASbTmV2snDknrekqrbZnkI5aBqizpw/2oxywNz4OekmjF0/vtkO9yac+5e4ncgb
+         kUFanpXhVSCu6v7SigxAkJY7FeWiIRYMQBtkYOHXR74kgjgvIcXp408X6XvnE1D/HxoZ
+         ocq3q0KQQBccGM9TdjYVxqrDvo1jJO2qOyp08S5hzdaWpM1jjSy+rjJm8ghi6ZJe97Qe
+         pfmbgThjZSBldoaaE+S+F9SJdnhRZrpGMpSqVE9wugQQeJQuwk+XCWKclPBHY3MedSRt
+         xL8ClbIQpd+opPTdgW9jmjLLN1ykH67ZhkI3kHoQ1rTKoBbjQwIPMxGsJ7L+vLPZSicI
+         r5vw==
+X-Gm-Message-State: APjAAAWKlgLsQ63AXV3xXAaUzngh+TWXj/GNatcmS5B6pOOm11D17Pq/
+        zGUJH0rRHF0CMRGsHAIZiB8uhLSS/wM3j7Vr+WYhllNW7VpVCWjyTk0bYs53aD9PZYUHQl8saCd
+        9DegEGPl0vBk/rZbjleRhhmRJ
+X-Received: by 2002:ac8:cb:: with SMTP id d11mr27573197qtg.22.1582216286045;
+        Thu, 20 Feb 2020 08:31:26 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyk1N7dL59sWammyS1kvLismOt/2QFhFT9Et6JVVWTW7b592VWkU5ILX5RvyRKdfYH5Z5TKNQ==
+X-Received: by 2002:ac8:cb:: with SMTP id d11mr27573156qtg.22.1582216285648;
+        Thu, 20 Feb 2020 08:31:25 -0800 (PST)
 Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id l19sm42366qkl.3.2020.02.20.08.31.18
+        by smtp.gmail.com with ESMTPSA id l19sm42366qkl.3.2020.02.20.08.31.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 08:31:19 -0800 (PST)
+        Thu, 20 Feb 2020 08:31:24 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Brian Geffon <bgeffon@google.com>,
@@ -81,9 +81,9 @@ Cc:     Brian Geffon <bgeffon@google.com>,
         Hugh Dickins <hughd@google.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         Jerome Glisse <jglisse@redhat.com>
-Subject: [PATCH v6 03/19] userfaultfd: wp: add WP pagetable tracking to x86
-Date:   Thu, 20 Feb 2020 11:30:56 -0500
-Message-Id: <20200220163112.11409-4-peterx@redhat.com>
+Subject: [PATCH v6 06/19] mm: merge parameters for change_protection()
+Date:   Thu, 20 Feb 2020 11:30:59 -0500
+Message-Id: <20200220163112.11409-7-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200220163112.11409-1-peterx@redhat.com>
 References: <20200220163112.11409-1-peterx@redhat.com>
@@ -94,277 +94,238 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+change_protection() was used by either the NUMA or mprotect() code,
+there's one parameter for each of the callers (dirty_accountable and
+prot_numa).  Further, these parameters are passed along the calls:
 
-Accurate userfaultfd WP tracking is possible by tracking exactly which
-virtual memory ranges were writeprotected by userland. We can't relay
-only on the RW bit of the mapped pagetable because that information is
-destroyed by fork() or KSM or swap. If we were to relay on that, we'd
-need to stay on the safe side and generate false positive wp faults
-for every swapped out page.
+  - change_protection_range()
+  - change_p4d_range()
+  - change_pud_range()
+  - change_pmd_range()
+  - ...
 
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-[peterx: append _PAGE_UFD_WP to _PAGE_CHG_MASK]
+Now we introduce a flag for change_protect() and all these helpers to
+replace these parameters.  Then we can avoid passing multiple parameters
+multiple times along the way.
+
+More importantly, it'll greatly simplify the work if we want to
+introduce any new parameters to change_protection().  In the follow up
+patches, a new parameter for userfaultfd write protection will be
+introduced.
+
+No functional change at all.
+
 Reviewed-by: Jerome Glisse <jglisse@redhat.com>
-Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/x86/Kconfig                     |  1 +
- arch/x86/include/asm/pgtable.h       | 52 ++++++++++++++++++++++++++++
- arch/x86/include/asm/pgtable_64.h    |  8 ++++-
- arch/x86/include/asm/pgtable_types.h | 11 +++++-
- include/asm-generic/pgtable.h        |  1 +
- include/asm-generic/pgtable_uffd.h   | 51 +++++++++++++++++++++++++++
- init/Kconfig                         |  5 +++
- 7 files changed, 127 insertions(+), 2 deletions(-)
- create mode 100644 include/asm-generic/pgtable_uffd.h
+ include/linux/huge_mm.h |  2 +-
+ include/linux/mm.h      | 14 +++++++++++++-
+ mm/huge_memory.c        |  3 ++-
+ mm/mempolicy.c          |  2 +-
+ mm/mprotect.c           | 29 ++++++++++++++++-------------
+ 5 files changed, 33 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..ca6f12f34d92 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -230,6 +230,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select HAVE_ARCH_USERFAULTFD_WP		if USERFAULTFD
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 7e118660bbd9..74f16d7e5b47 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -25,6 +25,7 @@
- #include <asm/x86_init.h>
- #include <asm/fpu/xstate.h>
- #include <asm/fpu/api.h>
-+#include <asm-generic/pgtable_uffd.h>
- 
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
- int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
-@@ -313,6 +314,23 @@ static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
- 	return native_make_pte(v & ~clear);
- }
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static inline int pte_uffd_wp(pte_t pte)
-+{
-+	return pte_flags(pte) & _PAGE_UFFD_WP;
-+}
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 5aca3d1bdb32..92220ec66862 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -46,7 +46,7 @@ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ 			 pmd_t *old_pmd, pmd_t *new_pmd);
+ extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, pgprot_t newprot,
+-			int prot_numa);
++			unsigned long cp_flags);
+ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
+ enum transparent_hugepage_flag {
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 51a886d50758..547c7415ff92 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1660,9 +1660,21 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+ 		unsigned long old_addr, struct vm_area_struct *new_vma,
+ 		unsigned long new_addr, unsigned long len,
+ 		bool need_rmap_locks);
 +
-+static inline pte_t pte_mkuffd_wp(pte_t pte)
-+{
-+	return pte_set_flags(pte, _PAGE_UFFD_WP);
-+}
++/*
++ * Flags used by change_protection().  For now we make it a bitmap so
++ * that we can pass in multiple flags just like parameters.  However
++ * for now all the callers are only use one of the flags at the same
++ * time.
++ */
++/* Whether we should allow dirty bit accounting */
++#define  MM_CP_DIRTY_ACCT                  (1UL << 0)
++/* Whether this protection change is for NUMA hints */
++#define  MM_CP_PROT_NUMA                   (1UL << 1)
 +
-+static inline pte_t pte_clear_uffd_wp(pte_t pte)
-+{
-+	return pte_clear_flags(pte, _PAGE_UFFD_WP);
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- static inline pte_t pte_mkclean(pte_t pte)
- {
- 	return pte_clear_flags(pte, _PAGE_DIRTY);
-@@ -392,6 +410,23 @@ static inline pmd_t pmd_clear_flags(pmd_t pmd, pmdval_t clear)
- 	return native_make_pmd(v & ~clear);
- }
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static inline int pmd_uffd_wp(pmd_t pmd)
-+{
-+	return pmd_flags(pmd) & _PAGE_UFFD_WP;
-+}
-+
-+static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
-+{
-+	return pmd_set_flags(pmd, _PAGE_UFFD_WP);
-+}
-+
-+static inline pmd_t pmd_clear_uffd_wp(pmd_t pmd)
-+{
-+	return pmd_clear_flags(pmd, _PAGE_UFFD_WP);
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- static inline pmd_t pmd_mkold(pmd_t pmd)
- {
- 	return pmd_clear_flags(pmd, _PAGE_ACCESSED);
-@@ -1377,6 +1412,23 @@ static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
- #endif
- #endif
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static inline pte_t pte_swp_mkuffd_wp(pte_t pte)
-+{
-+	return pte_set_flags(pte, _PAGE_SWP_UFFD_WP);
-+}
-+
-+static inline int pte_swp_uffd_wp(pte_t pte)
-+{
-+	return pte_flags(pte) & _PAGE_SWP_UFFD_WP;
-+}
-+
-+static inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
-+{
-+	return pte_clear_flags(pte, _PAGE_SWP_UFFD_WP);
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
- #define PKRU_AD_BIT 0x1
- #define PKRU_WD_BIT 0x2
- #define PKRU_BITS_PER_PKEY 2
-diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
-index 0b6c4042942a..df1373415f11 100644
---- a/arch/x86/include/asm/pgtable_64.h
-+++ b/arch/x86/include/asm/pgtable_64.h
-@@ -189,7 +189,7 @@ extern void sync_global_pgds(unsigned long start, unsigned long end);
-  *
-  * |     ...            | 11| 10|  9|8|7|6|5| 4| 3|2| 1|0| <- bit number
-  * |     ...            |SW3|SW2|SW1|G|L|D|A|CD|WT|U| W|P| <- bit names
-- * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| X|X|SD|0| <- swp entry
-+ * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| X|F|SD|0| <- swp entry
-  *
-  * G (8) is aliased and used as a PROT_NONE indicator for
-  * !present ptes.  We need to start storing swap entries above
-@@ -197,9 +197,15 @@ extern void sync_global_pgds(unsigned long start, unsigned long end);
-  * erratum where they can be incorrectly set by hardware on
-  * non-present PTEs.
-  *
-+ * SD Bits 1-4 are not used in non-present format and available for
-+ * special use described below:
-+ *
-  * SD (1) in swp entry is used to store soft dirty bit, which helps us
-  * remember soft dirty over page migration
-  *
-+ * F (2) in swp entry is used to record when a pagetable is
-+ * writeprotected by userfaultfd WP support.
-+ *
-  * Bit 7 in swp entry should be 0 because pmd_present checks not only P,
-  * but also L and G.
-  *
-diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
-index 0239998d8cdc..e24a2ecf9475 100644
---- a/arch/x86/include/asm/pgtable_types.h
-+++ b/arch/x86/include/asm/pgtable_types.h
-@@ -32,6 +32,7 @@
- 
- #define _PAGE_BIT_SPECIAL	_PAGE_BIT_SOFTW1
- #define _PAGE_BIT_CPA_TEST	_PAGE_BIT_SOFTW1
-+#define _PAGE_BIT_UFFD_WP	_PAGE_BIT_SOFTW2 /* userfaultfd wrprotected */
- #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
- #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
- 
-@@ -100,6 +101,14 @@
- #define _PAGE_SWP_SOFT_DIRTY	(_AT(pteval_t, 0))
- #endif
- 
-+#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+#define _PAGE_UFFD_WP		(_AT(pteval_t, 1) << _PAGE_BIT_UFFD_WP)
-+#define _PAGE_SWP_UFFD_WP	_PAGE_USER
-+#else
-+#define _PAGE_UFFD_WP		(_AT(pteval_t, 0))
-+#define _PAGE_SWP_UFFD_WP	(_AT(pteval_t, 0))
-+#endif
-+
- #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
- #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
- #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
-@@ -118,7 +127,7 @@
+ extern unsigned long change_protection(struct vm_area_struct *vma, unsigned long start,
+ 			      unsigned long end, pgprot_t newprot,
+-			      int dirty_accountable, int prot_numa);
++			      unsigned long cp_flags);
+ extern int mprotect_fixup(struct vm_area_struct *vma,
+ 			  struct vm_area_struct **pprev, unsigned long start,
+ 			  unsigned long end, unsigned long newflags);
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index b08b199f9a11..2b01765bee92 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -1934,13 +1934,14 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+  *  - HPAGE_PMD_NR is protections changed and TLB flush necessary
   */
- #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
- 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
--			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
-+			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_UFFD_WP)
- #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+-		unsigned long addr, pgprot_t newprot, int prot_numa)
++		unsigned long addr, pgprot_t newprot, unsigned long cp_flags)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	spinlock_t *ptl;
+ 	pmd_t entry;
+ 	bool preserve_write;
+ 	int ret;
++	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
  
- /*
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index e2e2bef07dd2..329b8c8ca703 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -10,6 +10,7 @@
- #include <linux/mm_types.h>
- #include <linux/bug.h>
- #include <linux/errno.h>
-+#include <asm-generic/pgtable_uffd.h>
+ 	ptl = __pmd_trans_huge_lock(pmd, vma);
+ 	if (!ptl)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index 977c641f78cf..2ea6c4c0579a 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -598,7 +598,7 @@ unsigned long change_prot_numa(struct vm_area_struct *vma,
+ {
+ 	int nr_updated;
  
- #if 5 - defined(__PAGETABLE_P4D_FOLDED) - defined(__PAGETABLE_PUD_FOLDED) - \
- 	defined(__PAGETABLE_PMD_FOLDED) != CONFIG_PGTABLE_LEVELS
-diff --git a/include/asm-generic/pgtable_uffd.h b/include/asm-generic/pgtable_uffd.h
-new file mode 100644
-index 000000000000..643d1bf559c2
---- /dev/null
-+++ b/include/asm-generic/pgtable_uffd.h
-@@ -0,0 +1,51 @@
-+#ifndef _ASM_GENERIC_PGTABLE_UFFD_H
-+#define _ASM_GENERIC_PGTABLE_UFFD_H
-+
-+#ifndef CONFIG_HAVE_ARCH_USERFAULTFD_WP
-+static __always_inline int pte_uffd_wp(pte_t pte)
-+{
-+	return 0;
-+}
-+
-+static __always_inline int pmd_uffd_wp(pmd_t pmd)
-+{
-+	return 0;
-+}
-+
-+static __always_inline pte_t pte_mkuffd_wp(pte_t pte)
-+{
-+	return pte;
-+}
-+
-+static __always_inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
-+{
-+	return pmd;
-+}
-+
-+static __always_inline pte_t pte_clear_uffd_wp(pte_t pte)
-+{
-+	return pte;
-+}
-+
-+static __always_inline pmd_t pmd_clear_uffd_wp(pmd_t pmd)
-+{
-+	return pmd;
-+}
-+
-+static __always_inline pte_t pte_swp_mkuffd_wp(pte_t pte)
-+{
-+	return pte;
-+}
-+
-+static __always_inline int pte_swp_uffd_wp(pte_t pte)
-+{
-+	return 0;
-+}
-+
-+static __always_inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
-+{
-+	return pte;
-+}
-+#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
-+
-+#endif /* _ASM_GENERIC_PGTABLE_UFFD_H */
-diff --git a/init/Kconfig b/init/Kconfig
-index 452bc1835cd4..329113eea531 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1554,6 +1554,11 @@ config ADVISE_SYSCALLS
- 	  applications use these syscalls, you can disable this option to save
- 	  space.
+-	nr_updated = change_protection(vma, addr, end, PAGE_NONE, 0, 1);
++	nr_updated = change_protection(vma, addr, end, PAGE_NONE, MM_CP_PROT_NUMA);
+ 	if (nr_updated)
+ 		count_vm_numa_events(NUMA_PTE_UPDATES, nr_updated);
  
-+config HAVE_ARCH_USERFAULTFD_WP
-+	bool
-+	help
-+	  Arch has userfaultfd write protection support
-+
- config MEMBARRIER
- 	bool "Enable membarrier() system call" if EXPERT
- 	default y
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 7a8e84f86831..1565058ebcfc 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -37,12 +37,14 @@
+ 
+ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+ 		unsigned long addr, unsigned long end, pgprot_t newprot,
+-		int dirty_accountable, int prot_numa)
++		unsigned long cp_flags)
+ {
+ 	pte_t *pte, oldpte;
+ 	spinlock_t *ptl;
+ 	unsigned long pages = 0;
+ 	int target_node = NUMA_NO_NODE;
++	bool dirty_accountable = cp_flags & MM_CP_DIRTY_ACCT;
++	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+ 
+ 	/*
+ 	 * Can be called with only the mmap_sem for reading by
+@@ -163,7 +165,7 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+ 
+ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 		pud_t *pud, unsigned long addr, unsigned long end,
+-		pgprot_t newprot, int dirty_accountable, int prot_numa)
++		pgprot_t newprot, unsigned long cp_flags)
+ {
+ 	pmd_t *pmd;
+ 	unsigned long next;
+@@ -195,7 +197,7 @@ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 				__split_huge_pmd(vma, pmd, addr, false, NULL);
+ 			} else {
+ 				int nr_ptes = change_huge_pmd(vma, pmd, addr,
+-						newprot, prot_numa);
++							      newprot, cp_flags);
+ 
+ 				if (nr_ptes) {
+ 					if (nr_ptes == HPAGE_PMD_NR) {
+@@ -210,7 +212,7 @@ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 			/* fall through, the trans huge pmd just split */
+ 		}
+ 		this_pages = change_pte_range(vma, pmd, addr, next, newprot,
+-				 dirty_accountable, prot_numa);
++					      cp_flags);
+ 		pages += this_pages;
+ next:
+ 		cond_resched();
+@@ -226,7 +228,7 @@ static inline unsigned long change_pmd_range(struct vm_area_struct *vma,
+ 
+ static inline unsigned long change_pud_range(struct vm_area_struct *vma,
+ 		p4d_t *p4d, unsigned long addr, unsigned long end,
+-		pgprot_t newprot, int dirty_accountable, int prot_numa)
++		pgprot_t newprot, unsigned long cp_flags)
+ {
+ 	pud_t *pud;
+ 	unsigned long next;
+@@ -238,7 +240,7 @@ static inline unsigned long change_pud_range(struct vm_area_struct *vma,
+ 		if (pud_none_or_clear_bad(pud))
+ 			continue;
+ 		pages += change_pmd_range(vma, pud, addr, next, newprot,
+-				 dirty_accountable, prot_numa);
++					  cp_flags);
+ 	} while (pud++, addr = next, addr != end);
+ 
+ 	return pages;
+@@ -246,7 +248,7 @@ static inline unsigned long change_pud_range(struct vm_area_struct *vma,
+ 
+ static inline unsigned long change_p4d_range(struct vm_area_struct *vma,
+ 		pgd_t *pgd, unsigned long addr, unsigned long end,
+-		pgprot_t newprot, int dirty_accountable, int prot_numa)
++		pgprot_t newprot, unsigned long cp_flags)
+ {
+ 	p4d_t *p4d;
+ 	unsigned long next;
+@@ -258,7 +260,7 @@ static inline unsigned long change_p4d_range(struct vm_area_struct *vma,
+ 		if (p4d_none_or_clear_bad(p4d))
+ 			continue;
+ 		pages += change_pud_range(vma, p4d, addr, next, newprot,
+-				 dirty_accountable, prot_numa);
++					  cp_flags);
+ 	} while (p4d++, addr = next, addr != end);
+ 
+ 	return pages;
+@@ -266,7 +268,7 @@ static inline unsigned long change_p4d_range(struct vm_area_struct *vma,
+ 
+ static unsigned long change_protection_range(struct vm_area_struct *vma,
+ 		unsigned long addr, unsigned long end, pgprot_t newprot,
+-		int dirty_accountable, int prot_numa)
++		unsigned long cp_flags)
+ {
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	pgd_t *pgd;
+@@ -283,7 +285,7 @@ static unsigned long change_protection_range(struct vm_area_struct *vma,
+ 		if (pgd_none_or_clear_bad(pgd))
+ 			continue;
+ 		pages += change_p4d_range(vma, pgd, addr, next, newprot,
+-				 dirty_accountable, prot_numa);
++					  cp_flags);
+ 	} while (pgd++, addr = next, addr != end);
+ 
+ 	/* Only flush the TLB if we actually modified any entries: */
+@@ -296,14 +298,15 @@ static unsigned long change_protection_range(struct vm_area_struct *vma,
+ 
+ unsigned long change_protection(struct vm_area_struct *vma, unsigned long start,
+ 		       unsigned long end, pgprot_t newprot,
+-		       int dirty_accountable, int prot_numa)
++		       unsigned long cp_flags)
+ {
+ 	unsigned long pages;
+ 
+ 	if (is_vm_hugetlb_page(vma))
+ 		pages = hugetlb_change_protection(vma, start, end, newprot);
+ 	else
+-		pages = change_protection_range(vma, start, end, newprot, dirty_accountable, prot_numa);
++		pages = change_protection_range(vma, start, end, newprot,
++						cp_flags);
+ 
+ 	return pages;
+ }
+@@ -425,7 +428,7 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
+ 	vma_set_page_prot(vma);
+ 
+ 	change_protection(vma, start, end, vma->vm_page_prot,
+-			  dirty_accountable, 0);
++			  dirty_accountable ? MM_CP_DIRTY_ACCT : 0);
+ 
+ 	/*
+ 	 * Private VM_LOCKED VMA becoming writable: trigger COW to avoid major
 -- 
 2.24.1
 
