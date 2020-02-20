@@ -2,62 +2,242 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E2CC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C179FC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D1E2467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926DD2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:55:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P7+C4UiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgBTSyy (ORCPT
+        id S1728896AbgBTSzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:54:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgBTSyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:54:54 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181D4206F4;
-        Thu, 20 Feb 2020 18:54:53 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 13:54:51 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, acme@redhat.com,
-        tstoyanov@vmware.com, andriy.shevchenko@intel.com,
-        cezary.rojewski@intel.com, gustaw.lewandowski@intel.com
-Subject: Re: [PATCH v2] libtraceevent: add __print_hex_dump support
-Message-ID: <20200220135451.5f6f373f@gandalf.local.home>
-In-Reply-To: <1581337151-11231-1-git-send-email-piotrx.maziarz@linux.intel.com>
-References: <1581337151-11231-1-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 20 Feb 2020 13:55:18 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48786 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728315AbgBTSzS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:55:18 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KIsafT124931;
+        Thu, 20 Feb 2020 12:54:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582224876;
+        bh=wEEg/7za58pz0OaOTo3rUQEadWNihDSZlnn0QWWoCnM=;
+        h=From:To:CC:Subject:Date;
+        b=P7+C4UiQDFiF1OIOZUGBuLjv8kT+nRqJgYvEb0sk8E0J9rbFr139HY6dLIPk2zEo+
+         s0YmzvOcprfpjSiDhpwJu2b681WGZQTU7kcuNv389Q8T0LAqWaqoUBHrtg98XoGr9N
+         98N3XAOc3qv5HsgPurzax+iae2D0PWm2Vxaw6asg=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KIsaR6062873
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Feb 2020 12:54:36 -0600
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
+ Feb 2020 12:54:36 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 20 Feb 2020 12:54:36 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KIsamG100034;
+        Thu, 20 Feb 2020 12:54:36 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v2] ASoC: tas2562: Add support for digital volume control
+Date:   Thu, 20 Feb 2020 12:49:30 -0600
+Message-ID: <20200220184930.21543-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 13:19:11 +0100
-Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
+Add support for digital volume control.  There is no dedicated register
+for volume control but instead there are 4.  The values of the registers
+are determined with exponential floating point math.
+So a table was created with register values for 2dB step increments
+from -110dB to 0dB.
 
-> This allows using parsing __print_hex_dump in user space tools. Print
-> format is aligned with debugfs tracing interface.
-> 
-> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-> ---
-> v2:
-> Fix checkpatch warning
-> Use is_power_of_2() function
-> 
->
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+v2 - Fix init values to lower volume CFG4 is the LSB and CFG1 is MSB
 
--- Steve
+ sound/soc/codecs/tas2562.c | 94 ++++++++++++++++++++++++++++++++++++++
+ sound/soc/codecs/tas2562.h |  6 ++-
+ 2 files changed, 98 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/tas2562.c b/sound/soc/codecs/tas2562.c
+index b2682c2360b6..92e4bf34b35c 100644
+--- a/sound/soc/codecs/tas2562.c
++++ b/sound/soc/codecs/tas2562.c
+@@ -26,6 +26,24 @@
+ #define TAS2562_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE |\
+ 			 SNDRV_PCM_FORMAT_S32_LE)
+ 
++/* DVC equation involves floating point math
++ * round(10^(volume in dB/20)*2^30)
++ * so create a lookup table for 2dB step
++ */
++static const unsigned int float_vol_db_lookup[] = {
++0x00000d43, 0x000010b2, 0x00001505, 0x00001a67, 0x00002151,
++0x000029f1, 0x000034cd, 0x00004279, 0x000053af, 0x0000695b,
++0x0000695b, 0x0000a6fa, 0x0000d236, 0x000108a4, 0x00014d2a,
++0x0001a36e, 0x00021008, 0x000298c0, 0x000344df, 0x00041d8f,
++0x00052e5a, 0x000685c8, 0x00083621, 0x000a566d, 0x000d03a7,
++0x0010624d, 0x0014a050, 0x0019f786, 0x0020b0bc, 0x0029279d,
++0x0033cf8d, 0x004139d3, 0x00521d50, 0x00676044, 0x0082248a,
++0x00a3d70a, 0x00ce4328, 0x0103ab3d, 0x0146e75d, 0x019b8c27,
++0x02061b89, 0x028c423f, 0x03352529, 0x0409c2b0, 0x05156d68,
++0x080e9f96, 0x0a24b062, 0x0cc509ab, 0x10137987, 0x143d1362,
++0x197a967f, 0x2013739e, 0x28619ae9, 0x32d64617, 0x40000000
++};
++
+ struct tas2562_data {
+ 	struct snd_soc_component *component;
+ 	struct gpio_desc *sdz_gpio;
+@@ -34,6 +52,7 @@ struct tas2562_data {
+ 	struct i2c_client *client;
+ 	int v_sense_slot;
+ 	int i_sense_slot;
++	int volume_lvl;
+ };
+ 
+ static int tas2562_set_bias_level(struct snd_soc_component *component,
+@@ -334,6 +353,22 @@ static int tas2562_codec_probe(struct snd_soc_component *component)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Set the Digital volume to -110dB */
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4, 0x43);
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3, 0x0d);
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2, 0x00);
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1, 0x00);
++	if (ret)
++		return ret;
++
++	tas2562->volume_lvl = 0;
++
+ 	return 0;
+ }
+ 
+@@ -414,6 +449,50 @@ static int tas2562_dac_event(struct snd_soc_dapm_widget *w,
+ 	return 0;
+ }
+ 
++static int tas2562_volume_control_get(struct snd_kcontrol *kcontrol,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++
++	ucontrol->value.integer.value[0] = tas2562->volume_lvl;
++	return 0;
++}
++
++static int tas2562_volume_control_put(struct snd_kcontrol *kcontrol,
++				      struct snd_ctl_elem_value *ucontrol)
++{
++	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
++	struct tas2562_data *tas2562 = snd_soc_component_get_drvdata(component);
++	int ret;
++	u32 reg_val;
++
++	reg_val = float_vol_db_lookup[ucontrol->value.integer.value[0]/2];
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4,
++				      (reg_val & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3,
++				      ((reg_val >> 8) & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2,
++				      ((reg_val >> 16) & 0xff));
++	if (ret)
++		return ret;
++	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1,
++				      ((reg_val >> 24) & 0xff));
++	if (ret)
++		return ret;
++
++	tas2562->volume_lvl = ucontrol->value.integer.value[0];
++
++	return ret;
++}
++
++/* Digital Volume Control. From 0 dB to -110 dB in 1 dB steps */
++static const DECLARE_TLV_DB_SCALE(dvc_tlv, -11000, 100, 0);
++
+ static DECLARE_TLV_DB_SCALE(tas2562_dac_tlv, 850, 50, 0);
+ 
+ static const struct snd_kcontrol_new isense_switch =
+@@ -427,6 +506,17 @@ static const struct snd_kcontrol_new vsense_switch =
+ static const struct snd_kcontrol_new tas2562_snd_controls[] = {
+ 	SOC_SINGLE_TLV("Amp Gain Volume", TAS2562_PB_CFG1, 0, 0x1c, 0,
+ 		       tas2562_dac_tlv),
++	{
++		.iface = SNDRV_CTL_ELEM_IFACE_MIXER,
++		.name = "Digital Volume Control",
++		.index = 0,
++		.tlv.p = dvc_tlv,
++		.access = SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_READWRITE,
++		.info = snd_soc_info_volsw,
++		.get = tas2562_volume_control_get,
++		.put = tas2562_volume_control_put,
++		.private_value = SOC_SINGLE_VALUE(TAS2562_DVC_CFG1, 0, 110, 0, 0) ,
++	},
+ };
+ 
+ static const struct snd_soc_dapm_widget tas2562_dapm_widgets[] = {
+@@ -517,6 +607,10 @@ static const struct reg_default tas2562_reg_defaults[] = {
+ 	{ TAS2562_PB_CFG1, 0x20 },
+ 	{ TAS2562_TDM_CFG0, 0x09 },
+ 	{ TAS2562_TDM_CFG1, 0x02 },
++	{ TAS2562_DVC_CFG1, 0x40 },
++	{ TAS2562_DVC_CFG2, 0x40 },
++	{ TAS2562_DVC_CFG3, 0x00 },
++	{ TAS2562_DVC_CFG4, 0x00 },
+ };
+ 
+ static const struct regmap_config tas2562_regmap_config = {
+diff --git a/sound/soc/codecs/tas2562.h b/sound/soc/codecs/tas2562.h
+index 6f55ebcf19ea..28e75fc431d0 100644
+--- a/sound/soc/codecs/tas2562.h
++++ b/sound/soc/codecs/tas2562.h
+@@ -35,8 +35,10 @@
+ #define TAS2562_REV_ID		TAS2562_REG(0, 0x7d)
+ 
+ /* Page 2 */
+-#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x01)
+-#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x02)
++#define TAS2562_DVC_CFG1	TAS2562_REG(2, 0x0c)
++#define TAS2562_DVC_CFG2	TAS2562_REG(2, 0x0d)
++#define TAS2562_DVC_CFG3	TAS2562_REG(2, 0x0e)
++#define TAS2562_DVC_CFG4	TAS2562_REG(2, 0x0f)
+ 
+ #define TAS2562_RESET	BIT(0)
+ 
+-- 
+2.25.0
+
