@@ -2,120 +2,91 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D9C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DACEC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76183206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:05:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oNgGUgcX"
+	by mail.kernel.org (Postfix) with ESMTP id 6ABDF222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729297AbgBTXFj (ORCPT
+        id S1729301AbgBTXHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:05:39 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34098 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTXFi (ORCPT
+        Thu, 20 Feb 2020 18:07:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18912 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729027AbgBTXHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:05:38 -0500
-Received: by mail-pg1-f194.google.com with SMTP id j4so2690701pgi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:05:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=c0kZSeFM/+814IXGYlA2mUh7BiAgeVF3A/1ZFnTcsZc=;
-        b=oNgGUgcXPIIzpKoyYuQCg2iZgDGOqNq2Nuywq1XBACo+UkBmEshyJJcH4Rq/FYPAyV
-         wmpxnA+i3Uj2NsKgZB7+n+cELRd+40ZezWMN3LL3O7GAvIzFSkQ7jxZrbtedJlR/P5zc
-         qznGHo5Zt1TIpx7dru+9PdeL5yFGhMh8D4Ztc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c0kZSeFM/+814IXGYlA2mUh7BiAgeVF3A/1ZFnTcsZc=;
-        b=Xe3rNAUv6yZUOZ7iQf3PcpnZZJ+CnzvfmUNjbfjv1C/JrOLMxX4RdeZb00Zva3244r
-         VwXE9pb3iM12ZJ9elsRAKtw0EpRJFT0ywYAaUjwtwtnuPYlDLEbP7PoEyywKs4H4EfPv
-         7k6WNZMQEpdjxan6G70nCjQQ7W9iahrZBy6Sr4kgjCbRPlbyT5oUKqh5ncjt8fRG0+3l
-         zsuuJiE6t+yLzv8JxxV7JwYTylCWrcWN/oNU6xVuiu8MFh5cZxbow0ztiFZDbqKZ6n6M
-         06fMJg9bbNx3lwDbDH+YI+3W2Y3TRlz8jCE2Coml6p7tfpVsuMwARrsGdqJwAfLAzM4J
-         RiiA==
-X-Gm-Message-State: APjAAAWr3mfp/WLevn0pOPhvQ13MZXkrqsd5U9edSw3DTyyGrpXNo0+6
-        Z5tw6IRhhLpXbbrp4dwH27BOxw==
-X-Google-Smtp-Source: APXvYqxk+KNXpddw0Soriz9dh3hS8Ty+wHgvXPj77cXIpL/9OafL5vZZNFJjY0dqa57hetm/W/6LdA==
-X-Received: by 2002:aa7:8f33:: with SMTP id y19mr32954425pfr.47.1582239938288;
-        Thu, 20 Feb 2020 15:05:38 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g7sm660356pfq.33.2020.02.20.15.05.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 15:05:37 -0800 (PST)
-Date:   Thu, 20 Feb 2020 15:05:36 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     =?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-        Alexander Potapenko <glider@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/xen: Distribute switch variables for initialization
-Message-ID: <202002201505.C3863B2D0@keescook>
-References: <20200220062318.69299-1-keescook@chromium.org>
- <16a166da-c6e7-aa36-53a0-1b56197c8fc0@suse.com>
- <8a7f5bd7-2bb6-d187-cc6e-87ff01c440ce@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8a7f5bd7-2bb6-d187-cc6e-87ff01c440ce@oracle.com>
+        Thu, 20 Feb 2020 18:07:23 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KN44qi085976
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 18:07:22 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubbur6j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 18:07:22 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 20 Feb 2020 23:07:20 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Feb 2020 23:07:18 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01KN7HLX44826762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 23:07:17 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BF0DAE051;
+        Thu, 20 Feb 2020 23:07:17 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E34EAE04D;
+        Thu, 20 Feb 2020 23:07:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.145.184])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Feb 2020 23:07:15 +0000 (GMT)
+Subject: Re: [PATCH v5 0/3] integrity: improve log messages
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>, joe@perches.com,
+        skhan@linuxfoundation.org, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 20 Feb 2020 18:07:15 -0500
+In-Reply-To: <20200219000611.28141-1-tusharsu@linux.microsoft.com>
+References: <20200219000611.28141-1-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022023-0020-0000-0000-000003AC1616
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022023-0021-0000-0000-000022041DC0
+Message-Id: <1582240035.5121.0.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_18:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=875 suspectscore=0
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:33:41AM -0500, Boris Ostrovsky wrote:
+On Tue, 2020-02-18 at 16:06 -0800, Tushar Sugandhi wrote:
+> The log messages from integrity subsystem should be consistent for better
+> diagnosability and discoverability.
 > 
-> 
-> On 2/20/20 1:37 AM, Jürgen Groß wrote:
-> > On 20.02.20 07:23, Kees Cook wrote:
-> >> Variables declared in a switch statement before any case statements
-> >> cannot be automatically initialized with compiler instrumentation (as
-> >> they are not part of any execution flow). With GCC's proposed automatic
-> >> stack variable initialization feature, this triggers a warning (and they
-> >> don't get initialized). Clang's automatic stack variable initialization
-> >> (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-> >> doesn't initialize such variables[1]. Note that these warnings (or
-> >> silent
-> >> skipping) happen before the dead-store elimination optimization phase,
-> >> so even when the automatic initializations are later elided in favor of
-> >> direct initializations, the warnings remain.
-> >>
-> >> To avoid these problems, move such variables into the "case" where
-> >> they're used or lift them up into the main function body.
-> >>
-> >> arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
-> >> arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be
-> >> executed [-Wswitch-unreachable]
-> >>    904 |   unsigned which;
-> >>        |            ^~~~~
-> >>
-> >> [1] https://bugs.llvm.org/show_bug.cgi?id=44916
-> >>
-> >> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > Reviewed-by: Juergen Gross <jgross@suse.com>
-> >
-> 
-> Applied to for-linus-5.6.
-> 
-> (I replaced 'unsigned' with 'unsigned int' to quiet down checkpatch )
+> This patch set improves the logging by removing duplicate log formatting
+> macros, adding a consistent prefix to the log messages, and adding new 
+> log messages where necessary.
 
-Oh, good call. Sorry I missed that!
+Thanks!  This patch set is now queued in the next-integrity-testing branch.
 
-Thanks!
+Mimi
 
--- 
-Kees Cook
