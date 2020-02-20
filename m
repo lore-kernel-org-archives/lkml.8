@@ -2,121 +2,272 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6C6C11D40
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E49C11D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738442465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TNlFJ47j"
+	by mail.kernel.org (Postfix) with ESMTP id 8679D24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgBTGXh (ORCPT
+        id S1726766AbgBTG0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:23:37 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33908 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbgBTGXM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:23:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i6so1400737pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dZSYj4kTVX2QKNO4qM/GL6talXd67o8KZVFc5Pes8+c=;
-        b=TNlFJ47j/n51UH7nhg7ZSP2xl6mjw5Z4eJZvo6/HIrlLllt6vipeXtnR8qIihoe4/2
-         dk7uD4LbivJMR47wpyp9uAKtrxNZfakAu+Xsz42GokveoHCVPFcSKmm0LufYf6rKC1fz
-         8Sr5ZOjdnxz4YGQtkqAS86nJuJKbR52TL9mNk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dZSYj4kTVX2QKNO4qM/GL6talXd67o8KZVFc5Pes8+c=;
-        b=LZbpk/I0ABOf2e3wEZY4ZsV8YRF3WC3D/GK8OXwtz46ofeXfXfgAY2KyZp7zYKz+rk
-         UOKaaJnO+O+uW/mneOgRcFb1CL2/iepq8axzU/9bWYi2FOUSb+ANu+AvYuhfAUHYaprJ
-         2pmWs4hdeXHiybuo0gEbGPQC2GUQtoKBLiT9L1k6aGIzVJAP2OjzwzwI7W6JUF8/xV8r
-         SpLa65O5YHhthFhfyR+T/4+IQnR0MP27QWqqhMGOg0/91XrVyj2YQD6bjQT7MzrRE/DU
-         xsCIIBcFf4LMrKzHC7kOBZN3uzPGW064pscUnQjSjQXZ/CMWH1suSZcWuVWX3OzFmmeg
-         yeLw==
-X-Gm-Message-State: APjAAAVRKLztzt9EYdcn+2TuqewCg4PNejRKbjbRfOqDCySaD0nZ+lGu
-        z61sbybJiYqH/K8wI5KLxKSynw==
-X-Google-Smtp-Source: APXvYqwq62M/efZaqT2+1rrIrwer9ELCsk9xh7WiMNuBgusEoV/hmWrLZ/SGmXZZ1a4bqmDfl4jLPg==
-X-Received: by 2002:aa7:914b:: with SMTP id 11mr31556085pfi.69.1582179791494;
-        Wed, 19 Feb 2020 22:23:11 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b18sm1786855pfb.116.2020.02.19.22.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 22:23:10 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Harald Welte <laforge@gnumonks.org>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] pcmcia: Distribute switch variables for initialization
-Date:   Wed, 19 Feb 2020 22:23:08 -0800
-Message-Id: <20200220062308.69032-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 20 Feb 2020 01:26:36 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10657 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725942AbgBTG0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 01:26:36 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B58305314CD405316284;
+        Thu, 20 Feb 2020 14:26:32 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 20 Feb
+ 2020 14:26:29 +0800
+Subject: Re: [PATCH v2] f2fs: introduce DEFAULT_IO_TIMEOUT
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200217094544.106429-1-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <722787da-92b0-6b98-17a1-79372c9baf7e@huawei.com>
+Date:   Thu, 20 Feb 2020 14:26:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200217094544.106429-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+Hi Jaegeuk,
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
+Could you help to adapt this change for f2fs_wait_on_all_pages() manually
+in your tree?
 
-drivers/char/pcmcia/cm4000_cs.c: In function ‘monitor_card’:
-drivers/char/pcmcia/cm4000_cs.c:734:17: warning: statement will never be executed [-Wswitch-unreachable]
-  734 |   unsigned char flags0;
-      |                 ^~~~~~
+-		io_schedule_timeout(HZ/50);
++		io_schedule_timeout(DEFAULT_IO_TIMEOUT);
 
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+Thanks,
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/char/pcmcia/cm4000_cs.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/pcmcia/cm4000_cs.c b/drivers/char/pcmcia/cm4000_cs.c
-index 15bf585af5d3..4edb4174a1e2 100644
---- a/drivers/char/pcmcia/cm4000_cs.c
-+++ b/drivers/char/pcmcia/cm4000_cs.c
-@@ -731,8 +731,9 @@ static void monitor_card(struct timer_list *t)
- 	}
- 
- 	switch (dev->mstate) {
-+	case M_CARDOFF: {
- 		unsigned char flags0;
--	case M_CARDOFF:
-+
- 		DEBUGP(4, dev, "M_CARDOFF\n");
- 		flags0 = inb(REG_FLAGS0(iobase));
- 		if (flags0 & 0x02) {
-@@ -755,6 +756,7 @@ static void monitor_card(struct timer_list *t)
- 			dev->mdelay = T_50MSEC;
- 		}
- 		break;
-+	}
- 	case M_FETCH_ATR:
- 		DEBUGP(4, dev, "M_FETCH_ATR\n");
- 		xoutb(0x80, REG_FLAGS0(iobase));
-
+On 2020/2/17 17:45, Chao Yu wrote:
+> As Geert Uytterhoeven reported:
+> 
+> for parameter HZ/50 in congestion_wait(BLK_RW_ASYNC, HZ/50);
+> 
+> On some platforms, HZ can be less than 50, then unexpected 0 timeout
+> jiffies will be set in congestion_wait().
+> 
+> This patch introduces a macro DEFAULT_IO_TIMEOUT to wrap a determinate
+> value with msecs_to_jiffies(20) to instead HZ/50 to avoid such issue.
+> 
+> Quoted from Geert Uytterhoeven:
+> 
+> "A timeout of HZ means 1 second.
+> HZ/50 means 20 ms, but has the risk of being zero, if HZ < 50.
+> 
+> If you want to use a timeout of 20 ms, you best use msecs_to_jiffies(20),
+> as that takes care of the special cases, and never returns 0."
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> ---
+> v2:
+> - use msecs_to_jiffies(20) instead.
+>  fs/f2fs/compress.c |  3 ++-
+>  fs/f2fs/data.c     |  4 ++--
+>  fs/f2fs/f2fs.h     |  3 +++
+>  fs/f2fs/gc.c       |  3 ++-
+>  fs/f2fs/inode.c    |  2 +-
+>  fs/f2fs/node.c     |  2 +-
+>  fs/f2fs/recovery.c |  5 +++--
+>  fs/f2fs/segment.c  | 10 ++++++----
+>  fs/f2fs/super.c    |  6 ++++--
+>  9 files changed, 24 insertions(+), 14 deletions(-)
+> 
+> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+> index 0282149aa4c8..b9ea531ffbb6 100644
+> --- a/fs/f2fs/compress.c
+> +++ b/fs/f2fs/compress.c
+> @@ -985,7 +985,8 @@ static int f2fs_write_raw_pages(struct compress_ctx *cc,
+>  			} else if (ret == -EAGAIN) {
+>  				ret = 0;
+>  				cond_resched();
+> -				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +				congestion_wait(BLK_RW_ASYNC,
+> +						DEFAULT_IO_TIMEOUT);
+>  				lock_page(cc->rpages[i]);
+>  				clear_page_dirty_for_io(cc->rpages[i]);
+>  				goto retry_write;
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 019c91f7b301..a877cc50a4c3 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2332,7 +2332,7 @@ int f2fs_encrypt_one_page(struct f2fs_io_info *fio)
+>  		/* flush pending IOs and wait for a while in the ENOMEM case */
+>  		if (PTR_ERR(fio->encrypted_page) == -ENOMEM) {
+>  			f2fs_flush_merged_writes(fio->sbi);
+> -			congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +			congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  			gfp_flags |= __GFP_NOFAIL;
+>  			goto retry_encrypt;
+>  		}
+> @@ -2923,7 +2923,7 @@ static int f2fs_write_cache_pages(struct address_space *mapping,
+>  					if (wbc->sync_mode == WB_SYNC_ALL) {
+>  						cond_resched();
+>  						congestion_wait(BLK_RW_ASYNC,
+> -								HZ/50);
+> +							DEFAULT_IO_TIMEOUT);
+>  						goto retry_write;
+>  					}
+>  					goto next;
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 816a5adb83a4..72c91a6dd549 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -558,6 +558,9 @@ enum {
+>  
+>  #define DEFAULT_RETRY_IO_COUNT	8	/* maximum retry read IO count */
+>  
+> +/* congestion wait timeout value, default: 20ms */
+> +#define	DEFAULT_IO_TIMEOUT	(msecs_to_jiffies(20))
+> +
+>  /* maximum retry quota flush count */
+>  #define DEFAULT_RETRY_QUOTA_FLUSH_COUNT		8
+>  
+> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> index 897de003e423..3db11d5a50d5 100644
+> --- a/fs/f2fs/gc.c
+> +++ b/fs/f2fs/gc.c
+> @@ -974,7 +974,8 @@ static int move_data_page(struct inode *inode, block_t bidx, int gc_type,
+>  		if (err) {
+>  			clear_cold_data(page);
+>  			if (err == -ENOMEM) {
+> -				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +				congestion_wait(BLK_RW_ASYNC,
+> +						DEFAULT_IO_TIMEOUT);
+>  				goto retry;
+>  			}
+>  			if (is_dirty)
+> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+> index 78c3f1d70f1d..156cc5ef3044 100644
+> --- a/fs/f2fs/inode.c
+> +++ b/fs/f2fs/inode.c
+> @@ -518,7 +518,7 @@ struct inode *f2fs_iget_retry(struct super_block *sb, unsigned long ino)
+>  	inode = f2fs_iget(sb, ino);
+>  	if (IS_ERR(inode)) {
+>  		if (PTR_ERR(inode) == -ENOMEM) {
+> -			congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +			congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  			goto retry;
+>  		}
+>  	}
+> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+> index 9824f055a5bc..d5edbe2ce4a1 100644
+> --- a/fs/f2fs/node.c
+> +++ b/fs/f2fs/node.c
+> @@ -2602,7 +2602,7 @@ int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page)
+>  retry:
+>  	ipage = f2fs_grab_cache_page(NODE_MAPPING(sbi), ino, false);
+>  	if (!ipage) {
+> -		congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +		congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  		goto retry;
+>  	}
+>  
+> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+> index 348e8d463b3e..dd804c07eeb0 100644
+> --- a/fs/f2fs/recovery.c
+> +++ b/fs/f2fs/recovery.c
+> @@ -534,7 +534,7 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+>  	err = f2fs_get_dnode_of_data(&dn, start, ALLOC_NODE);
+>  	if (err) {
+>  		if (err == -ENOMEM) {
+> -			congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +			congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  			goto retry_dn;
+>  		}
+>  		goto out;
+> @@ -617,7 +617,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+>  			err = check_index_in_prev_nodes(sbi, dest, &dn);
+>  			if (err) {
+>  				if (err == -ENOMEM) {
+> -					congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +					congestion_wait(BLK_RW_ASYNC,
+> +							DEFAULT_IO_TIMEOUT);
+>  					goto retry_prev;
+>  				}
+>  				goto err;
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index c3252603ff79..1628bc8327f1 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -245,7 +245,8 @@ static int __revoke_inmem_pages(struct inode *inode,
+>  								LOOKUP_NODE);
+>  			if (err) {
+>  				if (err == -ENOMEM) {
+> -					congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +					congestion_wait(BLK_RW_ASYNC,
+> +							DEFAULT_IO_TIMEOUT);
+>  					cond_resched();
+>  					goto retry;
+>  				}
+> @@ -312,7 +313,7 @@ void f2fs_drop_inmem_pages_all(struct f2fs_sb_info *sbi, bool gc_failure)
+>  skip:
+>  		iput(inode);
+>  	}
+> -	congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +	congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  	cond_resched();
+>  	if (gc_failure) {
+>  		if (++looped >= count)
+> @@ -415,7 +416,8 @@ static int __f2fs_commit_inmem_pages(struct inode *inode)
+>  			err = f2fs_do_write_data_page(&fio);
+>  			if (err) {
+>  				if (err == -ENOMEM) {
+> -					congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +					congestion_wait(BLK_RW_ASYNC,
+> +							DEFAULT_IO_TIMEOUT);
+>  					cond_resched();
+>  					goto retry;
+>  				}
+> @@ -2801,7 +2803,7 @@ static unsigned int __issue_discard_cmd_range(struct f2fs_sb_info *sbi,
+>  			blk_finish_plug(&plug);
+>  			mutex_unlock(&dcc->cmd_lock);
+>  			trimmed += __wait_all_discard_cmd(sbi, NULL);
+> -			congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +			congestion_wait(BLK_RW_ASYNC, DEFAULT_IO_TIMEOUT);
+>  			goto next;
+>  		}
+>  skip:
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 1456979222cf..dcfa5836767c 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -1884,7 +1884,8 @@ static ssize_t f2fs_quota_read(struct super_block *sb, int type, char *data,
+>  		page = read_cache_page_gfp(mapping, blkidx, GFP_NOFS);
+>  		if (IS_ERR(page)) {
+>  			if (PTR_ERR(page) == -ENOMEM) {
+> -				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +				congestion_wait(BLK_RW_ASYNC,
+> +						DEFAULT_IO_TIMEOUT);
+>  				goto repeat;
+>  			}
+>  			set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
+> @@ -1938,7 +1939,8 @@ static ssize_t f2fs_quota_write(struct super_block *sb, int type,
+>  							&page, NULL);
+>  		if (unlikely(err)) {
+>  			if (err == -ENOMEM) {
+> -				congestion_wait(BLK_RW_ASYNC, HZ/50);
+> +				congestion_wait(BLK_RW_ASYNC,
+> +						DEFAULT_IO_TIMEOUT);
+>  				goto retry;
+>  			}
+>  			set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
+> 
