@@ -2,119 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B4CC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0B4C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5721B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:27:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eAcVw+X8"
+	by mail.kernel.org (Postfix) with ESMTP id 862F120801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgBTX1B (ORCPT
+        id S1729342AbgBTX3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:27:01 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35462 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTX1A (ORCPT
+        Thu, 20 Feb 2020 18:29:32 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41814 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBTX3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:27:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b17so354884wmb.0;
-        Thu, 20 Feb 2020 15:26:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gXhC1fUagtJi7fZvzRqoyd1CGAuI4p99NoxRHov+yno=;
-        b=eAcVw+X81nRW3zoI1yR5wX/S5pCZdqCpf4aSF10m//RBc65CtQ6FtpIKhlvnQFtiis
-         vIaDPSvJNiwXLbTeyMwpuWe6qxjB+EfwhlYr2i7vOplHTR+hDtnBfiUvIMQyjvNOFGt/
-         FYEvmwxVqBw1sNcD6vLVt+MwiYSC8T++DRFmPiCsKOcFnJVHUfoaobWvd4slo1vuJTCd
-         TVFBzdL2+h55plGDe3xnpBKFs5yw7s2O8UNK3yGEyXNUn8z7uzf75su9zERhxPdvF6+e
-         UxW9p8jR4bf0YKJzhHeHvXil6rbPIR6Fp56Simdy5Rb4HXEenX1qdxEFHOe1F7L9BOKv
-         5Fxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gXhC1fUagtJi7fZvzRqoyd1CGAuI4p99NoxRHov+yno=;
-        b=MBryMIMhQ3zyx+Oz5eSPQZu65atqqWr79DRUdifkTE/5KYhAyXGpq+Cw9cI+/kkBBn
-         c2RyU/WDMjgHgZXTFyWxRYHZpN5eN+N39qas+u5yr38o49vasB8aoQzcXtuFdZY5FalW
-         SfEiW5sYg+mnetJafkoj2olpZFqoZvTwVVllkzrDKDlyL8wsxDvGADVuTBopuppXgQcH
-         5QXgFExhc1uJO+d3blgW8Sd6XobbAsqPO2BOz1W31YsLf0N1t4JFU0k2DP5Q7JgriqB/
-         ACxybSbxgcTN3bs9ikIXKR0qMpYgw6MwM8YiHfA9kgCBbUXxga9eOElR27cR0+kW96A5
-         XceA==
-X-Gm-Message-State: APjAAAXn60iSBJvxJjK+h4H822lCIKviWIvbBTsQTgfmhZCB2hr/rPxs
-        Fe4XrPSDQobklhJnCVu8h3QUBE7urLt36RBLGn8=
-X-Google-Smtp-Source: APXvYqxvDI4BZ8Sh8Jlyyw7mZ5xY0GgwMwrJBslvznQ5W22et9Ic+Vm2lPfCJqJOT1go6PmZMIA59zuA2EOnxaWxX1o=
-X-Received: by 2002:a1c:1d09:: with SMTP id d9mr7100967wmd.91.1582241218869;
- Thu, 20 Feb 2020 15:26:58 -0800 (PST)
-MIME-Version: 1.0
-References: <20200220055250.196456-1-saravanak@google.com>
-In-Reply-To: <20200220055250.196456-1-saravanak@google.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 20 Feb 2020 15:26:46 -0800
-Message-ID: <CANcMJZBQe5F=gbj6V2ybF-dK=kRsGZT2BX9CBJiBFoK=5Hg-kA@mail.gmail.com>
-Subject: Re: [PATCH v1] of: property: Add device link support for
- power-domains and hwlocks
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org,
-        Android Kernel Team <kernel-team@android.com>,
-        devicetree@vger.kernel.org,
+        Thu, 20 Feb 2020 18:29:32 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4vG5-00G2iY-L0; Thu, 20 Feb 2020 23:29:29 +0000
+Date:   Thu, 20 Feb 2020 23:29:29 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] regset ->get() API
+Message-ID: <20200220232929.GU23230@ZenIV.linux.org.uk>
+References: <20200217183340.GI23230@ZenIV.linux.org.uk>
+ <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
+ <20200220224707.GQ23230@ZenIV.linux.org.uk>
+ <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 9:53 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> Add support for creating device links out of more DT properties.
->
-> To: lkml <linux-kernel@vger.kernel.org>
-> To: John Stultz <john.stultz@linaro.org>
-> To: Rob Herring <robh@kernel.org>
+On Thu, Feb 20, 2020 at 02:56:28PM -0800, Linus Torvalds wrote:
+> On Thu, Feb 20, 2020 at 2:47 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > On Wed, Feb 19, 2020 at 12:01:54PM -0800, Linus Torvalds wrote:
+> >
+> > > I don't mind it, but some of those buffers are big, and the generic
+> > > code generally doesn't know how big.
+> >
+> > That's what regset_size() returns...
+> 
+> Yes, but the code ends up being disgusting. You first have to call
+> that indirect function just to get the size, then do a kmalloc, and
+> then call another indirect function to actually fill it.
 
-Just as a heads up, git-send-email doesn't seem to pick up these To:
-lines, so I had to dig this out of an archive.
+Umm...  You do realize that this indirect function is a pathological
+case, right?  It has exactly one user - REGSET_SVE on arm64.  Everything
+else uses regset->n * regset->size.
 
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> Don't do that. Not since we know how retpoline is a bad thing.
+> 
+> And since the size isn't always some trivial constant (ie for x86 PFU
+> it depends on the register state!), I think the only sane model is to
+> change the interface even more, and just have the "get()" function not
+> only get the data, but allocate the backing store too.
+> 
+> So you'd never pass in the result pointer - you'd get a result area
+> that you can then free.
+> 
+> Hmm?
 
-This does seem to work for me, allowing various clk drivers to be used
-as modules! This removes the functional need for my recent driver core
-patch series around the deferred_probe_timeout (though the cleanup
-bits in there may still be worth while).
+Do you want such allocations done in each ->get() instance?  We have
+a plenty of those instances...
 
-Tested-by: John Stultz <john.stultz@linaro.org>
+> > FWIW, what I have in mind is to start with making copy_regset_to_user() do
+> >         buf = kmalloc(size, GFP_KERNEL);
+> >         if (!buf)
+> >                 return -ENOMEM;
+> >         err = regset->get(target, regset, offset, size, buf, NULL);
+> 
+> See above. This doesn't work. You don't know the size. And we don't
+> have a known maximum size either.
 
-Thanks for sending it out!
--john
+We do know that caller does not want more than the value it has passed in
+'size' argument, though.  For existing ptrace requests it's either
+min(iov->iov_len, regset->n * regset->size) (in ptrace_regset())
+or an explicit constant (usually in arch_ptrace()).  Note, BTW, that
+regset_size() is used only by coredump - that's how much we allocate
+there.  Everybody else either looks like
+        case PTRACE_GETFPREGS:  /* Get the child FPU state. */
+                return copy_regset_to_user(child,
+                                           task_user_regset_view(current),
+                                           REGSET_FP,
+                                           0, sizeof(struct user_i387_struct),
+                                           datap);
+or does regset->n * regset->size.
+
+FWIW, the real need to know the size is not in "how much do we allocated" -
+it's "how much do we copy"; I _think_ everyone except that arm64 thing
+fills exactly regset->n * regset->size (or we have a nasty infoleak in
+coredumps) and we can switch coredump to "allocate regset->n * regset->size,
+call ->get(), copy all of that into coredump unless ->get_size is there,
+copy ->get_size() bytes to coredump if ->get_size exists" as the first
+step.
+
+Longer term I would have ->get() tell how much has it filled and killed
+->get_size().  Again, there's only one user.  But I'd prefer to do that
+in the end of series, when the bodies of ->get() instances are cleaned
+up...
