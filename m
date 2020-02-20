@@ -2,193 +2,83 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEC3C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E663CC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B5F24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB84324672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hWOYRbRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBTKfd (ORCPT
+        id S1727789AbgBTKgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:35:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39333 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgBTKfd (ORCPT
+        Thu, 20 Feb 2020 05:36:04 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:59689 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbgBTKgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:35:33 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j4jB1-0003kB-U3; Thu, 20 Feb 2020 10:35:28 +0000
-Date:   Thu, 20 Feb 2020 11:35:26 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 6/9] drivers/base/power: add
- dpm_sysfs_change_owner()
-Message-ID: <20200220103526.5iqh3vhdjo7mp7ko@wittgenstein>
-References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
- <20200218162943.2488012-7-christian.brauner@ubuntu.com>
- <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
- <20200220102107.grkyypt7swrufzas@wittgenstein>
- <CAJZ5v0itDdfdNd6TzLi=2J517CyjEBbKb+K4OfkkSt-B+w9taw@mail.gmail.com>
+        Thu, 20 Feb 2020 05:36:04 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582194963; h=Message-ID: Subject: Cc: To: From: Date:
+ Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
+ bh=IvusCc7SfQWheL3qpyxJjGggUjJ0Q+qu37ojxqfgpPg=; b=hWOYRbRhXL9s9qU0B7Dhm1acPV0OaLZCk/o4x0ZXjzJAHuHPIdTGmpv49bFnCq5frQ+yA4cn
+ psocljpApkfZ9kna/HH5C1Oca1ocTLq/YXyRt79iC2pb8EwOgpb7Qv/eCDUNObXd+iDY0aJi
+ IfrqNxJNiUwtapg+Ymwkrg6PZYw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e610b.7fa682926c38-smtp-out-n02;
+ Thu, 20 Feb 2020 10:35:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 95211C4479D; Thu, 20 Feb 2020 10:35:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bgodavar)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AB2AC43383;
+        Thu, 20 Feb 2020 10:35:54 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0itDdfdNd6TzLi=2J517CyjEBbKb+K4OfkkSt-B+w9taw@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 16:05:54 +0530
+From:   bgodavar@codeaurora.org
+List-Id: <linux-firmware.lore.kernel.org>
+To:     linux-firmware@kernel.org
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, gubbaven@codeaurora.org
+Subject: Firmware files for QCA BT chip WCN3991.
+Message-ID: <3d3a530f11e6bc9a87573389d72ddd3c@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:30:32AM +0100, Rafael J. Wysocki wrote:
-> On Thu, Feb 20, 2020 at 11:21 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Thu, Feb 20, 2020 at 11:02:04AM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Feb 18, 2020 at 5:30 PM Christian Brauner
-> > > <christian.brauner@ubuntu.com> wrote:
-> > > >
-> > > > Add a helper to change the owner of a device's power entries. This
-> > > > needs to happen when the ownership of a device is changed, e.g. when
-> > > > moving network devices between network namespaces.
-> > > > This function will be used to correctly account for ownership changes,
-> > > > e.g. when moving network devices between network namespaces.
-> > > >
-> > > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > > ---
-> > > > /* v2 */
-> > > > - "Rafael J. Wysocki" <rafael@kernel.org>:
-> > > >   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
-> > > >      if (device_can_wakeup(dev)) check since the former can never be true if
-> > > >      the latter is false.
-> > > >
-> > > > - Christian Brauner <christian.brauner@ubuntu.com>:
-> > > >   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
-> > > >     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
-> > > >     when this config option is set.
-> > > >
-> > > > /* v3 */
-> > > > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> > > >    - Add explicit uid/gid parameters.
-> > > > ---
-> > > >  drivers/base/core.c        |  4 ++++
-> > > >  drivers/base/power/power.h |  3 +++
-> > > >  drivers/base/power/sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 49 insertions(+)
-> > > >
-> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > index ec0d5e8cfd0f..efec2792f5d7 100644
-> > > > --- a/drivers/base/core.c
-> > > > +++ b/drivers/base/core.c
-> > > > @@ -3522,6 +3522,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> > > >         if (error)
-> > > >                 goto out;
-> > > >
-> > > > +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
-> > > > +       if (error)
-> > > > +               goto out;
-> > > > +
-> > > >  #ifdef CONFIG_BLOCK
-> > > >         if (sysfs_deprecated && dev->class == &block_class)
-> > > >                 goto out;
-> > > > diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> > > > index 444f5c169a0b..54292cdd7808 100644
-> > > > --- a/drivers/base/power/power.h
-> > > > +++ b/drivers/base/power/power.h
-> > > > @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
-> > > >  extern void pm_qos_sysfs_remove_flags(struct device *dev);
-> > > >  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
-> > > >  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
-> > > > +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
-> > > >
-> > > >  #else /* CONFIG_PM */
-> > > >
-> > > > @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
-> > > >
-> > > >  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
-> > > >  static inline void dpm_sysfs_remove(struct device *dev) {}
-> > > > +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
-> > > > +                                        kgid_t kgid) { return 0; }
-> > > >
-> > > >  #endif
-> > > >
-> > > > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > > > index d7d82db2e4bc..4e79afcd5ca8 100644
-> > > > --- a/drivers/base/power/sysfs.c
-> > > > +++ b/drivers/base/power/sysfs.c
-> > > > @@ -684,6 +684,48 @@ int dpm_sysfs_add(struct device *dev)
-> > > >         return rc;
-> > > >  }
-> > > >
-> > > > +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> > > > +{
-> > > > +       int rc;
-> > > > +
-> > > > +       if (device_pm_not_required(dev))
-> > > > +               return 0;
-> > > > +
-> > > > +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
-> > > > +       if (rc)
-> > > > +               return rc;
-> > > > +
-> > > > +       if (pm_runtime_callbacks_present(dev)) {
-> > > > +               rc = sysfs_group_change_owner(
-> > > > +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
-> > > > +               if (rc)
-> > > > +                       return rc;
-> > > > +       }
-> > > > +       if (device_can_wakeup(dev)) {
-> > > > +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
-> > > > +                                             kuid, kgid);
-> > > > +               if (rc)
-> > > > +                       return rc;
-> > > > +
-> > > > +#ifdef CONFIG_PM_SLEEP
-> > > > +               if (dev->power.wakeup && dev->power.wakeup->dev) {
-> > > > +                       rc = device_change_owner(dev->power.wakeup->dev, kuid,
-> > > > +                                                kgid);
-> > > > +                       if (rc)
-> > > > +                               return rc;
-> > > > +               }
-> > > > +#endif
-> > >
-> > > First off, I don't particularly like #ifdefs in function bodies.  In
-> > > particular, there is a CONFIG_PM_SLEEP block in this file already and
-> > > you could define a new function in there to carry out the above
-> > > operations, and provide an empty stub of it for the "unset" case.
-> > > Failing to do so is somewhat on the "rushing things in" side in my
-> > > view.
-> >
-> > How ifdefines are used is highly dependent on the subsystem; networking
-> > ofen uses in-place ifdefines in some parts and not in others. That has
-> > nothing to do with rushing things. I'm happy to change it to your
-> > preferences.
-> 
-> Thanks!
-> 
-> > Thanks for pointing out your expectations. But please don't
-> > assume bad intentions on my part because I'm not meeting them right
-> > away. It often is the case that adding a helper that is called in one
-> > place is not well-received.
-> 
-> Fair enough, sorry for being harsh.
+Hi,
 
-Np, I didn't read it as such. I was really just worried you thought
-that I was trying to rush things in. It's Thursday anyway, usually about
-the time where we're all grumpy because we can't wait until we made it
-to Friday. :)
+The following changes since commit 
+54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
 
-Christian
+   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
++0530)
+
+are available in the Git repository at:
+
+   https://github.com/bgodavar/qca_bt_wcn3991.git
+
+for you to fetch changes up to 54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
+
+   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
++0530)
+
+
+Regards
+Balakrishna
