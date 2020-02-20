@@ -2,98 +2,162 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24074C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0DC11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1319206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="giUHMUtf"
+	by mail.kernel.org (Postfix) with ESMTP id 1C1A1206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:08:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbgBTRHw (ORCPT
+        id S1728837AbgBTRIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:07:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33530 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728756AbgBTRHs (ORCPT
+        Thu, 20 Feb 2020 12:08:11 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:56324 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728701AbgBTRIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:07:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582218467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fRyl+HNCJYGuzif7UHbBNmoq+TguvgwSchvSmXTT2m8=;
-        b=giUHMUtfIAB0HemHQWmprLxqBb5rPV6Kp6+MEPN2dWwBtGo+ZL3ggisJjLdiIw6hkntwNn
-        e+FBi/TY/0gbeligtFHiyER+7m3jhFhm7o1HaF+crlbQfXQ+6jbu1y3waJi/baKoCcM8AU
-        BCIczJnJFZMJDaimAuasbIm+PHZ00Uw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-387-o5UPWaBQMDeQ-SMDPVJK3A-1; Thu, 20 Feb 2020 12:07:44 -0500
-X-MC-Unique: o5UPWaBQMDeQ-SMDPVJK3A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E3649800EB4;
-        Thu, 20 Feb 2020 17:07:38 +0000 (UTC)
-Received: from redhatnow.users.ipa.redhat.com (ovpn-117-1.phx2.redhat.com [10.3.117.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A06D90F65;
-        Thu, 20 Feb 2020 17:07:29 +0000 (UTC)
-Subject: Re: [RFC PATCH 02/11] ata: Remove Calxeda AHCI driver
-To:     Rob Herring <robh@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
-        Matthias Brugger <mbrugger@suse.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        James Morse <james.morse@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Will Deacon <will@kernel.org>
-References: <20200218171321.30990-1-robh@kernel.org>
- <20200218171321.30990-3-robh@kernel.org>
-From:   Mark Langsdorf <mlangsdo@redhat.com>
-Message-ID: <bf1291f2-597e-bff9-6780-ec233f5c2a20@redhat.com>
-Date:   Thu, 20 Feb 2020 11:07:29 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 12:08:09 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KGxu1W015666;
+        Thu, 20 Feb 2020 12:08:08 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y8udumrex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Feb 2020 12:08:07 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01KH86vl003517
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 20 Feb 2020 12:08:06 -0500
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 20 Feb 2020 09:08:04 -0800
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 20 Feb 2020 09:08:03 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 20 Feb 2020 09:08:03 -0800
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01KH80KI001949;
+        Thu, 20 Feb 2020 12:08:00 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH] iio: industrialio-core: Fix debugfs read
+Date:   Thu, 20 Feb 2020 19:07:26 +0200
+Message-ID: <20200220170726.9580-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200218171321.30990-3-robh@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=900
+ phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/20 11:13 AM, Rob Herring wrote:
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: linux-ide@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+Currently iio_debugfs_read_reg calls debugfs_reg_access
+every time it is ran. Reading the same hardware register
+multiple times during the same reading of a debugfs file
+can cause unintended effects.
 
-Acked-by: Mark Langsdorf <mark.langsdorf@gmail.com>
+For example for each: cat iio:device0/direct_reg_access
+the file_operations.read function will be called at least
+twice. First will return the full length of the string in
+bytes  and the second will return 0.
+
+This patch makes iio_debugfs_read_reg to call debugfs_reg_access
+only when the user's buffer position (*ppos) is 0. (meaning
+it is the beginning of a new reading of the debugfs file).
+
+Fixes: e553f182d55b ("staging: iio: core: Introduce debugfs support, add support for direct register access")
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/industrialio-core.c | 34 +++++++++++++++++++++++----------
+ include/linux/iio/iio.h         |  2 ++
+ 2 files changed, 26 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 65ff0d067018..637cea14afdb 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -297,26 +297,40 @@ static void __exit iio_exit(void)
+ }
+ 
+ #if defined(CONFIG_DEBUG_FS)
+-static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+-			      size_t count, loff_t *ppos)
++static int iio_debugfs_get_reg_string(struct iio_dev *indio_dev)
+ {
+-	struct iio_dev *indio_dev = file->private_data;
+-	char buf[20];
++	const struct iio_info *info = indio_dev->info;
+ 	unsigned val = 0;
+-	ssize_t len;
+ 	int ret;
+ 
+-	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+-						  indio_dev->cached_reg_addr,
+-						  0, &val);
++	ret = info->debugfs_reg_access(indio_dev, indio_dev->cached_reg_addr,
++				       0, &val);
+ 	if (ret) {
+ 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
+ 		return ret;
+ 	}
++	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
++					   sizeof(indio_dev->read_buf),
++					   "0x%X\n", val);
++	return 0;
++}
+ 
+-	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
++static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
++				    size_t count, loff_t *ppos)
++{
++	struct iio_dev *indio_dev = file->private_data;
++	loff_t pos = *ppos;
++	int ret;
++
++	if (pos == 0) {
++		ret = iio_debugfs_get_reg_string(indio_dev);
++		if (ret)
++			return ret;
++	}
+ 
+-	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
++	return simple_read_from_buffer(userbuf, count, ppos,
++				       indio_dev->read_buf,
++				       indio_dev->read_buf_len);
+ }
+ 
+ static ssize_t iio_debugfs_write_reg(struct file *file,
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 862ce0019eba..eed58ed2f368 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -568,6 +568,8 @@ struct iio_dev {
+ #if defined(CONFIG_DEBUG_FS)
+ 	struct dentry			*debugfs_dentry;
+ 	unsigned			cached_reg_addr;
++	char				read_buf[20];
++	unsigned int			read_buf_len;
+ #endif
+ };
+ 
+-- 
+2.20.1
 
