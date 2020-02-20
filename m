@@ -2,217 +2,299 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646D7C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D16C11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CF920801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F426208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jbnmAXzs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fx34DlnL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgBTXYE (ORCPT
+        id S1729353AbgBTX0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:24:04 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33653 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729258AbgBTXYE (ORCPT
+        Thu, 20 Feb 2020 18:26:35 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36842 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBTX0f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:24:04 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y6so274347lji.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:24:01 -0800 (PST)
+        Thu, 20 Feb 2020 18:26:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so351661wma.1;
+        Thu, 20 Feb 2020 15:26:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XIeBZDogNfaTWSyvaUAomCKZ8CEnFBAh/xMXEs0iMRU=;
-        b=jbnmAXzsLQ7KRZ5bLhIAqCC9dJBGm537bHk5dY+iNKRAWNXr8iJM42DaqbMqdp8snm
-         DK4FrswCJtyE//7/bU+cHi9lL51gtdHrtJtfjNazLBOxcfjXGERoZUx7yBL1zT4xzThk
-         ROMPSiJX81blZe/I+zPgU2DWzWeMGCRmNg2KG8JDJNjacFYQQn6BFYIQogcCckyrzAKZ
-         FQcqJluSLsrncvSNBCNAZ1B6ye6ZrGVkFYR/dXw0USISC6dRHwZB4vd2EmlcAz1klrOA
-         s4kLdW8spYly14p4JazHiWXgePXoJTS1jH2srp1FffbfRdNBTHEngmQBYZJMr0C2TBVl
-         9Org==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Di1qslRPbTpLpq+RzibDLTYgsINPkOU2t7v0O3JomH8=;
+        b=Fx34DlnLGoVm0X3/BbyODqd94691Jp5RZd/JQFAGlbLlPbfN8OUDF/QeeOqf16rtSj
+         ZoH4lb8IL9pmEC0NHIqiLjDR3gQPfCE0xD67dXyqQofrk1SGga+P57hiwz151IPYnusG
+         LsgZUrTfP5aZpoV1cTVco7bW2a/W/Q1apbTlShWxVP5JPME+P0MWWibfSuFVelknEoLq
+         fQwsx8XaZcCo0AI7BB2VaIARsEKESHvrBSAAAJpDSTXZZB7O/kDy4Q925Xkg6x/EuVp3
+         aFupf+zDTd9fPRwKFSUZvYe0d+FVvgZSVuwusXEsDMpPxmsx5oH9mHO3KqIUR0M2O+ZR
+         pIFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XIeBZDogNfaTWSyvaUAomCKZ8CEnFBAh/xMXEs0iMRU=;
-        b=hn4KPMZANySD6adFHDar8WegDU+Wg0MfOaVYFrwMeqXehb2FY3tOk5HfrWlpaD4tlc
-         8Xt161ymb3DKmCwbi1RlalNC5yPVKem8Vso3pCBrON9150rTpOH374es49VFcXgBMEkW
-         07ZVSBDHwvShcO4HKN28bSPrfBhyg1Pfdny2V20QaapGhNmby8RfR7SKtRdJUdL5RsO+
-         SarFrmH+umGJ1QzRXV4zAWwzyjKUUesUFiZ0N+lRruvpAoNWrp3IIBqzmEiodX7Sps2S
-         bOazj5k3gKEmDfjiCFnPjw82lyP+Rh9GsV8s7d3pUIc9h27+a0qIduH1loI0vsKqJKS8
-         /O6Q==
-X-Gm-Message-State: APjAAAW+52Gx8M8fVU3iU6s3IqjMAzrrw3FLXq1FOZk6foIN3YfzpU9s
-        oSJcRYlE/QoeL3QaQw7nPVp8ulJMeFBlJy7GIDIGnQ==
-X-Google-Smtp-Source: APXvYqypcU/r1i45FPqCupRHRb73pHgOjAIxggW06CsnHK9DRgJT7I31tHfuM0OA63RqhRTqCvU4JP+OmLyEAqIOs9I=
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr20328632ljb.150.1582241040193;
- Thu, 20 Feb 2020 15:24:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Di1qslRPbTpLpq+RzibDLTYgsINPkOU2t7v0O3JomH8=;
+        b=Yq4wxbrRwu2CU64gdSZW3EjeijDaTBZrhL8Hm1l9Z83bqj0Lu19TKXBqpYhiaJgBIa
+         AwiVOhzeqYcoPhFWK0762kDzsHo7fwYAUybY3sCjmesWcy29hVYmLIsdat3MHg0S1F7C
+         rmiOz/Vgv0Me4NcQ4l2CUA2RwiTbG3oeFm8LHnRgSQG6YczCuwKZyOiTjYFR3XA1WgCb
+         yTnGUxfR4ITo0ybt5+P0TYSR0ZPkevwBN8NmtvAdVVL4hA3I3olpAOVNn3A2I/GTuodN
+         5fa+FtlkXZRHzSlKN3HrKPg5CWVtMryGkSv9/F9X3q1E82L5QfNFwXLz7nINUNn3SLsG
+         Ke+g==
+X-Gm-Message-State: APjAAAW8i7jpobq8u0zFlfxRrzSI84cUz4Qq0PhUKHAnD3FYU7Etoa5g
+        qVz9Y9PWRgOwnuBzPwhz1XFgj6WjDO4=
+X-Google-Smtp-Source: APXvYqzcPuox4GKUuu553WORBOrXIwayqJTE8kc1Znk1nXaGNOSlFGzS//GNIR8GOwVkc6s65D/84Q==
+X-Received: by 2002:a7b:c651:: with SMTP id q17mr7138818wmk.5.1582241192025;
+        Thu, 20 Feb 2020 15:26:32 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id h18sm1498064wrv.78.2020.02.20.15.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 15:26:31 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Fri, 21 Feb 2020 00:26:21 +0100
+Message-Id: <20200220232624.7001-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <CABayD+ch3XBvJgJc+uoF6JSP0qZGq2zKHN-hTc0Vode-pi80KA@mail.gmail.com>
- <52450536-AF7B-4206-8F05-CF387A216031@amacapital.net> <3de6e962-3277-ddbd-8c78-eaf754973928@amd.com>
- <CABayD+fBpP-W_jfVuy_+shh+Sj_id79+ECG+R5H=W9Jmcii8qg@mail.gmail.com> <e5ef78d4-2764-cbbb-d3d6-69621e1d6490@amd.com>
-In-Reply-To: <e5ef78d4-2764-cbbb-d3d6-69621e1d6490@amd.com>
-From:   Steve Rutherford <srutherford@google.com>
-Date:   Thu, 20 Feb 2020 15:23:23 -0800
-Message-ID: <CABayD+fTa=dtbb3E4+kgQkNqDHYUfJGJTUfN5PirBit6Xp4JeQ@mail.gmail.com>
-Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
- status is changed
-To:     Brijesh Singh <brijesh.singh@amd.com>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, x86@kernel.org,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 2:43 PM Brijesh Singh <brijesh.singh@amd.com> wrote=
-:
->
->
->
-> On 2/20/20 2:43 PM, Steve Rutherford wrote:
-> > On Thu, Feb 20, 2020 at 7:55 AM Brijesh Singh <brijesh.singh@amd.com> w=
-rote:
-> >>
-> >>
-> >>
-> >> On 2/19/20 8:12 PM, Andy Lutomirski wrote:
-> >>>
-> >>>
-> >>>> On Feb 19, 2020, at 5:58 PM, Steve Rutherford <srutherford@google.co=
-m> wrote:
-> >>>>
-> >>>> =EF=BB=BFOn Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@=
-amd.com> wrote:
-> >>>>>
-> >>>>> From: Brijesh Singh <brijesh.singh@amd.com>
-> >>>>>
-> >>>>> Invoke a hypercall when a memory region is changed from encrypted -=
->
-> >>>>> decrypted and vice versa. Hypervisor need to know the page encrypti=
-on
-> >>>>> status during the guest migration.
-> >>>>
-> >>>> One messy aspect, which I think is fine in practice, is that this
-> >>>> presumes that pages are either treated as encrypted or decrypted. If
-> >>>> also done on SEV, the in-place re-encryption supported by SME would
-> >>>> break SEV migration. Linux doesn't do this now on SEV, and I don't
-> >>>> have an intuition for why Linux might want this, but we will need to
-> >>>> ensure it is never done in order to ensure that migration works down
-> >>>> the line. I don't believe the AMD manual promises this will work
-> >>>> anyway.
-> >>>>
-> >>>> Something feels a bit wasteful about having all future kernels
-> >>>> universally announce c-bit status when SEV is enabled, even if KVM
-> >>>> isn't listening, since it may be too old (or just not want to know).
-> >>>> Might be worth eliding the hypercalls if you get ENOSYS back? There
-> >>>> might be a better way of passing paravirt config metadata across tha=
-n
-> >>>> just trying and seeing if the hypercall succeeds, but I'm not super
-> >>>> familiar with it.
-> >>>
-> >>> I actually think this should be a hard requirement to merge this. The=
- host needs to tell the guest that it supports this particular migration st=
-rategy and the guest needs to tell the host that it is using it.  And the g=
-uest needs a way to tell the host that it=E2=80=99s *not* using it right no=
-w due to kexec, for example.
-> >>>
-> >>> I=E2=80=99m still uneasy about a guest being migrated in the window w=
-here the hypercall tracking and the page encryption bit don=E2=80=99t match=
-.  I guess maybe corruption in this window doesn=E2=80=99t matter?
-> >>>
-> >>
-> >> I don't think there is a corruption issue here. Let's consider the bel=
-ow
-> >> case:
-> >>
-> >> 1) A page is transmitted as C=3D1 (encrypted)
-> >>
-> >> 2) During the migration window, the page encryption bit is changed
-> >>    to C=3D0 (decrypted)
-> >>
-> >> 3) #2 will cause a change in page table memory, thus dirty memory
-> >>    the tracker will create retransmission of the page table memory.
-> >>
-> >> 4) The page itself will not be re-transmitted because there was
-> >>    no change to the content of the page.
-> >>
-> >> On destination, the read from the page will get the ciphertext.
-> >>
-> >> The encryption bit change in the page table is used on the next access=
-.
-> >> The user of the page needs to ensure that data is written with the
-> >> correct encryption bit before reading.
-> >>
-> >> thanks
-> >
-> >
-> > I think the issue results from a slightly different perspective than
-> > the one you are using. I think the situation Andy is interested in is
-> > when a c-bit change and a write happen close in time. There are five
-> > events, and the ordering matters:
-> > 1) Guest dirties the c-bit in the guest
-> > 2) Guest dirties the page
-> > 3) Host userspace observes the c-bit logs
-> > 4) Host userspace observes the page dirty logs
-> > 5) Host transmits the page
-> >
-> > If these are reordered to:
-> > 3) Host userspace observes the c-bit logs
-> > 1) Guest dirties the c-bit in the guest
-> > 2) Guest dirties the page
-> > 4) Host userspace observes the page dirty logs
-> > 5) Host transmits the page (from the wrong c-bit perspective!)
-> >
-> > Then the host will transmit a page with the wrong c-bit status and
-> > clear the dirty bit for that page. If the guest page is not
-> > retransmitted incidentally later, then this page will be corrupted.
-> >
-> > If you treat pages with dirty c-bits as dirty pages, then you will
-> > check the c-bit logs later and observe the dirty c-bit and retransmit.
-> > There might be some cleverness around enforcing that you always fetch
-> > the c-bit logs after fetching the dirty logs, but I haven't convinced
-> > myself that this works yet. I think it might, since then the c-bits
-> > are at least as fresh as the dirty bits.
-> >
->
-> Unlike the dirty log, the c-bit log maintains the complete state.
-> So, I think it is the Host userspace responsibility to ensure that it
-> either keeps track of any c-bit log changes since it last sync'ed.
-> During the migration, after pausing the guest it can get the recent
-> c-bit log and compare if something has changed since it last sync'ed.
-> If so, then retransmit the page with new c-bit state.
->
-> > The main uncertainty that comes to mind for that strategy is if, on
-> > multi-vCPU VMs, the page dirtying event (from the new c-bit
-> > perspective) and the c-bit status change hypercall can themselves
-> > race. If a write from the new c-bit perspective can arrive before the
-> > c-bit status change arrives in the c-bit logs, we will need to treat
-> > pages with dirty c-bits as dirty pages.
-> >
->
-> I believe if host userspace tracks the changes in the c-bit log since
-> it last synced then this problem can be avoided. Do you think we should
-> consider tracking the last sync changes in KVM or let the host userspace
-> handle it.
-Punting this off to userspace to handle works. If storing the old
-c-bit statuses in userspace becomes a memory issue (unlikely), we can
-fix that down the line.
+Currently ipq806x soc use generi bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
-Andy, are your concerns about the raceyness of c-bit tracking resolved?
+Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 163 +++++++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
+
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..e974a6f5d5ef
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Qualcomm IPQ8064 MDIO interface driver
++//
++// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY                          (1000)
++#define MII_MDIO_RETRY                          (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	u32 busy;
++
++	return regmap_read_poll_timeout(priv->base, MII_ADDR_REG_ADDR, busy,
++				   !(busy & MII_BUSY), MII_MDIO_DELAY,
++				   MII_MDIO_RETRY * USEC_PER_MSEC);
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	u32 ret_val;
++	int err;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++
++	/* Reject clause 45 */
++	if (reg_offset & MII_ADDR_C45)
++		return -EOPNOTSUPP;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR_OR_NULL(priv->base)) {
++		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
++		if (IS_ERR_OR_NULL(priv->base)) {
++			dev_err(&pdev->dev, "master phandle not found\n");
++			return -EINVAL;
++		}
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.0
+
