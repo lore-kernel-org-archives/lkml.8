@@ -2,175 +2,275 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318D6C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69A7C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B9B2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769A2207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:41:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="NocTA30z";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="oF9Qqd0k"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="oh8Ww43w";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BnrXmVp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgBTPkz (ORCPT
+        id S1728529AbgBTPlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:40:55 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:64672 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728305AbgBTPkz (ORCPT
+        Thu, 20 Feb 2020 10:41:12 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6148 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728305AbgBTPlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:40:55 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KFdqDj005513;
-        Thu, 20 Feb 2020 07:40:41 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=z4/Y2RKqxlrE9f+tNnFoxR506Q9kNivJJi+sOCKQTlY=;
- b=NocTA30zHf8n0gYRruK3mouIm/KyiaqhIxMpYqhxhBjwt+g8tfH2+bzZle6Isabok/yV
- 1+tH7KbXsV2C1cVvtWaH8A3xB6YeB/WEg0FuGOFXxyAHW+qnIKDsinYOk+qytWM75cFz
- UFB5rHge3cNPV8Vud9eoYIf9p51e5AEv8vuige9zZXe+F7s7OC6LYlhYeysTLt/TR8li
- jnGa6DsTniITEel20PTvNKXidcuJTvfyipx2wUT20EddMv6qHrl+Wipbm67DNxA+mrWK
- 46aeB2XAE0bVGxQjuUuLLRmANmGVe6HDUclUPq8EUuOwYVbXM9/EgOfHKJfuWPFG1pXd tQ== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2y8ubv82aj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 20 Feb 2020 07:40:41 -0800
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 20 Feb
- 2020 07:40:39 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
- by SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Thu, 20 Feb 2020 07:40:39 -0800
+        Thu, 20 Feb 2020 10:41:11 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 01KFbuLS006884;
+        Thu, 20 Feb 2020 07:40:49 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=facebook;
+ bh=KVZCuSFI8K2grWi1H7cHL6KkJTX844z6Qxg+85P8OgA=;
+ b=oh8Ww43whFJ6ZLlWhlI/t4YxUQ+J4eID9FhB9uVBvar4sET7eYPvlHUdCng/qzCVWCzK
+ ny9i6zarN0h67u9KB6eDxN6uK3FTjIYO98a0A6BEJkdInuRskRxoqgnuJxfiG0PG6PBC
+ JY6avLdMVTeqV5wx5qZHKhFvJVhS8KkWhFI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2y8ub493mj-15
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 20 Feb 2020 07:40:49 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 20 Feb 2020 07:40:47 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImshT0JplBfJC7TcIlblNNkxaOrFPXYzqX6JsIkRus8aFKJ09e0yldQqWIAd7IsX7FRDAmtovEFdsA5Bo6j8+X4Bma36wpaAspDm8b3y7eMqFCtee8tAQJ7eHlnhCXB6NFnJYPPg33hTDtaufRlWUoTQ6x0O7xAUnUNsCvwZeXsd132auvwfx/LCRCdPcpOmmzDbRbn05y57AiWbq99We+WcqZ5EcuiuX4mrVBHSQn6dVxe404Z+JVhEyaMd4sllKAlGcvHY1FSwn5s/VcCFN8vNEoB+t4JqYpwscoWATCLpmwdLeG47Y8gG+6jF2h2y6hczvhpcY/QHubJqUvF8ew==
+ b=bQQHY9AtZQ9++7MDpsHOhgJL4EiGbdk24DsomvegdBaXyv1nPBZ3PbiZz+tTm6C+gI13my+8DnDqgcghgzSc9tvjS9WCvV7X/uUgzYqL3yMc8qTbHulvAVOvMBSvAy5pcNxus3R2e2TkSUhQG4uEvuwB+nr4xPru0RWoNXnd8dN1hB+pLiNWSd1ozr2sQwUtdBqO+RXsJz4qL/7ZDLNnjNI6SZqFMxWYZhTRLrE+B/QSkU4UCIH2+nlpxJ+Bbtvm9zPAsyiuuLzeC6Vs/1nIqGPQI1jQO94cqRDvKEj/RrCUK/oDxQiRENwSdvJgsMKQw6/Z+zoku7PIcw4NoWV1Pg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4/Y2RKqxlrE9f+tNnFoxR506Q9kNivJJi+sOCKQTlY=;
- b=BWnTeir1gP/QhKJUSz/Os+IATcGK5/rS7cm9w1Af3B39ohPmbccPUbZzx7XQhysyTm7XphHXhqqGVOYqDolCnfM1IRvUPfPGmOeLq94Ti24Eyt8MnoiwqueSDfsQK3xojCFmvOdsyaRM+zCr8rwmGon+HIqsZajypsf2eTlFw6/FMtK6wpjk7H9PzJr9/hbkgyXEK/xo2erZBuELbG9+HR8IezAHflcMPuw8nL15NIIi5Phpr2OaMWvIyLck353qY+NRg7hxq9Yjr6TR2DFhhGNwBLP2PBec4uXYDLa/VVmhdkuPjKpisNPE34BKYnlo//zoQAuMSTe+TjYkWh5WAg==
+ bh=KVZCuSFI8K2grWi1H7cHL6KkJTX844z6Qxg+85P8OgA=;
+ b=gjf24tXVdhTn4FU+IixqaZcsfrYRvu/HLDJgKl2RHyh3y2EcH+NAEAjLYuMjZwkAhHmQbseKMJHtBuiZ4Dy/1EVrGdZ6XErQoE2c2K0t3pHMZrm3nr9TZQRhgnJHwcvI5O9s2OGAWiJEvYc/JETD0yX8EvVdmZv/GRUtiemXyft2UPtnPBx/zwnYwVzDWv8A5EgcF7S8d1C/1xSlKT0MxKBFmqrov/L6LRcXbo1+faFp/K5QQ/ZIZTzPZ4XHLaKz67etYaTwq5vSDu4XU+Yvc0sOUA87OAG55hJWnkodOaDZ8Z4KXcTIBNJqpNC3oWVitAxXh9F31127ZfPnK3Tw1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z4/Y2RKqxlrE9f+tNnFoxR506Q9kNivJJi+sOCKQTlY=;
- b=oF9Qqd0k3cRCZCfDY/2vuTouspWTaVSz7Jmwx51RPxWF6JuTTXtZCo/7OdKI7VInEBLtLMG8c0rbBLzl1i1zJ9C/vwvHfYi+RAHl0NYmZhRuo0noQZJIZPz8CiC5WVNUX3nTZ6Wn5oW73w1+H7dOIzoajXbHSBnekq+/j628Afk=
-Received: from DM5PR18MB2215.namprd18.prod.outlook.com (2603:10b6:4:b7::18) by
- DM5PR18MB1212.namprd18.prod.outlook.com (2603:10b6:3:b9::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2750.17; Thu, 20 Feb 2020 15:40:38 +0000
-Received: from DM5PR18MB2215.namprd18.prod.outlook.com
- ([fe80::bc55:e2d3:1159:1a1a]) by DM5PR18MB2215.namprd18.prod.outlook.com
- ([fe80::bc55:e2d3:1159:1a1a%5]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
- 15:40:38 +0000
-From:   Ariel Elior <aelior@marvell.com>
-To:     Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "it+linux-netdev@molgen.mpg.de" <it+linux-netdev@molgen.mpg.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [EXT] Re: bnx2x: Latest firmware requirement breaks no regression
- policy
-Thread-Topic: [EXT] Re: bnx2x: Latest firmware requirement breaks no
- regression policy
-Thread-Index: AQHV5wGCvUlGLJk7UUybWaBU9BXeqKgidnIAgAFYngCAAGbFwA==
-Date:   Thu, 20 Feb 2020 15:40:37 +0000
-Message-ID: <DM5PR18MB221508B070C5C2DAE8ADB053C4130@DM5PR18MB2215.namprd18.prod.outlook.com>
-References: <ffbcf99c-8274-eca1-5166-efc0828ca05b@molgen.mpg.de>
- <MN2PR18MB2528C681601B34D05100DF89D3100@MN2PR18MB2528.namprd18.prod.outlook.com>
- <8daadcd1-3ff2-2448-7957-827a71ae4d2e@molgen.mpg.de>
- <MN2PR18MB2528EC91E410FD1BE9FC3EF5D3130@MN2PR18MB2528.namprd18.prod.outlook.com>
-In-Reply-To: <MN2PR18MB2528EC91E410FD1BE9FC3EF5D3130@MN2PR18MB2528.namprd18.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [199.203.130.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: eb378971-a546-4844-243c-08d7b61b3bdd
-x-ms-traffictypediagnostic: DM5PR18MB1212:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR18MB1212AED2971FCF64287FD991C4130@DM5PR18MB1212.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(39840400004)(136003)(376002)(346002)(396003)(199004)(189003)(316002)(52536014)(64756008)(66446008)(6506007)(53546011)(966005)(66946007)(6636002)(66476007)(76116006)(110136005)(66556008)(4326008)(81166006)(9686003)(33656002)(478600001)(8936002)(5660300002)(8676002)(186003)(7696005)(54906003)(2906002)(26005)(71200400001)(86362001)(55016002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR18MB1212;H:DM5PR18MB2215.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NfbfXTC1Pc6Qf0SSQlhqZhjYLClXzjAKBROZs1qUhSJGQIzTVWGWGUxcQta3EWUFli7KLFasfraCOj9yiJ/yXmlirDBk9UWaUep0IINDgRdUnzIpuqyQ0mhPzhAcLdpStv0tkUqFz7Lxw3tbMhnfTny2ylM/EqXWJe+1UGoagHMpJab1HM1hLlBC8OIzVKNlGLwqWFVctbEJgXn+k75lKScBHHtdBWnVCAl4MQopO7Mcabm9s9iejjkLHXC3SGI3tQB8fZXr3jjyQtfJHA/r7r0lJM7HDVMwkVRDdSYds9IuaGfhY5AYipIu010bmwfG3hR8hw1cA8qxNPo8pxY51Q8aXMRokxlF4N3kXCcjuvcFXUvNKUK/J6ydXmxyXGO4MBjEMDt+Rk89GkBUWqTPHFYOHYn9GqtnMX1sFVwJK5f/3qfyiP80vbOtIQ1/rUY4Es5hgn9hWnKm+x6xQGLDRDpL+wz0q59CFnYxrJFwRD2LLxX80OrasOtdJjI6tyJsmWvEAU7WuUzLpzzrXjbKlA==
-x-ms-exchange-antispam-messagedata: Y1N+BnWoHlyNJwnQkDSypzo5nS/6APrx9j0mFZAXU2/GDjFa9/5BHiDFbicFDx6mIf0fbKbI4qnwiXOOuGlL0C6zHUrWSchmVzd5VkW09jJgNhVuMME2/XPtTij9K1KU8TNZ/pVhtkJo+Lyk37dO4w==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ bh=KVZCuSFI8K2grWi1H7cHL6KkJTX844z6Qxg+85P8OgA=;
+ b=BnrXmVp5mhXjCZI7nKM9V2WzU8qTOyB8DcnQpF8bRnoXKxAEihOoWJbLeaW8lE6WzqW7IU4nz462gYJuDoacKHCLdXxOW8E6Xfq0umzp8VKwtRXVgopziSqzaivs6jabTtI2CKic1zjWQLuOxSSR50Djb0ILyLkMfVCFIHO2JDo=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.155.147) by
+ BYAPR15MB2200.namprd15.prod.outlook.com (52.135.196.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.25; Thu, 20 Feb 2020 15:40:46 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::ccb6:a331:77d8:d308%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
+ 15:40:45 +0000
+Date:   Thu, 20 Feb 2020 07:40:36 -0800
+From:   Roman Gushchin <guro@fb.com>
+To:     Wen Yang <wenyang@linux.alibaba.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Xunlei Pang <xlpang@linux.alibaba.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/slub: Detach node lock from counting free objects
+Message-ID: <20200220154036.GA191388@carbon.dhcp.thefacebook.com>
+References: <20200201031502.92218-1-wenyang@linux.alibaba.com>
+ <20200212145247.bf89431272038de53dd9d975@linux-foundation.org>
+ <b42f7daa-4aea-1cf8-5bbb-2cd5d48b4e9a@linux.alibaba.com>
+ <20200218205312.GA3156@carbon>
+ <cb36f3e5-c01c-a99d-9230-af52f806e227@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cb36f3e5-c01c-a99d-9230-af52f806e227@linux.alibaba.com>
+X-ClientProxiedBy: MWHPR1201CA0007.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::17) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:150::19)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb378971-a546-4844-243c-08d7b61b3bdd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 15:40:37.9076
+Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:500::6:7ecb) by MWHPR1201CA0007.namprd12.prod.outlook.com (2603:10b6:301:4a::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Thu, 20 Feb 2020 15:40:44 +0000
+X-Originating-IP: [2620:10d:c090:500::6:7ecb]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 03172461-a864-423d-cd62-08d7b61b3fe8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB2200:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB2200F97093C9EBC09E83C8E0BE130@BYAPR15MB2200.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 031996B7EF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(136003)(376002)(396003)(346002)(199004)(189003)(5660300002)(6666004)(4326008)(316002)(81156014)(81166006)(8936002)(2906002)(1076003)(7696005)(52116002)(8676002)(6506007)(478600001)(6916009)(55016002)(9686003)(54906003)(66946007)(66476007)(186003)(66556008)(53546011)(33656002)(16526019)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2200;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0ySYzn+JYm6nOoiTfrbmQCPdeSqAxmX8+ifChm8a7gJM+rogt5MwXRO33UQswVRWVcL5NI1Mi+jvFf/54e8DyKbc1VNvaK9VHTwyegyla1SnzoiVYIy+4nvvXMau/uN/3F1Meq2sT+2zi7u4sbSo+0AWhuOsk8XdDFVpm7Uhm+Wvdj3+4eV+DeweqiweKXIPtWMtAV0O+FuO5g0XRI5RuQ7lSujUsVFcZ7CshHfT5UOkbUQVu33ncR4ws6xWxMpQ4NhqOSYPeqQnd7IXu2/8S3IVPrz9mwyiBVCtxqGiVJlUKUOVuFYrq590gN2W2Z0GeKaNotwu8jmTfHQs1vAPBxbjlipiB3o6rWILlk2jjtB9j6Af4xC2z9mmLReCwBMIkMHTmMMs4OQTOtZDw/+14Onmk8qfVBvOfUrpaG+ieu/J6zr94QSmhAtFRjZgyty8
+X-MS-Exchange-AntiSpam-MessageData: 30IHJFER42ocxBwiCrXMpC1db74YaMqCSdDIWFMbarMaM+fFG1LcisxIJyQgZ3idLhUGnK5/xdN/xZseO4kCRj5ZzhfEY+m6IEeAwbiYQa3aL/qBInZAs0duLUi2wKI+cNFPSmspZYZIBoJjvQm20gxh9GDY5szToIG8+LOyIW/CnPgHS0UWyHIHK07qREZd
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03172461-a864-423d-cd62-08d7b61b3fe8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 15:40:45.8352
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hgmhOtEPPsnqgVCxxe5jHLOkOqjk/gwZ7U6AuaGzXNminO25aR6hKpzE4JmrVBy/AbzZ6e9ox1fX3W5C4rkgYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR18MB1212
-X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 067T3j7famv4FmrdaL2vPVQYLeyLWOizrnEndLdTgtzYKcGnCoqOZ+1i5Tfm+z8g
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2200
+X-OriginatorOrg: fb.com
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 suspectscore=5 phishscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002200115
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTdWRhcnNhbmEgUmVkZHkgS2Fs
-bHVydSA8c2thbGx1cnVAbWFydmVsbC5jb20+DQo+IFNlbnQ6IFRodXJzZGF5LCBGZWJydWFyeSAy
-MCwgMjAyMCAxMToxNyBBTQ0KPiBUbzogUGF1bCBNZW56ZWwgPHBtZW56ZWxAbW9sZ2VuLm1wZy5k
-ZT47IEFyaWVsIEVsaW9yDQo+IDxhZWxpb3JAbWFydmVsbC5jb20+OyBHUi1ldmVyZXN0LWxpbnV4
-LWwyIDxHUi1ldmVyZXN0LWxpbnV4LQ0KPiBsMkBtYXJ2ZWxsLmNvbT4NCj4gQ2M6IG5ldGRldkB2
-Z2VyLmtlcm5lbC5vcmc7IExLTUwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBpdCts
-aW51eC0NCj4gbmV0ZGV2QG1vbGdlbi5tcGcuZGU7IERhdmlkIFMuIE1pbGxlciA8ZGF2ZW1AZGF2
-ZW1sb2Z0Lm5ldD4NCj4gU3ViamVjdDogUkU6IFtFWFRdIFJlOiBibngyeDogTGF0ZXN0IGZpcm13
-YXJlIHJlcXVpcmVtZW50IGJyZWFrcyBubyByZWdyZXNzaW9uDQo+IHBvbGljeQ0KPiANCj4gSGkg
-UGF1bCwNCj4gICAgIEJueDJ4IGRyaXZlciBhbmQgdGhlIHN0b3JtIEZXIGFyZSB0aWdodGx5IGNv
-dXBsZWQsIGFuZCB0aGUgaW5mbyBpcyBleGNoYW5nZWQNCj4gYmV0d2VlbiB0aGVtIHZpYSBzaG1l
-bSAoaS5lLiwgY29tbW9uIHN0cnVjdHVyZXMgd2hpY2ggbWlnaHQgY2hhbmdlDQo+IGJldHdlZW4g
-dGhlIHJlbGVhc2VzKS4gQWxzbywgRlcgcHJvdmlkZXMgc29tZSBvZmZzZXQgYWRkcmVzc2VzIHRv
-IHRoZSBkcml2ZXINCj4gd2hpY2ggY291bGQgY2hhbmdlIGJldHdlZW4gdGhlIEZXIHJlbGVhc2Vz
-LCBmb2xsb3dpbmcgaXMgb25lIHN1Y2ggY29tbWl0LA0KPiAJaHR0cHM6Ly93d3cuc3Bpbmljcy5u
-ZXQvbGlzdHMvbmV0ZGV2L21zZzYwOTg4OS5odG1sDQo+IEhlbmNlIGl0J3Mgbm90IHZlcnkgc3Ry
-YWlnaHQgZm9yd2FyZCB0byBwcm92aWRlIHRoZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IGkuZS4s
-DQo+IG5ld2VyICh1cGRhdGVkKSBrZXJuZWwgZHJpdmVyIHdpdGggdGhlIG9sZGVyIEZXLg0KPiBD
-dXJyZW50bHkgd2UgZG9u4oCZdCBoYXZlIHBsYW5zIHRvIGltcGxlbWVudCB0aGUgbmV3IG1vZGVs
-IG1lbnRpb25lZCBiZWxvdy4NCj4gDQo+IFRoYW5rcywNCj4gU3VkYXJzYW5hDQpIaSwNClRoZXJl
-IGFyZSBhZGRpdGlvbmFsIHJlYXNvbnMgd2h5IGJhY2t3YXJkcy9mb3J3YXJkcyBjb21wYXRpYmls
-aXR5IGNvbnNpZGVyYXRpb25zDQphcmUgbm90IGFwcGxpY2FibGUgaGVyZS4gVGhpcyBGdyBpcyBu
-b3QgbnZyYW0gYmFzZWQsIGFuZCBkb2VzIG5vdCByZXNpZGUgaW4gdGhlDQpkZXZpY2UuIEl0IGlz
-IHByb2dyYW1lZCB0byB0aGUgZGV2aWNlIG9uIGV2ZXJ5IGRyaXZlciBsb2FkLiBUaGUgZHJpdmVy
-IHdpbGwNCm5ldmVyIGZhY2UgYSBkZXZpY2UgImFscmVhZHkgaW5pdGlhbGl6ZWQiIHdpdGggYSB2
-ZXJzaW9uIG9mIEZXIGl0IGlzIG5vdA0KZmFtaWxpYXIgd2l0aC4NClRoZSBkZXZpY2UgYWxzbyBo
-YXMgdHJhZGl0aW9uYWwgbWFuYWdlbWVudCBGVyBpbiBudnJhbSBpbiB0aGUgZGV2aWNlIHdpdGgg
-d2hpY2gNCndlIGhhdmUgYSBiYWNrd2FyZHMgYW5kIGZvcndhcmRzIGNvbXBhdGliaWxpdHkgbWVj
-aGFuaXNtLCB3aGljaCB3b3JrcyBqdXN0DQpmaW5lLg0KQnV0IHRoZSBGVyB1bmRlciBkaXNjdXNz
-aW9uIGlzIGZhc3RwYXRoIEZ3LCB1c2VkIHRvIGNyYWZ0IGV2ZXJ5IHBhY2tldCBnb2luZyBvdXQN
-Cm9mIHRoZSBkZXZpY2UgYW5kIGFuYWx5emUgYW5kIHBsYWNlIGV2ZXJ5IHBhY2tldCBjb21pbmcg
-aW50byB0aGUgZGV2aWNlLg0KU3VwcG9ydGluZyBtdWx0aXBsZSB2ZXJzaW9ucyBvZiBGVyB3b3Vs
-ZCBiZSB0YW50YW1vdW50IHRvIGltcGxlbWVudGluZyBkb3plbnMgb2YNCnZlcnNpb25zIG9mIHN0
-YXJ0X3htaXQgYW5kIG5hcGlfcG9sbCBpbiB0aGUgZHJpdmVyIChub3QgdG8gbWVudGlvbiBtdWx0
-aXBsZQ0KZmFzdHBhdGggaGFuZGxlcyBvZiBhbGwgdGhlIG9mZmxvYWRzIHRoZSBkZXZpY2Ugc3Vw
-cG9ydHMsIHJvY2UsIGlzY3NpLCBmY29lIGFuZA0KaXdhcnAsIGFzIGFsbCBvZiB0aGVzZSBhcmUg
-b2ZmbG9hZGVkIGJ5IHRoZSBGVykuDQpUaGUgZW50aXJlIGRldmljZSBpbml0aWFsaXphdGlvbiBz
-ZXF1ZW5jZSBhbHNvIGNoYW5nZXMgc2lnbmlmaWNhbnRseSBmcm9tIG9uZSBGVw0KdmVyc2lvbiB0
-byB0aGUgTmV4dC4gQWxsIG9mIHRoZXNlIGRpZmZlcmVuY2VzIGFyZSBhYnN0cmFjdGVkIGF3YXkg
-aW4gdGhlIEZXDQpmaWxlLCB3aGljaCBpbmNsdWRlcyB0aGUgaW5pdCBzZXF1ZW5jZSBhbmQgdGhl
-IGNvbXBpbGVkIEZXLiBUaGUgYW1vdW50IG9mDQpjaGFuZ2VzIHJlcXVpcmVkIGluIGRyaXZlciBh
-cmUgdmVyeSBzaWduaWZpY2FudCB3aGVuIG1vdmluZyBmcm9tIG9uZSB2ZXJzaW9uIHRvDQp0aGUg
-bmV4dC4gVHJ5aW5nIHRvIGtlZXAgYWxsIHRob3NlIHZlcnNpb25zIGFsaXZlIGNvbmN1cnJlbnRs
-eSB3b3VsZCBjYXVzZSB0aGlzDQphbHJlYWR5IHZlcnkgbGFyZ2UgZHJpdmVyIHRvIGJlIDIweCBs
-YXJnZXIuDQpXZSBkb24ndCBoYXZlIGEgbWV0aG9kIG9mIGtlZXBpbmcgdGhlIGRldmljZSBvcGVy
-YXRpb25hbCBpZiB0aGUga2VybmVsIHdhcw0KdXBncmFkZWQgYnV0IGZpcm13YXJlIHRyZWUgd2Fz
-IG5vdCB1cGRhdGVkLiBUaGUgYmVzdCB0aGF0IGNhbiBiZSBkb25lIGlzIHJlcG9ydA0KdGhlIHBy
-b2JsZW0sIHdoaWNoIGlzIHdoYXQgd2UgZG8uDQpUaGFua3MsDQpBcmllbA0K
+On Thu, Feb 20, 2020 at 09:53:26PM +0800, Wen Yang wrote:
+> 
+> 
+> On 2020/2/19 4:53 上午, Roman Gushchin wrote:
+> > On Sun, Feb 16, 2020 at 12:15:54PM +0800, Wen Yang wrote:
+> > > 
+> > > 
+> > > On 2020/2/13 6:52 上午, Andrew Morton wrote:
+> > > > On Sat,  1 Feb 2020 11:15:02 +0800 Wen Yang <wenyang@linux.alibaba.com> wrote:
+> > > > 
+> > > > > The lock, protecting the node partial list, is taken when couting the free
+> > > > > objects resident in that list. It introduces locking contention when the
+> > > > > page(s) is moved between CPU and node partial lists in allocation path
+> > > > > on another CPU. So reading "/proc/slabinfo" can possibily block the slab
+> > > > > allocation on another CPU for a while, 200ms in extreme cases. If the
+> > > > > slab object is to carry network packet, targeting the far-end disk array,
+> > > > > it causes block IO jitter issue.
+> > > > > 
+> > > > > This fixes the block IO jitter issue by caching the total inuse objects in
+> > > > > the node in advance. The value is retrieved without taking the node partial
+> > > > > list lock on reading "/proc/slabinfo".
+> > > > > 
+> > > > > ...
+> > > > > 
+> > > > > @@ -1768,7 +1774,9 @@ static void free_slab(struct kmem_cache *s, struct page *page)
+> > > > >    static void discard_slab(struct kmem_cache *s, struct page *page)
+> > > > >    {
+> > > > > -	dec_slabs_node(s, page_to_nid(page), page->objects);
+> > > > > +	int inuse = page->objects;
+> > > > > +
+> > > > > +	dec_slabs_node(s, page_to_nid(page), page->objects, inuse);
+> > > > 
+> > > > Is this right?  dec_slabs_node(..., page->objects, page->objects)?
+> > > > 
+> > > > If no, we could simply pass the page* to inc_slabs_node/dec_slabs_node
+> > > > and save a function argument.
+> > > > 
+> > > > If yes then why?
+> > > > 
+> > > 
+> > > Thanks for your comments.
+> > > We are happy to improve this patch based on your suggestions.
+> > > 
+> > > 
+> > > When the user reads /proc/slabinfo, in order to obtain the active_objs
+> > > information, the kernel traverses all slabs and executes the following code
+> > > snippet:
+> > > static unsigned long count_partial(struct kmem_cache_node *n,
+> > >                                          int (*get_count)(struct page *))
+> > > {
+> > >          unsigned long flags;
+> > >          unsigned long x = 0;
+> > >          struct page *page;
+> > > 
+> > >          spin_lock_irqsave(&n->list_lock, flags);
+> > >          list_for_each_entry(page, &n->partial, slab_list)
+> > >                  x += get_count(page);
+> > >          spin_unlock_irqrestore(&n->list_lock, flags);
+> > >          return x;
+> > > }
+> > > 
+> > > It may cause performance issues.
+> > > 
+> > > Christoph suggested "you could cache the value in the userspace application?
+> > > Why is this value read continually?", But reading the /proc/slabinfo is
+> > > initiated by the user program. As a cloud provider, we cannot control user
+> > > behavior. If a user program inadvertently executes cat /proc/slabinfo, it
+> > > may affect other user programs.
+> > > 
+> > > As Christoph said: "The count is not needed for any operations. Just for the
+> > > slabinfo output. The value has no operational value for the allocator
+> > > itself. So why use extra logic to track it in potentially performance
+> > > critical paths?"
+> > > 
+> > > In this way, could we show the approximate value of active_objs in the
+> > > /proc/slabinfo?
+> > > 
+> > > Based on the following information:
+> > > In the discard_slab() function, page->inuse is equal to page->total_objects;
+> > > In the allocate_slab() function, page->inuse is also equal to
+> > > page->total_objects (with one exception: for kmem_cache_node, page-> inuse
+> > > equals 1);
+> > > page->inuse will only change continuously when the obj is constantly
+> > > allocated or released. (This should be the performance critical path
+> > > emphasized by Christoph)
+> > > 
+> > > When users query the global slabinfo information, we may use total_objects
+> > > to approximate active_objs.
+> > 
+> > Well, from one point of view, it makes no sense, because the ratio between
+> > these two numbers is very meaningful: it's the slab utilization rate.
+> > 
+> > On the other side, with enabled per-cpu partial lists active_objs has
+> > nothing to do with the reality anyway, so I agree with you, calling
+> > count_partial() is almost useless.
+> > 
+> > That said, I wonder if the right thing to do is something like the patch below?
+> > 
+> > Thanks!
+> > 
+> > Roman
+> > 
+> > --
+> > 
+> > diff --git a/mm/slub.c b/mm/slub.c
+> > index 1d644143f93e..ba0505e75ecc 100644
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -2411,14 +2411,16 @@ static inline unsigned long node_nr_objs(struct kmem_cache_node *n)
+> >   static unsigned long count_partial(struct kmem_cache_node *n,
+> >                                          int (*get_count)(struct page *))
+> >   {
+> > -       unsigned long flags;
+> >          unsigned long x = 0;
+> > +#ifdef CONFIG_SLUB_CPU_PARTIAL
+> > +       unsigned long flags;
+> >          struct page *page;
+> >          spin_lock_irqsave(&n->list_lock, flags);
+> >          list_for_each_entry(page, &n->partial, slab_list)
+> >                  x += get_count(page);
+> >          spin_unlock_irqrestore(&n->list_lock, flags);
+> > +#endif
+> >          return x;
+> >   }
+> >   #endif /* CONFIG_SLUB_DEBUG || CONFIG_SYSFS */
+> > 
+> 
+> Hi Roman,
+> 
+> Thanks for your comments.
+> 
+> In the server scenario, SLUB_CPU_PARTIAL is turned on by default, and can
+> improve the performance of the cloud server, as follows:
+
+Hello, Wen!
+
+That's exactly my point: if CONFIG_SLUB_CPU_PARTIAL is on, count_partial() is useless
+anyway because the returned number is far from the reality. So if we define
+active_objects == total_objects, as you basically suggest, we do not introduce any
+regression. Actually I think it's even preferable to show the unrealistic uniform 100%
+slab utilization rather than some very high but incorrect value.
+
+And on real-time systems uncontrolled readings of /proc/slabinfo is less
+of a concern, I hope.
+
+Thank you!
