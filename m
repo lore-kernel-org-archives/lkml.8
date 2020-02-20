@@ -2,390 +2,111 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF27C11D25
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02170C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CF220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0E920679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582232062;
+	bh=csklF/VLfMBe/9AbLqcIGNOh+eIVqt00sLyRiNBn9xQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dKq3DuEZhpT5ew0NUv5/WIlJuTaL+VIbow5qnG2eYeXKvI28BrWzm5cxE+U1OQgca
+	 tvETzCRcZ1UGB3PotULXrPtIc8E6PKaU5ca3z+eC7K279/sOi6m+1JxWC7ngUZxpnT
+	 JdKYJO8Tpcl3KUgB2vw6N1gQ4CXrm0olCmfX9RjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgBTUyP (ORCPT
+        id S1729150AbgBTUyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:54:15 -0500
-Received: from out03.mta.xmission.com ([166.70.13.233]:34984 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTUyP (ORCPT
+        Thu, 20 Feb 2020 15:54:21 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:43304 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgBTUyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:54:15 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j4spp-0006m8-FF; Thu, 20 Feb 2020 13:54:13 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j4spo-00063X-DX; Thu, 20 Feb 2020 13:54:13 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thu, 20 Feb 2020 15:54:20 -0500
+Received: by mail-qt1-f193.google.com with SMTP id g21so3913620qtq.10;
+        Thu, 20 Feb 2020 12:54:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=BiE+rct0rry2pArV3gigMdzlZiS1+memMy+VBdXCC0g=;
+        b=oHWDw6RCZdv06TZrh3Qj3gsEIXivcxE3uXPCbkcJ2m2UdQNHxxKuovATMPLuouJjWG
+         /7xptXQ03FED86Sla82047upyBEwI7HZBrTJXMer3p1NaCTwIpl16i4cOA7FPSFwwncS
+         RUIp1/jottGogriZOzdHOi3HyT61dDWUWxDebE8ZiGPJ2NkCjmgm+shlmh5wd83Qzy3Z
+         30286SGALzQD8SzVxnEet57ytjDAmy8YcnYLI48M4clrruxKdKnmO6MIgs507n5itrye
+         6TpiJZ0fBNrb2OL9NGL+NJLlTWEAMfP3nSPcOxps//7VAMRGHfh2t/E95u0WyPTdwj5R
+         ChBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=BiE+rct0rry2pArV3gigMdzlZiS1+memMy+VBdXCC0g=;
+        b=Q7KXVyVHwypRtv42tH2ru772XVRri88IxIn7uIHPpYUKHUnDNybvquoP3iQIN4jszQ
+         +CYYc7GSXncDupngtB6jHugNG1+/zWkTV5qZxvMzks145KBexzHUHqWLcOr3iHg2H33x
+         khXLL7p6yviQLBR9ZKU7V6lBGsH8BlY/xmgBky6q0CnegFexeVsyxdK9+N8e5QOYUrCT
+         ByZ9Cc3yrw5fEGzDRHc9xOObqgqukmX3KxGIaRhJYnH+o5sbpU8OVkmaU4Coqy7QgdPW
+         DN9l3Une9E5cjLYykJuXxYJroSQ0lRPLjWs19n+oLekA6BEbFSQVRhFf/DUItUVCxyMg
+         QE2g==
+X-Gm-Message-State: APjAAAXVYdhXARrzBr8LOe1Rof32SYngJn9G+bvvmOiQhrL26bpmV88A
+        DlbzDtoE7ngLOrU0kf3ISsA=
+X-Google-Smtp-Source: APXvYqx8p0C/GaJD7Fie8OUeewsrbm4Q0PH7AogGZxTkl86op5vkJ3JFVQfhBK9/2ANYRUN8ev8xbA==
+X-Received: by 2002:aed:3f70:: with SMTP id q45mr27822085qtf.310.1582232057881;
+        Thu, 20 Feb 2020 12:54:17 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::55b1])
+        by smtp.gmail.com with ESMTPSA id g9sm420153qkl.11.2020.02.20.12.54.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 12:54:17 -0800 (PST)
+Date:   Thu, 20 Feb 2020 15:54:16 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
-        <87v9odlxbr.fsf@x220.int.ebiederm.org>
-        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
-        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-        <87v9obipk9.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
-        <20200212200335.GO23230@ZenIV.linux.org.uk>
-        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
-        <20200212203833.GQ23230@ZenIV.linux.org.uk>
-        <20200212204124.GR23230@ZenIV.linux.org.uk>
-        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-        <87lfp7h422.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
-        <87pnejf6fz.fsf@x220.int.ebiederm.org>
-        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 20 Feb 2020 14:52:12 -0600
-In-Reply-To: <871rqpaswu.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 20 Feb 2020 14:46:25 -0600")
-Message-ID: <87wo8h7zib.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200220205416.GI698990@mtj.thefacebook.com>
+References: <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
+ <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
+ <20200219220859.GF54486@cmpxchg.org>
+ <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
+ <20200220155651.GG698990@mtj.thefacebook.com>
+ <20200220182326.ubcjycaubgykiy6e@ca-dmjordan1.us.oracle.com>
+ <20200220184545.GH698990@mtj.thefacebook.com>
+ <20200220195535.7xblt45akld6eftj@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j4spo-00063X-DX;;;mid=<87wo8h7zib.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/OMqs9VehhvIb+4bZWbETbEYL0SNii37Q=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 6/7] proc: Use a list of inodes to flush from proc
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220195535.7xblt45akld6eftj@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello, Daniel.
 
-Rework the flushing of proc to use a list of directory inodes that
-need to be flushed.
+On Thu, Feb 20, 2020 at 02:55:35PM -0500, Daniel Jordan wrote:
+> On Thu, Feb 20, 2020 at 01:45:45PM -0500, Tejun Heo wrote:
+> > The setup cost can be lazy optimized but it'd still have to bounce the
+> > tiny pieces of work to different threads instead of processing them in
+> > one fell swoop from the same context, which most likely is gonna be
+> > untenably expensive.
+> 
+> I see, your last mail is clearer now.  If it's easy to do, a pointer to where
+> this happens would help so we're on the same page.
 
-The list is kept on struct pid not on struct task_struct, as there is
-a fixed connection between proc inodes and pids but at least for the
-case of de_thread the pid of a task_struct changes.
+Network packet rx is the clearest example I think, but you already
+mentioned it. Reclaim is less so but when kswapd reclaims, it walks
+everybody, and there can be a lot of small cgroups.
 
-This removes the dependency on proc_mnt which allows for different
-mounts of proc having different mount options even in the same pid
-namespace and this allows for the removal of proc_mnt which will
-trivially the first mount of proc to honor it's mount options.
+Thanks.
 
-This flushing remains an optimization.  The functions
-pid_delete_dentry and pid_revalidate ensure that ordinary dcache
-management will not attempt to use dentries past the point their
-respective task has died.  When unused the shrinker will
-eventually be able to remove these dentries.
-
-There is a case in de_thread where proc_flush_pid can be
-called early for a given pid.  Which winds up being
-safe (if suboptimal) as this is just an optiimization.
-
-Only pid directories are put on the list as the other
-per pid files are children of those directories and
-d_invalidate on the directory will get them as well.
-
-So that the pid can be used during flushing it's reference count is
-taken in release_task and dropped in proc_flush_pid.  Further the call
-of proc_flush_pid is moved after the tasklist_lock is released in
-release_task so that it is certain that the pid has already been
-unhashed when flushing it taking place.  This removes a small race
-where a dentry could recreated.
-
-As struct pid is supposed to be small and I need a per pid lock
-I reuse the only lock that currently exists in struct pid the
-the wait_pidfd.lock.
-
-The net result is that this adds all of this functionality
-with just a little extra list management overhead and
-a single extra pointer in struct pid.
-
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- fs/proc/base.c          | 111 +++++++++++++---------------------------
- fs/proc/inode.c         |   2 +-
- fs/proc/internal.h      |   1 +
- include/linux/pid.h     |   1 +
- include/linux/proc_fs.h |   4 +-
- kernel/exit.c           |   4 +-
- 6 files changed, 44 insertions(+), 79 deletions(-)
-
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index c7c64272b0fa..e7efe9d6f3d6 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -1834,11 +1834,25 @@ void task_dump_owner(struct task_struct *task, umode_t mode,
- 	*rgid = gid;
- }
- 
-+void proc_pid_evict_inode(struct proc_inode *ei)
-+{
-+	struct pid *pid = ei->pid;
-+
-+	if (S_ISDIR(ei->vfs_inode.i_mode)) {
-+		spin_lock(&pid->wait_pidfd.lock);
-+		hlist_del_init_rcu(&ei->sibling_inodes);
-+		spin_unlock(&pid->wait_pidfd.lock);
-+	}
-+
-+	put_pid(pid);
-+}
-+
- struct inode *proc_pid_make_inode(struct super_block * sb,
- 				  struct task_struct *task, umode_t mode)
- {
- 	struct inode * inode;
- 	struct proc_inode *ei;
-+	struct pid *pid;
- 
- 	/* We need a new inode */
- 
-@@ -1856,10 +1870,18 @@ struct inode *proc_pid_make_inode(struct super_block * sb,
- 	/*
- 	 * grab the reference to task.
- 	 */
--	ei->pid = get_task_pid(task, PIDTYPE_PID);
--	if (!ei->pid)
-+	pid = get_task_pid(task, PIDTYPE_PID);
-+	if (!pid)
- 		goto out_unlock;
- 
-+	/* Let the pid remember us for quick removal */
-+	ei->pid = pid;
-+	if (S_ISDIR(mode)) {
-+		spin_lock(&pid->wait_pidfd.lock);
-+		hlist_add_head_rcu(&ei->sibling_inodes, &pid->inodes);
-+		spin_unlock(&pid->wait_pidfd.lock);
-+	}
-+
- 	task_dump_owner(task, 0, &inode->i_uid, &inode->i_gid);
- 	security_task_to_inode(task, inode);
- 
-@@ -3230,90 +3252,29 @@ static const struct inode_operations proc_tgid_base_inode_operations = {
- 	.permission	= proc_pid_permission,
- };
- 
--static void proc_flush_task_mnt(struct vfsmount *mnt, pid_t pid, pid_t tgid)
--{
--	struct dentry *dentry, *leader, *dir;
--	char buf[10 + 1];
--	struct qstr name;
--
--	name.name = buf;
--	name.len = snprintf(buf, sizeof(buf), "%u", pid);
--	/* no ->d_hash() rejects on procfs */
--	dentry = d_hash_and_lookup(mnt->mnt_root, &name);
--	if (dentry) {
--		d_invalidate(dentry);
--		dput(dentry);
--	}
--
--	if (pid == tgid)
--		return;
--
--	name.name = buf;
--	name.len = snprintf(buf, sizeof(buf), "%u", tgid);
--	leader = d_hash_and_lookup(mnt->mnt_root, &name);
--	if (!leader)
--		goto out;
--
--	name.name = "task";
--	name.len = strlen(name.name);
--	dir = d_hash_and_lookup(leader, &name);
--	if (!dir)
--		goto out_put_leader;
--
--	name.name = buf;
--	name.len = snprintf(buf, sizeof(buf), "%u", pid);
--	dentry = d_hash_and_lookup(dir, &name);
--	if (dentry) {
--		d_invalidate(dentry);
--		dput(dentry);
--	}
--
--	dput(dir);
--out_put_leader:
--	dput(leader);
--out:
--	return;
--}
--
- /**
-- * proc_flush_task -  Remove dcache entries for @task from the /proc dcache.
-- * @task: task that should be flushed.
-+ * proc_flush_pid -  Remove dcache entries for @pid from the /proc dcache.
-+ * @pid: pid that should be flushed.
-  *
-- * When flushing dentries from proc, one needs to flush them from global
-- * proc (proc_mnt) and from all the namespaces' procs this task was seen
-- * in. This call is supposed to do all of this job.
-- *
-- * Looks in the dcache for
-- * /proc/@pid
-- * /proc/@tgid/task/@pid
-- * if either directory is present flushes it and all of it'ts children
-- * from the dcache.
-+ * This function walks a list of inodes (that belong to any proc
-+ * filesystem) that are attached to the pid and flushes them from
-+ * the dentry cache.
-  *
-  * It is safe and reasonable to cache /proc entries for a task until
-  * that task exits.  After that they just clog up the dcache with
-  * useless entries, possibly causing useful dcache entries to be
-- * flushed instead.  This routine is proved to flush those useless
-- * dcache entries at process exit time.
-+ * flushed instead.  This routine is provided to flush those useless
-+ * dcache entries when a process is reaped.
-  *
-  * NOTE: This routine is just an optimization so it does not guarantee
-- *       that no dcache entries will exist at process exit time it
-- *       just makes it very unlikely that any will persist.
-+ *       that no dcache entries will exist after a process is reaped
-+ *       it just makes it very unlikely that any will persist.
-  */
- 
--void proc_flush_task(struct task_struct *task)
-+void proc_flush_pid(struct pid *pid)
- {
--	int i;
--	struct pid *pid, *tgid;
--	struct upid *upid;
--
--	pid = task_pid(task);
--	tgid = task_tgid(task);
--
--	for (i = 0; i <= pid->level; i++) {
--		upid = &pid->numbers[i];
--		proc_flush_task_mnt(upid->ns->proc_mnt, upid->nr,
--					tgid->numbers[i].nr);
--	}
-+	proc_invalidate_siblings_dcache(&pid->inodes, &pid->wait_pidfd.lock);
-+	put_pid(pid);
- }
- 
- static struct dentry *proc_pid_instantiate(struct dentry * dentry,
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index 3c9082cd257b..979e867be3e5 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -40,7 +40,7 @@ static void proc_evict_inode(struct inode *inode)
- 
- 	/* Stop tracking associated processes */
- 	if (ei->pid) {
--		put_pid(ei->pid);
-+		proc_pid_evict_inode(ei);
- 		ei->pid = NULL;
- 	}
- 
-diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-index fd470172675f..9e294f0290e5 100644
---- a/fs/proc/internal.h
-+++ b/fs/proc/internal.h
-@@ -158,6 +158,7 @@ extern int proc_pid_statm(struct seq_file *, struct pid_namespace *,
- extern const struct dentry_operations pid_dentry_operations;
- extern int pid_getattr(const struct path *, struct kstat *, u32, unsigned int);
- extern int proc_setattr(struct dentry *, struct iattr *);
-+extern void proc_pid_evict_inode(struct proc_inode *);
- extern struct inode *proc_pid_make_inode(struct super_block *, struct task_struct *, umode_t);
- extern void pid_update_inode(struct task_struct *, struct inode *);
- extern int pid_delete_dentry(const struct dentry *);
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 998ae7d24450..01a0d4e28506 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -62,6 +62,7 @@ struct pid
- 	unsigned int level;
- 	/* lists of tasks that use this pid */
- 	struct hlist_head tasks[PIDTYPE_MAX];
-+	struct hlist_head inodes;
- 	/* wait queue for pidfd notifications */
- 	wait_queue_head_t wait_pidfd;
- 	struct rcu_head rcu;
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 3dfa92633af3..40a7982b7285 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -32,7 +32,7 @@ struct proc_ops {
- typedef int (*proc_write_t)(struct file *, char *, size_t);
- 
- extern void proc_root_init(void);
--extern void proc_flush_task(struct task_struct *);
-+extern void proc_flush_pid(struct pid *);
- 
- extern struct proc_dir_entry *proc_symlink(const char *,
- 		struct proc_dir_entry *, const char *);
-@@ -105,7 +105,7 @@ static inline void proc_root_init(void)
- {
- }
- 
--static inline void proc_flush_task(struct task_struct *task)
-+static inline void proc_flush_pid(struct pid *pid)
- {
- }
- 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 2833ffb0c211..502b4995b688 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -191,6 +191,7 @@ void put_task_struct_rcu_user(struct task_struct *task)
- void release_task(struct task_struct *p)
- {
- 	struct task_struct *leader;
-+	struct pid *thread_pid;
- 	int zap_leader;
- repeat:
- 	/* don't need to get the RCU readlock here - the process is dead and
-@@ -199,11 +200,11 @@ void release_task(struct task_struct *p)
- 	atomic_dec(&__task_cred(p)->user->processes);
- 	rcu_read_unlock();
- 
--	proc_flush_task(p);
- 	cgroup_release(p);
- 
- 	write_lock_irq(&tasklist_lock);
- 	ptrace_release_task(p);
-+	thread_pid = get_pid(p->thread_pid);
- 	__exit_signal(p);
- 
- 	/*
-@@ -226,6 +227,7 @@ void release_task(struct task_struct *p)
- 	}
- 
- 	write_unlock_irq(&tasklist_lock);
-+	proc_flush_pid(thread_pid);
- 	release_thread(p);
- 	put_task_struct_rcu_user(p);
- 
 -- 
-2.20.1
-
+tejun
