@@ -2,147 +2,221 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URI_HEX,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27912C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E61C11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0AF4206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A723222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lwip480+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HIPw1W6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgBTTLp (ORCPT
+        id S1728932AbgBTTLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:11:45 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2123 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgBTTLo (ORCPT
+        Thu, 20 Feb 2020 14:11:51 -0500
+Received: from gateway36.websitewelcome.com ([192.185.200.11]:40442 "EHLO
+        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728111AbgBTTLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:11:44 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4ed9a70000>; Thu, 20 Feb 2020 11:10:31 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 11:11:43 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 20 Feb 2020 11:11:43 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 19:11:42 +0000
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>,
-        <helen.koike@collabora.com>, <sboyd@kernel.org>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <b301c247-537d-d78e-b057-a3225b10de7e@xs4all.nl>
- <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <b3933aa1-0717-183d-f00c-2d5fd6836a18@nvidia.com>
-Date:   Thu, 20 Feb 2020 11:11:51 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 14:11:49 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway36.websitewelcome.com (Postfix) with ESMTP id 96ABB400C8F54
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:26:16 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 4rEgjkh86XVkQ4rEgj7BxU; Thu, 20 Feb 2020 13:11:46 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=5i2VISLHxkwlkmTIbhd4lHNarQUya3H3hLvf7tzN68w=; b=HIPw1W6sVnurI/pvy2PMAys5a2
+        OIz/RiA5KGxYsEcEBKxAKaveo2Oul/hB+JvX4qYo74B1OLonj+MxOlPrBbILRu+8dlFw+M7IW/iDO
+        u0NBUn1sI7swDe5gGz1JPYeDzYGtvsKiPqmtJGvvbhafYgeazhH+gS7Jr/8nItQp+xaHaQDZcPeRA
+        wSa0bmSdFwcue/yv24eLYpc/Q93vPQzS9wKsbYQU7adEmB4Lm9v7tEgtvygyzpG1QUkhAU831cOa1
+        2JkR67vRIfW/4+HB8wWAd2IL2dgypFTpSKEGBZo0XocHJXelK/mhmXj9hevD79LTZn/V4LHCQS3i6
+        upiGbREA==;
+Received: from [201.144.174.47] (port=20829 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j4rEf-002Fcv-Fy; Thu, 20 Feb 2020 13:11:45 -0600
+Subject: Re: [PATCH] staging: Replace zero-length array with flexible-array
+ member
+To:     Adham.Abozaeid@microchip.com, gregkh@linuxfoundation.org,
+        vaibhav.sr@gmail.com, mgreer@animalcreek.com, johan@kernel.org,
+        elder@kernel.org, m.tretter@pengutronix.de, kernel@pengutronix.de,
+        mchehab@kernel.org, Larry.Finger@lwfinger.net,
+        florian.c.schilhabel@googlemail.com, Ajay.Kathat@microchip.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        greybus-dev@lists.linaro.org, linux-media@vger.kernel.org,
+        linux-wireless@vger.kernel.org
+References: <20200220132908.GA30501@embeddedor>
+ <d331cd9c-ec57-b686-d977-c48e70415ae1@microchip.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <8e9e1b59-a7a8-782e-990b-8a7023c2292d@embeddedor.com>
+Date:   Thu, 20 Feb 2020 13:14:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <dc592f29-3109-d10c-7df7-ffdb2755ade0@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <d331cd9c-ec57-b686-d977-c48e70415ae1@microchip.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582225831; bh=heGfCD1XOLpMxJxA4HNefg5duZSK5mV5RMUR+iVA1L8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=lwip480+6jSOA6Li0cjyn37svqwAVWkRifwsZL3qphkMWbEa9Eai7Gb4N63teRGCF
-         dalP/2lfjPUeLWOacg1RW2PzPGQSKZTEa0xdPBk0cYEjki/3guB9cGhywQoF1bd5MF
-         RsDsMX7y9ZHfsjdiXomO8iurvuGuh/3XukmWJB/KNrHDhDCkWklTYNEv0yE+u7OEU8
-         D9hygg5Ujtm1CDQERG0fjfinHhdDk5zPeYIJB0HsQPLvMmhvWAglWQYUFsKNoRMVPW
-         3NQh+XpBhvjdcNwUa9mtwmRb9GkXAwGzp0XUbe/mOabrq/LL9HsbWixuMvMNbVQiqP
-         iCKn80t/DrJvw==
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.144.174.47
+X-Source-L: No
+X-Exim-ID: 1j4rEf-002Fcv-Fy
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [201.144.174.47]:20829
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 2/20/20 5:33 AM, Hans Verkuil wrote:
-> External email: Use caution opening links or attachments
->
->
-> (Replying to myself so I can explain this a bit more)
->
-> On 2/20/20 1:44 PM, Hans Verkuil wrote:
->>> +
->>> +static int tegra_csi_tpg_channels_alloc(struct tegra_csi *csi)
->>> +{
->>> +    struct device_node *node = csi->dev->of_node;
->>> +    unsigned int port_num;
->>> +    int ret;
->>> +    struct tegra_csi_channel *item;
->>> +    unsigned int tpg_channels = csi->soc->csi_max_channels;
->>> +
->>> +    /* allocate CSI channel for each CSI x2 ports */
->>> +    for (port_num = 0; port_num < tpg_channels; port_num++) {
->>> +            item = devm_kzalloc(csi->dev, sizeof(*item), GFP_KERNEL);
->> Using devm_*alloc can be dangerous. If someone unbinds the driver, then
->> all memory allocated with devm_ is immediately freed. But if an application
->> still has a filehandle open, then when it closes it it might still reference
->> this already-freed memory.
+On 2/20/20 13:04, Adham.Abozaeid@microchip.com wrote:
+> Hi Gustavo
+> 
+> On 2/20/20 6:29 AM, Gustavo A. R. Silva wrote:
+>> The current codebase makes use of the zero-length array language
+>> extension to the C90 standard, but the preferred mechanism to declare
+>> variable-length types such as these ones is a flexible array member[1][2],
+>> introduced in C99:
 >>
->> I recommend that you avoid using devm_*alloc for media drivers.
-> A good test is to unbind & bind the driver:
->
-> cd /sys/devices/platform/50000000.host1x/54080000.vi/driver
-> echo -n 54080000.vi >unbind
-> echo -n 54080000.vi >bind
->
-> First just do this without the driver being used. That already
-> gives me 'list_del corruption' kernel messages (list debugging
-> is turned on in my kernel).
->
-> Note that this first test is basically identical to a rmmod/modprobe
-> of the driver. But when I compiled the driver as a module it didn't
-> create any video device nodes! Nor did I see any errors in the kernel
-> log. I didn't pursue this, and perhaps I did something wrong, but it's
-> worth taking a look at.
->
-> The next step would be to have a video node open with:
->
-> v4l2-ctl --sleep 10
->
-> then while it is sleeping unbind the driver and see what happens
-> when v4l2-ctl exits.
->
-> Worst case is when you are streaming:
->
-> v4l2-ctl --stream-mmap
->
-> and then unbind.
->
-> In general, the best way to get this to work correctly is:
->
-> 1) don't use devm_*alloc
-> 2) set the release callback of struct v4l2_device and do all freeing there.
-> 3) in the platform remove() callback you call media_device_unregister()
->     and video_unregister_device().
-Reg 3, in current patch, media_device_unregister is called in 
-host1x_video_remove
-video_unregister_device happens during host1x_video_remove -> 
-host1x_device_exit -> tegra_vi_exit -> tegra_vi_channels_cleanup
+>> struct foo {
+>>         int stuff;
+>>         struct boo array[];
+>> };
+>>
+>> By making use of the mechanism above, we will get a compiler warning
+>> in case the flexible array does not occur last in the structure, which
+>> will help us prevent some kind of undefined behavior bugs from being
+>> inadvertently introduced[3] to the codebase from now on.
+>>
+>> Also, notice that, dynamic memory allocations won't be affected by
+>> this change:
+>>
+>> "Flexible array members have incomplete type, and so the sizeof operator
+>> may not be applied. As a quirk of the original implementation of
+>> zero-length arrays, sizeof evaluates to zero."[1]
+>>
+>> This issue was found with the help of Coccinelle.
+>>
+>> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+>> [2] https://github.com/KSPP/linux/issues/21
+>> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>>
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>>
+>>  static void cfg_scan_result(enum scan_event scan_event,
+>> diff --git a/drivers/staging/wilc1000/spi.c b/drivers/staging/wilc1000/spi.c
+>> index 44f7d48851b5..11653ac118cd 100644
+>> --- a/drivers/staging/wilc1000/spi.c
+>> +++ b/drivers/staging/wilc1000/spi.c
+>> @@ -139,7 +139,7 @@ struct wilc_spi_read_rsp_data {
+>>         u8 status;
+>>         u8 resp_header;
+>>         u8 resp_data[4];
+>> -       u8 crc[0];
+>> +       u8 crc[];
+>>  } __packed;
+> more zero-length arrays in wilc1000, spi.c, struct wilc_spi_cmd, and in fw.h
+> 
 
-> It's worth getting this right in this early stage, rather than fixing it
-> in the future.
->
-> Regards,
->
->          Hans
+Oh wow, I hadn't thought about cases like this:
+
+struct wilc_spi_cmd {
+        u8 cmd_type;
+        union {
+                struct {
+                        u8 addr[3];
+                        u8 crc[0];
+                } __packed simple_cmd;
+                struct {
+                        u8 addr[3];
+                        u8 size[2];
+                        u8 crc[0];
+                } __packed dma_cmd;
+                struct {
+                        u8 addr[3];
+                        u8 size[3];
+                        u8 crc[0];
+                } __packed dma_cmd_ext;
+                struct {
+                        u8 addr[2];
+                        __be32 data;
+                        u8 crc[0];
+                } __packed internal_w_cmd;
+                struct {
+                        u8 addr[3];
+                        __be32 data;
+                        u8 crc[0];
+                } __packed w_cmd;
+        } u;
+} __packed;
+
+Thanks for the feedback.
+--
+Gustavo
