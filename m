@@ -2,127 +2,113 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E8C11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCACC11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD3D222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582226077;
-	bh=6ecAglT5TlAF47DAQQ9RK+GrKyAxT7mF1NvDg1d5fwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bWtvlFikiwnu+8gKf6Hn3qENW/JvteVNk6ZNx3izsAdIPDyb5HuLuftIDFyo4v+zS
-	 LOJTqg37UOSRiyrLi5mS4iREwZj9OMXNouv4XE/Rw8kT4Y4+OiFYGP7pw8IfmqFn53
-	 lKAvohU5TO7Vt+8CjAyOR2ReEOxCNYgkHqZ44wRY=
+	by mail.kernel.org (Postfix) with ESMTP id E4647222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgBTTOg (ORCPT
+        id S1728792AbgBTTPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:14:36 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43250 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgBTTOg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:14:36 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p11so1909330plq.10;
-        Thu, 20 Feb 2020 11:14:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h9IQQUeC9EperJkziFiFFU+AHHaFbtQiLn6EJLG6aXI=;
-        b=HeC+npsgBHhiJ8NIcu/dVdd2oXGRPJ3NFOC7+E5vznBVbARU0WycUTo4gFBmcRqweo
-         GGrURpmF8J/wkrAvK2EfiBwBxqSTjnaXP3tQ1y0+vAsIfeDnwCb1zFqZYdBjNj+K2D8z
-         OwFNPf7m+ieszSqmoZWnTXSAyJHL0lri8Cvpp9iwtx5PvW8HhrT2I+bR+es09KZjGqEV
-         4ZA+k7LU5x9V6oq8AZrTI2UzpoQRi8u2lDW6Dz7syIto31tj6co6nyssRfFvNw/BMcCj
-         0cxx2fzSVeVRE8/sKDNVZuUTNPWW/LW4AhPTwY33l0L3snhpHpevqTwNIaDfmZRwO1PX
-         7xjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h9IQQUeC9EperJkziFiFFU+AHHaFbtQiLn6EJLG6aXI=;
-        b=R03CUQiYFYIKD19Bvtgs224cfJsCpoH/ndTbd/XqzOH8Sn4cCXilGkb8TAAI+m+hfL
-         qT0gFzfu0a3y0b+gBMKR0J4DvDs5MDf00hun47ohze0UHBj1NF6EFbTFSqj0QZr9Zypp
-         9wOQf5WG5hOWRpbGa0ueShnTSZRPUVmbbPgBhNp9iOjQM8ogbLxGh/w6UwIsu+mrkVKy
-         ea6UoVuLspLkB4qJtmQ0VtEOWU3p2fhzLL6su9gwdwKFvUHEhPNdhx7Hklanpbm/3F0C
-         izKb3EHakoEYzNSS3LR8/k2zNYx8582YGjzC/6FiuU9eLYfkaHWlyj7jin9E2v2vouwS
-         8Z8A==
-X-Gm-Message-State: APjAAAXko2uGcfFvBOW2EUJd6qnLcCBysgseuFB1i77Ap0hIwyFpMPBu
-        BxgWU3B/Xqs6r1csnak/7jg=
-X-Google-Smtp-Source: APXvYqw6y7Nhb4vjA5yJoK8XclQcAOEQlx4Y0ZxOWmGiku8xlJ6tQ7PMUsOzidtgo3Q+t0gDUVPNCQ==
-X-Received: by 2002:a17:90a:1f8d:: with SMTP id x13mr5471397pja.27.1582226075283;
-        Thu, 20 Feb 2020 11:14:35 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id z5sm375930pfq.3.2020.02.20.11.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 11:14:34 -0800 (PST)
-Date:   Thu, 20 Feb 2020 11:14:32 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v6 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200220191432.GA180571@google.com>
-References: <20200218173221.237674-1-bgeffon@google.com>
- <20200220171554.GA44866@google.com>
- <CADyq12zUEq9kcyuR_Qm9MrU1ii-+9n8T2hK6QNzj=kH5zn0VrA@mail.gmail.com>
+        Thu, 20 Feb 2020 14:15:12 -0500
+Received: from mga05.intel.com ([192.55.52.43]:49172 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728111AbgBTTPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:15:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 11:15:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="434935036"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 20 Feb 2020 11:15:10 -0800
+Date:   Thu, 20 Feb 2020 11:15:10 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>, puiterwijk@redhat.com,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+Message-ID: <20200220191510.GF3972@linux.intel.com>
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
+ <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+ <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADyq12zUEq9kcyuR_Qm9MrU1ii-+9n8T2hK6QNzj=kH5zn0VrA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:36:38AM -0800, Brian Geffon wrote:
-> Hi Minchan,
+On Thu, Feb 20, 2020 at 10:51:37AM -0800, Andy Lutomirski wrote:
+> On Thu, Feb 20, 2020 at 10:13 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> > More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
+> > because part of the enclave loader is written in assembly.  Unless
+> > explicitly told otherwise, the linker assumes that any program with
+> > assembly code may need an executable stack, which leads to the RIE
+> > personality being set for the process.  Here's a fantastic write up for
+> > more details: https://www.airs.com/blog/archives/518
+> >
+> > There are essentially two paths we can take:
+> >
+> >  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
+> >     PROT_EXEC for enclaves.
 > 
-> > And here we got error if the addr is in non-anonymous-private vma so the
-> > syscall will fail but old vma is gone? I guess it's not your intention?
+> Seems reasonable.
 > 
-> This is exactly what happens today in several situations, because
-> vma_to_resize is called unconditionally. For example if the old vma
-> has VM_HUGETLB and old_len < new_len it would have unmapped a portion
-> and then in vma_to_resize returned -EINVAL, similarly when old_len = 0
-> with a non-sharable mapping it will have called do_munmap only to fail
-> in vma_to_resize, if the vma has VM_DONTEXPAND set and you shrink the
-> size with old_len < new_len it would return -EFAULT after having done
-> the unmap on the decreased portion. So I followed the pattern to keep
-> the change simple and maintain consistency with existing behavior.
+> Honestly, it probably makes sense to try to exempt almost everything
+> from RIE.  I'd be a bit surprised if RIE is actually useful for
+> anything other than plain anonymous pages and private file mappings.
 
-Fair enough. It seems to be very old existing behavior but man page
-never mention about it. :(
+Hmm, last I looked at this I was focused on adding a generic protections
+manipulator, e.g. vm_ops->mprotect_adjust() and f_op->???, and I thought
+those options were too ugly to pursue.
 
-> 
-> But with that being said, Kirill made the point that resizing a VMA
-> while also using MREMAP_DONTUNMAP doesn't have any clear use case and
-> I agree with that, I'm unable to think of a situation where you'd want
-> to resize a VMA and use MREMAP_DONTUNMAP. So I'm tempted to mail a new
-> version which returns -EINVAL if old_len != new_len that would resolve
-> this concern here as nothing would be unmapped ever at the old
-> position add it would clean up the change to very few lines of code.
-> 
-> What do you think?
+But if we want to start killing RIE specifically, adding a boolean flag
+to and f_op wouldn't be _that_ heinous, e.g.
 
-Agreed. That makes code more simple/clean.
+static int do_mprotect_pkey(...)
+{
+	...
 
-Thanks!
+		/* Does the application expect PROT_READ to imply PROT_EXEC */
+		if (rier && (vma->vm_flags & VM_MAYEXEC) &&
+		    (!vma->vm_file || !vma->vm_file->f_op->no_read_implies_exec))
+			prot |= PROT_EXEC;
+}
+
+unsigned long do_mmap(...)
+{
+	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
+		if (!file || (!path_noexec(&file->f_path) &&
+			      !file->f_op->no_read_implies_exec))
+			prot |= PROT_EXEC;
+}
