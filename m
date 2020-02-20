@@ -2,113 +2,93 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F51C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D352DC11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30162208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582211654;
-	bh=Seg2LhjjPAxqOZnI9OgrKZh0kE8TcZAm7iss4ZsKB3c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gh9icnws2qzmzKthmeIB6G7Ps7MPgWH6Q6LMMXZr9EkmdSynI3PNtXQHFu2/WbdMj
-	 XaBiYekKfbX3lBDYL6Wlzi62lA6HlBYJX6JTa/1PRrR3TT8oDfVR+hkr3tXlJvaoBl
-	 Dej1UiqlbrT0wkqPYpNdgJbOLAN3m4Uxg7eMDIGA=
+	by mail.kernel.org (Postfix) with ESMTP id A8F78208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FB6lzG1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgBTPOM (ORCPT
+        id S1728594AbgBTPOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:14:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbgBTPOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:14:10 -0500
-Received: from lenoir.home (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ADB4208CD;
-        Thu, 20 Feb 2020 15:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582211650;
-        bh=Seg2LhjjPAxqOZnI9OgrKZh0kE8TcZAm7iss4ZsKB3c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2u4eH2lJ5NovDucny4gD3ssoatiKK2wn2YlK7Y60orzKkpKJOoxVyrVkih/bcOmtM
-         RWu/Rp49efHgNugTWvYDTfpUQmJwR1iaoc7mNMlrr4jDEeVGLWUIfJhSZSIrHLRV3D
-         CiVTq6eoV1/2GVviLdIgOB71YqCAOw2PDUMSIfyU=
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell King <linux@armlinux.org.uk>
-Subject: [GIT PULL] context_tracking: Remove TIF_NOHZ from 3 archs
-Date:   Thu, 20 Feb 2020 16:13:56 +0100
-Message-Id: <20200220151356.17637-1-frederic@kernel.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200214152615.25447-1-frederic@kernel.org>
-References: <20200214152615.25447-1-frederic@kernel.org>
+        Thu, 20 Feb 2020 10:14:19 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33819 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbgBTPOR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:14:17 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so4639668ljc.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:14:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nyYfAxHT6CRHzAhL+Lfi1DTcyn2H/tLwm1L1QgCaoUc=;
+        b=FB6lzG1QsIqJHCuslHP3XrKS96DyFbJ/GgtiTNNd+l2lp80jw0+yLLjt0yAnjFUU6/
+         8WD/q9sg3t58MaC9meV35lDEcTrOtbdtPD1gGvBOTvftfV6FsjjVwS4RSzkAV6QEiTmI
+         VkJrdusURrmMv0GCiczAYp9z8LUIdgMCgb5L33aNByuSoyffErjFIldKL9bea4/kpf8N
+         RI/47mpW1GDKEPL7hpCsxbmnKlj2JtpAdfgYY/N13m1vHCq8UlzrBbEpSVbNXnebI2Jk
+         7y7BA/Uxnxq6PfuBrRb+x1Z032LUiaaFim9zrrTNbinVCNYATV2YijjptrZYmbGw2eFb
+         iKXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nyYfAxHT6CRHzAhL+Lfi1DTcyn2H/tLwm1L1QgCaoUc=;
+        b=ErR+xqEsD2JoXWkj3MvIS5kV+jf7W7XFS8540unOXUx89GtsE+MY3fGJfXF3eMHiaG
+         awnjc+TOdrRNLjDKOEI6RRn/7B95AymfxEdm9S7PuA+LA+9yA72ygMqwAFx/U+jmTV1S
+         i1gfsvmMZ/+aKVUdpCot2vdn6gpztbXz7s9jhcnYSdzmJXOtwuAd3f2eMIlsD3p3V6w0
+         uXVeni71QSYniNtIy1q+Ynjr9Ih22Q+j67Zlsc4gdiSCpF2RrheFrBHzUE+byA/cak/L
+         qaWZAn41MryrZ/0EtYfsD6qxie4EDZhj3llNL/RzsrTxgU6W/DD7CEvgGMjQxCEkI2Zt
+         YTag==
+X-Gm-Message-State: APjAAAWILrHcFS7C66hWKdRVsvTYD8iQGdtCxVPdQ9Xnd7sJDqE8rrjo
+        PoyZMoWhsb2ugTLg3ssMWFCjpinp2Q9QKPyUulvF0Q==
+X-Google-Smtp-Source: APXvYqxtKVKfD5MHxlSSaj0Vz28Axw6Zu0+dlk/mKScpMhfCjU4oekoeWPt9CHiwud40m5c1q60F4dL0wXI2I30UJCs=
+X-Received: by 2002:a2e:81c3:: with SMTP id s3mr18719210ljg.168.1582211654160;
+ Thu, 20 Feb 2020 07:14:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200218023625.14324-1-yuehaibing@huawei.com>
+In-Reply-To: <20200218023625.14324-1-yuehaibing@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 20 Feb 2020 16:14:03 +0100
+Message-ID: <CACRpkdbgWj3FtKP2S1BcNDphYRS5G-c6-Ms1HGyrcOox8EFpOA@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: mediatek: remove set but not used variable 'e'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Light Hsieh <light.hsieh@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel@listd.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ingo, Thomas,
+On Tue, Feb 18, 2020 at 3:36 AM YueHaibing <yuehaibing@huawei.com> wrote:
 
-Please pull the arch/nohz branch that can be found at:
+> drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c: In function mtk_hw_pin_field_lookup:
+> drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c:70:39: warning:
+>  variable e set but not used [-Wunused-but-set-variable]
+>
+> Since commit 3de7deefce69 ("pinctrl: mediatek: Check gpio pin
+> number and use binary search in mtk_hw_pin_field_lookup()"),
+> it is not used any more, so remove it, also remove redundant
+> assignment to variable c, it will be assigned a new value later
+> before used.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-git://git.kernel.org/pub/scm/linux/kernel/git/frederic/linux-dynticks.git
-	arch/nohz
+Patch applied with Matthias Review tag.
 
-HEAD: 320a4fc2d1b0c2314342dfdd3348270f126196a4
-
----
-TIF_NOHZ is getting deprecated by static keys which avoid to invoke
-syscall slow path on every syscall. So remove that flag from
-architectures that don't need it anymore (or worse yet: that spuriously
-triggered syscall slow path when it's not needed anymore).
-
-We hope to remove TIF_NOHZ entirely in the long run (PPC, MIPS, SPARC).
-If we want to be able to enable/disable nohz full dynamically on runtime,
-freezing all tasks and iterating through the whole tasklist to set/clear
-TIF_NOHZ doesn't sound very appealing.
-
-Thanks,
-	Frederic
----
-
-Frederic Weisbecker (4):
-      context-tracking: Introduce CONFIG_HAVE_TIF_NOHZ
-      x86: Remove TIF_NOHZ
-      arm: Remove TIF_NOHZ
-      arm64: Remove TIF_NOHZ
-
-Thomas Gleixner (1):
-      x86/entry: Remove _TIF_NOHZ from _TIF_WORK_SYSCALL_ENTRY
-
-
- arch/Kconfig                         | 16 +++++++++++-----
- arch/arm/include/asm/thread_info.h   |  1 -
- arch/arm64/include/asm/thread_info.h |  4 +---
- arch/mips/Kconfig                    |  1 +
- arch/powerpc/Kconfig                 |  1 +
- arch/sparc/Kconfig                   |  1 +
- arch/x86/include/asm/thread_info.h   | 10 ++--------
- kernel/context_tracking.c            |  2 ++
- 8 files changed, 19 insertions(+), 17 deletions(-)
+Yours,
+Linus Walleij
