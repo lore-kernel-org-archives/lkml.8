@@ -2,183 +2,122 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA727C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B7EC11D0F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758C4206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DABE206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LO7Fmk/K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yy0PiBsN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgBTQcs (ORCPT
+        id S1728818AbgBTQdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:32:48 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:52348 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgBTQcr (ORCPT
+        Thu, 20 Feb 2020 11:33:24 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43164 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728173AbgBTQdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:32:47 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGVCT0098925;
-        Thu, 20 Feb 2020 16:32:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=FTYI2rf57qFKmy9u3jBDlYnYqczz/CLz4OVjzu82Z1E=;
- b=LO7Fmk/KDnVN3ezdVZMqw61sik/zOyBD+Q5GGp6z5mx54GWjGnXQBfkrPfcQzrUM3os3
- kDOBco/J6q6W87q6xFsEins9Ap3PtCV10MU3HLanN3R6Mu21VX82pZZGug0oBStuzjgV
- o71gtPldYGrgrge7bf+EKi7OZHdCfT1EWbe7Sc5J61djjukDVSZLPzHgGKKrxWP3ssku
- R2fJAi8tlJbFBUtdxXMLuSKg4+hsnoWuEB6tXgAvZbFYHZu9+FyDE/qarwejainY955R
- Vmu9km9IlyL6ZSL3uLWrJOhmTlEMdVKVpL2/ZS2wrHacWL/Sp1CGMR7Jhsr13u8deyh+ BA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2y8uddaxjn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 16:32:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGS1rc079568;
-        Thu, 20 Feb 2020 16:30:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2y8ud6df1s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 16:30:28 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KGUQvD018268;
-        Thu, 20 Feb 2020 16:30:26 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 08:30:26 -0800
-Date:   Thu, 20 Feb 2020 08:30:24 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200220163024.GV9506@magnolia>
-References: <CAPcyv4hkWoC+xCqicH1DWzmU2DcpY0at_A6HaBsrdLbZ6qzWow@mail.gmail.com>
- <20200214200607.GA18593@iweiny-DESK2.sc.intel.com>
- <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
- <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
- <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
- <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
- <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
- <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
- <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
- <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
+        Thu, 20 Feb 2020 11:33:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582216402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fLonCBUOUjLc0CmEPRN1BygsqRkakx9D4QOI0lbDDos=;
+        b=Yy0PiBsNWBmOfqmvm+3Z7fJQn3t56xOJVjqcZzVZzwevKXhUXKe0ULYmI2UzgSvMM5e+7C
+        19YUoqj0gYZ++os5LUEIGFKlWcEFBhEwVE6wTBRiYOIzgbYscSJZZbHFe7fp243OMHVOPD
+        MNl+BsWE4ZC8PJnV7VWGTJbZ+5RcyKk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-1A-sLOg3PBeK2UXKicdNvg-1; Thu, 20 Feb 2020 11:33:20 -0500
+X-MC-Unique: 1A-sLOg3PBeK2UXKicdNvg-1
+Received: by mail-wm1-f71.google.com with SMTP id f207so797024wme.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:33:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=fLonCBUOUjLc0CmEPRN1BygsqRkakx9D4QOI0lbDDos=;
+        b=Me3q3x7mty5BP1xljKl4c1b4rYL4RcI6YddMvxwB16EB5NcL0FahtKWgv1MCMi7H5g
+         avOLDWTAh1NraKzKbEKmfGJtpX2oobII0+KjDj3h38GBOEG3rVev1U2g9pNPExHrmB3Z
+         5MvaKivN4kYYGsN7hHMG1TYEvxzumTTkZt2N/1iKUVRa+NzYohUN8k2W6XQWJvJz9+SL
+         6sWMRIlaxJTxtIcLnr+P9Ys5n5urlcqAGLllpmjxeN8JG0IzqXOdU1RwI/QKnV09QDUB
+         0sw+PVhl36XUAqAROPQB9Ljufg7TtCiEY+OrKx0OiHFi5N67L41Stx/tSaxa2TDB6kJu
+         N1mg==
+X-Gm-Message-State: APjAAAU3u5mJCAXN5Jtcl6gDAnl3A1PpBFVzLLXPCz1skrrWiDu/JkpE
+        /TA/eaw7W7N/8ulN5E5Umce1TZU1Q6S00fVKiBdTZ/N4sxdTxIvV+wgp14KmEA71wZN3zdVX5It
+        xzD9P7lhZLftARLclDopmQmnb
+X-Received: by 2002:a1c:e007:: with SMTP id x7mr5250315wmg.3.1582216399425;
+        Thu, 20 Feb 2020 08:33:19 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxRHj5vuBzGfQvaITDv9sfER6wfON7w4T7TTLU9Vtme/FwYOA1F5VpAtAdFuc4WikvP/UsG4w==
+X-Received: by 2002:a1c:e007:: with SMTP id x7mr5250287wmg.3.1582216399222;
+        Thu, 20 Feb 2020 08:33:19 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id 133sm5765628wme.32.2020.02.20.08.33.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 08:33:18 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: apic: avoid calculating pending eoi from an uninitialized val
+In-Reply-To: <1582213006-488-1-git-send-email-linmiaohe@huawei.com>
+References: <1582213006-488-1-git-send-email-linmiaohe@huawei.com>
+Date:   Thu, 20 Feb 2020 17:33:17 +0100
+Message-ID: <8736b56wxe.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
- adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200121
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 08:20:28AM -0800, Ira Weiny wrote:
-> On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
-> > On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
-> > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > > If my disassembly of read_pages is correct it looks like readpage is null which
-> > > > makes sense because all files should be IS_DAX() == true due to the mount option...
-> > > >
-> > > > But tracing code indicates that the patch:
-> > > >
-> > > > 	fs: remove unneeded IS_DAX() check
-> > > >
-> > > > ... may be the culprit and the following fix may work...
-> > > >
-> > > > diff --git a/mm/filemap.c b/mm/filemap.c
-> > > > index 3a7863ba51b9..7eaf74a2a39b 100644
-> > > > --- a/mm/filemap.c
-> > > > +++ b/mm/filemap.c
-> > > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-> > > >         if (!count)
-> > > >                 goto out; /* skip atime */
-> > > >  
-> > > > -       if (iocb->ki_flags & IOCB_DIRECT) {
-> > > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
-> > > >                 struct file *file = iocb->ki_filp;
-> > > >                 struct address_space *mapping = file->f_mapping;
-> > > >                 struct inode *inode = mapping->host;
-> > > 
-> > > Well, you'll have to up-level the inode variable instantiation,
-> > > obviously.  That solves this particular issue.
-> > 
-> > Well...  This seems to be a random issue.  I've had BMC issues with
-> > my server most of the day...  But even with this patch I still get the failure
-> > in read_pages().  :-/
-> > 
-> > And I have gotten it to both succeed and fail with qemu...  :-/
-> 
-> ... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
-> out factoring in the flag logic changes we have agreed upon...
-> 
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 62d9f622bad1..d592949ad396 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
->                 inode->i_flags |= S_NOATIME;
->         else
->                 inode->i_flags &= ~S_NOATIME;
-> -       if (xflags & FS_XFLAG_DAX)
-> +
-> +       if (xfs_inode_enable_dax(ip))
->                 inode->i_flags |= S_DAX;
->         else
->                 inode->i_flags &= ~S_DAX;
-> -
->  }
-> 
-> But the one thing which tripped me up, and concerns me, is we have 2 functions
-> which set the inode flags.
-> 
-> xfs_diflags_to_iflags()
-> xfs_diflags_to_linux()
-> 
-> xfs_diflags_to_iflags() is geared toward initialization but logically they do
-> the same thing.  I see no reason to keep them separate.  Does anyone?
-> 
-> Based on this find, the discussion on behavior in this thread, and the comments
-> from Dave I'm reworking the series because the flag check/set functions have
-> all changed and I really want to be as clear as possible with both the patches
-> and the resulting code.[*]  So v4 should be out today including attempting to
-> document what we have discussed here and being as clear as possible on the
-> behavior.  :-D
-> 
-> Thanks so much for testing this!
-> 
-> Ira
-> 
-> [*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
-> really don't see a reason to keep it.
-> 
+linmiaohe <linmiaohe@huawei.com> writes:
 
-I prefer you keep the one in xfs_iops.c since ioctls are a higher level
-function than general inode operations.
+> From: Miaohe Lin <linmiaohe@huawei.com>
+>
+> When get user eoi value failed, var val would be uninitialized and result
+> in calculating pending eoi from an uninitialized val. Initialize var val
+> to 0 to fix this case.
 
---D
+Let me try to suggest an alternative wording,
+
+"When pv_eoi_get_user() fails, 'val' may remain uninitialized and the
+return value of pv_eoi_get_pending() becomes random. Fix the issue by
+initializing the variable."
+
+>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/lapic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 4f14ec7525f6..7e77e94f3176 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -626,7 +626,7 @@ static inline bool pv_eoi_enabled(struct kvm_vcpu *vcpu)
+>  
+>  static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
+>  {
+> -	u8 val;
+> +	u8 val = 0;
+>  	if (pv_eoi_get_user(vcpu, &val) < 0)
+>  		printk(KERN_WARNING "Can't read EOI MSR value: 0x%llx\n",
+>  			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+But why compilers don't complain?
+
+-- 
+Vitaly
+
