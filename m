@@ -2,134 +2,191 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9932AC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0304C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71764207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2ED207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="EfW2bgLg"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnywNgr+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBTLzj (ORCPT
+        id S1727973AbgBTL4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:55:39 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17801 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726921AbgBTLzi (ORCPT
+        Thu, 20 Feb 2020 06:56:44 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48637 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727545AbgBTL4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:55:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582199706;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=7ddhxQbyEwQ7HhvLbQ42ZoP2jYQ44LLoMYHI95WK4Mw=;
-        b=EfW2bgLgvBeZfS8AKWm+ZYKWizWq9m6B3QEBfBRuGCRL/ioeX2Gzb0i9jL0oW+YF
-        WL/mE4w+sck4cGrjXa8MU8WOprRiOGys//FV1XvHlwjyDlfKF0UjNJiS+MsaLBhpbvv
-        PfOKvKalTljIx3djiRNx8WdDR0E+ahXqbZiEhXI4=
-Received: from mail.baihui.com by mx.zoho.com.cn
-        with SMTP id 1582199704516305.15577623524825; Thu, 20 Feb 2020 19:55:04 +0800 (CST)
-Date:   Thu, 20 Feb 2020 19:55:04 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     "John Garry" <john.garry@huawei.com>
-Cc:     "Wei Xu" <xuwei5@hisilicon.com>, "bhelgaas" <bhelgaas@google.com>,
-        "andyshevchenko" <andy.shevchenko@gmail.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "Linux Mips" <linux-mips@vger.kernel.org>
-Message-ID: <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
-In-Reply-To: <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
- <5E4E55F7.70800@hisilicon.com> <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
-Subject: Re: Questions about logic_pio
+        Thu, 20 Feb 2020 06:56:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582199802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VQuAY+FWx1o4FX7FYltHtE08eGBQmvdsb4/8EksyjCg=;
+        b=LnywNgr+RrcWZI4dDARhkBEMj4mVSSAAeODsglwuUxfdta36NFZ/YtVGkmRgkrN2xgz5wN
+        0sdywHqD5R66DrpJMtqAmxwmiFl5U3TsmgPuqrnDpPpR2EELrtPucph3SPzfpGCdbqOViF
+        J4+x7qWvuyllgfQIyuow4vhShGhAxXc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-r7ejy0VVPtOYaAoJPF6J1A-1; Thu, 20 Feb 2020 06:56:35 -0500
+X-MC-Unique: r7ejy0VVPtOYaAoJPF6J1A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37C8F100550E;
+        Thu, 20 Feb 2020 11:56:34 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 994AF5DA82;
+        Thu, 20 Feb 2020 11:56:31 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:56:29 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v1 0/2] perf report: Support annotation of code without
+ symbols
+Message-ID: <20200220115629.GC565976@krava>
+References: <20200220005902.8952-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: ZohoCN Mail
-X-Mailer: ZohoCN Mail
+In-Reply-To: <20200220005902.8952-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 08:59:00AM +0800, Jin Yao wrote:
+> For perf report on stripped binaries it is currently impossible to do
+> annotation. The annotation state is all tied to symbols, but there are
+> either no symbols, or symbols are not covering all the code.
+>=20
+> We should support the annotation functionality even without symbols.
+>=20
+> The first patch uses al_addr to print because it's easy to dump
+> the instructions from this address in binary for branch mode.
+>=20
+> The second patch supports the annotation on stripped binary.
+>=20
+> Jin Yao (2):
+>   perf util: Print al_addr when symbol is not found
+>   perf annotate: Support interactive annotation of code without symbols
+
+looks good, but I'm getting crash when annotating unresolved kernel address:
+
+jirka
+
+
+Samples: 14  of event 'cycles:u', Event count (approx.): 1822321
+Overhead  Command  Shared Object     Symbol
+  26.86%  ls       libc-2.30.so      [.] __strcoll_l                       =
+                                                                           =
+                                                             =E2=96=92
+  17.03%  ls       ls                [.] 0x0000000000008968                =
+                                                                           =
+                                                             =E2=96=92
+  13.10%  ls       [unknown]         [k] 0xffffffff81c00ae7                =
+                                                                           =
+                                                             =E2=96=92
+  13.02%  ls       ld-2.30.so        [.] _dl_cache_libcmp                  =
+                                                                           =
+                                                             =E2=96=92
+  12.84%  ls       libc-2.30.so      [.] _int_malloc                       =
+                                                                           =
+                                                             =E2=96=92
+  11.94%  ls       libc-2.30.so      [.] __memcpy_chk                      =
+                                                                           =
+                                                             =E2=96=92
+   5.21%  ls       ld-2.30.so        [.] __GI___tunables_init              =
+                                                                           =
+                                                             =E2=96=92
+                                                                           =
+                                                                           =
+                                                             =E2=96=92
+                                                                           =
+                                                                           =
+                                                             Program receiv=
+ed signal SIGSEGV, Segmentation fault.                                     =
+                                                                           =
+                                                =E2=96=92
+                                                   add_annotate_opt (browse=
+r=3D0xec34a0, act=3D0x7fffffffabf0, optstr=3D0x7fffffffab70, ms=3D0xdbdb60,=
+ addr=3D18446744071591430887) at ui/browsers/hists.c:2500              =E2=
+=96=92
+2500            if (ms->map->dso->annotate_warned)                         =
+                                                                           =
+                                                             =E2=96=92
+Missing separate debuginfos, use: dnf debuginfo-install brotli-1.0.7-6.fc31=
+=2Ex86_64 bzip2-libs-1.0.8-1.fc31.x86_64 cyrus-sasl-lib-2.1.27-2.fc31.x86_6=
+4 elfutils-debuginfod-client-0.178-7.fc31.x86_64 elfutils-libelf-0.178-7.fc=
+31.x86_64 elfutils-libs-0.178-7.fc31.x86_64 glib2-2.62.5-1.fc31.x86_64 keyu=
+tils-libs-1.6-3.fc31.x86_64 krb5-libs-1.17-46.fc31.x86_64 libbabeltrace-1.5=
+=2E7-2.fc31.x86_64 libcap-2.26-6.fc31.x86_64 libcom_err-1.45.5-1.fc31.x86_6=
+4 libcurl-7.66.0-1.fc31.x86_64 libgcc-9.2.1-1.fc31.x86_64 libidn2-2.3.0-1.f=
+c31.x86_64 libnghttp2-1.40.0-1.fc31.x86_64 libpsl-0.21.0-2.fc31.x86_64 libs=
+elinux-2.9-5.fc31.x86_64 libssh-0.9.3-1.fc31.x86_64 libunwind-1.3.1-5.fc31.=
+x86_64 libuuid-2.34-4.fc31.x86_64 libxcrypt-4.4.14-1.fc31.x86_64 libzstd-1.=
+4.4-1.fc31.x86_64 openldap-2.4.47-3.fc31.x86_64 openssl-libs-1.1.1d-2.fc31.=
+x86_64 pcre-8.43-3.fc31.x86_64 pcre2-10.34-6.fc31.x86_64 perl-libs-5.30.1-4=
+49.fc31.x86_64 popt-1.16-18.fc31.x86_64 python2-libs-2.7.17-1.fc31.x86_64 s=
+lang-2.3.2-6.fc31.x86_64 xz-libs-5.2.4-6.fc31.x86_64 zlib-1.2.11-20.fc31.x8=
+6_64         =E2=96=92
+(gdb) bt                                                                   =
+                                                                           =
+                                                             =E2=96=92
+#0  add_annotate_opt (browser=3D0xec34a0, act=3D0x7fffffffabf0, optstr=3D0x=
+7fffffffab70, ms=3D0xdbdb60, addr=3D18446744071591430887) at ui/browsers/hi=
+sts.c:2500                                                             =E2=
+=96=92
+#1  0x000000000061caf9 in perf_evsel__hists_browse (evsel=3D0xc58860, nr_ev=
+ents=3D1, helpline=3D0xef69f0 "Tip: Show current config key-value pairs: pe=
+rf config --list", left_exits=3Dfalse, hbt=3D0x0, min_pcnt=3D0,          =
+=E2=96=92
+    env=3D0xc5c7b0, warn_lost_event=3Dtrue, annotation_opts=3D0x7fffffffb51=
+8) at ui/browsers/hists.c:3265                                             =
+                                                                   =E2=96=92
+#2  0x000000000061dbc2 in perf_evlist__tui_browse_hists (evlist=3D0xc55ed0,=
+ help=3D0xef69f0 "Tip: Show current config key-value pairs: perf config --l=
+ist", hbt=3D0x0, min_pcnt=3D0, env=3D0xc5c7b0, warn_lost_event=3Dtrue,   =
+=E2=96=92
+    annotation_opts=3D0x7fffffffb518) at ui/browsers/hists.c:3569          =
+                                                                           =
+                                                               =E2=96=92
+#3  0x00000000004511e4 in report__browse_hists (rep=3D0x7fffffffb380) at bu=
+iltin-report.c:630                                                         =
+                                                               =E2=96=92
+#4  0x00000000004521db in __cmd_report (rep=3D0x7fffffffb380) at builtin-re=
+port.c:975                                                                 =
+                                                               =E2=96=92
+#5  0x000000000045444a in cmd_report (argc=3D0, argv=3D0x7fffffffd820) at b=
+uiltin-report.c:1540                                                       =
+                                                                 =E2=96=92
+#6  0x00000000004e384a in run_builtin (p=3D0xa5b370 <commands+240>, argc=3D=
+1, argv=3D0x7fffffffd820) at perf.c:312                                    =
+                                                                   =E2=96=92
+#7  0x00000000004e3ab7 in handle_internal_command (argc=3D1, argv=3D0x7ffff=
+fffd820) at perf.c:364                                                     =
+                                                                 =E2=96=92
+#8  0x00000000004e3bfe in run_argv (argcp=3D0x7fffffffd67c, argv=3D0x7fffff=
+ffd670) at perf.c:408                                                      =
+                                                                 =E2=96=92
+#9  0x00000000004e3fca in main (argc=3D1, argv=3D0x7fffffffd820) at perf.c:=
+538                                                                        =
+                                                                 =E2=96=92
+(gdb)                                                                      =
+                                                                           =
+                                                             =E2=96=92
 
 
 
- ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=9B=9B, 2020-02-20 18:52:38 John Garry=
- <john.garry@huawei.com> =E6=92=B0=E5=86=99 ----
-Also Cc MIPS list to check other's opinions.
 
-Hi John.
-
-Thanks for your kind explanation, however, I think this way is
-violating how I/O ports supposed to work, at least in MIPS world.
-
- > >>
- > >> After dig into logic pio logic, I found that logic pio is trying to "=
-allocate" an io_start
- > >> for MMIO ranges, the allocation starts from 0x0. And later the io_sta=
-rt is used to calculate
- > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio addres=
-s should always
- > >> equal to hw address,
- >=20
- > I'm not sure what you mean by simply the hw address.
- >=20
-
-I meant  hw_start should always equal to io_start.
-
-
-MIPS have their own wrapped inl/outl functions, doing the samething with
-PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
-
-Originally, the I/O ports layout seems like this:
-
-00000020-00000021 : pic1
-00000060-0000006f : i8042
-00000070-00000077 : rtc0
-000000a0-000000a1 : pic2
-00000170-00000177 : pata_atiixp
-000001f0-000001f7 : pata_atiixp
-00000376-00000376 : pata_atiixp
-000003f6-000003f6 : pata_atiixp
-00000800-000008ff : acpi
-00001000-00001008 : piix4_smbus
-00004000-0003ffff : pci io space
-  00004000-00004fff : PCI Bus 0000:01
-    00004000-000040ff : 0000:01:05.0
-  00005000-00005fff : PCI Bus 0000:03
-    00005000-0000501f : 0000:03:00.0
-
-But with PCI_IOBASE defined, I got this:
-
-host bridge /bus@10000000/pci@10000000 ranges:
-      MEM 0x0040000000..0x007fffffff -> 0x0040000000
-       IO 0x0000004000..0x0000007fff -> 0x0000004000
-resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x0020-0x0=
-021]
-
-Because io_start was allocated to 0x0 by Logic PIO.
-
-There are a lot of devices that have fixed ioports thanks to x86's legacy.
-For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveable,
-and they can't be managed by logic pio subsystem.
-Also, the PCI Hostbridge got implied by DeviceTree that it's I/O range
-started from 0x4000 in bus side, but then, Logic PIO remapped to PCI_IOBASE=
- + 0x0.
-The real address should be PCI_IOBASE + 0x4000,
-hardware never got correctly informed about that. And there is still no way=
- to
-transform to correct address as it's inside the MMIO_LIMIT.
-
-So the question comes to why we're allocating io_start for MMIO PCI_IOBASE
-rather than just check the range provided doesn't overlap each other or exc=
-eed
-the MMIO_LIMIT.
-
-Thanks.
-
---
-Jiaxun Yang
