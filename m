@@ -2,132 +2,121 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60154C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC4C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354DC24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC03124671
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZCBB9Nph"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wz426QWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgBTBhJ (ORCPT
+        id S1727885AbgBTBhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:37:09 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:57194 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727833AbgBTBhI (ORCPT
+        Wed, 19 Feb 2020 20:37:14 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:41586 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727224AbgBTBhN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:37:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582162627; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=hsLg89Wno2a4zivhXbQ7ZlOQv+K/T+fljhSoDklnjik=;
- b=ZCBB9NphBCt+uiD4lxFgj+CFf7EVmmhrHhDJBG9OFw6A4Vc1D7cNK4oi3xvHzkvwPpg5wri6
- 3el6XrvUSRvyvpg8UD8KuaG7Kst99GTA/QNVrPia5T8o4JaQjzK0524VMTafvwFl6WCnBNvS
- YNrmrK6xzC5/pjCzfyQmR/qjbEA=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4de2ba.7f38666f83b0-smtp-out-n02;
- Thu, 20 Feb 2020 01:36:58 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 49875C447A4; Thu, 20 Feb 2020 01:36:58 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B50C433A2;
-        Thu, 20 Feb 2020 01:36:57 +0000 (UTC)
+        Wed, 19 Feb 2020 20:37:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1582162631; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g/qGIDqkgIozFpdOtlMp+Dtu76f8lgaOYvJWkuAfEMw=;
+        b=wz426QWDY0aAgnJ0mydROr4g5rQFH4aMNVQWOmSvFmaQc3DLt1kqFqoSyu8wLMHEuYNlgv
+        32i2A1fLG0X2CksRvPxLmRzlItTLSlcUIB9oJmJihRxyNXSEErZozb1HRXj/MvvJBBM/Od
+        XWvUxzlU/1w/+gVPITvNW9s4CyLTe84=
+Date:   Wed, 19 Feb 2020 22:36:57 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Message-Id: <1582162617.3.1@crapouillou.net>
+In-Reply-To: <20200217151804.yymflofpbiqjqnnz@treble>
+References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
+        <1581706938.3.5@crapouillou.net> <20200214203738.af3y4gskukctvvum@treble>
+        <1581734224.3.14@crapouillou.net> <20200217151804.yymflofpbiqjqnnz@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 09:36:57 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v3 1/2] scsi: ufs: pass device information to
- apply_dev_quirks
-In-Reply-To: <1582009359.26304.29.camel@mtksdccf07>
-References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
- <1578726707-6596-2-git-send-email-stanley.chu@mediatek.com>
- <2a8fc44914b7ed8777a4a99ba6b8647a@codeaurora.org>
- <1582009359.26304.29.camel@mtksdccf07>
-Message-ID: <57698522f7e1d9401ac27a0bd7f0756a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanley,
+Hi Josh,
 
-On 2020-02-18 15:02, Stanley Chu wrote:
-> Hi Can,
-> 
-> 
->> Hi Stanley,
->> 
->> Is this series merged? If no, would you mind moving
->> ufshcd_vops_apply_dev_quirks(hba, card); a little bit? Like below.
->> 
->> @@ -6852,14 +6852,14 @@ static void ufshcd_tune_unipro_params(struct
->> ufs_hba *hba)
->>                  ufshcd_tune_pa_hibern8time(hba);
->>          }
->> 
->> +       ufshcd_vops_apply_dev_quirks(hba, card);
->> +
->>          if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
->>                  /* set 1ms timeout for PA_TACTIVATE */
->>                  ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 10);
->> 
->> In this way, vendor codes have a chance to modify the dev_quirks
->> before ufshcd_tune_unipro_params() does the rest of its job.
->> 
-> 
-> This patch has been merged to 5.6-rc1.
-> 
-> Basically I am fine with your proposal. But if you need to move it to
-> new mentioned position, our apply_dev_quirks callback also need
-> corresponding change so it might need our co-works : )
-> 
-> For example, you could just post your proposed changes and then we 
-> would
-> provide corresponding change as soon as possible?
-> 
-> Besides, I would like to remind that allowing vendor to "fix" device
-> quirks in advance imply that current common device quirks have some
-> problems? If so, would you consider to fix common device quirks 
-> instead?
-> 
-> 
->> Thanks,
->> Can Guo.
-> 
-> Thanks,
-> Stanley Chu
+Le lun., f=E9vr. 17, 2020 at 09:18, Josh Poimboeuf <jpoimboe@redhat.com>=20
+a =E9crit :
+> On Fri, Feb 14, 2020 at 11:37:04PM -0300, Paul Cercueil wrote:
+>>  > >  I don't like the idea that you change this driver's code just=20
+>> to
+>>  > > work around
+>>  > >  a bug in objtool, and I don't like the idea of working around a
+>>  > > future bug
+>>  > >  that shouldn't be introduced in the first place.
+>>  >
+>>  > It's not an objtool bug.  It's a byproduct of the fact that GCC's
+>>  > undefined behavior is inscrutable, and there's no way to=20
+>> determine that
+>>  > it actually *wants* to jump to a random function.
+>>  >
+>>  > And anyway, regardless of objtool, the patch is meant to make the=20
+>> code
+>>  > more robust.
+>>  >
+>>  > Do you not agree that BUG (defined behavior) is more robust than
+>>  > unreachable (undefined behavior)?
+>>=20
+>>  It's a dead code path. That would be an undefined behaviour, if it=20
+>> was
+>>  taken, but it's not.
+>=20
+> Given your confidence that humans don't introduce bugs, would you
+> recommend that we
+>=20
+>   s/BUG()/unreachable()/
+>=20
+> tree-wide?
 
-Thanks for your cooperations on this :)
+Of course not.
 
-There are some failure seen with specific UFS devices on our platforms,
-we can fix it with the quirk QUIRK_HOST_PA_TACTIVATE, but we are not
-sure if other vendors need it or not. So we want to handle it more
-carefully by limiting it to our platforms only. I had sent out that
-patch weeks ago, so I will just upload the new patch as we both agreed
-in that patch series.
+> Another option would be to remove the unreachable() statement, which
+> would actually improve the generated code by making it more compact=20
+> (16
+> bytes of i-cache savings), on top of removing the "fallthrough to next
+> function" nastiness.
 
-Thanks,
-Can Guo
+I'd prefer that, yes.
+
+-Paul
+
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 96f04d121ebd..13c7d3351ed5 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -2158,7 +2158,8 @@ static int ingenic_pinconf_set(struct=20
+> pinctrl_dev *pctldev, unsigned int pin,
+>  			break;
+>=20
+>  		default:
+> -			unreachable();
+> +			/* unreachable */
+> +			break;
+>  		}
+>  	}
+>=20
+>=20
+
+=
+
