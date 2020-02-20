@@ -2,126 +2,153 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFA1C11D25
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5282EC11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE9324650
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240EB208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:30:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z9QZQ6z+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RTq29u2k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbgBTVaE (ORCPT
+        id S1729206AbgBTVap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:30:04 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33497 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728975AbgBTVaD (ORCPT
+        Thu, 20 Feb 2020 16:30:45 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46837 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729090AbgBTVao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:30:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582234202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lf3au2MSHJPbioLz91pJ+pe3QhvFI4k4CcE4NuKgsdw=;
-        b=Z9QZQ6z+3Jg+cBZ4q/9oSXYT1ToM107VKQ3ai9+L2gdzWef4eq7Sb8YlSgOtRIYHO/plp5
-        nKarORGw/cSjB22isEmbDfgGGKR12Hp72jdNSX/UQKM3dhoAdyce8VnNS4n22jywR6X3TL
-        XPatCt1lSX0X3nEkk0aDFzACmQoQLQE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-oa12Z3pLPGaipmkZvOU8Hg-1; Thu, 20 Feb 2020 16:29:59 -0500
-X-MC-Unique: oa12Z3pLPGaipmkZvOU8Hg-1
-Received: by mail-qt1-f198.google.com with SMTP id e37so94330qtk.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:29:59 -0800 (PST)
+        Thu, 20 Feb 2020 16:30:44 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a22so29065895oid.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:30:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oVh5juQDAX3nFGzy3Em/g1lgubn+lOWmnU3guSEX++0=;
+        b=RTq29u2kxUZ7TuTu6/Ym0lqftSpWXlPAcHM21XJLsjrek3IdKOMW1tUscmr9452uqf
+         cGtzhOfod2s8BNgdoNUHNqlTmpj2oxBLo1LdTfYsHIWkeseMR0rChQMxttyc7fdm6cXC
+         pO9BmV28ZaJ89N5Fq1Eubp7A4zTMZrB75cXtgJAQVcueryBUov+4bRLQlb34GG/IdwFc
+         YfQf9+JtF3CVJZqfmHUy67G/rbSicvG9o/gBDbefYCzOakJTk9VZxO1dv+LkkO+cV9HO
+         m1vGuFvnqWEo2KQxB/GYkTR88H5P63KWA3QnXYcOiOvvlC7nB743GVb5/Z84CSrsYJ6q
+         fIWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Lf3au2MSHJPbioLz91pJ+pe3QhvFI4k4CcE4NuKgsdw=;
-        b=gqUAYtecgnR34LwvK8d64+NtEnmoPrBsuEewnQ57Vk1hEydQngRB9WSwqbnyBppSqv
-         xVz2B7txf14HUj4LpxIxcpAsQO3HmLrAmELwa6pY8v8HUQif8uaaNb15NkHZtWFLjHk8
-         cCDfoQecVz71UnjkC8s+WCL5FVHf32SzqUfdRLZGuZrYkROIFSRA0YLjhD9//vHICF9p
-         /cJ3T6fNknaY2TY6PJtNEYDVMJIClzL3YPzg8k9dVT7lz/2mNvMueDRDN3ARZgi4VG8t
-         tcS1V4lwLj/djMjSRqORONwvx3ZXbZo1Mmva4AVBJurH1UQRjeLeBuchkZ/IHrijn9Bj
-         Wu2g==
-X-Gm-Message-State: APjAAAWXPqSA3x5679WtH26VMdTMCWGoCqbITuQf1qiVGorjgJph2oEK
-        F2gSW1Zxjyl1BG3HB87cNNn1oHYNquz7pQQPhmAfmGnXsZZa4mesAhGI5YoNYJITUUkBibuy791
-        3IVsj5/Ci2E2OizCio1NIs30y
-X-Received: by 2002:ac8:4616:: with SMTP id p22mr29036880qtn.368.1582234199337;
-        Thu, 20 Feb 2020 13:29:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwCyE/IGRqPbb728yukodcrAAG8HoUGpZIWGc8w9a3plX9TiklcItDV0lrQNkao9NxMwpK5TQ==
-X-Received: by 2002:ac8:4616:: with SMTP id p22mr29036863qtn.368.1582234199118;
-        Thu, 20 Feb 2020 13:29:59 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id c45sm453698qtd.43.2020.02.20.13.29.53
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=oVh5juQDAX3nFGzy3Em/g1lgubn+lOWmnU3guSEX++0=;
+        b=FimVTSewRX1rPs7rIMFha3aF50fbBL5rBMC6fEM5vQYzXv2cyhQF8XKBF+m79cjFyX
+         UeZ5zDYbHBjtg+mO7b2BTo5xU50gW1AO2rOLFboigi5jyvm9CZP1sg64iGkivX/xveVB
+         3oVpFwPHfSeio1k71Cam0DVXSqe4gStRnNrPLzWev6iBzHbbWsbu8OzhxIcJF+VkQ3fI
+         QgUPkbb3oro8rxG6N03Hw5ZKSM/VwZXYjcT03nMqFwFWLxbbRCjJrYWXj4J6cvoRD612
+         hBUvrAvIsOglamSYD9mkx6eB7lEeKmeBZiJtrs0P5YUCIbvPMnf8n72RYSI7koVRsYoT
+         VTcw==
+X-Gm-Message-State: APjAAAWc1Mj8UWAcJ5PD1p+NOPYn4gRYZed7Y/1NyG14vZqQTIqChwaM
+        QKXaInegF0y6F7L/Q82q+g==
+X-Google-Smtp-Source: APXvYqwTz7qzppb6KsFhdjw6YO9WvuQdahmdP5SBO9OchLZxzJJasv8cqW4Kx5WO93GyGuS3sgeZEw==
+X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr3654588oij.2.1582234243664;
+        Thu, 20 Feb 2020 13:30:43 -0800 (PST)
+Received: from serve.minyard.net ([47.184.136.59])
+        by smtp.gmail.com with ESMTPSA id 60sm252865otu.45.2020.02.20.13.30.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 13:29:57 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:29:50 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200220162747-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        Thu, 20 Feb 2020 13:30:43 -0800 (PST)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:cce4:a148:5f1:8fb6])
+        by serve.minyard.net (Postfix) with ESMTPSA id 4C00718004F;
+        Thu, 20 Feb 2020 21:30:42 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 15:30:40 -0600
+From:   Corey Minyard <minyard@acm.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
+Message-ID: <20200220213040.GA2919@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200219152403.3495-1-minyard@acm.org>
+ <20200220142214.GC14459@willie-the-truck>
+ <20200220163038.GJ3704@minyard.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220160606.53156-1-pasic@linux.ibm.com>
+In-Reply-To: <20200220163038.GJ3704@minyard.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:06:04PM +0100, Halil Pasic wrote:
-> * This usage is not congruent with  standardised semantics of
-> VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> for using DMA API in virtio (orthogonal with respect to what is
-> expressed by VIRTIO_F_IOMMU_PLATFORM). 
+On Thu, Feb 20, 2020 at 10:30:38AM -0600, Corey Minyard wrote:
+> On Thu, Feb 20, 2020 at 02:22:14PM +0000, Will Deacon wrote:
+> > On Wed, Feb 19, 2020 at 09:24:03AM -0600, minyard@acm.org wrote:
 
-Quoting the spec:
+snip...
 
-  \item[VIRTIO_F_ACCESS_PLATFORM(33)] This feature indicates that
-  the device can be used on a platform where device access to data
-  in memory is limited and/or translated. E.g. this is the case if the device can be located
-  behind an IOMMU that translates bus addresses from the device into physical
-  addresses in memory, if the device can be limited to only access
-  certain memory addresses or if special commands such as
-  a cache flush can be needed to synchronise data in memory with
-  the device. Whether accesses are actually limited or translated
-  is described by platform-specific means.
-  If this feature bit is set to 0, then the device
-  has same access to memory addresses supplied to it as the
-  driver has.
-  In particular, the device will always use physical addresses
-  matching addresses used by the driver (typically meaning
-  physical addresses used by the CPU)
-  and not translated further, and can access any address supplied to it by
-  the driver. When clear, this overrides any platform-specific description of
-  whether device access is limited or translated in any way, e.g.
-  whether an IOMMU may be present.
+> > > After fixing this and doing some more testing, I ran into another issue:
+> > > 
+> > > * Kernel enables the pt_regs single step
+> > > * Kernel returns from the exception with ERET.
+> > > * An interrupt or page fault happens on the instruction, causing the
+> > >   instruction to not be run, but the exception handler runs.
+> > 
+> > This sounds like you've broken debug; we should take the step exception
+> > in the exception handler. That's the way this is supposed to work.
+> 
+> Ok, here is the disconnect, I think.  If that is the case, then what I'm
+> seeing is working like it should.  That doesn't work with gdb, though,
+> gdb expects to be able to single-step and get to the next instruction.
+> The scenario I mentioned at the top of this email.
+> 
+> Let me look at this a bit more.  I'll look at this on qemu and maybe a
+> pi.
+> 
 
-since device can't access encrypted memory,
-this seems to match your case reasonably well.
+Ok, this is the disconnect.  I was assuming that single step would stop
+at the next instruction after returning from an exception.  qemu works
+the same way the hardware I have does.  So I'm assuming arm64 doesn't
+clear PTRACE.SS on an exception, even though that seems to be what the
+manual says.
 
--- 
-MST
+You can reproduce this by setting up kgdb on the kernel and hooking up
+gdb, setting a breakpoint somewhere that has interrupts enabled, then
+doing a "continue".  It will hit the same breakpoint again and again
+because the PC doesn't get advanced by the single step and the timer
+interrupt is always going to be pending.  I can do a more detailed set
+of instructions with qemu, if you like.
 
+I looked at kprobes a bit.  I don't think kprobes will have a problem
+with this particular issue, it disables interrupts while single
+stepping and doesn't allow a probe on any instruction that would modify
+the interrupt settings.  I didn't look at page faults, but I assume that
+it also won't allow a probe where there can be a page fault.
+
+If a single-step is enabled and an exception occurs before the
+instruction is executed, the single step is happening in the exception
+handler when debug is re-enabled.  This what you are saying is how it is
+supposed to work.
+
+That's not what gdb is expecting, and that's not how x86 works, at
+least.  I looked at ARM and MIPS and they don't even do single steps in
+the kernel debugger.  PPC seems to work like x86 from code examination
+and since our testers haven't reported this bug on that architecture.
+
+I can do a patch that works sort of like kprobes, disabling interrupts
+and simulating a single-step if the instruction modifies the daif bits.
+Then you couldn't single step across an instruction that did a page
+fault, but that's probably not a huge restriction.
+
+I could modify the patch I have now to ifdef it out unless kgdb is
+enabled.
+
+I can do a patch that just pulls single step support out of the kgdb
+interface for ARM64, since it doesn't work as gdb expects, anyway.  And
+that's what ARM does.
+
+It doesn't really matter to me.  I'm just trying to fix a bug that was
+reported to me, and trying to get it upstream as a good citizen.  I don't
+use kgdb.
+
+-corey
