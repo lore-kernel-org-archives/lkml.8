@@ -2,108 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861CDC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70435C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FDF2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F2A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tyFafhAv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iWfuxaMZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBTKJT (ORCPT
+        id S1727158AbgBTKJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:09:19 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:32885 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgBTKJS (ORCPT
+        Thu, 20 Feb 2020 05:09:52 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44210 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726771AbgBTKJv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:09:18 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so1713866pgk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:09:18 -0800 (PST)
+        Thu, 20 Feb 2020 05:09:51 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y5so1674369pfb.11;
+        Thu, 20 Feb 2020 02:09:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6Cs2yKf1Mj6L8mC6FxbiRVQOnPOuCFoW1oNMmgN/AK4=;
-        b=tyFafhAvy5PRkRfV5T11BWejdwAb7oinJiVslkWHS0MmDK6tKVcrklv3xAA1Oo6ZBt
-         CdOgs/eb+oZYzaL5odSTg5y47Jcsl3AlF8l8FhOn6b7dYbjr7ByfKgxWnkARxZhjyN1O
-         A8P6hcDkB4RH01ZbFO+ywdjyz1fEYyEANWtupxg/3HQHTaYt/wRjET7KHNgjPgmycrfV
-         OdfP3lOK/XqAbSxqgYODKQJettzLsin7eHjPReDp9zxtuUvvcvhEhLzLhJlMTgJbsKkR
-         TXZvSImybVHF0XZ5ci20CUFG/0JTLnCCmV6eQaeDNqufQnWhbx/9u1ulO8hFMy7Bo/9C
-         9Xqw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NpuuBxfbKHIUwnb3LRiYILCMm22iCmnjP8uXzLSEjVk=;
+        b=iWfuxaMZ1GQAXTsX3hPS/1aDPr5XJzqKbDVGbvb470Z38y5jXGtfwv1GBtfG91LdJg
+         tetHrqKrBS+ZnHgF0HKe62d5hwp1mi85Ywe1ShUV9cPxQt16RvVQ9nDVztFQxMvPFHXr
+         q978IwmZd5GBg4usV63XWJiTrktJtna8fXrAmhITtGKGGEinaLqnV4PXWJTF28y/NStB
+         ZxeJzWC/CgV7Ur4MzWcU5R0mpOM2alMsKMC/pCrYdl8o+VO/AWmf6V4R0rR5ZujLlmSA
+         KcmFNH0x6yo04LwD4qED5ZwDFTsTlQRdmQkvohwCF7FM7Fi0S3OK/VY/YOUNYIzbBvow
+         iQ9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6Cs2yKf1Mj6L8mC6FxbiRVQOnPOuCFoW1oNMmgN/AK4=;
-        b=Zo/EQUs8UujxWa/TZOlCPpS8fN7hkaIenXcA6Ivztg89geNV6CKuqmOwTcekHVe0yE
-         WCq5lR4spzc13ORI8g+2SHG2J5Pw49gsgprqFTPNLL1ehGfTCRoNIfPgA/4pJPiPpyTj
-         ASapYs3P2952mFvydp7fxwCjMW9AqwMfiZ02+v8s575wbmYEzhXA/gbKM3m8KxC/OoTL
-         sxvrNazlSXFlDEdkcNpZZLakWhmpN0We5iJyprS2AvWNgv+S7N9hyTtxROYS1GVlwcsU
-         Euc/OZyX1OAwRy3uOG+9+W2hNEBLslkN9UF391oE8oiKmLXUv0HY5kaoBIxeP1F8i4P+
-         h+CA==
-X-Gm-Message-State: APjAAAVikyFb75sJegcl8fkzX0/GhVUr2K5NcUmydXeWbHbCjSXPnHlD
-        EqRhq1BbInR4+e1wiK4Lr3k=
-X-Google-Smtp-Source: APXvYqw1RK1VOyfBQNPgyhQsItWzyQsVbOC6cRR4fej6gaqdfEqXif09tWFW5VikNFhdqBGvvaPByQ==
-X-Received: by 2002:aa7:9816:: with SMTP id e22mr32015789pfl.229.1582193358143;
-        Thu, 20 Feb 2020 02:09:18 -0800 (PST)
-Received: from localhost ([43.224.245.179])
-        by smtp.gmail.com with ESMTPSA id g16sm3205852pgb.54.2020.02.20.02.09.17
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Thu, 20 Feb 2020 02:09:17 -0800 (PST)
-Date:   Thu, 20 Feb 2020 18:09:15 +0800
-From:   chenqiwu <qiwuchen55@gmail.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH] sched/fair: add !se->on_rq check before dequeue entity
-Message-ID: <20200220100915.GA14721@cqw-OptiPlex-7050>
-References: <1582183784-13502-1-git-send-email-qiwuchen55@gmail.com>
- <CAKfTPtDzb9XD5wrMhcvGn+dz27nh58taDrdp36YHKNusp739Og@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NpuuBxfbKHIUwnb3LRiYILCMm22iCmnjP8uXzLSEjVk=;
+        b=VlW3PfGLKEU5U9RH76+nZL1TGurNLzAAN6Kuj/8LSJXk8sHXxJSf3SDiyywkgle+fc
+         9cddsOrAA6JrzdxcKmz+E7onuDeDq5H86GAn3rFPMPyrA3n7507ZBwl+DUU4JSpaYIuy
+         R9v3PtlDSY7MmKFTXSO9MIm73pxXtZkOhtf11UbO1iCJyMabCX9XlYQgaSux/6+tzhqg
+         YtZQR0810xej4TsDd8KGrprcgqJH22tyWGV8rSH7r3DIKOrezyTqPZGdYDvgkRAad2oW
+         uxxzSVqZuvff2BM5G2UveDDLCjksla/kf2qflUYqtzKj+pNw7kD0td4DzbkmUlj6wNeX
+         TPQw==
+X-Gm-Message-State: APjAAAWbj9jtc6Uw1ymLsBxA4odVuEvBcrwXnHnSreoAgDCPa0Ky/jVR
+        s1d9U71idm/9FElJmCZgw1RxXSE6We6Mq6Xy5zc=
+X-Google-Smtp-Source: APXvYqwy658WWlnW63JID/OYabb2tkComA3d7a+Zy6/L9sWbvQoYTfebwxlkJb4JZR8q8u7tLijnNFJySepK+2+BBe0=
+X-Received: by 2002:a65:5242:: with SMTP id q2mr31475579pgp.74.1582193389555;
+ Thu, 20 Feb 2020 02:09:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDzb9XD5wrMhcvGn+dz27nh58taDrdp36YHKNusp739Og@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20200218220748.54823-1-john.stultz@linaro.org> <20200220052739.87057-1-saravanak@google.com>
+In-Reply-To: <20200220052739.87057-1-saravanak@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 20 Feb 2020 12:09:41 +0200
+Message-ID: <CAHp75VfodUCQWRcPB08Qmp8o+BxwL4j4aAgqt9cuJ=mHLLAQyQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
+ to allow EPROBE_DEFER to be returned for longer
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "Brown, Len" <len.brown@intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Todd Kjos <tkjos@google.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:38:02AM +0100, Vincent Guittot wrote:
-> On Thu, 20 Feb 2020 at 08:29, <qiwuchen55@gmail.com> wrote:
-> >
-> > From: chenqiwu <chenqiwu@xiaomi.com>
-> >
-> > We igonre checking for !se->on_rq condition before dequeue one
-> > entity from cfs rq. It must be required in case the entity has
-> > been dequeued.
-> 
-> Do you have a use case that triggers this situation ?
-> 
-> This is the only way to reach this situation seems to be dequeuing a
-> task on a throttled cfs_rq
+On Thu, Feb 20, 2020 at 7:29 AM Saravana Kannan <saravanak@google.com> wrote:
+> On Tue, Feb 18, 2020 at 4:07 PM John Stultz wrote:
+> > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
+> > at the end of initcall"), along with commit 25b4e70dcce9
+> > ("driver core: allow stopping deferred probe after init") after
+> > late_initcall, drivers will stop getting EPROBE_DEFER, and
+> > instead see an error causing the driver to fail to load.
 >
-Sorry, I have no use case triggers this situation. It's just found by
-reading code.
-I agree the situation you mentioned above may have a racy with
-dequeue_task_fair() in the following code path:
-__schedule
-	pick_next_task_fair
-		put_prev_entity
-			check_cfs_rq_runtime
-				throttle_cfs_rq
-					dequeue_entity
+> Both of those patches were the best solution at that point in time. But
+> the kernel has changed a lot since then. Power domain and IOMMU drivers
+> can work as modules now. We have of_devlink and sync_state().
+>
+> So, while a delay might have been the ideal solution back then, I think
+> we need to work towards removing arbitrary timeouts instead of making
+> the timeout mechanism more elaborate.
+>
+> I think driver_deferred_probe_check_state() logic should boiled down
+> to something like:
 
-So this check is worth to be added for dequeue_task_fair().
+...
+
+> Once we add of_devlink support for power-domains, you won't even hit the
+> genpd error path if you have of_devlink enabled. I believe in the case
+> you are testing DB 845c, of_devlink is enabled?
+>
+> If of_devlink is enabled, the devices depending on the unprobed power
+> domains would be deferred without even calling the driver's probe()
+> function.
+>
+> Adding power-domain support to of_devlink is a 2 line change. I'll send
+> it out soon.
+
+...
+
+Pardon me for not knowing the OF and devlink stuff in particular, but
+have you had a chance to test your changes on some (rather complex)
+ACPI enabled platforms?
+Would it have any complications there?
+
+-- 
+With Best Regards,
+Andy Shevchenko
