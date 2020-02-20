@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90440C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A49C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638BC24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E1B24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582201159;
-	bh=85lQHUpjZh6+SeIsl6ntkgQfMW1eJY7MisoqWGvUHDk=;
+	s=default; t=1582201169;
+	bh=dgn6olFp0KDBN8hifcEtw3QbsBVEs+td4iZ0ONnuJ8E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTrqC6M5jcBS9dNGDef1uLy+ubd+Wg4Y3OKE9sSx1aKg5GE38gHOLp0qrHorAJ/az
-	 OGECfTwmVdYdBGkyZ2ZcWhCqZdHvAJTHIlIdTFwR0q19u7cxjMeoQqAGo6JPYbtaYS
-	 mk1xkLKDSwTxwzcKxdT1wV/PFp47ie+qniH0GkMg=
+	b=i7U3sYq5IOSccOgohOVUgBNdUgQXVhU2wVEQ9ysbFUDKHgG27G/dhWKdvSdO0GWnE
+	 DLGYVIKq0r1F6R5DijtuFkyLq6ir8UO5Nqv/ga6PbuFPQoixC0lwG7o/vSamLEMJPn
+	 YTZey2eXILu6mBnwp6BD7vE7qONaO0bzhu9yqvY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBTMTS (ORCPT
+        id S1728107AbgBTMT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:19:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 07:19:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726893AbgBTMTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:19:17 -0500
+        id S1728019AbgBTMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:19:27 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1846D207FD;
-        Thu, 20 Feb 2020 12:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E863524672;
+        Thu, 20 Feb 2020 12:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582201157;
-        bh=85lQHUpjZh6+SeIsl6ntkgQfMW1eJY7MisoqWGvUHDk=;
+        s=default; t=1582201166;
+        bh=dgn6olFp0KDBN8hifcEtw3QbsBVEs+td4iZ0ONnuJ8E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MxgYpuqH8ad80rY13wXS23qUwX7VJidhNYZ+4fXD09tcHp60LKGJBMg7JFbCw8PpB
-         JnI1m9Z0nxkyC5ZTQoSYPyiUFDQjjOVVq3air5KBxSOTlHXALLYq7GVLLDm2CK5EY6
-         t08xN/6XYeEpKSTzyxgOvImn4v1TNT752KdjG4sU=
+        b=ZzsFznyppG9vdFrMgiuxQRz8XFmCDmHQ1PmsVtxyrfTqZnlg8AkCnItgjp24qcWZs
+         8wq5UcuZmZj2Rp4KF4afI9h2Q9V0mctYj0GfCurfgcAJV36+UFIcOdY8Gqw7k3Vb2F
+         f0/stsCU/gNMGfj5citvDN5+rq1/EOkL6/xJoeiM=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -48,9 +48,9 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 5/8] bootconfig: Reject subkey and value on same parent key
-Date:   Thu, 20 Feb 2020 21:19:12 +0900
-Message-Id: <158220115232.26565.7792340045009731803.stgit@devnote2>
+Subject: [PATCH v2 6/8] bootconfig: Overwrite value on same key by default
+Date:   Thu, 20 Feb 2020 21:19:22 +0900
+Message-Id: <158220116248.26565.12553080867501195108.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <158220110257.26565.4812934676257459744.stgit@devnote2>
 References: <158220110257.26565.4812934676257459744.stgit@devnote2>
@@ -63,110 +63,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reject if a value node is mixed with subkey node on same
-parent key node.
+Currently, bootconfig does not overwrite existing value
+on same key, but add new value to the tail of an array.
+But this looks a bit confusing because similar syntax
+configuration always overwrite the value by default.
 
-A value node can not co-exist with subkey node under some key
-node, e.g.
+This changes the behavior to overwrite value on same key.
 
-key = value
-key.subkey = another-value
+For example, if there are 2 entries
 
-This is not be allowed because bootconfig API is not designed
-to handle such case.
+  key = value
+  ...
+  key = value2
+
+Then, the key is updated as below.
+
+  key = value2
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- Documentation/admin-guide/bootconfig.rst     |    7 +++++++
- lib/bootconfig.c                             |   16 ++++++++++++----
- tools/bootconfig/samples/bad-mixed-kv1.bconf |    3 +++
- tools/bootconfig/samples/bad-mixed-kv2.bconf |    3 +++
- 4 files changed, 25 insertions(+), 4 deletions(-)
- create mode 100644 tools/bootconfig/samples/bad-mixed-kv1.bconf
- create mode 100644 tools/bootconfig/samples/bad-mixed-kv2.bconf
+ Documentation/admin-guide/bootconfig.rst |   12 ++++++++++++
+ lib/bootconfig.c                         |   18 ++++++++++++++----
+ tools/bootconfig/test-bootconfig.sh      |   16 ++++++++++++++--
+ 3 files changed, 40 insertions(+), 6 deletions(-)
 
 diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 48675052c963..4a106584eb21 100644
+index 4a106584eb21..0c18e3f540e6 100644
 --- a/Documentation/admin-guide/bootconfig.rst
 +++ b/Documentation/admin-guide/bootconfig.rst
-@@ -62,6 +62,13 @@ Or more shorter, written as following::
+@@ -62,6 +62,18 @@ Or more shorter, written as following::
  In both styles, same key words are automatically merged when parsing it
  at boot time. So you can append similar trees or key-values.
  
-+Note that a sub-key and a value can not co-exist under a parent key.
-+For example, following config is NOT allowed.::
++Same-key Values
++---------------
 +
-+ foo = value1
-+ foo.bar = value2 # !ERROR! subkey "bar" and value "value1" can NOT co-exist
++If two or more values or arraies share a same-key, the latter one remains.
++For example,::
 +
++ foo = bar, baz
++ foo = qux
 +
- Comments
- --------
++In this case ``bar`` and ``baz`` is overwritten by ``qux``, and ``foo = qux``
++remains.
++
+ Note that a sub-key and a value can not co-exist under a parent key.
+ For example, following config is NOT allowed.::
  
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 3ea601a2eba5..54ac623ca781 100644
+index 54ac623ca781..9a094162ea3e 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -533,7 +533,7 @@ struct xbc_node *find_match_node(struct xbc_node *node, char *k)
+@@ -578,10 +578,18 @@ static int __init __xbc_parse_keys(char *k)
+ 	return __xbc_add_key(k);
+ }
  
- static int __init __xbc_add_key(char *k)
- {
--	struct xbc_node *node;
-+	struct xbc_node *node, *child;
- 
- 	if (!xbc_valid_keyword(k))
- 		return xbc_parse_error("Invalid keyword", k);
-@@ -543,8 +543,12 @@ static int __init __xbc_add_key(char *k)
- 
- 	if (!last_parent)	/* the first level */
- 		node = find_match_node(xbc_nodes, k);
--	else
--		node = find_match_node(xbc_node_get_child(last_parent), k);
-+	else {
-+		child = xbc_node_get_child(last_parent);
-+		if (child && xbc_node_is_value(child))
-+			return xbc_parse_error("Subkey is mixed with value", k);
-+		node = find_match_node(child, k);
-+	}
- 
- 	if (node)
- 		last_parent = node;
-@@ -577,7 +581,7 @@ static int __init __xbc_parse_keys(char *k)
++static void xbc_node_overwrite(struct xbc_node *node, char *v)
++{
++	unsigned long offset = v - xbc_data;
++
++	node->data = (u16)offset | XBC_VALUE;
++	node->next = 0;
++}
++
  static int __init xbc_parse_kv(char **k, char *v)
  {
  	struct xbc_node *prev_parent = last_parent;
--	struct xbc_node *node;
-+	struct xbc_node *node, *child;
+-	struct xbc_node *node, *child;
++	struct xbc_node *child;
  	char *next;
  	int c, ret;
  
-@@ -585,6 +589,10 @@ static int __init xbc_parse_kv(char **k, char *v)
- 	if (ret)
- 		return ret;
- 
-+	child = xbc_node_get_child(last_parent);
-+	if (child && xbc_node_is_key(child))
-+		return xbc_parse_error("Value is mixed with subkey", v);
-+
- 	c = __xbc_parse_value(&v, &next);
+@@ -597,9 +605,11 @@ static int __init xbc_parse_kv(char **k, char *v)
  	if (c < 0)
  		return c;
-diff --git a/tools/bootconfig/samples/bad-mixed-kv1.bconf b/tools/bootconfig/samples/bad-mixed-kv1.bconf
-new file mode 100644
-index 000000000000..1761547dd05c
---- /dev/null
-+++ b/tools/bootconfig/samples/bad-mixed-kv1.bconf
-@@ -0,0 +1,3 @@
-+# value -> subkey pattern
-+key = value
-+key.subkey = another-value
-diff --git a/tools/bootconfig/samples/bad-mixed-kv2.bconf b/tools/bootconfig/samples/bad-mixed-kv2.bconf
-new file mode 100644
-index 000000000000..6b32e0c3878c
---- /dev/null
-+++ b/tools/bootconfig/samples/bad-mixed-kv2.bconf
-@@ -0,0 +1,3 @@
-+# subkey -> value pattern
-+key.subkey = value
-+key = another-value
+ 
+-	node = xbc_add_sibling(v, XBC_VALUE);
+-	if (!node)
+-		return -ENOMEM;
++	if (!child) {
++		if (!xbc_add_sibling(v, XBC_VALUE))
++			return -ENOMEM;
++	} else
++		xbc_node_overwrite(child, v);
+ 
+ 	if (c == ',') {	/* Array */
+ 		c = xbc_parse_array(&next);
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index c5965eff62c5..f6948790c693 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -9,7 +9,7 @@ TEMPCONF=`mktemp temp-XXXX.bconf`
+ NG=0
+ 
+ cleanup() {
+-  rm -f $INITRD $TEMPCONF
++  rm -f $INITRD $TEMPCONF $OUTFILE
+   exit $NG
+ }
+ 
+@@ -71,7 +71,6 @@ printf " \0\0\0 \0\0\0" >> $INITRD
+ $BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
+ xfail grep -i "failed" $OUTFILE
+ xfail grep -i "error" $OUTFILE
+-rm $OUTFILE
+ 
+ echo "Max node number check"
+ 
+@@ -96,6 +95,19 @@ truncate -s 32764 $TEMPCONF
+ echo "\"" >> $TEMPCONF	# add 2 bytes + terminal ('\"\n\0')
+ xpass $BOOTCONF -a $TEMPCONF $INITRD
+ 
++echo "Overwrite same-key values"
++cat > $TEMPCONF << EOF
++key = bar, baz
++key = qux
++EOF
++echo > $INITRD
++
++xpass $BOOTCONF -a $TEMPCONF $INITRD
++$BOOTCONF $INITRD > $OUTFILE
++xfail grep -q "bar" $OUTFILE
++xfail grep -q "baz" $OUTFILE
++xpass grep -q "qux" $OUTFILE
++
+ echo "=== expected failure cases ==="
+ for i in samples/bad-* ; do
+   xfail $BOOTCONF -a $i $INITRD
 
