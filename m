@@ -2,118 +2,109 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD76FC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E861C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F1F207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098C5207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eweRblFR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KIKEWIpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbgBTMLV (ORCPT
+        id S1727992AbgBTMLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:11:21 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:38291 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTMLU (ORCPT
+        Thu, 20 Feb 2020 07:11:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:50318 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTMLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:11:20 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z19so3278183qkj.5;
-        Thu, 20 Feb 2020 04:11:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=C7euBNC6YCslx00oQDgJ2Wi3lurW6SPfEjwkYCAhRlw=;
-        b=eweRblFRqyt7jwOm6YKC3TjaqUvuhQfAH7PhGMFKVA/Td/QGpBPvW8ZMPlkOtFkvbn
-         +7Qpgm4yuMcQZDumHho/XJP/EB07XXRgLguKQQ4kZ9k1b/rkS+P7ktDq36TmW0xEglpE
-         jyFvb7vX9+ttZONjjqdI4sE78DKrkmjUFct+huQ5IWiaLLpFiLtjhub2VoZaCnIBmrI1
-         TJyDqq4sAvv9ZLN3bj6TkKHIYQHwymKutZXwW2u8I57HkGxWdUSUzGEZLQ7a9hGbvnP4
-         UdxQkK+/F/ZSdhcJx2qju8fzQG/fw+SimgvE8Z2swdGTA+5AWaCokdAqk85YAuO3kXOy
-         FT0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=C7euBNC6YCslx00oQDgJ2Wi3lurW6SPfEjwkYCAhRlw=;
-        b=TEm6LgYlQDtwdFuav1zoMpfWoL6OUmd1AnD0MS2ci0VkoT4e/eMyg8R+zQR4q1H7hQ
-         lL9Oo4/kubz7ciJh++LnBRcC/5xJJXSqcOs1gtlxJcXXxh/llIyjrlKchTZ6cAmu+OKR
-         UrybAjQ/0eMOR2EXUyPM8Rrr0e8CKN6T/iwCM8kl3QVsCDNESs8yLgsqpwgxm+EIeZqh
-         AB3fEy7cXEnxLcj0n7HH9qFfpifBJoA/ME6cCuTBJjhpiB2VwBd95LV2WykJ2LZqYzAA
-         fU9SndasQQCOAcNMd/TN+vf4HCY9fjpXGl4OqkkplJNu+/HRIGfxzJKA9GJqjusbWPqL
-         RYhQ==
-X-Gm-Message-State: APjAAAUR/VbF74CUK9VEJ4Ow9oyeNds4UlPPOy2NS035LB+BJ9Orh+ZR
-        WYLQVmERVIoglxNWe7YU5fin2QhQ/sZSMD9xVPM/IYkA
-X-Google-Smtp-Source: APXvYqyvj6vdIfP72q8CWowSR3P+jW7KE4wtWxwXmCS5S6Ev8+nigPSSW8X+yLP9khOwKW7xU70p407HL5Dprzsxkhc=
-X-Received: by 2002:a37:6752:: with SMTP id b79mr28621584qkc.224.1582200679404;
- Thu, 20 Feb 2020 04:11:19 -0800 (PST)
+        Thu, 20 Feb 2020 07:11:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=YmVRDek+B2T1n7RDukHZxAGkhFyE67wqzGfrUyN9bnk=; b=KIKEWIppTck6euc9S6SYz8bITo
+        NIDl3tt9TaBxjyAqF0VWS7eTwEh2ndrAq1HApPeR+ODvT7m1LO4wyWP73KOHBlwbkU1hlZjvf5uOj
+        ZBm8KtdNQf4yfKYF/o2bODJM8Q20EF/0gPyZq5w3EA0M8vmecZVBnQX8gprmNb+ZshDZv4x87auou
+        qZTdGiMRfZ6zt8AMS0wbCbXBjyEOFcV297YnT5Bpxg7gmyoCDSYZyY6i4xMlDV7gGkEwca/0yFrC3
+        oNkbGBq9wCE3l3pp15GF3BKy3HmtLRyR4+MxH6Gh35Dht8WJ2V+PTCdkgiEUOivoQ3UoFmoqmc8XC
+        DHbcZo5w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4kfl-0004Uf-5e; Thu, 20 Feb 2020 12:11:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 03B6730008D;
+        Thu, 20 Feb 2020 13:09:21 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BCDD92B178B31; Thu, 20 Feb 2020 13:11:13 +0100 (CET)
+Date:   Thu, 20 Feb 2020 13:11:13 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org
+Subject: Re: [PATCH v3 03/22] x86: Replace ist_enter() with nmi_enter()
+Message-ID: <20200220121113.GY18400@hirez.programming.kicks-ass.net>
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.547288232@infradead.org>
+ <20200220105439.GA507@zn.tnic>
 MIME-Version: 1.0
-References: <20200219191730.1277800-1-paulburton@kernel.org>
- <20200219191730.1277800-3-paulburton@kernel.org> <20200220112330.GA3053@alpha.franken.de>
-In-Reply-To: <20200220112330.GA3053@alpha.franken.de>
-From:   YunQiang Su <wzssyqa@gmail.com>
-Date:   Thu, 20 Feb 2020 20:11:08 +0800
-Message-ID: <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, wayne.sun@cipunited.com,
-        chris.wang@neocore.cn, Yunqiang Su <ysu@wavecomp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220105439.GA507@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC people from NeoCore and CIP United, and my Wave Computing's mail address=
-.
+On Thu, Feb 20, 2020 at 11:54:39AM +0100, Borislav Petkov wrote:
+> On Wed, Feb 19, 2020 at 03:47:27PM +0100, Peter Zijlstra wrote:
+> > @@ -1220,7 +1220,7 @@ static void mce_kill_me_maybe(struct cal
+> >   * MCE broadcast. However some CPUs might be broken beyond repair,
+> >   * so be always careful when synchronizing with others.
+> >   */
+> > -void do_machine_check(struct pt_regs *regs, long error_code)
+> > +notrace void do_machine_check(struct pt_regs *regs, long error_code)
+> 
+> Is there a convention where the notrace marker should come in the
+> function signature? I see all possible combinations while grepping...
 
-Thomas Bogendoerfer <tsbogend@alpha.franken.de> =E4=BA=8E2020=E5=B9=B42=E6=
-=9C=8820=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=887:23=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> On Wed, Feb 19, 2020 at 11:17:30AM -0800, Paul Burton wrote:
-> > My time with MIPS the company has reached its end, and so at best I'll
-> > have little time spend on maintaining arch/mips/. Reflect that in
-> > MAINTAINERS by changing status to Odd Fixes. Hopefully this might spur
-> > the involvement of someone with more time, but even if not it should
-> > help serve to avoid unrealistic expectations.
->
-> I'd like to jump in as MIPS maintainer. I'm doing Linux MIPS kernel
+Same place as inline I think.
 
-It is a great news that you are willing to act as maintainer as Linux-MIPS.
+> >  {
+> >  	DECLARE_BITMAP(valid_banks, MAX_NR_BANKS);
+> >  	DECLARE_BITMAP(toclear, MAX_NR_BANKS);
+> > @@ -1254,10 +1254,10 @@ void do_machine_check(struct pt_regs *re
+> >  	 */
+> >  	int lmce = 1;
+> >  
+> > -	if (__mc_check_crashing_cpu(cpu))
+> > -		return;
+> > +	nmi_enter();
+> >  
+> > -	ist_enter(regs);
+> > +	if (__mc_check_crashing_cpu(cpu))
+> > +		goto out;
+> >  
+> >  	this_cpu_inc(mce_exception_count);
+> >  
+> 
+> Should that __mc_check_crashing_cpu() happen before nmi_enter? The
+> function is doing only a bunch of checks and clearing MSRs for bystander
+> CPUs...
 
-> development since ages (started with an Olivetti M700 and kernel version
-> 2.x) and right now time for doing the jobs isn't issue:-)
->
+You'll note the lack of notrace on that function, and we must not call
+into tracers before nmi_enter().
 
-I noticed that you are mainly working some old machines.
-And recently years, there are some new machines from Ingenic, Loongson, MTK=
- etc.
-MIPS Inc also have some MIPSr6 IPs.
-I think that you need some of these machines.
-
-In the last years, we see that the single maintainer is not enough as peopl=
-e may
-quite busy.
-Do you think that we need co-maintainers?
-
-> Thomas.
->
-> --
-> Crap can work. Given enough thrust pigs will fly, but it's not necessaril=
-y a
-> good idea.                                                [ RFC1925, 2.3 =
-]
-
-
-
---=20
-YunQiang Su
+AFAICT there really is no benefit to trying to lift it before
+nmi_enter().
