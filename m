@@ -2,132 +2,186 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37017C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E77FC11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A424F2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582194652;
-	bh=uWiTS8YgHPdo3MANnuhWHXoq+v/QRNnUmDA8sfhf8Bk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g7uQAPEC1xxt5wtXEVH0r795ptZQ3PdDlaQFLcZX1dM308cBFYVlxp35+u46iMEGG
-	 vi2x0zusr5ZdUXtNyCWR6vcI4Qe5foQy+F9MjtAqDrK9tyfAJAHKyiZxsTgOUu82fz
-	 oBZ1MqcAg/kogxOWwU6LE5VqpPWUHa4f86R3faRA=
+	by mail.kernel.org (Postfix) with ESMTP id 01C732071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBTKav (ORCPT
+        id S1727802AbgBTKaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:30:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39528 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726885AbgBTKau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:30:50 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E03EB24672;
-        Thu, 20 Feb 2020 10:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582194650;
-        bh=uWiTS8YgHPdo3MANnuhWHXoq+v/QRNnUmDA8sfhf8Bk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RbCX7TQv3skc2aoG9+L6JIaQJnX2npmUZ93js6YaP63bVUSIDSySPmRrCugANIO42
-         qVsWcpQ8PWkjcLRzJAQp3NoUEnVEYDYLmzdY2G+7m/ipJJqJb26g4N04KVDR0h2rgS
-         RtaaVKotVzuJB0D2J344nJa3ZP3ZiZw1HGdYZ3gg=
-Date:   Thu, 20 Feb 2020 10:30:45 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Carter Li =?utf-8?B?5p2O6YCa5rSy?= <carter.li@eoitek.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        io-uring <io-uring@vger.kernel.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] asm-generic/atomic: Add try_cmpxchg() fallbacks
-Message-ID: <20200220103044.GA13608@willie-the-truck>
-References: <7c4c3996-4886-eb58-cdee-fe0951907ab5@kernel.dk>
- <addcd44e-ed9b-5f82-517d-c1ed3ee2d85c@kernel.dk>
- <b8069e62-7ea4-c7f3-55a3-838241951068@kernel.dk>
- <20200217120920.GQ14914@hirez.programming.kicks-ass.net>
- <53de3581-b902-89ba-3f53-fd46b052df40@kernel.dk>
- <43c066d1-a892-6a02-82e7-7be850d9454d@kernel.dk>
- <20200217174610.GU14897@hirez.programming.kicks-ass.net>
- <592cf069-41ee-0bc1-1f83-e058e5dd53ff@kernel.dk>
- <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
- <20200218142700.GB14946@hirez.programming.kicks-ass.net>
+        Thu, 20 Feb 2020 05:30:55 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45579 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTKaz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 05:30:55 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so27016872oic.12;
+        Thu, 20 Feb 2020 02:30:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LaRxy7mSTm2TUALpIGXjpz65a6FCoe/jI7xl5xTwPto=;
+        b=dg8r1ikTI1ZZyBUFISRbgw9825x7ZU7/j2y4g68FQho6dczEffo/LCNoC7KhGwksCu
+         a61e62SvqJ5bhNrQbJV1G2RAsNuXFRolPI3ccoITbf6O4SekxA5808H0PS+ULgNKDZS7
+         SjERN3VZN4N2o8aGIhGIYkuMiN+IbM0ksvQgROyVVqumGaPONWIWkIlQJ0n3OWXka7L7
+         Bo9IUXdu4i7SrraqxBHSo70UFByIDrn2LOSAIegPqkH+UA3V3oOCLfOSCLe38J+q3ZIk
+         TbhtTPXZ7Mak14oUwuO/34Pe4MwTRIDYlIxXH6c92Ne2qArIOzyIhOsq88FLjzJBCWJa
+         QZvw==
+X-Gm-Message-State: APjAAAWdkJdsb+0OrOLkm7X2j7M3QORAoobg1x6Nbia5BouJ8B4wW6PE
+        LLjgM0mqJeuAVyH6uWSCjTbJ34AZ6onqOJ/xutkG64HQ
+X-Google-Smtp-Source: APXvYqzyg5SeUJapHnGnohk1i8hiYxXjg3x2KCPKIyEqlh7N9USv+WlDEtilOjkYsCFxXxjfurKt3yb828JFZbfyqQw=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr1496275oia.102.1582194654310;
+ Thu, 20 Feb 2020 02:30:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218142700.GB14946@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582018657-5720-1-git-send-email-nbelin@baylibre.com> <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
+In-Reply-To: <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Feb 2020 11:30:43 +0100
+Message-ID: <CAMuHMdWPgUKOHyspV3bL_4YKsxgXvEgQqdOzoo-8s8gi_g3rVw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: leds: Shiji Lighting APA102C LED driver
+To:     Nicolas Belin <nbelin@baylibre.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 03:27:00PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 18, 2020 at 02:13:10PM +0100, Peter Zijlstra wrote:
-> > (with the caveat that try_cmpxchg() doesn't seem available on !x86 -- I
-> > should go fix that)
-> 
-> Completely untested (lemme go do that shortly), but something like so I
-> suppose.
-> 
-> ---
-> Subject: asm-generic/atomic: Add try_cmpxchg() fallbacks
-> 
-> Only x86 provides try_cmpxchg() outside of the atomic_t interfaces,
-> provide generic fallbacks to create this interface from the widely
-> available cmpxchg() function.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
-> diff --git a/include/linux/atomic-fallback.h b/include/linux/atomic-fallback.h
-> index 656b5489b673..243f61d6c35f 100644
-> --- a/include/linux/atomic-fallback.h
-> +++ b/include/linux/atomic-fallback.h
-> @@ -77,6 +77,50 @@
->  
->  #endif /* cmpxchg64_relaxed */
->  
-> +#ifndef try_cmpxchg
-> +#define try_cmpxchg(_ptr, _oldp, _new) \
-> +({ \
-> +	typeof(*ptr) ___r, ___o = *(_oldp); \
+Hi Nicolas,
 
-Probably worth pointing out that this will have the nasty behaviour
-for volatile pointers that we're tackling for READ_ONCE. Obviously no
-need to hold this up, but just mentioning it here in the hope that one
-of us remembers to fix it later on.
+CC devicetree, Lukas
 
-> diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
-> index b6c6f5d306a7..3c9be8d550e0 100755
-> --- a/scripts/atomic/gen-atomic-fallback.sh
-> +++ b/scripts/atomic/gen-atomic-fallback.sh
-> @@ -140,6 +140,32 @@ cat <<EOF
->  EOF
->  }
->  
-> +gen_try_cmpxchg_fallback()
-> +{
-> +	local order="$1"; shift;
+On Tue, Feb 18, 2020 at 10:39 AM Nicolas Belin <nbelin@baylibre.com> wrote:
+> Document Shiji Lighting APA102C LED driver device tree bindings.
+>
+> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> ---
+>  .../devicetree/bindings/leds/leds-apa102c.yaml     | 91 ++++++++++++++++++++++
+>  1 file changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-apa102c.yaml b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+> new file mode 100644
+> index 000000000000..24bc2fc19fcb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+> @@ -0,0 +1,91 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-apa102c.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +cat <<EOF
-> +#ifndef try_cmpxchg${order}
-> +#define try_cmpxchg${order}(_ptr, _oldp, _new) \\
-> +({ \\
-> +	typeof(*ptr) ___r, ___o = *(_oldp); \\
-> +	___r = cmpxchg${order}((_ptr), ___o, (_new)); \\
-> +	if (unlikely(___r != ___o)) \\
-> +		*(_old) = ___r; \\
+> +title: LED driver for Shiji Lighting - APA102C
+> +
+> +maintainers:
+> +  - Nicolas Belin <nbelin@baylibre.com>
+> +
+> +description:
+> +  Each LED is represented as a sub-node of the leds-apa102c device.  Each LED
+> +  is a three color RGB LED with 32 levels brightness adjustment that can be
+> +  cascaded so that multiple LEDs can be set with a single command.
+> +
+> +properties:
+> +  compatible:
+> +    const: shiji,apa102c
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 1000000
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-max-frequency
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +
+> +patternProperties:
+> +  "^led@[0-9]+$":
+> +    type: object
+> +    description: |
+> +      Properties for an array of connected LEDs.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          This property corresponds to the led index. It has to be between 0
+> +          and the number of managed leds minus 1
+> +        maxItems: 1
+> +
+> +      label:
+> +        description: |
+> +          This property corresponds to the name of the led. If not set,
+> +          the led index will be used to create the led name instead
+> +        maxItems: 1
+> +
+> +      linux,default-trigger: true
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        led-controller@0 {
+> +            compatible = "shiji,apa102c";
+> +            reg = <0>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +            spi-max-frequency = <1000000>;
+> +            led@0 {
+> +                reg = <0>;
+> +                label = "led1";
+> +            };
+> +
+> +            led@1 {
+> +                reg = <1>;
+> +                label = "led2";
+> +            };
+> +
+> +            led@2 {
+> +                reg = <2>;
+> +                label = "led3";
+> +            };
+> +        };
+> +    };
 
-This doesn't compile because _old isn't declared. Probably best to avoid
-evaluating _oldp twice though.
+Perhaps this should use "#daisy-chained-devices" instead of listing all LEDs
+explicitly?
+Or would that cause problems w.r.t. LED labeling?
 
-Will
+Documentation/devicetree/bindings/common-properties.txt
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
