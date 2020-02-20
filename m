@@ -2,97 +2,129 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1405C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAD2C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55992465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9524524670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IJZnCzHl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HuesXzqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgBTCVP (ORCPT
+        id S1727803AbgBTC1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:21:15 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42548 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727291AbgBTCVO (ORCPT
+        Wed, 19 Feb 2020 21:27:31 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34481 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727370AbgBTC1a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:21:14 -0500
-Received: by mail-pl1-f194.google.com with SMTP id e8so907998plt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:21:14 -0800 (PST)
+        Wed, 19 Feb 2020 21:27:30 -0500
+Received: by mail-lf1-f67.google.com with SMTP id l18so1805013lfc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:27:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=YAR5AKH97O4wD1WPqWhh58Z+vTDyTGU+wowRu7veeWo=;
-        b=IJZnCzHlX08ZA7i7SWUg3SVtMUVih+MtyIhM06LeI0WUnLEa/A/npW9fObuTqHp5bR
-         ng5U6jk3rSrmAJ5psu8/fWOitlD/WVffCzwla/GH8evP5zKSx+xXS6sG+O34VufGl4ih
-         fmsg6Os6z9BY6etm4kkLqKNOE9U5+BSnxFpT4=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6R9oDs43e49OHId2T3Say1GnAm1Sa9Cij9vjtGqns0w=;
+        b=HuesXzqrMwl5FNOeLlSDpflwNsgmCskzweQrWPKSAAxSCw7lHW66AFscJTMdsIwTfM
+         jGiq6RpnOPaB5Oyh2lOyEHyuTv6NINI8z9tC0O74kkXNN/1S0DYEYEQUa8h2V/dm0VDo
+         keHC2RRk+b6r2swD/RwtYXIMxjyjo6GlOu9gB+dUg2p6qefC+T1P4UZIm91Uo85LA+Rv
+         8G03jtGxUTJfvgq8RG9MYFoubld2O9BsSsn+sfVhyCNC5XE59suWdHa3oI9hlsR9Dp3B
+         GPuDBZymMhE77jVkDqjzwPoCAdP4mi7yBzI9bHOB2pq77Qnr4eN2rvsvew1j0jZvfkPA
+         bB7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=YAR5AKH97O4wD1WPqWhh58Z+vTDyTGU+wowRu7veeWo=;
-        b=BuPX6X/SY7bFCmSHZ3hx6IKf9rGGrtsAKxC5ZstMXKmh3GRyjf0tmU9FDa+mC6w991
-         Mn1piFtCVcTl+pZy2VMhtdDiOiB3R9LZrjEC44y+yNFNhrfJFmQ6oonCd2FlCudApJD/
-         kIhEJ5xClnR6tWO3yhH4tH0ZsCVtYcLm7uDNXVLVtvHfCklArHY/Ns3A212oJ69XEGA/
-         m5I1lCa0aF10vOShlBjk8bdp/lkN0NsyKDaql0AUAyrDTDzuMCMTbXM4UYoHwfEY3e7K
-         DPknHWFSwoz6nBKslZIJYjaT9BKJ0G1ctmyT2lAV24xHd2k9Q9ZZgLp+Khfd9rhnSkgN
-         ox3A==
-X-Gm-Message-State: APjAAAX1nCh1DS9V1n4EazwMmEkIgs4OFHgMVp4lhRcBsIN2ykzKVEzv
-        Z454jfv3gOcdAF5Sh6pUhEtSDQt2org=
-X-Google-Smtp-Source: APXvYqwSH9YFZ8odOgVn06hoHxPxyEr2qvJkCwykxh07cvNLocTEBqrTv4zhDDYp2xuIco8iBD2U1w==
-X-Received: by 2002:a17:902:502:: with SMTP id 2mr28499313plf.151.1582165273803;
-        Wed, 19 Feb 2020 18:21:13 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id h185sm956137pfg.135.2020.02.19.18.21.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 18:21:13 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6R9oDs43e49OHId2T3Say1GnAm1Sa9Cij9vjtGqns0w=;
+        b=QNjR86Ug6/ZOH6C7gdjfqpwLxX8t+ZqQgFEi9fYGsilAWDDbtFB9vJaKg0ZSYNZ3KM
+         SoZDalu18S5Qq/nENJX+jLaxIfNY7cStK50oqyrZF3jxR/ALFERP4BlZBJZmKHe30uiU
+         6lRgM5Y3ytt3Q87P4BvFupdms60WB70B9fXaRc1s7adF88SXuepfn3zZz38TiPVKRRKk
+         HIhicwufWWasrcxX70zLcAvnmkVKRVnHiGyl9kdJPZ+UMvxfQH8uPnLRpWE2W8yozBQR
+         JR/h6SRNilO2zu7VLEDXiRED1ugAZz/VjlTqxWO8Ni4oYdTnAevsFRJ3zzXpuBlHgccG
+         sYZQ==
+X-Gm-Message-State: APjAAAVWvsleCyj6iJZwlc1uzAJciNpqgHMCS8brGA8MCvm3eLt/xsS8
+        cY7fUVQ5677lkn/8I+4do6R3YGV/EhP5M5fkspcFVQ==
+X-Google-Smtp-Source: APXvYqxXpLX+dEvOT5j7tpgmTqUeHQ8fFVlo3960ntu34jaP3dDFM5jPLMUuGTmSmVlcfqf9AGyYlOtPMi7izdaPUmg=
+X-Received: by 2002:ac2:5979:: with SMTP id h25mr15671398lfp.203.1582165648799;
+ Wed, 19 Feb 2020 18:27:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1581944408-7656-2-git-send-email-mkshah@codeaurora.org>
-References: <1581944408-7656-1-git-send-email-mkshah@codeaurora.org> <1581944408-7656-2-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [RFC 1/2] irqchip: qcom: pdc: Introduce irq_set_wake call
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, linus.walleij@linaro.org, tglx@linutronix.de,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, mka@chromium.org
-Date:   Wed, 19 Feb 2020 18:21:12 -0800
-Message-ID: <158216527227.184098.17500969657143611632@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+References: <20200208013552.241832-1-drosen@google.com> <20200208013552.241832-3-drosen@google.com>
+ <20200208021216.GE23230@ZenIV.linux.org.uk> <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
+ <20200210234207.GJ23230@ZenIV.linux.org.uk> <20200212063440.GL870@sol.localdomain>
+ <20200212065734.GA157327@sol.localdomain>
+In-Reply-To: <20200212065734.GA157327@sol.localdomain>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Wed, 19 Feb 2020 18:27:17 -0800
+Message-ID: <CA+PiJmRX1tBVqdAgHwk62rGqEQg28B3j5mEsaDBm3UV9_fzDEQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subject should be something different. "Fix irq wake when irqs are
-disabled"?
+On Tue, Feb 11, 2020 at 10:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
+>
+> Or (just throwing another idea out there) the dentry's name could be copied to a
+> temporary buffer in ->d_compare().  The simplest version would be:
+>
+>         u8 _name[NAME_MAX];
+>
+>         memcpy(_name, name, len);
+>         name = _name;
+>
+> Though, 255 bytes is a bit large for a stack buffer (so for long names it may
+> need kmalloc with GFP_ATOMIC), and technically it would need a special version
+> of memcpy() to be guaranteed safe from compiler optimizations (though I expect
+> this would work in practice).
+>
+> Alternatively, take_dentry_name_snapshot() kind of does this already, except
+> that it takes a dentry and not a (name, len) pair.
+>
+> - Eric
 
-Quoting Maulik Shah (2020-02-17 05:00:07)
-> Change the way interrupts get enabled at wakeup capable PDC irq chip.
-> Introduce irq_set_wake call which lets interrupts enabled at PDC with
-> enable_irq_wake and disabled with disable_irq_wake.
->=20
-> Remove irq_disable and irq_enable calls which now will default to irq_mask
-> and irq_unmask.
->=20
+If we want to use take_dentry_name_snapshot, we'd need to do it before
+calling the dentry op, since we get the dentry as a const. It would do
+exactly what we want, in that it either takes a reference on the long
+name, or copies the short name, although it does so under a spinlock.
+I'm guessing we don't want to add that overhead for all
+d_compare/d_hash's. I suppose it could just take a snapshot if it
+falls under needs_casefold, but that feels a bit silly to me.
 
-This commit text is pretty useless. It says what is happening in the
-patch but doesn't explain why anything is changing or why anyone should
-care.
+i don't think utf8cursor/utf8byte could be modified to be RCU safe
+apart from a copy. As part of normalization there's some sorting that
+goes on to ensure that different encodings of the same characters can
+be matched, and I think those can technically be arbitrarily long, so
+we'd possibly end up needing the copy anyways.
 
-How are wakeups supposed to work when the CPU cluster power is disabled
-in low power CPU idle modes? Presumably the parent irq controller is
-powered off (in this case it's an ARM GIC) and we would need to have the
-interrupt be "enabled" or "unmasked" at the PDC for the irq to wakeup
-the cluster. We shouldn't need to enable irq wake on any irq for the CPU
-to get that interrupt in deep CPU idle states.
+So, I see two possible fixes.
+1. Use take_dentry_name_snapshot along the RCU paths to calling d_hash
+and d_compare, at least when needs_casefold is true.
+2. Within d_hash/d_compare, create a copy of the name if it is a short name.
+
+For 1, it adds some overhead in general, which I'm sure we'd want to avoid.
+For 2, I don't think we know we're in RCU mode, so we'd need to always
+copy short filenames. I'm also unsure if it's valid to assume that
+name given is stable if it is not the same as dentry->d_iname. If it
+is, we only need to worry about copying DNAME_INLINE_LEN bytes at max
+there. For memcpy, is there a different version that we'd want to use
+for option 2?
+
+-Daniel
