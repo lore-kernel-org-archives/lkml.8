@@ -2,406 +2,160 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218F5C11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B07C11D1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0609208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19D65208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="EBtPW47J"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Nc3sqFiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgBTSd3 (ORCPT
+        id S1728814AbgBTSdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:33:29 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:43970 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSd3 (ORCPT
+        Thu, 20 Feb 2020 13:33:38 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:38024 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTSdi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:33:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582223606; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+QCaP4eRw7Wm0jz0Gb7txDdWwktRYZfcHIYjEbdwCHA=;
-        b=EBtPW47JvELJNe1b30hNYJu+ngAM6b3D+s9f1YdkrY3lRYFpsMbLEiU2z5SYab45GdiMxv
-        sjkRNjL5ZhnIHd1SwHeeVO3Yt9FR7wa8KwW3MAc24apmu6nqHEsFYCd2LqNMb2ewe6L7rH
-        /v2kja1yYfxKRbPi4QS1uz32G20EXzw=
-Date:   Thu, 20 Feb 2020 15:33:04 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v6 4/7] clocksource: Ingenic: Add high resolution timer
- support for SMP.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, geert+renesas@glider.be,
-        krzk@kernel.org, ebiederm@xmission.com, miquel.raynal@bootlin.com,
-        keescook@chromium.org, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
-Message-Id: <1582223584.3.2@crapouillou.net>
-In-Reply-To: <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-        <1582215889-113034-6-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 20 Feb 2020 13:33:38 -0500
+Received: from [10.131.86.40] (unknown [131.107.174.40])
+        by linux.microsoft.com (Postfix) with ESMTPSA id CF78620B9C02;
+        Thu, 20 Feb 2020 10:33:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF78620B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1582223617;
+        bh=AWFTKff2D71eTULXfKD0OOx5tsIJ1Cyrn7ArYV67Ud8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Nc3sqFiKUhHLMxzD7NGjTh04dBiuYyLoB/4Vawy/wGZAhe6xGrmX4B1Y+OG1hYmcb
+         SJdjy8FViujaAPSrUNHd1OKDV+vCN7ZzQlv7ftlYhMDVkKsOHzKT/uJeELDuTaL0ue
+         M+k9OfRLbVBc2SqoIj6UTWw70i+LG/zxQ55ftSoA=
+Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>
+References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
+ <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
+ <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
+ <20200220181345.GD3972@linux.intel.com>
+From:   Jordan Hand <jorhand@linux.microsoft.com>
+Message-ID: <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
+Date:   Thu, 20 Feb 2020 10:33:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200220181345.GD3972@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+On 2/20/20 10:13 AM, Sean Christopherson wrote:
+> On Tue, Feb 18, 2020 at 07:26:31PM -0800, Jordan Hand wrote:
+>> During mprotect (in mm/mprotect.c line 525) the following checks if
+>> READ_IMPLIES_EXECUTE and a PROT_READ is being requested. If so and
+>> VM_MAYEXEC is set, it also adds PROT_EXEC to the request.
+>>
+>> 	if (rier && (vma->vm_flags & VM_MAYEXEC))
+>> 		prot |= PROT_EXEC;
+>>
+>> But if we look at sgx_encl_page_alloc(), we see vm_max_prot_bits is set
+>> without taking VM_MAYEXEC into account:
+>>
+>> 	encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
+>>
+>> sgx_encl_may_map() checks that the requested protection can be added with:
+>>
+>> 	if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
+>> 		return -EACCESS
+>>
+>> This means that for any process where READ_IMPLIES_EXECUTE is set and
+>> page where (vma->vm_flags & VM_MAYEXEC) == true, mmap/mprotect calls to
+>> that request PROT_READ on a page that was not added with PROT_EXEC will
+>> fail.
+> 
+> I could've sworn this was discussed on the SGX list at one point, but
+> apparently we only discussed it internally.  Anyways...
+> 
+> More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
+> because part of the enclave loader is written in assembly.  Unless
+> explicitly told otherwise, the linker assumes that any program with
+> assembly code may need an executable stack, which leads to the RIE
+> personality being set for the process.  Here's a fantastic write up for
+> more details: https://www.airs.com/blog/archives/518
+> 
+> There are essentially two paths we can take:
+> 
+>  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
+>     PROT_EXEC for enclaves.
+> 
+>  2) Punt the issue to userspace.
+> 
+> Option (1) is desirable in some ways:
+> 
+>   - Enclaves will get an executable stack if and only if the loader/creator
+>     intentionally configures it to have an executable stack.
+> 
+>   - Separates enclaves from the personality of the loader.
+> 
+>   - Userspace doesn't have to do anything for the common case of not
+>     wanting an executable stack for its enclaves.
+> 
+> The big down side to (1) is that it'd require an ugly hook in architecture
+> agnostic code.  And arguably, it reduces the overall security of the
+> platform (more below).
+> 
+> For (2), userspace has a few options:
+> 
+>  a) Tell the linker the enclave loader doesn't need RIE, either via a .note
+>     in assembly files or via the global "-z noexecstack" flag.
+> 
+>  b) Spawn a separate process to run/map the enclave if the enclave loader
+>     needs RIE.
+> 
+>  c) Require enclaves to allow PROT_EXEC on all pages.  Note, this is an
+>     absolutely terrible idea and only included for completeness.
+> 
+> As shown by the lack of a mmap()/mprotect() hook in this series to squash
+> RIE, we chose option (2).  Given that enclave loaders are not legacy code
+> and hopefully following decent coding practices, option (2a) should suffice
+> for all loaders.  The security benefit mentioned above is that forcing
+> enclave loaders to squash RIE eliminates an exectuable stack as an attack
+> vector on the loader.
 
+I see your point and I do agree that there are security benefits to (2a)
+and I think we could do that for our loader. That said, it does concern
+me that this breaks perfectly valid userspace behavior. If a userspace
+process decides to use RIE, I don't know that the SGX driver should
+disobey that decision.
 
-Le ven., f=C3=A9vr. 21, 2020 at 00:24, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Ya=
-njie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Enable clock event handling on per CPU core basis.
-> Make sure that interrupts raised on the first core execute
-> event handlers on the correct CPU core.
->=20
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Tested-by: Paul Boddie <paul@boddie.org.uk>
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v1->v2:
->     1.Adjust function naming to make it more reasonable.
->     2.Replace function smp_call_function_single() with
->       smp_call_function_single_async() in order to resolve
->       the warning below:
->=20
->     [    0.350942] smp: Brought up 1 node, 2 CPUs
->     [    0.365497] ------------[ cut here ]------------
->     [    0.365522] WARNING: CPU: 0 PID: 1 at kernel/smp.c:300=20
-> smp_call_function_single+0x110/0x200
->     [    0.365533] CPU: 0 PID: 1 Comm: swapper/0 Not tainted=20
-> 5.5.0-rc1+ #5
->     [    0.365537] Stack : 00000000 59c73bcd 00000037 80074e80=20
-> 80000000 80670000 805a0000 80620590
->     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
-> 80670000 00000001 8fc0dc20 59c73bcd
->     [    0.365574]         00000000 00000000 806f0000 80670000=20
-> 00000000 806dab00 00000000 2d302e35
->     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
-> 80670000 00000000 00000000 00000009
->     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
-> 00000018 803592dc 00000000 806d0000
->     [    0.365627]         ...
->     [    0.365634] Call Trace:
->     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
->     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
->     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
->     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
->     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
->     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
->     [    0.365557]         8065ce38 8fc0dc8c 806d0000 00000000=20
-> 80670000 00000001 8fc0dc20 59c73bcd
->     [    0.365574]         00000000 00000000 806f0000 80670000=20
-> 00000000 806dab00 00000000 2d302e35
->     [    0.365591]         203a6d6d 806e0000 806e0000 70617773=20
-> 80670000 00000000 00000000 00000009
->     [    0.365610]         00000000 8fc94e20 8fc0de30 80690000=20
-> 00000018 803592dc 00000000 806d0000
->     [    0.365627]         ...
->     [    0.365634] Call Trace:
->     [    0.365647] [<8001b9a0>] show_stack+0x6c/0x12c
->     [    0.365663] [<804aed20>] dump_stack+0x98/0xc8
->     [    0.365673] [<8003044c>] __warn+0xc4/0xe8
->     [    0.365682] [<800304f4>] warn_slowpath_fmt+0x84/0xb8
->     [    0.365690] [<800a886c>] smp_call_function_single+0x110/0x200
->     [    0.365703] ---[ end trace 5785856ca39c79d5 ]---
->=20
->     v2->v3:
->     No Change.
->=20
->     v3->v4:
->     Rebase on top of kernel 5.6-rc1.
->=20
->     v4->v5:
->     Move the check for (evt->event_handler) from=20
-> "ingenic_per_cpu_event_handler"
->     to "ingenic_tcu_cevt_cb".
->=20
->     v5->v6:
->     No change.
->=20
->  drivers/clocksource/ingenic-timer.c | 113=20
-> +++++++++++++++++++++++++++++-------
->  1 file changed, 91 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/clocksource/ingenic-timer.c=20
-> b/drivers/clocksource/ingenic-timer.c
-> index 4bbdb3d..e396326 100644
-> --- a/drivers/clocksource/ingenic-timer.c
-> +++ b/drivers/clocksource/ingenic-timer.c
-> @@ -1,7 +1,8 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
-> - * JZ47xx SoCs TCU IRQ driver
-> + * XBurst SoCs TCU IRQ driver
->   * Copyright (C) 2019 Paul Cercueil <paul@crapouillou.net>
-> + * Copyright (C) 2020 =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=20
-> <zhouyanjie@wanyeetech.com>
->   */
->=20
->  #include <linux/bitops.h>
-> @@ -21,18 +22,23 @@
->=20
->  #include <dt-bindings/clock/ingenic,tcu.h>
->=20
-> +static DEFINE_PER_CPU(call_single_data_t, ingenic_cevt_csd);
-> +
->  struct ingenic_soc_info {
->  	unsigned int num_channels;
->  };
->=20
->  struct ingenic_tcu {
->  	struct regmap *map;
-> +	struct device_node *np;
->  	struct clk *timer_clk, *cs_clk;
-> +	unsigned int timer_local[NR_CPUS];
->  	unsigned int timer_channel, cs_channel;
->  	struct clock_event_device cevt;
->  	struct clocksource cs;
-> -	char name[4];
-> +	char name[8];
->  	unsigned long pwm_channels_mask;
-> +	int cpu;
->  };
->=20
->  static struct ingenic_tcu *ingenic_tcu;
-> @@ -81,6 +87,24 @@ static int ingenic_tcu_cevt_set_next(unsigned long=20
-> next,
->  	return 0;
->  }
->=20
-> +static void ingenic_per_cpu_event_handler(void *info)
-> +{
-> +	struct clock_event_device *cevt =3D (struct clock_event_device *)=20
-> info;
-> +
-> +	cevt->event_handler(cevt);
-> +}
-> +
-> +static void ingenic_tcu_per_cpu_cb(struct clock_event_device *evt)
-> +{
-> +	struct ingenic_tcu *tcu =3D to_ingenic_tcu(evt);
-> +	call_single_data_t *csd;
-> +
-> +	csd =3D &per_cpu(ingenic_cevt_csd, tcu->cpu);
-> +	csd->info =3D (void *) evt;
-> +	csd->func =3D ingenic_per_cpu_event_handler;
-> +	smp_call_function_single_async(tcu->cpu, csd);
-> +}
-> +
->  static irqreturn_t ingenic_tcu_cevt_cb(int irq, void *dev_id)
->  {
->  	struct clock_event_device *evt =3D dev_id;
-> @@ -89,7 +113,7 @@ static irqreturn_t ingenic_tcu_cevt_cb(int irq,=20
-> void *dev_id)
->  	regmap_write(tcu->map, TCU_REG_TECR, BIT(tcu->timer_channel));
->=20
->  	if (evt->event_handler)
-> -		evt->event_handler(evt);
-> +		ingenic_tcu_per_cpu_cb(evt);
->=20
->  	return IRQ_HANDLED;
->  }
-> @@ -105,14 +129,21 @@ static struct clk * __init=20
-> ingenic_tcu_get_clock(struct device_node *np, int id)
->  	return of_clk_get_from_provider(&args);
->  }
->=20
-> -static int __init ingenic_tcu_timer_init(struct device_node *np,
-> -					 struct ingenic_tcu *tcu)
-> +static int ingenic_tcu_setup_per_cpu_cevt(struct device_node *np,
-> +				     unsigned int channel)
->  {
-> -	unsigned int timer_virq, channel =3D tcu->timer_channel;
-> +	unsigned int timer_virq;
->  	struct irq_domain *domain;
-> +	struct ingenic_tcu *tcu;
->  	unsigned long rate;
->  	int err;
->=20
-> +	tcu =3D kzalloc(sizeof(*tcu), GFP_KERNEL);
-> +	if (!tcu)
-> +		return -ENOMEM;
-> +
-> +	tcu->map =3D ingenic_tcu->map;
-> +
->  	tcu->timer_clk =3D ingenic_tcu_get_clock(np, channel);
->  	if (IS_ERR(tcu->timer_clk))
->  		return PTR_ERR(tcu->timer_clk);
-> @@ -139,13 +170,15 @@ static int __init ingenic_tcu_timer_init(struct=20
-> device_node *np,
->  		goto err_clk_disable;
->  	}
->=20
-> -	snprintf(tcu->name, sizeof(tcu->name), "TCU");
-> +	snprintf(tcu->name, sizeof(tcu->name), "TCU%u", channel);
->=20
->  	err =3D request_irq(timer_virq, ingenic_tcu_cevt_cb, IRQF_TIMER,
->  			  tcu->name, &tcu->cevt);
->  	if (err)
->  		goto err_irq_dispose_mapping;
->=20
-> +	tcu->cpu =3D smp_processor_id();
-> +	tcu->timer_channel =3D channel;
->  	tcu->cevt.cpumask =3D cpumask_of(smp_processor_id());
->  	tcu->cevt.features =3D CLOCK_EVT_FEAT_ONESHOT;
->  	tcu->cevt.name =3D tcu->name;
-> @@ -166,6 +199,25 @@ static int __init ingenic_tcu_timer_init(struct=20
-> device_node *np,
->  	return err;
->  }
->=20
-> +static int ingenic_tcu_setup_cevt(unsigned int cpu)
-> +{
-> +	int ret;
-> +
-> +	ret =3D ingenic_tcu_setup_per_cpu_cevt(ingenic_tcu->np,
-> +						ingenic_tcu->timer_local[cpu]);
-> +	if (ret)
-> +		goto err_tcu_clocksource_cleanup;
-> +
-> +	return 0;
-> +
-> +err_tcu_clocksource_cleanup:
-> +	clocksource_unregister(&ingenic_tcu->cs);
-> +	clk_disable_unprepare(ingenic_tcu->cs_clk);
-> +	clk_put(ingenic_tcu->cs_clk);
-> +	kfree(ingenic_tcu);
-> +	return ret;
-> +}
-> +
->  static int __init ingenic_tcu_clocksource_init(struct device_node=20
-> *np,
->  					       struct ingenic_tcu *tcu)
->  {
-> @@ -239,6 +291,7 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	const struct ingenic_soc_info *soc_info =3D id->data;
->  	struct ingenic_tcu *tcu;
->  	struct regmap *map;
-> +	unsigned cpu =3D 0;
->  	long rate;
->  	int ret;
->=20
-> @@ -252,13 +305,18 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	if (!tcu)
->  		return -ENOMEM;
->=20
-> -	/* Enable all TCU channels for PWM use by default except channels=20
-> 0/1 */
-> -	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1, 2);
-> +	/*
-> +	 * Enable all TCU channels for PWM use by default except channels=20
-> 0/1,
-> +	 * and channel 2 if target CPU is JZ4780 and SMP is selected.
-> +	 */
-> +	tcu->pwm_channels_mask =3D GENMASK(soc_info->num_channels - 1,
-> +								NR_CPUS + 1);
->  	of_property_read_u32(np, "ingenic,pwm-channels-mask",
->  			     (u32 *)&tcu->pwm_channels_mask);
->=20
-> -	/* Verify that we have at least two free channels */
-> -	if (hweight8(tcu->pwm_channels_mask) > soc_info->num_channels - 2) {
-> +	/* Verify that we have at least NR_CPUS + 1 free channels */
-> +	if (hweight8(tcu->pwm_channels_mask) >
-> +			soc_info->num_channels - NR_CPUS + 1) {
+So option (3) would be to just honor RIE for enclave pages and when page
+permissions are set to PROT_READ in sgx_encl_page_alloc and RIE is set,
+also add PROT_EXEC.
 
-NR_CPUS can be up to 256. You want to use num_online_cpus() here, I=20
-believe.
+I understand your concerns that this using RIE is bad security practice
+and I'm not convinced that (3) is the way to go, but from a philosophy
+perspective I don't know that the kernel should be in the business of
+stopping userspace from doing valid things.
 
->  		pr_crit("%s: Invalid PWM channel mask: 0x%02lx\n", __func__,
->  			tcu->pwm_channels_mask);
->  		ret =3D -EINVAL;
-> @@ -266,13 +324,27 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  	}
->=20
->  	tcu->map =3D map;
-> +	tcu->np =3D np;
->  	ingenic_tcu =3D tcu;
->=20
-> -	tcu->timer_channel =3D find_first_zero_bit(&tcu->pwm_channels_mask,
-> +	tcu->timer_local[cpu] =3D find_first_zero_bit(&tcu->pwm_channels_mask,
->  						 soc_info->num_channels);
-> -	tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> -					     soc_info->num_channels,
-> -					     tcu->timer_channel + 1);
-> +
-> +	if (NR_CPUS > 1) {
-> +		for (cpu =3D 1; cpu < NR_CPUS; cpu++)
-> +			tcu->timer_local[cpu] =3D find_next_zero_bit(
-> +						&tcu->pwm_channels_mask,
-> +						soc_info->num_channels,
-> +						tcu->timer_local[cpu - 1] + 1);
-> +
-> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> +					soc_info->num_channels,
-> +					tcu->timer_local[cpu-1] + 1);
-> +	} else {
-> +		tcu->cs_channel =3D find_next_zero_bit(&tcu->pwm_channels_mask,
-> +					soc_info->num_channels,
-> +					tcu->timer_local[cpu] + 1);
-> +	}
+If option (3) can't/shouldn't be done for some reason, option (1) at
+least keeps from breaking expected userspace behavior. But I do agree
+that (1) is ugly to implement.
 
-I believe you can factorize the code a bit here - don't check for=20
-NR_CPUS > 1, and have a for (cpu =3D 0; cpu < num_online_cpus(); cpu++)=20
-loop. You could use a temporary variable to store the 'next bit' value.
-
--Paul
-
->=20
->  	ret =3D ingenic_tcu_clocksource_init(np, tcu);
->  	if (ret) {
-> @@ -280,9 +352,10 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->  		goto err_free_ingenic_tcu;
->  	}
->=20
-> -	ret =3D ingenic_tcu_timer_init(np, tcu);
-> -	if (ret)
-> -		goto err_tcu_clocksource_cleanup;
-> +	/* Setup clock events on each CPU core */
-> +	ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "Ingenic XBurst:=20
-> online",
-> +				ingenic_tcu_setup_cevt, NULL);
-> +	WARN_ON(ret < 0);
->=20
->  	/* Register the sched_clock at the end as there's no way to undo it=20
-> */
->  	rate =3D clk_get_rate(tcu->cs_clk);
-> @@ -290,10 +363,6 @@ static int __init ingenic_tcu_init(struct=20
-> device_node *np)
->=20
->  	return 0;
->=20
-> -err_tcu_clocksource_cleanup:
-> -	clocksource_unregister(&tcu->cs);
-> -	clk_disable_unprepare(tcu->cs_clk);
-> -	clk_put(tcu->cs_clk);
->  err_free_ingenic_tcu:
->  	kfree(tcu);
->  	return ret;
-> --
-> 2.7.4
->=20
-
-=
-
+-Jordan
