@@ -2,154 +2,200 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488BEC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36D5C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C3B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D7B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="fGvpMoTg"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TdDjBgqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbgBTXL6 (ORCPT
+        id S1729347AbgBTXMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:11:58 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:14761 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729150AbgBTXL6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:11:58 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582240317; h=Content-Type: MIME-Version: References:
- Message-ID: In-Reply-To: Subject: cc: To: From: Date: Sender;
- bh=4Ua+l2URoPGFdI23i0BjObQxmo48JHmZH6T7Ju4WQOw=; b=fGvpMoTgtJ1VYQ8AHzWspO2XBFDRGixlm00P6idViGMpOjkxnumhoA5UzPWrgHxE2kdSWFRI
- zJ7p0jnd5kJfr173RojcWQ8QqY09gEYjquYD7zqkFzEe9baoqmmIYQBonNwyZs5MApbQdu9f
- Qt2JT8A1QWsC7IrDfGbOLBwGzMw=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4f123b.7fb6003e02d0-smtp-out-n01;
- Thu, 20 Feb 2020 23:11:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D6B3CC4479F; Thu, 20 Feb 2020 23:11:55 +0000 (UTC)
-Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Feb 2020 18:12:40 -0500
+Received: from ozlabs.org ([203.11.71.1]:38461 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729027AbgBTXMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:12:40 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: lmark)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9711AC433A2;
-        Thu, 20 Feb 2020 23:11:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9711AC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
-Date:   Thu, 20 Feb 2020 15:11:54 -0800 (PST)
-From:   Liam Mark <lmark@codeaurora.org>
-X-X-Sender: lmark@lmark-linux.qualcomm.com
-To:     Robin Murphy <robin.murphy@arm.com>
-cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        iommu@lists.linux-foundation.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] iommu/iova: Support limiting IOVA alignment
-In-Reply-To: <f0d4312b-a451-691a-3fcd-e9c90f6c5308@arm.com>
-Message-ID: <alpine.DEB.2.10.2002201508320.1846@lmark-linux.qualcomm.com>
-References: <alpine.DEB.2.10.2002141223510.27047@lmark-linux.qualcomm.com> <e9ae618c-58d4-d245-be80-e62fbde4f907@arm.com> <20200219123704.GC19400@willie-the-truck> <alpine.DEB.2.10.2002191517150.636@lmark-linux.qualcomm.com>
- <f0d4312b-a451-691a-3fcd-e9c90f6c5308@arm.com>
-User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Nr382l3Sz9sPk;
+        Fri, 21 Feb 2020 10:12:36 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582240356;
+        bh=9q6mRNIp03dcqTokBVM+57+us+Lfs23/8GR9JHEgJnI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=TdDjBgqCXTJ+Q4VMJ95puLVMlZFFgOjsIMfbnW2+V2udyMnmoLqhuiq9wnXdla900
+         xAU5WkUQU9cJpCehqNaKUK1s3MiaapJYz2nNake0RUtR9FFTQaePylNynrzCJhLYfa
+         os21j+z89s87vSZjjjDzq2z+2tB9pXds/xAktfWSYpUOdQ5IRryaV5Co6XfJkoPLv7
+         +K0c3iOJDmuOnIagX7re0Nd46pSNuadcn7RYRFAAsHm5PgEfwhBhd1vU7WxHULGYTg
+         t70mGoHTpf+PpKfSK+fXfod2VCAps1mxh24nh8YNgm0zYeBWazAd5boRIK5DbT8feV
+         wTeFUaRSG9mKw==
+Date:   Fri, 21 Feb 2020 10:12:35 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brett Creeley <brett.creeley@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200221101235.3db4fc56@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-2046127808-2041823424-1582240314=:1846"
+Content-Type: multipart/signed; boundary="Sig_/8kFVcoFSaXg35pzhBJbQ1WN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+--Sig_/8kFVcoFSaXg35pzhBJbQ1WN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
----2046127808-2041823424-1582240314=:1846
-Content-Type: TEXT/PLAIN; charset=iso-8859-7
-Content-Transfer-Encoding: 8BIT
+Hi all,
 
-On Thu, 20 Feb 2020, Robin Murphy wrote:
+Today's linux-next merge of the net-next tree got a conflict in:
 
-> > > > > Add CONFIG_IOMMU_LIMIT_IOVA_ALIGNMENT to limit the alignment of
-> > > > > IOVAs to some desired PAGE_SIZE order, specified by
-> > > > > CONFIG_IOMMU_IOVA_ALIGNMENT. This helps reduce the impact of
-> > > > > fragmentation caused by the current IOVA alignment scheme, and
-> > > > > gives better IOVA space utilization.
-> > > > 
-> > > > Even if the general change did prove reasonable, this IOVA allocator is
-> > > > not
-> > > > owned by the DMA API, so entirely removing the option of strict
-> > > > size-alignment feels a bit uncomfortable. Personally I'd replace the
-> > > > bool
-> > > > argument with an actual alignment value to at least hand the authority
-> > > > out
-> > > > to individual callers.
-> > > > 
-> > > > Furthermore, even in DMA API terms, is anyone really ever going to
-> > > > bother
-> > > > tuning that config? Since iommu-dma is supposed to be a transparent
-> > > > layer,
-> > > > arguably it shouldn't behave unnecessarily differently from CMA, so
-> > > > simply
-> > > > piggy-backing off CONFIG_CMA_ALIGNMENT would seem logical.
-> > > 
-> > > Agreed, reusing CONFIG_CMA_ALIGNMENT makes a lot of sense here as callers
-> > > relying on natural alignment of DMA buffer allocations already have to
-> > > deal with that limitation. We could fix it as an optional parameter at
-> > > init time (init_iova_domain()), and have the DMA IOMMU implementation
-> > > pass it in there.
-> > > 
-> > 
-> > My concern with using CONFIG_CMA_ALIGNMENT alignment is that for us this
-> > would either involve further fragmenting our CMA regions (moving our CMA
-> > max alignment from 1MB to max 2MB) or losing so of our 2MB IOVA block
-> > mappings (changing our IOVA max alignment form 2MB to 1MB).
-> > 
-> > At least for us CMA allocations are often not DMA mapped into stage 1 page
-> > tables so moving the CMA max alignment to 2MB in our case would, I think,
-> > only provide the disadvantage of having to increase the size our CMA
-> > regions to accommodate this large alignment (which isn¢t optimal for
-> > memory utilization since CMA regions can't satisfy unmovable page
-> > allocations).
-> > 
-> > As an alternative would it be possible for the dma-iommu layer to use the
-> > size of the allocation and the domain pgsize_bitmap field to pick a max
-> > IOVA alignment, which it can pass in for that IOVA allocation, which will
-> > maximize block mappings but not waste IOVA space?
-> 
-> Given that we already have DMA_ATTR_ALOC_SINGLE_PAGES for video drivers and
-> suchlike that know enough to know they want "large buffer" allocation
-> behaviour, would it suffice to have a similar attribute that says "I'm not too
-> fussed about alignment"? That way there's no visible change for anyone who
-> doesn't opt in and might be relying on the existing behaviour, intentionally
-> or otherwise.
-> 
-> Then if necessary, the implementation can consider both flags together to
-> decide whether to try to round down to the next block size or just shove it in
-> anywhere.
-> 
+  drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
 
-This should work for us.
-My only concern is that many of our users would be using DMA-Buf memory, 
-so DMA mapping would be done using dma_buf_map_attachment which I believe 
-still doesn't support specifying any DMA attributes. 
+between commit:
 
-I had previously tried to get support added upstream but wasn't 
-successful.
-https://lkml.org/lkml/2019/1/18/826
-https://lkml.org/lkml/2019/1/18/827
+  c54d209c78b8 ("ice: Wait for VF to be reset/ready before configuration")
 
-But perhaps this new attribute will provide enough justification for DMA 
-attributes (in some form, either explicitly or via flags) to be supported 
-via dma_buf_map_attachment.
+from the net tree and commits:
 
-Liam
+  b093841f9ac9 ("ice: Refactor port vlan configuration for the VF")
+  61c9ce86a6f5 ("ice: Fix Port VLAN priority bits")
 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
----2046127808-2041823424-1582240314=:1846--
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+index 75c70d432c72,a21f9d2edbbb..000000000000
+--- a/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
++++ b/drivers/net/ethernet/intel/ice/ice_virtchnl_pf.c
+@@@ -2738,7 -2786,8 +2828,8 @@@ ice_set_vf_port_vlan(struct net_device=20
+  	struct ice_vsi *vsi;
+  	struct device *dev;
+  	struct ice_vf *vf;
++ 	u16 vlanprio;
+ -	int ret =3D 0;
+ +	int ret;
+ =20
+  	dev =3D ice_pf_to_dev(pf);
+  	if (ice_validate_vf_id(pf, vf_id))
+@@@ -2756,47 -2806,58 +2848,59 @@@
+ =20
+  	vf =3D &pf->vf[vf_id];
+  	vsi =3D pf->vsi[vf->lan_vsi_idx];
+ -	if (ice_check_vf_init(pf, vf))
+ -		return -EBUSY;
+ +
+ +	ret =3D ice_check_vf_ready_for_cfg(vf);
+ +	if (ret)
+ +		return ret;
+ =20
+- 	if (le16_to_cpu(vsi->info.pvid) =3D=3D vlanprio) {
++ 	vlanprio =3D vlan_id | (qos << VLAN_PRIO_SHIFT);
++=20
++ 	if (vf->port_vlan_info =3D=3D vlanprio) {
+  		/* duplicate request, so just return success */
+  		dev_dbg(dev, "Duplicate pvid %d request\n", vlanprio);
+ -		return ret;
+ +		return 0;
+  	}
+ =20
+- 	/* If PVID, then remove all filters on the old VLAN */
+- 	if (vsi->info.pvid)
+- 		ice_vsi_kill_vlan(vsi, (le16_to_cpu(vsi->info.pvid) &
+- 				  VLAN_VID_MASK));
+-=20
+  	if (vlan_id || qos) {
++ 		/* remove VLAN 0 filter set by default when transitioning from
++ 		 * no port VLAN to a port VLAN. No change to old port VLAN on
++ 		 * failure.
++ 		 */
++ 		ret =3D ice_vsi_kill_vlan(vsi, 0);
++ 		if (ret)
++ 			return ret;
+  		ret =3D ice_vsi_manage_pvid(vsi, vlanprio, true);
+  		if (ret)
+  			return ret;
+  	} else {
+- 		ice_vsi_manage_pvid(vsi, 0, false);
+- 		vsi->info.pvid =3D 0;
++ 		/* add VLAN 0 filter back when transitioning from port VLAN to
++ 		 * no port VLAN. No change to old port VLAN on failure.
++ 		 */
++ 		ret =3D ice_vsi_add_vlan(vsi, 0);
++ 		if (ret)
++ 			return ret;
++ 		ret =3D ice_vsi_manage_pvid(vsi, 0, false);
++ 		if (ret)
+ -			goto error_manage_pvid;
+++			return ret;
+  	}
+ =20
+  	if (vlan_id) {
+  		dev_info(dev, "Setting VLAN %d, QoS 0x%x on VF %d\n",
+  			 vlan_id, qos, vf_id);
+ =20
+- 		/* add new VLAN filter for each MAC */
++ 		/* add VLAN filter for the port VLAN */
+  		ret =3D ice_vsi_add_vlan(vsi, vlan_id);
+  		if (ret)
+ -			goto error_manage_pvid;
+ +			return ret;
+  	}
++ 	/* remove old port VLAN filter with valid VLAN ID or QoS fields */
++ 	if (vf->port_vlan_info)
++ 		ice_vsi_kill_vlan(vsi, vf->port_vlan_info & VLAN_VID_MASK);
+ =20
+- 	/* The Port VLAN needs to be saved across resets the same as the
+- 	 * default LAN MAC address.
+- 	 */
+- 	vf->port_vlan_id =3D le16_to_cpu(vsi->info.pvid);
++ 	/* keep port VLAN information persistent on resets */
++ 	vf->port_vlan_info =3D le16_to_cpu(vsi->info.pvid);
+ =20
+ -error_manage_pvid:
+ -	return ret;
+ +	return 0;
+  }
+ =20
+  /**
+
+--Sig_/8kFVcoFSaXg35pzhBJbQ1WN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5PEmMACgkQAVBC80lX
+0Gzoqwf9FP4eMWnPBiWV08yZ3C7pb8dz5+Azf24h1tq8kFFCrDYcB/F7H3QDEUFk
+gKie/4sunhaV93GKs9nQwJLwV0IQU1CbtZAdIj4vqK/ERzr8MwxgBNFA05PFjiUm
+51UkjkMNDBSBxwsDXpFMpZS4VJw8EvVAmT3cC9VrlwU1wnJQiPmFSIFq7I9ZD//k
+BPqbPCGlDI0g4hBN/DO10vfsFM382UVlrqEy9jj8xgfO3ccmkaG+ZyGZ8pN8kMKf
+ad2Wq5oRvtZ75gdM9AAvCw7hCer7qrOHj46tjUBcJOLo/S5WqWu7XdPAGwsnCPSX
+mubFsy0nZRZ1DZwR+KFCdohrAUpyog==
+=OU+m
+-----END PGP SIGNATURE-----
+
+--Sig_/8kFVcoFSaXg35pzhBJbQ1WN--
