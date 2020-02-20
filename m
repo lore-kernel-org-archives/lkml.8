@@ -2,130 +2,170 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B8DC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB56C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0462024654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E4B206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kJoyVX0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgBTNFj (ORCPT
+        id S1728139AbgBTNJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:05:39 -0500
-Received: from mga03.intel.com ([134.134.136.65]:57895 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgBTNFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:05:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 05:05:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="283399590"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Feb 2020 05:05:21 -0800
-Received: from [10.125.252.166] (abudanko-mobl.ccr.corp.intel.com [10.125.252.166])
-        by linux.intel.com (Postfix) with ESMTP id 253CC580472;
-        Thu, 20 Feb 2020 05:05:12 -0800 (PST)
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
-References: <875zgizkyk.fsf@nanos.tec.linutronix.de>
- <7d6f4210-423f-e454-3910-9f8e17dff1aa@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <95aa57e6-4d78-39df-386c-a98734f19777@linux.intel.com>
-Date:   Thu, 20 Feb 2020 16:05:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 08:09:54 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3866 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727868AbgBTNJy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:09:54 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KD4iRd017726;
+        Thu, 20 Feb 2020 14:09:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=wUo+rOcziXoZHOEnRfM4e41jdLfo3cichwE/6Du2kU0=;
+ b=kJoyVX0xMt6C4QuB8S+tAO2HZw6Yc6+BOIDxPPR9n+gcYKdYjT4aMcjOgZ+E5ZLEZNb1
+ LnF2deI6FYam1xmFRvMCjlZuSZGeLbaZDXNgCQI0DcW5y5bVf2tR2Gn8G92hq5wz84Eh
+ g3YyK8u0bpA5gAUlrd7i/TLLkF23Ttl8gT5FyH7BEve03E8qjubZlEISK1+6ERek0Yt1
+ xuSnpAYajYCr7JTkfkIGW8uGu2x7yubfy4xDcHOmHqmfsGmSdjd4+fDAyqVlyL4f3fhX
+ CTC6HukbAhwwArQtz2I8Elb4evEMipW7sR5JITN3iP4rk/hR80CipVlqiXMAwEdNWK9n uA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5s6v0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Feb 2020 14:09:37 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C7F2E100038;
+        Thu, 20 Feb 2020 14:09:32 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99C632B5006;
+        Thu, 20 Feb 2020 14:09:32 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 20 Feb
+ 2020 14:09:31 +0100
+Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
+To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+References: <20200218131218.10789-1-alexandre.torgue@st.com>
+ <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
+ <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
+ <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
+ <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
+ <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <66520848-f630-e210-aecb-96c8828605b7@st.com>
+Date:   Thu, 20 Feb 2020 14:09:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <7d6f4210-423f-e454-3910-9f8e17dff1aa@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Marek
 
-On 07.02.2020 16:39, Alexey Budankov wrote:
-> 
-> On 07.02.2020 14:38, Thomas Gleixner wrote:
->> Alexey Budankov <alexey.budankov@linux.intel.com> writes:
->>> On 22.01.2020 17:25, Alexey Budankov wrote:
->>>> On 22.01.2020 17:07, Stephen Smalley wrote:
->>>>>> It keeps the implementation simple and readable. The implementation is more
->>>>>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
->>>>>> privileged process.
+On 2/19/20 6:24 PM, Marek Vasut wrote:
+> On 2/19/20 10:20 AM, Alexandre Torgue wrote:
+> Hi,
+> [...]
+>>>>>> This series adds the possibility to handle gpio interrupts on level.
 >>>>>>
->>>>>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
->>>>>> but this bloating also advertises and leverages using more secure CAP_PERFMON
->>>>>> based approach to use perf_event_open system call.
+>>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
+>>>>>> external interrupts only on edge. To be able to handle GPIO
+>>>>>> interrupt on
+>>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
+>>>>>> chip)
+>>>>>> is retriggered following interrupt type and gpio line value.
+>>>>>>
+>>>>>> In exti irq chip, retrigger ops function is added.
 >>>>>
->>>>> I can live with that.  We just need to document that when you see
->>>>> both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process,
->>>>> try only allowing CAP_PERFMON first and see if that resolves the
->>>>> issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus
->>>>> CAP_DAC_OVERRIDE.
+>>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
+>>>>> set
+>>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
+>>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
+>>>>> selection")
+>>>>> prevents that.
+>>>>>
 >>>>
->>>> perf security [1] document can be updated, at least, to align and document 
->>>> this audit logging specifics.
+>>>> No it's not possible. Each gpio line doesn't have a dedicated Exti line
+>>>> Each Exti line is muxing between gpio banks.
 >>>
->>> And I plan to update the document right after this patch set is accepted.
->>> Feel free to let me know of the places in the kernel docs that also
->>> require update w.r.t CAP_PERFMON extension.
+>>> OK, that confirms my assumption.
+>>>
+>>>> Mapping is done as following:
+>>>>
+>>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
+>>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
+>>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
+>>>> ...
+>>>
+>>> Is it at least possible to have IRQs of the same type on the same exti
+>>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
+>>> trigger-edge-falling ?
+>>>
 >>
->> The documentation update wants be part of the patch set and not planned
->> to be done _after_ the patch set is merged.
+>> Sorry I don't catch your point. If you already succeed to get gpioA2,
+>> then you will failed to get gpioB2 but looking at function call stack we
+>> could get an other issue.
 > 
-> Well, accepted. It is going to make patches #11 and beyond.
+> Considering the EXTI line limitations, I'd like to know what kind of IRQ
+> input configuration is allowed/valid and what kind of configuration is
+> not valid.
 
-Patches #11 and #12 of v7 [1] contain information on CAP_PERFMON intention and usage.
-Patch for man-pages [2] extends perf_event_open.2 documentation.
+As a mux is used to select which GPIO[A..Z]_X has to be mapped on exti_X 
+line, only one GPIO can be used on the EXTI line.
 
-Thanks,
-Alexey
+For example, on EXTI2 you could map either gpioa2 or gpiob2 or 
+....gpioz2 but not gpioa2 and gpiob2 in the same time.
 
----
-[1] https://lore.kernel.org/lkml/c8de937a-0b3a-7147-f5ef-69f467e87a13@linux.intel.com/
-[2] https://lore.kernel.org/lkml/18d1083d-efe5-f5f8-c531-d142c0e5c1a8@linux.intel.com/
 
+> 
+>> Lets take example where you succeed to get gpioa2 as interrupt (using
+>> interrupt bindings) and now you try to do the same for gpiob2, you will
+>> have (roughly):
+>>
+>> stm32_gpio_irq_request_resources (for gpiob2) --> succeed
+>>
+>> stm32_gpio_set_type
+>>   |
+>>   |--> stm32_exti_set_type type -> change exti line 2 trigger registers
+>>                                    with gpiob2 binding.
+>>
+>> stm32_gpio_domain_activate --> failed as exti line2 is already used
+>>                     by gpioa2.
+>>
+>> So as stm32_gpio_set_type is called before checking than exti line is
+>> available, type could be changed and behavior of gpioa2 interrupt broken.
+>>
+>> Solution would be to move the exti line mux check from
+>> stm32_gpio_domain_activate to  stm32_gpio_irq_request_resources callback.
+> 
+> So the hardware does support using both gpioA2 and gpioB2 as an
+> interrupt source, for different drivers, if they are of the same
+> interrupt type. Except the current implementation does not permit that.
+> 
+
+No hardware doesn't allow it for reason explain above.
+
+> If the interrupt types are different, that is not supported by the hardware.
+> 
+> Correct ?
+> 
