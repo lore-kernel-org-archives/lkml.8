@@ -2,62 +2,149 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14330C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB22DC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB10424654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E90E208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgBTTeP (ORCPT
+        id S1728834AbgBTTim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:34:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgBTTeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:34:15 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CEC4208C4;
-        Thu, 20 Feb 2020 19:34:14 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 14:34:12 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, artem.bityutskiy@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH] tracing: Skip software disabled event at
- __synth_event_trace_end()
-Message-ID: <20200220143412.65432e7c@gandalf.local.home>
-In-Reply-To: <20200217183340.121fed47e680584c4ca6dd93@kernel.org>
-References: <158148685911.20407.3538292497442671878.stgit@devnote2>
-        <20200217183340.121fed47e680584c4ca6dd93@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 20 Feb 2020 14:38:42 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:54705 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbgBTTil (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:38:41 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j4reg-0005Xc-Ak; Thu, 20 Feb 2020 19:38:38 +0000
+Date:   Thu, 20 Feb 2020 20:38:37 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next v3 3/9] sysfs: add sysfs_group{s}_change_owner()
+Message-ID: <20200220193837.3agsi2idqirzpkiu@wittgenstein>
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
+ <20200218162943.2488012-4-christian.brauner@ubuntu.com>
+ <20200220111550.GE3374196@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200220111550.GE3374196@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Feb 2020 18:33:40 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> >  static inline void
-> >  __synth_event_trace_end(struct synth_event_trace_state *trace_state)
-> >  {
-> > +	if (trace_state->disabled)
-> > +		return;
-> > +  
+On Thu, Feb 20, 2020 at 12:15:50PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 18, 2020 at 05:29:37PM +0100, Christian Brauner wrote:
+> > Add helpers to change the owner of sysfs groups.
+> > This function will be used to correctly account for kobject ownership
+> > changes, e.g. when moving network devices between network namespaces.
+> > 
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> > /* v2 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add comment how ownership of sysfs object is changed.
+> > 
+> > /* v3 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add explicit uid/gid parameters.
+> > - Christian Brauner <christian.brauner@ubuntu.com>:
+> >   - Collapse groups ownership helper patches into a single patch.
+> > ---
+> >  fs/sysfs/group.c      | 117 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/sysfs.h |  20 ++++++++
+> >  2 files changed, 137 insertions(+)
+> > 
+> > diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> > index c4ab045926b7..bae562d3cba1 100644
+> > --- a/fs/sysfs/group.c
+> > +++ b/fs/sysfs/group.c
+> > @@ -13,6 +13,7 @@
+> >  #include <linux/dcache.h>
+> >  #include <linux/namei.h>
+> >  #include <linux/err.h>
+> > +#include <linux/fs.h>
+> >  #include "sysfs.h"
+> >  
+> >  
+> > @@ -457,3 +458,119 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+> >  	return PTR_ERR_OR_ZERO(link);
+> >  }
+> >  EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+> > +
+> > +static int sysfs_group_attrs_change_owner(struct kernfs_node *grp_kn,
+> > +					  const struct attribute_group *grp,
+> > +					  struct iattr *newattrs)
+> > +{
+> > +	struct kernfs_node *kn;
+> > +	int error;
+> > +
+> > +	if (grp->attrs) {
+> > +		struct attribute *const *attr;
+> > +
+> > +		for (attr = grp->attrs; *attr; attr++) {
+> > +			kn = kernfs_find_and_get(grp_kn, (*attr)->name);
+> > +			if (!kn)
+> > +				return -ENOENT;
+> > +
+> > +			error = kernfs_setattr(kn, newattrs);
+> > +			kernfs_put(kn);
+> > +			if (error)
+> > +				return error;
+> > +		}
+> > +	}
+> > +
+> > +	if (grp->bin_attrs) {
+> > +		struct bin_attribute *const *bin_attr;
+> > +
+> > +		for (bin_attr = grp->bin_attrs; *bin_attr; bin_attr++) {
+> > +			kn = kernfs_find_and_get(grp_kn, (*bin_attr)->attr.name);
+> > +			if (!kn)
+> > +				return -ENOENT;
+> > +
+> > +			error = kernfs_setattr(kn, newattrs);
+> > +			kernfs_put(kn);
+> > +			if (error)
+> > +				return error;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * sysfs_group_change_owner - change owner of an attribute group.
+> > + * @kobj:	The kobject containing the group.
+> > + * @grp:	The attribute group.
+> > + * @kuid:	new owner's kuid
+> > + * @kgid:	new owner's kgid
+> > + *
+> > + * Returns 0 on success or error code on failure.
 > 
-> Aah, I assumed that trace_state should be initialized with 0, but
-> in really, it could be just allocated on the stack.
-> We has to set trace_state->disabled = false in __synth_event_trace_start().
+> This is fine to document, just funny it's the only one documented about
+> the return value so far in this series.
 
-Is this patch good enough to take, or is there another one coming?
+I stuck to the documentation style common to the file. Most of the
+functions in fs/syfs/file.c did not mention return codes
+sysfs_remove_bin_file(), sysfs_create_bin_file(),
+sysfs_remove_file_from_group() etc. But I'll document all in this series
+with return codes now.
 
--- Steve
+Thanks!
+Christian
