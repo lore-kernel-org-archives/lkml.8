@@ -2,207 +2,116 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E69E2C3404C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55650C3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B615924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB862465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:13:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/SxpJqi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="SjzIXiSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbgBTFMV (ORCPT
+        id S1728073AbgBTFNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:12:21 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36582 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgBTFMQ (ORCPT
+        Thu, 20 Feb 2020 00:13:02 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:34662 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725957AbgBTFNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:12:16 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so1072544plm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:12:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=G9zwvQ4CGCx+wiNpWyUGWH8dCEXbiZhNqior0NhHpUA=;
-        b=h/SxpJqiWyv96/GLSrLehHyIuCjBp4cSZrlSVNtlHMEafyK4voytGfzUdpCU8zrQLQ
-         57SVIyMi/eYsa4LniLLSCZ8+7YYM+CSH+c5C0SR1HNBlm5RYXS8eA0W/R7ipiu/5CaqY
-         WwQFzQmreg45g6p1FQOTIEuDPal+FVkDMgDl3XUgM0VBQcPV1Cj5bLzyP7MuWg05ubFD
-         6hzbQUnuEZOCsWmSmQg2MT1++XXlhDV1qxnzzUKvNBHP3Zjz9giow/hvX4FcZApSfbaS
-         KWuGEunVL6zQDXdQrPUZqVck4bNGf8Bp1IDvGJCCecxRmZAhHIExZxxvVYeiBhCvQbXt
-         cPxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=G9zwvQ4CGCx+wiNpWyUGWH8dCEXbiZhNqior0NhHpUA=;
-        b=gEa6fo6798T/YNeB42QZSwn94LUoHrOT5/MYemwy4dcU5cTIsBM3DhUCEqObNAo+Wq
-         3h+A4rA1gO/xGVaHVr1bdk0TEIxRhcdxAJy2HvXy804qim25Sb4pPXUY0raPBlHV1P4/
-         iZoQ61vUg7+bwKVGW9rK9uI6yiHRVSoACbNUs4Iw5K4YCUlS3imXBaYb6I6BN3UuF5Db
-         jk8Rmh4WP8eIccnatQ+UvMl2r2+30+WzeckMs7DnFGSkKFKRR1peLf0aIm2OZRe5xmeU
-         oj6GxuJHp2aXzGVw0XtZWqaLXJK+VPgWtpEjYZxqDZwOZ4Z3jsfGZi2h/+bf/pzCMPfZ
-         r2dA==
-X-Gm-Message-State: APjAAAXUTgoKt7XP+7iBVP+O/2QxCs3ZLqM41BnEs3WfO+oz+mod1YXG
-        mYOj/qU0gdCeMoSN8TMemiw=
-X-Google-Smtp-Source: APXvYqyS0susRVtL7+OoCXj7RZrS7HFQ8EbXkEP2qjapjneHJ9GECVLT4k8nSwqe66TMYSL1165OQQ==
-X-Received: by 2002:a17:902:b788:: with SMTP id e8mr30366372pls.1.1582175535644;
-        Wed, 19 Feb 2020 21:12:15 -0800 (PST)
-Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id t15sm1472599pgr.60.2020.02.19.21.12.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Feb 2020 21:12:15 -0800 (PST)
-From:   js1304@gmail.com
-X-Google-Original-From: iamjoonsoo.kim@lge.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 4/9] mm/swapcache: support to handle the value in swapcache
-Date:   Thu, 20 Feb 2020 14:11:48 +0900
-Message-Id: <1582175513-22601-5-git-send-email-iamjoonsoo.kim@lge.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
-References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
+        Thu, 20 Feb 2020 00:13:01 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582175581; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Ao1uwixRp+mRr4IVPkNGuxraZYvp+rb//Bou7aXajek=;
+ b=SjzIXiSSBhskYb4oNvCHmSzBmyzNbOFVXBAsMnW3OdKYT2dwR66oIwdRaHnCmuNlQjomVXCG
+ PGiAtUyxnrfTuRGWXYVXknFGR/7r60rsDXalrEyqKwD6pcuOCENUktpeX7ffSNXdppChPfL2
+ i5rA2/q5YKw/dQTVyP6spg9zFUg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e1556.7fad6d94e848-smtp-out-n01;
+ Thu, 20 Feb 2020 05:12:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1EA5CC4479F; Thu, 20 Feb 2020 05:12:53 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11D60C43383;
+        Thu, 20 Feb 2020 05:12:52 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 10:42:52 +0530
+From:   vjitta@codeaurora.org
+To:     Christopher Lameter <cl@linux.com>
+Cc:     penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, vinmenon@codeaurora.org,
+        kernel-team@android.com, linux-kernel-owner@vger.kernel.org
+Subject: Re: [PATCH] mm: slub: reinitialize random sequence cache on slab
+ object update
+In-Reply-To: <7bf56496-7b8a-c60f-b261-9505068f9130@codeaurora.org>
+References: <1580379523-32272-1-git-send-email-vjitta@codeaurora.org>
+ <alpine.DEB.2.21.2001301826130.9861@www.lameter.com>
+ <7bf56496-7b8a-c60f-b261-9505068f9130@codeaurora.org>
+Message-ID: <f5c4c74ecb1f43992285bb5f57ee874c@codeaurora.org>
+X-Sender: vjitta@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On 2020-02-03 12:27, Vijayanand Jitta wrote:
+> On 1/30/2020 11:58 PM, Christopher Lameter wrote:
+>> On Thu, 30 Jan 2020, vjitta@codeaurora.org wrote:
+>> 
+>>> Random sequence cache is precomputed during slab object creation
+>>> based up on the object size and no of objects per slab. These could
+>>> be changed when flags like SLAB_STORE_USER, SLAB_POISON are updated
+>>> from sysfs. So when shuffle_freelist is called during slab_alloc it
+>> 
+>> Sorry no. That cannot happen. Changing the size of the slab is only
+>> possible if no slab pages are allocated. Any sysfs changes that affect 
+>> the
+>> object size must fail if object and slab pages are already allocated.
+>> 
+>> If you were able to change the object size then we need to prevent 
+>> that
+>> from happening.
+>> 
+> 
+> Yes, size of slab can't be changed after objects are allocated, that 
+> holds
+> true even with this change. Let me explain a bit more about the use 
+> case here
+> 
+> ZRAM compression uses the slub allocator, by enabling the slub debug 
+> flags like
+> SLAB_STORE_USER etc.. the memory consumption will rather be increased
+> which doesn't
+> serve the purpose of ZRAM compression. So, such flags are to be
+> disabled before the
+> allocations happen, this requires updation of random sequence cache as 
+> object
+> size and number of objects change after these flags are disabled.
+> 
+> So, the sequence will be
+> 
+> 1. Slab creation (this will set a precomputed random sequence cache)
+> 2. Remove the debug flags
+> 3. update the random sequence cache
+> 4. Mount zram and then start using it for allocations.
+> 
+> Thanks,
+> Vijay
 
-Swapcache doesn't handle the value since there is no case using the value.
-In the following patch, workingset detection for anonymous page will be
-implemented and it stores the value into the swapcache. So, we need to
-handle it and this patch implement handling.
+Waiting for your response.
 
-Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
----
- include/linux/swap.h |  5 +++--
- mm/swap_state.c      | 23 ++++++++++++++++++++---
- mm/vmscan.c          |  2 +-
- 3 files changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 954e13e..0df8b3f 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -410,7 +410,8 @@ extern void show_swap_cache_info(void);
- extern int add_to_swap(struct page *page);
- extern int add_to_swap_cache(struct page *, swp_entry_t, gfp_t);
- extern int __add_to_swap_cache(struct page *page, swp_entry_t entry);
--extern void __delete_from_swap_cache(struct page *, swp_entry_t entry);
-+extern void __delete_from_swap_cache(struct page *page,
-+			swp_entry_t entry, void *shadow);
- extern void delete_from_swap_cache(struct page *);
- extern void free_page_and_swap_cache(struct page *);
- extern void free_pages_and_swap_cache(struct page **, int);
-@@ -571,7 +572,7 @@ static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
- }
- 
- static inline void __delete_from_swap_cache(struct page *page,
--							swp_entry_t entry)
-+					swp_entry_t entry, void *shadow)
- {
- }
- 
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 8e7ce9a..3fbbe45 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -117,6 +117,10 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
- 	pgoff_t idx = swp_offset(entry);
- 	XA_STATE_ORDER(xas, &address_space->i_pages, idx, compound_order(page));
- 	unsigned long i, nr = compound_nr(page);
-+	unsigned long nrexceptional = 0;
-+	void *old;
-+
-+	xas_set_update(&xas, workingset_update_node);
- 
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 	VM_BUG_ON_PAGE(PageSwapCache(page), page);
-@@ -132,10 +136,14 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
- 			goto unlock;
- 		for (i = 0; i < nr; i++) {
- 			VM_BUG_ON_PAGE(xas.xa_index != idx + i, page);
-+			old = xas_load(&xas);
-+			if (xa_is_value(old))
-+				nrexceptional++;
- 			set_page_private(page + i, entry.val + i);
- 			xas_store(&xas, page);
- 			xas_next(&xas);
- 		}
-+		address_space->nrexceptional -= nrexceptional;
- 		address_space->nrpages += nr;
- 		__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, nr);
- 		ADD_CACHE_INFO(add_total, nr);
-@@ -155,24 +163,33 @@ int add_to_swap_cache(struct page *page, swp_entry_t entry, gfp_t gfp)
-  * This must be called only on pages that have
-  * been verified to be in the swap cache.
-  */
--void __delete_from_swap_cache(struct page *page, swp_entry_t entry)
-+void __delete_from_swap_cache(struct page *page,
-+			swp_entry_t entry, void *shadow)
- {
- 	struct address_space *address_space = swap_address_space(entry);
- 	int i, nr = hpage_nr_pages(page);
- 	pgoff_t idx = swp_offset(entry);
- 	XA_STATE(xas, &address_space->i_pages, idx);
- 
-+	/* Do not apply workingset detection for the hugh page */
-+	if (nr > 1)
-+		shadow = NULL;
-+
-+	xas_set_update(&xas, workingset_update_node);
-+
- 	VM_BUG_ON_PAGE(!PageLocked(page), page);
- 	VM_BUG_ON_PAGE(!PageSwapCache(page), page);
- 	VM_BUG_ON_PAGE(PageWriteback(page), page);
- 
- 	for (i = 0; i < nr; i++) {
--		void *entry = xas_store(&xas, NULL);
-+		void *entry = xas_store(&xas, shadow);
- 		VM_BUG_ON_PAGE(entry != page, entry);
- 		set_page_private(page + i, 0);
- 		xas_next(&xas);
- 	}
- 	ClearPageSwapCache(page);
-+	if (shadow)
-+		address_space->nrexceptional += nr;
- 	address_space->nrpages -= nr;
- 	__mod_node_page_state(page_pgdat(page), NR_FILE_PAGES, -nr);
- 	ADD_CACHE_INFO(del_total, nr);
-@@ -247,7 +264,7 @@ void delete_from_swap_cache(struct page *page)
- 	struct address_space *address_space = swap_address_space(entry);
- 
- 	xa_lock_irq(&address_space->i_pages);
--	__delete_from_swap_cache(page, entry);
-+	__delete_from_swap_cache(page, entry, NULL);
- 	xa_unlock_irq(&address_space->i_pages);
- 
- 	put_swap_page(page, entry);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 74c3ade..99588ba 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -909,7 +909,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
- 	if (PageSwapCache(page)) {
- 		swp_entry_t swap = { .val = page_private(page) };
- 		mem_cgroup_swapout(page, swap);
--		__delete_from_swap_cache(page, swap);
-+		__delete_from_swap_cache(page, swap, NULL);
- 		xa_unlock_irqrestore(&mapping->i_pages, flags);
- 		put_swap_page(page, swap);
- 	} else {
--- 
-2.7.4
-
+Thanks,
+Vijay
