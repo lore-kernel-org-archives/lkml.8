@@ -2,160 +2,111 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B07C11D1C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E2C11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19D65208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937162465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Nc3sqFiK"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="fmztncXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbgBTSdi (ORCPT
+        id S1728434AbgBTSf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:33:38 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:38024 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSdi (ORCPT
+        Thu, 20 Feb 2020 13:35:56 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:42843 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728217AbgBTSfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:33:38 -0500
-Received: from [10.131.86.40] (unknown [131.107.174.40])
-        by linux.microsoft.com (Postfix) with ESMTPSA id CF78620B9C02;
-        Thu, 20 Feb 2020 10:33:36 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF78620B9C02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1582223617;
-        bh=AWFTKff2D71eTULXfKD0OOx5tsIJ1Cyrn7ArYV67Ud8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Nc3sqFiKUhHLMxzD7NGjTh04dBiuYyLoB/4Vawy/wGZAhe6xGrmX4B1Y+OG1hYmcb
-         SJdjy8FViujaAPSrUNHd1OKDV+vCN7ZzQlv7ftlYhMDVkKsOHzKT/uJeELDuTaL0ue
-         M+k9OfRLbVBc2SqoIj6UTWw70i+LG/zxQ55ftSoA=
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        linux-security-module@vger.kernel.org,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
- <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
- <20200220181345.GD3972@linux.intel.com>
-From:   Jordan Hand <jorhand@linux.microsoft.com>
-Message-ID: <7738b3cf-fb32-5306-5740-59974444e327@linux.microsoft.com>
-Date:   Thu, 20 Feb 2020 10:33:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 13:35:55 -0500
+Received: by mail-qv1-f65.google.com with SMTP id dc14so2345415qvb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:35:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ui1GYJ+3TKdhDhER6hX80GC8ogMrESlUENKJdsvmiJw=;
+        b=fmztncXTcGHJiFgzRFjgjLEip0FvqqT27efzmzqFHV75pB/K83qJ3D1hNW4E70dXeZ
+         CJFi4rvcQHriQibThmglNljM7AMJM2WmKPyRjHJZtP1+ft4kHUBatB/TJEuTN6xxhTiN
+         E6+kHjefonE2x7TQtlE6uRTgWbAoPRwp5TtqE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ui1GYJ+3TKdhDhER6hX80GC8ogMrESlUENKJdsvmiJw=;
+        b=PVOk/1Z1JZyv2GKwqGwVWtOr5bbu29Xq2sMxZAPmzsNXau6dCd0O9NcB5M7pTYcdrD
+         3/yFdQaZk+0hhGqK3yEvLXnk4lbrRuhizJc0stV5eD3tVUZqeW/sFnCiw16rQfB7xVoE
+         meqy09Vt3RQdpYyPQMnHoEuM4k1lfaxBm28qXhkPT3n4ODItDhcwE74feVOru11Ru0qG
+         sBlQz3e5KhQ42axpV/SkjE7DLwkgAUJMtE5lQKuP37elDnsK4Cts/lAZFn6Cg33gdtKs
+         esTsqZ1UOHsvMTeV357NUdfhkbD8N1SBX19Nxl26OmOvQ4STO1pefvKONs3fgX1HhedU
+         oT6w==
+X-Gm-Message-State: APjAAAX8T/UQ6ZUunMf0fK6rXB1xFwrgXD76cPJh+x49+NtaE3+YciBs
+        VdjE2/NqRyYYppToLoeuP0vCtQ==
+X-Google-Smtp-Source: APXvYqxmnMhAcMk3lY0AI5vqnwgSVzy5Kgiji+XEXQ3tkC5VUl2qSX0E++tOv9JyuEOMeCuZhNP74Q==
+X-Received: by 2002:ad4:478b:: with SMTP id z11mr27009509qvy.185.1582223754273;
+        Thu, 20 Feb 2020 10:35:54 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::2:a76b])
+        by smtp.gmail.com with ESMTPSA id g9sm226424qkl.11.2020.02.20.10.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 10:35:53 -0800 (PST)
+Date:   Thu, 20 Feb 2020 13:35:52 -0500
+From:   Chris Down <chris@chrisdown.name>
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
+Message-ID: <20200220183552.GA2181061@chrisdown.name>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com>
+ <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220181345.GD3972@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 10:13 AM, Sean Christopherson wrote:
-> On Tue, Feb 18, 2020 at 07:26:31PM -0800, Jordan Hand wrote:
->> During mprotect (in mm/mprotect.c line 525) the following checks if
->> READ_IMPLIES_EXECUTE and a PROT_READ is being requested. If so and
->> VM_MAYEXEC is set, it also adds PROT_EXEC to the request.
->>
->> 	if (rier && (vma->vm_flags & VM_MAYEXEC))
->> 		prot |= PROT_EXEC;
->>
->> But if we look at sgx_encl_page_alloc(), we see vm_max_prot_bits is set
->> without taking VM_MAYEXEC into account:
->>
->> 	encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
->>
->> sgx_encl_may_map() checks that the requested protection can be added with:
->>
->> 	if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
->> 		return -EACCESS
->>
->> This means that for any process where READ_IMPLIES_EXECUTE is set and
->> page where (vma->vm_flags & VM_MAYEXEC) == true, mmap/mprotect calls to
->> that request PROT_READ on a page that was not added with PROT_EXEC will
->> fail.
-> 
-> I could've sworn this was discussed on the SGX list at one point, but
-> apparently we only discussed it internally.  Anyways...
-> 
-> More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
-> because part of the enclave loader is written in assembly.  Unless
-> explicitly told otherwise, the linker assumes that any program with
-> assembly code may need an executable stack, which leads to the RIE
-> personality being set for the process.  Here's a fantastic write up for
-> more details: https://www.airs.com/blog/archives/518
-> 
-> There are essentially two paths we can take:
-> 
->  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
->     PROT_EXEC for enclaves.
-> 
->  2) Punt the issue to userspace.
-> 
-> Option (1) is desirable in some ways:
-> 
->   - Enclaves will get an executable stack if and only if the loader/creator
->     intentionally configures it to have an executable stack.
-> 
->   - Separates enclaves from the personality of the loader.
-> 
->   - Userspace doesn't have to do anything for the common case of not
->     wanting an executable stack for its enclaves.
-> 
-> The big down side to (1) is that it'd require an ugly hook in architecture
-> agnostic code.  And arguably, it reduces the overall security of the
-> platform (more below).
-> 
-> For (2), userspace has a few options:
-> 
->  a) Tell the linker the enclave loader doesn't need RIE, either via a .note
->     in assembly files or via the global "-z noexecstack" flag.
-> 
->  b) Spawn a separate process to run/map the enclave if the enclave loader
->     needs RIE.
-> 
->  c) Require enclaves to allow PROT_EXEC on all pages.  Note, this is an
->     absolutely terrible idea and only included for completeness.
-> 
-> As shown by the lack of a mmap()/mprotect() hook in this series to squash
-> RIE, we chose option (2).  Given that enclave loaders are not legacy code
-> and hopefully following decent coding practices, option (2a) should suffice
-> for all loaders.  The security benefit mentioned above is that forcing
-> enclave loaders to squash RIE eliminates an exectuable stack as an attack
-> vector on the loader.
+Dan Schatzberg writes:
+>memalloc_use_memcg() worked for kernel allocations but was silently
+>ignored for user pages.
+>
+>This patch establishes a precedence order for who gets charged:
+>
+>1. If there is a memcg associated with the page already, that memcg is
+>   charged. This happens during swapin.
+>
+>2. If an explicit mm is passed, mm->memcg is charged. This happens
+>   during page faults, which can be triggered in remote VMs (eg gup).
+>
+>3. Otherwise consult the current process context. If it has configured
+>   a current->active_memcg, use that. Otherwise, current->mm->memcg.
+>
+>Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
+>would always charge the root cgroup. Now it looks up the current
+>active_memcg first (falling back to charging the root cgroup if not
+>set).
+>
+>Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
+>Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>Acked-by: Tejun Heo <tj@kernel.org>
 
-I see your point and I do agree that there are security benefits to (2a)
-and I think we could do that for our loader. That said, it does concern
-me that this breaks perfectly valid userspace behavior. If a userspace
-process decides to use RIE, I don't know that the SGX driver should
-disobey that decision.
+Acked-by: Chris Down <chris@chrisdown.name>
 
-So option (3) would be to just honor RIE for enclave pages and when page
-permissions are set to PROT_READ in sgx_encl_page_alloc and RIE is set,
-also add PROT_EXEC.
-
-I understand your concerns that this using RIE is bad security practice
-and I'm not convinced that (3) is the way to go, but from a philosophy
-perspective I don't know that the kernel should be in the business of
-stopping userspace from doing valid things.
-
-If option (3) can't/shouldn't be done for some reason, option (1) at
-least keeps from breaking expected userspace behavior. But I do agree
-that (1) is ugly to implement.
-
--Jordan
+Thanks! The clarification the v2 thread for this made things clear to me.
