@@ -2,101 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC62C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B39C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2A82467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6822467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582195134;
-	bh=5/Diy9ZKVyA5vlQHoEgKBQrgGCrvICrp/OzFQIB4RLk=;
+	s=default; t=1582195182;
+	bh=pmMeD3J462Ed0GYqNb2rQ5J4xvML9edU/W6pE3Ujv+Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JevO87DPZWcfZSMwXMUFJ21k0W24A6EStSIZb8qakvzARXy+tnw4loEG3BoMXzSw+
-	 t2t/kSGTirHKu7vviSa3pRDvjzSUPFyU5W2JqcX6Sohi4y7/h/dl0+rBVOGFT3JlQY
-	 WhBFS3hU/YU9Tz33FubI1z4BnVICJfy7LuGFoT0M=
+	b=A6zAXoGYZTTL5+6GVrNm2prLCcr1A9SUJYghGfKnjvHSOHnga1lpGZ3vf6/nl6CxM
+	 7YMUPlVydL8oQLRiu9uUOsqqo9vJ5IiSvWKbo5szJoxHHjLWrb0N9+s4GIHjw9wuch
+	 3mryLCN8oWl5Jgz1h1rmrNKEKFY3pK87M3Tirbjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgBTKix (ORCPT
+        id S1727887AbgBTKjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:38:53 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38722 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgBTKix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:38:53 -0500
-Received: by mail-wr1-f66.google.com with SMTP id e8so4029676wrm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:38:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ht1b2Gn12WUgyUngBOy6cF6YFNd2DyC26HhQ0+Z/imw=;
-        b=pPvECpqze1JTo8iFOWJcZyZvIn/nlzyOtmaTANlaqersOdPXTtBU7HNjYhvDufZiYg
-         uySVBkzB4oK99LagzHeWtvlR90brmTTL/rdv+ipRQSzB1wmb0G8pfgHBcVyuFm+dcekH
-         5tMBSVZlJA43YH7iIPLyo9jshQ2R4Wl7Wjm+0mbR7gaYVKvf0ZWWSdL1JfPd2juQnUmq
-         ZHcklZjSK3VX4EAKHwqAqLwpe1Elp0tOVI3McoRPcfNpcsQB+m3qrwiAo1rABZUPUg1k
-         K7+kcP9sfHVLddDGRJomaoyzBCCQQ6dV0cKWoUPKR+BiNJx1WGuB05/0FtkCcLFnn8AW
-         GqHQ==
-X-Gm-Message-State: APjAAAUIc81lazLVxD1/Zkr+6Q/NHE3c+y1UNpbnbyCFqxxsDVKuVizI
-        DJ8QJG8wUbx1OjiILzwyawA=
-X-Google-Smtp-Source: APXvYqx9uGPq79/Y37GnvXyltn1NCMABFOX+xrRpc44HyxfkCeZH95pJYQQfgSCA/8RHbNnLBE0JqQ==
-X-Received: by 2002:adf:d4c7:: with SMTP id w7mr42913682wrk.101.1582195131500;
-        Thu, 20 Feb 2020 02:38:51 -0800 (PST)
-Received: from localhost (ip-37-188-133-21.eurotel.cz. [37.188.133.21])
-        by smtp.gmail.com with ESMTPSA id b17sm4061890wrp.49.2020.02.20.02.38.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 02:38:50 -0800 (PST)
-Date:   Thu, 20 Feb 2020 11:38:49 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
-        david@redhat.com, osalvador@suse.de, dan.j.williams@intel.com,
-        rppt@linux.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
- case
-Message-ID: <20200220103849.GG20509@dhcp22.suse.cz>
-References: <20200220043316.19668-1-bhe@redhat.com>
+        Thu, 20 Feb 2020 05:39:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgBTKjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 05:39:40 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A6A024654;
+        Thu, 20 Feb 2020 10:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582195179;
+        bh=pmMeD3J462Ed0GYqNb2rQ5J4xvML9edU/W6pE3Ujv+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r2TguAywdipbP4Jz7R2+hYm5KCmvFxe6y2myDGF6Ly85bnkYnJ2RBOu/JShHg40H6
+         Y7+nGQtLziSEWGYsNsfwRKeIGf7MBpN1PbeOiZH5NOIQWRZbe3dcABDtO38TyWpri4
+         jun2dHMx/RapBMJqjfnwRk7B14rA3jg0AoEn5cco=
+Date:   Thu, 20 Feb 2020 10:39:35 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Carter Li =?utf-8?B?5p2O6YCa5rSy?= <carter.li@eoitek.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        io-uring <io-uring@vger.kernel.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] asm-generic/atomic: Add try_cmpxchg() fallbacks
+Message-ID: <20200220103934.GA14459@willie-the-truck>
+References: <b8069e62-7ea4-c7f3-55a3-838241951068@kernel.dk>
+ <20200217120920.GQ14914@hirez.programming.kicks-ass.net>
+ <53de3581-b902-89ba-3f53-fd46b052df40@kernel.dk>
+ <43c066d1-a892-6a02-82e7-7be850d9454d@kernel.dk>
+ <20200217174610.GU14897@hirez.programming.kicks-ass.net>
+ <592cf069-41ee-0bc1-1f83-e058e5dd53ff@kernel.dk>
+ <20200218131310.GZ14914@hirez.programming.kicks-ass.net>
+ <20200218142700.GB14946@hirez.programming.kicks-ass.net>
+ <20200220103044.GA13608@willie-the-truck>
+ <20200220103727.GW18400@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220043316.19668-1-bhe@redhat.com>
+In-Reply-To: <20200220103727.GW18400@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-02-20 12:33:09, Baoquan He wrote:
-> Memory sub-section hotplug was added to fix the issue that nvdimm could
-> be mapped at non-section aligned starting address. A subsection map is
-> added into struct mem_section_usage to implement it. However, sub-section
-> is only supported in VMEMMAP case.
-
-Why? Is there any fundamental reason or just a lack of implementation?
-VMEMMAP should be really only an implementation detail unless I am
-missing something subtle.
-
-> Hence there's no need to operate
-> subsection map in SPARSEMEM|!VMEMMAP case. In this patchset, change
-> codes to make sub-section map and the relevant operation only available
-> in VMEMMAP case.
+On Thu, Feb 20, 2020 at 11:37:27AM +0100, Peter Zijlstra wrote:
+> On Thu, Feb 20, 2020 at 10:30:45AM +0000, Will Deacon wrote:
+> > On Tue, Feb 18, 2020 at 03:27:00PM +0100, Peter Zijlstra wrote:
+> > > diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
+> > > index b6c6f5d306a7..3c9be8d550e0 100755
+> > > --- a/scripts/atomic/gen-atomic-fallback.sh
+> > > +++ b/scripts/atomic/gen-atomic-fallback.sh
+> > > @@ -140,6 +140,32 @@ cat <<EOF
+> > >  EOF
+> > >  }
+> > >  
+> > > +gen_try_cmpxchg_fallback()
+> > > +{
+> > > +	local order="$1"; shift;
+> > > +
+> > > +cat <<EOF
+> > > +#ifndef try_cmpxchg${order}
+> > > +#define try_cmpxchg${order}(_ptr, _oldp, _new) \\
+> > > +({ \\
+> > > +	typeof(*ptr) ___r, ___o = *(_oldp); \\
+> > > +	___r = cmpxchg${order}((_ptr), ___o, (_new)); \\
+> > > +	if (unlikely(___r != ___o)) \\
+> > > +		*(_old) = ___r; \\
+> > 
+> > This doesn't compile because _old isn't declared. Probably best to avoid
+> > evaluating _oldp twice though.
 > 
-> And since sub-section hotplug added, the hot add/remove functionality
-> have been broken in SPARSEMEM|!VMEMMAP case. Wei Yang and I, each of us
-> make one patch to fix one of the failures. In this patchset, the patch
-> 1/7 from me is used to fix the hot remove failure. Wei Yang's patch has
-> been merged by Andrew.
+> Compiler had already spotted that, I'll make it something like:
+> 
+> 	typeof(*ptr) *___op = (_oldp), ___o = *___op;
+> 
+> 	...
+> 
+> 		*___op = ___r;
+> 
+> Which avoids the double eval.
 
-Not sure I understand. Are there more issues to be fixed?
->  include/linux/mmzone.h |   2 +
->  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
->  2 files changed, 127 insertions(+), 53 deletions(-)
+Cool, you can stick my Ack on the patch with that change.
 
-Why do we need to add so much code to remove a functionality from one
-memory model?
--- 
-Michal Hocko
-SUSE Labs
+Will
