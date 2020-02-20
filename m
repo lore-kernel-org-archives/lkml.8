@@ -2,113 +2,118 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCACC11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D69C11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4647222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4464222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582226118;
+	bh=wuYgJdYmKiQd4r+UyQmCOa68AWBzeQV+TJZRUaxsiHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HXo8Nmmm24SijqCRXw69MShESiYRNC9uWoXRNBaFd8/u1SMqodpGzksQuBx2/UVea
+	 2QlNrWWyZoJXc93NZOaKJaiRW0HaTxfPV0Ob1C40odtaFjzP8jlDgNOtb8VNYEGr73
+	 wd71K5BMu+0Dzlfc6AGTb4N3Xufh+w9g5MsaYstY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgBTTPM (ORCPT
+        id S1728948AbgBTTPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:15:12 -0500
-Received: from mga05.intel.com ([192.55.52.43]:49172 "EHLO mga05.intel.com"
+        Thu, 20 Feb 2020 14:15:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbgBTTPM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:15:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 11:15:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="434935036"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Feb 2020 11:15:10 -0800
-Date:   Thu, 20 Feb 2020 11:15:10 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>, puiterwijk@redhat.com,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-Message-ID: <20200220191510.GF3972@linux.intel.com>
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com>
- <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
- <20200220181345.GD3972@linux.intel.com>
- <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
+        id S1728111AbgBTTPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:15:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A82A6206E2;
+        Thu, 20 Feb 2020 19:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582226116;
+        bh=wuYgJdYmKiQd4r+UyQmCOa68AWBzeQV+TJZRUaxsiHc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vamKU3a5baew9BfJzvbhFHb8QbsMKNRkpgWRf7kyQ3tUHggXWr7moIvwnPJDDNIdG
+         mQtRAN6lBR8NNjgnZ/h18FTHAEsZWh26AEH7su4F4HrK13Qf2Rt+/3dzuRQl7oTS4f
+         GM5YLQ5ezaSdf4JarVAEGbNUi5DQq0kj0xd/c+Kg=
+Date:   Thu, 20 Feb 2020 20:15:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Orson Zhai <orson.unisoc@gmail.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        John Stultz <john.stultz@linaro.org>, mingmin.ling@unisoc.com,
+        orsonzhai@gmail.com, jingchao.ye@unisoc.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] Revert "PM / devfreq: Modify the device name as
+ devfreq(X) for sysfs"
+Message-ID: <20200220191513.GA3450796@kroah.com>
+References: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:51:37AM -0800, Andy Lutomirski wrote:
-> On Thu, Feb 20, 2020 at 10:13 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
-> > because part of the enclave loader is written in assembly.  Unless
-> > explicitly told otherwise, the linker assumes that any program with
-> > assembly code may need an executable stack, which leads to the RIE
-> > personality being set for the process.  Here's a fantastic write up for
-> > more details: https://www.airs.com/blog/archives/518
-> >
-> > There are essentially two paths we can take:
-> >
-> >  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
-> >     PROT_EXEC for enclaves.
+On Fri, Feb 21, 2020 at 01:37:04AM +0800, Orson Zhai wrote:
+> This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
 > 
-> Seems reasonable.
+> The name changing as devfreq(X) breaks some user space applications,
+> such as Android HAL from Unisoc and Hikey [1].
+> The device name will be changed unexpectly after every boot depending
+> on module init sequence. It will make trouble to setup some system
+> configuration like selinux for Android.
 > 
-> Honestly, it probably makes sense to try to exempt almost everything
-> from RIE.  I'd be a bit surprised if RIE is actually useful for
-> anything other than plain anonymous pages and private file mappings.
+> So we'd like to revert it back to old naming rule before any better
+> way being found.
+> 
+> [1] https://lkml.org/lkml/2018/5/8/1042
+> 
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+> 
+> ---
+>  drivers/devfreq/devfreq.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index cceee8b..7dcf209 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  {
+>  	struct devfreq *devfreq;
+>  	struct devfreq_governor *governor;
+> -	static atomic_t devfreq_no = ATOMIC_INIT(-1);
+>  	int err = 0;
+>  
+>  	if (!dev || !profile || !governor_name) {
+> @@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+>  	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+>  	atomic_set(&devfreq->suspend_count, 0);
+>  
+> -	dev_set_name(&devfreq->dev, "devfreq%d",
+> -				atomic_inc_return(&devfreq_no));
+> +	dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+>  	err = device_register(&devfreq->dev);
+>  	if (err) {
+>  		mutex_unlock(&devfreq->lock);
+> -- 
+> 2.7.4
+> 
 
-Hmm, last I looked at this I was focused on adding a generic protections
-manipulator, e.g. vm_ops->mprotect_adjust() and f_op->???, and I thought
-those options were too ugly to pursue.
+Thanks for this, I agree, this needs to get back to the way things were
+as it seems to break too many existing systems as-is.
 
-But if we want to start killing RIE specifically, adding a boolean flag
-to and f_op wouldn't be _that_ heinous, e.g.
+I'll queue this up in my tree now, thanks.
 
-static int do_mprotect_pkey(...)
-{
-	...
-
-		/* Does the application expect PROT_READ to imply PROT_EXEC */
-		if (rier && (vma->vm_flags & VM_MAYEXEC) &&
-		    (!vma->vm_file || !vma->vm_file->f_op->no_read_implies_exec))
-			prot |= PROT_EXEC;
-}
-
-unsigned long do_mmap(...)
-{
-	if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
-		if (!file || (!path_noexec(&file->f_path) &&
-			      !file->f_op->no_read_implies_exec))
-			prot |= PROT_EXEC;
-}
+greg k-h
