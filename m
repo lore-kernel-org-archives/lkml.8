@@ -2,148 +2,155 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04ECDC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DF7C11D15
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD03624673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E7D24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:59:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qwmkCUco"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbgBTR5t (ORCPT
+        id S1728456AbgBTR7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:57:49 -0500
-Received: from muru.com ([72.249.23.125]:56428 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgBTR5t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:57:49 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 56B2D8080;
-        Thu, 20 Feb 2020 17:58:32 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 09:57:44 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200220175744.GQ37466@atomide.com>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
- <20200220163703.GK37466@atomide.com>
- <20200220171305.GL37466@atomide.com>
- <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
+        Thu, 20 Feb 2020 12:59:15 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40429 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728102AbgBTR7O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:59:14 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so1202777pjb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:59:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b39p1eGP3nlw0aRiq/EeenwuRZud+ndWD/CEPqlUtnE=;
+        b=qwmkCUcoVIMXBx/AwEt9MPwRTrkz2uyhf0NcAxdivTQjwX1XtVFIVwvizt7PTnm2A4
+         +/uy0TnaN37yTB6RrkMkpdIbONbwniMinlv2RHduA2AOzqu5/QmYAR1BtJ9tf7xh07L3
+         f6pFWAHnngs5stFC70RIfUeyOOiWQ8YNY5qxr6NT9f5gqVxktjseLYAeD7rSXFVEOlfW
+         mtpwnIwTcI8XLpaD76ZhgOYOoumzeO3sUAZM8OyeoRSqeLi6YnCD0RGuMnIcTuQAcgrS
+         TdIzRXquWA8RjNDjLf8WwV8bug0AkUrm1r9xKRAlK9lVkIDp/yFSKRcmfE59ga8oXMbH
+         yZUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b39p1eGP3nlw0aRiq/EeenwuRZud+ndWD/CEPqlUtnE=;
+        b=InFHvD8jpCE9eoUJ1VCraQJOOsPxsxlSghcqkJJRtLmH+b1zykhQe8qysMj/mKrQ5R
+         UBcLjkNbS6gPRzTgBnpZeGE9nl4x4AOO8FyAvdv0mfA+JGfCZKjFLNltCqPWnXU9hk3i
+         bOxPe+4sK1nNVHM3s4DkPlSsFRO4XqTJmNPB18yfiXKGboejnUJVLreaid1zZlZs9lnc
+         lHCgpIS3z1NyKfAQ021IeZGWW8i8DA3g9qx6cGV6D5jENxV27rX3vtVmv6S9NEwvpiYW
+         WR+EnK0BjBpbP/Z1StFUfdtpWDuMoJEUAs2ZY4guj9H5YROVSMR+ZhyKvX0kDVQ2j3Jc
+         kYLA==
+X-Gm-Message-State: APjAAAUOkTnwhfVhToVrVRz5DM5/qJjigQCYa+KQ7DOF70ONhGPHyK/U
+        sKU0iv5jJfs2qjID/sVtBbODXQ==
+X-Google-Smtp-Source: APXvYqwD3zUPaAslcARdnI7JTUN/osi+pnuqbRLDxOFcEbVa3s64IJ6zWD8Jvh/qwLsyt7L2ySuVQQ==
+X-Received: by 2002:a17:90b:14a:: with SMTP id em10mr5009154pjb.4.1582221554028;
+        Thu, 20 Feb 2020 09:59:14 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id ev5sm112928pjb.4.2020.02.20.09.59.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:59:13 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:59:11 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: remoteproc: Add Qualcomm PIL info
+ binding
+Message-ID: <20200220175911.GA19352@xps15>
+References: <20200211005059.1377279-1-bjorn.andersson@linaro.org>
+ <20200211005059.1377279-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
+In-Reply-To: <20200211005059.1377279-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [200220 17:39]:
-> On 2/20/20 12:13 PM, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [200220 16:37]:
-> >> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
-> >>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
-> >>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
-> >>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
-> >>>>>> Andrew,
-> >>>>>>
-> >>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
-> >>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> >>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> >>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> >>>>>>> date:   3 weeks ago
-> >>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
-> >>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> >>>>>>> reproduce:
-> >>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>>>>>>         chmod +x ~/bin/make.cross
-> >>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
-> >>>>>>>         # save the attached .config to linux build tree
-> >>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> >>>>>>>
-> >>>>>>> If you fix the issue, kindly add following tag
-> >>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
-> >>>>>>>
-> >>>>>>> All errors (new ones prefixed by >>):
-> >>>>>>>
-> >>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> >>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
-> >>>>>>
-> >>>>>> Have you looked at this one? Looks like there's still an unhandled
-> >>>>>> randconfig build case.
-> >>>>>>
-> >>>>>
-> >>>>>
-> >>>>> I've had a quick look, all the ARM config does:
-> >>>>>
-> >>>>> select HAVE_ARM_SMCCC if CPU_V7
-> >>>>>
-> >>>>> so I don't think this will happen in any real config, but if we want to
-> >>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
-> >>>>> on it.
-> >>>>
-> >>>> Seems to happen at least with omap2 only config where we don't have
-> >>>> CPU_V7. Something like below seems to fix it.
-> >>>>
-> >>>> If that looks OK to you, I'll send out a proper fix.
-> >>>>
-> >>>
-> >>>
-> >>> This looks fine to me.
-> >>>
-> >>> A better later fix might be to later stub out the actual __arm_smccc_smc
-> >>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
-> >>> get the fix.
-> >>
-> >> Yeah seems that might be better. Adding Aaro and Marc to Cc.
-> > 
-> > But if we can in theory have some arm11 machine with smccc, then this
-> > local ifdef below is probably the way to go.
-> > 
+On Mon, Feb 10, 2020 at 04:50:52PM -0800, Bjorn Andersson wrote:
+> Add a devicetree binding for the Qualcomm periperal image loader
+
+s/periperal/peripheral
+
+> relocation info region found in the IMEM.
+
+s/info/information
+
 > 
-> If the machine has SMCCC then it will also have the
-> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - Replaced offset with reg to describe the region of IMEM used for the entries
+> 
+>  .../bindings/remoteproc/qcom,pil-info.yaml    | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> new file mode 100644
+> index 000000000000..8386a4da6030
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,pil-info.yaml
+> @@ -0,0 +1,42 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/remoteproc/qcom,pil-info.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm peripheral image loader relocation info binding
+> +
+> +maintainers:
+> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
+> +
+> +description:
+> +  This document defines the binding for describing the Qualcomm peripheral
+> +  image loader relocation memory region, in IMEM, which is used for post mortem
+> +  debugging of remoteprocs.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,pil-reloc-info
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    imem@146bf000 {
+> +      compatible = "syscon", "simple-mfd";
+> +      reg = <0 0x146bf000 0 0x1000>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +
+> +      pil-reloc {
+> +        compatible ="qcom,pil-reloc-info";
 
-Hmm yeah good point.
+s/="/= "
 
-Regards,
-
-Tony
-
-
-> >>>> 8< -----------------------
-> >>>> diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-> >>>> --- a/arch/arm/mach-omap2/omap-secure.c
-> >>>> +++ b/arch/arm/mach-omap2/omap-secure.c
-> >>>> @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
-> >>>>  	return ret;
-> >>>>  }
-> >>>>  
-> >>>> +#ifdef CONFIG_HAVE_ARM_SMCCC
-> >>>>  void omap_smccc_smc(u32 fn, u32 arg)
-> >>>>  {
-> >>>>  	struct arm_smccc_res res;
-> >>>> @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
-> >>>>  		      0, 0, 0, 0, 0, 0, &res);
-> >>>>  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
-> >>>>  }
-> >>>> +#else
-> >>>> +void omap_smccc_smc(u32 fn, u32 arg)
-> >>>> +{
-> >>>> +}
-> >>>> +#endif
-> >>>>  
-> >>>>  void omap_smc1(u32 fn, u32 arg)
-> >>>>  {
-> >>>>
+> +        reg = <0x94c 200>;
+> +      };
+> +    };
+> +...
+> -- 
+> 2.24.0
+> 
