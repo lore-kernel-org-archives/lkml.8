@@ -2,153 +2,114 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A0C5C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED989C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F8C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24D6206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:03:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzeeKWgy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zAtgcGHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgBTPC2 (ORCPT
+        id S1728390AbgBTPD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:02:28 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33731 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727298AbgBTPC1 (ORCPT
+        Thu, 20 Feb 2020 10:03:26 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46869 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbgBTPD0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:02:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582210946;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3cu+nCrF0vUC0DWPMISJ46Dyo+A/qgWPAj0jcXPlop0=;
-        b=FzeeKWgyFIXoyAhCl3K/oRe2B6yuiXF3AZOR63EyJmrPZqaqKL0XT9SEv6jqxpvkTYfFtD
-        jgEybqQvTK75X7GbHpF6xTwacDL7KPY4+bjvqAESywkh0kbAADUEupN4OO4L+eZuLI5gQn
-        bGkBJuz76p1cBbgBr7zHg6cX/hodtaM=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-312-hh9EangBNNafis37K764gA-1; Thu, 20 Feb 2020 10:02:25 -0500
-X-MC-Unique: hh9EangBNNafis37K764gA-1
-Received: by mail-qk1-f200.google.com with SMTP id k133so2885104qke.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:02:25 -0800 (PST)
+        Thu, 20 Feb 2020 10:03:26 -0500
+Received: by mail-lj1-f194.google.com with SMTP id x14so4526294ljd.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:03:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LxO6VpOJIjKHq57KwHOFGT9nr+13wIF/dBwcEWsuzEg=;
+        b=zAtgcGHDO2T0usjZzu4nYCT5UC+A/FBkj+nFH5q0RePPgyLofKTbA0zhwIFP6kenac
+         xItNUhQqWoQOGlddS+vKnfvA4QCRWBw0FnLnYYZW/9lUWYeSKjq1J5C9R+Yj3wP9kZCR
+         FRIwMH0GFjbLIQ6KlXomzKuNSDR1WMkBYUx4+D6hMjYIHVn8EEGL70YdtN4whTUwLJpF
+         BDfrKa3HH670i+lf98h876GlLE3KWczf6SP27sz6x0hHuJTWVoiGbf7XqqIjTSMGS33Y
+         rbS7kYDF3ii79sHclghTh4+BcwLX5xDkZBaVIAEZGGXs/yfX7HRgkqdcuWY0/5cZ1GG7
+         +JCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3cu+nCrF0vUC0DWPMISJ46Dyo+A/qgWPAj0jcXPlop0=;
-        b=lMgbHUfryJHNOV7UOe0FK2C7WtbV8JUIdY/Yj4tN6/HbM7Y4ca8jhNkgohvhIrU80x
-         8u2hS4PmvHqUbfcsOujxSdFH9nX2Cx0coey05PcOM0Jh1RmckQ11S3jl334V88Lh4Cme
-         sapl6oWtOCHJVTihb9RBPiAZ6Rz7pnmE1LOp2Spa045F4EHOXwqFtTKR3gcujfTX5UTw
-         T0zhE5Qtce95At8Z4RiXiu6bJZy6gvPi/Hiw/xV8h7gaw+GbttwxHIR9pOumG8zdHOfk
-         SFbDcpRysrdAHBkvLLgUbSvpFhRgETpz+c3VmuQerC+Jfpj85kTYBbA2GGkdrT06ssiG
-         BmzA==
-X-Gm-Message-State: APjAAAU9FVZdr+x1beUAvBwegRuqhIH/0kH2aobPxYf7z+7f7y6EzB46
-        DL6P78VECrkxr/3erVOndBBizRDo/J1Fmx2uvw3ffcCbRhUMSmSsiTYPaCP49ysWYBntVYU3omH
-        gYoM5Yl7OFg0PsVcVU60s+J1U
-X-Received: by 2002:aed:2266:: with SMTP id o35mr27096991qtc.392.1582210944725;
-        Thu, 20 Feb 2020 07:02:24 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwGhja4fszCZ8iNXLMYYaAL97h6qyMi5Falkk5Bxp02RABcQA3JMqlc0eVFMPDvI16Q+varXQ==
-X-Received: by 2002:aed:2266:: with SMTP id o35mr27095812qtc.392.1582210931370;
-        Thu, 20 Feb 2020 07:02:11 -0800 (PST)
-Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id g11sm1956437qtc.48.2020.02.20.07.02.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 07:02:10 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>, Martin Cracauer <cracauer@cons.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        David Hildenbrand <david@redhat.com>,
-        Bobby Powers <bobbypowers@gmail.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: [PATCH v6 04/16] x86/mm: Use helper fault_signal_pending()
-Date:   Thu, 20 Feb 2020 10:02:08 -0500
-Message-Id: <20200220150208.5159-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200220145432.4561-1-peterx@redhat.com>
-References: 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LxO6VpOJIjKHq57KwHOFGT9nr+13wIF/dBwcEWsuzEg=;
+        b=do3afy279Yxa+g4PntRSyB7LMEvzxCNiFsndhRIVmA07JPQGLoekt5qBLsLCNu1h86
+         u+9UOpJkElUd9IeGnmagDhmhN6MoJtlVuj0zxz7EzIgTTNo/k/xdoHJlhmgH8vasvcdS
+         eqNrxNDARbzZvLaWmAhk2HlE/9ULfl4DdUfZkofEs8Sk4MhGsuQsLueLCVOlJGtDzmUX
+         o/7wXbTD1zUDUuMzRHd6vbv7Uf4/IW0ulXlv0tTwngOb8aqSNr4UsspmjU+ozBL6gFSL
+         GDQuf4e2NmjRn09CHxBRAB24XX5DGcWI4Y0A9i87CQFxE6ZBCeEBtPC8Kv4eXMUyzNtW
+         tjMQ==
+X-Gm-Message-State: APjAAAVM+1yQRL4asmmhXB9R68n5L+D46+FeEJTHlzG5zaJ6+R9DA3O4
+        SjSxz2CXtylZrsTABG2FUR5JUmt7633Vo9Ni+jhp5A==
+X-Google-Smtp-Source: APXvYqw6qh6x9/zwhJngNlJ+ruI4osBVT7VUQqyOcXlmxYpb88NIGEaxEuqeNN6LL9GHHlMwg5gYZc3XZAjCDwsiFvY=
+X-Received: by 2002:a2e:b6ce:: with SMTP id m14mr17877360ljo.99.1582211002826;
+ Thu, 20 Feb 2020 07:03:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-7-brgl@bgdev.pl>
+ <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com> <CAMRc=MfkbJ=zTvgpaxFC7L7APEhfC7J_PcncGaQ_AQUA9uw2Fw@mail.gmail.com>
+In-Reply-To: <CAMRc=MfkbJ=zTvgpaxFC7L7APEhfC7J_PcncGaQ_AQUA9uw2Fw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 20 Feb 2020 16:03:10 +0100
+Message-ID: <CACRpkdZE0F_E1o-psXdOh93j1JAS8uqT=ZOf4-mrj5WKoKcD6A@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 6/7] gpiolib: add new ioctl() for monitoring
+ changes in line info
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's move the fatal signal check even earlier so that we can directly
-use the new fault_signal_pending() in x86 mm code.
+On Wed, Feb 12, 2020 at 12:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Tue, Feb 11, 2020 at 10:19 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/x86/mm/fault.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
+> > A question:
+> >
+> > Bartosz, since you know about possible impacts on userspace,
+> > since this code use the preferred ktime_get_ns() rather than
+> > ktime_get_ns_real(), what happens if we just patch the other
+> > event timestamp to use ktime_get_ns() instead, so we use the
+> > same everywhere?
+> >
+> > If it's fine I'd like to just toss in a patch for that as well.
+> >
+>
+> Arnd pointed out it would be an incompatible ABI change[1].
 
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index fa4ea09593ab..6a00bc8d047f 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1442,27 +1442,25 @@ void do_user_addr_fault(struct pt_regs *regs,
- 	fault = handle_mm_fault(vma, address, flags);
- 	major |= fault & VM_FAULT_MAJOR;
- 
-+	/* Quick path to respond to signals */
-+	if (fault_signal_pending(fault, regs)) {
-+		if (!user_mode(regs))
-+			no_context(regs, hw_error_code, address, SIGBUS,
-+				   BUS_ADRERR);
-+		return;
-+	}
-+
- 	/*
- 	 * If we need to retry the mmap_sem has already been released,
- 	 * and if there is a fatal signal pending there is no guarantee
- 	 * that we made any progress. Handle this case first.
- 	 */
--	if (unlikely(fault & VM_FAULT_RETRY)) {
-+	if (unlikely((fault & VM_FAULT_RETRY) &&
-+		     (flags & FAULT_FLAG_ALLOW_RETRY))) {
- 		/* Retry at most once */
--		if (flags & FAULT_FLAG_ALLOW_RETRY) {
--			flags &= ~FAULT_FLAG_ALLOW_RETRY;
--			flags |= FAULT_FLAG_TRIED;
--			if (!fatal_signal_pending(tsk))
--				goto retry;
--		}
--
--		/* User mode? Just return to handle the fatal exception */
--		if (flags & FAULT_FLAG_USER)
--			return;
--
--		/* Not returning to user mode? Handle exceptions or die: */
--		no_context(regs, hw_error_code, address, SIGBUS, BUS_ADRERR);
--		return;
-+		flags &= ~FAULT_FLAG_ALLOW_RETRY;
-+		flags |= FAULT_FLAG_TRIED;
-+		goto retry;
- 	}
- 
- 	up_read(&mm->mmap_sem);
--- 
-2.24.1
+Yeah, I was thinking more about this specific answer from Arnd:
 
+> "It is an incompatible ABI change, the question here is whether anyone
+> actually cares. If nothing relies on the timestamps being in
+> CLOCK_REALTIME domain, then it can be changed, the question
+> is just how you want to prove that this is the case."
+
+So the question is if userspace really cares.
+
+What happens with libgpiod or users of it? Are they assuming
+the weirdness of CLOCK_REALTIME, or are they simply assuming
+something that is monotonic increasing and just lucky that they
+didn't run into anything jumping backwards in time even though
+they *could*.
+
+I think I'll propose a change and see what people say.
+
+> However - I asked Khouloud who's working on v2 of the line event
+> interface to use ktime_get_ns().
+
+That's great!
+
+Yours,
+Linus Walleij
