@@ -2,144 +2,89 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F858C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 813D8C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0784B24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jeXfjP86"
+	by mail.kernel.org (Postfix) with ESMTP id 4B7F924673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582188359;
+	bh=M6GGXuQ/D6jiRe6KPYbT3GWIqkyMWWqU9w9MfTEu9pc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1bdb6wh2OEXMgIVknbhW8h+kHo5txI9uYTfEaYRiciL4MAwPd4MbvCTwIJemj0q17
+	 heuly4EtNaUgwTQHxkX7H6bVq2u6+A14Y9F0osfyAWwRbLYCWvQx/kYUSCD35QWPie
+	 TWxDW45oGRc5okui1mUWOXtoIhe/Mq77haz62sYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgBTIpn (ORCPT
+        id S1726989AbgBTIp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:45:43 -0500
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55843 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726799AbgBTIpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:45:43 -0500
-Received: from [192.168.2.10] ([46.9.235.248])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4hSkj9f9DyIme4hSnjicPj; Thu, 20 Feb 2020 09:45:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582188341; bh=n1KovKvq/q7CIfGUBL0d+FJ4p0KVxipSS2I4qj0qbjY=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=jeXfjP86TikbtpD3J5VM+gOlslNigQ3trmHXSBe5ZjocZN9D33MAOue90O/UO7ahl
-         QToWoYt+tLkBWWswLNeClIk9egzyswdF+oy5dwSejQSY0BcUpxs/IAoJAyIhFS2iS+
-         PKc3xqtMswCYD3RytkalsISdAJFmcCZkn1V/guato+ZS6D1GiQdxtPqaG+t7KH8e0Y
-         i1MIalfnweVfP2rkNTy1sXrq33fq188GTrjmMjy0rtgKuUwQipNchR1zxnWC6A38TT
-         VPOkjOHL6qN9/w82j0cWR83XvGidJ+yMKLROgJpKeGkf1YMOQYMQCJ01O7t/u8bYBt
-         rb04LfTm6G9ZA==
-Subject: Re: [PATCH v5 0/6] media: rockchip: Add the rkvdec driver
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-References: <20200219173750.26453-1-ezequiel@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <933b8189-5541-a7ff-e1dc-05ca3b2d65d5@xs4all.nl>
-Date:   Thu, 20 Feb 2020 09:45:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 03:45:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47662 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726799AbgBTIp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:45:57 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBBD9207FD;
+        Thu, 20 Feb 2020 08:45:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582188357;
+        bh=M6GGXuQ/D6jiRe6KPYbT3GWIqkyMWWqU9w9MfTEu9pc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lI95RFO8JMLFC9bEmf1jbUprqiB7R/md/sR6FxYDha9JFtReCPlJ8MzUa8NB4H7yn
+         elIzgxmFyp4jHkujurvO69MXlPwSkJHAxULUB0mTK8rEzCAJqLKDq/eGxbqzbVYOX1
+         75GGZ4a4pc3c6KF0Jp8wmYBF1HTwpHWB98LbtTNU=
+Date:   Thu, 20 Feb 2020 08:45:52 +0000
+From:   Will Deacon <will@kernel.org>
+To:     isaacm@codeaurora.org
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@infradead.org>, pratikp@codeaurora.org,
+        linux-kernel@vger.kernel.org, Liam Mark <lmark@codeaurora.org>,
+        iommu@lists.linux-foundation.org, kernel-team@android.com
+Subject: Re: [RFC PATCH] iommu/dma: Allow drivers to reserve an iova range
+Message-ID: <20200220084552.GB11827@willie-the-truck>
+References: <1581721096-16235-1-git-send-email-isaacm@codeaurora.org>
+ <20200217080138.GB10342@infradead.org>
+ <c58fd502-52a4-cb0f-6e7f-e9cc00627313@arm.com>
+ <fc6e1b6689bca7a00e6b12d2bc877d20@codeaurora.org>
+ <20200219111501.GA19400@willie-the-truck>
+ <d8b70a579f07c688b264e83a0ec0b6d6@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200219173750.26453-1-ezequiel@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCIE1D8IrPKqAzrx2WDTcm5C6VJb1hktJWZM2wFnyVwAi4U00BlQBVxdgIrnegfo5ze+3BZKzUXGO8cxlQPs5vQti08iUW+80WqJLRhT7RuAtfoIcdBb
- ZUnK6dj/BIP++yf1V8jAqwrbUNUW9rpw23QgJrzuDbPeyb0ps1YcvTiN/ZTeK89vspQ5tttTtSjovKQWR9lHx39MEFbFie9iFjuuMLr4dU2rwgbuvquEnzEP
- HglOUv8e44p712AelnuV0P2kvDnUyqSXo40pTKjhCJcQYjSMeG9LRzohRMDpggUH9l5I71WrLaFl3pZ8s/2VgIAt0RD+HBQaXAZtrMu9rR80TNjGD88Rr4io
- sxDhTfuqN/1Izqg4ExpWJxktDZnwijHzyYTf+EjUN3R8BjLYZhYOdTb2YHHi5sTbOiefVXME4ajMs2SQ//FdTruIrJCXnbaVJK5u3OtO+Al0ortWFWGu2IU3
- RACIZovXQUNdrkfZUeUOCuL+MB7BjBpv/2Oan0zw1An3ln0f6Et+gDESrxg4XHXv7xGwwO0k8fAOxtL/IedjKvKT4ei5kLADE1Ob2RwhaEE+ilGzBHq6uyGO
- y+QclkE4lAHfE2YQkJFkDz1CQiqYFVX9sugqg/6C1+MrKgusnLo70Stp5xFXpQiGPWP1u16KgdhwLk6y2NqfjQPNX1ffJIvi+z6reco8M0Q8/g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8b70a579f07c688b264e83a0ec0b6d6@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 6:37 PM, Ezequiel Garcia wrote:
-> Hello,
-> 
-> This is v5 of Boris' rkvdec driver.
-> 
-> This version corrects wrong copyright notices and then adds
-> a TODO file for the staging driver. The only reason to keep the
-> driver in staging are the staging uAPI controls.
+On Wed, Feb 19, 2020 at 12:06:28PM -0800, isaacm@codeaurora.org wrote:
+> On 2020-02-19 03:15, Will Deacon wrote:
+> > On Tue, Feb 18, 2020 at 05:57:18PM -0800, isaacm@codeaurora.org wrote:
+> > > Does this mean that the driver should be managing the IOVA space and
+> > > mappings for this device using the IOMMU API? If so, is the
+> > > rationale for
+> > > this because the device driver can have the information of what IOVA
+> > > ranges
+> > > can and cannot be used? Shouldn't there be a generic way of
+> > > informing an
+> > > IOMMU driver about these reserved ranges? Perhaps through a device
+> > > tree
+> > > property, instead of deferring this type of management to the driver?
+> > 
+> > Before we dive into designing that, can you please clarify whether the
+> > reserved IOVA range applies to all DMA masters mastering through a
+> > particular SMMU, or whether it's just about one specific master? I was
+> > assuming the former, but wanted to be sure.
+> > 
+> This situation currently applies to one master.
 
-I got some sparse warnings for this series, should be trivial to fix:
+Interesting. Is it problematic if the range is reserved for all masters
+sharing that SMMU?
 
-sparse: WARNINGS
-drivers/media/v4l2-core/v4l2-h264.c:214: warning: Function parameter or member 'reflist' not described in 'v4l2_h264_build_p_ref_list'
-drivers/media/v4l2-core/v4l2-h264.c:214: warning: Excess function parameter 'p_reflist' description in 'v4l2_h264_build_p_ref_list'
-SPARSE:drivers/staging/media/rkvdec/rkvdec.c drivers/staging/media/rkvdec/rkvdec.c:561:22:  warning: symbol 'rkvdec_queue_ops' was not
-declared. Should it be static?
-
-Also, checkpatch.pl --strict complains about empty trailing lines in two
-files.
-
-Together with the missing MAINTAINERS it is probably best if you post
-a v6.
-
-Regards,
-
-	Hans
-
-> 
-> Thanks,
-> Ezequiel
-> 
-> Boris Brezillon (5):
->   media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
->   media: hantro: h264: Use the generic H264 reflist builder
->   media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
->   media: rkvdec: Add the rkvdec driver
->   arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
-> 
-> Jonas Karlman (1):
->   media: uapi: h264: Add DPB entry field reference flags
-> 
->  .../bindings/media/rockchip,vdec.yaml         |   71 +
->  .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
->  drivers/media/v4l2-core/Kconfig               |    4 +
->  drivers/media/v4l2-core/Makefile              |    1 +
->  drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
->  drivers/staging/media/Kconfig                 |    2 +
->  drivers/staging/media/Makefile                |    1 +
->  drivers/staging/media/hantro/Kconfig          |    1 +
->  drivers/staging/media/hantro/hantro_h264.c    |  237 +---
->  drivers/staging/media/rkvdec/Kconfig          |   15 +
->  drivers/staging/media/rkvdec/Makefile         |    3 +
->  drivers/staging/media/rkvdec/TODO             |   11 +
->  drivers/staging/media/rkvdec/rkvdec-h264.c    | 1154 +++++++++++++++++
->  drivers/staging/media/rkvdec/rkvdec-regs.h    |  223 ++++
->  drivers/staging/media/rkvdec/rkvdec.c         | 1134 ++++++++++++++++
->  drivers/staging/media/rkvdec/rkvdec.h         |  123 ++
->  include/media/h264-ctrls.h                    |    2 +
->  include/media/v4l2-h264.h                     |   86 ++
->  19 files changed, 3126 insertions(+), 230 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
->  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
->  create mode 100644 drivers/staging/media/rkvdec/Kconfig
->  create mode 100644 drivers/staging/media/rkvdec/Makefile
->  create mode 100644 drivers/staging/media/rkvdec/TODO
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
->  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
->  create mode 100644 include/media/v4l2-h264.h
-> 
-
+Will
