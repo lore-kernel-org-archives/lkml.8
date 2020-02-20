@@ -2,94 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E09C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33CFC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE53720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582241538;
-	bh=PnWdemNzl8t3D+ICdzFH3Z7glID+wZxgfxtM41+7VPs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0dse177FeIe0SiDMUCC6XOSSASP248R2c34jJb14iaqQZL1JfAOrYHOYW5mOxnA7q
-	 N8esbrFQlKT7vn5csvwhtpvfZB1MFMMHfvEoJfJoQvgwIhDF+aAZ1OmxymUXuFXP+V
-	 MPWBYuKGu4l6TsSYOkfB9dSeaN6faCYDPh2xfUqk=
+	by mail.kernel.org (Postfix) with ESMTP id A7D6020801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iir8/4hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgBTXcS (ORCPT
+        id S1729376AbgBTXfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:32:18 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41111 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729270AbgBTXcR (ORCPT
+        Thu, 20 Feb 2020 18:35:00 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:55045 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBTXfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:32:17 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so247902ljc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:32:14 -0800 (PST)
+        Thu, 20 Feb 2020 18:35:00 -0500
+Received: by mail-pj1-f68.google.com with SMTP id dw13so172373pjb.4;
+        Thu, 20 Feb 2020 15:34:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vWeBp/urnK4tuGJfqV9ZFGP9TrjtClq354zSDpIQQfY=;
-        b=GZX6OFO7fkNUS1d3TzfeLavrKb+nZ6HWPMW1jViAB8AtYBh8cGv3whtpphDdik8l2K
-         YtIl2m5ZcTHKKQ1z0FAj0P/4veATqWxebKwQxOZ0rcOFdozjfQo2RaKvMYrD/UncZu93
-         6QiaHgv/uUMuDaodJwlKgm24Ve6MdwTVPf/lg=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ib7HQNjwBZEeeeqlrByrC4mTfctGE4wzzBlFkYuG584=;
+        b=Iir8/4hrmlntwuBLVxLAydhzV39gHbjgOxHQiOIHle7rAw6MbPykzseyAGdUz6x0xC
+         RGE82VY+cY+sRtNnJjnJP+cmARNC7s091dZ3Zr48PkpB6Q+T4YzHpM537Q9T1VvnfxN1
+         SYO4c2ex3piIv/Lnar+AJThsbVsCLC4KxQ6OtE/wPICRsrCEUQPRHXtBQzfEQVj8+AWP
+         +ZwWl/t0CygGV/RqZcybjH+eNPJn74acTVQFJPqWqu6rxmbf3XhlQwp337naYtmrRqeP
+         kyLr9napuNwQ9/m29QCKiy0oHNu29lWI/z+jUXjANBNpTwQ1/ykB2Os7HjfqihGj0UK/
+         3reA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vWeBp/urnK4tuGJfqV9ZFGP9TrjtClq354zSDpIQQfY=;
-        b=TvOL+hxN/0BOimDRkmKpCQBoxRdcKcUIS3pqSPS1Mi70VUUyfiihMAKCQZ+QZilheQ
-         epQp42/9difRI0PhPJHpqRWW9Qr0coBE0EY/60KK4j4VvUQEO/MLGFBpXcIyWyrgSuI1
-         dRQo2D60n4XZG/FejDW0zMkeqfMGtkfQR5lIF95wU5ZRl/We/b24r9CMEmjsXdAVnqDK
-         gIloLbA2GExfcjEdy4OQbOZyMvvdfOUzuHnZ7XkhL1nggrqnsOpOw48aeOLzwZNVnkV+
-         KK/v4Yd7xkG52A5+YcgZtT1nWrzCwkVNrpcuoWC1PauO+zJ4yFxJOI8l94UW6v/d438i
-         /Gkw==
-X-Gm-Message-State: APjAAAVOQgbC/AjA9f/rYgEstvmbep0GCdPukaqKGGcYWGx0og/1I6Ff
-        yP84aHRk3lrkZCAWKK01SBKxUDRQdp0=
-X-Google-Smtp-Source: APXvYqxUggGoqZqr30JeKpWLhMkp05dHBQSnog68WOI+3IWabKIh4QFJYWwCWB58cjQohYpsX1lnpQ==
-X-Received: by 2002:a2e:844e:: with SMTP id u14mr20152260ljh.183.1582241533537;
-        Thu, 20 Feb 2020 15:32:13 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id m15sm485459ljg.4.2020.02.20.15.32.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 15:32:12 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id l16so105581lfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:32:12 -0800 (PST)
-X-Received: by 2002:a19:f514:: with SMTP id j20mr18104253lfb.31.1582241531956;
- Thu, 20 Feb 2020 15:32:11 -0800 (PST)
-MIME-Version: 1.0
-References: <20200217183340.GI23230@ZenIV.linux.org.uk> <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
- <20200220224707.GQ23230@ZenIV.linux.org.uk> <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
- <20200220232929.GU23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200220232929.GU23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 20 Feb 2020 15:31:56 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
-Message-ID: <CAHk-=whdat=wfwKh5rF3MuCbTxhcFwaGqmdsCXXv=H=kDERTOw@mail.gmail.com>
-Subject: Re: [RFC] regset ->get() API
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ib7HQNjwBZEeeeqlrByrC4mTfctGE4wzzBlFkYuG584=;
+        b=KWywZ6YTmDJuZnE9gi3/IpkDtaRSYrMsWJIBldhtK/di524MtVWC8hHCOCV+gleTBA
+         qUpGkYt3lAzdcfP9CZ1C9d2RqTsHKTmAyzErFHZAwZeWnV7mRaZFnAjGwTTZT1NEWmgl
+         dBwfcZIxaDNdsZtLuEsyiHlRfxmj/oxrJAlESpf/f5MhAtdROlkuZlEQOMjLyKGtfYKA
+         uApN/gt/L6pp9Vb5iLAK6Fr+KpNOqrDick+UKNK0ysmuKREUDuClqcon0fgfWhN3qpPE
+         jyV8Jtv4v2NJaPidtwI3KQvYB+ZhX8gS4RtRQkLQIlJwQsY/SZfcGp3JxOZujucU3t6e
+         qHdQ==
+X-Gm-Message-State: APjAAAXKqno8BTBzqhC+4t0xmYqlcxP1UPJ6EYTYES8rWe26LxWE9aYD
+        nA3oOIQrx+ritNHhnQA2zJdZc+2H
+X-Google-Smtp-Source: APXvYqzoUng9rwn9VWrUCJ73KCbi0fQVywXpbpLlOxAQAT0gelfcWCU46XOTD0SbUC9QJF/89dR4Kg==
+X-Received: by 2002:a17:90a:e509:: with SMTP id t9mr6137477pjy.110.1582241699186;
+        Thu, 20 Feb 2020 15:34:59 -0800 (PST)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d69sm693688pfd.72.2020.02.20.15.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 15:34:58 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     yoshihiro.shimoda.uh@renesas.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Fugang Duan <B38611@freescale.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net] net: phy: Avoid multiple suspends
+Date:   Thu, 20 Feb 2020 15:34:53 -0800
+Message-Id: <20200220233454.31514-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 3:29 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> We do know that caller does not want more than the value it has passed in
-> 'size' argument, though.
+It is currently possible for a PHY device to be suspended as part of a
+network device driver's suspend call while it is still being attached to
+that net_device, either via phy_suspend() or implicitly via phy_stop().
 
-Ok, fair enough. That's probably a good way to handle the "allocate in
-the caller".
+Later on, when the MDIO bus controller get suspended, we would attempt
+to suspend again the PHY because it is still attached to a network
+device.
 
-So then I have no issues with that approach.
+This is both a waste of time and creates an opportunity for improper
+clock/power management bugs to creep in.
 
-          Linus
+Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Heiner, Andrew,
+
+I did consider adding logic that would check for phydev->suspended in
+phy_suspend() and phy_resume(), but this was really the only place where
+I found it to be problematic.
+
+ drivers/net/phy/phy_device.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 6a5056e0ae77..6131aca79823 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -247,7 +247,7 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ 	 * MDIO bus driver and clock gated at this point.
+ 	 */
+ 	if (!netdev)
+-		return !phydev->suspended;
++		goto out;
+ 
+ 	if (netdev->wol_enabled)
+ 		return false;
+@@ -267,7 +267,8 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
+ 	if (device_may_wakeup(&netdev->dev))
+ 		return false;
+ 
+-	return true;
++out:
++	return !phydev->suspended;
+ }
+ 
+ static int mdio_bus_phy_suspend(struct device *dev)
+-- 
+2.17.1
+
