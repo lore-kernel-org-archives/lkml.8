@@ -2,129 +2,126 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5EDC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2675BC34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD15124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76B924673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:27:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582182843;
-	bh=2YUcYMrgZVnWN/CARA1x1Z4L8XOK9AEca//b0RCdMuc=;
+	s=default; t=1582183631;
+	bh=uNIHbqumAC6ZtH7f4LkLWi1UDVSaJ9V3rGs4himqles=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nyW00DcSXb1v9onIhzQ2UhEDz/y79MUNkWKkakFYEXO73WJRn748tPWEPCisDUD4d
-	 WI7SULbXK8+mc+Rr7zpgaYJ9McF8BH0ACsDYg46JJPopIFj8Qmk9lI5l914R8Jfre0
-	 9qW7Eagx/wmMAqX/mM+b0k3v7e2Iv3MsvF7qqRXI=
+	b=2SF9DWp3elGQfzzbHjmZMPr9BpPtJ/xgNohhfeZBvvpUtOhcpQhsVquKLm8hsCBGk
+	 fm2iQjfAlNP1wy91eP4oGlHNucCb6BzM2J6Z4xGtM2V6iS/OXMu8PzhxsmYNAgfpGy
+	 8LhmZlwu6nLxhqM0hBH8gtfZJlKld6CsKj/Ie8cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgBTHOC (ORCPT
+        id S1726759AbgBTH03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:14:02 -0500
-Received: from conuserg-08.nifty.com ([210.131.2.75]:36906 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgBTHOC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:14:02 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id 01K7Bl6d011059;
-        Thu, 20 Feb 2020 16:11:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01K7Bl6d011059
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1582182709;
-        bh=RGjdzwfQtcxcoKdnoWUCQmUyQN1VFbdpPZmhgB3NQTg=;
+        Thu, 20 Feb 2020 02:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49968 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgBTH02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 02:26:28 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB9B24654;
+        Thu, 20 Feb 2020 07:26:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582183588;
+        bh=uNIHbqumAC6ZtH7f4LkLWi1UDVSaJ9V3rGs4himqles=;
         h=From:To:Cc:Subject:Date:From;
-        b=AWHBX0UdXgGdhv2cpgdj49Y1GSquysKyrkVwyMwJbateXpitUPdtm1oyYUf0n5cPe
-         zutHkgNQJ2DO/MNHEuFQOVml5GdlGqb291UoCA2/SP0G9xhvUEXPuqcK2QopZ+KVsi
-         DAAzVmHYxXU/uhr4gaxXcUvB+LOUOmqFSWsuSaY2hTBMDw7E4T8B4IOje6fYgFbHD4
-         3pyg00EK0d9WBtL6pPADmrbyn4XQkxTYqaWPTM5xusKG4sgf15N2fbGbV8xoOc8/ta
-         i2FS1sneF/UM/Kb9t0JE9o37m3Zl/ixLhkNU8o2zAruo62J6F8RmYehjA8EW4sEwZT
-         nv+juHiW9uAmA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        sparclinux@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        b=Rorymk0XBA5lSQm+c8ih3Z6C9l/5rGEVeVKkDxpKSBxZG6NT7BaHLvMAZCfrmSIf8
+         pdvzEvbOnThgJoTWeHR/IlJfyvA651Ot7n/KA5eHgyYSet3nAXw+OpHWChKUZpHWqb
+         3x+o9/v1XtTgHvgwD+tfQegV/XtZi5OM5+31S5JE=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] vdso: remove meaningless undefining CONFIG_OPTIMIZE_INLINING
-Date:   Thu, 20 Feb 2020 16:11:39 +0900
-Message-Id: <20200220071140.14080-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/8] bootconfig: Update for the recent reports
+Date:   Thu, 20 Feb 2020 16:26:23 +0900
+Message-Id: <158218358363.6940.18380270211351882136.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code, #undef CONFIG_OPTIMIZE_INLINING, is not working as expected.
+Hello,
 
-It is because <linux/compiler_types.h> is parsed before vclock_gettime.c
-since 28128c61e08e ("kconfig.h: Include compiler types to avoid missed
-struct attributes").
+Here are some patches to update bootconfig. There are
+several implementation changes and syntax fix/updates.
 
-Since then, <linux/compiler_types.h> is included really early by
-using the '-include' option. So, you cannot negate the decision of
-<linux/compiler_types.h> in this way.
+As we discussed in the previous thread, modifies bootconfig.
 
-You can confirm it by checking the pre-processed code, like this:
+ - [1/8] Make CONFIG_BOOT_CONFIG=n by default
+ - [2/8] Add magic word for bootconfig
+ - [8/8] Print array as multiple commands for
+         legacy command line
 
-  $ make arch/x86/entry/vdso/vdso32/vclock_gettime.i
+With the magic word, we can identify bootconfig without
+checksum, also if we find a wrong bootconfig, there is no
+reason to suppress the error message anymore.
 
-There is no difference with/without CONFIG_CC_OPTIMIZE_FOR_SIZE.
+ - [3/8] Remove unneeded error message silencer
+ - [4/8] Remove unneeded checksum
 
-It it about two years since 28128c61e08e. Nobody has reported a
-problem (or, nobody has even noticed the fact that this code is not
-working).
+In addition, I found some issues on bootconfig syntax, so
+fix it. (these also include testcase update)
 
-It is ugly and unreliable to attempt to undefine a CONFIG option from
-C files, and anyway the inlining heuristic is up to the compiler.
+ - [5/8] Reject if subkey and value has same parent
+ - [6/8] Overwrite value on same key by default
+ - [7/8] Add append value operator ("+=")
 
-Just remove the broken code.
+To update synchronously, each patch includes code, test
+and documentation. If it is better to split (especially
+documentation). please let me know.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+TODO: support kernel builtin bootconfig. Should we reuse
+firmware builtin loader? But it seems we just need a Makefile.
+
+Thank you,
+
 ---
 
- arch/sparc/vdso/vdso32/vclock_gettime.c     | 4 ----
- arch/x86/entry/vdso/vdso32/vclock_gettime.c | 4 ----
- 2 files changed, 8 deletions(-)
+Masami Hiramatsu (8):
+      bootconfig: Set CONFIG_BOOT_CONFIG=n by default
+      bootconfig: Add bootconfig magic word for indicating bootconfig explicitly
+      tools/bootconfig: Remove unneeded error message silencer
+      bootconfig: Remove unneeded checksum
+      bootconfig: Reject subkey and value on same parent key
+      bootconfig: Overwrite value on same key by default
+      bootconfig: Add append value operator support
+      bootconfig: Print array as multiple commands for legacy command line
 
-diff --git a/arch/sparc/vdso/vdso32/vclock_gettime.c b/arch/sparc/vdso/vdso32/vclock_gettime.c
-index 026abb3b826c..d7f99e6745ea 100644
---- a/arch/sparc/vdso/vdso32/vclock_gettime.c
-+++ b/arch/sparc/vdso/vdso32/vclock_gettime.c
-@@ -4,10 +4,6 @@
- 
- #define	BUILD_VDSO32
- 
--#ifndef	CONFIG_CC_OPTIMIZE_FOR_SIZE
--#undef	CONFIG_OPTIMIZE_INLINING
--#endif
--
- #ifdef	CONFIG_SPARC64
- 
- /*
-diff --git a/arch/x86/entry/vdso/vdso32/vclock_gettime.c b/arch/x86/entry/vdso/vdso32/vclock_gettime.c
-index 9242b28418d5..3c26488db94d 100644
---- a/arch/x86/entry/vdso/vdso32/vclock_gettime.c
-+++ b/arch/x86/entry/vdso/vdso32/vclock_gettime.c
-@@ -1,10 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #define BUILD_VDSO32
- 
--#ifndef CONFIG_CC_OPTIMIZE_FOR_SIZE
--#undef CONFIG_OPTIMIZE_INLINING
--#endif
--
- #ifdef CONFIG_X86_64
- 
- /*
--- 
-2.17.1
 
+ Documentation/admin-guide/bootconfig.rst     |   37 +++++++++++-
+ include/linux/bootconfig.h                   |    3 +
+ init/Kconfig                                 |    2 -
+ init/main.c                                  |   54 +++++++-----------
+ kernel/trace/Kconfig                         |    3 +
+ lib/bootconfig.c                             |   44 +++++++++++----
+ tools/bootconfig/include/linux/printk.h      |    5 --
+ tools/bootconfig/main.c                      |   77 +++++++++++---------------
+ tools/bootconfig/samples/bad-mixed-kv1.bconf |    3 +
+ tools/bootconfig/samples/bad-mixed-kv2.bconf |    3 +
+ tools/bootconfig/test-bootconfig.sh          |   31 +++++++++-
+ 11 files changed, 164 insertions(+), 98 deletions(-)
+ create mode 100644 tools/bootconfig/samples/bad-mixed-kv1.bconf
+ create mode 100644 tools/bootconfig/samples/bad-mixed-kv2.bconf
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
