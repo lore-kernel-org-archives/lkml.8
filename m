@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A49C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CD7C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E1B24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB82224673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582201169;
-	bh=dgn6olFp0KDBN8hifcEtw3QbsBVEs+td4iZ0ONnuJ8E=;
+	s=default; t=1582201179;
+	bh=g09eWAq+ZPGg1WTVfAAG0QWbptpBF9XSfGLKxydLU6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7U3sYq5IOSccOgohOVUgBNdUgQXVhU2wVEQ9ysbFUDKHgG27G/dhWKdvSdO0GWnE
-	 DLGYVIKq0r1F6R5DijtuFkyLq6ir8UO5Nqv/ga6PbuFPQoixC0lwG7o/vSamLEMJPn
-	 YTZey2eXILu6mBnwp6BD7vE7qONaO0bzhu9yqvY0=
+	b=oTO3zPfb0mshoP54RcE/AxPGBJAd1wTZRe4Zb7QB0X6Qd1LtgE7XZQt+6GwvSZ3lz
+	 08oZYm8UX0PMXkMCKqNobKI84xXTyMV2qnCRHEc07xKoGk0mJbj01MImCXoGvrSq4C
+	 YsE2CeDiznsNUEUspAvtG6IKQ13fk/gA4UfXWQCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgBTMT2 (ORCPT
+        id S1728115AbgBTMTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:19:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37648 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 07:19:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgBTMT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:19:27 -0500
+        id S1727393AbgBTMTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:19:38 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E863524672;
-        Thu, 20 Feb 2020 12:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D157A207FD;
+        Thu, 20 Feb 2020 12:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582201166;
-        bh=dgn6olFp0KDBN8hifcEtw3QbsBVEs+td4iZ0ONnuJ8E=;
+        s=default; t=1582201176;
+        bh=g09eWAq+ZPGg1WTVfAAG0QWbptpBF9XSfGLKxydLU6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZzsFznyppG9vdFrMgiuxQRz8XFmCDmHQ1PmsVtxyrfTqZnlg8AkCnItgjp24qcWZs
-         8wq5UcuZmZj2Rp4KF4afI9h2Q9V0mctYj0GfCurfgcAJV36+UFIcOdY8Gqw7k3Vb2F
-         f0/stsCU/gNMGfj5citvDN5+rq1/EOkL6/xJoeiM=
+        b=b23hCJIV1+TK0J8ZXYopFr2LJsJVbRaf6KRveRQDq5+9nAoovWOiJRDJEM+LPSUF9
+         PDtL/JFk/ZK8v/HG57V9WjwktGrsPLvkyRqfPco6cfTch6ypudqMe14MWf58ZZxXyU
+         vp7gD13x10Lf85h7Sjec10CfDmPYH3tLM3WX6kdc=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -48,9 +48,9 @@ Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 6/8] bootconfig: Overwrite value on same key by default
-Date:   Thu, 20 Feb 2020 21:19:22 +0900
-Message-Id: <158220116248.26565.12553080867501195108.stgit@devnote2>
+Subject: [PATCH v2 7/8] bootconfig: Add append value operator support
+Date:   Thu, 20 Feb 2020 21:19:32 +0900
+Message-Id: <158220117229.26565.13227304161543713591.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <158220110257.26565.4812934676257459744.stgit@devnote2>
 References: <158220110257.26565.4812934676257459744.stgit@devnote2>
@@ -63,128 +63,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, bootconfig does not overwrite existing value
-on same key, but add new value to the tail of an array.
-But this looks a bit confusing because similar syntax
-configuration always overwrite the value by default.
+Add append value operator "+=" support to bootconfig syntax.
+With this operator, user can add new value to the key as
+an entry of array instead of overwriting.
+For example,
 
-This changes the behavior to overwrite value on same key.
-
-For example, if there are 2 entries
-
-  key = value
+  foo = bar
   ...
-  key = value2
+  foo += baz
 
-Then, the key is updated as below.
-
-  key = value2
+Then the key "foo" has "bar" and "baz" values as an array.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- Documentation/admin-guide/bootconfig.rst |   12 ++++++++++++
- lib/bootconfig.c                         |   18 ++++++++++++++----
- tools/bootconfig/test-bootconfig.sh      |   16 ++++++++++++++--
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ Documentation/admin-guide/bootconfig.rst |    8 ++++++++
+ lib/bootconfig.c                         |   14 ++++++++++----
+ tools/bootconfig/test-bootconfig.sh      |   13 +++++++++++++
+ 3 files changed, 31 insertions(+), 4 deletions(-)
 
 diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 4a106584eb21..0c18e3f540e6 100644
+index 0c18e3f540e6..abe2432b8eec 100644
 --- a/Documentation/admin-guide/bootconfig.rst
 +++ b/Documentation/admin-guide/bootconfig.rst
-@@ -62,6 +62,18 @@ Or more shorter, written as following::
- In both styles, same key words are automatically merged when parsing it
- at boot time. So you can append similar trees or key-values.
+@@ -74,6 +74,14 @@ For example,::
+ In this case ``bar`` and ``baz`` is overwritten by ``qux``, and ``foo = qux``
+ remains.
  
-+Same-key Values
-+---------------
-+
-+If two or more values or arraies share a same-key, the latter one remains.
-+For example,::
++If you want to append the value to existing key as an array member,
++you can use ``+=`` operator. For example::
 +
 + foo = bar, baz
-+ foo = qux
++ foo += qux
 +
-+In this case ``bar`` and ``baz`` is overwritten by ``qux``, and ``foo = qux``
-+remains.
++In this case, the key ``foo`` has ``bar``, ``baz`` and ``qux``.
 +
  Note that a sub-key and a value can not co-exist under a parent key.
  For example, following config is NOT allowed.::
  
 diff --git a/lib/bootconfig.c b/lib/bootconfig.c
-index 54ac623ca781..9a094162ea3e 100644
+index 9a094162ea3e..4afc768489cd 100644
 --- a/lib/bootconfig.c
 +++ b/lib/bootconfig.c
-@@ -578,10 +578,18 @@ static int __init __xbc_parse_keys(char *k)
- 	return __xbc_add_key(k);
+@@ -586,7 +586,7 @@ static void xbc_node_overwrite(struct xbc_node *node, char *v)
+ 	node->next = 0;
  }
  
-+static void xbc_node_overwrite(struct xbc_node *node, char *v)
-+{
-+	unsigned long offset = v - xbc_data;
-+
-+	node->data = (u16)offset | XBC_VALUE;
-+	node->next = 0;
-+}
-+
- static int __init xbc_parse_kv(char **k, char *v)
+-static int __init xbc_parse_kv(char **k, char *v)
++static int __init xbc_parse_kv(char **k, char *v, int op)
  {
  	struct xbc_node *prev_parent = last_parent;
--	struct xbc_node *node, *child;
-+	struct xbc_node *child;
- 	char *next;
- 	int c, ret;
- 
-@@ -597,9 +605,11 @@ static int __init xbc_parse_kv(char **k, char *v)
+ 	struct xbc_node *child;
+@@ -605,7 +605,7 @@ static int __init xbc_parse_kv(char **k, char *v)
  	if (c < 0)
  		return c;
  
--	node = xbc_add_sibling(v, XBC_VALUE);
--	if (!node)
--		return -ENOMEM;
-+	if (!child) {
-+		if (!xbc_add_sibling(v, XBC_VALUE))
-+			return -ENOMEM;
-+	} else
-+		xbc_node_overwrite(child, v);
+-	if (!child) {
++	if (op == '+' || !child) {
+ 		if (!xbc_add_sibling(v, XBC_VALUE))
+ 			return -ENOMEM;
+ 	} else
+@@ -781,7 +781,7 @@ int __init xbc_init(char *buf)
  
- 	if (c == ',') {	/* Array */
- 		c = xbc_parse_array(&next);
+ 	p = buf;
+ 	do {
+-		q = strpbrk(p, "{}=;\n#");
++		q = strpbrk(p, "{}=+;\n#");
+ 		if (!q) {
+ 			p = skip_spaces(p);
+ 			if (*p != '\0')
+@@ -792,8 +792,14 @@ int __init xbc_init(char *buf)
+ 		c = *q;
+ 		*q++ = '\0';
+ 		switch (c) {
++		case '+':
++			if (*q++ != '=') {
++				ret = xbc_parse_error("Wrong + operator", q - 2);
++				break;
++			}
++			/* Fall through */
+ 		case '=':
+-			ret = xbc_parse_kv(&p, q);
++			ret = xbc_parse_kv(&p, q, c);
+ 			break;
+ 		case '{':
+ 			ret = xbc_open_brace(&p, q);
 diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index c5965eff62c5..f6948790c693 100755
+index f6948790c693..04f65548ca1e 100755
 --- a/tools/bootconfig/test-bootconfig.sh
 +++ b/tools/bootconfig/test-bootconfig.sh
-@@ -9,7 +9,7 @@ TEMPCONF=`mktemp temp-XXXX.bconf`
- NG=0
+@@ -108,6 +108,19 @@ xfail grep -q "bar" $OUTFILE
+ xfail grep -q "baz" $OUTFILE
+ xpass grep -q "qux" $OUTFILE
  
- cleanup() {
--  rm -f $INITRD $TEMPCONF
-+  rm -f $INITRD $TEMPCONF $OUTFILE
-   exit $NG
- }
- 
-@@ -71,7 +71,6 @@ printf " \0\0\0 \0\0\0" >> $INITRD
- $BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
- xfail grep -i "failed" $OUTFILE
- xfail grep -i "error" $OUTFILE
--rm $OUTFILE
- 
- echo "Max node number check"
- 
-@@ -96,6 +95,19 @@ truncate -s 32764 $TEMPCONF
- echo "\"" >> $TEMPCONF	# add 2 bytes + terminal ('\"\n\0')
- xpass $BOOTCONF -a $TEMPCONF $INITRD
- 
-+echo "Overwrite same-key values"
++echo "Adding same-key values"
 +cat > $TEMPCONF << EOF
 +key = bar, baz
-+key = qux
++key += qux
 +EOF
 +echo > $INITRD
 +
 +xpass $BOOTCONF -a $TEMPCONF $INITRD
 +$BOOTCONF $INITRD > $OUTFILE
-+xfail grep -q "bar" $OUTFILE
-+xfail grep -q "baz" $OUTFILE
++xpass grep -q "bar" $OUTFILE
++xpass grep -q "baz" $OUTFILE
 +xpass grep -q "qux" $OUTFILE
 +
  echo "=== expected failure cases ==="
