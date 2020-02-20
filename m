@@ -2,180 +2,166 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12860C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B75C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE3920679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E6E20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:55:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJgy3fdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgBTUyu (ORCPT
+        id S1729111AbgBTUz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:54:50 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:50204 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgBTUyu (ORCPT
+        Thu, 20 Feb 2020 15:55:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42416 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728400AbgBTUz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:54:50 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j4sqP-0002HF-0g; Thu, 20 Feb 2020 13:54:49 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j4sqN-00069Y-Au; Thu, 20 Feb 2020 13:54:48 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-References: <20200210150519.538333-8-gladkov.alexey@gmail.com>
-        <87v9odlxbr.fsf@x220.int.ebiederm.org>
-        <20200212144921.sykucj4mekcziicz@comp-core-i7-2640m-0182e6>
-        <87tv3vkg1a.fsf@x220.int.ebiederm.org>
-        <CAHk-=wg52stFtUxMOxs3afkwDWmWn1JXC7RJ7dPsTrJbnxpZVg@mail.gmail.com>
-        <87v9obipk9.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgwmu4jpmOqW0+Lz0dcem1Fub=ThLHvmLobf_WqCq7bwg@mail.gmail.com>
-        <20200212200335.GO23230@ZenIV.linux.org.uk>
-        <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
-        <20200212203833.GQ23230@ZenIV.linux.org.uk>
-        <20200212204124.GR23230@ZenIV.linux.org.uk>
-        <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
-        <87lfp7h422.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
-        <87pnejf6fz.fsf@x220.int.ebiederm.org>
-        <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
-Date:   Thu, 20 Feb 2020 14:52:47 -0600
-In-Reply-To: <871rqpaswu.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Thu, 20 Feb 2020 14:46:25 -0600")
-Message-ID: <87r1yp7zhc.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 20 Feb 2020 15:55:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582232124;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n59pKOcdTZlkr3iRkuuDYSYR3kx21EL+m/7qJp3dlcc=;
+        b=TJgy3fdIhr1nIEMfjYfEPhdRzlTciAlC8fVTGpUG2zdoHnclKVg2SvEB8zEOhMQUTgX1BN
+        IkFwb+rM1YFxUHJxWfBJQZIgHLcBCOug/smK69tXP7jTXF2Diac7GvOkyXwEKWtfqboIRP
+        DbPAC/gBJsyayhnYOZUAAAl2qHS/Wi0=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-Hjh8eV4UM56fKJTbWwRo9w-1; Thu, 20 Feb 2020 15:55:22 -0500
+X-MC-Unique: Hjh8eV4UM56fKJTbWwRo9w-1
+Received: by mail-qv1-f72.google.com with SMTP id j15so3431264qvp.21
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:55:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=n59pKOcdTZlkr3iRkuuDYSYR3kx21EL+m/7qJp3dlcc=;
+        b=n4qp42yCJDaXtzYwf6zGVvBpLnBddYqtHWa8hr9wJygiP4CmXG2DixUBzhAyekV1zK
+         3X40y+BbOzSzqfuXrgsE205Y7ptUyak4OLa6xO9ncsd3En+qsu6ioQVoZ70e3cqGWJNd
+         5C60wiCNjegdF30ek2kZhjPMWbJ6/21Huid8aHY7DV7Mi8ye+QE3DKduI4ckhd65U/Ne
+         w3E0RRwYKbNpF6GfEGfvwUYYLDMryzeMpwK4BoN6+mHqjpo4xf9EivBT5w/TRBOx90kG
+         gBfuSal2+KeRmVSgnq5eppT+zMtXiJ9jQeNhru69MDH4uWPcUCOdMRq3cKEl1iTsnhOJ
+         9DSA==
+X-Gm-Message-State: APjAAAWFRUNEB85BxCN/t8Ipo6ybeoQmoruoTQ9RGPbZRsjqXPooFuXn
+        TJvFAh2oisDWx6lYQhpSHHpj/1JClA5dxtrRv67IbKdU6hbwkGT3JUgDhy/wCSFeLsH6lkFJKvM
+        yHF8M3RHOlL5b2BHt7LLFjdUQ
+X-Received: by 2002:a0c:b920:: with SMTP id u32mr26145203qvf.173.1582232121719;
+        Thu, 20 Feb 2020 12:55:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyYbEyWlyA1CtyLkpPuUF6uywJfTlRwR2s/p8kqFjjrgLX6Ni1df+OO/USj4ggxNDPJ4/sgrw==
+X-Received: by 2002:a0c:b920:: with SMTP id u32mr26145171qvf.173.1582232121178;
+        Thu, 20 Feb 2020 12:55:21 -0800 (PST)
+Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
+        by smtp.gmail.com with ESMTPSA id g19sm391571qkk.91.2020.02.20.12.55.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 12:55:20 -0800 (PST)
+Date:   Thu, 20 Feb 2020 15:55:14 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+Message-ID: <20200220154904-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j4sqN-00069Y-Au;;;mid=<87r1yp7zhc.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/YvfDt9LJUlANZXt5NnLd7OKfeCre6VOM=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH 7/7] proc: Ensure we see the exit of each process tid exactly once
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220160606.53156-3-pasic@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> Currently the advanced guest memory protection technologies (AMD SEV,
+> powerpc secure guest technology and s390 Protected VMs) abuse the
+> VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, which
+> is in turn necessary, to make IO work with guest memory protection.
+> 
+> But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really a
+> different beast: with virtio devices whose implementation runs on an SMP
+> CPU we are still fine with doing all the usual optimizations, it is just
+> that we need to make sure that the memory protection mechanism does not
+> get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> side of the guest (and possibly he host side as well) than we actually
+> need.
+> 
+> An additional benefit of teaching the guest to make the right decision
+> (and use DMA API) on it's own is: removing the need, to mandate special
+> VM configuration for guests that may run with protection. This is
+> especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> the virtio control structures into the first 2G of guest memory:
+> something we don't necessarily want to do per-default.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Tested-by: Ram Pai <linuxram@us.ibm.com>
+> Tested-by: Michael Mueller <mimu@linux.ibm.com>
 
-When the thread group leader changes during exec and the old leaders
-thread is reaped proc_flush_pid will flush the dentries for the entire
-process because the leader still has it's original pid.
+This might work for you but it's fragile, since without
+VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+GPA's, not DMA addresses.
 
-Fix this by exchanging the pids in an rcu safe manner,
-and wrapping the code to do that up in a helper exchange_tids.
 
-When I removed switch_exec_pids and introduced this behavior
-in d73d65293e3e ("[PATCH] pidhash: kill switch_exec_pids") there
-really was nothing that cared as flushing happened with
-the cached dentry and de_thread flushed both of them on exec.
 
-This lack of fully exchanging pids became a problem a few months later
-when I introduced 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry
-flush on exit optimization").  Which overlooked the de_thread case
-was no longer swapping pids, and I was looking up proc dentries
-by task->pid.
+IOW this looks like another iteration of:
 
-The current behavior isn't properly a bug as everything in proc will
-continue to work correctly just a little bit less efficiently.  Fix
-this just so there are no little surprise corner cases waiting to bite
-people.
+	virtio: Support encrypted memory on powerpc secure guests
 
-Fixes: 48e6484d4902 ("[PATCH] proc: Rewrite the proc dentry flush on exit optimization").
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
----
- fs/exec.c           |  5 +----
- include/linux/pid.h |  1 +
- kernel/pid.c        | 16 ++++++++++++++++
- 3 files changed, 18 insertions(+), 4 deletions(-)
+which I was under the impression was abandoned as unnecessary.
 
-diff --git a/fs/exec.c b/fs/exec.c
-index db17be51b112..3f0bc293442e 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1148,11 +1148,8 @@ static int de_thread(struct task_struct *tsk)
+
+To summarize, the necessary conditions for a hack along these lines
+(using DMA API without VIRTIO_F_ACCESS_PLATFORM) are that we detect that:
+
+  - secure guest mode is enabled - so we know that since we don't share
+    most memory regular virtio code won't
+    work, even though the buggy hypervisor didn't set VIRTIO_F_ACCESS_PLATFORM
+  - DMA API is giving us addresses that are actually also physical
+    addresses
+  - Hypervisor is buggy and didn't enable VIRTIO_F_ACCESS_PLATFORM
  
- 		/* Become a process group leader with the old leader's pid.
- 		 * The old leader becomes a thread of the this thread group.
--		 * Note: The old leader also uses this pid until release_task
--		 *       is called.  Odd but simple and correct.
- 		 */
--		tsk->pid = leader->pid;
--		change_pid(tsk, PIDTYPE_PID, task_pid(leader));
-+		exchange_tids(tsk, leader);
- 		transfer_pid(leader, tsk, PIDTYPE_TGID);
- 		transfer_pid(leader, tsk, PIDTYPE_PGID);
- 		transfer_pid(leader, tsk, PIDTYPE_SID);
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 01a0d4e28506..0f40b5f1c32c 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -101,6 +101,7 @@ extern void attach_pid(struct task_struct *task, enum pid_type);
- extern void detach_pid(struct task_struct *task, enum pid_type);
- extern void change_pid(struct task_struct *task, enum pid_type,
- 			struct pid *pid);
-+extern void exchange_tids(struct task_struct *task, struct task_struct *old);
- extern void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			 enum pid_type);
- 
-diff --git a/kernel/pid.c b/kernel/pid.c
-index 0f4ecb57214c..0085b15478fb 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -359,6 +359,22 @@ void change_pid(struct task_struct *task, enum pid_type type,
- 	attach_pid(task, type);
- }
- 
-+void exchange_tids(struct task_struct *ntask, struct task_struct *otask)
-+{
-+	/* pid_links[PIDTYPE_PID].next is always NULL */
-+	struct pid *npid = READ_ONCE(ntask->thread_pid);
-+	struct pid *opid = READ_ONCE(otask->thread_pid);
-+
-+	rcu_assign_pointer(opid->tasks[PIDTYPE_PID].first, &ntask->pid_links[PIDTYPE_PID]);
-+	rcu_assign_pointer(npid->tasks[PIDTYPE_PID].first, &otask->pid_links[PIDTYPE_PID]);
-+	rcu_assign_pointer(ntask->thread_pid, opid);
-+	rcu_assign_pointer(otask->thread_pid, npid);
-+	WRITE_ONCE(ntask->pid_links[PIDTYPE_PID].pprev, &opid->tasks[PIDTYPE_PID].first);
-+	WRITE_ONCE(otask->pid_links[PIDTYPE_PID].pprev, &npid->tasks[PIDTYPE_PID].first);
-+	WRITE_ONCE(ntask->pid, pid_nr(opid));
-+	WRITE_ONCE(otask->pid, pid_nr(npid));
-+}
-+
- /* transfer_pid is an optimization of attach_pid(new), detach_pid(old) */
- void transfer_pid(struct task_struct *old, struct task_struct *new,
- 			   enum pid_type type)
--- 
-2.20.1
+I don't see how this patch does this.
+
+
+> ---
+>  drivers/virtio/virtio_ring.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index 867c7ebd3f10..fafc8f924955 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+>  	if (!virtio_has_iommu_quirk(vdev))
+>  		return true;
+>  
+> +	if (force_dma_unencrypted(&vdev->dev))
+> +		return true;
+> +
+>  	/* Otherwise, we are left to guess. */
+>  	/*
+>  	 * In theory, it's possible to have a buggy QEMU-supposed
+> -- 
+> 2.17.1
 
