@@ -2,158 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AEFC761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9AFC34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D6F24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5A624654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dbj0y4eV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgBTFtY (ORCPT
+        id S1726342AbgBTFxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:49:24 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:43555 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgBTFtY (ORCPT
+        Thu, 20 Feb 2020 00:53:02 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:40570 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBTFxB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:49:24 -0500
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 7561A20006;
-        Thu, 20 Feb 2020 05:49:21 +0000 (UTC)
-Subject: Re: [PATCH v2 3/3] riscv: Fix crash when flushing executable ioremap
- regions
-From:   Alex Ghiti <alex@ghiti.fr>
-To:     Jan Kiszka <jan.kiszka@web.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-References: <cover.1581767384.git.jan.kiszka@web.de>
- <8a555b0b0934f0ba134de92f6cf9db8b1744316c.1581767384.git.jan.kiszka@web.de>
- <e721c440-2baf-d962-62ef-41a4f3b1333b@ghiti.fr>
- <b63e5945-0e31-940f-5ff7-6754ef5c034f@web.de>
- <441527ef-1fd4-ed98-8381-8902c4e05fc5@ghiti.fr>
-Message-ID: <74bd5c0c-cdeb-5498-2948-35f40600a8bc@ghiti.fr>
-Date:   Thu, 20 Feb 2020 00:49:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <441527ef-1fd4-ed98-8381-8902c4e05fc5@ghiti.fr>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Feb 2020 00:53:01 -0500
+Received: by mail-pg1-f201.google.com with SMTP id n7so1599344pgt.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:53:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=nl3RPJB2d6ViIOhoDwVm0BTw7tW7NUBEzufzTKYpnXc=;
+        b=Dbj0y4eVYaiMi34+H/DpZxxNGq3yaaZJnS0Yq38l9gcRHiVda9a5WsXKFIKSQjqoQu
+         THNdBOaNyf+oQj9+WbX2eh4yQOPDxIndKfq1KX4pGr8JttKX4CtblHcI8vRdgdkE3wsF
+         Y2Ns2Vt/6F5SN21lS4s7z7wM/3+tMVKXUkmHjJ8nIEXuIU0ZxjuCzQuxmePzf8RnSmNS
+         qLPkgdrirOLrfY8tLQTdWApEjXhajKSAJWWYawLSkHKdtC+Um0ncRZW/OZ311rkctLLV
+         Xr0yqw8sjObC5sqJYI4As8eA+qGJA5wmDTxQJKuLXmzG2V1kdTzjGL2jbtAr/0nhWf6A
+         1iyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=nl3RPJB2d6ViIOhoDwVm0BTw7tW7NUBEzufzTKYpnXc=;
+        b=cNT+zMDf2rSWIIh+Q2yNBP/ttK4bmKUVDvkIQnW98rwRjIPgdHsIdm1l6L2svVU5v/
+         U8oZsgZJ5cwcUlbEY7qay26bctu2o//+ovysPuXBWhopp0kARvikhGjk4/8nymNDd7rM
+         0+ePrfn39ik06VSJfddc3f9v8X8TcwrOQ4ywjYQTDUKMZuxmv754fIbaE25q3jFFhxUm
+         RP0R/r6jUFc7XK746/nly7RDU4xOvLNBaF3gFSptOpgdwQHTBHLcg8RO927QGjOrgZQv
+         bZC3qnNN+XtaN+2hvONsuec1I3eAABbnIYHjsyV3JpfInxVKrW7WARIit+ubOx4Jvkh/
+         GRDA==
+X-Gm-Message-State: APjAAAUS4MGdIPRJ1TEo088b3w1SeoM6Gx6fEu+t8wSMuWNN3bNddGsW
+        y1VNY88LRIEnYYQgtk5SkloLM6aH3MbeE80=
+X-Google-Smtp-Source: APXvYqy4SHuUt+Wdi7Jk03QlHFri6nCdgrgM+tkdNH0KM2noC47Abc/IxlGKmTwrmbII4aBmMk0Ll+EJgyEH8o4=
+X-Received: by 2002:a63:3c4b:: with SMTP id i11mr32426363pgn.123.1582177980998;
+ Wed, 19 Feb 2020 21:53:00 -0800 (PST)
+Date:   Wed, 19 Feb 2020 21:52:50 -0800
+Message-Id: <20200220055250.196456-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v1] of: property: Add device link support for power-domains
+ and hwlocks
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jan,
+Add support for creating device links out of more DT properties.
 
-On 2/16/20 2:56 PM, Alex Ghiti wrote:
-> On 2/16/20 11:05 AM, Jan Kiszka wrote:
->> On 16.02.20 15:41, Alex Ghiti wrote:
->>> Hi Jan,
->>>
->>> On 2/15/20 6:49 AM, Jan Kiszka wrote:
->>>> From: Jan Kiszka <jan.kiszka@siemens.com>
->>>>
->>>> Those are not backed by page structs, and pte_page is returning an
->>>> invalid pointer.
->>>>
->>>> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
->>>> =2D--
->>>>   arch/riscv/mm/cacheflush.c | 3 ++-
->>>>   1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
->>>> index 8930ab7278e6..9ee2c1a387cc 100644
->>>> =2D-- a/arch/riscv/mm/cacheflush.c
->>>> +++ b/arch/riscv/mm/cacheflush.c
->>>> @@ -84,7 +84,8 @@ void flush_icache_pte(pte_t pte)
->>>>   {
->>>>       struct page *page =3D pte_page(pte);
->>>>
->>>> -    if (!test_and_set_bit(PG_dcache_clean, &page->flags))
->>>> +    if (!pfn_valid(pte_pfn(pte)) ||
->>>> +        !test_and_set_bit(PG_dcache_clean, &page->flags))
->>>>           flush_icache_all();
->>>>   }
->>>>   #endif /* CONFIG_MMU */
->>>> =2D-
->>>> 2.16.4
->>>>
->>>>
->>>
->>> When did you encounter such a situation ? i.e. executable code that is
->>> not backed by struct page ?
->>>
->>> Riscv uses the generic implementation of ioremap and the way
->>> _PAGE_IOREMAP is defined does not allow to map executable memory region
->>> using ioremap, so I'm interested to understand how we end up in
->>> flush_icache_pte for an executable region not backed by any struct page.
->>
->> You can create executable mappings of memory that Linux does not
->> initially consider as RAM via ioremap_prot or ioremap_page_range. We are
->> using that in Jailhouse to load the hypervisor code into reserved memory
->> that is ioremapped for the purpose. Works fine on x86, arm and arm64.
->>
->> Jan
-> 
-> Ok thanks, I had missed this API.
-> 
-> Regarding your patch, I find it weird to do anything if the pfn is 
-> invalid, we could have garbage in pte pointing to an invalid region for 
-> example (I admit that the effect of flushing the icache would not be 
-> catastrophic in that situation).
-> 
-> I'm not saying I will come with a better solution but I'll take a deeper 
-> look tomorrow.
-> 
-> Alex
-> 
+To: lkml <linux-kernel@vger.kernel.org>
+To: John Stultz <john.stultz@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Kevin Hilman <khilman@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I took a look at the Jailhouse driver. After loading the hypervisor into 
-the ioremapped region, it explicitly ensures icache/dcache consistency 
-by calling flush_icache_range here:
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index e851c57a15b0..d977c11decda 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1204,6 +1204,8 @@ DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
+ DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
+ DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
+ DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
++DEFINE_SIMPLE_PROP(power_domains, "power-domains", "#power-domain-cells")
++DEFINE_SIMPLE_PROP(hwlocks, "hwlocks", "#hwlock-cells")
+ DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
+ DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
+ DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+@@ -1226,6 +1228,8 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_io_channels, },
+ 	{ .parse_prop = parse_interrupt_parent, },
+ 	{ .parse_prop = parse_dmas, },
++	{ .parse_prop = parse_power_domains, },
++	{ .parse_prop = parse_hwlocks, },
+ 	{ .parse_prop = parse_regulators, },
+ 	{ .parse_prop = parse_gpio, },
+ 	{ .parse_prop = parse_gpios, },
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-https://github.com/siemens/jailhouse/blob/master/driver/main.c#L505
-
-There seems to be an implicit (?) rule that states that in-kernel code 
-modification must handle icache/dcache consistency:
-
-In arm64 set_pte_at definition, they do not sync icache/dcache when the 
-pte is kernel:
-
-https://elixir.bootlin.com/linux/latest/source/arch/arm64/include/asm/pgtable.h#L271
-
-In mips, they do the same:
-
-https://elixir.bootlin.com/linux/latest/source/arch/mips/mm/cache.c#L137
-
-So funnily, I'd do the contrary of what you have done, the mips way:
-
-diff --git a/arch/riscv/mm/cacheflush.c b/arch/riscv/mm/cacheflush.c
-index 8930ab7278e6..c90c8bb49109 100644
---- a/arch/riscv/mm/cacheflush.c
-+++ b/arch/riscv/mm/cacheflush.c
-@@ -84,6 +84,9 @@ void flush_icache_pte(pte_t pte)
-  {
-         struct page *page = pte_page(pte);
-
-+       if (unlikely(!pfn_valid(pte_pfn(pte))))
-+               return;
-+
-         if (!test_and_set_bit(PG_dcache_clean, &page->flags))
-                 flush_icache_all();
-  }
-
-What do you think ?
-
-Alex
