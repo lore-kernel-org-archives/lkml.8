@@ -2,130 +2,95 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382CFC11D1D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7187C11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146CD206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uf0O8u+T"
+	by mail.kernel.org (Postfix) with ESMTP id 84C53206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbgBTTSw (ORCPT
+        id S1728688AbgBTTUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:18:52 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:54564 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbgBTTSw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:18:52 -0500
-Received: by mail-pj1-f66.google.com with SMTP id dw13so1272049pjb.4;
-        Thu, 20 Feb 2020 11:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rMhIIEZUgKeNZVyeBrXf1C0vRvoNcRcDaKcwizMaibs=;
-        b=Uf0O8u+TCDQjNTfqxcb7pdKzT0RQtcRKal2XfSILe8ZNYBq4r1ipuFOgPMy8NaF6F5
-         1ZdM34p4WSfuysS42LplXeiN5JNnzjtnNokeh5Q+sauL9gato/bBSuuxc7tfFQ4kYCRz
-         2CA+YhU+hIVmI1RTr3O5nf1iThf4FPGqM+5BQdGF/PfGHk6CfrIomkH0JjFlLJNUXMys
-         /HpHbvgMynqUhUbgxiWF3cE9mFDyIE3n2IZYAabaWvkDFl1NM4qLAW4NpigJ0NYgYnEq
-         FQPHACl4BJcJ5APXU7bhuYLA/GZMALl90Nz96X2m574RP4t1vXleQlj+V/5Onnr8GFgI
-         k/Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rMhIIEZUgKeNZVyeBrXf1C0vRvoNcRcDaKcwizMaibs=;
-        b=JD3jEt9+XzIZLFp3AUkjDehLp7gIBmuXzdFBpTP1Kq5qoceWKjEEqM7C60UEjaVsF5
-         ifz48qbOn7gGXDvFJ5uzAGJUMS4q4Fufa9tqS1eWRw1tMJCxtYWjZQNwGsSm9sHlZCsY
-         RUReeQHEtKJl61xuLhnLIVoa5FlaUmO59dTSRRTl0gMADrtTa16jQsf6K4zy4mfBkSei
-         O8san3EJAysZmvRLgrYJzacuP20V02vvQE/eQcTGwpAYyzRyJB46Ws9Rpl0enL+3ZJRb
-         VBedFUu6B+fnV574gq9/I054LJpKBViPMT7RxOTWw6+77Bi5A/xZGjcIyaRCSAwdf999
-         Oh2g==
-X-Gm-Message-State: APjAAAVHUaojVGt0HUpKzt+X8wdLsMu3VE4F/rEhTckUpIziZEVjChQt
-        Iss8Uvjc0vvuLDPJdeq08PI=
-X-Google-Smtp-Source: APXvYqw5JxeeJ/AWAadkS9nmdRGpCmWdRi47H8MKfTkbp2DWpc/mINUruptzlSs4Bv/cMOf01GMjHA==
-X-Received: by 2002:a17:902:348:: with SMTP id 66mr32468100pld.137.1582226329710;
-        Thu, 20 Feb 2020 11:18:49 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::5:f03d])
-        by smtp.gmail.com with ESMTPSA id j21sm213384pji.13.2020.02.20.11.18.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Feb 2020 11:18:48 -0800 (PST)
-Date:   Thu, 20 Feb 2020 11:18:46 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        shuah <shuah@kernel.org>,
-        Daniel =?utf-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Thu, 20 Feb 2020 14:20:23 -0500
+Received: from muru.com ([72.249.23.125]:56468 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728111AbgBTTUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:20:23 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id F058F8080;
+        Thu, 20 Feb 2020 19:21:05 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 11:20:18 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-Message-ID: <20200220191845.u62nhohgzngbrpib@ast-mbp>
-References: <20200219192854.6b05b807@carbon>
- <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
- <20200219210609.20a097fb@carbon>
- <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
- <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
- <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
- <20200220173740.7a3f9ad7@carbon>
- <MWHPR13MB0895649219625C5F7380314FFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200220172612.7aqmiwrnizgsukvm@ast-mbp>
- <MWHPR13MB0895B185BC36759121D6F26AFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: mfd: motmdm: Add binding for
+ motorola-mdm
+Message-ID: <20200220192018.GS37466@atomide.com>
+References: <20200210040107.10306-1-tony@atomide.com>
+ <20200210040107.10306-4-tony@atomide.com>
+ <20200219221310.GA26624@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <MWHPR13MB0895B185BC36759121D6F26AFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20200219221310.GA26624@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:41:51PM +0000, Bird, Tim wrote:
+* Rob Herring <robh@kernel.org> [200219 14:14]:
+> On Sun, Feb 09, 2020 at 08:01:05PM -0800, Tony Lindgren wrote:
+> > Add a binding document for Motorola modems controllable by
+> > TS 27.010 UART line discipline using serdev drivers.
+> > 
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  .../mfd/motorola,mapphone-mdm6600.yaml        | 37 +++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> > new file mode 100644
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+> > @@ -0,0 +1,37 @@
+> > +# SPDX-License-Identifier: GPL-2.0
 > 
-> So - do the BPF developers add new instructions to the virtual machine, that then
-> have to be added to both the compiler and the executor (VM implementation)?
+> Dual license new bindings please:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
 
-Right. New instructions are added to the kernel and llvm at the same time. The
-kernel and llvm release cadence and process are different which complicates it
-for us.
+OK
 
-> It sounds like the compiler support and executor support is done in concert, and
-> that patches are at least accepted upstream (but possibly are not yet available in
-> a compiler release) for the compiler side.  What about the Linux kernel side?  Is the
-> support for a new instruction only in non-released kernels (say, in the BPF development
-> tree), or could it potentially be included in a released kernel, before the compiler
-> with matching support is released?  What would happen if a bug was found, and
-> compiler support for the instruction was delayed?  
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/mfd/motorola,mapphone-mdm6600.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Motorola Mapphone MDM6600 Modem
+> > +
+> > +maintainers:
+> > +  - Tony Lindgren <tony@atomide.com>
+> > +
+> > +allOf:
+> > +  - $ref: "motorola,mapphone-mdm6600.yaml#"
+> 
+> Huh? A recursive include? I'm not sure how that didn't blow up.
 
-As with all chicken-and-egg problems the feature has to land in one of the
-repos first. That was one of the reasons llvm community switched to mono repo
-to avoid clang vs llvm conflicts. The kernel and llvm are not going to be in a
-single repo, so we have to orchestrate the landing. Most of the time it's easy,
-because we maintain both kernel and llvm components. But in some cases it's
-very difficult. For example we've delayed landing kernel and libbpf patches by
-about six month, since we couldn't get an agreement on how the feature has to
-be implemented in clang.
+Oops sorry about that, I'll just drop that one.
 
-> I suppose that this would only
-> mean that the executor supported an instruction that never appeared in a compiled
-> BPF program? Is that right?
+Regards,
 
-The answer is yes. It is the case that the kernel supports certain bpf
-instructions, but llvm doesn't know how to emit them. But it has nothing to do
-with landing of features and release cadence.
+Tony
