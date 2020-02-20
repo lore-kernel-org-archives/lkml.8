@@ -2,108 +2,127 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF682C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1E1C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8371D208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582211164;
-	bh=qZGMqmf13kGIaYi/07SmSX1RGyMwOKwiwho8FB8lkTs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vsC4lEAoO8XocwOIiMcBVhd7oHXMJWJe0RQPwynIJAbVuMI28K45avOkwXgyl5PHB
-	 b/WiYzPkepWhf1e3T7Q8cmh+raf5NrJXtLNSactn1iOA6ZPx57aBH2pw7b28bUSZUn
-	 7aEULy9dW+jNyxU3HyPwrpUFKTTH0qhRYvEoklDc=
+	by mail.kernel.org (Postfix) with ESMTP id DB278208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:06:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="AMkCVSuP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgBTPGD (ORCPT
+        id S1728420AbgBTPGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbgBTPGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:06:02 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14FA2071E;
-        Thu, 20 Feb 2020 15:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582211162;
-        bh=qZGMqmf13kGIaYi/07SmSX1RGyMwOKwiwho8FB8lkTs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NryJuAResREVCHM8mQNQCcamlRvxhjbRJxG0YuRw7rtC44JpxQ5ZDgw9dU/I10TDI
-         DvepeERBJ3zq76TvxDDwTS+DVnXwkyVH0SAF6bhnilPh4OQrZKvVTIYw4ROgIOmOHk
-         rNIQ1sC5bmZKTPVzN1InK+HWplCsUgImxfL5KERE=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j4nOq-006km6-8n; Thu, 20 Feb 2020 15:06:00 +0000
+        Thu, 20 Feb 2020 10:06:53 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:36997 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728339AbgBTPGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:06:53 -0500
+Received: by mail-il1-f193.google.com with SMTP id v13so23950030iln.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:06:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NSsjYT9fUOPTYQbcZ94+27Yah30PB6aLnA5rRBloM9w=;
+        b=AMkCVSuPnLYTvcYBNs48cuzP2SkK2PmblIXOa1jvv9Tda9NX7AIkiOV8KobbP7bihb
+         rnqOrKl1ZaGEjq9URnuifGN91nXEZGIdJHLqvL7OYeDSEfMF+kghEJY+adUyNBhqQ8ui
+         R4+HqjKjLTwH5Mb0Lkh+2jIH2+kr6nFb74B9B6pLKzA1s5XvLD66gvBmgi1SfINz5JFo
+         zITxK3Dxv3FW6dFMrMLdDE/QTEMDBaXgNaUufM3sW9BK2NpOAvkk2JCg+o2PFwgmMaa1
+         d89lJA4IQQAM3S5StzASp5aE3znqUP7EO8ayXWaM5TaawpzasSD2Dmu6fSxlJIuWpBLs
+         l7HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NSsjYT9fUOPTYQbcZ94+27Yah30PB6aLnA5rRBloM9w=;
+        b=Zm2f+xvf51EapGMrkqyVQ+Fjfisk+Bk0JaJMURe69SlqDXOaUow9QreIs+gkqpZTYi
+         AxUq+D2Q2qGbcx0aZFrFhGpOfqQCZqiYgU+VXVtnAIS3Rbij7guGFGf8MxxfWAMqQ9/M
+         OtfeWkHyi27a1hschAz0cdan+AUmFXIHHRcC1W71TL285E2DsaDY/ePm5tZWqIcTGhSk
+         vNg75pln6WhEknZfTo1lFginolhJLkhJtBvyHmALB/julohXoZAz094Y+D1h+rmoesfJ
+         bFsE3PXt51xV7QjQh8ba+Wp5LVY86+vasUCImhTmjKpEf0VdlaqQnLiYGx7w808fCMmo
+         0ptA==
+X-Gm-Message-State: APjAAAX5WW1n8JyCdmFJNte6wOqgYHX2MBmOGYdo+UDdAf+Kyx3fNl6e
+        psjxLMX7kKGvw3FFTecGZk0lbV0FfHpAaipKe6qopg==
+X-Google-Smtp-Source: APXvYqw/ESa882FKikl90NHlXA23Rwaxm14tT/lk+8qF+IBJFaZYq8TAqRQU3v/u6jl8rS37gg41y0CM3iOxGrVsFvk=
+X-Received: by 2002:a92:9c1c:: with SMTP id h28mr28240919ili.189.1582211212217;
+ Thu, 20 Feb 2020 07:06:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 15:06:00 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     minyard@acm.org
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Corey Minyard <cminyard@mvista.com>,
-        linux-kernel@vger.kernel.org, Corey Minyard <tcminyard@gmail.com>
-Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
-In-Reply-To: <20200220145048.GH3704@minyard.net>
-References: <20200219152403.3495-1-minyard@acm.org>
- <1416dca51b52dff349923184f41d48e8@kernel.org>
- <20200220145048.GH3704@minyard.net>
-Message-ID: <375815af3c711b94dd2ee56326c2dd3b@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: minyard@acm.org, will@kernel.org, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, cminyard@mvista.com, linux-kernel@vger.kernel.org, tcminyard@gmail.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200211091937.29558-1-brgl@bgdev.pl> <20200211091937.29558-7-brgl@bgdev.pl>
+ <CACRpkdZNyCBxQF_pVPGENob5EKZfYjuaNq5bLNA42XjraXzNZg@mail.gmail.com>
+ <CAMRc=MfkbJ=zTvgpaxFC7L7APEhfC7J_PcncGaQ_AQUA9uw2Fw@mail.gmail.com> <CACRpkdZE0F_E1o-psXdOh93j1JAS8uqT=ZOf4-mrj5WKoKcD6A@mail.gmail.com>
+In-Reply-To: <CACRpkdZE0F_E1o-psXdOh93j1JAS8uqT=ZOf4-mrj5WKoKcD6A@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 20 Feb 2020 16:06:41 +0100
+Message-ID: <CAMRc=Mc-nS+U2=NbYnschQTAe+GROgXDLqQ1yyWZveyRAKhGOw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v6 6/7] gpiolib: add new ioctl() for monitoring
+ changes in line info
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-20 14:50, Corey Minyard wrote:
-> On Thu, Feb 20, 2020 at 02:21:36PM +0000, Marc Zyngier wrote:
->> On 2020-02-19 15:24, minyard@acm.org wrote:
->> > From: Corey Minyard <cminyard@mvista.com>
->> 
->> [...]
->> 
->> > After studying the EL0 handling for this, I realized an issue with using
->> > MDSCR to check if single step is enabled: it can be expensive on a VM.
->> > So check the task flag first to see if single step is enabled.  Then
->> > check MDSCR if the task flag is set.
->> 
->> Very tangential remark: I'd really like people *not* to try and 
->> optimize
->> Linux based on the behaviour of a hypervisor. In general, reading a
->> system register is fast, and the fact that it traps on a given 
->> hypervisor
->> at some point may not be true in the future, nor be a valid assumption
->> across hypervisors.
-> 
-> Normally I would agree, but I based this upon git commit
-> https://github.com/torvalds/linux/commit/2a2830703a2371b47f7b50b1d35cb15dc0e2b717
-> which seemed to say that it was a significant enough factor to do in 
-> the
-> EL0 case.
+czw., 20 lut 2020 o 16:03 Linus Walleij <linus.walleij@linaro.org> napisa=
+=C5=82(a):
+>
+> On Wed, Feb 12, 2020 at 12:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> > > On Tue, Feb 11, 2020 at 10:19 AM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> > > A question:
+> > >
+> > > Bartosz, since you know about possible impacts on userspace,
+> > > since this code use the preferred ktime_get_ns() rather than
+> > > ktime_get_ns_real(), what happens if we just patch the other
+> > > event timestamp to use ktime_get_ns() instead, so we use the
+> > > same everywhere?
+> > >
+> > > If it's fine I'd like to just toss in a patch for that as well.
+> > >
+> >
+> > Arnd pointed out it would be an incompatible ABI change[1].
+>
+> Yeah, I was thinking more about this specific answer from Arnd:
+>
+> > "It is an incompatible ABI change, the question here is whether anyone
+> > actually cares. If nothing relies on the timestamps being in
+> > CLOCK_REALTIME domain, then it can be changed, the question
+> > is just how you want to prove that this is the case."
+>
+> So the question is if userspace really cares.
+>
+> What happens with libgpiod or users of it? Are they assuming
+> the weirdness of CLOCK_REALTIME, or are they simply assuming
+> something that is monotonic increasing and just lucky that they
+> didn't run into anything jumping backwards in time even though
+> they *could*.
+>
+> I think I'll propose a change and see what people say.
+>
 
-And that's a blast from a distant past. Hypervisors have changed 
-drastically
-over these 6 years, and I'm still sitting on a bunch of patches that 
-*could*
-change the way MDSCR_EL1 is handled.
+Libgpiod doesn't care about the value really - it just forwards
+whatever it reads.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Bart
+
+> > However - I asked Khouloud who's working on v2 of the line event
+> > interface to use ktime_get_ns().
+>
+> That's great!
+>
+> Yours,
+> Linus Walleij
