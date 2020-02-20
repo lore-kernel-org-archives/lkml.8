@@ -2,149 +2,144 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE371C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F858C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6ABE207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0784B24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j4caedeS"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="jeXfjP86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgBTIn3 (ORCPT
+        id S1726927AbgBTIpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:43:29 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:36242 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgBTIn3 (ORCPT
+        Thu, 20 Feb 2020 03:45:43 -0500
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:55843 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726799AbgBTIpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:43:29 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K8cv00119896;
-        Thu, 20 Feb 2020 08:43:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=3DBcmRHN7uJqFWQQFJU2jUM8me9GZcXg5MtIEEBW19g=;
- b=j4caedeSclA+wC5JW86i2YTtdgvD6z7Q21bpuXdgyugzbfmGJ6PlhDKHkjWMPTezuUyA
- 4lUF0IJ01FpBja8+blyiBMv0tip0G6/yebcmWvfF8/qlY9sP4wQT5Op/tDr7ZnNR3BRH
- aKDOHjlNRAqOpdu+XN+PRUTZ3wrMr6M/aBqWq9dRfpbyLkeGRCwOeMDd7p1aH6eaIpbJ
- ytoIF6njfY/t9ju3kSgineXtxaJ0GoniyjbWzBPLiwPlx0gs7LGE0OgL5Hdem3uBeZwr
- 4i+VeWEmWcVvdn8/X3/NnD0/JhjFZuaZhRCq9yqv2IcQFt4B2MhDAgWCKpTaQ+zghH1p MA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2y8udd881t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 08:43:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K8bnNp079829;
-        Thu, 20 Feb 2020 08:43:12 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2y8udbd8vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 08:43:12 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01K8h8m4010277;
-        Thu, 20 Feb 2020 08:43:08 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 00:43:07 -0800
-Date:   Thu, 20 Feb 2020 11:42:55 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH v2 3/7] test_firmware: add partial read support for
- request_firmware_into_buf
-Message-ID: <20200220084255.GW7838@kadam>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
- <20200220004825.23372-4-scott.branden@broadcom.com>
+        Thu, 20 Feb 2020 03:45:43 -0500
+Received: from [192.168.2.10] ([46.9.235.248])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 4hSkj9f9DyIme4hSnjicPj; Thu, 20 Feb 2020 09:45:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582188341; bh=n1KovKvq/q7CIfGUBL0d+FJ4p0KVxipSS2I4qj0qbjY=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=jeXfjP86TikbtpD3J5VM+gOlslNigQ3trmHXSBe5ZjocZN9D33MAOue90O/UO7ahl
+         QToWoYt+tLkBWWswLNeClIk9egzyswdF+oy5dwSejQSY0BcUpxs/IAoJAyIhFS2iS+
+         PKc3xqtMswCYD3RytkalsISdAJFmcCZkn1V/guato+ZS6D1GiQdxtPqaG+t7KH8e0Y
+         i1MIalfnweVfP2rkNTy1sXrq33fq188GTrjmMjy0rtgKuUwQipNchR1zxnWC6A38TT
+         VPOkjOHL6qN9/w82j0cWR83XvGidJ+yMKLROgJpKeGkf1YMOQYMQCJ01O7t/u8bYBt
+         rb04LfTm6G9ZA==
+Subject: Re: [PATCH v5 0/6] media: rockchip: Add the rkvdec driver
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>
+References: <20200219173750.26453-1-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <933b8189-5541-a7ff-e1dc-05ca3b2d65d5@xs4all.nl>
+Date:   Thu, 20 Feb 2020 09:45:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220004825.23372-4-scott.branden@broadcom.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200064
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200064
+In-Reply-To: <20200219173750.26453-1-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCIE1D8IrPKqAzrx2WDTcm5C6VJb1hktJWZM2wFnyVwAi4U00BlQBVxdgIrnegfo5ze+3BZKzUXGO8cxlQPs5vQti08iUW+80WqJLRhT7RuAtfoIcdBb
+ ZUnK6dj/BIP++yf1V8jAqwrbUNUW9rpw23QgJrzuDbPeyb0ps1YcvTiN/ZTeK89vspQ5tttTtSjovKQWR9lHx39MEFbFie9iFjuuMLr4dU2rwgbuvquEnzEP
+ HglOUv8e44p712AelnuV0P2kvDnUyqSXo40pTKjhCJcQYjSMeG9LRzohRMDpggUH9l5I71WrLaFl3pZ8s/2VgIAt0RD+HBQaXAZtrMu9rR80TNjGD88Rr4io
+ sxDhTfuqN/1Izqg4ExpWJxktDZnwijHzyYTf+EjUN3R8BjLYZhYOdTb2YHHi5sTbOiefVXME4ajMs2SQ//FdTruIrJCXnbaVJK5u3OtO+Al0ortWFWGu2IU3
+ RACIZovXQUNdrkfZUeUOCuL+MB7BjBpv/2Oan0zw1An3ln0f6Et+gDESrxg4XHXv7xGwwO0k8fAOxtL/IedjKvKT4ei5kLADE1Ob2RwhaEE+ilGzBHq6uyGO
+ y+QclkE4lAHfE2YQkJFkDz1CQiqYFVX9sugqg/6C1+MrKgusnLo70Stp5xFXpQiGPWP1u16KgdhwLk6y2NqfjQPNX1ffJIvi+z6reco8M0Q8/g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 04:48:21PM -0800, Scott Branden wrote:
-> +static int test_dev_config_update_size_t(const char *buf,
-> +					 size_t size,
-> +					 size_t *cfg)
-> +{
-> +	int ret;
-> +	long new;
-> +
-> +	ret = kstrtol(buf, 10, &new);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (new > SIZE_MAX)
+On 2/19/20 6:37 PM, Ezequiel Garcia wrote:
+> Hello,
+> 
+> This is v5 of Boris' rkvdec driver.
+> 
+> This version corrects wrong copyright notices and then adds
+> a TODO file for the staging driver. The only reason to keep the
+> driver in staging are the staging uAPI controls.
 
-This "new" variable is long and SIZE_MAX is ULONG_MAX so the condition
-can't be true.
+I got some sparse warnings for this series, should be trivial to fix:
 
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&test_fw_mutex);
-> +	*(size_t *)cfg = new;
-> +	mutex_unlock(&test_fw_mutex);
-> +
-> +	/* Always return full write size even if we didn't consume all */
-> +	return size;
-> +}
-> +
-> +static ssize_t test_dev_config_show_size_t(char *buf, int cfg)
-> +{
-> +	size_t val;
-> +
-> +	mutex_lock(&test_fw_mutex);
-> +	val = cfg;
-> +	mutex_unlock(&test_fw_mutex);
+sparse: WARNINGS
+drivers/media/v4l2-core/v4l2-h264.c:214: warning: Function parameter or member 'reflist' not described in 'v4l2_h264_build_p_ref_list'
+drivers/media/v4l2-core/v4l2-h264.c:214: warning: Excess function parameter 'p_reflist' description in 'v4l2_h264_build_p_ref_list'
+SPARSE:drivers/staging/media/rkvdec/rkvdec.c drivers/staging/media/rkvdec/rkvdec.c:561:22:  warning: symbol 'rkvdec_queue_ops' was not
+declared. Should it be static?
 
-Both val and cfg are stack variables so there is no need for locking.
-Probably you meant to pass a pointer to cfg?
+Also, checkpatch.pl --strict complains about empty trailing lines in two
+files.
 
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%zu\n", val);
-> +}
-> +
->  static ssize_t test_dev_config_show_int(char *buf, int cfg)
->  {
->  	int val;
+Together with the missing MAINTAINERS it is probably best if you post
+a v6.
 
-regards,
-dan carpenter
+Regards,
 
+	Hans
+
+> 
+> Thanks,
+> Ezequiel
+> 
+> Boris Brezillon (5):
+>   media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
+>   media: hantro: h264: Use the generic H264 reflist builder
+>   media: dt-bindings: rockchip: Document RK3399 Video Decoder bindings
+>   media: rkvdec: Add the rkvdec driver
+>   arm64: dts: rockchip: rk3399: Define the rockchip Video Decoder node
+> 
+> Jonas Karlman (1):
+>   media: uapi: h264: Add DPB entry field reference flags
+> 
+>  .../bindings/media/rockchip,vdec.yaml         |   71 +
+>  .../media/uapi/v4l/ext-ctrls-codec.rst        |   16 +
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi      |   14 +-
+>  drivers/media/v4l2-core/Kconfig               |    4 +
+>  drivers/media/v4l2-core/Makefile              |    1 +
+>  drivers/media/v4l2-core/v4l2-h264.c           |  258 ++++
+>  drivers/staging/media/Kconfig                 |    2 +
+>  drivers/staging/media/Makefile                |    1 +
+>  drivers/staging/media/hantro/Kconfig          |    1 +
+>  drivers/staging/media/hantro/hantro_h264.c    |  237 +---
+>  drivers/staging/media/rkvdec/Kconfig          |   15 +
+>  drivers/staging/media/rkvdec/Makefile         |    3 +
+>  drivers/staging/media/rkvdec/TODO             |   11 +
+>  drivers/staging/media/rkvdec/rkvdec-h264.c    | 1154 +++++++++++++++++
+>  drivers/staging/media/rkvdec/rkvdec-regs.h    |  223 ++++
+>  drivers/staging/media/rkvdec/rkvdec.c         | 1134 ++++++++++++++++
+>  drivers/staging/media/rkvdec/rkvdec.h         |  123 ++
+>  include/media/h264-ctrls.h                    |    2 +
+>  include/media/v4l2-h264.h                     |   86 ++
+>  19 files changed, 3126 insertions(+), 230 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip,vdec.yaml
+>  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
+>  create mode 100644 drivers/staging/media/rkvdec/Kconfig
+>  create mode 100644 drivers/staging/media/rkvdec/Makefile
+>  create mode 100644 drivers/staging/media/rkvdec/TODO
+>  create mode 100644 drivers/staging/media/rkvdec/rkvdec-h264.c
+>  create mode 100644 drivers/staging/media/rkvdec/rkvdec-regs.h
+>  create mode 100644 drivers/staging/media/rkvdec/rkvdec.c
+>  create mode 100644 drivers/staging/media/rkvdec/rkvdec.h
+>  create mode 100644 include/media/v4l2-h264.h
+> 
 
