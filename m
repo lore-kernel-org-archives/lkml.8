@@ -2,90 +2,175 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4957AC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830D5C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 157372465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:01:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582196513;
-	bh=XA+MZZqMC4C3YhfpyUwhkCEhFaVy0Z2309SPCdm5MMA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=j2K6514rG0ec8Y2q9Oe7DCiPtQkvNTShru1rXE1v4lMV2liOrcaJYmStChgLvXtWb
-	 amiHl3d+D4+I2bJc6Al8cpdgv8pdx17Y9naf2FudvFl9YstO3jh9vrmgQyRQH/hNYd
-	 oznonhuKQ71mB0tqlz2W3CAJbzGFaVfIXyOTiAus=
+	by mail.kernel.org (Postfix) with ESMTP id 52E3E24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GAOxrJoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgBTLBw (ORCPT
+        id S1727553AbgBTLEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:01:52 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:32853 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726837AbgBTLBv (ORCPT
+        Thu, 20 Feb 2020 06:04:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34962 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726837AbgBTLEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:01:51 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q81so27163273oig.0;
-        Thu, 20 Feb 2020 03:01:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AcdTEUdWDm4jUDilWMJvR5LBjS5mmvllE0LeHYlzzTA=;
-        b=H+IyoROtVV784nqI6OMlcygE33H5E5zbNhJhAqr8VqSYk+i1rrLMHDDIBD8hM7NPVJ
-         qsCvmGMAimbOJyFL4n4P4SKSyNuweiNND8S8ROj1ksORZrDkjI8pSmesnycF3Ylwf27P
-         yFYUwo14AFTs4NesQc83y9EqCoPcsz+URts7wruoKjuDRH9zX/bcVJfwVdsJYbGAVQgW
-         s0/6C2+gb/xF8tcpwWCP6OjzwXyy3ywO/Am2HrBpY10tSt6CJkulKSaZ0IxQQqt1yjoe
-         bVbd/PqVIvyZP/hFzsiHNoslVX7kvjpDdJ5AvTEvwfgO2K2B1z9E9YwMydIGXch04yRL
-         CZyw==
-X-Gm-Message-State: APjAAAUyfOv/cEslnIWrEHNwk522h/vXoBQTda4y7V1J0iJPNwfv53zF
-        eS6QVy+NasRkdVU3Gbf+EzTdj6KhocAYYafoamuxBw==
-X-Google-Smtp-Source: APXvYqxEeOSeZUODBnrZd79RwocCoiWnCZtiyGFX2ugncp6ZgSJlu0k1vpma+2aaDv97VLdkyiHCb5xEYomjp1ZalZ0=
-X-Received: by 2002:a05:6808:8e1:: with SMTP id d1mr1508375oic.68.1582196510586;
- Thu, 20 Feb 2020 03:01:50 -0800 (PST)
+        Thu, 20 Feb 2020 06:04:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582196643;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HMa4koWyLSARu7hw4Wcnh7n2N//Bgrplr2DvnwxKML0=;
+        b=GAOxrJoB7D27RTrlwA+hvHrDp2oqzGXEDSlqAPnZpZRF5pAqBV6shkH2RLSq+XV8mt/cWn
+        cHkd/QaUl540VkAQYeOtYu5RAQZZ+07hk5lntzcS+kWeeXGa7+FzLdJ312FvKVW0Y7DSBR
+        EXUeD80o5Q9bYy2TI+tgVAXq4B9oIzI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-CG_I3geeMzGOISkcw0L_kg-1; Thu, 20 Feb 2020 06:04:01 -0500
+X-MC-Unique: CG_I3geeMzGOISkcw0L_kg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B27C8800D48;
+        Thu, 20 Feb 2020 11:03:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B12AF5DA60;
+        Thu, 20 Feb 2020 11:03:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez0o3iHjQJNvh8V2Ao77g0CqfqGsv6caMCOFDy7w-VdtkQ@mail.gmail.com>
+References: <CAG48ez0o3iHjQJNvh8V2Ao77g0CqfqGsv6caMCOFDy7w-VdtkQ@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204550281.3299825.6344518327575765653.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/19] vfs: syscall: Add fsinfo() to query filesystem information [ver #16]
 MIME-Version: 1.0
-References: <20200214140621.19796-1-alexandre.belloni@bootlin.com>
-In-Reply-To: <20200214140621.19796-1-alexandre.belloni@bootlin.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 Feb 2020 12:01:39 +0100
-Message-ID: <CAJZ5v0g-D4X=epZK2m8X=xnPA5fAPRa94uVw3zjwzyGsBgG=sQ@mail.gmail.com>
-Subject: Re: [PATCH] PM / hibernate: fix typo "reserverd_size" -> "reserved_size"
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <584178.1582196636.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 20 Feb 2020 11:03:56 +0000
+Message-ID: <584179.1582196636@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 3:06 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> Fix a mistake in a variable name in a comment.
->
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  kernel/power/snapshot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> index ddade80ad276..d82b7b88d616 100644
-> --- a/kernel/power/snapshot.c
-> +++ b/kernel/power/snapshot.c
-> @@ -1681,7 +1681,7 @@ static unsigned long minimum_image_size(unsigned long saveable)
->   * hibernation for allocations made while saving the image and for device
->   * drivers, in case they need to allocate memory from their hibernation
->   * callbacks (these two numbers are given by PAGES_FOR_IO (which is a rough
-> - * estimate) and reserverd_size divided by PAGE_SIZE (which is tunable through
-> + * estimate) and reserved_size divided by PAGE_SIZE (which is tunable through
->   * /sys/power/reserved_size, respectively).  To make this happen, we compute the
->   * total number of available page frames and allocate at least
->   *
-> --
+Jann Horn <jannh@google.com> wrote:
 
-Applied as 5.6 material, thanks!
+> > +int fsinfo_string(const char *s, struct fsinfo_context *ctx)
+> ...
+> Please add a check here to ensure that "ret" actually fits into the
+> buffer (and use WARN_ON() if you think the check should never fire).
+> Otherwise I think this is too fragile.
+
+How about:
+
+	int fsinfo_string(const char *s, struct fsinfo_context *ctx)
+	{
+		unsigned int len;
+		char *p =3D ctx->buffer;
+		int ret =3D 0;
+		if (s) {
+			len =3D strlen(s);
+			if (len > ctx->buf_size - 1)
+				len =3D ctx->buf_size;
+			if (!ctx->want_size_only) {
+				memcpy(p, s, len);
+				p[len] =3D 0;
+			}
+			ret =3D len;
+		}
+		return ret;
+	}
+
+I've also added a check to eliminate the copy if userspace didn't actually
+supply a buffer.
+
+> > +       ret =3D vfs_statfs(path, &buf);
+> > +       if (ret < 0 && ret !=3D -ENOSYS)
+> > +               return ret;
+> ...
+> > +       memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
+> =
+
+> What's going on here? If vfs_statfs() returns -ENOSYS, we just use the
+> (AFAICS uninitialized) buf.f_fsid anyway in the memcpy() below and
+> return it to userspace?
+
+Good point.  I've made the access to the buffer contingent on ret=3D=3D0. =
+ If I
+don't set it, it will just be left pre-cleared.
+
+> > +       return sizeof(*attr);
+> =
+
+> I think you meant sizeof(*info).
+
+Yes.  I've renamed the buffer point to "p" in all cases so that it's more
+obvious.
+
+> > +       return ctx->usage;
+> =
+
+> It is kind of weird that you have to return the ctx->usage everywhere
+> even though the caller already has ctx...
+
+At this point, it's only used and returned by fsinfo_attributes() and real=
+ly
+is only for the use of the attribute getter function.
+
+I could, I suppose, return the amount of data in ctx->usage and then prese=
+t it
+for VSTRUCT-type objects.  Unfortunately, I can't make the getter return v=
+oid
+since it might have to return an error.
+
+> > +               ctx->buffer =3D kvmalloc(ctx->buf_size, GFP_KERNEL);
+> =
+
+> ctx->buffer is _almost_ always pre-zeroed (see vfs_do_fsinfo() below),
+> except if we have FSINFO_TYPE_OPAQUE or FSINFO_TYPE_LIST with a size
+> bigger than what the attribute's ->size field said? Is that
+> intentional?
+
+Fixed.
+
+> > +struct fsinfo_attribute {
+> > +       unsigned int            attr_id;        /* The ID of the attri=
+bute */
+> > +       enum fsinfo_value_type  type:8;         /* The type of the att=
+ribute's value(s) */
+> > +       unsigned int            flags:8;
+> > +       unsigned int            size:16;        /* - Value size (FSINF=
+O_STRUCT) */
+> > +       unsigned int            element_size:16; /* - Element size (FS=
+INFO_LIST) */
+> > +       int (*get)(struct path *path, struct fsinfo_context *params);
+> > +};
+> =
+
+> Why the bitfields? It doesn't look like that's going to help you much,
+> you'll just end up with 6 bytes of holes on x86-64:
+
+Expanding them to non-bitfields will require an extra 10 bytes, making the
+struct 8 bytes bigger with 4 bytes of padding.  I can do that if you'd rat=
+her.
+
+David
+
