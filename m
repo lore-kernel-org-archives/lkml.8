@@ -2,101 +2,246 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D3CC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272FEC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09C524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC8792465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aSdz011n"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fLhWaNE3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgBTGew (ORCPT
+        id S1726783AbgBTGfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:34:52 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:44680 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726198AbgBTGev (ORCPT
+        Thu, 20 Feb 2020 01:35:19 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17337 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgBTGfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:34:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582180490; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=sVo+Sl7faQqaCYyB29lBwLjWrgSdpJiLU0kKGcEC8no=;
- b=aSdz011n+VIO3gKoUSbVh5XrhuQ7VVc/spT2AkyDWGkMs1CXz0r+ELAoGCEAphJZlW93dmBx
- lr6wGjUrnoktufVZjDc+RLJ90ml9Xyhk0CCWX/RfwFWuel/H26iaCivoCciTe5t7gU4vHri+
- P6R72Dmn6umssj+fO6kTNJ8g4ls=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4e2880.7f1eea9446c0-smtp-out-n03;
- Thu, 20 Feb 2020 06:34:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 533B5C447AA; Thu, 20 Feb 2020 06:34:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A991C4479C;
-        Thu, 20 Feb 2020 06:34:39 +0000 (UTC)
+        Thu, 20 Feb 2020 01:35:19 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4e285d0001>; Wed, 19 Feb 2020 22:34:05 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 19 Feb 2020 22:35:17 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 19 Feb 2020 22:35:17 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 06:35:17 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 20 Feb 2020 06:35:16 +0000
+Received: from audio.nvidia.com (Not Verified[10.24.34.185]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e4e289f0001>; Wed, 19 Feb 2020 22:35:16 -0800
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>, Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v3 00/10] add ASoC components for AHUB
+Date:   Thu, 20 Feb 2020 12:04:42 +0530
+Message-ID: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 14:34:39 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scsi: ufs: Enable HOST_PA_TACTIVATE quirk for WDC UFS
- devices
-In-Reply-To: <MN2PR04MB6991569990279CA1985BE92DFC130@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1580977315-19321-1-git-send-email-cang@codeaurora.org>
- <MN2PR04MB6991569990279CA1985BE92DFC130@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <382c4c44e04c48ddc1682b3d3b0c6256@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582180445; bh=Z37BJ+MMqRRQHdYLSPpiPQGwP7SvJrqMimTP4ECmOf4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=fLhWaNE345r7bKxEJlPPcb5hlsY//W4hjv0ZM3LvX4FIIiS0cBR8cBnxB1CaJ2tHS
+         Fdak4PiJCtTUC9Xd5Qsl6N4tXm41O6o6Wu/KhMIakLqYmXGNlPERfxTV3TUqJIepax
+         ZuZVTuZmAHn2Qq2XSEebDeUVkjifuZ4Rdv+8/iJkjeQANLvKQPII22DEoP6r9kiEOQ
+         etYTaOyQo9gAKZYsj/aM1A9EYYDVmVekxdbGmz6gcAxZOW6k7KBE07Om3fyP7QMeWN
+         zk1+rhsYd7MGWGgKBNs8VS7rKDsRh8K8mRUmYrggDmrH7bo4lUoJ3dCiq3jFpFDSwK
+         k2L2azBWTSgqw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-20 14:20, Avri Altman wrote:
-> Hi,
-> 
->> 
->>  /**
->>   * ufs_dev_fix - ufs device quirk info
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index 1fe0a97..a066f00 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -239,6 +239,8 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] = {
->>                 UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME),
->>         UFS_FIX(UFS_VENDOR_SKHYNIX, "hB8aL1" /*H28U62301AMR*/,
->>                 UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME),
->> +       UFS_FIX(UFS_VENDOR_WDC, UFS_ANY_MODEL,
->> +               UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE),
-> We are objecting to apply this quirk categorically for all SOC vendors.
-> Please use a vendor-specific quirk for that.
-> 
-> Thanks,
-> Avri
+Overview
+========
+The Audio Hub (AHUB) is part of the Audio Processing Engine (APE) which
+comprises a collection of hardware accelerators for audio pre-processing
+and post-processing. It also includes a programmable full crossbar for
+routing audio data across these accelerators.
 
-Yeah, as we discussed, I will apply it in ufshcd_vops_apply_dev_quirks()
-in next version and this is agreed by Stanley as well.
+This series exposes some of these below mentioned HW devices as ASoC
+components for Tegra platforms from Tegra210 onwards.
+ * ADMAIF : The interface between ADMA and AHUB
+ * XBAR   : Crossbar for routing audio samples across various modules
+ * I2S    : Inter-IC Sound Controller
+ * DMIC   : Digital Microphone
+ * DSPK   : Digital Speaker
+
+Following is the summary of current series.
+ 1. Add YAML DT binding documentation for above mentioned modules.
+ 2. Helper function for ACIF programming is exposed for Tegra210 and later.
+ 3. Add ASoC driver components for each of the above modules.
+ 4. Add DT entries for above components for Tegra210, Tegra186 and
+    Tegra194.
+ 5. Enable these components for Jetson-Tx1, Jetson-Tx2 and Jetson-Xavier.
+
+Machine driver series will be sent separately.
+
+Changelog
+=========
+
+v2 -> v3
+--------
+ * [1/10]  "dt-bindings: sound: tegra: add DT binding for AHUB
+   - Updated licence
+   - Removed redundancy w.r.t items/const/enum
+   - Added constraints wherever needed with "pattern" property
+
+ * [2/10]  "ASoC: tegra: add support for CIF programming"
+   - Removed tegra_cif.c
+   - Instead added inline helper function in tegra_cif.h
+
+ * common changes (for patch [3/10] to [7/10])
+   - Replace LATE system calls with Normal sleep
+   - Remove explicit RPM suspend in driver remove() call
+   - Use devm_kzalloc() instead of devm_kcalloc() for single element
+   - Replace 'ret' with 'err' for better reading
+   - Consistent error printing style across drivers
+   - Minor formating fixes
+
+ * [8/10]  "arm64: tegra: add AHUB components for few Tegra chips"
+   - no change
+
+ * [9/10]  "arm64: tegra: enable AHUB modules for few Tegra chips"
+   - no change
+
+ * [10/10] "arm64: defconfig: enable AHUB components for Tegra210 and later"
+   (New patch)
+   - Enables ACONNECT and AHUB components. With this AHUB and components are
+     registered with ASoC core.
+
+v1 -> v2
+--------
+ * [1/9] "dt-bindings: sound: tegra: add DT binding for AHUB"
+   - no changes
+
+ * [2/9] "ASoC: tegra: add support for CIF programming"
+   - removed CIF programming changes for legacy chips.
+   - this patch now exposes helper function for CIF programming,
+     which can be used on Tegra210 later.
+   - later tegra_cif.c can be extended for legacy chips as well.
+   - updated commit message accordingly
+
+ * [3/9] "ASoC: tegra: add Tegra210 based DMIC driver"
+   - removed unnecessary initialization of 'ret' in probe()
+
+ * [4/9] "ASoC: tegra: add Tegra210 based I2S driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - fixed indentation
+   - added consistent bracing for if-else clauses
+   - updated 'rx_fifo_th' type to 'unsigned int'
+   - used BIT() macro for defines like '1 << {x}' in tegra210_i2s.h
+
+ * [5/9] "ASoC: tegra: add Tegra210 based AHUB driver"
+   - used of_device_get_match_data() to get 'soc_data' and removed
+    explicit of_match_device()
+   - used devm_platform_ioremap_resource() and removed explicit
+    platform_get_resource()
+   - fixed indentation for devm_snd_soc_register_component()
+   - updated commit message
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+
+ * [6/9] "ASoC: tegra: add Tegra186 based DSPK driver"
+   - removed unnecessary initialization of 'ret' in probe()
+   - updated 'max_th' to 'unsigned int'
+   - shortened lengthy macro names to avoid wrapping in
+     tegra186_dspk_wr_reg() and to be consistent
+
+ * [7/9] "ASoC: tegra: add Tegra210 based ADMAIF driver"
+   - used of_device_get_match_data() and removed explicit of_match_device()
+   - used BIT() macro for defines like '1 << {x}' in tegra210_admaif.h
+   - updated commit message to reflect compatible binding for Tegra186 and
+     Tegra194.
+
+ * [8/9] "arm64: tegra: add AHUB components for few Tegra chips"
+   - no change
+
+ * [9/9] "arm64: tegra: enable AHUB modules for few Tegra chips"
+   - no change
+
+ * common changes for patch [3/9] to [7/9]
+   - sorted headers in alphabetical order
+   - moved MODULE_DEVICE_TABLE() right below *_of_match table
+   - removed macro DRV_NAME
+   - removed explicit 'owner' field from platform_driver structure
+   - added 'const' to snd_soc_dai_ops structure
+
+=================
+Sameer Pujar (10):
+  dt-bindings: sound: tegra: add DT binding for AHUB
+  ASoC: tegra: add support for CIF programming
+  ASoC: tegra: add Tegra210 based DMIC driver
+  ASoC: tegra: add Tegra210 based I2S driver
+  ASoC: tegra: add Tegra210 based AHUB driver
+  ASoC: tegra: add Tegra186 based DSPK driver
+  ASoC: tegra: add Tegra210 based ADMAIF driver
+  arm64: tegra: add AHUB components for few Tegra chips
+  arm64: tegra: enable AHUB modules for few Tegra chips
+  arm64: defconfig: enable AHUB components for Tegra210 and later
+
+ .../bindings/sound/nvidia,tegra186-dspk.yaml       |  88 ++
+ .../bindings/sound/nvidia,tegra210-admaif.yaml     | 163 ++++
+ .../bindings/sound/nvidia,tegra210-ahub.yaml       | 110 +++
+ .../bindings/sound/nvidia,tegra210-dmic.yaml       |  88 ++
+ .../bindings/sound/nvidia,tegra210-i2s.yaml        | 101 +++
+ arch/arm64/boot/dts/nvidia/tegra186-p2771-0000.dts |  48 ++
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 231 ++++-
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  36 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 239 +++++-
+ arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts |  40 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 145 ++++
+ arch/arm64/configs/defconfig                       |   7 +
+ sound/soc/tegra/Kconfig                            |  56 ++
+ sound/soc/tegra/Makefile                           |  10 +
+ sound/soc/tegra/tegra186_dspk.c                    | 510 +++++++++++
+ sound/soc/tegra/tegra186_dspk.h                    |  73 ++
+ sound/soc/tegra/tegra210_admaif.c                  | 884 +++++++++++++++++++
+ sound/soc/tegra/tegra210_admaif.h                  | 164 ++++
+ sound/soc/tegra/tegra210_ahub.c                    | 651 ++++++++++++++
+ sound/soc/tegra/tegra210_ahub.h                    | 125 +++
+ sound/soc/tegra/tegra210_dmic.c                    | 515 +++++++++++
+ sound/soc/tegra/tegra210_dmic.h                    |  85 ++
+ sound/soc/tegra/tegra210_i2s.c                     | 938 +++++++++++++++++++++
+ sound/soc/tegra/tegra210_i2s.h                     | 132 +++
+ sound/soc/tegra/tegra_cif.h                        |  63 ++
+ sound/soc/tegra/tegra_pcm.c                        | 222 ++++-
+ sound/soc/tegra/tegra_pcm.h                        |  23 +-
+ 27 files changed, 5743 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+ create mode 100644 sound/soc/tegra/tegra186_dspk.c
+ create mode 100644 sound/soc/tegra/tegra186_dspk.h
+ create mode 100644 sound/soc/tegra/tegra210_admaif.c
+ create mode 100644 sound/soc/tegra/tegra210_admaif.h
+ create mode 100644 sound/soc/tegra/tegra210_ahub.c
+ create mode 100644 sound/soc/tegra/tegra210_ahub.h
+ create mode 100644 sound/soc/tegra/tegra210_dmic.c
+ create mode 100644 sound/soc/tegra/tegra210_dmic.h
+ create mode 100644 sound/soc/tegra/tegra210_i2s.c
+ create mode 100644 sound/soc/tegra/tegra210_i2s.h
+ create mode 100644 sound/soc/tegra/tegra_cif.h
+
+-- 
+2.7.4
+
