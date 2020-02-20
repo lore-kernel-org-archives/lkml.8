@@ -2,94 +2,116 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D519C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73292C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1559124654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:15:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="YV1tA3OK"
+	by mail.kernel.org (Postfix) with ESMTP id 51EAC24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgBTIPh (ORCPT
+        id S1726830AbgBTIRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:15:37 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17957 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726466AbgBTIPh (ORCPT
+        Thu, 20 Feb 2020 03:17:08 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36935 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgBTIRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:15:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582186495;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=ba15D71WM0TZsIQOmNCZ0fPENXbBRJUGx/lLfYnaJ34=;
-        b=YV1tA3OKGl8+N12UqweV/Bmk71bqSri5WYrj+Rz4YE9PoytJruQSkfZLZXE8A10S
-        VNqGIu3T50hssTNTlB5NbuUCeNUvZf3J36tMnLEhGDwpX/l+FqJsbFb0TGjjj0gqurn
-        PGKbDr86QNyPGFHIlHXNMPR7mTe3U/u/vhb/npjk=
-Received: from mail.baihui.com by mx.zoho.com.cn
-        with SMTP id 1582186493587928.9027487890974; Thu, 20 Feb 2020 16:14:53 +0800 (CST)
-Date:   Thu, 20 Feb 2020 16:14:53 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     "Huacai Chen" <chenhuacai@gmail.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>
-Cc:     "Paul Burton" <paulburton@kernel.org>,
-        "LKML" <linux-kernel@vger.kernel.org>, "ysu" <ysu@wavecomp.com>
-Message-ID: <17061a9f690.e5cbd01f5685.8497926865164942268@flygoat.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+        Thu, 20 Feb 2020 03:17:08 -0500
+Received: by mail-ot1-f67.google.com with SMTP id b3so1669779otp.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:17:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sD2J/5uum42C2xZRjOEEGhvwf/LUtVUFDgCu9pCttwo=;
+        b=E/bhVv/IQYElaYIlz2E3abNKPvoHYfgYg6qW0WxNyf5gKNa8uG2dFF+wOXY9qGIEc9
+         k0xV+UefNUIGs0LaYzrRaGO0zkwnlDx26Gg43GLDh+Oi9wUS1JFGvT6n869N+8aHd5Ex
+         ntJO+sDIrBuUORAwrC7KFLKTGdxFLz3w9wJcYtvkBwkm9rAp3Toa7WdtoMlI8yv8OSpF
+         wSFryv6wjGNIgdtjsyZ7J5Mp4/QwuDW7p6s4qEywKIvhkJAII72HGjl8PLDxPTT3Rx1c
+         XR8bohZ+cY7QT3T7VHynJTqP09r5b7/nx8n9cHg9P3Q/ATFGUCl7OtJzF7xtgrkzAB4/
+         9S5w==
+X-Gm-Message-State: APjAAAVvu0v87vXCXTzWj3Seqdj2uu3ylBHBlexyri2+T95sxGhqWV0Q
+        pebVoWvdSeqWLQSHg1PY+pkQCkJ6ULqh/J26hiE=
+X-Google-Smtp-Source: APXvYqwItDQQVwf7oA5GRL9lws1n+HFJcGAVqsbPVF//RiENrTsIKFqFA6VEWAG6qqdVc8WTfok+ws2CoKk3IGufgI4=
+X-Received: by 2002:a9d:7602:: with SMTP id k2mr22857306otl.39.1582186627028;
+ Thu, 20 Feb 2020 00:17:07 -0800 (PST)
 MIME-Version: 1.0
+References: <158218358363.6940.18380270211351882136.stgit@devnote2> <158218359349.6940.8460152450938960505.stgit@devnote2>
+In-Reply-To: <158218359349.6940.8460152450938960505.stgit@devnote2>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Feb 2020 09:16:56 +0100
+Message-ID: <CAMuHMdVDBMii5RPiMkRo1XbFTiivbJASFUWQBn8_dU1Q5uRSzA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] bootconfig: Set CONFIG_BOOT_CONFIG=n by default
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: ZohoCN Mail
-X-Mailer: ZohoCN Mail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Hiramatsu-san,
 
-
-=E4=BA=8E 2020=E5=B9=B42=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=882:=
-44:03, Huacai Chen <chenhuacai@gmail.com> =E5=86=99=E5=88=B0:
->Hi, all,
+On Thu, Feb 20, 2020 at 8:26 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> Set CONFIG_BOOT_CONFIG=n by default. This also warns
+> user if CONFIG_BOOT_CONFIG=n but "bootconfig" is given
+> in the kernel command line.
 >
->I suggest Jiaxun Yang to be the new Linux/MIPS maintainer because of
->the following reasons:
->
->1. He is familiar with Linux kernel & MIPS architecture.
->2. He is active and has already contributed many patches.
->3. He is not an employee of any corporation, so people can expect him
->to be neutral.
->4. He is young and has enough free time to follow the mainstream
->development closely.
->5. His English is good and is willing to maintain a good level of
->communication with other contributors.
->
->Jiaxun, what's your opinion?
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-Resend as MIPS List rejected the previous mail.
+Thanks for your patch!
 
-Thanks for your recommendation.
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -1218,7 +1218,7 @@ endif
+>  config BOOT_CONFIG
+>         bool "Boot config support"
+>         depends on BLK_DEV_INITRD
+> -       default y
+> +       default n
 
-It's my pleasure to take this duty if I'm eligible.
+"default n" is the default, so you can just drop the line.
 
-I have experience in MIPS chips and have already involved in some review pr=
-ocesses.
-i.e.loongson, Ingenic/MediaTek & etc.
+>         help
+>           Extra boot config allows system admin to pass a config file as
+>           complemental extension of kernel cmdline when booting.
+> diff --git a/init/main.c b/init/main.c
+> index 59248717c925..680ff7123705 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -418,6 +418,14 @@ static void __init setup_boot_config(const char *cmdline)
+>  }
+>  #else
+>  #define setup_boot_config(cmdline)     do { } while (0)
+> +
+> +static int __init warn_bootconfig(char *str)
+> +{
+> +       pr_err("WARNING: 'bootconfig' found on the kernel command line but CONFIG_BOOTCONFIG is not set.\n");
 
-As what Huacai has said, I'm a pure contributor from community,
-which means I will able to be neutral to MIPS family members.
+pr_warn()?
 
-[Also added Yunqiang Su to Cc list as he is the
-only current MIPS company employee I know.]
+> +       return 0;
+> +}
+> +early_param("bootconfig", warn_bootconfig);
+> +
+>  #endif
 
-Thanks.
->
->Regards,
->Huacai Chen
---=20
-Jiaxun Yang
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
