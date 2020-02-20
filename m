@@ -2,84 +2,94 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741BFC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3770C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF08206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jcjpzc7E"
+	by mail.kernel.org (Postfix) with ESMTP id AD469206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgBTW3p (ORCPT
+        id S1729213AbgBTWcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:29:45 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44020 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbgBTW3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:29:44 -0500
-Received: by mail-qt1-f195.google.com with SMTP id g21so4108778qtq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:29:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9JBTeYjQ4OSxmuiL2ZqLwcDcFNG9wOe01nNDIgFt4X8=;
-        b=Jcjpzc7EBrfLq2tuPgjvbEzIeeVuOA4sAvis/RvWvv/Brx1gksKftAVO1KFKzvpy8z
-         XCC6EJY3G5JHV132lV1wCm7LN1f/rfmt3+CH4EjSPI+zAqxp95FAfYm78JB7z2zLcnjP
-         gP0g8gVAg4LUlFpnBhuUnZWh5uuqRb+EMzAj+dK9o7cZx7I9EZ62x0+G6D1oWAmsNYoK
-         NqoSZlefuuuXNQLbRqB0WCf10W3Pj/SPDuDukffuQl43IFMudS1AXuu3aDEjB+QnU1vs
-         76oVvCXEpK9RHZXVjNzKRAL5u+rHJ1RYSrZfcICqlgQS4cAdEgk4uj27yWO3v8QVTcFj
-         fPrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9JBTeYjQ4OSxmuiL2ZqLwcDcFNG9wOe01nNDIgFt4X8=;
-        b=aj1Qjc0ik2RyNXQqz5wuy6eLRMOBtcmX62Q9imCzuByQzMwO9tgnO3acArxOcyl3+B
-         LjjC0rWfjCuvXxHBUokHCwWN/3fx+KxKJg0eDjP2LqqRybuUTbgmj8VNmPovZOlZlW3v
-         1MoJFUrJldCM38DC2nA3Ppy4TYTT6813DIzZ7y5VmXBYgJzpJ83Pe8XLzbVZmX865u6Y
-         vf5TBihL7tvNFQ4WL/zlTqIn1DGEBPSlQatmmf70UDDSQi2XjX6XEOvtfXW0+fr4UNSr
-         XErkFSMAChzyOwLSSbMCpRhavNmPwfn65GZ6z7QJQIEBt6e/VxnG+2o9rCVgWFKbgkjl
-         X/2g==
-X-Gm-Message-State: APjAAAWWfYFR/ha9qoyzAVCXJE3hkGbDBdvnaDBIUkozrQyn9qEDTwu/
-        A7oftqfhzQbTFpdLvHpqaeI8OY6au+OIP/oLnK6oZ2sc
-X-Google-Smtp-Source: APXvYqwoWrH7/If0ame9SZaVwZx3aYtuG3KUWXrbZCSZ/1HYk27oz6ttjY7BHfQHj8CWFY3vOIj4TG728lbd0zUqX2I=
-X-Received: by 2002:ac8:381a:: with SMTP id q26mr29289352qtb.381.1582237783761;
- Thu, 20 Feb 2020 14:29:43 -0800 (PST)
+        Thu, 20 Feb 2020 17:32:32 -0500
+Received: from mga09.intel.com ([134.134.136.24]:18456 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgBTWcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 17:32:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 14:32:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
+   d="scan'208";a="283540360"
+Received: from jbrandeb-desk4.amr.corp.intel.com (HELO localhost) ([10.166.241.50])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Feb 2020 14:32:30 -0800
+Date:   Thu, 20 Feb 2020 14:32:29 -0800
+From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <x86@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux@rasmusvillemoes.dk>, <andriy.shevchenko@intel.com>,
+        <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 1/2] x86: fix bitops.h warning with a moved cast
+Message-ID: <20200220143229.00002d4d@intel.com>
+In-Reply-To: <20200220181236.GC18400@hirez.programming.kicks-ass.net>
+References: <20200220173722.2034546-1-jesse.brandeburg@intel.com>
+        <20200220181236.GC18400@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20200216161836.1976-1-Jason@zx2c4.com> <20200216182319.GA54139@kroah.com>
- <CA+8MBbKScktNPWPgMqexp9gSX+y2FVnXTDJyyEMVsdONPBpFrQ@mail.gmail.com>
-In-Reply-To: <CA+8MBbKScktNPWPgMqexp9gSX+y2FVnXTDJyyEMVsdONPBpFrQ@mail.gmail.com>
-From:   Tony Luck <tony.luck@gmail.com>
-Date:   Thu, 20 Feb 2020 14:29:32 -0800
-Message-ID: <CA+8MBbKyRhipHsxb0nvV11Bvv8ypQ_gq5JR8ihfuG6JfBTnxZw@mail.gmail.com>
-Subject: Re: [PATCH] random: always use batched entropy for get_random_u{32,64}
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>, "Ted Ts'o" <tytso@mit.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Also ... what's the deal with a spin_lock on a per-cpu structure?
+On Thu, 20 Feb 2020 19:12:36 +0100 Peter wrote:
+> On Thu, Feb 20, 2020 at 09:37:21AM -0800, Jesse Brandeburg wrote:
+> > @@ -72,9 +74,11 @@ static __always_inline void
+> >  arch_clear_bit(long nr, volatile unsigned long *addr)
+> >  {
+> >  	if (__builtin_constant_p(nr)) {
+> > +		u8 cmaski = ~CONST_MASK(nr);
+> > +
+> >  		asm volatile(LOCK_PREFIX "andb %1,%0"
+> >  			: CONST_MASK_ADDR(nr, addr)
+> > -			: "iq" ((u8)~CONST_MASK(nr)));
+> > +			: "iq" (cmaski));
+> 
+> Urgh, that's sad. So why doesn't this still generate a warning, ~ should
+> promote your u8 to int, and then you down-cast to u8 on assignment
+> again.
 
-        batch = raw_cpu_ptr(&batched_entropy_u64);
-        spin_lock_irqsave(&batch->batch_lock, flags);
-        if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
-                extract_crng((u8 *)batch->entropy_u64);
-                batch->position = 0;
-        }
-        ret = batch->entropy_u64[batch->position++];
-        spin_unlock_irqrestore(&batch->batch_lock, flags);
+My suspicion is that using the right size types on the lvalue causes
+the compiler (and sparse) to know that the type and number of bits in
+the "iq" statement is unambiguous.
 
-Could we just disable interrupts and pre-emption around the entropy extraction?
+> 
+> So now you have more lines, more ugly casts and exactly the same
+> generated code; where the win?
 
--Tony
+The win as I see it is that sparse (C=1) doesn't warn, but you're right,
+it wasn't my first choice to do it the way I ended up with (see below) 
+
+> Perhaps you should write it like:
+> 
+> 		: "iq" (0xFF ^ CONST_MASK(nr))
+> 
+> hmm?
+
+Thanks! That works, for my tests at least. FWIW, at one point during
+review I got some feedback from a build bot (zero day tester) that
+certain compilers like gcc 7.5.0 interpret ~CONST_MASK(nr) into needing
+32 bits. So I solved that issue by using correctly typed (and width)
+local variables, but I didn't try the 0xff^ way at that time.
+
+I'll change back to the simpler version of the changes (without locals)
+and with your 0xff^ change, we'll see if anything comes up from build
+bots.
+
