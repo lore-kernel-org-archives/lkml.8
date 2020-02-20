@@ -2,221 +2,165 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E61C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1E8C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A723222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3A5206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:13:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="HIPw1W6s"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGBQF1Dw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgBTTLv (ORCPT
+        id S1728834AbgBTTNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:11:51 -0500
-Received: from gateway36.websitewelcome.com ([192.185.200.11]:40442 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728111AbgBTTLt (ORCPT
+        Thu, 20 Feb 2020 14:13:52 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:44337 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbgBTTNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:11:49 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 96ABB400C8F54
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:26:16 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 4rEgjkh86XVkQ4rEgj7BxU; Thu, 20 Feb 2020 13:11:46 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5i2VISLHxkwlkmTIbhd4lHNarQUya3H3hLvf7tzN68w=; b=HIPw1W6sVnurI/pvy2PMAys5a2
-        OIz/RiA5KGxYsEcEBKxAKaveo2Oul/hB+JvX4qYo74B1OLonj+MxOlPrBbILRu+8dlFw+M7IW/iDO
-        u0NBUn1sI7swDe5gGz1JPYeDzYGtvsKiPqmtJGvvbhafYgeazhH+gS7Jr/8nItQp+xaHaQDZcPeRA
-        wSa0bmSdFwcue/yv24eLYpc/Q93vPQzS9wKsbYQU7adEmB4Lm9v7tEgtvygyzpG1QUkhAU831cOa1
-        2JkR67vRIfW/4+HB8wWAd2IL2dgypFTpSKEGBZo0XocHJXelK/mhmXj9hevD79LTZn/V4LHCQS3i6
-        upiGbREA==;
-Received: from [201.144.174.47] (port=20829 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j4rEf-002Fcv-Fy; Thu, 20 Feb 2020 13:11:45 -0600
-Subject: Re: [PATCH] staging: Replace zero-length array with flexible-array
- member
-To:     Adham.Abozaeid@microchip.com, gregkh@linuxfoundation.org,
-        vaibhav.sr@gmail.com, mgreer@animalcreek.com, johan@kernel.org,
-        elder@kernel.org, m.tretter@pengutronix.de, kernel@pengutronix.de,
-        mchehab@kernel.org, Larry.Finger@lwfinger.net,
-        florian.c.schilhabel@googlemail.com, Ajay.Kathat@microchip.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        greybus-dev@lists.linaro.org, linux-media@vger.kernel.org,
-        linux-wireless@vger.kernel.org
-References: <20200220132908.GA30501@embeddedor>
- <d331cd9c-ec57-b686-d977-c48e70415ae1@microchip.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <8e9e1b59-a7a8-782e-990b-8a7023c2292d@embeddedor.com>
-Date:   Thu, 20 Feb 2020 13:14:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 14:13:51 -0500
+Received: by mail-lf1-f66.google.com with SMTP id 7so2508102lfz.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:13:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jtGfCZ6Tt9nUtJs/4fCZbyPWZOZzIWbBkr2JPN+tTJ8=;
+        b=YGBQF1DwPBtMmghk2sblaYVP5/14qwbXmY/QJcnKFI9whyFZjAeC8/6poFolPl9sHk
+         15xN02AviSmyITu7QB9VdCGClnENhzaUzT0+Padx+4z5I0Ml73Z6jKoH4cUIPWi6XRov
+         daM0gPriqHZy87AFnXdWz4XDbM3cmh8uagZJoDG5Dohn4QSU6WsDmsp865rsBbyIZB4o
+         feMlIJRP/8hJ3IaIIOijFujFaxe9jV5AUZqWb17+Ww08CNgkSteV4cQsRCT1V/LFJOYi
+         N/noj6dQi7+yD1icEzllmTVLaR2q20B96dB+5RPMC9I6Jh4uLdPqnIFOxC3MBhxxMMSJ
+         uh2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jtGfCZ6Tt9nUtJs/4fCZbyPWZOZzIWbBkr2JPN+tTJ8=;
+        b=fDOy76r3/KBD0x70A98wx9kX6fvVAr9A76xrc1xVN4guX7oJypymYx9SN192Il0pAn
+         zCg+9McyyvcH5Z8lCNpZcqxbyBW0GX+SaDY2m3m9dh/NovKBJyevyIj6aWwa8SYtazM5
+         Hg7ClCaqrKoubTy0tGHyIcWFhbzVeO1636NVctuInzEdfXjti+h4lHhX+D3Myf7mnBNI
+         DmwaDOnDt5nZ5nYHOQ8NXPIgsdoAp8HO9PsspWRGUWwxjDnqRjc6L6PCm9RzazkkZ0ie
+         CpW9mG++BXD3Yx4nDcoej8PIi/uFaDnXrwVUHgkiZBkMwLGlk4mtUw9paJtUF53YSHOn
+         tgtQ==
+X-Gm-Message-State: APjAAAUedI0MGIe8eujIfZ0xkMR3MFIjIr/4YKYLVK6Wf0A4DsLOZuhj
+        QBwU9g2/mRhJzqSnykECobU22bxHnBxK6pHkkxN2hw==
+X-Google-Smtp-Source: APXvYqzg8s50xmcwT+LpIu6nvPTBFwgpY+hE0DY/gee/4/ibTmwRrPaemXe5HVlQzJgdENN2Q7BMW397mtDgSpOswVg=
+X-Received: by 2002:a19:5e1d:: with SMTP id s29mr17601785lfb.21.1582226028830;
+ Thu, 20 Feb 2020 11:13:48 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d331cd9c-ec57-b686-d977-c48e70415ae1@microchip.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.144.174.47
-X-Source-L: No
-X-Exim-ID: 1j4rEf-002Fcv-Fy
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [201.144.174.47]:20829
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200220074637.7578-1-njoshi1@lenovo.com> <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+ <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
+ <CACK8Z6GwuOnJUUscriGwKWGBp5PFKyuqUkFYC8tEXa0UEuEZww@mail.gmail.com> <PS1PR0302MB260492DDE243BE0A64A39AA7BD130@PS1PR0302MB2604.apcprd03.prod.outlook.com>
+In-Reply-To: <PS1PR0302MB260492DDE243BE0A64A39AA7BD130@PS1PR0302MB2604.apcprd03.prod.outlook.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 20 Feb 2020 11:13:12 -0800
+Message-ID: <CACK8Z6HWkafL4EzOndRyiA3k-VyUg8bQ=2diw_wJSxSTyqsE+w@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] thinkpad_acpi: Add sysfs entry for
+ lcdshadow feature
+To:     Mark Pearson <mpearson@lenovo.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nitin Joshi <nitjoshi@gmail.com>,
+        Mat King <mathewk@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Thinkpad-acpi devel ML <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Mark,
 
-On 2/20/20 13:04, Adham.Abozaeid@microchip.com wrote:
-> Hi Gustavo
-> 
-> On 2/20/20 6:29 AM, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
->> This issue was found with the help of Coccinelle.
->>
->> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
->> [2] https://github.com/KSPP/linux/issues/21
->> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
->>
->>  static void cfg_scan_result(enum scan_event scan_event,
->> diff --git a/drivers/staging/wilc1000/spi.c b/drivers/staging/wilc1000/spi.c
->> index 44f7d48851b5..11653ac118cd 100644
->> --- a/drivers/staging/wilc1000/spi.c
->> +++ b/drivers/staging/wilc1000/spi.c
->> @@ -139,7 +139,7 @@ struct wilc_spi_read_rsp_data {
->>         u8 status;
->>         u8 resp_header;
->>         u8 resp_data[4];
->> -       u8 crc[0];
->> +       u8 crc[];
->>  } __packed;
-> more zero-length arrays in wilc1000, spi.c, struct wilc_spi_cmd, and in fw.h
-> 
 
-Oh wow, I hadn't thought about cases like this:
+On Thu, Feb 20, 2020 at 11:03 AM Mark Pearson <mpearson@lenovo.com> wrote:
+>
+> Hi Rajat,
+>
+> > -----Original Message-----
+> > From: Rajat Jain <rajatja@google.com>
+> > Sent: Thursday, February 20, 2020 1:39 PM
+> > >
+> > > For this particular issue what is the best way to contribute and get
+> > > involved? We'd like to make it so ePrivacy can be used more easily fr=
+om
+> > > Linux. I agree a more generic way of controlling it would be good.
+> > > I looked at the proposed patch from Rajat
+> > > (https://lkml.org/lkml/2019/10/22/967) - it seems like a good solutio=
+n to me.
+> > > We can help with testing that on our platforms if that would be usefu=
+l.
+> >
+> > Thanks you, just so that you know, the latest patchset is at:
+> > https://lkml.org/lkml/2019/12/20/794
+> >
+> > It would be great to get some additional testing if possible. I can
+> > send a sample ACPI (for our platform) in case it helps.
+> >
+> Sounds good - we'll definitely try this out and see how it goes. I suspec=
+t we'll have some questions once we try it out and get more familiar.
+>
+> > >
+> > > I need to understand how we connect that implementation with the ACPI
+> > > controls we have (as I believe what we have are thinkpad specific and=
+ not to
+> > > a drm spec; we need to confirm that). We also have the ACPI events th=
+at
+> > > notify if ePrivacy was changed by the hotkeys and that seems like som=
+ething
+> > > that should be done in thinkpad_acpi.c and not the drm code.
+> > >
+> > > Not sure if the two need to be connected somehow (or if handling the
+> > > event is actually not important and polling is acceptable)?
+> >
+> > So there was some brief discussion about this on my patches - but
+> > atleast on  the platforms I have seen, there was no way to change the
+> > privacy screen out of software / kernel control. Essentially, if there
+> > are hotkeys, they would send an input event to the kernel, who'd send
+> > them to userspace, who'd use the DRM method to toggle the privacy
+> > screen. Thus the current version of the patch only supports
+> > controlling the privacy screen via set() method. The get() method just
+> > returns the cached value.I hope that works for you.
+> >
+> OK - on the thinkpads we have function+D as a 'hotkey' to control the fea=
+ture...and my understanding is that bypasses everything and goes straight t=
+o the firmware.
+>
+> The changes Nitin had been working on in thinkpad_acpi.c was to make this=
+ more Linux and friendly - provide a sysfs hook for user space to connect t=
+o with the aim of allowing it to be configured from user space and have on =
+screen display when it was triggered etc.
+>
+> I'm personally not sure yet how this ties up with the DRM method - more d=
+igging required. I'm intrigued to see if it works on our systems (sadly I d=
+on't have anything with that feature available on my desk right now...I nee=
+d to get my hands on one)
 
-struct wilc_spi_cmd {
-        u8 cmd_type;
-        union {
-                struct {
-                        u8 addr[3];
-                        u8 crc[0];
-                } __packed simple_cmd;
-                struct {
-                        u8 addr[3];
-                        u8 size[2];
-                        u8 crc[0];
-                } __packed dma_cmd;
-                struct {
-                        u8 addr[3];
-                        u8 size[3];
-                        u8 crc[0];
-                } __packed dma_cmd_ext;
-                struct {
-                        u8 addr[2];
-                        __be32 data;
-                        u8 crc[0];
-                } __packed internal_w_cmd;
-                struct {
-                        u8 addr[3];
-                        __be32 data;
-                        u8 crc[0];
-                } __packed w_cmd;
-        } u;
-} __packed;
+Just FYI, Here is the brief discussion we had about an interrupt
+mechanism to support a (hardware based) "kill switch" for the privacy
+screen.
+https://lkml.org/lkml/2019/10/25/992
 
-Thanks for the feedback.
---
-Gustavo
+Thanks,
+
+Rajat
+
+>
+> Thanks
+> Mark
