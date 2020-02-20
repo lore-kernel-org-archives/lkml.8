@@ -2,111 +2,123 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E2C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADF1C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937162465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:35:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="fmztncXT"
+	by mail.kernel.org (Postfix) with ESMTP id 91F192465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582223783;
+	bh=vrlr8Yaqzkj9ziXbvSzTa5UcFiN65AQ7Ci7jczR5isA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=OGQQ6wqn1eLx7gvfRMY5MWGubv0uVoS1iiBuTrwGnSJbjnGVNVR/1GS2CIUrXvBIp
+	 0CgqRVCUna3Fo8kd7Dz1WXzClbKXpTSZkUoY7GNkqTo7kXX/5zb34pJ0nPwg747XJv
+	 x9iJ4IATjE/6SW/KGrDjC2Z+Ze76dOEPTs+uAv5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728434AbgBTSf4 (ORCPT
+        id S1728701AbgBTSgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:35:56 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:42843 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgBTSfz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:35:55 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dc14so2345415qvb.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ui1GYJ+3TKdhDhER6hX80GC8ogMrESlUENKJdsvmiJw=;
-        b=fmztncXTcGHJiFgzRFjgjLEip0FvqqT27efzmzqFHV75pB/K83qJ3D1hNW4E70dXeZ
-         CJFi4rvcQHriQibThmglNljM7AMJM2WmKPyRjHJZtP1+ft4kHUBatB/TJEuTN6xxhTiN
-         E6+kHjefonE2x7TQtlE6uRTgWbAoPRwp5TtqE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ui1GYJ+3TKdhDhER6hX80GC8ogMrESlUENKJdsvmiJw=;
-        b=PVOk/1Z1JZyv2GKwqGwVWtOr5bbu29Xq2sMxZAPmzsNXau6dCd0O9NcB5M7pTYcdrD
-         3/yFdQaZk+0hhGqK3yEvLXnk4lbrRuhizJc0stV5eD3tVUZqeW/sFnCiw16rQfB7xVoE
-         meqy09Vt3RQdpYyPQMnHoEuM4k1lfaxBm28qXhkPT3n4ODItDhcwE74feVOru11Ru0qG
-         sBlQz3e5KhQ42axpV/SkjE7DLwkgAUJMtE5lQKuP37elDnsK4Cts/lAZFn6Cg33gdtKs
-         esTsqZ1UOHsvMTeV357NUdfhkbD8N1SBX19Nxl26OmOvQ4STO1pefvKONs3fgX1HhedU
-         oT6w==
-X-Gm-Message-State: APjAAAX8T/UQ6ZUunMf0fK6rXB1xFwrgXD76cPJh+x49+NtaE3+YciBs
-        VdjE2/NqRyYYppToLoeuP0vCtQ==
-X-Google-Smtp-Source: APXvYqxmnMhAcMk3lY0AI5vqnwgSVzy5Kgiji+XEXQ3tkC5VUl2qSX0E++tOv9JyuEOMeCuZhNP74Q==
-X-Received: by 2002:ad4:478b:: with SMTP id z11mr27009509qvy.185.1582223754273;
-        Thu, 20 Feb 2020 10:35:54 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:a76b])
-        by smtp.gmail.com with ESMTPSA id g9sm226424qkl.11.2020.02.20.10.35.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 10:35:53 -0800 (PST)
-Date:   Thu, 20 Feb 2020 13:35:52 -0500
-From:   Chris Down <chris@chrisdown.name>
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
-Message-ID: <20200220183552.GA2181061@chrisdown.name>
-References: <cover.1582216294.git.schatzberg.dan@gmail.com>
- <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+        Thu, 20 Feb 2020 13:36:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728217AbgBTSgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:36:22 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C332465D;
+        Thu, 20 Feb 2020 18:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582223781;
+        bh=vrlr8Yaqzkj9ziXbvSzTa5UcFiN65AQ7Ci7jczR5isA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=aZOo1UB7NpW8BSawzs7dZGEoVH4N1bUITwekfRWZjJY7ZPihXzJCYpbpEAAffrQ4n
+         y6kiFKN9rO73DEQ+s12+otJ8e/X7pIK7Lk0RfWa9Ws8rmC7I75n5N+PlJQY+lojkC7
+         xMjRiSrcprMWCzDMv87T9zb4dcqn7L2QAwix5ow8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 314ED352034E; Thu, 20 Feb 2020 10:36:21 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:36:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Dave Airlie <airlied@linux.ie>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>
+Subject: Re: drm_dp_mst_topology.c and old compilers
+Message-ID: <20200220183621.GW2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200220004232.GA28048@paulmck-ThinkPad-P72>
+ <CADnq5_OJSHV5XotA6hORgQSrC4A-ZFzfXN_NRMGYFka+MTyjGg@mail.gmail.com>
+ <158218553821.8112.10047864129562395990@skylake-alporthouse-com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+In-Reply-To: <158218553821.8112.10047864129562395990@skylake-alporthouse-com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Schatzberg writes:
->memalloc_use_memcg() worked for kernel allocations but was silently
->ignored for user pages.
->
->This patch establishes a precedence order for who gets charged:
->
->1. If there is a memcg associated with the page already, that memcg is
->   charged. This happens during swapin.
->
->2. If an explicit mm is passed, mm->memcg is charged. This happens
->   during page faults, which can be triggered in remote VMs (eg gup).
->
->3. Otherwise consult the current process context. If it has configured
->   a current->active_memcg, use that. Otherwise, current->mm->memcg.
->
->Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
->would always charge the root cgroup. Now it looks up the current
->active_memcg first (falling back to charging the root cgroup if not
->set).
->
->Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
->Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->Acked-by: Tejun Heo <tj@kernel.org>
+On Thu, Feb 20, 2020 at 07:58:58AM +0000, Chris Wilson wrote:
+> Quoting Alex Deucher (2020-02-20 02:52:32)
+> > On Wed, Feb 19, 2020 at 7:42 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > Hello!
+> > >
+> > > A box with GCC 4.8.3 compiler didn't like drm_dp_mst_topology.c.  The
+> > > following (lightly tested) patch makes it happy and seems OK for newer
+> > > compilers as well.
+> > >
+> > > Is this of interest?
+> > 
+> > How about a memset instead?  That should be consistent across compilers.
+> 
+> The kernel has adopted the gccism: struct drm_dp_desc desc = {};
+> git grep '= {}' | wc -l: 2046
+> git grep '= { }' | wc -l: 694
+> -Chris
 
-Acked-by: Chris Down <chris@chrisdown.name>
+And this works well, a big "thank you!" to all three of you!
 
-Thanks! The clarification the v2 thread for this made things clear to me.
+Please see below for the updated patch.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 78c0e53a98a9772a99e46806f8fcbe1140d667a4
+Author: Paul E. McKenney <paulmck@kernel.org>
+Date:   Wed Feb 19 16:42:47 2020 -0800
+
+    EXP drm: Make drm_dp_mst_dsc_aux_for_port() safe for old compilers
+    
+    Older compilers either want two extra pairs of curly braces around the
+    initializer for local variable desc, or they want a single pair of curly
+    braces with nothing inside.  Current Linux-kernel practice favors the
+    latter, so this commit makes it so.
+    
+    Suggested-by: Chris Wilson <chris@chris-wilson.co.uk>
+    Suggested-by: Joe Perches <joe@perches.com>
+    Suggested-by: Christoph Hellwig <hch@infradead.org>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index 20cdaf3..b123f60 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -5396,7 +5396,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
+ {
+ 	struct drm_dp_mst_port *immediate_upstream_port;
+ 	struct drm_dp_mst_port *fec_port;
+-	struct drm_dp_desc desc = { 0 };
++	struct drm_dp_desc desc = { };
+ 	u8 endpoint_fec;
+ 	u8 endpoint_dsc;
+ 
