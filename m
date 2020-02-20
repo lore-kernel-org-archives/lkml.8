@@ -2,93 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE34C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E1CC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE23206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582228311;
-	bh=inbcbcpwi5tQ6Mt2SNqbNgb0gw+R9VogWJuC9bHVY+I=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=ILeXs2uvhwVuwWY2aaNX5jgxX4ghUeGRyETLBU5UFnka4cohq1ji0qVfM3GszXFro
-	 dBdPoXd55UYgzmDpxqNXEDvmJPhAbxFBbbI1m93YUoR4vsILR7kZ6j8aNhrKcrYkxK
-	 1IBN1c8opw1F4UqJHzCNm3KqhmnbHKxkFqL+K+Po=
+	by mail.kernel.org (Postfix) with ESMTP id C58E7206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgBTTvu (ORCPT
+        id S1729034AbgBTTvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:51:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728448AbgBTTvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:51:50 -0500
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C490206E2;
-        Thu, 20 Feb 2020 19:51:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582228309;
-        bh=inbcbcpwi5tQ6Mt2SNqbNgb0gw+R9VogWJuC9bHVY+I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Kctczxrrh91HLKuFd73ECPF0UaWVGxACvyapJC0utBRhBKmwF00G3MRGwh8cG3NyR
-         OraqzAzXWRLA5KRXpovUYbuvHhCCCZ/OhurXeNCcfTAeHzTeyE33Ejzw4hRl622KL3
-         7oV0yBI93zaJuVSPfy78Zd0zymxd9t0WKAOx8ETc=
-Message-ID: <1582228308.12738.1.camel@kernel.org>
-Subject: Re: [PATCH] tracing: Skip software disabled event at
- __synth_event_trace_end()
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     artem.bityutskiy@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Date:   Thu, 20 Feb 2020 13:51:48 -0600
-In-Reply-To: <20200220143412.65432e7c@gandalf.local.home>
-References: <158148685911.20407.3538292497442671878.stgit@devnote2>
-         <20200217183340.121fed47e680584c4ca6dd93@kernel.org>
-         <20200220143412.65432e7c@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Feb 2020 14:51:53 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55785 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbgBTTvw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:51:52 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j4rrS-0006UR-54; Thu, 20 Feb 2020 19:51:50 +0000
+Date:   Thu, 20 Feb 2020 20:51:49 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/9] sysfs: add sysfs_link_change_owner()
+Message-ID: <20200220195149.xha7jltmfzs3xs7g@wittgenstein>
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
+ <20200218162943.2488012-3-christian.brauner@ubuntu.com>
+ <20200220111443.GD3374196@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200220111443.GD3374196@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Thu, 2020-02-20 at 14:34 -0500, Steven Rostedt wrote:
-> On Mon, 17 Feb 2020 18:33:40 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > >  static inline void
-> > >  __synth_event_trace_end(struct synth_event_trace_state
-> > > *trace_state)
-> > >  {
-> > > +	if (trace_state->disabled)
-> > > +		return;
-> > > +  
+On Thu, Feb 20, 2020 at 12:14:43PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Feb 18, 2020 at 05:29:36PM +0100, Christian Brauner wrote:
+> > Add a helper to change the owner of a sysfs link.
+> > This function will be used to correctly account for kobject ownership
+> > changes, e.g. when moving network devices between network namespaces.
 > > 
-> > Aah, I assumed that trace_state should be initialized with 0, but
-> > in really, it could be just allocated on the stack.
-> > We has to set trace_state->disabled = false in
-> > __synth_event_trace_start().
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > ---
+> > /* v2 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add comment how ownership of sysfs object is changed.
+> > 
+> > /* v3 */
+> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> >    - Add explicit uid/gid parameters.
+> > ---
+> >  fs/sysfs/file.c       | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/sysfs.h | 10 ++++++++++
+> >  2 files changed, 50 insertions(+)
+> > 
+> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
+> > index 32bb04b4d9d9..df5107d7b3fd 100644
+> > --- a/fs/sysfs/file.c
+> > +++ b/fs/sysfs/file.c
+> > @@ -570,6 +570,46 @@ static int internal_change_owner(struct kernfs_node *kn, struct kobject *kobj,
+> >  	return kernfs_setattr(kn, &newattrs);
+> >  }
+> >  
+> > +/**
+> > + *	sysfs_link_change_owner - change owner of a link.
+> > + *	@kobj:	object of the kernfs_node the symlink is located in.
+> > + *	@targ:	object of the kernfs_node the symlink points to.
+> > + *	@name:	name of the link.
+> > + *	@kuid:	new owner's kuid
+> > + *	@kgid:	new owner's kgid
+> > + */
+> > +int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
+> > +			    const char *name, kuid_t kuid, kgid_t kgid)
+> > +{
+> > +	struct kernfs_node *parent, *kn = NULL;
+> > +	int error;
+> > +
+> > +	if (!kobj)
+> > +		parent = sysfs_root_kn;
+> > +	else
+> > +		parent = kobj->sd;
 > 
-> Is this patch good enough to take, or is there another one coming?
+> I don't understand this, why would (!kobj) ever be a valid situation?
+
+Yeah, a caller could just pass in "sysfs_root_kn" itself if they for
+some reason needed to.
+
 > 
+> > +	if (!targ->state_in_sysfs)
+> > +		return -EINVAL;
+> 
+> Should you also check kobj->state_in_sysfs as well?
 
-I think this patch is good to take.  The fix for setting trace_state-
->disabled to false would be covered by this later patch:
+Probably. I'll take a closer look now.
 
-  [PATCH 2/2] tracing: Clear trace_state when starting trace
-
-https://lore.kernel.org/lkml/158193315899.8868.1781259176894639952.stgit@devnote2/
-
-Tom
-
-> -- Steve
+Thanks!
+Christian
