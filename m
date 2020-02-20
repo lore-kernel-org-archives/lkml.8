@@ -2,164 +2,308 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33854C34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74695C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 131F824654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3736624654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Tk9Eey1v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgBTGh6 (ORCPT
+        id S1726805AbgBTGi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:37:58 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58330 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725962AbgBTGh5 (ORCPT
+        Thu, 20 Feb 2020 01:38:28 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:55238 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726759AbgBTGi1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:37:57 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K6Ns99048858
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:37:56 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y99pfdmrk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:37:56 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Thu, 20 Feb 2020 06:37:54 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Feb 2020 06:37:51 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01K6bokh42664382
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 06:37:50 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F15A642047;
-        Thu, 20 Feb 2020 06:37:49 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2381E4203F;
-        Thu, 20 Feb 2020 06:37:48 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.199.56.212])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Feb 2020 06:37:47 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Hendrik Brueckner <brueckner@linux.vnet.ibm.com>,
-        Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH] tools headers: Move powerpc and s390 syscall table check to check-headers.sh
-Date:   Thu, 20 Feb 2020 12:07:40 +0530
-X-Mailer: git-send-email 2.24.1
+        Thu, 20 Feb 2020 01:38:27 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582180706; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Izr/vsm9x+ObsGmkOF8JwUW+2DRyGOYwxwFKyWQAf60=;
+ b=Tk9Eey1v8MOtezX2F9xmfrv3V5VpcljrTfsWUOV+pQSOYmbwRotAJ3PV2GD73APxE4QTEt0n
+ eF14kTqrKH/O5wnVwL95siS9bkOmH769eychuxw64DCl0WFD4ZoQyPOYj5mUGEI46AYja7ID
+ Q2f7S4yhHIWy7qe+F0exd8BZlGY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e2961.7fafa2534f48-smtp-out-n01;
+ Thu, 20 Feb 2020 06:38:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BA093C4479C; Thu, 20 Feb 2020 06:38:25 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: isaacm)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AA7DAC43383;
+        Thu, 20 Feb 2020 06:38:24 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022006-0016-0000-0000-000002E87C09
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022006-0017-0000-0000-0000334B96ED
-Message-Id: <20200220063740.785913-1-naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_01:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 phishscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200046
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 19 Feb 2020 22:38:24 -0800
+From:   isaacm@codeaurora.org
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, pratikp@codeaurora.org,
+        Liam Mark <lmark@codeaurora.org>
+Subject: Re: [RFC PATCH] iommu/iova: Add a best-fit algorithm
+In-Reply-To: <b9d31aa9-fb57-ad31-52e4-1a5c21e5e0de@arm.com>
+References: <1581721602-17010-1-git-send-email-isaacm@codeaurora.org>
+ <b9d31aa9-fb57-ad31-52e4-1a5c21e5e0de@arm.com>
+Message-ID: <7239ddd532e94a4371289f3be23c66a3@codeaurora.org>
+X-Sender: isaacm@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is good to know changes in headers and syscall tables across all
-architectures so that the changes can be sync'ed at once. Move check for
-arch-specific syscall table changes from tools/perf/arch for powerpc and
-s390, to the generic check-headers.sh script, similar to how we do the
-check for x86.
+On 2020-02-17 08:03, Robin Murphy wrote:
+> On 14/02/2020 11:06 pm, Isaac J. Manjarres wrote:
+>> From: Liam Mark <lmark@codeaurora.org>
+>> 
+>> Using the best-fit algorithm, instead of the first-fit
+>> algorithm, may reduce fragmentation when allocating
+>> IOVAs.
+> 
+> What kind of pathological allocation patterns make that a serious
+> problem? Is there any scope for simply changing the order of things in
+> the callers? Do these drivers also run under other DMA API backends
+> (e.g. 32-bit Arm)?
+> 
+The usecases where the IOVA space has been fragmented have 
+non-deterministic allocation
+patterns, and thus, it's not feasible to change the allocation order to 
+avoid fragmenting
+the IOVA space.
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
-Thomas, Hendrik,
-I see quite some changes with s390 syscall table since the previous 
-sync. You may want to take a look.
+ From what we've observed, the usecases involve allocations of two types 
+of
+buffers: one type of buffer between 1 KB to 4 MB in size, and another 
+type of
+buffer between 1 KB to 400 MB in size.
 
-- Naveen
+The pathological scenarios seem to arise when there are
+many (100+) randomly distributed non-power of two allocations, which in 
+some cases leaves
+behind holes of up to 100+ MB in the IOVA space.
 
+Here are some examples that show the state of the IOVA space under which 
+failure to
+allocate an IOVA was observed:
 
- tools/perf/arch/powerpc/Makefile | 7 -------
- tools/perf/arch/s390/Makefile    | 4 ----
- tools/perf/check-headers.sh      | 2 ++
- 3 files changed, 2 insertions(+), 11 deletions(-)
+Instance 1:
+	Currently mapped total size : ~1.3GB
+	Free space available : ~2GB
+	Map for ~162MB fails.
+         Max contiguous space available : < 162MB
 
-diff --git a/tools/perf/arch/powerpc/Makefile b/tools/perf/arch/powerpc/Makefile
-index e58d00d62f02..840ea0e59287 100644
---- a/tools/perf/arch/powerpc/Makefile
-+++ b/tools/perf/arch/powerpc/Makefile
-@@ -14,7 +14,6 @@ PERF_HAVE_JITDUMP := 1
- out    := $(OUTPUT)arch/powerpc/include/generated/asm
- header32 := $(out)/syscalls_32.c
- header64 := $(out)/syscalls_64.c
--syskrn := $(srctree)/arch/powerpc/kernel/syscalls/syscall.tbl
- sysprf := $(srctree)/tools/perf/arch/powerpc/entry/syscalls
- sysdef := $(sysprf)/syscall.tbl
- systbl := $(sysprf)/mksyscalltbl
-@@ -23,15 +22,9 @@ systbl := $(sysprf)/mksyscalltbl
- _dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
- 
- $(header64): $(sysdef) $(systbl)
--	@(test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
--	(diff -B $(sysdef) $(syskrn) >/dev/null) \
--	|| echo "Warning: Kernel ABI header at '$(sysdef)' differs from latest version at '$(syskrn)'" >&2 )) || true
- 	$(Q)$(SHELL) '$(systbl)' '64' $(sysdef) > $@
- 
- $(header32): $(sysdef) $(systbl)
--	@(test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
--	(diff -B $(sysdef) $(syskrn) >/dev/null) \
--	|| echo "Warning: Kernel ABI header at '$(sysdef)' differs from latest version at '$(syskrn)'" >&2 )) || true
- 	$(Q)$(SHELL) '$(systbl)' '32' $(sysdef) > $@
- 
- clean::
-diff --git a/tools/perf/arch/s390/Makefile b/tools/perf/arch/s390/Makefile
-index 6ac8887be7c9..74bffbea03e2 100644
---- a/tools/perf/arch/s390/Makefile
-+++ b/tools/perf/arch/s390/Makefile
-@@ -12,7 +12,6 @@ PERF_HAVE_JITDUMP := 1
- 
- out    := $(OUTPUT)arch/s390/include/generated/asm
- header := $(out)/syscalls_64.c
--syskrn := $(srctree)/arch/s390/kernel/syscalls/syscall.tbl
- sysprf := $(srctree)/tools/perf/arch/s390/entry/syscalls
- sysdef := $(sysprf)/syscall.tbl
- systbl := $(sysprf)/mksyscalltbl
-@@ -21,9 +20,6 @@ systbl := $(sysprf)/mksyscalltbl
- _dummy := $(shell [ -d '$(out)' ] || mkdir -p '$(out)')
- 
- $(header): $(sysdef) $(systbl)
--	@(test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
--        (diff -B $(sysdef) $(syskrn) >/dev/null) \
--        || echo "Warning: Kernel ABI header at '$(sysdef)' differs from latest version at '$(syskrn)'" >&2 )) || true
- 	$(Q)$(SHELL) '$(systbl)' $(sysdef) > $@
- 
- clean::
-diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-index 68039a96c1dc..272d9ad33bf9 100755
---- a/tools/perf/check-headers.sh
-+++ b/tools/perf/check-headers.sh
-@@ -123,5 +123,7 @@ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in
- 
- # diff non-symmetric files
- check_2 tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-+check_2 tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/syscalls/syscall.tbl
-+check_2 tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
- 
- cd tools/perf
--- 
-2.24.1
+Instance 2:
+	Currently mapped total size : ~950MB
+	Free space available : ~2.3GB
+	Map for ~320MB fails.
+	Max contiguous space available : ~189MB
 
+Instance 3:
+	Currently mapped total size : ~1.2GB
+	Free space available : ~2.7GB
+	Map for ~162MB fails.
+	Max contiguous space available : <162MB
+
+We are still in the process of collecting data with the best-fit 
+algorithm enabled
+to provide some numbers to show that it results in less IOVA space
+fragmentation.
+
+To answer your question about whether if this driver run under other DMA 
+API backends:
+yes, such as 32 bit ARM.
+> More generally, if a driver knows enough to want to second-guess a
+> generic DMA API allocator, that's a reasonable argument that it should
+> perhaps be properly IOMMU-aware and managing its own address space
+> anyway. Perhaps this effort might be better spent finishing off the
+> DMA ops bypass stuff to make that approach more robust and welcoming.
+> 
+> Robin.
+> 
+>> Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+>> ---
+>>   drivers/iommu/dma-iommu.c | 17 +++++++++++
+>>   drivers/iommu/iova.c      | 73 
+>> +++++++++++++++++++++++++++++++++++++++++++++--
+>>   include/linux/dma-iommu.h |  7 +++++
+>>   include/linux/iova.h      |  1 +
+>>   4 files changed, 96 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+>> index a2e96a5..af08770 100644
+>> --- a/drivers/iommu/dma-iommu.c
+>> +++ b/drivers/iommu/dma-iommu.c
+>> @@ -364,9 +364,26 @@ static int iommu_dma_deferred_attach(struct 
+>> device *dev,
+>>   	if (unlikely(ops->is_attach_deferred &&
+>>   			ops->is_attach_deferred(domain, dev)))
+>>   		return iommu_attach_device(domain, dev);
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * Should be called prior to using dma-apis.
+>> + */
+>> +int iommu_dma_enable_best_fit_algo(struct device *dev)
+>> +{
+>> +	struct iommu_domain *domain;
+>> +	struct iova_domain *iovad;
+>> +
+>> +	domain = iommu_get_domain_for_dev(dev);
+>> +	if (!domain || !domain->iova_cookie)
+>> +		return -EINVAL;
+>>   +	iovad = &((struct iommu_dma_cookie *)domain->iova_cookie)->iovad;
+>> +	iovad->best_fit = true;
+>>   	return 0;
+>>   }
+>> +EXPORT_SYMBOL(iommu_dma_enable_best_fit_algo);
+>>     /**
+>>    * dma_info_to_prot - Translate DMA API directions and attributes to 
+>> IOMMU API
+>> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+>> index 0e6a953..716b05f 100644
+>> --- a/drivers/iommu/iova.c
+>> +++ b/drivers/iommu/iova.c
+>> @@ -50,6 +50,7 @@ static unsigned long iova_rcache_get(struct 
+>> iova_domain *iovad,
+>>   	iovad->anchor.pfn_lo = iovad->anchor.pfn_hi = IOVA_ANCHOR;
+>>   	rb_link_node(&iovad->anchor.node, NULL, &iovad->rbroot.rb_node);
+>>   	rb_insert_color(&iovad->anchor.node, &iovad->rbroot);
+>> +	iovad->best_fit = false;
+>>   	init_iova_rcaches(iovad);
+>>   }
+>>   EXPORT_SYMBOL_GPL(init_iova_domain);
+>> @@ -227,6 +228,69 @@ static int __alloc_and_insert_iova_range(struct 
+>> iova_domain *iovad,
+>>   	return -ENOMEM;
+>>   }
+>>   +static int __alloc_and_insert_iova_best_fit(struct iova_domain 
+>> *iovad,
+>> +		unsigned long size, unsigned long limit_pfn,
+>> +			struct iova *new, bool size_aligned)
+>> +{
+>> +	struct rb_node *curr, *prev;
+>> +	struct iova *curr_iova, *prev_iova;
+>> +	unsigned long flags;
+>> +	unsigned long align_mask = ~0UL;
+>> +	struct rb_node *candidate_rb_parent;
+>> +	unsigned long new_pfn, candidate_pfn = ~0UL;
+>> +	unsigned long gap, candidate_gap = ~0UL;
+>> +
+>> +	if (size_aligned)
+>> +		align_mask <<= limit_align(iovad, fls_long(size - 1));
+>> +
+>> +	/* Walk the tree backwards */
+>> +	spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
+>> +	curr = &iovad->anchor.node;
+>> +	prev = rb_prev(curr);
+>> +	for (; prev; curr = prev, prev = rb_prev(curr)) {
+>> +		curr_iova = rb_entry(curr, struct iova, node);
+>> +		prev_iova = rb_entry(prev, struct iova, node);
+>> +
+>> +		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
+>> +		new_pfn = (limit_pfn - size) & align_mask;
+>> +		gap = curr_iova->pfn_lo - prev_iova->pfn_hi - 1;
+>> +		if ((limit_pfn >= size) && (new_pfn > prev_iova->pfn_hi)
+>> +				&& (gap < candidate_gap)) {
+>> +			candidate_gap = gap;
+>> +			candidate_pfn = new_pfn;
+>> +			candidate_rb_parent = curr;
+>> +			if (gap == size)
+>> +				goto insert;
+>> +		}
+>> +	}
+>> +
+>> +	curr_iova = rb_entry(curr, struct iova, node);
+>> +	limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
+>> +	new_pfn = (limit_pfn - size) & align_mask;
+>> +	gap = curr_iova->pfn_lo - iovad->start_pfn;
+>> +	if (limit_pfn >= size && new_pfn >= iovad->start_pfn &&
+>> +			gap < candidate_gap) {
+>> +		candidate_gap = gap;
+>> +		candidate_pfn = new_pfn;
+>> +		candidate_rb_parent = curr;
+>> +	}
+>> +
+>> +insert:
+>> +	if (candidate_pfn == ~0UL) {
+>> +		spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	/* pfn_lo will point to size aligned address if size_aligned is set 
+>> */
+>> +	new->pfn_lo = candidate_pfn;
+>> +	new->pfn_hi = new->pfn_lo + size - 1;
+>> +
+>> +	/* If we have 'prev', it's a valid place to start the insertion. */
+>> +	iova_insert_rbtree(&iovad->rbroot, new, candidate_rb_parent);
+>> +	spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
+>> +	return 0;
+>> +}
+>> +
+>>   static struct kmem_cache *iova_cache;
+>>   static unsigned int iova_cache_users;
+>>   static DEFINE_MUTEX(iova_cache_mutex);
+>> @@ -302,8 +366,13 @@ struct iova *
+>>   	if (!new_iova)
+>>   		return NULL;
+>>   -	ret = __alloc_and_insert_iova_range(iovad, size, limit_pfn + 1,
+>> -			new_iova, size_aligned);
+>> +	if (iovad->best_fit) {
+>> +		ret = __alloc_and_insert_iova_best_fit(iovad, size,
+>> +				limit_pfn + 1, new_iova, size_aligned);
+>> +	} else {
+>> +		ret = __alloc_and_insert_iova_range(iovad, size, limit_pfn + 1,
+>> +				new_iova, size_aligned);
+>> +	}
+>>     	if (ret) {
+>>   		free_iova_mem(new_iova);
+>> diff --git a/include/linux/dma-iommu.h b/include/linux/dma-iommu.h
+>> index 2112f21..b01a31a 100644
+>> --- a/include/linux/dma-iommu.h
+>> +++ b/include/linux/dma-iommu.h
+>> @@ -37,6 +37,8 @@ void iommu_dma_compose_msi_msg(struct msi_desc 
+>> *desc,
+>>     void iommu_dma_get_resv_regions(struct device *dev, struct 
+>> list_head *list);
+>>   +int iommu_dma_enable_best_fit_algo(struct device *dev);
+>> +
+>>   #else /* CONFIG_IOMMU_DMA */
+>>     struct iommu_domain;
+>> @@ -78,5 +80,10 @@ static inline void 
+>> iommu_dma_get_resv_regions(struct device *dev, struct list_he
+>>   {
+>>   }
+>>   +static inline int iommu_dma_enable_best_fit_algo(struct device 
+>> *dev)
+>> +{
+>> +	return -ENODEV;
+>> +}
+>> +
+>>   #endif	/* CONFIG_IOMMU_DMA */
+>>   #endif	/* __DMA_IOMMU_H */
+>> diff --git a/include/linux/iova.h b/include/linux/iova.h
+>> index a0637ab..58713bb 100644
+>> --- a/include/linux/iova.h
+>> +++ b/include/linux/iova.h
+>> @@ -95,6 +95,7 @@ struct iova_domain {
+>>   						   flush-queues */
+>>   	atomic_t fq_timer_on;			/* 1 when timer is active, 0
+>>   						   when not */
+>> +	bool best_fit;
+>>   };
+>>     static inline unsigned long iova_size(struct iova *iova)
+>> 
