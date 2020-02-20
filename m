@@ -2,121 +2,134 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775CCC11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96037C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F793206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E3B208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582228907;
-	bh=E3wtXDlHqe9uG1b3FccAdsybeJfQVvMHZ1RK3GWM/sg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tIzhmb0ODBkwqheSTduu1/HoZacsZbmuukP3ob2NHEeezwA0o7rExiN7SfI4+dRd2
-	 wCN1VYllMFu7cFG7Kj6rt8/sXqARRoiRLrN/ZNVFICk1yz8Xt4LsCoHhvbJIYzTfi0
-	 ActUQMKLMPqfJC14AxKtf8r+CJ/MEdlvgmeq3EWQ=
+	s=default; t=1582228911;
+	bh=HmI/fQ1CTkYnKRxG/BHRZ/wExiUnQ0GpijZHX7xjyg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XEyijDUCAZ09e2yz1JZUWE72HeQP8VRrsSpuZcBDq92pA09I14tT9BDYJqtRVN8/s
+	 LqZvzmM6zt6ilUGjZMKeoSq/1jxNANVRGB7JDvqRr6ZalbilvWRbB1Ao3KaEyeErsG
+	 BWvBcLY/tXRYE7ov/0WLSKTuinsl/2RW5m860NoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgBTUBq (ORCPT
+        id S1729073AbgBTUBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:01:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47184 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 15:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbgBTUBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:01:45 -0500
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728556AbgBTUBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:01:49 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9D9124650;
-        Thu, 20 Feb 2020 20:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 036E124650;
+        Thu, 20 Feb 2020 20:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582228904;
-        bh=E3wtXDlHqe9uG1b3FccAdsybeJfQVvMHZ1RK3GWM/sg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u9GdaiH1AxhdmxCLobZH59ld4VoU8bKkNCMkr+kUaThLTzlb7w+ao+wURI3rU/lek
-         kkrMmCnfUd1uAHE0IXSzPpNjvapSXrhlWTqfH6XQ6LC86ycV0l4A54mw0s2vnKLNgv
-         Q2N7uUTFijrtv0F9zAGaPeLCtnkS9xrY/PtegQSM=
-Received: by mail-qt1-f171.google.com with SMTP id n17so3819030qtv.2;
-        Thu, 20 Feb 2020 12:01:44 -0800 (PST)
-X-Gm-Message-State: APjAAAVVsDDV1JloJ0p6wNPt5d2gjjBteVInGArU5TqOjMJeAkhffqfZ
-        4eoOiqNEkY5sgy015gNQSwk8OLWIOGNc0PXzKA==
-X-Google-Smtp-Source: APXvYqzjdY4RP8PXrUjP9DhJJfjP2nOH9wKbVDesN+YnyeYa7DustfCuvJPmOYppH7ViKAhlXHaPkzzxn/PcXp6k6M8=
-X-Received: by 2002:ac8:6747:: with SMTP id n7mr28217961qtp.224.1582228903752;
- Thu, 20 Feb 2020 12:01:43 -0800 (PST)
+        s=default; t=1582228907;
+        bh=HmI/fQ1CTkYnKRxG/BHRZ/wExiUnQ0GpijZHX7xjyg8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qen3W6NIEaj1Ry3wbDGSZ6H/aI4eYf++1PWgQuAy7o09fLYsSKVHexbiti+if/ZaM
+         Fkc9kbXAA3piTj+poXgVSAwyxkgWwlmvSKhAfVa61MNDVVR1NbOyXAF8qn1fACe//j
+         OmaXSFak9N7hWLoBDgpOnnBuZcsLl8M4FyuGcqMs=
+Date:   Thu, 20 Feb 2020 21:01:45 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Orson Zhai <orson.unisoc@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, mingmin.ling@unisoc.com,
+        orsonzhai@gmail.com, jingchao.ye@unisoc.com,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] Revert "PM / devfreq: Modify the device name as
+ devfreq(X) for sysfs"
+Message-ID: <20200220200145.GA3455749@kroah.com>
+References: <1582220224-1904-1-git-send-email-orson.unisoc@gmail.com>
+ <20200220191513.GA3450796@kroah.com>
+ <CALAqxLViRgGE8FsukCJL+doqk_GqabLDCtXBWem+VOGf9xXZdg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200217234657.9413-1-chris.packham@alliedtelesis.co.nz> <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20200217234657.9413-3-chris.packham@alliedtelesis.co.nz>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 20 Feb 2020 14:01:32 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK-zD+_gBw-HqzSfz8_r8wY041DcewKJYm7BZj4ToHeZw@mail.gmail.com>
-Message-ID: <CAL_JsqK-zD+_gBw-HqzSfz8_r8wY041DcewKJYm7BZj4ToHeZw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dt-bindings: hwmon: Document adt7475
- bypass-attenuator property
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Logan Shaw <logan.shaw@alliedtelesis.co.nz>,
-        Linux HWMON List <linux-hwmon@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALAqxLViRgGE8FsukCJL+doqk_GqabLDCtXBWem+VOGf9xXZdg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 17, 2020 at 5:47 PM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
->
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
->
-> Add documentation for the bypass-attenuator-in[0-4] property.
->
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
->  .../devicetree/bindings/hwmon/adt7475.yaml          | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/adt7475.yaml b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> index 2252499ea201..61da90c82649 100644
-> --- a/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> +++ b/Documentation/devicetree/bindings/hwmon/adt7475.yaml
-> @@ -39,6 +39,17 @@ properties:
->    reg:
->      maxItems: 1
->
-> +patternProperties:
-> +  "^bypass-attenuator-in[0-4]$":
-> +    maxItems: 1
-> +    minimum: 0
-> +    maximum: 1
+On Thu, Feb 20, 2020 at 11:47:41AM -0800, John Stultz wrote:
+> On Thu, Feb 20, 2020 at 11:15 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Feb 21, 2020 at 01:37:04AM +0800, Orson Zhai wrote:
+> > > This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
+> > >
+> > > The name changing as devfreq(X) breaks some user space applications,
+> > > such as Android HAL from Unisoc and Hikey [1].
+> > > The device name will be changed unexpectly after every boot depending
+> > > on module init sequence. It will make trouble to setup some system
+> > > configuration like selinux for Android.
+> > >
+> > > So we'd like to revert it back to old naming rule before any better
+> > > way being found.
+> > >
+> > > [1] https://lkml.org/lkml/2018/5/8/1042
+> > >
+> > > Cc: John Stultz <john.stultz@linaro.org>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+> > >
+> > > ---
+> > >  drivers/devfreq/devfreq.c | 4 +---
+> > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> > > index cceee8b..7dcf209 100644
+> > > --- a/drivers/devfreq/devfreq.c
+> > > +++ b/drivers/devfreq/devfreq.c
+> > > @@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> > >  {
+> > >       struct devfreq *devfreq;
+> > >       struct devfreq_governor *governor;
+> > > -     static atomic_t devfreq_no = ATOMIC_INIT(-1);
+> > >       int err = 0;
+> > >
+> > >       if (!dev || !profile || !governor_name) {
+> > > @@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+> > >       devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+> > >       atomic_set(&devfreq->suspend_count, 0);
+> > >
+> > > -     dev_set_name(&devfreq->dev, "devfreq%d",
+> > > -                             atomic_inc_return(&devfreq_no));
+> > > +     dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+> > >       err = device_register(&devfreq->dev);
+> > >       if (err) {
+> > >               mutex_unlock(&devfreq->lock);
+> > > --
+> > > 2.7.4
+> > >
+> >
+> > Thanks for this, I agree, this needs to get back to the way things were
+> > as it seems to break too many existing systems as-is.
+> >
+> > I'll queue this up in my tree now, thanks.
+> 
+> Oof this old thing. I unfortunately didn't get back to look at the
+> devfreq name node issue or the compatibility links, since the impact
+> of the regression (breaking the powerHAL's interactions with the gpu)
+> wasn't as big as other problems we had. While the regression was
+> frustrating, my only hesitancy at this point is that its been this way
+> since 4.10, so reverting the problematic patch is likely to break any
+> new users since then.
 
-The errors here are because you are mixing array and scalar constraints.
+4.11 :)
 
-You also need a vendor prefix and a type $ref.
-
-> +    description: |
-> +      Configures bypassing the individual voltage input attenuator. If
-> +      set to 1 the attenuator is bypassed if set to 0 the attenuator is
-> +      not bypassed. If the property is absent then the attenuator
-> +      retains it's configuration from the bios/bootloader.
-> +
->  required:
->    - compatible
->    - reg
-> @@ -52,6 +63,8 @@ examples:
->        hwmon@2e {
->          compatible = "adi,adt7476";
->          reg = <0x2e>;
-> +        bypass-attenuator-in0 = <1>;
-> +        bypass-attenuator-in1 = <0>;
->        };
->      };
->
-> --
-> 2.25.0
->
