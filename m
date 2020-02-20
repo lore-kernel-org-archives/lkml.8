@@ -2,129 +2,207 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAD2C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C040C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9524524670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1878424656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:29:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HuesXzqr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HVdjzWqF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBTC1b (ORCPT
+        id S1727402AbgBTC3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:27:31 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34481 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727370AbgBTC1a (ORCPT
+        Wed, 19 Feb 2020 21:29:43 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38513 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727211AbgBTC3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:27:30 -0500
-Received: by mail-lf1-f67.google.com with SMTP id l18so1805013lfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:27:29 -0800 (PST)
+        Wed, 19 Feb 2020 21:29:43 -0500
+Received: by mail-pg1-f194.google.com with SMTP id d6so1131983pgn.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:29:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6R9oDs43e49OHId2T3Say1GnAm1Sa9Cij9vjtGqns0w=;
-        b=HuesXzqrMwl5FNOeLlSDpflwNsgmCskzweQrWPKSAAxSCw7lHW66AFscJTMdsIwTfM
-         jGiq6RpnOPaB5Oyh2lOyEHyuTv6NINI8z9tC0O74kkXNN/1S0DYEYEQUa8h2V/dm0VDo
-         keHC2RRk+b6r2swD/RwtYXIMxjyjo6GlOu9gB+dUg2p6qefC+T1P4UZIm91Uo85LA+Rv
-         8G03jtGxUTJfvgq8RG9MYFoubld2O9BsSsn+sfVhyCNC5XE59suWdHa3oI9hlsR9Dp3B
-         GPuDBZymMhE77jVkDqjzwPoCAdP4mi7yBzI9bHOB2pq77Qnr4eN2rvsvew1j0jZvfkPA
-         bB7A==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=EEVYOjfi5PbSHH+WdgPROxvm0gDkTQzR92KMTQUcWvE=;
+        b=HVdjzWqFiZCI8G1rH0pU2pp39Y7AS6KZZ/rK62HCDFZoE/pVrjKzbD1LJ0cd57Fe2m
+         4gpf93cOUw7g3ErlADetf3lBMXp3jieq7XE3cW8gn0LeM/x/MgNoSSh3yJ/ZkXuhiQM+
+         TUKWPSPk8ExLDq7fWpN6yNYwhj7nG+U1NqQY4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6R9oDs43e49OHId2T3Say1GnAm1Sa9Cij9vjtGqns0w=;
-        b=QNjR86Ug6/ZOH6C7gdjfqpwLxX8t+ZqQgFEi9fYGsilAWDDbtFB9vJaKg0ZSYNZ3KM
-         SoZDalu18S5Qq/nENJX+jLaxIfNY7cStK50oqyrZF3jxR/ALFERP4BlZBJZmKHe30uiU
-         6lRgM5Y3ytt3Q87P4BvFupdms60WB70B9fXaRc1s7adF88SXuepfn3zZz38TiPVKRRKk
-         HIhicwufWWasrcxX70zLcAvnmkVKRVnHiGyl9kdJPZ+UMvxfQH8uPnLRpWE2W8yozBQR
-         JR/h6SRNilO2zu7VLEDXiRED1ugAZz/VjlTqxWO8Ni4oYdTnAevsFRJ3zzXpuBlHgccG
-         sYZQ==
-X-Gm-Message-State: APjAAAVWvsleCyj6iJZwlc1uzAJciNpqgHMCS8brGA8MCvm3eLt/xsS8
-        cY7fUVQ5677lkn/8I+4do6R3YGV/EhP5M5fkspcFVQ==
-X-Google-Smtp-Source: APXvYqxXpLX+dEvOT5j7tpgmTqUeHQ8fFVlo3960ntu34jaP3dDFM5jPLMUuGTmSmVlcfqf9AGyYlOtPMi7izdaPUmg=
-X-Received: by 2002:ac2:5979:: with SMTP id h25mr15671398lfp.203.1582165648799;
- Wed, 19 Feb 2020 18:27:28 -0800 (PST)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=EEVYOjfi5PbSHH+WdgPROxvm0gDkTQzR92KMTQUcWvE=;
+        b=AOaha1Ea7y+czwM+LVAWlA1qu+Q73kK20d2q1+mW0oQH++BJ/vtA/0tF+7hLhuplu6
+         4BUadNVNq0T48QmTsNLWopJaJaeW3plrOxtYr2qfIN30IgQstO1hqgNHZFWVt7M7fC2N
+         thDX6f5Com3rzOcdf17toZAT+UsduoUXnIaTXlxhWo6/bHZiOn06DbJpx3ptt1uGVZUX
+         1sJl+hfRjuCUotj/wtSYBW/0cAiADEDgNRTMLR4us3iQ301+UQgxicvoM61YhfqMZuM6
+         GKcQyYUGVaQqeFxUqCwTvGus2EOMcnZrKY0lUb8EyobmqgjyWkbhr1oyEH3ZytlNbIlv
+         1B+g==
+X-Gm-Message-State: APjAAAW2nQ5O3MYe3fdehMXPRRxmqYkp8aPnrx956p1Tm8EbU2E+GdZR
+        aEamf0F+TZv2JUYdE7hGLE9TcA==
+X-Google-Smtp-Source: APXvYqyC9WwG78kMU3KSSI/fRicHSjd1baiiC4/yYeU0mSsTDEQzzD+lr9QkKMTXu3yunzvr7OmjIg==
+X-Received: by 2002:a63:1a50:: with SMTP id a16mr30180925pgm.389.1582165782692;
+        Wed, 19 Feb 2020 18:29:42 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 76sm952903pfx.97.2020.02.19.18.29.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 18:29:42 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200208013552.241832-1-drosen@google.com> <20200208013552.241832-3-drosen@google.com>
- <20200208021216.GE23230@ZenIV.linux.org.uk> <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
- <20200210234207.GJ23230@ZenIV.linux.org.uk> <20200212063440.GL870@sol.localdomain>
- <20200212065734.GA157327@sol.localdomain>
-In-Reply-To: <20200212065734.GA157327@sol.localdomain>
-From:   Daniel Rosenberg <drosen@google.com>
-Date:   Wed, 19 Feb 2020 18:27:17 -0800
-Message-ID: <CA+PiJmRX1tBVqdAgHwk62rGqEQg28B3j5mEsaDBm3UV9_fzDEQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
+References: <1581932974-21654-1-git-send-email-akashast@codeaurora.org> <1581932974-21654-2-git-send-email-akashast@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: spi: Convert QSPI bindings to YAML
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mgautam@codeaurora.org,
+        rojay@codeaurora.org, skakit@codeaurora.org,
+        Akash Asthana <akashast@codeaurora.org>
+To:     Akash Asthana <akashast@codeaurora.org>, agross@kernel.org,
+        mark.rutland@arm.com, robh+dt@kernel.org
+Date:   Wed, 19 Feb 2020 18:29:41 -0800
+Message-ID: <158216578112.184098.9357700822184458798@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 10:57 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> Or (just throwing another idea out there) the dentry's name could be copied to a
-> temporary buffer in ->d_compare().  The simplest version would be:
->
->         u8 _name[NAME_MAX];
->
->         memcpy(_name, name, len);
->         name = _name;
->
-> Though, 255 bytes is a bit large for a stack buffer (so for long names it may
-> need kmalloc with GFP_ATOMIC), and technically it would need a special version
-> of memcpy() to be guaranteed safe from compiler optimizations (though I expect
-> this would work in practice).
->
-> Alternatively, take_dentry_name_snapshot() kind of does this already, except
-> that it takes a dentry and not a (name, len) pair.
->
-> - Eric
+Quoting Akash Asthana (2020-02-17 01:49:33)
+> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yam=
+l b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+> new file mode 100644
+> index 0000000..977070a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.yaml
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/spi/qcom,spi-qcom-qspi.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm Quad Serial Peripheral Interface (QSPI)
+> +
+> +maintainers:
+> + - Mukesh Savaliya <msavaliy@codeaurora.org>
+> + - Akash Asthana <akashast@codeaurora.org>
+> +
+> +description: |
 
-If we want to use take_dentry_name_snapshot, we'd need to do it before
-calling the dentry op, since we get the dentry as a const. It would do
-exactly what we want, in that it either takes a reference on the long
-name, or copies the short name, although it does so under a spinlock.
-I'm guessing we don't want to add that overhead for all
-d_compare/d_hash's. I suppose it could just take a snapshot if it
-falls under needs_casefold, but that feels a bit silly to me.
+Drop the | because it doesn't look like any formatting needs to be
+maintained in the text for the description.
 
-i don't think utf8cursor/utf8byte could be modified to be RCU safe
-apart from a copy. As part of normalization there's some sorting that
-goes on to ensure that different encodings of the same characters can
-be matched, and I think those can technically be arbitrarily long, so
-we'd possibly end up needing the copy anyways.
+> + The QSPI controller allows SPI protocol communication in single, dual, =
+or quad
+> + wire transmission modes for read/write access to slaves such as NOR fla=
+sh.
+> +
+> +allOf:
+> +  - $ref: /spi/spi-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: qcom,sdm845-qspi
+> +      - const: qcom,qspi-v1
+> +
+> +  reg:
+> +    description: Base register location and length.
 
-So, I see two possible fixes.
-1. Use take_dentry_name_snapshot along the RCU paths to calling d_hash
-and d_compare, at least when needs_casefold is true.
-2. Within d_hash/d_compare, create a copy of the name if it is a short name.
+Drop description? It doesn't seem useful.
 
-For 1, it adds some overhead in general, which I'm sure we'd want to avoid.
-For 2, I don't think we know we're in RCU mode, so we'd need to always
-copy short filenames. I'm also unsure if it's valid to assume that
-name given is stable if it is not the same as dentry->d_iname. If it
-is, we only need to worry about copying DNAME_INLINE_LEN bytes at max
-there. For memcpy, is there a different version that we'd want to use
-for option 2?
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: iface
+> +      - const: core
+> +
+> +  clocks:
+> +    items:
+> +      - description: AHB clock
+> +      - description: QSPI core clock.
 
--Daniel
+Please drop the full-stop on core clock.
+
+> +
+> +  "#address-cells":
+> +     const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+
+Aren't these two unnecessary because they're covered by the
+spi-controller.yaml binding?
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clock-names
+> +  - clocks
+> +  - "#address-cells"
+> +  - "#size-cells"
+
+These last two are also covered by spi-controller binding.
+
+> +
+> +
+
+Why two newlines instead of one?
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    soc: soc@0 {
+
+Remove this node from example please.
+
+> +        #address-cells =3D <2>;
+> +        #size-cells =3D <2>;
+> +
+> +        qspi: spi@88df000 {
+> +            compatible =3D "qcom,sdm845-qspi", "qcom,qspi-v1";
+> +            reg =3D <0 0x88df000 0 0x600>;
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +            interrupts =3D <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +            clock-names =3D "iface", "core";
+> +            clocks =3D <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +                <&gcc GCC_QSPI_CORE_CLK>;
+
+Weird tabbing here. Just use spaces and align it up.
+
+> +
+> +                flash@0 {
+> +                    compatible =3D "jedec,spi-nor";
+> +                    reg =3D <0>;
+> +                    spi-max-frequency =3D <25000000>;
+> +                    spi-tx-bus-width =3D <2>;
+> +                    spi-rx-bus-width =3D <2>;
+> +                };
+
+Is this flash node necessary for the example?
+
+> +        };
+> +    };
+> +
+
+Nitpick: Why newline here?
+
+> +...
