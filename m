@@ -2,100 +2,114 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0CDC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D4BC11D27
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A97207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:44:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2709E207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:48:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JG0tnAIO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DBC8QHhV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgBTXol (ORCPT
+        id S1729376AbgBTXsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:44:41 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39451 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTXol (ORCPT
+        Thu, 20 Feb 2020 18:48:22 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:53870 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727135AbgBTXsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:44:41 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so6543195wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:44:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JND3fDcmDGV+LOuOc+MELgsbHkbd9A/S1d4P55At3V4=;
-        b=JG0tnAIOd7aktwBZsysuBUFcBpECsP35+OXKFI70Zm/Jbyk8b7AKhlzsavPwe//lDf
-         GColtgj2fpk01oMSObpUZi5Zu9tVZBdq65GfSYrJcu8Wl2T8UcEqtNz7Isi9bvA6LKfH
-         hzfEY+38Jm7cCcamdH/aqMq92seb4XJ0No/NJ/O+rbqig5Xz9zrPE6IG4n8Ds3YWo80n
-         uroJ95Ho2RX2BBMmOjyPpEVOl9GlQ7M/ryQNuje/rnB+IZKBKPLgKw/O17iKSCmutY0G
-         0y3xk3F4epw87mQ6trjyyvoMJwkJS8EQfrqfhmoDjwgBZWBz6fcpsfGpzYDT5thcuwvc
-         N3fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JND3fDcmDGV+LOuOc+MELgsbHkbd9A/S1d4P55At3V4=;
-        b=p0NYH1lQjQLgvbQEtYML2a3Tl2MN9Gv8Oq3KeGJda5If0i8LJyL8RIVQZFe5TbUVWD
-         TDm3dz1AP3sI7m3thKyXvqmZ6bQrlGGhWELu5TCRXccn/pYAyS7Dmc0lWCwzwD1e6ilw
-         QAUun7Fyv1c1ukWJPApdP8lwohekvz3/DzCJOA0Ewdsz7UH9ZoQulOFpglXqf/SSgEv2
-         //QywGZ/ipVGOT4ff+li1Am76fHIB5omkjUoF2/442SSM6rv/osGL0kFzJ2iALcFl5F4
-         0xfyTIycx/GQHzGdtYiqNgT7cvZ2Y2eRxFqVaSuA6aL3nMnyRDo0s87aBOsNTrMoNgU6
-         ZpEQ==
-X-Gm-Message-State: APjAAAWQPQnvvB/G8bId5ODt5xNEZCJ33Z2asupUl9LvppYYDQv+JCkw
-        +rJEwYB8pvrTOvwWZMM38/Z3WFLLgC72cjEchsZc9pUGzYQ=
-X-Google-Smtp-Source: APXvYqyEBpsj9nEa56zgIwEIS3Bvz2+c3Gfexs94e6PgMzrjyA2GWPzsjrN3KBbl1wSTBIfBcyq39yVDT+D0OUlHUXY=
-X-Received: by 2002:adf:e692:: with SMTP id r18mr45012733wrm.413.1582242279439;
- Thu, 20 Feb 2020 15:44:39 -0800 (PST)
+        Thu, 20 Feb 2020 18:48:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=B9aSlxx7wx7w6JgLrqupsTcq3VAPuxTbkmWcCtYGRVU=; b=DBC8QHhVOjtp6ibn9AOlSwONWa
+        KS+1mQxLjWZ1bi5hyXU/HxnJJwr3OJQUSwQCDAtI7+eoLSgn4iNjY2MhDzDP5n8GYn0FvCNJCttJQ
+        rzKiBZcNL/0HJ8S7fG5sVQlps4VT5UOhSQScg+usFQZfMgH4c+qokRCncDFOblytGeiad8VvhuHWM
+        m5TZoAk/xEjg7RR957H7+0JnmNmSWKZnToH/oDiHO4hUdf+EJ8swHkdE81GLLywKdWUgeyOqJaYBb
+        WZ8O4Njk0F3VrCdwmLZyr23M+MYDcHnvxj+3k5AemtVQ0OK2yhmdgHvB0lOfiIhILLv0qlqtwe5Kl
+        BHd46h3w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4vYF-0007k0-KU; Thu, 20 Feb 2020 23:48:15 +0000
+Subject: Re: [PATCH v8 1/6] drm/mediatek: Use regmap for register access
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, ck.hu@mediatek.com,
+        p.zabel@pengutronix.de, airlied@linux.ie, mturquette@baylibre.com,
+        sboyd@kernel.org, ulrich.hecht+renesas@gmail.com,
+        laurent.pinchart@ideasonboard.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        dri-devel@lists.freedesktop.org, Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        linux-clk@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>, wens@csie.org,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        sean.wang@mediatek.com, frank-w@public-files.de,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Fontana <rfontana@redhat.com>,
+        linux-kernel@vger.kernel.org, matthias.bgg@kernel.org,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20200220172147.919996-1-enric.balletbo@collabora.com>
+ <20200220172147.919996-2-enric.balletbo@collabora.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0b2046b9-90de-c894-7502-993b5df12e7a@infradead.org>
+Date:   Thu, 20 Feb 2020 15:48:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200217145711.4af495a3@canb.auug.org.au> <CAOFY-A1nfPjf3EcQB6KiEifbFR+aUtdSgK=CHGt_k3ziSG6T_Q@mail.gmail.com>
- <CAOFY-A3q_pmtHKAoOJdbB09wy=dxs9SdpXjCsU1wBxU5EDHVmw@mail.gmail.com>
- <20200221101845.21c0c8c5@canb.auug.org.au> <CAOFY-A2ndGCSEDstOmXs-u1XjNsaj8wkLezYsMbzeZeVTJGC5g@mail.gmail.com>
- <20200221104328.0f897efd@canb.auug.org.au>
-In-Reply-To: <20200221104328.0f897efd@canb.auug.org.au>
-From:   Arjun Roy <arjunroy@google.com>
-Date:   Thu, 20 Feb 2020 15:44:28 -0800
-Message-ID: <CAOFY-A2tK5=eFt2AQx+FOjyHXQ85XE-N8gdbb49wJphjAAgFUQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the akpm tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200220172147.919996-2-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 3:43 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Arjun,
->
-> On Thu, 20 Feb 2020 15:22:04 -0800 Arjun Roy <arjunroy@google.com> wrote:
-> >
-> > I have a possible solution in mind, but it would involve a slight
-> > change in the SPARC macro (to be more inline with the semantics of the
-> > other platforms).
-> > If you're open to such a change, I can send it out.
->
-> Its not up to me :-)
->
-> If it is not too much work, I would say, do the patch, test it as you
-> can, then send it out cc'ing the Sparc maintainer (DaveM cc'd) and see
-> what happens.
->
+On 2/20/20 9:21 AM, Enric Balletbo i Serra wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> The mmsys memory space is shared between the drm and the
+> clk driver. Use regmap to access it.
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v8: None
+> Changes in v7:
+> - Add R-by from CK
+> 
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  4 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 50 +++++++++++--------------
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |  4 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  | 13 ++-----
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |  2 +-
+>  5 files changed, 30 insertions(+), 43 deletions(-)
 
-Certainly, I will do so.
+Hi. Just a quick question:
 
-Thanks,
--Arjun
+Do you need to select REGMAP or one of its derivatives to make sure
+that the proper interfaces are available for this driver?
 
-> --
-> Cheers,
-> Stephen Rothwell
+thanks.
+-- 
+~Randy
+
