@@ -2,131 +2,146 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE07C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C2CC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21DA208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="RZe84KTg"
+	by mail.kernel.org (Postfix) with ESMTP id 547AE20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582231658;
+	bh=zhAIqLnnnv+wodCzFnBPaFPLL1axodY6rIUf0WW6IXA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i3j0ZwpyDrvZKTqLxjCH9c2/IN1FK0UCHQD5KNvNW2s4GDgYtiowk5t1GVKUkHAy0
+	 fqXRnURShunr2pIdgwYCOY9WwiAHcAEm7W78+kRGM3ibc4/KmxMVoxl15asYANC/f8
+	 aFGzl31kU13x+AMjAKSwhq0XK791HgL029KKQP6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgBTUpA (ORCPT
+        id S1729057AbgBTUrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:45:00 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51667 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbgBTUo7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:44:59 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t23so1836wmi.1;
-        Thu, 20 Feb 2020 12:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n76MR2hfIZsf6g57SD/GC8wwOFNZ4gbM6KJt3yOpBLs=;
-        b=RZe84KTgVDumaVTivMwcyl7kEwDt57yX76+EH+ZLQWwRzv5k62azpHW8GqTx8mxI5J
-         6d86J/N/tD47TrjzY+73UOYpQtyxsiHyf/yJ2PAbvRbUgF4WGlHmAwxGRofiMzBIfWmu
-         DajDDq/fyp1k7BZfgCAdwxbHMfLZDowqN2cq23QtzZkTbeMw66pO0GdihywqH6QEC4LI
-         W/C3nTVpiEI4DWCMfTY8/yGtanqaqmcWk9EqVf+SKkCo+CAiF39bmSCyuPXOucKkcvc6
-         9BqwCvhOH5psaYpONEy2grDTT/ygotPLzUdunW6SVTK8+dcLurn4nftvXiPC+pd1vuuM
-         yTqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n76MR2hfIZsf6g57SD/GC8wwOFNZ4gbM6KJt3yOpBLs=;
-        b=c+798zZHLvXHnD3IlxbFlaXVbhJsptzJwNDGRTZ0wwWX5ss6AnqQipmd2aWJjsMSXO
-         LAOT3dHDz+b5KQbwSeGWkMZryI0xqjsDxlBr109xuJnf8lLjur6AkfaOCptB0p5HI2OL
-         D4DyEw4Hc9+8GfMRgjuiPlwxPi4iUVwFUShkqh9g9WqY1GIJaX0kDJ3kwIVAjtxb4wsq
-         mkeGcSWPAmtYHeLPsA09EUwCsgIZEUD+MyMZFN1azUF+vxG8sJ5rXFPSZQkR44AYTt+Z
-         en0yczjTxBUiN2DmS09zEOHQzjfFotmVIqZoJDQ1ljNesM+V4Y3/ga2MfSXKfV7g9R1h
-         FxOQ==
-X-Gm-Message-State: APjAAAW1lP9eQBAkcTB8tSgmNGcUSXqiWVaLSwSyYpUDM2BMWMlI1D6b
-        6SX4DOwRPh8zPFoUo1a8obw=
-X-Google-Smtp-Source: APXvYqxch3aaikANJA018nryWRbnsmAci2QcLCKH9CNx4CfFPp5Gcf4OfNOPQkVxewFpcm91NxbQvg==
-X-Received: by 2002:a7b:c204:: with SMTP id x4mr6326147wmi.20.1582231497318;
-        Thu, 20 Feb 2020 12:44:57 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id r6sm902544wrp.95.2020.02.20.12.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:44:56 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, jbrunet@baylibre.com
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        mturquette@baylibre.com, narmstrong@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH] clk: meson: meson8b: set audio output clock hierarchy
-Date:   Thu, 20 Feb 2020 21:44:33 +0100
-Message-Id: <20200220204433.67113-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Feb 2020 15:47:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728618AbgBTUrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:47:36 -0500
+Received: from earth.universe (unknown [185.62.205.105])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF53208CD;
+        Thu, 20 Feb 2020 20:47:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582231655;
+        bh=zhAIqLnnnv+wodCzFnBPaFPLL1axodY6rIUf0WW6IXA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d/MuCgRGhzj4SWM35SD0udulwCF++XSwdk6qoVb/vDe0O/IdUOopK+nJHPL2jApYF
+         FQYTrlZTy+tMMPncuKH3JAnyr06NbncLW1PbKANYkgvP8SPRCF1cYhFm0vWzGaDUSS
+         +adLvgsIyCqEdWHFTz5CCMEt613I5qcRUfgczAD0=
+Received: by earth.universe (Postfix, from userid 1000)
+        id 1142E3C0C83; Thu, 20 Feb 2020 21:47:33 +0100 (CET)
+Date:   Thu, 20 Feb 2020 21:47:33 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200220204733.ktzhmmaytnglr5nh@earth.universe>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
+ <20200214170322.GZ64767@atomide.com>
+ <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
+ <20200217231001.GC35972@atomide.com>
+ <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
+ <20200218211631.fxojsxzvttoidfed@earth.universe>
+ <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dedczlb2yot6jtdy"
+Content-Disposition: inline
+In-Reply-To: <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The aiu devices peripheral clocks needs the aiu and aiu_glue clocks to
-operate. Reflect this hierarchy in the clock tree.
 
-Fixes: e31a1900c1ff73 ("meson: clk: Add support for clock gates")
-Suggested-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-This takes Jerome's patch for GXBB and ports it to the Meson8* SoCs.
-Hence the Suggested-by.
+--dedczlb2yot6jtdy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
- drivers/clk/meson/meson8b.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+On Thu, Feb 20, 2020 at 04:15:22PM +0200, Peter Ujfalusi wrote:
+> > I suppose in the end its a question if generic card can provide TDM
+> > support.
+>=20
+> Sure it can, but can it handle the switching between the paths based on
+> use cases?
+> There should be machine level DAPM widgets to kick codec2codec (MDM6600
+> - CPAC_voice for example) and also to make sure that when you switch
+> between them the system is not going to get misconfigured.
+> Switching between CPAC and BT route during call?
+> Not allowing VoIP while on call, etc.
 
-diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
-index 9fd31f23b2a9..34a70c4b4899 100644
---- a/drivers/clk/meson/meson8b.c
-+++ b/drivers/clk/meson/meson8b.c
-@@ -2605,14 +2605,6 @@ static MESON_GATE(meson8b_spi, HHI_GCLK_MPEG0, 30);
- static MESON_GATE(meson8b_i2s_spdif, HHI_GCLK_MPEG1, 2);
- static MESON_GATE(meson8b_eth, HHI_GCLK_MPEG1, 3);
- static MESON_GATE(meson8b_demux, HHI_GCLK_MPEG1, 4);
--static MESON_GATE(meson8b_aiu_glue, HHI_GCLK_MPEG1, 6);
--static MESON_GATE(meson8b_iec958, HHI_GCLK_MPEG1, 7);
--static MESON_GATE(meson8b_i2s_out, HHI_GCLK_MPEG1, 8);
--static MESON_GATE(meson8b_amclk, HHI_GCLK_MPEG1, 9);
--static MESON_GATE(meson8b_aififo2, HHI_GCLK_MPEG1, 10);
--static MESON_GATE(meson8b_mixer, HHI_GCLK_MPEG1, 11);
--static MESON_GATE(meson8b_mixer_iface, HHI_GCLK_MPEG1, 12);
--static MESON_GATE(meson8b_adc, HHI_GCLK_MPEG1, 13);
- static MESON_GATE(meson8b_blkmv, HHI_GCLK_MPEG1, 14);
- static MESON_GATE(meson8b_aiu, HHI_GCLK_MPEG1, 15);
- static MESON_GATE(meson8b_uart1, HHI_GCLK_MPEG1, 16);
-@@ -2659,6 +2651,19 @@ static MESON_GATE(meson8b_vclk2_vencl, HHI_GCLK_OTHER, 25);
- static MESON_GATE(meson8b_vclk2_other, HHI_GCLK_OTHER, 26);
- static MESON_GATE(meson8b_edp, HHI_GCLK_OTHER, 31);
- 
-+/* AIU gates */
-+#define MESON_AIU_GLUE_GATE(_name, _reg, _bit) \
-+	MESON_PCLK(_name, _reg, _bit, &meson8b_aiu_glue.hw)
-+
-+static MESON_PCLK(meson8b_aiu_glue, HHI_GCLK_MPEG1, 6, &meson8b_aiu.hw);
-+static MESON_AIU_GLUE_GATE(meson8b_iec958, HHI_GCLK_MPEG1, 7);
-+static MESON_AIU_GLUE_GATE(meson8b_i2s_out, HHI_GCLK_MPEG1, 8);
-+static MESON_AIU_GLUE_GATE(meson8b_amclk, HHI_GCLK_MPEG1, 9);
-+static MESON_AIU_GLUE_GATE(meson8b_aififo2, HHI_GCLK_MPEG1, 10);
-+static MESON_AIU_GLUE_GATE(meson8b_mixer, HHI_GCLK_MPEG1, 11);
-+static MESON_AIU_GLUE_GATE(meson8b_mixer_iface, HHI_GCLK_MPEG1, 12);
-+static MESON_AIU_GLUE_GATE(meson8b_adc, HHI_GCLK_MPEG1, 13);
-+
- /* Always On (AO) domain gates */
- 
- static MESON_GATE(meson8b_ao_media_cpu, HHI_GCLK_AO, 0);
--- 
-2.25.1
+I think the main issue is, that based on the route configuration
+(which could be a simple DAPM widget generated by the simple-graph-card),
+we may need to configure different bitrates. Tony's hack adding
+this knowledge to the cpcap driver is very ugly.
 
+> >> In case of B/C you should not have a running stream imho.
+> >=20
+> > I would expect, that MDM6600 codec marks itself as running/stopped
+> > based on call state. That should enable DAPM widgets automatically
+> > when CPCAP_voice is routed to MDM6600?
+> >=20
+> >> In all cases CPCAP_voice should be able to run the clocks on i2s,
+> >> even if it is not used by the audio setup.
+> >> Not sure if you can just turn Wl1285 as master, but it is possible
+> >> that it is master, but silent when it is not used?
+> >=20
+> > I provided CPCAP registers for BT call, which should be enough to
+> > figure this out (I did not yet analyze the results myself).
+>=20
+> I got the datasheet from NXP (thanks for the pointer!), I try to look at
+> it in a coming days.
+
+FWIW the datasheet is not for the same chip, but for a similar one.
+The audio part seems to be very similar though.
+
+-- Sebastian
+
+--dedczlb2yot6jtdy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl5O8GEACgkQ2O7X88g7
++pqQ/hAAgEqBO6UXtQnbUsOTqAxQ6FWYfr2uOwPllZ/qaDcYwXg4/JKMDlkdj/TN
+NVLSo98L3HRUIyVzofJJ8/mNuz26OnUDF+Jmp/NDVyWm494i284b4UcejTuq2QZF
+PIUBEuEZAbXjZssKqNiWLK0sIbhSfGGjFwKMHJL7u5hnQ4LTBtjIbiQ7hcIfZIR0
+wxpoMupM9HqVuw3Ulic8Vq8bIWWbVy2S8ockuZn5H9R6fACBGJA+gJCcv+jb0xDl
+18Nf/b/aYsufjaNuX+cxEI2h8xvzzzr/hOAhXoBTju6UPFr4bHUmDPhV3ycxRMib
+eRgZ96TX6Gur53dPVz2KxG1Xx6LDsLfqYAvojww6PL5O37xx531jk+z/5w4yUvB1
+zNOq8dEyJsPFfG3JH3racUr/GEkdllORvAn5T5Dbbt28kEFs7YuDujwe5yIXi/YR
+Ve557gjSI6/xWSTA4zlJjzffOYWBg67+JDRiw/V1C1sV+1Eqx+xGsGhq9QqNqyld
+lkAh3Z5FNPvQbgFofHn+7l7VPu2FH4SfVDow2DCa7gEee90Wwr8SxxaQ/+z6Tghw
+tOTTER2jXWCdZ74WxrJITLKVT4SRBXwNvcC9/jNMiHmb8q6T9Zr2lmJQ13GRyCoT
+2YBZjeEgOkLi8aKbqHMT3lgfK1r9j43SRZCGy2i/zCc0PiIN+L4=
+=d1zp
+-----END PGP SIGNATURE-----
+
+--dedczlb2yot6jtdy--
