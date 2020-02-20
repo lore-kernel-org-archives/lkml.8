@@ -2,125 +2,84 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72FC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0308EC11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A3A207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:39:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tRp/RfyO"
+	by mail.kernel.org (Postfix) with ESMTP id CCE3D207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729290AbgBTWjK (ORCPT
+        id S1729257AbgBTWlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:39:10 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49450 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgBTWjK (ORCPT
+        Thu, 20 Feb 2020 17:41:25 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48513 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729130AbgBTWlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:39:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PJX15g/idnsbi9mBK4m/qgB4NAR6fjeo4oenehrzb84=; b=tRp/RfyOc8MMAOEnFbjVZPeWaN
-        2KkzEKXiN/S1p09Bqu90S2Z278xQaeJcCcxdgeXrdpytnUBFOLEh/tcVUgBOZ3WDQA1fyr25gzLyH
-        gRM7sCok3nV4KM0JhdGQW17PpL0/Q+08nFcey+vxgYObaAojcT6v9r7vvwC4L45gbM+E1ObajSRbu
-        9fqhh3Le7FzPdJj54Iv5P1uuGStaEN80lg311yLhBq1nMBvGvQ80nBsaseT/97o8elxjyPsMZtK46
-        3NBlICNdJTCPRvVzyFRBHETaOyBq9s1mCrpI3p5mh7mcYzLn6aixyJdO3+xKTmslXOd/sUkUMeqtP
-        kTySNnYQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4uTN-0006hx-9M; Thu, 20 Feb 2020 22:39:09 +0000
-Date:   Thu, 20 Feb 2020 14:39:09 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     dsterba@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 00/23] Change readahead API
-Message-ID: <20200220223909.GB24185@bombadil.infradead.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200220175400.GB2902@twin.jikos.cz>
+        Thu, 20 Feb 2020 17:41:25 -0500
+Received: from 79.184.254.252.ipv4.supernova.orange.pl (79.184.254.252) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id e4bb8ae86d8915f1; Thu, 20 Feb 2020 23:41:22 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>
+Subject: Re: Linux 5.6-rc2
+Date:   Thu, 20 Feb 2020 23:41:22 +0100
+Message-ID: <10791544.HYfhKnFLvn@kreacher>
+In-Reply-To: <158197497594.2449.9692451182044632969@skylake-alporthouse-com>
+References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com> <CAHk-=wik6C7uCyPZ_qwv0M29uVUdgrpOdubfaVHF8FVBAsCivA@mail.gmail.com> <158197497594.2449.9692451182044632969@skylake-alporthouse-com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220175400.GB2902@twin.jikos.cz>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 06:54:00PM +0100, David Sterba wrote:
-> On Wed, Feb 19, 2020 at 01:00:39PM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+On Monday, February 17, 2020 10:29:35 PM CET Chris Wilson wrote:
+> Quoting Linus Torvalds (2020-02-17 21:20:27)
+> > On Mon, Feb 17, 2020 at 8:22 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+> > >
+> > > Quoting Linus Torvalds (2020-02-16 21:32:32)
+> > > > Rafael J. Wysocki (4):
+> > > >       ACPI: EC: Fix flushing of pending work
+> > > >       ACPI: PM: s2idle: Avoid possible race related to the EC GPE
+> > > >       ACPICA: Introduce acpi_any_gpe_status_set()
+> > > >       ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system
+> > >
+> > > Our S0 testing broke on all platforms, so we've reverted
+> > > e3728b50cd9b ("ACPI: PM: s2idle: Avoid possible race related to the EC GPE")
+> > > fdde0ff8590b ("ACPI: PM: s2idle: Prevent spurious SCIs from waking up the system")
+> > >
+> > > There wasn't much in the logs, for example,
+> > > https://intel-gfx-ci.01.org/tree/drm-tip/IGT_5445/fi-kbl-7500u/igt@gem_exec_suspend@basic-s0.html
 > > 
-> > This series adds a readahead address_space operation to eventually
-> > replace the readpages operation.  The key difference is that
-> > pages are added to the page cache as they are allocated (and
-> > then looked up by the filesystem) instead of passing them on a
-> > list to the readpages operation and having the filesystem add
-> > them to the page cache.  It's a net reduction in code for each
-> > implementation, more efficient than walking a list, and solves
-> > the direct-write vs buffered-read problem reported by yu kuai at
-> > https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+> > So the machine suspends, but never comes back?
 > > 
-> > The only unconverted filesystems are those which use fscache.
-> > Their conversion is pending Dave Howells' rewrite which will make the
-> > conversion substantially easier.
-> > 
-> > I want to thank the reviewers; Dave Chinner, John Hubbard and Christoph
-> > Hellwig have done a marvellous job of providing constructive criticism.
-> > Eric Biggers pointed out how I'd broken ext4 (which led to a substantial
-> > change).  I've tried to take it all on board, but I may have missed
-> > something simply because you've done such a thorough job.
-> > 
-> > This series can also be found at
-> > http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v7
-> > (I also pushed the readahead_v6 tag there in case anyone wants to diff, and
-> > they're both based on 5.6-rc2 so they're easy to diff)
-> > 
-> > v7:
-> >  - Now passes an xfstests run on ext4!
+> > Do you need to revert both for it to work for you? Or is the revert of
+> > fdde0ff8590b just to avoid the conflict?
 > 
-> On btrfs it still chokes on the first test btrfs/001, with the following
-> warning, the test is stuck there.
+> fdde0ff85 was just to avoid conflicts.
+>  
+> > I'm assuming you bisected this, and the bisect indicated e3728b50cd9b,
+> > and then to revert it you reverted the other commit too..
+> 
+> Lucky guess based on diff rc1..rc2. Bisect was going to be painful, but
+> could be done if this is not enough clue for Rafael.
 
-Thanks.  The warning actually wasn't the problem, but it did need to
-be addressed.  I got a test system up & running with btrfs, and it's
-currently on generic/027 with the following patch:
+Sorry for the delayed response, was away.
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 9c782c15f7f7..d23a224d2ad2 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -676,7 +676,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
- 		struct page **array, unsigned int array_sz)
- {
- 	unsigned int i = 0;
--	XA_STATE(xas, &rac->mapping->i_pages, rac->_index);
-+	XA_STATE(xas, &rac->mapping->i_pages, 0);
- 	struct page *page;
- 
- 	BUG_ON(rac->_batch_count > rac->_nr_pages);
-@@ -684,6 +684,8 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
- 	rac->_index += rac->_batch_count;
- 	rac->_batch_count = 0;
- 
-+	xas_set(&xas, rac->_index);
-+	rcu_read_lock();
- 	xas_for_each(&xas, page, rac->_index + rac->_nr_pages - 1) {
- 		VM_BUG_ON_PAGE(!PageLocked(page), page);
- 		VM_BUG_ON_PAGE(PageTail(page), page);
-@@ -702,6 +704,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
- 		if (i == array_sz)
- 			break;
- 	}
-+	rcu_read_unlock();
- 
- 	return i;
- }
+I'm guessing that you are using rtcwake for wakeup, in which case reverting
+fdde0ff85 alone should unbreak it.
+
+Can you please double check that?
+
+
+
