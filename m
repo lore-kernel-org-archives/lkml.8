@@ -2,228 +2,232 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BBC11D15
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF419C11D15
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8027D20637
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89012208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:41:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="vKP8zmdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgBTRj4 (ORCPT
+        id S1728555AbgBTRlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:39:56 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2452 "EHLO huawei.com"
+        Thu, 20 Feb 2020 12:41:55 -0500
+Received: from mail-mw2nam10on2109.outbound.protection.outlook.com ([40.107.94.109]:62177
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726959AbgBTRjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:39:55 -0500
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EFE1B51D0DBE5344DF09;
-        Thu, 20 Feb 2020 17:39:52 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 20 Feb 2020 17:39:52 +0000
-Received: from [127.0.0.1] (10.210.167.243) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 20 Feb
- 2020 17:39:51 +0000
-Subject: Re: Questions about logic_pio
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-CC:     "xuwei (O)" <xuwei5@huawei.com>, bhelgaas <bhelgaas@google.com>,
-        andyshevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Mips <linux-mips@vger.kernel.org>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
- <5E4E55F7.70800@hisilicon.com>
- <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
- <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
- <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
- <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e54a9936-5cf3-777d-3e91-58d2be96bf1c@huawei.com>
-Date:   Thu, 20 Feb 2020 17:39:50 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        id S1726959AbgBTRly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:41:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TVhsMTHP53kCMzYTuu6juT7KLkm87wqZ8hnUQvDg2xdMNuOpUdG7isDNFmF1/3A5KwsTlRd7+BazSZdhJRm0mam6NxgsClc3qYnvad//LYynJPT33XUSv18vmgD1Ja/0y1VqF1o2+U4kU8JdS0uHdeqVTkQ6bVQpADFhrXrJ0qFcSI3KUC2b7nvp79NANcqmFiA/48YF15EBhMcNBWpAr9+aE8pjjLBpmWoMpE+ovqaF+ksDpAw30vFu+T9nI3K2ZQ4W1uKiWlrQuVWDObjJ8N2ECjJO3vvRZShnMne0Qlo8uXysIOM27vnrbHa77IUwa21O1HvWr642Nt1/v3WZ8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l9aAM5Wjiu948eTSW5mCmAEJGLgZgUNWfuOH3OeHZFA=;
+ b=eW8oJ8+q8LbyMaaUzrbEr9STt0jQAiJDPNKXfITEc4w5acW3lew/xjGByLHZkP17QjRoeGkLWHzgpbMFOzCYau94iU4pVx5zuCX9Kg7qO2gvAvfu1B0uNPFHpqFNi8MsPauGkYsx+YHBfBwnqP6KLpflBfzCZi9C8ESAkFfe+/3HoXXxSeaowfNldjtXt7tptK67NByMibXh+O8kCqIUdB7u4N9Jk/CDJqa13heIAKsc8QrzavQX3VOShrTh5Z+jb0iRjlrkr0otwXZrI18nb3clgoNbsQdWMLxTsvkwa5rQJttC8ubkOoIXBoroF1Urqf6snA1vM3IS/AshIrUCxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector2-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l9aAM5Wjiu948eTSW5mCmAEJGLgZgUNWfuOH3OeHZFA=;
+ b=vKP8zmdOhPzY6K3UeI54CtFlS1BTeMAIDFc7OXvZv0G1CWbZq20w86mSyaQPWmUcnrSETFEBc2KVBbufD7jfoZnb+Pekfo9KcU+PX+yhyw9RjYpEFvJN4Geni9VxcLaw9ntM1tZSyv7Zx0r5TebyUbX0UZgBlzY4abIl4u11PQM=
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com (2603:10b6:300:2::27)
+ by MWHPR13MB1871.namprd13.prod.outlook.com (2603:10b6:300:132::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.6; Thu, 20 Feb
+ 2020 17:41:51 +0000
+Received: from MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::7544:fc2:b078:5dcd]) by MWHPR13MB0895.namprd13.prod.outlook.com
+ ([fe80::7544:fc2:b078:5dcd%3]) with mapi id 15.20.2750.016; Thu, 20 Feb 2020
+ 17:41:51 +0000
+From:   "Bird, Tim" <Tim.Bird@sony.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+CC:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        shuah <shuah@kernel.org>,
+        =?iso-8859-1?Q?Daniel_D=EDaz?= <daniel.diaz@linaro.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        =?iso-8859-1?Q?Toke_H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: RE: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Thread-Topic: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Thread-Index: AQHV54eZmWZeYpO93EedYy5TfrJieagkSRIAgAAEQ8CAAAlOgIAAAVRg
+Date:   Thu, 20 Feb 2020 17:41:51 +0000
+Message-ID: <MWHPR13MB0895B185BC36759121D6F26AFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
+References: <20200219180348.40393e28@carbon>
+ <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
+ <20200219192854.6b05b807@carbon>
+ <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
+ <20200219210609.20a097fb@carbon>
+ <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
+ <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
+ <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
+ <20200220173740.7a3f9ad7@carbon>
+ <MWHPR13MB0895649219625C5F7380314FFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
+ <20200220172612.7aqmiwrnizgsukvm@ast-mbp>
+In-Reply-To: <20200220172612.7aqmiwrnizgsukvm@ast-mbp>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.210.167.243]
-X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Tim.Bird@sony.com; 
+x-originating-ip: [160.33.195.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 250fdeae-19d6-44ff-e55a-08d7b62c2b02
+x-ms-traffictypediagnostic: MWHPR13MB1871:
+x-microsoft-antispam-prvs: <MWHPR13MB18712F2774B073EA40BD4D1BFD130@MWHPR13MB1871.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 031996B7EF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(52536014)(66476007)(66556008)(64756008)(66446008)(76116006)(9686003)(8676002)(5660300002)(33656002)(8936002)(7416002)(55016002)(66946007)(81166006)(2906002)(6916009)(81156014)(478600001)(7696005)(4326008)(54906003)(186003)(6506007)(53546011)(316002)(71200400001)(86362001)(66574012)(26005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR13MB1871;H:MWHPR13MB0895.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sony.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Lwk2a4tVtCT9iGQac40Ekk6QshPCdkVvIPJAgWdy4h9DBoExAXErkKs5cnP2QWO+WDAwIe02eXdrrx/js/TJfZNfsQUcU3GACDje2bn3hok2UskGU4HIbJbYc5bf9wKOjdd6Kzlj0nfvhK8tNDuIPfqj5k6fhywnvBcB+C/KXdWU0NWZBE7Ca5Jfuk+lAokn9PSdhCilw/tmuCDs2egFCmnF28AmTmNlpi3mW0cKeNtTFvGReTGyP2/0ABzMn9FqUHW1M2uoayHWtIsAXtNex/cQjnUVL+ctnM/nBvP3PoYkKOsZ2rV5md1hfpOR6sB8rNre8Ge6ivZtagmhQwpM/RFCtB6QajohPc1gyDfhTprl7YJU9OIS4avyM2PiJFF65H5E4QJyihL1Mz1xNtBjQCVPDNlpP3axRr9quiBljkHcczeL9rUSThlhVQGtb61C
+x-ms-exchange-antispam-messagedata: v9j/ZEcDQLdOveLVsf1ZVcFEitswXiCmZq25bJocG0GnYfSH/25BhaBA07KilepTU0rMKOa8CrtQfDpRoy0Au7spn2/7VUJ5st9vouJZVGfWYSXzcJyulKszRpxhfxuBEwcpvjlnFTQuwp4jAJwreg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 250fdeae-19d6-44ff-e55a-08d7b62c2b02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 17:41:51.1531
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GMveCYqBc2CYF9c7QnaMDYG4YZPqDfmpFqbC/GY8lbUycuGbQU4avzO74Lb5yspdCse9nt4CceGt8tGS9b/ntA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1871
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/02/2020 15:12, Jiaxun Yang wrote:
-> 
->   ---- 在 星期四, 2020-02-20 22:23:57 John Garry <john.garry@huawei.com> 撰写 ----
->   > > Also Cc MIPS list to check other's opinions.
->   > >
->   > > Hi John.
->   > >
->   >
->   > Hi Jiaxun Yang,
->   >
->   > > Thanks for your kind explanation, however, I think this way is
->   > > violating how I/O ports supposed to work, at least in MIPS world.
->   >
->   > For a bit more history, please understand that the core PCI code was
->   > managing non-native IO port space in the same way before we added the
->   > logic PIO framework. The only real functional change here was that we
->   > introduced the indirect-io region within the IO port space, under
->   > CONFIG_INDIRECT_PIO.
-> 
-> I'm going to do more investigation. Thanks.
-> 
->   >
->   > >
->   > >   > >>
->   > >   > >> After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
->   > >   > >> for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
->   > >   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
->   > >   > >> equal to hw address,
->   > >   >
->   > >   > I'm not sure what you mean by simply the hw address.
->   > >   >
->   > >
->   > > I meant  hw_start should always equal to io_start.
->   > >
->   > >
->   > > MIPS have their own wrapped inl/outl functions,
->   >
->   > Can you please point me to these? I could not find them in arch/mips
-> 
-> They are built by __BUILD_IOPORT_PFX(bus, bwlq, type) macro.
-> Just using mips_io_port_base + offset to handle inl/outl, the same way PCI_IOBASE.
+> -----Original Message-----
+> From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+>=20
+> On Thu, Feb 20, 2020 at 05:02:25PM +0000, Bird, Tim wrote:
+> >
+> > > -----Original Message-----
+> > > From:  Jesper Dangaard Brouer
+> > >
+> > > On Wed, 19 Feb 2020 17:47:23 -0700
+> > > shuah <shuah@kernel.org> wrote:
+> > >
+> > > > On 2/19/20 5:27 PM, Alexei Starovoitov wrote:
+> > > > > On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel D=EDaz wrote:
+> > > > >>>
+> > > > >>> When I download a specific kernel release, how can I know what =
+LLVM
+> > > > >>> git-hash or version I need (to use BPF-selftests)?
+> > > > >
+> > > > > as discussed we're going to add documentation-like file that will
+> > > > > list required commits in tools.
+> > > > > This will be enforced for future llvm/pahole commits.
+> > > > >
+> > > > >>> Do you think it is reasonable to require end-users to compile t=
+heir own
+> > > > >>> bleeding edge version of LLVM, to use BPF-selftests?
+> > > > >
+> > > > > absolutely.
+> >
+> > Is it just the BPF-selftests that require the bleeding edge version of =
+LLVM,
+> > or do BPF features themselves need the latest LLVM.  If the latter, the=
+n this
+> > is quite worrisome, and I fear the BPF developers are getting ahead of =
+themselves.
+> > We don't usually have a kernel dependency on the latest compiler versio=
+n (some
+> > recent security fixes are an anomaly).  In fact deprecating support for=
+ older compiler
+> > versions has been quite slow and methodical over the years.
+> >
+> > It's quite dangerous to be baking stuff into the kernel that depends on=
+ features
+> > from compilers that haven't even made it to release yet.
+> >
+> > I'm sorry, but I'm coming into the middle of this thread.  Can you plea=
+se explain
+> > what the features are in the latest LLVM that are required for BPF-self=
+tests?
+>=20
+> Above is correct. bpf kernel features do depend on the latest pahole and =
+llvm
+> features that did not make it into a release. That was the case for many =
+years
+> now and still the case. The first commit 8 years ago relied on something =
+that
+> can generate those instructions. For many years llvm was the only compile=
+r that
+> could generate them. Right now there is GCC backend as well. New features=
+ (like
+> new instructions) depend on the compiler.
+>=20
+> selftests/bpf are not testing kernel's bpf features. They are testing the=
+ whole
+> bpf ecosystem. They test llvm, pahole, libbpf, bpftool, and kernel togeth=
+er.
+> Hence it's a requirement to install the latest pahole and llvm.
+>=20
+> When I'm talking about selftests/bpf I'm talking about all the tests in t=
+hat
+> directory combined. There are several unit tests scattered across repos. =
+The
+> unit tests for llvm bpf backend are inside llvm repo.
+> selftests/bpf/test_verifier and test_maps are unit tests for the verifier=
+ and
+> for maps. They are llvm independent. They test a combination of kernel an=
+d
+> libbpf only. But majority of the selftests/bpf are done via test_progs wh=
+ich
+> are the whole ecosystem tests.
 
-Right, so I had a glance through the code and mips has it own management 
-of this IO port space. And, like you say, mips_io_port_base is 
-equivalent to PCI_IOBASE.
+Alexei,
 
-> 
->   >
->   > I will also note that arch/mips/include/asm/io.h does not include
->   > asm-generic io.h today
-> 
-> Yes, and I'm attempting to take advantage of asm-generic.
+Thank you very much for this explanation.  It is very helpful.  I apologize=
+ for my
+ignorance of this, but can I ask a few questions just to check my understan=
+ding?
+Please forgive me if I use the wrong terminology below.
 
-I just don't think it's as simple as saying we want to take advantage of 
-asm-generic. asm-generic io.h includes logic_pio.h, which uses logical 
-PIO to manage IO port space and relies on PIO_IOBASE. This is 
-incompatible with having some other framework - like mips_io_port_base - 
-managing IO port space at the same time.
+So - do the BPF developers add new instructions to the virtual machine, tha=
+t then
+have to be added to both the compiler and the executor (VM implementation)?
+It sounds like the compiler support and executor support is done in concert=
+, and
+that patches are at least accepted upstream (but possibly are not yet avail=
+able in
+a compiler release) for the compiler side.  What about the Linux kernel sid=
+e?  Is the
+support for a new instruction only in non-released kernels (say, in the BPF=
+ development
+tree), or could it potentially be included in a released kernel, before the=
+ compiler
+with matching support is released?  What would happen if a bug was found, a=
+nd
+compiler support for the instruction was delayed?  I suppose that this woul=
+d only
+mean that the executor supported an instruction that never appeared in a co=
+mpiled
+BPF program? Is that right?
 
-The core PCI code relies on logical PIO to manage IO port space for when 
-PCI_IOBASE is defined.
-
-> 
->   >
->   > doing the samething with
->   > > PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
->   > >
->   > > Originally, the I/O ports layout seems like this:
->   > >
->   > > 00000020-00000021 : pic1
->   > > 00000060-0000006f : i8042
->   > > 00000070-00000077 : rtc0
->   > > 000000a0-000000a1 : pic2
->   > > 00000170-00000177 : pata_atiixp
->   > > 000001f0-000001f7 : pata_atiixp
->   > > 00000376-00000376 : pata_atiixp
->   > > 000003f6-000003f6 : pata_atiixp
->   > > 00000800-000008ff : acpi
->   > > 00001000-00001008 : piix4_smbus
->   > > 00004000-0003ffff : pci io space
->   > >    00004000-00004fff : PCI Bus 0000:01
->   > >      00004000-000040ff : 0000:01:05.0
->   > >    00005000-00005fff : PCI Bus 0000:03
->   > >      00005000-0000501f : 0000:03:00.0
->   > >
->   > > But with PCI_IOBASE defined, I got this:
->   > >
->   > > host bridge /bus@10000000/pci@10000000 ranges:
->   > >        MEM 0x0040000000..0x007fffffff -> 0x0040000000
->   > >         IO 0x0000004000..0x0000007fff -> 0x0000004000
->   > > resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x0020-0x0021]
->   > >
->   > > Because io_start was allocated to 0x0 by Logic PIO.
->   > >
->   > > There are a lot of devices that have fixed ioports thanks to x86's legacy.
->   >
->   > Well, yes, I'm not so surprised.
->   >
->   > So if MIPS does not have native IO port access, then surely you need
->   > some host bridge to translate host CPU MMIO accesses to port I/O
->   > accesses, right? Where are these CPU addresses defined?
-> 
-> It is defined by the variable mips_io_port_base.
-> 
->   >
->   > > For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveable,
->   > > and they can't be managed by logic pio subsystem. > Also, the PCI Hostbridge got implied by DeviceTree that it's I/O range
->   > > started from 0x4000 in bus side
->   >
->   > which bus is this?
-> 
-> They're all located under "ISA Range".  Just an MMIO range that will resend
-> the request to ISA I/O. --ioports for both PCI and some legacy devices.
-> 
-> In that range, base + 0x0000 to 0x4000 is preserved for PIO devices (e.g.) I8259
-> and base + 0x4000 to MMIO_LIMIT are for PCI devices under host bridge.
-> For the host bridge, ioports it can decode starts from 0x4000.
-> 
-> My intentional behavior is that when I'm specifying in dts that the IO Range of PCI host
-> bridge is 0x4000 to 0x7fff, it would request the IO_RESOURCE start from 0x4000
-> to 0x7fff, also tell the host driver to decode  0x4000 to 0x7fff in IO BAR, And let the drivers
-> access 0x4000 to 0x7fff via inl/outl, rather than allocate from PIO 0x0 to 0x3fff.
-> 
->   >
->   > , but then, Logic PIO remapped to PCI_IOBASE + 0x0.
->   > > The real address should be PCI_IOBASE + 0x4000,
->   >
->   > You seem to be using two methods to manage IO port space, and they seem
->   > to be conflicting.
-> 
-> So... Are there any way to handle these unmoveable devices in logic pio world?
-
-When you say that they are unmovable, they are at a fixed address on 
-this "ISA Range", right? If so, yes, you should be able to handle it in 
-logical PIO. You just need to deal with translating logical PIO 
-addresses to ISA bus addresses. We do this very thing in our LPC driver 
-- see drivers/bus/hisi_lpc.c
-
-This driver deals with legacy IO ports where we need to bitbang 
-accesses, i.e. we don't support MMIO for this.
-> 
->   >
->   > > hardware never got correctly informed about that. And there is still no way to
->   > > transform to correct address as it's inside the MMIO_LIMIT.
->   > >
->   > > So the question comes to why we're allocating io_start for MMIO PCI_IOBASE
->   > > rather than just check the range provided doesn't overlap each other or exceed
->   > > the MMIO_LIMIT.
->   >
->   > When PCI_IOBASE is defined, we work on the basis that any IO port range
->   > in the system is registered for a logical PIO region, which manages the
->   > actual IO port addresses - see logic_pio_trans_cpuaddr().
-> 
-> The port is not the actual port.. It makes me confusing about what it's actually doing..
-> Sorry but probably I'm still thinking in a vintage way -- need some hints about how to
-> deal with these legacy cases in a modern way.
-> 
-> Thanks.
-> 
->   >
->   > Thanks,
->   > John
->   >
-> 
-
+Thanks,
+ -- Tim
 
