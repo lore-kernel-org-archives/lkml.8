@@ -2,203 +2,140 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFEEC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C6CC11D1E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155CF20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1156424650
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgBTULq (ORCPT
+        id S1729043AbgBTUNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:11:46 -0500
-Received: from mga05.intel.com ([192.55.52.43]:53786 "EHLO mga05.intel.com"
+        Thu, 20 Feb 2020 15:13:43 -0500
+Received: from muru.com ([72.249.23.125]:56612 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbgBTULq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:11:46 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 12:11:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="383253442"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 20 Feb 2020 12:11:45 -0800
-Date:   Thu, 20 Feb 2020 12:11:45 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is
- triggered by a page fault
-Message-ID: <20200220201145.GI3972@linux.intel.com>
-References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
- <20200218230310.29410-2-sean.j.christopherson@intel.com>
- <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
+        id S1728770AbgBTUNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:13:43 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 055CE8080;
+        Thu, 20 Feb 2020 20:14:25 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:13:38 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+Message-ID: <20200220201338.GW37466@atomide.com>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
+ <20200214170322.GZ64767@atomide.com>
+ <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
+ <20200217231001.GC35972@atomide.com>
+ <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
+ <20200218152833.GH35972@atomide.com>
+ <40a803e2-6a08-2c73-0312-666441716daa@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <40a803e2-6a08-2c73-0312-666441716daa@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 05:01:41PM +0800, Xiaoyao Li wrote:
-> On 2/19/2020 7:03 AM, Sean Christopherson wrote:
-> >Add a new emulation type flag to explicitly mark emulation related to a
-> >page fault.  Move the propation of the GPA into the emulator from the
-> >page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
-> >indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
-> >exception.address when it's *not* valid.
-> >
-> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >---
-> >  arch/x86/include/asm/kvm_host.h | 12 +++++++++---
-> >  arch/x86/kvm/mmu/mmu.c          | 10 ++--------
-> >  arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
-> >  3 files changed, 30 insertions(+), 17 deletions(-)
-> >
-> >diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> >index 4dffbc10d3f8..10c1e8f472b6 100644
-> >--- a/arch/x86/include/asm/kvm_host.h
-> >+++ b/arch/x86/include/asm/kvm_host.h
-> >@@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
-> >   *		   decode the instruction length.  For use *only* by
-> >   *		   kvm_x86_ops->skip_emulated_instruction() implementations.
-> >   *
-> >- * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
-> >- *			  retry native execution under certain conditions.
-> >+ * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
-> >+ *			     retry native execution under certain conditions,
-> >+ *			     Can only be set in conjunction with EMULTYPE_PF.
-> >   *
-> >   * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
-> >   *			     triggered by KVM's magic "force emulation" prefix,
-> >@@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
-> >   *			backdoor emulation, which is opt in via module param.
-> >   *			VMware backoor emulation handles select instructions
-> >   *			and reinjects the #GP for all other cases.
-> >+ *
-> >+ * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
-> >+ *		 case the CR2/GPA value pass on the stack is valid.
-> >   */
-> >  #define EMULTYPE_NO_DECODE	    (1 << 0)
-> >  #define EMULTYPE_TRAP_UD	    (1 << 1)
-> >  #define EMULTYPE_SKIP		    (1 << 2)
-> >-#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
-> >+#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [200220 14:08]:
+> On 18/02/2020 17.28, Tony Lindgren wrote:
+> > Right. I'm not attached to the dummy dai, but looks like currently
+> > snd-soc-audio-graph-card won't work without it.
 > 
-> How about naming it as EMULTYPE_PF_ALLOW_RETRY and exchanging the bit
-> position with EMULTYPE_PF ?
+> The generic cards will link up a dummy dai/codec when it is needed by DPMC.
 
-Hmm, EMULTYPE_PF_ALLOW_RETRY does sound better.  I'm on the fence regarding
-shuffling the bits.  If I were to shuffle the bits, I'd do a more thorough
-reorder so that the #UD and #PF types are consecutive, e.g.
+Not sure what should be fixed here..
 
-	#define EMULTYPE_NO_DECODE	    (1 << 0)
-	#define EMULTYPE_TRAP_UD	    (1 << 1)
-	#define EMULTYPE_TRAP_UD_FORCED	    (1 << 2)
-	#define EMULTYPE_SKIP		    (1 << 3)
-	#define EMULTYPE_VMWARE_GP	    (1 << 4)
-	#define EMULTYPE_PF		    (1 << 5)
-	#define EMULTYPE_PF_ALLOW_RETRY	    (1 << 6)
-
-Part of me really wants to do that, the other part of me thinks it's
-unnecessary thrash.
-
-> >  #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
-> >  #define EMULTYPE_VMWARE_GP	    (1 << 5)
-> >+#define EMULTYPE_PF		    (1 << 6)
-> >+
-> >  int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
-> >  int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
-> >  					void *insn, int insn_len);
-> >diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >index 7011a4e54866..258624d46588 100644
-> >--- a/arch/x86/kvm/mmu/mmu.c
-> >+++ b/arch/x86/kvm/mmu/mmu.c
-> >@@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
-> >  int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
-> >  		       void *insn, int insn_len)
-> >  {
-> >-	int r, emulation_type = 0;
-> >+	int r, emulation_type = EMULTYPE_PF;
-> >  	bool direct = vcpu->arch.mmu->direct_map;
-> >  	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
-> >  		return RET_PF_RETRY;
-> >-	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
-> >-	if (vcpu->arch.mmu->direct_map) {
-> >-		vcpu->arch.gpa_available = true;
-> >-		vcpu->arch.gpa_val = cr2_or_gpa;
-> >-	}
-> >-
-> >  	r = RET_PF_INVALID;
-> >  	if (unlikely(error_code & PFERR_RSVD_MASK)) {
-> >  		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-> >@@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
-> >  	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
-> >  	 */
-> >  	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
-> >-		emulation_type = EMULTYPE_ALLOW_RETRY;
-> >+		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
-> >  emulate:
-> >  	/*
-> >  	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
-> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> >index fbabb2f06273..92af6c5a69e3 100644
-> >--- a/arch/x86/kvm/x86.c
-> >+++ b/arch/x86/kvm/x86.c
-> >@@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-> >  	gpa_t gpa = cr2_or_gpa;
-> >  	kvm_pfn_t pfn;
-> >-	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-> >+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
-> >  		return false;
-> >-	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-> >+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-> >+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
-> >  		return false;
-> >  	if (!vcpu->arch.mmu->direct_map) {
-> >@@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
-> >  	 */
-> >  	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
-> >-	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
-> >+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
-> >  		return false;
-> >-	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
-> >+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
-> >+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
-> >  		return false;
-> >  	if (x86_page_table_writing_insn(ctxt))
-> >@@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
-> >  	}
-> >  restart:
-> >-	/* Save the faulting GPA (cr2) in the address field */
-> >-	ctxt->exception.address = cr2_or_gpa;
-> >+	if (emulation_type & EMULTYPE_PF) {
-> >+		/* Save the faulting GPA (cr2) in the address field */
-> >+		ctxt->exception.address = cr2_or_gpa;
-> >+
-> >+		/* With shadow page tables, cr2 contains a GVA or nGPA. */
-> >+		if (vcpu->arch.mmu->direct_map) {
-> >+			vcpu->arch.gpa_available = true;
-> >+			vcpu->arch.gpa_val = cr2_or_gpa;
-> >+		}
-> >+	} else {
-> >+		/* Sanitize the address out of an abundance of paranoia. */
-> >+		ctxt->exception.address = 0;
-> >+	}
-> >  	r = x86_emulate_insn(ctxt);
-> >
+> > And we potentially
+> > do need a place to configure TDM slot specific stuff for mcbsp.
 > 
+> Yes, but you still have one port and one endpoint should not change the
+> configuration which is already in used for the other endpoint.
+
+OK so what's the fix for snd-soc-audio-graph-card expecting a
+separate DAI then?
+
+> > Oh, I think there are Android apps to do that though.. Never tried
+> > if they work on droid4. But if they do, doing a register dump of
+> > mcbsp3 would show up how it's configured.
+> 
+> I don't see how you could record the data from the line which is
+> connected to McBSP_DX pin (the pin is output).
+> 
+> But I might be missing something.
+
+Yeah I don't know either, but the pins we have muxed for
+mcbsp3 are:
+
+/* 0x4a100106 abe_pdm_ul_data.abe_mcbsp3_dr ag25 */
+OMAP4_IOPAD(0x106, PIN_INPUT | MUX_MODE1)
+
+/* 0x4a100108 abe_pdm_dl_data.abe_mcbsp3_dx af25 */
+OMAP4_IOPAD(0x108, PIN_OUTPUT | MUX_MODE1)
+
+/* 0x4a10010a abe_pdm_frame.abe_mcbsp3_clkx ae25 */
+OMAP4_IOPAD(0x10a, PIN_INPUT | MUX_MODE1)
+
+/* 0x4a10010c abe_pdm_lb_clk.abe_mcbsp3_fsx af26 */
+OMAP4_IOPAD(0x10c, PIN_INPUT | MUX_MODE1)
+
+Isn't the data receive there as mcbsp3_dr?
+
+> > I think the link for the patches you posted is patching the
+> > snd-soc-audio-graph-card already?
+> 
+> Yes it does, but the functionality is there via custom machine drivers.
+> What I afraid is that such a complex wiring as the Droid4 have it might
+> be not possible to use a generic - fits everything - driver without
+> making it a customized one ;)
+> 
+> Otho, if the only thing is the machine level DAPM switching and linking
+> the paths then it might be relatively straight forward to extend the
+> simple-card family.
+
+Yeah or maybe it just needs to be handled directly in the cpcap,
+mdm6600 codec drivers?
+
+> > Right. So right now it seems that for snd-soc-audio-graph-card
+> > needs the dummy dai, but it's unclear what would need to be
+> > changed to not use a dummy dai for mcbsp.
+> 
+> Since simple-card family can and will connect up dummy dai/codec when
+> needed based on the setup, I would look at that and make it do so.
+
+Oh so make simple-card spin up the dummy dai instead of mcbsp?
+
+> > The dts snippets I posted earlier do follow the graph bindings
+> > as far as I know. But just to confirm, do you see any need to
+> > move things around there?
+> 
+> It also states that a port is a physical port which can have multiple
+> endpoints. But multiple endpoint != DAI. port == dai.
+
+I guess I'm getting really confused now.. Are you saying
+the dts needs to be changed too now?
+
+Regards,
+
+Tony
