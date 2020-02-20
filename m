@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A57C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7E5C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7478206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D251A208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:26:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="x7h8Orqv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ky5F7F2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728145AbgBTNVj (ORCPT
+        id S1728149AbgBTN02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:21:39 -0500
-Received: from gateway22.websitewelcome.com ([192.185.47.179]:30850 "EHLO
-        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727996AbgBTNVj (ORCPT
+        Thu, 20 Feb 2020 08:26:28 -0500
+Received: from gateway32.websitewelcome.com ([192.185.145.102]:13108 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727996AbgBTN02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:21:39 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway22.websitewelcome.com (Postfix) with ESMTP id 86B145F27
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:21:37 -0600 (CST)
+        Thu, 20 Feb 2020 08:26:28 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id 24A902F591D
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:26:26 -0600 (CST)
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with SMTP
-        id 4llpjvNqSRP4z4llpjLRj6; Thu, 20 Feb 2020 07:21:37 -0600
+        id 4lqUj13eiAGTX4lqUjBf3Y; Thu, 20 Feb 2020 07:26:26 -0600
 X-Authority-Reason: nr=8
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
@@ -36,30 +36,35 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
         List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=aBVqKO+u3fecGVX4F0/4pATO5Sy+gKRtKWeV4k7qRzo=; b=x7h8Orqvf8KxMai8yvij1HqxiF
-        GxEp7yxJNcdmd0JZlW7bZconjwlIuu657HChS6j8ndOOaAuDbbJJB76LrNag9KyRwjd1BuSeOohB0
-        GNRLWnfXVTLFgH+Bqk6TtpyzFVIedbEgchwnMJmtuXdnRM35CCR6yutu994l0ocdjGuM8rB1S0ScT
-        NklxiPZea+ehf+TAvoxd9p132/UW/FWDtVko2d72G3idzES/pDk6OtpyNkhjrG8GKfiyhTWoyA/hl
-        d5Y7qUrGkJmiBFXbZG8C3CHcC4RKh+nvAT+BqUu8JrHWJyolTDALC2b2IxR02mIbdarlgJZ2+tTXa
-        RkHzKCpQ==;
-Received: from [201.144.174.47] (port=7747 helo=embeddedor)
+        bh=6J84MBeCdQLzfeiSeo8Y1ThSIemYlFwtAHSXsSX6lv0=; b=ky5F7F2xIbcmlLjeJpgQVjAdUK
+        rsux4XakoDz2WE9MqurVR1xRzyiajbRig5AkP53QD3kFYEkdxHhrJOs2c3CeUACQgIQqalyrPESN2
+        CTbnUV5yIx3UhKY/tOM9PvR5xkWdPh0/QqayMYp6g31gwfJBBMhXRcRsBofn7GCNLz8J6q+lQPOtJ
+        o4ysTmFrOjPVsNJkT8rbMmgREjrKtvq4PhdVG/xBwlu6cpHReUeOY5fZ5nbHRCutD7V/JSGjWBHXk
+        ffuLyMRYJmftHY1bK3nxa5FASfWEn2z+5fMFheBlOasMnTLC8fnhix6K3mXpHi2jv8M/u1+vV84a7
+        ZJd2fVfg==;
+Received: from [201.144.174.47] (port=24243 helo=embeddedor)
         by gator4166.hostgator.com with esmtpa (Exim 4.92)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1j4lln-003avg-Mu; Thu, 20 Feb 2020 07:21:35 -0600
-Date:   Thu, 20 Feb 2020 07:24:20 -0600
+        id 1j4lqR-003dLZ-U0; Thu, 20 Feb 2020 07:26:24 -0600
+Date:   Thu, 20 Feb 2020 07:29:08 -0600
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vaibhav Agarwal <vaibhav.sr@gmail.com>,
+        Mark Greer <mgreer@animalcreek.com>,
+        Johan Hovold <johan@kernel.org>, Alex Elder <elder@kernel.org>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        greybus-dev@lists.linaro.org, linux-media@vger.kernel.org,
+        linux-wireless@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] sound: Replace zero-length array with flexible-array member
-Message-ID: <20200220132420.GA29765@embeddedor>
+Subject: [PATCH] staging: Replace zero-length array with flexible-array member
+Message-ID: <20200220132908.GA30501@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -72,13 +77,13 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 201.144.174.47
 X-Source-L: No
-X-Exim-ID: 1j4lln-003avg-Mu
+X-Exim-ID: 1j4lqR-003dLZ-U0
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.144.174.47]:7747
+X-Source-Sender: (embeddedor) [201.144.174.47]:24243
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 25
+X-Email-Count: 39
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -116,217 +121,538 @@ This issue was found with the help of Coccinelle.
 
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- include/sound/control.h                  | 2 +-
- include/sound/intel-nhlt.h               | 6 +++---
- include/sound/soc-dapm.h                 | 2 +-
- include/sound/soc.h                      | 2 +-
- include/uapi/sound/asound.h              | 2 +-
- include/uapi/sound/skl-tplg-interface.h  | 2 +-
- sound/core/oss/pcm_plugin.h              | 2 +-
- sound/firewire/fireworks/fireworks.h     | 2 +-
- sound/soc/intel/atom/sst-atom-controls.h | 2 +-
- sound/soc/intel/skylake/skl-i2s.h        | 2 +-
- sound/soc/intel/skylake/skl-topology.h   | 4 ++--
- sound/soc/intel/skylake/skl.h            | 2 +-
- sound/usb/usx2y/usbusx2y.h               | 2 +-
- 13 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/staging/gdm724x/gdm_mux.h             |  2 +-
+ drivers/staging/gdm724x/hci_packet.h          |  6 ++--
+ drivers/staging/greybus/audio_apbridgea.h     |  2 +-
+ drivers/staging/ks7010/ks_hostif.h            |  4 +--
+ .../staging/media/allegro-dvt/allegro-core.c  |  2 +-
+ drivers/staging/octeon-usb/octeon-hcd.c       |  2 +-
+ drivers/staging/rtl8192e/rtllib.h             | 30 +++++++++----------
+ .../staging/rtl8192u/ieee80211/ieee80211.h    | 28 ++++++++---------
+ drivers/staging/rtl8712/ieee80211.h           |  4 +--
+ drivers/staging/rtl8712/rtl871x_mp_ioctl.h    |  4 +--
+ drivers/staging/wilc1000/cfg80211.c           | 10 +++----
+ drivers/staging/wilc1000/spi.c                |  2 +-
+ drivers/staging/wlan-ng/hfa384x.h             |  4 +--
+ drivers/staging/wlan-ng/p80211types.h         |  4 +--
+ 14 files changed, 52 insertions(+), 52 deletions(-)
 
-diff --git a/include/sound/control.h b/include/sound/control.h
-index 11feeee31e35..aeaed2a05bae 100644
---- a/include/sound/control.h
-+++ b/include/sound/control.h
-@@ -75,7 +75,7 @@ struct snd_kcontrol {
- 	unsigned long private_value;
- 	void *private_data;
- 	void (*private_free)(struct snd_kcontrol *kcontrol);
--	struct snd_kcontrol_volatile vd[0];	/* volatile data */
-+	struct snd_kcontrol_volatile vd[];	/* volatile data */
+diff --git a/drivers/staging/gdm724x/gdm_mux.h b/drivers/staging/gdm724x/gdm_mux.h
+index 51c22e3d8aeb..87b8d921fdc8 100644
+--- a/drivers/staging/gdm724x/gdm_mux.h
++++ b/drivers/staging/gdm724x/gdm_mux.h
+@@ -29,7 +29,7 @@ struct mux_pkt_header {
+ 	__le32 seq_num;
+ 	__le32 payload_size;
+ 	__le16 packet_type;
+-	unsigned char data[0];
++	unsigned char data[];
  };
  
- #define snd_kcontrol(n) list_entry(n, struct snd_kcontrol, list)
-diff --git a/include/sound/intel-nhlt.h b/include/sound/intel-nhlt.h
-index f657fd8fc0ad..743c2f442280 100644
---- a/include/sound/intel-nhlt.h
-+++ b/include/sound/intel-nhlt.h
-@@ -50,7 +50,7 @@ enum nhlt_device_type {
- 
- struct nhlt_specific_cfg {
- 	u32 size;
--	u8 caps[0];
-+	u8 caps[];
+ struct mux_tx {
+diff --git a/drivers/staging/gdm724x/hci_packet.h b/drivers/staging/gdm724x/hci_packet.h
+index 6dea3694afdd..faecdfbc664f 100644
+--- a/drivers/staging/gdm724x/hci_packet.h
++++ b/drivers/staging/gdm724x/hci_packet.h
+@@ -28,7 +28,7 @@
+ struct hci_packet {
+ 	__dev16 cmd_evt;
+ 	__dev16 len;
+-	u8 data[0];
++	u8 data[];
  } __packed;
  
- struct nhlt_fmt_cfg {
-@@ -60,7 +60,7 @@ struct nhlt_fmt_cfg {
- 
- struct nhlt_fmt {
- 	u8 fmt_count;
--	struct nhlt_fmt_cfg fmt_config[0];
-+	struct nhlt_fmt_cfg fmt_config[];
+ struct tlv {
+@@ -51,7 +51,7 @@ struct sdu {
+ 	__dev32 dft_eps_ID;
+ 	__dev32 bearer_ID;
+ 	__dev32 nic_type;
+-	u8 data[0];
++	u8 data[];
  } __packed;
  
- struct nhlt_endpoint {
-@@ -80,7 +80,7 @@ struct nhlt_endpoint {
- struct nhlt_acpi_table {
- 	struct acpi_table_header header;
- 	u8 endpoint_count;
--	struct nhlt_endpoint desc[0];
-+	struct nhlt_endpoint desc[];
+ struct multi_sdu {
+@@ -59,7 +59,7 @@ struct multi_sdu {
+ 	__dev16 len;
+ 	__dev16 num_packet;
+ 	__dev16 reserved;
+-	u8 data[0];
++	u8 data[];
  } __packed;
  
- struct nhlt_resource_desc  {
-diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
-index 1a9c5dd40228..f870f927b70c 100644
---- a/include/sound/soc-dapm.h
-+++ b/include/sound/soc-dapm.h
-@@ -688,7 +688,7 @@ struct snd_soc_dapm_context {
- /* A list of widgets associated with an object, typically a snd_kcontrol */
- struct snd_soc_dapm_widget_list {
- 	int num_widgets;
--	struct snd_soc_dapm_widget *widgets[0];
-+	struct snd_soc_dapm_widget *widgets[];
+ struct hci_pdn_table_ind {
+diff --git a/drivers/staging/greybus/audio_apbridgea.h b/drivers/staging/greybus/audio_apbridgea.h
+index 3f1f4dd2c61a..efec0f815efd 100644
+--- a/drivers/staging/greybus/audio_apbridgea.h
++++ b/drivers/staging/greybus/audio_apbridgea.h
+@@ -65,7 +65,7 @@
+ struct audio_apbridgea_hdr {
+ 	__u8	type;
+ 	__le16	i2s_port;
+-	__u8	data[0];
++	__u8	data[];
+ } __packed;
+ 
+ struct audio_apbridgea_set_config_request {
+diff --git a/drivers/staging/ks7010/ks_hostif.h b/drivers/staging/ks7010/ks_hostif.h
+index ca7dc8f5166c..39138191a556 100644
+--- a/drivers/staging/ks7010/ks_hostif.h
++++ b/drivers/staging/ks7010/ks_hostif.h
+@@ -70,7 +70,7 @@ struct hostif_data_request {
+ #define TYPE_DATA 0x0000
+ #define TYPE_AUTH 0x0001
+ 	__le16 reserved;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ #define TYPE_PMK1 0x0001
+@@ -194,7 +194,7 @@ enum mib_data_type {
+ struct hostif_mib_value {
+ 	__le16 size;
+ 	__le16 type;
+-	u8 body[0];
++	u8 body[];
+ } __packed;
+ 
+ struct hostif_mib_get_confirm_t {
+diff --git a/drivers/staging/media/allegro-dvt/allegro-core.c b/drivers/staging/media/allegro-dvt/allegro-core.c
+index 3be41698df4c..0a09b3622e78 100644
+--- a/drivers/staging/media/allegro-dvt/allegro-core.c
++++ b/drivers/staging/media/allegro-dvt/allegro-core.c
+@@ -434,7 +434,7 @@ struct mcu_msg_push_buffers_internal_buffer {
+ struct mcu_msg_push_buffers_internal {
+ 	struct mcu_msg_header header;
+ 	u32 channel_id;
+-	struct mcu_msg_push_buffers_internal_buffer buffer[0];
++	struct mcu_msg_push_buffers_internal_buffer buffer[];
+ } __attribute__ ((__packed__));
+ 
+ struct mcu_msg_put_stream_buffer {
+diff --git a/drivers/staging/octeon-usb/octeon-hcd.c b/drivers/staging/octeon-usb/octeon-hcd.c
+index 582c9187559d..61471a19d4e6 100644
+--- a/drivers/staging/octeon-usb/octeon-hcd.c
++++ b/drivers/staging/octeon-usb/octeon-hcd.c
+@@ -406,7 +406,7 @@ struct octeon_hcd {
+  */
+ struct octeon_temp_buffer {
+ 	void *orig_buffer;
+-	u8 data[0];
++	u8 data[];
  };
  
- #define for_each_dapm_widgets(list, i, widget)				\
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index f0e4f36f83bf..9944b978ae70 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -1146,7 +1146,7 @@ struct snd_soc_pcm_runtime {
- 	unsigned int fe_compr:1; /* for Dynamic PCM */
- 
- 	int num_components;
--	struct snd_soc_component *components[0]; /* CPU/Codec/Platform */
-+	struct snd_soc_component *components[]; /* CPU/Codec/Platform */
- };
- #define for_each_rtd_components(rtd, i, component)			\
- 	for ((i) = 0;							\
-diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
-index 535a7229e1d9..3809993f6cb4 100644
---- a/include/uapi/sound/asound.h
-+++ b/include/uapi/sound/asound.h
-@@ -1071,7 +1071,7 @@ struct snd_ctl_elem_value {
- struct snd_ctl_tlv {
- 	unsigned int numid;	/* control element numeric identification */
- 	unsigned int length;	/* in bytes aligned to 4 */
--	unsigned int tlv[0];	/* first TLV */
-+	unsigned int tlv[];	/* first TLV */
- };
- 
- #define SNDRV_CTL_IOCTL_PVERSION	_IOR('U', 0x00, int)
-diff --git a/include/uapi/sound/skl-tplg-interface.h b/include/uapi/sound/skl-tplg-interface.h
-index 9eee32f5e407..62f76f154d19 100644
---- a/include/uapi/sound/skl-tplg-interface.h
-+++ b/include/uapi/sound/skl-tplg-interface.h
-@@ -149,7 +149,7 @@ struct skl_dfw_algo_data {
- 	__u32 rsvd:30;
- 	__u32 param_id;
- 	__u32 max;
--	char params[0];
-+	char params[];
+ static inline struct usb_hcd *octeon_to_hcd(struct octeon_hcd *p)
+diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
+index 328f410daa03..b84f00b8d18b 100644
+--- a/drivers/staging/rtl8192e/rtllib.h
++++ b/drivers/staging/rtl8192e/rtllib.h
+@@ -728,14 +728,14 @@ struct rtllib_pspoll_hdr {
+ struct rtllib_hdr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+-	u8 payload[0];
++	u8 payload[];
  } __packed;
  
- enum skl_tkn_dir {
-diff --git a/sound/core/oss/pcm_plugin.h b/sound/core/oss/pcm_plugin.h
-index 8d2f7a4e3ab6..46e273bd4a78 100644
---- a/sound/core/oss/pcm_plugin.h
-+++ b/sound/core/oss/pcm_plugin.h
-@@ -64,7 +64,7 @@ struct snd_pcm_plugin {
- 	char *buf;
- 	snd_pcm_uframes_t buf_frames;
- 	struct snd_pcm_plugin_channel *buf_channels;
--	char extra_data[0];
-+	char extra_data[];
- };
- 
- int snd_pcm_plugin_build(struct snd_pcm_substream *handle,
-diff --git a/sound/firewire/fireworks/fireworks.h b/sound/firewire/fireworks/fireworks.h
-index dda797209a27..654e28a6669f 100644
---- a/sound/firewire/fireworks/fireworks.h
-+++ b/sound/firewire/fireworks/fireworks.h
-@@ -177,7 +177,7 @@ struct snd_efw_phys_meters {
- 	u32 in_meters;
- 	u32 reserved4;
- 	u32 reserved5;
--	u32 values[0];
-+	u32 values[];
- } __packed;
- enum snd_efw_clock_source {
- 	SND_EFW_CLOCK_SOURCE_INTERNAL	= 0,
-diff --git a/sound/soc/intel/atom/sst-atom-controls.h b/sound/soc/intel/atom/sst-atom-controls.h
-index 5356e954a732..620b48d2a064 100644
---- a/sound/soc/intel/atom/sst-atom-controls.h
-+++ b/sound/soc/intel/atom/sst-atom-controls.h
-@@ -410,7 +410,7 @@ struct sst_cmd_set_gain_dual {
- struct sst_cmd_set_params {
- 	struct sst_destination_id dst;
- 	u16 command_id;
--	char params[0];
-+	char params[];
+ struct rtllib_hdr_1addr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
  } __packed;
  
- 
-diff --git a/sound/soc/intel/skylake/skl-i2s.h b/sound/soc/intel/skylake/skl-i2s.h
-index d7c15873c0d4..dfce91e11be1 100644
---- a/sound/soc/intel/skylake/skl-i2s.h
-+++ b/sound/soc/intel/skylake/skl-i2s.h
-@@ -46,7 +46,7 @@ struct skl_i2s_config_mclk {
- struct skl_i2s_config_mclk_ext {
- 	u32 mdivctrl;
- 	u32 mdivr_count;
--	u32 mdivr[0];
-+	u32 mdivr[];
+ struct rtllib_hdr_2addr {
+@@ -743,7 +743,7 @@ struct rtllib_hdr_2addr {
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+ 	u8 addr2[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
  } __packed;
  
- struct skl_i2s_config_blob_signature {
-diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
-index e967800dbb62..d2cd8ef8e97f 100644
---- a/sound/soc/intel/skylake/skl-topology.h
-+++ b/sound/soc/intel/skylake/skl-topology.h
-@@ -119,7 +119,7 @@ struct skl_cpr_gtw_cfg {
- struct skl_dma_control {
- 	u32 node_id;
- 	u32 config_length;
--	u32 config_data[0];
-+	u32 config_data[];
+ struct rtllib_hdr_3addr {
+@@ -753,7 +753,7 @@ struct rtllib_hdr_3addr {
+ 	u8 addr2[ETH_ALEN];
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+-	u8 payload[0];
++	u8 payload[];
  } __packed;
  
- struct skl_cpr_cfg {
-@@ -152,7 +152,7 @@ struct skl_up_down_mixer_cfg {
- 
- struct skl_algo_cfg {
- 	struct skl_base_cfg  base_cfg;
--	char params[0];
-+	char params[];
+ struct rtllib_hdr_4addr {
+@@ -764,7 +764,7 @@ struct rtllib_hdr_4addr {
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+ 	u8 addr4[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
  } __packed;
  
- struct skl_base_outfmt_cfg {
-diff --git a/sound/soc/intel/skylake/skl.h b/sound/soc/intel/skylake/skl.h
-index 2bfbf59277c4..26057f38a014 100644
---- a/sound/soc/intel/skylake/skl.h
-+++ b/sound/soc/intel/skylake/skl.h
-@@ -49,7 +49,7 @@ struct skl_astate_param {
+ struct rtllib_hdr_3addrqos {
+@@ -775,7 +775,7 @@ struct rtllib_hdr_3addrqos {
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+ 	__le16 qos_ctl;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
  
- struct skl_astate_config {
- 	u32 count;
--	struct skl_astate_param astate_table[0];
-+	struct skl_astate_param astate_table[];
- };
+ struct rtllib_hdr_4addrqos {
+@@ -787,13 +787,13 @@ struct rtllib_hdr_4addrqos {
+ 	__le16 seq_ctl;
+ 	u8 addr4[ETH_ALEN];
+ 	__le16 qos_ctl;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
  
- struct skl_fw_config {
-diff --git a/sound/usb/usx2y/usbusx2y.h b/sound/usb/usx2y/usbusx2y.h
-index e0f77172ce8f..144b85f57bd2 100644
---- a/sound/usb/usx2y/usbusx2y.h
-+++ b/sound/usb/usx2y/usbusx2y.h
-@@ -18,7 +18,7 @@ struct snd_usX2Y_AsyncSeq {
- struct snd_usX2Y_urbSeq {
- 	int	submitted;
- 	int	len;
--	struct urb	*urb[0];
-+	struct urb	*urb[];
+ struct rtllib_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct rtllib_authentication {
+@@ -802,7 +802,7 @@ struct rtllib_authentication {
+ 	__le16 transaction;
+ 	__le16 status;
+ 	/*challenge*/
+-	struct rtllib_info_element info_element[0];
++	struct rtllib_info_element info_element[];
+ } __packed;
+ 
+ struct rtllib_disauth {
+@@ -818,7 +818,7 @@ struct rtllib_disassoc {
+ struct rtllib_probe_request {
+ 	struct rtllib_hdr_3addr header;
+ 	/* SSID, supported rates */
+-	struct rtllib_info_element info_element[0];
++	struct rtllib_info_element info_element[];
+ } __packed;
+ 
+ struct rtllib_probe_response {
+@@ -829,7 +829,7 @@ struct rtllib_probe_response {
+ 	/* SSID, supported rates, FH params, DS params,
+ 	 * CF params, IBSS params, TIM (if beacon), RSN
+ 	 */
+-	struct rtllib_info_element info_element[0];
++	struct rtllib_info_element info_element[];
+ } __packed;
+ 
+ /* Alias beacon for probe_response */
+@@ -840,7 +840,7 @@ struct rtllib_assoc_request_frame {
+ 	__le16 capability;
+ 	__le16 listen_interval;
+ 	/* SSID, supported rates, RSN */
+-	struct rtllib_info_element info_element[0];
++	struct rtllib_info_element info_element[];
+ } __packed;
+ 
+ struct rtllib_assoc_response_frame {
+@@ -848,7 +848,7 @@ struct rtllib_assoc_response_frame {
+ 	__le16 capability;
+ 	__le16 status;
+ 	__le16 aid;
+-	struct rtllib_info_element info_element[0]; /* supported rates */
++	struct rtllib_info_element info_element[]; /* supported rates */
+ } __packed;
+ 
+ struct rtllib_txb {
+@@ -859,7 +859,7 @@ struct rtllib_txb {
+ 	u16 reserved;
+ 	__le16 frag_size;
+ 	__le16 payload_size;
+-	struct sk_buff *fragments[0];
++	struct sk_buff *fragments[];
  };
  
- #include "usx2yhwdeppcm.h"
+ #define MAX_SUBFRAME_COUNT		  64
+@@ -1792,7 +1792,7 @@ struct rtllib_device {
+ 	/* This must be the last item so that it points to the data
+ 	 * allocated beyond this structure by alloc_rtllib
+ 	 */
+-	u8 priv[0];
++	u8 priv[];
+ };
+ 
+ #define IEEE_A	    (1<<0)
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211.h b/drivers/staging/rtl8192u/ieee80211/ieee80211.h
+index 9576b647f6b1..39f4ddd86796 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211.h
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211.h
+@@ -886,14 +886,14 @@ enum ieee80211_mfie {
+ struct rtl_80211_hdr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_80211_hdr_1addr {
+ 	__le16 frame_ctl;
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_80211_hdr_2addr {
+@@ -901,7 +901,7 @@ struct rtl_80211_hdr_2addr {
+ 	__le16 duration_id;
+ 	u8 addr1[ETH_ALEN];
+ 	u8 addr2[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_80211_hdr_3addr {
+@@ -911,7 +911,7 @@ struct rtl_80211_hdr_3addr {
+ 	u8 addr2[ETH_ALEN];
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_80211_hdr_4addr {
+@@ -922,7 +922,7 @@ struct rtl_80211_hdr_4addr {
+ 	u8 addr3[ETH_ALEN];
+ 	__le16 seq_ctl;
+ 	u8 addr4[ETH_ALEN];
+-	u8 payload[0];
++	u8 payload[];
+ } __packed;
+ 
+ struct rtl_80211_hdr_3addrqos {
+@@ -951,7 +951,7 @@ struct rtl_80211_hdr_4addrqos {
+ struct ieee80211_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct ieee80211_authentication {
+@@ -960,7 +960,7 @@ struct ieee80211_authentication {
+ 	__le16 transaction;
+ 	__le16 status;
+ 	/*challenge*/
+-	struct ieee80211_info_element info_element[0];
++	struct ieee80211_info_element info_element[];
+ } __packed;
+ 
+ struct ieee80211_disassoc {
+@@ -971,7 +971,7 @@ struct ieee80211_disassoc {
+ struct ieee80211_probe_request {
+ 	struct rtl_80211_hdr_3addr header;
+ 	/* SSID, supported rates */
+-	struct ieee80211_info_element info_element[0];
++	struct ieee80211_info_element info_element[];
+ } __packed;
+ 
+ struct ieee80211_probe_response {
+@@ -982,7 +982,7 @@ struct ieee80211_probe_response {
+ 	/* SSID, supported rates, FH params, DS params,
+ 	 * CF params, IBSS params, TIM (if beacon), RSN
+ 	 */
+-	struct ieee80211_info_element info_element[0];
++	struct ieee80211_info_element info_element[];
+ } __packed;
+ 
+ /* Alias beacon for probe_response */
+@@ -993,7 +993,7 @@ struct ieee80211_assoc_request_frame {
+ 	__le16 capability;
+ 	__le16 listen_interval;
+ 	/* SSID, supported rates, RSN */
+-	struct ieee80211_info_element info_element[0];
++	struct ieee80211_info_element info_element[];
+ } __packed;
+ 
+ struct ieee80211_reassoc_request_frame {
+@@ -1002,7 +1002,7 @@ struct ieee80211_reassoc_request_frame {
+ 	__le16 listen_interval;
+ 	u8 current_ap[ETH_ALEN];
+ 	/* SSID, supported rates, RSN */
+-	struct ieee80211_info_element info_element[0];
++	struct ieee80211_info_element info_element[];
+ } __packed;
+ 
+ struct ieee80211_assoc_response_frame {
+@@ -1010,7 +1010,7 @@ struct ieee80211_assoc_response_frame {
+ 	__le16 capability;
+ 	__le16 status;
+ 	__le16 aid;
+-	struct ieee80211_info_element info_element[0]; /* supported rates */
++	struct ieee80211_info_element info_element[]; /* supported rates */
+ } __packed;
+ 
+ struct ieee80211_txb {
+@@ -1021,7 +1021,7 @@ struct ieee80211_txb {
+ 	u16 reserved;
+ 	__le16 frag_size;
+ 	__le16 payload_size;
+-	struct sk_buff *fragments[0];
++	struct sk_buff *fragments[];
+ };
+ 
+ #define MAX_TX_AGG_COUNT		  16
+@@ -2007,7 +2007,7 @@ struct ieee80211_device {
+ 	/* This must be the last item so that it points to the data
+ 	 * allocated beyond this structure by alloc_ieee80211
+ 	 */
+-	u8 priv[0];
++	u8 priv[];
+ };
+ 
+ #define IEEE_A            (1<<0)
+diff --git a/drivers/staging/rtl8712/ieee80211.h b/drivers/staging/rtl8712/ieee80211.h
+index 8098f6905554..dabaa8fd34fb 100644
+--- a/drivers/staging/rtl8712/ieee80211.h
++++ b/drivers/staging/rtl8712/ieee80211.h
+@@ -535,7 +535,7 @@ struct ieee80211_info_element_hdr {
+ struct ieee80211_info_element {
+ 	u8 id;
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /*
+@@ -597,7 +597,7 @@ struct ieee80211_txb {
+ 	u16 reserved;
+ 	u16 frag_size;
+ 	u16 payload_size;
+-	struct sk_buff *fragments[0];
++	struct sk_buff *fragments[];
+ };
+ 
+ /* SWEEP TABLE ENTRIES NUMBER*/
+diff --git a/drivers/staging/rtl8712/rtl871x_mp_ioctl.h b/drivers/staging/rtl8712/rtl871x_mp_ioctl.h
+index 64e2ae436625..59fa6664d868 100644
+--- a/drivers/staging/rtl8712/rtl871x_mp_ioctl.h
++++ b/drivers/staging/rtl8712/rtl871x_mp_ioctl.h
+@@ -48,7 +48,7 @@ struct eeprom_rw_param {
+ struct EFUSE_ACCESS_STRUCT {
+ 	u16	start_addr;
+ 	u16	cnts;
+-	u8	data[0];
++	u8	data[];
+ };
+ 
+ struct burst_rw_reg {
+@@ -324,7 +324,7 @@ struct mp_ioctl_handler {
+ struct mp_ioctl_param {
+ 	unsigned int subcode;
+ 	unsigned int len;
+-	unsigned char data[0];
++	unsigned char data[];
+ };
+ 
+ #define GEN_MP_IOCTL_SUBCODE(code) _MP_IOCTL_ ## code ## _CMD_
+diff --git a/drivers/staging/wilc1000/cfg80211.c b/drivers/staging/wilc1000/cfg80211.c
+index 995b1f306807..5d8faa01337d 100644
+--- a/drivers/staging/wilc1000/cfg80211.c
++++ b/drivers/staging/wilc1000/cfg80211.c
+@@ -62,7 +62,7 @@ struct wilc_p2p_pub_act_frame {
+ 	u8 oui_type;
+ 	u8 oui_subtype;
+ 	u8 dialog_token;
+-	u8 elem[0];
++	u8 elem[];
+ } __packed;
+ 
+ struct wilc_vendor_specific_ie {
+@@ -70,13 +70,13 @@ struct wilc_vendor_specific_ie {
+ 	u8 tag_len;
+ 	u8 oui[3];
+ 	u8 oui_type;
+-	u8 attr[0];
++	u8 attr[];
+ } __packed;
+ 
+ struct wilc_attr_entry {
+ 	u8  attr_type;
+ 	__le16 attr_len;
+-	u8 val[0];
++	u8 val[];
+ } __packed;
+ 
+ struct wilc_attr_oper_ch {
+@@ -91,13 +91,13 @@ struct wilc_attr_ch_list {
+ 	u8 attr_type;
+ 	__le16 attr_len;
+ 	u8 country_code[IEEE80211_COUNTRY_STRING_LEN];
+-	u8 elem[0];
++	u8 elem[];
+ } __packed;
+ 
+ struct wilc_ch_list_elem {
+ 	u8 op_class;
+ 	u8 no_of_channels;
+-	u8 ch_list[0];
++	u8 ch_list[];
+ } __packed;
+ 
+ static void cfg_scan_result(enum scan_event scan_event,
+diff --git a/drivers/staging/wilc1000/spi.c b/drivers/staging/wilc1000/spi.c
+index 44f7d48851b5..11653ac118cd 100644
+--- a/drivers/staging/wilc1000/spi.c
++++ b/drivers/staging/wilc1000/spi.c
+@@ -139,7 +139,7 @@ struct wilc_spi_read_rsp_data {
+ 	u8 status;
+ 	u8 resp_header;
+ 	u8 resp_data[4];
+-	u8 crc[0];
++	u8 crc[];
+ } __packed;
+ 
+ struct wilc_spi_rsp_data {
+diff --git a/drivers/staging/wlan-ng/hfa384x.h b/drivers/staging/wlan-ng/hfa384x.h
+index bdd7f414fdbb..88e894dd3568 100644
+--- a/drivers/staging/wlan-ng/hfa384x.h
++++ b/drivers/staging/wlan-ng/hfa384x.h
+@@ -355,7 +355,7 @@
+ /* Commonly used basic types */
+ struct hfa384x_bytestr {
+ 	__le16 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct hfa384x_bytestr32 {
+@@ -421,7 +421,7 @@ struct hfa384x_authenticate_station_data {
+ /*-- Configuration Record: WPAData       (data portion only) --*/
+ struct hfa384x_wpa_data {
+ 	__le16 datalen;
+-	u8 data[0];		/* max 80 */
++	u8 data[];		/* max 80 */
+ } __packed;
+ 
+ /*--------------------------------------------------------------------
+diff --git a/drivers/staging/wlan-ng/p80211types.h b/drivers/staging/wlan-ng/p80211types.h
+index ac254542fde6..3dcdd022da61 100644
+--- a/drivers/staging/wlan-ng/p80211types.h
++++ b/drivers/staging/wlan-ng/p80211types.h
+@@ -204,7 +204,7 @@ struct p80211pstr {
+ 
+ struct p80211pstrd {
+ 	u8 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /* Maximum pascal string */
+@@ -249,7 +249,7 @@ struct p80211itemd {
+ 	u32 did;
+ 	u16 status;
+ 	u16 len;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ /* message data item for int, BOUNDEDINT, ENUMINT */
 -- 
 2.25.0
 
