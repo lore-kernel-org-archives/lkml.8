@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C18AC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF36C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3367B20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1655520801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bRhVmrGG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ub0zzd8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgBTF3J (ORCPT
+        id S1727001AbgBTF3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:29:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39517 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbgBTF3I (ORCPT
+        Thu, 20 Feb 2020 00:29:18 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33497 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726921AbgBTF3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:29:08 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so1080514plp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:29:08 -0800 (PST)
+        Thu, 20 Feb 2020 00:29:17 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 6so1341593pgk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:29:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3qk48O5iP5UI83BGLtFK/DPXjcS2SRQP8TVMgp2fJpo=;
-        b=bRhVmrGGpBmtuhmW7mF9VhV7BpnN10S3RU3sTcIlAIM6YOGdKjZ3Muy0pfFZe2HjrE
-         +ivyFn3B0QqL0Ol5NTaEMo8clTBpXV+uTp8jhp82ceKiaBLhs86pcSsLjIXMlQiYMOQn
-         U7/pghcJB7bzkbFeytV2N+2VSre7MAF5HzQr4a9xJo8EdiiZV9e4SCRrsqsLuzX3baYS
-         Sjr0EPpXA0sO0qCXUn903Cva3jEeYbKONPZfRXl24FlLLEG2TWe1L+i/JUlqlfkDfgcr
-         AI/yVONdmuXUT8egRIDZyGN4l3PIV0VubOxrHCzNjswERFv82GKMpG494kJbaaCd4IbE
-         2WdA==
+        bh=EjE4Cf7VSGmXDtiO9wfyAofjvoP2FRT6B4UQ7hLR5AY=;
+        b=Ub0zzd8dWNfTsDTewN1jODEFnVsMOTPD5316AMePvfM0o+2Um4n9L/wKg+jmamqCXq
+         8XJPquqFIDrrkvHZluYuz/9foLpjkiu1cwtAW+C6ixGT2XEtt1997AUR+VbqkhkTZdzl
+         o5Mvsf40nekLYIMcM3FQU1MgEUFl7BiExQQPPXuxeVKXp8HfH+JhvF2wo4AC3khFtn3M
+         SXAy+mVO5lNQeWedTjZgBj4OTWbmRklis6gQDEcVDjVAOWHLBjuDP8m2jXw0slsHtjfW
+         oqRmzzpv94v3l2QQrjT0rFWu7CnwcuidgwMR+onqK+HtBbaZRXFThQpJGkT0KXKOYy47
+         zlkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=3qk48O5iP5UI83BGLtFK/DPXjcS2SRQP8TVMgp2fJpo=;
-        b=P+Jhhp+TrvLRC27Q6VPpijkYGhS/777v/ugIHjcSzhqD42zvI+ls5RXKYQJQzwFYX6
-         yGR4q4T5pyr1vOLF61eCzvERfXLpBxAxJc2aPxlF7+ZHMcwSgFH6FdaA/Hmz8KUXOXHb
-         2HbixwIkjThLTjOdpGSr9wQCOg74Vc4dnlfiC+JsVLx40dSdfEJc2hPmrIZ53nVUTMa4
-         jj37NlI3CsZizbc9O/lNE3fpiYzOUeGp1saWbuoxlTHqMDBQDckU2I08ew2+QHcdg2Ap
-         C95FZXiNZtioaTFaEF43UhxquUUkoKUalPMUfgwxbuvtohLUUbjrK0VcIMMNr1r4zMK7
-         7LdQ==
-X-Gm-Message-State: APjAAAWeP6T/2ieoSBU2y+PSWcGEu9kCU1f/YHnGHS/YwyBK0gBRqD0k
-        6xkF5/pHmla4O+UdMivDa46XVA==
-X-Google-Smtp-Source: APXvYqwRsniVe9jr9X/SxVEMR87rh2T9LKg7rl7y/G3tSgvH3gz7yNnWze0GXZlxv9TewDyIjcISZw==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr30197151pls.285.1582176547616;
-        Wed, 19 Feb 2020 21:29:07 -0800 (PST)
+        bh=EjE4Cf7VSGmXDtiO9wfyAofjvoP2FRT6B4UQ7hLR5AY=;
+        b=nhX9DaDJ5q5Wd+wTZXGY3iw25qSFCOjQd9oNLSpYlldx3/hUEqBEJEFtkupYu6wP9d
+         cFR1xbRiv7s2WadhKyTWuagGbYNxNDxV9Fvw8S/a/8t8efzw6SYdIiFC316wL6fDQ2dZ
+         nKYVqCs1xlCJXKA5OM16OJo0RVHMQUSZr0ybRzIGBDbJP/eJj9viZ1YedAS2MF4tJYZb
+         G2TNh9nk68s2TFAWjGzPFv1tFbP07o7k9iup4XlTk91xyi13I3LbqZ9A4WF8UlF05o4m
+         B8ttde/doQJ3+h2kljCREha57G/emB8MDM0NwxUq4FujxzhUO5RVMn7WaeHYiGGC5iro
+         kV1Q==
+X-Gm-Message-State: APjAAAUm7qRY+dmnXLiEmazScGEa44bQMRs+31wbLVwKPBSRz2xZncFZ
+        cUhLBxXmt+KUFlgq+aEg8hy4DA==
+X-Google-Smtp-Source: APXvYqzXGCJ8KKqo2Ke8Te55VXSZTK7rRAQmCpM2W+Cmx3hGbcok220pWXGhNqhw2DaGZEJJib1fwg==
+X-Received: by 2002:a62:1456:: with SMTP id 83mr30897343pfu.186.1582176557002;
+        Wed, 19 Feb 2020 21:29:17 -0800 (PST)
 Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id l69sm1535663pgd.1.2020.02.19.21.28.59
+        by smtp.gmail.com with ESMTPSA id l69sm1535663pgd.1.2020.02.19.21.29.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 21:29:07 -0800 (PST)
+        Wed, 19 Feb 2020 21:29:16 -0800 (PST)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
@@ -70,9 +70,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Coresight ML <coresight@lists.linaro.org>
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 8/9] perf thread: Add helper to get top return address
-Date:   Thu, 20 Feb 2020 13:27:00 +0800
-Message-Id: <20200220052701.7754-9-leo.yan@linaro.org>
+Subject: [PATCH v5 9/9] perf cs-etm: Fixup exception exit for thread stack
+Date:   Thu, 20 Feb 2020 13:27:01 +0800
+Message-Id: <20200220052701.7754-10-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200220052701.7754-1-leo.yan@linaro.org>
 References: <20200220052701.7754-1-leo.yan@linaro.org>
@@ -81,52 +81,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the instruction emulation or single step in kernel, when return to
-the user space, the return address is not possible to be the same with
-the ret_addr in thread stack.
+For instruction emulation or other cases (like ptrace), the program will
+be trapped into kernel and the kernel executes the instruction with
+single step, so the exception return address will be one instruction
+ahead than the recorded address 'ret_addr' in the thread stack.
+Finally, it's impossible to pop up the thread stack due to the mismatch
+between the return address and 'ret_addr'.
 
-This patch adds a helper to read out the top return address from thread
-stack, this can be used for specific calibration in up case.
+To fix this issue, this patch reads out the 'ret_addr' from the top of
+thread stack, and if detects the exception return address is one
+instruction ahead than 'ret_addr', it implies the kernel has executed
+single step.  For this case, calibrate 'to_ip' to 'ret_addr' so can
+allow the thread stack to pop up.
+
+Before:
+
+  main  3258        100      instructions:
+          ffff800010095f48 do_emulate_mrs+0x48 ([kernel.kallsyms])
+          ffff800010096060 emulate_mrs+0x48 ([kernel.kallsyms])
+          ffff8000100904ec do_undefinstr+0x1f4 ([kernel.kallsyms])
+          ffff80001008788c el0_sync_handler+0x124 ([kernel.kallsyms])
+          ffff800010082d00 el0_sync+0x140 ([kernel.kallsyms])
+              ffffad8137d8 _dl_sysdep_start+0x2f8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  main  3258        100      instructions:
+          ffff8000100835fc finish_ret_to_user+0xbc ([kernel.kallsyms])
+              ffffad8137d8 _dl_sysdep_start+0x2f8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  main  3258        100      instructions:
+              ffffad801138 dl_main+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad81384c _dl_sysdep_start+0x36c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad8137d8 _dl_sysdep_start+0x2f8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+Note: after return back from instruction emulation with emulate_mrs(),
+_dl_sysdep_start+0x2f8 cannot be popped up.
+
+After:
+
+  main  3258        100      instructions:
+          ffff800010095f48 do_emulate_mrs+0x48 ([kernel.kallsyms])
+          ffff800010096060 emulate_mrs+0x48 ([kernel.kallsyms])
+          ffff8000100904ec do_undefinstr+0x1f4 ([kernel.kallsyms])
+          ffff80001008788c el0_sync_handler+0x124 ([kernel.kallsyms])
+          ffff800010082d00 el0_sync+0x140 ([kernel.kallsyms])
+              ffffad8137d8 _dl_sysdep_start+0x2f8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  main  3258        100      instructions:
+          ffff8000100835fc finish_ret_to_user+0xbc ([kernel.kallsyms])
+              ffffad8137d8 _dl_sysdep_start+0x2f8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+
+  main  3258        100      instructions:
+              ffffad801138 dl_main+0x70 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad81384c _dl_sysdep_start+0x36c (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800884 _dl_start_final+0xac (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800b00 _dl_start+0x200 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
+              ffffad800048 _start+0x8 (/usr/lib/aarch64-linux-gnu/ld-2.28.so)
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/thread-stack.c | 10 ++++++++++
- tools/perf/util/thread-stack.h |  1 +
- 2 files changed, 11 insertions(+)
+ tools/perf/util/cs-etm.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 0885967d5bc3..60cd6fdca8de 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -497,6 +497,16 @@ void thread_stack__sample(struct thread *thread, int cpu,
- 	chain->nr = i;
- }
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 4800daf0dc3d..7ff55704de5c 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1190,6 +1190,34 @@ static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
+ 		    tidq->prev_packet->end_addr)
+ 			insn_len = 0;
  
-+u64 thread_stack__get_top_ret_addr(struct thread *thread, int cpu)
-+{
-+	struct thread_stack *ts = thread__stack(thread, cpu);
++		/*
++		 * Fixup the exception exit.
++		 *
++		 * For instruction emulation or single step cases, when return
++		 * from exception, since an extra instruction has been executed
++		 * in kernel, the exception return address 'top_ip' is an
++		 * instruction ahead than the expected address 'ret_addr' in
++		 * thread stack.
++		 *
++		 * When detects this case, calibrate 'to_ip' to 'ret_addr' so
++		 * can pop up thread stack.
++		 */
++		flags = PERF_IP_FLAG_BRANCH | PERF_IP_FLAG_RETURN |
++			PERF_IP_FLAG_INTERRUPT;
++		if (tidq->prev_packet->flags == flags) {
++			u64 ret_addr;
++			int ret_insn_len;
 +
-+	if (!ts || !ts->cnt)
-+		return UINT64_MAX;
++			ret_addr = thread_stack__get_top_ret_addr(tidq->thread,
++						tidq->prev_packet->cpu);
++			ret_insn_len = cs_etm__instr_size(etmq,
++							  trace_chan_id,
++							  tidq->packet->isa,
++							  ret_addr);
++			if (to_ip == ret_addr + ret_insn_len)
++				to_ip = ret_addr;
++		}
 +
-+	return ts->stack[ts->cnt--].ret_addr;
-+}
-+
- struct call_return_processor *
- call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
- 			   void *data)
-diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-index e1ec5a58f1b2..b9d07a3be6c2 100644
---- a/tools/perf/util/thread-stack.h
-+++ b/tools/perf/util/thread-stack.h
-@@ -88,6 +88,7 @@ void thread_stack__sample(struct thread *thread, int cpu, struct ip_callchain *c
- int thread_stack__flush(struct thread *thread);
- void thread_stack__free(struct thread *thread);
- size_t thread_stack__depth(struct thread *thread, int cpu);
-+u64 thread_stack__get_top_ret_addr(struct thread *thread, int cpu);
- 
- struct call_return_processor *
- call_return_processor__new(int (*process)(struct call_return *cr, u64 *parent_db_id, void *data),
+ 		/*
+ 		 * Create thread stacks by keeping track of calls and returns;
+ 		 * any call pushes thread stack, return pops the stack, and
 -- 
 2.17.1
 
