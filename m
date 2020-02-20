@@ -2,124 +2,99 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33CFC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0AEC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7D6020801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iir8/4hr"
+	by mail.kernel.org (Postfix) with ESMTP id 00A7A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582241707;
+	bh=+vxZumNs1ah+G+/HYQ/utLfPw5v1Cw4mV4Ea+m4M9gg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yGvFfPgpFLlPof+eluDYuuFpd0R+DcBlvuveWs6c64K/Ev8dSfIWRSekut1R8xj41
+	 vd8KgtKBajFg0ND0aGzllNU07OITEXRW70xdhBIR55Fqhyb3M1x+dPqzzLbFsGdQqZ
+	 GIZ2IX+j78jc8psIIBEV8fUXhtBGneJf9rfItx+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgBTXfA (ORCPT
+        id S1729397AbgBTXfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:35:00 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:55045 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTXfA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:35:00 -0500
-Received: by mail-pj1-f68.google.com with SMTP id dw13so172373pjb.4;
-        Thu, 20 Feb 2020 15:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Ib7HQNjwBZEeeeqlrByrC4mTfctGE4wzzBlFkYuG584=;
-        b=Iir8/4hrmlntwuBLVxLAydhzV39gHbjgOxHQiOIHle7rAw6MbPykzseyAGdUz6x0xC
-         RGE82VY+cY+sRtNnJjnJP+cmARNC7s091dZ3Zr48PkpB6Q+T4YzHpM537Q9T1VvnfxN1
-         SYO4c2ex3piIv/Lnar+AJThsbVsCLC4KxQ6OtE/wPICRsrCEUQPRHXtBQzfEQVj8+AWP
-         +ZwWl/t0CygGV/RqZcybjH+eNPJn74acTVQFJPqWqu6rxmbf3XhlQwp337naYtmrRqeP
-         kyLr9napuNwQ9/m29QCKiy0oHNu29lWI/z+jUXjANBNpTwQ1/ykB2Os7HjfqihGj0UK/
-         3reA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Ib7HQNjwBZEeeeqlrByrC4mTfctGE4wzzBlFkYuG584=;
-        b=KWywZ6YTmDJuZnE9gi3/IpkDtaRSYrMsWJIBldhtK/di524MtVWC8hHCOCV+gleTBA
-         qUpGkYt3lAzdcfP9CZ1C9d2RqTsHKTmAyzErFHZAwZeWnV7mRaZFnAjGwTTZT1NEWmgl
-         dBwfcZIxaDNdsZtLuEsyiHlRfxmj/oxrJAlESpf/f5MhAtdROlkuZlEQOMjLyKGtfYKA
-         uApN/gt/L6pp9Vb5iLAK6Fr+KpNOqrDick+UKNK0ysmuKREUDuClqcon0fgfWhN3qpPE
-         jyV8Jtv4v2NJaPidtwI3KQvYB+ZhX8gS4RtRQkLQIlJwQsY/SZfcGp3JxOZujucU3t6e
-         qHdQ==
-X-Gm-Message-State: APjAAAXKqno8BTBzqhC+4t0xmYqlcxP1UPJ6EYTYES8rWe26LxWE9aYD
-        nA3oOIQrx+ritNHhnQA2zJdZc+2H
-X-Google-Smtp-Source: APXvYqzoUng9rwn9VWrUCJ73KCbi0fQVywXpbpLlOxAQAT0gelfcWCU46XOTD0SbUC9QJF/89dR4Kg==
-X-Received: by 2002:a17:90a:e509:: with SMTP id t9mr6137477pjy.110.1582241699186;
-        Thu, 20 Feb 2020 15:34:59 -0800 (PST)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d69sm693688pfd.72.2020.02.20.15.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 15:34:58 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     yoshihiro.shimoda.uh@renesas.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Fugang Duan <B38611@freescale.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] net: phy: Avoid multiple suspends
-Date:   Thu, 20 Feb 2020 15:34:53 -0800
-Message-Id: <20200220233454.31514-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Feb 2020 18:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729382AbgBTXfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:35:04 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D5A4208CD;
+        Thu, 20 Feb 2020 23:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582241704;
+        bh=+vxZumNs1ah+G+/HYQ/utLfPw5v1Cw4mV4Ea+m4M9gg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gs1lr4IENJuU8QEKWW+cxv9RVYuHxiiyrkN0+7PjLhZyyT9BpT+14/NN0KSYh/c+g
+         Vpe7B3DycW7UevacPa0zpmffKRo+VU07e+UVjSYCCe++VP+QnIOiV6qvzvrSQUXWpi
+         9Ao/OpVfYlC7PuAEbXx54syVA9N6ZKek4hJKJgpw=
+Date:   Fri, 21 Feb 2020 08:34:59 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 4/8] bootconfig: Remove unneeded checksum
+Message-Id: <20200221083459.5469ae4bbb26b57f2063ec99@kernel.org>
+In-Reply-To: <20200220121431.0de871fe@gandalf.local.home>
+References: <158220110257.26565.4812934676257459744.stgit@devnote2>
+        <158220114239.26565.3917262826354805559.stgit@devnote2>
+        <20200220121431.0de871fe@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is currently possible for a PHY device to be suspended as part of a
-network device driver's suspend call while it is still being attached to
-that net_device, either via phy_suspend() or implicitly via phy_stop().
+On Thu, 20 Feb 2020 12:14:31 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Later on, when the MDIO bus controller get suspended, we would attempt
-to suspend again the PHY because it is still attached to a network
-device.
+> On Thu, 20 Feb 2020 21:19:02 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Remove checksum of bootconfig because we already use a magic
+> > word to identify bootconfig. This checksum was used for
+> > checking whether there is a bootconfig at the end of initrd
+> > or not. Since we have a bootconfig magic word to identify
+> > the bootconfig data, we do not this checksum anymore.
+> > 
+> > Thus the block image of the initrd file with bootconfig is
+> > as follows.
+> > 
+> > [initrd][bootconfig][size(u32)][#BOOTCONFIG\n]
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >
+> 
+> Hmm, I think the checksum is still good to have, in case of a corrupted
+> file. Does it hurt to keep it?
 
-This is both a waste of time and creates an opportunity for improper
-clock/power management bugs to creep in.
+No problem. We can drop this patch.
+I thought this check was a bit redundant since (originally) this was
+introduced to identify the bootconfig.
 
-Fixes: 803dd9c77ac3 ("net: phy: avoid suspending twice a PHY")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-Heiner, Andrew,
+Thank you,
 
-I did consider adding logic that would check for phydev->suspended in
-phy_suspend() and phy_resume(), but this was really the only place where
-I found it to be problematic.
+> 
+> -- Steve
 
- drivers/net/phy/phy_device.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 6a5056e0ae77..6131aca79823 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -247,7 +247,7 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	 * MDIO bus driver and clock gated at this point.
- 	 */
- 	if (!netdev)
--		return !phydev->suspended;
-+		goto out;
- 
- 	if (netdev->wol_enabled)
- 		return false;
-@@ -267,7 +267,8 @@ static bool mdio_bus_phy_may_suspend(struct phy_device *phydev)
- 	if (device_may_wakeup(&netdev->dev))
- 		return false;
- 
--	return true;
-+out:
-+	return !phydev->suspended;
- }
- 
- static int mdio_bus_phy_suspend(struct device *dev)
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
