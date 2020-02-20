@@ -7,39 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC3BC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C426EC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8EC20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E3E20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgBTUVA (ORCPT
+        id S1729076AbgBTUVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:21:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43898 "EHLO
+        Thu, 20 Feb 2020 15:21:15 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43910 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgBTUU7 (ORCPT
+        with ESMTP id S1728556AbgBTUVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:20:59 -0500
+        Thu, 20 Feb 2020 15:21:15 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1j4sJd-0006u0-8J; Thu, 20 Feb 2020 21:20:57 +0100
+        id 1j4sJd-0006u4-PE; Thu, 20 Feb 2020 21:20:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C97F01C1A4F;
-        Thu, 20 Feb 2020 21:20:56 +0100 (CET)
-Date:   Thu, 20 Feb 2020 20:20:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 50B0B1C20C5;
+        Thu, 20 Feb 2020 21:20:57 +0100 (CET)
+Date:   Thu, 20 Feb 2020 20:20:57 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/rt] sched: Provide cant_migrate()
-Cc:     Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200214161503.070487511@linutronix.de>
-References: <20200214161503.070487511@linutronix.de>
+Subject: [tip: sched/rt] sched/rt: Provide migrate_disable/enable() inlines
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <878slclv1u.fsf@nanos.tec.linutronix.de>
+References: <878slclv1u.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158223005640.13786.3830245021041569703.tip-bot2@tip-bot2>
+Message-ID: <158223005708.13786.5277207033614446765.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,48 +63,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/rt branch of tip:
 
-Commit-ID:     4e139c7711633365ebb52fbb63905395522a8413
-Gitweb:        https://git.kernel.org/tip/4e139c7711633365ebb52fbb63905395522a8413
+Commit-ID:     66630058e56b26b3a9cf2625e250a8c592dd0207
+Gitweb:        https://git.kernel.org/tip/66630058e56b26b3a9cf2625e250a8c592dd0207
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 14 Feb 2020 14:39:19 +01:00
+AuthorDate:    Sat, 08 Feb 2020 20:48:29 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Thu, 20 Feb 2020 21:17:24 +01:00
 
-sched: Provide cant_migrate()
+sched/rt: Provide migrate_disable/enable() inlines
 
-Some code pathes rely on preempt_disable() to prevent migration on a non RT
-enabled kernel. These preempt_disable/enable() pairs are substituted by
-migrate_disable/enable() pairs or other forms of RT specific protection. On
-RT these protections prevent migration but not preemption. Obviously a
-cant_sleep() check in such a section will trigger on RT because preemption
-is not disabled.
+Code which solely needs to prevent migration of a task uses
+preempt_disable()/enable() pairs. This is the only reliable way to do so
+as setting the task affinity to a single CPU can be undone by a
+setaffinity operation from a different task/process.
 
-Provide a cant_migrate() macro which maps to cant_sleep() on a non RT
-kernel and an empty placeholder for RT for now. The placeholder will be
-changed to a proper debug check along with the RT specific migration
-protection mechanism.
+RT provides a seperate migrate_disable/enable() mechanism which does not
+disable preemption to achieve the semantic requirements of a (almost) fully
+preemptible kernel.
+
+As it is unclear from looking at a given code path whether the intention is
+to disable preemption or migration, introduce migrate_disable/enable()
+inline functions which can be used to annotate code which merely needs to
+disable migration. Map them to preempt_disable/enable() for now. The RT
+substitution will be provided later.
+
+Code which is annotated that way documents that it has no requirement to
+protect against reentrancy of a preempting task. Either this is not
+required at all or the call sites are already serialized by other means.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200214161503.070487511@linutronix.de
----
- include/linux/kernel.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/878slclv1u.fsf@nanos.tec.linutronix.de
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 0d9db2a..9b7a8d7 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -257,6 +257,13 @@ extern void __cant_sleep(const char *file, int line, int preempt_offset);
+---
+ include/linux/preempt.h | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/include/linux/preempt.h b/include/linux/preempt.h
+index bbb68db..bc3f1ae 100644
+--- a/include/linux/preempt.h
++++ b/include/linux/preempt.h
+@@ -322,4 +322,34 @@ static inline void preempt_notifier_init(struct preempt_notifier *notifier,
  
- #define might_sleep_if(cond) do { if (cond) might_sleep(); } while (0)
+ #endif
  
-+#ifndef CONFIG_PREEMPT_RT
-+# define cant_migrate()		cant_sleep()
-+#else
-+  /* Placeholder for now */
-+# define cant_migrate()		do { } while (0)
-+#endif
++/**
++ * migrate_disable - Prevent migration of the current task
++ *
++ * Maps to preempt_disable() which also disables preemption. Use
++ * migrate_disable() to annotate that the intent is to prevent migration,
++ * but not necessarily preemption.
++ *
++ * Can be invoked nested like preempt_disable() and needs the corresponding
++ * number of migrate_enable() invocations.
++ */
++static __always_inline void migrate_disable(void)
++{
++	preempt_disable();
++}
 +
- /**
-  * abs - return absolute value of an argument
-  * @x: the value.  If it is unsigned type, it is converted to signed type first.
++/**
++ * migrate_enable - Allow migration of the current task
++ *
++ * Counterpart to migrate_disable().
++ *
++ * As migrate_disable() can be invoked nested, only the outermost invocation
++ * reenables migration.
++ *
++ * Currently mapped to preempt_enable().
++ */
++static __always_inline void migrate_enable(void)
++{
++	preempt_enable();
++}
++
+ #endif /* __LINUX_PREEMPT_H */
