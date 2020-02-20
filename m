@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906AAC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50615C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664DB2467D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 282A52467D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2ufgc2A"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KWtAXqoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgBTFFJ (ORCPT
+        id S1726955AbgBTFFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:05:09 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45548 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbgBTFFH (ORCPT
+        Thu, 20 Feb 2020 00:05:13 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38577 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgBTFFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:05:07 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so1044933pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:05:07 -0800 (PST)
+        Thu, 20 Feb 2020 00:05:11 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x185so1293252pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:05:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=aixlBG1IUMuyRnlbsO9Bddkyq8kq21Uvz9l57YstKEY=;
-        b=j2ufgc2A6/zlTZrKnv+kOV8+1hQXXn3hsLZe88ekx9d15lUcmJnyFUmhDsip74svCh
-         pr7/+G5aP6LdzE4a7lEJUZgNTJMhvYQE/MKQ4aG/rMEG02biDlVWqaIUw8PgVwbDxwS1
-         dSJ/9VHA7hhoPMtn++Xrple53Lem5Nsayidp3GA+3+TlpYNWCwa+N3TKHz5zYeol9AUp
-         trdAnxxH31Bt/cY/j24Bq+ddIJ0mb+gOBv9XXnT3AUQdT4FVG0FHMS/eyoxgshaj0aDe
-         NuXP3JUSwR6i0KECbbq/OVFbX3uAJmVBj+k/4sVu8kBtxetNlMs4NXbFXIasx0g2OUz6
-         U9Gw==
+        bh=aW+BwlvCbf3aWaQh47QJ3yNM7VLxHMAzfks9zOaajkM=;
+        b=KWtAXqoH66/xVX33DhMaKTUdGX6Uf98AbL57ah+k6dEdauNQwApvPnNPHUiivq6Jdi
+         49xLg0mTm79BVYHbdcVGHKDyfCI7Yt8YhnlXGJHea2d2Y16+X+iCM76wvPNmXrV4dhfb
+         KKtxMQCoagp0X+c11lVO9afWRHTd6fPbsvUjdhWnY6dEPBMgam5bDsEJ0yD01A23gyxO
+         XyvFyW3dEfa9OwDK55NIUQRusiahMNtBIZGwbpxIjB1xAdamE56cpYEcFU/u6PxFnaWt
+         V6wbP8AjfqY2Y56H4t559cVNwx9C1p0h6Vw2CRmcPmowj7AN8PIhT+73joESZcCRHPmP
+         3dBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=aixlBG1IUMuyRnlbsO9Bddkyq8kq21Uvz9l57YstKEY=;
-        b=mPcbTm36q/CZWPXrmT7q+V6wRbVoq6Xm9UPrlkhbOhFhWTQLD/PuIX8efChzdM8mE3
-         TFMzgt58h4xd048V0SdGPfg3xoyj7O3fu8Uav5ydtYgNXpdUU0BKv4cdF8grJebGcXB6
-         oJ4bqD6pQhRSveuY9BIIuQtkPPbM4WVlqZjCq029qcxAUqpt+5PMRZDG5dLPcCek3LgM
-         DrLNmZ9J98KivgWA5h1x9vY1aMENMmw61kwiGFACrIuXuELGWocxE5NoQTPdJ6IY3nJP
-         MntLWz0YMA5MkLZ72Pih++Ru44hdmEu0uTjUqw6hlU0Zjf2MNMDnq8PLmopqs9kbKMuK
-         9Pfw==
-X-Gm-Message-State: APjAAAVScXzRsB9jNri4hCYEsfftK7nFGTsOXutu9Jci35L08Sf9g6/C
-        hlPcIj6V9LpTp4ll2WHfHEtp4j/kyuk=
-X-Google-Smtp-Source: APXvYqzmBhGA+NC9IeOnvf5JOOp42iqCCjHX+Qckv0WLtqV7PEDyvMGdktmnkX5JTyIHsNGyOPPQUA==
-X-Received: by 2002:a17:90a:cc10:: with SMTP id b16mr1393657pju.55.1582175106420;
-        Wed, 19 Feb 2020 21:05:06 -0800 (PST)
+        bh=aW+BwlvCbf3aWaQh47QJ3yNM7VLxHMAzfks9zOaajkM=;
+        b=Gx4Q7fSwlUey9YsDuxBcmMPUZw3R0n04Qmas9tiPBO6t82ssiNloeC4AkrKPBu5aq/
+         WQOW6BadyNBYa/TorFEXpjilfhGZSzasPv5rIv4tBBCNhEJwmh1L0JDOqcbFwi0qstn9
+         Do5fjNfpA4dHRDEpF2Ft7+dEv5Gy5v2WIBji/7VEVt8kbcbeHCBWRrbpgmJcislmhZkc
+         xpN4AV/ys8eyFkoZ4LoIJD+OnG4J0i9Qj4nU5Mout0pqErGNq7gwzJeNaMmXn7rSKJiq
+         7gGb2PFsYvlDcNb3+3jzkkkJ0hXVScPEEgEMqwf6XBGBXXlr/51iwQ3K8jQ4O8OFNDs+
+         mvGA==
+X-Gm-Message-State: APjAAAXqg7uhvQIWruBs0Nqww/ASLd2yeQiNhmToeCLobhHucmBv60UO
+        lT1x2bf8Km5P4r/tlpkTqGcwm8dJ6M8=
+X-Google-Smtp-Source: APXvYqxtOMEIAg/0vMNdo4l2g1zhUCi8GqsKzxUcztilwfCWBSoXPh54dpJIreh60u0UmWS9iVnVSQ==
+X-Received: by 2002:a63:fc51:: with SMTP id r17mr31212077pgk.292.1582175109855;
+        Wed, 19 Feb 2020 21:05:09 -0800 (PST)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id z4sm1400847pfn.42.2020.02.19.21.05.05
+        by smtp.gmail.com with ESMTPSA id z4sm1400847pfn.42.2020.02.19.21.05.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 21:05:05 -0800 (PST)
+        Wed, 19 Feb 2020 21:05:09 -0800 (PST)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>,
@@ -71,9 +71,9 @@ Cc:     John Stultz <john.stultz@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-pm@vger.kernel.org
-Subject: [PATCH v4 4/6] driver core: Remove driver_deferred_probe_check_state_continue()
-Date:   Thu, 20 Feb 2020 05:04:38 +0000
-Message-Id: <20200220050440.45878-5-john.stultz@linaro.org>
+Subject: [PATCH v4 5/6] driver core: Rename deferred_probe_timeout and make it global
+Date:   Thu, 20 Feb 2020 05:04:39 +0000
+Message-Id: <20200220050440.45878-6-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200220050440.45878-1-john.stultz@linaro.org>
 References: <20200220050440.45878-1-john.stultz@linaro.org>
@@ -82,10 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that driver_deferred_probe_check_state() works better, and
-we've converted the only user of
-driver_deferred_probe_check_state_continue() we can simply
-remove it and simplify some of the logic.
+Since other subsystems (like regulator) have similar arbitrary
+timeouts for how long they try to resolve driver dependencies,
+rename deferred_probe_timeout to driver_deferred_probe_timeout
+and set it as global, so it can be shared.
 
 Cc: Rob Herring <robh@kernel.org>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
@@ -102,98 +102,89 @@ Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-pm@vger.kernel.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
-Change-Id: Id5cd5e9264cfb0fbd70a702715174cc4b10006f4
+Change-Id: I92ee3b392004ecc9217c5337b54eda48c2d7f3ee
 ---
- drivers/base/dd.c             | 49 +++++------------------------------
- include/linux/device/driver.h |  1 -
- 2 files changed, 6 insertions(+), 44 deletions(-)
+v4:
+* Split out into its own patch as suggested by Mark
+* Renamed deferred_probe_timeout as suggested by Greg
+---
+ drivers/base/dd.c             | 18 ++++++++++--------
+ include/linux/device/driver.h |  1 +
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index fa138f24e2d3..408e4da081da 100644
+index 408e4da081da..39f1ce6d4f1c 100644
 --- a/drivers/base/dd.c
 +++ b/drivers/base/dd.c
-@@ -244,19 +244,6 @@ static int __init deferred_probe_timeout_setup(char *str)
+@@ -229,17 +229,19 @@ DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+  * In the case of modules, set the default probe timeout to
+  * 30 seconds to give userland some time to load needed modules
+  */
+-static int deferred_probe_timeout = 30;
++int driver_deferred_probe_timeout = 30;
+ #else
+ /* In the case of !modules, no probe timeout needed */
+-static int deferred_probe_timeout = -1;
++int driver_deferred_probe_timeout = -1;
+ #endif
++EXPORT_SYMBOL_GPL(driver_deferred_probe_timeout);
++
+ static int __init deferred_probe_timeout_setup(char *str)
+ {
+ 	int timeout;
+ 
+ 	if (!kstrtoint(str, 10, &timeout))
+-		deferred_probe_timeout = timeout;
++		driver_deferred_probe_timeout = timeout;
+ 	return 1;
  }
  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
- 
--static int __driver_deferred_probe_check_state(struct device *dev)
--{
--	if (!initcalls_done || deferred_probe_timeout > 0)
--		return -EPROBE_DEFER;
--
--	if (!deferred_probe_timeout) {
--		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
--		return -ETIMEDOUT;
--	}
--
--	return 0;
--}
--
- /**
-  * driver_deferred_probe_check_state() - Check deferred probe state
-  * @dev: device to check
-@@ -272,43 +259,19 @@ static int __driver_deferred_probe_check_state(struct device *dev)
+@@ -259,10 +261,10 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
   */
  int driver_deferred_probe_check_state(struct device *dev)
  {
--	int ret;
-+	if (!initcalls_done || deferred_probe_timeout > 0)
-+		return -EPROBE_DEFER;
+-	if (!initcalls_done || deferred_probe_timeout > 0)
++	if (!initcalls_done || driver_deferred_probe_timeout > 0)
+ 		return -EPROBE_DEFER;
  
--	ret = __driver_deferred_probe_check_state(dev);
--	if (ret < 0)
--		return ret;
-+	if (!deferred_probe_timeout) {
-+		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
-+		return -ETIMEDOUT;
-+	}
- 
- 	dev_warn(dev, "ignoring dependency for device, assuming no driver");
- 
- 	return -ENODEV;
- }
- 
--/**
-- * driver_deferred_probe_check_state_continue() - check deferred probe state
-- * @dev: device to check
-- *
-- * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
-- * -EPROBE_DEFER otherwise.
-- *
-- * Drivers or subsystems can opt-in to calling this function instead of
-- * directly returning -EPROBE_DEFER.
-- *
-- * This is similar to driver_deferred_probe_check_state(), but it allows the
-- * subsystem to keep deferring probe after built-in drivers have had a chance
-- * to probe. One scenario where that is useful is if built-in drivers rely on
-- * resources that are provided by modular drivers.
-- */
--int driver_deferred_probe_check_state_continue(struct device *dev)
--{
--	int ret;
--
--	ret = __driver_deferred_probe_check_state(dev);
--	if (ret < 0)
--		return ret;
--
--	return -EPROBE_DEFER;
--}
--
- static void deferred_probe_timeout_work_func(struct work_struct *work)
+-	if (!deferred_probe_timeout) {
++	if (!driver_deferred_probe_timeout) {
+ 		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+ 		return -ETIMEDOUT;
+ 	}
+@@ -276,7 +278,7 @@ static void deferred_probe_timeout_work_func(struct work_struct *work)
  {
  	struct device_private *private, *p;
+ 
+-	deferred_probe_timeout = 0;
++	driver_deferred_probe_timeout = 0;
+ 	driver_deferred_probe_trigger();
+ 	flush_work(&deferred_probe_work);
+ 
+@@ -310,9 +312,9 @@ static int deferred_probe_initcall(void)
+ 	driver_deferred_probe_trigger();
+ 	flush_work(&deferred_probe_work);
+ 
+-	if (deferred_probe_timeout > 0) {
++	if (driver_deferred_probe_timeout > 0) {
+ 		schedule_delayed_work(&deferred_probe_timeout_work,
+-			deferred_probe_timeout * HZ);
++			driver_deferred_probe_timeout * HZ);
+ 	}
+ 	return 0;
+ }
 diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index 1188260f9a02..5242afabfaba 100644
+index 5242afabfaba..ee7ba5b5417e 100644
 --- a/include/linux/device/driver.h
 +++ b/include/linux/device/driver.h
-@@ -238,7 +238,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+@@ -236,6 +236,7 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+ }
+ #endif
  
++extern int driver_deferred_probe_timeout;
  void driver_deferred_probe_add(struct device *dev);
  int driver_deferred_probe_check_state(struct device *dev);
--int driver_deferred_probe_check_state_continue(struct device *dev);
  void driver_init(void);
- 
- /**
 -- 
 2.17.1
 
