@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F919C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB53C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4E0206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFF8206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:26:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgBTQ0G (ORCPT
+        id S1728741AbgBTQ0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:26:06 -0500
-Received: from out28-195.mail.aliyun.com ([115.124.28.195]:57095 "EHLO
-        out28-195.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgBTQ0C (ORCPT
+        Thu, 20 Feb 2020 11:26:00 -0500
+Received: from out28-4.mail.aliyun.com ([115.124.28.4]:48411 "EHLO
+        out28-4.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728173AbgBTQZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:26:02 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07466222|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.452662-0.00849394-0.538844;DS=CONTINUE|ham_alarm|0.00316388-0.000108622-0.996728;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03279;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GqC0FCl_1582215911;
+        Thu, 20 Feb 2020 11:25:39 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07648442|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.498548-0.0165261-0.484926;DS=CONTINUE|ham_regular_dialog|0.0122992-0.000497969-0.987203;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03296;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GqC0FCl_1582215911;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GqC0FCl_1582215911)
           by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 21 Feb 2020 00:25:22 +0800
+          Fri, 21 Feb 2020 00:25:29 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         miquel.raynal@bootlin.com, keescook@chromium.org,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
         dongsheng.qiu@ingenic.com
-Subject: [PATCH v6 1/7] clk: JZ4780: Add function for enable the second core.
-Date:   Fri, 21 Feb 2020 00:24:43 +0800
-Message-Id: <1582215889-113034-3-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v6 5/7] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Date:   Fri, 21 Feb 2020 00:24:47 +0800
+Message-Id: <1582215889-113034-7-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
@@ -52,127 +52,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add "jz4780_core1_enable()" for enable the second core of JZ4780,
-prepare for later commits.
+Document the available properties for the SoC root node and the
+CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
 Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Tested-by: Paul Boddie <paul@boddie.org.uk>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
 
 Notes:
-    v5:
-    New patch, split from [1/6] in v4.
+    v1->v2:
+    Change the two Document from txt to yaml.
+    
+    v2->v3:
+    Fix formatting errors.
+    
+    v3->v4:
+    Fix bugs in the two yaml files.
+    
+    v4->v5:
+    No change.
     
     v5->v6:
-    simplify code with "readl_poll_timeout()".
+    Rewrite the two yaml files.
 
- drivers/clk/ingenic/jz4780-cgu.c | 55 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 50 insertions(+), 5 deletions(-)
+ .../bindings/mips/ingenic/ingenic,cpu.yaml         | 61 ++++++++++++++++++++++
+ .../bindings/mips/ingenic/ingenic,soc.yaml         | 34 ++++++++++++
+ 2 files changed, 95 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+ create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
 
-diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index d07fff1..92102d8 100644
---- a/drivers/clk/ingenic/jz4780-cgu.c
-+++ b/drivers/clk/ingenic/jz4780-cgu.c
-@@ -9,14 +9,16 @@
- #include <linux/clk-provider.h>
- #include <linux/delay.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/of.h>
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+new file mode 100644
+index 00000000..ad1fd86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,cpu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- #include <dt-bindings/clock/jz4780-cgu.h>
- #include "cgu.h"
- #include "pm.h"
- 
- /* CGU register offsets */
- #define CGU_REG_CLOCKCONTROL	0x00
--#define CGU_REG_PLLCONTROL	0x0c
-+#define CGU_REG_LCR			0x04
- #define CGU_REG_APLL		0x10
- #define CGU_REG_MPLL		0x14
- #define CGU_REG_EPLL		0x18
-@@ -46,8 +48,8 @@
- #define CGU_REG_CLOCKSTATUS	0xd4
- 
- /* bits within the OPCR register */
--#define OPCR_SPENDN0		(1 << 7)
--#define OPCR_SPENDN1		(1 << 6)
-+#define OPCR_SPENDN0		BIT(7)
-+#define OPCR_SPENDN1		BIT(6)
- 
- /* bits within the USBPCR register */
- #define USBPCR_USB_MODE		BIT(31)
-@@ -88,6 +90,13 @@
- #define USBVBFIL_IDDIGFIL_MASK	(0xffff << USBVBFIL_IDDIGFIL_SHIFT)
- #define USBVBFIL_USBVBFIL_MASK	(0xffff)
- 
-+/* bits within the LCR register */
-+#define LCR_PD_SCPU			BIT(31)
-+#define LCR_SCPUS			BIT(27)
++title: Bindings for Ingenic XBurst family CPUs
 +
-+/* bits within the CLKGR1 register */
-+#define CLKGR1_CORE1		BIT(15)
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic XBurst family CPUs shall have the following properties.
 +
- static struct ingenic_cgu *cgu;
- 
- static u8 jz4780_otg_phy_get_parent(struct clk_hw *hw)
-@@ -205,6 +214,42 @@ static const struct clk_ops jz4780_otg_phy_ops = {
- 	.set_rate = jz4780_otg_phy_set_rate,
- };
- 
-+static int jz4780_core1_enable(struct clk_hw *hw)
-+{
-+	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
-+	struct ingenic_cgu *cgu = ingenic_clk->cgu;
-+	const unsigned int timeout = 5000;
-+	unsigned long flags;
-+	int retval;
-+	u32 lcr, clkgr1;
++properties:
++  compatible:
++    oneOf:
 +
-+	spin_lock_irqsave(&cgu->lock, flags);
++      - description: Ingenic XBurst®1 CPU Core
++        items:
++          - const: ingenic,xburst
 +
-+	lcr = readl(cgu->base + CGU_REG_LCR);
-+	lcr &= ~LCR_PD_SCPU;
-+	writel(lcr, cgu->base + CGU_REG_LCR);
++      - description: Ingenic XBurst®2 CPU Core
++        items:
++          - const: ingenic,xburst2
 +
-+	clkgr1 = readl(cgu->base + CGU_REG_CLKGR1);
-+	clkgr1 &= ~CLKGR1_CORE1;
-+	writel(clkgr1, cgu->base + CGU_REG_CLKGR1);
++  reg:
++    description: |
++      The number of the CPU.
 +
-+	spin_unlock_irqrestore(&cgu->lock, flags);
++required:
++  - device_type
++  - compatible
++  - reg
 +
-+	/* wait for the CPU to be powered up */
-+	retval = readl_poll_timeout(cgu->base + CGU_REG_LCR, lcr,
-+				 !(lcr & LCR_SCPUS), 10, timeout);
-+	if (retval == -ETIMEDOUT) {
-+		pr_err("%s: Wait for power up core1 timeout\n", __func__);
-+		return retval;
-+	}
++examples:
++  - |
++    #include <dt-bindings/clock/jz4780-cgu.h>
 +
-+	return 0;
-+}
++    cpus {
++    	#address-cells = <1>;
++    	#size-cells = <0>;
 +
-+static const struct clk_ops jz4780_core1_ops = {
-+	.enable = jz4780_core1_enable,
-+};
++    	cpu0: cpu@0 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <0>;
 +
- static const s8 pll_od_encoding[16] = {
- 	0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
- 	0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf,
-@@ -701,9 +746,9 @@ static const struct ingenic_cgu_clk_info jz4780_cgu_clocks[] = {
- 	},
- 
- 	[JZ4780_CLK_CORE1] = {
--		"core1", CGU_CLK_GATE,
-+		"core1", CGU_CLK_CUSTOM,
- 		.parents = { JZ4780_CLK_CPU, -1, -1, -1 },
--		.gate = { CGU_REG_CLKGR1, 15 },
-+		.custom = { &jz4780_core1_ops },
- 	},
- 
- };
++    		clocks = <&cgu JZ4780_CLK_CPU>;
++    		clock-names = "cpu";
++    	};
++
++    	cpu1: cpu@1 {
++    		device_type = "cpu";
++    		compatible = "ingenic,xburst";
++    		reg = <1>;
++
++    		clocks = <&cgu JZ4780_CLK_CORE1>;
++    		clock-names = "cpu";
++    	};
++    };
++...
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+new file mode 100644
+index 00000000..8943e73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc.yaml
+@@ -0,0 +1,34 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mips/ingenic/ingenic,soc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Bindings for Ingenic SoCs with XBurst CPU inside.
++
++maintainers:
++  - 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
++description: |
++  Ingenic SoCs with XBurst CPU inside shall have the following properties.
++
++properties:
++  $nodename:
++    const: '/'
++  compatible:
++    oneOf:
++
++      - description: Ingenic JZ47 Series Mobile Application Processor
++        items:
++          - const: ingenic,jz4740
++          - const: ingenic,jz4725b
++          - const: ingenic,jz4760
++          - const: ingenic,jz4760b
++          - const: ingenic,jz4770
++          - const: ingenic,jz4780
++
++      - description: Ingenic X Series IoT Application Processor
++        items:
++          - const: ingenic,x1000
++          - const: ingenic,x1000e
++          - const: ingenic,x1500
++...
 -- 
 2.7.4
 
