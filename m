@@ -2,145 +2,212 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E45C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABDBC11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 919AF20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45205206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:16:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BbrebXmL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgBTQOW (ORCPT
+        id S1728090AbgBTQQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:14:22 -0500
-Received: from mga11.intel.com ([192.55.52.93]:58024 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgBTQOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:14:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 08:14:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="283447982"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Feb 2020 08:14:11 -0800
-Received: from [10.251.25.159] (kliang2-mobl.ccr.corp.intel.com [10.251.25.159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 2055358056A;
-        Thu, 20 Feb 2020 08:14:10 -0800 (PST)
-Subject: Re: [PATCH 4/5] perf metricgroup: Support metric constraint
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        namhyung@kernel.org, ravi.bangoria@linux.ibm.com,
-        yao.jin@linux.intel.com, ak@linux.intel.com
-References: <1582139320-75181-1-git-send-email-kan.liang@linux.intel.com>
- <1582139320-75181-5-git-send-email-kan.liang@linux.intel.com>
- <20200220113530.GA565976@krava>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <fea147db-2af3-e9ec-fb23-f9db8cf1c77a@linux.intel.com>
-Date:   Thu, 20 Feb 2020 11:14:09 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 11:16:26 -0500
+Received: from mail.efficios.com ([167.114.26.124]:47186 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTQQ0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:16:26 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D613D256811;
+        Thu, 20 Feb 2020 11:16:24 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id qE7irgTtY9Be; Thu, 20 Feb 2020 11:16:23 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E3ACB256810;
+        Thu, 20 Feb 2020 11:16:23 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E3ACB256810
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1582215383;
+        bh=ve1qzJqPP8JQO3uOepENYiNneIeqiKsiO6UMBcZnahs=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=BbrebXmLUrmmcEPVztepRWqyDPkj1/Ko0U0oUMfxd2uHNjFX/G5gqNzuUwDnCbYiE
+         UvVdv/ezjgymxe4b5Htgl//PsYr3uL/jVQVX3a+w1iyPZq86D2qBjbl8N0ksZNXfSB
+         UC74+kUV10Do7kXE91SbbhQwQZ/zMgTkgntMAEXjHpl+820q8xz8+TS6WXxGPyrMsC
+         6vC3mg4Mk1D5UYewIRdDsp63wlaYwJyY0XPJ6h7E4x80zWoek/cjlAQOJRCjC3uZ5d
+         ZnHBhT7ZKXbdD94VcF/YhdwqmMtY3ULy7C66UYlKYVf51/NFRkzxFWO5qQJjwGTRyD
+         e3G6bIlM0+Omg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id BZ8ebMMwK7sP; Thu, 20 Feb 2020 11:16:23 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id D58CE2562EF;
+        Thu, 20 Feb 2020 11:16:23 -0500 (EST)
+Date:   Thu, 20 Feb 2020 11:16:23 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     linux-kselftest <linux-kselftest@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
+Message-ID: <763647628.2256.1582215383750.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200220113748.15990-1-mpe@ellerman.id.au>
+References: <20200220113748.15990-1-mpe@ellerman.id.au>
+Subject: Re: [PATCH] selftests/rseq: Fix out-of-tree compilation
 MIME-Version: 1.0
-In-Reply-To: <20200220113530.GA565976@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: selftests/rseq: Fix out-of-tree compilation
+Thread-Index: /MnXhITZ60jvWnXx1SK35yo2OOEX/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+----- On Feb 20, 2020, at 6:37 AM, Michael Ellerman mpe@ellerman.id.au wrote:
 
-
-On 2/20/2020 6:35 AM, Jiri Olsa wrote:
-> On Wed, Feb 19, 2020 at 11:08:39AM -0800, kan.liang@linux.intel.com wrote:
+> Currently if you build with O=... the rseq tests don't build:
 > 
-> SNIP
+>  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
+>  make: Entering directory '/linux/tools/testing/selftests'
+>  ...
+>  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./  -shared
+>  -fPIC rseq.c -lpthread -o /linux/output/rseq/librseq.so
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./
+>  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
+>  /usr/bin/ld: cannot find -lrseq
+>  collect2: error: ld returned 1 exit status
 > 
->> +static bool violate_nmi_constraint;
->> +
->> +static bool metricgroup__has_constraint(struct pmu_event *pe)
->> +{
->> +	if (!pe->metric_constraint)
->> +		return false;
->> +
->> +	if (!strcmp(pe->metric_constraint, "NO_NMI_WATCHDOG") &&
->> +	    sysctl__nmi_watchdog_enabled()) {
->> +		pr_warning("Splitting metric group %s into standalone metrics.\n",
->> +			   pe->metric_name);
->> +		violate_nmi_constraint = true;
+> This is because the library search path points to the source
+> directory, not the output.
 > 
-> no static flags plz.. can't you just print that rest of the warning in here?
->
+> We can fix it by changing the library search path to $(OUTPUT).
 
-Because we only want to print the NMI watchdog warning once.
-If there are more than one metric groups with constraint, the warning 
-may be printed several times. For example,
-   $ perf stat -M Page_Walks_Utilization,Page_Walks_Utilization
-   Splitting metric group Page_Walks_Utilization into standalone metrics.
-   Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric 
-constraint:
-       echo 0 > /proc/sys/kernel/nmi_watchdog
-       perf stat ...
-       echo 1 > /proc/sys/kernel/nmi_watchdog
-   Splitting metric group Page_Walks_Utilization into standalone metrics.
-   Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric 
-constraint:
-       echo 0 > /proc/sys/kernel/nmi_watchdog
-       perf stat ...
-       echo 1 > /proc/sys/kernel/nmi_watchdog
-Is it OK?
+Good catch!
 
-If it's OK, I think we can remove the flag.
+Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+Shuah, can you pick this up please ?
 
 Thanks,
-Kan
 
-> jirka
+Mathieu
+
 > 
->> +		return true;
->> +	}
->> +
->> +	return false;
->> +}
->> +
->>   static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>   				   struct list_head *group_list)
->>   {
->> @@ -460,7 +490,10 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
->>   			if (events->len > 0)
->>   				strbuf_addf(events, ",");
->>   
->> -			metricgroup__add_metric_weak_group(events, ids, idnum);
->> +			if (metricgroup__has_constraint(pe))
->> +				metricgroup__add_metric_non_group(events, ids, idnum);
->> +			else
->> +				metricgroup__add_metric_weak_group(events, ids, idnum);
->>   
->>   			eg = malloc(sizeof(struct egroup));
->>   			if (!eg) {
->> @@ -544,6 +577,13 @@ int metricgroup__parse_groups(const struct option *opt,
->>   	strbuf_release(&extra_events);
->>   	ret = metricgroup__setup_events(&group_list, perf_evlist,
->>   					metric_events);
->> +
->> +	if (violate_nmi_constraint) {
->> +		pr_warning("Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:\n"
->> +			   "    echo 0 > /proc/sys/kernel/nmi_watchdog\n"
->> +			   "    perf stat ...\n"
->> +			   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
->> +	}
->>   out:
->>   	metricgroup__free_egroups(&group_list);
->>   	return ret;
->> -- 
->> 2.7.4
->>
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> ---
 > 
+> This works in all cases.
+> 
+> With O= set:
+> 
+>  $ make O=$PWD/output -C tools/testing/selftests/ TARGETS=rseq
+>  ...
+>  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L/linux/output/rseq
+>  -Wl,-rpath=./  basic_test.c -lpthread -lrseq -o /linux/output/rseq/basic_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L/linux/output/rseq
+>  -Wl,-rpath=./  basic_percpu_ops_test.c -lpthread -lrseq -o
+>  /linux/output/rseq/basic_percpu_ops_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L/linux/output/rseq
+>  -Wl,-rpath=./  param_test.c -lpthread -lrseq -o /linux/output/rseq/param_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L/linux/output/rseq
+>  -Wl,-rpath=./  -DBENCHMARK param_test.c -lpthread -lrseq -o
+>  /linux/output/rseq/param_test_benchmark
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/ -L/linux/output/rseq
+>  -Wl,-rpath=./  -DRSEQ_COMPARE_TWICE param_test.c -lpthread -lrseq -o
+>  /linux/output/rseq/param_test_compare_twice
+>  make[1]: Leaving directory '/linux/tools/testing/selftests/rseq'
+>  make: Leaving directory '/linux/tools/testing/selftests'
+> 
+> And also without, in which case the selftest makefiles set OUTPUT to
+> the full path of the source directory:
+> 
+>  $ make -C tools/testing/selftests/ TARGETS=rseq
+>  ...
+>  make[1]: Entering directory '/linux/tools/testing/selftests/rseq'
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -shared -fPIC rseq.c
+>  -lpthread -o /linux/tools/testing/selftests/rseq/librseq.so
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  basic_test.c -lpthread
+>  -lrseq -o /linux/tools/testing/selftests/rseq/basic_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  basic_percpu_ops_test.c
+>  -lpthread -lrseq -o /linux/tools/testing/selftests/rseq/basic_percpu_ops_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  param_test.c -lpthread
+>  -lrseq -o /linux/tools/testing/selftests/rseq/param_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -DBENCHMARK param_test.c
+>  -lpthread -lrseq -o /linux/tools/testing/selftests/rseq/param_test_benchmark
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -DRSEQ_COMPARE_TWICE
+>  param_test.c -lpthread -lrseq -o
+>  /linux/tools/testing/selftests/rseq/param_test_compare_twice
+>  make[1]: Leaving directory '/linux/tools/testing/selftests/rseq'
+>  make: Leaving directory '/linux/tools/testing/selftests'
+> 
+> And finally, it also works if you build directly in the rseq
+> directory, eg:
+> 
+>  $ cd tools/testing/selftests/rseq
+>  $ make
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -shared -fPIC rseq.c
+>  -lpthread -o /linux/tools/testing/selftests/rseq/librseq.so
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  basic_test.c -lpthread
+>  -lrseq -o /linux/tools/testing/selftests/rseq/basic_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  basic_percpu_ops_test.c
+>  -lpthread -lrseq -o /linux/tools/testing/selftests/rseq/basic_percpu_ops_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  param_test.c -lpthread
+>  -lrseq -o /linux/tools/testing/selftests/rseq/param_test
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -DBENCHMARK param_test.c
+>  -lpthread -lrseq -o /linux/tools/testing/selftests/rseq/param_test_benchmark
+>  gcc -O2 -Wall -g -I./ -I../../../../usr/include/
+>  -L/linux/tools/testing/selftests/rseq -Wl,-rpath=./  -DRSEQ_COMPARE_TWICE
+>  param_test.c -lpthread -lrseq -o
+>  /linux/tools/testing/selftests/rseq/param_test_compare_twice
+> ---
+> tools/testing/selftests/rseq/Makefile | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/rseq/Makefile
+> b/tools/testing/selftests/rseq/Makefile
+> index d6469535630a..708c1b345245 100644
+> --- a/tools/testing/selftests/rseq/Makefile
+> +++ b/tools/testing/selftests/rseq/Makefile
+> @@ -4,7 +4,7 @@ ifneq ($(shell $(CC) --version 2>&1 | head -n 1 | grep clang),)
+> CLANG_FLAGS += -no-integrated-as
+> endif
+> 
+> -CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L./ -Wl,-rpath=./ \
+> +CFLAGS += -O2 -Wall -g -I./ -I../../../../usr/include/ -L$(OUTPUT)
+> -Wl,-rpath=./ \
+> 	  $(CLANG_FLAGS)
+> LDLIBS += -lpthread
+> 
+> 
+> base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+> --
+> 2.21.1
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
