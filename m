@@ -2,97 +2,126 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ED0C34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50186C3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921302465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B2D2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:20:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cm67H6/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgBTERD (ORCPT
+        id S1727993AbgBTET7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 23:17:03 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:33759 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727476AbgBTERD (ORCPT
+        Wed, 19 Feb 2020 23:19:59 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36187 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbgBTET6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 23:17:03 -0500
-Received: from callcc.thunk.org (guestnat-104-133-8-109.corp.google.com [104.133.8.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01K4Gp6k017152
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 23:16:53 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 5101C4211EF; Wed, 19 Feb 2020 23:16:51 -0500 (EST)
-Date:   Wed, 19 Feb 2020 23:16:51 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Qian Cai <cai@lca.pw>
-Cc:     adilger.kernel@dilger.ca, elver@google.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
-Message-ID: <20200220041651.GA476845@mit.edu>
-References: <1581085751-31793-1-git-send-email-cai@lca.pw>
+        Wed, 19 Feb 2020 23:19:58 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a6so1026297plm.3;
+        Wed, 19 Feb 2020 20:19:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FYRx+ojWKka5dOzfxYown+hh6IqyoQrFZkYXQNdVQwQ=;
+        b=cm67H6/W2R77cF1SonxMWOSDPb/Xxz0VqEWjgmb7kn9I4ShrLmsP/HORD8S+VpEX3q
+         1uNIXhUlql+bIDWvHnxkipPT71yMfPSewxr55YMWkXt2bHpZQYQSEit9VUgEie7tzydS
+         RCIDH5Z8KPvRdj9qwniOL8e88vKoa4f3B1FUA7u7h1kdTzz8sXoFCFeVxsN3xF8wYyOd
+         HDHmDHyheDgyNyIc7kbQ3mq+G0uiyOkQGxmZKnddHOTKwu3EMA1jnUQQ9TMkqWSqbfHh
+         CkaWB/nxleCHGd5bdTcan7BCDAx/TOxKSEtjqKAhyv88ypMMOCjaMjoESxelBlZTvR9u
+         qoRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FYRx+ojWKka5dOzfxYown+hh6IqyoQrFZkYXQNdVQwQ=;
+        b=KDHN05QLJl5mHEK9H1yaN7uIv/zVfWZqntsoTItua0gJzXIZaTFQcTnOjGmQ2CiuSo
+         psTWJhM0p50b03cYSXhcAkJf8U/LkH2/Wk/F3gST80wpbjkGDwoNvJf+yAcAkodJtim/
+         Svgy0+UWU/TlnDG8+swGi9OUrcJZiYUlwqoFT2UU5kCn/D7Hr/H3ZM4Tv6j6Hmz3PNnC
+         elID08+zoVFRSXMLvFh5VhKQR79F3TikToyBvkRSW7ARddQiAwvZXs0NzWj1mOsbMJHf
+         i7i0vV351mUzbnrUixbBPvr0CRPzcEnWJ7J9meVxKQmP3nHCdVVHFlQZOB5wMJjy4Vcw
+         1Yxg==
+X-Gm-Message-State: APjAAAU8lbA4PpTIppzurZce/SE2RAnHhoHSsRInARisn3RgKSzl5IBs
+        EyCkjoT4GE/Ap5dbAiPqLSu6e047
+X-Google-Smtp-Source: APXvYqxKVrgoGUcRaA4sFoZcAOJCUTszg1jREcxjR8hwOxGHo5rNwVGV9YX8qC3aH+ZUpjiRnmz1Zw==
+X-Received: by 2002:a17:902:9a09:: with SMTP id v9mr28436709plp.341.1582172396600;
+        Wed, 19 Feb 2020 20:19:56 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:400::5:3283])
+        by smtp.gmail.com with ESMTPSA id r6sm1222468pfh.91.2020.02.19.20.19.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Feb 2020 20:19:55 -0800 (PST)
+Date:   Wed, 19 Feb 2020 20:19:52 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>, bpf <bpf@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [RFC patch 14/19] bpf: Use migrate_disable() in hashtab code
+Message-ID: <20200220041951.rhsr3zstl6fkbmfn@ast-mbp>
+References: <20200214133917.304937432@linutronix.de>
+ <20200214161504.325142160@linutronix.de>
+ <20200214191126.lbiusetaxecdl3of@localhost>
+ <87imk9t02r.fsf@nanos.tec.linutronix.de>
+ <20200218233641.i7fyf36zxocgucap@ast-mbp>
+ <1127123648.641.1582125448879.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1581085751-31793-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1127123648.641.1582125448879.JavaMail.zimbra@efficios.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 09:29:11AM -0500, Qian Cai wrote:
-> EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
-> KCSAN,
+On Wed, Feb 19, 2020 at 10:17:28AM -0500, Mathieu Desnoyers wrote:
+> ----- On Feb 18, 2020, at 6:36 PM, Alexei Starovoitov alexei.starovoitov@gmail.com wrote:
 > 
->  BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+> [...]
 > 
->  write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
->   ext4_write_end+0x4e3/0x750 [ext4]
->   ext4_update_i_disksize at fs/ext4/ext4.h:3032
->   (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
->   (inlined by) ext4_write_end at fs/ext4/inode.c:1287
->   generic_perform_write+0x208/0x2a0
->   ext4_buffered_write_iter+0x11f/0x210 [ext4]
->   ext4_file_write_iter+0xce/0x9e0 [ext4]
->   new_sync_write+0x29c/0x3b0
->   __vfs_write+0x92/0xa0
->   vfs_write+0x103/0x260
->   ksys_write+0x9d/0x130
->   __x64_sys_write+0x4c/0x60
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > If I can use migrate_disable() without RT it will help my work on sleepable
+> > BPF programs. I would only have to worry about rcu_read_lock() since
+> > preempt_disable() is nicely addressed.
 > 
->  read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
->   ext4_writepages+0x10ac/0x1d00 [ext4]
->   mpage_map_and_submit_extent at fs/ext4/inode.c:2468
->   (inlined by) ext4_writepages at fs/ext4/inode.c:2772
->   do_writepages+0x5e/0x130
->   __writeback_single_inode+0xeb/0xb20
->   writeback_sb_inodes+0x429/0x900
->   __writeback_inodes_wb+0xc4/0x150
->   wb_writeback+0x4bd/0x870
->   wb_workfn+0x6b4/0x960
->   process_one_work+0x54c/0xbe0
->   worker_thread+0x80/0x650
->   kthread+0x1e0/0x200
->   ret_from_fork+0x27/0x50
+> Hi Alexei,
 > 
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
->  Workqueue: writeback wb_workfn (flush-7:0)
+> You may want to consider using SRCU rather than RCU if you need to sleep while
+> holding a RCU read-side lock.
 > 
-> Since only the read is operating as lockless (outside of the
-> "i_data_sem"), load tearing could introduce a logic bug. Fix it by
-> adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+> This is the synchronization approach I consider for adding the ability to take page
+> faults when doing syscall tracing.
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Then you'll be able to replace preempt_disable() by combining SRCU and
+> migrate_disable():
+> 
+> AFAIU eBPF currently uses preempt_disable() for two reasons:
+> 
+> - Ensure the thread is not migrated,
+>   -> can be replaced by migrate_disable() in RT
+> - Provide RCU existence guarantee through sched-RCU
+>   -> can be replaced by SRCU, which allows sleeping and taking page faults.
 
-Thanks, applied.
-
-						- Ted
+bpf is using normal rcu to protect map values
+and rcu+preempt to protect per-cpu map values.
+srcu is certainly under consideration. It hasn't been used due to performance
+implications. atomics and barriers are too heavy for certain use cases. So we
+have to keep rcu where performance matters, but cannot fork map implementations
+to rcu and srcu due to huge code bloat. So far I've been thinking to introduce
+explicit helper bpf_rcu_read_lock() and let programs use it directly instead of
+implicit rcu_read_lock() that is done outside of bpf prog. The tricky part is
+teaching verifier to enforce critical section.
