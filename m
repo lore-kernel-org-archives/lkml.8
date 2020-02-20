@@ -2,154 +2,168 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C28C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82ABFC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF45620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574B620722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfOCeEJp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5FBHWOl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgBTRBh (ORCPT
+        id S1728695AbgBTRB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:01:37 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:34819 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTRBg (ORCPT
+        Thu, 20 Feb 2020 12:01:58 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33252 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTRB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:01:36 -0500
-Received: by mail-qv1-f66.google.com with SMTP id u10so2211941qvi.2;
-        Thu, 20 Feb 2020 09:01:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cz+Bmf3nimaZlMz+RGVMMxd3Xvynr99CFi1TWALwo3s=;
-        b=tfOCeEJpkzK6U8IHyMx9BGVNMceqXoPuU6TMya+DNYKtVTTdkMiWicUPESH7XdSF/n
-         D+wRd7O3oixMPfN9xT9WN/OYuxtiFVXJlaD30Nceot3qbukMd5FGYJETSmyYq7P5YV3k
-         NZCf3ztuwiOieIwZgCM3+h1ZjU8IN5tXbOJlNxZovv/lJ6LUL8SBFmwi16h4xRQOYEJ4
-         iTfnpKGfycqP1Hj+1cR0ceLWhbQ0t1wF69tBO2rwzDv+gcWbG1eRqV0SH7uAkxAu6tmz
-         eUGS3obNZW/EBS3NraozqZhNpf1YGtRKbRYsAgv0wzjULpa2DdaExTm01+2UTh8yDZUh
-         p6Jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cz+Bmf3nimaZlMz+RGVMMxd3Xvynr99CFi1TWALwo3s=;
-        b=NQS47FIVpYrk6riklf9z31TZEutph2TaAmKIc5uttbsEK5TfHJYCN0jJk6sxuUU3XV
-         0dAMrg8u6WYDnP+/WIQRVfOlDdjX5tw4nDMgAUXFMOThY8CP9Gfdnhe+HIJTWzYjDoQl
-         PhQ8xpauMTRLKtAUPIFQxobtk3+REq+rUZ1iDt9WAYb+Bb/KLNHpy/ta4iyJGKrD6yUm
-         7mLYgSfdZubkgUGExCNnVNmd5znBxo+zBCvp7fMpwP0qnVcxs1mvw3NAjmsz7ogyXwmN
-         iyaIyx6KODyUn7Y3aDmqAiuWKC8jDD/uUJqIVHZr/YY9LkyiH2hej51YfNLUDsUAkvNW
-         YEIg==
-X-Gm-Message-State: APjAAAWp7EbHITGRCo3gZmx3v2Wkz/JlwmIPI28XiGDbNxwTSKIyY1El
-        8NFro7XAijqxcidj8j11WGcUBb6zdUrrAMzWAyU=
-X-Google-Smtp-Source: APXvYqzPikzD+d/JCK30MCCr9zkafXhJSVACrgtepSek3WGV2tcjWhCpv7rBWPZtj6m5LtTCY7pMTa9YCMlAv4ATuwE=
-X-Received: by 2002:a0c:cd8e:: with SMTP id v14mr26355903qvm.182.1582218095573;
- Thu, 20 Feb 2020 09:01:35 -0800 (PST)
+        Thu, 20 Feb 2020 12:01:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=HtENtGXMu5lv8v2BETZ/HEIobwIkiHxnVtk2a6XxHoE=; b=T5FBHWOl/1ly9t3RQlAFneq+LH
+        znE7SnHgY6zEKFQuQFZUtOazi674gzMFHGtiQRguRPHKUpUbCoRszbOyCSWhkt5V4wSetu00nWMIj
+        SDgv5AxVFpQcpDs+txdludIlKBFYOQM5UH4DDKtuJx3uUFq3HQs9y6EFsF2ibt/ltHLfYK5TuFuGb
+        RlMbOcbURkAR2slWv5WKCiEA3XimfqMSpfvhYQoM2LMwGno23dRlU80vcUm8bl1QsE3T7jCGJVyHF
+        7Xk61JwG6k321wmvBIC0Nvxxm0md3oLioj7VFTWt/fxqpt0GInQM4j4s/G4tm7ygXDCIQP8LoIgV9
+        ib0EF5Dg==;
+Received: from [38.126.112.138] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4pCl-0000Dq-Og; Thu, 20 Feb 2020 17:01:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] openrisc: use the generic in-place uncached DMA allocator
+Date:   Thu, 20 Feb 2020 09:01:39 -0800
+Message-Id: <20200220170139.387354-3-hch@lst.de>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200220170139.387354-1-hch@lst.de>
+References: <20200220170139.387354-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200219191730.1277800-1-paulburton@kernel.org>
- <20200219191730.1277800-3-paulburton@kernel.org> <20200220112330.GA3053@alpha.franken.de>
- <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com> <5E4E7E3E.6070608@wanyeetech.com>
-In-Reply-To: <5E4E7E3E.6070608@wanyeetech.com>
-From:   YunQiang Su <wzssyqa@gmail.com>
-Date:   Fri, 21 Feb 2020 01:01:24 +0800
-Message-ID: <CAKcpw6V-=bFG7O8a0SKbiAzQeHGzzaQD=8ZqVUhm8-B3PTA5xQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
-To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips <linux-mips@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, wayne.sun@cipunited.com,
-        chris.wang@neocore.cn, Yunqiang Su <ysu@wavecomp.com>,
-        dongsheng.qiu@ingenic.com, xuwanhao@wanyeetech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhou Yanjie <zhouyanjie@wanyeetech.com> =E4=BA=8E2020=E5=B9=B42=E6=9C=8820=
-=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=888:40=E5=86=99=E9=81=93=EF=BC=
-=9A
->
-> Hi,
->
-> CC people from Ingenic Semi and Wanyee Tech.
->
-> On 2020=E5=B9=B402=E6=9C=8820=E6=97=A5 20:11, YunQiang Su wrote:
-> > CC people from NeoCore and CIP United, and my Wave Computing's mail add=
-ress.
-> >
-> > Thomas Bogendoerfer <tsbogend@alpha.franken.de> =E4=BA=8E2020=E5=B9=B42=
-=E6=9C=8820=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=887:23=E5=86=99=E9=
-=81=93=EF=BC=9A
-> >> On Wed, Feb 19, 2020 at 11:17:30AM -0800, Paul Burton wrote:
-> >>> My time with MIPS the company has reached its end, and so at best I'l=
-l
-> >>> have little time spend on maintaining arch/mips/. Reflect that in
-> >>> MAINTAINERS by changing status to Odd Fixes. Hopefully this might spu=
-r
-> >>> the involvement of someone with more time, but even if not it should
-> >>> help serve to avoid unrealistic expectations.
-> >> I'd like to jump in as MIPS maintainer. I'm doing Linux MIPS kernel
-> > It is a great news that you are willing to act as maintainer as Linux-M=
-IPS.
-> >
-> >> development since ages (started with an Olivetti M700 and kernel versi=
-on
-> >> 2.x) and right now time for doing the jobs isn't issue:-)
-> >>
-> > I noticed that you are mainly working some old machines.
-> > And recently years, there are some new machines from Ingenic, Loongson,=
- MTK etc.
-> > MIPS Inc also have some MIPSr6 IPs.
-> > I think that you need some of these machines.
->
-> I can provide some new Ingenic platform machines as a gift to Thomas.
-> Ingenic X1000 can be provided in a short time, it has been directly
-> supported by kernel 5.6.
-> X1830 and X2000 will be available later.
->
-> > In the last years, we see that the single maintainer is not enough as p=
-eople may
-> > quite busy.
-> > Do you think that we need co-maintainers?
+Switch openrisc to use the dma-direct allocator and just provide the
+hooks for setting memory uncached or cached.
 
-Paul Cercueil also has interest about it. That's so cool.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/openrisc/Kconfig      |  1 +
+ arch/openrisc/kernel/dma.c | 51 +++++---------------------------------
+ 2 files changed, 7 insertions(+), 45 deletions(-)
 
-As a suggestion, I think that we can have a maintainers team:
+diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+index 1928e061ff96..041fff4326dc 100644
+--- a/arch/openrisc/Kconfig
++++ b/arch/openrisc/Kconfig
+@@ -7,6 +7,7 @@
+ config OPENRISC
+ 	def_bool y
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HAS_DMA_SET_UNCACHED
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+ 	select OF
+ 	select OF_EARLY_FLATTREE
+diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
+index adec711ad39d..c73d2b3ae267 100644
+--- a/arch/openrisc/kernel/dma.c
++++ b/arch/openrisc/kernel/dma.c
+@@ -11,8 +11,6 @@
+  * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
+  *
+  * DMA mapping callbacks...
+- * As alloc_coherent is the only DMA callback being used currently, that's
+- * the only thing implemented properly.  The rest need looking into...
+  */
+ 
+ #include <linux/dma-noncoherent.h>
+@@ -67,62 +65,25 @@ static const struct mm_walk_ops clear_nocache_walk_ops = {
+ 	.pte_entry		= page_clear_nocache,
+ };
+ 
+-/*
+- * Alloc "coherent" memory, which for OpenRISC means simply uncached.
+- *
+- * This function effectively just calls __get_free_pages, sets the
+- * cache-inhibit bit on those pages, and makes sure that the pages are
+- * flushed out of the cache before they are used.
+- *
+- * If the NON_CONSISTENT attribute is set, then this function just
+- * returns "normal", cachable memory.
+- *
+- * There are additional flags WEAK_ORDERING and WRITE_COMBINE to take
+- * into consideration here, too.  All current known implementations of
+- * the OR1K support only strongly ordered memory accesses, so that flag
+- * is being ignored for now; uncached but write-combined memory is a
+- * missing feature of the OR1K.
+- */
+-void *
+-arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
+-		gfp_t gfp, unsigned long attrs)
++int arch_dma_set_uncached(void *cpu_addr, size_t size)
+ {
+-	unsigned long va;
+-	void *page;
+-
+-	page = alloc_pages_exact(size, gfp | __GFP_ZERO);
+-	if (!page)
+-		return NULL;
+-
+-	/* This gives us the real physical address of the first page. */
+-	*dma_handle = __pa(page);
+-
+-	va = (unsigned long)page;
++	unsigned long va = (unsigned long)cpu_addr;
+ 
+ 	/*
+ 	 * We need to iterate through the pages, clearing the dcache for
+ 	 * them and setting the cache-inhibit bit.
+ 	 */
+-	if (walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
+-			NULL)) {
+-		free_pages_exact(page, size);
+-		return NULL;
+-	}
+-
+-	return (void *)va;
++	return walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
++			NULL);
+ }
+ 
+-void
+-arch_dma_free(struct device *dev, size_t size, void *vaddr,
+-		dma_addr_t dma_handle, unsigned long attrs)
++void arch_dma_clear_uncached(void *cpu_addr, size_t size)
+ {
+-	unsigned long va = (unsigned long)vaddr;
++	unsigned long va = (unsigned long)cpu_addr;
+ 
+ 	/* walk_page_range shouldn't be able to fail here */
+ 	WARN_ON(walk_page_range(&init_mm, va, va + size,
+ 			&clear_nocache_walk_ops, NULL));
+-
+-	free_pages_exact(vaddr, size);
+ }
+ 
+ void arch_sync_dma_for_device(phys_addr_t addr, size_t size,
+-- 
+2.24.1
 
-Option1: Paul Cercueil/Thomas Bogendoerfer/Jiaxun Yang
-Option2: Thomas Bogendoerfer/Paul Cercueil/Jiaxun Yang
-
-any idea?
-
-background:
-1. PaulC works lots for Ingenic support.
-2. Thomas works lots for some SGI IP and some other hardware
-3. Jiaxun works lots for Loongson hardware.
-
-
-
-> >
-> >> Thomas.
-> >>
-> >> --
-> >> Crap can work. Given enough thrust pigs will fly, but it's not necessa=
-rily a
-> >> good idea.                                                [ RFC1925, 2=
-.3 ]
-> >
-> >
->
-
-
---=20
-YunQiang Su
