@@ -6,155 +6,97 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA95C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B8EC11D0A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF07207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:24:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E74207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgBTOYD (ORCPT
+        id S1728073AbgBTO01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:24:03 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2451 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726959AbgBTOYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:24:03 -0500
-Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 548CFD875E8D61D40FC7;
-        Thu, 20 Feb 2020 14:23:59 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 20 Feb 2020 14:23:58 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 20 Feb
- 2020 14:23:58 +0000
-Subject: Re: Questions about logic_pio
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-CC:     Wei Xu <xuwei5@hisilicon.com>, bhelgaas <bhelgaas@google.com>,
-        andyshevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Mips <linux-mips@vger.kernel.org>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
- <5E4E55F7.70800@hisilicon.com>
- <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
- <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
-Date:   Thu, 20 Feb 2020 14:23:57 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 20 Feb 2020 09:26:27 -0500
+Received: from mail.hallyn.com ([178.63.66.53]:59536 "EHLO mail.hallyn.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727088AbgBTO01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:26:27 -0500
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id B0D613F5; Thu, 20 Feb 2020 08:26:24 -0600 (CST)
+Date:   Thu, 20 Feb 2020 08:26:24 -0600
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        =?iso-8859-1?Q?St=E9phane?= Graber <stgraber@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Aleksa Sarai <cyphar@cyphar.com>, Jann Horn <jannh@google.com>,
+        smbarber@chromium.org, Seth Forshee <seth.forshee@canonical.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Phil Estes <estesp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH v3 09/25] fs: add is_userns_visible() helper
+Message-ID: <20200220142624.GA5249@mail.hallyn.com>
+References: <20200218143411.2389182-1-christian.brauner@ubuntu.com>
+ <20200218143411.2389182-10-christian.brauner@ubuntu.com>
+ <20200219024233.GA19334@mail.hallyn.com>
+ <20200219120604.vqudwaeppebvisco@wittgenstein>
+ <CALCETrW-XPkBMs30vk+Aiv+jA5i7TjHOYCgz0Ud6d0geaYte=g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrW-XPkBMs30vk+Aiv+jA5i7TjHOYCgz0Ud6d0geaYte=g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Also Cc MIPS list to check other's opinions.
+On Wed, Feb 19, 2020 at 09:18:51AM -0800, Andy Lutomirski wrote:
+> On Wed, Feb 19, 2020 at 4:06 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Tue, Feb 18, 2020 at 08:42:33PM -0600, Serge Hallyn wrote:
+> > > On Tue, Feb 18, 2020 at 03:33:55PM +0100, Christian Brauner wrote:
+> > > > Introduce a helper which makes it possible to detect fileystems whose
+> > > > superblock is visible in multiple user namespace. This currently only
+> > > > means proc and sys. Such filesystems usually have special semantics so their
+> > > > behavior will not be changed with the introduction of fsid mappings.
+> > >
+> > > Hi,
+> > >
+> > > I'm afraid I've got a bit of a hangup about the terminology here.  I
+> > > *think* what you mean is that SB_I_USERNS_VISIBLE is an fs whose uids are
+> > > always translated per the id mappings, not fsid mappings.  But when I see
+> >
+> > Correct!
+> >
+> > > the name it seems to imply that !SB_I_USERNS_VISIBLE filesystems can't
+> > > be seen by other namespaces at all.
+> > >
+> > > Am I right in my first interpretation?  If so, can we talk about the
+> > > naming?
+> >
+> > Yep, your first interpretation is right. What about: wants_idmaps()
 > 
-> Hi John.
-> 
+> Maybe fsidmap_exempt()?
 
-Hi Jiaxun Yang,
+Yeah, and maybe SB_USERNS_FSID_EXEMPT ?
 
-> Thanks for your kind explanation, however, I think this way is
-> violating how I/O ports supposed to work, at least in MIPS world.
+> I still haven't convinced myself that any of the above is actually
+> correct behavior, especially when people do things like creating
+> setuid binaries.
 
-For a bit more history, please understand that the core PCI code was 
-managing non-native IO port space in the same way before we added the 
-logic PIO framework. The only real functional change here was that we 
-introduced the indirect-io region within the IO port space, under 
-CONFIG_INDIRECT_PIO.
-
-> 
->   > >>
->   > >> After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
->   > >> for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
->   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
->   > >> equal to hw address,
->   >
->   > I'm not sure what you mean by simply the hw address.
->   >
-> 
-> I meant  hw_start should always equal to io_start.
-> 
-> 
-> MIPS have their own wrapped inl/outl functions, 
-
-Can you please point me to these? I could not find them in arch/mips
-
-I will also note that arch/mips/include/asm/io.h does not include 
-asm-generic io.h today
-
-doing the samething with
-> PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
-> 
-> Originally, the I/O ports layout seems like this:
-> 
-> 00000020-00000021 : pic1
-> 00000060-0000006f : i8042
-> 00000070-00000077 : rtc0
-> 000000a0-000000a1 : pic2
-> 00000170-00000177 : pata_atiixp
-> 000001f0-000001f7 : pata_atiixp
-> 00000376-00000376 : pata_atiixp
-> 000003f6-000003f6 : pata_atiixp
-> 00000800-000008ff : acpi
-> 00001000-00001008 : piix4_smbus
-> 00004000-0003ffff : pci io space
->    00004000-00004fff : PCI Bus 0000:01
->      00004000-000040ff : 0000:01:05.0
->    00005000-00005fff : PCI Bus 0000:03
->      00005000-0000501f : 0000:03:00.0
-> 
-> But with PCI_IOBASE defined, I got this:
-> 
-> host bridge /bus@10000000/pci@10000000 ranges:
->        MEM 0x0040000000..0x007fffffff -> 0x0040000000
->         IO 0x0000004000..0x0000007fff -> 0x0000004000
-> resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x0020-0x0021]
-> 
-> Because io_start was allocated to 0x0 by Logic PIO.
-> 
-> There are a lot of devices that have fixed ioports thanks to x86's legacy.
-
-Well, yes, I'm not so surprised.
-
-So if MIPS does not have native IO port access, then surely you need 
-some host bridge to translate host CPU MMIO accesses to port I/O 
-accesses, right? Where are these CPU addresses defined?
-
-> For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveable,
-> and they can't be managed by logic pio subsystem. > Also, the PCI Hostbridge got implied by DeviceTree that it's I/O range
-> started from 0x4000 in bus side
-
-which bus is this?
-
-, but then, Logic PIO remapped to PCI_IOBASE + 0x0.
-> The real address should be PCI_IOBASE + 0x4000,
-
-You seem to be using two methods to manage IO port space, and they seem 
-to be conflicting.
-
-> hardware never got correctly informed about that. And there is still no way to
-> transform to correct address as it's inside the MMIO_LIMIT.
-> 
-> So the question comes to why we're allocating io_start for MMIO PCI_IOBASE
-> rather than just check the range provided doesn't overlap each other or exceed
-> the MMIO_LIMIT.
-
-When PCI_IOBASE is defined, we work on the basis that any IO port range 
-in the system is registered for a logical PIO region, which manages the 
-actual IO port addresses - see logic_pio_trans_cpuaddr().
-
-Thanks,
-John
+The only place that would be a problem is if the child userns has an
+fsidmapping from X to 0 in the parent userns, right?  Yeah I'm sure
+many people would ignore all advice to the contrary and do this anyway,
+but I would try hard to suggest that people use an intermediary userns
+for storing filesystems for the "docker share" case.  So the host fsid
+range would start at say 200000.  So a setuid binary would just be
+setuid-200000.
