@@ -2,117 +2,69 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AC6C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0238C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3A021D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06D621D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgBTCmt (ORCPT
+        id S1727893AbgBTCoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:42:49 -0500
-Received: from mga02.intel.com ([134.134.136.20]:48607 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727211AbgBTCmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:42:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 18:42:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="229327721"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
-  by orsmga008.jf.intel.com with ESMTP; 19 Feb 2020 18:42:42 -0800
-Date:   Thu, 20 Feb 2020 10:42:21 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     mst@redhat.com, jasowang@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, shahafs@mellanox.com,
-        rob.miller@broadcom.com, haotian.wang@sifive.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        rdunlap@infradead.org, hch@infradead.org, jiri@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com,
-        maxime.coquelin@redhat.com, lingshan.zhu@intel.com,
-        dan.daly@intel.com, cunming.liang@intel.com, zhihong.wang@intel.com
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-Message-ID: <20200220024220.GA43609@___>
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <20200218135359.GA9608@ziepe.ca>
- <20200219025217.GA971968@___>
- <20200219131102.GN31668@ziepe.ca>
+        Wed, 19 Feb 2020 21:44:30 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:37488 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727402AbgBTCo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:44:29 -0500
+Received: from [192.168.68.111] (unknown [111.18.94.191])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxz9108k1ev6IRAA--.27S3;
+        Thu, 20 Feb 2020 10:44:15 +0800 (CST)
+To:     jdelvare@suse.com, jdelvare@suse.de
+References: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v3 1/2] firmware: dmi: Add macro
+ SMBIOS_ENTRY_POINT_SCAN_START
+Cc:     jiaxun.yang@flygoat.com, chenhc@lemote.com,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        lixuefeng@loongson.cn, paulburton@kernel.org, ralf@linux-mips.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <8ee01022-d3d1-8145-1a0b-ba77c5bb7101@loongson.cn>
+Date:   Thu, 20 Feb 2020 10:43:56 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200219131102.GN31668@ziepe.ca>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1580875713-18252-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxz9108k1ev6IRAA--.27S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+        VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYz7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+        6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+        kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+        cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
+        80aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+        c7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+        73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:11:02AM -0400, Jason Gunthorpe wrote:
-> On Wed, Feb 19, 2020 at 10:52:38AM +0800, Tiwei Bie wrote:
-> > > > +static int __init vhost_vdpa_init(void)
-> > > > +{
-> > > > +	int r;
-> > > > +
-> > > > +	idr_init(&vhost_vdpa.idr);
-> > > > +	mutex_init(&vhost_vdpa.mutex);
-> > > > +	init_waitqueue_head(&vhost_vdpa.release_q);
-> > > > +
-> > > > +	/* /dev/vhost-vdpa/$vdpa_device_index */
-> > > > +	vhost_vdpa.class = class_create(THIS_MODULE, "vhost-vdpa");
-> > > > +	if (IS_ERR(vhost_vdpa.class)) {
-> > > > +		r = PTR_ERR(vhost_vdpa.class);
-> > > > +		goto err_class;
-> > > > +	}
-> > > > +
-> > > > +	vhost_vdpa.class->devnode = vhost_vdpa_devnode;
-> > > > +
-> > > > +	r = alloc_chrdev_region(&vhost_vdpa.devt, 0, MINORMASK + 1,
-> > > > +				"vhost-vdpa");
-> > > > +	if (r)
-> > > > +		goto err_alloc_chrdev;
-> > > > +
-> > > > +	cdev_init(&vhost_vdpa.cdev, &vhost_vdpa_fops);
-> > > > +	r = cdev_add(&vhost_vdpa.cdev, vhost_vdpa.devt, MINORMASK + 1);
-> > > > +	if (r)
-> > > > +		goto err_cdev_add;
-> > > 
-> > > It is very strange, is the intention to create a single global char
-> > > dev?
-> > 
-> > No. It's to create a per-vdpa char dev named
-> > vhost-vdpa/$vdpa_device_index in dev.
-> > 
-> > I followed the code in VFIO which creates char dev
-> > vfio/$GROUP dynamically, e.g.:
-> > 
-> > https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L2164-L2180
-> > https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L373-L387
-> > https://github.com/torvalds/linux/blob/b1da3acc781c/drivers/vfio/vfio.c#L1553
-> > 
-> > Is it something unwanted?
-> 
-> Yes it is unwanted. This is some special pattern for vfio's unique
-> needs. 
-> 
-> Since this has a struct device for each char dev instance please use
-> the normal cdev_device_add() driven pattern here, or justify why it
-> needs to be special like this.
+Hi Jean,
 
-I see. Thanks! I will embed the cdev in each vhost_vdpa
-structure directly.
+Since this patch is independent and it has no any negative influence,
+could you apply it to your DMI tree first?
 
-Regards,
-Tiwei
+Thanks,
 
-> 
-> Jason
+Tiezhu Yang
+
