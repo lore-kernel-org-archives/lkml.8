@@ -2,180 +2,170 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FBBC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357B0C34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66112465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJ2E3Ck0"
+	by mail.kernel.org (Postfix) with ESMTP id 09CE224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582182833;
+	bh=rwQm2LHj6O68xe2FxIQGJ5fkX9rcTbc/gyMPReVRkgg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ksrJD6tQyiVomnjwISN4mnjbr9vmhN+5kM7cOlFIJ2GLCHHqzvXPs7A3RWcejTojs
+	 Acq1L99ot+lEUWKxj870IA93cPj93U+U2jBZxKBcrVXM49/j9pS10N58BwrIp9jQu7
+	 m6JiDQh+zGkPFKnpmzpWSfye1QH7nRDfl2mGvLa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgBTHNF (ORCPT
+        id S1726826AbgBTHNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:13:05 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35135 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725942AbgBTHNF (ORCPT
+        Thu, 20 Feb 2020 02:13:51 -0500
+Received: from conuserg-08.nifty.com ([210.131.2.75]:36597 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBTHNv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:13:05 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b17so821939wmb.0;
-        Wed, 19 Feb 2020 23:13:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LuLRB0u6LFeZT0zz7S0KLItdb3h9B9LHeKzaA+xlLl4=;
-        b=VJ2E3Ck0HxAKFJb/f98BRyx6TcvSrX9cwOn823sTbKvE0GaRYST7Q/uO9Z5o3OiW2u
-         uEZmroJKXSe60CTELjJD1gn0Uw6PQgQZucjVGXpozlJRe1MNPnQlrrpW0zGfNmf8BBTz
-         1ijyPnacJI7lf/qnHMBdZPlE/siW9GHXzbK9idcncXz28EO+fNgOqYXgQUIxGT/Af1z8
-         v02odj5iB0AHYxwbVOjoHiK9D184z5Dw9q8hBZQqgHw3up/nNLRYCC+9gaUzkmew64u4
-         TKjMmsgxI1qah8xBM+VBSpKu4ixdrtX+sJJsicXsKo8nxladk39qeMqk1aI40gc4JFDt
-         pKhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LuLRB0u6LFeZT0zz7S0KLItdb3h9B9LHeKzaA+xlLl4=;
-        b=mTjXx2spYainNdk6R9I9uZu1e3USPhDFF9kUmzaMaz6HWXTPRRuX0AXBAzHRmIuYo+
-         jG4s00sIelN3voxK7YtTphqq6nNiaNPLThAA4JG4Cue7Hf/KO8arZPK+gS5sa8LhWWp0
-         Sv/c+yKd2fxfqsDXAG7pmELdwtL1tj+OmrKBsvI+D78h9RXAVwD3TSMh7BXMo4tizY+F
-         eEPp129O+SzGMjTpd80VjMNI+ne/vXmFmp+/CqdhWmV13mnL2VH1OwYRZRymvT+FeErW
-         iQKoVLpkp2mfozb6v1ZerjOn9AZ+8Uez9yEI+GGfsNR/JQhPDfOrQrlfP3rvZNSPcrIY
-         WT+A==
-X-Gm-Message-State: APjAAAUFD/YVd18q4yO5DDgi9NeVgcoB6rxDRgcgT6HdBtTl8qOPcyg+
-        rNBVw4qNTT/R+3Um2bCsGxc1J7E=
-X-Google-Smtp-Source: APXvYqzbH1S0yZWti5zzw/ngfwtODbeK1Fjd48qTM4U4kVKC6R+/mMZNtC/AbAKSpTFmy/H1XvFw0A==
-X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr2518130wml.44.1582182783589;
-        Wed, 19 Feb 2020 23:13:03 -0800 (PST)
-Received: from avx2 ([46.53.248.148])
-        by smtp.gmail.com with ESMTPSA id r1sm3061979wrx.11.2020.02.19.23.13.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 23:13:02 -0800 (PST)
-Date:   Thu, 20 Feb 2020 10:13:00 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
+        Thu, 20 Feb 2020 02:13:51 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 01K7Bl6e011059;
+        Thu, 20 Feb 2020 16:11:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 01K7Bl6e011059
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1582182710;
+        bh=+g7cH/hWwvcSufuWOvuSo00awgwQs7zryYYrPdVzF2c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XHidawMYwRIsKTcmfjP8nOvaa/oCcqep+hb2pJYYzwkCDIEp3cz8qNtnOlWEPHm6b
+         EWq6MdZyqcn5pNEOn94SnX0hEOlDd4i394y15Zcua7OxtEDfQtLaibMiHJx2IkWF1K
+         Kyush1yLBNH6MKAi9cwAUtXXN4MeaUp+N+GALgMt67SCvQAWSTe8UvfXipIpCh8cnT
+         n7n0r1FEeggqLQJsmtChYF5BROrQdaUJXbfGuK6tK+kQfZbCCHcjSoUp7dcEwAXPdR
+         tkdX/j2kqS5veyaAYkSSEMCcsgfUi/oWGC5H5fs/1AcSFndEvfrqKt08xRWF4oGyDb
+         QpHNFTxBiszuA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2] proc: faster open/read/close with "permanent" files
-Message-ID: <20200220071300.GA2188@avx2>
-References: <20200219191127.GA15115@avx2>
- <20200219130600.3cb5cd65fbd696fe43fb7adc@linux-foundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200219130600.3cb5cd65fbd696fe43fb7adc@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Cc:     Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        sparclinux@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] compiler: Remove CONFIG_OPTIMIZE_INLINING entirely
+Date:   Thu, 20 Feb 2020 16:11:40 +0900
+Message-Id: <20200220071140.14080-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200220071140.14080-1-masahiroy@kernel.org>
+References: <20200220071140.14080-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 01:06:00PM -0800, Andrew Morton wrote:
-> On Wed, 19 Feb 2020 22:11:27 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> 
-> > Now that "struct proc_ops" exist we can start putting there stuff which
-> > could not fly with VFS "struct file_operations"...
-> > 
-> > Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
-> > in the event of disappearing /proc entries which usually happens if module is
-> > getting removed. Files like /proc/cpuinfo which never disappear simply do not
-> > need such protection.
-> > 
-> > Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
-> > "permanent" files.
-> > 
-> > Enable "permanent" flag for
-> > 
-> > 	/proc/cpuinfo
-> > 	/proc/kmsg
-> > 	/proc/modules
-> > 	/proc/slabinfo
-> > 	/proc/stat
-> > 	/proc/sysvipc/*
-> > 	/proc/swaps
-> > 
-> > More will come once I figure out foolproof way to prevent out module
-> > authors from marking their stuff "permanent" for performance reasons
-> > when it is not.
-> > 
-> > This should help with scalability: benchmark is "read /proc/cpuinfo R times
-> > by N threads scattered over the system".
-> > 
-> > 	N	R	t, s (before)	t, s (after)
-> > 	-----------------------------------------------------
-> > 	64	4096	1.582458	1.530502	-3.2%
-> > 	256	4096	6.371926	6.125168	-3.9%
-> > 	1024	4096	25.64888	24.47528	-4.6%
-> 
-> I guess that's significant.
-> 
-> > --- a/fs/proc/internal.h
-> > +++ b/fs/proc/internal.h
-> > @@ -61,6 +61,7 @@ struct proc_dir_entry {
-> >  	struct rb_node subdir_node;
-> >  	char *name;
-> >  	umode_t mode;
-> > +	u8 flags;
-> 
-> Add a comment describing what this is?
-> 
-> >  	u8 namelen;
-> >  	char inline_name[];
-> >  } __randomize_layout;
-> >
-> > ...
-> >
-> > @@ -12,7 +13,21 @@ struct proc_dir_entry;
-> >  struct seq_file;
-> >  struct seq_operations;
-> >  
-> > +enum {
-> > +	/*
-> > +	 * All /proc entries using this ->proc_ops instance are never removed.
-> > +	 *
-> > +	 * If in doubt, ignore this flag.
-> > +	 */
-> > +#ifdef MODULE
-> > +	PROC_ENTRY_PERMANENT = 0U,
-> > +#else
-> > +	PROC_ENTRY_PERMANENT = 1U << 0,
-> > +#endif
-> > +};
-> 
-> That feels quite hacky.  Is it really needed?  Any module which uses
-> this is simply buggy?
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") made this always-on option. We released v5.4 and v5.5
+including that commit.
 
-Without "#ifdef MODULE" -- yes, buggy.
-> 
-> Can we just leave this undefined if MODULE and break the build?
+Remove the CONFIG option and clean up the code now.
 
-It is for the case when module is built-in, so module removal won't
-happen.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-This flag requires discipline. It says that all code working for proc
-entry will never be unloaded and /proc entry itself will stay as well.
+ arch/x86/configs/i386_defconfig   |  1 -
+ arch/x86/configs/x86_64_defconfig |  1 -
+ include/linux/compiler_types.h    | 11 +----------
+ kernel/configs/tiny.config        |  1 -
+ lib/Kconfig.debug                 | 12 ------------
+ 5 files changed, 1 insertion(+), 25 deletions(-)
 
-> >  struct proc_ops {
-> > +	unsigned int proc_flags;
-> >  	int	(*proc_open)(struct inode *, struct file *);
-> >  	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
-> >  	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
-> > @@ -25,7 +40,7 @@ struct proc_ops {
-> >  #endif
-> >  	int	(*proc_mmap)(struct file *, struct vm_area_struct *);
-> >  	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
-> > -};
-> > +} __randomize_layout;
-> 
-> Unchangelogged, unrelated?
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index 59ce9ed58430..d961d831c266 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -288,7 +288,6 @@ CONFIG_EARLY_PRINTK_DBGP=y
+ CONFIG_DEBUG_STACKOVERFLOW=y
+ # CONFIG_DEBUG_RODATA_TEST is not set
+ CONFIG_DEBUG_BOOT_PARAMS=y
+-CONFIG_OPTIMIZE_INLINING=y
+ CONFIG_SECURITY=y
+ CONFIG_SECURITY_NETWORK=y
+ CONFIG_SECURITY_SELINUX=y
+diff --git a/arch/x86/configs/x86_64_defconfig b/arch/x86/configs/x86_64_defconfig
+index 0b9654c7a05c..4826254c6140 100644
+--- a/arch/x86/configs/x86_64_defconfig
++++ b/arch/x86/configs/x86_64_defconfig
+@@ -285,7 +285,6 @@ CONFIG_EARLY_PRINTK_DBGP=y
+ CONFIG_DEBUG_STACKOVERFLOW=y
+ # CONFIG_DEBUG_RODATA_TEST is not set
+ CONFIG_DEBUG_BOOT_PARAMS=y
+-CONFIG_OPTIMIZE_INLINING=y
+ CONFIG_UNWINDER_ORC=y
+ CONFIG_SECURITY=y
+ CONFIG_SECURITY_NETWORK=y
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 72393a8c1a6c..e970f97a7fcb 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -129,22 +129,13 @@ struct ftrace_likely_data {
+ #define __compiler_offsetof(a, b)	__builtin_offsetof(a, b)
+ 
+ /*
+- * Force always-inline if the user requests it so via the .config.
+  * Prefer gnu_inline, so that extern inline functions do not emit an
+  * externally visible function. This makes extern inline behave as per gnu89
+  * semantics rather than c99. This prevents multiple symbol definition errors
+  * of extern inline functions at link time.
+  * A lot of inline functions can cause havoc with function tracing.
+- * Do not use __always_inline here, since currently it expands to inline again
+- * (which would break users of __always_inline).
+  */
+-#if !defined(CONFIG_OPTIMIZE_INLINING)
+-#define inline inline __attribute__((__always_inline__)) __gnu_inline \
+-	__inline_maybe_unused notrace
+-#else
+-#define inline inline                                    __gnu_inline \
+-	__inline_maybe_unused notrace
+-#endif
++#define inline inline __gnu_inline __inline_maybe_unused notrace
+ 
+ /*
+  * gcc provides both __inline__ and __inline as alternate spellings of
+diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
+index 7fa0c4ae6394..8a44b93da0f3 100644
+--- a/kernel/configs/tiny.config
++++ b/kernel/configs/tiny.config
+@@ -6,7 +6,6 @@ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ CONFIG_KERNEL_XZ=y
+ # CONFIG_KERNEL_LZO is not set
+ # CONFIG_KERNEL_LZ4 is not set
+-CONFIG_OPTIMIZE_INLINING=y
+ # CONFIG_SLAB is not set
+ # CONFIG_SLUB is not set
+ CONFIG_SLOB=y
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 69def4a9df00..5abde39c3c69 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -305,18 +305,6 @@ config HEADERS_INSTALL
+ 	  user-space program samples. It is also needed by some features such
+ 	  as uapi header sanity checks.
+ 
+-config OPTIMIZE_INLINING
+-	def_bool y
+-	help
+-	  This option determines if the kernel forces gcc to inline the functions
+-	  developers have marked 'inline'. Doing so takes away freedom from gcc to
+-	  do what it thinks is best, which is desirable for the gcc 3.x series of
+-	  compilers. The gcc 4.x series have a rewritten inlining algorithm and
+-	  enabling this option will generate a smaller kernel there. Hopefully
+-	  this algorithm is so good that allowing gcc 4.x and above to make the
+-	  decision will become the default in the future. Until then this option
+-	  is there to test gcc for this.
+-
+ config DEBUG_SECTION_MISMATCH
+ 	bool "Enable full Section mismatch analysis"
+ 	help
+-- 
+2.17.1
 
-No! Randomization kicks in if all members are pointers to functions,
-so once a integer is added it is not randomised anymore.
-
-Or so I've heard...
-
-I'll resend with more comments.
