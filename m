@@ -7,31 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218D9C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C215C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F368120659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 440A820659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgBTP70 (ORCPT
+        id S1728739AbgBTP7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:59:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47606 "EHLO
+        Thu, 20 Feb 2020 10:59:32 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47622 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbgBTP7W (ORCPT
+        with ESMTP id S1728716AbgBTP70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:59:22 -0500
+        Thu, 20 Feb 2020 10:59:26 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 9BD312951A0
+        with ESMTPSA id C96B92951A0
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
         bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        pmalani@chromium.org
-Subject: [PATCH 5/8] platform/chrome: cros_ec_sysfs: Use cros_ec_cmd_xfer_status helper
-Date:   Thu, 20 Feb 2020 16:58:56 +0100
-Message-Id: <20200220155859.906647-6-enric.balletbo@collabora.com>
+        pmalani@chromium.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Enrico Granata <egranata@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: [PATCH 8/8] platform/chrome: cros_ec_proto: Do not export cros_ec_cmd_xfer()
+Date:   Thu, 20 Feb 2020 16:58:59 +0100
+Message-Id: <20200220155859.906647-9-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200220155859.906647-1-enric.balletbo@collabora.com>
 References: <20200220155859.906647-1-enric.balletbo@collabora.com>
@@ -42,88 +48,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes use of cros_ec_cmd_xfer_status() instead of
-cros_ec_cmd_xfer(). In this case the change is trivial and the only
-reason to do it is because we want to make cros_ec_cmd_xfer() a private
-function for the EC protocol and let people only use the
-cros_ec_cmd_xfer_status() to return Linux standard error codes.
-
-Looking at the code I am even unsure that makes sense differentiate
-these two errors but let's not change the behaviour for now.
+Now that all the remaining users of cros_ec_cmd_xfer() has been removed,
+make this function private to the cros_ec_proto module.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 
- drivers/platform/chrome/cros_ec_sysfs.c | 36 ++++++++++++-------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ drivers/platform/chrome/cros_ec_proto.c     | 5 ++---
+ include/linux/platform_data/cros_ec_proto.h | 3 ---
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-index 07dac97ad57c..d45ea5d5bfa4 100644
---- a/drivers/platform/chrome/cros_ec_sysfs.c
-+++ b/drivers/platform/chrome/cros_ec_sysfs.c
-@@ -149,14 +149,14 @@ static ssize_t version_show(struct device *dev,
- 	/* Get build info. */
- 	msg->command = EC_CMD_GET_BUILD_INFO + ec->cmd_offset;
- 	msg->insize = EC_HOST_PARAM_SIZE;
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
--	if (ret < 0)
--		count += scnprintf(buf + count, PAGE_SIZE - count,
--				   "Build info:    XFER ERROR %d\n", ret);
--	else if (msg->result != EC_RES_SUCCESS)
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret == -EPROTO) {
- 		count += scnprintf(buf + count, PAGE_SIZE - count,
- 				   "Build info:    EC error %d\n", msg->result);
--	else {
-+	} else if (ret < 0) {
-+		count += scnprintf(buf + count, PAGE_SIZE - count,
-+				   "Build info:    XFER ERROR %d\n", ret);
-+	} else {
- 		msg->data[EC_HOST_PARAM_SIZE - 1] = '\0';
- 		count += scnprintf(buf + count, PAGE_SIZE - count,
- 				   "Build info:    %s\n", msg->data);
-@@ -165,14 +165,14 @@ static ssize_t version_show(struct device *dev,
- 	/* Get chip info. */
- 	msg->command = EC_CMD_GET_CHIP_INFO + ec->cmd_offset;
- 	msg->insize = sizeof(*r_chip);
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
--	if (ret < 0)
--		count += scnprintf(buf + count, PAGE_SIZE - count,
--				   "Chip info:     XFER ERROR %d\n", ret);
--	else if (msg->result != EC_RES_SUCCESS)
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret == -EPROTO) {
- 		count += scnprintf(buf + count, PAGE_SIZE - count,
- 				   "Chip info:     EC error %d\n", msg->result);
--	else {
-+	} else if (ret < 0) {
-+		count += scnprintf(buf + count, PAGE_SIZE - count,
-+				   "Chip info:     XFER ERROR %d\n", ret);
-+	} else {
- 		r_chip = (struct ec_response_get_chip_info *)msg->data;
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 3e745e0fe092..11a2db7cd0f7 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -496,8 +496,8 @@ EXPORT_SYMBOL(cros_ec_query_all);
+  *
+  * Return: 0 on success or negative error code.
+  */
+-int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+-		     struct cros_ec_command *msg)
++static int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
++			    struct cros_ec_command *msg)
+ {
+ 	int ret;
  
- 		r_chip->vendor[sizeof(r_chip->vendor) - 1] = '\0';
-@@ -189,14 +189,14 @@ static ssize_t version_show(struct device *dev,
- 	/* Get board version */
- 	msg->command = EC_CMD_GET_BOARD_VERSION + ec->cmd_offset;
- 	msg->insize = sizeof(*r_board);
--	ret = cros_ec_cmd_xfer(ec->ec_dev, msg);
--	if (ret < 0)
--		count += scnprintf(buf + count, PAGE_SIZE - count,
--				   "Board version: XFER ERROR %d\n", ret);
--	else if (msg->result != EC_RES_SUCCESS)
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret == -EPROTO) {
- 		count += scnprintf(buf + count, PAGE_SIZE - count,
- 				   "Board version: EC error %d\n", msg->result);
--	else {
-+	} else if (ret < 0) {
-+		count += scnprintf(buf + count, PAGE_SIZE - count,
-+				   "Board version: XFER ERROR %d\n", ret);
-+	} else {
- 		r_board = (struct ec_response_board_version *)msg->data;
+@@ -541,7 +541,6 @@ int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
  
- 		count += scnprintf(buf + count, PAGE_SIZE - count,
+ 	return ret;
+ }
+-EXPORT_SYMBOL(cros_ec_cmd_xfer);
+ 
+ /**
+  * cros_ec_cmd_xfer_status() - Send a command to the ChromeOS EC.
+diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+index ba5914770191..1334fedc07cb 100644
+--- a/include/linux/platform_data/cros_ec_proto.h
++++ b/include/linux/platform_data/cros_ec_proto.h
+@@ -212,9 +212,6 @@ int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
+ int cros_ec_check_result(struct cros_ec_device *ec_dev,
+ 			 struct cros_ec_command *msg);
+ 
+-int cros_ec_cmd_xfer(struct cros_ec_device *ec_dev,
+-		     struct cros_ec_command *msg);
+-
+ int cros_ec_cmd_xfer_status(struct cros_ec_device *ec_dev,
+ 			    struct cros_ec_command *msg);
+ 
 -- 
 2.25.0
 
