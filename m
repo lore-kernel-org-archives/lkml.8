@@ -2,123 +2,154 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C73C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EE5C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C63524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582214215;
-	bh=VNyp7lBvT7OkfPkutXyCOLUpkCyVU4q5GYk6PBFJlRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wWXVk9WqN5yDbAVV9cYV4RXKCWxfAQRJhkAsEB6ODBWLAS2wR8jt0dZbkL00y3mYf
-	 ck8MZmT8wfHM8qIrZeiz+PR0D6eepdlaxA/+CpNVbGWwJpo5Zowhw5rXsLTo8jwSiJ
-	 uNNiXpUKQ3HPB8o468H8kINNuIv6ZBLbUvIgjuYk=
+	by mail.kernel.org (Postfix) with ESMTP id 2909820659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GhANP2g0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgBTP4x (ORCPT
+        id S1728655AbgBTP46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:56:53 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45118 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgBTP4x (ORCPT
+        Thu, 20 Feb 2020 10:56:58 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34803 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728460AbgBTP4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:56:53 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a2so3965723qko.12;
-        Thu, 20 Feb 2020 07:56:52 -0800 (PST)
+        Thu, 20 Feb 2020 10:56:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so2150883pgi.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:56:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=WrIAIkuYfbohT4URY+WT9f9IMynxvVzhUx7hJqz7oAk=;
-        b=ESOkYp4wOyqNJWtsVeoAd/ssWk0nvkvCqnwMaCaF3sumNcZ7bZUGH+0ucazaesndy0
-         yirD6ztauUJJvTh2k0qQOCMIuSy8y0I5Op0djhJN8tXc86SkhYb3GRAvPH0Xdg20PLhR
-         tkP4CLoOD5zcFyv/N+6KLjwu32UptfltbOtBQhs2lFBq9bhdey1qQykNbSqzme1HWTvF
-         YJKe9824y9fv3QDFnPj2iRvGn8faVc36cGixbcfn6JihAAnsRa6TRztLTkXfYeKmfck4
-         JQ0bQjj5RuwY3aPQVQLPJ5lDRI+ouoTLCgEgk4zeilfjXu6dAxWPxxTsm/zvTFmQrkVB
-         y1rw==
+        bh=rNBzr+gKL7W/4+tMuEJmqqL2ELw8zx9/UXsCB1+eKjY=;
+        b=GhANP2g0294bY7ihToE8mRKMYwYIxEuzTTlWpZSq/Oj/DNB7wcAnz6UBnSA/0JlzO1
+         zQgrDPIGpwOyPqKz3rhBKLyBVINls8WEGLZ3i38vALuFb74X4TA2EQdBwdsRdEqMClwJ
+         7O6L2YGcyC6eoVlx39mkCRWCcNx4o+Iv397gKPOTx0tqlh/+B3R7Sm1uW4vNC3l3/E6E
+         uYudBzcX7IR1ofHCR+nbozHYZ5oAl97JP2DFKmeN2P1pBfUJJQBSyxzMxf021nn65FTI
+         x0h4wu/RANDJ/gFpme5Stsyy2G1FMyFjvLmgLy2zW8nr5FgDNhLBm8J7G0+vKQfU12Po
+         xnhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=WrIAIkuYfbohT4URY+WT9f9IMynxvVzhUx7hJqz7oAk=;
-        b=JZjH+GfTO+qhT4RqZgv/Nro+yYKDSYRQMNWbe8StRtYrtDXcoEDREy3YS2NYcT8q1G
-         4tUrFPnDViVwxAqzk6vA7+AIHPE1u1FzW59Mrd/vAI2OqTunE7DnwciZ3IboEu0jTaN2
-         uC0bnRtTsdIh01226K74aYyaehAbojJLCDN36pmDPNzqRldxD0pR1MneZvIy1V7Nlh46
-         wKegmJratMlleWlAHtwJTr0665t8hgCgbKaHTxpbW15+Nctszza880Spad7J1Wp5ronM
-         EtxVoKnoiDctjDUbITWZjqIL//k9nO2QsBkgrRcp0rCtH6yEvIPKVT9y864kQcyYUpTb
-         V53w==
-X-Gm-Message-State: APjAAAUz/7k9alrbtjVRIOGEETlMmBN93uiXFNZmwjLSAKDn+Z3ACfTJ
-        MyfzMx/eQDjdLXNu/1SfVyQ=
-X-Google-Smtp-Source: APXvYqxl2VFYhPNB5rqU5j+Wp99qIWsjSoVAVV6XHVaiOidOGQt4AO4LYzBpRqNGmdzKRoW3+dg+/w==
-X-Received: by 2002:a05:620a:31b:: with SMTP id s27mr28175423qkm.105.1582214212209;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rNBzr+gKL7W/4+tMuEJmqqL2ELw8zx9/UXsCB1+eKjY=;
+        b=KikM4fl3SrYQHcwD8j1xGMQG4QljxVEnRiT3q8g5sAGTIsrm15JHgSloglDbZaku6X
+         VJLYdXdyoITteZut8mz7eRqR9IHfLNqMdv5G4C1XRpHDkjURlfEqwhrooMgUnb0MsBKO
+         gp1UCBfkmbOoOUJK7CaA63eLGW38MC2WK1DC3u3eTNrhA+bfqoxLNCIrOzmgKwM+RnDr
+         QY3gjyvLKT2UCbMfrA+R4n1yFbzqiUEkQCwlE1sugWPCK7xYwxo5zfGzWTOWn4r3Y2PU
+         1TvlrFloeGZyGiUolJxO9hmPRR+g2xdFks7R0vwlj02GLHjlG/nBR3ancAPZ7dBDsEya
+         X5cg==
+X-Gm-Message-State: APjAAAViV+95kpTe2vI/dDNeTqZxR8lFZUE8rwSat2PcCpwugvf31VyU
+        +KenO3vwZjNfK47HbspiVFkV8GUSNaM=
+X-Google-Smtp-Source: APXvYqxgmpLr0iQFDhJMwwmGPN0p+UlmPhonwyMbkL9R2pkVjF5jGqMHkbnHZVBJ+BMwHtftaA4qJw==
+X-Received: by 2002:a63:33c4:: with SMTP id z187mr33761577pgz.114.1582214212585;
         Thu, 20 Feb 2020 07:56:52 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::5e31])
-        by smtp.gmail.com with ESMTPSA id x66sm57180qkb.101.2020.02.20.07.56.51
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f13sm4218442pgk.12.2020.02.20.07.56.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 20 Feb 2020 07:56:51 -0800 (PST)
-Date:   Thu, 20 Feb 2020 10:56:51 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200220155651.GG698990@mtj.thefacebook.com>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219191618.GB54486@cmpxchg.org>
- <20200219195332.GE11847@dhcp22.suse.cz>
- <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
- <20200219220859.GF54486@cmpxchg.org>
- <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
+Date:   Thu, 20 Feb 2020 07:55:56 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] driver core: Set deferred_probe_timeout to a
+ longer default if CONFIG_MODULES is set
+Message-ID: <20200220155556.GE955802@ripper>
+References: <20200220050440.45878-1-john.stultz@linaro.org>
+ <20200220050440.45878-3-john.stultz@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
+In-Reply-To: <20200220050440.45878-3-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:45:24AM -0500, Daniel Jordan wrote:
-> Ok, consistency with io and memory is one advantage to doing it that way.
-> Creating kthreads in cgroups also seems viable so far, and it's unclear whether
-> either approach is significantly simpler or more maintainable than the other,
-> at least to me.
+On Wed 19 Feb 21:04 PST 2020, John Stultz wrote:
 
-The problem with separate kthread approach is that many of these work
-units are tiny, and cgroup membership might not be known or doesn't
-agree with the processing context from the beginning
+> When using modules, its common for the modules not to be loaded
+> until quite late by userland. With the current code,
+> driver_deferred_probe_check_state() will stop returning
+> EPROBE_DEFER after late_initcall, which can cause module
+> dependency resolution to fail after that.
+> 
+> So allow a longer window of 30 seconds (picked somewhat
+> arbitrarily, but influenced by the similar regulator core
+> timeout value) in the case where modules are enabled.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Change-Id: I9c5a02a54915ff53f9f14d49c601f41d7105e05e
 
-For example, the ownership of network packets can't be determined till
-processing has progressed quite a bit in shared contexts and each item
-too small to bounce around. The only viable way I can think of
-splitting aggregate overhead according to the number of packets (or
-some other trivially measureable quntity) processed.
+Change-Id...
 
-Anything sitting in reclaim layer is the same. Reclaim should be
-charged to the cgroup whose memory is reclaimed *but* shouldn't block
-other cgroups which are waiting for that memory. It has to happen in
-the context of the highest priority entity waiting for memory but the
-costs incurred must be charged to the memory owners.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-So, one way or the other, I think we'll need back charging and once
-back charging is needed for big ticket items like network and reclaim,
-it's kinda silly to use separate mechanisms for other stuff.
+Regards,
+Bjorn
 
-> Is someone on your side working on remote charging right now?  I was planning
-> to post an RFD comparing these soon and it would make sense to include them.
-
-It's been on the to do list but nobody is working on it yet.
-
-Thanks.
-
--- 
-tejun
+> ---
+> v4:
+> * Split out into its own patch as suggested by Mark
+> * Made change conditional on CONFIG_MODULES
+> ---
+>  drivers/base/dd.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index bb383dca39c1..fa138f24e2d3 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -224,7 +224,16 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+>  
+> +#ifdef CONFIG_MODULES
+> +/*
+> + * In the case of modules, set the default probe timeout to
+> + * 30 seconds to give userland some time to load needed modules
+> + */
+> +static int deferred_probe_timeout = 30;
+> +#else
+> +/* In the case of !modules, no probe timeout needed */
+>  static int deferred_probe_timeout = -1;
+> +#endif
+>  static int __init deferred_probe_timeout_setup(char *str)
+>  {
+>  	int timeout;
+> -- 
+> 2.17.1
+> 
