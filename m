@@ -2,114 +2,111 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157EBC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E425C11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF67C206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582228224;
-	bh=+4S0oAYYxi9zkJWuqqwvbk09yWLfIy2eTIDvAci08fw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wKQfT73JAbWFuuhMLGuPoSeJRL1K/XTkRbYtnlf6+JQBdAgMKDIEUJNaTLYaj+5IU
-	 bco9+0iAf2b4GvfLxm3k0tud9JaV0ubCvTuusqVF+TjqGHnsP4156eK9kyLg8q0gd4
-	 nabBtwym8Cc5W58v+MvST3QC1pjbeA11mNWSHBSU=
+	by mail.kernel.org (Postfix) with ESMTP id DD99B206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:50:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DJ8zTdOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgBTTuX (ORCPT
+        id S1728979AbgBTTui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:50:23 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36260 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgBTTuX (ORCPT
+        Thu, 20 Feb 2020 14:50:38 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:41602 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728865AbgBTTui (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:50:23 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so1963317plm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:50:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KktWaA20cRZDutlgvoO1nRHN/e/oQ4YYrqk4PqmRjNc=;
-        b=Bqyb+ErqUGYF3kReeVJttOjglAf0oW56o1v6T6s+jK7qBSTwtB4YlPdj0YtdWb25Uk
-         0EeB1uC5Y1tyafywAm6XWiiUrRTxYZOQSbxmcfbAbX/mhBjPu9AVDadbmxobD6ZFG1xR
-         c0XF5Qho7D3E7BDrJx50CmI5gtEvSw9No9bjA5dC5rP2rRu1+ao1Phwv/lamh7xfNxLU
-         65IrXSsmzlSvlmjqnZUjI7QJiaYALdlhquDVjIedkHZ/t+gCfRjaVJqPmnlkv4pQqtIO
-         uR2BtQ6h6GTGoDRpRuomI27w83iRbNZtKjMUFWP2sfw8IHLe/Z+BF/p5V8fsHG8wmILh
-         4UVQ==
-X-Gm-Message-State: APjAAAWGSluYK6Hed3WQN0GpmlBxEmHJ0sHsCe6YO//W0gHpzwrn/JLW
-        WWJSiKQwPtSlzrwHXSo1y8E=
-X-Google-Smtp-Source: APXvYqz0q/gU3204XY9FOMh0frYACvr+WP0LQnb8eVTBz+fO1CTlKX9eeuh1Eax9MRnpy/1Qsf416g==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr32968958plo.193.1582228222418;
-        Thu, 20 Feb 2020 11:50:22 -0800 (PST)
-Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
-        by smtp.gmail.com with ESMTPSA id 70sm375556pfw.140.2020.02.20.11.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 11:50:21 -0800 (PST)
-Date:   Thu, 20 Feb 2020 11:50:20 -0800
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Yonghyun Hwang <yonghyun@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Havard Skinnemoen <hskinnemoen@google.com>,
-        Deepa Dinamani <deepadinamani@google.com>,
-        Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v2] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys()
- for huge page
-Message-ID: <20200220195020.GA1193@epycbox.lan>
-References: <20200220194431.169629-1-yonghyun@google.com>
+        Thu, 20 Feb 2020 14:50:38 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582228237; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=7vaalBQGbByuwInf/ET23b5L19GnKvr01agHVpzaH2A=; b=DJ8zTdOPIcJ1tXmHTQcxPHV+ztUoDeBa3l7KGm8p6Wvr2FG0576/d4r9XTWhPK6vpVrDJjqs
+ Z9PUK07Pv283+8hY6q7d2DqBkXt6cJMzPQZRU2vd1TgG8LRwfleTFGWzq2KsHXy67EzqDJ0X
+ XC6ecV8ddoQ6OYqh3m5w3Y9NUC8=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4ee304.7f0e2a5a9bc8-smtp-out-n03;
+ Thu, 20 Feb 2020 19:50:28 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D0071C447A3; Thu, 20 Feb 2020 19:50:27 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5C997C43383;
+        Thu, 20 Feb 2020 19:50:26 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5C997C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Thu, 20 Feb 2020 12:50:24 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [PATCH] drm/msm/a6xx: Fix CP_MEMPOOL state name
+Message-ID: <20200220195024.GA11477@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@chromium.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <freedreno@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>
+References: <20200220180013.1120750-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220194431.169629-1-yonghyun@google.com>
+In-Reply-To: <20200220180013.1120750-1-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yonghyun,
+On Thu, Feb 20, 2020 at 10:00:09AM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 
-On Thu, Feb 20, 2020 at 11:44:31AM -0800, Yonghyun Hwang wrote:
-> intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a huge
-> page onto its corresponding physical address. This commit fixes the bug by
-> accomodating the level of page entry for the IOVA and adds IOVA's lower
-> address to the physical address.
-> 
-D'oh I meant to add a Cc: stable@vger.kernel.org here ... :)
-> Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
+>  drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Changes from v1:
-> - level cannot be 0. So, the condition, "if (level > 1)", is removed, which results in a simple code.
-> - a macro, BIT_MASK, is used to have a bit mask
-> 
-> ---
->  drivers/iommu/intel-iommu.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 932267f49f9a..4fd5c6287b6d 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5554,7 +5554,9 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> index 68cccfa2870a..bbbec8d26870 100644
+> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu_state.h
+> @@ -370,7 +370,7 @@ static const struct a6xx_indexed_registers {
+>  };
 >  
->  	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
->  	if (pte)
-> -		phys = dma_pte_addr(pte);
-> +		phys = dma_pte_addr(pte) +
-> +			(iova & (BIT_MASK(level_to_offset_bits(level) +
-> +						VTD_PAGE_SHIFT) - 1));
+>  static const struct a6xx_indexed_registers a6xx_cp_mempool_indexed = {
+> -	"CP_MEMPOOOL", REG_A6XX_CP_MEM_POOL_DBG_ADDR,
+> +	"CP_MEMPOOL", REG_A6XX_CP_MEM_POOL_DBG_ADDR,
+>  		REG_A6XX_CP_MEM_POOL_DBG_DATA, 0x2060,
+>  };
 >  
->  	return phys;
->  }
 > -- 
-> 2.25.0.265.gbab2e86ba0-goog
+> 2.24.1
 > 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
-Cheers,
-Moritz
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
