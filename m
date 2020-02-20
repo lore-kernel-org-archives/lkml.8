@@ -2,83 +2,137 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E663CC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A964C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB84324672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hWOYRbRh"
+	by mail.kernel.org (Postfix) with ESMTP id 633CA24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582194990;
+	bh=Jt8q2yRmWrmdpGuZKJez7b1Pow9w+YhVcApOApMKI6s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=a5ITsSJ4nHOwZVazgoRLr5BwqZBZc+kRbWCj78jw0sEi6+dzqPKgXtO+mf1z027mW
+	 okpstYrscYgejeYwJP4tJW4UwUEHQ2iQtDtgGoFvj0FSF77db514y6uVgjagX1dn/K
+	 28VykrfmOvnncqVimVyVj6RffXwukyozePRin6rQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgBTKgE (ORCPT
+        id S1727827AbgBTKg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:36:04 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:59689 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726885AbgBTKgE (ORCPT
+        Thu, 20 Feb 2020 05:36:29 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32979 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727263AbgBTKg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:36:04 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582194963; h=Message-ID: Subject: Cc: To: From: Date:
- Content-Transfer-Encoding: Content-Type: MIME-Version: Sender;
- bh=IvusCc7SfQWheL3qpyxJjGggUjJ0Q+qu37ojxqfgpPg=; b=hWOYRbRhXL9s9qU0B7Dhm1acPV0OaLZCk/o4x0ZXjzJAHuHPIdTGmpv49bFnCq5frQ+yA4cn
- psocljpApkfZ9kna/HH5C1Oca1ocTLq/YXyRt79iC2pb8EwOgpb7Qv/eCDUNObXd+iDY0aJi
- IfrqNxJNiUwtapg+Ymwkrg6PZYw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4e610b.7fa682926c38-smtp-out-n02;
- Thu, 20 Feb 2020 10:35:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 95211C4479D; Thu, 20 Feb 2020 10:35:54 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bgodavar)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3AB2AC43383;
-        Thu, 20 Feb 2020 10:35:54 +0000 (UTC)
+        Thu, 20 Feb 2020 05:36:29 -0500
+Received: by mail-ot1-f66.google.com with SMTP id w6so3218860otk.0;
+        Thu, 20 Feb 2020 02:36:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=miXTb5HAsIjYSRoFoX3UH15Dws4NhNQxWNMPkO2fDLE=;
+        b=JOEgvdemrDTCAe4fgny6maoWpUYXoCVcYMq3RT3K+uCEzUvFU/TtbjWAc3w+lavnjo
+         QRt5CSjMXhUkjlica9XxU393ZmdANYZU7shc3gCuO3mpJUaR8WMBcHPiTzBkJuWMfWVY
+         zphhYT2IiAEPyloqxCjyhWjCGbXnAhKKa9xLS4lfbZ8vsZt3miJZHsNL33zCZxwzad5X
+         qB4ml7LVBVUACI0z5mZo5Ig4LRGxDUF9sSgMZILsQ9j1Sw9dnlXRiGJE980YXDpnHOxI
+         wXIHlayCqYqVdoYeOMY+oHIJlPsqW6mhwYEHl1iKmQN0R5+sRLQ8Af7obOyunEy4romq
+         jvKA==
+X-Gm-Message-State: APjAAAWNd6irPlJqNnUMHx6Kwgu8JtleRDodLhlDpFFamcOHJv8E0c+H
+        zkdcziguG1HYAiIciE2jTeXkbZEgbgZVLT1jBz8=
+X-Google-Smtp-Source: APXvYqzKD8vfsYd9LIyX1NTkCe04vt+5krg0iwxtBfD5CVB9Bx8JIBmvjT94OvR0nDTq/oxZhnlqp2jiITkDYILcSeY=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr1304767otd.266.1582194988112;
+ Thu, 20 Feb 2020 02:36:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 16:05:54 +0530
-From:   bgodavar@codeaurora.org
-List-Id: <linux-firmware.lore.kernel.org>
-To:     linux-firmware@kernel.org
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, gubbaven@codeaurora.org
-Subject: Firmware files for QCA BT chip WCN3991.
-Message-ID: <3d3a530f11e6bc9a87573389d72ddd3c@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200220050440.45878-1-john.stultz@linaro.org> <20200220050440.45878-3-john.stultz@linaro.org>
+In-Reply-To: <20200220050440.45878-3-john.stultz@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Feb 2020 11:36:16 +0100
+Message-ID: <CAJZ5v0jZ8VVEFjMcCMby-RdEwUY6mS5w3pMktv-hfJQ7OEp9Gg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/6] driver core: Set deferred_probe_timeout to a
+ longer default if CONFIG_MODULES is set
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Feb 20, 2020 at 6:05 AM John Stultz <john.stultz@linaro.org> wrote:
+>
+> When using modules, its common for the modules not to be loaded
+> until quite late by userland. With the current code,
+> driver_deferred_probe_check_state() will stop returning
+> EPROBE_DEFER after late_initcall, which can cause module
+> dependency resolution to fail after that.
+>
+> So allow a longer window of 30 seconds (picked somewhat
+> arbitrarily, but influenced by the similar regulator core
+> timeout value) in the case where modules are enabled.
+>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Change-Id: I9c5a02a54915ff53f9f14d49c601f41d7105e05e
+> ---
+> v4:
+> * Split out into its own patch as suggested by Mark
+> * Made change conditional on CONFIG_MODULES
+> ---
+>  drivers/base/dd.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index bb383dca39c1..fa138f24e2d3 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -224,7 +224,16 @@ static int deferred_devs_show(struct seq_file *s, void *data)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(deferred_devs);
+>
+> +#ifdef CONFIG_MODULES
+> +/*
+> + * In the case of modules, set the default probe timeout to
+> + * 30 seconds to give userland some time to load needed modules
+> + */
+> +static int deferred_probe_timeout = 30;
+> +#else
+> +/* In the case of !modules, no probe timeout needed */
+>  static int deferred_probe_timeout = -1;
+> +#endif
 
-The following changes since commit 
-54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
+Looks reasonable to me.
 
-   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
-+0530)
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-are available in the Git repository at:
-
-   https://github.com/bgodavar/qca_bt_wcn3991.git
-
-for you to fetch changes up to 54b017d06a44bfd9b4c2757cace6cc349afd5bf2:
-
-   qca: Add firmware files for BT chip wcn3991. (2020-02-20 16:01:04 
-+0530)
-
-
-Regards
-Balakrishna
+>  static int __init deferred_probe_timeout_setup(char *str)
+>  {
+>         int timeout;
+> --
