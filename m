@@ -2,157 +2,102 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF91C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D38C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACE0207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69E4208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djeVkI8M"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MwQ43G3L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgBTA1z (ORCPT
+        id S1727020AbgBTAbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:27:55 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41570 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgBTA1y (ORCPT
+        Wed, 19 Feb 2020 19:31:20 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36163 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgBTAbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:27:54 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 70so968447pgf.8;
-        Wed, 19 Feb 2020 16:27:54 -0800 (PST)
+        Wed, 19 Feb 2020 19:31:20 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a6so810332plm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:31:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Y+lXZvcOBfBAhi74vXh+F5MDPoNXIEah7v92Mu4iLv4=;
-        b=djeVkI8Mai6nfa082dqb/fYwZCL7HWd5VYrzdS1cxd58ALdhbyLWaRAB0707cgL1Hs
-         B6/UTUB+GY/GlKqIp503aOSoQR9ONtYioOa0HJhyWk67MtJoAYz1zTprMAh65ySJW81l
-         NzAVE5xNPteoIrpJ2NxNivspcg4a3pLokzdaKr8p5B0HrIaLT/3iO10x2oVINFXdhhkG
-         j1qTbSd/TgMl4u/886LfZojKT+rL5MCqVPnA42B1Rx5B97HhHLDYVJLDQ4YETgY8zmSJ
-         pCbuP/Qn5V6475nqBiS8Jhgmk8KMAm+Za9iEgCKfzOjGHoF1HAykm+dY9+5v2V/VijYC
-         JbnA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DABA29lvnKahjWN65Up4SMobg1WasA5eEpWwvMJgQ6c=;
+        b=MwQ43G3L6srlNwtHvkvQm7lWzatySi2qtRIS8jSsEzV/L1rc8pljgk7Y+GaBeB0a3g
+         g5tzG4g5+kBakUYEupMRcyj0AfFMZF7u4DIbkC8/KAL+JaJzUuiP6OCpEpq35cMyPpFm
+         FZpDUv7g7zh5JZUAn2AI5GXe4m6dfpUzjeCGs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Y+lXZvcOBfBAhi74vXh+F5MDPoNXIEah7v92Mu4iLv4=;
-        b=lPK6ZJYCRX29GtncwnlL/VBFlDSfq4XPkfb8nrDmZwtW7Ke/uQCEoYeB6S2zLY3aD/
-         FKrhJQhsT/l46Edp3UEjS6B4f2XAqE64U3YZXmdFz49kYYp1VpQBqfZC9Oam33G68nDf
-         17zatzdNub3kvfQjtqg/LD4GthJw4J9eQybBHg3whQD3pNwqlKC/yfkuboE7YOwoCg0w
-         NieIToRUb6s9byr4PdwIHl863/LVeTBh+0/bA1JOLHCktEWjVqQgGE0yaUjoveaBVaCU
-         ySAETVRlmTrE6zDp1McG4r14dVzpTUJYGESuVsULwVIHK/P1q+K0m6eOAZ2N8D0U+CEe
-         lcbQ==
-X-Gm-Message-State: APjAAAXugThqb7g/TWIQQVB8XzCNmns8XO9UCA+zosd/e2/xSkiRvyj/
-        iABUYh/w5QLuX5iFvhdcbVCBB0DY
-X-Google-Smtp-Source: APXvYqwFqz7SUwcM9bgG8aoIsxEkp+bsFoly9zubTnlVMMQ09hDOGOX95YXiuCbAGxVxPK96NTvIPQ==
-X-Received: by 2002:a63:ba43:: with SMTP id l3mr31749817pgu.120.1582158473742;
-        Wed, 19 Feb 2020 16:27:53 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:400::5:1b18])
-        by smtp.gmail.com with ESMTPSA id s13sm648733pjp.1.2020.02.19.16.27.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Feb 2020 16:27:52 -0800 (PST)
-Date:   Wed, 19 Feb 2020 16:27:49 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Daniel =?utf-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        BPF-dev-list <bpf@vger.kernel.org>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
-Message-ID: <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
-References: <20200219133012.7cb6ac9e@carbon>
- <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
- <20200219180348.40393e28@carbon>
- <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
- <20200219192854.6b05b807@carbon>
- <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
- <20200219210609.20a097fb@carbon>
- <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DABA29lvnKahjWN65Up4SMobg1WasA5eEpWwvMJgQ6c=;
+        b=p+x++6w9OiWgx7RPJkmj2WiJm5OXQLX3FpwGxjZ/geWjc3g0kI3Eg3VCJ0QvBEATLv
+         8VFXZX93KAS75seS3hkwSibdYXwSkt9LA2fqfCxKZZYOYMsEaodryu2RyxK+M5I3mdjU
+         W/b/Hxd7YwMPCL1q8iO34q8S/faXqKLKP14zAOUrVObt7m0P01mK3KkrBo0FmMhFxZJT
+         //uRG+8ecgc490PMYJDVmBeZDfeSJ57o166RneK3Ge1KFY08/BihIea8wPmu5RY6MSIy
+         DDPhg8tsmWBXwF/Zg9okRt0OYGFl4/5Cvxh/4HxceMaqzseceSI3Mi15//bhK7hmtf0q
+         s0mA==
+X-Gm-Message-State: APjAAAXjBg6H0W2m+OzTMFrd8FD/Cb9dfNLLTPmZKHc9fjcCEQcRsMzq
+        /zQTMNKggLe4Hdo2PgssBK/0emwP0pU=
+X-Google-Smtp-Source: APXvYqymv8vYYbZdsvczre9QEC7s9GoJR4iHu3CXG7yzljDmTeKtEZ7UkIZXpBWJCXWfZeZ4h5Zv0Q==
+X-Received: by 2002:a17:90a:191a:: with SMTP id 26mr370789pjg.111.1582158677720;
+        Wed, 19 Feb 2020 16:31:17 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id d69sm815370pfd.72.2020.02.19.16.31.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 16:31:17 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
+        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v3 0/4] platform/chrome: Add Type C connector class driver
+Date:   Wed, 19 Feb 2020 16:30:53 -0800
+Message-Id: <20200220003102.204480-1-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
-User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel Díaz wrote:
-> >
-> > When I download a specific kernel release, how can I know what LLVM
-> > git-hash or version I need (to use BPF-selftests)?
+The following series introduces a Type C port driver for Chrome OS devices
+that have an EC (Embedded Controller). It derives port information from
+ACPI or DT entries. This patch series adds basic support, including
+registering ports, and setting certain basic attributes.
 
-as discussed we're going to add documentation-like file that will
-list required commits in tools.
-This will be enforced for future llvm/pahole commits.
+v2: https://lkml.org/lkml/2020/2/7/646
+v1: https://lkml.org/lkml/2020/2/5/676
 
-> > Do you think it is reasonable to require end-users to compile their own
-> > bleeding edge version of LLVM, to use BPF-selftests?
+Changes in v3:
+- Fix DT bindings entry in Documentation to use usb-connector binding.
+- Fixed minor code nits in driver file.
 
-absolutely.
-If a developer wants to send a patch they must run all selftests and
-all of them must pass in their environment.
-"but I'm adding a tracing feature and don't care about networking tests
-failing"... is not acceptable.
+Prashant Malani (4):
+  dt-bindings: Add cros-ec Type C port driver
+  platform/chrome: Add Type C connector class driver
+  platform/chrome: typec: Get PD_CONTROL cmd version
+  platform/chrome: typec: Update port info from EC
 
-> > I do hope that some end-users of BPF-selftests will be CI-systems.
-> > That also implies that CI-system maintainers need to constantly do
-> > "latest built from sources" of LLVM git-tree to keep up.  Is that a
-> > reasonable requirement when buying a CI-system in the cloud?
+ .../bindings/chrome/google,cros-ec-typec.yaml |  86 +++++
+ drivers/platform/chrome/Kconfig               |  11 +
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_ec_typec.c       | 340 ++++++++++++++++++
+ 4 files changed, 438 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+ create mode 100644 drivers/platform/chrome/cros_ec_typec.c
 
-"buying CI-system in the cloud" ?
-If I could buy such system I would pay for it out of my own pocket to save
-maintainer's and developer's time.
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-> We [1] are end users of kselftests and many other test suites [2]. We
-> run all of our testing on every git-push on linux-stable-rc, mainline,
-> and linux-next -- approximately 1 million tests per week. We have a
-> dedicated engineering team looking after this CI infrastructure and
-> test results, and as such, I can wholeheartedly echo Jesper's
-> sentiment here: We would really like to help kernel maintainers and
-> developers by automatically testing their code in real hardware, but
-> the BPF kselftests are difficult to work with from a CI perspective.
-> We have caught and reported [3] many [4] build [5] failures [6] in the
-> past for libbpf/Perf, but building is just one of the pieces. We are
-> unable to run the entire BPF kselftests because only a part of the
-> code builds, so our testing is very limited there.
-> 
-> We hope that this situation can be improved and that our and everyone
-> else's automated testing can help you guys too. For this to work out,
-> we need some help.
-
-I don't understand what kind of help you need. Just install the latest tools.
-Both the latest llvm and the latest pahole are required.
-If by 'help' you mean to tweak selftests to skip tests then it's a nack.
-We have human driven CI. Every developer must run selftests/bpf before
-emailing the patches. Myself and Daniel run them as well before applying.
-These manual runs is the only thing that keeps bpf tree going.
-If selftests get to skip tests humans will miss those errors.
-When I don't see '0 SKIPPED, 0 FAILED' I go and investigate.
-Anything but zero is a path to broken kernels.
-
-Imagine the tests would get skipped when pahole is too old.
-That would mean all of the kernel features from year 2019
-would get skipped. Is there a point of running such selftests?
-I think the value is not just zero. The value is negative.
-Such selftests that run old stuff would give false believe
-that they do something meaningful.
-"but CI can do build only tests"... If 'helping' such CI means hurting the
-key developer/maintainer workflow such CI is on its own.
