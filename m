@@ -2,195 +2,154 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F917C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C28C11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC20020722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF45620801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QBQdV8q+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfOCeEJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgBTRA7 (ORCPT
+        id S1728664AbgBTRBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:00:59 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:49440 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbgBTRA7 (ORCPT
+        Thu, 20 Feb 2020 12:01:37 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:34819 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTRBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:00:59 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGtQPp034532;
-        Thu, 20 Feb 2020 17:00:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=OEQ8Sxa54D6VnD4JhJWJER8N7HEKh6e9JKT56rZDleE=;
- b=QBQdV8q+xwhUQQ4QZzAVwG0KL3dPMu9uuKVM94+Ujg0HER7/QBiUcfYiDbKJ0Xm+ep09
- ZpQkJLCgP273WVkvIbjWPOBmobhFZnSWnpVWvCMETYx25BUSjU/ynJli1rhCpU32RNIl
- OnLBYqyDlLW0XU8kcSZAUacZaLYcpndbNgPXHMvLLskvDNjhi59YDVIUryBdRZyZr/XT
- 2toggFLuD4atkvW3oicIJ7M+mgye7DHrbiT0SPBaQm14/EBmzEAU8heQTaWTYoMiRsFf
- fNpKdtRcAaRVRess/Wfr9rGovbbMEQxthGY2es7coZzi5L0CYVvHApyjgI9XB2QbZc/m uA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2y8udkk4j9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 17:00:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGwPjn165758;
-        Thu, 20 Feb 2020 17:00:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2y8udd650q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 17:00:39 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KH0bXN014803;
-        Thu, 20 Feb 2020 17:00:37 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 09:00:36 -0800
-Date:   Thu, 20 Feb 2020 09:00:35 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
-Message-ID: <20200220170035.GY9506@magnolia>
-References: <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
- <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
- <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
- <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
- <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
- <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
- <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
- <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
- <20200220163024.GV9506@magnolia>
- <20200220164957.GB20772@iweiny-DESK2.sc.intel.com>
+        Thu, 20 Feb 2020 12:01:36 -0500
+Received: by mail-qv1-f66.google.com with SMTP id u10so2211941qvi.2;
+        Thu, 20 Feb 2020 09:01:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cz+Bmf3nimaZlMz+RGVMMxd3Xvynr99CFi1TWALwo3s=;
+        b=tfOCeEJpkzK6U8IHyMx9BGVNMceqXoPuU6TMya+DNYKtVTTdkMiWicUPESH7XdSF/n
+         D+wRd7O3oixMPfN9xT9WN/OYuxtiFVXJlaD30Nceot3qbukMd5FGYJETSmyYq7P5YV3k
+         NZCf3ztuwiOieIwZgCM3+h1ZjU8IN5tXbOJlNxZovv/lJ6LUL8SBFmwi16h4xRQOYEJ4
+         iTfnpKGfycqP1Hj+1cR0ceLWhbQ0t1wF69tBO2rwzDv+gcWbG1eRqV0SH7uAkxAu6tmz
+         eUGS3obNZW/EBS3NraozqZhNpf1YGtRKbRYsAgv0wzjULpa2DdaExTm01+2UTh8yDZUh
+         p6Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cz+Bmf3nimaZlMz+RGVMMxd3Xvynr99CFi1TWALwo3s=;
+        b=NQS47FIVpYrk6riklf9z31TZEutph2TaAmKIc5uttbsEK5TfHJYCN0jJk6sxuUU3XV
+         0dAMrg8u6WYDnP+/WIQRVfOlDdjX5tw4nDMgAUXFMOThY8CP9Gfdnhe+HIJTWzYjDoQl
+         PhQ8xpauMTRLKtAUPIFQxobtk3+REq+rUZ1iDt9WAYb+Bb/KLNHpy/ta4iyJGKrD6yUm
+         7mLYgSfdZubkgUGExCNnVNmd5znBxo+zBCvp7fMpwP0qnVcxs1mvw3NAjmsz7ogyXwmN
+         iyaIyx6KODyUn7Y3aDmqAiuWKC8jDD/uUJqIVHZr/YY9LkyiH2hej51YfNLUDsUAkvNW
+         YEIg==
+X-Gm-Message-State: APjAAAWp7EbHITGRCo3gZmx3v2Wkz/JlwmIPI28XiGDbNxwTSKIyY1El
+        8NFro7XAijqxcidj8j11WGcUBb6zdUrrAMzWAyU=
+X-Google-Smtp-Source: APXvYqzPikzD+d/JCK30MCCr9zkafXhJSVACrgtepSek3WGV2tcjWhCpv7rBWPZtj6m5LtTCY7pMTa9YCMlAv4ATuwE=
+X-Received: by 2002:a0c:cd8e:: with SMTP id v14mr26355903qvm.182.1582218095573;
+ Thu, 20 Feb 2020 09:01:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220164957.GB20772@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200125
+References: <20200219191730.1277800-1-paulburton@kernel.org>
+ <20200219191730.1277800-3-paulburton@kernel.org> <20200220112330.GA3053@alpha.franken.de>
+ <CAKcpw6UDik=K6MdEayDPVaZP+BsqrbKoKAXJaHLERrxDmFF7+A@mail.gmail.com> <5E4E7E3E.6070608@wanyeetech.com>
+In-Reply-To: <5E4E7E3E.6070608@wanyeetech.com>
+From:   YunQiang Su <wzssyqa@gmail.com>
+Date:   Fri, 21 Feb 2020 01:01:24 +0800
+Message-ID: <CAKcpw6V-=bFG7O8a0SKbiAzQeHGzzaQD=8ZqVUhm8-B3PTA5xQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, wayne.sun@cipunited.com,
+        chris.wang@neocore.cn, Yunqiang Su <ysu@wavecomp.com>,
+        dongsheng.qiu@ingenic.com, xuwanhao@wanyeetech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 08:49:57AM -0800, Ira Weiny wrote:
-> On Thu, Feb 20, 2020 at 08:30:24AM -0800, Darrick J. Wong wrote:
-> > On Thu, Feb 20, 2020 at 08:20:28AM -0800, Ira Weiny wrote:
-> > > On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
-> > > > On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
-> > > > > Ira Weiny <ira.weiny@intel.com> writes:
-> > > > > > If my disassembly of read_pages is correct it looks like readpage is null which
-> > > > > > makes sense because all files should be IS_DAX() == true due to the mount option...
-> > > > > >
-> > > > > > But tracing code indicates that the patch:
-> > > > > >
-> > > > > > 	fs: remove unneeded IS_DAX() check
-> > > > > >
-> > > > > > ... may be the culprit and the following fix may work...
-> > > > > >
-> > > > > > diff --git a/mm/filemap.c b/mm/filemap.c
-> > > > > > index 3a7863ba51b9..7eaf74a2a39b 100644
-> > > > > > --- a/mm/filemap.c
-> > > > > > +++ b/mm/filemap.c
-> > > > > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
-> > > > > >         if (!count)
-> > > > > >                 goto out; /* skip atime */
-> > > > > >  
-> > > > > > -       if (iocb->ki_flags & IOCB_DIRECT) {
-> > > > > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
-> > > > > >                 struct file *file = iocb->ki_filp;
-> > > > > >                 struct address_space *mapping = file->f_mapping;
-> > > > > >                 struct inode *inode = mapping->host;
-> > > > > 
-> > > > > Well, you'll have to up-level the inode variable instantiation,
-> > > > > obviously.  That solves this particular issue.
-> > > > 
-> > > > Well...  This seems to be a random issue.  I've had BMC issues with
-> > > > my server most of the day...  But even with this patch I still get the failure
-> > > > in read_pages().  :-/
-> > > > 
-> > > > And I have gotten it to both succeed and fail with qemu...  :-/
-> > > 
-> > > ... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
-> > > out factoring in the flag logic changes we have agreed upon...
-> > > 
-> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> > > index 62d9f622bad1..d592949ad396 100644
-> > > --- a/fs/xfs/xfs_ioctl.c
-> > > +++ b/fs/xfs/xfs_ioctl.c
-> > > @@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
-> > >                 inode->i_flags |= S_NOATIME;
-> > >         else
-> > >                 inode->i_flags &= ~S_NOATIME;
-> > > -       if (xflags & FS_XFLAG_DAX)
-> > > +
-> > > +       if (xfs_inode_enable_dax(ip))
-> > >                 inode->i_flags |= S_DAX;
-> > >         else
-> > >                 inode->i_flags &= ~S_DAX;
-> > > -
-> > >  }
-> > > 
-> > > But the one thing which tripped me up, and concerns me, is we have 2 functions
-> > > which set the inode flags.
-> > > 
-> > > xfs_diflags_to_iflags()
-> > > xfs_diflags_to_linux()
-> > > 
-> > > xfs_diflags_to_iflags() is geared toward initialization but logically they do
-> > > the same thing.  I see no reason to keep them separate.  Does anyone?
-> > > 
-> > > Based on this find, the discussion on behavior in this thread, and the comments
-> > > from Dave I'm reworking the series because the flag check/set functions have
-> > > all changed and I really want to be as clear as possible with both the patches
-> > > and the resulting code.[*]  So v4 should be out today including attempting to
-> > > document what we have discussed here and being as clear as possible on the
-> > > behavior.  :-D
-> > > 
-> > > Thanks so much for testing this!
-> > > 
-> > > Ira
-> > > 
-> > > [*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
-> > > really don't see a reason to keep it.
-> > > 
-> > 
-> > I prefer you keep the one in xfs_iops.c since ioctls are a higher level
-> > function than general inode operations.
-> 
-> Makes sense.  Do you prefer the xfs_diflags_to_iflags() name as well?
+Zhou Yanjie <zhouyanjie@wanyeetech.com> =E4=BA=8E2020=E5=B9=B42=E6=9C=8820=
+=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=888:40=E5=86=99=E9=81=93=EF=BC=
+=9A
+>
+> Hi,
+>
+> CC people from Ingenic Semi and Wanyee Tech.
+>
+> On 2020=E5=B9=B402=E6=9C=8820=E6=97=A5 20:11, YunQiang Su wrote:
+> > CC people from NeoCore and CIP United, and my Wave Computing's mail add=
+ress.
+> >
+> > Thomas Bogendoerfer <tsbogend@alpha.franken.de> =E4=BA=8E2020=E5=B9=B42=
+=E6=9C=8820=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=887:23=E5=86=99=E9=
+=81=93=EF=BC=9A
+> >> On Wed, Feb 19, 2020 at 11:17:30AM -0800, Paul Burton wrote:
+> >>> My time with MIPS the company has reached its end, and so at best I'l=
+l
+> >>> have little time spend on maintaining arch/mips/. Reflect that in
+> >>> MAINTAINERS by changing status to Odd Fixes. Hopefully this might spu=
+r
+> >>> the involvement of someone with more time, but even if not it should
+> >>> help serve to avoid unrealistic expectations.
+> >> I'd like to jump in as MIPS maintainer. I'm doing Linux MIPS kernel
+> > It is a great news that you are willing to act as maintainer as Linux-M=
+IPS.
+> >
+> >> development since ages (started with an Olivetti M700 and kernel versi=
+on
+> >> 2.x) and right now time for doing the jobs isn't issue:-)
+> >>
+> > I noticed that you are mainly working some old machines.
+> > And recently years, there are some new machines from Ingenic, Loongson,=
+ MTK etc.
+> > MIPS Inc also have some MIPSr6 IPs.
+> > I think that you need some of these machines.
+>
+> I can provide some new Ingenic platform machines as a gift to Thomas.
+> Ingenic X1000 can be provided in a short time, it has been directly
+> supported by kernel 5.6.
+> X1830 and X2000 will be available later.
+>
+> > In the last years, we see that the single maintainer is not enough as p=
+eople may
+> > quite busy.
+> > Do you think that we need co-maintainers?
 
-I don't really care one way or another, so ... iflags wins by arbitrary
-choice! 8)
+Paul Cercueil also has interest about it. That's so cool.
 
---D
+As a suggestion, I think that we can have a maintainers team:
 
-> Ira
-> 
-> > 
-> > --D
+Option1: Paul Cercueil/Thomas Bogendoerfer/Jiaxun Yang
+Option2: Thomas Bogendoerfer/Paul Cercueil/Jiaxun Yang
+
+any idea?
+
+background:
+1. PaulC works lots for Ingenic support.
+2. Thomas works lots for some SGI IP and some other hardware
+3. Jiaxun works lots for Loongson hardware.
+
+
+
+> >
+> >> Thomas.
+> >>
+> >> --
+> >> Crap can work. Given enough thrust pigs will fly, but it's not necessa=
+rily a
+> >> good idea.                                                [ RFC1925, 2=
+.3 ]
+> >
+> >
+>
+
+
+--=20
+YunQiang Su
