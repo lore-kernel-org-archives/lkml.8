@@ -2,195 +2,343 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6BFC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42833C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE321206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JGkUCdur"
+	by mail.kernel.org (Postfix) with ESMTP id 069DF207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582231279;
+	bh=+FxN4LSrTpLPQ+BNOXbeHelQDANhytSaVcyEj0REqJQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=L+qh86ldy8y3V+qOIzIIYEbpTMdRFW81LDhjecJQgNHbqmrzG3m0CljL0zefHBdXK
+	 Z8GLT59EL2ePSZ5EnGU4R2D1oME27DgQyAhgXRZtnQfVJ9T4H7r7nLwt3Ex0Gh8PhW
+	 lBjk/bC91yFowKasGHj3o0VfmcMNzt0lI8iDdEdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgBTUjb (ORCPT
+        id S1729036AbgBTUlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:39:31 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2750 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728582AbgBTUjb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:39:31 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4eee740000>; Thu, 20 Feb 2020 12:39:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 12:39:30 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 12:39:30 -0800
-Received: from [10.2.163.58] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 20:39:28 +0000
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-To:     Rob Herring <robh@kernel.org>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Frank Chen <frankc@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
- <20200218231503.GA19099@bogus>
- <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
- <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <a41f3a6c-c6ed-4148-7af8-faf0cf36d67d@nvidia.com>
-Date:   Thu, 20 Feb 2020 12:39:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 15:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgBTUlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:41:17 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA51A206EF;
+        Thu, 20 Feb 2020 20:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582231276;
+        bh=+FxN4LSrTpLPQ+BNOXbeHelQDANhytSaVcyEj0REqJQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=aMf4pr44Fpuim07oaWGoniGQRxXw7tU+iE9mbHulidNSc68+JHvIAOfx4fp2YRZEC
+         Gtbzo4Ptu9lCOV7WVDWlLI/pUUSR8zWg9oXLPFurqZqlwvxj3aIPwEicxyWgcC2aIi
+         kMjq4KWpgPEtzUlQABDtsv0JoE91xifhAANHJ8HU=
+Message-ID: <9282539b8efcaccdd8d19197edb289828803d39c.camel@kernel.org>
+Subject: Re: [PATCH] ceph: re-org copy_file_range and fix error handling
+ paths
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Luis Henriques <lhenriques@suse.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 20 Feb 2020 15:41:14 -0500
+In-Reply-To: <20200217123649.12316-1-lhenriques@suse.com>
+References: <20200217123649.12316-1-lhenriques@suse.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582231156; bh=x3FSVTVnhy0xB8qhuAdvyWzG3JHJZQd1kGDJjAzQz10=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=JGkUCdurxr3SkgI7EvyQXUJOStOj4UBsFhEsTLa+UzobiHEdc3aeqclPmBz/gvmw4
-         Po68btgzdIaJcFU+TLyh5wSyJMb1p9ZJz7uX6trq82O0ZZty0cxWxslWrkCLzn6NI5
-         xGh+cykLu5ZrNO5KykmA7iWfhcyYF70HswLrckY1mTkcprmMYK0096OdOyhDqfdVaj
-         32LFT1p4VyTEMIy6G5sF1cS2eGRISg9XhIw6nxx9uyUz/kA1xM7gHMlaCd1SHDTzt4
-         th8HnIaKVzDwjsGxuPILSGf34/lzeVrajG/+IHKkqXJCdrWvzbKq4xWmjAL//nJwgy
-         XBoH+5OqJ7wNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 2020-02-17 at 12:36 +0000, Luis Henriques wrote:
+> This patch re-organizes copy_file_range, trying to fix a few issues in
+> error handling.  Here's the summary:
+> 
+> - Abort copy if initial do_splice_direct() returns fewer bytes than
+>   requested.
+> 
+> - Move the 'size' initialization (with i_size_read()) further down in the
+>   code, after the initial call to do_splice_direct().  This avoids issues
+>   with a possibly stale value if a manual copy is done.
+> 
+> - Move the object copy loop into a separate function.  This makes it
+>   easier to handle errors (e.g, dirtying caps and updating the MDS
+>   metadata if only some objects have been copied before an error has
+>   occurred).
+> 
+> - Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
+>   and dst_oloc
+> 
+> - After the object copy loop, the new file size to be reported to the MDS
+>   (if there's file size change) is now the actual file size, and not the
+>   size after an eventual extra manual copy.
+> 
+> - Added a few dout() to show the number of bytes copied in the two manual
+>   copies and in the object copy loop.
+> 
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+> Hi!
+> 
+> Initially I was going to have this patch split in a series, but then I
+> decided not to do that as this big patch allows (IMO) to better see the
+> whole picture.  But please let me know if you think otherwise and I can
+> split it in a few smaller patches.
+> 
+> I tried to cover all the issues that have been pointed out by Ilya, but I
+> may have missed something or, more likely, introduced new bugs ;-)
+> 
+> Cheers,
+> --
+> Luis
+> 
 
-On 2/20/20 11:45 AM, Rob Herring wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Tue, Feb 18, 2020 at 9:28 PM Sowjanya Komatineni
-> <skomatineni@nvidia.com> wrote:
->>
->> On 2/18/20 3:15 PM, Rob Herring wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
->>>> Tegra contains VI controller which can support up to 6 MIPI CSI
->>>> camera sensors.
->>>>
->>>> Each Tegra CSI port from CSI unit can be one-to-one mapper to
->>>> VI channel and can capture from an external camera sensor or
->>>> from built-in test pattern generator.
->>>>
->>>> This patch adds dt-bindings for Tegra VI and CSI.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>    .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
->>>>    1 file changed, 47 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> index 9999255ac5b6..3d0ed540a646 100644
->>>> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
->>>> @@ -40,14 +40,24 @@ of the following host1x client modules:
->>>>
->>>>      Required properties:
->>>>      - compatible: "nvidia,tegra<chip>-vi"
->>>> -  - reg: Physical base address and length of the controller's registers.
->>>> +  - reg: Physical base address and length of the controller registers.
->>>>      - interrupts: The interrupt outputs from the controller.
->>>> -  - clocks: Must contain one entry, for the module clock.
->>>> +  - clocks: Must contain an entry for the module clock "vi"
->>>>        See ../clocks/clock-bindings.txt for details.
->>>>      - resets: Must contain an entry for each entry in reset-names.
->>>>        See ../reset/reset.txt for details.
->>>> -  - reset-names: Must include the following entries:
->>>> -    - vi
->>>> +  - reset-names: Must include the entry "vi"
->>>> +
->>>> +  Tegra210 has CSI part of VI sharing same host interface and register
->>>> +  space. So, VI device node should have CSI child node.
->>>> +
->>>> +  - csi: mipi csi interface to vi
->>>> +
->>>> +    Required properties:
->>>> +    - compatible: "nvidia,tegra<chip>-csi"
->>>> +    - reg: Physical base address and length of the controller registers.
->>>> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
->>>> +      See ../clocks/clock-bindings.txt for details.
->>>>
->>>>    - epp: encoder pre-processor
->>>>
->>>> @@ -310,12 +320,41 @@ Example:
->>>>                 };
->>>>
->>>>                 vi {
->>>> -                     compatible = "nvidia,tegra20-vi";
->>>> -                     reg = <0x54080000 0x00040000>;
->>>> +                     compatible = "nvidia,tegra210-vi";
->>>> +                     reg = <0x0 0x54080000 0x0 0x700>;
->>>>                         interrupts = <0 69 0x04>;
->>>> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
->>>> -                     resets = <&tegra_car 100>;
->>>> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
->>>> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
->>>> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
->>>> +                     clock-names = "vi";
->>>> +                     resets = <&tegra_car 20>;
->>>>                         reset-names = "vi";
->>>> +
->>>> +                     #address-cells = <2>;
->>>> +                     #size-cells = <2>;
->>>> +
->>>> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
->>>> +
->>>> +                     csi@0x54080838 {
->>> Drop '0x'
->> Will fix in v4
->>>> +                             compatible = "nvidia,tegra210-csi";
->>>> +                             reg = <0x0 0x54080838 0x0 0x2000>;
->>> Kind of odd that this address and ranges address are not the same. And
->>> also wrong that the size here exceeds the bounds of ranges.
->>>
->>> Also, best practice is to make the child address 0 or relative to the
->>> parent.
->> Actual CSI starts at offset 0x808 but we don't use couple of registers
->> at offset 0x808.
->>
->> Will update ranges in v4 to start from 0x838 offset and will make child
->> address relative to parent.
-> Seems odd, but okay. And you will never, ever need to use those
-> registers no matter what, and we can reject any DT change trying to
-> change it later?
->
-> Rob
+Sorry for the delay in review!
 
-Yes not required to access them by driver.
+>  fs/ceph/file.c | 169 ++++++++++++++++++++++++++++---------------------
+>  1 file changed, 96 insertions(+), 73 deletions(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index c3b8e8e0bf17..4d90a275f9a5 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1931,6 +1931,71 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+>  	return 0;
+>  }
+>  
+> +static ssize_t ceph_do_objects_copy(struct ceph_inode_info *src_ci, u64 *src_off,
+> +				    struct ceph_inode_info *dst_ci, u64 *dst_off,
+> +				    struct ceph_fs_client *fsc,
+> +				    size_t len, unsigned int flags)
+> +{
+> +	struct ceph_object_locator src_oloc, dst_oloc;
+> +	struct ceph_object_id src_oid, dst_oid;
+> +	size_t bytes = 0;
+> +	u64 src_objnum, src_objoff, dst_objnum, dst_objoff;
+> +	u32 src_objlen, dst_objlen;
+> +	u32 object_size = src_ci->i_layout.object_size;
+> +	int ret;
+> +
+> +	src_oloc.pool = src_ci->i_layout.pool_id;
+> +	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+> +	dst_oloc.pool = dst_ci->i_layout.pool_id;
+> +	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+> +
+> +	while (len >= object_size) {
+> +		ceph_calc_file_object_mapping(&src_ci->i_layout, *src_off,
+> +					      object_size, &src_objnum,
+> +					      &src_objoff, &src_objlen);
+> +		ceph_calc_file_object_mapping(&dst_ci->i_layout, *dst_off,
+> +					      object_size, &dst_objnum,
+> +					      &dst_objoff, &dst_objlen);
+> +		ceph_oid_init(&src_oid);
+> +		ceph_oid_printf(&src_oid, "%llx.%08llx",
+> +				src_ci->i_vino.ino, src_objnum);
+> +		ceph_oid_init(&dst_oid);
+> +		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> +				dst_ci->i_vino.ino, dst_objnum);
+> +		/* Do an object remote copy */
+> +		ret = ceph_osdc_copy_from(&fsc->client->osdc,
+> +					  src_ci->i_vino.snap, 0,
+> +					  &src_oid, &src_oloc,
+> +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> +					  CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> +					  &dst_oid, &dst_oloc,
+> +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> +					  CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> +					  dst_ci->i_truncate_seq,
+> +					  dst_ci->i_truncate_size,
+> +					  CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> +		if (ret) {
+> +			if (ret == -EOPNOTSUPP) {
+> +				fsc->have_copy_from2 = false;
+> +				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+> +			}
+> +			dout("ceph_osdc_copy_from returned %d\n", ret);
+> +			if (!bytes)
+> +				bytes = ret;
+> +			goto out;
+> +		}
+> +		len -= object_size;
+> +		bytes += object_size;
+> +		*src_off += object_size;
+> +		*dst_off += object_size;
+> +	}
+> +
+> +out:
+> +	ceph_oloc_destroy(&src_oloc);
+> +	ceph_oloc_destroy(&dst_oloc);
+> +	return bytes;
+> +}
+> +
+>  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  				      struct file *dst_file, loff_t dst_off,
+>  				      size_t len, unsigned int flags)
+> @@ -1941,14 +2006,11 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+>  	struct ceph_cap_flush *prealloc_cf;
+>  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> -	struct ceph_object_locator src_oloc, dst_oloc;
+> -	struct ceph_object_id src_oid, dst_oid;
+> -	loff_t endoff = 0, size;
+> -	ssize_t ret = -EIO;
+> +	loff_t size;
+> +	ssize_t ret = -EIO, bytes;
+>  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+> -	u32 src_objlen, dst_objlen, object_size;
+> +	u32 src_objlen, dst_objlen;
+>  	int src_got = 0, dst_got = 0, err, dirty;
+> -	bool do_final_copy = false;
+>  
+>  	if (src_inode->i_sb != dst_inode->i_sb) {
+>  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> @@ -2026,22 +2088,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  	if (ret < 0)
+>  		goto out_caps;
+>  
+> -	size = i_size_read(dst_inode);
+> -	endoff = dst_off + len;
+> -
+>  	/* Drop dst file cached pages */
+>  	ret = invalidate_inode_pages2_range(dst_inode->i_mapping,
+>  					    dst_off >> PAGE_SHIFT,
+> -					    endoff >> PAGE_SHIFT);
+> +					    (dst_off + len) >> PAGE_SHIFT);
+>  	if (ret < 0) {
+>  		dout("Failed to invalidate inode pages (%zd)\n", ret);
+>  		ret = 0; /* XXX */
+>  	}
+> -	src_oloc.pool = src_ci->i_layout.pool_id;
+> -	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+> -	dst_oloc.pool = dst_ci->i_layout.pool_id;
+> -	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+> -
+>  	ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+>  				      src_ci->i_layout.object_size,
+>  				      &src_objnum, &src_objoff, &src_objlen);
+> @@ -2060,6 +2114,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  	 * starting at the src_off
+>  	 */
+>  	if (src_objoff) {
+> +		dout("Initial partial copy of %u bytes\n", src_objlen);
+> +
+>  		/*
+>  		 * we need to temporarily drop all caps as we'll be calling
+>  		 * {read,write}_iter, which will get caps again.
+> @@ -2067,8 +2123,9 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  		put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+>  		ret = do_splice_direct(src_file, &src_off, dst_file,
+>  				       &dst_off, src_objlen, flags);
+> -		if (ret < 0) {
+> -			dout("do_splice_direct returned %d\n", err);
+> +		/* Abort on short copies or on error */
+> +		if (ret < src_objlen) {
+> +			dout("Failed partial copy (%zd)\n", ret);
+>  			goto out;
+>  		}
+>  		len -= ret;
+> @@ -2081,62 +2138,29 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  		if (err < 0)
+>  			goto out_caps;
+>  	}
+> -	object_size = src_ci->i_layout.object_size;
+> -	while (len >= object_size) {
+> -		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+> -					      object_size, &src_objnum,
+> -					      &src_objoff, &src_objlen);
+> -		ceph_calc_file_object_mapping(&dst_ci->i_layout, dst_off,
+> -					      object_size, &dst_objnum,
+> -					      &dst_objoff, &dst_objlen);
+> -		ceph_oid_init(&src_oid);
+> -		ceph_oid_printf(&src_oid, "%llx.%08llx",
+> -				src_ci->i_vino.ino, src_objnum);
+> -		ceph_oid_init(&dst_oid);
+> -		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> -				dst_ci->i_vino.ino, dst_objnum);
+> -		/* Do an object remote copy */
+> -		err = ceph_osdc_copy_from(
+> -			&src_fsc->client->osdc,
+> -			src_ci->i_vino.snap, 0,
+> -			&src_oid, &src_oloc,
+> -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> -			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> -			&dst_oid, &dst_oloc,
+> -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> -			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> -			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> -			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> -		if (err) {
+> -			if (err == -EOPNOTSUPP) {
+> -				src_fsc->have_copy_from2 = false;
+> -				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+> -			}
+> -			dout("ceph_osdc_copy_from returned %d\n", err);
+> -			if (!ret)
+> -				ret = err;
+> -			goto out_caps;
+> -		}
+> -		len -= object_size;
+> -		src_off += object_size;
+> -		dst_off += object_size;
+> -		ret += object_size;
+> -	}
+>  
+> -	if (len)
+> -		/* We still need one final local copy */
+> -		do_final_copy = true;
+> +	size = i_size_read(dst_inode);
+> +	bytes = ceph_do_objects_copy(src_ci, &src_off, dst_ci, &dst_off,
+> +				     src_fsc, len, flags);
+> +	if (bytes <= 0) {
+> +		if (!ret)
+> +			ret = bytes;
+> +		goto out_caps;
+> +	}
 
-On T210, CSI registers under VI starts from location 0x54080808
+Suppose we did the front part with do_splice_direct (ret > 0), but then
+ceph_do_objects_copy fails (bytes < 0). We "goto out_caps" but then...
 
-SW don't need to access initial 3 registers at 0x54080808, 0x54080818, 
-0x54080828
+[...]
 
-Actual CSI registers that are needed for SW starts from 0x54080838.
+> @@ -2152,15 +2176,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>  out_caps:
+>  	put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+>  
+> -	if (do_final_copy) {
+> -		err = do_splice_direct(src_file, &src_off, dst_file,
+> -				       &dst_off, len, flags);
+> -		if (err < 0) {
+> -			dout("do_splice_direct returned %d\n", err);
+> -			goto out;
+> -		}
+> -		len -= err;
+> -		ret += err;
+> +	if (len && (ret >= 0)) {
+
+...len is still positive and we do_splice_direct again (probably at the
+wrong offset?), instead of just returning a short copy. I think we
+probably want to just stop any copying if it fails at any point along
+the way, right?
+
+> +		dout("Final partial copy of %zu bytes\n", len);
+> +		bytes = do_splice_direct(src_file, &src_off, dst_file,
+> +					 &dst_off, len, flags);
+> +		if (bytes > 0)
+> +			ret += bytes;
+> +		else
+> +			dout("Failed partial copy (%zd)\n", bytes);
+>  	}
+>  
+>  out:
+
+-- 
+Jeff Layton <jlayton@kernel.org>
 
