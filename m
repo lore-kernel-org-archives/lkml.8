@@ -2,89 +2,106 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D07F6C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606DFC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A947206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582227871;
-	bh=jy8tDLfzTXTYRcXEUoi81f9eEPJ1OWLxv/i9o6EZz5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s+0jngiEm+qgslsH3efOzZ1NRkspmUjK4RywO4LGjPMEC2EdVqTd7tlgQlxBh6dEO
-	 WduGjjom1SYNmGOO+aG5HIafVzBnY1mf8TSjvVdr97X/JnkD481jH51aQ6/scMkPMF
-	 Nlb1e0/30YNqQujxKhWztVzpDV4z4AmT5eb6mHvQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3BDCA206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QZ0uQ2KO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728889AbgBTTo3 (ORCPT
+        id S1728979AbgBTToo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:44:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:50330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgBTTo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:44:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E58B30E;
-        Thu, 20 Feb 2020 11:44:28 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 585C93F6CF;
-        Thu, 20 Feb 2020 11:44:27 -0800 (PST)
-Date:   Thu, 20 Feb 2020 19:44:25 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Introduce the TLV320ADCx140 codec family
-Message-ID: <20200220194425.GJ3926@sirena.org.uk>
-References: <20200219125942.22013-1-dmurphy@ti.com>
- <1d2b79f5-a928-adc5-b6f8-e73e0c061f75@ti.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ofZMSlrAVk9bLeVm"
-Content-Disposition: inline
-In-Reply-To: <1d2b79f5-a928-adc5-b6f8-e73e0c061f75@ti.com>
-X-Cookie: You are number 6!  Who is number one?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Feb 2020 14:44:44 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:46696 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbgBTToo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:44:44 -0500
+Received: by mail-pl1-f201.google.com with SMTP id t17so2755905plr.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=A+oVpb+Lk0C4bnIx0YQSuGzTprOuprdSgDwQ17Ryeq8=;
+        b=QZ0uQ2KOiOtz27OTmXVuPdy+gb5tJEgosgIPP20QlpfkVTPle1eV9rnsiQPHgrpD5X
+         qbCig5OBHinZv6GG1T/hbfwUB04jCeISf9ONeijcwbDWf5dM4cYHteDIz6CDSqJXe6pz
+         qPPQ/aG8Alq5YnJesmPag0mar3R4IwZTbwVBEADKHVxphochRgLSh935uNNpkEbn9PyC
+         1P8fOHwhNqXJlZmC6Cepf+cUttboYMo4a91VQoIsba8RVrHWdJZPaW9Kl34lcU+s9LrN
+         zl8Ehs5Wzl3LkrO7Frqat+skbWh5DML28CSifsderE2+WBhicJl6Mup+ZJeR+iQDguGt
+         VcMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=A+oVpb+Lk0C4bnIx0YQSuGzTprOuprdSgDwQ17Ryeq8=;
+        b=Y6/BkFwfJJ6fN2mizy3BJ3c3cSjBfKzxMkTwJ55ej413N2/FwK2KOTc5if04dQfQAt
+         Nj2XL8JxNSFaUfBp03rXFB18YSpD8yQLeoJv0YKcedLTxfxi01lzLlqMP0DEQFS5koN9
+         Ao9HXyZcfh4v4YQPn7TSbW+pSLgqyGm+g9LhaGlY7kZp8swEYoaiHKoDb0SNwgMXWU6F
+         CmegcQWbgfv2zFmysJUf4eMOqn0aKc0t0RA/mDxvJ7rrALb5JymjitFBuAJvGi8/8YjD
+         CoKH4d+NzoMnLa5DAbjwDWyblIVsOb3e5DdwF6LDNg9iuyVgFqSPW0jn98ATgAWRaQy2
+         Uz4A==
+X-Gm-Message-State: APjAAAV9FEi8jVexj+rvWyE+QDQMaPPQg9MG1qcysnSUAw0x6SEsiuHU
+        lzSgnrvCcdE0jHQvQ/ES+l9icpejc6WyPA==
+X-Google-Smtp-Source: APXvYqyDNBAd9llJr9uXqcKnHjQnxyRTE1k3X8Epf4THWj+dS6sSLVAZ4gd2YU4H44IvNCnSBzQLKMTRfm6Q4g==
+X-Received: by 2002:a63:790f:: with SMTP id u15mr33406976pgc.172.1582227883584;
+ Thu, 20 Feb 2020 11:44:43 -0800 (PST)
+Date:   Thu, 20 Feb 2020 11:44:31 -0800
+Message-Id: <20200220194431.169629-1-yonghyun@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] iommu/vt-d: Fix a bug in intel_iommu_iova_to_phys() for
+ huge page
+From:   Yonghyun Hwang <yonghyun@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Havard Skinnemoen <hskinnemoen@google.com>,
+        Deepa Dinamani <deepadinamani@google.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Yonghyun Hwang <yonghyun@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+intel_iommu_iova_to_phys() has a bug when it translates an IOVA for a huge
+page onto its corresponding physical address. This commit fixes the bug by
+accomodating the level of page entry for the IOVA and adds IOVA's lower
+address to the physical address.
 
---ofZMSlrAVk9bLeVm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Yonghyun Hwang <yonghyun@google.com>
+---
 
-On Thu, Feb 20, 2020 at 01:24:14PM -0600, Dan Murphy wrote:
-> On 2/19/20 6:59 AM, Dan Murphy wrote:
+Changes from v1:
+- level cannot be 0. So, the condition, "if (level > 1)", is removed, which results in a simple code.
+- a macro, BIT_MASK, is used to have a bit mask
 
-> > TLV320ADC3140 - http://www.ti.com/lit/gpn/tlv320adc3140
-> > TLV320ADC5140 - http://www.ti.com/lit/gpn/tlv320adc5140
-> > TLV320ADC6140 - http://www.ti.com/lit/gpn/tlv320adc6140
+---
+ drivers/iommu/intel-iommu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Please let me know if there are any additional review comments on this code
-> I have 2 more feature add patches on top of this patch that I developed a
-> couple days ago and don't want to submit them for review until this driver
-> is integrated.
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 932267f49f9a..4fd5c6287b6d 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5554,7 +5554,9 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
+ 
+ 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+ 	if (pte)
+-		phys = dma_pte_addr(pte);
++		phys = dma_pte_addr(pte) +
++			(iova & (BIT_MASK(level_to_offset_bits(level) +
++						VTD_PAGE_SHIFT) - 1));
+ 
+ 	return phys;
+ }
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
-You posted this just a bit over 24 hours ago...
-
---ofZMSlrAVk9bLeVm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O4ZgACgkQJNaLcl1U
-h9Bvawf+N0d9mAzg22+fazMaFpDweaoHxUZbPEW2IwwhC4GBJ95/Z80s2bfVxRgN
-Tdw4akcgXjSzh358u0LZsuAee0G0uNA4KDBLn/SShioH2tdoWpGCtYGNEToJocxS
-hhTEk6xnSfIfJz0gOATZZ2JD8+FdbO3d9GxiuAKQnqa04540oaYbE3MfFHn/zb2t
-o+756jzCn60wXDG6qX1Nb4vvRwZoenkPku7R8zK9h9dp/8CiPXZm9EDz4dFSifCJ
-wv37xTF5niLrs+wdWoXZPv/M7rhP2Y4dT0Vm9lgk56awZqHi1P6SgajisjTTUYHm
-ormGVILCOhrjurk/IqptKkPFs31mTQ==
-=pCGf
------END PGP SIGNATURE-----
-
---ofZMSlrAVk9bLeVm--
