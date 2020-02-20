@@ -2,32 +2,32 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 719D6C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29E0C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC9B206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852C1206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgBTUn6 (ORCPT
+        id S1729117AbgBTUn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:43:58 -0500
+        Thu, 20 Feb 2020 15:43:59 -0500
 Received: from mga12.intel.com ([192.55.52.136]:13654 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728582AbgBTUn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:43:58 -0500
+        id S1728582AbgBTUn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:43:59 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 12:43:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="349237088"
+   d="scan'208";a="349237095"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2020 12:43:57 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2020 12:43:58 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,10 +36,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 00/10] KVM: x86: Clean up VMX's TLB flushing code
-Date:   Thu, 20 Feb 2020 12:43:46 -0800
-Message-Id: <20200220204356.8837-1-sean.j.christopherson@intel.com>
+Subject: [PATCH 02/10] KVM: VMX: Move vpid_sync_vcpu_addr() down a few lines
+Date:   Thu, 20 Feb 2020 12:43:48 -0800
+Message-Id: <20200220204356.8837-3-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200220204356.8837-1-sean.j.christopherson@intel.com>
+References: <20200220204356.8837-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,57 +49,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series is technically x86 wide, but it only superficially affects
-SVM, the motivation and primary touchpoints are all about VMX.
+Move vpid_sync_vcpu_addr() below vpid_sync_context() so that it can be
+refactored in a future patch to call vpid_sync_context() directly when
+the "individual address" INVVPID variant isn't supported.
 
-The goal of this series to ultimately clean up __vmx_flush_tlb(), which,
-for me, manages to be extremely confusing despite being only ten lines of
-code.
+No functional change intended.
 
-The most confusing aspect of __vmx_flush_tlb() is that it is overloaded
-for multiple uses:
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/ops.h | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
- 1) TLB flushes in response to a change in KVM's MMU
-
- 2) TLB flushes during nested VM-Enter/VM-Exit when VPID is enabled
-
- 3) Guest-scoped TLB flushes for paravirt TLB flushing
-
-Handling (2) and (3) in the same flow as (1) is kludgy, because the rules
-for (1) are quite different than the rules for (2) and (3).  They're all
-squeezed into __vmx_flush_tlb() via the @invalidate_gpa param, which means
-"invalidate gpa mappings", not "invalidate a specific gpa"; it took me
-forever and a day to realize that.
-
-To clean things up, handle (2) by directly calling vpid_sync_context()
-instead of bouncing through __vmx_flush_tlb(), and handle (3) via a
-dedicated kvm_x86_ops hook.  This allows for a less tricky implementation
-of vmx_flush_tlb() for (1), and (hopefully) clarifies the rules for what
-mappings must be invalidated when.
-
-Sean Christopherson (10):
-  KVM: VMX: Use vpid_sync_context() directly when possible
-  KVM: VMX: Move vpid_sync_vcpu_addr() down a few lines
-  KVM: VMX: Handle INVVPID fallback logic in vpid_sync_vcpu_addr()
-  KVM: VMX: Fold vpid_sync_vcpu_{single,global}() into
-    vpid_sync_context()
-  KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
-  KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
-  KVM: VMX: Clean up vmx_flush_tlb_gva()
-  KVM: x86: Drop @invalidate_gpa param from kvm_x86_ops' tlb_flush()
-  KVM: VMX: Drop @invalidate_gpa from __vmx_flush_tlb()
-  KVM: VMX: Fold __vmx_flush_tlb() into vmx_flush_tlb()
-
- arch/x86/include/asm/kvm_host.h |  8 +++++++-
- arch/x86/kvm/mmu/mmu.c          |  2 +-
- arch/x86/kvm/svm.c              | 14 ++++++++++----
- arch/x86/kvm/vmx/nested.c       | 12 ++++--------
- arch/x86/kvm/vmx/ops.h          | 32 +++++++++-----------------------
- arch/x86/kvm/vmx/vmx.c          | 26 +++++++++++++++++---------
- arch/x86/kvm/vmx/vmx.h          | 19 ++++++++++---------
- arch/x86/kvm/x86.c              |  8 ++++----
- 8 files changed, 62 insertions(+), 59 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 45eaedee2ac0..a2b0689e65e3 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -253,19 +253,6 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+ 	vmx_asm2(invept, "r"(ext), "m"(operand), ext, eptp, gpa);
+ }
+ 
+-static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
+-{
+-	if (vpid == 0)
+-		return true;
+-
+-	if (cpu_has_vmx_invvpid_individual_addr()) {
+-		__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR, vpid, addr);
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+ static inline void vpid_sync_vcpu_single(int vpid)
+ {
+ 	if (vpid == 0)
+@@ -289,6 +276,19 @@ static inline void vpid_sync_context(int vpid)
+ 		vpid_sync_vcpu_global();
+ }
+ 
++static inline bool vpid_sync_vcpu_addr(int vpid, gva_t addr)
++{
++	if (vpid == 0)
++		return true;
++
++	if (cpu_has_vmx_invvpid_individual_addr()) {
++		__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR, vpid, addr);
++		return true;
++	}
++
++	return false;
++}
++
+ static inline void ept_sync_global(void)
+ {
+ 	__invept(VMX_EPT_EXTENT_GLOBAL, 0, 0);
 -- 
 2.24.1
 
