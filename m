@@ -2,81 +2,79 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A3FC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18468C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E9324654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:19:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jfi729bG"
+	by mail.kernel.org (Postfix) with ESMTP id EA36024654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgBTITd (ORCPT
+        id S1726878AbgBTIUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:19:33 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37159 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbgBTITd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:19:33 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b15so2371501lfc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:19:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D8w/ISG8KFq/Fjl3981G7oGuaDvri7xJtq4icnzIEzA=;
-        b=Jfi729bGUdIJ61fCox5a+GbkxisR/QQuT47B6cHyq+g86Nph/W5xrAjZQ61yrw5Mnq
-         KKxlQbEp/Wmg3NI2TgqVb0ibWDSKZZmrRW1d9eq8ZHF89JMbmBq6vipNkofRJBqvX8RX
-         ovUfISec35kjOh8yE6nmbP3uu1fnbBrfyjS33Sp0qYphqdRNXnjmZxdNoDYhpWGoEEcD
-         51F7mt1jXBmthLZVJ/DpGQPese09fTQ8yAuyALTjgl+eloyf2o1SAPqWVaHQl6vmozYf
-         WAUwLB5AoYXTEX7LzrxgG2VcOqAAM119LUiyJYfbDt2tbC0ZEOegShWcfpD85SwudAEW
-         ppYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D8w/ISG8KFq/Fjl3981G7oGuaDvri7xJtq4icnzIEzA=;
-        b=Nl0KLhkNP5sVPVyrx+iDr+iYhSld1Zv1IravA4Hm9TiFjtYJz5STUsnHKM0mnBxZFI
-         nGPbcwa+vIMeraCieSJeEU0bnwhLYeGKn3Yn+t4CGOho/ObWahyAatagNc7qs/U619hh
-         OrBrYa3oVKjNQeUic8BKV57dywgqdj3mEzGChsL3kb7bqtGPSLiy19LE7Tx8mQ3RYRql
-         bzV9nQyJzD+pAVeNqyOGDdyHAoWrSxnhuyMk43UPFj0xd6jNNTQHApFtNn+djYOhQVIl
-         AzC79YtOhRZArFIy6pic5R2eec1FL9HZCSgFFHqnt+dmyp4T2MfDM6QltOHPBUs3XfTl
-         TRHQ==
-X-Gm-Message-State: APjAAAXdl009IGccxko0tqQgcDqIG1fKQgePgvdCE/g9iFREFqK6S4tT
-        MZmaFlnrBVSyhu1cY6piXayT+QcED8RP2XMhMAipkg==
-X-Google-Smtp-Source: APXvYqwM4myztaWN91fnjDuBms++WacpRwVJCXlpdWUEazIxZNYjBbC6EO58B6ksaRjwN2Gnhr1XpXJC9fpdxJgP+Zk=
-X-Received: by 2002:ac2:4d04:: with SMTP id r4mr16046600lfi.77.1582186771011;
- Thu, 20 Feb 2020 00:19:31 -0800 (PST)
+        Thu, 20 Feb 2020 03:20:03 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726766AbgBTIUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:20:03 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 70D15595F2CA640EE134;
+        Thu, 20 Feb 2020 16:20:00 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 20 Feb
+ 2020 16:19:50 +0800
+Subject: Re: [PATCH v3] erofs: convert workstn to XArray
+To:     Gao Xiang <gaoxiang25@huawei.com>, <linux-erofs@lists.ozlabs.org>
+CC:     Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Miao Xie <miaoxie@huawei.com>
+References: <20200220024642.91529-1-gaoxiang25@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <c3372d97-ec77-6928-719e-39195c8c33f8@huawei.com>
+Date:   Thu, 20 Feb 2020 16:19:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200209095600.16394-1-ashish.gschavan@gmail.com>
-In-Reply-To: <20200209095600.16394-1-ashish.gschavan@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Feb 2020 09:19:20 +0100
-Message-ID: <CACRpkdbYEpcugZ5Y=opmASC1JXfojv979ykp=q8mcknOAif4sg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: rcar: Fix typo in comment
-To:     Ashish Chavan <ashish.gschavan@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        ashish.gschavn@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200220024642.91529-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 10:56 AM Ashish Chavan <ashish.gschavan@gmail.com> wrote:
+On 2020/2/20 10:46, Gao Xiang wrote:
+> XArray has friendly APIs and it will replace the old radix
+> tree in the near future.
+> 
+> This convert makes use of __xa_cmpxchg when inserting on
+> a just inserted item by other thread. In detail, instead
+> of totally looking up again as what we did for the old
+> radix tree, it will try to legitimize the current in-tree
+> item in the XArray therefore more effective.
+> 
+> In addition, naming is rather a challenge for non-English
+> speaker like me. The basic idea of workstn is to provide
+> a runtime sparse array with items arranged in the physical
+> block number order. Such items (was called workgroup) can be
+> used to record compress clusters or for later new features.
+> 
+> However, both workgroup and workstn seem not good names from
+> whatever point of view, so I'd like to rename them as pslot
+> and managed_pslots to stand for physical slots. This patch
+> handles the second as a part of the radix tree convert.
+> 
+> Cc: Chao Yu <yuchao0@huawei.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-> "Positive" is spelled incorrectly as "Postive" in
-> comment fix this.
->
-> Signed-off-by: Ashish Chavan <ashish.gschavan@gmail.com>
+Looks good to me.
 
-Patch applied.
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Yours,
-Linus Walleij
+Thanks,
