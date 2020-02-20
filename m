@@ -2,133 +2,83 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFA9C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD04CC11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF8824676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582201188;
-	bh=T6827mSnyvKgT9BHC3wiK1eVbFXxKEp7/bfCsigzPZs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GYQBXue6DCpmccn/dcWgdUZ4Kni4pMM7UJVw3XerzIR9Ai2tgYhjLb0zxwVJ/OeNd
-	 sPI50gUzljCyd2v1n2xbWV9TnJGUv2yWlgdmCZ9KJqhEyXFASL8HNjwLPx07iJ3P6S
-	 /MhyJpyOTRAJL8oLX2oIN1A/s1uDyfrSXxh0hjBE=
+	by mail.kernel.org (Postfix) with ESMTP id 9418724656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:22:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWb9yP5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBTMTr (ORCPT
+        id S1727964AbgBTMWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:19:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727393AbgBTMTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:19:46 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 20 Feb 2020 07:22:17 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26712 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726921AbgBTMWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:22:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582201336;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sgne7vEZYUlNT6R014gNlgb5JFShF1C38DgPIAIxt3w=;
+        b=UWb9yP5pvcl6LRmgc+Z7lh6XPQb4U83KhT/z5UCaz87pWCPiyzdJQ4Nt815NpyXsI+aSua
+        UgIzDd4BVByPQxznXCcu5c9NMUrFprSyK9uJSCxup39A78GtkfjTgMqqHc2Ef1BYHLS0hy
+        PEU5rVLsY0m3yE0V1jFmk/DB5jFlBI4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-rleZgANVOiu2qcgllCao9w-1; Thu, 20 Feb 2020 07:22:13 -0500
+X-MC-Unique: rleZgANVOiu2qcgllCao9w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE6A24673;
-        Thu, 20 Feb 2020 12:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582201186;
-        bh=T6827mSnyvKgT9BHC3wiK1eVbFXxKEp7/bfCsigzPZs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XJbOnNma1ZE5C61k2a440CqZHNfIZxi6rNO2s3xSpiWOvNuo6xyO15l+z61gWMMjE
-         RMy2wzNPSBDvA9F+aR/zeVzGZzySVg9VHdsIgzKNC9HbDZYWCUbESdoygHrYgpZjQf
-         z0aFhXqiWY03ahY+qg3egxuZmDT1ltiki254Jf1U=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 8/8] bootconfig: Print array as multiple commands for legacy command line
-Date:   Thu, 20 Feb 2020 21:19:42 +0900
-Message-Id: <158220118213.26565.8163300497009463916.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <158220110257.26565.4812934676257459744.stgit@devnote2>
-References: <158220110257.26565.4812934676257459744.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE29318C35A1;
+        Thu, 20 Feb 2020 12:22:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF5E819C4F;
+        Thu, 20 Feb 2020 12:22:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200219163705.GC9496@magnolia>
+References: <20200219163705.GC9496@magnolia> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204552063.3299825.17824500635078230412.stgit@warthog.procyon.org.uk>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/19] fsinfo: Provide a bitmap of supported features [ver #16]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <596566.1582201328.1@warthog.procyon.org.uk>
+Date:   Thu, 20 Feb 2020 12:22:08 +0000
+Message-ID: <596567.1582201328@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print arraied values as multiple same options for legacy
-kernel command line. With this rule, if the "kernel.*" and
-"init.*" array entries in bootconfig are printed out as
-multiple same options, e.g.
+Darrick J. Wong <darrick.wong@oracle.com> wrote:
 
-kernel {
- console = "ttyS0,115200"
- console += "tty0"
-}
+> > +struct fsinfo_features {
+> > +	__u8	features[(FSINFO_FEAT__NR + 7) / 8];
+> 
+> Hm...the structure size is pretty small (56 bytes) and will expand as we
+> add new _FEAT flags.  Is this ok because the fsinfo code will truncate
+> its response to userspace to whatever buffer size userspace tells it?
 
-will be correctly converted to
+Yes.  Also, you can ask fsinfo how many feature bits it supports.
 
-console="ttyS0,115200" console="tty0"
+I should put this in the struct first rather than putting it elsewhere.
 
-in the kernel command line.
-
-Reported-by: Borislav Petkov <bp@alien8.de>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- init/main.c |   22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
-
-diff --git a/init/main.c b/init/main.c
-index 821c582af49b..19a5577e0bb0 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -268,7 +268,6 @@ static int __init xbc_snprint_cmdline(char *buf, size_t size,
- {
- 	struct xbc_node *knode, *vnode;
- 	char *end = buf + size;
--	char c = '\"';
- 	const char *val;
- 	int ret;
- 
-@@ -279,25 +278,20 @@ static int __init xbc_snprint_cmdline(char *buf, size_t size,
- 			return ret;
- 
- 		vnode = xbc_node_get_child(knode);
--		ret = snprintf(buf, rest(buf, end), "%s%c", xbc_namebuf,
--				vnode ? '=' : ' ');
--		if (ret < 0)
--			return ret;
--		buf += ret;
--		if (!vnode)
-+		if (!vnode) {
-+			ret = snprintf(buf, rest(buf, end), "%s ", xbc_namebuf);
-+			if (ret < 0)
-+				return ret;
-+			buf += ret;
- 			continue;
--
--		c = '\"';
-+		}
- 		xbc_array_for_each_value(vnode, val) {
--			ret = snprintf(buf, rest(buf, end), "%c%s", c, val);
-+			ret = snprintf(buf, rest(buf, end), "%s=\"%s\" ",
-+				       xbc_namebuf, val);
- 			if (ret < 0)
- 				return ret;
- 			buf += ret;
--			c = ',';
- 		}
--		if (rest(buf, end) > 2)
--			strcpy(buf, "\" ");
--		buf += 2;
- 	}
- 
- 	return buf - (end - size);
+David
 
