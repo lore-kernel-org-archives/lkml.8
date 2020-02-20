@@ -2,116 +2,153 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73292C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1327C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51EAC24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C891824654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="D0KB/4YV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgBTIRI (ORCPT
+        id S1726893AbgBTIRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:17:08 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36935 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgBTIRI (ORCPT
+        Thu, 20 Feb 2020 03:17:42 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:10017 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgBTIRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:17:08 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b3so1669779otp.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:17:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sD2J/5uum42C2xZRjOEEGhvwf/LUtVUFDgCu9pCttwo=;
-        b=E/bhVv/IQYElaYIlz2E3abNKPvoHYfgYg6qW0WxNyf5gKNa8uG2dFF+wOXY9qGIEc9
-         k0xV+UefNUIGs0LaYzrRaGO0zkwnlDx26Gg43GLDh+Oi9wUS1JFGvT6n869N+8aHd5Ex
-         ntJO+sDIrBuUORAwrC7KFLKTGdxFLz3w9wJcYtvkBwkm9rAp3Toa7WdtoMlI8yv8OSpF
-         wSFryv6wjGNIgdtjsyZ7J5Mp4/QwuDW7p6s4qEywKIvhkJAII72HGjl8PLDxPTT3Rx1c
-         XR8bohZ+cY7QT3T7VHynJTqP09r5b7/nx8n9cHg9P3Q/ATFGUCl7OtJzF7xtgrkzAB4/
-         9S5w==
-X-Gm-Message-State: APjAAAVvu0v87vXCXTzWj3Seqdj2uu3ylBHBlexyri2+T95sxGhqWV0Q
-        pebVoWvdSeqWLQSHg1PY+pkQCkJ6ULqh/J26hiE=
-X-Google-Smtp-Source: APXvYqwItDQQVwf7oA5GRL9lws1n+HFJcGAVqsbPVF//RiENrTsIKFqFA6VEWAG6qqdVc8WTfok+ws2CoKk3IGufgI4=
-X-Received: by 2002:a9d:7602:: with SMTP id k2mr22857306otl.39.1582186627028;
- Thu, 20 Feb 2020 00:17:07 -0800 (PST)
+        Thu, 20 Feb 2020 03:17:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1582186662; x=1613722662;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=RLTXfx7fYdK319XaeyXL5HDwJIQwzFkcbgDe8LGSdWA=;
+  b=D0KB/4YVA0SmLyGX2GZmaGnPeCrIXZqZH8XWJDqAGjDx6ubrbUlqK+cu
+   PO5pC9SKU0DZB+XrtYMHj/VfrJwUv/CzVAyqaBK6akrCUQl7gny3TfIX6
+   FJpwz+BzrOi1HKEX0A10/LzAkiDTvICe3C6K0hkRr9fY6rVFIDWus3JyA
+   Y=;
+IronPort-SDR: VMdHx0aL2wlJwG7+qs5TKuDlO/e4vPV6vY+s/Qs5VqSBsTTWC4cluGFk7Fu2E5reftsEEwjPWV
+ 25+EcFAggvZA==
+X-IronPort-AV: E=Sophos;i="5.70,463,1574121600"; 
+   d="scan'208";a="26277303"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 20 Feb 2020 08:17:40 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2c-4e7c8266.us-west-2.amazon.com (Postfix) with ESMTPS id 46840A040E;
+        Thu, 20 Feb 2020 08:17:37 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Thu, 20 Feb 2020 08:17:36 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.162.53) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 20 Feb 2020 08:17:25 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     SeongJae Park <sjpark@amazon.com>
+CC:     <akpm@linux-foundation.org>, SeongJae Park <sjpark@amazon.de>,
+        <acme@kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <amit@kernel.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <dwmw@amazon.com>,
+        <jolsa@redhat.com>, <kirill@shutemov.name>, <mark.rutland@arm.com>,
+        <mgorman@suse.de>, <minchan@kernel.org>, <mingo@redhat.com>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <rdunlap@infradead.org>, <rostedt@goodmis.org>, <shuah@kernel.org>,
+        <sj38.park@gmail.com>, <vdavydov.dev@gmail.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 00/14] Introduce Data Access MONitor (DAMON)
+Date:   Thu, 20 Feb 2020 09:17:10 +0100
+Message-ID: <20200220081710.15211-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200217102544.29012-1-sjpark@amazon.com> (raw)
 MIME-Version: 1.0
-References: <158218358363.6940.18380270211351882136.stgit@devnote2> <158218359349.6940.8460152450938960505.stgit@devnote2>
-In-Reply-To: <158218359349.6940.8460152450938960505.stgit@devnote2>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Feb 2020 09:16:56 +0100
-Message-ID: <CAMuHMdVDBMii5RPiMkRo1XbFTiivbJASFUWQBn8_dU1Q5uRSzA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] bootconfig: Set CONFIG_BOOT_CONFIG=n by default
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.53]
+X-ClientProxiedBy: EX13D23UWA004.ant.amazon.com (10.43.160.72) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hiramatsu-san,
+On Mon, 17 Feb 2020 11:25:30 +0100 SeongJae Park <sjpark@amazon.com> wrote:
 
-On Thu, Feb 20, 2020 at 8:26 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> Set CONFIG_BOOT_CONFIG=n by default. This also warns
-> user if CONFIG_BOOT_CONFIG=n but "bootconfig" is given
-> in the kernel command line.
->
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> From: SeongJae Park <sjpark@amazon.de>
+> 
+> Introduction
+> ============
+> 
+> Memory management decisions can be improved if finer data access information is
+> available.  However, because such finer information usually comes with higher
+> overhead, most systems including Linux forgives the potential improvement and
+> rely on only coarse information or some light-weight heuristics.  The
+> pseudo-LRU and the aggressive THP promotions are such examples.
+> 
+> A number of experimental data access pattern awared memory management
+> optimizations (refer to 'Appendix A' for more details) say the sacrifices are
+> huge.  However, none of those has successfully adopted to Linux kernel mainly
+> due to the absence of a scalable and efficient data access monitoring
+> mechanism.  Refer to 'Appendix B' to see the limitations of existing memory
+> monitoring mechanisms.
+> 
+> DAMON is a data access monitoring subsystem for the problem.  It is 1) accurate
+> enough to be used for the DRAM level memory management (a straightforward
+> DAMON-based optimization achieved up to 2.55x speedup), 2) light-weight enough
+> to be applied online (compared to a straightforward access monitoring scheme,
+> DAMON is up to 94.242.42x lighter) and 3) keeps predefined upper-bound overhead
+> regardless of the size of target workloads (thus scalable).  Refer to 'Appendix
+> C' if you interested in how it is possible.
+> 
+> DAMON has mainly designed for the kernel's memory management mechanisms.
+> However, because it is implemented as a standalone kernel module and provides
+> several interfaces, it can be used by a wide range of users including kernel
+> space programs, user space programs, programmers, and administrators.  DAMON
+> is now supporting the monitoring only, but it will also provide simple and
+> convenient data access pattern awared memory managements by itself.  Refer to
+> 'Appendix D' for more detailed expected usages of DAMON.
 
-Thanks for your patch!
+So, with this patchset, you can (1) do data access pattern based memory
+management optimizations and (2) analyze your program's dynamic data access
+pattern.  For the analysis, this patchset also supports visualization of the
+pattern in (1) heatmap form and distribution of the (2-1) dynamic working set
+size and (2-2) monitoring overhead.
 
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1218,7 +1218,7 @@ endif
->  config BOOT_CONFIG
->         bool "Boot config support"
->         depends on BLK_DEV_INITRD
-> -       default y
-> +       default n
+To help you better understand what DAMON can give you, I made web pages showing
+the visualized dynamic data access pattern of various realistic workloads,
+which I picked up from PARSEC3 and SPLASH-2X bechmark suites.  Note that
+another big part of DAMON's usecases, access pattern based optimization is not
+demonstrated in the pages, yet.
 
-"default n" is the default, so you can just drop the line.
+There are pages showing the heatmap format dynamic access pattern of each
+workload for heap area[1], mmap()-ed area[2], and stack[3] area.  I splitted
+the entire address space to the three area because the total address space is
+too huge.
 
->         help
->           Extra boot config allows system admin to pass a config file as
->           complemental extension of kernel cmdline when booting.
-> diff --git a/init/main.c b/init/main.c
-> index 59248717c925..680ff7123705 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -418,6 +418,14 @@ static void __init setup_boot_config(const char *cmdline)
->  }
->  #else
->  #define setup_boot_config(cmdline)     do { } while (0)
-> +
-> +static int __init warn_bootconfig(char *str)
-> +{
-> +       pr_err("WARNING: 'bootconfig' found on the kernel command line but CONFIG_BOOTCONFIG is not set.\n");
+You can also show how the dynamic working set size of each workload is
+distributed, and how it is changing chronologically[5].
 
-pr_warn()?
+The biggest characteristic of DAMON is its promise of the upperbound of
+the monitoring overhead.  To show whether DAMON keeps the promise well, I
+visualized the number of monitoring operations required for each 5
+milliseconds, which is configured to not exceed 1000.  You can show the
+distribution of the numbers[6] and how it changes chronologically[7].
 
-> +       return 0;
-> +}
-> +early_param("bootconfig", warn_bootconfig);
-> +
->  #endif
+As previously mentioned, these are only a fraction of the outputs of DAMON.  I
+believe DAMON can be used for more wide and creative purposes.  Nonetheless, I
+hope the pages help you understand what DAMON can give you in more intuitive
+fashion.
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1] https://damonitor.github.io/reports/latest/by_image/heatmap.0.png.html
+[2] https://damonitor.github.io/reports/latest/by_image/heatmap.1.png.html
+[3] https://damonitor.github.io/reports/latest/by_image/heatmap.2.png.html
+[4] https://damonitor.github.io/reports/latest/by_image/wss_sz.png.html
+[5] https://damonitor.github.io/reports/latest/by_image/wss_time.png.html
+[6] https://damonitor.github.io/reports/latest/by_image/nr_regions_sz.png.html
+[7] https://damonitor.github.io/reports/latest/by_image/nr_regions_time.png.html
