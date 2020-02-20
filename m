@@ -2,55 +2,56 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30BADC11D0E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD48C11D0A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED872467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8E724673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="YUVwVNYx"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="jnkBtvxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgBTM1n (ORCPT
+        id S1728162AbgBTM2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:27:43 -0500
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:23429 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgBTM1m (ORCPT
+        Thu, 20 Feb 2020 07:28:06 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:60184 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbgBTM1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:27:42 -0500
+        Thu, 20 Feb 2020 07:27:43 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id DD9EA3F65E;
-        Thu, 20 Feb 2020 13:27:40 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=YUVwVNYx;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 413D93F53F;
+        Thu, 20 Feb 2020 13:27:41 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=jnkBtvxg;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id suS8Fnzl-PuE; Thu, 20 Feb 2020 13:27:39 +0100 (CET)
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9-VwuXEww7Sp; Thu, 20 Feb 2020 13:27:40 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id D77BD3F481;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id F35293F439;
         Thu, 20 Feb 2020 13:27:34 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 10D7536016C;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id AB17C360481;
         Thu, 20 Feb 2020 13:27:34 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1582201654; bh=IXNf/Qbi8TyXfdlIfuX8eOlUFvlWatv8T9EkfzwiBlM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YUVwVNYxXZ8kFmNnFRiXwjX0URvz/NEyhVNuWQ3Cmhu+eSHIBGq+ggUWDS/XMDWfr
-         49Y5X+zRVYCGXGTPCVOWEWBRsmEyyhI725h/K/v3wQkp2ruPcdo5D2gwS2CwACljtl
-         u7su0Wm7s2eqin4yCC6/sYLO541Css8WqirycZ+E=
+        t=1582201654; bh=PC0ObXncuosXfOTedLamOENbqJpHqToCf6XcPkZEDYc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jnkBtvxgh6o45fzUEAHlgpicyBxUvgLhz7rw8uPrCo5jNTC+eLMpwbszQ3xDAdxXd
+         3Ckxxfs1FCWa6rkwIwR0Ho3fmtFHNCFWmBJA+GLeKJrU5/8QT1rIWMPFVfgTWGx+1h
+         /MICBwmB05bISlxvALyJxmlrwNtsxQlyAUaxDNS8=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@suse.com>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -59,10 +60,12 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v4 0/9] Huge page-table entries for TTM
-Date:   Thu, 20 Feb 2020 13:27:10 +0100
-Message-Id: <20200220122719.4302-1-thomas_os@shipmail.org>
+Subject: [PATCH v4 4/9] mm: Add vmf_insert_pfn_xxx_prot() for huge page-table entries
+Date:   Thu, 20 Feb 2020 13:27:14 +0100
+Message-Id: <20200220122719.4302-5-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200220122719.4302-1-thomas_os@shipmail.org>
+References: <20200220122719.4302-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -71,80 +74,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to reduce TLB misses and CPU usage this patchset enables huge-
-and giant page-table entries for TTM and TTM-enabled graphics drivers.
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Patch 1 and 2 introduce a vma_is_special_huge() function to make the mm code
-take the same path as DAX when splitting huge- and giant page table entries,
-(which currently means zapping the page-table entry and rely on re-faulting).
-
-Patch 3 makes the mm code split existing huge page-table entries
-on huge_fault fallbacks. Typically on COW or on buffer-objects that want
-write-notify. COW and write-notification is always done on the lowest
-page-table level. See the patch log message for additional considerations.
-
-Patch 4 introduces functions to allow the graphics drivers to manipulate
-the caching- and encryption flags of huge page-table entries without ugly
-hacks.
-
-Patch 5 implements the huge_fault handler in TTM.
-This enables huge page-table entries, provided that the kernel is configured
-to support transhuge pages, either by default or using madvise().
-However, they are unlikely to be inserted unless the kernel buffer object
-pfns and user-space addresses align perfectly. There are various options
-here, but since buffer objects that reside in system pages typically start
-at huge page boundaries if they are backed by huge pages, we try to enforce
-buffer object starting pfns and user-space addresses to be huge page-size
-aligned if their size exceeds a huge page-size. If pud-size transhuge
-("giant") pages are enabled by the arch, the same holds for those.
-
-Patch 6 implements a specialized huge_fault handler for vmwgfx.
-The vmwgfx driver may perform dirty-tracking and needs some special code
-to handle that correctly.
-
-Patch 7 implements a drm helper to align user-space addresses according
-to the above scheme, if possible.
-
-Patch 8 implements a TTM range manager for vmwgfx that does the same for
-graphics IO memory. This may later be reused by other graphics drivers
-if necessary.
-
-Patch 9 finally hooks up the helpers of patch 7 and 8 to the vmwgfx driver.
-A similar change is needed for graphics drivers that want a reasonable
-likelyhood of actually using huge page-table entries.
-
-If a buffer object size is not huge-page or giant-page aligned,
-its size will NOT be inflated by this patchset. This means that the buffer
-object tail will use smaller size page-table entries and thus no memory
-overhead occurs. Drivers that want to pay the memory overhead price need to
-implement their own scheme to inflate buffer-object sizes.
-
-PMD size huge page-table-entries have been tested with vmwgfx and found to
-work well both with system memory backed and IO memory backed buffer objects.
-
-PUD size giant page-table-entries have seen limited (fault and COW) testing
-using a modified kernel (to support 1GB page allocations) and a fake vmwgfx
-TTM memory type. The vmwgfx driver does otherwise not support 1GB-size IO
-memory resources.
-
-Comments and suggestions welcome.
-Thomas
-
-Changes since RFC:
-* Check for buffer objects present in contigous IO Memory (Christian König)
-* Rebased on the vmwgfx emulated coherent memory functionality. That rebase
-  adds patch 5.
-Changes since v1:
-* Make the new TTM range manager vmwgfx-specific. (Christian König)
-* Minor fixes for configs that don't support or only partially support
-  transhuge pages.
-Changes since v2:
-* Minor coding style and doc fixes in patch 5/9 (Christian König)
-* Patch 5/9 doesn't touch mm. Remove from the patch title.
-Changes since v3:
-* Added reviews and acks
-* Implemented ugly but generic ttm_pgprot_is_wrprotecting() instead of arch
-  specific code.
+For graphics drivers needing to modify the page-protection, add
+huge page-table entries counterparts to vmf_insert_pfn_prot().
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -154,5 +87,141 @@ Cc: Ralph Campbell <rcampbell@nvidia.com>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+---
+ include/linux/huge_mm.h | 41 +++++++++++++++++++++++++++++++++++++++--
+ mm/huge_memory.c        | 38 ++++++++++++++++++++++++++++++++------
+ 2 files changed, 71 insertions(+), 8 deletions(-)
 
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 0b84e13e88e2..a95d1bc8ffe8 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -47,8 +47,45 @@ extern bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
+ extern int change_huge_pmd(struct vm_area_struct *vma, pmd_t *pmd,
+ 			unsigned long addr, pgprot_t newprot,
+ 			int prot_numa);
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write);
+-vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write);
++vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
++				   pgprot_t pgprot, bool write);
++
++/**
++ * vmf_insert_pfn_pmd - insert a pmd size pfn
++ * @vmf: Structure describing the fault
++ * @pfn: pfn to insert
++ * @pgprot: page protection to use
++ * @write: whether it's a write fault
++ *
++ * Insert a pmd size pfn. See vmf_insert_pfn() for additional info.
++ *
++ * Return: vm_fault_t value.
++ */
++static inline vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn,
++					    bool write)
++{
++	return vmf_insert_pfn_pmd_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
++}
++vm_fault_t vmf_insert_pfn_pud_prot(struct vm_fault *vmf, pfn_t pfn,
++				   pgprot_t pgprot, bool write);
++
++/**
++ * vmf_insert_pfn_pud - insert a pud size pfn
++ * @vmf: Structure describing the fault
++ * @pfn: pfn to insert
++ * @pgprot: page protection to use
++ * @write: whether it's a write fault
++ *
++ * Insert a pud size pfn. See vmf_insert_pfn() for additional info.
++ *
++ * Return: vm_fault_t value.
++ */
++static inline vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn,
++					    bool write)
++{
++	return vmf_insert_pfn_pud_prot(vmf, pfn, vmf->vma->vm_page_prot, write);
++}
++
+ enum transparent_hugepage_flag {
+ 	TRANSPARENT_HUGEPAGE_FLAG,
+ 	TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index f8d24fc3f4df..b2ec62cca3ae 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -811,11 +811,24 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 		pte_free(mm, pgtable);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
++/**
++ * vmf_insert_pfn_pmd_prot - insert a pmd size pfn
++ * @vmf: Structure describing the fault
++ * @pfn: pfn to insert
++ * @pgprot: page protection to use
++ * @write: whether it's a write fault
++ *
++ * Insert a pmd size pfn. See vmf_insert_pfn() for additional info and
++ * also consult the vmf_insert_mixed_prot() documentation when
++ * @pgprot != @vmf->vma->vm_page_prot.
++ *
++ * Return: vm_fault_t value.
++ */
++vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
++				   pgprot_t pgprot, bool write)
+ {
+ 	unsigned long addr = vmf->address & PMD_MASK;
+ 	struct vm_area_struct *vma = vmf->vma;
+-	pgprot_t pgprot = vma->vm_page_prot;
+ 	pgtable_t pgtable = NULL;
+ 
+ 	/*
+@@ -843,7 +856,7 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
+ 	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
+ 	return VM_FAULT_NOPAGE;
+ }
+-EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd);
++EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd_prot);
+ 
+ #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+ static pud_t maybe_pud_mkwrite(pud_t pud, struct vm_area_struct *vma)
+@@ -889,11 +902,24 @@ static void insert_pfn_pud(struct vm_area_struct *vma, unsigned long addr,
+ 	spin_unlock(ptl);
+ }
+ 
+-vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
++/**
++ * vmf_insert_pfn_pud_prot - insert a pud size pfn
++ * @vmf: Structure describing the fault
++ * @pfn: pfn to insert
++ * @pgprot: page protection to use
++ * @write: whether it's a write fault
++ *
++ * Insert a pud size pfn. See vmf_insert_pfn() for additional info and
++ * also consult the vmf_insert_mixed_prot() documentation when
++ * @pgprot != @vmf->vma->vm_page_prot.
++ *
++ * Return: vm_fault_t value.
++ */
++vm_fault_t vmf_insert_pfn_pud_prot(struct vm_fault *vmf, pfn_t pfn,
++				   pgprot_t pgprot, bool write)
+ {
+ 	unsigned long addr = vmf->address & PUD_MASK;
+ 	struct vm_area_struct *vma = vmf->vma;
+-	pgprot_t pgprot = vma->vm_page_prot;
+ 
+ 	/*
+ 	 * If we had pud_special, we could avoid all these restrictions,
+@@ -914,7 +940,7 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
+ 	insert_pfn_pud(vma, addr, vmf->pud, pfn, pgprot, write);
+ 	return VM_FAULT_NOPAGE;
+ }
+-EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud);
++EXPORT_SYMBOL_GPL(vmf_insert_pfn_pud_prot);
+ #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
+ 
+ static void touch_pmd(struct vm_area_struct *vma, unsigned long addr,
+-- 
+2.21.1
 
