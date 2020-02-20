@@ -2,187 +2,176 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC51C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842F3C11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2FD1208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLzTcpTU"
+	by mail.kernel.org (Postfix) with ESMTP id 555BD208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582228450;
+	bh=G7F0PXamV8KjthSBpmnQYzM9wFyKJlEKoCMkaPi/V2A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oh10AWjjbM2U00vCAH0/sFhB5n8hA28Tcx0lUOKm9WlFq9ULvqAWmA9lGIHMj8wXN
+	 4c2AyZBcfUezY3Te815LmzoyKBLzn6UXcc4gyiSOxFdS2RJXMMtK/hFYrotLJFfgJt
+	 pc6o8O21mo8JgoQV62+VQp5XrV3ZjX1L9qqS+SBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbgBTTyD (ORCPT
+        id S1729031AbgBTTyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:54:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49865 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728556AbgBTTyD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:54:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582228442;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Fez1YLYoRTejKdl3XovFZRqHL8yeL2JwUep3jNimnQM=;
-        b=WLzTcpTU2VGcnTgHsUzdEjIub5u2+7yDAgL+UD16gT09lNzslx1xOEySgq2VV0xRu81c+l
-        uwZZYwi9bTWbmf2qApbo6xlbsmQigyQhhJIDb5FRPCIK+UNKYcB9KjUT9sAWle88PT9+VC
-        ubuiovkClXAykm67izuPw5nWX+OJaYE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-31-Ar63fx_ePSS9Hvsku2YrUQ-1; Thu, 20 Feb 2020 14:54:00 -0500
-X-MC-Unique: Ar63fx_ePSS9Hvsku2YrUQ-1
-Received: by mail-qt1-f199.google.com with SMTP id r30so3373174qtb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:54:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Fez1YLYoRTejKdl3XovFZRqHL8yeL2JwUep3jNimnQM=;
-        b=Db+NET4UXZ3i9Ya0tN5mVBrstQ4hFGW4FkHCL9gWu61FkOurCtmeQY2LaH4zEOZOYg
-         pn/cZO4KMjIBS/Idgbi85LrcOrXJRL8zoGqu8lC9Ew/goPyhoiVmcrnRtP7rZxtX9vQb
-         Sa+PsdnAKhNWOQK34Ri8XQcWpEyoJElIxpk8X1HLu4coKBdPSejaCWiZV35jIKqveqQJ
-         QXyvM/U19Du/OhCd05AJzBGAg5Iy3eSbsgkN41HbQ4nCFLtKktyqErTnNpPOKEoI3zyl
-         CG7V9awYnLX2qWFp5AdrpOODNu3odO4vHX9KsLSK+Dz5iep6ZHfufH4VMZHfep96FYic
-         7MZg==
-X-Gm-Message-State: APjAAAXD1bKmqJhDmp7VkXCiyXQzkrR1P5lHXKHIvsd6taDaFZ6juneY
-        M/s6o10G44Wzxo/7q+IyaFAb9an3Ain9h7zDW4FlIZZOTugRyW4jh4y0Hmz/ZaUtP9GX1V+sd61
-        T6qEWbwGjduT+Hex7C6TwmYiu
-X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr27322419qvb.47.1582228439903;
-        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwEIhUPaSeXK2C2o3Bv58EPeWBkwTGMcKqMaRd3x8T+f6afhWOfRCq+hk0nYhl6E3hyCskSsQ==
-X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr27322394qvb.47.1582228439636;
-        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
-Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id a192sm332776qkb.53.2020.02.20.11.53.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>, Martin Cracauer <cracauer@cons.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        David Hildenbrand <david@redhat.com>,
-        Bobby Powers <bobbypowers@gmail.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: [PATCH RESEND v6 14/16] mm/gup: Allow VM_FAULT_RETRY for multiple times
-Date:   Thu, 20 Feb 2020 14:53:57 -0500
-Message-Id: <20200220195357.16371-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200220155353.8676-1-peterx@redhat.com>
-References: 
+        Thu, 20 Feb 2020 14:54:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728556AbgBTTyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:54:08 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD217208E4;
+        Thu, 20 Feb 2020 19:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582228447;
+        bh=G7F0PXamV8KjthSBpmnQYzM9wFyKJlEKoCMkaPi/V2A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QBbz2JVlL4gMj+bS1andjj5ao4hXrn6mRCwkQXu+GYp+ytsMzxurmAj1uGfifTfvS
+         BIP92Y44BHzLEYC80V2kJn/hgSTB9+wMDxhTJr+PmCsioO0byrKdVWIb8eQmIsjfgw
+         XTeymf6neRgd1tabn0V11TyrknFmoCCjnP/e8oYw=
+Received: by mail-qk1-f180.google.com with SMTP id o28so4744342qkj.9;
+        Thu, 20 Feb 2020 11:54:07 -0800 (PST)
+X-Gm-Message-State: APjAAAXkezniAWzeyhGgM17YluTC3Nm9shk20G83yhGRX0ovJLySDXEC
+        uSeCrli5ObJX312ozF5P5+LPeCcIx+oC4TZIhQ==
+X-Google-Smtp-Source: APXvYqwUpbePX8rcwBZf0o9pMlMFzEH0M7fCorDHPbfwgZVsl3To5oa244R0QJ3sIPjUMWARlW8Y5KyDGO8NwfCeV64=
+X-Received: by 2002:a37:5347:: with SMTP id h68mr29237844qkb.393.1582228446784;
+ Thu, 20 Feb 2020 11:54:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com> <20200220060001.25807-1-andreas@kemnade.info>
+In-Reply-To: <20200220060001.25807-1-andreas@kemnade.info>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 20 Feb 2020 13:53:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
+Message-ID: <CAL_JsqKTdpbLfPq_eGUf-w-0s8JMndbMrQ2BsMt+8y+eqQ-kZw@mail.gmail.com>
+Subject: Re: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     "H. Nikolaus Schaller" <hns@goldelico.com>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the gup counterpart of the change that allows the
-VM_FAULT_RETRY to happen for more than once.  One thing to mention is
-that we must check the fatal signal here before retry because the GUP
-can be interrupted by that, otherwise we can loop forever.
+On Thu, Feb 20, 2020 at 12:00 AM Andreas Kemnade <andreas@kemnade.info> wrote:
+>
+> From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+>
+> This patch brings support for the JZ4780 efuse. Currently it only expose
+> a read only access to the entire 8K bits efuse memory.
+>
+> Tested-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> [converted to yaml]
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> I will not update/maintain this, just have the impression that here some
+> more work is needed to make somebody comfortable with yaml than stick
+> to the usual pointing to documentation and I have not the ingredients
+> for doing
+> cat  Antihistamines >/dev/brain ;-)
+> and I do not want to see the other patches get lost.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- mm/gup.c     | 27 +++++++++++++++++++++------
- mm/hugetlb.c |  6 ++++--
- 2 files changed, 25 insertions(+), 8 deletions(-)
+Looks about right...
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 76cb420c0fb7..ec2b76f44a01 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -652,7 +652,10 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
- 	if (*flags & FOLL_NOWAIT)
- 		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
- 	if (*flags & FOLL_TRIED) {
--		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_ALLOW_RETRY);
-+		/*
-+		 * Note: FAULT_FLAG_ALLOW_RETRY and FAULT_FLAG_TRIED
-+		 * can co-exist
-+		 */
- 		fault_flags |= FAULT_FLAG_TRIED;
- 	}
- 
-@@ -1012,7 +1015,6 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
- 		down_read(&mm->mmap_sem);
- 		if (!(fault_flags & FAULT_FLAG_TRIED)) {
- 			*unlocked = true;
--			fault_flags &= ~FAULT_FLAG_ALLOW_RETRY;
- 			fault_flags |= FAULT_FLAG_TRIED;
- 			goto retry;
- 		}
-@@ -1096,17 +1098,30 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 		if (likely(pages))
- 			pages += ret;
- 		start += ret << PAGE_SHIFT;
-+		lock_dropped = true;
- 
-+retry:
- 		/*
- 		 * Repeat on the address that fired VM_FAULT_RETRY
--		 * without FAULT_FLAG_ALLOW_RETRY but with
--		 * FAULT_FLAG_TRIED.
-+		 * with both FAULT_FLAG_ALLOW_RETRY and
-+		 * FAULT_FLAG_TRIED.  Note that GUP can be interrupted
-+		 * by fatal signals, so we need to check it before we
-+		 * start trying again otherwise it can loop forever.
- 		 */
-+
-+		if (fatal_signal_pending(current))
-+			break;
-+
- 		*locked = 1;
--		lock_dropped = true;
- 		down_read(&mm->mmap_sem);
-+
- 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
--				       pages, NULL, NULL);
-+				       pages, NULL, locked);
-+		if (!*locked) {
-+			/* Continue to retry until we succeeded */
-+			BUG_ON(ret != 0);
-+			goto retry;
-+		}
- 		if (ret != 1) {
- 			BUG_ON(ret > 1);
- 			if (!pages_done)
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index c84f721db020..ac9a28d51674 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4343,8 +4343,10 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
- 				fault_flags |= FAULT_FLAG_ALLOW_RETRY |
- 					FAULT_FLAG_RETRY_NOWAIT;
- 			if (flags & FOLL_TRIED) {
--				VM_WARN_ON_ONCE(fault_flags &
--						FAULT_FLAG_ALLOW_RETRY);
-+				/*
-+				 * Note: FAULT_FLAG_ALLOW_RETRY and
-+				 * FAULT_FLAG_TRIED can co-exist
-+				 */
- 				fault_flags |= FAULT_FLAG_TRIED;
- 			}
- 			ret = hugetlb_fault(mm, vma, vaddr, fault_flags);
--- 
-2.24.1
+>
+>  .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+> new file mode 100644
+> index 000000000000..ad56c17b0bd5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
+Dual license new bindings please:
+
+(GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Ingenic JZ EFUSE driver bindings
+> +
+> +maintainers:
+> +  - tbd <tbd@tbd>
+> +
+> +allOf:
+> +  - $ref: "nvmem.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ingenic,jz4780-efuse
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    # Handle for the ahb for the efuse.
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +   items:
+> +     - const:  bus_clk
+
+My prior comment still applies.
+
+Also, for a single clock, you don't really need a name.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clock
+
+'make dt_binding_check' would have pointed the error here for you:
+
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.example.dt.yaml:
+efuse@134100d0: 'clock' is a required property
+
+> +  - clock-names
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/jz4780-cgu.h>
+> +
+> +    efuse@134100d0 {
+> +        compatible = "ingenic,jz4780-efuse";
+> +        reg = <0x134100d0 0x2c>;
+> +
+> +        clocks = <&cgu JZ4780_CLK_AHB2>;
+> +        clock-names = "bus_clk";
+> +    };
+> +
+> +...
+> --
+> 2.20.1
+>
