@@ -2,108 +2,144 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31277C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A3BCC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0674424654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="adVpB5W/"
+	by mail.kernel.org (Postfix) with ESMTP id 7978D24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:09:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBTJJ0 (ORCPT
+        id S1727046AbgBTJJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:09:26 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54951 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726821AbgBTJJ0 (ORCPT
+        Thu, 20 Feb 2020 04:09:48 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36977 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgBTJJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:09:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582189765;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KN7rEECvZEXdU6a12wfZOhPFPAnfs6WWVcWaa4l8tB8=;
-        b=adVpB5W/QC4e9+Sl4UWvZ/clgPeUBo6qrwVgHPekqzxwS7Kkf94B0c5JIHyIHx+zxvhpvy
-        pbJSeVkP6C2yqslQwulDYHT8Ubl+Pi29mo1T6OvTIQtP3bMLbUSMCayxvdrfdp8/W4bHds
-        ytmqwMVCyrdiEdJQ3SKzaTzIRWC1yjU=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-3MY_vCxRO36enoZna6uP-A-1; Thu, 20 Feb 2020 04:09:23 -0500
-X-MC-Unique: 3MY_vCxRO36enoZna6uP-A-1
-Received: by mail-wm1-f72.google.com with SMTP id p2so548197wmi.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:09:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=KN7rEECvZEXdU6a12wfZOhPFPAnfs6WWVcWaa4l8tB8=;
-        b=Y3+iBf5SdVZyYRP6V8JsfWRvtMn5A8dpZuWpX0HU8dIweKp6nKoGiwOFvW/7Y/VJc+
-         egN4egcGcyIXNas5f1bSbnIvTkEwRM7g9eF0O79l3l0iB7FHtYpWp1XUtKUPRGdFmv/a
-         vQD7XyDK23L3Z/xLtjQnE+IDM+1V05Vh0ISq3pwZKmDml245j3BzDC+eklyJhDcLDVrf
-         lr91BrAkkJC/euJef77Dl7upNssH1PtqNPy7z8abSsn1aujKSZK6UAbaJQPgK71plD58
-         a3lvFxhHOeHEzcuP+18uMK7lKi5ez4S+1+ngqgy6oJK2Sz2QY+RPr9D0bY3CdzJWsNor
-         3SHw==
-X-Gm-Message-State: APjAAAV41XtFipJs1QxJnBwWlIrMaELFJbBL3PW3aCbFtBwbKLbhVxb1
-        u2G+t448+MG2GUBtcDk1uwFHjBnt2yHGLykZ9AqelAYYdGqPwiafnfYJJX/eJyXWKV9XE/b08Uw
-        agpL0OLr8C/GawrvLvDLzZIO3
-X-Received: by 2002:a1c:2089:: with SMTP id g131mr3043326wmg.63.1582189762246;
-        Thu, 20 Feb 2020 01:09:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxuP2UdYyi73MjeE3vnzzNZI01MnvzA+dn9FFZ8I7LwiSQkzQOBin8Kub8QMd4N8L20So6CHQ==
-X-Received: by 2002:a1c:2089:: with SMTP id g131mr3043309wmg.63.1582189762074;
-        Thu, 20 Feb 2020 01:09:22 -0800 (PST)
-Received: from [131.159.204.89] (w204-2h-v4.eduroam.dynamic.rbg.tum.de. [131.159.204.89])
-        by smtp.gmail.com with ESMTPSA id m21sm3580891wmi.27.2020.02.20.01.09.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 01:09:21 -0800 (PST)
+        Thu, 20 Feb 2020 04:09:47 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j4hq0-0006gp-7x; Thu, 20 Feb 2020 09:09:40 +0000
+Date:   Thu, 20 Feb 2020 10:09:39 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Ian Kent <raven@themaw.net>
+Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
+        mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications [ver
+ #16]
+Message-ID: <20200220090939.4e2mpmdixcyruzda@wittgenstein>
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <20200219144613.lc5y2jgzipynas5l@wittgenstein>
+ <c9a6f929b57e0c21c8845c211d1e3eab09d09633.camel@themaw.net>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] virtio_balloon: Fix build error seen with CONFIG_BALLOON_COMPACTION=n
-Date:   Thu, 20 Feb 2020 10:09:20 +0100
-Message-Id: <48277641-3748-4EFD-BB19-ED5C9E06FDF2@redhat.com>
-References: <20200220023156.20636-1-linux@roeck-us.net>
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>
-In-Reply-To: <20200220023156.20636-1-linux@roeck-us.net>
-To:     Guenter Roeck <linux@roeck-us.net>
-X-Mailer: iPhone Mail (17D50)
+Content-Disposition: inline
+In-Reply-To: <c9a6f929b57e0c21c8845c211d1e3eab09d09633.camel@themaw.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 12:42:15PM +0800, Ian Kent wrote:
+> On Wed, 2020-02-19 at 15:46 +0100, Christian Brauner wrote:
+> > On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
+> > > Here are a set of patches that adds system calls, that (a) allow
+> > > information about the VFS, mount topology, superblock and files to
+> > > be
+> > > retrieved and (b) allow for notifications of mount topology
+> > > rearrangement
+> > > events, mount and superblock attribute changes and other superblock
+> > > events,
+> > > such as errors.
+> > > 
+> > > ============================
+> > > FILESYSTEM INFORMATION QUERY
+> > > ============================
+> > > 
+> > > The first system call, fsinfo(), allows information about the
+> > > filesystem at
+> > > a particular path point to be queried as a set of attributes, some
+> > > of which
+> > > may have more than one value.
+> > > 
+> > > Attribute values are of four basic types:
+> > > 
+> > >  (1) Version dependent-length structure (size defined by type).
+> > > 
+> > >  (2) Variable-length string (up to 4096, including NUL).
+> > > 
+> > >  (3) List of structures (up to INT_MAX size).
+> > > 
+> > >  (4) Opaque blob (up to INT_MAX size).
+> > 
+> > I mainly have an organizational question. :) This is a huge patchset
+> > with lots and lots of (good) features. Wouldn't it make sense to make
+> > the fsinfo() syscall a completely separate patchset from the
+> > watch_mount() and watch_sb() syscalls? It seems that they don't need
+> > to
+> > depend on each other at all. This would make reviewing this so much
+> > nicer and likely would mean that fsinfo() could proceed a little
+> > faster.
+> 
+> The remainder of the fsinfo() series would need to remain useful
+> if this was done.
+> 
+> For context I want work on improving handling of large mount
+> tables.
 
+Yeah, I've talked to David about this; polling on a large mountinfo file
+is not great, I agree.
 
-> Am 20.02.2020 um 03:32 schrieb Guenter Roeck <linux@roeck-us.net>:
->=20
-> =EF=BB=BF0day reports:
->=20
-> drivers//virtio/virtio_balloon.c: In function 'virtballoon_probe':
-> drivers//virtio/virtio_balloon.c:960:1: error:
->    label 'out_del_vqs' defined but not used [-Werror=3Dunused-label]
->=20
-> This is seen with CONFIG_BALLOON_COMPACTION=3Dn.
->=20
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtba=
-lloon_probe()")
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Michael S. Tsirkin <mst@redhat.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
+> 
+> Ultimately I expect to solve a very long standing autofs problem
+> of using large direct mount maps without prohibitive performance
+> overhead (and there a lot of rather challenging autofs changes to
+> do for this too) and I believe the fsinfo() system call, and
+> related bits, is the way to do this.
+> 
+> But improving the handling of large mount tables for autofs
+> will have the side effect of improvements for other mount table
+> users, even in the early stages of this work.
+> 
+> For example I want to use this for mount table handling improvements
+> in libmount. Clearly that ultimately needs mount change notification
+> in the end but ...
+> 
+> There's a bunch of things that need to be done alone the way
+> to even get started.
+> 
+> One thing that's needed is the ability to call fsinfo() to get
+> information on a mount to avoid constant reading of the proc based
+> mount table, which happens a lot (since the mount info. needs
+> to be up to date) so systemd (and others) would see an improvement
+> with the fsinfo() system call alone able to be used in libmount.
+> 
+> But for the fsinfo() system call to be used for this the file
+> system specific mount options need to also be obtained when
+> using fsinfo(). That means the super block operation fsinfo uses
+> to provide this must be implemented for at least most file systems.
+> 
+> So separating out the notifications part, leaving whatever is needed
+> to still be able to do this, should be fine and the system call
+> would be immediately useful once the super operation is implemented
+> for the needed file systems.
+> 
+> Whether the implementation of the super operation should be done
+> as part of this series is another question but would certainly
+> be a challenge and make the series more complicated. But is needed
+> for the change to be useful in my case.
 
-There is already a patch on the list to fix that (and it looks exactly like t=
-his one :) ). Unfortunately, not picked up yet.
+I think what would might work - and what David had already brought up
+briefly - is to either base the fsinfo branch on top of the mount
+notificaiton branch or break the notification counters pieces into a
+separate patch and base both mount notifications and fsinfo on top of
+it.
 
-Thanks!=
-
+Christian
