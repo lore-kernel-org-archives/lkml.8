@@ -2,124 +2,108 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA02C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2102CC11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00044208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:40:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="fPbfSEvN"
+	by mail.kernel.org (Postfix) with ESMTP id E6C20206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:44:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582235090;
+	bh=1By3D340Xj5laiaEOMoieVFH4UjEm3FJLDCJSovq1Nc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RXXT6Fv8siiT3u9hXcCEg2i4vosEtaDNwITgNmJJm0jEojPh7o3Sx91k1iplYlA09
+	 RRR9FvLH0Zag7LEw4OTWwJeoeDgXWFpXRWvWBtqoss1DIswWvvC4Pu+hroIRmbhZam
+	 cXhPo2sOcP/6v9SKq4secnkvwLOXjpCfIjwqmjIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgBTVkc (ORCPT
+        id S1729078AbgBTVos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:40:32 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54677 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgBTVkb (ORCPT
+        Thu, 20 Feb 2020 16:44:48 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35322 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbgBTVos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:40:31 -0500
-Received: by mail-pj1-f67.google.com with SMTP id dw13so44402pjb.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:40:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SdMXiwQ30NtFiXHtEOV93iERJEGx/98ZsoX3dNQE1dU=;
-        b=fPbfSEvNBWFRQJpPerpnQOFFuOaBUykwN5G3Mb0OQ7ESFAV1G/GfvLFLh4E3x3/orj
-         QZCmolJ9+ZBm5kA1lEKjya5v3YRWAUVVCgsmHJw/YllODFWn0M7bvPEZKPWO774L79om
-         s55nEDeEVHyK7FWNTHPn5gY3+LQCa6Bo1B7oaST1i7SlzC8KFee1OwVT9Ej3jyChQNsS
-         j7X2PGbnxZTx1QHEbBQkl0Fz6gXj4H5hsbWYgzwl/xDvjDJORlmfK/IRMcOaxh7BRY0t
-         0hqAwWZ6QzKEjbrElt6rupJuyeLob1dQGRK0IGhyLqaJtqJlFOiVp+fNqn0EVfy+KHLd
-         wZiw==
+        Thu, 20 Feb 2020 16:44:48 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r16so156141otd.2;
+        Thu, 20 Feb 2020 13:44:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SdMXiwQ30NtFiXHtEOV93iERJEGx/98ZsoX3dNQE1dU=;
-        b=Vg+2DXZnLv8pYqH0tFUqeZbaAI8h4FEkjH8NZucD1z7/Co5kk3ihSaLQhFVE/UxDGP
-         uVcFouJD6I64Zk/Imb0PRdvX/oTTWaFmyAuiLGNsQGSUdz/x7daqv6j9up40CFf9sTZ5
-         HnbO2s0LsKv98p2ft+30b3Ysh+rcWnomrgZsywuQiDs1M6tx0vzjZ1ZDkjwzeKroOdId
-         RDphlCObk5G9dGU6v2nuPqVa9Nvp0AigHJTR/Ptd8h/42RNvd2USj3hQu28vS6UZtiDb
-         rSwWO7IdfZnyb5+VHyGOBTwsiOFtls7PPngWvdAW7esfHafyFj+TkzQ8meKjUpBCni13
-         lrng==
-X-Gm-Message-State: APjAAAUPCKQCFljMQezQBlkiXz8n4uXhjsiGsDgrWwyeWIsGZ9+X9xpA
-        l0B9mZk6cKHDD8ZeLpMAdgA9Zw==
-X-Google-Smtp-Source: APXvYqxoWg8UWtAn7qZl+URGKHfmSgJlNhTD6bwEWpMBVPmnFq43cZPNxCZ2yrsn44C6bIEQW6nsKQ==
-X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr6116479pjq.11.1582234830293;
-        Thu, 20 Feb 2020 13:40:30 -0800 (PST)
-Received: from cisco.hsd1.co.comcast.net ([2001:420:c0c8:1008::8b3])
-        by smtp.gmail.com with ESMTPSA id h3sm386289pjs.0.2020.02.20.13.40.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 13:40:29 -0800 (PST)
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: [PATCH] doc: fix filesystems/porting.rst whitespace
-Date:   Thu, 20 Feb 2020 14:40:09 -0700
-Message-Id: <20200220214009.11645-1-tycho@tycho.ws>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gVNMXV+GYwL7O+PpLd4msfz5vj4MvTvgQc/WifjGAvM=;
+        b=fBoH3Gx7Mrpaj+cKypiJGEfmTKi4kqI9V3/DqhT6WV71meh72wMzvQQm7ZLtRqhZzz
+         pIhtQ/f/6I5UDZAwHZDZxVIRdUSqSNhHaTRnpKRyxC96dkpZcfbaPNIqar2JLB1p0wTn
+         k54MYlnH9SKha0ApUEMN4ycESiB+eKVkO4XufHUpecjI5ThJ6ZtOdS7WbvJ3IYLmBX9o
+         NzwPpoVjMsjlBoo/J9sKRkfwn+P4uYZo6fwUZYT4pTD1FicKLQ50Qd+VCVEZokqazHlW
+         7GV1Qd5cbO5GpW6V5sMUYrW+dcTvQIUU2HdWk6JqearmxnLbTUPGdknZ6zsqHYVyLR/E
+         3ULw==
+X-Gm-Message-State: APjAAAWD6HiV8U4QWJ5XWYaf26Q9wxwg35OVPLmxceicqMpidCAz5rNw
+        N5D/Hw0o26U/g21Z8Kky4ZZ2fF4/TGou8FPEZnw=
+X-Google-Smtp-Source: APXvYqzXrW8tTLCrt5fn19taPhUJKI/pQVbfsUINFlYguhoDqbfR/4Vi6SciKAUGdzIl7AgirjHDY6trZyHsrsTZKLw=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr3712558otd.266.1582235087639;
+ Thu, 20 Feb 2020 13:44:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAJZ5v0he=WQ6159fyaYYffdi66y596rVo7z1yLyGFcH45PXNUg@mail.gmail.com>
+ <202002201158.2911CE2388@keescook>
+In-Reply-To: <202002201158.2911CE2388@keescook>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Feb 2020 22:44:35 +0100
+Message-ID: <CAJZ5v0hkKUi7FUOneEy2nO-=RM8ZbcoG1uHRYNWzrjONEhKYxQ@mail.gmail.com>
+Subject: Re: [Regression] Docs build broken by commit 51e46c7a4007
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we start with spaces instead of tabs, rst seems to get confused and
-italicize some things (presumably because of the `*'s).
+On Thu, Feb 20, 2020 at 9:05 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Feb 20, 2020 at 07:50:47PM +0100, Rafael J. Wysocki wrote:
+> > On two of my systems the docs build has been broken by commit
+> > 51e46c7a4007 ("docs, parallelism: Rearrange how jobserver reservations
+> > are made").
+> >
+> > The symptom is that the build system complains about the "output"
+> > directory not being there and returns with an error.
+> >
+> > Reverting the problematic commit makes the problem go away.
+>
+> How strange! This must be some race in the parallel build.
 
-Instead, let's switch to using leading tabs as we do elsewhere in the file.
+I don't think so, I didn't use -j with htmldocs builds.
 
-Signed-off-by: Tycho Andersen <tycho@tycho.ws>
----
- Documentation/filesystems/porting.rst | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+And you know what, adding "-j 2" to the command line actually makes it work. :-)
 
-diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-index f18506083ced..898e1d0c6e98 100644
---- a/Documentation/filesystems/porting.rst
-+++ b/Documentation/filesystems/porting.rst
-@@ -57,12 +57,13 @@ Turn your foo_read_super() into a function that would return 0 in case of
- success and negative number in case of error (-EINVAL unless you have more
- informative error value to report).  Call it foo_fill_super().  Now declare::
- 
--  int foo_get_sb(struct file_system_type *fs_type,
--	int flags, const char *dev_name, void *data, struct vfsmount *mnt)
--  {
--	return get_sb_bdev(fs_type, flags, dev_name, data, foo_fill_super,
--			   mnt);
--  }
-+	int foo_get_sb(struct file_system_type *fs_type,
-+		       int flags, const char *dev_name, void *data,
-+		       struct vfsmount *mnt)
-+	{
-+		return get_sb_bdev(fs_type, flags, dev_name, data, foo_fill_super,
-+				   mnt);
-+	}
- 
- (or similar with s/bdev/nodev/ or s/bdev/single/, depending on the kind of
- filesystem).
-@@ -181,10 +182,10 @@ can be used as examples of very different filesystems.
- iget4() and the read_inode2 callback have been superseded by iget5_locked()
- which has the following prototype::
- 
--    struct inode *iget5_locked(struct super_block *sb, unsigned long ino,
--				int (*test)(struct inode *, void *),
--				int (*set)(struct inode *, void *),
--				void *data);
-+	struct inode *iget5_locked(struct super_block *sb, unsigned long ino,
-+				   int (*test)(struct inode *, void *),
-+				   int (*set)(struct inode *, void *),
-+				   void *data);
- 
- 'test' is an additional function that can be used when the inode
- number is not sufficient to identify the actual file object. 'set'
--- 
-2.20.1
+> AFAICT, "output" is made in the first sub-target (Documentation/media). This
+> doesn't look entirely stable (there's no ordering implied by the "all"
+> target in there)...
+>
+> Does this work for you?
 
+No, it doesn't.
+
+>
+> diff --git a/Documentation/Makefile b/Documentation/Makefile
+> index d77bb607aea4..5654e087ae1e 100644
+> --- a/Documentation/Makefile
+> +++ b/Documentation/Makefile
+> @@ -62,7 +62,8 @@ loop_cmd = $(echo-cmd) $(cmd_$(1)) || exit;
+>  #    e.g. "media" for the linux-tv book-set at ./Documentation/media
+>
+>  quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
+> -      cmd_sphinx = $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/media $2 && \
+> +      cmd_sphinx = mkdir -p $(abspath $(BUILDDIR)) && \
+> +       $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/media $2 && \
+>         PYTHONDONTWRITEBYTECODE=1 \
+>         BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
+>         $(PYTHON) $(srctree)/scripts/jobserver-exec \
+>
+> --
