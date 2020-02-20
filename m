@@ -2,95 +2,203 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9FC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFEEC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698E220722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="qe7hPOoC"
+	by mail.kernel.org (Postfix) with ESMTP id 155CF20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgBTUKk (ORCPT
+        id S1729064AbgBTULq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:10:40 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41566 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgBTUKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:10:40 -0500
-Received: by mail-pf1-f193.google.com with SMTP id j9so2446678pfa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:10:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=2w+R3Z75BVcBJL4mHaaewYE8ej5x4YeGxTQpsg56oM0=;
-        b=qe7hPOoCCTMNdxtIg3f5Pg5ViViUneZC/ftBiK39R+KVP0JYxDL98CFA0YNadsMx/O
-         GGsjFOFhKwL8Dvxs5SCZQpNJ5gOJIPlgouPjCxdNRQp+s+RFDuDAXO9/krV4g++BYW9e
-         jUYlrUfhlkzvoQAw7wlqGZRWjNjf/75L6hTA0vG08+8mrmHo7+JtHFFfm6y8viK6NmHD
-         CBxpa3ASk5oqLVuxb3mJTy+0cOGMBm5lzDsJXgAYiWGZRC68iYsB0jRPc6DmaRBZNVzu
-         f3Lph20DUJ5Xf4OOvB2aB9VxfUVK8VMWveuVv4tTteDBeKfIqKl2E8naXchVBmNTXEc9
-         fV1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=2w+R3Z75BVcBJL4mHaaewYE8ej5x4YeGxTQpsg56oM0=;
-        b=ALpXbZxSs91JodwHQC04EUdEadfnZAJk3eMFVWsJyNuBLC86Do1gBv8EjiKZUEwSS/
-         +1pttlS8pFTo9RpccaR8xqP2fPHiJbEuSX4hGjJFggPaSAB1X6VLyCqXCOfwwtu7wgok
-         3zkagWzS77CQJeySYu39Yjw5NTRbt8hffdn5nD7liVBB51tLRAT8B3SfbSUjHJLB9Fyq
-         JYn5OoFl6pozVyfUvXkcoKaZ1G+wG/fUkdd8VU7pjvtZtnVA/uhm1b+jNH8CdvFyBUxP
-         Fg3+okBLfNmpGzR0QcOs06azDVXzs4FjAWBukVygpcInukSED0H3fRB/0BTxBfzcfDE6
-         JxlQ==
-X-Gm-Message-State: APjAAAXS1QGP2F5JXU5WJpvKiGsOfRpIuPfjONCXOYvM+tgi9XbKn373
-        IJP1rIznTZkoM8N/198VRHCryt5E2O6Gmcwo
-X-Google-Smtp-Source: APXvYqzHNbmO1s9R3NGefmrkNGHZZe0xixDdrQKTauLTfQfkXcLz68TcQ+ehcG7N+NwoOzOY7LsmHg==
-X-Received: by 2002:a62:6d01:: with SMTP id i1mr32854344pfc.94.1582229439310;
-        Thu, 20 Feb 2020 12:10:39 -0800 (PST)
-Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.175])
-        by smtp.gmail.com with ESMTPSA id l1sm262100pjb.28.2020.02.20.12.10.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 12:10:38 -0800 (PST)
-Date:   Fri, 21 Feb 2020 01:40:33 +0530
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: octeon: match parentheses alignment
-Message-ID: <20200220201033.GA14855@kaaira-HP-Pavilion-Notebook>
+        Thu, 20 Feb 2020 15:11:46 -0500
+Received: from mga05.intel.com ([192.55.52.43]:53786 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728770AbgBTULq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:11:46 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 12:11:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="383253442"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga004.jf.intel.com with ESMTP; 20 Feb 2020 12:11:45 -0800
+Date:   Thu, 20 Feb 2020 12:11:45 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] KVM: x86: Add EMULTYPE_PF when emulation is
+ triggered by a page fault
+Message-ID: <20200220201145.GI3972@linux.intel.com>
+References: <20200218230310.29410-1-sean.j.christopherson@intel.com>
+ <20200218230310.29410-2-sean.j.christopherson@intel.com>
+ <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7d564331-9a77-d59a-73d3-a7452fd7b15f@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-match the next line with open parentheses by giving appropriate tabs.
+On Wed, Feb 19, 2020 at 05:01:41PM +0800, Xiaoyao Li wrote:
+> On 2/19/2020 7:03 AM, Sean Christopherson wrote:
+> >Add a new emulation type flag to explicitly mark emulation related to a
+> >page fault.  Move the propation of the GPA into the emulator from the
+> >page fault handler into x86_emulate_instruction, using EMULTYPE_PF as an
+> >indicator that cr2 is valid.  Similarly, don't propagate cr2 into the
+> >exception.address when it's *not* valid.
+> >
+> >Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >---
+> >  arch/x86/include/asm/kvm_host.h | 12 +++++++++---
+> >  arch/x86/kvm/mmu/mmu.c          | 10 ++--------
+> >  arch/x86/kvm/x86.c              | 25 +++++++++++++++++++------
+> >  3 files changed, 30 insertions(+), 17 deletions(-)
+> >
+> >diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> >index 4dffbc10d3f8..10c1e8f472b6 100644
+> >--- a/arch/x86/include/asm/kvm_host.h
+> >+++ b/arch/x86/include/asm/kvm_host.h
+> >@@ -1370,8 +1370,9 @@ extern u64 kvm_mce_cap_supported;
+> >   *		   decode the instruction length.  For use *only* by
+> >   *		   kvm_x86_ops->skip_emulated_instruction() implementations.
+> >   *
+> >- * EMULTYPE_ALLOW_RETRY - Set when the emulator should resume the guest to
+> >- *			  retry native execution under certain conditions.
+> >+ * EMULTYPE_ALLOW_RETRY_PF - Set when the emulator should resume the guest to
+> >+ *			     retry native execution under certain conditions,
+> >+ *			     Can only be set in conjunction with EMULTYPE_PF.
+> >   *
+> >   * EMULTYPE_TRAP_UD_FORCED - Set when emulating an intercepted #UD that was
+> >   *			     triggered by KVM's magic "force emulation" prefix,
+> >@@ -1384,13 +1385,18 @@ extern u64 kvm_mce_cap_supported;
+> >   *			backdoor emulation, which is opt in via module param.
+> >   *			VMware backoor emulation handles select instructions
+> >   *			and reinjects the #GP for all other cases.
+> >+ *
+> >+ * EMULTYPE_PF - Set when emulating MMIO by way of an intercepted #PF, in which
+> >+ *		 case the CR2/GPA value pass on the stack is valid.
+> >   */
+> >  #define EMULTYPE_NO_DECODE	    (1 << 0)
+> >  #define EMULTYPE_TRAP_UD	    (1 << 1)
+> >  #define EMULTYPE_SKIP		    (1 << 2)
+> >-#define EMULTYPE_ALLOW_RETRY	    (1 << 3)
+> >+#define EMULTYPE_ALLOW_RETRY_PF	    (1 << 3)
+> 
+> How about naming it as EMULTYPE_PF_ALLOW_RETRY and exchanging the bit
+> position with EMULTYPE_PF ?
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
----
- drivers/staging/octeon/octeon-stubs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm, EMULTYPE_PF_ALLOW_RETRY does sound better.  I'm on the fence regarding
+shuffling the bits.  If I were to shuffle the bits, I'd do a more thorough
+reorder so that the #UD and #PF types are consecutive, e.g.
 
-diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
-index ea33c94fa12b..d06743504f2b 100644
---- a/drivers/staging/octeon/octeon-stubs.h
-+++ b/drivers/staging/octeon/octeon-stubs.h
-@@ -1345,7 +1345,7 @@ static inline void cvmx_pow_work_request_async_nocheck(int scr_addr,
- { }
- 
- static inline void cvmx_pow_work_request_async(int scr_addr,
--						       cvmx_pow_wait_t wait)
-+					       cvmx_pow_wait_t wait)
- { }
- 
- static inline struct cvmx_wqe *cvmx_pow_work_response_async(int scr_addr)
--- 
-2.17.1
+	#define EMULTYPE_NO_DECODE	    (1 << 0)
+	#define EMULTYPE_TRAP_UD	    (1 << 1)
+	#define EMULTYPE_TRAP_UD_FORCED	    (1 << 2)
+	#define EMULTYPE_SKIP		    (1 << 3)
+	#define EMULTYPE_VMWARE_GP	    (1 << 4)
+	#define EMULTYPE_PF		    (1 << 5)
+	#define EMULTYPE_PF_ALLOW_RETRY	    (1 << 6)
 
+Part of me really wants to do that, the other part of me thinks it's
+unnecessary thrash.
+
+> >  #define EMULTYPE_TRAP_UD_FORCED	    (1 << 4)
+> >  #define EMULTYPE_VMWARE_GP	    (1 << 5)
+> >+#define EMULTYPE_PF		    (1 << 6)
+> >+
+> >  int kvm_emulate_instruction(struct kvm_vcpu *vcpu, int emulation_type);
+> >  int kvm_emulate_instruction_from_buffer(struct kvm_vcpu *vcpu,
+> >  					void *insn, int insn_len);
+> >diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> >index 7011a4e54866..258624d46588 100644
+> >--- a/arch/x86/kvm/mmu/mmu.c
+> >+++ b/arch/x86/kvm/mmu/mmu.c
+> >@@ -5416,18 +5416,12 @@ EXPORT_SYMBOL_GPL(kvm_mmu_unprotect_page_virt);
+> >  int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+> >  		       void *insn, int insn_len)
+> >  {
+> >-	int r, emulation_type = 0;
+> >+	int r, emulation_type = EMULTYPE_PF;
+> >  	bool direct = vcpu->arch.mmu->direct_map;
+> >  	if (WARN_ON(!VALID_PAGE(vcpu->arch.mmu->root_hpa)))
+> >  		return RET_PF_RETRY;
+> >-	/* With shadow page tables, fault_address contains a GVA or nGPA.  */
+> >-	if (vcpu->arch.mmu->direct_map) {
+> >-		vcpu->arch.gpa_available = true;
+> >-		vcpu->arch.gpa_val = cr2_or_gpa;
+> >-	}
+> >-
+> >  	r = RET_PF_INVALID;
+> >  	if (unlikely(error_code & PFERR_RSVD_MASK)) {
+> >  		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+> >@@ -5472,7 +5466,7 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 error_code,
+> >  	 * for L1 isn't going to magically fix whatever issue cause L2 to fail.
+> >  	 */
+> >  	if (!mmio_info_in_cache(vcpu, cr2_or_gpa, direct) && !is_guest_mode(vcpu))
+> >-		emulation_type = EMULTYPE_ALLOW_RETRY;
+> >+		emulation_type |= EMULTYPE_ALLOW_RETRY_PF;
+> >  emulate:
+> >  	/*
+> >  	 * On AMD platforms, under certain conditions insn_len may be zero on #NPF.
+> >diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> >index fbabb2f06273..92af6c5a69e3 100644
+> >--- a/arch/x86/kvm/x86.c
+> >+++ b/arch/x86/kvm/x86.c
+> >@@ -6483,10 +6483,11 @@ static bool reexecute_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> >  	gpa_t gpa = cr2_or_gpa;
+> >  	kvm_pfn_t pfn;
+> >-	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
+> >+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
+> >  		return false;
+> >-	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
+> >+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
+> >+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
+> >  		return false;
+> >  	if (!vcpu->arch.mmu->direct_map) {
+> >@@ -6574,10 +6575,11 @@ static bool retry_instruction(struct x86_emulate_ctxt *ctxt,
+> >  	 */
+> >  	vcpu->arch.last_retry_eip = vcpu->arch.last_retry_addr = 0;
+> >-	if (!(emulation_type & EMULTYPE_ALLOW_RETRY))
+> >+	if (!(emulation_type & EMULTYPE_ALLOW_RETRY_PF))
+> >  		return false;
+> >-	if (WARN_ON_ONCE(is_guest_mode(vcpu)))
+> >+	if (WARN_ON_ONCE(is_guest_mode(vcpu)) ||
+> >+	    WARN_ON_ONCE(!(emulation_type & EMULTYPE_PF)))
+> >  		return false;
+> >  	if (x86_page_table_writing_insn(ctxt))
+> >@@ -6830,8 +6832,19 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> >  	}
+> >  restart:
+> >-	/* Save the faulting GPA (cr2) in the address field */
+> >-	ctxt->exception.address = cr2_or_gpa;
+> >+	if (emulation_type & EMULTYPE_PF) {
+> >+		/* Save the faulting GPA (cr2) in the address field */
+> >+		ctxt->exception.address = cr2_or_gpa;
+> >+
+> >+		/* With shadow page tables, cr2 contains a GVA or nGPA. */
+> >+		if (vcpu->arch.mmu->direct_map) {
+> >+			vcpu->arch.gpa_available = true;
+> >+			vcpu->arch.gpa_val = cr2_or_gpa;
+> >+		}
+> >+	} else {
+> >+		/* Sanitize the address out of an abundance of paranoia. */
+> >+		ctxt->exception.address = 0;
+> >+	}
+> >  	r = x86_emulate_insn(ctxt);
+> >
+> 
