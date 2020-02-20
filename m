@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E849DC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC51C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6727206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FD1208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:54:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R/+g2KqP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WLzTcpTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgBTTxz (ORCPT
+        id S1728996AbgBTTyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:53:55 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23065 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728556AbgBTTxz (ORCPT
+        Thu, 20 Feb 2020 14:54:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49865 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728556AbgBTTyD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:53:55 -0500
+        Thu, 20 Feb 2020 14:54:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582228433;
+        s=mimecast20190719; t=1582228442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=aCcTytOP234Bpez2/x/ttANB+L1zPQGu6RuaOR8/cjA=;
-        b=R/+g2KqP5hVOiDlEPrdthY0zZipHrIiOT8zX8UaWWGwk/yQPN2c2kTpX0TSJd+PTAPvsS3
-        3ObNYlXXOxyIDbwzKMN3e1UN8fZw+HjwN3RIms5njE0snpq2U2yuVtF3AKsmWADPu6mIBl
-        JI/Vo925y0OwOBBM5hToeYbuC94Q+Xg=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-eixVDyz7OtGZCB7eiNrKyQ-1; Thu, 20 Feb 2020 14:53:51 -0500
-X-MC-Unique: eixVDyz7OtGZCB7eiNrKyQ-1
-Received: by mail-qt1-f197.google.com with SMTP id o18so3379345qtt.19
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:53:51 -0800 (PST)
+        bh=Fez1YLYoRTejKdl3XovFZRqHL8yeL2JwUep3jNimnQM=;
+        b=WLzTcpTU2VGcnTgHsUzdEjIub5u2+7yDAgL+UD16gT09lNzslx1xOEySgq2VV0xRu81c+l
+        uwZZYwi9bTWbmf2qApbo6xlbsmQigyQhhJIDb5FRPCIK+UNKYcB9KjUT9sAWle88PT9+VC
+        ubuiovkClXAykm67izuPw5nWX+OJaYE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-31-Ar63fx_ePSS9Hvsku2YrUQ-1; Thu, 20 Feb 2020 14:54:00 -0500
+X-MC-Unique: Ar63fx_ePSS9Hvsku2YrUQ-1
+Received: by mail-qt1-f199.google.com with SMTP id r30so3373174qtb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:54:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aCcTytOP234Bpez2/x/ttANB+L1zPQGu6RuaOR8/cjA=;
-        b=SmCOYl6Wa8Y7aBhc2OOcHlVHvrzWILV8qmM4MKPzgAWcJ3Q9nW8wqnw92aiVEhqc61
-         dr+/u1ug887K1KNuOMvMSr89UWylFIUzVIxAnvfLm5hw3Vesx5CX5LSnUC0jsqB8OfPb
-         yZjJh0YqXiZa6PM0UV7ok6sc+BumO/I/q4fogB+YIUvmHk69M5dRlfHEM9Djjj8xlQRG
-         Shk3QdQAx4q36X998n0oO6U8YIunuqV7cFxuFCXX5revNl5O4YDJpF+sM6nq0/SthLI8
-         PPk3R+tiWDPfulVmYYABqE0/6QV0KPxPWRMx8CPqs+XYrvNp+cVj9QCwZrGu168HBhyD
-         1brQ==
-X-Gm-Message-State: APjAAAUeVhwq2mds2Fm5loxWgjdGJiyHWxIYOcc7ylRunIHPPRwqUIDl
-        SxeV/ws8PgG56WTEBBB0gLcemNeDMInsnGaPBHs2jYVwrWN9wtc7rJzTg/Ycpw3AtffaharEyLk
-        6u0gmOwDcGmeRqaFtwEyoafU5
-X-Received: by 2002:a0c:eacb:: with SMTP id y11mr27802170qvp.68.1582228431160;
-        Thu, 20 Feb 2020 11:53:51 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz93atG3z/lnFBir34YOlOdzPMcROHMRiL5PAnpOXXRYB9KUMpanhKW+UUPSuYBC/9MetdmXg==
-X-Received: by 2002:a0c:eacb:: with SMTP id y11mr27802131qvp.68.1582228430870;
-        Thu, 20 Feb 2020 11:53:50 -0800 (PST)
+        bh=Fez1YLYoRTejKdl3XovFZRqHL8yeL2JwUep3jNimnQM=;
+        b=Db+NET4UXZ3i9Ya0tN5mVBrstQ4hFGW4FkHCL9gWu61FkOurCtmeQY2LaH4zEOZOYg
+         pn/cZO4KMjIBS/Idgbi85LrcOrXJRL8zoGqu8lC9Ew/goPyhoiVmcrnRtP7rZxtX9vQb
+         Sa+PsdnAKhNWOQK34Ri8XQcWpEyoJElIxpk8X1HLu4coKBdPSejaCWiZV35jIKqveqQJ
+         QXyvM/U19Du/OhCd05AJzBGAg5Iy3eSbsgkN41HbQ4nCFLtKktyqErTnNpPOKEoI3zyl
+         CG7V9awYnLX2qWFp5AdrpOODNu3odO4vHX9KsLSK+Dz5iep6ZHfufH4VMZHfep96FYic
+         7MZg==
+X-Gm-Message-State: APjAAAXD1bKmqJhDmp7VkXCiyXQzkrR1P5lHXKHIvsd6taDaFZ6juneY
+        M/s6o10G44Wzxo/7q+IyaFAb9an3Ain9h7zDW4FlIZZOTugRyW4jh4y0Hmz/ZaUtP9GX1V+sd61
+        T6qEWbwGjduT+Hex7C6TwmYiu
+X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr27322419qvb.47.1582228439903;
+        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwEIhUPaSeXK2C2o3Bv58EPeWBkwTGMcKqMaRd3x8T+f6afhWOfRCq+hk0nYhl6E3hyCskSsQ==
+X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr27322394qvb.47.1582228439636;
+        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
 Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id r37sm293401qtj.44.2020.02.20.11.53.49
+        by smtp.gmail.com with ESMTPSA id a192sm332776qkb.53.2020.02.20.11.53.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 11:53:50 -0800 (PST)
+        Thu, 20 Feb 2020 11:53:59 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Peter Xu <peterx@redhat.com>, Martin Cracauer <cracauer@cons.org>,
@@ -83,9 +83,9 @@ Cc:     Peter Xu <peterx@redhat.com>, Martin Cracauer <cracauer@cons.org>,
         David Hildenbrand <david@redhat.com>,
         Bobby Powers <bobbypowers@gmail.com>,
         Mel Gorman <mgorman@suse.de>
-Subject: [PATCH RESEND v6 12/16] mm: Introduce FAULT_FLAG_INTERRUPTIBLE
-Date:   Thu, 20 Feb 2020 14:53:48 -0500
-Message-Id: <20200220195348.16302-1-peterx@redhat.com>
+Subject: [PATCH RESEND v6 14/16] mm/gup: Allow VM_FAULT_RETRY for multiple times
+Date:   Thu, 20 Feb 2020 14:53:57 -0500
+Message-Id: <20200220195357.16371-1-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200220155353.8676-1-peterx@redhat.com>
 References: 
@@ -96,109 +96,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-handle_userfaultfd() is currently the only one place in the kernel
-page fault procedures that can respond to non-fatal userspace signals.
-It was trying to detect such an allowance by checking against USER &
-KILLABLE flags, which was "un-official".
+This is the gup counterpart of the change that allows the
+VM_FAULT_RETRY to happen for more than once.  One thing to mention is
+that we must check the fatal signal here before retry because the GUP
+can be interrupted by that, otherwise we can loop forever.
 
-In this patch, we introduced a new flag (FAULT_FLAG_INTERRUPTIBLE) to
-show that the fault handler allows the fault procedure to respond even
-to non-fatal signals.  Meanwhile, add this new flag to the default
-fault flags so that all the page fault handlers can benefit from the
-new flag.  With that, replacing the userfault check to this one.
-
-Since the line is getting even longer, clean up the fault flags a bit
-too to ease TTY users.
-
-Although we've got a new flag and applied it, we shouldn't have any
-functional change with this patch so far.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- fs/userfaultfd.c   |  4 +---
- include/linux/mm.h | 39 ++++++++++++++++++++++++++++-----------
- 2 files changed, 29 insertions(+), 14 deletions(-)
+ mm/gup.c     | 27 +++++++++++++++++++++------
+ mm/hugetlb.c |  6 ++++--
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 888272621f38..c076d3295958 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -462,9 +462,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	uwq.ctx = ctx;
- 	uwq.waken = false;
+diff --git a/mm/gup.c b/mm/gup.c
+index 76cb420c0fb7..ec2b76f44a01 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -652,7 +652,10 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
+ 	if (*flags & FOLL_NOWAIT)
+ 		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
+ 	if (*flags & FOLL_TRIED) {
+-		VM_WARN_ON_ONCE(fault_flags & FAULT_FLAG_ALLOW_RETRY);
++		/*
++		 * Note: FAULT_FLAG_ALLOW_RETRY and FAULT_FLAG_TRIED
++		 * can co-exist
++		 */
+ 		fault_flags |= FAULT_FLAG_TRIED;
+ 	}
  
--	return_to_userland =
--		(vmf->flags & (FAULT_FLAG_USER|FAULT_FLAG_KILLABLE)) ==
--		(FAULT_FLAG_USER|FAULT_FLAG_KILLABLE);
-+	return_to_userland = vmf->flags & FAULT_FLAG_INTERRUPTIBLE;
- 	blocking_state = return_to_userland ? TASK_INTERRUPTIBLE :
- 			 TASK_KILLABLE;
+@@ -1012,7 +1015,6 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
+ 		down_read(&mm->mmap_sem);
+ 		if (!(fault_flags & FAULT_FLAG_TRIED)) {
+ 			*unlocked = true;
+-			fault_flags &= ~FAULT_FLAG_ALLOW_RETRY;
+ 			fault_flags |= FAULT_FLAG_TRIED;
+ 			goto retry;
+ 		}
+@@ -1096,17 +1098,30 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
+ 		if (likely(pages))
+ 			pages += ret;
+ 		start += ret << PAGE_SHIFT;
++		lock_dropped = true;
  
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 08ca35d3c341..ff653f9136dd 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -378,22 +378,38 @@ extern unsigned int kobjsize(const void *objp);
-  */
- extern pgprot_t protection_map[16];
- 
--#define FAULT_FLAG_WRITE	0x01	/* Fault was a write access */
--#define FAULT_FLAG_MKWRITE	0x02	/* Fault was mkwrite of existing pte */
--#define FAULT_FLAG_ALLOW_RETRY	0x04	/* Retry fault if blocking */
--#define FAULT_FLAG_RETRY_NOWAIT	0x08	/* Don't drop mmap_sem and wait when retrying */
--#define FAULT_FLAG_KILLABLE	0x10	/* The fault task is in SIGKILL killable region */
--#define FAULT_FLAG_TRIED	0x20	/* Second try */
--#define FAULT_FLAG_USER		0x40	/* The fault originated in userspace */
--#define FAULT_FLAG_REMOTE	0x80	/* faulting for non current tsk/mm */
--#define FAULT_FLAG_INSTRUCTION  0x100	/* The fault was during an instruction fetch */
-+/**
-+ * Fault flag definitions.
-+ *
-+ * @FAULT_FLAG_WRITE: Fault was a write fault.
-+ * @FAULT_FLAG_MKWRITE: Fault was mkwrite of existing PTE.
-+ * @FAULT_FLAG_ALLOW_RETRY: Allow to retry the fault if blocked.
-+ * @FAULT_FLAG_RETRY_NOWAIT: Don't drop mmap_sem and wait when retrying.
-+ * @FAULT_FLAG_KILLABLE: The fault task is in SIGKILL killable region.
-+ * @FAULT_FLAG_TRIED: The fault has been tried once.
-+ * @FAULT_FLAG_USER: The fault originated in userspace.
-+ * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
-+ * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
-+ * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
-+ */
-+#define FAULT_FLAG_WRITE			0x01
-+#define FAULT_FLAG_MKWRITE			0x02
-+#define FAULT_FLAG_ALLOW_RETRY			0x04
-+#define FAULT_FLAG_RETRY_NOWAIT			0x08
-+#define FAULT_FLAG_KILLABLE			0x10
-+#define FAULT_FLAG_TRIED			0x20
-+#define FAULT_FLAG_USER				0x40
-+#define FAULT_FLAG_REMOTE			0x80
-+#define FAULT_FLAG_INSTRUCTION  		0x100
-+#define FAULT_FLAG_INTERRUPTIBLE		0x200
- 
- /*
-  * The default fault flags that should be used by most of the
-  * arch-specific page fault handlers.
-  */
- #define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
--			     FAULT_FLAG_KILLABLE)
-+			     FAULT_FLAG_KILLABLE | \
-+			     FAULT_FLAG_INTERRUPTIBLE)
- 
- #define FAULT_FLAG_TRACE \
- 	{ FAULT_FLAG_WRITE,		"WRITE" }, \
-@@ -404,7 +420,8 @@ extern pgprot_t protection_map[16];
- 	{ FAULT_FLAG_TRIED,		"TRIED" }, \
- 	{ FAULT_FLAG_USER,		"USER" }, \
- 	{ FAULT_FLAG_REMOTE,		"REMOTE" }, \
--	{ FAULT_FLAG_INSTRUCTION,	"INSTRUCTION" }
-+	{ FAULT_FLAG_INSTRUCTION,	"INSTRUCTION" }, \
-+	{ FAULT_FLAG_INTERRUPTIBLE,	"INTERRUPTIBLE" }
- 
- /*
-  * vm_fault is filled by the the pagefault handler and passed to the vma's
++retry:
+ 		/*
+ 		 * Repeat on the address that fired VM_FAULT_RETRY
+-		 * without FAULT_FLAG_ALLOW_RETRY but with
+-		 * FAULT_FLAG_TRIED.
++		 * with both FAULT_FLAG_ALLOW_RETRY and
++		 * FAULT_FLAG_TRIED.  Note that GUP can be interrupted
++		 * by fatal signals, so we need to check it before we
++		 * start trying again otherwise it can loop forever.
+ 		 */
++
++		if (fatal_signal_pending(current))
++			break;
++
+ 		*locked = 1;
+-		lock_dropped = true;
+ 		down_read(&mm->mmap_sem);
++
+ 		ret = __get_user_pages(tsk, mm, start, 1, flags | FOLL_TRIED,
+-				       pages, NULL, NULL);
++				       pages, NULL, locked);
++		if (!*locked) {
++			/* Continue to retry until we succeeded */
++			BUG_ON(ret != 0);
++			goto retry;
++		}
+ 		if (ret != 1) {
+ 			BUG_ON(ret > 1);
+ 			if (!pages_done)
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index c84f721db020..ac9a28d51674 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -4343,8 +4343,10 @@ long follow_hugetlb_page(struct mm_struct *mm, struct vm_area_struct *vma,
+ 				fault_flags |= FAULT_FLAG_ALLOW_RETRY |
+ 					FAULT_FLAG_RETRY_NOWAIT;
+ 			if (flags & FOLL_TRIED) {
+-				VM_WARN_ON_ONCE(fault_flags &
+-						FAULT_FLAG_ALLOW_RETRY);
++				/*
++				 * Note: FAULT_FLAG_ALLOW_RETRY and
++				 * FAULT_FLAG_TRIED can co-exist
++				 */
+ 				fault_flags |= FAULT_FLAG_TRIED;
+ 			}
+ 			ret = hugetlb_fault(mm, vma, vaddr, fault_flags);
 -- 
 2.24.1
 
