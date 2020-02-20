@@ -6,151 +6,111 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D8C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFB6C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9231207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACD1206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582239409;
-	bh=pZudnsciafrb+vXn4etwqNO8T95u5KrvEe3MBiiI0Kc=;
+	s=default; t=1582239637;
+	bh=npUvA3Z4rYmLdHA5oXZiFkJuo1vKCyirh+g/aJDCmjc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=esZtqvHMvkTY+D+YXTAXAMABF+hV6VAAZFXraaM5aTNzGfSVhIvRDeNSEec/P3Dgj
-	 p0/+v6/stp7P+knrDBmdkIeHxIljutBzWipOX07KNIpFxBhfnjE38QkH0nTIX8RRzT
-	 REM3FqPBbScQwBAvQZAw+q3d4aKJSrNQQThnBcfM=
+	b=VuKkvw4AN0FZgkUgPPpJrxNWx7Nobhg0QsrOFN8Hj++GB4N73UDCHrbf8g9Zo44X6
+	 8Y7WWXKlBNH7uukjBezCcwJjroN6Pyw+RuxbJnMstEV5bIcaq8uigYmgMnbgKlH3Hf
+	 nOi09hpdqJQ2uTeBahMP1PsnDI7AiQ+Acd2aGwXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgBTW4s (ORCPT
+        id S1729272AbgBTXAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:56:48 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43251 "EHLO
+        Thu, 20 Feb 2020 18:00:36 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45299 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729130AbgBTW4r (ORCPT
+        with ESMTP id S1727135AbgBTXAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:56:47 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a13so172128ljm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:56:46 -0800 (PST)
+        Thu, 20 Feb 2020 18:00:35 -0500
+Received: by mail-lj1-f195.google.com with SMTP id e18so166436ljn.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:00:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VPKDe6yRRFJGUnIwSU2OwVdWr6D/nSY2qyTGzzCBHYQ=;
-        b=g52x6jfoclKMmzoDFsItZqupm/1XbxO96MhH+R0k3RS07HgaUyCwcGY2OQkLyiZEGS
-         HeYbZrTNT4ygcHbgFok2GwM1MWDRWE1rWgHw90nB1fVTrKRtnxVYM68htw6dBXxWj+3F
-         UhZPwMEXtTOtA6b4b76Pnl2fv6iWYWogA+Ul4=
+        bh=oW+dHyuXcdgcpFOp9rkCYNNzyvxL/1mmVUWMW1tVkn8=;
+        b=HsJYplXHj9WIosfuyYDxgCIpizr4Q2QTncG0r8kQoBcqx1jdtsR9fFVeYAPGlhnI5Y
+         7UWBHhKU9LT9oEd08VowjnmWRULPbdq+faWGzRjHU4lCzwffnnc4X3O8+YTbupxrOXam
+         he3lTa6POmGxUb6ylyx451mYPhWfQQq6/MfdM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VPKDe6yRRFJGUnIwSU2OwVdWr6D/nSY2qyTGzzCBHYQ=;
-        b=Dud5ivsM6Zs8gmlbqZpDwEVZkpUXZuTcJT8JKdirSaA86JOg7D1i+ZucuVG9MU1Ii/
-         mVmUOtyplrX5X2yHPpiJe6S2thimVfw4rD54Q0tbArCjM5bOWDIZuy0Rlzymv9GqPjZJ
-         Y7s9VCM+FdMXsKHfA+G6GNW+bJ0/6rsrew1OSFOHMmfL2TtLQq0PwC+jPJEBHCpawPu/
-         fvsHpTLTMBBAF/fXsFDLmEzA2eRDnaRNUQJYzFk4E+JHvCPjR5C1IByyMi4kSouVryVl
-         WuN6bQKv28YKC+MTZ74jrCpZEc4XlmIElH7MSyI0BD8wQqPlm/SOjfF3RgYLscAOc0m1
-         QQ4A==
-X-Gm-Message-State: APjAAAX5lAHadWVuuWF+8YIcmMbAhD40NiJGJaIFs6l0sAS5qyQp1FO6
-        QfBiBcZnCbCY+PSQcHsx8dxf5fS+G6I=
-X-Google-Smtp-Source: APXvYqzi2XME7EAm3RJQ6RUdWW2k9+PeE2WIRx76tVDvNT872rFzIZgD5uk4bHED7mS9TEPg++s8gg==
-X-Received: by 2002:a2e:81c3:: with SMTP id s3mr19658221ljg.168.1582239405508;
-        Thu, 20 Feb 2020 14:56:45 -0800 (PST)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id d20sm425253ljg.95.2020.02.20.14.56.44
+        bh=oW+dHyuXcdgcpFOp9rkCYNNzyvxL/1mmVUWMW1tVkn8=;
+        b=geEL0LwjBGWKCMrDMeQOR2XMIkhrN97TRkl3NDuhGBtskzpwwpxLPS9f03RzCmTDgs
+         wz06DXUNwybEpiO4CRS3Hn5PBUEhkg0VRd2iOT+Ko1afQvuCiGc0tAtKnbI8u7ElexwG
+         36hFV8Jie/hwnTleBYmfAjcfYf1Qg66xCvHRry/YbKV5ibA9EJWFx/MurXLBQUSX0Bq3
+         cTOA6Nbw4Yk+AsMNdEvEsdRNuiuHUBu4TNQz/v0hV4Pk6ZH557Oli0ESDf+0NICag0Ju
+         3vEJhm/zB9DYvdSuy5ZgPK5FMAGDTEYKhNAU3w2Nlk9QmOYt97yJjeuc4P/ONUUMaJDB
+         GoHQ==
+X-Gm-Message-State: APjAAAXOIgfp7Y9y1DJ0ogN/0MLN3U8e/hy4UTyaxzdzwMrvaXql8OCs
+        MEkm4foDd7qORuqPiEGrkItdz78KsLQ=
+X-Google-Smtp-Source: APXvYqwxeEgopvmtBbMD+4ih7zX46XAmpH+f+d2wde+BlCccq0CSLIIAJU2dgwSoTOvLtiI1dUnOdw==
+X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr19041327ljm.218.1582239632310;
+        Thu, 20 Feb 2020 15:00:32 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id m21sm492516lfb.59.2020.02.20.15.00.30
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 14:56:44 -0800 (PST)
-Received: by mail-lf1-f54.google.com with SMTP id f24so43752lfh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:56:44 -0800 (PST)
-X-Received: by 2002:ac2:490e:: with SMTP id n14mr3027836lfi.142.1582239404138;
- Thu, 20 Feb 2020 14:56:44 -0800 (PST)
+        Thu, 20 Feb 2020 15:00:30 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id q8so172693ljj.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:00:30 -0800 (PST)
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr20496205ljk.201.1582239629960;
+ Thu, 20 Feb 2020 15:00:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20200217183340.GI23230@ZenIV.linux.org.uk> <CAHk-=wivKU1eP8ir4q5xEwOV0hsomFz7DMtiAot__X2zU-yGog@mail.gmail.com>
- <20200220224707.GQ23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200220224707.GQ23230@ZenIV.linux.org.uk>
+References: <20200212200335.GO23230@ZenIV.linux.org.uk> <CAHk-=wi+1CPShMFvJNPfnrJ8DD8uVKUOQ5TQzQUNGLUkeoahkg@mail.gmail.com>
+ <20200212203833.GQ23230@ZenIV.linux.org.uk> <20200212204124.GR23230@ZenIV.linux.org.uk>
+ <CAHk-=wi5FOGV_3tALK3n6E2fK3Oa_yCYkYQtCSaXLSEm2DUCKg@mail.gmail.com>
+ <87lfp7h422.fsf@x220.int.ebiederm.org> <CAHk-=wgmn9Qds0VznyphouSZW6e42GWDT5H1dpZg8pyGDGN+=w@mail.gmail.com>
+ <87pnejf6fz.fsf@x220.int.ebiederm.org> <871rqpaswu.fsf_-_@x220.int.ebiederm.org>
+ <87blpt9e6m.fsf_-_@x220.int.ebiederm.org> <20200220225420.GR23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200220225420.GR23230@ZenIV.linux.org.uk>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 20 Feb 2020 14:56:28 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
-Message-ID: <CAHk-=wiKs7Q2DbP6kk8JQksb0nhUvAs2wO5cNdWirNEc3CM-YQ@mail.gmail.com>
-Subject: Re: [RFC] regset ->get() API
+Date:   Thu, 20 Feb 2020 15:00:13 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whPwMTTaGtphubBXeiKitKigutddx9Fcp4Sf1sw4tpyeA@mail.gmail.com>
+Message-ID: <CAHk-=whPwMTTaGtphubBXeiKitKigutddx9Fcp4Sf1sw4tpyeA@mail.gmail.com>
+Subject: Re: [PATCH 4/7] proc: Use d_invalidate in proc_prune_siblings_dcache
 To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Solar Designer <solar@openwall.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 2:47 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Thu, Feb 20, 2020 at 2:54 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> On Wed, Feb 19, 2020 at 12:01:54PM -0800, Linus Torvalds wrote:
->
-> > I don't mind it, but some of those buffers are big, and the generic
-> > code generally doesn't know how big.
->
-> That's what regset_size() returns...
+> s/no inode.*/it's a directory inode./
 
-Yes, but the code ends up being disgusting. You first have to call
-that indirect function just to get the size, then do a kmalloc, and
-then call another indirect function to actually fill it.
+That actually makes my worry go away too. We don't allow aliases for
+directory inodes, iirc.
 
-Don't do that. Not since we know how retpoline is a bad thing.
-
-And since the size isn't always some trivial constant (ie for x86 PFU
-it depends on the register state!), I think the only sane model is to
-change the interface even more, and just have the "get()" function not
-only get the data, but allocate the backing store too.
-
-So you'd never pass in the result pointer - you'd get a result area
-that you can then free.
-
-Hmm?
-
-The alternative is to pick a constant size that is "big enough", and
-just assume that one page (or whatever) is sufficient:
-
-> > Maybe even more. I'm not sure how big the FPU regset can get on x86...
->
-> amd64:
->         REGSET_GENERAL  =>      sizeof(struct user_regs_struct) (216)
->         REGSET_FP       =>      sizeof(struct user_i387_struct) (512)
->         REGSET_XSTATE   =>      sizeof(struct swregs_state) or
->                                 sizeof(struct fxregs_state) or
->                                 sizeof(struct fregs_state) or
->                                 XSAVE insn buffer size (max about 2.5Kb, AFAICS)
->         REGSET_IOPERM64 =>      IO_BITMAP_BYTES (8Kb, that is)
-
-Yeah, so apparently one page isn't sufficient.
-
-
-> FWIW, what I have in mind is to start with making copy_regset_to_user() do
->         buf = kmalloc(size, GFP_KERNEL);
->         if (!buf)
->                 return -ENOMEM;
->         err = regset->get(target, regset, offset, size, buf, NULL);
-
-See above. This doesn't work. You don't know the size. And we don't
-have a known maximum size either.
-
->         if (!err && copy_to_user(data, buf, size))
->                 err = -EFAULT;
->         kfree(buf);
->         return err;
-
-But if you change "->get()" to just return a kmalloc'ed buffer, I'd be
-ok with that.
-
-IOW, something like
-
-        buf = regset->get(target, regset, &size);
-        if (IS_ERR(buf))
-                return PTR_ERR(bug);
-        err = copy_to_user(data, buf, size);
-        kfree(buf);
-        return err;
-
-or something like that. Just get rid of the "ubuf" entirely.
-
-Wouldn't that be nicer?
+So then it doesn't depend on some /proc implementation issue any more,
+then it's fundamental that there's only one dentry.
 
             Linus
