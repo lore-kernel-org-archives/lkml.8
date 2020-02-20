@@ -2,70 +2,78 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB96C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7514EC11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9E52465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E40F20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PM/AprBi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgBTPyc (ORCPT
+        id S1728662AbgBTPyx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:54:32 -0500
-Received: from muru.com ([72.249.23.125]:56308 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbgBTPyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:54:32 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id EB8098080;
-        Thu, 20 Feb 2020 15:55:16 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 07:54:29 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200220155429.GH37466@atomide.com>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
+        Thu, 20 Feb 2020 10:54:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56204 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbgBTPyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:54:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=D6I8jW+2llttZsSrEwC7oLd5yfRbnmR5fQ3XY07h6/A=; b=PM/AprBicbU39edYsbWTpTc0Na
+        emVcq7cb+NHUM6oooQNEoXkG8+bHD9DPrTjjG2z2x3T5qTsF2asVZBk11hr9EbGPUjnd00E3//wQZ
+        Ybl+M5Ncbk5X+eqZuv5FQg2IiH2QMSkNvYYPTlkj7xTRE/LwRRrh6jsluV0sdP9tbDuj8LPcnDHs1
+        hcDRVlsCikcg/+gbg3xn8+BGR6mA7HS7wgpHnbqj5ErHAFq/eFM9zwR+c5djfNPqtTIEOm8KczQWy
+        Y9fVsWdlNqjO9NJrXN3ek4kvMofOELyh95VqWLxea4QhQIGt2c5AYVzLVexEyX6ylz0YB4RkWIKLh
+        T/R9auvw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4oA8-00077l-7Q; Thu, 20 Feb 2020 15:54:52 +0000
+Date:   Thu, 20 Feb 2020 07:54:52 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v7 14/24] btrfs: Convert from readpages to readahead
+Message-ID: <20200220155452.GX24185@bombadil.infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-15-willy@infradead.org>
+ <SN4PR0401MB35987D7B76007B93B1C5CE5E9B130@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <20200220134849.GV24185@bombadil.infradead.org>
+ <20200220154658.GA19577@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202002131856.VeW4PhBJ%lkp@intel.com>
+In-Reply-To: <20200220154658.GA19577@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
-
-* kbuild test robot <lkp@intel.com> [200213 10:27]:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> date:   3 weeks ago
-> config: arm-randconfig-a001-20200213 (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.5.0 make.cross ARCH=arm 
+On Thu, Feb 20, 2020 at 07:46:58AM -0800, Christoph Hellwig wrote:
+> On Thu, Feb 20, 2020 at 05:48:49AM -0800, Matthew Wilcox wrote:
+> > btrfs: Convert from readpages to readahead
+> >   
+> > Implement the new readahead method in btrfs.  Add a readahead_page_batch()
+> > to optimise fetching a batch of pages at once.
 > 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> >> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
+> Shouldn't this readahead_page_batch heper go into a separate patch so
+> that it clearly stands out?
 
-Have you looked at this one? Looks like there's still an unhandled
-randconfig build case.
-
-Regards,
-
-Tony
+I'll move it into 'Put readahead pages in cache earlier' for v8 (the
+same patch where we add readahead_page())
