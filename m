@@ -2,126 +2,107 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AC3C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4BDC11D0A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBCE206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07080206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MOPvSlGH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTY9u1hH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbgBTNnc (ORCPT
+        id S1728225AbgBTNoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:43:32 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:41731 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbgBTNnc (ORCPT
+        Thu, 20 Feb 2020 08:44:08 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58475 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727298AbgBTNoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:43:32 -0500
-Received: by mail-vs1-f67.google.com with SMTP id k188so2663181vsc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:43:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VHEgUpty5OrcYJGxbPFH9uNYoAV1sH/e0iu6cPEMqFw=;
-        b=MOPvSlGHs9vY9i1zxdZVYvRucN1GCv+wIlEmZNcxvOVJgWieyOuK5t2FgeWXlgssoI
-         mgJD2DDeUXPTIpGdhTzqk5XirwmPaMk6CAwFKtPLAPWngvQpSx0wvzDZ3QBI5chjHIfO
-         KlmT5z1qkHUZ1uy+lLfwhjvhlJoHtsQuwvRing9iIyS86tsUJYRObuuaZR1A4VsrYEWk
-         CWwFljQX7WEAW5jj6YS8yCvSvpKPzB2Ug+lVXbgZ5JfB92mkizAVa2b/yNk21crOhZrc
-         gnOIAvQqaXvxMxoOcpWkdq6mv+MYWKnMO5YcMjsRyGPJRrqW9wjWseT53Fo8heW6kC0g
-         R9VA==
+        Thu, 20 Feb 2020 08:44:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582206245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9GnCMDDr9bENW9WQppVm9UUnxyqhxQmFQhfd/rFn4fo=;
+        b=LTY9u1hH1HPAuKqAfxibwn5+nxaXOt9zdo6mnRy5wiVp1SmjhDkAB9aD6nfQpfc8WDe5Kx
+        Ibg7ITcu/ZPulK794ZbYU22uHGrn94o4IuQstdQHr8L1BXhFuQOSQLntHV4nAMJhkwIYV2
+        aGRYMsP2DIwd/i8yFY64ub5wi2ckIgw=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-A_910umtPBaUjXRX0W3jow-1; Thu, 20 Feb 2020 08:44:03 -0500
+X-MC-Unique: A_910umtPBaUjXRX0W3jow-1
+Received: by mail-wm1-f69.google.com with SMTP id u11so846692wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:44:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VHEgUpty5OrcYJGxbPFH9uNYoAV1sH/e0iu6cPEMqFw=;
-        b=d6d/vsC7sE7OXFtVu9dLnZGG9LwcWHxpV5U5beAIew5OBuo0llfnIIXXhurT5A54fT
-         rsH3b3xOaFmO8wDbVvpridUJAbWqUAr/VzZ8IXmsAl4rzTAqDS2s3hzBOQYCxp9MbvPE
-         CpG8vuihHv+X2vWj1cpfsRnDMXNrF2cFN+u91BFwRIMbKQ2HK6SgbVP8zqza0LXsVu8A
-         IA8QZHRU/csS5KVkhKFuvvfU7VsQz18F7qnpAicJK9g09ibOQa9X3FVomr/qNEAf5BeS
-         dgmwTZ9JPMXiBx1TXa9LUV/BTQSKLSw0LRcBGBtie0N9pqn59cCtHub75XWMJbDj83EW
-         jitg==
-X-Gm-Message-State: APjAAAUwSYxv71jmV0JPCIgKrqNzOqZA5bKEM2b5RYndLAQdo55xKLG0
-        saZgZNZuH5XPJg0g57Ri9qLNEXkqq/xGYv8blkocSqZa
-X-Google-Smtp-Source: APXvYqzAicYKMyJevIEntfrmo+/YD/iJAwDqnrwi2s9zzjbgZoib9lZtdmSkXq/LWZ2YjZVuv7nGnV3Vfctk+AI50NM=
-X-Received: by 2002:a05:6102:22d6:: with SMTP id a22mr16400744vsh.191.1582206209871;
- Thu, 20 Feb 2020 05:43:29 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=9GnCMDDr9bENW9WQppVm9UUnxyqhxQmFQhfd/rFn4fo=;
+        b=Xvvv7Q/kZtvbStyhfANslRaZKjGYy0VQL86pVkksMqIcadX5zg51W9aQE8w5EtoP28
+         oZHGOyAGbckxDQjiPgK67wLaEbfe99SbUZujIzqJP9+4Ww1JU/Vpksu1mNiM8Ak3H9rf
+         vuzxFXnetqNuygBI7bjiiWpZm+rCwJRculwtlffrgUTjZcEbOFwF7nUzGumLNwBEwUie
+         uSK0/oKOmbCvJnxu6/TMAAl0+sMvgw+2Keyjdk38+H8KQEN/PoiG3m5rnPUE13ZcXEsF
+         RLELetmdPwiwesOlj21z9tYt8QFzOjEzLPI3/ELZyqsh/U2MvpvF8DjKgCCw6b6//Sa9
+         FgYQ==
+X-Gm-Message-State: APjAAAVsgcgpXnJ4iAryzKGy/Z5DX5dW/3HG1zXrk0z0vQsFYcj1Io4k
+        ePtvQksbQXVTSxQ+9GymvByYE2TtnCfQiyW3qlOTXtQtoXrxOWxOqdiuhq1pLhWwEfjSEubDE6O
+        eMhw2cOx+A8TAZFiTODKF8RRd
+X-Received: by 2002:a05:600c:4105:: with SMTP id j5mr4820232wmi.28.1582206242467;
+        Thu, 20 Feb 2020 05:44:02 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyUpHy0hlSQ8YseVyGjJV91s1b+icW0ezutQz33mhkVlVtICBPEbWyT+7sWDM88+qD5srIPjg==
+X-Received: by 2002:a05:600c:4105:: with SMTP id j5mr4820213wmi.28.1582206242154;
+        Thu, 20 Feb 2020 05:44:02 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a9sm4992690wrn.3.2020.02.20.05.44.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 05:44:01 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: x86: enable -Werror
+In-Reply-To: <1581535233-42127-1-git-send-email-pbonzini@redhat.com>
+References: <1581535233-42127-1-git-send-email-pbonzini@redhat.com>
+Date:   Thu, 20 Feb 2020 14:44:00 +0100
+Message-ID: <875zg174rj.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-References: <20200211160321.22124-1-paul@crapouillou.net> <20200211160321.22124-4-paul@crapouillou.net>
- <CAPDyKFquXSB+ztXZQS4MPV20dRN_-CKJkmCF0A97pG+vJYRsbg@mail.gmail.com>
-In-Reply-To: <CAPDyKFquXSB+ztXZQS4MPV20dRN_-CKJkmCF0A97pG+vJYRsbg@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 20 Feb 2020 14:42:52 +0100
-Message-ID: <CAPDyKFrGTVZ9_d-rGDLiEJ-nxPhXtOmw5hTDekpt_+RNB2Sx2A@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/3] mmc: jz4740: Use pm_sleep_ptr() macro
-To:     Paul Cercueil <paul@crapouillou.net>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        od@zcrc.me, Linux PM <linux-pm@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 14:38, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Tue, 11 Feb 2020 at 17:03, Paul Cercueil <paul@crapouillou.net> wrote:
-> >
-> > Use the newly introduced pm_sleep_ptr() macro to simplify the code.
-> >
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> > ---
-> >  drivers/mmc/host/jz4740_mmc.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> > index fbae87d1f017..09554f9831de 100644
-> > --- a/drivers/mmc/host/jz4740_mmc.c
-> > +++ b/drivers/mmc/host/jz4740_mmc.c
-> > @@ -1099,24 +1099,18 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
-> >         return 0;
-> >  }
-> >
-> > -#ifdef CONFIG_PM_SLEEP
-> > -
-> > -static int jz4740_mmc_suspend(struct device *dev)
-> > +static int __maybe_unused jz4740_mmc_suspend(struct device *dev)
-> >  {
-> >         return pinctrl_pm_select_sleep_state(dev);
-> >  }
-> >
-> > -static int jz4740_mmc_resume(struct device *dev)
-> > +static int __maybe_unused jz4740_mmc_resume(struct device *dev)
-> >  {
-> >         return pinctrl_select_default_state(dev);
-> >  }
-> >
-> >  static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
-> >         jz4740_mmc_resume);
-> > -#define JZ4740_MMC_PM_OPS (&jz4740_mmc_pm_ops)
-> > -#else
-> > -#define JZ4740_MMC_PM_OPS NULL
-> > -#endif
->
-> All of the above code can be simplified in this way, without having to
-> convert into using the new pm_sleep_ptr() macro, below.
->
-> The only "penalty" would be that, the struct dev_pm_ops
-> (jz4740_mmc_pm_ops) would then be referenced even when CONFIG_PM* is
-> unset, thus the compiler would be able to throw it away.
+Paolo Bonzini <pbonzini@redhat.com> writes:
 
-/s/would/would not
+> Avoid more embarrassing mistakes.  
 
-[...]
+"avoid more" != "make less" :-)
 
-Kind regards
-Uffe
+> At least those that the compiler can catch.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  arch/x86/kvm/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
+> index b19ef421084d..4654e97a05cc 100644
+> --- a/arch/x86/kvm/Makefile
+> +++ b/arch/x86/kvm/Makefile
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  ccflags-y += -Iarch/x86/kvm
+> +ccflags-y += -Werror
+>  
+>  KVM := ../../../virt/kvm
+
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
+
