@@ -2,168 +2,132 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1250C7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60154C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8B824671
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 354DC24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZCBB9Nph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgBTBhF (ORCPT
+        id S1727864AbgBTBhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:37:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:8059 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727135AbgBTBhD (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:37:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 17:37:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,462,1574150400"; 
-   d="scan'208";a="259114772"
-Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Feb 2020 17:37:00 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v7 3/3] perf report: support hotkey to let user select any event for sorting
-Date:   Thu, 20 Feb 2020 09:36:16 +0800
-Message-Id: <20200220013616.19916-4-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200220013616.19916-1-yao.jin@linux.intel.com>
-References: <20200220013616.19916-1-yao.jin@linux.intel.com>
+        Wed, 19 Feb 2020 20:37:09 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:57194 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727833AbgBTBhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:37:08 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582162627; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=hsLg89Wno2a4zivhXbQ7ZlOQv+K/T+fljhSoDklnjik=;
+ b=ZCBB9NphBCt+uiD4lxFgj+CFf7EVmmhrHhDJBG9OFw6A4Vc1D7cNK4oi3xvHzkvwPpg5wri6
+ 3el6XrvUSRvyvpg8UD8KuaG7Kst99GTA/QNVrPia5T8o4JaQjzK0524VMTafvwFl6WCnBNvS
+ YNrmrK6xzC5/pjCzfyQmR/qjbEA=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4de2ba.7f38666f83b0-smtp-out-n02;
+ Thu, 20 Feb 2020 01:36:58 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 49875C447A4; Thu, 20 Feb 2020 01:36:58 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 90B50C433A2;
+        Thu, 20 Feb 2020 01:36:57 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 09:36:57 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v3 1/2] scsi: ufs: pass device information to
+ apply_dev_quirks
+In-Reply-To: <1582009359.26304.29.camel@mtksdccf07>
+References: <1578726707-6596-1-git-send-email-stanley.chu@mediatek.com>
+ <1578726707-6596-2-git-send-email-stanley.chu@mediatek.com>
+ <2a8fc44914b7ed8777a4a99ba6b8647a@codeaurora.org>
+ <1582009359.26304.29.camel@mtksdccf07>
+Message-ID: <57698522f7e1d9401ac27a0bd7f0756a@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When performing "perf report --group", it shows the event group information
-together. In previous patch, we have supported a new option "--group-sort-idx"
-to sort the output by the event at the index n in event group.
+Hi Stanley,
 
-It would be nice if we can use a hotkey in browser to select a event
-to sort.
+On 2020-02-18 15:02, Stanley Chu wrote:
+> Hi Can,
+> 
+> 
+>> Hi Stanley,
+>> 
+>> Is this series merged? If no, would you mind moving
+>> ufshcd_vops_apply_dev_quirks(hba, card); a little bit? Like below.
+>> 
+>> @@ -6852,14 +6852,14 @@ static void ufshcd_tune_unipro_params(struct
+>> ufs_hba *hba)
+>>                  ufshcd_tune_pa_hibern8time(hba);
+>>          }
+>> 
+>> +       ufshcd_vops_apply_dev_quirks(hba, card);
+>> +
+>>          if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TACTIVATE)
+>>                  /* set 1ms timeout for PA_TACTIVATE */
+>>                  ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 10);
+>> 
+>> In this way, vendor codes have a chance to modify the dev_quirks
+>> before ufshcd_tune_unipro_params() does the rest of its job.
+>> 
+> 
+> This patch has been merged to 5.6-rc1.
+> 
+> Basically I am fine with your proposal. But if you need to move it to
+> new mentioned position, our apply_dev_quirks callback also need
+> corresponding change so it might need our co-works : )
+> 
+> For example, you could just post your proposed changes and then we 
+> would
+> provide corresponding change as soon as possible?
+> 
+> Besides, I would like to remind that allowing vendor to "fix" device
+> quirks in advance imply that current common device quirks have some
+> problems? If so, would you consider to fix common device quirks 
+> instead?
+> 
+> 
+>> Thanks,
+>> Can Guo.
+> 
+> Thanks,
+> Stanley Chu
 
-For example,
+Thanks for your cooperations on this :)
 
-  # perf report --group
+There are some failure seen with specific UFS devices on our platforms,
+we can fix it with the quirk QUIRK_HOST_PA_TACTIVATE, but we are not
+sure if other vendors need it or not. So we want to handle it more
+carefully by limiting it to our platforms only. I had sent out that
+patch weeks ago, so I will just upload the new patch as we both agreed
+in that patch series.
 
- Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
-                        Overhead  Command    Shared Object            Symbol
-  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
-   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
-   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
-   1.56%   0.01%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494ce
-   1.56%   0.00%   0.00%   0.00%  mgen       [kernel.kallsyms]        [k] task_tick_fair
-   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
-   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
-   0.00%   0.03%   0.00%   0.00%  gsd-color  libglib-2.0.so.0.5600.4  [.] g_main_context_check
-   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] apic_timer_interrupt
-   0.00%   0.03%   0.00%   0.00%  swapper    [kernel.kallsyms]        [k] check_preempt_curr
-
-When user press hotkey '3' (event index, starting from 0), it indicates
-to sort output by the forth event in group.
-
-  Samples: 12K of events 'cpu/instructions,period=2000003/, cpu/cpu-cycles,period=200003/, ...
-                        Overhead  Command    Shared Object            Symbol
-  92.19%  98.68%   0.00%  93.30%  mgen       mgen                     [.] LOOP1
-   0.00%   0.13%   0.00%   6.08%  swapper    [kernel.kallsyms]        [k] intel_idle
-   3.12%   0.29%   0.00%   0.16%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x0000000000049515
-   0.00%   0.00%   0.00%   0.06%  swapper    [kernel.kallsyms]        [k] hrtimer_start_range_ns
-   1.56%   0.03%   0.00%   0.04%  gsd-color  libglib-2.0.so.0.5600.4  [.] 0x00000000000494b7
-   0.00%   0.15%   0.00%   0.04%  perf       [kernel.kallsyms]        [k] smp_call_function_single
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] update_curr
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] apic_timer_interrupt
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] native_apic_msr_eoi_write
-   0.00%   0.00%   0.00%   0.02%  mgen       [kernel.kallsyms]        [k] __update_load_avg_se
-
- v7:
- ---
- Rebase to perf/core, no other change.
-
- v6:
- ---
- Jiri provided a good improvement to eliminate unneeded refresh.
- This improvement is added to v6.
-
- v5:
- ---
- No change
-
- v4:
- ---
- No change
-
- v3:
- ---
- No change
-
- v2:
- ---
- 1. Report warning at helpline when index is invalid.
- 2. Report warning at helpline when it's not group event.
- 3. Use "case '0' ... '9'" to refine the code
- 4. Split K_RELOAD implementation to another patch.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/ui/browsers/hists.c | 28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 7c091fa51a5c..fa4548459c46 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2964,7 +2964,8 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"s             Switch to another data file in PWD\n"
- 	"t             Zoom into current Thread\n"
- 	"V             Verbose (DSO names in callchains, etc)\n"
--	"/             Filter symbol by name";
-+	"/             Filter symbol by name\n"
-+	"0-9           Sort by event n in group";
- 	static const char top_help[] = HIST_BROWSER_HELP_COMMON
- 	"P             Print histograms to perf.hist.N\n"
- 	"t             Zoom into current Thread\n"
-@@ -3025,6 +3026,31 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			 * go to the next or previous
- 			 */
- 			goto out_free_stack;
-+		case '0' ... '9':
-+			if (!symbol_conf.event_group ||
-+			    evsel->core.nr_members < 2) {
-+				snprintf(buf, sizeof(buf),
-+					 "Sort by index only available with group events!");
-+				helpline = buf;
-+				continue;
-+			}
-+
-+			if (key - '0' == symbol_conf.group_sort_idx)
-+				continue;
-+
-+			symbol_conf.group_sort_idx = key - '0';
-+
-+			if (symbol_conf.group_sort_idx >= evsel->core.nr_members) {
-+				snprintf(buf, sizeof(buf),
-+					 "Max event group index to sort is %d (index from 0 to %d)",
-+					 evsel->core.nr_members - 1,
-+					 evsel->core.nr_members - 1);
-+				helpline = buf;
-+				continue;
-+			}
-+
-+			key = K_RELOAD;
-+			goto out_free_stack;
- 		case 'a':
- 			if (!hists__has(hists, sym)) {
- 				ui_browser__warning(&browser->b, delay_secs * 2,
--- 
-2.17.1
-
+Thanks,
+Can Guo
