@@ -2,132 +2,233 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 638BFC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34524C11D0F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4303F20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02931207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UTRyRkSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbgBTQhH (ORCPT
+        id S1728404AbgBTQiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:37:07 -0500
-Received: from muru.com ([72.249.23.125]:56356 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbgBTQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:37:07 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id C21028080;
-        Thu, 20 Feb 2020 16:37:50 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 08:37:03 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200220163703.GK37466@atomide.com>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+        Thu, 20 Feb 2020 11:38:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42820 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728133AbgBTQiA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:38:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582216679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JPLN0ouhhg0blmU2M9hGNXZisumAqDkHlC1AmG0Un74=;
+        b=UTRyRkSdntoX2PFaw8n1gjamNUbZ6/G+3s5quOm1upUdl/qonAfcK39Hx+wEBqrVHiLmkK
+        o0xVN+Sav/sI1PVbfc2pll3gMU5wGj8rAn/KlGNdbIus8t41k1nZcwco78oC4mOtJwso4J
+        dm9Ft5lMZYk/nr2ciZ7RhCwtmeS+qzA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-290-8c5kERyLNBuMfxt3ogkWqQ-1; Thu, 20 Feb 2020 11:37:55 -0500
+X-MC-Unique: 8c5kERyLNBuMfxt3ogkWqQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F529477;
+        Thu, 20 Feb 2020 16:37:53 +0000 (UTC)
+Received: from carbon (ovpn-200-26.brq.redhat.com [10.40.200.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F41DF9051B;
+        Thu, 20 Feb 2020 16:37:42 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 17:37:40 +0100
+From:   Jesper Dangaard Brouer <brouer@redhat.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Daniel =?UTF-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdlbnNlbg==?= <toke@redhat.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, brouer@redhat.com
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Message-ID: <20200220173740.7a3f9ad7@carbon>
+In-Reply-To: <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
+References: <20200219133012.7cb6ac9e@carbon>
+        <CAADnVQKQRKtDz0Boy=-cudc4eKGXB-yParGZv6qvYcQR4uMUQQ@mail.gmail.com>
+        <20200219180348.40393e28@carbon>
+        <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
+        <20200219192854.6b05b807@carbon>
+        <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
+        <20200219210609.20a097fb@carbon>
+        <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
+        <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
+        <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andrew F. Davis <afd@ti.com> [200220 16:24]:
-> On 2/20/20 11:20 AM, Tony Lindgren wrote:
-> > * Andrew F. Davis <afd@ti.com> [200220 16:04]:
-> >> On 2/20/20 10:54 AM, Tony Lindgren wrote:
-> >>> Andrew,
+On Wed, 19 Feb 2020 17:47:23 -0700
+shuah <shuah@kernel.org> wrote:
+
+> On 2/19/20 5:27 PM, Alexei Starovoitov wrote:
+> > On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel D=C3=ADaz wrote: =20
 > >>>
-> >>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
-> >>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> >>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> >>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> >>>> date:   3 weeks ago
-> >>>> config: arm-randconfig-a001-20200213 (attached as .config)
-> >>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> >>>> reproduce:
-> >>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >>>>         chmod +x ~/bin/make.cross
-> >>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
-> >>>>         # save the attached .config to linux build tree
-> >>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> >>>>
-> >>>> If you fix the issue, kindly add following tag
-> >>>> Reported-by: kbuild test robot <lkp@intel.com>
-> >>>>
-> >>>> All errors (new ones prefixed by >>):
-> >>>>
-> >>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> >>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
-> >>>
-> >>> Have you looked at this one? Looks like there's still an unhandled
-> >>> randconfig build case.
-> >>>
-> >>
-> >>
-> >> I've had a quick look, all the ARM config does:
-> >>
-> >> select HAVE_ARM_SMCCC if CPU_V7
-> >>
-> >> so I don't think this will happen in any real config, but if we want to
-> >> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
-> >> on it.
-> > 
-> > Seems to happen at least with omap2 only config where we don't have
-> > CPU_V7. Something like below seems to fix it.
-> > 
-> > If that looks OK to you, I'll send out a proper fix.
-> > 
-> 
-> 
-> This looks fine to me.
-> 
-> A better later fix might be to later stub out the actual __arm_smccc_smc
-> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
-> get the fix.
+> >>> When I download a specific kernel release, how can I know what LLVM
+> >>> git-hash or version I need (to use BPF-selftests)? =20
+> >=20
+> > as discussed we're going to add documentation-like file that will
+> > list required commits in tools.
+> > This will be enforced for future llvm/pahole commits.
+> >  =20
+> >>> Do you think it is reasonable to require end-users to compile their o=
+wn
+> >>> bleeding edge version of LLVM, to use BPF-selftests? =20
+> >=20
+> > absolutely. =20
+>=20
+> + linux-kselftest@vger.kernel.org
+>=20
+> End-users in this context are users and not necessarily developers.
 
-Yeah seems that might be better. Adding Aaro and Marc to Cc.
+I agree.  And I worry that we are making it increasingly hard for
+non-developer users.
 
-Regards,
 
-Tony
+> > If a developer wants to send a patch they must run all selftests and
+> > all of them must pass in their environment.
+> > "but I'm adding a tracing feature and don't care about networking tests
+> > failing"... is not acceptable. =20
+>=20
+> This is a reasonable expectation when a developers sends bpf patches.
 
-> > 8< -----------------------
-> > diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-> > --- a/arch/arm/mach-omap2/omap-secure.c
-> > +++ b/arch/arm/mach-omap2/omap-secure.c
-> > @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
-> >  	return ret;
-> >  }
-> >  
-> > +#ifdef CONFIG_HAVE_ARM_SMCCC
-> >  void omap_smccc_smc(u32 fn, u32 arg)
-> >  {
-> >  	struct arm_smccc_res res;
-> > @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
-> >  		      0, 0, 0, 0, 0, 0, &res);
-> >  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
-> >  }
-> > +#else
-> > +void omap_smccc_smc(u32 fn, u32 arg)
-> > +{
-> > +}
-> > +#endif
-> >  
-> >  void omap_smc1(u32 fn, u32 arg)
-> >  {
-> > 
+Sure. I have several versions on LLVM that I've compiled manually.
+
+> >  =20
+> >>> I do hope that some end-users of BPF-selftests will be CI-systems.
+> >>> That also implies that CI-system maintainers need to constantly do
+> >>> "latest built from sources" of LLVM git-tree to keep up.  Is that a
+> >>> reasonable requirement when buying a CI-system in the cloud? =20
+> >=20
+> > "buying CI-system in the cloud" ?
+> > If I could buy such system I would pay for it out of my own pocket to s=
+ave
+> > maintainer's and developer's time.
+
+And Daniel D=C3=ADaz want to provide his help below (to tests it on arch
+that you likely don't even have access to). That sounds like a good
+offer, and you don't even have to pay.
+
+> >  =20
+> >> We [1] are end users of kselftests and many other test suites [2]. We
+> >> run all of our testing on every git-push on linux-stable-rc, mainline,
+> >> and linux-next -- approximately 1 million tests per week. We have a
+> >> dedicated engineering team looking after this CI infrastructure and
+> >> test results, and as such, I can wholeheartedly echo Jesper's
+> >> sentiment here: We would really like to help kernel maintainers and
+> >> developers by automatically testing their code in real hardware, but
+> >> the BPF kselftests are difficult to work with from a CI perspective.
+> >> We have caught and reported [3] many [4] build [5] failures [6] in the
+> >> past for libbpf/Perf, but building is just one of the pieces. We are
+> >> unable to run the entire BPF kselftests because only a part of the
+> >> code builds, so our testing is very limited there.
+> >>
+> >> We hope that this situation can be improved and that our and everyone
+> >> else's automated testing can help you guys too. For this to work out,
+> >> we need some help. =20
+> >  =20
+>=20
+> It would be helpful understand what "help" is in this context.
+>=20
+> > I don't understand what kind of help you need. Just install the
+> > latest tools. =20
+
+I admire that you want to push *everybody* forward to use the latest
+LLVM, but saying latest is LLVM devel git tree HEAD is too extreme.
+I can support saying latest LLVM release is required.
+
+As soon as your LLVM patches are accepted into llvm-git-tree, you will
+add some BPF selftests that util this. Then CI-systems pull latest
+bpf-next they will start to fail to compile BPF-selftests, and CI
+stops.  Now you want to force CI-system maintainer to recompile LLVM
+from git.  This will likely take some time.  Until that happens
+CI-system doesn't catch stuff. E.g. I really want the ARM tests that
+Linaro can run for us (which isn't run before you apply patches...).
+
+
+> What would be helpful is to write bpf tests such that older tests that
+> worked on older llvm versions continue to work and with some indication
+> on which tests require new bleeding edge tools.
+>=20
+> > Both the latest llvm and the latest pahole are required. =20
+>=20
+> It would be helpful if you can elaborate why latest tools are a
+> requirement.
+>=20
+> > If by 'help' you mean to tweak selftests to skip tests then it's a nack.
+> > We have human driven CI. Every developer must run selftests/bpf before
+> > emailing the patches. Myself and Daniel run them as well before applyin=
+g.
+> > These manual runs is the only thing that keeps bpf tree going.
+> > If selftests get to skip tests humans will miss those errors.
+> > When I don't see '0 SKIPPED, 0 FAILED' I go and investigate.
+> > Anything but zero is a path to broken kernels.
+> >=20
+> > Imagine the tests would get skipped when pahole is too old.
+> > That would mean all of the kernel features from year 2019
+> > would get skipped. Is there a point of running such selftests?
+> > I think the value is not just zero. The value is negative.
+> > Such selftests that run old stuff would give false believe
+> > that they do something meaningful.
+> > "but CI can do build only tests"... If 'helping' such CI means hurting =
+the
+> > key developer/maintainer workflow such CI is on its own.
+> >  =20
+>=20
+> Skipping tests will be useless. I am with you on that. However,
+> figuring out how to maintain some level of backward compatibility
+> to run at least older tests and warn users to upgrade would be
+> helpful.
+
+What I propose is that a BPF-selftest that use a new LLVM feature,
+should return FAIL (or perhaps SKIP), when it is compiled with say one
+release old LLVM. This will allow new-tests to show up in CI-systems
+reports as FAIL, and give everybody breathing room to upgrade their LLVM
+compiler.
+
+> I suspect currently users are ignoring bpf failures because they
+> are unable to keep up with the requirement to install newer tools
+> to run the tests. This isn't great either.
+
+Yes, my worry is also that we are simply making it too difficult for
+non-developer users to run these tests.  And I specifically want to
+attract CI-systems to run these.  And especially Linaro, who have
+dedicated engineering team looking after their CI infrastructure, and
+they explicitly in this email confirm my worry.
+
+
+> Users that care are sharing their pain to see if they can get some
+> help or explanation on why new tools are required every so often.
+> I don't think everybody understands why. :)
+
+--=20
+Best regards,
+  Jesper Dangaard Brouer
+  MSc.CS, Principal Kernel Engineer at Red Hat
+  LinkedIn: http://www.linkedin.com/in/brouer
+
