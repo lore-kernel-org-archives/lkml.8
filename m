@@ -2,103 +2,143 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D4AC7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FCCC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 956C524658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB18324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dlpnFhTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgBTDRB (ORCPT
+        id S1727966AbgBTDRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 22:17:01 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:39596 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727208AbgBTDRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 22:17:01 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 254FA61EE444AE7C7B70;
-        Thu, 20 Feb 2020 11:16:59 +0800 (CST)
-Received: from huawei.com (10.175.101.78) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
- 11:16:56 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <tglx@linutronix.de>, <john.stultz@linaro.org>, <sboyd@kernel.org>
-Subject: [PATCH] timer_list: avoid other cpu soft lockup when printing timer list
-Date:   Thu, 20 Feb 2020 11:42:32 +0800
-Message-ID: <1582170152-69418-1-git-send-email-yangyingliang@huawei.com>
-X-Mailer: git-send-email 1.8.3
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.101.78]
-X-CFilter-Loop: Reflected
+        Wed, 19 Feb 2020 22:17:41 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:34854 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727476AbgBTDRl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 22:17:41 -0500
+Received: by mail-pg1-f202.google.com with SMTP id j29so1425347pgj.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 19:17:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=i2O9M22wRHGvAOZAL5G1kwDrP71Yc5DXVKcI6ikT/o0=;
+        b=dlpnFhTJuppuR+7jhHOrc29QhJDsFb/a9lebelLf5+HpvXJAn1SQBioq39Qk8Vm3AQ
+         CaUiiTHkAgza79JX7dXl3SCPyyIwwCB2Zj6DbBTVEGF8c5wauY6xKMi8xxVKZw//JS2H
+         3jDmVyKsKRudtiC4BeHrWuJZBL7iFYElm8LYKpLUaScuxhcalPyXP634Spg/cogqQq8j
+         35xfj0nCeAwlfsWLTdbma6cb6Xzb82XaO/bSzayA2HwEPYyOQefA3WQvS7F/X8tFzwn+
+         PZl1jwhrpg0riUoXF0V61wIeJb0iKteX2/MQYwSMrRU6X8BqMrFqbojtUyrLd10crM2Z
+         1fdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=i2O9M22wRHGvAOZAL5G1kwDrP71Yc5DXVKcI6ikT/o0=;
+        b=jPSk6g5yI6J6iahJ6EqiYaU7kzxKaP9p+EC3Xq2emzLLKrBUJ2wzeWi/KUQnEoJ2ei
+         Mj4OIOdmNrFLIssa7TorLAA5twFOk7fOesWAGEERPWKC9UNmk4xaPXSDE6mDcrml4CkI
+         f74T/DkfiEvuix9nk2ErYNej8BPwKzh+7y5MuDAbo2v8++8dCTedxVwpypUxI7r1p70j
+         fET8EZbhPdFXivsbY4fISNzOLQlH2EalC6C8Jxupw/IXcy+du5YG9nVqLpTOUiGoAl9I
+         IsTZWtgJ9el6xnYMkKHsh/R76hqr/B+/3/XFiYsv1SkVX3vkHmtoH+dTyqLh35N+P4mj
+         9RQg==
+X-Gm-Message-State: APjAAAXXECR4ZhYCml/02sfj9hBkWH2s1f69B/UadsU0FRk+VWxn4tdV
+        vZlipF048URHpOH0bxUCY/KSpjOHwfcldqbhQg==
+X-Google-Smtp-Source: APXvYqwhfiEKlSr0AAX/yDJjQ+IOrKLdHL+H7bLrG4jZblws54K3aApuo2mh5mWRFYU+RaFoM5HXxjPpmsEXHnHDtw==
+X-Received: by 2002:a63:b250:: with SMTP id t16mr29658302pgo.18.1582168660404;
+ Wed, 19 Feb 2020 19:17:40 -0800 (PST)
+Date:   Thu, 20 Feb 2020 11:17:29 +0800
+Message-Id: <20200220111711.Bluez.v3.1.I145f6c5bbf2437a6f6afc28d3db2b876c034c2d8@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [Bluez PATCH v3] bluetooth: fix passkey uninitialized when used
+From:   Howard Chung <howardchung@google.com>
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Howard Chung <howardchung@google.com>,
+        kbuild test robot <lkp@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If system has many cpus (e.g. 128), it will spend a lot of time to
-print message to the console when execute echo q > /proc/sysrq-trigger.
+This patch fix the issue: warning:variable 'passkey' is uninitialized
+when used here
 
-When /proc/sys/kernel/numa_balancing is enabled, if the migration threads
-are woke up, the migration thread that on print mesasage cpu can't run
-until the print finish, another migration thread may trigger soft lockup.
+Link: https://groups.google.com/forum/#!topic/clang-built-linux/kyRKCjRsGoU
 
-PID: 619    TASK: ffffa02fdd8bec80  CPU: 121  COMMAND: "migration/121"
-  #0 [ffff00000a103b10] __crash_kexec at ffff0000081bf200
-  #1 [ffff00000a103ca0] panic at ffff0000080ec93c
-  #2 [ffff00000a103d80] watchdog_timer_fn at ffff0000081f8a14
-  #3 [ffff00000a103e00] __run_hrtimer at ffff00000819701c
-  #4 [ffff00000a103e40] __hrtimer_run_queues at ffff000008197420
-  #5 [ffff00000a103ea0] hrtimer_interrupt at ffff00000819831c
-  #6 [ffff00000a103f10] arch_timer_dying_cpu at ffff000008b53144
-  #7 [ffff00000a103f30] handle_percpu_devid_irq at ffff000008174e34
-  #8 [ffff00000a103f70] generic_handle_irq at ffff00000816c5e8
-  #9 [ffff00000a103f90] __handle_domain_irq at ffff00000816d1f4
- #10 [ffff00000a103fd0] gic_handle_irq at ffff000008081860
- --- <IRQ stack> ---
- #11 [ffff00000d6e3d50] el1_irq at ffff0000080834c8
- #12 [ffff00000d6e3d60] multi_cpu_stop at ffff0000081d9964
- #13 [ffff00000d6e3db0] cpu_stopper_thread at ffff0000081d9cfc
- #14 [ffff00000d6e3e10] smpboot_thread_fn at ffff00000811e0a8
- #15 [ffff00000d6e3e70] kthread at ffff000008118988
+Reported-by: kbuild test robot <lkp@intel.com>
 
-To avoid this soft lockup, add touch_all_softlockup_watchdogs()
-in sysrq_timer_list_show()
+Suggested-by: Marcel Holtmann <marcel@holtmann.org>
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Howard Chung <howardchung@google.com>
+
 ---
- kernel/time/timer_list.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
-index acb326f..4cb0e6f 100644
---- a/kernel/time/timer_list.c
-+++ b/kernel/time/timer_list.c
-@@ -289,13 +289,17 @@ void sysrq_timer_list_show(void)
+Changes in v3:
+- rephrase the commit message
+
+Changes in v2:
+- refactor code
+
+ net/bluetooth/smp.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+index 50e0ac692ec4..929e0bebaf80 100644
+--- a/net/bluetooth/smp.c
++++ b/net/bluetooth/smp.c
+@@ -2115,7 +2115,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 	struct l2cap_chan *chan = conn->smp;
+ 	struct smp_chan *smp = chan->data;
+ 	struct hci_conn *hcon = conn->hcon;
+-	u8 *pkax, *pkbx, *na, *nb;
++	u8 *pkax, *pkbx, *na, *nb, confirm_hint;
+ 	u32 passkey;
+ 	int err;
  
- 	timer_list_header(NULL, now);
+@@ -2179,13 +2179,12 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 		 */
+ 		if (hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+ 				 hcon->role)) {
+-			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+-							hcon->type,
+-							hcon->dst_type,
+-							passkey, 1);
+-			if (err)
+-				return SMP_UNSPECIFIED;
+-			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
++			/* Set passkey to 0. The value can be any number since
++			 * it'll be ignored anyway.
++			 */
++			passkey = 0;
++			confirm_hint = 1;
++			goto confirm;
+ 		}
+ 	}
  
--	for_each_online_cpu(cpu)
-+	for_each_online_cpu(cpu) {
-+		touch_all_softlockup_watchdogs();
- 		print_cpu(NULL, cpu, now);
-+	}
+@@ -2206,9 +2205,11 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+ 	err = smp_g2(smp->tfm_cmac, pkax, pkbx, na, nb, &passkey);
+ 	if (err)
+ 		return SMP_UNSPECIFIED;
++	confirm_hint = 0;
  
- #ifdef CONFIG_GENERIC_CLOCKEVENTS
- 	timer_list_show_tickdevices_header(NULL);
--	for_each_online_cpu(cpu)
-+	for_each_online_cpu(cpu) {
-+		touch_all_softlockup_watchdogs();
- 		print_tickdevice(NULL, tick_get_device(cpu), cpu);
-+	}
- #endif
- 	return;
- }
++confirm:
+ 	err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst, hcon->type,
+-					hcon->dst_type, passkey, 0);
++					hcon->dst_type, passkey, confirm_hint);
+ 	if (err)
+ 		return SMP_UNSPECIFIED;
+ 
 -- 
-1.8.3
+2.25.0.265.gbab2e86ba0-goog
 
