@@ -2,96 +2,128 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A686DC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A411C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E32424650
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B57222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:03:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JsoqIRD4"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="m1KDQ49I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgBTVCo (ORCPT
+        id S1729114AbgBTVDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:02:44 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46857 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgBTVCo (ORCPT
+        Thu, 20 Feb 2020 16:03:47 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45148 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729055AbgBTVDr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:02:44 -0500
-Received: by mail-pg1-f194.google.com with SMTP id y30so2514655pga.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:02:44 -0800 (PST)
+        Thu, 20 Feb 2020 16:03:47 -0500
+Received: by mail-qt1-f195.google.com with SMTP id d9so3935736qte.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:03:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
-        b=JsoqIRD4xomQetfHM7XtcK7FHq/ipSAEkJsVnBvyST4DrAaAZF6BueSVgo/A0us1yb
-         ELSgSfno5PgHnoJm/NzqbsG8qQ02kmK3xDxajwkASRuGLEPI5+BMdVoxVksurm9wJ1Hp
-         6IrSh0MG+2h1RvRA1zHGLa4KQ8N8MtjmIgGKw=
+         :content-disposition:in-reply-to;
+        bh=6QH645NYVKdQbEm2dIlQdYX121ucp0jcY5IFqd2iTAM=;
+        b=m1KDQ49IVlT6YDlcrR6kEHfCL5+o2vBShdjFVu+ROsFCINUdPBhVp7ZfyQt8YkI4V1
+         ApmRefafOkHmPeBqAw+aOBORpbSSPQvei4ZebQKB6lbePikwbuyMsGeJXjPGkKyhKF37
+         9o1/9zImGJswylC3buBORrbYwImOCEp6dvqkw7OsG2kKvjpLcZYbIMBWEEJBGIfSfePm
+         lGuJBobkL/67AGpQYKeKwnKNQ1SI7SGZF6n4xEHA6Fr1dU2rHcyXW6iOC4YReVB3nvXP
+         1eTMKYwJmvRR0MRNpnHb4fLXuhiRnQktysIIIW6duWgeu98O/ehaOE4y54nOMfsUxX8A
+         5c/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yCWhyMONDF7/2d7s+slz/xE4GsVXYJ+VIwzdQklkW/U=;
-        b=M1TVTLtNyjzqMm3Jn+NfzZxXsprJrlGU8ytz5Iq5/0guuNa/gK/yXAVSVgoT2EkJzN
-         p2jPXQ6Mct6/wOjDoI66bI72JHipvZmT/9yGWDUi4QO95Gc+nulKxzLmedMugdbjLdmm
-         TtKrk5qwwEbbkmw2bw4mZjBFDXZxpreg2h9PEspJynQuRo9TT4NFCDOPHHLIQ1LREIDo
-         bTxN4Yl08HJMVzRL4HmwrGIMBz6XcJdjyoy1S7r/ALJ44GfONoyn2bPzuvQ3RhlZkOnD
-         dBGamHSCnu78f7OlLvWAR+Kdg1gdWGpG2L2CRcrIQVswVECNPGjtAgpj1D5dzOyWYbUI
-         Wc6Q==
-X-Gm-Message-State: APjAAAX7cSKhHBjictKEIoZW2D+IWRh/mpQB/I3myd3DoIYDIJroR9hC
-        yWHZ7LY9M/nhviaI4beEYUobLQ==
-X-Google-Smtp-Source: APXvYqybBEIA4/pqHt8cShquf8H+vaT94NLFSfun4J2uEKy/wjt157bBu3t/D8co6V54Gr/xmMNoZQ==
-X-Received: by 2002:a63:565e:: with SMTP id g30mr3053334pgm.206.1582232563637;
-        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id o73sm341592pje.7.2020.02.20.13.02.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2020 13:02:43 -0800 (PST)
-Date:   Thu, 20 Feb 2020 13:02:42 -0800
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Sharat Masetty <smasetty@codeaurora.org>
-Cc:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, dianders@chromium.org
-Subject: Re: [PATCH] dt-bindings: arm-smmu: update the list of clocks
-Message-ID: <20200220210242.GC24720@google.com>
-References: <1582186342-3484-1-git-send-email-smasetty@codeaurora.org>
- <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
+         :mime-version:content-disposition:in-reply-to;
+        bh=6QH645NYVKdQbEm2dIlQdYX121ucp0jcY5IFqd2iTAM=;
+        b=lfp5bn97sr9iSNoC0ytBENCE+7umewqYUGaXzEeSLsDpmTWxr1wlU09E/WYzivI6rf
+         boW4pEpc4sI23A9hVdwAV/mOVcwQkmv9M4g5KSdor8JKAf3UMAyoMunIRWERo1KMmbUu
+         YNqEGhoAZHR8aeONBNXHl2Y57wJO1NnxQdVw9uL5QUfEo7vCvdJLQkA74qyDWzEjN4kU
+         G20aIc1Bdm/Cjav6Ow6taM1IB8v6HNEqjYNGtfjp5KG1LgIYjyx4pu4H2bZNn8dKBAQ0
+         Ud6kgjoYyhN8jpFZksR43z6B/NMi45zxDNWb0TRr0Kv5UqEa0pEQ7PJBMMWpXuaD2rkd
+         LxOA==
+X-Gm-Message-State: APjAAAWBVs6gCh4U9/oIpZ3FsrfASnvKHT4C7uQgCAlyTy/v0g5D4UWw
+        AV/1FoFp4ff06HbquH63EJ4KAA==
+X-Google-Smtp-Source: APXvYqysf1N+4rBFuAy/S4cj47nv2KlYs5KqccQLWtqnaJveOyCZVqgwo5POmZuC5JIHml5pKKa8hg==
+X-Received: by 2002:ac8:7258:: with SMTP id l24mr27935548qtp.154.1582232625787;
+        Thu, 20 Feb 2020 13:03:45 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:3504])
+        by smtp.gmail.com with ESMTPSA id h6sm420212qtr.33.2020.02.20.13.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 13:03:44 -0800 (PST)
+Date:   Thu, 20 Feb 2020 16:03:44 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
+Message-ID: <20200220210344.GK54486@cmpxchg.org>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com>
+ <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
+ <CALvZod5bDQvYHTMCHoWbhiEbcBs4KATv=QLdjjivJ33kb6ZY+w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582186342-3484-2-git-send-email-smasetty@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALvZod5bDQvYHTMCHoWbhiEbcBs4KATv=QLdjjivJ33kb6ZY+w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 01:42:22PM +0530, Sharat Masetty wrote:
-> This patch adds a clock definition needed for powering on the GPU TBUs
-> and the GPU TCU.
-> 
-> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index 6515dbe..235c0df 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -28,6 +28,7 @@ properties:
->            - enum:
->                - qcom,msm8996-smmu-v2
->                - qcom,msm8998-smmu-v2
-> +              - qcom,sc7180-smmu-v2
+Hey Shakeel!
 
-The addition of the compatible string isn't (directly) related with $subject,
-this should be done in a separate patch.
+On Thu, Feb 20, 2020 at 10:14:45AM -0800, Shakeel Butt wrote:
+> On Thu, Feb 20, 2020 at 8:52 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
+> >
+> > memalloc_use_memcg() worked for kernel allocations but was silently
+> > ignored for user pages.
+> >
+> > This patch establishes a precedence order for who gets charged:
+> >
+> > 1. If there is a memcg associated with the page already, that memcg is
+> >    charged. This happens during swapin.
+> >
+> > 2. If an explicit mm is passed, mm->memcg is charged. This happens
+> >    during page faults, which can be triggered in remote VMs (eg gup).
+> >
+> > 3. Otherwise consult the current process context. If it has configured
+> >    a current->active_memcg, use that.
+> 
+> What if css_tryget_online(current->active_memcg) in
+> get_mem_cgroup_from_current() fails? Do we want to change this to
+> css_tryget() and even if that fails should we fallback to
+> root_mem_cgroup or current->mm->memcg?
+
+Good questions.
+
+I think we can switch to css_tryget(). If a cgroup goes offline
+between issuing the IO and the loop layer executing that IO, the
+resources used could end up in the root instead of the closest
+ancestor of the offlined group. However, the risk of that actually
+happening and causing problems is probably pretty small, and the
+behavior isn't really worse than before Dan's patches.
+
+Would you mind sending a separate patch for this? AFAICS similar
+concerns apply to all users of foreign charging.
+
+As for tryget failing: can that actually happen? AFAICS, all current
+users acquire a reference first (get_memcg_from_somewhere()) that they
+assign to current->active_memcg. We should probably codify this rule
+and do WARN_ON(!css_tryget()) /* current->active_memcg must hold a ref */
