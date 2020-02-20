@@ -2,108 +2,102 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71E8C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF56CC11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA92320679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91605206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:15:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="itJvvjLT"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Zk+cdZTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgBTVPS (ORCPT
+        id S1729230AbgBTVPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 16:15:18 -0500
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:46670 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbgBTVPR (ORCPT
+        Thu, 20 Feb 2020 16:15:21 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38484 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727786AbgBTVPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:15:17 -0500
-Received: by mail-vk1-f196.google.com with SMTP id u6so1607474vkn.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 13:15:17 -0800 (PST)
+        Thu, 20 Feb 2020 16:15:18 -0500
+Received: by mail-ed1-f66.google.com with SMTP id p23so35395719edr.5;
+        Thu, 20 Feb 2020 13:15:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VtH6MBxxbzar9OipIWWKPkk5V8ZZykX/4RLjsMCgSw0=;
-        b=itJvvjLTjnAztaW3ELzLWWOItRSpx0VEbznSWQRD2w5LWICCqXBPNEHhDU5rFKFP6Q
-         vuyEYtotOdCIFIz1XJec20kXLy25/JiQ6uw+0bgl/zEfBCQyL6qIxrsqZdnFBw+0pOa6
-         dhuSeGnzbUKkl20/CUxAFyxo57oxShrr081lqlT55iOBkdQo+UkLgySNpVO0kGfAe3h5
-         PMbTsKhsLUG0Oh3M0J9t4j+UdalOyoi/arcDlydpv0KIHUjajmBRd+IRjc3Ds7lsHaBK
-         OQOIgksxwxaYbkPodvrysTB+g9laG5Peu7Mo06tw+vP91Kj31rabF/tyoXRamNVQmH2F
-         8CTg==
+        bh=E0r8UtKklC8vn0exQFm1xc2bM7Px85fwUILOFwxpfXc=;
+        b=Zk+cdZTJrrQGLS4LPCXUuDR4TnwujssZT/tflyRWzR4m5EuB74oGIb4XNsW8ZpTcV6
+         0bMOKocFAC5Aws/uPZuTdgEtDPOjoyukKgAGlNmDCD977jXJDA419hAYFYPI1NXVuJQo
+         h430UdKqeKyZxLWCK4GO4NKiUkni6qDd7foBhauhsIrn9EgNs9smHTIWE+gilQ/16aAA
+         qfn6Hasa8dA4DT4sDD1+nxpUPc7G2OPFgzjY066Dx0k/Rav91/e4+SBstXos/38maA95
+         wnZg7wriDejBaAEUGOUJBhPWdWDn0GFAE47f0mBxFDKwa5X6dxLRje0PnLK0qSHVgZ26
+         oMsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VtH6MBxxbzar9OipIWWKPkk5V8ZZykX/4RLjsMCgSw0=;
-        b=nAgWe2kYt4gYe5i0KPr/5xFvAJ8Z2M3Q9mTvAi/q6Ql/xJ5gJCa95x6dJVMhLIOEU8
-         MYFas92GWO8HzZTEheMWGvyx9tDvr51P9M7YOnyD8fLoaSM4n9VFlpGy129HQ5OFqSYd
-         XP0ZW6EukiRv12mJt46EEHFQFg2nXm7EWi9p1+Z24vP82wrqcp3S8hl5XPUFyQLRS+Nz
-         ELnUHYYbcdq6hzUzNtyhYdIMKvcBjgHNbHZz7iBnYlockopjvwufe2yQOjhYZ79AJDih
-         WLVJPk+qiTP0RdUQSWu8kK/mfmVUE01QwGW1UJKPrtCtwcFrklvzlYZNFeUS0wfXXELc
-         WQUw==
-X-Gm-Message-State: APjAAAVqumhjrIYi/HpmTzeVNx9YkUukgmAYZ1d87ACQ6lcwrtQQ0Hfh
-        2plxe6EdygOkI9yMPSBXyCIt95E6FJwyemFOAEbhdQ==
-X-Google-Smtp-Source: APXvYqyCkkbwdY7/IDGLKw691E2mNt/d2lLCEjoEG68m8sSXMR34k1Di0Rm7ufY66/tPsJ4DsT/vqWsRb+qu0brj+04=
-X-Received: by 2002:a1f:ee45:: with SMTP id m66mr15468181vkh.75.1582233316395;
- Thu, 20 Feb 2020 13:15:16 -0800 (PST)
+        bh=E0r8UtKklC8vn0exQFm1xc2bM7Px85fwUILOFwxpfXc=;
+        b=HGnhpVFR1sxTmIAhQm6Ubn4AWXVyclQVIYWY3Vhhqbec7VeBiZRFyTinMhS5Op9LxF
+         et1VtkbbO7+POH0h68Lr4mS/wdU5HjEBAmuw0BxNDAXSbkME9DDlYnJfe+zBsku5f8rV
+         VrZI5+9Ed19GOC7NdSzf0+GklrP+jKr3Wj2ksEr8gwcW6j2GW1lfg4mwlKY0tH7GIN1v
+         eFNPyboDYgWvLJ/esMPLHW4Lp/bstuODYFRbYD5DnTg/Zl7sfRy+wbcyry+vKzFr8FZs
+         FjZZ5ogVLIzn27oFAeaaOsucMmmPlHXKLD4wa0FBb47+kCW5PGh/gYJr9NcOcv8zIwCt
+         Iu1w==
+X-Gm-Message-State: APjAAAVmqzhu/CNdRTlvFT+9Mo/PalwAFnP6hYizUvz1aF/D8EnHTTiJ
+        qmj9E3U/mrM8sOguoPBjNPlFUq/kWmDZq+7K/jg=
+X-Google-Smtp-Source: APXvYqwXYPTGE8gx5kvAp7lnVSFQVA+NMeL3QVC6+h/cuRK/8EgB3ahTv0Vbyn5nmgxN9HxsBKLSAoZv7ayNwuuXxTA=
+X-Received: by 2002:a05:6402:2037:: with SMTP id ay23mr29262250edb.146.1582233317366;
+ Thu, 20 Feb 2020 13:15:17 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1582216294.git.schatzberg.dan@gmail.com> <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
-In-Reply-To: <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 20 Feb 2020 13:15:05 -0800
-Message-ID: <CALvZod4OJhoLQxHeUKwN4FC-W0YnSpQCb5ZAwOef0rjAExtw5w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
+References: <20200216173446.1823-1-linux.amoon@gmail.com> <20200216173446.1823-4-linux.amoon@gmail.com>
+ <1jmu9hzlo2.fsf@starbuckisacylon.baylibre.com> <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
+In-Reply-To: <CANAwSgSaQgU=H3h0S9deT11HA8z9R=Fhy5Kawii9tSBxKf2Wgw@mail.gmail.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 20 Feb 2020 22:15:06 +0100
+Message-ID: <CAFBinCCSosE1XfwbKZOR9G+DVYg8zFcKShmTNWUhh1e8W0VoAQ@mail.gmail.com>
+Subject: Re: [PATCHv1 3/3] clk: meson: g12a: set cpu clock divider flags too CLK_IS_CRITICAL
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-amlogic@lists.infradead.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 8:52 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
->
-> memalloc_use_memcg() worked for kernel allocations but was silently
-> ignored for user pages.
->
-> This patch establishes a precedence order for who gets charged:
->
-> 1. If there is a memcg associated with the page already, that memcg is
->    charged. This happens during swapin.
->
-> 2. If an explicit mm is passed, mm->memcg is charged. This happens
->    during page faults, which can be triggered in remote VMs (eg gup).
->
-> 3. Otherwise consult the current process context. If it has configured
->    a current->active_memcg, use that. Otherwise, current->mm->memcg.
->
-> Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
-> would always charge the root cgroup. Now it looks up the current
-> active_memcg first (falling back to charging the root cgroup if not
-> set).
->
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
+Hi Anand,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+On Mon, Feb 17, 2020 at 2:30 PM Anand Moon <linux.amoon@gmail.com> wrote:
+[...]
+> > > @@ -681,7 +682,7 @@ static struct clk_regmap g12b_cpub_clk = {
+> > >                       &g12a_sys_pll.hw
+> > >               },
+> > >               .num_parents = 2,
+> > > -             .flags = CLK_SET_RATE_PARENT,
+> > > +             .flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
+> >
+> > Why not. Neil what do you think of this ?
+> > If nothing is claiming this clock and enabling it then I suppose it
+> > could make sense.
+> >
+> I would like core developers to handle this.
+> Sorry for the noise.
+can you please resend this patch with only the change to g12b_cpub_clk?
+I have no G12B board myself so it would be great if you could take care of this!
+
+
+Martin
