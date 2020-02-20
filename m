@@ -2,116 +2,98 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2789C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99145C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773D424670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7088924654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B77riBNy"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tGoj+zJj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgBTMpl (ORCPT
+        id S1727987AbgBTMva (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:45:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33956 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727931AbgBTMpk (ORCPT
+        Thu, 20 Feb 2020 07:51:30 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:36743 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727789AbgBTMva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:45:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582202739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=goBkqnHTe+jpLAI1tMKYh/5HXzvRmb1T4YJS1+WLtPo=;
-        b=B77riBNylvJ1+sljtTZAxTbpH1nNNBRIUW7kmyMLok7vCblWaTZxGPufJohAZ5ViFL9/1/
-        IO7JVQvwIGVoO/lylKk4ljpl6bFbOFUGAR5ACuPB6Cp1+bLjhAtFwS/GcXf6iMopvs+OR8
-        as0ZDeucLsP1j44bKYZPIfQ1yBAd3kM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-nUGEn3wlO9OXKY1E6Qwh3A-1; Thu, 20 Feb 2020 07:45:38 -0500
-X-MC-Unique: nUGEn3wlO9OXKY1E6Qwh3A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1270107ACC5;
-        Thu, 20 Feb 2020 12:45:36 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D99765C28E;
-        Thu, 20 Feb 2020 12:45:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200219165312.GD9504@magnolia>
-References: <20200219165312.GD9504@magnolia> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204553565.3299825.3864357054582488949.stgit@warthog.procyon.org.uk>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        mszeredi@redhat.com, christian@brauner.io,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/19] vfs: Introduce a non-repeating system-unique superblock ID [ver #16]
+        Thu, 20 Feb 2020 07:51:30 -0500
+Received: by mail-qv1-f66.google.com with SMTP id ff2so1809715qvb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 04:51:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
+        b=tGoj+zJjCFlZ9bhdUn+7m0AmuqV1txOsHJRJBnEg6KA2fyVq+zz/iELWJgMTM24R+J
+         XatNmnPWbmev9wW0oX1X8qPc1uyytzGERnz+7t+htuv8OhQzlaT/mEP180ZemvSlUqTc
+         DYtkKQ8qAfkshrVXLAj9HR6UMkjPQus/rQ6ChK8lkcaX0+nrZQ7KoXewU+Nwva72Pl6n
+         a7OydZO/RoLaPMPYG7+T5OiQGt4kAWA9AshfOVz3jOURd5D4K1AFFR+Z1JUCkworJiz9
+         lvH0Nc5SPZ8m7Ouh9OP1JwUSDVLPgQtH93yYB/x3fQ0DT7dK8OX8QyV/rmWYqfxmNZcJ
+         SLqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EYcNKr/N3Y8JXsfApAPcA0o8C1pFsDDtiwpZriI6bFA=;
+        b=Oere2nDMK1Epa3av6anawQwKN0mFzWj2Cj9QGJzYuOB8BeckHpsfVBSRKBFBXtSdah
+         B8/m+EmPIdecflwe6Uz8UJ7A66dkkaAmhyP2d6FWGDlzEz0jJGqHK1+VlWbPrhduAX4t
+         aEJJFofLRKLX2A2haYVauI16hQHWIS9hfjRo7FawX/CVMcSUhiDTZ3pZVybxRhTuRQli
+         76wo0zNls7/7qT1X0/ndpsu4CZ2N3JgXKalmRLILqPsFlLU3LNUOS6LUef2eslb9ZjFb
+         T1C2sPxJkAUcJdWJ6QdxuC8gUehwXPg/RSZ2hPzQ/zexYRAHt2G2cN7ARMxdBND+xieL
+         FKjQ==
+X-Gm-Message-State: APjAAAVcpM0HpmV3yOlqsXnOpPn26yk1m6ZPWGO1pjyyE4kmdVSEXpMH
+        CkrkDNNdyEmqvU25BTnoY8oh0goorMwvr5Tt81p90g==
+X-Google-Smtp-Source: APXvYqzt3/u4sLm+8a7c12Ru7REntLJGkgoZmt8TgpKEmEX2TJZHyXdbu5hruKsC4N7eHkriHdxricWluVN6/oEXbJs=
+X-Received: by 2002:ad4:446b:: with SMTP id s11mr25036775qvt.148.1582203089373;
+ Thu, 20 Feb 2020 04:51:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <626758.1582202733.1@warthog.procyon.org.uk>
-Date:   Thu, 20 Feb 2020 12:45:33 +0000
-Message-ID: <626759.1582202733@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <20200220100141.5905-1-brgl@bgdev.pl> <20200220100141.5905-3-brgl@bgdev.pl>
+ <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
+In-Reply-To: <5970b17a-b29b-154f-033e-6da007d6a289@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Thu, 20 Feb 2020 13:51:18 +0100
+Message-ID: <CAMpxmJX5673AmGDwrb=DMUu7=8Xi2VTtWE72F2hgitK9QUt-RA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/4] gpiolib: use kref in gpio_desc
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Darrick J. Wong <darrick.wong@oracle.com> wrote:
+czw., 20 lut 2020 o 13:05 Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> napisa=C5=82(a):
+>
+>
+>
+> On 20/02/2020 10:01, Bartosz Golaszewski wrote:
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -2798,6 +2798,8 @@ static int gpiod_request_commit(struct gpio_desc =
+*desc, const char *label)
+> >               goto done;
+> >       }
+> >
+> > +     kref_init(&desc->ref);
+> > +
+>
+> Should we not decrement refcount on the error path of this function?
+>
 
-> Ahah, this is what the f_sb_id field is for.  I noticed a few patches
-> ago that it was in a header file but was never set.
-> 
-> I'm losing track of which IDs do what...
-> 
-> * f_fsid is that old int[2] thing that we used for statfs.  It sucks but
->   we can't remove it because it's been in statfs since the beginning of
->   time.
-> 
-> * f_fs_name is a string coming from s_type, which is the name of the fs
->   (e.g. "XFS")?
-> 
-> * f_fstype comes from s_magic, which (for XFS) is 0x58465342.
-> 
-> * f_sb_id is basically an incore u64 cookie that one can use with the
->   mount events thing that comes later in this patchset?
-> 
-> * FSINFO_ATTR_VOLUME_ID comes from s_id, which tends to be the block
->   device name (at least for local filesystems)
-> 
-> * FSINFO_ATTR_VOLUME_UUID comes from s_uuid, which some filesystems fill
->   in at mount time.
-> 
-> * FSINFO_ATTR_VOLUME_NAME is ... left to individual filesystems to
->   implement, and (AFAICT) can be the label that one uses for things
->   like: "mount LABEL=foo /home" ?
-> 
-> Assuming I got all of that right, can we please capture what all of
-> these "IDs" mean in the documentation?
+On error the descriptor will still be unrequested so there's no point
+in potentially calling gpiod_free(). Also: the next time someone
+requests it and succeeds, we'll set it back to 1.
 
-Basically, yes.  Would it help if I:
-
- (1) Put the ID generation into its own patch, first.
-
- (2) Put the notification counter patches right after that.
-
- (3) Renamed the fields a bit, say:
-
-	f_fsid		-> fsid
-	f_fs_name	-> filesystem_name
-	f_fstype	-> filesystem_magic
-	f_sb_id		-> superblock_id
-	f_dev_*		-> backing_dev_*
-
-David
-
+Bartosz
