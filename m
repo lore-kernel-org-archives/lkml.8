@@ -2,191 +2,159 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73768C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A7C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49FB720658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:03:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YGCOgway"
+	by mail.kernel.org (Postfix) with ESMTP id 4F37E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbgBTQDJ (ORCPT
+        id S1728627AbgBTQDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:03:09 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53802 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728798AbgBTQDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:03:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582214586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lwNlsBs8NIb6Y77atButveT5DrFFM9+Zoa3o5H5cFjw=;
-        b=YGCOgwayF1eIniQUiuMWQrwnb7zw4PewZ7uDvVbwX7M1skSHBKDi00aXpPYla5g8E/yFGh
-        BiDvsj2244nRors6aALOJ1cJQTeKSVKs5y8K9N6vitjD3wSSEZgaBc+9YOPh+l0L6ze7dH
-        BL/PhWdMWF1JpmHNjLr6+P2R5ncheSo=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-95rLSdHiNVmGtj-_hRhBNw-1; Thu, 20 Feb 2020 11:03:03 -0500
-X-MC-Unique: 95rLSdHiNVmGtj-_hRhBNw-1
-Received: by mail-qv1-f70.google.com with SMTP id s5so2855714qvr.15
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:03:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lwNlsBs8NIb6Y77atButveT5DrFFM9+Zoa3o5H5cFjw=;
-        b=kWtPrmA0tUuAYOipXZ/G1LK05nXfMg01ajl/+JeeEPcfe11ZKFRZ08YB02UVRgDRyz
-         OFgfXMBwtj/VPczwqPZRPLrKxdk4riTsLlSNSmrW4FG9Dzs/Bu7QoBK1Fo45LdeXYWi2
-         iq/nA7nxJ9xNZ2TbSfR3VLcTnrYsvzifJA7L6LMeUP5FjS8s8bhg0E/U1JeV2PhU7jab
-         99qImn2WcAgnWl0Y96EIo3LfR0lFfoAnWjh5zq/M6V0vFX5NMsLS5rYvIzN6sMjxlGq0
-         LdcyXlg9JQ1v4CtnvYEs/bcCUhmEZgvkIQ9TZYtVaw0laHhV8/nG0qJK2e2y5bdOpGWw
-         WFnw==
-X-Gm-Message-State: APjAAAUBqLS4bezDn7nhfc6sSgtNsC+vc3RIMrOJDNFZsGE/yiMepkdw
-        qch7gxv+P0xM88dzNAADGqlW3U5fA3ypf18YTllKIsvf2UHs3NW2sEmq7ZoVuaewUN6d5yNjkN1
-        oFTKDmIgOBDBs0RC+caFX1T9P
-X-Received: by 2002:a37:6343:: with SMTP id x64mr12490176qkb.469.1582214582493;
-        Thu, 20 Feb 2020 08:03:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx2aPDTTJLSGD106eUq72NgEiCCqnnnqxrNnv6B6KzmA2UMTNOcP0AD9i+lrW6IWJ9nODQY9g==
-X-Received: by 2002:a37:6343:: with SMTP id x64mr12490151qkb.469.1582214582267;
-        Thu, 20 Feb 2020 08:03:02 -0800 (PST)
-Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id n123sm1857635qke.58.2020.02.20.08.03.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 08:03:01 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Peter Xu <peterx@redhat.com>, Martin Cracauer <cracauer@cons.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        David Hildenbrand <david@redhat.com>,
-        Bobby Powers <bobbypowers@gmail.com>,
-        Mel Gorman <mgorman@suse.de>
-Subject: [PATCH RESEND v6 16/16] mm/userfaultfd: Honor FAULT_FLAG_KILLABLE in fault path
-Date:   Thu, 20 Feb 2020 11:03:00 -0500
-Message-Id: <20200220160300.9941-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200220155353.8676-1-peterx@redhat.com>
-References: 
+        Thu, 20 Feb 2020 11:03:39 -0500
+Received: from mga14.intel.com ([192.55.52.115]:36515 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgBTQDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:03:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 08:03:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
+   d="scan'208";a="269640221"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Feb 2020 08:03:37 -0800
+Received: from [10.251.25.159] (kliang2-mobl.ccr.corp.intel.com [10.251.25.159])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 171FE58056A;
+        Thu, 20 Feb 2020 08:03:37 -0800 (PST)
+Subject: Re: [PATCH 0/5] Support metric group constraint
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        namhyung@kernel.org, ravi.bangoria@linux.ibm.com,
+        yao.jin@linux.intel.com, ak@linux.intel.com
+References: <1582139320-75181-1-git-send-email-kan.liang@linux.intel.com>
+ <20200220113924.GB565976@krava>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <534b4b99-466a-0a5b-e9f5-b4711abd8a4a@linux.intel.com>
+Date:   Thu, 20 Feb 2020 11:03:35 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220113924.GB565976@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Userfaultfd fault path was by default killable even if the caller does
-not have FAULT_FLAG_KILLABLE.  That makes sense before in that when
-with gup we don't have FAULT_FLAG_KILLABLE properly set before.  Now
-after previous patch we've got FAULT_FLAG_KILLABLE applied even for
-gup code so it should also make sense to let userfaultfd to honor the
-FAULT_FLAG_KILLABLE.
 
-Because we're unconditionally setting FAULT_FLAG_KILLABLE in gup code
-right now, this patch should have no functional change.  It also
-cleaned the code a little bit by introducing some helpers.
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- fs/userfaultfd.c | 36 ++++++++++++++++++++++++++++--------
- 1 file changed, 28 insertions(+), 8 deletions(-)
+On 2/20/2020 6:39 AM, Jiri Olsa wrote:
+> On Wed, Feb 19, 2020 at 11:08:35AM -0800, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Some metric groups, e.g. Page_Walks_Utilization, will never count when
+>> NMI watchdog is enabled.
+>>
+>>   $echo 1 > /proc/sys/kernel/nmi_watchdog
+>>   $perf stat -M Page_Walks_Utilization
+>>
+>>   Performance counter stats for 'system wide':
+>>
+>>   <not counted>      itlb_misses.walk_pending       (0.00%)
+>>   <not counted>      dtlb_load_misses.walk_pending  (0.00%)
+>>   <not counted>      dtlb_store_misses.walk_pending (0.00%)
+>>   <not counted>      ept.walk_pending               (0.00%)
+>>   <not counted>      cycles                         (0.00%)
+>>
+>>         2.343460588 seconds time elapsed
+>>
+>>   Some events weren't counted. Try disabling the NMI watchdog:
+>>          echo 0 > /proc/sys/kernel/nmi_watchdog
+>>          perf stat ...
+>>          echo 1 > /proc/sys/kernel/nmi_watchdog
+>>   The events in group usually have to be from the same PMU. Try
+>>   reorganizing the group.
+>>
+>> A metric group is a weak group, which relies on group validation
+>> code in the kernel to determine whether to be opened as a group or
+>> a non-group. However, group validation code may return false-positives,
+>> especially when NMI watchdog is enabled. (The metric group is allowed
+>> as a group but will never be scheduled.)
+>>
+>> The attempt to fix the group validation code has been rejected.
+>> https://lore.kernel.org/lkml/20200117091341.GX2827@hirez.programming.kicks-ass.net/
+>> Because we cannot accurately predict whether the group can be scheduled
+>> as a group, only by checking current status.
+>>
+>> This patch set provides another solution to mitigate the issue.
+>> Add "MetricConstraint" in event list, which provides a hint for perf tool,
+>> e.g. "MetricConstraint": "NO_NMI_WATCHDOG". Perf tool can change the
+>> metric group to non-group (standalone metrics) if NMI watchdog is enabled.
+> 
+> the problem is in the missing counter, that's taken by NMI watchdog, right?
+>
+> and it's problem for any metric that won't fit to the available
+> counters.. shouldn't we rather do this workaround for any metric
+> that wouldn't fit in available counters? 
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index c076d3295958..703c1c3faa6e 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -334,6 +334,30 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
- 	return ret;
- }
- 
-+/* Should pair with userfaultfd_signal_pending() */
-+static inline long userfaultfd_get_blocking_state(unsigned int flags)
-+{
-+	if (flags & FAULT_FLAG_INTERRUPTIBLE)
-+		return TASK_INTERRUPTIBLE;
-+
-+	if (flags & FAULT_FLAG_KILLABLE)
-+		return TASK_KILLABLE;
-+
-+	return TASK_UNINTERRUPTIBLE;
-+}
-+
-+/* Should pair with userfaultfd_get_blocking_state() */
-+static inline bool userfaultfd_signal_pending(unsigned int flags)
-+{
-+	if (flags & FAULT_FLAG_INTERRUPTIBLE)
-+		return signal_pending(current);
-+
-+	if (flags & FAULT_FLAG_KILLABLE)
-+		return fatal_signal_pending(current);
-+
-+	return false;
-+}
-+
- /*
-  * The locking rules involved in returning VM_FAULT_RETRY depending on
-  * FAULT_FLAG_ALLOW_RETRY, FAULT_FLAG_RETRY_NOWAIT and
-@@ -355,7 +379,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	struct userfaultfd_ctx *ctx;
- 	struct userfaultfd_wait_queue uwq;
- 	vm_fault_t ret = VM_FAULT_SIGBUS;
--	bool must_wait, return_to_userland;
-+	bool must_wait;
- 	long blocking_state;
- 
- 	/*
-@@ -462,9 +486,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	uwq.ctx = ctx;
- 	uwq.waken = false;
- 
--	return_to_userland = vmf->flags & FAULT_FLAG_INTERRUPTIBLE;
--	blocking_state = return_to_userland ? TASK_INTERRUPTIBLE :
--			 TASK_KILLABLE;
-+	blocking_state = userfaultfd_get_blocking_state(vmf->flags);
- 
- 	spin_lock_irq(&ctx->fault_pending_wqh.lock);
- 	/*
-@@ -490,8 +512,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	up_read(&mm->mmap_sem);
- 
- 	if (likely(must_wait && !READ_ONCE(ctx->released) &&
--		   (return_to_userland ? !signal_pending(current) :
--		    !fatal_signal_pending(current)))) {
-+		   !userfaultfd_signal_pending(vmf->flags))) {
- 		wake_up_poll(&ctx->fd_wqh, EPOLLIN);
- 		schedule();
- 		ret |= VM_FAULT_MAJOR;
-@@ -513,8 +534,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 			set_current_state(blocking_state);
- 			if (READ_ONCE(uwq.waken) ||
- 			    READ_ONCE(ctx->released) ||
--			    (return_to_userland ? signal_pending(current) :
--			     fatal_signal_pending(current)))
-+			    userfaultfd_signal_pending(vmf->flags))
- 				break;
- 			schedule();
- 		}
--- 
-2.24.1
+I think current perf already did this.
+All metric groups are weak group. Kernel (validate_group()) tells perf 
+tool whether a metric group fit to available counters.
+If yes, the metric group will be scheduled as a group.
+If no, perf tool will not using a group and re-try. The code is as below.
 
+  try_again:
+  		if (create_perf_stat_counter(counter, &stat_config, &target) < 0) {
+
+  			/* Weak group failed. Reset the group. */
+  			if ((errno == EINVAL || errno == EBADF) &&
+  			    counter->leader != counter &&
+  			    counter->weak_group) {
+  				counter = perf_evlist__reset_weak_group(evsel_list, counter);
+  				goto try_again;
+  			}
+
+
+This patch set is to workaroud the false-positives from the kernel.
+Kernel only validate the group itself. It assumes that all counters are 
+available. So, when any counter is permanently occupied by others, e.g. 
+watchdog, the validate_group() may return false-positives.
+
+? not just for chosen
+> ones..?
+
+For now, I think we only need to workaround the Page_Walks_Utilization 
+metric group. Because it has 5 events, and one of the events is cycles.
+The cycles has to be scheduled on fixed counter 2. But it's already 
+occupied by watchdog.
+The false-positives of validate_group() will trigger the issue (metric 
+group never be scheduled.).
+
+For other metric groups, even they have cycles, the issue should not be 
+triggered.
+For example, if they have 4 or less events, the cycles can be scheduled 
+to GP counter instead.
+If they have 6 or more events, the weak group will be reject anyway.
+Perf tool will open it as non-group (standalone metrics).
+
+I think we only need to apply the constraint for the 
+Page_Walks_Utilization metric group for now.
+
+
+Thanks,
+Kan
+
+> 
+> thanks,
+> jirka
+> 
