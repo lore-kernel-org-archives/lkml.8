@@ -2,64 +2,73 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE76DC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA716C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01DB24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1224673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgBTMnt (ORCPT
+        id S1728074AbgBTMo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:43:49 -0500
-Received: from mx2.cyber.ee ([193.40.6.72]:39981 "EHLO mx2.cyber.ee"
+        Thu, 20 Feb 2020 07:44:56 -0500
+Received: from a.mx.secunet.com ([62.96.220.36]:50216 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727789AbgBTMnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:43:49 -0500
-Subject: Re: w83627ehf crash in 5.6.0-rc2-00055-gca7e1fd1026c
-To:     "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc:     linux-hwmon@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Chen Zhou <chenzhou10@huawei.com>
-References: <434212bb-4eb9-7366-3255-79826d0e65bc@linux.ee>
- <20200220121451.GA18071@gallifrey>
-From:   Meelis Roos <mroos@linux.ee>
-Message-ID: <6050ed14-f7a6-cb99-7268-072129226d48@linux.ee>
-Date:   Thu, 20 Feb 2020 14:43:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1728021AbgBTMo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:44:56 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 8520720491;
+        Thu, 20 Feb 2020 13:44:54 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id iOePJampMJ7u; Thu, 20 Feb 2020 13:44:53 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 2FFAB2027C;
+        Thu, 20 Feb 2020 13:44:53 +0100 (CET)
+Received: from gauss2.secunet.de (10.182.7.193) by mail-essen-01.secunet.de
+ (10.53.40.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
+ 13:44:52 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id CF65E318028C;
+ Thu, 20 Feb 2020 13:44:52 +0100 (CET)
+Date:   Thu, 20 Feb 2020 13:44:52 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Yi Wang <wang.yi59@zte.com.cn>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <xue.zhihong@zte.com.cn>,
+        <wang.liang82@zte.com.cn>, Huang Zijiang <huang.zijiang@zte.com.cn>
+Subject: Re: [PATCH] xfrm: Use kmem_cache_zalloc() instead of
+ kmem_cache_alloc() with flag GFP_ZERO.
+Message-ID: <20200220124452.GX8274@gauss3.secunet.de>
+References: <1581501276-5636-1-git-send-email-wang.yi59@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200220121451.GA18071@gallifrey>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1581501276-5636-1-git-send-email-wang.yi59@zte.com.cn>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It looks like not all chips have temp_label, so I think we need to change w83627ehf_is_visible
-> which has:
+On Wed, Feb 12, 2020 at 05:54:36PM +0800, Yi Wang wrote:
+> From: Huang Zijiang <huang.zijiang@zte.com.cn>
 > 
->                  if (attr == hwmon_temp_input || attr == hwmon_temp_label)
->                          return 0444;
+> Use kmem_cache_zalloc instead of manually setting kmem_cache_alloc
+> with flag GFP_ZERO since kzalloc sets allocated memory
+> to zero.
 > 
-> to
->                  if (attr == hwmon_temp_input)
->                          return 0444;
->                  if (attr == hwmon_temp_label) {
->                          if (data->temp_label)
-> 				return 0444;
-> 			else
-> 				return 0;
->                  }
+> Change in v2:
+>      add indation
 > 
-> Does that work for you?
-Yes, it works - sensors are displayed as they should be, with nothing in dmesg.
+> Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
+> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
 
-Thank you for so quick response!
-
--- 
-Meelis Roos <mroos@linux.ee>
+Applied to ipsec-next, thanks!
