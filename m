@@ -2,85 +2,142 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86258C34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA851C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A3620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EC5924656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VQcdePU2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ODbEDpu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgBTFb2 (ORCPT
+        id S1726198AbgBTFkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:31:28 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:24355 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgBTFb1 (ORCPT
+        Thu, 20 Feb 2020 00:40:07 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30876 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725957AbgBTFkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:31:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582176687; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=1IQ7rTO8MrCC26jln2QV3jowt/CvD+kTkMdX2ajR2JI=;
- b=VQcdePU2mRMEz/HdIJpWEeDSXflUTdhb8rT1U1e+qA+dNootHMbb+CbZJaV3R+FF93PF3N9g
- NDByLPbsGYucFTIw8iiE8MWGsi5Ij3yYgxAfeF3R1eVolZ9Afytjd5YvdlA8gV083V7O6v7K
- oJnNShOL6xZc4NKR1ePps2a/Mbg=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4e19a8.7fde26b66570-smtp-out-n02;
- Thu, 20 Feb 2020 05:31:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 642A8C447A0; Thu, 20 Feb 2020 05:31:19 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 20 Feb 2020 00:40:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582177206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=J9NrFI8gvvH8gN3m+EAbf89V4rNzqsdM3V845EEW2jg=;
+        b=ODbEDpu8QEZBcClQD0IIPXeh+GaBZn0ZuJxOv2tNbg0QkQIrVMyCCisR1HJOuaTHfWWVH7
+        T6z5zLc7kVNg11i2FAUr7BmiA5wujfcNqSBL/zQjQq5mIs5Zs0S6X+J/U6DcmlHJtPqPfz
+        Qs/FXRBGvTxJeS4rw4nM6zQaBHPBApI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-51-OnCytqH4M4yaDNXjpZfCEA-1; Thu, 20 Feb 2020 00:40:04 -0500
+X-MC-Unique: OnCytqH4M4yaDNXjpZfCEA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D25D3C43383;
-        Thu, 20 Feb 2020 05:31:18 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B286DB23;
+        Thu, 20 Feb 2020 05:40:01 +0000 (UTC)
+Received: from [10.72.12.159] (ovpn-12-159.pek2.redhat.com [10.72.12.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 87A229077C;
+        Thu, 20 Feb 2020 05:39:41 +0000 (UTC)
+Subject: Re: [PATCH V3 1/5] vhost: factor out IOTLB
+To:     Randy Dunlap <rdunlap@infradead.org>, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, hch@infradead.org,
+        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com
+References: <20200220035650.7986-1-jasowang@redhat.com>
+ <20200220035650.7986-2-jasowang@redhat.com>
+ <61d64892-ce77-3e86-acb8-a49679fc0047@infradead.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <b348cb04-3b5b-1a11-a4c5-4b05d31e88c0@redhat.com>
+Date:   Thu, 20 Feb 2020 13:39:39 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Feb 2020 11:01:18 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] watchdog: qcom: Use irq flags from firmware
-In-Reply-To: <20200220002047.115000-1-swboyd@chromium.org>
-References: <20200220002047.115000-1-swboyd@chromium.org>
-Message-ID: <c454ec5812217f41d56984ce68b643da@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <61d64892-ce77-3e86-acb8-a49679fc0047@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-20 05:50, Stephen Boyd wrote:
-> The DT or ACPI tables should tell the driver what the irq flags are.
-> Given that this driver probes only on DT based platforms and those DT
-> platforms specify the irq flags we can safely drop the forced irq flag
-> setting here.
-> 
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Thanks,
+On 2020/2/20 =E4=B8=8B=E5=8D=8812:04, Randy Dunlap wrote:
+> On 2/19/20 7:56 PM, Jason Wang wrote:
+>> This patch factors out IOTLB into a dedicated module in order to be
+>> reused by other modules like vringh. User may choose to enable the
+>> automatic retiring by specifying VHOST_IOTLB_FLAG_RETIRE flag to fit
+>> for the case of vhost device IOTLB implementation.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   MAINTAINERS                 |   1 +
+>>   drivers/vhost/Kconfig       |   7 ++
+>>   drivers/vhost/Makefile      |   2 +
+>>   drivers/vhost/net.c         |   2 +-
+>>   drivers/vhost/vhost.c       | 221 +++++++++++-----------------------=
+--
+>>   drivers/vhost/vhost.h       |  36 ++----
+>>   drivers/vhost/vhost_iotlb.c | 171 ++++++++++++++++++++++++++++
+>>   include/linux/vhost_iotlb.h |  45 ++++++++
+>>   8 files changed, 304 insertions(+), 181 deletions(-)
+>>   create mode 100644 drivers/vhost/vhost_iotlb.c
+>>   create mode 100644 include/linux/vhost_iotlb.h
+>>
+> Hi,
+> Sorry if you have gone over this previously:
 
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for the review, it's really helpful.
+
+
+>
+>> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+>> index 3d03ccbd1adc..eef634ff9a6e 100644
+>> --- a/drivers/vhost/Kconfig
+>> +++ b/drivers/vhost/Kconfig
+>> @@ -36,6 +36,7 @@ config VHOST_VSOCK
+>>  =20
+>>   config VHOST
+>>   	tristate
+>> +	select VHOST_IOTLB
+>>   	---help---
+>>   	  This option is selected by any driver which needs to access
+>>   	  the core of vhost.
+>> @@ -54,3 +55,9 @@ config VHOST_CROSS_ENDIAN_LEGACY
+>>   	  adds some overhead, it is disabled by default.
+>>  =20
+>>   	  If unsure, say "N".
+>> +
+>> +config VHOST_IOTLB
+>> +	tristate
+>> +	default m
+> "default m" should not be needed. Just make whatever needs it select it=
+.
+
+
+Yes, will fix.
+
+Thanks
+
+
+>
+>> +	help
+>> +	  Generic IOTLB implementation for vhost and vringh.
+>
+
