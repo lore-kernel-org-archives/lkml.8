@@ -2,125 +2,107 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A025AC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F7BC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7963E208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582204429;
-	bh=IHgFRQu6vtgSjRH+EdzEs0RBHd01e1qO18Td6UiCAis=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=jeYQ5v56EUqUum1BiqI0YRDvm4WXpSLC7Mgu+26vG2ppSLWCANjHRQIF1wKGqUpxi
-	 mLDs1XicTLrgfk2rpAKALIqHkZd4eduSnIsD4Xrk/KckPqgWbdL6MoMQMqoZfnGyUJ
-	 pfh3/OGDnUp+0aNC0Sjh0AwwUZ4BfU2TqGQR046M=
+	by mail.kernel.org (Postfix) with ESMTP id EEBE1206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:15:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cL9Qls0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgBTNNs (ORCPT
+        id S1728157AbgBTNPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:13:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728051AbgBTNNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:13:47 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45113206ED;
-        Thu, 20 Feb 2020 13:13:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582204427;
-        bh=IHgFRQu6vtgSjRH+EdzEs0RBHd01e1qO18Td6UiCAis=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zhcN+w8O8nH3zuu0JNaiOHi/9YXh2rFG2X4sP3cBanfCx49cKOikccbhsyKoVDdaw
-         ymKYIvDS2oPQxbvGrvR35XhpKxnZoCPM1IUIMA6tvCSK6+LNx0n4gKgl0aMzl0HXqf
-         SdEoonAg7P9pbbhRflCgl5Jp9DT5E3btGkd2Ux9g=
-Date:   Thu, 20 Feb 2020 22:13:40 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Bird <Tim.Bird@sony.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: Re: [for-next][PATCH 12/26] Documentation: bootconfig: Add a doc
- for extended boot config
-Message-Id: <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
-In-Reply-To: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
-References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Feb 2020 08:15:38 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50850 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbgBTNPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:15:38 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a5so1961076wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:15:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=XbSocyvlHYbidOLh4UOVd5RVPSZd3HbLsAjRlUOFqzE=;
+        b=cL9Qls0rrY+UzGeBw0dqcz5IcrwkrepfPyKpcfyhixITUM1d5/ShOLtYyv9e2ht9re
+         vNF4EHS1lout8tWKpDNYeE1wRWJUB1sne2NqK/Fp8QN4MgqLCzv/LyFVKSl2MdP7TfsB
+         jFYPfRkh6ytqAY8bNihNOxsftGETYTp9skzjC6gCf6wScN7+DVr3ntlwNTnbiS/vsVrq
+         RW6sXB8KpGLV3EjfZJLIAAN+AZLCNu9ksf6Vt5nE4aSeDTxWlB0KqxTWvlA1uAqcXnQm
+         31OCyhy4DJ6uyFnqeGplku3fQIs7GQi4AbO0uQU83nieE6vYGS8SxvvzL18IuhEZ+PGC
+         aTOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XbSocyvlHYbidOLh4UOVd5RVPSZd3HbLsAjRlUOFqzE=;
+        b=UpfmAuV4Xwez6SLKDRBWmHg/BKAIE+gc8WvAcT7BeYfy+XYkBTC6LytxEpPUJup+0a
+         hl82O2MyjG+6Q10iS9uzspjAOKaQijoCG2ji4s0LcOR99FDdsAhG68dBjviOnYQoiNqO
+         7o0JXRpNDdWqrqJ0N75GSl0QCnQcXWvVScncd8NjVgHMSjveTosm3wW25OMdzR9nPkWa
+         Ca+k+T07U4ixeiKYJtoHDh37pz7FYTeQG5g9GXXCEQtGtc4DsOEqgvLbQFL3QuAP31nl
+         oef4PSFpegm/DG+G2sXai/bL8tztb6ItOzKVDTFzOkG6I2ephtKh4+fg1ps4zM8S8QHL
+         o5DQ==
+X-Gm-Message-State: APjAAAUyg24aqqnWAGyRcGxT3VkkgQKvR5cSa+wNR5dB4nbTU1HAXg/b
+        UGD5wjRAP3tM4K3LYA3ykitmlg==
+X-Google-Smtp-Source: APXvYqxJi6xwPPsEIzGnzgqipWlqaAxHhHMEH+ezeWOrFPemY21Bt4/b8HeNAvszDL/6lNpuF+oXFQ==
+X-Received: by 2002:a7b:c851:: with SMTP id c17mr4468157wml.71.1582204535329;
+        Thu, 20 Feb 2020 05:15:35 -0800 (PST)
+Received: from nbelin-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id d204sm4382774wmd.30.2020.02.20.05.15.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Feb 2020 05:15:34 -0800 (PST)
+From:   Nicolas Belin <nbelin@baylibre.com>
+To:     linus.walleij@linaro.org
+Cc:     khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nicolas Belin <nbelin@baylibre.com>
+Subject: [PATCH RESEND] pinctrl: meson-gxl: fix GPIOX sdio pins
+Date:   Thu, 20 Feb 2020 14:15:12 +0100
+Message-Id: <1582204512-7582-1-git-send-email-nbelin@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In the gxl driver, the sdio cmd and clk pins are inverted. It has not caused
+any issue so far because devices using these pins always take both pins
+so the resulting configuration is OK.
 
-On Thu, 20 Feb 2020 10:10:20 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
-
-> I wonder about a few details in the added text.
-> 
-> 
-> …
-> > +++ b/Documentation/admin-guide/bootconfig.rst
-> …
-> > +C onfig File Limitation
-> 
-> How do you think about to omit a space character at the beginning
-> of this line?
-
-That was my mistake. I used restructured text extension for vim
-which collapsed all sections and use "space" key to expand.
-Accidentally, I run into edit mode and hit "space" to expand it.
-(it actually expanded but also put a space there and I missed it...)
-
-Anyway, it has been fixed (pointed by Rundy)
-
-> > +Currently the maximum config size size is 32KB …
-> 
-> Would you like to avoid a word duplication here?
-
-Oops, still exist. Thanks!
-
-
-> > +Note: this is not the number of entries but nodes, an entry must consume
-> > +more than 2 nodes (a key-word and a value). …
-> 
-> I find the relevance of the term “nodes” unclear at the moment.
-
-Indeed, "node" is not well defined. What about this?
----
-Each key consists of words separated by dot, and value also consists of
-values separated by comma. Here, each word and each value is generally
-called a "node".
+Fixes: 0f15f500ff2c ("pinctrl: meson: Add GXL pinctrl definitions")
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
 ---
 
-> 
-> Could an other wording be nicer than the abbreviation “a doc for … config”
-> in the commit subject?
+Hi Linus,
 
-OK, I'll try next time. 
+Sorry for the the bad formatting of the first patch, this one should be fine.
 
-Thank you,
+Thanks
 
+Nicolas
+
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+index 1b6e8646700f..2ac921c83da9 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+@@ -147,8 +147,8 @@ static const unsigned int sdio_d0_pins[]	= { GPIOX_0 };
+ static const unsigned int sdio_d1_pins[]	= { GPIOX_1 };
+ static const unsigned int sdio_d2_pins[]	= { GPIOX_2 };
+ static const unsigned int sdio_d3_pins[]	= { GPIOX_3 };
+-static const unsigned int sdio_cmd_pins[]	= { GPIOX_4 };
+-static const unsigned int sdio_clk_pins[]	= { GPIOX_5 };
++static const unsigned int sdio_clk_pins[]	= { GPIOX_4 };
++static const unsigned int sdio_cmd_pins[]	= { GPIOX_5 };
+ static const unsigned int sdio_irq_pins[]	= { GPIOX_7 };
+ 
+ static const unsigned int nand_ce0_pins[]	= { BOOT_8 };
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
