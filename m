@@ -2,143 +2,219 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAB2C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB42C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D3124673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039EE24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbgBTSma (ORCPT
+        id S1728506AbgBTSoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:42:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:49398 "EHLO foss.arm.com"
+        Thu, 20 Feb 2020 13:44:22 -0500
+Received: from mga09.intel.com ([134.134.136.24]:59791 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgBTSm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:42:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7041E30E;
-        Thu, 20 Feb 2020 10:42:29 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E8FD3F6CF;
-        Thu, 20 Feb 2020 10:42:28 -0800 (PST)
-Subject: Re: [RFC PATCH] iommu/iova: Add a best-fit algorithm
-To:     isaacm@codeaurora.org
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, pratikp@codeaurora.org,
-        Liam Mark <lmark@codeaurora.org>
-References: <1581721602-17010-1-git-send-email-isaacm@codeaurora.org>
- <b9d31aa9-fb57-ad31-52e4-1a5c21e5e0de@arm.com>
- <7239ddd532e94a4371289f3be23c66a3@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <195d44d1-ff92-06fd-8ce8-75cd12d47c43@arm.com>
-Date:   Thu, 20 Feb 2020 18:42:27 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726959AbgBTSoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:44:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 10:44:21 -0800
+X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
+   d="scan'208";a="236329771"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 10:44:21 -0800
+Message-ID: <7d3c732d9ec7725dcb5a90c1dc8e9859fbe6ccc0.camel@linux.intel.com>
+Subject: Re: [PATCH v17 4/9] mm: Introduce Reported pages
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Mel Gorman <mgorman@techsingularity.net>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
+        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
+        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
+        vbabka@suse.cz, osalvador@suse.de
+Date:   Thu, 20 Feb 2020 10:44:21 -0800
+In-Reply-To: <20200219145511.GS3466@techsingularity.net>
+References: <20200211224416.29318.44077.stgit@localhost.localdomain>
+         <20200211224635.29318.19750.stgit@localhost.localdomain>
+         <20200219145511.GS3466@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <7239ddd532e94a4371289f3be23c66a3@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/02/2020 6:38 am, isaacm@codeaurora.org wrote:
-> On 2020-02-17 08:03, Robin Murphy wrote:
->> On 14/02/2020 11:06 pm, Isaac J. Manjarres wrote:
->>> From: Liam Mark <lmark@codeaurora.org>
->>>
->>> Using the best-fit algorithm, instead of the first-fit
->>> algorithm, may reduce fragmentation when allocating
->>> IOVAs.
->>
->> What kind of pathological allocation patterns make that a serious
->> problem? Is there any scope for simply changing the order of things in
->> the callers? Do these drivers also run under other DMA API backends
->> (e.g. 32-bit Arm)?
->>
-> The usecases where the IOVA space has been fragmented have 
-> non-deterministic allocation
-> patterns, and thus, it's not feasible to change the allocation order to 
-> avoid fragmenting
-> the IOVA space.
-
-What about combining smaller buffers into larger individual allocations; 
-any scope for that sort of thing? Certainly if you're consistently 
-allocating small things less than PAGE_SIZE then DMA pools would be 
-useful to avoid wanton memory wastage in general.
-
->  From what we've observed, the usecases involve allocations of two types of
-> buffers: one type of buffer between 1 KB to 4 MB in size, and another 
-> type of
-> buffer between 1 KB to 400 MB in size.
+On Wed, 2020-02-19 at 14:55 +0000, Mel Gorman wrote:
+> On Tue, Feb 11, 2020 at 02:46:35PM -0800, Alexander Duyck wrote:
+> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
+> > new file mode 100644
+> > index 000000000000..1047c6872d4f
+> > --- /dev/null
+> > +++ b/mm/page_reporting.c
+> > @@ -0,0 +1,319 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include <linux/mm.h>
+> > +#include <linux/mmzone.h>
+> > +#include <linux/page_reporting.h>
+> > +#include <linux/gfp.h>
+> > +#include <linux/export.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/scatterlist.h>
+> > +
+> > +#include "page_reporting.h"
+> > +#include "internal.h"
+> > +
+> > +#define PAGE_REPORTING_DELAY	(2 * HZ)
 > 
-> The pathological scenarios seem to arise when there are
-> many (100+) randomly distributed non-power of two allocations, which in 
-> some cases leaves
-> behind holes of up to 100+ MB in the IOVA space.
+> I assume there is nothing special about 2 seconds other than "do some
+> progress every so often".
+
+Yes, nothing special. I played around with a few different values. I just
+settled on 2 seconds as I figured with that and 1/16 of the list per pass
+it came out to about 30 seconds which I felt is about the right time for a
+fully utilized system to settle back to the inactive state.
+
+
+> > 
+> > +static int
+> > +page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
+> > +		     unsigned int order, unsigned int mt,
+> > +		     struct scatterlist *sgl, unsigned int *offset)
+> > +{
+> > +	struct free_area *area = &zone->free_area[order];
+> > +	struct list_head *list = &area->free_list[mt];
+> > +	unsigned int page_len = PAGE_SIZE << order;
+> > +	struct page *page, *next;
+> > +	int err = 0;
+> > +
+> > +	/*
+> > +	 * Perform early check, if free area is empty there is
+> > +	 * nothing to process so we can skip this free_list.
+> > +	 */
+> > +	if (list_empty(list))
+> > +		return err;
+> > +
+> > +	spin_lock_irq(&zone->lock);
+> > +
+> > +	/* loop through free list adding unreported pages to sg list */
+> > +	list_for_each_entry_safe(page, next, list, lru) {
+> > +		/* We are going to skip over the reported pages. */
+> > +		if (PageReported(page))
+> > +			continue;
+> > +
+> > +		/* Attempt to pull page from list */
+> > +		if (!__isolate_free_page(page, order))
+> > +			break;
+> > +
 > 
-> Here are some examples that show the state of the IOVA space under which 
-> failure to
-> allocate an IOVA was observed:
+> Might want to note that you are breaking because the only reason to fail
+> the isolation is that watermarks are not met and we are likely under
+> memory pressure. It's not a big issue.
 > 
-> Instance 1:
->      Currently mapped total size : ~1.3GB
->      Free space available : ~2GB
->      Map for ~162MB fails.
->          Max contiguous space available : < 162MB
+> However, while I think this is correct, it's hard to follow. This loop can
+> be broken out of with pages still on the scatter gather list. The current
+> flow guarantees that err will not be set at this point so the caller
+> cleans it up so we always drain the list either here or in the caller.
+
+I can probably submit a follow-up patch to update the comments. The reason
+for not returning an error is because I didn't consider it an error that
+we encountered the watermark and were not able to pull any more pages.
+Instead I considered that the "stop" point for this pass and have it just
+exit out of the loop and flush the data.
+
+At the start of the next pass we will check against the low watermark
+instead of the minimum watermark and if that check fails we will simply
+stop reporting pages for the zone until additional pages are freed.
+
+I can probably also update the description for page_reporting_cycle since
+it may not be clear that the output for this is a partially filled in-
+progress scatterlist so we always have to reporting any remaining entries
+at the end of processing a given zone. It might make more sense if I move
+the bits related to "leftover" in page_reporting_process_zone into their
+own function.
+
+> While I think it works, it's a bit fragile. I recommend putting a comment
+> above this noting why it's safe and put a VM_WARN_ON_ONCE(err) before the
+> break in case someone tries to change this in a years time and does not
+> spot that the flow to reach page_reporting_drain *somewhere* is critical.
+
+I assume this isn't about this section, but the section below?
+
+> > +		/* Add page to scatter list */
+> > +		--(*offset);
+> > +		sg_set_page(&sgl[*offset], page, page_len, 0);
+> > +
+> > +		/* If scatterlist isn't full grab more pages */
+> > +		if (*offset)
+> > +			continue;
+> > +
+> > +		/* release lock before waiting on report processing */
+> > +		spin_unlock_irq(&zone->lock);
+> > +
+> > +		/* begin processing pages in local list */
+> > +		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
+> > +
+
+So one thing I can do is probably add a comment here as well to more
+thoroughly explain the reason why we wait to call the break until we are
+in the block below.
+
+> > +		/* reset offset since the full list was reported */
+> > +		*offset = PAGE_REPORTING_CAPACITY;
+> > +
+> > +		/* reacquire zone lock and resume processing */
+> > +		spin_lock_irq(&zone->lock);
+> > +
+> > +		/* flush reported pages from the sg list */
+> > +		page_reporting_drain(prdev, sgl, PAGE_REPORTING_CAPACITY, !err);
+> > +
+> > +		/*
+> > +		 * Reset next to first entry, the old next isn't valid
+> > +		 * since we dropped the lock to report the pages
+> > +		 */
+> > +		next = list_first_entry(list, struct page, lru);
+> > +
+> > +		/* exit on error */
+> > +		if (err)
+> > +			break;
+
+And I assume you meant to add the VM_WARN_ON_ONCE here? The statement
+above wouldn't make much sense since err would always be 0.
+
+> > +	}
+> > +
+> > +	spin_unlock_irq(&zone->lock);
+> > +
+> > +	return err;
+> > +}
 > 
-> Instance 2:
->      Currently mapped total size : ~950MB
->      Free space available : ~2.3GB
->      Map for ~320MB fails.
->      Max contiguous space available : ~189MB
+> I complained about the use of zone lock before but in this version, I
+> think I'm ok with it. The lock is held for the free list manipulations
+> which is what it's for. The state management with atomics seems
+> reasonable.
 > 
-> Instance 3:
->      Currently mapped total size : ~1.2GB
->      Free space available : ~2.7GB
->      Map for ~162MB fails.
->      Max contiguous space available : <162MB
+> Otherwise I think this is ok and I think the implementation right. Of
+> great importance to me was the allocator fast paths but they seem to be
+> adequately protected by a static branch so
 > 
-> We are still in the process of collecting data with the best-fit 
-> algorithm enabled
-> to provide some numbers to show that it results in less IOVA space
-> fragmentation.
+> Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> 
+> The ack applies regardless of whether you decide to document and
+> defensively protect page_reporting_cycle against losing pages on the
+> scatter/gather list but I do recommend it.
 
-Thanks for those examples, and I'd definitely like to see the 
-comparative figures. To dig a bit further, at the point where things 
-start failing, where are the cached nodes pointing? IIRC there is still 
-a pathological condition where empty space between limit_pfn and 
-cached32_node gets 'lost' if nothing in between is freed, so the bigger 
-the range of allocation sizes, the worse the effect, e.g.:
+Thanks for reviewing this. I appreciate the feedback.
 
-(considering an empty domain, pfn 0 *not* reserved, 32-bit limit_pfn)
+- Alex
 
-	alloc 4K, succeeds, cached32_node now at 4G-4K
-	alloc 2G, succeeds, cached32_node now at 0
-	alloc 4K, fails despite almost 2G contiguous free space within limit_pfn
-	(and max32_alloc_size==1 now fast-forwards *any* further allocation 
-attempt to failure)
 
-If you're falling foul of this case (I was never sure how realistic a 
-problem it would be in practice), there are at least a couple of much 
-less invasive tweaks I can think of that would be worth exploring.
-
-> To answer your question about whether if this driver run under other DMA 
-> API backends:
-> yes, such as 32 bit ARM.
-
-OK, that's what I suspected :)
-
-AFAICS arch/arm's __alloc_iova() is also a first-fit algorithm, so if 
-you get better behaviour there then it would suggest that this aspect 
-isn't really the most important issue. Certainly, the fact that the 
-"best fit" logic here also happens to ignore the cached nodes does start 
-drawing me back to the point above.
-
-Robin.
