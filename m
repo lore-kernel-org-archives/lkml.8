@@ -2,195 +2,137 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2403BC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E47C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AA02467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:22:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3080206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l0M0ZVSv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ehED6/br"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgBTSW4 (ORCPT
+        id S1728482AbgBTSZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:22:56 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:52226 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTSW4 (ORCPT
+        Thu, 20 Feb 2020 13:25:47 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53868 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTSZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:22:56 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KIMSYg068103;
-        Thu, 20 Feb 2020 12:22:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582222948;
-        bh=K5dPu3+Wa7CxKbU5shKv6WcPAdBvfaqlk76SVCdHdLA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=l0M0ZVSv3fmfMS9j84mE8lFOURm3UA0yk69gHqQocp+dURS2y8WzJ7wefa+JZ3r6h
-         Zm1UAWCanpIgV89obYfddTMQ1IV1OVIPpzf0e1wfh4cD4NN2mZBsj+NLmFgA//Rgo4
-         ikfFFtZjBcSv/8X0vbpbrdV8Hk+XNV6a/8s7ZMUg=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KIMSfh002895
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Feb 2020 12:22:28 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 12:22:28 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 12:22:28 -0600
-Received: from [10.250.77.18] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KIMRVw100737;
-        Thu, 20 Feb 2020 12:22:27 -0600
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        <linux-omap@vger.kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
- <20200220163703.GK37466@atomide.com> <20200220171305.GL37466@atomide.com>
- <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
- <20200220175744.GQ37466@atomide.com> <20200220181141.GR37466@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <333dd36f-e760-64b3-9e0f-3a316df9ad10@ti.com>
-Date:   Thu, 20 Feb 2020 13:22:27 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 13:25:47 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIDOiU057489;
+        Thu, 20 Feb 2020 18:25:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=MfkDo7F3aCv5MhbXyV3vcG34vepcUBqfArK40IWMSPM=;
+ b=ehED6/brb3OLIlpBCDLQ8RVkzqfWWwGBQzMe5/iZiWEPtp6S/SrP2QtpAUOhXBD/nJW3
+ nK+7VZyUtcJpus9B9TOiUgyunJ5eXfP/yip64KVp6ApVzTmHzqKgdXZS93qN3uGRAvaE
+ SPIeqGF9hwL5t2z8o2Gnnh4mPl8Yjiaf2TwOo1/zAoPGPiyksfy4sa/+WnA8Du/btm7f
+ /G/QxgOuRGFcxgg7HTZq4owWLjVCQjGSw0SJ7aXzhyAH8moJodX+KFz7LRuMtQeRUmNT
+ 3d3czrmcD0EUdXWaDeqPVdLP0JstG5l9g3O2A1i+re25xPZkGfbLuYrmbIVzxxrd79Wb fA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2y8udkkm3g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 18:25:14 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KIBhYf089964;
+        Thu, 20 Feb 2020 18:23:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2y8ud4dwew-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 18:23:13 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KIN9fb032081;
+        Thu, 20 Feb 2020 18:23:10 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 10:23:09 -0800
+Date:   Thu, 20 Feb 2020 13:23:26 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200220182326.ubcjycaubgykiy6e@ca-dmjordan1.us.oracle.com>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
+ <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
+ <20200219220859.GF54486@cmpxchg.org>
+ <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
+ <20200220155651.GG698990@mtj.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220181141.GR37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220155651.GG698990@mtj.thefacebook.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 1:11 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [200220 17:58]:
->> * Andrew F. Davis <afd@ti.com> [200220 17:39]:
->>> On 2/20/20 12:13 PM, Tony Lindgren wrote:
->>>> * Tony Lindgren <tony@atomide.com> [200220 16:37]:
->>>>> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
->>>>>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
->>>>>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
->>>>>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
->>>>>>>>> Andrew,
->>>>>>>>>
->>>>>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
->>>>>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>>>>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
->>>>>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
->>>>>>>>>> date:   3 weeks ago
->>>>>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
->>>>>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
->>>>>>>>>> reproduce:
->>>>>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>>>>>>>>         chmod +x ~/bin/make.cross
->>>>>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
->>>>>>>>>>         # save the attached .config to linux build tree
->>>>>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
->>>>>>>>>>
->>>>>>>>>> If you fix the issue, kindly add following tag
->>>>>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
->>>>>>>>>>
->>>>>>>>>> All errors (new ones prefixed by >>):
->>>>>>>>>>
->>>>>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
->>>>>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
->>>>>>>>>
->>>>>>>>> Have you looked at this one? Looks like there's still an unhandled
->>>>>>>>> randconfig build case.
->>>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> I've had a quick look, all the ARM config does:
->>>>>>>>
->>>>>>>> select HAVE_ARM_SMCCC if CPU_V7
->>>>>>>>
->>>>>>>> so I don't think this will happen in any real config, but if we want to
->>>>>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
->>>>>>>> on it.
->>>>>>>
->>>>>>> Seems to happen at least with omap2 only config where we don't have
->>>>>>> CPU_V7. Something like below seems to fix it.
->>>>>>>
->>>>>>> If that looks OK to you, I'll send out a proper fix.
->>>>>>>
->>>>>>
->>>>>>
->>>>>> This looks fine to me.
->>>>>>
->>>>>> A better later fix might be to later stub out the actual __arm_smccc_smc
->>>>>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
->>>>>> get the fix.
->>>>>
->>>>> Yeah seems that might be better. Adding Aaro and Marc to Cc.
->>>>
->>>> But if we can in theory have some arm11 machine with smccc, then this
->>>> local ifdef below is probably the way to go.
->>>>
->>>
->>> If the machine has SMCCC then it will also have the
->>> CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
->>
->> Hmm yeah good point.
+On Thu, Feb 20, 2020 at 10:56:51AM -0500, Tejun Heo wrote:
+> On Thu, Feb 20, 2020 at 10:45:24AM -0500, Daniel Jordan wrote:
+> > Ok, consistency with io and memory is one advantage to doing it that way.
+> > Creating kthreads in cgroups also seems viable so far, and it's unclear whether
+> > either approach is significantly simpler or more maintainable than the other,
+> > at least to me.
 > 
-> So the patch below seems like the way to go then. Anybody have issues
-> with the patch below?
+> The problem with separate kthread approach is that many of these work
+> units are tiny, and cgroup membership might not be known or doesn't
+> agree with the processing context from the beginning
+
+The amount of work wouldn't seem to matter as long as the kernel thread stays
+in the cgroup and lives long enough.  There's only the one-time cost of
+attaching it when it's forked.  That seems doable for unbound workqueues (the
+async reclaim), but may not be for the network packets.
+
+The membership and context issues are pretty compelling though.  Good to know,
+I'll keep it in mind as I think this through.
+
+> For example, the ownership of network packets can't be determined till
+> processing has progressed quite a bit in shared contexts and each item
+> too small to bounce around. The only viable way I can think of
+> splitting aggregate overhead according to the number of packets (or
+> some other trivially measureable quntity) processed.
 > 
-> Regards,
+> Anything sitting in reclaim layer is the same. Reclaim should be
+> charged to the cgroup whose memory is reclaimed *but* shouldn't block
+> other cgroups which are waiting for that memory. It has to happen in
+> the context of the highest priority entity waiting for memory but the
+> costs incurred must be charged to the memory owners.
 > 
-> Tony
+> So, one way or the other, I think we'll need back charging and once
+> back charging is needed for big ticket items like network and reclaim,
+> it's kinda silly to use separate mechanisms for other stuff.
+
+Yes, having both would appear to be redundant.
+
+> > Is someone on your side working on remote charging right now?  I was planning
+> > to post an RFD comparing these soon and it would make sense to include them.
 > 
-> 8< -------------------------
-> diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> --- a/include/linux/arm-smccc.h
-> +++ b/include/linux/arm-smccc.h
-> @@ -121,6 +121,7 @@ struct arm_smccc_quirk {
->  	} state;
->  };
->  
-> +#ifdef CONFIG_HAVE_ARM_SMCCC
->  /**
->   * __arm_smccc_smc() - make SMC calls
->   * @a0-a7: arguments passed in registers 0 to 7
-> @@ -137,6 +138,14 @@ asmlinkage void __arm_smccc_smc(unsigned long a0, unsigned long a1,
->  			unsigned long a2, unsigned long a3, unsigned long a4,
->  			unsigned long a5, unsigned long a6, unsigned long a7,
->  			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk);
-> +#else
-> +static inline void __arm_smccc_smc(unsigned long a0, unsigned long a1,
-> +			unsigned long a2, unsigned long a3, unsigned long a4,
-> +			unsigned long a5, unsigned long a6, unsigned long a7,
-> +			struct arm_smccc_res *res, struct arm_smccc_quirk *quirk)
-> +{
+> It's been on the to do list but nobody is working on it yet.
 
-
-Maybe a warning? If you do not have SMC on your platform but are still
-making SMC calls then something is broken and it looks like it would
-fail silently here.
-
-Andrew
-
-
-> +}
-> +#endif
->  
->  /**
->   * __arm_smccc_hvc() - make HVC calls
-> 
+Ok, thanks.
