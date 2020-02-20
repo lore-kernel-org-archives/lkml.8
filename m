@@ -2,116 +2,144 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C4BC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDF5C3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FDD24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E076724654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:15:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6zyIrEA"
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="Br3pVW4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbgBTFN1 (ORCPT
+        id S1726149AbgBTFPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:13:27 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33067 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBTFN0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:13:26 -0500
-Received: by mail-ot1-f68.google.com with SMTP id w6so2551491otk.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:13:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WZBsGB9tbxhvRXiclwSK9JL1N3w+7ntoBoXx7wbC0SA=;
-        b=L6zyIrEA07BO5pZPVjxTdJuZFZ4cMO6KcaAlEy54ZmCSFjEJ6E1a44niIjUGE0QSGd
-         GRGW5GcAICDs/++0WZE1YPib3Udk+0OJz8u4fpRBq+7tM6ppcQ4iTBOkQyRaguauGXVP
-         N+19xzmx1FH9Aqr5vEz7DQw46BosdXOBuEDva6f28VUpPr0A5zgQkJ8jUGEntSOaFlnM
-         99F+xW5PnrQSdQqRXIjI9oDwzFOxTFgC6cLg0gnTe97wG30MxF+UjxIILdtlLNYm4LxO
-         /0EsOp9HHnlwmqEEmuKg9uRtLY3f8kXWbI/CJb/xzQcKpSzXv1LUi9zpeA++sl/hk5c0
-         6Ajw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WZBsGB9tbxhvRXiclwSK9JL1N3w+7ntoBoXx7wbC0SA=;
-        b=mmJE4C+8Z+1CTb0aXwvXCuw4CGmCHF6AeLwjGqZdU+xneE/AMX01oCi+2hkqkW/teH
-         F/D+sybja9YZnTMsDMM5RtruOuA2P4ym+kv8F8auhi0Y8k3EGK2qbrUGj0I2/UMN0hp8
-         QLtGZV/c8T0cLaehfxA0IkgRMIYP06202v4IgCGsENIz5WHDXOUFJ9aIlJdC702SINb0
-         zOS94dJX7MVJ34lZS23UYMDiO3ICdzkr8dRCbkMk3sW6ets95de01qLGlksgLBRHEGJh
-         SdjPC5mdLl0Ao27WW+kSqHmUo8ZUdKrUX6U3AJMK8XhuDy8Jpdqqwans3DC2QWp2cDkF
-         mm2Q==
-X-Gm-Message-State: APjAAAUSaM7EMpUxXzJ1hojGU0JPLoJplVIu97XH7lQJQec2drtyFw7d
-        Ti/n0BoGy2Eluvit0qaBRBc=
-X-Google-Smtp-Source: APXvYqzn/iOB3a3kniJ7S6+vX77Obx/FYjx86k3IKWTZfsD7m+TwvNhj0IFnaXbHigkhtlRv4PF95w==
-X-Received: by 2002:a05:6830:1050:: with SMTP id b16mr22621414otp.140.1582175606032;
-        Wed, 19 Feb 2020 21:13:26 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id h15sm742436otq.67.2020.02.19.21.13.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 21:13:25 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Jason Baron <jbaron@akamai.com>
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] dynamic_debug: Use address-of operator on section symbols
-Date:   Wed, 19 Feb 2020 22:13:20 -0700
-Message-Id: <20200220051320.10739-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Feb 2020 00:15:46 -0500
+Received: from mail-bn8nam11on2058.outbound.protection.outlook.com ([40.107.236.58]:6221
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbgBTFPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 00:15:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8zSVlQV5jDuWxKDpWEZfD88YM+MvCqxN7LubsPdbY743hWXVBnd5BoAR/Ef1GXbDcgLeRttvylwV0b8hoZQmoUZx1D5ltv4ZtIh36k2C1JUEQFT+sAHc35sJSnnsediYIN9Cxprhaom4G6IN+a3rDULYncPRR9qDAIQ3vUmBVwMtJ5NVA4Z6/I4zMA2lCCwKbcHh4UJwDcofykGzCvIa/uQTaUxtzWfqlyCI16CqQ7sTCKae/fVK3ycqZ55S3TXAawRyPoQds9YDFXMG5UwxudBjNla9nPhHaYjoL09SIaK+kvDI5UYPh11yHnTJC2hbhX0Ky0fJtkdATKrMK2PSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0QdYbW9hQZiaX1B2N+bNv9XwqGcFsZKNFsxULV2KXA=;
+ b=RRjJn4ZQHhEdNQy9KyEsssjpzED85+P2gtJ+SY22P9R/QZuRtHVEHIbtXNhbd2+Ja2cIAQv78CP7yB6AH5qPMSpQHYfi72yKRZjlWohcNgPMj/waGucFgNttY5g5Gmg6x9G2ZvDJKPKbeOMsHJNWdWwvGu3e0tcrS39n2R8tIo/gEi+H0eB4HAwJWIPxfceiKG0sGnth9518Oi2Kcz4B4URFRvBLlFVyxgWo8TdIA3qtnN/oUvCawxYXdgqmS18EMUsKighOco1C8jN+lc718wdyQ2O8mcFQPvZtfeciD1zThapN7qJBx9i+9hza7gLYkGmdVLHOPkOZ1+3NcKriag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G0QdYbW9hQZiaX1B2N+bNv9XwqGcFsZKNFsxULV2KXA=;
+ b=Br3pVW4CcQ5R7JdhFlc3DkI0fh2yRPDJpFzSwOQSLiIdvbKkjl+NhZv4MMG/JaWXKFlvESfx3JzJuhZ3sFOukFP9cC53D4GcdkXHBWsJ9HjE2M0RjSIpreI0hWlQ6vxchxmvkGn143HmpVBeKtwsvTAzBM3Ihxccvj139lYqEwc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3495.namprd13.prod.outlook.com (52.132.247.74) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2750.9; Thu, 20 Feb 2020 05:15:42 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::55a5:5dab:67de:b5d8]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::55a5:5dab:67de:b5d8%5]) with mapi id 15.20.2750.016; Thu, 20 Feb 2020
+ 05:15:42 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     palmer@dabbelt.com, paul.walmsley@sifive.com
+Cc:     aou@eecs.berkeley.edu, anup@brainfault.org,
+        gregkh@linuxfoundation.org, alexios.zavras@intel.com,
+        tglx@linutronix.de, bp@suse.de, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH v5 0/2] cacheinfo support to read no. of L2 cache ways enabled
+Date:   Thu, 20 Feb 2020 10:45:17 +0530
+Message-Id: <1582175719-7401-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: PN1PR01CA0086.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c00:1::26) To CH2PR13MB3368.namprd13.prod.outlook.com
+ (2603:10b6:610:2c::26)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from osubuntu003.open-silicon.com (159.117.144.156) by PN1PR01CA0086.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:1::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2750.17 via Frontend Transport; Thu, 20 Feb 2020 05:15:39 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [159.117.144.156]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8eaa0bd8-7cae-4580-2af1-08d7b5c3eea8
+X-MS-TrafficTypeDiagnostic: CH2PR13MB3495:
+X-LD-Processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <CH2PR13MB3495F3AE00D5CDC1A2FAD7C88C130@CH2PR13MB3495.namprd13.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 031996B7EF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(346002)(39830400003)(136003)(396003)(376002)(366004)(199004)(189003)(4326008)(8936002)(316002)(81166006)(8676002)(5660300002)(6486002)(81156014)(52116002)(107886003)(6506007)(66946007)(2616005)(16526019)(6512007)(956004)(478600001)(2906002)(6636002)(66556008)(86362001)(186003)(6666004)(36756003)(66476007)(44832011)(966005)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3495;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 9MZCh2RMhMermJbZjla7pbW8WVzLUzfdOoJPPfTfKoLjdDzPGhg4bqrts2nEKXFGBY67Ykn7kESSwru4ojAqFoUXJ0ONpSoKSrKa29FIl7jkfUhdM2c9tJ6CDHnLPni+2fC0VJW1dQYrdTsganLEPA0eKU0gnH+NeR9Q/APRV+4TaH7JE8s64ackGbQPykPOFcdq0u8ckDVilvoIfGslP8YZned7b01iFcHt6eEUMj6ggObM8kDJ1u7rH1vw4hNxGmblpF3VA4aCvTyTI1dgIRSE9uDLf95dggW4lx61u9CPcJU3snLsZzf+wDhN0vHSTVO7IJo3c5HZ9ouKZemjYRYc6uJE7vl1InXmU4q3ZzzyXrkr9rpzGNBxHlFTNt37F92s5PjE8h9QSrxSUDpXSHSj0Xu8i4BDfmey5ji/aYHhnzjo9+0Zf1mn4ynMoPmFmsftPdKEtwqaKNwOstptwCY69nircSZNiWV9iCQcvyNyMf93oShK72G1tksCSdbRyC913UnHsO6Ry8/7U6JnqA==
+X-MS-Exchange-AntiSpam-MessageData: JPaCU8yf5lRn69ji8JuJk3hGkCLv6YyBEKP/IwPUQGmvBH/blsWDu5x789o93s7yVAMd6cpXs6BpjkCFBY9e//OWPu+zCmupYqDQScGhU6RkXOeOIj4tPFN8Fs+Ic/SMGv6+CSq6rWvxOReU87StdQ==
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8eaa0bd8-7cae-4580-2af1-08d7b5c3eea8
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 05:15:42.5761
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oaRQgNs7ysEzi17CPkUIyr9VZ8z9oBAsQKJXYrIPqauIQLpqvLir6sxhYvxIP6xOmpAL49ZH1PRK7qGUOUsLiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3495
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+The patchset includes 2 patches. Patch 1 implements cache_get_priv_group
+which make use of a generic ops structure to return a private attribute
+group for custom cacheinfo. Patch 2 implements a private attribute named
+"number_of_ways_enabled" in the cacheinfo framework. Reading this
+attribute returns the number of L2 cache ways enabled at runtime,
 
-../lib/dynamic_debug.c:1034:24: warning: array comparison always
-evaluates to false [-Wtautological-compare]
-        if (__start___verbose == __stop___verbose) {
-                              ^
-1 warning generated.
+This patchset is based on Linux v5.6-rc2 and tested on HiFive Unleashed
+board.
 
-These are not true arrays, they are linker defined symbols, which are
-just addresses. Using the address of operator silences the warning and
-does not change the resulting assembly with either clang/ld.lld or
-gcc/ld (tested with diff + objdump -Dr).
+v5:
+- Since WayEnable is 8bits, mask out and return only the last 8 bit in
+  l2_largest_wayenabled()
+- Rebased on Linux v5.6-rc2
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/894
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
-v1 -> v2: https://lore.kernel.org/lkml/20200219045423.54190-5-natechancellor@gmail.com/
+v4:
+- Rename "sifive_l2_largest_wayenabled" to "l2_largest_wayenabled" and
+  make it a static function
 
-* No longer a series because there is no prerequisite patch.
-* Use address-of operator instead of casting to unsigned long.
+v3:
+- As per Anup Patel's suggestion[0], implement a new approach which uses
+  generic ops structure. Hence addition of patch 1 to this series and
+  corresponding changes to patch 2.
+- Dropped "riscv: dts: Add DT support for SiFive L2 cache controller"
+  patch since it is already merged
+- Rebased on Linux v5.5-rc6
 
- lib/dynamic_debug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v2:
+- Rebase the series on v5.5-rc3
+- Remove the reserved-memory node from DT
 
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index aae17d9522e5..8f199f403ab5 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -1031,7 +1031,7 @@ static int __init dynamic_debug_init(void)
- 	int n = 0, entries = 0, modct = 0;
- 	int verbose_bytes = 0;
- 
--	if (__start___verbose == __stop___verbose) {
-+	if (&__start___verbose == &__stop___verbose) {
- 		pr_warn("_ddebug table is empty in a CONFIG_DYNAMIC_DEBUG build\n");
- 		return 1;
- 	}
+[0]: https://lore.kernel.org/linux-riscv/CAAhSdy0CXde5s_ya=4YvmA4UQ5f5gLU-Z_FaOr8LPni+s_615Q@mail.gmail.com/
+
+Yash Shah (2):
+  riscv: cacheinfo: Implement cache_get_priv_group with a generic ops
+    structure
+  riscv: Add support to determine no. of L2 cache way enabled
+
+ arch/riscv/include/asm/cacheinfo.h   | 15 ++++++++++++++
+ arch/riscv/kernel/cacheinfo.c        | 17 ++++++++++++++++
+ drivers/soc/sifive/sifive_l2_cache.c | 38 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 70 insertions(+)
+ create mode 100644 arch/riscv/include/asm/cacheinfo.h
+
 -- 
-2.25.1
+2.7.4
 
