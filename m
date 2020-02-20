@@ -2,86 +2,149 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5269C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE371C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8E324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:42:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582188122;
-	bh=8040ipU19Whua9AEwBIO6II4ixMc8OOuUr42dSrJ2/U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O5c2+KG8nZy7E/4ChcTj0K8V5ODGTlK54waFus43wgV/0z8gx0dxXCZZNBKtEoQEz
-	 vWwRagPwDs5alB6UzM4uBtiBglvyhkzp8aQm1qpatsj0QfbEKmVF08PDLCi0GCFehx
-	 Q/8Z4vhrW05+GNFyuxkX2x9e+bumw77HIUBSYj1E=
+	by mail.kernel.org (Postfix) with ESMTP id A6ABE207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:43:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j4caedeS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgBTImB (ORCPT
+        id S1726943AbgBTIn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:42:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726764AbgBTImB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:42:01 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E6E3207FD;
-        Thu, 20 Feb 2020 08:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582188120;
-        bh=8040ipU19Whua9AEwBIO6II4ixMc8OOuUr42dSrJ2/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L973ugZPZxGg5Ed17eRAlWhoj6FPr7OSx9Gr2s4faK9Wv9JYh4ecB7AMCld3+a10M
-         B6TUo3O33fza86PMtqjOnJogUgErRICABq5vlfJvjuD6Uyu8R04oC+JIv1UsSlIck2
-         uJedzCUrZ9cXVuD9KFDb19+3MR56Mzq5gAC6ZnD8=
-Date:   Thu, 20 Feb 2020 08:41:53 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
-        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
-        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
-        dan.carpenter@oracle.com, mhiramat@kernel.org,
-        Marc Zyngier <maz@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 01/22] hardirq/nmi: Allow nested nmi_enter()
-Message-ID: <20200220084153.GA11827@willie-the-truck>
-References: <20200219144724.800607165@infradead.org>
- <20200219150744.428764577@infradead.org>
+        Thu, 20 Feb 2020 03:43:29 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:36242 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbgBTIn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:43:29 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K8cv00119896;
+        Thu, 20 Feb 2020 08:43:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=3DBcmRHN7uJqFWQQFJU2jUM8me9GZcXg5MtIEEBW19g=;
+ b=j4caedeSclA+wC5JW86i2YTtdgvD6z7Q21bpuXdgyugzbfmGJ6PlhDKHkjWMPTezuUyA
+ 4lUF0IJ01FpBja8+blyiBMv0tip0G6/yebcmWvfF8/qlY9sP4wQT5Op/tDr7ZnNR3BRH
+ aKDOHjlNRAqOpdu+XN+PRUTZ3wrMr6M/aBqWq9dRfpbyLkeGRCwOeMDd7p1aH6eaIpbJ
+ ytoIF6njfY/t9ju3kSgineXtxaJ0GoniyjbWzBPLiwPlx0gs7LGE0OgL5Hdem3uBeZwr
+ 4i+VeWEmWcVvdn8/X3/NnD0/JhjFZuaZhRCq9yqv2IcQFt4B2MhDAgWCKpTaQ+zghH1p MA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2y8udd881t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 08:43:13 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K8bnNp079829;
+        Thu, 20 Feb 2020 08:43:12 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y8udbd8vm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 08:43:12 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01K8h8m4010277;
+        Thu, 20 Feb 2020 08:43:08 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 00:43:07 -0800
+Date:   Thu, 20 Feb 2020 11:42:55 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Brown <david.brown@linaro.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Olof Johansson <olof@lixom.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kees Cook <keescook@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 3/7] test_firmware: add partial read support for
+ request_firmware_into_buf
+Message-ID: <20200220084255.GW7838@kadam>
+References: <20200220004825.23372-1-scott.branden@broadcom.com>
+ <20200220004825.23372-4-scott.branden@broadcom.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200219150744.428764577@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200220004825.23372-4-scott.branden@broadcom.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200064
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 impostorscore=0
+ mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 bulkscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 03:47:25PM +0100, Peter Zijlstra wrote:
-> Since there are already a number of sites (ARM64, PowerPC) that
-> effectively nest nmi_enter(), lets make the primitive support this
-> before adding even more.
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/arm64/include/asm/hardirq.h |    4 ++--
->  arch/arm64/kernel/sdei.c         |   14 ++------------
->  arch/arm64/kernel/traps.c        |    8 ++------
+On Wed, Feb 19, 2020 at 04:48:21PM -0800, Scott Branden wrote:
+> +static int test_dev_config_update_size_t(const char *buf,
+> +					 size_t size,
+> +					 size_t *cfg)
+> +{
+> +	int ret;
+> +	long new;
+> +
+> +	ret = kstrtol(buf, 10, &new);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (new > SIZE_MAX)
 
-For these arm64 bits:
+This "new" variable is long and SIZE_MAX is ULONG_MAX so the condition
+can't be true.
 
-Acked-by: Will Deacon <will@kernel.org>
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&test_fw_mutex);
+> +	*(size_t *)cfg = new;
+> +	mutex_unlock(&test_fw_mutex);
+> +
+> +	/* Always return full write size even if we didn't consume all */
+> +	return size;
+> +}
+> +
+> +static ssize_t test_dev_config_show_size_t(char *buf, int cfg)
+> +{
+> +	size_t val;
+> +
+> +	mutex_lock(&test_fw_mutex);
+> +	val = cfg;
+> +	mutex_unlock(&test_fw_mutex);
 
-Will
+Both val and cfg are stack variables so there is no need for locking.
+Probably you meant to pass a pointer to cfg?
+
+> +
+> +	return snprintf(buf, PAGE_SIZE, "%zu\n", val);
+> +}
+> +
+>  static ssize_t test_dev_config_show_int(char *buf, int cfg)
+>  {
+>  	int val;
+
+regards,
+dan carpenter
+
+
