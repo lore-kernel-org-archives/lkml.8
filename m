@@ -2,197 +2,139 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D09C11D15
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68D3CC11D14
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A93C8208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D6D2467E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="SW1Wt5DP";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w8pJuTV1"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="VHirKNJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgBTRry (ORCPT
+        id S1728434AbgBTRuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:47:54 -0500
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:49071 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726959AbgBTRry (ORCPT
+        Thu, 20 Feb 2020 12:50:05 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40363 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728119AbgBTRuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:47:54 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 29CCD21B82;
-        Thu, 20 Feb 2020 12:47:53 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:47:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=OzZ5s0/+nPTILqp5qR3suIDlHla
-        J5VfGwJdDzxiCG14=; b=SW1Wt5DPZub7FFigeTeXlQpSM8LZ6gVC61HOI9/kv1d
-        OpiZc95TH2v3BcTOXKnHryH58+qEPeJJXAi4wi6CPiG78w7BiAELymaNs7f44xrp
-        R74/kQwSh3Zlj4e3m8A03b1z3KAbWAX7mFXXKSA3PtHoFjaev/rCcHsfFgf3R/iM
-        jiXTX9y+Xl8oEJas6DXUse6MbdYUpals/GUrAydIEriJfowz20tAEyytMk/GMKa0
-        Te5ripKwZnUrU1xPxz0xrytRqdsMtVQxdKnd+TLXkIlT51/19NEV5nr7YW2smuCx
-        BoD41TLhg5v07UzrCjcDipofT/gzQdn9urEO0GrKuxA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=OzZ5s0
-        /+nPTILqp5qR3suIDlHlaJ5VfGwJdDzxiCG14=; b=w8pJuTV132EgFBMoe2QE65
-        GESqRBWBAlWW4Foj4E3n9InYMPM89MlLcWdK4yLZhOXIJA+jDXYsCUnqLTh8DPU4
-        1QrRCcWhxIi8IHaA14peWCIh1GMgHWiGE3SaCMNSGcodK6sslyUBYq6ynlCdK01V
-        4KyZfW2y8Et1YIYppwvI3Rt6lV3kxg7P+lFb0szFIROkkzkbmBrk2xT8IXff3Sjp
-        vFNM9bTL50KyY39C9l5UEMPh7rOpfELFb7fn5ogPOFGJuR5wASFugDT2bJ7TNCl2
-        vjtKLi1TsLXE/W6glbtOlGA7TEiMG7csuys2yemPhrA5AV685MH5TNLxvohBWsug
-        ==
-X-ME-Sender: <xms:R8ZOXuTRwC9E3WP6cRy9axgkTnlp3ZOD0x0M5lMqyMVUwvv5e4Ve4A>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtuggj
-    sehgtderredttdejnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimh
-    gvsegtvghrnhhordhtvggthheqnecuffhomhgrihhnpehigidrihhonecukfhppeeltddr
-    keelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:R8ZOXtFQZvJPU359f3JzCx8yJ0rxAANuubZGxec8WsTLgaFACDKGPw>
-    <xmx:R8ZOXoPuHeGQ0xiCv0zWqfUn406LPPunfI7firkigt6mtM_-ukia_g>
-    <xmx:R8ZOXhlglNRMFqx8QNA--N3h1kPm1O0LAERLbCxP0Jcl8uOo630rgA>
-    <xmx:ScZOXh8wSbiGXZfzswMdCmKY7XJc6tB5KYkH2OpAg6YSIbzHoLkrlA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 550143280060;
-        Thu, 20 Feb 2020 12:47:51 -0500 (EST)
-Date:   Thu, 20 Feb 2020 18:47:49 +0100
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 1/2] rtc: sun6i: Make external 32k oscillator optional
-Message-ID: <20200220174749.ih3pcj3oxiwvuurz@gilmour.lan>
-References: <20200213211427.33004-1-jernej.skrabec@siol.net>
- <20200213211427.33004-2-jernej.skrabec@siol.net>
- <20200214081443.ajz2sxh5ztk6qb2i@gilmour.lan>
- <5326350.DvuYhMxLoT@jernej-laptop>
+        Thu, 20 Feb 2020 12:50:05 -0500
+Received: by mail-qt1-f196.google.com with SMTP id v25so3482853qto.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9LcvSEumTmXyuKFplLOO57e96BKQQeEk4RY39TL+hio=;
+        b=VHirKNJDDO682guKBEd7Lh4Sdhh51LWyOruN25/r3aHd6uttqamXF0Y2SA7SURFcGF
+         9L68VvTMCycQxV8a8PVSRKwVlrRBX6dROpPZI2+TYVXxntJtO4mJrARFdxtJn8K2f0LX
+         7jmviilTZKEOD7cXwUqgwwYTXTAlVCWI4H8HphGY1AyOS0JkzhcsRMoHBwScPbu+Eghl
+         lr3mqrpjO/hI6Mqqpdz1bwAZpagS8xbsNMtYg/gVu4+EkG2nZ7e+seyK7JK9UOIIsSbW
+         iktcaKz88wwRW8q1+2Iz7hLBH+IFUEheTfhVWoJQBx196zKDvstwAtnve1heQWmWVFey
+         OZHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9LcvSEumTmXyuKFplLOO57e96BKQQeEk4RY39TL+hio=;
+        b=EftUSaM0MIy/4pwIo/CQPwNfQesUVzaWgE056m0lLe2vTdP2GToqjPC756Czk+7Z1m
+         v9Av06NktIcYZU/3em+8+Sb8y/WLE2oCYXFl2JUGY5Ekpy71/Ep2AoxF+96lCeLPpn+L
+         LJeiGYcuagIKIPlZKHLWTm0YD3RyC6Vs0CIfp9F4+QT/3AMu2hcoIUiKyRzYyHmiyHLB
+         KDSjb79PhSc4sEz1LkycHqTTB1CdaEGyt58T6XB7p4m5qWBdlOoaLrwldDJnKbsdd4R9
+         Y/4587i1x4X7plGb7jN5g1jrOWxOwj641fhtd3l0o0sRpOpwsUkK4Uz6hKL6DbRXxoqI
+         D9gA==
+X-Gm-Message-State: APjAAAVU51EwTjWM7Mb0KsN9EK04kXh4+Rk2EqoztCBkaYKwbT5vNOc1
+        xIidDYPVQ/724IatfxNsxg8RyQ==
+X-Google-Smtp-Source: APXvYqzbtO/RIeVYLc6mfivNPQO8ldS0h+Q0UAxefaixOy8FmrW7r/AiWxWUfsQFv7WDc0SriYliDw==
+X-Received: by 2002:ac8:1ac1:: with SMTP id h1mr27444991qtk.255.1582221004432;
+        Thu, 20 Feb 2020 09:50:04 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:3504])
+        by smtp.gmail.com with ESMTPSA id 65sm123024qtc.4.2020.02.20.09.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:50:03 -0800 (PST)
+Date:   Thu, 20 Feb 2020 12:50:02 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v3 1/3] loop: Use worker per cgroup instead of kworker
+Message-ID: <20200220175002.GJ54486@cmpxchg.org>
+References: <cover.1582216294.git.schatzberg.dan@gmail.com>
+ <118a1bd99d12f1980c7fc01ab732b40ffd8f0537.1582216294.git.schatzberg.dan@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qx7cvp6xg6zw344o"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5326350.DvuYhMxLoT@jernej-laptop>
+In-Reply-To: <118a1bd99d12f1980c7fc01ab732b40ffd8f0537.1582216294.git.schatzberg.dan@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Dan,
 
---qx7cvp6xg6zw344o
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 20, 2020 at 11:51:51AM -0500, Dan Schatzberg wrote:
+> +static void loop_process_work(struct loop_worker *worker,
+> +			struct list_head *cmd_list, struct loop_device *lo)
+> +{
+> +	int orig_flags = current->flags;
+> +	struct loop_cmd *cmd;
+> +
+> +	current->flags |= PF_LESS_THROTTLE | PF_MEMALLOC_NOIO;
+> +	while (1) {
+> +		spin_lock_irq(&lo->lo_lock);
+> +		if (list_empty(cmd_list))
+> +			break;
+> +
+> +		cmd = container_of(
+> +			cmd_list->next, struct loop_cmd, list_entry);
+> +		list_del(cmd_list->next);
+> +		spin_unlock_irq(&lo->lo_lock);
+> +		loop_handle_cmd(cmd);
+> +		cond_resched();
+> +	}
 
-On Fri, Feb 14, 2020 at 05:42:13PM +0100, Jernej =C5=A0krabec wrote:
-> Hi Maxime,
->
-> Dne petek, 14. februar 2020 ob 09:14:43 CET je Maxime Ripard napisal(a):
-> > Hi Jernej,
-> >
-> > Thanks for taking care of this
-> >
-> > On Thu, Feb 13, 2020 at 10:14:26PM +0100, Jernej Skrabec wrote:
-> > > Some boards, like OrangePi PC2 (H5), OrangePi Plus 2E (H3) and Tanix =
-TX6
-> > > (H6) don't have external 32kHz oscillator. Till H6, it didn't really
-> > > matter if external oscillator was enabled because HW detected error a=
-nd
-> > > fall back to internal one. H6 has same functionality but it's the fir=
-st
-> > > SoC which have "auto switch bypass" bit documented and always enabled=
- in
-> > > driver. This prevents RTC to work correctly if external crystal is not
-> > > present on board. There are other side effects - all peripherals which
-> > > depends on this clock also don't work (HDMI CEC for example).
-> > >
-> > > Make clocks property optional. If it is present, select external
-> > > oscillator. If not, stay on internal.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > >
-> > >  drivers/rtc/rtc-sun6i.c | 14 ++++++--------
-> > >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > > index 852f5f3b3592..538cf7e19034 100644
-> > > --- a/drivers/rtc/rtc-sun6i.c
-> > > +++ b/drivers/rtc/rtc-sun6i.c
-> > > @@ -250,19 +250,17 @@ static void __init sun6i_rtc_clk_init(struct
-> > > device_node *node,>
-> > >  		writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> > >
-> > >  	}
-> > >
-> > > -	/* Switch to the external, more precise, oscillator */
-> > > -	reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
-> > > -	if (rtc->data->has_losc_en)
-> > > -		reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > > +	/* Switch to the external, more precise, oscillator, if present */
-> > > +	if (of_get_property(node, "clocks", NULL)) {
-> > > +		reg |=3D SUN6I_LOSC_CTRL_EXT_OSC;
-> > > +		if (rtc->data->has_losc_en)
-> > > +			reg |=3D SUN6I_LOSC_CTRL_EXT_LOSC_EN;
-> > > +	}
-> > >
-> > >  	writel(reg, rtc->base + SUN6I_LOSC_CTRL);
-> > >
-> > >  	/* Yes, I know, this is ugly. */
-> > >  	sun6i_rtc =3D rtc;
-> > >
-> > > -	/* Deal with old DTs */
-> > > -	if (!of_get_property(node, "clocks", NULL))
-> > > -		goto err;
-> > > -
-> >
-> > Doesn't that prevent the parents to be properly set if there's an
-> > external crystal?
->
-> No, why?
->
-> Check these two clk_summary:
-> http://ix.io/2bHY Tanix TX6 (no external crystal)
-> http://ix.io/2bI2 OrangePi 3 (external crystal present)
+The loop structure tripped me up, because it's not immediately obvious
+that the lock will be held coming out. How about the following to make
+the lock section stand out visually?
 
-I was concerned about the "other" parent. In the case where you don't
-have a clocks property (so the check that you are removing), the code
-then registers a clock with two parents: the one that we create (the
-internal oscillator) and the one coming from the clocks property.
+	spin_lock_irq(&lo->lo_lock);
+	while (!list_empty(cmd_list)) {
+		cmd = container_of(cmd_list->next, struct loop_cmd, list_entry);
+		list_del(&cmd->list_entry);
+		spin_unlock_irq(&lo->lo_lock);		
 
-clk_summary only shows the current parent, which is going to be right
-with your patch, but in the case where you have no clocks property,
-you still (attempts to) register two parents, the second one being
-non-functional.
+		loop_handle_cmd(cmd);
+		cond_resched();
 
-Further looking at it, we might be good because we allocate an array
-of two clocks, but only register of_clk_get_parent_count(node) + 1
-clocks, so 1 if clocks is missing.
+		spin_lock_irq(&lo->lo_lock);
+	}
 
-Still, I think this should be more obvious, through a comment or
-shuffling a bit the parent registration maybe?
-
-Maxime
-
---qx7cvp6xg6zw344o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7GRQAKCRDj7w1vZxhR
-xQesAQC0dLTkjQRPv7nN8RoGvwkfQKD3MlJW0DS82ULs76MWzQD/XsYEwCgNWukt
-Jfxdu03CMK7a7R+nH2HNRolTJSWwpgQ=
-=5PFt
------END PGP SIGNATURE-----
-
---qx7cvp6xg6zw344o--
+> -	loop_handle_cmd(cmd);
+> +	/*
+> +	 * We only add to the idle list if there are no pending cmds
+> +	 * *and* the worker will not run again which ensures that it
+> +	 * is safe to free any worker on the idle list
+> +	 */
+> +	if (worker && !work_pending(&worker->work)) {
+> +		worker->last_ran_at = jiffies;
+> +		list_add_tail(&worker->idle_list, &lo->idle_worker_list);
+> +		loop_set_timer(lo);
+> +	}
+> +	spin_unlock_irq(&lo->lo_lock);
+> +	current->flags = orig_flags;
