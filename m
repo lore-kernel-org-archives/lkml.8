@@ -2,124 +2,114 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E84C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DB4C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6EE524654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF7624654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="awxpTPwW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgBTM6D (ORCPT
+        id S1727989AbgBTM7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:58:03 -0500
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:12341 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTM6D (ORCPT
+        Thu, 20 Feb 2020 07:59:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54573 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726959AbgBTM7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:58:03 -0500
-Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
-  Allan.Nielsen@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="Allan.Nielsen@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa5.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
-  envelope-from="Allan.Nielsen@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: DQl9fXxlcrwCXqm1XMZdzYAl4AupcDPWhlGkyTIyUTBdmL40P1e82GDoCa9p4Y3iOnECXnWDK2
- 2Ea+n/UoAkChLpjhxiFbLfvv0YwCsKXt5etWoFNnxqbiJ0Pj7kONAyexWtcbwhEcBe7m6q0+qn
- /8irrb26zOaYzFUxj3U7xbxl/PSbwPccw/f6m/EOvF6M5LvidZJIJDTX6m0RxSZ+mGaVQgLrRS
- faEqBnLs+Mgic7v0wFMiLn0RtnTwCseoK882Pn4l0vnqGLDlSZxIXlQoM0S8dx7S8pqvWuj03f
- 2sY=
-X-IronPort-AV: E=Sophos;i="5.70,464,1574146800"; 
-   d="scan'208";a="66147402"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Feb 2020 05:58:02 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 20 Feb 2020 05:58:09 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Thu, 20 Feb 2020 05:58:01 -0700
-Date:   Thu, 20 Feb 2020 13:58:00 +0100
-From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
-        <ivecera@redhat.com>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <anirudh.venkataramanan@intel.com>,
-        <olteanv@gmail.com>, <andrew@lunn.ch>,
-        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next v3 00/10] net: bridge: mrp: Add support for Media
- Redundancy Protocol (MRP)
-Message-ID: <20200220125800.c3qyc4wxtdt6hv4b@lx-anielsen.microsemi.net>
-References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
- <20200218121811.xo3o6zzrhl5p3j2s@lx-anielsen.microsemi.net>
- <3afba55f-f953-7aaa-8425-14777db1b27d@cumulusnetworks.com>
+        Thu, 20 Feb 2020 07:59:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582203540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=lgoZ/r5nCvlwSEe4sHdp4x/cyogCcgRFAVbQihojpxY=;
+        b=awxpTPwWKLB3Y37/DSIHdCjT36P9RtN3UsvMy5Ov587uD0Zstend/nH10T7Ls/xSEoHCST
+        y0hPkhk6M0DvCVuliJkVmwit+rIDq/2Z+CR7Jw+T3J2FHGwDO6Rbkoe9qM6svNCylIscfp
+        HC/bgQgfxeozLG14IswkjSLFSBbRK0s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-FXF-0yCqM0yQB_kg1T-nig-1; Thu, 20 Feb 2020 07:58:56 -0500
+X-MC-Unique: FXF-0yCqM0yQB_kg1T-nig-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D2FC107ACC4;
+        Thu, 20 Feb 2020 12:58:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 932855C13C;
+        Thu, 20 Feb 2020 12:58:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAG48ez0fsB_XTmNfE-2tuabH7JHyQdih8bu7Qwu9HGWJXti7tQ@mail.gmail.com>
+References: <CAG48ez0fsB_XTmNfE-2tuabH7JHyQdih8bu7Qwu9HGWJXti7tQ@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204558110.3299825.5080605285325995873.stgit@warthog.procyon.org.uk>
+To:     Jann Horn <jannh@google.com>
+Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 11/19] afs: Support fsinfo() [ver #16]
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-In-Reply-To: <3afba55f-f953-7aaa-8425-14777db1b27d@cumulusnetworks.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <628198.1582203532.1@warthog.procyon.org.uk>
+Date:   Thu, 20 Feb 2020 12:58:52 +0000
+Message-ID: <628199.1582203532@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nik,
+Jann Horn <jannh@google.com> wrote:
 
-On 20.02.2020 12:48, Nikolay Aleksandrov wrote:
-> In light of all the discussions and details that were explained, and as you've
-> noted above, I think more code should be put in kernel space at the very least
-> the performance/latency critical parts would benefit from being executed in the
-> kernel (kind of control/data-plane separation). It seems from the switchdev calls there's
-> a minimal state working set which define the behaviour and can be used to make
-> decisions (similar to STP) in the kernel, but the complex logic how to set them can be
-> executed in user-space meaning that maybe these hw-offload calls can have a simple SW
-> fallback logic based on their current values. I think it is worth considering if this can
-> be achieved before going to full in-kernel implementation of the state machine.
-> Since you intend to hw-offload it then putting in some SW fallback logic would be good
-> when the HW can't offload everything, what you suggest above also sounds good to me and
-> I think you'll have to extend mdb and the multicast code to do it, but IIRC you already
-> have code to do that based on previous discussions.
-Sounds good. We will continue working on defining a good control/data-plane separation
-and only keep the data-plane in the kernel. Also it seems that we agree that the SW fallback
-of the data-plane should stay in the kernel - we will do that.
+> Ewww. So basically, having one static set of .fsinfo_attributes is not
+> sufficiently flexible for everyone, but instead of allowing the
+> filesystem to dynamically provide a list of supported attributes, you
+> just duplicate the super_operations? Seems to me like it'd be cleaner
+> to add a function pointer to the super_operations that can dynamically
+> fill out the supported fsinfo attributes.
+>
+> It seems to me like the current API is going to be a dead end if you
+> ever want to have decent passthrough of these things for e.g. FUSE, or
+> overlayfs, or VirtFS?
 
-> As was already suggested you can put the MRP options in the bridge's options and
-> process them from the bridge netlink code, that should simplify your code.
-I'm okay with this.
+Ummm...
 
-The main argument I see for creating a seperate MRP netlink interface
-instead of extending the bridge, is that MRP is properly not the last
-bridge protocol we will want to work on.
+Would it be sufficient to have a function that returns a list of attributes?
+Or does it need to be able to call to vfs_do_fsinfo() if it supports an
+attribute?
 
-To complete the MRP-2018 implementation, we will also need some CFM
-support (defined in 802.1Qag or the latest version of 802.1Q). And
-furhter out we will properly want to implement the full CFM protocol.
+There are two things I want to be able to do:
 
-DLR may also be relevant at some point, and there may be other.
+ (1) Do the buffer wrangling in the core - which means the core needs to see
+     the type of the attribute.  That's fine if, say, afs_fsinfo() can call
+     vfs_do_fsinfo() with the definition for any attribute it wants to handle
+     and, say, return -ENOPKG otherways so that the core can then fall back to
+     its private list.
 
-My main point is, that at some point we will properly want to do
-seperate NETLINK interfaces for this. Not sure if that is now or later.
+ (2) Be able to retrieve the list of attributes and/or query an attribute.
+     Now, I can probably manage this even through the same interface.  If,
+     say, seeing FSINFO_ATTR_FSINFO_ATTRIBUTES causes the handler to simply
+     append on the IDs of its own supported attributes (a helper can be
+     provided for that).
 
-> You could also make the port's "mrp_aware" bool into an internal port
-> flag (use net_bridge_port's flags field) so it can be quickly tested
-> and in a hot cache line.
-Good point, we will do that.
+     If it sees FSINFO_ATR_FSINFO_ATTRIBUTE_INFO, it can just look to see if
+     it has the attribute with the ID matching Nth and return that, else
+     ENOPKG - again a helper could be provided.
 
-/Allan
+Chaining through overlayfs gets tricky.  You end up with multiple contributory
+filesystems with different properties - and any one of those layers could
+perhaps be another overlay.  Overlayfs would probably needs to integrate the
+info and derive the lowest common set.
+
+David
+
