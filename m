@@ -2,256 +2,377 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346E4C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F2CC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A28222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:08:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ABTeiGJw"
+	by mail.kernel.org (Postfix) with ESMTP id 5D690208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729367AbgBTXIe (ORCPT
+        id S1729305AbgBTXKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:08:34 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45779 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729150AbgBTXIe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:08:34 -0500
-Received: by mail-ot1-f66.google.com with SMTP id 59so303625otp.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:08:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vq9epyIrHcN2P4XdXzWMjBg4z7X1Q3DaaqUydM8VLqk=;
-        b=ABTeiGJwbhKNAqnD6Z8HupUZ7wKALHCjm1hb2M83ENTc200O2HPW/yFsg7RQKqTYCy
-         5rT59ueWmRwVEjNo+NWZG1SxKxdHdXm3Ko6TEzWIr4kyWEX4xywBMK6LuFjanBeNC3sr
-         mSNUYeOXQIpOT/u3WYgzpB9hNeBITAv9cqt4vnoFOUoGnq3XC7oRrHltSQxneFvCaiez
-         pPK7C/Y/6yMOpUyNLzTX1cyAjMgKEAcxy95pHhRxM2LPZ1nAEGZkgNLVZ+Kih8uxp5yS
-         jzl355ajWVk9W08x4Sv9el4JSpRR8gZm8UxpY7Kdv8h3yDap7r8uZc0IZF7il3T/zakC
-         cakA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vq9epyIrHcN2P4XdXzWMjBg4z7X1Q3DaaqUydM8VLqk=;
-        b=VLVo8s4+TiuAroJMkwckv2twrHSfaelU2qbMLvO28Np8z6i4NcrZB1408PNsNjxQba
-         H4E2dne+Dlph2XafmqvQ3hvQEtZ4xXqx5kEloC8R/wQekkOAYT/WqoWzyqE7NPYrrumS
-         0YPzMrL4ov8gkkZ3ZjrpZq0qLoxk0dxD6QEUVsXABi8bgaPseMKaWDLwMX8JVO5hbR9D
-         kQCsaTvjXWvOg5UriV1y9t3EYKtAX9jpb0EHRJJgXCREuc6g+VXCW6i8BRwfpdVgijLM
-         xz3Zw7tr+mIVtRtB/h8nqzLRVyE27iY5ZgbkaeKSM0MQz4e5XRGvcqcz7o10i+qK+7ke
-         NqzQ==
-X-Gm-Message-State: APjAAAWOWs6Opoujk5OdF3PfCil3dDcc+R800PD6VynlIw1CJgb5zKh3
-        2mUzPUOYlGTMY9lNiKtIh0PBiY8BEM1ojMt2dyZGOg==
-X-Google-Smtp-Source: APXvYqxPCtxyXxf8s/1nMY24FTf6EVdiWxJEwH84wm2asT4JnDA8p8cMaa+l7rK0RJMNoNs9YEOaw/PGmGaRwXwNyuw=
-X-Received: by 2002:a05:6830:22ee:: with SMTP id t14mr25024485otc.236.1582240112363;
- Thu, 20 Feb 2020 15:08:32 -0800 (PST)
+        Thu, 20 Feb 2020 18:10:03 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36068 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbgBTXKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:10:02 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 27092AC5F;
+        Thu, 20 Feb 2020 23:09:58 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 23:10:00 +0000
+From:   Luis Henriques <lhenriques@suse.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        "Yan, Zheng" <zyan@redhat.com>, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ceph: re-org copy_file_range and fix error handling paths
+Message-ID: <20200220231000.GA11036@suse.com>
+References: <20200217123649.12316-1-lhenriques@suse.com>
+ <9282539b8efcaccdd8d19197edb289828803d39c.camel@kernel.org>
+ <20200220223630.GA9748@suse.com>
+ <98baa0940d2ffea3017a08ce31358f3326e38a1e.camel@kernel.org>
 MIME-Version: 1.0
-References: <20200218220748.54823-1-john.stultz@linaro.org>
- <20200220052739.87057-1-saravanak@google.com> <CAL_JsqK-dd0deUWw43StoBdNOQM8E63axWRafwKZY2SGkdMzHw@mail.gmail.com>
-In-Reply-To: <CAL_JsqK-dd0deUWw43StoBdNOQM8E63axWRafwKZY2SGkdMzHw@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 20 Feb 2020 15:07:56 -0800
-Message-ID: <CAGETcx-s-c7ozKAbq8pYUEotaDRcxpy-9bXdiUYbyN7kK2moWA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] driver core: Rework logic in __driver_deferred_probe_check_state
- to allow EPROBE_DEFER to be returned for longer
-To:     Rob Herring <robh@kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Todd Kjos <tkjos@google.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <98baa0940d2ffea3017a08ce31358f3326e38a1e.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 7:21 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Feb 19, 2020 at 11:27 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Apologies in advance for replying to this one email but discussing the
-> > points raised in all the other replies. I'm not cc'ed in this thread and
-> > replying to each email individually is a pain.
-> >
-> > On Tue, Feb 18, 2020 at 4:07 PM John Stultz wrote:
-> > > Due to commit e01afc3250255 ("PM / Domains: Stop deferring probe
-> > > at the end of initcall"), along with commit 25b4e70dcce9
-> > > ("driver core: allow stopping deferred probe after init") after
-> > > late_initcall, drivers will stop getting EPROBE_DEFER, and
-> > > instead see an error causing the driver to fail to load.
-> >
-> > Both of those patches were the best solution at that point in time. But
-> > the kernel has changed a lot since then. Power domain and IOMMU drivers
-> > can work as modules now. We have of_devlink and sync_state().
-> >
-> > So, while a delay might have been the ideal solution back then, I think
-> > we need to work towards removing arbitrary timeouts instead of making
-> > the timeout mechanism more elaborate.
->
-> If you don't have some way to say all the dependencies that can be
-> resolved have been resolved already, how do you get away from a
-> timeout? Nothing has changed in that respect.
+On Thu, Feb 20, 2020 at 05:54:03PM -0500, Jeff Layton wrote:
+> On Thu, 2020-02-20 at 22:36 +0000, Luis Henriques wrote:
+> > On Thu, Feb 20, 2020 at 03:41:14PM -0500, Jeff Layton wrote:
+> > > On Mon, 2020-02-17 at 12:36 +0000, Luis Henriques wrote:
+> > > > This patch re-organizes copy_file_range, trying to fix a few issues in
+> > > > error handling.  Here's the summary:
+> > > > 
+> > > > - Abort copy if initial do_splice_direct() returns fewer bytes than
+> > > >   requested.
+> > > > 
+> > > > - Move the 'size' initialization (with i_size_read()) further down in the
+> > > >   code, after the initial call to do_splice_direct().  This avoids issues
+> > > >   with a possibly stale value if a manual copy is done.
+> > > > 
+> > > > - Move the object copy loop into a separate function.  This makes it
+> > > >   easier to handle errors (e.g, dirtying caps and updating the MDS
+> > > >   metadata if only some objects have been copied before an error has
+> > > >   occurred).
+> > > > 
+> > > > - Added calls to ceph_oloc_destroy() to avoid leaking memory with src_oloc
+> > > >   and dst_oloc
+> > > > 
+> > > > - After the object copy loop, the new file size to be reported to the MDS
+> > > >   (if there's file size change) is now the actual file size, and not the
+> > > >   size after an eventual extra manual copy.
+> > > > 
+> > > > - Added a few dout() to show the number of bytes copied in the two manual
+> > > >   copies and in the object copy loop.
+> > > > 
+> > > > Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> > > > ---
+> > > > Hi!
+> > > > 
+> > > > Initially I was going to have this patch split in a series, but then I
+> > > > decided not to do that as this big patch allows (IMO) to better see the
+> > > > whole picture.  But please let me know if you think otherwise and I can
+> > > > split it in a few smaller patches.
+> > > > 
+> > > > I tried to cover all the issues that have been pointed out by Ilya, but I
+> > > > may have missed something or, more likely, introduced new bugs ;-)
+> > > > 
+> > > > Cheers,
+> > > > --
+> > > > Luis
+> > > > 
+> > > 
+> > > Sorry for the delay in review!
+> > 
+> > No worries, I appreciate the feedback but I obviously don't expect it to
+> > happen immediately :-)
+> > 
+> > > >  fs/ceph/file.c | 169 ++++++++++++++++++++++++++++---------------------
+> > > >  1 file changed, 96 insertions(+), 73 deletions(-)
+> > > > 
+> > > > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > > > index c3b8e8e0bf17..4d90a275f9a5 100644
+> > > > --- a/fs/ceph/file.c
+> > > > +++ b/fs/ceph/file.c
+> > > > @@ -1931,6 +1931,71 @@ static int is_file_size_ok(struct inode *src_inode, struct inode *dst_inode,
+> > > >  	return 0;
+> > > >  }
+> > > >  
+> > > > +static ssize_t ceph_do_objects_copy(struct ceph_inode_info *src_ci, u64 *src_off,
+> > > > +				    struct ceph_inode_info *dst_ci, u64 *dst_off,
+> > > > +				    struct ceph_fs_client *fsc,
+> > > > +				    size_t len, unsigned int flags)
+> > > > +{
+> > > > +	struct ceph_object_locator src_oloc, dst_oloc;
+> > > > +	struct ceph_object_id src_oid, dst_oid;
+> > > > +	size_t bytes = 0;
+> > > > +	u64 src_objnum, src_objoff, dst_objnum, dst_objoff;
+> > > > +	u32 src_objlen, dst_objlen;
+> > > > +	u32 object_size = src_ci->i_layout.object_size;
+> > > > +	int ret;
+> > > > +
+> > > > +	src_oloc.pool = src_ci->i_layout.pool_id;
+> > > > +	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+> > > > +	dst_oloc.pool = dst_ci->i_layout.pool_id;
+> > > > +	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+> > > > +
+> > > > +	while (len >= object_size) {
+> > > > +		ceph_calc_file_object_mapping(&src_ci->i_layout, *src_off,
+> > > > +					      object_size, &src_objnum,
+> > > > +					      &src_objoff, &src_objlen);
+> > > > +		ceph_calc_file_object_mapping(&dst_ci->i_layout, *dst_off,
+> > > > +					      object_size, &dst_objnum,
+> > > > +					      &dst_objoff, &dst_objlen);
+> > > > +		ceph_oid_init(&src_oid);
+> > > > +		ceph_oid_printf(&src_oid, "%llx.%08llx",
+> > > > +				src_ci->i_vino.ino, src_objnum);
+> > > > +		ceph_oid_init(&dst_oid);
+> > > > +		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> > > > +				dst_ci->i_vino.ino, dst_objnum);
+> > > > +		/* Do an object remote copy */
+> > > > +		ret = ceph_osdc_copy_from(&fsc->client->osdc,
+> > > > +					  src_ci->i_vino.snap, 0,
+> > > > +					  &src_oid, &src_oloc,
+> > > > +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > +					  CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> > > > +					  &dst_oid, &dst_oloc,
+> > > > +					  CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > +					  CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > +					  dst_ci->i_truncate_seq,
+> > > > +					  dst_ci->i_truncate_size,
+> > > > +					  CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > > +		if (ret) {
+> > > > +			if (ret == -EOPNOTSUPP) {
+> > > > +				fsc->have_copy_from2 = false;
+> > > > +				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+> > > > +			}
+> > > > +			dout("ceph_osdc_copy_from returned %d\n", ret);
+> > > > +			if (!bytes)
+> > > > +				bytes = ret;
+> > > > +			goto out;
+> > > > +		}
+> > > > +		len -= object_size;
+> > > > +		bytes += object_size;
+> > > > +		*src_off += object_size;
+> > > > +		*dst_off += object_size;
+> > > > +	}
+> > > > +
+> > > > +out:
+> > > > +	ceph_oloc_destroy(&src_oloc);
+> > > > +	ceph_oloc_destroy(&dst_oloc);
+> > > > +	return bytes;
+> > > > +}
+> > > > +
+> > > >  static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  				      struct file *dst_file, loff_t dst_off,
+> > > >  				      size_t len, unsigned int flags)
+> > > > @@ -1941,14 +2006,11 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  	struct ceph_inode_info *dst_ci = ceph_inode(dst_inode);
+> > > >  	struct ceph_cap_flush *prealloc_cf;
+> > > >  	struct ceph_fs_client *src_fsc = ceph_inode_to_client(src_inode);
+> > > > -	struct ceph_object_locator src_oloc, dst_oloc;
+> > > > -	struct ceph_object_id src_oid, dst_oid;
+> > > > -	loff_t endoff = 0, size;
+> > > > -	ssize_t ret = -EIO;
+> > > > +	loff_t size;
+> > > > +	ssize_t ret = -EIO, bytes;
+> > > >  	u64 src_objnum, dst_objnum, src_objoff, dst_objoff;
+> > > > -	u32 src_objlen, dst_objlen, object_size;
+> > > > +	u32 src_objlen, dst_objlen;
+> > > >  	int src_got = 0, dst_got = 0, err, dirty;
+> > > > -	bool do_final_copy = false;
+> > > >  
+> > > >  	if (src_inode->i_sb != dst_inode->i_sb) {
+> > > >  		struct ceph_fs_client *dst_fsc = ceph_inode_to_client(dst_inode);
+> > > > @@ -2026,22 +2088,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  	if (ret < 0)
+> > > >  		goto out_caps;
+> > > >  
+> > > > -	size = i_size_read(dst_inode);
+> > > > -	endoff = dst_off + len;
+> > > > -
+> > > >  	/* Drop dst file cached pages */
+> > > >  	ret = invalidate_inode_pages2_range(dst_inode->i_mapping,
+> > > >  					    dst_off >> PAGE_SHIFT,
+> > > > -					    endoff >> PAGE_SHIFT);
+> > > > +					    (dst_off + len) >> PAGE_SHIFT);
+> > > >  	if (ret < 0) {
+> > > >  		dout("Failed to invalidate inode pages (%zd)\n", ret);
+> > > >  		ret = 0; /* XXX */
+> > > >  	}
+> > > > -	src_oloc.pool = src_ci->i_layout.pool_id;
+> > > > -	src_oloc.pool_ns = ceph_try_get_string(src_ci->i_layout.pool_ns);
+> > > > -	dst_oloc.pool = dst_ci->i_layout.pool_id;
+> > > > -	dst_oloc.pool_ns = ceph_try_get_string(dst_ci->i_layout.pool_ns);
+> > > > -
+> > > >  	ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+> > > >  				      src_ci->i_layout.object_size,
+> > > >  				      &src_objnum, &src_objoff, &src_objlen);
+> > > > @@ -2060,6 +2114,8 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  	 * starting at the src_off
+> > > >  	 */
+> > > >  	if (src_objoff) {
+> > > > +		dout("Initial partial copy of %u bytes\n", src_objlen);
+> > > > +
+> > > >  		/*
+> > > >  		 * we need to temporarily drop all caps as we'll be calling
+> > > >  		 * {read,write}_iter, which will get caps again.
+> > > > @@ -2067,8 +2123,9 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  		put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+> > > >  		ret = do_splice_direct(src_file, &src_off, dst_file,
+> > > >  				       &dst_off, src_objlen, flags);
+> > > > -		if (ret < 0) {
+> > > > -			dout("do_splice_direct returned %d\n", err);
+> > > > +		/* Abort on short copies or on error */
+> > > > +		if (ret < src_objlen) {
+> > > > +			dout("Failed partial copy (%zd)\n", ret);
+> > > >  			goto out;
+> > > >  		}
+> > > >  		len -= ret;
+> > > > @@ -2081,62 +2138,29 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  		if (err < 0)
+> > > >  			goto out_caps;
+> > > >  	}
+> > > > -	object_size = src_ci->i_layout.object_size;
+> > > > -	while (len >= object_size) {
+> > > > -		ceph_calc_file_object_mapping(&src_ci->i_layout, src_off,
+> > > > -					      object_size, &src_objnum,
+> > > > -					      &src_objoff, &src_objlen);
+> > > > -		ceph_calc_file_object_mapping(&dst_ci->i_layout, dst_off,
+> > > > -					      object_size, &dst_objnum,
+> > > > -					      &dst_objoff, &dst_objlen);
+> > > > -		ceph_oid_init(&src_oid);
+> > > > -		ceph_oid_printf(&src_oid, "%llx.%08llx",
+> > > > -				src_ci->i_vino.ino, src_objnum);
+> > > > -		ceph_oid_init(&dst_oid);
+> > > > -		ceph_oid_printf(&dst_oid, "%llx.%08llx",
+> > > > -				dst_ci->i_vino.ino, dst_objnum);
+> > > > -		/* Do an object remote copy */
+> > > > -		err = ceph_osdc_copy_from(
+> > > > -			&src_fsc->client->osdc,
+> > > > -			src_ci->i_vino.snap, 0,
+> > > > -			&src_oid, &src_oloc,
+> > > > -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > -			CEPH_OSD_OP_FLAG_FADVISE_NOCACHE,
+> > > > -			&dst_oid, &dst_oloc,
+> > > > -			CEPH_OSD_OP_FLAG_FADVISE_SEQUENTIAL |
+> > > > -			CEPH_OSD_OP_FLAG_FADVISE_DONTNEED,
+> > > > -			dst_ci->i_truncate_seq, dst_ci->i_truncate_size,
+> > > > -			CEPH_OSD_COPY_FROM_FLAG_TRUNCATE_SEQ);
+> > > > -		if (err) {
+> > > > -			if (err == -EOPNOTSUPP) {
+> > > > -				src_fsc->have_copy_from2 = false;
+> > > > -				pr_notice("OSDs don't support copy-from2; disabling copy offload\n");
+> > > > -			}
+> > > > -			dout("ceph_osdc_copy_from returned %d\n", err);
+> > > > -			if (!ret)
+> > > > -				ret = err;
+> > > > -			goto out_caps;
+> > > > -		}
+> > > > -		len -= object_size;
+> > > > -		src_off += object_size;
+> > > > -		dst_off += object_size;
+> > > > -		ret += object_size;
+> > > > -	}
+> > > >  
+> > > > -	if (len)
+> > > > -		/* We still need one final local copy */
+> > > > -		do_final_copy = true;
+> > > > +	size = i_size_read(dst_inode);
+> > > > +	bytes = ceph_do_objects_copy(src_ci, &src_off, dst_ci, &dst_off,
+> > > > +				     src_fsc, len, flags);
+> > > > +	if (bytes <= 0) {
+> > > > +		if (!ret)
+> > > > +			ret = bytes;
+> > > > +		goto out_caps;
+> > > > +	}
+> > > 
+> > > Suppose we did the front part with do_splice_direct (ret > 0), but then
+> > > ceph_do_objects_copy fails (bytes < 0). We "goto out_caps" but then...
+> > > 
+> > > [...]
+> > > 
+> > > > @@ -2152,15 +2176,14 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+> > > >  out_caps:
+> > > >  	put_rd_wr_caps(src_ci, src_got, dst_ci, dst_got);
+> > > >  
+> > > > -	if (do_final_copy) {
+> > > > -		err = do_splice_direct(src_file, &src_off, dst_file,
+> > > > -				       &dst_off, len, flags);
+> > > > -		if (err < 0) {
+> > > > -			dout("do_splice_direct returned %d\n", err);
+> > > > -			goto out;
+> > > > -		}
+> > > > -		len -= err;
+> > > > -		ret += err;
+> > > > +	if (len && (ret >= 0)) {
+> > > 
+> > > ...len is still positive and we do_splice_direct again (probably at the
+> > > wrong offset?), instead of just returning a short copy. I think we
+> > > probably want to just stop any copying if it fails at any point along
+> > > the way, right?
+> > 
+> > Well... To be honest I deliberately wanted to try a do_splice_direct in
+> > case the remote object copies fail (basically, reverting to something
+> > similar to the generic_copy_file_range).  Now, I've been staring at this
+> > code for some time and I may be missing the obvious (again!).  But:
+> > 
+> >  - the offsets should be OK because ceph_do_objects_copy() only updates
+> >    them after each successful object copy
+> > 
+> >  - len should also be consistent:
+> >    * If 'bytes' was <= 0, it should contain what was written by
+> >      do_splice_direct
+> >    * if 'bytes' was > 0, but possibly < expected (e.g. an OSD returned an
+> >      error after a few object copies), len should still be consistent
+> > 
+> > Anyway, I'm not too attached to this approach, and if you rather have this
+> > function to return in the scenario you've described (and eventually have
+> > the user to retry the operation) I'm OK with that.
+> > 
+> 
+> Yes, sorry. I wasn't disputing whether this would fall over, but whether
+> it was intended behavior.
+> 
+> I'm not sure we gain anything by doing a second splice once we've had a
+> failure though. I think if this isn't going to (largely) use copy
+> offloading then we probably ought to stop and just return to userland as
+> quickly as we can.
 
-Right, we can't get away from timeout if we need to support
-CONFIG_MODULES AND mix-n-matched dtc+kernel versions.
+Sure, makes sense.  I'll work on v2 to change that behaviour.  (Probably I
+won't be able to send it tomorrow, as I'll be traveling and won't be able
+to test it.)
 
-But hopefully we can simplify the timeout logic by reducing the
-configurations it needs to support (because other checks take care of
-those configurations).
+Cheers,
+--
+Luís
 
-> If a dtb+kernel works, updating just the dtb with new dependencies
-> should not break things.
 
-I'm not sold on that policy (I agree newer kernel + old dtb shouldn't
-break), but that's a discussion for another time.
-
->
-> > I think driver_deferred_probe_check_state() logic should boiled down
-> > to something like:
-> >
-> > int driver_deferred_probe_check_state(struct device *dev)
-> > {
-> >         /* No modules and init done, deferred probes are pointless from
-> >          * now. */
-> >         if (!defined(CONFIG_MODULES) && initcall_done)
-> >                 return -ENODEV;
-> >
-> >         /* If modules and of_devlink then you clean want dependencies to
-> >          * be enforced.
-> >          */
-> >         if (defined(CONFIG_MODULES) && of_devlink)
-> >                 return -EPROBE_DEFER;
-> >
-> >         /* Whatever other complexity (including timeouts) we want to
-> >          * add. Hopefully none - we can discuss in this thread. */
-> >         if (.....)
-> >                 return -Exxxx;
-> >
-> >         /* When in doubt, allow probe deferral. */
-> >         return -EPROBE_DEFER;
-> > }
->
-> Mostly makes sense to me. I think using CONFIG_MODULES is good.
-
-Good to know. I'll see if John wants to do that. If not, I'll get around to it.
-
-> However, there is the case in pinctrl that we have a DT flag
-> 'pinctrl-use-default' and we stop deferring at the end of initcalls if
-> set.
-
-Ugh! That code hurts my head! Mainly because the
-driver_deferred_probe_check_state[_continue]() function names are so
-similar and confusing. And their implementation is also a bit twisty
-(like using triple negatives in a sentence). But I also noticed there
-is no user of pinctrl-use-default in the upstream kernel. So,
-whatever.
-
-> With the above, there's no way to detect that. I'm pretty sure
-> that's broken now with of_devlink and maybe from Thierry's change too.
-
-of_devlink doesn't parse pinctrl yet. I have some simple changes
-downstream for that which just parses -0, -1, -2 and -3 -- I'll get
-around to upstreaming those sometime. However, adding support for
-pinctrl-use-default is not hard. But I'd rather not do it unless
-someone actually needs to use that along with of_devlink enabled and
-asks for it in LKML.
-
-> > Rob, for the original use case those two patches were added for, do they need
-> > to support CONFIG_MODULES?
->
-> At the time since the subsystems involved were not typically modules
-> so using CONFIG_MODULES didn't really matter. As you said, that's
-> changed now.
->
-> > > That change causes trouble when trying to use many clk drivers
-> > > as modules, as the clk modules may not load until much later
-> > > after init has started. If a dependent driver loads and gets an
-> > > error instead of EPROBE_DEFER, it won't try to reload later when
-> > > the dependency is met, and will thus fail to load.
-> >
-> > Once we add of_devlink support for power-domains, you won't even hit the
-> > genpd error path if you have of_devlink enabled. I believe in the case
-> > you are testing DB 845c, of_devlink is enabled?
-> >
-> > If of_devlink is enabled, the devices depending on the unprobed power
-> > domains would be deferred without even calling the driver's probe()
-> > function.
-> >
-> > Adding power-domain support to of_devlink is a 2 line change. I'll send
-> > it out soon.
-> >
-> > Also, regulator_init_complete() can be replaced by a sync_state() based
-> > implementation. I have a downstream implementation that works. But it's
-> > definitely not upstream ready. I plan to rewrite it and send it upstream
-> > at some point, but it's fairly straightforward if anyone else want to
-> > implement it. My main point being, we shouldn't have to make the timeout
-> > logic more complex (or even need one) for regulator clean up either.
-> >
-> > On Tue, Feb 18, 2020 at 6:07 PM Rob Herring wrote:
-> > > The one complication which I mentioned already is with consoles. A
-> > > timeout (and dependencies in modules) there doesn't work. You have to
-> > > probe and register the console before init is done.
-> >
-> > Rob,
-> >
-> > I've seen you say this a couple of times before. But I don't think this
-> > is true any more. With of_devlink enabled I've booted hardware countless
-> > times with the console device probing after userspace comes up. The only
-> > limitation for console drivers is that they need to be built-in if they
-> > need to support earlycon. If you don't care to support earlycon (very
-> > useful for bringup debugging), I think the console driver can even be a
-> > module. I don't think even of_devlink needs to be enabled technically if
-> > you load the modules in the right order.
->
-> Every serial driver has to be built-in to enable console support.
-> That's not because of earlycon. It's been that way for as long as I've
-> worked on linux. Now of course, a driver could be built-in and still
-> probe after userspace starts, but in my testing with the timeout that
-> didn't work.
-
->I don't see how of_devlink changes that.
-
-of_devlink sometimes helps because it avoids running probe() functions
-with poor error handling (Eg: returning -Esomethingelse when they
-should return -EPROBE_DEFER). Also, I did say "I don't think even
-of_devlink needs to be enabled..."
-
-> It could depend on what userspace you have.
-
-Right, and because of that I think we should say the following going forward:
-"Every serial driver has to be built-in to enable console support, but
-it can still probe after userspace starts"
-
-Instead of:
-"You have to probe and register the console before init is done".
-
-Because the former statement gives a clearer picture and doesn't
-discourage people from trying to modularize their platforms more
-thoroughly :)
-
-> Certainly, booting with 'console=ttyS0 init=/bin/sh' would not work for example.
-> What I probably tested with was a busybox based rootfs. What are you testing
-> with? Android?
-
-Yeah, with Android. Happen to know why busybox (or whatever other
-shell) might not work? Is it because they exit immediately if console
-device is not available instead of continuing to run the scripts?
-
--Saravana
+> 
+> > > > +		dout("Final partial copy of %zu bytes\n", len);
+> > > > +		bytes = do_splice_direct(src_file, &src_off, dst_file,
+> > > > +					 &dst_off, len, flags);
+> > > > +		if (bytes > 0)
+> > > > +			ret += bytes;
+> > > > +		else
+> > > > +			dout("Failed partial copy (%zd)\n", bytes);
+> > > >  	}
+> > > >  
+> > > >  out:
+> > > 
+> > > -- 
+> > > Jeff Layton <jlayton@kernel.org>
+> > > 
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
