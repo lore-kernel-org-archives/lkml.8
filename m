@@ -2,120 +2,116 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC72C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DECDC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF8B222C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03FFD20882
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:59:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XXGyT2OT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q0xgQ8/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgBTX4W (ORCPT
+        id S1729397AbgBTX7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:56:22 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43362 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729295AbgBTX4W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:56:22 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so143281edb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:56:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NNDEYAC7DB9YZj2gZI9Z6zcgcjYXY0WlNUd/lj4aAPs=;
-        b=XXGyT2OTWpB64th/vPVkrN8ruW2f9cZk6TbylbolgAVKvklROGPImgdexYcm7PLy+f
-         BQTWWPL1F3qIN7l3Dq0t9Uu68LaVEjTVVH3auFqU7GxZPXIvpkmrC16+4Z1H1cJOebL5
-         Lvo1QJHLtGwmVRsdCOiaMRq4DYeqlDXcfrVJdD7R2pwkOZREAbrYu4uO69FSE1NQjX41
-         LHAhCWZNeW5WU9pBAp27tB02+HKXN20P76igbJaaQi0x/nItXf1MM5UocyVhxVMtvBJ3
-         ayy3sAy5iev4TWkVL/NJTUQfH2mnlc/NEqADgydaiOsyVsK7eC5LwvaXHBbFhtT3g4wp
-         4ivQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NNDEYAC7DB9YZj2gZI9Z6zcgcjYXY0WlNUd/lj4aAPs=;
-        b=Y2OQIKQZIPn5UIH7DUxNwp3gBe91/XXGTM3RYJxuIkgXp2kYN5oPptHJ62RD7lq4eT
-         ZmUb2urHK5xlCwvONSLPFbQyg/Q0sINGO7nGNyQzA9M59k1Jr0r5jEXr4RM/v8TJzCDc
-         n4JY9fRotJ2FInDbfzWot+WI/nVu18V8vMDPrlCX/LsqT4pyi03k7VVTS4hJQUy4OtGr
-         suamiaULPyvZboSMMCTfuGYY6FTpiJYvAfgEr+zVG0uvL8+KSmvmxcfMcf59AaigcNyl
-         2QQXuTl5Eh/pvaV89ngIcBeY8/UGfpRYoQGdko/7wTmfRkTg0d2zSGIIpS40K6V4Biur
-         1nbA==
-X-Gm-Message-State: APjAAAUnNCl7DZn8MTNVqdBgEG31xdvg5OeoixD/by5gHYc6NMgjpkQO
-        BJ1n2rpSxJmgASc+mSBkE+VY7NIUGg1PtovM1tdmDg==
-X-Google-Smtp-Source: APXvYqzpKwKC1T9/jdMm4FY8y3lkou+3lv6gj8We0ELkhEzlN9PeYavWhHfqwfiG/wqIc9ypFDi9U3oCF2x+1nSM0Og=
-X-Received: by 2002:a05:6402:6c7:: with SMTP id n7mr30390013edy.177.1582242980107;
- Thu, 20 Feb 2020 15:56:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200218173221.237674-1-bgeffon@google.com> <20200220115744.ummq6j5ejp5qojic@box>
-In-Reply-To: <20200220115744.ummq6j5ejp5qojic@box>
-From:   Brian Geffon <bgeffon@google.com>
-Date:   Thu, 20 Feb 2020 15:55:53 -0800
-Message-ID: <CADyq12y2uJh2ROBajA1D5H6OLEyFrKKEXH=yQC-8ELF0+UiNzw@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] mm: Add MREMAP_DONTUNMAP to mremap().
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+        Thu, 20 Feb 2020 18:59:44 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38509 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729234AbgBTX7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:59:43 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Ns5T2bZGz9sRf;
+        Fri, 21 Feb 2020 10:59:41 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582243181;
+        bh=H3Bhw27wgMSfXqZ06hdKW86qGZbRwhtvODS+7/bYq7M=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Q0xgQ8/dL5ErWYPwEyNog28B1fCEM37HenFeUSmx/BYq8wmiOQ8vPI3f1zUeRC1Av
+         TCR09UDg729nveVLP7SvwqZyrkdozoKka7D1ZIUCwiSNiRQ7abGao2VzmfK+bos0DQ
+         JP5JqKIZRwvL5kB/+MiEQbBTFRdPYnvGaA0AIKbup8TpQeb5z/9TbSq0RWaWmYc3A9
+         cJDv43wnU/94SwtGikSSNFOTVAES3S/M/ERGMcs5mekzT9Rl1zgZ+2/NJ7fuMIVwhq
+         GdGg6x+JEg468Db1Y9d2NH6WD4qUirmwYVkA4+nWzk8XDbg41N7Mo5D08/P5hVnrKk
+         7nvhblx7/Lv0A==
+Date:   Fri, 21 Feb 2020 10:59:40 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arjun Roy <arjunroy@google.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Florian Weimer <fweimer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200221105940.44fd67f1@canb.auug.org.au>
+In-Reply-To: <CAOFY-A2tK5=eFt2AQx+FOjyHXQ85XE-N8gdbb49wJphjAAgFUQ@mail.gmail.com>
+References: <20200217145711.4af495a3@canb.auug.org.au>
+        <CAOFY-A1nfPjf3EcQB6KiEifbFR+aUtdSgK=CHGt_k3ziSG6T_Q@mail.gmail.com>
+        <CAOFY-A3q_pmtHKAoOJdbB09wy=dxs9SdpXjCsU1wBxU5EDHVmw@mail.gmail.com>
+        <20200221101845.21c0c8c5@canb.auug.org.au>
+        <CAOFY-A2ndGCSEDstOmXs-u1XjNsaj8wkLezYsMbzeZeVTJGC5g@mail.gmail.com>
+        <20200221104328.0f897efd@canb.auug.org.au>
+        <CAOFY-A2tK5=eFt2AQx+FOjyHXQ85XE-N8gdbb49wJphjAAgFUQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/n=+M1qFwCmphl3AY.Cq.mx5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
+--Sig_/n=+M1qFwCmphl3AY.Cq.mx5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> I have hard time understanding the case when new_len != old_len.
->
-> Correct me if I'm wrong, but looks like that you change the size of old
-> mapping to be the new_len and then create a new of the same new_len.
->
-> This doesn't look right to me.
->
-> In my opinion, MREMAP_DONTUNMAP has to leave the old mapping intact. And
-> create the new mapping adjusted to the new_len.
->
-> Other option is to force new_len == old_len if MREMAP_DONTUNMAP is
-> specified. It would simplify the implementation. And I don't see why
-> anybody would really want anything else.
+Hi Arjun,
 
-I had been approaching this as, "do what mremap would have done in
-this situation except skip the last step." Meaning, whatever the final
-state of the old mapping was MREMAP_DONTUNMAP meant that you should
-just not do the unmap operation on the old mapping at the end. But I
-understand why it's confusing, especially when in the case of the VMA
-growing you're left with the old vma of size old_len and the new_vma
-of size new_len but only containing old_len worth of pages.
-Personally, I don't think this is a problem having that behavior
-because it can be documented and it just adds a small amount of
-flexibility.
+On Thu, 20 Feb 2020 15:44:28 -0800 Arjun Roy <arjunroy@google.com> wrote:
+>
+> On Thu, Feb 20, 2020 at 3:43 PM Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+> >
+> > On Thu, 20 Feb 2020 15:22:04 -0800 Arjun Roy <arjunroy@google.com> wrot=
+e: =20
+> > >
+> > > I have a possible solution in mind, but it would involve a slight
+> > > change in the SPARC macro (to be more inline with the semantics of the
+> > > other platforms).
+> > > If you're open to such a change, I can send it out. =20
+> >
+> > Its not up to me :-)
+> >
+> > If it is not too much work, I would say, do the patch, test it as you
+> > can, then send it out cc'ing the Sparc maintainer (DaveM cc'd) and see
+> > what happens.
+>=20
+> Certainly, I will do so.
 
-Nonetheless, I agree with you and I also cannot come up with a
-situation where you'd actually want to do this so I'm willing to
-restrict it to old_len == new_len and return -EINVAL if not, it
-simplifies it a bit and accounting becomes a easier because the
-outcome is always the same two mappings of size old_len and the size
-of the locked_vm never changes. We can always allow the resize
-operation later if there becomes a need. If everyone is okay with this
-restriction I can send a new patch.
+Just one thing: its worth while making it clear to DaveM that you just
+want his Ack (rather than for him to take the patch into the Sparc
+tree) so that the patch can go into Andrew's tree along with the rest
+of the series.
 
-Thank you again,
-Brian
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/n=+M1qFwCmphl3AY.Cq.mx5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5PHWwACgkQAVBC80lX
+0GwXiwf+NAqXQ9gETVZZgq6sHUVnJj0/G11Axq+1O3yLWOEi8RpsRq8Fv0Gzg9oE
+l+yil+FOsWiCI5huwAGcHtBFe3D1Q98/qZSSS/tKVTLEbMpKXMCLbODv++66dyxy
+Pw3ugAeuJd7aWBlnA9RCMnD80X3k2yThO6UNZRvtx0GKs/yvokvF6g8ivKNKJFwf
+69czhR6nPVC1w+Lzqo98V9GZrMPfrh6n7eIvu0wXXiEBe8uPZgRvTkgU+2pLOYTD
+gvZpVO7bwd47a37XkBJx8bk23mdbCbi48jwMCBHgC7f/ep5rht6s8X12UCR+S4K9
+OZCwdguRNneS4yr48PulWpOnBPP0bA==
+=nMVK
+-----END PGP SIGNATURE-----
+
+--Sig_/n=+M1qFwCmphl3AY.Cq.mx5--
