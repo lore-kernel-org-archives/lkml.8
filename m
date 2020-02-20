@@ -2,158 +2,89 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E59C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059B9C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0C2920801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10C42465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:26:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jJ6qEZSE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRjY7eWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgBTJVv (ORCPT
+        id S1726839AbgBTJ0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:21:51 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35045 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726921AbgBTJVv (ORCPT
+        Thu, 20 Feb 2020 04:26:19 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41648 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgBTJ0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:21:51 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582190510; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=c85s8naSK3Xbvoo8BeI3imw+A0YDHtYgT9ZUdHxHtZM=; b=jJ6qEZSEsqmxOpZJw1nHRIiv/Dzq/AD3qegVy1ziMQsVoO6b2QI+omRv9GDM4lgKljr5xQ5D
- GExkTMQujSjRVpR80V6OsatrORYCgbRDfgHOh0xeFXyyhtqOUCDdSxEQlxuV5dItEMOam0LL
- Tfa+3DOXn2hS8yeWbM7wezxhGbI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4e4fac.7fa66f6f9030-smtp-out-n02;
- Thu, 20 Feb 2020 09:21:48 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9D67CC433A2; Thu, 20 Feb 2020 09:21:47 +0000 (UTC)
-Received: from sayalil-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sayalil)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B1783C43383;
-        Thu, 20 Feb 2020 09:21:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B1783C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
-From:   Sayali Lokhande <sayalil@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        ppvk@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating sdcc clk
-Date:   Thu, 20 Feb 2020 14:50:46 +0530
-Message-Id: <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
-References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
+        Thu, 20 Feb 2020 04:26:19 -0500
+Received: by mail-lf1-f68.google.com with SMTP id m30so2496614lfp.8;
+        Thu, 20 Feb 2020 01:26:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jWL4OlWg/ImsZ63WRta4BWWVgqBXfj6sTueyX2l3ehw=;
+        b=FRjY7eWoShhLInLVqivCbDZmz3Tzaed2/S4StccntngX7sjwsp+gpyCqhLFxFaOSOO
+         ujSEGd9NgGayusZyXzghE2ftdkD7kZQPajX4sB6sxR0ajJxcJW9AEjSEtBg/7Z8J+y+U
+         Q7cRJRA1L7NdgmBMdEXVSJtfRJzdjNu5o7NBFaOzUuEActSwDZHIlikxvHOmN2PlnWhe
+         ADvc9wsv1SIHgb3pfcSx9Cr8Q3de6uKcYR5H8hDTCx3mfYdEGU6Obf9NIKJ990Ucw3zC
+         wcU+sCbS73CcMQx8hAkJ5U0bNWT7lqIX6Gm6vjDS2XtFk07wa2ZmDzhQNUSNMjZlnMjV
+         92YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jWL4OlWg/ImsZ63WRta4BWWVgqBXfj6sTueyX2l3ehw=;
+        b=s6SHG9KShoeA60Y/HkS7NIQ5bM8w0pGNN/AZdya2zaUSya3NmnXHoJAsSsa1AqiZfe
+         6hpElPRlNuup5ptFQUJC/DNpcxRb1wItMLjlA0JeHR1KHUxgaYajRbRQn+Myz0U/YCkB
+         68J0RHMJtTwcffIb8CkawWOVEAtE/ExauZ6W/NBZxkCG/xiXOU+8l2omy1CVr9phhz+V
+         xM3M83/LSOmg50wa8RjBXazgvaiIXCt6UAb9xRQ+6aJAHoagKfJT8Xq7BBXWGD9r0HKj
+         /PCroNAU3ZOQgIKLUwtqWsMbSH2KOHuY41ogJavmoZMtWsa7t78IX+QK6Mgpbf6lhr4C
+         jKSg==
+X-Gm-Message-State: APjAAAXGyZbO0MvCUQ/0U17rTurZcEPAt1cF4LKMVsS8ULIhUTop5Plp
+        wsI7c/J/wXnGZGuXIWV93S9NYBzAaoQfC05Ps83LKQ==
+X-Google-Smtp-Source: APXvYqy0eAlphZlkrP7jg0My9wepzrhcr9QemESkO8toScsiMUqiVlVjsI/0k8VPy9q2ShDz5AEXeGmqrYrpWAGcG6k=
+X-Received: by 2002:ac2:4199:: with SMTP id z25mr16242179lfh.26.1582190775281;
+ Thu, 20 Feb 2020 01:26:15 -0800 (PST)
+MIME-Version: 1.0
+References: <20200220071140.14080-1-masahiroy@kernel.org> <20200220071140.14080-2-masahiroy@kernel.org>
+In-Reply-To: <20200220071140.14080-2-masahiroy@kernel.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 20 Feb 2020 10:26:04 +0100
+Message-ID: <CANiq72nWs3c2MWGTsG=zvDQ21B_=_Yaw3AhRhHDBAr2xFJwF_g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] compiler: Remove CONFIG_OPTIMIZE_INLINING entirely
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        sparclinux@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ram Prakash Gupta <rampraka@codeaurora.org>
+On Thu, Feb 20, 2020 at 8:12 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+> forcibly") made this always-on option. We released v5.4 and v5.5
+> including that commit.
+>
+> Remove the CONFIG option and clean up the code now.
 
-During GCC level clock gating of MCLK, the async FIFO
-gets into some hang condition, such that for the next
-transfer after MCLK ungating, first bit of CMD response
-doesn't get written in to the FIFO. This cause the CPSM
-to hang eventually leading to SW timeout.
+Yes, please!
 
-To fix the issue, toggle the FIFO write clock after
-MCLK ungated to get the FIFO pointers and flags to
-valid states.
+Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
-Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
----
- drivers/mmc/host/sdhci-msm.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-index c3a160c..eaa3e95 100644
---- a/drivers/mmc/host/sdhci-msm.c
-+++ b/drivers/mmc/host/sdhci-msm.c
-@@ -127,6 +127,8 @@
- #define CQHCI_VENDOR_CFG1	0xA00
- #define CQHCI_VENDOR_DIS_RST_ON_CQ_EN	(0x3 << 13)
- 
-+#define RCLK_TOGGLE 0x2
-+
- struct sdhci_msm_offset {
- 	u32 core_hc_mode;
- 	u32 core_mci_data_cnt;
-@@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- 	sdhci_enable_clk(host, clk);
- }
- 
-+/*
-+ * After MCLK ugating, toggle the FIFO write clock to get
-+ * the FIFO pointers and flags to valid state.
-+ */
-+static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
-+	const struct sdhci_msm_offset *msm_offset =
-+					msm_host->offset;
-+	struct mmc_card *card = host->mmc->card;
-+
-+	if (msm_host->tuning_done ||
-+			(card && card->ext_csd.strobe_support &&
-+			card->host->ios.enhanced_strobe)) {
-+		/*
-+		 * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
-+		 * DLL input clock
-+		 */
-+		writel_relaxed(((readl_relaxed(host->ioaddr +
-+			msm_offset->core_dll_config_3))
-+			| RCLK_TOGGLE), host->ioaddr +
-+			msm_offset->core_dll_config_3);
-+		/* ensure above write as toggling same bit quickly */
-+		wmb();
-+		udelay(2);
-+		/*
-+		 * clear HC_REG_DLL_CONFIG_3[1] to select RCLK as
-+		 * DLL input clock
-+		 */
-+		writel_relaxed(((readl_relaxed(host->ioaddr +
-+			msm_offset->core_dll_config_3))
-+			& ~RCLK_TOGGLE), host->ioaddr +
-+			msm_offset->core_dll_config_3);
-+	}
-+}
-+
- /* sdhci_msm_set_clock - Called with (host->lock) spinlock held. */
- static void sdhci_msm_set_clock(struct sdhci_host *host, unsigned int clock)
- {
-@@ -2149,6 +2188,10 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
- 				       msm_host->bulk_clks);
- 	if (ret)
- 		return ret;
-+	if (host->mmc &&
-+			(host->mmc->ios.timing == MMC_TIMING_MMC_HS400))
-+		sdhci_msm_toggle_fifo_write_clk(host);
-+
- 	/*
- 	 * Whenever core-clock is gated dynamically, it's needed to
- 	 * restore the SDR DLL settings when the clock is ungated.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers,
+Miguel
