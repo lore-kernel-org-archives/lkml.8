@@ -2,140 +2,392 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F3FC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABB5C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CF1208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:29:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582187365;
-	bh=ZebiJDWQAcplpLQYOd5lEDYWwQlgeKCH5PTtGSAP74I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EJcS/od399ceBoVRW0X+dLf0qZqnwiiWJ784+KgaD2Qrx2x7MlfUsG9R7+G7L2/ho
-	 X8N/V3cJetEOzcpFsPjbGt2uH6JdeBJNK9qKcQcOcZFiiWTEemy3CD8dRuXZjMrBHJ
-	 4lit2yo9VOL/vB9bkZDa3W5M0ZT7M5HJKRCWZ6/k=
+	by mail.kernel.org (Postfix) with ESMTP id 2CBC2208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbgBTI3Y (ORCPT
+        id S1726877AbgBTIaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:29:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38598 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgBTI3X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:29:23 -0500
-Received: by mail-wr1-f65.google.com with SMTP id e8so3584391wrm.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:29:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pcVb7tYtjd5vJy2GdOdQXq1b2D4fCTq0JpAZZtr5yr0=;
-        b=SvhgGKg0zhNAYvi8E1HKvGl2fXLxJveVVsHR+Wf737kBQhBZcBq09u12VCFTB+I0Fo
-         YKTmElL5sG/Gwze/4LAVJgD586SFm/qGMuZ7YrVpkF9N4kYC0/vepCMeNsGPwxncM7w2
-         z/nkJmNCfRdlfrPj4FdnKdbkkcI68nj2Io42NZ5YuRub14sFH4QtxTEDp1o1ZTZCOtmW
-         igEICm+X71KGPxu/n6r/JAMmjfT4XpmeL8+dSAhawvWnZkYdd+l3eqeqqMmDlGqUi4yY
-         haJahYVY9dnhGNzhcfgFFa3nqhGU6nLsCCc9s07aEWKFeIkaB5Suk0dVJev60OtfbqmZ
-         mkmA==
-X-Gm-Message-State: APjAAAXOHkEmhM0u+rrboGl5tQDmaYX8gUpqyY7WLucz5fyCC/sv838b
-        veuWM9UYFBS+Wn1X2yNtQ7A=
-X-Google-Smtp-Source: APXvYqznloAc7/YvN2REE3Ur5hUHLeUc0Ogh8t5kKphHGasqgO/VXOdODTu2+evN2nivuKVMKGzQBA==
-X-Received: by 2002:a5d:6802:: with SMTP id w2mr40472712wru.353.1582187361702;
-        Thu, 20 Feb 2020 00:29:21 -0800 (PST)
-Received: from localhost (ip-37-188-133-21.eurotel.cz. [37.188.133.21])
-        by smtp.gmail.com with ESMTPSA id h128sm3895837wmh.33.2020.02.20.00.29.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 00:29:20 -0800 (PST)
-Date:   Thu, 20 Feb 2020 09:29:19 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: [PATCH] mm: Stop kswapd early when nothing's waiting for it to
- free pages
-Message-ID: <20200220082919.GC20509@dhcp22.suse.cz>
-References: <20200219182522.1960-1-sultan@kerneltoast.com>
- <dcd1cb4c-89dc-856b-ea1b-8d4930fec3eb@intel.com>
- <20200219194006.GA3075@sultan-book.localdomain>
- <20200219200527.GF11847@dhcp22.suse.cz>
- <20200219204220.GA3488@sultan-book.localdomain>
+        Thu, 20 Feb 2020 03:30:02 -0500
+Received: from honk.sigxcpu.org ([24.134.29.49]:46392 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726679AbgBTIaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:30:02 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id C8BE0FB03;
+        Thu, 20 Feb 2020 09:29:59 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zMjbSs77NzEe; Thu, 20 Feb 2020 09:29:57 +0100 (CET)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 7B4B5405C2; Thu, 20 Feb 2020 09:29:56 +0100 (CET)
+Date:   Thu, 20 Feb 2020 09:29:56 +0100
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        daniel.thompson@linaro.org, jingoohan1@gmail.com,
+        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
+        jjhiblot@ti.com
+Subject: Re: [PATCH] backlight: add led-backlight driver
+Message-ID: <20200220082956.GA3383@bogon.m.sigxcpu.org>
+References: <20200219191412.GA15905@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200219204220.GA3488@sultan-book.localdomain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219191412.GA15905@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-02-20 12:42:20, Sultan Alsawaf wrote:
-> On Wed, Feb 19, 2020 at 09:05:27PM +0100, Michal Hocko wrote:
-[...]
-> > Again, do you have more details about the workload and what was the
-> > cause of responsiveness issues? Because I would expect that the
-> > situation would be quite opposite because it is usually the direct
-> > reclaim that is a source of stalls visible from userspace. Or is this
-> > about a single CPU situation where kswapd saturates the single CPU and
-> > all other tasks are just not getting enough CPU cycles?
+Hi,
+On Wed, Feb 19, 2020 at 08:14:12PM +0100, Pavel Machek wrote:
+> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 > 
-> The workload was having lots of applications open at once. At a certain point
-> when memory ran low, my system became sluggish and kswapd CPU usage skyrocketed.
-
-Could you provide more details please? Is kswapd making a forward
-progress? Have you checked why other precesses are slugish? They do not
-get CPU time or they are blocked on something?
-
-> I added printks into kswapd with this patch, and my premature exit in kswapd
-> kicked in quite often.
+> This patch adds a led-backlight driver (led_bl), which is similar to
+> pwm_bl except the driver uses a LED class driver to adjust the
+> brightness in the HW. Multiple LEDs can be used for a single backlight.
 > 
-> > > On systems with more memory I tested (>=4G), kswapd becomes more expensive to
-> > > run at its higher scan depths, so stopping kswapd prematurely when there aren't
-> > > any memory allocations waiting for it prevents it from reaching the *really*
-> > > expensive scan depths and burning through even more resources.
-> > > 
-> > > Combine a large amount of memory with a slow CPU and the current problematic
-> > > behavior of kswapd at high memory pressure shows. My personal test scenario for
-> > > this was an arm64 CPU with a variable amount of memory (up to 4G RAM + 2G swap).
-> > 
-> > But still, somebody has to put the system into balanced state so who is
-> > going to do all the work?
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> Tested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+Tested-by: Guido Günther <agx@sigxcpu.org>
+
+Cheers,
+ -- Guido
+
+> ---
+>  drivers/video/backlight/Kconfig  |   7 ++
+>  drivers/video/backlight/Makefile |   1 +
+>  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 268 insertions(+)
+>  create mode 100644 drivers/video/backlight/led_bl.c
 > 
-> All the work will be done by kswapd of course, but only if it's needed.
+> Hi!
 > 
-> The real problem is that a single memory allocation failure, and free memory
-> being some amount below the high watermark, are not good heuristics to predict
-> *future* memory allocation needs. They are good for determining how to steer
-> kswapd to help satisfy a failed allocation in the present, but anything more is
-> pure speculation (which turns out to be wrong speculation, since this behavior
-> causes problems).
+> Here's the version of the driver I have. AFAICT
+> default-brightness-level handling is ok, so does not need to be
+> changed.
+> 
+> Lee, it would be easiest for me if you could apply it to your tree and
+> push, but given enough time I can push it to Linus, too.
+> 
+> Thanks,
+> 								Pavel
+> 
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 403707a3e503..0093bbd0d326 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -456,6 +456,13 @@ config BACKLIGHT_RAVE_SP
+>  	help
+>  	  Support for backlight control on RAVE SP device.
+>  
+> +config BACKLIGHT_LED
+> +	tristate "Generic LED based Backlight Driver"
+> +	depends on LEDS_CLASS && OF
+> +	help
+> +	  If you have a LCD backlight adjustable by LED class driver, say Y
+> +	  to enable this driver.
+> +
+>  endif # BACKLIGHT_CLASS_DEVICE
+>  
+>  endmenu
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index 6f8777037c37..0c1a1524627a 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+>  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+>  obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
+>  obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
+> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
+> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
+> new file mode 100644
+> index 000000000000..3f66549997c8
+> --- /dev/null
+> +++ b/drivers/video/backlight/led_bl.c
+> @@ -0,0 +1,260 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
+> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> + *
+> + * Based on pwm_bl.c
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +
+> +struct led_bl_data {
+> +	struct device		*dev;
+> +	struct backlight_device	*bl_dev;
+> +	struct led_classdev	**leds;
+> +	bool			enabled;
+> +	int			nb_leds;
+> +	unsigned int		*levels;
+> +	unsigned int		default_brightness;
+> +	unsigned int		max_brightness;
+> +};
+> +
+> +static void led_bl_set_brightness(struct led_bl_data *priv, int level)
+> +{
+> +	int i;
+> +	int bkl_brightness;
+> +
+> +	if (priv->levels)
+> +		bkl_brightness = priv->levels[level];
+> +	else
+> +		bkl_brightness = level;
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_set_brightness(priv->leds[i], bkl_brightness);
+> +
+> +	priv->enabled = true;
+> +}
+> +
+> +static void led_bl_power_off(struct led_bl_data *priv)
+> +{
+> +	int i;
+> +
+> +	if (!priv->enabled)
+> +		return;
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_set_brightness(priv->leds[i], LED_OFF);
+> +
+> +	priv->enabled = false;
+> +}
+> +
+> +static int led_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct led_bl_data *priv = bl_get_data(bl);
+> +	int brightness = bl->props.brightness;
+> +
+> +	if (bl->props.power != FB_BLANK_UNBLANK ||
+> +	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
+> +	    bl->props.state & BL_CORE_FBBLANK)
+> +		brightness = 0;
+> +
+> +	if (brightness > 0)
+> +		led_bl_set_brightness(priv, brightness);
+> +	else
+> +		led_bl_power_off(priv);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct backlight_ops led_bl_ops = {
+> +	.update_status	= led_bl_update_status,
+> +};
+> +
+> +static int led_bl_get_leds(struct device *dev,
+> +			   struct led_bl_data *priv)
+> +{
+> +	int i, nb_leds, ret;
+> +	struct device_node *node = dev->of_node;
+> +	struct led_classdev **leds;
+> +	unsigned int max_brightness;
+> +	unsigned int default_brightness;
+> +
+> +	ret = of_count_phandle_with_args(node, "leds", NULL);
+> +	if (ret < 0) {
+> +		dev_err(dev, "Unable to get led count\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	nb_leds = ret;
+> +	if (nb_leds < 1) {
+> +		dev_err(dev, "At least one LED must be specified!\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	leds = devm_kzalloc(dev, sizeof(struct led_classdev *) * nb_leds,
+> +			    GFP_KERNEL);
+> +	if (!leds)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < nb_leds; i++) {
+> +		leds[i] = devm_of_led_get(dev, i);
+> +		if (IS_ERR(leds[i]))
+> +			return PTR_ERR(leds[i]);
+> +	}
+> +
+> +	/* check that the LEDs all have the same brightness range */
+> +	max_brightness = leds[0]->max_brightness;
+> +	for (i = 1; i < nb_leds; i++) {
+> +		if (max_brightness != leds[i]->max_brightness) {
+> +			dev_err(dev, "LEDs must have identical ranges\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	/* get the default brightness from the first LED from the list */
+> +	default_brightness = leds[0]->brightness;
+> +
+> +	priv->nb_leds = nb_leds;
+> +	priv->leds = leds;
+> +	priv->max_brightness = max_brightness;
+> +	priv->default_brightness = default_brightness;
+> +
+> +	return 0;
+> +}
+> +
+> +static int led_bl_parse_levels(struct device *dev,
+> +			   struct led_bl_data *priv)
+> +{
+> +	struct device_node *node = dev->of_node;
+> +	int num_levels;
+> +	u32 value;
+> +	int ret;
+> +
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	num_levels = of_property_count_u32_elems(node, "brightness-levels");
+> +	if (num_levels > 1) {
+> +		int i;
+> +		unsigned int db;
+> +		u32 *levels = NULL;
+> +
+> +		levels = devm_kzalloc(dev, sizeof(u32) * num_levels,
+> +				      GFP_KERNEL);
+> +		if (!levels)
+> +			return -ENOMEM;
+> +
+> +		ret = of_property_read_u32_array(node, "brightness-levels",
+> +						levels,
+> +						num_levels);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/*
+> +		 * Try to map actual LED brightness to backlight brightness
+> +		 * level
+> +		 */
+> +		db = priv->default_brightness;
+> +		for (i = 0 ; i < num_levels; i++) {
+> +			if ((i && db > levels[i-1]) && db <= levels[i])
+> +				break;
+> +		}
+> +		priv->default_brightness = i;
+> +		priv->max_brightness = num_levels - 1;
+> +		priv->levels = levels;
+> +	} else if (num_levels >= 0)
+> +		dev_warn(dev, "Not enough levels defined\n");
+> +
+> +	ret = of_property_read_u32(node, "default-brightness-level", &value);
+> +	if (!ret && value <= priv->max_brightness)
+> +		priv->default_brightness = value;
+> +	else if (!ret  && value > priv->max_brightness)
+> +		dev_warn(dev, "Invalid default brightness. Ignoring it\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int led_bl_probe(struct platform_device *pdev)
+> +{
+> +	struct backlight_properties props;
+> +	struct led_bl_data *priv;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	priv->dev = &pdev->dev;
+> +
+> +	ret = led_bl_get_leds(&pdev->dev, priv);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = led_bl_parse_levels(&pdev->dev, priv);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to parse DT data\n");
+> +		return ret;
+> +	}
+> +
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.type = BACKLIGHT_RAW;
+> +	props.max_brightness = priv->max_brightness;
+> +	props.brightness = priv->default_brightness;
+> +	props.power = (priv->default_brightness > 0) ? FB_BLANK_POWERDOWN :
+> +		      FB_BLANK_UNBLANK;
+> +	priv->bl_dev = backlight_device_register(dev_name(&pdev->dev),
+> +			&pdev->dev, priv, &led_bl_ops, &props);
+> +	if (IS_ERR(priv->bl_dev)) {
+> +		dev_err(&pdev->dev, "Failed to register backlight\n");
+> +		return PTR_ERR(priv->bl_dev);
+> +	}
+> +
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_sysfs_disable(priv->leds[i]);
+> +
+> +	backlight_update_status(priv->bl_dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int led_bl_remove(struct platform_device *pdev)
+> +{
+> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
+> +	struct backlight_device *bl = priv->bl_dev;
+> +	int i;
+> +
+> +	backlight_device_unregister(bl);
+> +
+> +	led_bl_power_off(priv);
+> +	for (i = 0; i < priv->nb_leds; i++)
+> +		led_sysfs_enable(priv->leds[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id led_bl_of_match[] = {
+> +	{ .compatible = "led-backlight" },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
+> +
+> +static struct platform_driver led_bl_driver = {
+> +	.driver		= {
+> +		.name		= "led-backlight",
+> +		.of_match_table	= of_match_ptr(led_bl_of_match),
+> +	},
+> +	.probe		= led_bl_probe,
+> +	.remove		= led_bl_remove,
+> +};
+> +
+> +module_platform_driver(led_bl_driver);
+> +
+> +MODULE_DESCRIPTION("LED based Backlight Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:led-backlight");
+> -- 
+> 2.11.0
 
-Well, you might be right that there might be better heuristics than the
-existing watermark based one. After all nobody can predict the future.
-The existing heuristic aims at providing min_free_kbytes of free memory
-as much as possible and that tends to work reasonably well for a large
-set of workloads.
 
-> If there are outstanding failed allocations that won't go away, then it's
-> perfectly reasonable to keep kswapd running until it frees pages up to the high
-> watermark. But beyond that is unnecessary, since there's no way to know if or
-> when kswapd will need to fire up again. This makes sense considering how kswapd
-> is currently invoked: it's fired up due to a failed allocation of some sort, not
-> because the amount of free memory dropped below the high watermark.
-
-Very broadly speaking (sorry if I am stating obvious here), the kswapd
-is woken up when the allocator hits low watermark or the reguested high
-order pages are depleted. Then allocator enters its slow path. That
-means that the background reclaim then aims at reclaiming the high-low
-watermark gap or invokes compaction to keep the balance. It takes to
-consume that gap to wake the kswapd again for order-0 (most common)
-requests. So this is usually not about a single allocation to trigger
-the background reclaim and counting failures on low watermark attempts
-is unlikely to work with the current code as you suggested.
--- 
-Michal Hocko
-SUSE Labs
