@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C9FC11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF8AC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B160D20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEC9220801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:22:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgBTXWW (ORCPT
+        id S1729376AbgBTXWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:22:22 -0500
+        Thu, 20 Feb 2020 18:22:25 -0500
 Received: from mga06.intel.com ([134.134.136.31]:29032 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbgBTXWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:22:21 -0500
+        id S1729330AbgBTXWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:22:22 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 15:22:20 -0800
 X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
-   d="scan'208";a="225026469"
+   d="scan'208";a="225026470"
 Received: from jbrandeb-desk.jf.intel.com ([10.166.244.152])
   by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 15:22:20 -0800
 From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
@@ -33,10 +33,12 @@ Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>, x86@kernel.org,
         linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
         andriy.shevchenko@intel.com, dan.j.williams@intel.com,
         peterz@infradead.org
-Subject: [PATCH v3 1/2] x86: fix bitops.h warning with a moved cast
-Date:   Thu, 20 Feb 2020 15:21:54 -0800
-Message-Id: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
+Subject: [PATCH v3 2/2] lib: make a test module with set/clear bit
+Date:   Thu, 20 Feb 2020 15:21:55 -0800
+Message-Id: <20200220232155.2123827-2-jesse.brandeburg@intel.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
+References: <20200220232155.2123827-1-jesse.brandeburg@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -44,68 +46,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix many sparse warnings when building with C=1.
+Test some bit clears/sets to make sure assembly doesn't change, and
+that the set_bit and clear_bit functions work and don't cause sparse
+warnings.
 
-When the kernel is compiled with C=1, there are lots of messages like:
-  arch/x86/include/asm/bitops.h:77:37: warning: cast truncates bits from constant value (ffffff7f becomes 7f)
+Instruct Kbuild to build this file with extra warning level -Wextra,
+to catch new issues, and also doesn't hurt to build with C=1.
 
-CONST_MASK() is using a signed integer "1" to create the mask which
-is later cast to (u8) when used. Move the cast to the definition and
-clean up the calling sites to prevent sparse from warning.
+This was used to test changes to arch/x86/include/asm/bitops.h.
 
-The reason the warning was occurring is because certain bitmasks that
-end with a mask next to a natural boundary like 7, 15, 23, 31, end up
-with a mask like 0x7f, which then results in sign extension when doing
-an invert (but I'm not a compiler expert). It was really only
-"clear_bit" that was having problems, and it was only on bit checks next
-to a byte boundary (top bit).
+In particular, sparse (C=1) was very concerned when the last bit
+before a natural boundary, like 7, or 31, was being tested, as this
+causes sign extension (0xffffff7f) for instance when clearing bit 7.
 
-Verified with a test module (see next patch) and assembly inspection
-that the patch doesn't introduce any change in generated code.
+Recommended usage:
+make defconfig
+scripts/config -m CONFIG_TEST_BITOPS
+make modules_prepare
+make C=1 W=1 lib/test_bitops.ko
+objdump -S -d lib/test_bitops.ko
 
 Signed-off-by: Jesse Brandeburg <jesse.brandeburg@intel.com>
----
-v3: Clean up
-the header file changes as per peterz.
 
-v2: use correct CC: list
 ---
- arch/x86/include/asm/bitops.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+v3: update the test to fail if bits aren't cleared, and make the
+test reproduce the original issue without patch 1/2, showing that
+the issue is fixed in patch 1/2. Thanks PeterZ!
+v2: correct CC: list
+---
+ lib/Kconfig.debug                  | 13 +++++++
+ lib/Makefile                       |  2 ++
+ lib/test_bitops.c                  | 55 ++++++++++++++++++++++++++++++
+ tools/testing/selftests/lib/config |  1 +
+ 4 files changed, 71 insertions(+)
+ create mode 100644 lib/test_bitops.c
 
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 062cdecb2f24..96ef19dcbde6 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -46,7 +46,7 @@
-  * a mask operation on a byte.
-  */
- #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr)>>3))
--#define CONST_MASK(nr)			(1 << ((nr) & 7))
-+#define CONST_MASK(nr)			((u8)1 << ((nr) & 7))
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 69def4a9df00..61a5d00ea064 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1947,6 +1947,19 @@ config TEST_LKM
  
- static __always_inline void
- arch_set_bit(long nr, volatile unsigned long *addr)
-@@ -54,7 +54,7 @@ arch_set_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" ((u8)CONST_MASK(nr))
-+			: "iq" (CONST_MASK(nr))
- 			: "memory");
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(bts) " %1,%0"
-@@ -74,7 +74,7 @@ arch_clear_bit(long nr, volatile unsigned long *addr)
- 	if (__builtin_constant_p(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
--			: "iq" ((u8)~CONST_MASK(nr)));
-+			: "iq" (0xff ^ CONST_MASK(nr)));
- 	} else {
- 		asm volatile(LOCK_PREFIX __ASM_SIZE(btr) " %1,%0"
- 			: : RLONG_ADDR(addr), "Ir" (nr) : "memory");
-
-base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+ 	  If unsure, say N.
+ 
++config TEST_BITOPS
++	tristate "Test module for compilation of clear_bit/set_bit operations"
++	depends on m
++	help
++	  This builds the "test_bitops" module that is much like the
++	  TEST_LKM module except that it does a basic exercise of the
++	  clear_bit and set_bit macros to make sure there are no compiler
++	  warnings from C=1 sparse checker or -Wextra compilations. It has
++	  no dependencies and doesn't run or load unless explicitly requested
++	  by name.  for example: modprobe test_bitops.
++
++	  If unsure, say N.
++
+ config TEST_VMALLOC
+ 	tristate "Test module for stress/performance analysis of vmalloc allocator"
+ 	default n
+diff --git a/lib/Makefile b/lib/Makefile
+index 611872c06926..b18db565b355 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -89,6 +89,8 @@ obj-$(CONFIG_TEST_OBJAGG) += test_objagg.o
+ obj-$(CONFIG_TEST_STACKINIT) += test_stackinit.o
+ obj-$(CONFIG_TEST_BLACKHOLE_DEV) += test_blackhole_dev.o
+ obj-$(CONFIG_TEST_MEMINIT) += test_meminit.o
++obj-$(CONFIG_TEST_BITOPS) += test_bitops.o
++CFLAGS_test_bitops.o += -Werror
+ 
+ obj-$(CONFIG_TEST_LIVEPATCH) += livepatch/
+ 
+diff --git a/lib/test_bitops.c b/lib/test_bitops.c
+new file mode 100644
+index 000000000000..97339d6455b0
+--- /dev/null
++++ b/lib/test_bitops.c
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/printk.h>
++
++/* a tiny module only meant to compile-test set/clear_bit */
++
++/* use an enum because thats the most common BITMAP usage */
++enum bitops_fun {
++	BITOPS_4 = 4,
++	BITOPS_7 = 7,
++	BITOPS_11 = 11,
++	BITOPS_31 = 31,
++	BITOPS_88 = 88,
++	BITOPS_LAST = 255
++};
++
++static DECLARE_BITMAP(g_bitmap, BITOPS_LAST);
++
++static int __init test_bitops_startup(void)
++{
++	pr_warn("Loaded test module\n");
++	set_bit(BITOPS_4, g_bitmap);
++	set_bit(BITOPS_7, g_bitmap);
++	set_bit(BITOPS_11, g_bitmap);
++	set_bit(BITOPS_31, g_bitmap);
++	set_bit(BITOPS_88, g_bitmap);
++	return 0;
++}
++
++static void __exit test_bitops_unstartup(void)
++{
++	int bit_set;
++
++	clear_bit(BITOPS_4, g_bitmap);
++	clear_bit(BITOPS_7, g_bitmap);
++	clear_bit(BITOPS_11, g_bitmap);
++	clear_bit(BITOPS_31, g_bitmap);
++	clear_bit(BITOPS_88, g_bitmap);
++
++	bit_set = find_first_bit(g_bitmap, BITOPS_LAST);
++	if (bit_set != BITOPS_LAST)
++		pr_err("ERROR: FOUND SET BIT %d\n", bit_set);
++
++	pr_warn("Unloaded test module\n");
++}
++
++module_init(test_bitops_startup);
++module_exit(test_bitops_unstartup);
++
++MODULE_AUTHOR("Jesse Brandeburg <jesse.brandeburg@intel.com>");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Bit testing module");
+diff --git a/tools/testing/selftests/lib/config b/tools/testing/selftests/lib/config
+index 14a77ea4a8da..b80ee3f6e265 100644
+--- a/tools/testing/selftests/lib/config
++++ b/tools/testing/selftests/lib/config
+@@ -2,3 +2,4 @@ CONFIG_TEST_PRINTF=m
+ CONFIG_TEST_BITMAP=m
+ CONFIG_PRIME_NUMBERS=m
+ CONFIG_TEST_STRSCPY=m
++CONFIG_TEST_BITOPS=m
 -- 
 2.24.1
 
