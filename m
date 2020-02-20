@@ -2,236 +2,95 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 819EEC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F9FC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5ED20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 698E220722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:10:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="qe7hPOoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbgBTUJf (ORCPT
+        id S1729008AbgBTUKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:09:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:43871 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729058AbgBTUJU (ORCPT
+        Thu, 20 Feb 2020 15:10:40 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41566 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbgBTUKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:09:20 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j4s8H-0006hT-TJ; Thu, 20 Feb 2020 21:09:14 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8653C1C20C5;
-        Thu, 20 Feb 2020 21:09:13 +0100 (CET)
-Date:   Thu, 20 Feb 2020 20:09:13 -0000
-From:   "tip-bot2 for Morten Rasmussen" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/fair: Add asymmetric CPU capacity wakeup scan
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Quentin Perret <qperret@google.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200206191957.12325-2-valentin.schneider@arm.com>
-References: <20200206191957.12325-2-valentin.schneider@arm.com>
+        Thu, 20 Feb 2020 15:10:40 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so2446678pfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:10:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=2w+R3Z75BVcBJL4mHaaewYE8ej5x4YeGxTQpsg56oM0=;
+        b=qe7hPOoCCTMNdxtIg3f5Pg5ViViUneZC/ftBiK39R+KVP0JYxDL98CFA0YNadsMx/O
+         GGsjFOFhKwL8Dvxs5SCZQpNJ5gOJIPlgouPjCxdNRQp+s+RFDuDAXO9/krV4g++BYW9e
+         jUYlrUfhlkzvoQAw7wlqGZRWjNjf/75L6hTA0vG08+8mrmHo7+JtHFFfm6y8viK6NmHD
+         CBxpa3ASk5oqLVuxb3mJTy+0cOGMBm5lzDsJXgAYiWGZRC68iYsB0jRPc6DmaRBZNVzu
+         f3Lph20DUJ5Xf4OOvB2aB9VxfUVK8VMWveuVv4tTteDBeKfIqKl2E8naXchVBmNTXEc9
+         fV1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2w+R3Z75BVcBJL4mHaaewYE8ej5x4YeGxTQpsg56oM0=;
+        b=ALpXbZxSs91JodwHQC04EUdEadfnZAJk3eMFVWsJyNuBLC86Do1gBv8EjiKZUEwSS/
+         +1pttlS8pFTo9RpccaR8xqP2fPHiJbEuSX4hGjJFggPaSAB1X6VLyCqXCOfwwtu7wgok
+         3zkagWzS77CQJeySYu39Yjw5NTRbt8hffdn5nD7liVBB51tLRAT8B3SfbSUjHJLB9Fyq
+         JYn5OoFl6pozVyfUvXkcoKaZ1G+wG/fUkdd8VU7pjvtZtnVA/uhm1b+jNH8CdvFyBUxP
+         Fg3+okBLfNmpGzR0QcOs06azDVXzs4FjAWBukVygpcInukSED0H3fRB/0BTxBfzcfDE6
+         JxlQ==
+X-Gm-Message-State: APjAAAXS1QGP2F5JXU5WJpvKiGsOfRpIuPfjONCXOYvM+tgi9XbKn373
+        IJP1rIznTZkoM8N/198VRHCryt5E2O6Gmcwo
+X-Google-Smtp-Source: APXvYqzHNbmO1s9R3NGefmrkNGHZZe0xixDdrQKTauLTfQfkXcLz68TcQ+ehcG7N+NwoOzOY7LsmHg==
+X-Received: by 2002:a62:6d01:: with SMTP id i1mr32854344pfc.94.1582229439310;
+        Thu, 20 Feb 2020 12:10:39 -0800 (PST)
+Received: from kaaira-HP-Pavilion-Notebook ([103.37.201.175])
+        by smtp.gmail.com with ESMTPSA id l1sm262100pjb.28.2020.02.20.12.10.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Feb 2020 12:10:38 -0800 (PST)
+Date:   Fri, 21 Feb 2020 01:40:33 +0530
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: octeon: match parentheses alignment
+Message-ID: <20200220201033.GA14855@kaaira-HP-Pavilion-Notebook>
 MIME-Version: 1.0
-Message-ID: <158222935329.13786.16711123258402589223.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+match the next line with open parentheses by giving appropriate tabs.
 
-Commit-ID:     b7a331615d254191e7f5f0e35aec9adcd6acdc54
-Gitweb:        https://git.kernel.org/tip/b7a331615d254191e7f5f0e35aec9adcd6acdc54
-Author:        Morten Rasmussen <morten.rasmussen@arm.com>
-AuthorDate:    Thu, 06 Feb 2020 19:19:54 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 20 Feb 2020 21:03:14 +01:00
-
-sched/fair: Add asymmetric CPU capacity wakeup scan
-
-Issue
-=====
-
-On asymmetric CPU capacity topologies, we currently rely on wake_cap() to
-drive select_task_rq_fair() towards either:
-
-- its slow-path (find_idlest_cpu()) if either the previous or
-  current (waking) CPU has too little capacity for the waking task
-- its fast-path (select_idle_sibling()) otherwise
-
-Commit:
-
-  3273163c6775 ("sched/fair: Let asymmetric CPU configurations balance at wake-up")
-
-points out that this relies on the assumption that "[...]the CPU capacities
-within an SD_SHARE_PKG_RESOURCES domain (sd_llc) are homogeneous".
-
-This assumption no longer holds on newer generations of big.LITTLE
-systems (DynamIQ), which can accommodate CPUs of different compute capacity
-within a single LLC domain. To hopefully paint a better picture, a regular
-big.LITTLE topology would look like this:
-
-  +---------+ +---------+
-  |   L2    | |   L2    |
-  +----+----+ +----+----+
-  |CPU0|CPU1| |CPU2|CPU3|
-  +----+----+ +----+----+
-      ^^^         ^^^
-    LITTLEs      bigs
-
-which would result in the following scheduler topology:
-
-  DIE [         ] <- sd_asym_cpucapacity
-  MC  [   ] [   ] <- sd_llc
-       0 1   2 3
-
-Conversely, a DynamIQ topology could look like:
-
-  +-------------------+
-  |        L3         |
-  +----+----+----+----+
-  | L2 | L2 | L2 | L2 |
-  +----+----+----+----+
-  |CPU0|CPU1|CPU2|CPU3|
-  +----+----+----+----+
-     ^^^^^     ^^^^^
-    LITTLEs    bigs
-
-which would result in the following scheduler topology:
-
-  MC [       ] <- sd_llc, sd_asym_cpucapacity
-      0 1 2 3
-
-What this means is that, on DynamIQ systems, we could pass the wake_cap()
-test (IOW presume the waking task fits on the CPU capacities of some LLC
-domain), thus go through select_idle_sibling().
-This function operates on an LLC domain, which here spans both bigs and
-LITTLEs, so it could very well pick a CPU of too small capacity for the
-task, despite there being fitting idle CPUs - it very much depends on the
-CPU iteration order, on which we have absolutely no guarantees
-capacity-wise.
-
-Implementation
-==============
-
-Introduce yet another select_idle_sibling() helper function that takes CPU
-capacity into account. The policy is to pick the first idle CPU which is
-big enough for the task (task_util * margin < cpu_capacity). If no
-idle CPU is big enough, we pick the idle one with the highest capacity.
-
-Unlike other select_idle_sibling() helpers, this one operates on the
-sd_asym_cpucapacity sched_domain pointer, which is guaranteed to span all
-known CPU capacities in the system. As such, this will work for both
-"legacy" big.LITTLE (LITTLEs & bigs split at MC, joined at DIE) and for
-newer DynamIQ systems (e.g. LITTLEs and bigs in the same MC domain).
-
-Note that this limits the scope of select_idle_sibling() to
-select_idle_capacity() for asymmetric CPU capacity systems - the LLC domain
-will not be scanned, and no further heuristic will be applied.
-
-Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Quentin Perret <qperret@google.com>
-Link: https://lkml.kernel.org/r/20200206191957.12325-2-valentin.schneider@arm.com
-
+Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
 ---
- kernel/sched/fair.c | 56 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 56 insertions(+)
+ drivers/staging/octeon/octeon-stubs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1a0ce83..6fb47a2 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5897,6 +5897,40 @@ static int select_idle_cpu(struct task_struct *p, struct sched_domain *sd, int t
- }
+diff --git a/drivers/staging/octeon/octeon-stubs.h b/drivers/staging/octeon/octeon-stubs.h
+index ea33c94fa12b..d06743504f2b 100644
+--- a/drivers/staging/octeon/octeon-stubs.h
++++ b/drivers/staging/octeon/octeon-stubs.h
+@@ -1345,7 +1345,7 @@ static inline void cvmx_pow_work_request_async_nocheck(int scr_addr,
+ { }
  
- /*
-+ * Scan the asym_capacity domain for idle CPUs; pick the first idle one on which
-+ * the task fits. If no CPU is big enough, but there are idle ones, try to
-+ * maximize capacity.
-+ */
-+static int
-+select_idle_capacity(struct task_struct *p, struct sched_domain *sd, int target)
-+{
-+	unsigned long best_cap = 0;
-+	int cpu, best_cpu = -1;
-+	struct cpumask *cpus;
-+
-+	sync_entity_load_avg(&p->se);
-+
-+	cpus = this_cpu_cpumask_var_ptr(select_idle_mask);
-+	cpumask_and(cpus, sched_domain_span(sd), p->cpus_ptr);
-+
-+	for_each_cpu_wrap(cpu, cpus, target) {
-+		unsigned long cpu_cap = capacity_of(cpu);
-+
-+		if (!available_idle_cpu(cpu) && !sched_idle_cpu(cpu))
-+			continue;
-+		if (task_fits_capacity(p, cpu_cap))
-+			return cpu;
-+
-+		if (cpu_cap > best_cap) {
-+			best_cap = cpu_cap;
-+			best_cpu = cpu;
-+		}
-+	}
-+
-+	return best_cpu;
-+}
-+
-+/*
-  * Try and locate an idle core/thread in the LLC cache domain.
-  */
- static int select_idle_sibling(struct task_struct *p, int prev, int target)
-@@ -5904,6 +5938,28 @@ static int select_idle_sibling(struct task_struct *p, int prev, int target)
- 	struct sched_domain *sd;
- 	int i, recent_used_cpu;
+ static inline void cvmx_pow_work_request_async(int scr_addr,
+-						       cvmx_pow_wait_t wait)
++					       cvmx_pow_wait_t wait)
+ { }
  
-+	/*
-+	 * For asymmetric CPU capacity systems, our domain of interest is
-+	 * sd_asym_cpucapacity rather than sd_llc.
-+	 */
-+	if (static_branch_unlikely(&sched_asym_cpucapacity)) {
-+		sd = rcu_dereference(per_cpu(sd_asym_cpucapacity, target));
-+		/*
-+		 * On an asymmetric CPU capacity system where an exclusive
-+		 * cpuset defines a symmetric island (i.e. one unique
-+		 * capacity_orig value through the cpuset), the key will be set
-+		 * but the CPUs within that cpuset will not have a domain with
-+		 * SD_ASYM_CPUCAPACITY. These should follow the usual symmetric
-+		 * capacity path.
-+		 */
-+		if (!sd)
-+			goto symmetric;
-+
-+		i = select_idle_capacity(p, sd, target);
-+		return ((unsigned)i < nr_cpumask_bits) ? i : target;
-+	}
-+
-+symmetric:
- 	if (available_idle_cpu(target) || sched_idle_cpu(target))
- 		return target;
- 
+ static inline struct cvmx_wqe *cvmx_pow_work_response_async(int scr_addr)
+-- 
+2.17.1
+
