@@ -2,149 +2,90 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491F8C11D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298A6C11D01
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E03A24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75DB24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ijPjguYP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+cnH/SE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgBTGAs (ORCPT
+        id S1726550AbgBTGCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:00:48 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:55158 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgBTGAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:00:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=GGaI48ID+RANcSnbSgDavldeijLO9g3YzgPX5PpG8fI=; b=ijPjguYP7Zt3epKkXf4L+PGD+o
-        c+7c8P7oEmieCGXVUeVhZ101mqBnhqONhJq77kzfHl8hPbqjKpo8xLDgv4o5TGAq69fdqMT2s9ngz
-        W09rbd2kuPFK4ID32zV4qssJsccAQbsrg0mY64zEXMykYKf5nYgxRwT3hKFCbaODPYak=;
-Received: from [77.247.85.102] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j4et8-0002hm-8L; Thu, 20 Feb 2020 07:00:42 +0100
-Received: from andi by localhost with local (Exim 4.92)
-        (envelope-from <andreas@kemnade.info>)
-        id 1j4et6-0006jD-Nf; Thu, 20 Feb 2020 07:00:40 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>,
-        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH RFC] Bindings: nvmem: add bindings for JZ4780 efuse
-Date:   Thu, 20 Feb 2020 07:00:01 +0100
-Message-Id: <20200220060001.25807-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
-References: <CFE9AEF5-FFF9-44A9-90D8-DE6AC7E7DD4F@goldelico.com>
+        Thu, 20 Feb 2020 01:02:00 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44256 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBTGB7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 01:01:59 -0500
+Received: by mail-qt1-f196.google.com with SMTP id j23so2083165qtr.11;
+        Wed, 19 Feb 2020 22:01:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l1SAZDOfe5Y7UwUxWdEtrikDtP05tBKBkNevXDa5dmY=;
+        b=J+cnH/SERbHxksupMLfhAYoV7wgUA9KhEu3/k3sFwHlLgjzOd1FuAakTj7f+iJbJPg
+         ko01mzlYYf1Az04dqGNAYSKQt1wSZjq7t6kNviTj9QFec/DFbHxasFe2jzpspK2MXoXf
+         N1OHy1wBX7xyJA5VPxW3tUzNHHaTMI/VzwBxMfHAsQMnuH6a1IAlqUsdWS+kIaO1Wo9B
+         IV/Rmz0jetFxsUguYzYKM1mdzw5FTllDnizu85aO8bz3vFoPkHu5lRYJPKMxblPK0j1n
+         Y0FQD23GXf9S/8YqS1bRBeX0j70f/iUXapdLdj6FFchIg4prGqVoNFH6KC8WIy2h3Du7
+         H7Yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l1SAZDOfe5Y7UwUxWdEtrikDtP05tBKBkNevXDa5dmY=;
+        b=jVTdJXD31/X/UuaEdKXl1zkAklwZCkQocrwhg4Uj5KetTr4f6RcHwqi+bsBV6vq7Tp
+         3OSNDPCs5jDZNMuuQ6TPDHM8W3co0mtpYaZqPSMa+fPVnMivtO+qBfQC8UBr6SwrKc+D
+         yofzdSOs2vjFXP5s3zRkM+AU0CVxq3wlfMikPQ/zqVfPWJqCKOLBbMC3j7V4ghKuiNBp
+         dkAnXwUAbROYoLKIk7GwDmVrBwkbZdpcI8LdmTbJYOwDW7qCvln3n3P7Pqb5C7K97myw
+         Yz2FPHwE2S1obk77PTRaGFo6tWb2X7bBD4xDgM/O6ZyioeUYVnem2KdbK9QRNnTjcvXJ
+         hdGQ==
+X-Gm-Message-State: APjAAAVvDZcOSDIo3XAKhGzmIxBxKRwy1lzRJRLTD3AJ2jzeRi0wuBs5
+        ONkCoNw/4I+lvhGKzRAbHyweerCGmKcoCuf0YyM=
+X-Google-Smtp-Source: APXvYqy6qf9+0eM7IX9ftMMLUdcktph+/PL3yFpp5ozDn2XA2+ON0JFSKqzCw2XTxtKLMjy3xmEHq/EC446Vk9XjVn8=
+X-Received: by 2002:aed:2202:: with SMTP id n2mr26124272qtc.4.1582178517204;
+ Wed, 19 Feb 2020 22:01:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200220144408.359a7e02@canb.auug.org.au> <dba0c486-46e9-0b96-bd71-b9e81b362c85@infradead.org>
+In-Reply-To: <dba0c486-46e9-0b96-bd71-b9e81b362c85@infradead.org>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 20 Feb 2020 14:01:45 +0800
+Message-ID: <CADBw62q08iYfm+g2y5GBUH74-TwTGRzforbuyZ_tTZQ6RQ9fzA@mail.gmail.com>
+Subject: Re: linux-next: Tree for Feb 20 (mmc/mmc_hsq.c)
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+Hi Randy,
 
-This patch brings support for the JZ4780 efuse. Currently it only expose
-a read only access to the entire 8K bits efuse memory.
+On Thu, Feb 20, 2020 at 1:55 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 2/19/20 7:44 PM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > Changes since 20200219:
+> >
+>
+> on i386:
+>
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o
 
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-[converted to yaml]
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-I will not update/maintain this, just have the impression that here some
-more work is needed to make somebody comfortable with yaml than stick
-to the usual pointing to documentation and I have not the ingredients 
-for doing
-cat  Antihistamines >/dev/brain ;-)
-and I do not want to see the other patches get lost.
-
- .../bindings/nvmem/ingenic,jz4780-efuse.yaml  | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-
-diff --git a/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-new file mode 100644
-index 000000000000..ad56c17b0bd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/ingenic,jz4780-efuse.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/ingenic,jz4780-efuse.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ingenic JZ EFUSE driver bindings
-+
-+maintainers:
-+  - tbd <tbd@tbd>
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ingenic,jz4780-efuse
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    # Handle for the ahb for the efuse.
-+    maxItems: 1
-+
-+  clock-names:
-+   items:
-+     - const:  bus_clk
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock
-+  - clock-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/jz4780-cgu.h>
-+
-+    efuse@134100d0 {
-+        compatible = "ingenic,jz4780-efuse";
-+        reg = <0x134100d0 0x2c>;
-+
-+        clocks = <&cgu JZ4780_CLK_AHB2>;
-+        clock-names = "bus_clk";
-+    };
-+
-+...
--- 
-2.20.1
-
+I've already sent out a patch to fix the warning, can you try it?
+Sorry for troubles.
+https://lore.kernel.org/patchwork/patch/1196938/
