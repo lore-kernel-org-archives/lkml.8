@@ -2,168 +2,186 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DEF2C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8880DC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17D5D208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548F0208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3Ip14znY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ziQRes5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbgBTPzG (ORCPT
+        id S1728574AbgBTP4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:55:06 -0500
-Received: from mail-dm6nam12on2070.outbound.protection.outlook.com ([40.107.243.70]:17376
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728380AbgBTPzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:55:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lkuf0Scj8/zgBrgdSd6DupjmmvGIqswvGBmCsAieZdiAlHrdrtWg40UNsqApn9BkWok8cXxk5oP5g4hW7/z81Nfq1k1zBhTNAjRAPts4lHD1VK4HvUTVgnHpIDhZQQZmEOLT8SNovlm3Y5N5/Fzr5/Yk9JiEOA+CkNBVpS22aWhdcYntUR6aObiT7NFiTRjeoOcywCpOzV7SJ+C7y1PcIeFRR32F5ci7wbd06HOx3b6sVmZ1+/qgIUONdmE/GObxpKpxZ0fg9eZPzOOsddsUvMJlczEETP4Kg/V7G1E/jfZ0ZLmke+mSfPvGwtSaIvFxSxN3fBVxLy/FRLrblkZJVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M4LCJ0+kopJZqsANSh6OFKcPJieqrrhYWMAlSe3J+40=;
- b=XAuy+FE4+/i0wcqJ5gugbn1Q7X22RavxnR5TgmG5NlH5ZyubVX77l09QsJK1At5l/eDbiq0gjwWQDL+n2eYjofZLW9evJTXX3J0+lCpnedbpskHChxonNDeQJ6ygXYPXJ6Mv68UTtyearbeBYEgFomlwIeSNUMegAZlc72O/EeYGVyyKbi+1ivcYl40S4/h9rLZCJb6hbsXaaWMWIhWbVZB5Li7YTMmGYCflTSzjErzeQGU1xvKVofzUXjCkaoHGiZ9CP+7SgYXo3ts+MzFyOqqZ8XUdkfv9ds2m1kAEtHlV3wLq3lof8Tyob+3ISwMwn4ACHftpiskOx9vzd3DFWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 20 Feb 2020 10:56:01 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42912 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728428AbgBTP4B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:56:01 -0500
+Received: by mail-pl1-f194.google.com with SMTP id e8so1701572plt.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:56:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M4LCJ0+kopJZqsANSh6OFKcPJieqrrhYWMAlSe3J+40=;
- b=3Ip14znYWKgtKkxzp+D4nE5Uss3eEoXcGLV+Vx4ykcYpfa/GqwtTyZSHBsneqQXEjkIwy/At8wYV9E8EE8ZsfdrfgCvG3h4N1hf5FaeHPWzXIB5boSrzjIRNpuEa6jmjbgJrAndE7k+FiT4HcMKZW3DqHvyW2W+WBOv4Cmi7Xtk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com (10.175.59.139) by
- CY4PR12MB1287.namprd12.prod.outlook.com (10.168.168.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Thu, 20 Feb 2020 15:55:03 +0000
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4]) by CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4%12]) with mapi id 15.20.2729.032; Thu, 20 Feb
- 2020 15:55:03 +0000
-Cc:     brijesh.singh@amd.com, Ashish Kalra <ashish.kalra@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, x86@kernel.org,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
- status is changed
-To:     Andy Lutomirski <luto@amacapital.net>,
-        Steve Rutherford <srutherford@google.com>
-References: <CABayD+ch3XBvJgJc+uoF6JSP0qZGq2zKHN-hTc0Vode-pi80KA@mail.gmail.com>
- <52450536-AF7B-4206-8F05-CF387A216031@amacapital.net>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <3de6e962-3277-ddbd-8c78-eaf754973928@amd.com>
-Date:   Thu, 20 Feb 2020 09:54:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <52450536-AF7B-4206-8F05-CF387A216031@amacapital.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: HK2P15301CA0007.APCP153.PROD.OUTLOOK.COM
- (2603:1096:202:1::17) To CY4PR12MB1926.namprd12.prod.outlook.com
- (2603:10b6:903:11b::11)
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dPLlvkm9LDItGatWM8z0zqMFKuHSP92PMk+ALHwse6g=;
+        b=ziQRes5Wn8emIACRiQKqwWQd7p+hOvkb67mJ6Bz09tTlUTSaeOt6azfgjJBuzGxsVx
+         XrkSwyDlksNCs4l+mjPgIhrQI8wQC4jCoSmlcxefVgwinDvD0GV9iPu37Uu7FGHLQ3d8
+         9rHCoKTuh7/OZJDwUonf8aJhm2Y3qa+mlLgX9bXWUEjQd59BjeeskxAHjtohAuDX7juC
+         JukbhoovrJ+3s2YDXq6GdAt0p9A5JpVvweXA0i0ZlTYRg6alPWV0V+1v8VjHqAfXhjkA
+         mtizN6+hPmJOZP9fOQst8tsBOv5XiYOlVjbdL2EhtNBHAho8BnWSbJiEQA/OVpugM2+9
+         Helw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dPLlvkm9LDItGatWM8z0zqMFKuHSP92PMk+ALHwse6g=;
+        b=Kc5d4F9dAFkx9ZDE0JWeEaIxUTSCLN0vF4X9PXUL566BSwQFvxKGZnFJ/O3oHemhyP
+         nh170lpF2NIS8hovI0HP21rUNDW33uT4Ll0xNwOHZYPEUugWTkt7DO6tu95Vuk5BrBlp
+         vuZNS/OehF2dP2mkjuax/QWxoX3/y7G3/89gB9QUP5XTbECyZ0nOsxygEInsviNCxnUN
+         Jk7wZ+6joNFcs4mxTk1Vy4LJaafMYLLt/QCPb/VZQtSn1fFg0VEajy3aL3fo2xsVt3Vt
+         yncFPe36p1QV4fcjZgcvsJzzuex6EZTOPrqK1WYzIAicKpIEBI9aQ46PDIIHY2mpYaBv
+         C9RQ==
+X-Gm-Message-State: APjAAAWfGbgfzj09zyNnFsVEsOgUzVTcpi2RoIJ0IJMegoT7PauuP3j6
+        urk7JmLcuXZ4SUw/NKjG5Ld3ZB2Z07k=
+X-Google-Smtp-Source: APXvYqzQg5xdhcudupIotNjSrqXf+6W08xrzP5NVdRO6Vhdy1jTtk44EddZdLaITBvHl0445gSYhzA==
+X-Received: by 2002:a17:902:528:: with SMTP id 37mr32621886plf.322.1582214159735;
+        Thu, 20 Feb 2020 07:55:59 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id q6sm19046pfh.127.2020.02.20.07.55.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 07:55:59 -0800 (PST)
+Date:   Thu, 20 Feb 2020 07:55:03 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/6] driver core: Fix
+ driver_deferred_probe_check_state() logic
+Message-ID: <20200220155503.GD955802@ripper>
+References: <20200220050440.45878-1-john.stultz@linaro.org>
+ <20200220050440.45878-2-john.stultz@linaro.org>
 MIME-Version: 1.0
-Received: from [10.236.31.95] (165.204.77.1) by HK2P15301CA0007.APCP153.PROD.OUTLOOK.COM (2603:1096:202:1::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.3 via Frontend Transport; Thu, 20 Feb 2020 15:54:55 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 647ab5e7-40c8-4573-3c17-08d7b61d3f9a
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1287:|CY4PR12MB1287:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB12873136E1B4504E2B4E6B9CE5130@CY4PR12MB1287.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 031996B7EF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(366004)(396003)(136003)(346002)(199004)(189003)(6666004)(2616005)(956004)(66946007)(316002)(52116002)(44832011)(110136005)(66556008)(186003)(16526019)(54906003)(16576012)(66476007)(5660300002)(36756003)(81166006)(4326008)(31696002)(81156014)(8676002)(53546011)(8936002)(86362001)(26005)(6486002)(478600001)(7416002)(2906002)(31686004);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1287;H:CY4PR12MB1926.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uYOSg7o4CMN6Nbkrgp0NhYy/FV3dhFw+c6wfgwB09Xq0nq4adkfvDRpAVWCJK5Ne+52sfkhTZfDatS3Qv1H3PpQ5syhmHtXwxBRyQHMYDGVWix/rIzZX/SIn0Ykp6GYLA+j6NWmaJwOjoSs5ZdABWCQm7tguFN5LPsdty1HSjZgSuXsd0cuLHQ9CrKtK6deOd8x6leZKn7q6iu3soFIYjbMuNPdW0TJ2fKeWVHaJs/ePUPq+vDc/1oW3j7jP5gJkj22Qakrv/BEakIVYik2efd2x4h6aEM75l7F9BKcdP9vHstz6dUYtW+GNhBA8RZhHOJeVmVP9nOdF56pd6YEDFj5qDD/SRCbPpkq49acsOQrpOeLplzVOilAtO2PNAldFHOO0MXTxHv+YhV3SgzsB/M5Uyhd6I+iVqBVfdduRCmpNdBmpBIZ7dqrlgFcnRp2g
-X-MS-Exchange-AntiSpam-MessageData: 2hYHOEiZov91jEC1cTnRCwgfEncYDyScIBqvR0DEGZijHIKFL6qnStMasPS2b1+Hq1Ls2uSKT+ncKw938jUOG8uHbHRhQyJEgjnodpK1paxS6gab17FhFtDmLTEny42Gqr9GAs2IyYlPMUgZyvKaLg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 647ab5e7-40c8-4573-3c17-08d7b61d3f9a
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 15:55:03.6542
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gN8F6P55bHuULcr6qL8JzlD6m9bjdMoAD8z0tWHIBRjvCqZOoux/Vjjx+KOrSx2eIzCJXq5+AH65uCGTlwrcyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1287
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220050440.45878-2-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 19 Feb 21:04 PST 2020, John Stultz wrote:
 
-
-On 2/19/20 8:12 PM, Andy Lutomirski wrote:
+> driver_deferred_probe_check_state() has some uninituitive behavior.
 > 
+> * From boot to late_initcall, it returns -EPROBE_DEFER
 > 
->> On Feb 19, 2020, at 5:58 PM, Steve Rutherford <srutherford@google.com> wrote:
->>
->> ﻿On Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
->>>
->>> From: Brijesh Singh <brijesh.singh@amd.com>
->>>
->>> Invoke a hypercall when a memory region is changed from encrypted ->
->>> decrypted and vice versa. Hypervisor need to know the page encryption
->>> status during the guest migration.
->>
->> One messy aspect, which I think is fine in practice, is that this
->> presumes that pages are either treated as encrypted or decrypted. If
->> also done on SEV, the in-place re-encryption supported by SME would
->> break SEV migration. Linux doesn't do this now on SEV, and I don't
->> have an intuition for why Linux might want this, but we will need to
->> ensure it is never done in order to ensure that migration works down
->> the line. I don't believe the AMD manual promises this will work
->> anyway.
->>
->> Something feels a bit wasteful about having all future kernels
->> universally announce c-bit status when SEV is enabled, even if KVM
->> isn't listening, since it may be too old (or just not want to know).
->> Might be worth eliding the hypercalls if you get ENOSYS back? There
->> might be a better way of passing paravirt config metadata across than
->> just trying and seeing if the hypercall succeeds, but I'm not super
->> familiar with it.
+> * From late_initcall to the deferred_probe_timeout (if set)
+>   it returns -ENODEV
 > 
-> I actually think this should be a hard requirement to merge this. The host needs to tell the guest that it supports this particular migration strategy and the guest needs to tell the host that it is using it.  And the guest needs a way to tell the host that it’s *not* using it right now due to kexec, for example.
+> * If the deferred_probe_timeout it set, after it fires, it
+>   returns -ETIMEDOUT
 > 
-> I’m still uneasy about a guest being migrated in the window where the hypercall tracking and the page encryption bit don’t match.  I guess maybe corruption in this window doesn’t matter?
+> This is a bit confusing, as its useful to have the function
+> return -EPROBE_DEFER while the timeout is still running. This
+> behavior has resulted in the somwhat duplicative
+> driver_deferred_probe_check_state_continue() function being
+> added.
 > 
+> Thus this patch tries to improve the logic, so that it behaves
+> as such:
+> 
+> * If deferred_probe_timeout is set, it returns -EPROBE_DEFER
+>   until the timeout, afterwhich it returns -ETIMEDOUT.
+> 
+> * If deferred_probe_timeout is not set (-1), it returns
+>   -EPROBE_DEFER until late_initcall, after which it returns
+> 
+> This will make the deferred_probe_timeout value much more
+> functional, and will allow us to consolidate the
+> driver_deferred_probe_check_state() and
+> driver_deferred_probe_check_state_continue() logic in a later
+> patch.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Change-Id: I8349b7a403ce8cbce485ea0a0a5512fddffb635c
 
-I don't think there is a corruption issue here. Let's consider the below
-case:
+Please drop the Change-Id.
 
-1) A page is transmitted as C=1 (encrypted)
+> ---
+> v4:
+> * Simplified logic suggested by Andy Shevchenko
+> * Clarified commit message to focus on logic change
+> ---
+>  drivers/base/dd.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index b25bcab2a26b..bb383dca39c1 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -237,7 +237,7 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>  
+>  static int __driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -	if (!initcalls_done)
+> +	if (!initcalls_done || deferred_probe_timeout > 0)
+>  		return -EPROBE_DEFER;
+>  
+>  	if (!deferred_probe_timeout) {
+> @@ -252,9 +252,11 @@ static int __driver_deferred_probe_check_state(struct device *dev)
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+>   *
+> - * Returns -ENODEV if init is done and all built-in drivers have had a chance
+> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
+> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
+> + * Returnes -EPROBE_DEFER if initcalls have not completed, or the deferred
 
-2) During the migration window, the page encryption bit is changed
-  to C=0 (decrypted)
+As pointed out by Rafael, this should be Return:
 
-3) #2 will cause a change in page table memory, thus dirty memory
-  the tracker will create retransmission of the page table memory.
+With that addressed, you have my
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-4) The page itself will not be re-transmitted because there was
-  no change to the content of the page.
+Regards,
+Bjorn
 
-On destination, the read from the page will get the ciphertext.
-
-The encryption bit change in the page table is used on the next access.
-The user of the page needs to ensure that data is written with the
-correct encryption bit before reading.
-
-thanks
+> + * probe timeout is set, but not expried.
+> + * Returns -ETIMEDOUT if the probe timeout was set and has expired.
+> + * Returns -ENODEV if initcalls have completed and the deferred probe timeout
+> + * was not set.
+>   *
+>   * Drivers or subsystems can opt-in to calling this function instead of directly
+>   * returning -EPROBE_DEFER.
+> -- 
+> 2.17.1
+> 
