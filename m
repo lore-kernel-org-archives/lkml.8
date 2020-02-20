@@ -2,187 +2,153 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15CAC761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11DBC761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACAB720801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C88E20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:28:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B4R6/j6T"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="W4w1z4s5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgBTF20 (ORCPT
+        id S1726837AbgBTF2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:28:26 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39671 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgBTF20 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:28:26 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so1324915pgm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:28:25 -0800 (PST)
+        Thu, 20 Feb 2020 00:28:31 -0500
+Received: from mail-bn7nam10on2062.outbound.protection.outlook.com ([40.107.92.62]:24152
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725811AbgBTF2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 00:28:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QC2+RfX+buMuctQ1JyF1xNjP7a72MFmCkOSZ28j6WUiK5GqxRMyk7AszJVaYjt/xJVY1NaIeN9zXfgaZK3TFBr/Qhfwv3C/e1trNOhLIYn2ah9+wDPNq2EZJT1RAcDJnvpb3hNS9bmE3wfgzMjuIyYdGrI6xHWSnRQFJ4F6mq20v0A+fWCBNiV/ahpB0VVCm9axhhYVCE4WcRIvDIvIWaMylqZNeqGLzPyRhHlFYhLXrXH6cDA/hqyc/0jxbXsPWdo2mOIQlvIgg1bb1OkWDI/jaSYay3Ipzj/WrRfqkRCc5IdqJ90JHiqM23MPqm5YxS1bB6q6hJNcvj7AL3QG+zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTle8A0VvPamz1sfF3pVweMmHDxmSbvqckyJCx3kbyw=;
+ b=Rk56QGY0qrU8fCAEnqTqTjFQJ4kkPDVcbSbCODjIhCUvZEq7a5/SijW7WH7SbqCjY46x22XOQi3MHG/Suf8VvKyCaCcuWBVPd6LBkSVv44beuWef4kA8f1ksJcMy46cnNlUIxLiCswT2Kh+QUpddfzIdYsdmIqlEALGsrU246zGxDry9bHgXBx7+KKONd2jH80IJ3KjbUBN0eerLbyGh3DRSSG1MBqIhzwwTm/ELd4++1pN+p848oiOrBg+Jk1TH7sC4cyM3nx/HZMY5ccRUgyvG2+0M20NHs0gx7Un8sJ5Lzj7uGFHotZpwCkukwqK+NC9vf/7LDtMXDzzIM7bwVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=k8d4kmIccAidADFe+MdrG7ylohXu5nRgFPNyr4D4gnE=;
-        b=B4R6/j6TkXEcNb0cGsNW/UtwR61rs/DnLFsdw6EqYmbnBzbQJJ7s9M0FY67z5uwYgA
-         p31L6Gh121GL+N+2fBiynbasV3w/nXAUn30xYWWT6fKF4T5lQ+gD1pvCgDGCfey4edKn
-         a0duIjYt+ZWPsMoEs+Mx776KNj+zmZIIuFK8YnarRbuXhPo6JeJB12rOFqRJBcjpEthU
-         fhb7A3AZc4gxSz9gECh2zgp0ntAZcQU6Q99x5Hv7AsMIx/DnpIpl6soRAx8EEjJ0IH/c
-         tfVl4jrZHNM8uwIwjmbdLb3oMUfkQ5w0XoVko4PfteOhpEGZlmvMoLbfIRR7ajCSW3yf
-         JqOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=k8d4kmIccAidADFe+MdrG7ylohXu5nRgFPNyr4D4gnE=;
-        b=sHUXo212T1vuCzhqkPtqSzNYHpQXhdjBuVtb5DU5GWef1t7JuFqpFwvfs3+oZEipI4
-         UDceiRUjVf/8pSE+w6mnw1xlZbRKFWBMFacXI8mns+Z4ECMS16GPPB8KgR3uElJyvwqT
-         GjCZwuJZrPQsFdRkun1PAMSPX14UyouWNaxzD9LtzT3kAW72BlrGTdIKTXL+Py6lDaf2
-         djrCfoOgjXzJwVsfCcDmS1J7bKXkUl9Zmz6QZb6MLJTrWqcwSGAwnxaQOsFWPdwVfYDu
-         ivXIfM0BmfsnVk8MSBnWxppTvDDL6E/RiF5/iOYYpTuj7uJVszt4RecorsF0LFKxSiwv
-         G3UA==
-X-Gm-Message-State: APjAAAWCsJDvmyu5dJgvChjl2437K4zJt4wRgjEf4bVEXyA+slrUf0PA
-        R5+Mo48JlANp3hpJO7qD0e4dOQ==
-X-Google-Smtp-Source: APXvYqwIVRZqP4ZuGnM9wjkZvs/dywF7Z5InBLQvdw5dIrKQub2KF8eGlCVr4GWpYML1MDb82Xak8Q==
-X-Received: by 2002:a65:6454:: with SMTP id s20mr32221795pgv.386.1582176505177;
-        Wed, 19 Feb 2020 21:28:25 -0800 (PST)
-Received: from localhost.localdomain (li1441-214.members.linode.com. [45.118.134.214])
-        by smtp.gmail.com with ESMTPSA id l69sm1535663pgd.1.2020.02.19.21.28.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 21:28:24 -0800 (PST)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JTle8A0VvPamz1sfF3pVweMmHDxmSbvqckyJCx3kbyw=;
+ b=W4w1z4s5NJpngHapDS+FIdRinbv68Gw+Pf3Obzqi+2vr7bT4EDs/9qV1ZbEQBHCB+IPdIschbNNRYt5ZxXbkG6LbhhLaEbiStmvZzGLhwf1J8+J8Awh/oB5H9TIt4WhyTSHVrmUCKPHH0yPgj0x7api6F0sQ7eZbFNcaZ0IpBNg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com (2603:10b6:802:28::33)
+ by SN1SPR01MB0002.namprd12.prod.outlook.com (2603:10b6:802:23::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.22; Thu, 20 Feb
+ 2020 05:28:27 +0000
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::fd48:9921:dd63:c6e1]) by SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::fd48:9921:dd63:c6e1%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
+ 05:28:26 +0000
+Date:   Thu, 20 Feb 2020 05:28:21 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Coresight ML <coresight@lists.linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 4/9] perf cs-etm: Support thread stack
-Date:   Thu, 20 Feb 2020 13:26:56 +0800
-Message-Id: <20200220052701.7754-5-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200220052701.7754-1-leo.yan@linaro.org>
-References: <20200220052701.7754-1-leo.yan@linaro.org>
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, x86@kernel.org,
+        KVM list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, brijesh.singh@amd.com
+Subject: Re: [PATCH 08/12] KVM: X86: Introduce KVM_HC_PAGE_ENC_STATUS
+ hypercall
+Message-ID: <20200220052821.GA21598@ashkalra_ubuntu_server>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <fc5e111e0a4eda0e6ea1ee3923327384906aff36.1581555616.git.ashish.kalra@amd.com>
+ <CABayD+fM-s0+j6JXN5qb0zce2Kqi6AC8+c+7qbqKr0NgC-QYiQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABayD+fM-s0+j6JXN5qb0zce2Kqi6AC8+c+7qbqKr0NgC-QYiQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN2PR01CA0029.prod.exchangelabs.com (2603:10b6:804:2::39)
+ To SN1PR12MB2528.namprd12.prod.outlook.com (2603:10b6:802:28::33)
+MIME-Version: 1.0
+Received: from ashkalra_ubuntu_server (165.204.77.1) by SN2PR01CA0029.prod.exchangelabs.com (2603:10b6:804:2::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Thu, 20 Feb 2020 05:28:26 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b9b22cca-766d-4513-11bb-08d7b5c5b631
+X-MS-TrafficTypeDiagnostic: SN1SPR01MB0002:|SN1SPR01MB0002:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1SPR01MB0002EED6484C4632B1A91A598E130@SN1SPR01MB0002.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 031996B7EF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(346002)(136003)(39860400002)(199004)(189003)(26005)(1076003)(53546011)(9686003)(54906003)(186003)(16526019)(44832011)(316002)(5660300002)(55016002)(81156014)(6666004)(66946007)(52116002)(6496006)(66556008)(7416002)(66476007)(81166006)(2906002)(478600001)(86362001)(33716001)(8936002)(33656002)(956004)(4326008)(8676002)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1SPR01MB0002;H:SN1PR12MB2528.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Vw72KdY6KlyTv15Xi3/fOHt77Vyk5+qE/huBSQaRlq2bi6sWFatW6UgGpavaQjaXLZ9OuMmqXzwCaCdb5m1TBJuPneE4qTfyK/QzQLBoyw/tuONReie5cRuemzWVC+OA8N5gLU7Wiv18duwr74sT51949mOCTfraK0YrJ9+JcHgZ3SgtpSn4sgY2MWSzzsfjhhvVl12iS71uRyKvVs8lNMgBMvuTf77vfLOWUtinSbea1/XMe1448FQ3XEpYbgsMcX4Raz9dYLGSctmYpnX8Moh9zigOLaCr1zN6HnEW4Q57Fb24OnE63nA57Q/DBM99HljBsnz5xBl0v8JUC4cKKQxjYq2f7xW+fRc3en8bRJhRrD4rpwlI4mtH1A/8shoWc77dqeC9CibDOSpJWwZwJohFTp3x3Vk9qdRRUnQQ6E3Oh1vYSUs2Fj85bc8D8WTN
+X-MS-Exchange-AntiSpam-MessageData: Q3AweIfFNnZfcGCOp/7290LMautAlwjiyyXFELfzXCGtSWzw99YtWVqfascCpNH2xzDqCakCYKZKXqMABtxJDDsHb04b32PJSNBjlJSNrI38tRhg4/2Zth3EiKmMSBaGdRMBoyQFiIP62R1bbv3ItQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b9b22cca-766d-4513-11bb-08d7b5c5b631
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 05:28:26.8277
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cWX8q9LE5Dp0/rRkubOTdkbyJzME7VALjw8sJf5c5pomLV2dJx/L/ddJW46Mi4laOyu+RTxGajftDQoCe41XNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1SPR01MB0002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Arm CoreSight doesn't support thread stack, the decoding cannot
-display symbols with indented spaces to reflect the stack depth.
+On Wed, Feb 19, 2020 at 06:39:39PM -0800, Steve Rutherford wrote:
+> On Wed, Feb 12, 2020 at 5:17 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> >
+> >  static void vmx_cleanup_l1d_flush(void)
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index fbabb2f06273..298627fa3d39 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -7547,6 +7547,12 @@ int kvm_emulate_hypercall(struct kvm_vcpu *vcpu)
+> >                 kvm_sched_yield(vcpu->kvm, a0);
+> >                 ret = 0;
+> >                 break;
+> > +       case KVM_HC_PAGE_ENC_STATUS:
+> > +               ret = -KVM_ENOSYS;
+> > +               if (kvm_x86_ops->page_enc_status_hc)
+> > +                       ret = kvm_x86_ops->page_enc_status_hc(vcpu->kvm,
+> > +                                       a0, a1, a2);
+> > +               break;
+> >         default:
+> >                 ret = -KVM_ENOSYS;
+> >                 break;
+> Add a cap to kvm_vm_ioctl_enable_cap so that the vmm can configure
+> whether or not this hypercall is offered. Moving to an enable cap
+> would also allow the vmm to pass down the expected size of the c-bit
+> tracking buffer, so that you don't need to handle dynamic resizing in
+> response to guest hypercall, otherwise KVM will sporadically start
+> copying around large buffers when working with large VMs.
+> 
 
-This patch adds support thread stack for Arm CoreSight, this allows
-'perf script' to display properly for option '-F,+callindent'.
+Yes, that is something we have been looking at adding.
 
-Before:
+But, how will VMM know the expected size of the c-bit tracking buffer ?
 
-  # perf script -F,+callindent
-            main  2808          1          branches: coresight_test1                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
-            main  2808          1          branches: printf@plt                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
-            main  2808          1          branches: printf@plt                           aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
-            main  2808          1          branches: _init                                aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
-            main  2808          1          branches: _dl_fixup                            ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.so)
-            main  2808          1          branches: _dl_lookup_symbol_x                  ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
-  [...]
+The guest kernel and firmware make the hypercall to mark page encryption
+status and depending on the GPA range being marked, the kernel's page
+encryption bitmap needs to be dynamically resized as response to the guest
+hypercall.
 
-After:
+> Stepping back a bit, I'm a little surprised by the fact that you don't
+> treat the c-bit buffers the same way as the dirty tracking buffers and
+> put them alongside the memslots. That's probably more effort, and the
+> strategy of using one large buffer should work fine (assuming you
+> don't need to support non-zero as_ids).
 
-  # perf script -F,+callindent
-            main  2808          1          branches:                 coresight_test1                                      ffff8634f5c8 coresight_test1+0x3c (/root/coresight_test/libcstest.so)
-            main  2808          1          branches:                 printf@plt                                           aaaaba8d37ec main+0x28 (/root/coresight_test/main)
-            main  2808          1          branches:                     printf@plt                                       aaaaba8d36bc printf@plt+0xc (/root/coresight_test/main)
-            main  2808          1          branches:                     _init                                            aaaaba8d3650 _init+0x30 (/root/coresight_test/main)
-            main  2808          1          branches:                     _dl_fixup                                        ffff86373b4c _dl_runtime_resolve+0x40 (/lib/aarch64-linux-gnu/ld-2.28.s
-            main  2808          1          branches:                         _dl_lookup_symbol_x                          ffff8636e078 _dl_fixup+0xb8 (/lib/aarch64-linux-gnu/ld-2.28.so)
-  [...]
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/cs-etm.c | 44 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f3ba2cfb634f..08ca919aa2b1 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1138,6 +1138,45 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
- 			   sample->insn_len, (void *)sample->insn);
- }
- 
-+static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
-+				    struct cs_etm_traceid_queue *tidq)
-+{
-+	struct cs_etm_auxtrace *etm = etmq->etm;
-+	u8 trace_chan_id = tidq->trace_chan_id;
-+	int insn_len;
-+	u64 from_ip, to_ip;
-+
-+	if (etm->synth_opts.thread_stack) {
-+		from_ip = cs_etm__last_executed_instr(tidq->prev_packet);
-+		to_ip = cs_etm__first_executed_instr(tidq->packet);
-+
-+		insn_len = cs_etm__instr_size(etmq, trace_chan_id,
-+					      tidq->prev_packet->isa, from_ip);
-+
-+		/*
-+		 * Create thread stacks by keeping track of calls and returns;
-+		 * any call pushes thread stack, return pops the stack, and
-+		 * flush stack when the trace is discontinuous.
-+		 */
-+		thread_stack__event(tidq->thread, tidq->prev_packet->cpu,
-+				    tidq->prev_packet->flags,
-+				    from_ip, to_ip, insn_len,
-+				    etmq->buffer->buffer_nr + 1);
-+	} else {
-+		/*
-+		 * The thread stack can be output via thread_stack__process();
-+		 * thus the detailed information about paired calls and returns
-+		 * will be facilitated by Python script for the db-export.
-+		 *
-+		 * Need to set trace buffer number and flush thread stack if the
-+		 * trace buffer number has been alternate.
-+		 */
-+		thread_stack__set_trace_nr(tidq->thread,
-+					   tidq->prev_packet->cpu,
-+					   etmq->buffer->buffer_nr + 1);
-+	}
-+}
-+
- static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 					    struct cs_etm_traceid_queue *tidq,
- 					    u64 addr, u64 period)
-@@ -1382,6 +1421,9 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 	    tidq->prev_packet->last_instr_taken_branch)
- 		cs_etm__update_last_branch_rb(etmq, tidq);
- 
-+	if (tidq->prev_packet->last_instr_taken_branch)
-+		cs_etm__add_stack_event(etmq, tidq);
-+
- 	if (etm->sample_instructions &&
- 	    tidq->period_instructions >= etm->instructions_sample_period) {
- 		/*
-@@ -2730,6 +2772,8 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 		itrace_synth_opts__set_default(&etm->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
- 		etm->synth_opts.callchain = false;
-+		etm->synth_opts.thread_stack =
-+				session->itrace_synth_opts->thread_stack;
- 	}
- 
- 	err = cs_etm__synth_events(etm, session);
--- 
-2.17.1
-
+Thanks,
+Ashish
