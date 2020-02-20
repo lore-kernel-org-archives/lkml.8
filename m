@@ -2,211 +2,174 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F6C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1472DC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C5A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O4dI7IVo"
+	by mail.kernel.org (Postfix) with ESMTP id E832620659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgBTQAo (ORCPT
+        id S1728703AbgBTQBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:00:44 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42432 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgBTQAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:00:43 -0500
-Received: by mail-pg1-f196.google.com with SMTP id w21so2134974pgl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:00:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wbab2MAyBGVFVIVKjVgIjH6RybCXv9GVcrcCbqRwpPY=;
-        b=O4dI7IVoeleTa/KTNc+v5co+jsDKZweNB2IF6C3xqrIzT0bxEB0NBuTB+MCDauj3Tz
-         EWQGjCZe10yjw2XC/dNUcCIzTxrtqZyn2plgoLERrMscLyewavaOoOb6hRVx/5n3a2cT
-         ehtRlLd0yRn5/udp5PrDlr1wWmYHfDa+kwFCU7LsqCZIBrW6UYvnVOdBDXL6spfk5SZm
-         fw03faaIcHXM6DmDRecW4lOuwAB+NlnE1wXF5KuqVTFSvDi5VfS766kzxhfb9XLPq3bW
-         3U7sFKREGC29PT99UYrxu/0SSp3YzvL4A2zqvKYcOOkg9sJ5de0Mp9/l+mBkZqxqk0AF
-         zdBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wbab2MAyBGVFVIVKjVgIjH6RybCXv9GVcrcCbqRwpPY=;
-        b=SmUEBjPDUx2oGczc1jaG1DtDM+oBmfKOpqr+PAquS1crvp37emvViHLZvBJgA4pykh
-         nKqF+mgebwrFd1lnsrv4mmlSUVgB9g4QGaYye+wD0aRW7us0/itktszCIY8BIrHb0x3b
-         YtdNALduCsi0iu4ma7sXEDXX5FkUCybSBvRrPejqumGt2WVHWRbVPhunA44aWeTSc3/C
-         FiBhT1nGk/bpZfuovCXIHwWH2KxzN2TTG2bopl0pW4sXCOklLemoiBicopstFOVuo8Ed
-         IuHxazs4M033KxuyOv/do8piZuX19QmXP81YCudRHlharK8UAW1iBQgjgd9uBNM0xSBo
-         atvg==
-X-Gm-Message-State: APjAAAXK12Fw7tcpVnsVormMMJyy/4PXUZRoUbldNYZ7gduGXe91+k73
-        tdMjd7iQa6yBTA/Skq47X1mpWw==
-X-Google-Smtp-Source: APXvYqyniQeB0JwM3bF6YAJywLFqtTnmJzv22eYSwTjFbne1ZebTYK1xGgrm2MzYxjPWpf3OBOZIBQ==
-X-Received: by 2002:a62:1456:: with SMTP id 83mr33251094pfu.186.1582214442159;
-        Thu, 20 Feb 2020 08:00:42 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 199sm41506pfu.71.2020.02.20.08.00.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 08:00:41 -0800 (PST)
-Date:   Thu, 20 Feb 2020 07:59:46 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 4/6] driver core: Remove
- driver_deferred_probe_check_state_continue()
-Message-ID: <20200220155946.GF955802@ripper>
-References: <20200220050440.45878-1-john.stultz@linaro.org>
- <20200220050440.45878-5-john.stultz@linaro.org>
+        Thu, 20 Feb 2020 11:01:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:45498 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728414AbgBTQBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 11:01:07 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DA5C31B;
+        Thu, 20 Feb 2020 08:01:06 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 418113F6CF;
+        Thu, 20 Feb 2020 08:01:04 -0800 (PST)
+Date:   Thu, 20 Feb 2020 16:00:54 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>, andrew.murray@arm.com,
+        Tom Joseph <tjoseph@cadence.com>,
+        Milind Parab <mparab@cadence.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, bhelgaas@google.com,
+        thierry.reding@gmail.com, Jisheng.Zhang@synaptics.com,
+        jonathanh@nvidia.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V2 0/5] Add support to defer core initialization
+Message-ID: <20200220160044.GA8859@e121166-lin.cambridge.arm.com>
+References: <20200103100736.27627-1-vidyas@nvidia.com>
+ <a8678df3-141b-51ab-b0cb-5e88c6ac91b5@nvidia.com>
+ <680a58ec-5d09-3e3b-2fd6-544c32732818@nvidia.com>
+ <ca911119-da45-4cbd-b173-2ac8397fd79a@ti.com>
+ <b4af8353-3a56-fa31-3391-056050c0440a@ti.com>
+ <7e8dafcd-bc3f-4acc-7023-85e24bebdd94@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200220050440.45878-5-john.stultz@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e8dafcd-bc3f-4acc-7023-85e24bebdd94@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19 Feb 21:04 PST 2020, John Stultz wrote:
-
-> Now that driver_deferred_probe_check_state() works better, and
-> we've converted the only user of
-> driver_deferred_probe_check_state_continue() we can simply
-> remove it and simplify some of the logic.
+On Wed, Feb 19, 2020 at 07:06:47PM +0530, Vidya Sagar wrote:
+> Hi Lorenzo, Andrew,
+> Kishon did rebase [1] mentioned below and removed dependencies.
+> New patch series is available
+> @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=158088
 > 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Change-Id: Id5cd5e9264cfb0fbd70a702715174cc4b10006f4
-
-Change-Id...
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
->  drivers/base/dd.c             | 49 +++++------------------------------
->  include/linux/device/driver.h |  1 -
->  2 files changed, 6 insertions(+), 44 deletions(-)
+> I rebased my patches on top of this and is available for review
+> @ http://patchwork.ozlabs.org/project/linux-pci/list/?series=158959
 > 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index fa138f24e2d3..408e4da081da 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -244,19 +244,6 @@ static int __init deferred_probe_timeout_setup(char *str)
->  }
->  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
->  
-> -static int __driver_deferred_probe_check_state(struct device *dev)
-> -{
-> -	if (!initcalls_done || deferred_probe_timeout > 0)
-> -		return -EPROBE_DEFER;
-> -
-> -	if (!deferred_probe_timeout) {
-> -		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
-> -		return -ETIMEDOUT;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  /**
->   * driver_deferred_probe_check_state() - Check deferred probe state
->   * @dev: device to check
-> @@ -272,43 +259,19 @@ static int __driver_deferred_probe_check_state(struct device *dev)
->   */
->  int driver_deferred_probe_check_state(struct device *dev)
->  {
-> -	int ret;
-> +	if (!initcalls_done || deferred_probe_timeout > 0)
-> +		return -EPROBE_DEFER;
->  
-> -	ret = __driver_deferred_probe_check_state(dev);
-> -	if (ret < 0)
-> -		return ret;
-> +	if (!deferred_probe_timeout) {
-> +		dev_WARN(dev, "deferred probe timeout, ignoring dependency");
-> +		return -ETIMEDOUT;
-> +	}
->  
->  	dev_warn(dev, "ignoring dependency for device, assuming no driver");
->  
->  	return -ENODEV;
->  }
->  
-> -/**
-> - * driver_deferred_probe_check_state_continue() - check deferred probe state
-> - * @dev: device to check
-> - *
-> - * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
-> - * -EPROBE_DEFER otherwise.
-> - *
-> - * Drivers or subsystems can opt-in to calling this function instead of
-> - * directly returning -EPROBE_DEFER.
-> - *
-> - * This is similar to driver_deferred_probe_check_state(), but it allows the
-> - * subsystem to keep deferring probe after built-in drivers have had a chance
-> - * to probe. One scenario where that is useful is if built-in drivers rely on
-> - * resources that are provided by modular drivers.
-> - */
-> -int driver_deferred_probe_check_state_continue(struct device *dev)
-> -{
-> -	int ret;
-> -
-> -	ret = __driver_deferred_probe_check_state(dev);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	return -EPROBE_DEFER;
-> -}
-> -
->  static void deferred_probe_timeout_work_func(struct work_struct *work)
->  {
->  	struct device_private *private, *p;
-> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-> index 1188260f9a02..5242afabfaba 100644
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -238,7 +238,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
->  
->  void driver_deferred_probe_add(struct device *dev);
->  int driver_deferred_probe_check_state(struct device *dev);
-> -int driver_deferred_probe_check_state_continue(struct device *dev);
->  void driver_init(void);
->  
->  /**
-> -- 
-> 2.17.1
+> Please let us know the way forward towards merging these patches.
+
+Hi Vidya,
+
+I shall have a look shortly, I have planned to start queueing patches
+from next week.
+
+Thanks,
+Lorenzo
+
+> Thanks,
+> Vidya Sagar
 > 
+> On 2/5/2020 12:07 PM, Kishon Vijay Abraham I wrote:
+> > External email: Use caution opening links or attachments
+> > 
+> > 
+> > +Tom, Milind
+> > 
+> > Hi,
+> > 
+> > On 23/01/20 3:25 PM, Kishon Vijay Abraham I wrote:
+> > > Hi Vidya Sagar,
+> > > 
+> > > On 23/01/20 2:54 pm, Vidya Sagar wrote:
+> > > > Hi Kishon,
+> > > > Apologies for pinging again. Could you please review this series?
+> > > > 
+> > > > Thanks,
+> > > > Vidya Sagar
+> > > > 
+> > > > On 1/11/2020 5:18 PM, Vidya Sagar wrote:
+> > > > > Hi Kishon,
+> > > > > Could you please review this series?
+> > > > > 
+> > > > > Also, this series depends on the following change of yours
+> > > > > http://patchwork.ozlabs.org/patch/1109884/
+> > > > > Whats the plan to get this merged?
+> > > 
+> > > I've posted the endpoint improvements as a separate series
+> > > http://lore.kernel.org/r/20191231100331.6316-1-kishon@ti.com
+> > > 
+> > > I'd prefer this series gets tested by others. I'm also planning to test
+> > > this series. Sorry for the delay. I'll test review and test this series
+> > > early next week.
+> > 
+> > I tested this series with DRA7 configured in EP mode. So for the series
+> > itself
+> > 
+> > Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > 
+> > Tom, Can you test this series in Cadence platform?
+> > 
+> > Lorenzo, Andrew,
+> > 
+> > How do you want to go about merging this series? This series depends on
+> > [1] which in turn is dependent on two other series. If required, I can
+> > rebase [1] on mainline kernel and remove it's dependencies with the
+> > other series. That way this series and [1] could be merged. And the
+> > other series could be worked later. Kindly let me know.
+> > 
+> > Thanks
+> > Kishon
+> > 
+> > [1] ->
+> > https://lore.kernel.org/linux-pci/20191231100331.6316-1-kishon@ti.com/
+> > > 
+> > > Thanks
+> > > Kishon
+> > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > Vidya Sagar
+> > > > > 
+> > > > > On 1/3/20 3:37 PM, Vidya Sagar wrote:
+> > > > > > EPC/DesignWare core endpoint subsystems assume that the core
+> > > > > > registers are
+> > > > > > available always for SW to initialize. But, that may not be the case
+> > > > > > always.
+> > > > > > For example, Tegra194 hardware has the core running on a clock that
+> > > > > > is derived
+> > > > > > from reference clock that is coming into the endpoint system from host.
+> > > > > > Hence core is made available asynchronously based on when host system
+> > > > > > is going
+> > > > > > for enumeration of devices. To accommodate this kind of hardwares,
+> > > > > > support is
+> > > > > > required to defer the core initialization until the respective
+> > > > > > platform driver
+> > > > > > informs the EPC/DWC endpoint sub-systems that the core is indeed
+> > > > > > available for
+> > > > > > initiaization. This patch series is attempting to add precisely that.
+> > > > > > This series is based on Kishon's patch that adds notification mechanism
+> > > > > > support from EPC to EPF @ http://patchwork.ozlabs.org/patch/1109884/
+> > > > > > 
+> > > > > > Vidya Sagar (5):
+> > > > > >     PCI: endpoint: Add core init notifying feature
+> > > > > >     PCI: dwc: Refactor core initialization code for EP mode
+> > > > > >     PCI: endpoint: Add notification for core init completion
+> > > > > >     PCI: dwc: Add API to notify core initialization completion
+> > > > > >     PCI: pci-epf-test: Add support to defer core initialization
+> > > > > > 
+> > > > > >    .../pci/controller/dwc/pcie-designware-ep.c   |  79 +++++++-----
+> > > > > >    drivers/pci/controller/dwc/pcie-designware.h  |  11 ++
+> > > > > >    drivers/pci/endpoint/functions/pci-epf-test.c | 118 ++++++++++++------
+> > > > > >    drivers/pci/endpoint/pci-epc-core.c           |  19 ++-
+> > > > > >    include/linux/pci-epc.h                       |   2 +
+> > > > > >    include/linux/pci-epf.h                       |   5 +
+> > > > > >    6 files changed, 164 insertions(+), 70 deletions(-)
+> > > > > > 
