@@ -2,112 +2,156 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34AF8C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E918C11D25
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042C6206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34604206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 23:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z/Zpxrbe"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ph/K03WW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbgBTXS0 (ORCPT
+        id S1729365AbgBTXSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 18:18:26 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45952 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727135AbgBTXSZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 18:18:25 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so26183pls.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 15:18:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=qiIWn/AwNao12jLnO57Zy1eSMfhg2OcOJSkC6NTyoL4=;
-        b=Z/ZpxrbeGyYr1O90OCAFhyo23J1bsbTFVT00brNeeTuwwwK96lwnqkLFD1L9OKp7Jr
-         psjnCPGENnn4mnePs4ZwzgNh8eDSn+diPoIPMGegJueuimr7kxsidVFZopT24RcG5xDK
-         SC/zMlsdynQs1IWQOwGc2ldMpWPCirlqrqHmY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qiIWn/AwNao12jLnO57Zy1eSMfhg2OcOJSkC6NTyoL4=;
-        b=SYOZUZJkVIGyoTw1bG6P2YF//lJ35Tg1XZ2AI58aidjEjhKBiGtnRpyDi0ROUS4J5K
-         5XhxCmM3W8OD3qzr8bToZyAARBQkKHU3rYE7H8Kp+H58ln3LHvSJYK7RrfzUAd4o13TL
-         shn+mOcdIS7TGlbLcNIze7Dx542Png23B5yJO4QRVouSGPHTT5LABP10tfPa5TtDtK7i
-         bFZdbtiu5zi74tVjuRh6wnenD/jiwvaYngVqXdjqk3mBzEi3btNkWiicuqqZPdTtyScB
-         TLNylT4bPxQhtXDVat4icmTfwP22eFp8jfDfb+GEt7KPSCXlSCJ/Cqgo5NwRgOD/cqgW
-         +IOg==
-X-Gm-Message-State: APjAAAUmCe0lUORJ1C4igT0Xz/lHv0/2DfFEvGXMyfuIu5ZBB4Udvs5E
-        5uF9shWjyynLJ3rWweOt5PCBXRw3kT8=
-X-Google-Smtp-Source: APXvYqzhEIa1OtXP4MAIV3zoNmbsVPWGunyaLyvhOtt9UX6ZeNPh9zWaBFlyVTh2FozX8mEGqu5nLQ==
-X-Received: by 2002:a17:90a:d807:: with SMTP id a7mr6562607pjv.15.1582240705082;
-        Thu, 20 Feb 2020 15:18:25 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l69sm375799pgd.1.2020.02.20.15.18.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 15:18:24 -0800 (PST)
-Date:   Thu, 20 Feb 2020 15:18:23 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] selftest/lkdtm: Don't pollute 'git status'
-Message-ID: <202002201518.AFD4C0C9FA@keescook>
-References: <668b6ff463849ceee01f726fbf3e7110687575ec.1580976576.git.christophe.leroy@c-s.fr>
+        Thu, 20 Feb 2020 18:18:49 -0500
+Received: from ozlabs.org ([203.11.71.1]:39979 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727135AbgBTXSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 18:18:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48NrBG4yv9z9sRh;
+        Fri, 21 Feb 2020 10:18:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1582240727;
+        bh=l9UM+zCUkLs/4YBcjYo+To2tyvruDnuXxmfULpRo/nc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ph/K03WW88ta7deHSfNMWrMWAY2i0/4+eSc/7QB5c6RNdMvfsygVVQUdFbXejRlLy
+         cZKoka5PT4lQXU/wSZNNkgUG4ic3pEMcMazmdIIZDrEX70jTqfX32nHtUR9hFhg0rV
+         r4BH0vhOKuiwsbVFPYAZaYEHa4VKijg5HLShb84Ikj4tkIAGQ3Frz3r5ibHp3AJlyo
+         UM2CAMa6XZ+D64/e5GbO5bVA12c37KVOThfHcDa9nwNaOetZJ3s2t+9nnYm78P8DvO
+         qOVNpYLEaKJzc12HDfzuXVLSqg/w3oml5XDMtAVgjMj6XEkHs/wRA8ZP/Q84dU0Fi1
+         FSVOco/62GyKw==
+Date:   Fri, 21 Feb 2020 10:18:45 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Arjun Roy <arjunroy@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: linux-next: build failure after merge of the akpm tree
+Message-ID: <20200221101845.21c0c8c5@canb.auug.org.au>
+In-Reply-To: <CAOFY-A3q_pmtHKAoOJdbB09wy=dxs9SdpXjCsU1wBxU5EDHVmw@mail.gmail.com>
+References: <20200217145711.4af495a3@canb.auug.org.au>
+        <CAOFY-A1nfPjf3EcQB6KiEifbFR+aUtdSgK=CHGt_k3ziSG6T_Q@mail.gmail.com>
+        <CAOFY-A3q_pmtHKAoOJdbB09wy=dxs9SdpXjCsU1wBxU5EDHVmw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <668b6ff463849ceee01f726fbf3e7110687575ec.1580976576.git.christophe.leroy@c-s.fr>
+Content-Type: multipart/signed; boundary="Sig_/WlSQA3zZeWd/av48Z2WLf9P";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 08:11:39AM +0000, Christophe Leroy wrote:
-> Commit 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
-> added generation of lkdtm test scripts.
-> 
-> Ignore those generated scripts when performing 'git status'
-> 
-> Fixes: 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+--Sig_/WlSQA3zZeWd/av48Z2WLf9P
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ah! Yes, a very good idea. Thanks!
+Hi all,
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+On Sun, 16 Feb 2020 22:45:35 -0800 Arjun Roy <arjunroy@google.com> wrote:
+>
+> On Sun, Feb 16, 2020 at 8:12 PM Arjun Roy <arjunroy@google.com> wrote:
+> >
+> > On Sun, Feb 16, 2020 at 7:57 PM Stephen Rothwell <sfr@canb.auug.org.au>=
+ wrote: =20
+> > >
+> > > After merging the akpm tree, today's linux-next build (sparc64 defcon=
+fig)
+> > > failed like this:
+> > >
+> > > mm/memory.c: In function 'insert_pages':
+> > > mm/memory.c:1523:56: error: macro "pte_index" requires 2 arguments, b=
+ut only 1 given
+> > >    remaining_pages_total, PTRS_PER_PTE - pte_index(addr));
+> > >                                                         ^
+> > >
+> > > Caused by commit
+> > >
+> > >   366142f0b000 ("mm/memory.c: add vm_insert_pages()")
+> > >
+> > > This is the first use of pte_index() outside arch specific code and t=
+he
+> > > sparc64 version of pte_index() nas an extra argument.
+> >
+> > Looks like this happens for sparc, and also metag. Other platforms
+> > just take the addr parameter based on a quick search.
+>=20
+> And actually I guess there's no metag anyways now.
+> Looking further, then, it looks like in every non-sparc pte_index() is
+> an actual numerical index, while on sparc it goes a step further to
+> yield a pte_t *.
+> As far as I can tell, the sparc incarnation of this is only used by
+> the pte_offset_(kernel/map) macros.
+>=20
+> So I think a possibly sane way to fix this would be:
+> 1. Define pte_index() to be a numerical index, like the other architectur=
+es,
+> 2. Define something like pte_entry() that uses pte_index(), and
+> 3. Have pte_offset_(kernel/map) be defined as pte_entry() instead.
+>=20
+> Then pte_index would be operating on just an address for all
+> platforms, and the reverted patchset would work without any changes.
+>=20
+> If this sounds acceptable, I can send a patch.
+>=20
+> > > I have reverted these commits for today:
+> > >
+> > >   219ae14a9686 ("net-zerocopy-use-vm_insert_pages-for-tcp-rcv-zerocop=
+y-fix")
+> > >   cb912fdf96bf ("net-zerocopy: use vm_insert_pages() for tcp rcv zero=
+copy")
+> > >   72c684430b94 ("add missing page_count() check to vm_insert_pages().=
+")
+> > >   dbd9553775f3 ("mm-add-vm_insert_pages-fix")
+> > >   366142f0b000 ("mm/memory.c: add vm_insert_pages()")
+> > > =20
+> >
+> > In terms of fixing this; passing in an appropriate dir parameter is
+> > not really a problem, but what is concerning that it seems messy to
+> > have a per-platform ifdef to pass it either two arguments or one in
+> > this case. But it seems like either that would be one way to fix it,
+> > or having some arch method across all arches that takes two arguments
+> > (and ignores one of them for most arches).
+> >
+> > Is there a general preference for the right way forward, in this case?
 
--Kees
+Has there been any progress with this?  I am still reverting the above
+commits, so they are not getting any linux-next testing ...
 
-> ---
->  .gitignore | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/.gitignore b/.gitignore
-> index b849a72d69d5..bb05dce58f8e 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -100,6 +100,10 @@ modules.order
->  /include/ksym/
->  /arch/*/include/generated/
->  
-> +# Generated lkdtm tests
-> +/tools/testing/selftests/lkdtm/*.sh
-> +!/tools/testing/selftests/lkdtm/run.sh
-> +
->  # stgit generated dirs
->  patches-*
->  
-> -- 
-> 2.25.0
-> 
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-Kees Cook
+--Sig_/WlSQA3zZeWd/av48Z2WLf9P
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5PE9UACgkQAVBC80lX
+0GyOYggAjTGf7PaO6OpUQE/582qJnBS/Bp2yGI8K1o335IWQtnBApGbPvy/v/k1e
+BupKbY4mBVQhC0fZnLoNwBoZ2iDnjWwkQVYnNyQFohUv5xoDjnoLBJp1BSbpnlLA
+wkWRAG20ZK7NK+r5rKv6kNt1PWyRheBucfFUYabPrBuvHqSm7z5RXKjEWSw4bTIS
+VIEfO17i/5iNt2h+b1+BNcVq5cr2r/6LZYadTWS+4j0yP2mnRZKdvAsTCq8Nn6+7
+8cRSOoONNfsHShRnhHzKf+rOHCbGSgvm6rJEA2bWXLzDan4DqpQF/jD2jfJ982Mx
+KvP2uxCsDiv9f3eEGBpMuCsirLTfag==
+=THYJ
+-----END PGP SIGNATURE-----
+
+--Sig_/WlSQA3zZeWd/av48Z2WLf9P--
