@@ -2,229 +2,348 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA74C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E8AC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE5EE20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAl0vrUd"
+	by mail.kernel.org (Postfix) with ESMTP id D045B24670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgBTQan (ORCPT
+        id S1728799AbgBTQaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:30:43 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36404 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728134AbgBTQam (ORCPT
+        Thu, 20 Feb 2020 11:30:46 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48008 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728768AbgBTQap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:30:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id c16so28158282oic.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:30:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y9HQfeZQmR3ITWVRctdqux0hlFnrN0+7nUWBuGoGzbI=;
-        b=rAl0vrUdgC6BPCfHywHFImldtnI3m6Nj5ysAz5uBGUmEKyEPKdjcAq4t7lUO2stDK+
-         1t3k0thBRBULY6f2rwgUO2JbXJGA0QlMISutM6QHwTyDBTBJlbmBD42BOKB1LWHD9cCb
-         lLr8xuRQr6btT8GLq7QtB/mgo10L0lG4LZsXg4XoI0rCuOBHvgdD4fTMHBUmOrNKYVvI
-         Y2wkvJ93jpOQUYL2074hW4b9p6uKhmFrj1nT9Ujn/a1+5BWhVVbwa+ul+fLPkqZcp7yX
-         fFdEp07Q+lRUC7+7z07jRmsN4cOg07ydrTv4s7yBhE4Guyzi7TlUG+LCHTGLVXck9aFH
-         rVpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=y9HQfeZQmR3ITWVRctdqux0hlFnrN0+7nUWBuGoGzbI=;
-        b=a0DDAQdhdZZUMHd8PPJTRm/3a+4sR3nga5JmfHcDYLVJysPvnlUSGABcFqP1pIVq3x
-         dsL98ylbGm6xP8/ql2JKvoDoyTfmiHCMuvwCxy3RHgDWZbLxf3XWspj2m5Vx1CL9+ilU
-         Dmx00NlszsdAWbgah5G5r3ZYCLEpSADuph+chcXoq5PUpGcFQCShSh7HTX/X+klrZCN1
-         K69iD+37ErdFNZJiA3X3x7v3vWuDOpFFqzW2yfFIQQCwHOaIuPmF5YDAQxCRt3Tu+DQk
-         oBYmp3ZtDgF+fpWjuaiuwO9O2vXrN58hoF8zrqDXYIJMu+BhQ+iSGAADIkfS8W1a4AJQ
-         obIQ==
-X-Gm-Message-State: APjAAAWMdCsZHQBBSo5c9vCyP3BesUzwe2p6kSWXE0rrPqg5JWYcedf0
-        fMxnGrmFgfHY5p/lXuVqGuxeHUw=
-X-Google-Smtp-Source: APXvYqzJvnK1s6UOpaxFEdvEcJ3Bw6Mh437NhoRzotRpwK6fSKE5IJWYi7CGh3MjxZGTDTSpff+Czw==
-X-Received: by 2002:aca:d484:: with SMTP id l126mr2584473oig.114.1582216241151;
-        Thu, 20 Feb 2020 08:30:41 -0800 (PST)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id 9sm1299958otx.75.2020.02.20.08.30.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 08:30:40 -0800 (PST)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:9129:b2b8:445c:a4ff])
-        by serve.minyard.net (Postfix) with ESMTPSA id D290B18000D;
-        Thu, 20 Feb 2020 16:30:39 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 10:30:38 -0600
-From:   Corey Minyard <minyard@acm.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
-Message-ID: <20200220163038.GJ3704@minyard.net>
-Reply-To: minyard@acm.org
-References: <20200219152403.3495-1-minyard@acm.org>
- <20200220142214.GC14459@willie-the-truck>
+        Thu, 20 Feb 2020 11:30:45 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 943D22951E0
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v6 3/6] media: hantro: h264: Use the generic H264 reflist builder
+Date:   Thu, 20 Feb 2020 13:30:13 -0300
+Message-Id: <20200220163016.21708-4-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200220163016.21708-1-ezequiel@collabora.com>
+References: <20200220163016.21708-1-ezequiel@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220142214.GC14459@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 02:22:14PM +0000, Will Deacon wrote:
-> On Wed, Feb 19, 2020 at 09:24:03AM -0600, minyard@acm.org wrote:
-> > From: Corey Minyard <cminyard@mvista.com>
-> > 
-> > I was working on a single-step bug on kgdb on an ARM64 system, and I saw
-> > this scenario:
-> > 
-> > * A single step is setup to return to el1
-> > * The ERET return to el1
-> > * An interrupt is pending and runs before the instruction
-> > * As soon as PSTATE.D (the debug disable bit) is cleared, the single
-> >     step happens in that location, not where it should have.
-> > 
-> > This appears to be due to PSTATE.SS not being cleared when the exception
-> > happens.  Per section D.2.12.5 of the ARMv8 reference manual, that
-> > appears to be incorrect, it says "As part of exception entry, the PE
-> > does all of the following: ...  Sets PSTATE.SS to 0."
-> 
-> Sorry, but I don't follow you here. If PSTATE.SS is not cleared, why would
-> you take the step exception?
+From: Boris Brezillon <boris.brezillon@collabora.com>
 
-I don't follow.  If PSTATE.SS is set and MDSCR_EL1.SS is set, the
-processor will take a single-step exception as soon as the debug
-exceptions are enabled.  That's what I'm seeing.  The hardware bug is
-that PSTATE.SS is not cleared on an exception, and MDSCR_EL1.SS is not
-cleared on kernel entry from el1.
+Now that the core provides generic reflist builders, we can use them
+instead of implementing our own.
 
-I'm not 100% sure that PSTATE.SS is supposed to clear on an exception.
-The debug handling documentation in the ARM64 manual is extremely hard
-to follow.  But I'm pretty sure about this, as you would see this
-problem on every processor and it would be obvious.  You could never
-continue from a breakpoint, because the following happens when
-continuing from a breakpoint in what I'm seeing:
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+---
+ drivers/staging/media/hantro/Kconfig       |   1 +
+ drivers/staging/media/hantro/hantro_h264.c | 237 +--------------------
+ 2 files changed, 9 insertions(+), 229 deletions(-)
 
-* gdb disables the breakpoint
-* gdb does a single step
-* The single step triggers when debug excecption are enabled, not
-  after the instruction in question.
-* gdb restores the breakpoint and continues
-* The breakpoint occurs again because the single step never really
-  happened.
+diff --git a/drivers/staging/media/hantro/Kconfig b/drivers/staging/media/hantro/Kconfig
+index de77fe6554e7..33482910dee2 100644
+--- a/drivers/staging/media/hantro/Kconfig
++++ b/drivers/staging/media/hantro/Kconfig
+@@ -7,6 +7,7 @@ config VIDEO_HANTRO
+ 	select VIDEOBUF2_DMA_CONTIG
+ 	select VIDEOBUF2_VMALLOC
+ 	select V4L2_MEM2MEM_DEV
++	select V4L2_H264
+ 	help
+ 	  Support for the Hantro IP based Video Processing Unit present on
+ 	  Rockchip SoC, which accelerates video and image encoding and
+diff --git a/drivers/staging/media/hantro/hantro_h264.c b/drivers/staging/media/hantro/hantro_h264.c
+index f2d3e81fb6ce..d561f125085a 100644
+--- a/drivers/staging/media/hantro/hantro_h264.c
++++ b/drivers/staging/media/hantro/hantro_h264.c
+@@ -11,7 +11,7 @@
+  */
+ 
+ #include <linux/types.h>
+-#include <linux/sort.h>
++#include <media/v4l2-h264.h>
+ #include <media/v4l2-mem2mem.h>
+ 
+ #include "hantro.h"
+@@ -240,229 +240,6 @@ static void prepare_table(struct hantro_ctx *ctx)
+ 	reorder_scaling_list(ctx);
+ }
+ 
+-struct hantro_h264_reflist_builder {
+-	const struct v4l2_h264_dpb_entry *dpb;
+-	s32 pocs[HANTRO_H264_DPB_SIZE];
+-	u8 unordered_reflist[HANTRO_H264_DPB_SIZE];
+-	int frame_nums[HANTRO_H264_DPB_SIZE];
+-	s32 curpoc;
+-	u8 num_valid;
+-};
+-
+-static s32 get_poc(enum v4l2_field field, s32 top_field_order_cnt,
+-		   s32 bottom_field_order_cnt)
+-{
+-	switch (field) {
+-	case V4L2_FIELD_TOP:
+-		return top_field_order_cnt;
+-	case V4L2_FIELD_BOTTOM:
+-		return bottom_field_order_cnt;
+-	default:
+-		break;
+-	}
+-
+-	return min(top_field_order_cnt, bottom_field_order_cnt);
+-}
+-
+-static void
+-init_reflist_builder(struct hantro_ctx *ctx,
+-		     struct hantro_h264_reflist_builder *b)
+-{
+-	const struct v4l2_ctrl_h264_slice_params *slice_params;
+-	const struct v4l2_ctrl_h264_decode_params *dec_param;
+-	const struct v4l2_ctrl_h264_sps *sps;
+-	struct vb2_v4l2_buffer *buf = hantro_get_dst_buf(ctx);
+-	const struct v4l2_h264_dpb_entry *dpb = ctx->h264_dec.dpb;
+-	struct vb2_queue *cap_q = &ctx->fh.m2m_ctx->cap_q_ctx.q;
+-	int cur_frame_num, max_frame_num;
+-	unsigned int i;
+-
+-	dec_param = ctx->h264_dec.ctrls.decode;
+-	slice_params = &ctx->h264_dec.ctrls.slices[0];
+-	sps = ctx->h264_dec.ctrls.sps;
+-	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
+-	cur_frame_num = slice_params->frame_num;
+-
+-	memset(b, 0, sizeof(*b));
+-	b->dpb = dpb;
+-	b->curpoc = get_poc(buf->field, dec_param->top_field_order_cnt,
+-			    dec_param->bottom_field_order_cnt);
+-
+-	for (i = 0; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++) {
+-		int buf_idx;
+-
+-		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+-			continue;
+-
+-		buf_idx = vb2_find_timestamp(cap_q, dpb[i].reference_ts, 0);
+-		if (buf_idx < 0)
+-			continue;
+-
+-		buf = to_vb2_v4l2_buffer(vb2_get_buffer(cap_q, buf_idx));
+-
+-		/*
+-		 * Handle frame_num wraparound as described in section
+-		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
+-		 * TODO: This logic will have to be adjusted when we start
+-		 * supporting interlaced content.
+-		 */
+-		if (dpb[i].frame_num > cur_frame_num)
+-			b->frame_nums[i] = (int)dpb[i].frame_num - max_frame_num;
+-		else
+-			b->frame_nums[i] = dpb[i].frame_num;
+-
+-		b->pocs[i] = get_poc(buf->field, dpb[i].top_field_order_cnt,
+-				     dpb[i].bottom_field_order_cnt);
+-		b->unordered_reflist[b->num_valid] = i;
+-		b->num_valid++;
+-	}
+-
+-	for (i = b->num_valid; i < ARRAY_SIZE(ctx->h264_dec.dpb); i++)
+-		b->unordered_reflist[i] = i;
+-}
+-
+-static int p_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
+-{
+-	const struct hantro_h264_reflist_builder *builder = data;
+-	const struct v4l2_h264_dpb_entry *a, *b;
+-	u8 idxa, idxb;
+-
+-	idxa = *((u8 *)ptra);
+-	idxb = *((u8 *)ptrb);
+-	a = &builder->dpb[idxa];
+-	b = &builder->dpb[idxb];
+-
+-	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
+-	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+-		/* Short term pics firt. */
+-		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+-			return -1;
+-		else
+-			return 1;
+-	}
+-
+-	/*
+-	 * Short term pics in descending pic num order, long term ones in
+-	 * ascending order.
+-	 */
+-	if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+-		return HANTRO_CMP(builder->frame_nums[idxb],
+-				  builder->frame_nums[idxa]);
+-
+-	return HANTRO_CMP(a->pic_num, b->pic_num);
+-}
+-
+-static int b0_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
+-{
+-	const struct hantro_h264_reflist_builder *builder = data;
+-	const struct v4l2_h264_dpb_entry *a, *b;
+-	s32 poca, pocb;
+-	u8 idxa, idxb;
+-
+-	idxa = *((u8 *)ptra);
+-	idxb = *((u8 *)ptrb);
+-	a = &builder->dpb[idxa];
+-	b = &builder->dpb[idxb];
+-
+-	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
+-	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+-		/* Short term pics firt. */
+-		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+-			return -1;
+-		else
+-			return 1;
+-	}
+-
+-	/* Long term pics in ascending pic num order. */
+-	if (a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+-		return HANTRO_CMP(a->pic_num, b->pic_num);
+-
+-	poca = builder->pocs[idxa];
+-	pocb = builder->pocs[idxb];
+-
+-	/*
+-	 * Short term pics with POC < cur POC first in POC descending order
+-	 * followed by short term pics with POC > cur POC in POC ascending
+-	 * order.
+-	 */
+-	if ((poca < builder->curpoc) != (pocb < builder->curpoc))
+-		return HANTRO_CMP(poca, pocb);
+-	else if (poca < builder->curpoc)
+-		return HANTRO_CMP(pocb, poca);
+-
+-	return HANTRO_CMP(poca, pocb);
+-}
+-
+-static int b1_ref_list_cmp(const void *ptra, const void *ptrb, const void *data)
+-{
+-	const struct hantro_h264_reflist_builder *builder = data;
+-	const struct v4l2_h264_dpb_entry *a, *b;
+-	s32 poca, pocb;
+-	u8 idxa, idxb;
+-
+-	idxa = *((u8 *)ptra);
+-	idxb = *((u8 *)ptrb);
+-	a = &builder->dpb[idxa];
+-	b = &builder->dpb[idxb];
+-
+-	if ((a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM) !=
+-	    (b->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)) {
+-		/* Short term pics firt. */
+-		if (!(a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM))
+-			return -1;
+-		else
+-			return 1;
+-	}
+-
+-	/* Long term pics in ascending pic num order. */
+-	if (a->flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
+-		return HANTRO_CMP(a->pic_num, b->pic_num);
+-
+-	poca = builder->pocs[idxa];
+-	pocb = builder->pocs[idxb];
+-
+-	/*
+-	 * Short term pics with POC > cur POC first in POC ascending order
+-	 * followed by short term pics with POC < cur POC in POC descending
+-	 * order.
+-	 */
+-	if ((poca < builder->curpoc) != (pocb < builder->curpoc))
+-		return HANTRO_CMP(pocb, poca);
+-	else if (poca < builder->curpoc)
+-		return HANTRO_CMP(pocb, poca);
+-
+-	return HANTRO_CMP(poca, pocb);
+-}
+-
+-static void
+-build_p_ref_list(const struct hantro_h264_reflist_builder *builder,
+-		 u8 *reflist)
+-{
+-	memcpy(reflist, builder->unordered_reflist,
+-	       sizeof(builder->unordered_reflist));
+-	sort_r(reflist, builder->num_valid, sizeof(*reflist),
+-	       p_ref_list_cmp, NULL, builder);
+-}
+-
+-static void
+-build_b_ref_lists(const struct hantro_h264_reflist_builder *builder,
+-		  u8 *b0_reflist, u8 *b1_reflist)
+-{
+-	memcpy(b0_reflist, builder->unordered_reflist,
+-	       sizeof(builder->unordered_reflist));
+-	sort_r(b0_reflist, builder->num_valid, sizeof(*b0_reflist),
+-	       b0_ref_list_cmp, NULL, builder);
+-
+-	memcpy(b1_reflist, builder->unordered_reflist,
+-	       sizeof(builder->unordered_reflist));
+-	sort_r(b1_reflist, builder->num_valid, sizeof(*b1_reflist),
+-	       b1_ref_list_cmp, NULL, builder);
+-
+-	if (builder->num_valid > 1 &&
+-	    !memcmp(b1_reflist, b0_reflist, builder->num_valid))
+-		swap(b1_reflist[0], b1_reflist[1]);
+-}
+-
+ static bool dpb_entry_match(const struct v4l2_h264_dpb_entry *a,
+ 			    const struct v4l2_h264_dpb_entry *b)
+ {
+@@ -560,7 +337,7 @@ int hantro_h264_dec_prepare_run(struct hantro_ctx *ctx)
+ {
+ 	struct hantro_h264_dec_hw_ctx *h264_ctx = &ctx->h264_dec;
+ 	struct hantro_h264_dec_ctrls *ctrls = &h264_ctx->ctrls;
+-	struct hantro_h264_reflist_builder reflist_builder;
++	struct v4l2_h264_reflist_builder reflist_builder;
+ 
+ 	hantro_start_prepare_run(ctx);
+ 
+@@ -596,10 +373,12 @@ int hantro_h264_dec_prepare_run(struct hantro_ctx *ctx)
+ 	prepare_table(ctx);
+ 
+ 	/* Build the P/B{0,1} ref lists. */
+-	init_reflist_builder(ctx, &reflist_builder);
+-	build_p_ref_list(&reflist_builder, h264_ctx->reflists.p);
+-	build_b_ref_lists(&reflist_builder, h264_ctx->reflists.b0,
+-			  h264_ctx->reflists.b1);
++	v4l2_h264_init_reflist_builder(&reflist_builder, ctrls->decode,
++				       &ctrls->slices[0], ctrls->sps,
++				       ctx->h264_dec.dpb);
++	v4l2_h264_build_p_ref_list(&reflist_builder, h264_ctx->reflists.p);
++	v4l2_h264_build_b_ref_lists(&reflist_builder, h264_ctx->reflists.b0,
++				    h264_ctx->reflists.b1);
+ 	return 0;
+ }
+ 
+-- 
+2.25.0
 
-> 
-> > However, I appear to not be the first person who has noticed this.  In
-> > the el0-only portion of the kernel_entry macro in entry.S, I found the
-> > following comment: "Ensure MDSCR_EL1.SS is clear, since we can unmask
-> > debug exceptions when scheduling."  Exactly the same scenario, except
-> > coming from a userland single step, not a kernel one.
-> 
-> No, I think you might be conflating PSTATE.SS and MDSCR_EL1.SS.
-
-Not exactly.  If the processor clears PSTATE.SS, why would you need to
-clear MDSCR_EL1.SS?  You can just ignore it.  But looking at the git
-commit where that code was introduced, I can see that wasn't the reason.
-
-> 
-> > As I was studying this, though, I realized that the following scenario
-> > had an issue:
-> > 
-> > * Kernel enables MDSCR.SS, MDSCR.KDE, MDSCR.MDE (unnecessary), and
-> >   PSTATE.SS to enable a single step in el1, for kgdb or kprobes,
-> >   on the current CPU's MDSCR register and the process' PSTATE.SS
-> >   register.
-> > * Kernel returns from the exception with ERET.
-> > * An interrupt or page fault happens on the instruction, causing the
-> >   instruction to not be run, but the exception handler runs.
-> > * The exception causes the task to migrate to a new core.
-> > * The return from the exception runs on a different processor now,
-> >   where the MDSCR values are not set up for a single step.
-> > * The single step fails to happen.
-> > 
-> > This is bad for kgdb, of course, but it seems really bad for kprobes if
-> > this happens.
-> 
-> I don't see how this can happen for kprobes. Have you managed to reproduce
-> the failure?
-
-Can a migration happen if kprobes sets up a single-step, does the step,
-and an interrupt or page fault happens before the single step occurs?
-If so, that single-step will never happen.
-
-I would be hard to reproduce.  I think I could force this to happen by
-modifying the kernel to force a migration in the single-step code, but
-it would be hard without modifying the kernel.
-
-> 
-> > To fix both these problems, rework the handling of single steps to clear
-> > things out upon entry to the kernel from el1, and then to set up single
-> > step when returning to el1, and not do the setup in debug-monitors.c.
-> > This means that single stepping does not use
-> > enable/disable_debug_monitors(); it is no longer necessary to track
-> > those flags for single stepping.  This is much like single stepping is
-> > handled for el0.  A new flag is added in pt_regs to enable single
-> > stepping from el1.  Unfortunately, the old value of PSTATE.SS cannot be
-> > used for this because of the hardware bug mentioned earlier.
-> 
-> I don't think there's a hardware bug.
-> 
-> It sound like you're trying to make kernel debugging per-task instead
-> of per-cpu, but I don't think that's the right thing to do. What if I /want/
-> to debug an interrupt handler? For example, I might have a watchpoint on
-> something accessed by timer interrupt.
-> 
-> > As part of this, there is an interaction between single stepping and the
-> > other users of debug monitors with the MDSCR.KDE bit.  That bit has to
-> > be set for both hardware breakpoints at el1 and single stepping at el1.
-> > A new variable was created to store the cpu-wide value of MDSCR.KDE; the
-> > single stepping code makes sure not to clear that bit on kernel entry if
-> > it's set in the per-cpu variable.
-> > 
-> > After fixing this and doing some more testing, I ran into another issue:
-> > 
-> > * Kernel enables the pt_regs single step
-> > * Kernel returns from the exception with ERET.
-> > * An interrupt or page fault happens on the instruction, causing the
-> >   instruction to not be run, but the exception handler runs.
-> 
-> This sounds like you've broken debug; we should take the step exception
-> in the exception handler. That's the way this is supposed to work.
-
-Ok, here is the disconnect, I think.  If that is the case, then what I'm
-seeing is working like it should.  That doesn't work with gdb, though,
-gdb expects to be able to single-step and get to the next instruction.
-The scenario I mentioned at the top of this email.
-
-Let me look at this a bit more.  I'll look at this on qemu and maybe a
-pi.
-
--corey
-
-> 
-> > There's no easy way to find the pt_regs that has the single step flag
-> > set.  So a thread info flag was added so that the single step could be
-> > disabled in this case.  Both that flag and the flag in pt_regs must be
-> > set to enable a single step.
-> 
-> Honestly, I get the feeling that you don't really understand the code
-> you're changing here and it's a tonne of effort to try to untangle what
-> you're doing. That's not necessarily your fault because the debug
-> architecture is a nightmare to comprehend, but I'm not keen to change it
-> unless we have a really good justification. I'm sure kgdb is riddled with
-> bugs but, as I said before, the fixes should be in kgdb, not by tearing
-> up the low-level debug code (which has the potential to break other users).
-> 
-> Maybe it would be easier if you tried to fix one problem per patch,
-> preferably with a way to reproduce the issue you're seeing each time?
-> 
-> Will
