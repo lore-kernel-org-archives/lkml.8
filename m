@@ -2,193 +2,205 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E465CC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C4C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD1B24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FJvt1dBi"
+	by mail.kernel.org (Postfix) with ESMTP id A42A324672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582192938;
+	bh=J6dv4VhId7N9jeKcV+a4Mh3DIEpr/v8dwQ2J1ESlG+Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=D9RtgDSX4VYUTcI6o866xEUnDBA82w0GydBwLgTlXLEwT7NovHwFINd/+dVkeYQCQ
+	 UDDhBQXZlUeosirJrPhBOul2Qn5rW7oJvgeqAYVI8PPs0WayYvT6va/Sqqeqo03Ajx
+	 TEg2v2YSYL4ybPTiUqpDla6Vw7Ar2nohSOVeamfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbgBTKCC (ORCPT
+        id S1728002AbgBTKCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:02:02 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37538 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbgBTKBt (ORCPT
+        Thu, 20 Feb 2020 05:02:17 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33436 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgBTKCR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:01:49 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a6so1328020wme.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:01:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PxNamP/tY+VJSZ59R58OjGFNv8KfDwh59F4Xljb8y3g=;
-        b=FJvt1dBidHKQ9i6NzW7D3scasMhmuxHzOekGkhyG1QrETE1a0KjWbaQb+C5iZSSyBA
-         taIaO4VYqzahsrY7V4zWsc7+NzLmZiJHAIeBUNljknwYq3yk4fsKoU70gDwmrt8r+b4O
-         kPDf28Xy/7PWbZsfzgXu+YqeDMALSj51asraPrJh/PKnyAR3B+rrH/hd+gYEOFPN9YH3
-         5jp+JWgbihgNGpsfEEg+OC0ZaUHPCNhoKIpleB1lCx+/ygsk0PwzDDZcVqf84kRTzSOl
-         vEhY9HAPZk0QvprzPPbQKrAhMv4CW9A6iB3zj9iDUL7vis/TmnIvVxFyWW/OkRo5qBUL
-         dcVA==
+        Thu, 20 Feb 2020 05:02:17 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q81so27012251oig.0;
+        Thu, 20 Feb 2020 02:02:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PxNamP/tY+VJSZ59R58OjGFNv8KfDwh59F4Xljb8y3g=;
-        b=PnXvJjOia9CPe0Dz0TDPhFqGtG1ZxurXsNL6VKr3Gd4/4b1T6fiBV1W5d9MsSpdu7p
-         ZCQWsYEx2yd7uaV4a+4rggnkNr/lj1/D1fEvqMUvqlpTqh/1La9QJFvmP+vnoF0hcQVj
-         LQkeHsxt1G553F2hYExYxqG4ysnzy1xGDC7eiFR7kNmqg5sTq2/VVsQBtByAMJghaSup
-         gNDxRTyQcoGJsHhsgCoL8EVO/qXHqA8/ik6LB37mGSlnKbqdduteKlgYrajsEtGNSemE
-         pABWscLEOunIOAXg8Pwe5zENH2B2h9TMTEccuGrA2tDrhvrAhxfLgtZm5olRAGlU8BrK
-         /rDw==
-X-Gm-Message-State: APjAAAXThZJnoate7GFKz70BeY8ijxb6CcyU5qDh735IIsZSEmpV87Io
-        RuXo4GQRTIu1Am2BM0+zV7kTrw==
-X-Google-Smtp-Source: APXvYqywHwbPABTcol9PZLK4z7duQcvtOXJx1amFWGMSjrEKzVlTmOaPX0CLi7edYiQlkGUw8VP0cA==
-X-Received: by 2002:a05:600c:2503:: with SMTP id d3mr3431903wma.84.1582192907990;
-        Thu, 20 Feb 2020 02:01:47 -0800 (PST)
-Received: from localhost.localdomain (lfbn-nic-1-188-94.w2-15.abo.wanadoo.fr. [2.15.37.94])
-        by smtp.gmail.com with ESMTPSA id z1sm3663496wmf.42.2020.02.20.02.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 02:01:47 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v4 2/4] gpiolib: use kref in gpio_desc
-Date:   Thu, 20 Feb 2020 11:01:39 +0100
-Message-Id: <20200220100141.5905-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200220100141.5905-1-brgl@bgdev.pl>
-References: <20200220100141.5905-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jBIymrbfBl+v7nPPWD0/CAEzGIYciT+Z8FHLl9X2EUc=;
+        b=XnIRNuKkimWKqSKjSt80NFwKrHfxswsPfrUHmZB4nMHzCDZKqVRWJpxAKIm9deHIJ5
+         RBlMmhe69LJXEipStTgDTUKVLXevbibAtXe99hU4MGTjEjz288aUWCHaGzSBeBm6LAyB
+         Zg2R4FC5ZpzY+zipQ4vHUV2Rg549Z/lO9h4jrKrcgxaEt5zwBgPmWhPowxlFHlSJEhr2
+         XCv9YDbPr6YFXRfp1Yi1eSgPvkLdLxg8FGPtIPNT70NeH96gVpIzabWyh8bx3r0qNJIr
+         hi67RuSxiopL9hEBjhv5GO2BFGC1buV1E+RbQBVYLQx3fcT2PLnGGZ+6gcqHB/+BP0a5
+         nPSw==
+X-Gm-Message-State: APjAAAX8TqLU0mGCv0SbIL8sloJBlNolAsDXPq7awkCY44LK/g5+lFXK
+        qmXV+6Tniukl3rzTY+YZAKmJ/6/sYK1r3f3DrH4=
+X-Google-Smtp-Source: APXvYqxnbQilW4iMMvtajv6GT4Exg1xYmHrKUsTKPPxEke+F68s4JqLngeQF4aZcmLr6rDaXsWXHxB3VKBU07slHupM=
+X-Received: by 2002:a05:6808:8e1:: with SMTP id d1mr1369120oic.68.1582192935803;
+ Thu, 20 Feb 2020 02:02:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200218162943.2488012-1-christian.brauner@ubuntu.com> <20200218162943.2488012-7-christian.brauner@ubuntu.com>
+In-Reply-To: <20200218162943.2488012-7-christian.brauner@ubuntu.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Feb 2020 11:02:04 +0100
+Message-ID: <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 6/9] drivers/base/power: add dpm_sysfs_change_owner()
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Feb 18, 2020 at 5:30 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> Add a helper to change the owner of a device's power entries. This
+> needs to happen when the ownership of a device is changed, e.g. when
+> moving network devices between network namespaces.
+> This function will be used to correctly account for ownership changes,
+> e.g. when moving network devices between network namespaces.
+>
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+> /* v2 */
+> - "Rafael J. Wysocki" <rafael@kernel.org>:
+>   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
+>      if (device_can_wakeup(dev)) check since the former can never be true if
+>      the latter is false.
+>
+> - Christian Brauner <christian.brauner@ubuntu.com>:
+>   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
+>     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
+>     when this config option is set.
+>
+> /* v3 */
+> -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+>    - Add explicit uid/gid parameters.
+> ---
+>  drivers/base/core.c        |  4 ++++
+>  drivers/base/power/power.h |  3 +++
+>  drivers/base/power/sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 49 insertions(+)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index ec0d5e8cfd0f..efec2792f5d7 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3522,6 +3522,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+>         if (error)
+>                 goto out;
+>
+> +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
+> +       if (error)
+> +               goto out;
+> +
+>  #ifdef CONFIG_BLOCK
+>         if (sysfs_deprecated && dev->class == &block_class)
+>                 goto out;
+> diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
+> index 444f5c169a0b..54292cdd7808 100644
+> --- a/drivers/base/power/power.h
+> +++ b/drivers/base/power/power.h
+> @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
+>  extern void pm_qos_sysfs_remove_flags(struct device *dev);
+>  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
+>  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
+> +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
+>
+>  #else /* CONFIG_PM */
+>
+> @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
+>
+>  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
+>  static inline void dpm_sysfs_remove(struct device *dev) {}
+> +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
+> +                                        kgid_t kgid) { return 0; }
+>
+>  #endif
+>
+> diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
+> index d7d82db2e4bc..4e79afcd5ca8 100644
+> --- a/drivers/base/power/sysfs.c
+> +++ b/drivers/base/power/sysfs.c
+> @@ -684,6 +684,48 @@ int dpm_sysfs_add(struct device *dev)
+>         return rc;
+>  }
+>
+> +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
+> +{
+> +       int rc;
+> +
+> +       if (device_pm_not_required(dev))
+> +               return 0;
+> +
+> +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
+> +       if (rc)
+> +               return rc;
+> +
+> +       if (pm_runtime_callbacks_present(dev)) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +       if (device_can_wakeup(dev)) {
+> +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
+> +                                             kuid, kgid);
+> +               if (rc)
+> +                       return rc;
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +               if (dev->power.wakeup && dev->power.wakeup->dev) {
+> +                       rc = device_change_owner(dev->power.wakeup->dev, kuid,
+> +                                                kgid);
+> +                       if (rc)
+> +                               return rc;
+> +               }
+> +#endif
 
-GPIO descriptors are freed by consumers using gpiod_put(). The name of
-this function suggests some reference counting is going on but it's not
-true.
+First off, I don't particularly like #ifdefs in function bodies.  In
+particular, there is a CONFIG_PM_SLEEP block in this file already and
+you could define a new function in there to carry out the above
+operations, and provide an empty stub of it for the "unset" case.
+Failing to do so is somewhat on the "rushing things in" side in my
+view.
 
-Use kref to actually introduce reference counting for gpio_desc objects.
-Add a corresponding gpiod_get() helper for increasing the reference count.
+Second, the #ifdef should cover the entire if (device_can_wakeup(dev))
+{} block, because wakeup_sysfs_add() is only called if
+device_can_wakeup(dev) returns 'true' for the device in question (and
+arguably you could have checked that easily enough).
 
-This doesn't change anything for already existing (correct) drivers but
-allows us to keep track of GPIO descs used by multiple users.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpiolib.c        | 36 ++++++++++++++++++++++++++++++++---
- drivers/gpio/gpiolib.h        |  1 +
- include/linux/gpio/consumer.h |  1 +
- 3 files changed, 35 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 753283486037..42f820356279 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2798,6 +2798,8 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 		goto done;
- 	}
- 
-+	kref_init(&desc->ref);
-+
- 	if (chip->request) {
- 		/* chip->request may sleep */
- 		spin_unlock_irqrestore(&gpio_lock, flags);
-@@ -2933,6 +2935,13 @@ void gpiod_free(struct gpio_desc *desc)
- 	}
- }
- 
-+static void gpiod_free_kref(struct kref *ref)
-+{
-+	struct gpio_desc *desc = container_of(ref, struct gpio_desc, ref);
-+
-+	gpiod_free(desc);
-+}
-+
- /**
-  * gpiochip_is_requested - return string iff signal was requested
-  * @chip: controller managing the signal
-@@ -5047,18 +5056,39 @@ struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
- EXPORT_SYMBOL_GPL(gpiod_get_array_optional);
- 
- /**
-- * gpiod_put - dispose of a GPIO descriptor
-- * @desc:	GPIO descriptor to dispose of
-+ * gpiod_put - decrease the reference count of a GPIO descriptor
-+ * @desc:	GPIO descriptor to unref
-  *
-  * No descriptor can be used after gpiod_put() has been called on it.
-  */
- void gpiod_put(struct gpio_desc *desc)
- {
- 	if (desc)
--		gpiod_free(desc);
-+		kref_put(&desc->ref, gpiod_free_kref);
- }
- EXPORT_SYMBOL_GPL(gpiod_put);
- 
-+/**
-+ * gpiod_ref - increase the reference count of a GPIO descriptor
-+ * @desc:	GPIO descriptor to reference
-+ *
-+ * Returns the same gpio_desc after increasing the reference count.
-+ */
-+struct gpio_desc *gpiod_ref(struct gpio_desc *desc)
-+{
-+	if (!desc)
-+		return NULL;
-+
-+	if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
-+		pr_warn("gpiolib: unable to increase the reference count of unrequested GPIO descriptor\n");
-+		return desc;
-+	}
-+
-+	kref_get(&desc->ref);
-+	return desc;
-+}
-+EXPORT_SYMBOL_GPL(gpiod_ref);
-+
- /**
-  * gpiod_put_array - dispose of multiple GPIO descriptors
-  * @descs:	struct gpio_descs containing an array of descriptors
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 3e0aab2945d8..51a92c43dd55 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -119,6 +119,7 @@ struct gpio_desc {
- 	const char		*label;
- 	/* Name of the GPIO */
- 	const char		*name;
-+	struct kref		ref;
- };
- 
- int gpiod_request(struct gpio_desc *desc, const char *label);
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index bf2d017dd7b7..c7b5fb3d9d64 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -81,6 +81,7 @@ struct gpio_descs *__must_check gpiod_get_array(struct device *dev,
- struct gpio_descs *__must_check gpiod_get_array_optional(struct device *dev,
- 							const char *con_id,
- 							enum gpiod_flags flags);
-+struct gpio_desc *gpiod_ref(struct gpio_desc *desc);
- void gpiod_put(struct gpio_desc *desc);
- void gpiod_put_array(struct gpio_descs *descs);
- 
--- 
-2.25.0
-
+> +       }
+> +       if (dev->power.set_latency_tolerance) {
+> +               rc = sysfs_group_change_owner(
+> +                       &dev->kobj, &pm_qos_latency_tolerance_attr_group, kuid,
+> +                       kgid);
+> +               if (rc)
+> +                       return rc;
+> +       }
+> +       return 0;
+> +}
+> +
+>  int wakeup_sysfs_add(struct device *dev)
+>  {
+>         return sysfs_merge_group(&dev->kobj, &pm_wakeup_attr_group);
+> --
+> 2.25.0
+>
