@@ -2,52 +2,95 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F10C11D1C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6700DC11D1C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4721F208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3753A207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582227967;
+	bh=fWj4DricUfMFagu/vY1UD5Ak4KseFe0NphU6bFhigEk=;
+	h=Subject:From:To:Cc:Date:List-ID:From;
+	b=efBFN43LvOlUlYaOy8Fl9moll2MzLd2u4M1D26IwEZvvaPlEIhC5JkOK+waGI8u+1
+	 3i+obwCpWu8jB6Zc6yIVDK6JIqdLV6XlK21cCkc74VZjLfe7kEq27d+YCmNPmZwVby
+	 3osyxcSvwEeEwVYdJ3HnmzZMbzKhNVnm5MFd2BlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgBTTo5 (ORCPT
+        id S1728939AbgBTTqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:44:57 -0500
-Received: from muru.com ([72.249.23.125]:56484 "EHLO muru.com"
+        Thu, 20 Feb 2020 14:46:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbgBTTo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:44:56 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 1F44C8080;
-        Thu, 20 Feb 2020 19:45:41 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 11:44:53 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/10] n_gsm: drop unneeded gsm_dlci->fifo field
-Message-ID: <20200220194453.GT37466@atomide.com>
-References: <20200219084949.28074-1-jslaby@suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219084949.28074-1-jslaby@suse.cz>
+        id S1728334AbgBTTqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:46:05 -0500
+Received: from dhcp-9-31-102-231.watson.ibm.com (unknown [129.34.9.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC28206F4;
+        Thu, 20 Feb 2020 19:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582227965;
+        bh=fWj4DricUfMFagu/vY1UD5Ak4KseFe0NphU6bFhigEk=;
+        h=Subject:From:To:Cc:Date:From;
+        b=Vsl69bltoqHLqv4yfsvsiBB8zK97DHc1G1Cj/PK0ciqD+Z59dlrOA6LNHeh7GaE8S
+         PRXKGrQxQvjKAEpkaSXapAO7n6ELO+WNEr9hcUeyPYHApFWZqaKmYa9m8GZDQU5d3I
+         416r4uGWRx3Qy6o2TVzZQIVdsN+YXAX/6k7j4zfA=
+Message-ID: <1582227963.19057.17.camel@kernel.org>
+Subject: [GIT PULL] integrity subsystem fixes for v5.6
+From:   Mimi Zohar <zohar@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Feb 2020 14:46:03 -0500
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Linus,
 
-* Jiri Slaby <jslaby@suse.cz> [700101 00:00]:
-> gsm_dlci->fifo always points to gsm_dlci->_fifo. So drop the pointer and
-> rename _fifo to fifo. And update all the users (add & to them).
+Here are two bug fixes and an associated change for each.  The one
+that adds SM3 to the IMA list of supported hash algorithms is a simple
+change, but could be considered a new feature.
 
-I gave this series a quick test with my pending n_gsm serdev changes
-and things work fine for me.
+thanks,
 
-So for the whole series, please feel free to add:
+Mimi
 
-Tested-by: Tony Lindgren <tony@atomide.com>
+
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git next-integrity
+
+for you to fetch changes up to 5780b9abd530982c2bb1018e2c52c05ab3c30b45:
+
+  ima: add sm3 algorithm to hash algorithm configuration list (2020-02-18 07:35:49 -0500)
+
+----------------------------------------------------------------
+Ard Biesheuvel (1):
+      x86/ima: use correct identifier for SetupMode variable
+
+Javier Martinez Canillas (1):
+      efi: Only print errors about failing to get certs if EFI vars are found
+
+Tianjia Zhang (2):
+      crypto: rename sm3-256 to sm3 in hash_algo_name
+      ima: add sm3 algorithm to hash algorithm configuration list
+
+ arch/x86/kernel/ima_arch.c                    |  6 ++--
+ crypto/hash_info.c                            |  2 +-
+ security/integrity/ima/Kconfig                |  5 ++++
+ security/integrity/platform_certs/load_uefi.c | 40 +++++++++++++++++----------
+ 4 files changed, 34 insertions(+), 19 deletions(-)
