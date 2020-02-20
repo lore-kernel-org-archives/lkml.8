@@ -2,193 +2,217 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCB6EC11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B6A6C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9035208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A16208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="GyaaVhHG"
+	dkim=pass (1024-bit key) header.d=LenovoBeijing.onmicrosoft.com header.i=@LenovoBeijing.onmicrosoft.com header.b="nHEtHXgK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbgBTPOX (ORCPT
+        id S1728630AbgBTPOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:14:23 -0500
-Received: from mail-vi1eur05on2053.outbound.protection.outlook.com ([40.107.21.53]:30306
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728264AbgBTPOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:14:21 -0500
+        Thu, 20 Feb 2020 10:14:53 -0500
+Received: from mail1.bemta24.messagelabs.com ([67.219.250.115]:37091 "EHLO
+        mail1.bemta24.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728477AbgBTPOw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:14:52 -0500
+Received: from [100.112.135.241] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-b.us-west-2.aws.symcld.net id 21/AA-41136-862AE4E5; Thu, 20 Feb 2020 15:14:48 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1VTfUxTVxzt7Xt97xXp9gSUK5sGGpYhoV0LG3k
+  qurkR8ticGw6VyOYso9KatrC2QNnIwuJwpsiHghlUoLXABojC2BwfRXCADoGAKegIyoiIDPAD
+  J1MREPYeD932z805v3Puuecm9xKIWwnuRShNRqVep9CIMRc0bt0kLtlv375XNuTwpSZy2gB1L
+  H8RoVp+h1T3nSGc6n84hVHmkzLqYEk1Rp1oC6EKx04D6oe+akCV/12AU32NhRjVYZlFqcm2AY
+  w61TSOUOWV+eAtkm6wDOG0rTaRnjsP6J/K/enrV5swuvhSBN1SVIXTwxm/8WmHbZpPTzVfwej
+  p2nUfrtgjUOti4k37BKrF8wOChBofk+P4DJIGZrzNwIVwIxcBHDsyjnNkHMCun0cRjqTz4Z30
+  M3wzEDJkHsCSU56sAMgyBBZmVuEcuYhCe0X3MqkBMGN2GrAEJR0ILC1M43NhuXzYc2gA48gIg
+  ENXzuJsMkb6QeuJApQVPMgcxvV93tJ+hBxEoCW9WsC63Mk98FuzgxEIxhUNm62hHAyEQ2e2sA
+  6UfAW2fteGs2MRuQ8et5q44qnw7sGypaOEZATMzq/DWAzI1fBxZ9XS5RDSEw6OWpcwJElY2tS
+  LcHgVnLi5IOD8O+HguSMCbu4NG7Mblv1rodOaATj8PqyoqlueB8Bf+vNQDofAC3/aULYaJH3h
+  QmsKN46HHQ8r0BwQZPlPCwvjQsj1sLrxNW7sA/MybuAsFpEr4aWCUdQG0EoQHKNXx6mMWoVaI
+  5HLZBK5PFAiDwqUBEsVX0hipIkGSbLSYJQEShXJBqkhRfuZJlaqUxprAfNGYxO+wepB7+kpaS
+  tYQ/DFq0S7s7fvdXshJj42RaUwqD7VJ2qUhlbwMkGIochsY7SVemWc0rRfrWFe+jMZEq5iD9G
+  ElZFFhgSF1qCO46ROsIHImSiyI8S9JyXM2l5UZkfcUF28TunlKUpg80h2gypR9zzu2d9xgrVe
+  7iLA4/HcXBOUeq3a+H99EngSQOwuimJTXNU64/NTJ5lCfKbQlPs2tpBR8a/klcaH87P3d3Ruq
+  G91hqYcTR3O/Ss0Uu5zaHzE5aOF0qDDsuvRG28mhTnmr222XqzeuqVmLvX2o5ie0k2vhn3p4Z
+  T5+Y2PnR0WWng9X/mvGTzA67pftj5gR2XSH5KZkk/sSdGR5pDDZaQs+vI7n/u+3r5JqdG2K8Y
+  C3kj5evXYe5bw25SPd+dO+oET74rO0sdGvbnN9cKKX+dq8hpCYz1Hi7NvXa7nh7VkVW7Oqhmu
+  ExYJX3pa/2iX6cdehHf3Wlxke3DUSP/RD158es4r/N2iAUta9y1xcG7nyeS+vExHfTH2JOftj
+  Zl25+77/fe0EX61NolGrtZXXe1QH9jV9vhBuGVr8w2hBX4sRg0qhdwf0RsU/wAXs/vFtgQAAA
+  ==
+X-Env-Sender: mpearson@lenovo.com
+X-Msg-Ref: server-32.tower-346.messagelabs.com!1582211682!75939!1
+X-Originating-IP: [103.30.234.7]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.44.25; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 11895 invoked from network); 20 Feb 2020 15:14:45 -0000
+Received: from unknown (HELO lenovo.com) (103.30.234.7)
+  by server-32.tower-346.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 20 Feb 2020 15:14:45 -0000
+Received: from reswpmail01.lenovo.com (unknown [10.62.32.20])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by Forcepoint Email with ESMTPS id 44D522E4C184FFB761FA;
+        Thu, 20 Feb 2020 23:14:39 +0800 (CST)
+Received: from reswpmail02.lenovo.com (10.62.32.21) by reswpmail01.lenovo.com
+ (10.62.32.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1779.2; Thu, 20 Feb
+ 2020 10:14:31 -0500
+Received: from va32wusexedge01.lenovo.com (10.62.123.116) by
+ reswpmail02.lenovo.com (10.62.32.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.1779.2
+ via Frontend Transport; Thu, 20 Feb 2020 07:14:31 -0800
+Received: from APC01-PU1-obe.outbound.protection.outlook.com (104.47.126.57)
+ by mail.lenovo.com (10.62.123.116) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1779.2; Thu, 20 Feb 2020 23:14:30 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kPwhyPt0pnyd+N7bS5nZvbgBD+df4bo2FtEi4WaFayJhz2Fbk5t1R97z1OgMkRfWaYy6qxE/X4bJZr8vLsq7vZJP5jbquyfd45cDCaqeRurRjErFB8VbK5c6BT1cR0CVqzqSrUO5TcoWGsYOsknmNAE1RhjEX2lyAE6qi4+l6zSqX8q/L4pBkH4JJW6XmKmUId41D1QtOHbS5nOWLBZhDSqgZw8hR3SlL7t49tGOxWUcypbtjuC4BinqpJ5ETe16v6Shw/6mwEHpaU3H9zNmA4v/pQYfwZxtaCBAI8nQH/2LuF5yxKuuX6Lf8qX+ggydpf69Oi7vaZbu7HRBo/cCuw==
+ b=Kc5u79maBXN3IoVNeWaba8o1mc2pPZpSOKQDxFCodcUR5SfSwTGzzBBYKn8/PTjOIh2qGd2pfVuuZUFQQeO+mL+SskGhhspxtvL0kqNmCEFTimlcn8xZ3cSTFakTP8x/AxHR/t7R/LIkB9EpTaQ+5Z0iUp05gGeEs2Dt5a1kOQ0yUrxJt2wZxg8OhAlBAoyXi4gBizTQUoaNnqO+TwNcaL0yGphxN5fIANLebjUx9POhln2x35yTC07IoMAU6TJRC+TTrovFahQkFq/YJZ6Kgtrfk90A2JewW2U2dLcqUiiEBhSh81D5sP57xNcgrYqanzdJ0X6XJ7TGVFpJ97CvBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GKEaasxnyRA+P4oASqtn3mrcD23oV3l4Uil1XBkc4oo=;
- b=KEIBOJQwVMTt+t5buWFLar2vQdn6h7FCkvs0ljkIwhY6WrLPCEIJYwGNceeQRXzC6Wptt8AJtCFbfunXjt/sS0lrE4fbZYzoFRjUwl6UowHICScW2gIeo8DhLfJh7Yy9cxhzMx8UoBh/foqgsQqJrlz6pFcm6uBwvYskhVLiaKYVhWCd3xcMyooaf4aZm+Sk0pJS49GBqDi0Vo9BxOzY2HyHUUQi4WqM8B+J2mntuqK+fKZcybaNsGRYn8knP7XpzyIRZZnnzBjQMp+Y0pKTGlCuG9dt1gBbrdY5mM8+/UKK2FGUX0GKTYybQrote1JHzyuTsEi98l7f0MRyULJlXw==
+ bh=uGWowALbmCst9N7V+BOIDhQPc21SXUxxPEtCbFvYGtU=;
+ b=VdlJ5uaLEV4lg3y7kzyAqMlDY5UkQ3eKeYTShgaPhUqU8aLGpxfFOf/3qujxqOmjNh3mN4vJPnSb0I5jrGeUPyM8Y27GSwglQDqTO4fGQTMbUgsTg2Lr0XvsIq3Ws4sKsEI8QCE4ptCigSRg0N179izSLQ/MTyrwNWGDBH1AGDaQ6ezDUY2PNFvvPlBW9YObYFQB0iqXdpCGmj51WJk5ZGT+xnj0Atk4GAA7LkfRJG6/HUe0I8VNxuY9ZzefGhvyzLqLC8PWgq7roYqENkRR2xXljWAJP+P1DA0SVU0jWeVdNxZ3r7DhkSXXogZDvvOmFHmTHQ6ZVRdqp+86XbIf6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=lenovo.com; dmarc=pass action=none header.from=lenovo.com;
+ dkim=pass header.d=lenovo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=LenovoBeijing.onmicrosoft.com; s=selector2-LenovoBeijing-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GKEaasxnyRA+P4oASqtn3mrcD23oV3l4Uil1XBkc4oo=;
- b=GyaaVhHGU3/4dOefUDSDmXchEiCk2B2QBphJd6SKsLHKieueXQvgvvmmvFlE2rBjp5Po9QsNIP2xhx+2TR1iUjIe5jN8TNptTi18toa+/4a07H+YXqU7yNFDcH72EsYL6khLVyaeWwrUWiITNpeyKLozHc1HThq7WHr0PX/G0xM=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4830.eurprd05.prod.outlook.com (20.177.48.203) with Microsoft SMTP
+ bh=uGWowALbmCst9N7V+BOIDhQPc21SXUxxPEtCbFvYGtU=;
+ b=nHEtHXgKN0ei5F5XHmEdUfmIRGjcGUIR9BbQG50xLij+1rWPxJ5g7ev5nElgluAuEzeEkyKENFPyr9DFQ8X4JJNotPBSrFl1Fu9GeI2tHJblnQN7O4LOB6dEbE3oQE7T7U/1miwjzP9h7RS+/PGN2KmIcN+k9PaIw6kYKs3kcDY=
+Received: from HK2PR0302MB2593.apcprd03.prod.outlook.com (10.170.146.17) by
+ HK2PR0302MB2609.apcprd03.prod.outlook.com (10.170.149.14) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Thu, 20 Feb 2020 15:14:16 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
- 15:14:16 +0000
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR22CA0005.namprd22.prod.outlook.com (2603:10b6:208:238::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend Transport; Thu, 20 Feb 2020 15:14:16 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j4nWm-0002vi-1V; Thu, 20 Feb 2020 11:14:12 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-CC:     "mst@redhat.com" <mst@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "aadam@redhat.com" <aadam@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Shahaf Shuler <shahafs@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>
-Subject: Re: [PATCH V4 3/5] vDPA: introduce vDPA bus
-Thread-Topic: [PATCH V4 3/5] vDPA: introduce vDPA bus
-Thread-Index: AQHV57TR3IrhEhlGx0uJBD21uKCULKgkMWYA
-Date:   Thu, 20 Feb 2020 15:14:16 +0000
-Message-ID: <20200220151412.GV23930@mellanox.com>
-References: <20200220061141.29390-1-jasowang@redhat.com>
- <20200220061141.29390-4-jasowang@redhat.com>
-In-Reply-To: <20200220061141.29390-4-jasowang@redhat.com>
+ 15.20.2750.9; Thu, 20 Feb 2020 15:14:26 +0000
+Received: from HK2PR0302MB2593.apcprd03.prod.outlook.com
+ ([fe80::20bc:254b:6c9:b694]) by HK2PR0302MB2593.apcprd03.prod.outlook.com
+ ([fe80::20bc:254b:6c9:b694%10]) with mapi id 15.20.2750.016; Thu, 20 Feb 2020
+ 15:14:26 +0000
+From:   Mark Pearson <mpearson@lenovo.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Nitin Joshi <nitjoshi@gmail.com>,
+        Mat King <mathewk@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Rajat Jain <rajatja@google.com>
+CC:     Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Thinkpad-acpi devel ML" <ibm-acpi-devel@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Nitin Joshi1 <njoshi1@lenovo.com>,
+        Benjamin Berg <bberg@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: RE: [External]  Re: [PATCH] thinkpad_acpi: Add sysfs entry for
+ lcdshadow feature
+Thread-Topic: [External]  Re: [PATCH] thinkpad_acpi: Add sysfs entry for
+ lcdshadow feature
+Thread-Index: AQHV59qPOpC1IkCjDkm9hRYaaz1mrqgkLFhg
+Date:   Thu, 20 Feb 2020 15:14:25 +0000
+Message-ID: <HK2PR0302MB25937E2946BF38583B3A905DBD130@HK2PR0302MB2593.apcprd03.prod.outlook.com>
+References: <20200220074637.7578-1-njoshi1@lenovo.com>
+ <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
+In-Reply-To: <CAHp75VcJmEOu1-b7F2UAsv=Gujb=pPLzjz2ye9t4=Q68+ors-w@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR22CA0005.namprd22.prod.outlook.com
- (2603:10b6:208:238::10) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.68.57.212]
+x-originating-ip: [70.48.229.69]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8646165e-02d1-4e27-7736-08d7b6178ce3
-x-ms-traffictypediagnostic: VI1PR05MB4830:|VI1PR05MB4830:
+x-ms-office365-filtering-correlation-id: 58a4cd3c-0015-4f89-5271-08d7b61792db
+x-ms-traffictypediagnostic: HK2PR0302MB2609:
+x-ld-processed: 5c7d0b28-bdf8-410c-aa93-4df372b16203,ExtAddr
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB4830C66CBA4E37BBD709385BCF130@VI1PR05MB4830.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam-prvs: <HK2PR0302MB2609F81AF71A1235858D9B04BD130@HK2PR0302MB2609.apcprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(366004)(199004)(189003)(186003)(33656002)(5660300002)(66446008)(316002)(66556008)(1076003)(2906002)(478600001)(66476007)(64756008)(66946007)(54906003)(7416002)(26005)(8936002)(52116002)(81156014)(71200400001)(4326008)(8676002)(6916009)(2616005)(86362001)(9786002)(81166006)(9746002)(36756003)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4830;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(346002)(396003)(39860400002)(199004)(189003)(7696005)(9686003)(5660300002)(52536014)(966005)(8676002)(81166006)(55016002)(33656002)(7416002)(478600001)(81156014)(54906003)(110136005)(71200400001)(26005)(66476007)(66946007)(76116006)(66556008)(66446008)(64756008)(186003)(86362001)(316002)(53546011)(4326008)(8936002)(6506007)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK2PR0302MB2609;H:HK2PR0302MB2593.apcprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: lenovo.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3l1TUjvq5JcV1MdHQObPDgQ1nh1CKsV64dJXhavzUo/zyCreN4/0O0t1Y1W4EFcftYRPWnw891N7WDFOKQ8E4tP3h4VJ8OQ6c/QXuYLT5rOCPoN0KtYIFLUzaBVzknMFzYvUr7uM1bb03UprUSbfiId2YtCSM/JZspQDTXCWsF52xtVNmGgDGCqe+UqMDHcJ+OIPE4wbHv75HPOOmYptv8x83Y/jqqtiQHMyhgYA3+p8re3GN42CY5yAB9cFDEdMtS1PmfbXG2Z57UAJeCrWGsHjpLdQ4YlNxR/RPQDgnBD5JdprXIDjQjbpH0jtDwrgQlKA1ZeNOYnyAGBiw/TROR/BOfRJxEBXFkg8nJ4Np+wup6IJHP90nwp39A6ekXkLOKCq4xdZFxia7my0DX6OX6h/23wt36VBMkzSnCD//V4tbHb0yFdg9WcpILjV5V0Uu2q/qrXjYAOdN5CHySdzMhTgic9+R8c8TXQFf6ad71BdvBhb5jU1igYbLISC+o97
-x-ms-exchange-antispam-messagedata: CXVXB74RSjBji8E6u0sQW8B+Qak3NefSmthR4lkNy2NEdZ7M9QZwaKBMbHIHxgJEoiHSzJr1EMAu4LgqF9H4UqRZDJNm7JtEwmF9GUYd6kwFIoME0y38J2yVNOnJaJawjBFb1Cq1b1rLzjz+KZSA2w==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <56560667045D7F4389E12517EA86F97B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: PAUMAejA6vHWKqRV6Y7VlrX6zJqpsOIik1JmxpvSyg1DrVjF1ER+50oOmJJ2kIgzyMg2BUMt67GWNkXnot/Zc5uNd2KU9inyXDMCpyQBZ25xf2Kye+Dk7ByMQI7xyEY652wi7K8RwiQvntWzLiK7oSahKuMFN9vUUXnkuQUfWabenmwmN3C7DRzzZG+puKqcdMOoMD6drbQOZc+gPRo9HMMqduyoAmBzM8yEKO/2MCiAj1hw2tLh78D8TXb6zqhFrdBXNSiHV+tpoSyQa+9O6HGGpkkFjw+zfGJiypNPfDGiQAVtCa4TgHKncexrS9GzWwKivUjrWwXZBC3N8Hqqh2QCqVsEvgLLS7MqBKIF/asOgL3aJZXKjuN6ZZDWlS10wzuvKvNIPzJB5nmdzMe5bAl6Bo9nZPry2WrYEhCFwgS6CEQ0wtSH1CxE8+CBde9V9JGSEzkW7caOH3IKdd3TzLfwct59/r/uLE/I18FgUxatqemmsq/4qZTQ+KYII8UuWxrumb0NHgMJ4fpoDpzSqw==
+x-ms-exchange-antispam-messagedata: GD0kU7ARgXwv61Z+GmxJ6AYbKvmaoC0fZg/dICMaoiJo8g/MsVVFUffrMiNH9hqjQeIEvk/HRLC/sU+7pNGUzs1u4a8VfQqlNC1ncwbpb47ZSOJQ9YuE8ZyNQ7iFsc/3QN+2wqEp/lKAAc1JGzdiYA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8646165e-02d1-4e27-7736-08d7b6178ce3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 15:14:16.3123
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58a4cd3c-0015-4f89-5271-08d7b61792db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 15:14:25.8565
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 5c7d0b28-bdf8-410c-aa93-4df372b16203
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S8ohyJ7RuvRc+Qdvsq/R+Oo7KzMe94EScLyA1qYTc32O4xaV+kyZ+ij0QrUalqlsmFoc9CNIHU/gQASjQgmwzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4830
+X-MS-Exchange-CrossTenant-userprincipalname: k5qn2QB5seEfTIUEKFsqsVPDMDB86jtAQEy5pI5aScyaoXtWwRkluE7ssoTb9B8+5QRPGps83HGAgfF0DNGs3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2PR0302MB2609
+X-OriginatorOrg: lenovo.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 02:11:39PM +0800, Jason Wang wrote:
-> vDPA device is a device that uses a datapath which complies with the
-> virtio specifications with vendor specific control path. vDPA devices
-> can be both physically located on the hardware or emulated by
-> software. vDPA hardware devices are usually implemented through PCIE
-> with the following types:
->=20
-> - PF (Physical Function) - A single Physical Function
-> - VF (Virtual Function) - Device that supports single root I/O
->   virtualization (SR-IOV). Its Virtual Function (VF) represents a
->   virtualized instance of the device that can be assigned to different
->   partitions
-> - ADI (Assignable Device Interface) and its equivalents - With
->   technologies such as Intel Scalable IOV, a virtual device (VDEV)
->   composed by host OS utilizing one or more ADIs. Or its equivalent
->   like SF (Sub function) from Mellanox.
->=20
-> From a driver's perspective, depends on how and where the DMA
-> translation is done, vDPA devices are split into two types:
->=20
-> - Platform specific DMA translation - From the driver's perspective,
->   the device can be used on a platform where device access to data in
->   memory is limited and/or translated. An example is a PCIE vDPA whose
->   DMA request was tagged via a bus (e.g PCIE) specific way. DMA
->   translation and protection are done at PCIE bus IOMMU level.
-> - Device specific DMA translation - The device implements DMA
->   isolation and protection through its own logic. An example is a vDPA
->   device which uses on-chip IOMMU.
->=20
-> To hide the differences and complexity of the above types for a vDPA
-> device/IOMMU options and in order to present a generic virtio device
-> to the upper layer, a device agnostic framework is required.
->=20
-> This patch introduces a software vDPA bus which abstracts the
-> common attributes of vDPA device, vDPA bus driver and the
-> communication method (vdpa_config_ops) between the vDPA device
-> abstraction and the vDPA bus driver. This allows multiple types of
-> drivers to be used for vDPA device like the virtio_vdpa and vhost_vdpa
-> driver to operate on the bus and allow vDPA device could be used by
-> either kernel virtio driver or userspace vhost drivers as:
->=20
->    virtio drivers  vhost drivers
->           |             |
->     [virtio bus]   [vhost uAPI]
->           |             |
->    virtio device   vhost device
->    virtio_vdpa drv vhost_vdpa drv
->              \       /
->             [vDPA bus]
->                  |
->             vDPA device
->             hardware drv
->                  |
->             [hardware bus]
->                  |
->             vDPA hardware
-
-I still don't like this strange complexity, vhost should have been
-layered on top of the virtio device instead of adding an extra bus
-just for vdpa.
-
-However, I don't see any technical problems with this patch now.
-
-Thanks,
-Jason
+SGkgQW5keQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFuZHkgU2hl
+dmNoZW5rbyA8YW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIEZl
+YnJ1YXJ5IDIwLCAyMDIwIDU6NDMgQU0NCj4gDQo+IE9uIFRodSwgRmViIDIwLCAyMDIwIGF0IDk6
+NDggQU0gTml0aW4gSm9zaGkgPG5pdGpvc2hpQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiAg
+IFRoaXMgZmVhdHVyZSBpcyBzdXBwb3J0ZWQgb24gc29tZSBUaGlua3BhZCBwcm9kdWN0cyBsaWtl
+IFQ0OTBzLCBUaGlua3BhZA0KPiA+ICAgWDEgeW9nYSA0dGggR2VuIGV0YyAuIFRoZSBsY2RzaGFk
+b3cgZmVhdHVyZSBjYW4gYmUgZW5hYmxlZCBhbmQgZGlzYWJsZWQNCj4gPiAgIHdoZW4gdXNlciBw
+cmVzcyAiRm4iICsgIkQiIGtleS4gQ3VycmVudGx5LCBubyB1c2VyIGZlZWRiYWNrIGlzIGdpdmVu
+IGZvcg0KPiA+ICAgdGhpcyBhY3Rpb24uIEFkZGluZyBhcyBzeXNmcyBlbnRyeSBhbGxvd3MgdXNl
+cnNwYWNlIHRvIHNob3cgYW4gT24gU2NyZWVuDQo+ID4gICBEaXNwbGF5IHdoZW5ldmVyIHRoZSBz
+ZXR0aW5nIGNoYW5nZXMuDQo+ID4NCj4gPiAgIFN1bW1hcnkgb2YgY2hhbmdlcyBpcyBtZW50aW9u
+ZWQgYmVsb3cgOg0KPiA+DQo+ID4gIC0gQWRkZWQgVFBfSEtFWV9FVl9MQ0RTSEFET1dfQ0hBTkdF
+RCBmb3IgY29uc2lzdGVuY3kgaW5zaWRlIHRoZQ0KPiBkcml2ZXINCj4gPiAgLSBBZGRlZCB1bm1h
+cHBlZCBMQ0RTSEFET1cgdG8ga2V5bWFwDQo+ID4gIC0gQWRkZWQgbGNkc2hhZG93X2dldCBmdW5j
+dGlvbiB0byByZWFkIHZhbHVlIHVzaW5nIEFDUEkNCj4gPiAgLSBBZGRlZCBsY2RzaGFkb3dfcmVm
+cmVzaCBmdW5jdGlvbiB0byByZS1yZWFkIHZhbHVlIGFuZCBzZW5kIG5vdGlmaWNhdGlvbg0KPiA+
+ICAtIEFkZGVkIHN5c2ZzIGdyb3VwIGNyZWF0aW9uIHRvIHRwYWNpX2xjZHNoYWRvd19pbml0DQo+
+ID4gIC0gQWRkZWQgbGNkc2hhZG93X2V4aXQgdG8gcmVtb3ZlIHN5c2ZzIGdyb3VwIGFnYWluDQo+
+ID4gIC0gSW1wbGVtZW50ZWQgbGNkc2hhZG93X2VuYWJsZV9zaG93L2xjZHNoYWRvd19lbmFibGVf
+c3RvcmUNCj4gPiAgLSBBZGRlZCBoYW5kbGVyIHRvIHRwYWNwaV9kcml2ZXJfZXZlbnQgdG8gdXBk
+YXRlIHJlZnJlc2ggbGNkc2hhZG93DQo+ID4gIC0gRXhwbGljaXRseSBjYWxsIHRwYWNwaV9kcml2
+ZXJfZXZlbnQgZm9yIGV4dGVuZGVkIGtleXNldA0KPiANCj4gQWRkaW5nIGN1c3RvbSBQcml2YWN5
+R3VhcmQgc3VwcG9ydCB0byB0aGlzIGRyaXZlciB3YXMgbXkgbWlzdGFrZSwNCj4gVGhlcmUgaXMg
+YSBkaXNjdXNzaW9uIFsxXSBob3cgdG8gZG8gdGhpcyBpbiBnZW5lcmljIHdheSB0byBjb3ZlciBv
+dGhlcg0KPiBwb3NzaWJsZSB1c2Vycy4NCj4gSSBDYyB0aGlzIHRvIHBlb3BsZSBmcm9tIHRoYXQg
+ZGlzY3Vzc2lvbi4NCj4gDQo+IFsxXTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvZHJpLQ0KPiBk
+ZXZlbC9DQUxfcXV2UmtuU1NWdlhOM3FfU2UwaHJ6aXcyb1ROUzNFTk5vZUhZaHZjaUNScTlZd3dA
+bWFpbA0KPiAuZ21haWwuY29tLw0KPiANClRoYW5rcyBmb3IgdGhlIHBvaW50ZXIgdG8gdGhhdCB0
+aHJlYWQgLSByZWFsbHkgdXNlZnVsIGFuZCBpbnRlcmVzdGluZywgd2Ugd2VyZW4ndCBhd2FyZSB0
+aGVyZSB3YXMgYW4gb25nb2luZyBleGVyY2lzZSB0byBkbyB0aGlzLg0KDQpJIHdvcmsgd2l0aCBO
+aXRpbiBhcyBwYXJ0IG9mIHRoZSBMaW51eCB0ZWFtIGF0IExlbm92by4gV2UncmUgdHJ5aW5nIHRv
+IGdldCBtb3JlIGRpcmVjdGx5IGFuZCBhY3RpdmVseSBpbnZvbHZlZCBpbiB0aGUgb3BlbiBzb3Vy
+Y2UgY29tbXVuaXR5IHRvIGltcHJvdmUgdGhlIExpbnV4IGV4cGVyaWVuY2Ugb24gTGVub3ZvIGRl
+dmljZXMgYW5kIG9mIGNvdXJzZSB3YW50IHRvIG1ha2Ugc3VyZSB3ZSBjb250cmlidXRlIHRoZSBy
+aWdodCB3YXkuIFdlJ3JlIGFsbCBzdGlsbCBwcmV0dHkgbmV3IHNvIHBvaW50ZXJzIGFuZCBoZWxw
+IGFyZSB2ZXJ5IG11Y2ggYXBwcmVjaWF0ZWQgKHdlJ3ZlIGJlZW4gZ2V0dGluZyBzb21lIGdyZWF0
+IHN1cHBvcnQgZnJvbSB0aGUgZGlzdHJvcyB0byBnZXQgdXMgc3RhcnRlZCkuDQoNCkZvciB0aGlz
+IHBhcnRpY3VsYXIgaXNzdWUgd2hhdCBpcyB0aGUgYmVzdCB3YXkgdG8gY29udHJpYnV0ZSBhbmQg
+Z2V0IGludm9sdmVkPyBXZSdkIGxpa2UgdG8gbWFrZSBpdCBzbyBlUHJpdmFjeSBjYW4gYmUgdXNl
+ZCBtb3JlIGVhc2lseSBmcm9tIExpbnV4LiBJIGFncmVlIGEgbW9yZSBnZW5lcmljIHdheSBvZiBj
+b250cm9sbGluZyBpdCB3b3VsZCBiZSBnb29kLg0KSSBsb29rZWQgYXQgdGhlIHByb3Bvc2VkIHBh
+dGNoIGZyb20gUmFqYXQgKGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzEwLzIyLzk2NykgLSBp
+dCBzZWVtcyBsaWtlIGEgZ29vZCBzb2x1dGlvbiB0byBtZS4gV2UgY2FuIGhlbHAgd2l0aCB0ZXN0
+aW5nIHRoYXQgb24gb3VyIHBsYXRmb3JtcyBpZiB0aGF0IHdvdWxkIGJlIHVzZWZ1bC4NCg0KSSBu
+ZWVkIHRvIHVuZGVyc3RhbmQgaG93IHdlIGNvbm5lY3QgdGhhdCBpbXBsZW1lbnRhdGlvbiB3aXRo
+IHRoZSBBQ1BJIGNvbnRyb2xzIHdlIGhhdmUgKGFzIEkgYmVsaWV2ZSB3aGF0IHdlIGhhdmUgYXJl
+IHRoaW5rcGFkIHNwZWNpZmljIGFuZCBub3QgdG8gYSBkcm0gc3BlYzsgd2UgbmVlZCB0byBjb25m
+aXJtIHRoYXQpLiBXZSBhbHNvIGhhdmUgdGhlIEFDUEkgZXZlbnRzIHRoYXQgbm90aWZ5IGlmIGVQ
+cml2YWN5IHdhcyBjaGFuZ2VkIGJ5IHRoZSBob3RrZXlzIGFuZCB0aGF0IHNlZW1zIGxpa2Ugc29t
+ZXRoaW5nIHRoYXQgc2hvdWxkIGJlIGRvbmUgaW4gdGhpbmtwYWRfYWNwaS5jIGFuZCBub3QgdGhl
+IGRybSBjb2RlLiBOb3Qgc3VyZSBpZiB0aGUgdHdvIG5lZWQgdG8gYmUgY29ubmVjdGVkIHNvbWVo
+b3cgKG9yIGlmIGhhbmRsaW5nIHRoZSBldmVudCBpcyBhY3R1YWxseSBub3QgaW1wb3J0YW50IGFu
+ZCBwb2xsaW5nIGlzIGFjY2VwdGFibGUpPw0KDQpBcyBhIG5vdGUgTml0aW4gaGFzIGJlZW4gd29y
+a2luZyB3aXRoIHRoZSBSZWQgSGF0IGZvbGsgYW5kIGlzIGxvb2tpbmcgYXQgdGhlIHVzZXIgc3Bh
+Y2UgYXNwZWN0IG9mIHRoaXMgKGluIHBhcnRpY3VsYXJsIGdub21lIHNldHRpbmdzKSBhcyB3ZWxs
+Lg0KDQpUaGFua3MNCk1hcmsgUGVhcnNvbg0K
