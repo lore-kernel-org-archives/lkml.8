@@ -2,136 +2,145 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D890C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F6FC11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C2F2071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:43:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D43AC24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SDcgv1u/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XprjFRSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgBTPnP (ORCPT
+        id S1728486AbgBTPp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:43:15 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45755 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgBTPnO (ORCPT
+        Thu, 20 Feb 2020 10:45:28 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46632 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728289AbgBTPp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:43:14 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so2092248pfg.12;
-        Thu, 20 Feb 2020 07:43:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1DIMRV6Iqi1rLe5wMgz5eqoASoBEhZAuJOJhLs9EWXg=;
-        b=SDcgv1u/KxtAEvGdFod3asgbcGb/ypcbFpJI7L5wvrxLVXG1G1OG4sNftp87QbjuaC
-         9btXUMC6BSz/MvATW7U0uLF796Pv6wbNHLRCnzQfpAzngStKBcreMdIjAqyNPgAK5O4Q
-         dSdHoLLGdEuyf2kPK+06V6aHgQcbCxM2V5f73DfwvE+OwAfGcoKwat+U4zRHFQury1qi
-         o4NtU3HAcF6o9aR6mxYkzvNkvZJMS0/bHZYsVPhyaMxi8NH//AFvGjFRchAyBRWWSrwf
-         0pBi8Wg4pcJeKyQFOCSeYp4/bqB+Ywvwx0woG7UYS4r7PlZoChbDJTAxMMnLEXikqugP
-         TJ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1DIMRV6Iqi1rLe5wMgz5eqoASoBEhZAuJOJhLs9EWXg=;
-        b=tRQ9gho07qWIj05MjlXHT0MMvtopu537UAjHLGWck4DRg7NJ0sMcz9qrSVby9MiJ27
-         fjcBAYiJzZeLFRZB9vQI1Gaaswdr6UuE1lwnX7TDpOzvldAlAOtgUFDgoZm9iGTBC6Zv
-         bu2S5VPBf9RgK3dM5gtLi15Dec3pIsG8/P1oeB6JzqdtdLWSSepuQjIptqvSOGrZfxFc
-         vsFGCdtZwUaxQYF5hxqdWRo7G9rD3X7+IgV7ZOQ3qD6G4pbwEMzGWddhoPkrtbKFIPtS
-         YahkrYr+8FMHkLVMtfloCQ7fa7DRaj1Ql6WcpPMHV1WMEHn+Y6loCRrelySvpvkLIjeK
-         j5Sg==
-X-Gm-Message-State: APjAAAVE3SM2sM3FdL3ZgdVFXcuoRTKLbKM+nsm5NDzAxl7WBYJfY8mC
-        I9R500f/IuZfaa53G9mn81Q=
-X-Google-Smtp-Source: APXvYqwO3lW26bxqaJCMoOlpFAJtB3c1MIjoPwgFw5WTaUDCxMX3q2sVzXJyUPW4sVxi/vPZ2XA3Gg==
-X-Received: by 2002:a62:6409:: with SMTP id y9mr32901598pfb.30.1582213393847;
-        Thu, 20 Feb 2020 07:43:13 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x28sm4161696pgc.83.2020.02.20.07.43.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Feb 2020 07:43:12 -0800 (PST)
-Date:   Thu, 20 Feb 2020 07:43:11 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Evan Benn <evanbenn@chromium.org>
-Cc:     xingyu.chen@amlogic.com, Julius Werner <jwerner@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-Message-ID: <20200220154311.GA29658@roeck-us.net>
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus>
- <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
- <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
+        Thu, 20 Feb 2020 10:45:28 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KFiIcd099708;
+        Thu, 20 Feb 2020 15:45:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=Y/mFiU18EBtEaH5OMEwxs9bxgqWYfXtQzQK0tFNuMzw=;
+ b=XprjFRSGHt9YYCnNDTczDtIfli1Y+O0kphL/RPJ7I/vvYbyoTdaA1k7XDRwMMwTP/Ep1
+ hbkicNFvU3h3mL1nxqwsStgwBHHm7xKuv8BRKCjsKk+/shspPr7QLuFwEga05GMILil/
+ lpmK0g3v68WyUD6IVAGWlNImDuBofRSqpfwWBSRGnKDCDKSIpZPmC0qftkTCdsqfLEAo
+ TTpib+H965bQ77e7+qK1sTetoeqCydFYn9Azer0fHM66/tQASZ+b18g7ApOtSYIhbNWx
+ mD1DK+7ka2X3aQXR0sRZBnAEtPzBjuEAkon+WWWtdBYiTr7m9rxkevDzDEHyreVlaHn6 lQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2y8ud1ahwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 15:45:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KFfeTV191382;
+        Thu, 20 Feb 2020 15:45:12 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2y8ud435jg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 15:45:12 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01KFj7WR029782;
+        Thu, 20 Feb 2020 15:45:07 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 07:45:07 -0800
+Date:   Thu, 20 Feb 2020 10:45:24 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
+ <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
+ <20200219220859.GF54486@cmpxchg.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200219220859.GF54486@cmpxchg.org>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200115
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 spamscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:41:09PM +1100, Evan Benn wrote:
-> Dear Xingyu,
-> 
-> Could this driver also cover your usecase? I am not familiar with
-> meson, but it seems like the meson calls could
-> be replaced with arm_smccc calls. Then this driver will cover both
-> chips. I am not sure if your firmware is upstream
-> somewhere, but this might be adapted;
-> https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
-> 
-FWIW, the Meson driver has more functionality.
++Peter
 
-Guenter
+On Wed, Feb 19, 2020 at 05:08:59PM -0500, Johannes Weiner wrote:
+> On Wed, Feb 19, 2020 at 04:41:12PM -0500, Daniel Jordan wrote:
+> > On Wed, Feb 19, 2020 at 08:53:32PM +0100, Michal Hocko wrote:
+> > > On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
+> > > > On Wed, Feb 19, 2020 at 07:37:31PM +0100, Michal Hocko wrote:
+> > > > > On Wed 19-02-20 13:12:19, Johannes Weiner wrote:
+> > > > > > This patch adds asynchronous reclaim to the memory.high cgroup limit
+> > > > > > while keeping direct reclaim as a fallback. In our testing, this
+> > > > > > eliminated all direct reclaim from the affected workload.
+> > > > > 
+> > > > > Who is accounted for all the work? Unless I am missing something this
+> > > > > just gets hidden in the system activity and that might hurt the
+> > > > > isolation. I do see how moving the work to a different context is
+> > > > > desirable but this work has to be accounted properly when it is going to
+> > > > > become a normal mode of operation (rather than a rare exception like the
+> > > > > existing irq context handling).
+> > > > 
+> > > > Yes, the plan is to account it to the cgroup on whose behalf we're
+> > > > doing the work.
+> > 
+> > How are you planning to do that?
+> > 
+> > I've been thinking about how to account a kernel thread's CPU usage to a cgroup
+> > on and off while working on the parallelizing Michal mentions below.  A few
+> > approaches are described here:
+> > 
+> > https://lore.kernel.org/linux-mm/20200212224731.kmss6o6agekkg3mw@ca-dmjordan1.us.oracle.com/
+> 
+> What we do for the IO controller is execute the work unthrottled but
+> charge the cgroup on whose behalf we are executing with whatever cost
+> or time or bandwith that was incurred. The cgroup will pay off this
+> debt when it requests more of that resource.
+>
+[snip code pointers]
 
-> Thanks
-> 
-> 
-> On Thu, Feb 20, 2020 at 10:20 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> >
-> > On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
-> > > > You are not the first 'watchdog in firmware accessed via an SMC call'.
-> > > > Is there some more detail about what implementation this is? Part of
-> > > > TF-A? Defined by some spec (I can dream)?
-> > >
-> > > This is just some random implementation written by me because we
-> > > needed one. I would like it to be the new generic implementation, but
-> > > it sounds like people here prefer the naming to be MediaTek specific
-> > > (at least for now). The other SMC watchdog we're aware of is
-> > > imx_sc_wdt but unfortunately that seems to hardcode platform-specific
-> >
-> > There is one more pending, for Meson SMC.
-> >
-> > https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
-> >
-> > Unfortunately it uses Meson firmware API functions, though it has pretty
-> > much the same functionality since those ultimately end up calling
-> > arm_smccc_smc().
-> >
-> > Guenter
-> >
-> > > details in the interface (at least in the pretimeout SMC) so we can't
-> > > just expand that. With this driver I tried to directly wrap the kernel
-> > > watchdog interface so it should be platform-agnostic and possible to
-> > > expand this driver to other platforms later if desired. The SMC
-> > > function ID would still always have to be platform-specific,
-> > > unfortunately (but we could pass it in through the device tree), since
-> > > the Arm SMC spec doesn't really leave any room for OS-generic SMCs
-> > > like this.
+Thanks!  Figuring out how the io controllers dealt with remote charging was on
+my list, this makes it easier.
+
+> The plan for the CPU controller is similar. When a remote execution
+> begins, flush the current runtime accumulated (update_curr) and
+> associate the current thread with another cgroup (similar to
+> current->active_memcg); when remote execution is done, flush the
+> runtime delta to that cgroup and unset the remote context.
+
+Ok, consistency with io and memory is one advantage to doing it that way.
+Creating kthreads in cgroups also seems viable so far, and it's unclear whether
+either approach is significantly simpler or more maintainable than the other,
+at least to me.
+
+Is someone on your side working on remote charging right now?  I was planning
+to post an RFD comparing these soon and it would make sense to include them.
