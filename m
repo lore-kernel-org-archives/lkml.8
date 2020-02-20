@@ -2,163 +2,126 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E08C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F09C11D19
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A6A2467D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24DEC2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uEXDpSnv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jQemFjxS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728759AbgBTSO5 (ORCPT
+        id S1728336AbgBTSRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:14:57 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44060 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgBTSO5 (ORCPT
+        Thu, 20 Feb 2020 13:17:06 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38075 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTSRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:14:57 -0500
-Received: by mail-ot1-f67.google.com with SMTP id h9so4532076otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:14:56 -0800 (PST)
+        Thu, 20 Feb 2020 13:17:06 -0500
+Received: by mail-io1-f67.google.com with SMTP id s24so5745466iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:17:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uUKdgkaufxLmLYOt3TduZTiePIKaOkl8sejxXEeQJug=;
-        b=uEXDpSnvxNGx/1g8in8h2Lps6UF2cwI0Ci30lm3NqVXZaApTkzuDK+720dgSH9vb6k
-         KPzL7duyHh9m0BqEDV45tazOognY/d0scMRdl2OcG1JPE/lSbuZQK0NgSRFEE6JZ1ocE
-         bqLEMcVwBuFDRo16e9ImN9DFgGBbY4Rh3WKWen7Cz5Tan7f1NIIGTAN0UdCsrXlhKb2x
-         xp82sXN5MddaQ9Fo3jlxRRZOvEG5C3dmzkLPX1is1Moe0S017U8Ajd4vA0J68kr+ivdJ
-         DDHGyxImOHKFItW4eCZUYeAX2LdHOyh93fukcpNbkzLACAa56EL81Jnugc/MS1xxyks7
-         aVSg==
+        bh=bkxRzQQdsIgezztPpGEXgB6Tbmhl9XsKSgHs8oMS58Y=;
+        b=jQemFjxSgs+RoEzDujDqc912isO0FUO0iIwvqLQJMChzH/Gmf/croCHJidjUYYZCqQ
+         lw9uK4DfNAdkD1ouXwdr9zyhQ6VigKaKkJPZg1+hgfKhT0C3+Xe5FoiZ7heBU+OjjsM0
+         y2DEJ/IzOZHgfE4ixY90KY5gtlpiaqKTeoWx6VCXN3DN+yfIpjZ6uo6KCNllAS1sQ8sU
+         HGKU1F1G01iyehjfju6BPOSbJ4Atfis29U0cvBqqebpduIoBhW1PKPZ8qlV3lTgYLKLM
+         2X4HqP62mlgsviOvsMA2/YpXRxYbtLOTyR4K+l+JmAp36GrNmP2ZVf7QND7JYCMmW/x+
+         gboA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uUKdgkaufxLmLYOt3TduZTiePIKaOkl8sejxXEeQJug=;
-        b=mDgo7bipT/BBc4dgsJkozwq7yOX91Ad9baDNnnsNff0JakXwnTr3ongtKh8QmBt+z+
-         r89NxHCNR31/E4bwNFysNW30wVSf2nPHQ9vjOiv7ZRzTPyVIsMhUnD74Qu661ZXN3di8
-         cRROye21B3vEVLHjPcqSaolKaDg1D6Fh3K6S02bFDtZmkrXR7udJCm+Il3LqR6GWRHLd
-         N8IfFlpn05HnzGz1TphgTMnP+OXRgCGuiPuEQ1LL3ucTgnok6bH53zJAEyWoupYCum6n
-         PGiTA1XdTNBHdrD3+ncNA1TloUOcr6e0XyOdX8kh43bJVLnuHBTkgsBbRU9+lalyomEn
-         QuTw==
-X-Gm-Message-State: APjAAAXJjiJfERmF0UD13I0gyiH6esMwxO202nG3oeQ6+luKa8AuTvhj
-        ox1NAyFQ6gV3cOINH7ma1ja9rBayzRzryb8C2A36rw==
-X-Google-Smtp-Source: APXvYqwEhtHawQMBwvmDc5WZ+GbpmKPP7mgN5ZpRyswR3p1ZNH4wKythp6ijBG51PHDBpY+92/+km74sS2lSGrcqxRE=
-X-Received: by 2002:a05:6830:11:: with SMTP id c17mr24335278otp.360.1582222496058;
- Thu, 20 Feb 2020 10:14:56 -0800 (PST)
+        bh=bkxRzQQdsIgezztPpGEXgB6Tbmhl9XsKSgHs8oMS58Y=;
+        b=tdO4hXUAhfQSa88HFh8ttBOHPAPgBnnY3Ef1Vzdd5Xer+i+gog/4foZM1JXxkL8M8Y
+         4nsDQKW09zH3UrFr6yMQdqrobPlrDqvTrXnedAPB0tE3/eWVQ+a86OafdfNdgZ/zV4R1
+         hiVs+9GLcYohgpcg1x7xJF747+2vKeksNaFNbJ7pyykYem+wf4iqpsqTRSXbH0K8l12y
+         4nMdMHEjNGNolGiClwI2PHJ3PZ5l8Q8417wAKYOvFNWfwo/qHlfU7rzSNQn7sJg0kLBC
+         v4L9xeipWF5GvTez5ibm908BCzUY1eQUMk/5hZ36rWETQVkkNT1U3/VASzsWpNews+Q7
+         etyA==
+X-Gm-Message-State: APjAAAUTVp5jrNo0xazAxPshF+nGhPnOinCkEGtkIPUemK8FtY9Mk3fX
+        GBmooakaP95cDwEbNr9Mxjb6l0v89AmLDaZJXfY=
+X-Google-Smtp-Source: APXvYqysOLP0nXkKrh7QibdX9lVVNj1wUJPOGTNbIYlXM9+byhTu1Mczx/ZINDwIE2aoIO/UgYE+T2O1d6xPrMxlzu8=
+X-Received: by 2002:a6b:6205:: with SMTP id f5mr26192797iog.42.1582222625697;
+ Thu, 20 Feb 2020 10:17:05 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1582216294.git.schatzberg.dan@gmail.com> <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
-In-Reply-To: <0a27b6fcbd1f7af104d7f4cf0adc6a31e0e7dd19.1582216294.git.schatzberg.dan@gmail.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 20 Feb 2020 10:14:45 -0800
-Message-ID: <CALvZod5bDQvYHTMCHoWbhiEbcBs4KATv=QLdjjivJ33kb6ZY+w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] mm: Charge active memcg when no mm is set
-To:     Dan Schatzberg <schatzberg.dan@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
+References: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <1575420174-19171-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 20 Feb 2020 10:16:54 -0800
+Message-ID: <CAKgT0UdHhZznoS0kMdacCqgc=sFXj1Djmpd-DbPvAmyrhJq6CA@mail.gmail.com>
+Subject: Re: [v2 PATCH] mm: shmem: allow split THP when truncating THP partially
+To:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     Hugh Dickins <hughd@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 8:52 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
+On Tue, Dec 3, 2019 at 4:43 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
 >
-> memalloc_use_memcg() worked for kernel allocations but was silently
-> ignored for user pages.
+> Currently when truncating shmem file, if the range is partial of THP
+> (start or end is in the middle of THP), the pages actually will just get
+> cleared rather than being freed unless the range cover the whole THP.
+> Even though all the subpages are truncated (randomly or sequentially),
+> the THP may still be kept in page cache.  This might be fine for some
+> usecases which prefer preserving THP.
 >
-> This patch establishes a precedence order for who gets charged:
+> But, when doing balloon inflation in QEMU, QEMU actually does hole punch
+> or MADV_DONTNEED in base page size granulairty if hugetlbfs is not used.
+> So, when using shmem THP as memory backend QEMU inflation actually doesn't
+> work as expected since it doesn't free memory.  But, the inflation
+> usecase really needs get the memory freed.  Anonymous THP will not get
+> freed right away too but it will be freed eventually when all subpages are
+> unmapped, but shmem THP would still stay in page cache.
 >
-> 1. If there is a memcg associated with the page already, that memcg is
->    charged. This happens during swapin.
+> Split THP right away when doing partial hole punch, and if split fails
+> just clear the page so that read to the hole punched area would return
+> zero.
 >
-> 2. If an explicit mm is passed, mm->memcg is charged. This happens
->    during page faults, which can be triggered in remote VMs (eg gup).
->
-> 3. Otherwise consult the current process context. If it has configured
->    a current->active_memcg, use that.
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Andrea Arcangeli <aarcange@redhat.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-What if css_tryget_online(current->active_memcg) in
-get_mem_cgroup_from_current() fails? Do we want to change this to
-css_tryget() and even if that fails should we fallback to
-root_mem_cgroup or current->mm->memcg?
+One question I would have is if this is really the desired behavior we
+are looking for?
 
-> Otherwise, current->mm->memcg.
->
-> Previously, if a NULL mm was passed to mem_cgroup_try_charge (case 3) it
-> would always charge the root cgroup. Now it looks up the current
-> active_memcg first (falling back to charging the root cgroup if not
-> set).
->
-> Signed-off-by: Dan Schatzberg <schatzberg.dan@gmail.com>
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
-> ---
->  mm/memcontrol.c | 11 ++++++++---
->  mm/shmem.c      |  2 +-
->  2 files changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 6f6dc8712e39..b174aff4f069 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -6317,7 +6317,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->   * @compound: charge the page as compound or small page
->   *
->   * Try to charge @page to the memcg that @mm belongs to, reclaiming
-> - * pages according to @gfp_mask if necessary.
-> + * pages according to @gfp_mask if necessary. If @mm is NULL, try to
-> + * charge to the active memcg.
->   *
->   * Returns 0 on success, with *@memcgp pointing to the charged memcg.
->   * Otherwise, an error code is returned.
-> @@ -6361,8 +6362,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
->                 }
->         }
->
-> -       if (!memcg)
-> -               memcg = get_mem_cgroup_from_mm(mm);
-> +       if (!memcg) {
-> +               if (!mm)
-> +                       memcg = get_mem_cgroup_from_current();
-> +               else
-> +                       memcg = get_mem_cgroup_from_mm(mm);
-> +       }
->
->         ret = try_charge(memcg, gfp_mask, nr_pages);
->
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index c8f7540ef048..7c7f5acf89d6 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -1766,7 +1766,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
->         }
->
->         sbinfo = SHMEM_SB(inode->i_sb);
-> -       charge_mm = vma ? vma->vm_mm : current->mm;
-> +       charge_mm = vma ? vma->vm_mm : NULL;
->
->         page = find_lock_entry(mapping, index);
->         if (xa_is_value(page)) {
-> --
-> 2.17.1
->
+By proactively splitting the THP you are likely going to see a
+performance regression with the virtio-balloon driver enabled in QEMU.
+I would suspect the response to that would be to update the QEMU code
+to  identify the page size of the shared memory ramblock. At that
+point I suspect it would start behaving the same as how it currently
+handles anonymous memory, and the work done here would essentially
+have been wasted other than triggering the desire to resolve this in
+QEMU to avoid a performance regression.
+
+The code for inflating a the balloon in virtio-balloon in QEMU can be
+found here:
+https://github.com/qemu/qemu/blob/master/hw/virtio/virtio-balloon.c#L66
+
+If there is a way for us to just populate the value obtained via
+qemu_ram_pagesize with the THP page size instead of leaving it at 4K,
+which is the size I am assuming it is at since you indicated that it
+is just freeing the base page size, then we could address the same
+issue and likely get the desired outcome of freeing the entire THP
+page when it is no longer used.
+
+- Alex
