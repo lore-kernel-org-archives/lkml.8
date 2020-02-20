@@ -2,392 +2,74 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABB5C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1195FC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBC2208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2687208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:33:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="DfB4M8Vq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgBTIaC (ORCPT
+        id S1726830AbgBTIdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:30:02 -0500
-Received: from honk.sigxcpu.org ([24.134.29.49]:46392 "EHLO honk.sigxcpu.org"
+        Thu, 20 Feb 2020 03:33:02 -0500
+Received: from first.geanix.com ([116.203.34.67]:43076 "EHLO first.geanix.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgBTIaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:30:02 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id C8BE0FB03;
-        Thu, 20 Feb 2020 09:29:59 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zMjbSs77NzEe; Thu, 20 Feb 2020 09:29:57 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 7B4B5405C2; Thu, 20 Feb 2020 09:29:56 +0100 (CET)
-Date:   Thu, 20 Feb 2020 09:29:56 +0100
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com
-Subject: Re: [PATCH] backlight: add led-backlight driver
-Message-ID: <20200220082956.GA3383@bogon.m.sigxcpu.org>
-References: <20200219191412.GA15905@amd>
+        id S1726501AbgBTIdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:33:02 -0500
+Received: from localhost (unknown [193.163.1.7])
+        by first.geanix.com (Postfix) with ESMTPSA id 6FDECABE2F;
+        Thu, 20 Feb 2020 08:32:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=geanix.com; s=first;
+        t=1582187579; bh=7fJH91fFHjiUXtmwG2jBMWpcDq/boOo9eUL36++h+i8=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=DfB4M8VqU8kTqcfghs5TeBFdORfpRU2MDPkS4nqrSVC+bK9H/MDeqQCulS33Xia+7
+         MOWvLr3lrd1qYlx9j0HYK23jj3Amgql5uoTKeXJmtgFPScxp8ESrVrPWG2dCo6BPmF
+         5r9SYM2A2lp58eeDqi9klcaLempfjO2NA34g6wcn6KZxPCZ9Llis8ycRNmfFxNctPj
+         VMKf8Nmm5ZaKCcBGOel6f+ZoIUXrEFpS+NwJl4XOFh1jHtnF7X8lPzZssLPPVUVeAG
+         CRJdqmHokbuMIaT8EBYFQ+Ov+jAHFg9SuOQPWzoFR/JN25DmNE0o1lzlEP0gAfEQFK
+         7Ty11hZcZZxiA==
+From:   Esben Haabendal <esben@geanix.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, andrew@lunn.ch,
+        michal.simek@xilinx.com, ynezz@true.cz
+Subject: Re: [PATCH net 2/4] net: ll_temac: Add more error handling of dma_map_single() calls
+References: <cover.1582108989.git.esben@geanix.com>
+        <65907810dd82de3fcaad9869f328ab32800c67ea.1582108989.git.esben@geanix.com>
+        <20200219.105954.1568022053134111448.davem@davemloft.net>
+Date:   Thu, 20 Feb 2020 09:32:58 +0100
+In-Reply-To: <20200219.105954.1568022053134111448.davem@davemloft.net> (David
+        Miller's message of "Wed, 19 Feb 2020 10:59:54 -0800 (PST)")
+Message-ID: <87v9o18xqd.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219191412.GA15905@amd>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Wed, Feb 19, 2020 at 08:14:12PM +0100, Pavel Machek wrote:
-> From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> 
-> This patch adds a led-backlight driver (led_bl), which is similar to
-> pwm_bl except the driver uses a LED class driver to adjust the
-> brightness in the HW. Multiple LEDs can be used for a single backlight.
-> 
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Acked-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> Tested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+David Miller <davem@davemloft.net> writes:
 
-Tested-by: Guido Günther <agx@sigxcpu.org>
+> From: Esben Haabendal <esben@geanix.com>
+> Date: Wed, 19 Feb 2020 11:54:00 +0100
+>
+>> @@ -863,12 +865,13 @@ temac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>  	skb_dma_addr = dma_map_single(ndev->dev.parent, skb->data,
+>>  				      skb_headlen(skb), DMA_TO_DEVICE);
+>>  	cur_p->len = cpu_to_be32(skb_headlen(skb));
+>> +	if (WARN_ON_ONCE(dma_mapping_error(ndev->dev.parent, skb_dma_addr)))
+>> +		return NETDEV_TX_BUSY;
+>
+> The appropriate behavior in this situation is to drop the packet and return
+> NETDEV_TX_OK.
 
-Cheers,
- -- Guido
+Ok, and I guess the same goes for the error handling of dma_map_single()
+of one of the fragments later in same function.
 
-> ---
->  drivers/video/backlight/Kconfig  |   7 ++
->  drivers/video/backlight/Makefile |   1 +
->  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 268 insertions(+)
->  create mode 100644 drivers/video/backlight/led_bl.c
-> 
-> Hi!
-> 
-> Here's the version of the driver I have. AFAICT
-> default-brightness-level handling is ok, so does not need to be
-> changed.
-> 
-> Lee, it would be easiest for me if you could apply it to your tree and
-> push, but given enough time I can push it to Linus, too.
-> 
-> Thanks,
-> 								Pavel
-> 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 403707a3e503..0093bbd0d326 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -456,6 +456,13 @@ config BACKLIGHT_RAVE_SP
->  	help
->  	  Support for backlight control on RAVE SP device.
->  
-> +config BACKLIGHT_LED
-> +	tristate "Generic LED based Backlight Driver"
-> +	depends on LEDS_CLASS && OF
-> +	help
-> +	  If you have a LCD backlight adjustable by LED class driver, say Y
-> +	  to enable this driver.
-> +
->  endif # BACKLIGHT_CLASS_DEVICE
->  
->  endmenu
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index 6f8777037c37..0c1a1524627a 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
->  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
->  obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
->  obj-$(CONFIG_BACKLIGHT_RAVE_SP)		+= rave-sp-backlight.o
-> +obj-$(CONFIG_BACKLIGHT_LED)		+= led_bl.o
-> diff --git a/drivers/video/backlight/led_bl.c b/drivers/video/backlight/led_bl.c
-> new file mode 100644
-> index 000000000000..3f66549997c8
-> --- /dev/null
-> +++ b/drivers/video/backlight/led_bl.c
-> @@ -0,0 +1,260 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2015-2019 Texas Instruments Incorporated -  http://www.ti.com/
-> + * Author: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> + *
-> + * Based on pwm_bl.c
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +struct led_bl_data {
-> +	struct device		*dev;
-> +	struct backlight_device	*bl_dev;
-> +	struct led_classdev	**leds;
-> +	bool			enabled;
-> +	int			nb_leds;
-> +	unsigned int		*levels;
-> +	unsigned int		default_brightness;
-> +	unsigned int		max_brightness;
-> +};
-> +
-> +static void led_bl_set_brightness(struct led_bl_data *priv, int level)
-> +{
-> +	int i;
-> +	int bkl_brightness;
-> +
-> +	if (priv->levels)
-> +		bkl_brightness = priv->levels[level];
-> +	else
-> +		bkl_brightness = level;
-> +
-> +	for (i = 0; i < priv->nb_leds; i++)
-> +		led_set_brightness(priv->leds[i], bkl_brightness);
-> +
-> +	priv->enabled = true;
-> +}
-> +
-> +static void led_bl_power_off(struct led_bl_data *priv)
-> +{
-> +	int i;
-> +
-> +	if (!priv->enabled)
-> +		return;
-> +
-> +	for (i = 0; i < priv->nb_leds; i++)
-> +		led_set_brightness(priv->leds[i], LED_OFF);
-> +
-> +	priv->enabled = false;
-> +}
-> +
-> +static int led_bl_update_status(struct backlight_device *bl)
-> +{
-> +	struct led_bl_data *priv = bl_get_data(bl);
-> +	int brightness = bl->props.brightness;
-> +
-> +	if (bl->props.power != FB_BLANK_UNBLANK ||
-> +	    bl->props.fb_blank != FB_BLANK_UNBLANK ||
-> +	    bl->props.state & BL_CORE_FBBLANK)
-> +		brightness = 0;
-> +
-> +	if (brightness > 0)
-> +		led_bl_set_brightness(priv, brightness);
-> +	else
-> +		led_bl_power_off(priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct backlight_ops led_bl_ops = {
-> +	.update_status	= led_bl_update_status,
-> +};
-> +
-> +static int led_bl_get_leds(struct device *dev,
-> +			   struct led_bl_data *priv)
-> +{
-> +	int i, nb_leds, ret;
-> +	struct device_node *node = dev->of_node;
-> +	struct led_classdev **leds;
-> +	unsigned int max_brightness;
-> +	unsigned int default_brightness;
-> +
-> +	ret = of_count_phandle_with_args(node, "leds", NULL);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Unable to get led count\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	nb_leds = ret;
-> +	if (nb_leds < 1) {
-> +		dev_err(dev, "At least one LED must be specified!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	leds = devm_kzalloc(dev, sizeof(struct led_classdev *) * nb_leds,
-> +			    GFP_KERNEL);
-> +	if (!leds)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < nb_leds; i++) {
-> +		leds[i] = devm_of_led_get(dev, i);
-> +		if (IS_ERR(leds[i]))
-> +			return PTR_ERR(leds[i]);
-> +	}
-> +
-> +	/* check that the LEDs all have the same brightness range */
-> +	max_brightness = leds[0]->max_brightness;
-> +	for (i = 1; i < nb_leds; i++) {
-> +		if (max_brightness != leds[i]->max_brightness) {
-> +			dev_err(dev, "LEDs must have identical ranges\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/* get the default brightness from the first LED from the list */
-> +	default_brightness = leds[0]->brightness;
-> +
-> +	priv->nb_leds = nb_leds;
-> +	priv->leds = leds;
-> +	priv->max_brightness = max_brightness;
-> +	priv->default_brightness = default_brightness;
-> +
-> +	return 0;
-> +}
-> +
-> +static int led_bl_parse_levels(struct device *dev,
-> +			   struct led_bl_data *priv)
-> +{
-> +	struct device_node *node = dev->of_node;
-> +	int num_levels;
-> +	u32 value;
-> +	int ret;
-> +
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	num_levels = of_property_count_u32_elems(node, "brightness-levels");
-> +	if (num_levels > 1) {
-> +		int i;
-> +		unsigned int db;
-> +		u32 *levels = NULL;
-> +
-> +		levels = devm_kzalloc(dev, sizeof(u32) * num_levels,
-> +				      GFP_KERNEL);
-> +		if (!levels)
-> +			return -ENOMEM;
-> +
-> +		ret = of_property_read_u32_array(node, "brightness-levels",
-> +						levels,
-> +						num_levels);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/*
-> +		 * Try to map actual LED brightness to backlight brightness
-> +		 * level
-> +		 */
-> +		db = priv->default_brightness;
-> +		for (i = 0 ; i < num_levels; i++) {
-> +			if ((i && db > levels[i-1]) && db <= levels[i])
-> +				break;
-> +		}
-> +		priv->default_brightness = i;
-> +		priv->max_brightness = num_levels - 1;
-> +		priv->levels = levels;
-> +	} else if (num_levels >= 0)
-> +		dev_warn(dev, "Not enough levels defined\n");
-> +
-> +	ret = of_property_read_u32(node, "default-brightness-level", &value);
-> +	if (!ret && value <= priv->max_brightness)
-> +		priv->default_brightness = value;
-> +	else if (!ret  && value > priv->max_brightness)
-> +		dev_warn(dev, "Invalid default brightness. Ignoring it\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int led_bl_probe(struct platform_device *pdev)
-> +{
-> +	struct backlight_properties props;
-> +	struct led_bl_data *priv;
-> +	int ret, i;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	priv->dev = &pdev->dev;
-> +
-> +	ret = led_bl_get_leds(&pdev->dev, priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = led_bl_parse_levels(&pdev->dev, priv);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to parse DT data\n");
-> +		return ret;
-> +	}
-> +
-> +	memset(&props, 0, sizeof(struct backlight_properties));
-> +	props.type = BACKLIGHT_RAW;
-> +	props.max_brightness = priv->max_brightness;
-> +	props.brightness = priv->default_brightness;
-> +	props.power = (priv->default_brightness > 0) ? FB_BLANK_POWERDOWN :
-> +		      FB_BLANK_UNBLANK;
-> +	priv->bl_dev = backlight_device_register(dev_name(&pdev->dev),
-> +			&pdev->dev, priv, &led_bl_ops, &props);
-> +	if (IS_ERR(priv->bl_dev)) {
-> +		dev_err(&pdev->dev, "Failed to register backlight\n");
-> +		return PTR_ERR(priv->bl_dev);
-> +	}
-> +
-> +	for (i = 0; i < priv->nb_leds; i++)
-> +		led_sysfs_disable(priv->leds[i]);
-> +
-> +	backlight_update_status(priv->bl_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int led_bl_remove(struct platform_device *pdev)
-> +{
-> +	struct led_bl_data *priv = platform_get_drvdata(pdev);
-> +	struct backlight_device *bl = priv->bl_dev;
-> +	int i;
-> +
-> +	backlight_device_unregister(bl);
-> +
-> +	led_bl_power_off(priv);
-> +	for (i = 0; i < priv->nb_leds; i++)
-> +		led_sysfs_enable(priv->leds[i]);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id led_bl_of_match[] = {
-> +	{ .compatible = "led-backlight" },
-> +	{ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, led_bl_of_match);
-> +
-> +static struct platform_driver led_bl_driver = {
-> +	.driver		= {
-> +		.name		= "led-backlight",
-> +		.of_match_table	= of_match_ptr(led_bl_of_match),
-> +	},
-> +	.probe		= led_bl_probe,
-> +	.remove		= led_bl_remove,
-> +};
-> +
-> +module_platform_driver(led_bl_driver);
-> +
-> +MODULE_DESCRIPTION("LED based Backlight Driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:led-backlight");
-> -- 
-> 2.11.0
-
-
+/Esben
