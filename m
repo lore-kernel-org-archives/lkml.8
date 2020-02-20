@@ -2,130 +2,183 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C67C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F32C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD0E524654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFC0208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+fgwF/6"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="O2lUUkc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBTIgP (ORCPT
+        id S1726813AbgBTIj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:36:15 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36716 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgBTIf4 (ORCPT
+        Thu, 20 Feb 2020 03:39:56 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:63241 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbgBTIjz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:35:56 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so1280932plm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:35:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wYQONlA9lvcFld0G+NwhV5rBbyIu6fNUKkg/bhapB14=;
-        b=N+fgwF/6e6JTKFlrJgQIRnbOLpsKCtZYnIYWWcKNnfKNY9CCUMr6V9Gw9TGF6pjJIB
-         EHSAyjOJyfeCwqQkmI4hUnJOnoferabWuW52Jemsyz3ozxX45q3P64AnHJpigGKXMWzg
-         wBZNL9EgTQWFnkbTSNbeoeGpldgIni5ogrZfMmarImqShr+dejWNmNW96uI2OQSM/DiG
-         TbWyOd6OuhzcE+KwC0rYa/X8GMZFSoOWT0/63ZQIGG5D9x0EvG1IvBxr9J8jYpAcdO0a
-         4Za6FD12Z2xqA0PCoc8lNH2bo+yCBkGwRyZmRXN6uApIHstunbaeA/WX/yObPRwoUFUG
-         f+NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wYQONlA9lvcFld0G+NwhV5rBbyIu6fNUKkg/bhapB14=;
-        b=jnFT6diFITU+b5gHGaIu7Dk2ppvu7UIeP3+k3evXq8Z3+iPTvqfvK6rq45a9G6u/0A
-         8cQwc6PSofVkmz1uuwk6nlQyTm/a3tCRzGV/53n2ekEaMoVez7IJ1itrCAVh0pY9sk8j
-         Q9r7msR0suJNt2NKwvwbxvJlfO4ZLjv7BQ2OwK83lLoomcTghaMyQBE6as3Im09dgcCS
-         AaRPMeUqV2RA/bnXfNCT8fM/3HBnTaymiAKx8RDZlty+yrsR6BvS1FRBXtoY7BeKQHcT
-         EvGAol7uWO1DdBCYBxNG6Y++AXP64JwkK2f5JIaHeQs+UHVk/nrUoL9lWVnasqeRplnv
-         D7Dw==
-X-Gm-Message-State: APjAAAVL3ixtTod76Pm7EmOlz1Nh23HUE7R5mb+sAshFTbVg2jKpcfDi
-        5Noz5/lQ7WsJlxaCqEUF1NI=
-X-Google-Smtp-Source: APXvYqwAMzlg3ox1kckOd8OArhVChc+fFh1B8FYzsDIg77886p2/0Fs+/up3ECkbKsMtzNNlm8jUUQ==
-X-Received: by 2002:a17:90a:c216:: with SMTP id e22mr2300961pjt.134.1582187755353;
-        Thu, 20 Feb 2020 00:35:55 -0800 (PST)
-Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id l13sm2319038pjq.23.2020.02.20.00.35.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 00:35:54 -0800 (PST)
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@suse.de>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Samuel Holland <samuel@sholland.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 2/6] drm/bridge: anx6345: Clean up error handling in probe()
-Date:   Thu, 20 Feb 2020 00:35:04 -0800
-Message-Id: <20200220083508.792071-3-anarsoul@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200220083508.792071-1-anarsoul@gmail.com>
-References: <20200220083508.792071-1-anarsoul@gmail.com>
+        Thu, 20 Feb 2020 03:39:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582187994; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7LPj5WqUryWegMigWujZeMgopaFTsdUb2SSnoYMCyNg=;
+ b=O2lUUkc6cepBFh35qt4Pmeq789Lb6aExmNH+YrVcH6+cjn7gs8jpkLLxl3KajK6Fa/6E9OI2
+ 3psC9lbCsn5a3T103TwcWJdh9dcnuMPjLTrJc3TnwACWo7yNF+DKk+5K+GitphHQ2vKV4HtK
+ hXgW1cWUCuLBuFbopjHdNGNXE94=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e45d6.7f0e0786a880-smtp-out-n03;
+ Thu, 20 Feb 2020 08:39:50 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5A804C447A5; Thu, 20 Feb 2020 08:39:50 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4FF5BC433A2;
+        Thu, 20 Feb 2020 08:39:49 +0000 (UTC)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Feb 2020 14:09:49 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Cc:     ulf.hansson@linaro.org, robh+dt@kernel.org,
+        asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, dianders@google.com,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-msm-owner@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V2] mmc: mmc_test: Pass different sg lists for
+ non-blocking requests
+In-Reply-To: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
+References: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org>
+ <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
+Message-ID: <b12ac35f4f896a786ae5a109cf196b12@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_regulator_get() returns either a dummy regulator or -EPROBE_DEFER,
-we don't need to print scary message in either case.
+On 2020-02-19 15:14, Veerabhadrarao Badiganti wrote:
+> Supply a separate sg list for each of the request in non-blocking
+> IO test cases where two requests will be issued at same time.
+> 
+> Otherwise, sg memory may get unmapped when a request is done while
+> same memory is being accessed by controller from the other request,
+> and it leads to iommu errors with below call stack:
+> 
+> 	__arm_lpae_unmap+0x2e0/0x478
+> 	arm_lpae_unmap+0x54/0x70
+> 	arm_smmu_unmap+0x64/0xa4
+> 	__iommu_unmap+0xb8/0x1f0
+> 	iommu_unmap_fast+0x38/0x48
+> 	__iommu_dma_unmap+0x88/0x108
+> 	iommu_dma_unmap_sg+0x90/0xa4
+> 	sdhci_post_req+0x5c/0x78
+> 	mmc_test_start_areq+0x10c/0x120 [mmc_test]
+> 	mmc_test_area_io_seq+0x150/0x264 [mmc_test]
+> 	mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
+> 	mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
+> 	mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
+> 	mtf_test_write+0x238/0x3cc [mmc_test]
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> 
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-index 0d8d083b0207..0204bbe4f0a0 100644
---- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-+++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
-@@ -713,17 +713,13 @@ static int anx6345_i2c_probe(struct i2c_client *client,
- 
- 	/* 1.2V digital core power regulator  */
- 	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
--	if (IS_ERR(anx6345->dvdd12)) {
--		DRM_ERROR("dvdd12-supply not found\n");
-+	if (IS_ERR(anx6345->dvdd12))
- 		return PTR_ERR(anx6345->dvdd12);
--	}
- 
- 	/* 2.5V digital core power regulator  */
- 	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
--	if (IS_ERR(anx6345->dvdd25)) {
--		DRM_ERROR("dvdd25-supply not found\n");
-+	if (IS_ERR(anx6345->dvdd25))
- 		return PTR_ERR(anx6345->dvdd25);
--	}
- 
- 	/* GPIO for chip reset */
- 	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+This is reproducible on Dragonboard845c as well when performing 
+nonblocking tests
+and the patch fixes the issue.
+
+/ # emmc_dev=mmc0:0002
+  / # echo $emmc_dev > /sys/bus/mmc/drivers/mmcblk/unbind
+  / # echo $emmc_dev > /sys/bus/mmc/drivers/mmc_test/bind
+  [   23.715673] mmc_test mmc0:0002: Card claimed for testing.
+  / # cd /sys/kernel/debug/mmc*/${emmc_dev}
+  /sys/kernel/debug/mmc0/mmc0:0002 # echo 42 > test
+  [   32.074182] mmc0: Starting tests of card mmc0:0002...
+  [   32.079484] mmc0: Test case 42. Write performance non-blocking req 1 
+to 512 sg elems...
+  [   32.783439] mmc0: ADMA error: 0x02000000
+  [   32.787411] mmc0: sdhci: ============ SDHCI REGISTER DUMP 
+===========
+  [   32.796336] mmc0: sdhci: Sys addr:  0x00000000 | Version:  
+0x00006c02
+  [   32.804533] mmc0: sdhci: Blk size:  0x00000200 | Blk cnt:  
+0x00000280
+  [   32.811046] mmc0: sdhci: Argument:  0x001d0400 | Trn mode: 
+0x00000023
+  [   32.817555] mmc0: sdhci: Present:   0x01f801f6 | Host ctl: 
+0x0000001f
+  [   32.824062] mmc0: sdhci: Power:     0x00000001 | Blk gap:  
+0x00000000
+  [   32.830566] mmc0: sdhci: Wake-up:   0x00000000 | Clock:    
+0x00000007
+  [   32.837074] mmc0: sdhci: Timeout:   0x0000000e | Int stat: 
+0x02008000
+  [   32.843582] mmc0: sdhci: Int enab:  0x03ff100b | Sig enab: 
+0x03ff100b
+  [   32.850089] mmc0: sdhci: ACmd stat: 0x00000000 | Slot int: 
+0x00000000
+  [   32.856596] mmc0: sdhci: Caps:      0x362dc8b2 | Caps_1:   
+0x0000808f
+  [   32.863104] mmc0: sdhci: Cmd:       0x0000193a | Max curr: 
+0x00000000
+  [   32.869612] mmc0: sdhci: Resp[0]:   0x00000900 | Resp[1]:  
+0x5b590000
+  [   32.876121] mmc0: sdhci: Resp[2]:   0x1d9b7f80 | Resp[3]:  
+0x0a40003a
+  [   32.882627] mmc0: sdhci: Host ctl2: 0x00000000
+  [   32.887121] mmc0: sdhci: ADMA Err:  0x00000001 | ADMA Ptr: 
+0x0000000ffffff248
+  [   32.894320] mmc0: sdhci: 
+============================================
+  [   32.900831] mmc0: sdhci: ffffff200: DMA 0x0000000fffe80000, LEN 
+0x0000, Attr=0x21
+  [   32.908391] mmc0: sdhci: ffffff20c: DMA 0x0000000fffe90000, LEN 
+0x0000, Attr=0x21
+  [   32.915951] mmc0: sdhci: ffffff218: DMA 0x0000000fffea0000, LEN 
+0x0000, Attr=0x21
+  [   32.923511] mmc0: sdhci: ffffff224: DMA 0x0000000fffeb0000, LEN 
+0x0000, Attr=0x21
+  [   32.931070] mmc0: sdhci: ffffff230: DMA 0x0000000fffec0000, LEN 
+0x0000, Attr=0x21
+  [   32.938630] mmc0: sdhci: ffffff23c: DMA 0x0000000fffed0000, LEN 
+0x0000, Attr=0x21
+  [   32.946190] mmc0: sdhci: ffffff248: DMA 0x0000000fffee0000, LEN 
+0x0000, Attr=0x21
+  [   32.953750] mmc0: sdhci: ffffff254: DMA 0x0000000fffef0000, LEN 
+0x0000, Attr=0x21
+  [   32.961309] mmc0: sdhci: ffffff260: DMA 0x0000000000000000, LEN 
+0x0000, Attr=0x03
+  [   32.968982] arm-smmu 15000000.iommu: Unhandled context fault: 
+fsr=0x402, iova=0xfffe80480, fsynr=0x390003, cbfrsynra=0xa0, cb=1
+<snip>...
+  [   33.424884] [mmc_test_rw_multiple] error
+  [   33.428849] mmc0: Result: ERROR (-5)
+  [   33.432465] mmc0: Tests completed.
+  /sys/kernel/debug/mmc0/mmc0:0002 #
+
+-Sai
+
 -- 
-2.25.0
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
