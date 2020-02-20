@@ -4,193 +4,161 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF29C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A20C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086AF20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE252465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:21:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbgBTKVP (ORCPT
+        id S1727576AbgBTKVV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:21:15 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39028 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbgBTKVP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:21:15 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j4ixA-00032V-Nu; Thu, 20 Feb 2020 10:21:08 +0000
-Date:   Thu, 20 Feb 2020 11:21:07 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 6/9] drivers/base/power: add
- dpm_sysfs_change_owner()
-Message-ID: <20200220102107.grkyypt7swrufzas@wittgenstein>
-References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
- <20200218162943.2488012-7-christian.brauner@ubuntu.com>
- <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
+        Thu, 20 Feb 2020 05:21:21 -0500
+Received: from mga14.intel.com ([192.55.52.115]:14094 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726799AbgBTKVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 05:21:19 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 02:21:19 -0800
+X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
+   d="scan'208";a="224819481"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 02:21:16 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/i915: Distribute switch variables for initialization
+In-Reply-To: <20200220062258.68854-1-keescook@chromium.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200220062258.68854-1-keescook@chromium.org>
+Date:   Thu, 20 Feb 2020 12:21:14 +0200
+Message-ID: <877e0hv9t1.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hJwXH8Oc4spzDDemHhBVGKqtbrV2UG6-gmT-F0hA4ynA@mail.gmail.com>
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:02:04AM +0100, Rafael J. Wysocki wrote:
-> On Tue, Feb 18, 2020 at 5:30 PM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > Add a helper to change the owner of a device's power entries. This
-> > needs to happen when the ownership of a device is changed, e.g. when
-> > moving network devices between network namespaces.
-> > This function will be used to correctly account for ownership changes,
-> > e.g. when moving network devices between network namespaces.
-> >
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > - "Rafael J. Wysocki" <rafael@kernel.org>:
-> >   -  Fold if (dev->power.wakeup && dev->power.wakeup->dev) check into
-> >      if (device_can_wakeup(dev)) check since the former can never be true if
-> >      the latter is false.
-> >
-> > - Christian Brauner <christian.brauner@ubuntu.com>:
-> >   - Place (dev->power.wakeup && dev->power.wakeup->dev) check under
-> >     CONFIG_PM_SLEEP ifdefine since it will wakeup_source will only be available
-> >     when this config option is set.
-> >
-> > /* v3 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add explicit uid/gid parameters.
-> > ---
-> >  drivers/base/core.c        |  4 ++++
-> >  drivers/base/power/power.h |  3 +++
-> >  drivers/base/power/sysfs.c | 42 ++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 49 insertions(+)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index ec0d5e8cfd0f..efec2792f5d7 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -3522,6 +3522,10 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> >         if (error)
-> >                 goto out;
-> >
-> > +       error = dpm_sysfs_change_owner(dev, kuid, kgid);
-> > +       if (error)
-> > +               goto out;
-> > +
-> >  #ifdef CONFIG_BLOCK
-> >         if (sysfs_deprecated && dev->class == &block_class)
-> >                 goto out;
-> > diff --git a/drivers/base/power/power.h b/drivers/base/power/power.h
-> > index 444f5c169a0b..54292cdd7808 100644
-> > --- a/drivers/base/power/power.h
-> > +++ b/drivers/base/power/power.h
-> > @@ -74,6 +74,7 @@ extern int pm_qos_sysfs_add_flags(struct device *dev);
-> >  extern void pm_qos_sysfs_remove_flags(struct device *dev);
-> >  extern int pm_qos_sysfs_add_latency_tolerance(struct device *dev);
-> >  extern void pm_qos_sysfs_remove_latency_tolerance(struct device *dev);
-> > +extern int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid);
-> >
-> >  #else /* CONFIG_PM */
-> >
-> > @@ -88,6 +89,8 @@ static inline void pm_runtime_remove(struct device *dev) {}
-> >
-> >  static inline int dpm_sysfs_add(struct device *dev) { return 0; }
-> >  static inline void dpm_sysfs_remove(struct device *dev) {}
-> > +static inline int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid,
-> > +                                        kgid_t kgid) { return 0; }
-> >
-> >  #endif
-> >
-> > diff --git a/drivers/base/power/sysfs.c b/drivers/base/power/sysfs.c
-> > index d7d82db2e4bc..4e79afcd5ca8 100644
-> > --- a/drivers/base/power/sysfs.c
-> > +++ b/drivers/base/power/sysfs.c
-> > @@ -684,6 +684,48 @@ int dpm_sysfs_add(struct device *dev)
-> >         return rc;
-> >  }
-> >
-> > +int dpm_sysfs_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
-> > +{
-> > +       int rc;
-> > +
-> > +       if (device_pm_not_required(dev))
-> > +               return 0;
-> > +
-> > +       rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
-> > +       if (rc)
-> > +               return rc;
-> > +
-> > +       if (pm_runtime_callbacks_present(dev)) {
-> > +               rc = sysfs_group_change_owner(
-> > +                       &dev->kobj, &pm_runtime_attr_group, kuid, kgid);
-> > +               if (rc)
-> > +                       return rc;
-> > +       }
-> > +       if (device_can_wakeup(dev)) {
-> > +               rc = sysfs_group_change_owner(&dev->kobj, &pm_wakeup_attr_group,
-> > +                                             kuid, kgid);
-> > +               if (rc)
-> > +                       return rc;
-> > +
-> > +#ifdef CONFIG_PM_SLEEP
-> > +               if (dev->power.wakeup && dev->power.wakeup->dev) {
-> > +                       rc = device_change_owner(dev->power.wakeup->dev, kuid,
-> > +                                                kgid);
-> > +                       if (rc)
-> > +                               return rc;
-> > +               }
-> > +#endif
-> 
-> First off, I don't particularly like #ifdefs in function bodies.  In
-> particular, there is a CONFIG_PM_SLEEP block in this file already and
-> you could define a new function in there to carry out the above
-> operations, and provide an empty stub of it for the "unset" case.
-> Failing to do so is somewhat on the "rushing things in" side in my
-> view.
+On Wed, 19 Feb 2020, Kees Cook <keescook@chromium.org> wrote:
+> Variables declared in a switch statement before any case statements
+> cannot be automatically initialized with compiler instrumentation (as
+> they are not part of any execution flow). With GCC's proposed automatic
+> stack variable initialization feature, this triggers a warning (and they
+> don't get initialized). Clang's automatic stack variable initialization
+> (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+> doesn't initialize such variables[1]. Note that these warnings (or silent
+> skipping) happen before the dead-store elimination optimization phase,
+> so even when the automatic initializations are later elided in favor of
+> direct initializations, the warnings remain.
+>
+> To avoid these problems, move such variables into the "case" where
+> they're used or lift them up into the main function body.
+>
+> drivers/gpu/drm/i915/display/intel_display.c: In function ‘check_digital_port_conflicts’:
+> drivers/gpu/drm/i915/display/intel_display.c:12963:17: warning: statement will never be executed [-Wswitch-unreachable]
+> 12963 |    unsigned int port_mask;
+>       |                 ^~~~~~~~~
+>
+> drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_get_fifo_size’:
+> drivers/gpu/drm/i915/intel_pm.c:474:7: warning: statement will never be executed [-Wswitch-unreachable]
+>   474 |   u32 dsparb, dsparb2, dsparb3;
+>       |       ^~~~~~
+> drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_atomic_update_fifo’:
+> drivers/gpu/drm/i915/intel_pm.c:1997:7: warning: statement will never be executed [-Wswitch-unreachable]
+>  1997 |   u32 dsparb, dsparb2, dsparb3;
+>       |       ^~~~~~
+>
+> [1] https://bugs.llvm.org/show_bug.cgi?id=44916
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-How ifdefines are used is highly dependent on the subsystem; networking
-ofen uses in-place ifdefines in some parts and not in others. That has
-nothing to do with rushing things. I'm happy to change it to your
-preferences. Thanks for pointing out your expectations. But please don't
-assume bad intentions on my part because I'm not meeting them right
-away. It often is the case that adding a helper that is called in one
-place is not well-received.
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
 
-> 
-> Second, the #ifdef should cover the entire if (device_can_wakeup(dev))
-> {} block, because wakeup_sysfs_add() is only called if
-> device_can_wakeup(dev) returns 'true' for the device in question (and
-> arguably you could have checked that easily enough).
+If you look at i915/Makefile, you'll see that we don't shy away from
+enabling lots of extra warnings, and we run our CI with -Werror to keep
+it clean. It does not seem like -Wswitch-unreachable does me any good,
+though... is it new?
 
-I've looked at the header definitions for device_can_wakeup() and with
-and without CONFIG_PM_SLEEP it is defined as:
+BR,
+Jani.
 
-static inline bool device_can_wakeup(struct device *dev)
-{
-	return dev->power.can_wakeup;
-}
 
-which to me looks like it would neet to be called in all cases.
+> ---
+>  drivers/gpu/drm/i915/display/intel_display.c |    6 ++++--
+>  drivers/gpu/drm/i915/intel_pm.c              |    4 ++--
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+> index 064dd99bbc49..c829cd26f99e 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display.c
+> @@ -12960,14 +12960,15 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
+>  		WARN_ON(!connector_state->crtc);
+>  
+>  		switch (encoder->type) {
+> -			unsigned int port_mask;
+>  		case INTEL_OUTPUT_DDI:
+>  			if (WARN_ON(!HAS_DDI(to_i915(dev))))
+>  				break;
+>  			/* else, fall through */
+>  		case INTEL_OUTPUT_DP:
+>  		case INTEL_OUTPUT_HDMI:
+> -		case INTEL_OUTPUT_EDP:
+> +		case INTEL_OUTPUT_EDP: {
+> +			unsigned int port_mask;
+> +
+>  			port_mask = 1 << encoder->port;
+>  
+>  			/* the same port mustn't appear more than once */
+> @@ -12976,6 +12977,7 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
+>  
+>  			used_ports |= port_mask;
+>  			break;
+> +		}
+>  		case INTEL_OUTPUT_DP_MST:
+>  			used_mst_ports |=
+>  				1 << encoder->port;
+> diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+> index bd2d30ecc030..17d8833787c4 100644
+> --- a/drivers/gpu/drm/i915/intel_pm.c
+> +++ b/drivers/gpu/drm/i915/intel_pm.c
+> @@ -469,9 +469,9 @@ static void vlv_get_fifo_size(struct intel_crtc_state *crtc_state)
+>  	struct vlv_fifo_state *fifo_state = &crtc_state->wm.vlv.fifo_state;
+>  	enum pipe pipe = crtc->pipe;
+>  	int sprite0_start, sprite1_start;
+> +	u32 dsparb, dsparb2, dsparb3;
+>  
+>  	switch (pipe) {
+> -		u32 dsparb, dsparb2, dsparb3;
+>  	case PIPE_A:
+>  		dsparb = I915_READ(DSPARB);
+>  		dsparb2 = I915_READ(DSPARB2);
+> @@ -1969,6 +1969,7 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
+>  	const struct vlv_fifo_state *fifo_state =
+>  		&crtc_state->wm.vlv.fifo_state;
+>  	int sprite0_start, sprite1_start, fifo_size;
+> +	u32 dsparb, dsparb2, dsparb3;
+>  
+>  	if (!crtc_state->fifo_changed)
+>  		return;
+> @@ -1994,7 +1995,6 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
+>  	spin_lock(&uncore->lock);
+>  
+>  	switch (crtc->pipe) {
+> -		u32 dsparb, dsparb2, dsparb3;
+>  	case PIPE_A:
+>  		dsparb = intel_uncore_read_fw(uncore, DSPARB);
+>  		dsparb2 = intel_uncore_read_fw(uncore, DSPARB2);
+>
 
-I'll rework this to you preferences.
-
-Thanks!
-Christian
+-- 
+Jani Nikula, Intel Open Source Graphics Center
