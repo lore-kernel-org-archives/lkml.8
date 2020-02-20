@@ -2,124 +2,290 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08808C3404C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FA9C3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D03AA24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKq416MA"
+	by mail.kernel.org (Postfix) with ESMTP id 61CC324654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726423AbgBTFKY (ORCPT
+        id S1726679AbgBTFK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:10:24 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41974 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbgBTFKY (ORCPT
+        Thu, 20 Feb 2020 00:10:29 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33240 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgBTFK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:10:24 -0500
-Received: by mail-ot1-f68.google.com with SMTP id r27so2494652otc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:10:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=h5u7Xp7U99NSUOO/E2a/GBuGs/jUCGPtflsLAzfdTyw=;
-        b=AKq416MATIx767hbDafYSr2qGlA9d0kCZsKOTXysmdA4ZjamVtWxIESFgy81gdC/MM
-         Osi0AV7tsnCCF44AW7O6HxRA9IwLWKT/yUa1kcN3W+9s9oOp/IWW5WE/ogU6ZL4+Uzfe
-         ultzURxzO6w5kriTkIcy3B8CoSzb9C8d3/lExJH9S9erU70cFoAY5rrngi/SEmrKBPBR
-         8axvuyg5iRLHKzKbbt6WmSdFb3qUHeWwSo/uDqQXITnYI28C+V2+0ZxqU/eaXOViv/us
-         l/Fq2SpjU3OiamLvN/8sP8YlUXCPtkWoJ4Ce7m+lq0Cae7LbdYdCsGtqoaZh3UtNQJLM
-         TZJw==
+        Thu, 20 Feb 2020 00:10:28 -0500
+Received: from mail-pl1-f197.google.com ([209.85.214.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <matthew.ruffell@canonical.com>)
+        id 1j4e6T-0001mP-V4
+        for linux-kernel@vger.kernel.org; Thu, 20 Feb 2020 05:10:26 +0000
+Received: by mail-pl1-f197.google.com with SMTP id w11so1534555plp.22
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:10:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=h5u7Xp7U99NSUOO/E2a/GBuGs/jUCGPtflsLAzfdTyw=;
-        b=uKycKxq5fOkjJILKeU7+txKangzl/bqePhsdOZD79xE6ZHsKn6FbVw2h4ZAt7MvYsL
-         PCOBSC707OW1a1R9UAPWI3EH7qcXbP5CG7PJvhkg+ob+AxSz3+SG0yOMAgIubmyhU9Nj
-         H9JVPRKUAx96/Ev6zU1B2Cp+ZN8p1826H2rD/B5aF+0M0hLk9879nNqbBo8mmIPHeMG7
-         ezpzCH/zTfORQMBtgb9a/uzRAUY9k5/Ty1UotjRyYZx7RvLT77DTRQ4VI4QbMFQ8uz6i
-         2CC23znUymbTm/GnRoocKDDfYR5arETnihj5diWrsNnug4lmxx4AkTSqBsm7UFK29idt
-         38AQ==
-X-Gm-Message-State: APjAAAW0NKdckDlmucWTY+hAVLHMXiqs9FAFYy9Qkrs7vHOjiTDaN8f8
-        9cwnYTaRap3StuqoddiSMvM=
-X-Google-Smtp-Source: APXvYqwg2Rjx8/JioE8aCnNVyEz+BeBgyp748izDXcZLNZaJYsRCg/6662zxTKvULPHKD0JHWTK9Ew==
-X-Received: by 2002:a9d:6290:: with SMTP id x16mr21296090otk.343.1582175423669;
+        bh=E2kvQmkvb81bm+34qLewRFV/m+iH5XOHaaYoAXUsntE=;
+        b=hOKnpy4lGTC/B1Iy4/m974UuQT+Ct0+kTF92AVAFjMwcUDev5uskmL47lRWM/fnUXw
+         sI2gDDqOQ9lNKILQhd25aM+z9BhIBDIjpIBgqAGgAZR1Sy09OmTT+kFAed2L26e+91zf
+         OqWrHlUn0g8SHmqOE6ud2/jJYIEfsB4N6YOYh70RjTQIEmxL1NYXtMqCFXBQ8Qz0HRFy
+         029kRpgbikk47bklbYC8nk/mGTMwY1JpCYXdoRfHqD+rh3rSI/2dz0K+TZkcBBfBU5gN
+         PIUP7tbwjFp5Wgr4mJcC8e+TFssfTYKR09ykg0Rr0jCEmRddvGJxyI+2qGwjOVIMG3gC
+         NpFg==
+X-Gm-Message-State: APjAAAUwdmB9ZoJo+8QN59B8IIpqgn3sDdci4q5auv2lhDzAbi4yaY0w
+        5VyTPYxkstyD19QsNQUD2jyPVpt2Ud9k2G3WxqMyG+oouqzyFBacItJA//yuvC2jPF9Ux3R04xa
+        1jNMfQud97NwBI1xF9Emag+Pd5U0klWLK1oB3AyGbWw==
+X-Received: by 2002:a17:902:74cc:: with SMTP id f12mr30182180plt.192.1582175423564;
         Wed, 19 Feb 2020 21:10:23 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id g8sm745303otq.19.2020.02.19.21.10.22
+X-Google-Smtp-Source: APXvYqxpv4ToaCrZq27eJx3tmSweCd5e39rD0FKboP3/oMdOKh/N4L3ZGJLecz8fafviyr/+amqp/g==
+X-Received: by 2002:a17:902:74cc:: with SMTP id f12mr30182164plt.192.1582175423112;
+        Wed, 19 Feb 2020 21:10:23 -0800 (PST)
+Received: from localhost.localdomain (222-154-99-146-fibre.sparkbb.co.nz. [222.154.99.146])
+        by smtp.gmail.com with ESMTPSA id p3sm1409714pfg.184.2020.02.19.21.10.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 21:10:23 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] tracing: Use address-of operator on section symbols
-Date:   Wed, 19 Feb 2020 22:10:12 -0700
-Message-Id: <20200220051011.26113-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 19 Feb 2020 21:10:22 -0800 (PST)
+From:   Matthew Ruffell <matthew.ruffell@canonical.com>
+To:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     pabs3@bonedaddy.net
+Subject: [PATCH 0/1] coredump: Fix null pointer dereference when kernel.core_pattern is "|"
+Date:   Thu, 20 Feb 2020 18:10:14 +1300
+Message-Id: <20200220051015.14971-1-matthew.ruffell@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+Hello,
 
-../kernel/trace/trace.c:9335:33: warning: array comparison always
-evaluates to true [-Wtautological-compare]
-        if (__stop___trace_bprintk_fmt != __start___trace_bprintk_fmt)
-                                       ^
-1 warning generated.
+A user was setting their kernel.core_pattern to "|" to disable coredumps, and
+encountered the following null pointer dereference on a Ubuntu 5.3.0-29-generic
+kernel:
 
-These are not true arrays, they are linker defined symbols, which are
-just addresses. Using the address of operator silences the warning and
-does not change the runtime result of the check (tested with some print
-statements compiled in with clang + ld.lld and gcc + ld.bfd in QEMU).
+Steps to reproduce:
+Save the following intentionally broken program, save as socktest.c:
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/893
-Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <string.h>
 
-v1 -> v2: https://lore.kernel.org/lkml/20200219045423.54190-4-natechancellor@gmail.com/
+int main()
+{
+    int listenfd = 0;
+    struct sockaddr_in serv_addr;
 
-* No longer a series because there is no prerequisite patch.
-* Use address-of operator instead of casting to unsigned long.
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&serv_addr, '0', sizeof(serv_addr));
 
-NOTE: The code generation does seem to change, unlike every other call
-site that I did this change to but the result of the check remains the
-same as noted in the commit message and I cannot really understand what
-has changed in the assembly. Please let me know if there is something
-catastrophically wrong.
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(6000);
 
- kernel/trace/trace.c | 2 +-
+    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+
+    listen(listenfd, 10);
+
+    *(int*)33 = 33;
+
+    return 0;
+}
+
+$ sudo sysctl kernel.core_pattern="|"
+$ gcc -o socktest socktest.c
+$ ./socktest
+<program will hang and will not be killable>
+
+dmesg output:
+
+BUG: kernel NULL pointer dereference, address: 0000000000000020
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0 
+Oops: 0000 [#1] SMP PTI
+CPU: 1 PID: 1026 Comm: socktest Not tainted 5.3.0-29-generic #31-Ubuntu
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.12.0-1 04/01/2014
+RIP: 0010:do_coredump+0x536/0xb30
+Code: 00 48 8b bd 18 ff ff ff 48 85 ff 74 05 e8 c2 47 fa ff 65 48 8b 04 25 c0 6b 01 00 48 8b 00 48 8b 7d a0 a8 04 0f 85 65 05 00 00 <48> 8b 57 20 0f b7 02 66 25 00 f0 66 3d 00 80 0f 84 9b 03 00 00 49
+RSP: 0000:ffffa784c0887ca8 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffff8c5c743caec0 RCX: 00000000000019ab
+RDX: 0000000000000000 RSI: ffffa784c0887c68 RDI: 0000000000000000
+RBP: ffffa784c0887dd8 R08: 0000000000000400 R09: ffffa784c0887be0
+R10: ffff8c5c79c51850 R11: 0000000000000000 R12: ffff8c5c70b869c0
+R13: 0000000000000001 R14: 0000000000000000 R15: ffffffffa4d15920
+FS:  00007f5b7288d540(0000) GS:ffff8c5c7bb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000020 CR3: 000000017ab8a006 CR4: 0000000000160ee0
+Call Trace:
+? signal_wake_up_state+0x2a/0x30
+? __send_signal+0x1eb/0x3f0
+get_signal+0x159/0x880
+do_signal+0x34/0x280
+? do_user_addr_fault+0x34f/0x450
+exit_to_usermode_loop+0xbf/0x160
+prepare_exit_to_usermode+0x77/0xa0
+retint_user+0x8/0x8
+
+This happens on kernels 5.3 and above. On kernels 5.2 and prior, the user would
+expect to see the following message in dmesg instead:
+
+Core dump to | pipe failed
+
+And the program would terminate on a standard segmentation fault.
+
+Now, do_coredump+0x536 points more or less to the file_start_write() function
+in do_coredump():
+
+565 void do_coredump(const kernel_siginfo_t *siginfo)
+566 {
+...
+788     if (!dump_interrupted()) {
+789         file_start_write(cprm.file);
+...
+810 }
+
+But this is not the "real" cause of the fault.
+
+The problem was introduced in the following commit:
+
+commit 315c69261dd3fa12dbc830d4fa00d1fad98d3b03
+Author: Paul Wise <pabs3@bonedaddy.net>
+Date: Fri Aug 2 21:49:05 2019 -0700
+Subject: coredump: split pipe command whitespace before expanding template
+
+Here is the actual fault. When we enter format_corename(), cn->corename[0] is
+set to '\0' after being allocated on the heap:
+
+191 static int format_corename(struct core_name *cn, struct coredump_params *cprm,
+192                size_t **argv, int *argc)
+193 {
+...
+196     int ispipe = (*pat_ptr == '|');
+...
+202     cn->corename = NULL;
+203     if (expand_corename(cn, core_name_size))
+204         return -ENOMEM;
+205     cn->corename[0] = '\0';
+...
+}
+
+ispipe is also 1, since the first character of the core_pattern is "|".
+
+In the next if statement:
+
+207     if (ispipe) {
+208         int argvs = sizeof(core_pattern) / 2;
+209         (*argv) = kmalloc_array(argvs, sizeof(**argv), GFP_KERNEL);
+210         if (!(*argv))
+211             return -ENOMEM;
+212         (*argv)[(*argc)++] = 0;
+213         ++pat_ptr;
+214     }
+215 
+216     /* Repeat as long as we have more pattern to process and more output
+217        space */
+218     while (*pat_ptr) {
+
+argv[0] is set to 0, and after, we do not enter the while(*pat_ptr) loop because
+we have already reached the end of the core_pattern string.
+
+Back in do_coredump():
+
+676         for (argi = 0; argi < argc; argi++)
+677             helper_argv[argi] = cn.corename + argv[argi];
+678         helper_argv[argi] = NULL;
+
+helper_argv[0] is set to cn.corename, which still has '\0' at index 0, and
+argv[0] = 0, so helper_argv[0] == cn.corename.
+
+When the call to call_usermodehelper_setup() is issued:
+
+680         retval = -ENOMEM;
+681         sub_info = call_usermodehelper_setup(helper_argv[0],
+682                         helper_argv, NULL, GFP_KERNEL,
+683                         umh_pipe_setup, NULL, &cprm);
+684         if (sub_info)
+685             retval = call_usermodehelper_exec(sub_info,
+686                               UMH_WAIT_EXEC);
+
+sub_info->path is set to helper_argv[0], and in call_usermodehelper_exec():
+
+548 int call_usermodehelper_exec(struct subprocess_info *sub_info, int wait)
+549 {
+550     DECLARE_COMPLETION_ONSTACK(done);
+551     int retval = 0;
+552 
+553     if (!sub_info->path) {
+554         call_usermodehelper_freeinfo(sub_info);
+555         return -EINVAL;
+556     } 
+...
+568     if (strlen(sub_info->path) == 0)
+569         goto out;
+...
+597 out:
+598     call_usermodehelper_freeinfo(sub_info);
+599 unlock:
+600     helper_unlock();
+601     return retval;
+602 }
+
+retval is initially set to 0. sub_info->path is a valid pointer, since it points
+to the '\0' character, the check if (!sub_info->path) fails and we continue on
+to the strlen check. This passes, and we goto out, which returns the retval of 
+0.
+
+Back to do_coredump():
+
+688         kfree(helper_argv);
+689         if (retval) {
+690             printk(KERN_INFO "Core dump to |%s pipe failed\n",
+691                    cn.corename);
+692             goto close_fail;
+693         }
+
+We check to see if retval is nonzero. Since it is zero, we can continue on, and
+get stuck at the null pointer dereference at the call to file_start_write()
+pointed out earlier.
+
+What should happen, is that we keep the same behaviour as kernels before
+commit 315c69261dd3fa12dbc830d4fa00d1fad98d3b03, and enter the "if (retval)"
+statement to print the "Core dump to |%s pipe failed\n" message and goto
+close_fail.
+
+We can add a simple string length check to fix the issue:
+
+689         if (retval || strlen(cn.corename) == 0) {
+690             printk(KERN_INFO "Core dump to |%s pipe failed\n",
+691                    cn.corename);
+692             goto close_fail;
+693         }
+
+Attached is a patch. It keeps the semantics the same as before
+315c69261dd3fa12dbc830d4fa00d1fad98d3b03. Note, cn.corename will never be a
+null pointer, and will always be null terminated.
+
+If you can think of a better fix, please let me know.
+
+Thanks,
+Matthew Ruffell
+Sustaining Engineer @ Canonical
+
+Matthew Ruffell (1):
+  coredump: Fix null pointer dereference when kernel.core_pattern is "|"
+
+ fs/coredump.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c797a15a1fc7..78727dd9a6f5 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9332,7 +9332,7 @@ __init static int tracer_alloc_buffers(void)
- 		goto out_free_buffer_mask;
- 
- 	/* Only allocate trace_printk buffers if a trace_printk exists */
--	if (__stop___trace_bprintk_fmt != __start___trace_bprintk_fmt)
-+	if (&__stop___trace_bprintk_fmt != &__start___trace_bprintk_fmt)
- 		/* Must be called before global_trace.buffer is allocated */
- 		trace_printk_init_buffers();
- 
 -- 
-2.25.1
+2.20.1
 
