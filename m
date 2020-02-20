@@ -2,131 +2,108 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 425FBC761A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFADC761A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B60224672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D5224654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k5J7L+u1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kS8sPzcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgBTGlj (ORCPT
+        id S1726735AbgBTGp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:41:39 -0500
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40780 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgBTGlj (ORCPT
+        Thu, 20 Feb 2020 01:45:28 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:33186 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbgBTGp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:41:39 -0500
-Received: by mail-ua1-f68.google.com with SMTP id g13so1176685uab.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:41:38 -0800 (PST)
+        Thu, 20 Feb 2020 01:45:27 -0500
+Received: by mail-il1-f193.google.com with SMTP id s18so22766337iln.0;
+        Wed, 19 Feb 2020 22:45:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9FII6SdDOT5LM0XD58UCmM9UhU3FnY2YeLrE2lk53Is=;
-        b=k5J7L+u1jOqu5YUkSY9+Wm+SZ9fEd0plNX6vVCCQMNxtJ17xPFpHlzurSPf923XUx5
-         fGd8FKC/yCneBjJp84L4iNCbiXagGjaBqqevwWiGJTr6ZgEhG51rY5aoA+f0Upr+DuoI
-         aK9EFDfSdNNI3IUdXgtYEmwjegBCvffppiAHQ=
+        bh=Im+z9BpxgrtGOkJ+iJIGy2bwVRagdiXEKkPgtWVmzAI=;
+        b=kS8sPzcCHKfCH0EjHnhVB2wAIDK2IWKTgeJLse8OO4CcMISN9LlCicg5zSDWghpdKQ
+         xg5Tw8/EqXuKsLDMyTSWJvBbbwHklHhcDsoZNUpG6rllz2wzcV4quTN1IJMdQ95xSEIJ
+         VZWcJFGa0+yV7z3Ev3p7PcHZqKbPSrcrpfgmoItb1LAvrwQ6Ugy8iSrkCqGyDPyGHMsX
+         wjEwvzF8vQKMjbc/Ak5Y3alZSEf1KfK+WpOv3yVQ5BYxDtDwD2iZaifIhlDXhAEwq9SD
+         TTPybypiRM7NNYxVOB7xyr+q6wZ9YSFWCZl1Ut9ZGjKt4wKVq02SNzsHEZxxFvSIyAK/
+         Spyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9FII6SdDOT5LM0XD58UCmM9UhU3FnY2YeLrE2lk53Is=;
-        b=E77Zfv5Pa0WtPg3Z0PU+OPsnBtaURiSw60kmpYQJH0R6doCkWneLX0g0A8j0jiB0U5
-         dE1DEsT6WAgAgXh8QHpNUaDtpHqlLy7vnbjRzZbA/NV615kmxd9zwCNMzrx+3Unamgac
-         94En3NtQ4w+V+gWewXPhS59dlxrnMQINOAtE+VYQL0H3D8+TXyr7vjgSFpgouHk7+rYd
-         sIdsw93hDTG4sW/3OgNHJYeMyJd0EMpNNOPVcOEUISxd1ll48jxT3kmJZCF66P5FXxFV
-         8KxeHuAZgFd83YbLLFuddhAUliA8mZ4QNMScheDGTr3/9p8rouRw+CZgwaNcrX5T9XG5
-         H5ZA==
-X-Gm-Message-State: APjAAAWBOJ+PubBRhUkr+pjmApwmJCFGqlGySDuxul5zpzjLDC6nBDWF
-        d18gof2SiNYhk5lZwRIkd5RXjCW6vtg=
-X-Google-Smtp-Source: APXvYqwinmFpEEfgphOe3vXDhlBv66CCHZbJ4JZcv7kl38fLJRQWyNU4mv64uRSNYrVZMNlw/BL1hw==
-X-Received: by 2002:ab0:21cc:: with SMTP id u12mr14212438uan.55.1582180898202;
-        Wed, 19 Feb 2020 22:41:38 -0800 (PST)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id i22sm501279uap.17.2020.02.19.22.41.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Feb 2020 22:41:36 -0800 (PST)
-Received: by mail-vs1-f48.google.com with SMTP id n27so2031936vsa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:41:36 -0800 (PST)
-X-Received: by 2002:a67:f541:: with SMTP id z1mr15813130vsn.70.1582180895674;
- Wed, 19 Feb 2020 22:41:35 -0800 (PST)
+        bh=Im+z9BpxgrtGOkJ+iJIGy2bwVRagdiXEKkPgtWVmzAI=;
+        b=GKkh4I4lMnt++HIVTSnYNjdbY4s+toS7MHYMcm9nteiDWFyxuVCSdhElfW/6uXzBfs
+         6MIzF95KlQI2zVS5Ggij8qcmJ+vP6BmzNliod44Iajklc7UnoE43dt9Lz0+KMxHN+ii6
+         OiaS5GuKQvW6+uTGHa2wqrKDgi4hCf2Ig1UwZy8aNwdMabXybxUTqRBujHq2gXax40Gq
+         1FYYNrZhbRRjfQKyk0stN2QHAy/A2nZ3GQz+H5YDE8+ET/RhOsFln6fC2ouNPu66jmvF
+         dO3ltvm0m9D5J8lkSDs4qPJaPJztANq2OMDOyRZGxgbhnbHC3Cd0xdPZiylbw5IFqLKN
+         nx4A==
+X-Gm-Message-State: APjAAAUDgc0aGaxSO4u1+E4oBSZ6fwbBf76EE6p1E8TxtKvDWiAPDUWY
+        8SKb8F2Jhb7rb0obSgN1KQeaxGo6iYoDTGZud/gAvU70zmo=
+X-Google-Smtp-Source: APXvYqyd+49YVrH/RNEem9De5EU7pIuYMV/dKpioMc6ldrO+SbEDSr38Vy/jYjP+bok8uBMJI7+8zG1TRby1mRRUOQE=
+X-Received: by 2002:a92:cd52:: with SMTP id v18mr28468412ilq.134.1582181127140;
+ Wed, 19 Feb 2020 22:45:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20200214062637.216209-1-evanbenn@chromium.org>
- <20200214172512.1.I02ebc5b8743b1a71e0e15f68ea77e506d4e6f840@changeid>
- <20200219223046.GA16537@bogus> <CAODwPW8JspiUtyU4CC95w9rbNRyUF-Aeb9TuPm1PzmP6u=y1EA@mail.gmail.com>
- <20200219232005.GA9737@roeck-us.net>
-In-Reply-To: <20200219232005.GA9737@roeck-us.net>
-From:   Evan Benn <evanbenn@chromium.org>
-Date:   Thu, 20 Feb 2020 17:41:09 +1100
-X-Gmail-Original-Message-ID: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
-Message-ID: <CAKz_xw2hvHL=a4s37dmuCTWDbxefQFR3rfcaNiWYJY4T+jqabA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: watchdog: Add arm,smc-wdt watchdog
- arm,smc-wdt compatible
-To:     xingyu.chen@amlogic.com
-Cc:     Julius Werner <jwerner@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Rob Herring <robh@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-watchdog@vger.kernel.org
+References: <20200219191730.1277800-1-paulburton@kernel.org>
+ <20200219191730.1277800-3-paulburton@kernel.org> <cfeab22c0f332418d25e56fa86f5420f5470e4ee.camel@perches.com>
+In-Reply-To: <cfeab22c0f332418d25e56fa86f5420f5470e4ee.camel@perches.com>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Thu, 20 Feb 2020 14:44:03 +0800
+Message-ID: <CAAhV-H62BKFeh3h7xE3LQLYwLRukG5dE3gu4F7RGZdJcdoNCjg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] MAINTAINERS: Set MIPS status to Odd Fixes
+To:     Joe Perches <joe@perches.com>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Xingyu,
+Hi, all,
 
-Could this driver also cover your usecase? I am not familiar with
-meson, but it seems like the meson calls could
-be replaced with arm_smccc calls. Then this driver will cover both
-chips. I am not sure if your firmware is upstream
-somewhere, but this might be adapted;
-https://review.trustedfirmware.org/c/TF-A/trusted-firmware-a/+/3405
+I suggest Jiaxun Yang to be the new Linux/MIPS maintainer because of
+the following reasons:
 
-Thanks
+1. He is familiar with Linux kernel & MIPS architecture.
+2. He is active and has already contributed many patches.
+3. He is not an employee of any corporation, so people can expect him
+to be neutral.
+4. He is young and has enough free time to follow the mainstream
+development closely.
+5. His English is good and is willing to maintain a good level of
+communication with other contributors.
 
+Jiaxun, what's your opinion?
 
-On Thu, Feb 20, 2020 at 10:20 AM Guenter Roeck <linux@roeck-us.net> wrote:
+Regards,
+Huacai Chen
+
+On Thu, Feb 20, 2020 at 11:16 AM Joe Perches <joe@perches.com> wrote:
 >
-> On Wed, Feb 19, 2020 at 03:04:54PM -0800, Julius Werner wrote:
-> > > You are not the first 'watchdog in firmware accessed via an SMC call'.
-> > > Is there some more detail about what implementation this is? Part of
-> > > TF-A? Defined by some spec (I can dream)?
-> >
-> > This is just some random implementation written by me because we
-> > needed one. I would like it to be the new generic implementation, but
-> > it sounds like people here prefer the naming to be MediaTek specific
-> > (at least for now). The other SMC watchdog we're aware of is
-> > imx_sc_wdt but unfortunately that seems to hardcode platform-specific
+> On Wed, 2020-02-19 at 11:17 -0800, Paul Burton wrote:
+> > My time with MIPS the company has reached its end, and so at best I'll
+> > have little time spend on maintaining arch/mips/. Reflect that in
+> > MAINTAINERS by changing status to Odd Fixes. Hopefully this might spur
+> > the involvement of someone with more time, but even if not it should
+> > help serve to avoid unrealistic expectations.
+> []
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -11120,7 +11120,7 @@ W:    http://www.linux-mips.org/
+> >  T:   git git://git.linux-mips.org/pub/scm/ralf/linux.git
 >
-> There is one more pending, for Meson SMC.
+> Maybe Ralf's T: entry should be removed too.
 >
-> https://patchwork.kernel.org/project/linux-watchdog/list/?series=227733
 >
-> Unfortunately it uses Meson firmware API functions, though it has pretty
-> much the same functionality since those ultimately end up calling
-> arm_smccc_smc().
->
-> Guenter
->
-> > details in the interface (at least in the pretimeout SMC) so we can't
-> > just expand that. With this driver I tried to directly wrap the kernel
-> > watchdog interface so it should be platform-agnostic and possible to
-> > expand this driver to other platforms later if desired. The SMC
-> > function ID would still always have to be platform-specific,
-> > unfortunately (but we could pass it in through the device tree), since
-> > the Arm SMC spec doesn't really leave any room for OS-generic SMCs
-> > like this.
