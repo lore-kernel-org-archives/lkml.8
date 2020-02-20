@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6CBC34031
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53592C11D41
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940C724656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C2324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hE28D14b"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eXqOb0Xq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbgBTGXA (ORCPT
+        id S1726891AbgBTGXF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:23:00 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33564 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBTGXA (ORCPT
+        Thu, 20 Feb 2020 01:23:05 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38301 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBTGXE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:23:00 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n7so1405414pfn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:22:59 -0800 (PST)
+        Thu, 20 Feb 2020 01:23:04 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so1388710pfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KDL37BgDk/5hTL1aygm8F5m/3WsNy7EX3MegTZpHh8A=;
-        b=hE28D14boNTmJ1vj0aiii9wgqR4x726AYt0+Ugz1vZZxyNY/ZjRyjStYJ/E86o9UZQ
-         m+ILEBowROnzV6IEZacRqVHipZV2ubqx1exLZGnLz532+kkOuDI07VE0085ZhhSVT6BX
-         PBBz06hnw5jDBaa5zAzGTaC7k047+cizE829A=
+        bh=fbfAO2fSu64pq6u1mWmQFfQ48eFbdaGtUu7sTtkiZVI=;
+        b=eXqOb0Xq8yLMYkfMLFRWCv/9zeTHUJq2FN9U8UeFKeGFdm0DD5tRSl8YdQnwOJyO03
+         X7mT5Htx9fTxmkf6Diejdm6vkmBC94zAgA6RqlYSMdwekesiRIWnmujIHQYBfo9nil7i
+         LyWoECEDCeGzvEdh6DJrR01qVSjrXeuBbI9hs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=KDL37BgDk/5hTL1aygm8F5m/3WsNy7EX3MegTZpHh8A=;
-        b=mi7H9VFjOkPeHG7w3xmz6JU1PLq6hubvLYfsHYqzcnNEkgExMOF7vxcEa40fPTBjIr
-         4/Ve2188f/Yp6FH3m5HvutFfxazO+reWn88H16IU+QE4V6+MHu8iBg9rljkMSPNGtv0E
-         TuYbaZ9aUXJu+vx4SdiCXgms9bXVrtwvLkfhhNGQ/lNDTE62agep+u34TMm8iTlV7onb
-         obs3yHbzdxnhgxgO49qUGCLunteP+u0mLcWsDMRMPd27s43DUHSzY1yopC+IytJ0gr5u
-         fsD72aYdwOg9jfq7Qmj0i0ScemvlNZm+Oohm+dbonGKkjCx4RjHj6TWTNrmuVtscbhxq
-         x7Bg==
-X-Gm-Message-State: APjAAAWkxdGXf6ufunPWsIGRrqwkhAfNNmHPyVJw6lAT5Z000VgjoRu3
-        rneCyYfDRv2go76RDfHbU4Uq4w==
-X-Google-Smtp-Source: APXvYqwClzmaR771bSUMDQ76QXcQ9gHM+Y7s77UVkVWl9nHyOMS3rkIB6M1k/7iT21xhJ1goPJEBhg==
-X-Received: by 2002:a62:1cd6:: with SMTP id c205mr30460282pfc.179.1582179779343;
-        Wed, 19 Feb 2020 22:22:59 -0800 (PST)
+        bh=fbfAO2fSu64pq6u1mWmQFfQ48eFbdaGtUu7sTtkiZVI=;
+        b=Xyonv7/GAuNMWbKkNbzGhCr6sAlQ/Q4R4ruoCMgZBBrGcP/bCpWVbuIYbBKgkzW62q
+         zty6IOvzwJvwIV4r1W1JCQSR2Bco3Qjx5twErX6JpLB/3uADaSoZMFWpc+lyqAQlpRoq
+         8SckH2tflpoM6OXRWZHEzTR4eBf+rxtERxXDxTO+7mp+6RsodyuU36vChSWuryRLUMe1
+         qV19cVSQqvFhe/GRhY3gdHZ7dgdjkus6IJ38zZTw0E56lm6BtS3RtJW9/FC9AUZxv3xE
+         g0N16pPunVnIsMEjTYoJZ4fz4QJPxOE+/+VMAanT6LyX+SDVkQX5wjNMcatJtgoNO8Ys
+         /1zA==
+X-Gm-Message-State: APjAAAXCQJ1ijfQ594gbOWHkm7oeDgoXUzvmav5oHHtoYE3ncO8WI6Y5
+        1n+g5kP5T62ROWbnVfwcAxIV/w==
+X-Google-Smtp-Source: APXvYqxKdc3dx637nl+ZE7CYGKAsYw2ovD42uVb8xBeno/jiHtEqLviKrb5hssJUvWcJDdL7B+eXyA==
+X-Received: by 2002:a63:594a:: with SMTP id j10mr32381690pgm.227.1582179783832;
+        Wed, 19 Feb 2020 22:23:03 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a35sm1886088pgl.20.2020.02.19.22.22.58
+        by smtp.gmail.com with ESMTPSA id y2sm1747574pff.139.2020.02.19.22.23.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 22:22:58 -0800 (PST)
+        Wed, 19 Feb 2020 22:23:02 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
 Cc:     Alexander Potapenko <glider@google.com>,
         Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] fcntl: Distribute switch variables for initialization
-Date:   Wed, 19 Feb 2020 22:22:43 -0800
-Message-Id: <20200220062243.68809-1-keescook@chromium.org>
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/i915: Distribute switch variables for initialization
+Date:   Wed, 19 Feb 2020 22:22:58 -0800
+Message-Id: <20200220062258.68854-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -85,40 +86,87 @@ direct initializations, the warnings remain.
 To avoid these problems, move such variables into the "case" where
 they're used or lift them up into the main function body.
 
-fs/fcntl.c: In function ‘send_sigio_to_task’:
-fs/fcntl.c:738:20: warning: statement will never be executed [-Wswitch-unreachable]
-  738 |   kernel_siginfo_t si;
-      |                    ^~
+drivers/gpu/drm/i915/display/intel_display.c: In function ‘check_digital_port_conflicts’:
+drivers/gpu/drm/i915/display/intel_display.c:12963:17: warning: statement will never be executed [-Wswitch-unreachable]
+12963 |    unsigned int port_mask;
+      |                 ^~~~~~~~~
+
+drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_get_fifo_size’:
+drivers/gpu/drm/i915/intel_pm.c:474:7: warning: statement will never be executed [-Wswitch-unreachable]
+  474 |   u32 dsparb, dsparb2, dsparb3;
+      |       ^~~~~~
+drivers/gpu/drm/i915/intel_pm.c: In function ‘vlv_atomic_update_fifo’:
+drivers/gpu/drm/i915/intel_pm.c:1997:7: warning: statement will never be executed [-Wswitch-unreachable]
+ 1997 |   u32 dsparb, dsparb2, dsparb3;
+      |       ^~~~~~
 
 [1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/fcntl.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/display/intel_display.c |    6 ++++--
+ drivers/gpu/drm/i915/intel_pm.c              |    4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/fcntl.c b/fs/fcntl.c
-index 9bc167562ee8..2e4c0fa2074b 100644
---- a/fs/fcntl.c
-+++ b/fs/fcntl.c
-@@ -735,8 +735,9 @@ static void send_sigio_to_task(struct task_struct *p,
- 		return;
+diff --git a/drivers/gpu/drm/i915/display/intel_display.c b/drivers/gpu/drm/i915/display/intel_display.c
+index 064dd99bbc49..c829cd26f99e 100644
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -12960,14 +12960,15 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
+ 		WARN_ON(!connector_state->crtc);
  
- 	switch (signum) {
--		kernel_siginfo_t si;
--		default:
-+		default: {
-+			kernel_siginfo_t si;
-+
- 			/* Queue a rt signal with the appropriate fd as its
- 			   value.  We use SI_SIGIO as the source, not 
- 			   SI_KERNEL, since kernel signals always get 
-@@ -769,6 +770,7 @@ static void send_sigio_to_task(struct task_struct *p,
- 			si.si_fd    = fd;
- 			if (!do_send_sig_info(signum, &si, p, type))
+ 		switch (encoder->type) {
+-			unsigned int port_mask;
+ 		case INTEL_OUTPUT_DDI:
+ 			if (WARN_ON(!HAS_DDI(to_i915(dev))))
  				break;
+ 			/* else, fall through */
+ 		case INTEL_OUTPUT_DP:
+ 		case INTEL_OUTPUT_HDMI:
+-		case INTEL_OUTPUT_EDP:
++		case INTEL_OUTPUT_EDP: {
++			unsigned int port_mask;
++
+ 			port_mask = 1 << encoder->port;
+ 
+ 			/* the same port mustn't appear more than once */
+@@ -12976,6 +12977,7 @@ static bool check_digital_port_conflicts(struct intel_atomic_state *state)
+ 
+ 			used_ports |= port_mask;
+ 			break;
 +		}
- 		/* fall-through - fall back on the old plain SIGIO signal */
- 		case 0:
- 			do_send_sig_info(SIGIO, SEND_SIG_PRIV, p, type);
+ 		case INTEL_OUTPUT_DP_MST:
+ 			used_mst_ports |=
+ 				1 << encoder->port;
+diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+index bd2d30ecc030..17d8833787c4 100644
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -469,9 +469,9 @@ static void vlv_get_fifo_size(struct intel_crtc_state *crtc_state)
+ 	struct vlv_fifo_state *fifo_state = &crtc_state->wm.vlv.fifo_state;
+ 	enum pipe pipe = crtc->pipe;
+ 	int sprite0_start, sprite1_start;
++	u32 dsparb, dsparb2, dsparb3;
+ 
+ 	switch (pipe) {
+-		u32 dsparb, dsparb2, dsparb3;
+ 	case PIPE_A:
+ 		dsparb = I915_READ(DSPARB);
+ 		dsparb2 = I915_READ(DSPARB2);
+@@ -1969,6 +1969,7 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
+ 	const struct vlv_fifo_state *fifo_state =
+ 		&crtc_state->wm.vlv.fifo_state;
+ 	int sprite0_start, sprite1_start, fifo_size;
++	u32 dsparb, dsparb2, dsparb3;
+ 
+ 	if (!crtc_state->fifo_changed)
+ 		return;
+@@ -1994,7 +1995,6 @@ static void vlv_atomic_update_fifo(struct intel_atomic_state *state,
+ 	spin_lock(&uncore->lock);
+ 
+ 	switch (crtc->pipe) {
+-		u32 dsparb, dsparb2, dsparb3;
+ 	case PIPE_A:
+ 		dsparb = intel_uncore_read_fw(uncore, DSPARB);
+ 		dsparb2 = intel_uncore_read_fw(uncore, DSPARB2);
 
