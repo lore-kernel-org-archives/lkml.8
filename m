@@ -2,116 +2,86 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4D4C11D25
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7D5C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA3AC208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="F2UN2Hn7"
+	by mail.kernel.org (Postfix) with ESMTP id AB15820679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbgBTU5W (ORCPT
+        id S1729426AbgBTU5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:57:22 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34413 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbgBTU5T (ORCPT
+        Thu, 20 Feb 2020 15:57:43 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44164 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729211AbgBTU4k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:57:19 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n10so6219390wrm.1;
-        Thu, 20 Feb 2020 12:57:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXjFzy08xMuJRMEmwBB0yy8RCFRKvyZHt3R4Qv4p1O8=;
-        b=F2UN2Hn7nmxIi+cFd7snrG33JIJjswMBS3DsHUuvSbqqi8E8OVJdnLegKa+tC6gccQ
-         JKh/sbaLX1ZAeU+9UddHYLmfilbTGhARmYPRE7cSVKS26auV2A0KqWkdqV5tj9V0VYbQ
-         UDfyG6axD3KDMa/QyksF8EUy0zlROK63PctIj5HC8i1eqmDJv5aOjZZ7fyero/KPUuDq
-         wfOVVD/1bB99njYloSBusB4CVm9CWNj0SJE4q+N8v8QsGEqNz6UOdhXkNT/K4dzNfUVC
-         PD45Jx76l0Ml6UrUYOnaGDtRs2MmDO+DvUYM9Bn9bxHJr7ped37CZg95RVU2w6NlmZlo
-         d0eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FXjFzy08xMuJRMEmwBB0yy8RCFRKvyZHt3R4Qv4p1O8=;
-        b=VSOxU9gDsAv/qMF3KWWnoNHevPEPLi5t1JednUkXuL+TZJuO1bnoCYc+fYBolUh469
-         tKUKV2a0a5yI6hF5ynFgDh/D3EHbiFZjwFJYafvoK7cqJ2F8KEEjZdWGqUqU178eLi9j
-         CM3sa1fWkDEBith4VDGWexqDMWI3xcn5IOdUfAABqPt71nm9RluYKCpoQ28iVX0ztCVb
-         t3HCjCk9tUQ+4dTGyHxNQg+Iyi5O2yb2Wc4SVlsTzmw8B3di50gxwtvt8IWl50won/CH
-         uOD/vPU+5J3igpFQN/x7lQpZuE+qOJXsYFbLLng3/sRxD+OnPe8T0rDHFRjeB0YbyoiJ
-         nLRw==
-X-Gm-Message-State: APjAAAUDVJOPVpbjZFmanJxQRVgyx1c5bJSqXJbENQQD+46xRGT+/4VU
-        jMvdhlwEWXIobjPuIddxb5A=
-X-Google-Smtp-Source: APXvYqwTNBE8NHGbnW8Z3nYsC+iVU2OPITKzvQtdl8slWj3/kKZgD9q0JgDz86aIMPvz7Z2806fdUA==
-X-Received: by 2002:adf:f3d0:: with SMTP id g16mr45704445wrp.2.1582232237793;
-        Thu, 20 Feb 2020 12:57:17 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id a184sm695039wmf.29.2020.02.20.12.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 12:57:17 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     jbrunet@baylibre.com, broonie@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/3] ASoC: meson: aiu: add Meson8 SoC family support
-Date:   Thu, 20 Feb 2020 21:57:08 +0100
-Message-Id: <20200220205711.77953-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Feb 2020 15:56:40 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j4srb-0007TA-D5; Thu, 20 Feb 2020 21:56:03 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id D3B06104085;
+        Thu, 20 Feb 2020 21:56:02 +0100 (CET)
+Message-Id: <20200220204617.728659044@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Thu, 20 Feb 2020 21:45:21 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sebastian Sewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [patch V2 04/20] perf/bpf: Remove preempt disable around BPF invocation
+References: <20200220204517.863202864@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for the AIU audio controller found on the
-32-bit Meson8 and Meson8b SoCs (both seem to use the same revision,
-but for safety reasons we add two compatible strings).
+The BPF invocation from the perf event overflow handler does not require to
+disable preemption because this is called from NMI or at least hard
+interrupt context which is already non-preemptible.
 
-The only known difference compared to the GX SoCs is the absence of
-the I2S divider in the AIU_CLK_CTRL_MORE register. Instead we have
-to use a less flexible divider.
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ kernel/events/core.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-I2S testing was done on an Odroid-C1+ with a PCM5102A stereo DAC
-board connected (on the J7 header) like this:
-Odroid-C1+  | DAC
-------------------
-pin #1 GND  | GND
-pin #3 5V   | VIN
-pin #4 MCLK | SCK (optional, DAC can operate without this)
-pin #5 LRCK | LCK
-pin #5 SCK  | BCK
-pin #5 DATA | DIN
-
-In 3-wire I2S the MCLK <-> SCK connection can be omitted. For my tests
-I used mclk-fs = <64> in this case.
-In 4-wire I2S the MCLK <-> SCK connection is required. For my tests I
-used mclk-fs = <256> in this case.
-
-
-Martin Blumenstingl (3):
-  ASoC: meson: aiu: Document Meson8 and Meson8b support in the
-    dt-bindings
-  ASoC: meson: aiu: introduce a struct for platform specific information
-  ASoC: meson: aiu: add support for the Meson8 and Meson8b SoC families
-
- .../bindings/sound/amlogic,aiu.yaml           |  2 +
- sound/soc/meson/Kconfig                       |  2 +-
- sound/soc/meson/aiu-encoder-i2s.c             | 92 ++++++++++++++-----
- sound/soc/meson/aiu.c                         | 28 +++++-
- sound/soc/meson/aiu.h                         |  6 ++
- 5 files changed, 104 insertions(+), 26 deletions(-)
-
--- 
-2.25.1
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9206,7 +9206,6 @@ static void bpf_overflow_handler(struct
+ 	int ret = 0;
+ 
+ 	ctx.regs = perf_arch_bpf_user_pt_regs(regs);
+-	preempt_disable();
+ 	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1))
+ 		goto out;
+ 	rcu_read_lock();
+@@ -9214,7 +9213,6 @@ static void bpf_overflow_handler(struct
+ 	rcu_read_unlock();
+ out:
+ 	__this_cpu_dec(bpf_prog_active);
+-	preempt_enable();
+ 	if (!ret)
+ 		return;
+ 
 
