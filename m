@@ -2,119 +2,270 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717C0C11D15
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED6C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEE024673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:02:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582221775;
-	bh=37+6kRfe020nr3eTo55dbdOiwQoX7FUjUISiaAj1H6w=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=ZouXQ9gzeGRTBBIo9h/3Afy/0Vb/pGWPNBoGVTucnck3Mf3QjumZ3CBlhpJYWcttq
-	 sb0QHmlhLRfoN4xnUuI2ednvIBsW0rrJDTKQRQp2R/FqX3rs4gDb76M8kW5dgCySdN
-	 1GXMyLG0jQI5zeutWNTyi4pdMkd+yQcIU0/eQM3w=
+	by mail.kernel.org (Postfix) with ESMTP id 45B9E24673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Un0y7ZRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgBTSCy (ORCPT
+        id S1728461AbgBTSEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:02:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 13:04:53 -0500
+Received: from mout.web.de ([212.227.15.14]:34947 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgBTSCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:02:52 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE1624673;
-        Thu, 20 Feb 2020 18:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582221771;
-        bh=37+6kRfe020nr3eTo55dbdOiwQoX7FUjUISiaAj1H6w=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=m9xMxs8WLpZ1tJSTx12u4kJ78qow2BN0C/TsjYyITx052s7EDMb/8bu27UZaEaKQC
-         H7QOJcDNsK/KnboXjYJA7tTRsrQRUXUYO9KooPvCYVrO6GtCB9OR6Ad8q7QChfs8qv
-         gReuLai284/7HyoFHLCd3CtiEsSTtgxNdxqidEew=
-Content-Type: text/plain; charset="utf-8"
+        id S1727298AbgBTSEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:04:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1582221886;
+        bh=cED0tHcFWzQhYnuQNvhD6+a83OOv92ePG6aWKNeLv9Y=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=Un0y7ZRp+gADQR8u6zJrF8HSgozZRdBmiVH5npvs+8iaL4kvxaOKdoLF+IQwkFGMU
+         /V4Kg9kckTledA9+L7zsEmlNqUm5r0t13UnKzL8PIafiB9oQEsBajab6XDpLvsLZu7
+         klCO4FLrd3i8VSrheIXXrjeyvMOL1RDFzllsild4=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from luklap ([94.134.180.199]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lzs0p-1jZD011LVb-0152pg; Thu, 20
+ Feb 2020 19:04:46 +0100
+Date:   Thu, 20 Feb 2020 19:04:45 +0100
+From:   Lukas Straub <lukasstraub2@web.de>
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        dm-devel <dm-devel@redhat.com>
+Subject: [PATCH] dm-integrity: Prevent RMW for full tag area writes
+Message-ID: <20200220190445.2222af54@luklap>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-References: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org> <1582190446-4778-2-git-send-email-sayalil@codeaurora.org>
-Subject: Re: [PATCH RFC] mmc: sdhci-msm: Toggle fifo write clk after ungating sdcc clk
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Sayali Lokhande <sayalil@codeaurora.org>
-To:     Sayali Lokhande <sayalil@codeaurora.org>, adrian.hunter@intel.com,
-        asutoshd@codeaurora.org, bjorn.andersson@linaro.org,
-        georgi.djakov@linaro.org, mka@chromium.org, ppvk@codeaurora.org,
-        rampraka@codeaurora.org, robh+dt@kernel.org,
-        stummala@codeaurora.org, ulf.hansson@linaro.org,
-        vbadigan@codeaurora.org
-Date:   Thu, 20 Feb 2020 10:02:50 -0800
-Message-ID: <158222177078.184098.4974715009961694108@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+X-Provags-ID: V03:K1:j/VhRjSkDO6znn4FrHt3mC8n7LlVlbZVwkVTUlm/MVlZnqIEN/E
+ Q+Q63qWJCXLRysqLWXYyI5sNRzNR+nGrjrwhjDL4AmIDX2z/tbid1AOZi9cSolIRjDJ+E6G
+ DpcGJbKsRMvzxriSnblo6CEIuPT08lG584MRJ7/JMFo51AfBGgF9FQx3nvZ/8dDueft3vqE
+ tg0Rg+vgmApE9S/rn6h0g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:634g0Ktj+5Q=:OeZZsXReddB08MfLeqtxs0
+ aR3FIXFQVklIZVpkbWdK1bZpWyfc7djbSeGEZrQGoo3dMIypBGlgDGaWsuip2P9orzj1K6H8L
+ 608zJQn8tOapXyKRHZZiV6jcsO+AnPqhHRksRJhqZwKo9IqATTOg7Cg2ulu2Swkh6HpIacpK9
+ ocnzDTx15Giux/YoWWZqSNb2zJza7uPOAINUtC4CdT32l2/YsUcAUXdFgcGOJjgwtRWA5WEbE
+ HjU0zL+h3L26r72nK1m6FzHdqKjhcnimIza5VQmJLSJ3QJQuWdqx1jWakMuBajKMJr6wmLWsR
+ b1zdq4yP9nIeWXrusutgDHydrMRwvpDtALPte4a2jOM70tGAL8+klwAySC8fRpFLv+ky0DLx/
+ HEG680CRO6Ugn73qWA+04uLuLFg4WeECqNBJPrPbwegwk2F2QYxLwqldTtUZhFI+ceeZU4w0H
+ 8bL9GyU1upbHGcRoQBJvqDB1fsq6X53A7nq44anR61Rh9uYE6drDelNKskmKoBeErf76Q+D3T
+ OEvh06DIhR4f10Igwfgox+NwgBb9igZOyzrggesZmJCHDVEPmu9nkc2U6dEK0K8NjpyMIDPQN
+ EyNwbhS4aa3JlP1sU7WrfsBPTS3ycGlZACp6jN+brmmY8APQEP05yDdfyL6Tg54XcZDSN/JNv
+ FloOqdHkJtc1f4ZTEu72uE5TaCs+i465myRpT519jV0q/ww4Ei98S8luXtWjoSVWcqqY5+mlW
+ bRgffY83z0WyQUNrMHFPG17qrIQ//f0lYCDYl0YrHAsv2Lnz1iAFwXTURiwY42e+ssComG1Ee
+ azeqSpNYur8h+aW1mcCeI/2WqyADj64LNGsTAiGyQjLAvdaKWvGF5EtRw2m7R1ub8RLDPaNZv
+ 744U5sncz2Ni/S/+1+DZaLb0kq0ihkbgx5nUIdW52Btft4fjqKwMj4AJhTW29/jrBvto8FQpk
+ EwacYMkvw3a7ILT7buj+zg8cR1MN+T4cphpmSRY7IAQoiuwQRPlDnGGTS1cPZNvkgxr6Q3c4g
+ wwD1LrOtktt99A7XeRd2RERBJwiweTp8eXEJnApIFQ9mE/qxg++ZjCM033/XFjtlp7kn3Tp8r
+ CZiLvWPDslG3s5raDK9dyckajifS6kxqnBHAXgIwHYrnGv1RSK5sAABbx6yHiZMSwKQ69NO2c
+ x45hbhF+LSC1mqv6vl7NcadHCTVCYE2My2bVuAXc2Y3eko5NFVHb2KWX+DiiXj6xUlapQYktx
+ muWXXnnvOWYEcKusS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sayali Lokhande (2020-02-20 01:20:46)
-> From: Ram Prakash Gupta <rampraka@codeaurora.org>
->=20
-> During GCC level clock gating of MCLK, the async FIFO
+If a full tag area is being written, don't read it first. This prevents a
+read-modify-write cycle and increases performance on HDDs considerably.
 
-Is this automatic hardware clock gating?
+To do this we now calculate the checksums for all sectors in the bio in on=
+e
+go in integrity_metadata and then pass the result to dm_integrity_rw_tag,
+which now checks if we overwrite the whole tag area.
 
-> gets into some hang condition, such that for the next
-> transfer after MCLK ungating, first bit of CMD response
-> doesn't get written in to the FIFO. This cause the CPSM
-> to hang eventually leading to SW timeout.
->=20
-> To fix the issue, toggle the FIFO write clock after
-> MCLK ungated to get the FIFO pointers and flags to
-> valid states.
->=20
-> Change-Id: Ibef2d1d283ac0b6983c609a4abc98bc574d31fa6
-> Signed-off-by: Ram Prakash Gupta <rampraka@codeaurora.org>
-> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
-> ---
->  drivers/mmc/host/sdhci-msm.c | 43 ++++++++++++++++++++++++++++++++++++++=
-+++++
->  1 file changed, 43 insertions(+)
->=20
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..eaa3e95 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1554,6 +1556,43 @@ static void __sdhci_msm_set_clock(struct sdhci_hos=
-t *host, unsigned int clock)
->         sdhci_enable_clk(host, clk);
->  }
-> =20
-> +/*
-> + * After MCLK ugating, toggle the FIFO write clock to get
+Benchmarking with a 5400RPM HDD with bitmap mode:
+integritysetup format --no-wipe --batch-mode --interleave-sectors $((64*10=
+24)) -t 4 -s 512 -I crc32c -B /dev/sdc
+integritysetup open -I crc32c -B /dev/sdc hdda_integ
+dd if=3D/dev/zero of=3D/dev/mapper/hdda_integ bs=3D64K count=3D$((16*1024*=
+4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
 
-What is ugating?
+Without patch:
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 400.326 s, 10.7 MB/s
 
-> + * the FIFO pointers and flags to valid state.
-> + */
-> +static void sdhci_msm_toggle_fifo_write_clk(struct sdhci_host *host)
-> +{
-> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
-> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
-> +       const struct sdhci_msm_offset *msm_offset =3D
-> +                                       msm_host->offset;
-> +       struct mmc_card *card =3D host->mmc->card;
-> +
-> +       if (msm_host->tuning_done ||
-> +                       (card && card->ext_csd.strobe_support &&
-> +                       card->host->ios.enhanced_strobe)) {
-> +               /*
-> +                * set HC_REG_DLL_CONFIG_3[1] to select MCLK as
-> +                * DLL input clock
-> +                */
+With patch:
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 41.2057 s, 104 MB/s
+
+Signed-off-by: Lukas Straub <lukasstraub2@web.de>
+=2D--
+ drivers/md/dm-integrity.c | 80 ++++++++++++++++++++++-----------------
+ 1 file changed, 46 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
+index b225b3e445fa..0e5ddcf44935 100644
+=2D-- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -1309,9 +1309,16 @@ static int dm_integrity_rw_tag(struct dm_integrity_=
+c *ic, unsigned char *tag, se
+ 		if (unlikely(r))
+ 			return r;
+
+-		data =3D dm_bufio_read(ic->bufio, *metadata_block, &b);
+-		if (IS_ERR(data))
+-			return PTR_ERR(data);
++		/* Don't read tag area from disk if we're going to overwrite it complet=
+ely */
++		if (op =3D=3D TAG_WRITE && *metadata_offset =3D=3D 0 && total_size >=3D=
+ ic->metadata_run) {
++			data =3D dm_bufio_new(ic->bufio, *metadata_block, &b);
++			if (IS_ERR(data))
++				return PTR_ERR(data);
++		} else {
++			data =3D dm_bufio_read(ic->bufio, *metadata_block, &b);
++			if (IS_ERR(data))
++				return PTR_ERR(data);
++		}
+
+ 		to_copy =3D min((1U << SECTOR_SHIFT << ic->log2_buffer_sectors) - *meta=
+data_offset, total_size);
+ 		dp =3D data + *metadata_offset;
+@@ -1514,6 +1521,8 @@ static void integrity_metadata(struct work_struct *w=
+)
+ {
+ 	struct dm_integrity_io *dio =3D container_of(w, struct dm_integrity_io, =
+work);
+ 	struct dm_integrity_c *ic =3D dio->ic;
++	unsigned sectors_to_process =3D dio->range.n_sectors;
++	sector_t sector =3D dio->range.logical_sector;
+
+ 	int r;
+
+@@ -1522,16 +1531,14 @@ static void integrity_metadata(struct work_struct =
+*w)
+ 		struct bio_vec bv;
+ 		unsigned digest_size =3D crypto_shash_digestsize(ic->internal_hash);
+ 		struct bio *bio =3D dm_bio_from_per_bio_data(dio, sizeof(struct dm_inte=
+grity_io));
+-		char *checksums;
++		char *checksums, *checksums_ptr;
+ 		unsigned extra_space =3D unlikely(digest_size > ic->tag_size) ? digest_=
+size - ic->tag_size : 0;
+ 		char checksums_onstack[HASH_MAX_DIGESTSIZE];
+-		unsigned sectors_to_process =3D dio->range.n_sectors;
+-		sector_t sector =3D dio->range.logical_sector;
+
+ 		if (unlikely(ic->mode =3D=3D 'R'))
+ 			goto skip_io;
+
+-		checksums =3D kmalloc((PAGE_SIZE >> SECTOR_SHIFT >> ic->sb->log2_sector=
+s_per_block) * ic->tag_size + extra_space,
++		checksums =3D kmalloc((dio->range.n_sectors >> ic->sb->log2_sectors_per=
+_block) * ic->tag_size + extra_space,
+ 				    GFP_NOIO | __GFP_NORETRY | __GFP_NOWARN);
+ 		if (!checksums) {
+ 			checksums =3D checksums_onstack;
+@@ -1542,49 +1549,45 @@ static void integrity_metadata(struct work_struct =
+*w)
+ 			}
+ 		}
+
++		checksums_ptr =3D checksums;
+ 		__bio_for_each_segment(bv, bio, iter, dio->orig_bi_iter) {
+ 			unsigned pos;
+-			char *mem, *checksums_ptr;
+-
+-again:
++			char *mem;
+ 			mem =3D (char *)kmap_atomic(bv.bv_page) + bv.bv_offset;
+ 			pos =3D 0;
+-			checksums_ptr =3D checksums;
+ 			do {
+ 				integrity_sector_checksum(ic, sector, mem + pos, checksums_ptr);
+-				checksums_ptr +=3D ic->tag_size;
+-				sectors_to_process -=3D ic->sectors_per_block;
++
++				if (likely(checksums !=3D checksums_onstack)) {
++					checksums_ptr +=3D ic->tag_size;
++				} else {
++					r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio-=
+>metadata_offset,
++								ic->tag_size, !dio->write ? TAG_CMP : TAG_WRITE);
++					if (unlikely(r))
++						goto internal_hash_error;
++				}
++
+ 				pos +=3D ic->sectors_per_block << SECTOR_SHIFT;
+ 				sector +=3D ic->sectors_per_block;
+-			} while (pos < bv.bv_len && sectors_to_process && checksums !=3D check=
+sums_onstack);
++				sectors_to_process -=3D ic->sectors_per_block;
++			} while (pos < bv.bv_len && sectors_to_process);
+ 			kunmap_atomic(mem);
+
+-			r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio->m=
+etadata_offset,
+-						checksums_ptr - checksums, !dio->write ? TAG_CMP : TAG_WRITE);
+-			if (unlikely(r)) {
+-				if (r > 0) {
+-					DMERR_LIMIT("Checksum failed at sector 0x%llx",
+-						    (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag=
+_size)));
+-					r =3D -EILSEQ;
+-					atomic64_inc(&ic->number_of_mismatches);
+-				}
+-				if (likely(checksums !=3D checksums_onstack))
+-					kfree(checksums);
+-				goto error;
+-			}
+-
+ 			if (!sectors_to_process)
+ 				break;
++		}
+
+-			if (unlikely(pos < bv.bv_len)) {
+-				bv.bv_offset +=3D pos;
+-				bv.bv_len -=3D pos;
+-				goto again;
++		if (likely(checksums !=3D checksums_onstack)) {
++			r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio->m=
+etadata_offset,
++						(dio->range.n_sectors >> ic->sb->log2_sectors_per_block) * ic->tag_=
+size,
++						!dio->write ? TAG_CMP : TAG_WRITE);
++			if (unlikely(r)) {
++				kfree(checksums);
++				goto internal_hash_error;
+ 			}
++			kfree(checksums);
+ 		}
+
+-		if (likely(checksums !=3D checksums_onstack))
+-			kfree(checksums);
+ 	} else {
+ 		struct bio_integrity_payload *bip =3D dio->orig_bi_integrity;
+
+@@ -1615,6 +1618,13 @@ static void integrity_metadata(struct work_struct *=
+w)
+ skip_io:
+ 	dec_in_flight(dio);
+ 	return;
++internal_hash_error:
++	if (r > 0) {
++		DMERR_LIMIT("Checksum failed at sector 0x%llx",
++				(unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)=
+));
++		r =3D -EILSEQ;
++		atomic64_inc(&ic->number_of_mismatches);
++	}
+ error:
+ 	dio->bi_status =3D errno_to_blk_status(r);
+ 	dec_in_flight(dio);
+@@ -3019,6 +3029,8 @@ static void dm_integrity_io_hints(struct dm_target *=
+ti, struct queue_limits *lim
+ 		limits->physical_block_size =3D ic->sectors_per_block << SECTOR_SHIFT;
+ 		blk_limits_io_min(limits, ic->sectors_per_block << SECTOR_SHIFT);
+ 	}
++
++	blk_limits_io_opt(limits, (1U << ic->sb->log2_interleave_sectors));
+ }
+
+ static void calculate_journal_section_size(struct dm_integrity_c *ic)
+=2D-
+2.20.1
