@@ -2,84 +2,86 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B306C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5269C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38E54207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8E324656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582188122;
+	bh=8040ipU19Whua9AEwBIO6II4ixMc8OOuUr42dSrJ2/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=O5c2+KG8nZy7E/4ChcTj0K8V5ODGTlK54waFus43wgV/0z8gx0dxXCZZNBKtEoQEz
+	 vWwRagPwDs5alB6UzM4uBtiBglvyhkzp8aQm1qpatsj0QfbEKmVF08PDLCi0GCFehx
+	 Q/8Z4vhrW05+GNFyuxkX2x9e+bumw77HIUBSYj1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgBTIku convert rfc822-to-8bit (ORCPT
+        id S1726882AbgBTImB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:40:50 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2586 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726637AbgBTIkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:40:49 -0500
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id E18444B4BD356A59F3C6;
-        Thu, 20 Feb 2020 16:40:37 +0800 (CST)
-Received: from dggeme751-chm.china.huawei.com (10.3.19.97) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 20 Feb 2020 16:40:37 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme751-chm.china.huawei.com (10.3.19.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Thu, 20 Feb 2020 16:40:36 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
- Thu, 20 Feb 2020 16:40:36 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     "Li,Rongqing" <lirongqing@baidu.com>
-CC:     Liran Alon <liran.alon@oracle.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-Subject: Re: [PATCH][resend] KVM: fix error handling in svm_cpu_init
-Thread-Topic: [PATCH][resend] KVM: fix error handling in svm_cpu_init
-Thread-Index: AdXnyIf8QCn2ngYdSyKWLfuyXd13zw==
-Date:   Thu, 20 Feb 2020 08:40:36 +0000
-Message-ID: <b7a41c2ec0e644119180ba61d10ab4b9@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 20 Feb 2020 03:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgBTImB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:42:01 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6E3207FD;
+        Thu, 20 Feb 2020 08:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582188120;
+        bh=8040ipU19Whua9AEwBIO6II4ixMc8OOuUr42dSrJ2/U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L973ugZPZxGg5Ed17eRAlWhoj6FPr7OSx9Gr2s4faK9Wv9JYh4ecB7AMCld3+a10M
+         B6TUo3O33fza86PMtqjOnJogUgErRICABq5vlfJvjuD6Uyu8R04oC+JIv1UsSlIck2
+         uJedzCUrZ9cXVuD9KFDb19+3MR56Mzq5gAC6ZnD8=
+Date:   Thu, 20 Feb 2020 08:41:53 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        rostedt@goodmis.org, mingo@kernel.org, joel@joelfernandes.org,
+        gregkh@linuxfoundation.org, gustavo@embeddedor.com,
+        tglx@linutronix.de, paulmck@kernel.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
+        dan.carpenter@oracle.com, mhiramat@kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 01/22] hardirq/nmi: Allow nested nmi_enter()
+Message-ID: <20200220084153.GA11827@willie-the-truck>
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.428764577@infradead.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200219150744.428764577@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Li,Rongqing <lirongqing@baidu.com> writes:
->> Hi,
->> Li RongQing <lirongqing@baidu.com> writes:
->> >
->> >sd->save_area should be freed in error path
->> Oh, it's strange. This is already fixed in my previous patch : [PATCH v2] KVM:
->> SVM: Fix potential memory leak in svm_cpu_init().
->> And Vitaly and Liran gave me Reviewed-by tags and Paolo queued it one 
->> month ago. But I can't found it in master or queue branch. There might 
->> be something wrong. :(
->
->In fact, I send this patch 2019/02/, and get Reviewed-by,  but did not queue
->
->https://patchwork.kernel.org/patch/10853973/
->
->and resend it 2019/07
->
->https://patchwork.kernel.org/patch/11032081/
->
+On Wed, Feb 19, 2020 at 03:47:25PM +0100, Peter Zijlstra wrote:
+> Since there are already a number of sites (ARM64, PowerPC) that
+> effectively nest nmi_enter(), lets make the primitive support this
+> before adding even more.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/arm64/include/asm/hardirq.h |    4 ++--
+>  arch/arm64/kernel/sdei.c         |   14 ++------------
+>  arch/arm64/kernel/traps.c        |    8 ++------
 
-Oh, it's really a pit. And in this case, we can get rid of the var r as '-ENOMEM' is actually the only possible outcome here, as
-suggested by Vitaly, which looks like this: https://lkml.org/lkml/2020/1/15/933
-Thanks. :)
+For these arm64 bits:
 
+Acked-by: Will Deacon <will@kernel.org>
+
+Will
