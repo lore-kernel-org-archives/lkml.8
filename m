@@ -2,90 +2,116 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D6FC11D09
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2789C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59E3A24670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582202728;
-	bh=R4MR6DVkT9fI4lVE6MAadw5/IsujVCI32gaUZVMdTWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zSNpYLG7acahPCljmzKD90E0ENEeHNSTie/q6llI18xTkgc6f3HxOkIGIPUzy7hKf
-	 dgBmJZeL43/utkZxc+OLmoqWTuqGVmVKFrtcwFVozx7V27A3qApttQukodWDmKEzkC
-	 7tAoIfc+wXyNoS/PHPmI3K7r4a+562NmtSLkj3rg=
+	by mail.kernel.org (Postfix) with ESMTP id 773D424670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:45:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B77riBNy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgBTMp0 (ORCPT
+        id S1728178AbgBTMpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:45:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbgBTMp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:45:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Feb 2020 07:45:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33956 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727931AbgBTMpk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:45:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582202739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=goBkqnHTe+jpLAI1tMKYh/5HXzvRmb1T4YJS1+WLtPo=;
+        b=B77riBNylvJ1+sljtTZAxTbpH1nNNBRIUW7kmyMLok7vCblWaTZxGPufJohAZ5ViFL9/1/
+        IO7JVQvwIGVoO/lylKk4ljpl6bFbOFUGAR5ACuPB6Cp1+bLjhAtFwS/GcXf6iMopvs+OR8
+        as0ZDeucLsP1j44bKYZPIfQ1yBAd3kM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-nUGEn3wlO9OXKY1E6Qwh3A-1; Thu, 20 Feb 2020 07:45:38 -0500
+X-MC-Unique: nUGEn3wlO9OXKY1E6Qwh3A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6733924670;
-        Thu, 20 Feb 2020 12:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582202725;
-        bh=R4MR6DVkT9fI4lVE6MAadw5/IsujVCI32gaUZVMdTWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DtYaGpnYgHUa37yk9rSh7s9Ucg37EdokQNeKuf+WeP7OJs/OWD6tGWi2zzmcf6DSL
-         2NY3OGx2Cju2fueAvkEpOBX3Gr+o+rFwCbQBHVaHpju6wiv03HxWeOc1zeAy9wre+L
-         t/iWoAOuH/YmU/CfDKq71hWBQBImSZb8B3NK8mpk=
-Date:   Thu, 20 Feb 2020 13:45:23 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jiri Slaby <jslaby@suse.cz>, linux-serial@vger.kernel.org,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1270107ACC5;
+        Thu, 20 Feb 2020 12:45:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D99765C28E;
+        Thu, 20 Feb 2020 12:45:34 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200219165312.GD9504@magnolia>
+References: <20200219165312.GD9504@magnolia> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204553565.3299825.3864357054582488949.stgit@warthog.procyon.org.uk>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/24] n_hdlc: convert debuglevel use to pr_debug
-Message-ID: <20200220124523.GA3386763@kroah.com>
-References: <20200219084118.26491-1-jslaby@suse.cz>
- <20200219084118.26491-3-jslaby@suse.cz>
- <f3bac52dffc9e5402eb6c6106256dffaf550ee90.camel@perches.com>
+Subject: Re: [PATCH 05/19] vfs: Introduce a non-repeating system-unique superblock ID [ver #16]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f3bac52dffc9e5402eb6c6106256dffaf550ee90.camel@perches.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <626758.1582202733.1@warthog.procyon.org.uk>
+Date:   Thu, 20 Feb 2020 12:45:33 +0000
+Message-ID: <626759.1582202733@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 04:20:33AM -0800, Joe Perches wrote:
-> On Wed, 2020-02-19 at 09:40 +0100, Jiri Slaby wrote:
-> > With pr_debug we have a fine-grained control about debugging prints. So
-> > convert the use of global debuglevel variable and tests to a commonly
-> > used pr_debug. And drop debuglevel completely.
-> > 
-> > This also implicitly adds a loglevel to the messages (KERN_DEBUG) as it
-> > was missing on most of them.
-> []
-> > diff --git a/drivers/tty/n_hdlc.c b/drivers/tty/n_hdlc.c
-> []
-> > @@ -310,11 +306,9 @@ static int n_hdlc_tty_open (struct tty_struct *tty)
-> >  {
-> >  	struct n_hdlc *n_hdlc = tty2n_hdlc (tty);
-> >  
-> > -	if (debuglevel >= DEBUG_LEVEL_INFO)	
-> > -		printk("%s(%d)n_hdlc_tty_open() called (device=%s)\n",
-> > -		__FILE__,__LINE__,
-> > -		tty->name);
-> > -		
-> > +	pr_debug("%s(%d)%s() called (device=%s)\n",
-> > +			__FILE__, __LINE__, __func__, tty->name);
+Darrick J. Wong <darrick.wong@oracle.com> wrote:
+
+> Ahah, this is what the f_sb_id field is for.  I noticed a few patches
+> ago that it was in a header file but was never set.
 > 
-> Perhaps remove all the __FILE__ and __LINE__ arguments as
-> dynamic debug could emit module and __LINE__ when necessary.
+> I'm losing track of which IDs do what...
+> 
+> * f_fsid is that old int[2] thing that we used for statfs.  It sucks but
+>   we can't remove it because it's been in statfs since the beginning of
+>   time.
+> 
+> * f_fs_name is a string coming from s_type, which is the name of the fs
+>   (e.g. "XFS")?
+> 
+> * f_fstype comes from s_magic, which (for XFS) is 0x58465342.
+> 
+> * f_sb_id is basically an incore u64 cookie that one can use with the
+>   mount events thing that comes later in this patchset?
+> 
+> * FSINFO_ATTR_VOLUME_ID comes from s_id, which tends to be the block
+>   device name (at least for local filesystems)
+> 
+> * FSINFO_ATTR_VOLUME_UUID comes from s_uuid, which some filesystems fill
+>   in at mount time.
+> 
+> * FSINFO_ATTR_VOLUME_NAME is ... left to individual filesystems to
+>   implement, and (AFAICT) can be the label that one uses for things
+>   like: "mount LABEL=foo /home" ?
+> 
+> Assuming I got all of that right, can we please capture what all of
+> these "IDs" mean in the documentation?
 
-That can be a set of follow-on patches.  This patch is fine as-is for
-now.
+Basically, yes.  Would it help if I:
 
-thanks,
+ (1) Put the ID generation into its own patch, first.
 
-greg k-h
+ (2) Put the notification counter patches right after that.
+
+ (3) Renamed the fields a bit, say:
+
+	f_fsid		-> fsid
+	f_fs_name	-> filesystem_name
+	f_fstype	-> filesystem_magic
+	f_sb_id		-> superblock_id
+	f_dev_*		-> backing_dev_*
+
+David
+
