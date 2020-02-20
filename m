@@ -2,125 +2,95 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C12C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CEDC7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 099C524656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E70CB24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mymMtlTV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Hp2eGaSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgBTBKw (ORCPT
+        id S1727476AbgBTBPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:10:52 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:6968 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgBTBKw (ORCPT
+        Wed, 19 Feb 2020 20:15:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38018 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBTBPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:10:52 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4ddc8d0001>; Wed, 19 Feb 2020 17:10:37 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Feb 2020 17:10:50 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Feb 2020 17:10:50 -0800
-Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 01:10:45 +0000
-Subject: Re: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>
-References: <20200113224703.5917-1-rcampbell@nvidia.com>
- <20200113224703.5917-6-rcampbell@nvidia.com>
- <20200114125957.GO20978@mellanox.com>
- <5845f50e-8bc0-8068-ee21-4f910beb1255@nvidia.com>
- <20200116160002.GL20978@mellanox.com>
- <01adb7dd-589e-2cde-4fa9-68baa44c0976@nvidia.com>
- <20200116202151.GS20978@mellanox.com>
-From:   Ralph Campbell <rcampbell@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <770d0aab-726a-12b0-944d-ef71722ad587@nvidia.com>
-Date:   Wed, 19 Feb 2020 17:10:45 -0800
+        Wed, 19 Feb 2020 20:15:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=dZtuknyoRtx3zb5xuPMfjefBRKNpd+FEygxzTdEPEZg=; b=Hp2eGaSvfeHFfDoYUhD0EfYRjb
+        9TlBqHho2xGQiGFS0Ifi9l5JDoLZFS5y2bdmKHv3WlNzRHDNKYn1zbKPFqnHGKcYmZ43GtWLBuKga
+        1sdYUOSV+gFDedLOwnkNqYZjyS4abn6ceekXlY/xBrIiMzNFBza36vdM/r+k2a/vNpNNj6N2nB8BW
+        MEk5a/E8CXZklfl8BS8Ws2Ej/6rXl/SMAwL8NCCL+AQHGlHLmpqwzitqtlU6wBQdp0UMuHjVSGXPB
+        NULyiWrI/Qa2c15xFjZNocPbFN0n9R2ozzSxsg/4RHe8vx147AdBtrYi5smLhY2MT9pJJx89QIoeg
+        OJpnd4GA==;
+Received: from [2603:3004:32:9a00::4074]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4aRN-0007MU-BO; Thu, 20 Feb 2020 01:15:45 +0000
+Subject: Re: [PATCH v13 2/2] zonefs: Add documentation
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Dave Chinner <david@fromorbit.com>
+References: <20200207031606.641231-1-damien.lemoal@wdc.com>
+ <20200207031606.641231-3-damien.lemoal@wdc.com>
+ <a6f0eaf4-933f-8c15-6f0c-18400204791f@infradead.org>
+ <BYAPR04MB58167DDA2AE7B1BC1500D9C4E7130@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6f370a74-877a-a709-e7ff-ba7dc1963ece@infradead.org>
+Date:   Wed, 19 Feb 2020 17:15:44 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200116202151.GS20978@mellanox.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <BYAPR04MB58167DDA2AE7B1BC1500D9C4E7130@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582161037; bh=j5Kl9BSF2vTH61P01nHLq9s0kQA2Bt6KxZQ3tGK3SiY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mymMtlTV6FEpRSSfBKo8/J22MnNOMqhoctTnXKtoJNXQCGrFu2vD/UZWIgrhZKqx2
-         yZX/Olb+DHLawdffw5s7tzbLtq7L3rLMA1whAzYQmLJpjpty6SZQAOavs1iUYrF1rT
-         HTrA2u4UhZkBa3u67AZuNNObcH0GFzqZuWVoCrb3FMeLJawDhdGSPpaALw7Im9razI
-         cdAiQcigaPwrLsRhllcboZoB++U+H935O4KnvWag0CdyBtpgYEPvHrVhtmgYCjF3/O
-         +FBDcYWSeu5STzMh3DIwhAnhoJpFjvDMzrkPN0aVKcAQLw28WJpkfqGpDZrzCncRtb
-         +ixSSVVng+RzQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/19/20 4:59 PM, Damien Le Moal wrote:
+> On 2020/02/20 9:55, Randy Dunlap wrote:
+>> Hi Damien,
+>>
+>> Typo etc. corrections below:
+> 
+> Thanks. Will correct these. Since this is now in the kernel, you can send a
+> patch too :)
 
-On 1/16/20 12:21 PM, Jason Gunthorpe wrote:
-> On Thu, Jan 16, 2020 at 12:16:30PM -0800, Ralph Campbell wrote:
->> Can you point me to the latest ODP code? Seems like my understanding is
->> quite off.
-> 
-> https://elixir.bootlin.com/linux/v5.5-rc6/source/drivers/infiniband/hw/mlx5/odp.c
-> 
-> Look for the word 'implicit'
-> 
-> mlx5_ib_invalidate_range() releases the interval_notifier when there are
-> no populated shadow PTEs in its leaf
-> 
-> pagefault_implicit_mr() creates an interval_notifier that covers the
-> level in the page table that needs population. Notice it just uses an
-> unlocked xa_load to find the page table level.
-> 
-> The locking is pretty tricky as it relies on RCU, but the fault flow
-> is fairly lightweight.
-> 
-> Jason
-> 
-Thanks for the information, Jason.
+oops, sorry, I didn't notice that.
+I'll be glad to send a patch.
 
-I'm still interested in finding a way to support range based hints to device drivers.
-madvise() looks like it only sets a bit in vma->vm_flags or acts on the
-advice immediately. mbind() and set_mempolicy() only work with CPUs and memory
-with NUMA a node number. What I'm looking for is a way for the device to know
-whether to migrate pages to device private memory on a fault, whether to duplicate
-read-only pages in device private memory, or remote map/access a page instead of migrating it.
-For example, there is a working draft extension to OpenCL,
-https://github.com/intel/llvm/blob/sycl/sycl/doc/extensions/USM/cl_intel_unified_shared_memory.asciidoc
-that could provide a way to specify this sort of advice.
-C++ is also looking at extentions for specifying affinity attributes.
-In any case, these are probably a long ways off before being finalized and implemented.
+> 
+>>
+>> On 2/6/20 7:16 PM, Damien Le Moal wrote:
+>>> Add the new file Documentation/filesystems/zonefs.txt to document
+>>> zonefs principles and user-space tool usage.
+>>>
+>>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+>>> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+>>> ---
+>>>  Documentation/filesystems/zonefs.txt | 404 +++++++++++++++++++++++++++
+>>>  MAINTAINERS                          |   1 +
+>>>  2 files changed, 405 insertions(+)
+>>>  create mode 100644 Documentation/filesystems/zonefs.txt
 
-I also have some changes to support THP migration to device private memory but that
-will require updating nouveau to use 2MB TLB mappings.
 
-In the mean time, I can update the HMM self tests to do something like ODP without
-changing mm/mmu_notifier.c but I don't think I can easily change nouveau to that model.
+-- 
+~Randy
