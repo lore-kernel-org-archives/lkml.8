@@ -2,81 +2,180 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FC1C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FBBC34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07F5124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66112465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:13:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VJ2E3Ck0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgBTHMQ (ORCPT
+        id S1726788AbgBTHNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:12:16 -0500
-Received: from mga07.intel.com ([134.134.136.100]:3039 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725942AbgBTHMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:12:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Feb 2020 23:12:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,463,1574150400"; 
-   d="scan'208";a="315646652"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga001.jf.intel.com with ESMTP; 19 Feb 2020 23:12:13 -0800
-Date:   Thu, 20 Feb 2020 15:12:33 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, david@redhat.com, osalvador@suse.de,
-        dan.j.williams@intel.com, mhocko@suse.com, rppt@linux.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 6/7] mm/sparse.c: move subsection_map related codes
- together
-Message-ID: <20200220071233.GA592@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200220043316.19668-1-bhe@redhat.com>
- <20200220043316.19668-7-bhe@redhat.com>
- <20200220061832.GE32521@richard>
- <20200220070420.GD4937@MiWiFi-R3L-srv>
+        Thu, 20 Feb 2020 02:13:05 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35135 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbgBTHNF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 02:13:05 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so821939wmb.0;
+        Wed, 19 Feb 2020 23:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LuLRB0u6LFeZT0zz7S0KLItdb3h9B9LHeKzaA+xlLl4=;
+        b=VJ2E3Ck0HxAKFJb/f98BRyx6TcvSrX9cwOn823sTbKvE0GaRYST7Q/uO9Z5o3OiW2u
+         uEZmroJKXSe60CTELjJD1gn0Uw6PQgQZucjVGXpozlJRe1MNPnQlrrpW0zGfNmf8BBTz
+         1ijyPnacJI7lf/qnHMBdZPlE/siW9GHXzbK9idcncXz28EO+fNgOqYXgQUIxGT/Af1z8
+         v02odj5iB0AHYxwbVOjoHiK9D184z5Dw9q8hBZQqgHw3up/nNLRYCC+9gaUzkmew64u4
+         TKjMmsgxI1qah8xBM+VBSpKu4ixdrtX+sJJsicXsKo8nxladk39qeMqk1aI40gc4JFDt
+         pKhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LuLRB0u6LFeZT0zz7S0KLItdb3h9B9LHeKzaA+xlLl4=;
+        b=mTjXx2spYainNdk6R9I9uZu1e3USPhDFF9kUmzaMaz6HWXTPRRuX0AXBAzHRmIuYo+
+         jG4s00sIelN3voxK7YtTphqq6nNiaNPLThAA4JG4Cue7Hf/KO8arZPK+gS5sa8LhWWp0
+         Sv/c+yKd2fxfqsDXAG7pmELdwtL1tj+OmrKBsvI+D78h9RXAVwD3TSMh7BXMo4tizY+F
+         eEPp129O+SzGMjTpd80VjMNI+ne/vXmFmp+/CqdhWmV13mnL2VH1OwYRZRymvT+FeErW
+         iQKoVLpkp2mfozb6v1ZerjOn9AZ+8Uez9yEI+GGfsNR/JQhPDfOrQrlfP3rvZNSPcrIY
+         WT+A==
+X-Gm-Message-State: APjAAAUFD/YVd18q4yO5DDgi9NeVgcoB6rxDRgcgT6HdBtTl8qOPcyg+
+        rNBVw4qNTT/R+3Um2bCsGxc1J7E=
+X-Google-Smtp-Source: APXvYqzbH1S0yZWti5zzw/ngfwtODbeK1Fjd48qTM4U4kVKC6R+/mMZNtC/AbAKSpTFmy/H1XvFw0A==
+X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr2518130wml.44.1582182783589;
+        Wed, 19 Feb 2020 23:13:03 -0800 (PST)
+Received: from avx2 ([46.53.248.148])
+        by smtp.gmail.com with ESMTPSA id r1sm3061979wrx.11.2020.02.19.23.13.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 23:13:02 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:13:00 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v2] proc: faster open/read/close with "permanent" files
+Message-ID: <20200220071300.GA2188@avx2>
+References: <20200219191127.GA15115@avx2>
+ <20200219130600.3cb5cd65fbd696fe43fb7adc@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200220070420.GD4937@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200219130600.3cb5cd65fbd696fe43fb7adc@linux-foundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:04:20PM +0800, Baoquan He wrote:
->On 02/20/20 at 02:18pm, Wei Yang wrote:
->> On Thu, Feb 20, 2020 at 12:33:15PM +0800, Baoquan He wrote:
->> >No functional change.
->> >
->> 
->> Those functions are introduced in your previous patches.
->> 
->> Is it possible to define them close to each other at the very beginning?
->
->Thanks for reviewing.
->
->Do you mean to discard this patch and keep it as they are in the patch 4/7?
->If yes, it's fine to me to drop it as you suggested. To me, I prefer to put
->all subsection map handling codes together.
->
+On Wed, Feb 19, 2020 at 01:06:00PM -0800, Andrew Morton wrote:
+> On Wed, 19 Feb 2020 22:11:27 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> 
+> > Now that "struct proc_ops" exist we can start putting there stuff which
+> > could not fly with VFS "struct file_operations"...
+> > 
+> > Most of fs/proc/inode.c file is dedicated to make open/read/.../close reliable
+> > in the event of disappearing /proc entries which usually happens if module is
+> > getting removed. Files like /proc/cpuinfo which never disappear simply do not
+> > need such protection.
+> > 
+> > Save 2 atomic ops, 1 allocation, 1 free per open/read/close sequence for such
+> > "permanent" files.
+> > 
+> > Enable "permanent" flag for
+> > 
+> > 	/proc/cpuinfo
+> > 	/proc/kmsg
+> > 	/proc/modules
+> > 	/proc/slabinfo
+> > 	/proc/stat
+> > 	/proc/sysvipc/*
+> > 	/proc/swaps
+> > 
+> > More will come once I figure out foolproof way to prevent out module
+> > authors from marking their stuff "permanent" for performance reasons
+> > when it is not.
+> > 
+> > This should help with scalability: benchmark is "read /proc/cpuinfo R times
+> > by N threads scattered over the system".
+> > 
+> > 	N	R	t, s (before)	t, s (after)
+> > 	-----------------------------------------------------
+> > 	64	4096	1.582458	1.530502	-3.2%
+> > 	256	4096	6.371926	6.125168	-3.9%
+> > 	1024	4096	25.64888	24.47528	-4.6%
+> 
+> I guess that's significant.
+> 
+> > --- a/fs/proc/internal.h
+> > +++ b/fs/proc/internal.h
+> > @@ -61,6 +61,7 @@ struct proc_dir_entry {
+> >  	struct rb_node subdir_node;
+> >  	char *name;
+> >  	umode_t mode;
+> > +	u8 flags;
+> 
+> Add a comment describing what this is?
+> 
+> >  	u8 namelen;
+> >  	char inline_name[];
+> >  } __randomize_layout;
+> >
+> > ...
+> >
+> > @@ -12,7 +13,21 @@ struct proc_dir_entry;
+> >  struct seq_file;
+> >  struct seq_operations;
+> >  
+> > +enum {
+> > +	/*
+> > +	 * All /proc entries using this ->proc_ops instance are never removed.
+> > +	 *
+> > +	 * If in doubt, ignore this flag.
+> > +	 */
+> > +#ifdef MODULE
+> > +	PROC_ENTRY_PERMANENT = 0U,
+> > +#else
+> > +	PROC_ENTRY_PERMANENT = 1U << 0,
+> > +#endif
+> > +};
+> 
+> That feels quite hacky.  Is it really needed?  Any module which uses
+> this is simply buggy?
 
-I mean when you introduce clear_subsection_map() in patch 3, is it possible to
-move close to the definition of fill_subsection_map()?
+Without "#ifdef MODULE" -- yes, buggy.
+> 
+> Can we just leave this undefined if MODULE and break the build?
 
-Since finally you are will to move them together.
+It is for the case when module is built-in, so module removal won't
+happen.
 
--- 
-Wei Yang
-Help you, Help me
+This flag requires discipline. It says that all code working for proc
+entry will never be unloaded and /proc entry itself will stay as well.
+
+> >  struct proc_ops {
+> > +	unsigned int proc_flags;
+> >  	int	(*proc_open)(struct inode *, struct file *);
+> >  	ssize_t	(*proc_read)(struct file *, char __user *, size_t, loff_t *);
+> >  	ssize_t	(*proc_write)(struct file *, const char __user *, size_t, loff_t *);
+> > @@ -25,7 +40,7 @@ struct proc_ops {
+> >  #endif
+> >  	int	(*proc_mmap)(struct file *, struct vm_area_struct *);
+> >  	unsigned long (*proc_get_unmapped_area)(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+> > -};
+> > +} __randomize_layout;
+> 
+> Unchangelogged, unrelated?
+
+No! Randomization kicks in if all members are pointers to functions,
+so once a integer is added it is not randomised anymore.
+
+Or so I've heard...
+
+I'll resend with more comments.
