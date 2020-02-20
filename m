@@ -2,141 +2,126 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33655C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AC3C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08247206EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEBCE206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:43:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ZOSkCGU1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MOPvSlGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgBTNlZ (ORCPT
+        id S1728204AbgBTNnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:41:25 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:39541 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgBTNlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:41:25 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48NbN22Wgxz9ty9V;
-        Thu, 20 Feb 2020 14:41:22 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ZOSkCGU1; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id z6e7fNr83C6z; Thu, 20 Feb 2020 14:41:22 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48NbN204fCz9ty9T;
-        Thu, 20 Feb 2020 14:41:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582206082; bh=PWM2VGeYn1puuYVao8kR+gKhli5A0TKj0zM2lK44Ojg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZOSkCGU1Srry32+pfJZCoylAC9Zgb2Mf5iLtUbdraslH6edil/Z5vijqc6OA025Lp
-         nzx1saoBgW36o3ZnMfKImSy5boQBGQNGhtzNObDZuwZpOhe9hD2fI4xjldovLxkcUc
-         wfpzmLymqHpUV8+R3Aq7l/TQuVrPKWFwqD4SGXa0=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 552588B86E;
-        Thu, 20 Feb 2020 14:41:23 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id PVcQ5Y69vVqi; Thu, 20 Feb 2020 14:41:23 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 242678B86D;
-        Thu, 20 Feb 2020 14:41:22 +0100 (CET)
-Subject: Re: [PATCH v3 2/6] powerpc/fsl_booke/64: introduce
- reloc_kernel_entry() helper
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com,
-        oss@buserror.net
-Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
-References: <20200206025825.22934-1-yanaijie@huawei.com>
- <20200206025825.22934-3-yanaijie@huawei.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <da8c9b88-1d21-ed70-c6f1-343117b4075d@c-s.fr>
-Date:   Thu, 20 Feb 2020 14:41:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 08:43:32 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:41731 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbgBTNnc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:43:32 -0500
+Received: by mail-vs1-f67.google.com with SMTP id k188so2663181vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:43:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VHEgUpty5OrcYJGxbPFH9uNYoAV1sH/e0iu6cPEMqFw=;
+        b=MOPvSlGHs9vY9i1zxdZVYvRucN1GCv+wIlEmZNcxvOVJgWieyOuK5t2FgeWXlgssoI
+         mgJD2DDeUXPTIpGdhTzqk5XirwmPaMk6CAwFKtPLAPWngvQpSx0wvzDZ3QBI5chjHIfO
+         KlmT5z1qkHUZ1uy+lLfwhjvhlJoHtsQuwvRing9iIyS86tsUJYRObuuaZR1A4VsrYEWk
+         CWwFljQX7WEAW5jj6YS8yCvSvpKPzB2Ug+lVXbgZ5JfB92mkizAVa2b/yNk21crOhZrc
+         gnOIAvQqaXvxMxoOcpWkdq6mv+MYWKnMO5YcMjsRyGPJRrqW9wjWseT53Fo8heW6kC0g
+         R9VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VHEgUpty5OrcYJGxbPFH9uNYoAV1sH/e0iu6cPEMqFw=;
+        b=d6d/vsC7sE7OXFtVu9dLnZGG9LwcWHxpV5U5beAIew5OBuo0llfnIIXXhurT5A54fT
+         rsH3b3xOaFmO8wDbVvpridUJAbWqUAr/VzZ8IXmsAl4rzTAqDS2s3hzBOQYCxp9MbvPE
+         CpG8vuihHv+X2vWj1cpfsRnDMXNrF2cFN+u91BFwRIMbKQ2HK6SgbVP8zqza0LXsVu8A
+         IA8QZHRU/csS5KVkhKFuvvfU7VsQz18F7qnpAicJK9g09ibOQa9X3FVomr/qNEAf5BeS
+         dgmwTZ9JPMXiBx1TXa9LUV/BTQSKLSw0LRcBGBtie0N9pqn59cCtHub75XWMJbDj83EW
+         jitg==
+X-Gm-Message-State: APjAAAUwSYxv71jmV0JPCIgKrqNzOqZA5bKEM2b5RYndLAQdo55xKLG0
+        saZgZNZuH5XPJg0g57Ri9qLNEXkqq/xGYv8blkocSqZa
+X-Google-Smtp-Source: APXvYqzAicYKMyJevIEntfrmo+/YD/iJAwDqnrwi2s9zzjbgZoib9lZtdmSkXq/LWZ2YjZVuv7nGnV3Vfctk+AI50NM=
+X-Received: by 2002:a05:6102:22d6:: with SMTP id a22mr16400744vsh.191.1582206209871;
+ Thu, 20 Feb 2020 05:43:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200206025825.22934-3-yanaijie@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20200211160321.22124-1-paul@crapouillou.net> <20200211160321.22124-4-paul@crapouillou.net>
+ <CAPDyKFquXSB+ztXZQS4MPV20dRN_-CKJkmCF0A97pG+vJYRsbg@mail.gmail.com>
+In-Reply-To: <CAPDyKFquXSB+ztXZQS4MPV20dRN_-CKJkmCF0A97pG+vJYRsbg@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 20 Feb 2020 14:42:52 +0100
+Message-ID: <CAPDyKFrGTVZ9_d-rGDLiEJ-nxPhXtOmw5hTDekpt_+RNB2Sx2A@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] mmc: jz4740: Use pm_sleep_ptr() macro
+To:     Paul Cercueil <paul@crapouillou.net>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        od@zcrc.me, Linux PM <linux-pm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 20 Feb 2020 at 14:38, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Tue, 11 Feb 2020 at 17:03, Paul Cercueil <paul@crapouillou.net> wrote:
+> >
+> > Use the newly introduced pm_sleep_ptr() macro to simplify the code.
+> >
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > ---
+> >  drivers/mmc/host/jz4740_mmc.c | 12 +++---------
+> >  1 file changed, 3 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+> > index fbae87d1f017..09554f9831de 100644
+> > --- a/drivers/mmc/host/jz4740_mmc.c
+> > +++ b/drivers/mmc/host/jz4740_mmc.c
+> > @@ -1099,24 +1099,18 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
+> >         return 0;
+> >  }
+> >
+> > -#ifdef CONFIG_PM_SLEEP
+> > -
+> > -static int jz4740_mmc_suspend(struct device *dev)
+> > +static int __maybe_unused jz4740_mmc_suspend(struct device *dev)
+> >  {
+> >         return pinctrl_pm_select_sleep_state(dev);
+> >  }
+> >
+> > -static int jz4740_mmc_resume(struct device *dev)
+> > +static int __maybe_unused jz4740_mmc_resume(struct device *dev)
+> >  {
+> >         return pinctrl_select_default_state(dev);
+> >  }
+> >
+> >  static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
+> >         jz4740_mmc_resume);
+> > -#define JZ4740_MMC_PM_OPS (&jz4740_mmc_pm_ops)
+> > -#else
+> > -#define JZ4740_MMC_PM_OPS NULL
+> > -#endif
+>
+> All of the above code can be simplified in this way, without having to
+> convert into using the new pm_sleep_ptr() macro, below.
+>
+> The only "penalty" would be that, the struct dev_pm_ops
+> (jz4740_mmc_pm_ops) would then be referenced even when CONFIG_PM* is
+> unset, thus the compiler would be able to throw it away.
 
+/s/would/would not
 
-Le 06/02/2020 à 03:58, Jason Yan a écrit :
-> Like the 32bit code, we introduce reloc_kernel_entry() helper to prepare
-> for the KASLR 64bit version. And move the C declaration of this function
-> out of CONFIG_PPC32 and use long instead of int for the parameter 'addr'.
-> 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
+[...]
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-
-> ---
->   arch/powerpc/kernel/exceptions-64e.S | 13 +++++++++++++
->   arch/powerpc/mm/mmu_decl.h           |  3 ++-
->   2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-> index e4076e3c072d..1b9b174bee86 100644
-> --- a/arch/powerpc/kernel/exceptions-64e.S
-> +++ b/arch/powerpc/kernel/exceptions-64e.S
-> @@ -1679,3 +1679,16 @@ _GLOBAL(setup_ehv_ivors)
->   _GLOBAL(setup_lrat_ivor)
->   	SET_IVOR(42, 0x340) /* LRAT Error */
->   	blr
-> +
-> +/*
-> + * Return to the start of the relocated kernel and run again
-> + * r3 - virtual address of fdt
-> + * r4 - entry of the kernel
-> + */
-> +_GLOBAL(reloc_kernel_entry)
-> +	mfmsr	r7
-> +	rlwinm	r7, r7, 0, ~(MSR_IS | MSR_DS)
-> +
-> +	mtspr	SPRN_SRR0,r4
-> +	mtspr	SPRN_SRR1,r7
-> +	rfi
-> diff --git a/arch/powerpc/mm/mmu_decl.h b/arch/powerpc/mm/mmu_decl.h
-> index 8e99649c24fc..3e1c85c7d10b 100644
-> --- a/arch/powerpc/mm/mmu_decl.h
-> +++ b/arch/powerpc/mm/mmu_decl.h
-> @@ -140,9 +140,10 @@ extern void adjust_total_lowmem(void);
->   extern int switch_to_as1(void);
->   extern void restore_to_as0(int esel, int offset, void *dt_ptr, int bootcpu);
->   void create_kaslr_tlb_entry(int entry, unsigned long virt, phys_addr_t phys);
-> -void reloc_kernel_entry(void *fdt, int addr);
->   extern int is_second_reloc;
->   #endif
-> +
-> +void reloc_kernel_entry(void *fdt, long addr);
->   extern void loadcam_entry(unsigned int index);
->   extern void loadcam_multi(int first_idx, int num, int tmp_idx);
->   
-> 
+Kind regards
+Uffe
