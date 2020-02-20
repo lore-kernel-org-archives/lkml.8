@@ -2,102 +2,120 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F42C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E7CC11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C069206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5895C206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B3FQHyFp"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="UPvdRxU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgBTOIl (ORCPT
+        id S1728212AbgBTOLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:08:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:51340 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728282AbgBTOIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:08:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582207719;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=yXw1aooGm3SizxRsc5d1sX2J/L6gkHAaW3S5VvpIZy0=;
-        b=B3FQHyFpyo/FqshK32+eV/XR8KC4BZN4V0i6kq+RE8UvvFxxDniFWVRsNugCDqUG98NyfL
-        2j/0efe9sR5LRDthKkhU1dg1Y5uMqfGngS6RX4kQ0EOYDGkVmK7bXBZEqyMnjma90E/SOY
-        y87y8xH5UpyvtwpSW4nYGyii8F8v11k=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-303-ABW279RfPpSRSC4vPepxUg-1; Thu, 20 Feb 2020 09:08:37 -0500
-X-MC-Unique: ABW279RfPpSRSC4vPepxUg-1
-Received: by mail-wm1-f71.google.com with SMTP id m4so641834wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:08:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yXw1aooGm3SizxRsc5d1sX2J/L6gkHAaW3S5VvpIZy0=;
-        b=l+7zqHHAnfHgkKmoS27f7OU5fV9kkJ77koSD8d6Y9B3Oxp/suWIuJJNeW2fY9wAZ7N
-         ddFQ1I8hAv3VoKUvLj9qwsT91ULCMf0+CWKpr2gfLlNgiO7ZXpFpKmvNbgadzWwR8JJh
-         CbFvWJwOs6G+9PtfVJmxfYRULmsUak7UAKZZMO28PHHChNGfAfqN+RzVshrbLqWKjutK
-         zIEk59UcHSiR9/IhP0dhdn3s5gHiAmWA40Tmb2GeN+/RbkE++zq59UHBFx6D4vZZyjCZ
-         JpjvhVGn0NYDJ246RJlHHud7P1ZoL/SxfqbjGVCPiop/7LNlh5xXbdc50LHG0w17g08/
-         QUIA==
-X-Gm-Message-State: APjAAAWF8btJHnIgHLbHpM1WeD5VW7lYBxNpeInvccpVlZbQ0QJQ3MTK
-        RWQlgrsF3Ys3kDX8ZLVa6mhop/wotRhyvDbJQwfaPthMGKTpw5edQU4lPIpc5XmIWnsOSHQQxdp
-        shK0n7DUP1LOnUZFxbux/G6ZL
-X-Received: by 2002:a5d:5007:: with SMTP id e7mr42931438wrt.228.1582207715415;
-        Thu, 20 Feb 2020 06:08:35 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyw0NL4CfkVCvHhL8BV6jD0BLn6ZRb0x1FWrOTy5dsR72Hmp0fM/ZUPGXOTxrdPDBTx4bQySg==
-X-Received: by 2002:a5d:5007:: with SMTP id e7mr42931423wrt.228.1582207715204;
-        Thu, 20 Feb 2020 06:08:35 -0800 (PST)
-Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id 133sm5010574wmd.5.2020.02.20.06.08.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 06:08:34 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH liburing] man/io_uring_setup.2: fix 'sq_thread_idle' description
-Date:   Thu, 20 Feb 2020 15:08:33 +0100
-Message-Id: <20200220140833.108791-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 20 Feb 2020 09:11:50 -0500
+Received: from mail-am6eur05on2135.outbound.protection.outlook.com ([40.107.22.135]:22081
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgBTOLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:11:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yr15fp6p5UhCgwb54k9QJdnAAbzwlyQDRi890lyB8pOvRsfkfcPghGPzcXdzt6uikY1axpiSgVuEVWvMz1K6hIhy6vjzIJgVNbpDRObMbJjyFGb/M60wkiU9sX/mq2OOKqwiVf8YwZRZkj+iHMA9dzmkCBJhmIXcfDYs332H7+ShigyyalygxCpMmoFOQcKNoEqaBPVjObGnV2joxara282me/oRsN42UUsvjW5RZ39Qj8QvgEMCWMol5bK+kJT7tghfkqMlBYlPGYlwous/u6fjNqqcpIKtOY/OuMaE3lV3aETjoq12o4DtSuEcYp79oNH2UUVACeN3LoNbFiAO5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MDH/hw0Vv7EIKHSsfkPwAAtzbTpt99tTgrjpbFfvww8=;
+ b=KHAAfXCxdPye7ShaWubYZSw1T0pQXbGizRpMu2DNYIreAaPzLFMSYv4HZrkL/FdQnKAv1mX/ETGf2XtWaLXGjTj7tNHa29QA0ugcYJIyJvlrOe/tGwEXRCcuhKkat2K3Dxp3WXBXMmif0mRtrZxKQTozcRMF3pAgjIvu9IrftwQvg1CiZwrITo0I4gOjmah81CItKxNtzZgGhN/y1eqsUlNLPI0GGeBH5RgVdUBgad5U30QIW2L8zkRsLMguzS1dSgMfC9Gn2CXtpv4Zg2mpwJIGqszvlsWKB82MMrnizRZi6P2kUv11rwB24juFFNXcPq1E1H8z4md2Tq4BzxFq6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MDH/hw0Vv7EIKHSsfkPwAAtzbTpt99tTgrjpbFfvww8=;
+ b=UPvdRxU50XIS88Vksem1+HjEhNZvVtG/QTqZ6FWIn9QF4VlyzAqji4fcdZluHGncGqVDsy4Nhe/lT7B4bXEqCsGEFJpKuxpVPzztVaQEDN0ZsU+RNOxeEaSRyBlgCkmW6qFH4Y6FjFiY9ds5pJwBla+4bBNosUFm7NJadhIw/u4=
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com (10.170.238.24) by
+ VI1PR05MB3167.eurprd05.prod.outlook.com (10.170.236.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2729.24; Thu, 20 Feb 2020 14:11:47 +0000
+Received: from VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52]) by VI1PR05MB3279.eurprd05.prod.outlook.com
+ ([fe80::c14f:4592:515f:6e52%7]) with mapi id 15.20.2729.032; Thu, 20 Feb 2020
+ 14:11:46 +0000
+Received: from localhost (194.105.145.90) by PR3P193CA0060.EURP193.PROD.OUTLOOK.COM (2603:10a6:102:51::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Thu, 20 Feb 2020 14:11:45 +0000
+From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+To:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>,
+        Oleksandr Suvorov <cryosay@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Igor Opanyuk <igor.opanyuk@toradex.com>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/2] trivial fixes for fsl-spi and spidev
+Thread-Topic: [PATCH 0/2] trivial fixes for fsl-spi and spidev
+Thread-Index: AQHV5/evyIrhTup9ikK2ghbCvu9ccw==
+Date:   Thu, 20 Feb 2020 14:11:46 +0000
+Message-ID: <20200220141143.3902922-1-oleksandr.suvorov@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR3P193CA0060.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:102:51::35) To VI1PR05MB3279.eurprd05.prod.outlook.com
+ (2603:10a6:802:1c::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oleksandr.suvorov@toradex.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.24.1
+x-originating-ip: [194.105.145.90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 37dab45a-8141-420e-9b4a-08d7b60ed1c2
+x-ms-traffictypediagnostic: VI1PR05MB3167:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB3167FA8B7997E85546265F6FF9130@VI1PR05MB3167.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 031996B7EF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(39840400004)(136003)(366004)(396003)(199004)(189003)(54906003)(110136005)(316002)(6486002)(4744005)(36756003)(16526019)(66446008)(26005)(66946007)(66556008)(81156014)(81166006)(64756008)(5660300002)(8676002)(66476007)(186003)(2616005)(956004)(71200400001)(1076003)(4326008)(86362001)(52116002)(478600001)(6496006)(2906002)(8936002)(44832011);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR05MB3167;H:VI1PR05MB3279.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2fW+KK8zHRUSbHvWv4L0Dp/t24fqTrXszoayww+gILX5gR0BTzTb8+HZr3yvZL/xBLxrBsujDU6NdhfA+E2WcQ46h9mO7g3y+JvoXj+g9o15o0U0fEvWUwdwcOMGdOtURmmhUR9rDsB36JK9QMapehpuGOYTpPSnpLgzYAk8EuphziKXIR/u/z254nKUbzpt7Ksb6amJRYp4sMmzcHD0oH79co3EbW8TnG1EZ6FfY983RoycwNZI3SrT67NZvwLsFPo0iVlo/UDIdBbSXhIHr7locrBQn+6zhi/Q9ZyuxcoWrETo8n0OZw0G3QdMJy6a9NJ2bse/x5dbBZRWvafg58jnZ9lPrZJ5kJuZmXkc6YDRCtIeb5rZ/md11KQgIpwwXHUfmk8RjDTR+nmx3vX0EC9D80tjQ0Iu0Ypt5C/+InkoXu4W7XRPo1G+BclyUX8q
+x-ms-exchange-antispam-messagedata: 7qbptshx7nNvO9sk26Y1Akjxk0C/mmbw+oQQELOyHDXIvOKF9QjvCnWplpfWe3rcZvJmJu1GnK8HZ/cgppfWrYFXjurLHgPriE6Dda2FchKEAIgIZFSOMrk7pW653viUi7u6lVVhbxXC/uk6WG6hRA==
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 37dab45a-8141-420e-9b4a-08d7b60ed1c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 14:11:46.8369
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: odMLg/pTJfz9xyTA26GeAB2J4Al4l6L3sD3k5NCbIbtc5k5b78v6LXrbprNQdLeTRqm0wExr0R59sOC74GZVEh0m9KjmxIEU1bgYz9rabQs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the kernel we are using msecs_to_jiffies() to convert the
-'sq_thread_idle' parameter, provided by the user, in jiffies.
-So, the value is interpreted in milliseconds and not microseconds.
 
-Fixes: 59bb09c553eb ("man: add io_uring_setup.2 man page")
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- man/io_uring_setup.2 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- the memory optimization in fsl-spi
+- the fix of the max speed setting bug in spidev
 
-diff --git a/man/io_uring_setup.2 b/man/io_uring_setup.2
-index 4057e4b..20c67dc 100644
---- a/man/io_uring_setup.2
-+++ b/man/io_uring_setup.2
-@@ -82,7 +82,7 @@ doing a single system call.
- 
- If the kernel thread is idle for more than
- .I sq_thread_idle
--microseconds, it will set the
-+milliseconds, it will set the
- .B IORING_SQ_NEED_WAKEUP
- bit in the
- .I flags
--- 
+
+Oleksandr Suvorov (2):
+  spi: fsl-lpspi: remove unneeded array
+  spi: spidev: fix a max speed setting
+
+ drivers/spi/spi-fsl-lpspi.c |  7 ++-----
+ drivers/spi/spidev.c        | 10 ++++++----
+ 2 files changed, 8 insertions(+), 9 deletions(-)
+
+--=20
 2.24.1
 
