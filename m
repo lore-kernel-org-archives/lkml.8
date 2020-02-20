@@ -2,104 +2,85 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823CEC7619D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EF8C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4004124656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqLME2Up"
+	by mail.kernel.org (Postfix) with ESMTP id 344E824656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBTCcF (ORCPT
+        id S1727932AbgBTCcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:32:05 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46007 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbgBTCcE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:32:04 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 2so1105246pfg.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 18:32:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=zr5u8Chlfff2X4LtdmxMDdWIdJ3E6W1Jd7u1xAH1pgY=;
-        b=YqLME2Upvbgry5x4ZwXh9NuaSkibHeECcLimobVcOq4rOxlslvdQi8bQpj47MPJpsT
-         XZtF06I6/FVkWNuddpU0pb2IaHw9VWTjxq8wbM85XIePqlc8tqUew/GVhGEinnKRLCpz
-         AswZ5COmSocVAf7kBzRzLtMgqRMw4d2zALjO31HxM/Bc97gieySrjgjX+Pr9z0JjyBz7
-         zc009QD4iwZcjRkF0Rzk0AyezUcy1IwKYG3kAH1vvIXeFdiZo0yBCMuZYYcMtgM8xkq0
-         a6GcBN8UlwayRhqvIdv5xrOXcR2p5NIBW9eDQjUc60ESzxdh2DbKy0NM3T43pDPM4SI3
-         9kFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=zr5u8Chlfff2X4LtdmxMDdWIdJ3E6W1Jd7u1xAH1pgY=;
-        b=Gn4CwqF6Uf9SwXyk74NQCR5uZQhmP533kzMfCgvA8UpLxZvXoucs0RSd+1Qd7vy5SH
-         Uyh798WwquavV++jXikFud6ysU0fXuO/SJHjEkO54pBROqxq7woQVVnWyffdwkJm5fg4
-         JPgnAC8QpzgWP1MaB+4Uk02BVh0IJvIlIkuf6ry6Lta48XXC0c5JwQUEpJ89MPCJoukA
-         f8qN9sSwd/lKQdoJHLol+AsAr84cjxTVQH4nV8QO5hOFq+beu3vdtc1CL7o24xZKFOP/
-         EiOwkPZ3nBu6KRACK+k1/tXBSuPDmxAH5FvxzWbO9cD0GiT32OZe6R02jod1RHymOFrC
-         T2Vg==
-X-Gm-Message-State: APjAAAXJyaB0jQHiLJoNx9BrLfROBb/Ycw2Klg7IXjUsl1jJ4/qdXqpR
-        uizahv6hfxxreaiuYS8BQ6k=
-X-Google-Smtp-Source: APXvYqyep9F5J3KoDhiCL/yaP5HvZoAj87AsHQagc3pwSgMRkO7tnGn55MApTjed/2XjmAO6L8mFMQ==
-X-Received: by 2002:a63:8c5c:: with SMTP id q28mr30401414pgn.324.1582165924216;
-        Wed, 19 Feb 2020 18:32:04 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l12sm1049427pgj.16.2020.02.19.18.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Feb 2020 18:32:03 -0800 (PST)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Michael S . Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH] virtio_balloon: Fix build error seen with CONFIG_BALLOON_COMPACTION=n
-Date:   Wed, 19 Feb 2020 18:31:56 -0800
-Message-Id: <20200220023156.20636-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Feb 2020 21:32:33 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49320 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727211AbgBTCcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 21:32:32 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 371B5B13612E52EF5B93;
+        Thu, 20 Feb 2020 10:32:30 +0800 (CST)
+Received: from [127.0.0.1] (10.177.246.209) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
+ 10:32:22 +0800
+Subject: Re: [PATCH] mm/hugetlb: avoid get wrong ptep caused by race
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+CC:     <mike.kravetz@oracle.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <arei.gonglei@huawei.com>, <weidong.huang@huawei.com>,
+        <weifuqiang@huawei.com>, <kvm@vger.kernel.org>
+References: <1582027825-112728-1-git-send-email-longpeng2@huawei.com>
+ <20200218203717.GE28156@linux.intel.com>
+ <a041fdb4-bfd0-ac4b-2809-6fddfc4f8d83@huawei.com>
+ <20200219015836.GM28156@linux.intel.com>
+ <6ccbde03-953c-c006-a07e-8146b84389d9@huawei.com>
+ <20200219162231.GE15888@linux.intel.com>
+From:   "Longpeng (Mike)" <longpeng2@huawei.com>
+Message-ID: <6d4d2b59-5b40-49da-a6f7-e8ea34ed30e6@huawei.com>
+Date:   Thu, 20 Feb 2020 10:32:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <20200219162231.GE15888@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.246.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-0day reports:
+在 2020/2/20 0:22, Sean Christopherson 写道:
+> On Wed, Feb 19, 2020 at 08:21:26PM +0800, Longpeng (Mike) wrote:
+>> 在 2020/2/19 9:58, Sean Christopherson 写道:
+>>> FWIW, I'd be in favor of going the READ/WRITE_ONCE() route for x86, e.g.
+>>> convert everything as a follow-up patch (or patches).  I'm fairly confident
+>>> that KVM's usage of lookup_address_in_mm() is safe, but I wouldn't exactly
+>>> bet my life on it.  I'd much rather the failing scenario be that KVM uses
+>>> a sub-optimal page size as opposed to exploding on a bad pointer.
+>>>
+>> Um...our testcase starts 50 VMs with 2U4G(use 1G hugepage) and then do
+>> live-upgrade(private feature that just modify the qemu and libvirt) and
+>> live-migrate in turns for each one. However our live upgraded new QEMU won't do
+>> touch_all_pages.
+>> Suppose we start a VM without touch_all_pages in QEMU, the VM's guest memory is
+>> not mapped in the CR3 pagetable at the moment. When the 2 vcpus running, they
+>> could access some pages belong to the same 1G-hugepage, both of them will vmexit
+>> due to ept_violation and then call gup-->follow_hugetlb_page-->hugetlb_fault, so
+>> the race may encounter, right?
+> 
+> Yep.  The code I'm referring to is similar but different code that just
+> happened to go into KVM for kernel 5.6.  It has no effect on the gup() flow
+> that leads to this bug.  I mentioned it above as an example of code outside
+> of hugetlb_fault() that would also benefit from moving to READ/WRITE_ONCE().
+> 
+> 
+I understand better now, thanks for your patience. :)
 
-drivers//virtio/virtio_balloon.c: In function 'virtballoon_probe':
-drivers//virtio/virtio_balloon.c:960:1: error:
-	label 'out_del_vqs' defined but not used [-Werror=unused-label]
-
-This is seen with CONFIG_BALLOON_COMPACTION=n.
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 1ad6f58ea936 ("virtio_balloon: Fix memory leaks on errors in virtballoon_probe()")
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7bfe365d9372..341458fd95ca 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -959,8 +959,8 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 	iput(vb->vb_dev_info.inode);
- out_kern_unmount:
- 	kern_unmount(balloon_mnt);
--#endif
- out_del_vqs:
-+#endif
- 	vdev->config->del_vqs(vdev);
- out_free_vb:
- 	kfree(vb);
 -- 
-2.17.1
+Regards,
+Longpeng(Mike)
 
