@@ -2,201 +2,494 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ABCC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89CAC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7198720722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F30424673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:28:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hjINiJZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgBTQ2N (ORCPT
+        id S1728718AbgBTQ2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:28:13 -0500
-Received: from out28-219.mail.aliyun.com ([115.124.28.219]:52233 "EHLO
-        out28-219.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbgBTQ2J (ORCPT
+        Thu, 20 Feb 2020 11:28:11 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41732 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbgBTQ2I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:28:09 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07450332|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.208385-0.00957184-0.782043;DS=CONTINUE|ham_system_inform|0.028472-0.000402336-0.971126;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=23;RT=23;SR=0;TI=SMTPD_---.GqC0FCl_1582215911;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GqC0FCl_1582215911)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Fri, 21 Feb 2020 00:25:30 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linux-mips@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        ralf@linux-mips.org, paulburton@kernel.org,
-        jiaxun.yang@flygoat.com, chenhc@lemote.com, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        geert+renesas@glider.be, krzk@kernel.org, ebiederm@xmission.com,
-        miquel.raynal@bootlin.com, keescook@chromium.org,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-Subject: [PATCH v6 6/7] MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
-Date:   Fri, 21 Feb 2020 00:24:48 +0800
-Message-Id: <1582215889-113034-8-git-send-email-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1582215889-113034-1-git-send-email-zhouyanjie@wanyeetech.com>
+        Thu, 20 Feb 2020 11:28:08 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so5308099wrw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:28:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZrjMNHoguUcpFr30YrDzqs9vPrSEB6e8QQoRgTYGAKE=;
+        b=hjINiJZXYrdsKucZP+3gWh74UsWjtO4yCXhvWiAUGSKyJAT7u9jOOGj6OXxus3F2/M
+         awp2VzG1yMwJeiKBdG5I2ZcjWTfi01oKLPNkOGiU8/HM9iTUQazCsQ8FGVFpr5Si8jAz
+         0iik+3fUSn8qQhvuKRxVe0pXtEalZWuF7nz5pS/DRAeMfM/YkbDva9IswN2usLEpbP7t
+         dE2nxXSiqf/RLoGDIUuArRACcVGjq1eZH+WT6FWA5zATksCjIsc0wLs4TewOpXljK3CH
+         ZEcBwf6ANm2llo7v75CBBWkBGCqXFXtxbeSDj/Ko557OMwPvN2Amt++hF8OX+Za2rIrP
+         2yXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZrjMNHoguUcpFr30YrDzqs9vPrSEB6e8QQoRgTYGAKE=;
+        b=VfhciHYGo9G+8Gznhdsxnk7ycuId/tbjSH61l9BWc71ilbrk3NDZ8TfwkM+84eu3tF
+         1PWJvP5VGeoh9MZpRlRJUFWXz0drPKyom4PVOyEw4zltIZ1Zl5Q0FmV0m08VOc+5HDh5
+         kUWd3DbwkIl5t+4YF9R4rfegP5qOOin3Bw7le90HvEDMLDvuPG2XZqMktj9VsG3JwKEK
+         YmRUMZ9whYTnzoOJHOpiko+JywCyY0JP0eqGEsyypaoLqQS15GszDFVqtV4RQsvLf5Xt
+         lsg74YFgBSxhuOyEl14EA7I+Y3h5JPoXU8g00mS/P4K/QOsNxqnOLHjntD4zRgzV2Yi4
+         aP1A==
+X-Gm-Message-State: APjAAAWfdTHPEBWvwQfYZGV/nB3JQY45eM3KLskw9MV+ZucT5FbD+lTd
+        UBxqUcuQLoEtUw9Pzm3Km7w63w==
+X-Google-Smtp-Source: APXvYqwoTS56LLPkuckEyjirETeaS7EW2LqtmWlB3+xEUKQFctMYkYS+nk+BGTwoE2rcW/cbq1CSAQ==
+X-Received: by 2002:a5d:614a:: with SMTP id y10mr45106059wrt.73.1582216084100;
+        Thu, 20 Feb 2020 08:28:04 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id c15sm104164wrt.1.2020.02.20.08.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 08:28:03 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] drm/meson: overlay: setup overlay for Amlogic FBC
+Date:   Thu, 20 Feb 2020 17:27:57 +0100
+Message-Id: <20200220162758.13524-4-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200220162758.13524-1-narmstrong@baylibre.com>
+References: <20200220162758.13524-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 'cpus' node to the jz4740.dtsi, jz4770.dtsi, jz4780.dtsi
-and x1000.dtsi files.
+Setup the Amlogic FBC decoder for the VD1 video overlay plane.
 
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: Paul Boddie <paul@boddie.org.uk>
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+The VD1 Amlogic FBC decoder is integrated in the pipeline like the
+YUV pixel reading/formatter but used a direct memory address instead.
+
+The default mode needs to calculate the content body size since the header
+is allocated after.
+
+The scatter mode needs a simplier management since only the header is needed,
+since it contains an IOMMU scatter table to locate the superblocks in memory.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
+ drivers/gpu/drm/meson/meson_drv.h     |  16 ++
+ drivers/gpu/drm/meson/meson_overlay.c | 257 +++++++++++++++++++++++++-
+ 2 files changed, 265 insertions(+), 8 deletions(-)
 
-Notes:
-    v1->v2:
-    No change.
-    
-    v2->v3:
-    No change.
-    
-    v3->v4:
-    Rebase on top of kernel 5.6-rc1.
-    
-    v4->v5:
-    No change.
-    
-    v5->v6:
-    No change.
-
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 14 ++++++++++++++
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 15 ++++++++++++++-
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 23 +++++++++++++++++++++++
- arch/mips/boot/dts/ingenic/x1000.dtsi  | 14 ++++++++++++++
- 4 files changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 5accda2..9627d95 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -6,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4740";
+diff --git a/drivers/gpu/drm/meson/meson_drv.h b/drivers/gpu/drm/meson/meson_drv.h
+index 04fdf3826643..da951964e988 100644
+--- a/drivers/gpu/drm/meson/meson_drv.h
++++ b/drivers/gpu/drm/meson/meson_drv.h
+@@ -80,6 +80,7 @@ struct meson_drm {
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4740_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-index 0bfb9ed..1b8114d 100644
---- a/arch/mips/boot/dts/ingenic/jz4770.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -1,5 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--
- #include <dt-bindings/clock/jz4770-cgu.h>
+ 		bool vd1_enabled;
+ 		bool vd1_commit;
++		bool vd1_afbc;
+ 		unsigned int vd1_planes;
+ 		uint32_t vd1_if0_gen_reg;
+ 		uint32_t vd1_if0_luma_x0;
+@@ -105,6 +106,21 @@ struct meson_drm {
+ 		uint32_t vd1_height0;
+ 		uint32_t vd1_height1;
+ 		uint32_t vd1_height2;
++		uint32_t vd1_afbc_mode;
++		uint32_t vd1_afbc_en;
++		uint32_t vd1_afbc_head_addr;
++		uint32_t vd1_afbc_body_addr;
++		uint32_t vd1_afbc_conv_ctrl;
++		uint32_t vd1_afbc_dec_def_color;
++		uint32_t vd1_afbc_vd_cfmt_ctrl;
++		uint32_t vd1_afbc_vd_cfmt_w;
++		uint32_t vd1_afbc_vd_cfmt_h;
++		uint32_t vd1_afbc_mif_hor_scope;
++		uint32_t vd1_afbc_mif_ver_scope;
++		uint32_t vd1_afbc_size_out;
++		uint32_t vd1_afbc_pixel_hor_scope;
++		uint32_t vd1_afbc_pixel_ver_scope;
++		uint32_t vd1_afbc_size_in;
+ 		uint32_t vpp_pic_in_height;
+ 		uint32_t vpp_postblend_vd1_h_start_end;
+ 		uint32_t vpp_postblend_vd1_v_start_end;
+diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
+index 2468b0212d52..1fbb81732e9a 100644
+--- a/drivers/gpu/drm/meson/meson_overlay.c
++++ b/drivers/gpu/drm/meson/meson_overlay.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2015 Amlogic, Inc. All rights reserved.
+  */
  
- / {
-@@ -7,6 +6,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4770";
++#define DEBUG
+ #include <linux/bitfield.h>
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
-+
-+			clocks = <&cgu JZ4770_CLK_CCLK>;
-+			clock-names = "cpu";
-+		};
-+	};
-+
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index f928329..93a0604 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -7,6 +7,29 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,jz4780";
+ #include <drm/drm_atomic.h>
+@@ -76,6 +77,84 @@
+ #define VD_REGION24_START(value)	FIELD_PREP(GENMASK(11, 0), value)
+ #define VD_REGION13_END(value)		FIELD_PREP(GENMASK(27, 16), value)
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++/* AFBC_ENABLE */
++#define AFBC_DEC_ENABLE			BIT(8)
++#define AFBC_FRM_START			BIT(0)
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++/* AFBC_MODE */
++#define AFBC_HORZ_SKIP_UV(value)	FIELD_PREP(GENMASK(1, 0), value)
++#define AFBC_VERT_SKIP_UV(value)	FIELD_PREP(GENMASK(3, 2), value)
++#define AFBC_HORZ_SKIP_Y(value)		FIELD_PREP(GENMASK(5, 4), value)
++#define AFBC_VERT_SKIP_Y(value)		FIELD_PREP(GENMASK(7, 6), value)
++#define AFBC_COMPBITS_YUV(value)	FIELD_PREP(GENMASK(13, 8), value)
++#define AFBC_COMPBITS_8BIT		0
++#define AFBC_COMPBITS_10BIT		(2 | (2 << 2) | (2 << 4))
++#define AFBC_BURST_LEN(value)		FIELD_PREP(GENMASK(15, 14), value)
++#define AFBC_HOLD_LINE_NUM(value)	FIELD_PREP(GENMASK(22, 16), value)
++#define AFBC_MIF_URGENT(value)		FIELD_PREP(GENMASK(25, 24), value)
++#define AFBC_REV_MODE(value)		FIELD_PREP(GENMASK(27, 26), value)
++#define AFBC_BLK_MEM_MODE		BIT(28)
++#define AFBC_SCATTER_MODE		BIT(29)
++#define AFBC_SOFT_RESET			BIT(31)
 +
-+			clocks = <&cgu JZ4780_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
++/* AFBC_SIZE_IN */
++#define AFBC_HSIZE_IN(value)		FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_VSIZE_IN(value)		FIELD_PREP(GENMASK(12, 0), value)
 +
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <1>;
++/* AFBC_DEC_DEF_COLOR */
++#define AFBC_DEF_COLOR_Y(value)		FIELD_PREP(GENMASK(29, 20), value)
++#define AFBC_DEF_COLOR_U(value)		FIELD_PREP(GENMASK(19, 10), value)
++#define AFBC_DEF_COLOR_V(value)		FIELD_PREP(GENMASK(9, 0), value)
 +
-+			clocks = <&cgu JZ4780_CLK_CORE1>;
-+			clock-names = "cpu";
-+		};
-+	};
++/* AFBC_CONV_CTRL */
++#define AFBC_CONV_LBUF_LEN(value)	FIELD_PREP(GENMASK(11, 0), value)
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
-diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi b/arch/mips/boot/dts/ingenic/x1000.dtsi
-index 4994c69..376df1b 100644
---- a/arch/mips/boot/dts/ingenic/x1000.dtsi
-+++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
-@@ -7,6 +7,20 @@
- 	#size-cells = <1>;
- 	compatible = "ingenic,x1000", "ingenic,x1000e";
++/* AFBC_LBUF_DEPTH */
++#define AFBC_DEC_LBUF_DEPTH(value)	FIELD_PREP(GENMASK(27, 16), value)
++#define AFBC_MIF_LBUF_DEPTH(value)	FIELD_PREP(GENMASK(11, 0), value)
++
++/* AFBC_OUT_XSCOPE/AFBC_SIZE_OUT */
++#define AFBC_HSIZE_OUT(value)		FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_VSIZE_OUT(value)		FIELD_PREP(GENMASK(12, 0), value)
++#define AFBC_OUT_HORZ_BGN(value)	FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_OUT_HORZ_END(value)	FIELD_PREP(GENMASK(12, 0), value)
++
++/* AFBC_OUT_YSCOPE */
++#define AFBC_OUT_VERT_BGN(value)	FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_OUT_VERT_END(value)	FIELD_PREP(GENMASK(12, 0), value)
++
++/* AFBC_VD_CFMT_CTRL */
++#define AFBC_HORZ_RPT_PIXEL0		BIT(23)
++#define AFBC_HORZ_Y_C_RATIO(value)	FIELD_PREP(GENMASK(22, 21), value)
++#define AFBC_HORZ_FMT_EN		BIT(20)
++#define AFBC_VERT_RPT_LINE0		BIT(16)
++#define AFBC_VERT_INITIAL_PHASE(value)	FIELD_PREP(GENMASK(11, 8), value)
++#define AFBC_VERT_PHASE_STEP(value)	FIELD_PREP(GENMASK(7, 1), value)
++#define AFBC_VERT_FMT_EN		BIT(0)
++
++/* AFBC_VD_CFMT_W */
++#define AFBC_VD_V_WIDTH(value)		FIELD_PREP(GENMASK(11, 0), value)
++#define AFBC_VD_H_WIDTH(value)		FIELD_PREP(GENMASK(27, 16), value)
++
++/* AFBC_MIF_HOR_SCOPE */
++#define AFBC_MIF_BLK_BGN_H(value)	FIELD_PREP(GENMASK(25, 16), value)
++#define AFBC_MIF_BLK_END_H(value)	FIELD_PREP(GENMASK(9, 0), value)
++
++/* AFBC_MIF_VER_SCOPE */
++#define AFBC_MIF_BLK_BGN_V(value)	FIELD_PREP(GENMASK(27, 16), value)
++#define AFBC_MIF_BLK_END_V(value)	FIELD_PREP(GENMASK(11, 0), value)
++
++/* AFBC_PIXEL_HOR_SCOPE */
++#define AFBC_DEC_PIXEL_BGN_H(value)	FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_DEC_PIXEL_END_H(value)	FIELD_PREP(GENMASK(12, 0), value)
++
++/* AFBC_PIXEL_VER_SCOPE */
++#define AFBC_DEC_PIXEL_BGN_V(value)	FIELD_PREP(GENMASK(28, 16), value)
++#define AFBC_DEC_PIXEL_END_V(value)	FIELD_PREP(GENMASK(12, 0), value)
++
++/* AFBC_VD_CFMT_H */
++#define AFBC_VD_HEIGHT(value)		FIELD_PREP(GENMASK(12, 0), value)
++
+ struct meson_overlay {
+ 	struct drm_plane base;
+ 	struct meson_drm *priv;
+@@ -157,6 +236,9 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
+ 	unsigned int ratio_x, ratio_y;
+ 	int temp_height, temp_width;
+ 	unsigned int w_in, h_in;
++	int afbc_left, afbc_right;
++	int afbc_top_src, afbc_bottom_src;
++	int afbc_top, afbc_bottom;
+ 	int temp, start, end;
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
+ 	if (!crtc_state) {
+@@ -169,7 +251,7 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
+ 
+ 	w_in = fixed16_to_int(state->src_w);
+ 	h_in = fixed16_to_int(state->src_h);
+-	crop_top = fixed16_to_int(state->src_x);
++	crop_top = fixed16_to_int(state->src_y);
+ 	crop_left = fixed16_to_int(state->src_x);
+ 
+ 	video_top = state->crtc_y;
+@@ -243,6 +325,14 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
+ 	DRM_DEBUG("vsc startp %d endp %d start_lines %d end_lines %d\n",
+ 		 vsc_startp, vsc_endp, vd_start_lines, vd_end_lines);
+ 
++	afbc_top = round_down(vd_start_lines, 4);
++	afbc_bottom = round_up(vd_end_lines + 1, 4);
++	afbc_top_src = 0;
++	afbc_bottom_src = round_up(h_in + 1, 4);
 +
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "ingenic,xburst";
-+			reg = <0>;
++	DRM_DEBUG("afbc top %d (src %d) bottom %d (src %d)\n",
++		  afbc_top, afbc_top_src, afbc_bottom, afbc_bottom_src);
 +
-+			clocks = <&cgu X1000_CLK_CPU>;
-+			clock-names = "cpu";
-+		};
-+	};
+ 	/* Horizontal */
+ 
+ 	start = video_left + video_width / 2 - ((w_in << 17) / ratio_x);
+@@ -278,6 +368,16 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
+ 	DRM_DEBUG("hsc startp %d endp %d start_lines %d end_lines %d\n",
+ 		 hsc_startp, hsc_endp, hd_start_lines, hd_end_lines);
+ 
++	if (hd_start_lines > 0 || (hd_end_lines < w_in)) {
++		afbc_left = 0;
++		afbc_right = round_up(w_in, 32);
++	} else {
++		afbc_left = round_down(hd_start_lines, 32);
++		afbc_right = round_up(hd_end_lines + 1, 32);
++	}
 +
- 	cpuintc: interrupt-controller {
- 		#address-cells = <0>;
- 		#interrupt-cells = <1>;
++	DRM_DEBUG("afbc left %d right %d\n", afbc_left, afbc_right);
++
+ 	priv->viu.vpp_vsc_start_phase_step = ratio_y << 6;
+ 
+ 	priv->viu.vpp_vsc_ini_phase = vphase << 8;
+@@ -293,6 +393,35 @@ static void meson_overlay_setup_scaler_params(struct meson_drm *priv,
+ 			VD_H_WIDTH(hd_end_lines - hd_start_lines + 1) |
+ 			VD_V_WIDTH(hd_end_lines/2 - hd_start_lines/2 + 1);
+ 
++	priv->viu.vd1_afbc_vd_cfmt_w =
++			AFBC_VD_H_WIDTH(afbc_right - afbc_left) |
++			AFBC_VD_V_WIDTH(afbc_right / 2 - afbc_left / 2);
++
++	priv->viu.vd1_afbc_vd_cfmt_h =
++			AFBC_VD_HEIGHT((afbc_bottom - afbc_top) / 2);
++
++	priv->viu.vd1_afbc_mif_hor_scope = AFBC_MIF_BLK_BGN_H(afbc_left / 32) |
++				AFBC_MIF_BLK_END_H((afbc_right / 32) - 1);
++
++	priv->viu.vd1_afbc_mif_ver_scope = AFBC_MIF_BLK_BGN_V(afbc_top / 4) |
++				AFBC_MIF_BLK_END_H((afbc_bottom / 4) - 1);
++
++	priv->viu.vd1_afbc_size_out =
++			AFBC_HSIZE_OUT(afbc_right - afbc_left) |
++			AFBC_VSIZE_OUT(afbc_bottom - afbc_top);
++
++	priv->viu.vd1_afbc_pixel_hor_scope =
++			AFBC_DEC_PIXEL_BGN_H(hd_start_lines - afbc_left) |
++			AFBC_DEC_PIXEL_END_H(hd_end_lines - afbc_left);
++
++	priv->viu.vd1_afbc_pixel_ver_scope =
++			AFBC_DEC_PIXEL_BGN_V(vd_start_lines - afbc_top) |
++			AFBC_DEC_PIXEL_END_V(vd_end_lines - afbc_top);
++
++	priv->viu.vd1_afbc_size_in =
++				AFBC_HSIZE_IN(afbc_right - afbc_left) |
++				AFBC_VSIZE_IN(afbc_bottom_src - afbc_top_src);
++
+ 	priv->viu.vd1_if0_luma_y0 = VD_Y_START(vd_start_lines) |
+ 				    VD_Y_END(vd_end_lines);
+ 
+@@ -350,11 +479,63 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
+ 
+ 	spin_lock_irqsave(&priv->drm->event_lock, flags);
+ 
+-	priv->viu.vd1_if0_gen_reg = VD_URGENT_CHROMA |
+-				    VD_URGENT_LUMA |
+-				    VD_HOLD_LINES(9) |
+-				    VD_CHRO_RPT_LASTL_CTRL |
+-				    VD_ENABLE;
++	if ((fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC(0)) ==
++			    DRM_FORMAT_MOD_AMLOGIC_FBC(0)) {
++		priv->viu.vd1_afbc = true;
++
++		priv->viu.vd1_afbc_mode = AFBC_MIF_URGENT(3) |
++					  AFBC_HOLD_LINE_NUM(8) |
++					  AFBC_BURST_LEN(2);
++
++		if (fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC_SCATTER)
++			priv->viu.vd1_afbc_mode |= AFBC_SCATTER_MODE;
++
++		if (fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING)
++			priv->viu.vd1_afbc_mode |= AFBC_BLK_MEM_MODE;
++
++		priv->viu.vd1_afbc_en = 0x1600 | AFBC_DEC_ENABLE;
++
++		priv->viu.vd1_afbc_conv_ctrl = AFBC_CONV_LBUF_LEN(256);
++
++		priv->viu.vd1_afbc_dec_def_color = AFBC_DEF_COLOR_Y(1023);
++
++		/* 420: horizontal / 2, vertical / 4 */
++		priv->viu.vd1_afbc_vd_cfmt_ctrl = AFBC_HORZ_RPT_PIXEL0 |
++						  AFBC_HORZ_Y_C_RATIO(1) |
++						  AFBC_HORZ_FMT_EN |
++						  AFBC_VERT_RPT_LINE0 |
++						  AFBC_VERT_INITIAL_PHASE(12) |
++						  AFBC_VERT_PHASE_STEP(8) |
++						  AFBC_VERT_FMT_EN;
++
++		switch (fb->format->format) {
++		/* AFBC Only formats */
++		case DRM_FORMAT_YUV420_10BIT:
++			priv->viu.vd1_afbc_mode |=
++				AFBC_COMPBITS_YUV(AFBC_COMPBITS_10BIT);
++			priv->viu.vd1_afbc_dec_def_color |=
++					AFBC_DEF_COLOR_U(512) |
++					AFBC_DEF_COLOR_V(512);
++			break;
++		case DRM_FORMAT_YUV420_8BIT:
++			priv->viu.vd1_afbc_dec_def_color |=
++					AFBC_DEF_COLOR_U(128) |
++					AFBC_DEF_COLOR_V(128);
++			break;
++		}
++
++		priv->viu.vd1_if0_gen_reg = 0;
++		priv->viu.vd1_if0_canvas0 = 0;
++		priv->viu.viu_vd1_fmt_ctrl = 0;
++	} else {
++		priv->viu.vd1_afbc = false;
++
++		priv->viu.vd1_if0_gen_reg = VD_URGENT_CHROMA |
++					    VD_URGENT_LUMA |
++					    VD_HOLD_LINES(9) |
++					    VD_CHRO_RPT_LASTL_CTRL |
++					    VD_ENABLE;
++	}
+ 
+ 	/* Setup scaler params */
+ 	meson_overlay_setup_scaler_params(priv, plane, interlace_mode);
+@@ -370,6 +551,7 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
+ 	priv->viu.vd1_if0_gen_reg2 = 0;
+ 	priv->viu.viu_vd1_fmt_ctrl = 0;
+ 
++	/* None will match for AFBC Only formats */
+ 	switch (fb->format->format) {
+ 	/* TOFIX DRM_FORMAT_RGB888 should be supported */
+ 	case DRM_FORMAT_YUYV:
+@@ -488,13 +670,42 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
+ 		priv->viu.vd1_stride0 = fb->pitches[0];
+ 		priv->viu.vd1_height0 =
+ 			drm_format_info_plane_height(fb->format,
+-						fb->height, 0);
++						     fb->height, 0);
+ 		DRM_DEBUG("plane 0 addr 0x%x stride %d height %d\n",
+ 			 priv->viu.vd1_addr0,
+ 			 priv->viu.vd1_stride0,
+ 			 priv->viu.vd1_height0);
+ 	}
+ 
++	if (priv->viu.vd1_afbc) {
++		if (priv->viu.vd1_afbc_mode & AFBC_SCATTER_MODE) {
++			/*
++			 * In Scatter mode, the header contains the physical
++			 * body content layout, thus the body content
++			 * size isn't needed.
++			 */
++			priv->viu.vd1_afbc_head_addr = priv->viu.vd1_addr0 >> 4;
++			priv->viu.vd1_afbc_body_addr = 0;
++		} else {
++			/* Default mode is 4k per superblock */
++			unsigned long block_size = 4096;
++			unsigned long body_size;
++
++			/* 8bit mem saving mode is 3072bytes per superblock */
++			if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
++				block_size = 3072;
++
++			body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
++				    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
++				    block_size;
++
++			priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
++			/* Header is after body content */
++			priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
++							body_size) >> 4;
++		}
++	}
++
+ 	priv->viu.vd1_enabled = true;
+ 
+ 	spin_unlock_irqrestore(&priv->drm->event_lock, flags);
+@@ -531,6 +742,23 @@ static const struct drm_plane_helper_funcs meson_overlay_helper_funcs = {
+ 	.prepare_fb	= drm_gem_fb_prepare_fb,
+ };
+ 
++static bool meson_overlay_format_mod_supported(struct drm_plane *plane,
++					       u32 format, u64 modifier)
++{
++	if (modifier == DRM_FORMAT_MOD_LINEAR &&
++	    format != DRM_FORMAT_YUV420_8BIT &&
++	    format != DRM_FORMAT_YUV420_10BIT)
++		return true;
++
++	if ((modifier & DRM_FORMAT_MOD_AMLOGIC_FBC(0)) ==
++			DRM_FORMAT_MOD_AMLOGIC_FBC(0) &&
++	    (format == DRM_FORMAT_YUV420_8BIT ||
++	     format == DRM_FORMAT_YUV420_10BIT))
++		return true;
++
++	return false;
++}
++
+ static const struct drm_plane_funcs meson_overlay_funcs = {
+ 	.update_plane		= drm_atomic_helper_update_plane,
+ 	.disable_plane		= drm_atomic_helper_disable_plane,
+@@ -538,6 +766,7 @@ static const struct drm_plane_funcs meson_overlay_funcs = {
+ 	.reset			= drm_atomic_helper_plane_reset,
+ 	.atomic_duplicate_state = drm_atomic_helper_plane_duplicate_state,
+ 	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
++	.format_mod_supported   = meson_overlay_format_mod_supported,
+ };
+ 
+ static const uint32_t supported_drm_formats[] = {
+@@ -549,6 +778,18 @@ static const uint32_t supported_drm_formats[] = {
+ 	DRM_FORMAT_YUV420,
+ 	DRM_FORMAT_YUV411,
+ 	DRM_FORMAT_YUV410,
++	DRM_FORMAT_YUV420_8BIT, /* Amlogic FBC Only */
++	DRM_FORMAT_YUV420_10BIT, /* Amlogic FBC Only */
++};
++
++static const uint64_t format_modifiers[] = {
++	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_SCATTER |
++				   DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING),
++	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_SCATTER),
++	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING),
++	DRM_FORMAT_MOD_AMLOGIC_FBC_DEFAULT,
++	DRM_FORMAT_MOD_LINEAR,
++	DRM_FORMAT_MOD_INVALID,
+ };
+ 
+ int meson_overlay_create(struct meson_drm *priv)
+@@ -570,7 +811,7 @@ int meson_overlay_create(struct meson_drm *priv)
+ 				 &meson_overlay_funcs,
+ 				 supported_drm_formats,
+ 				 ARRAY_SIZE(supported_drm_formats),
+-				 NULL,
++				 format_modifiers,
+ 				 DRM_PLANE_TYPE_OVERLAY, "meson_overlay_plane");
+ 
+ 	drm_plane_helper_add(plane, &meson_overlay_helper_funcs);
 -- 
-2.7.4
+2.22.0
 
