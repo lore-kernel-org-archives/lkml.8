@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0862CC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADA8C11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70E12467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2438208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HKVJBbRf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EClCNMRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgBTQb3 (ORCPT
+        id S1728897AbgBTQbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:31:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23983 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728245AbgBTQb1 (ORCPT
+        Thu, 20 Feb 2020 11:31:32 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32971 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728869AbgBTQb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 11:31:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582216286;
+        s=mimecast20190719; t=1582216285;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2MRCsPZkECIAMgCPN1WrOh6KKwddF6jTzjs8rel6ry4=;
-        b=HKVJBbRferAk6bu4wvSEFr5pBnhTStigxbVgWasQNZZnaaV8AwiyqMOnq3Ws6o5LmyfGNz
-        5pR4l0Y1bEIpg9rglJVmw4b/ptenJyBGfLpTfn+3p8Q8aQOQd7riDj0GFAAWGugw1ECA4E
-        fM9+87rvbCPnTmAeG5uO7VPuRLpaXVQ=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-o-2UmsuRP2CB2Z1dF0J--w-1; Thu, 20 Feb 2020 11:31:24 -0500
-X-MC-Unique: o-2UmsuRP2CB2Z1dF0J--w-1
-Received: by mail-qt1-f197.google.com with SMTP id g26so2949660qts.16
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:31:24 -0800 (PST)
+        bh=7d584vpsqmF552ufSQ0oj+271PcbV3J+G1Y9hUcJJaw=;
+        b=EClCNMRVwkpPyxkAFueQeM7JPM4V54ZZFLq+Sq6EXuEoE99eBcqu6k47W+YE8Tx0E2Q6ur
+        W8yC0aT4Jf3zowmP7sqZpM8J1GSDd7rnor/JqjrI5wzYKAO3a+EYR5vvEAWJYay+SlZ6fN
+        JdS4I9+VRBSpuVF9MNSGZNv7Mk0n3Zs=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-339-8SSMJJnIMcGjIDdTONRatA-1; Thu, 20 Feb 2020 11:31:22 -0500
+X-MC-Unique: 8SSMJJnIMcGjIDdTONRatA-1
+Received: by mail-qk1-f198.google.com with SMTP id i11so3099369qki.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:31:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2MRCsPZkECIAMgCPN1WrOh6KKwddF6jTzjs8rel6ry4=;
-        b=LaOZRmwNQzlTl9Xq/MwDCMHiSpKrh3Y6RM9qqMYaw8fEssHu914IMflha3BDdql6gB
-         IHfKCVdoEywz4VY/43/Cie7BFR+KqLlkPk/1xrt+kyoEHXIVG95O6UZnKtoC/7L0rLjt
-         yeEu4Dw5i6F5VLtIvWEBIYcAUERw7onw4Y2GFpMDC9BzdldohqbtxI1jg26sqJ1M/RcH
-         TpHOPigKxnz+Kuur+q2IZc6uMkaviiquwnjwYuQahL3asGVumlR4dtSMeyWrN+9EQR64
-         rGeN2NQ0fSmpUqqVHZstyaMOB7W2JsvU1a4yAd37sseNEiqZwB7gFokk6l2zDJXdCuG0
-         U1tA==
-X-Gm-Message-State: APjAAAW/89WRJAsm6ZXKn3jvpYajV4uAYxrlwOK0dx2J79OOlgUKjRKL
-        XwDdwyoQidRVIxcTjCo2KMBg+Sf1CCXXXw3DTa6J+s0ThxRg0Cga6cl8rnkCvZ9TQIQ3FtnCoHj
-        piFpTSkIyIZRvREBLoPA4vvcW
-X-Received: by 2002:a37:a5cc:: with SMTP id o195mr28896001qke.25.1582216283817;
-        Thu, 20 Feb 2020 08:31:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqygal89srBsn4mZ/bnhvXAyGb0UApIWearYmWEISwoVwnoNKWRAO6z2Hytc+p5LPjVbRuk77Q==
-X-Received: by 2002:a37:a5cc:: with SMTP id o195mr28895946qke.25.1582216283392;
-        Thu, 20 Feb 2020 08:31:23 -0800 (PST)
+        bh=7d584vpsqmF552ufSQ0oj+271PcbV3J+G1Y9hUcJJaw=;
+        b=b3j6Bh0bev5vOhfkhGj4sl1EoWuwWAKeTuJF3OT2ArW0GcWkagIXQI6RMnIbQojpxa
+         kkaCzrespyF7mdEVm4fEiYPdpcYPPDLZzb88zrYT3aWK51vx0DNm4uGCNm/XOPF+gPBc
+         8fZRpSBV1RGvcXtYU7BfM2wP0ZO/pyFvM9pDNfFIWOmqwkJRbHgpuwWIKSMOV00j+4SE
+         Guy9hf4/IQkU1CRYvBS8+tdslVDMJzoSUGtAqDUoGDincermA7NFdp5b5L3ige38Uz2J
+         xEoZPWwekQheLPl8RXARBr34BnyVrfb7PWxhgdJp6cb6nKE+GPOkfD+zfsu+4mi1FlCc
+         +n1Q==
+X-Gm-Message-State: APjAAAWDqrTqi+DMxNBce9Li0pPPDdxHeOandliMVpk/V1uf8ZbeRy+W
+        Qw5o98OrrPgWAxP+KbyHU7KRvyf54sBmvgD/XtifWWtfiU0fklKSd9QLZ/L5VEkVX3viZcrrRTA
+        Xgfq4g7Kjw+y4ZAPfhe5+Dqd+
+X-Received: by 2002:a37:a687:: with SMTP id p129mr28937374qke.310.1582216280470;
+        Thu, 20 Feb 2020 08:31:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxpcQIM3G286rhkHKpQHKU9WSXWR3bLEaBtKD21o+ZbRl6RatF8cf5XiTJ/EJIKEX+HwIT5sw==
+X-Received: by 2002:a37:a687:: with SMTP id p129mr28937300qke.310.1582216280028;
+        Thu, 20 Feb 2020 08:31:20 -0800 (PST)
 Received: from xz-x1.redhat.com ([104.156.64.75])
-        by smtp.gmail.com with ESMTPSA id l19sm42366qkl.3.2020.02.20.08.31.22
+        by smtp.gmail.com with ESMTPSA id l19sm42366qkl.3.2020.02.20.08.31.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 08:31:22 -0800 (PST)
+        Thu, 20 Feb 2020 08:31:19 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc:     Brian Geffon <bgeffon@google.com>,
@@ -81,9 +81,9 @@ Cc:     Brian Geffon <bgeffon@google.com>,
         Hugh Dickins <hughd@google.com>,
         "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
         Jerome Glisse <jglisse@redhat.com>
-Subject: [PATCH v6 05/19] userfaultfd: wp: add UFFDIO_COPY_MODE_WP
-Date:   Thu, 20 Feb 2020 11:30:58 -0500
-Message-Id: <20200220163112.11409-6-peterx@redhat.com>
+Subject: [PATCH v6 03/19] userfaultfd: wp: add WP pagetable tracking to x86
+Date:   Thu, 20 Feb 2020 11:30:56 -0500
+Message-Id: <20200220163112.11409-4-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200220163112.11409-1-peterx@redhat.com>
 References: <20200220163112.11409-1-peterx@redhat.com>
@@ -96,190 +96,275 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrea Arcangeli <aarcange@redhat.com>
 
-This allows UFFDIO_COPY to map pages write-protected.
+Accurate userfaultfd WP tracking is possible by tracking exactly which
+virtual memory ranges were writeprotected by userland. We can't relay
+only on the RW bit of the mapped pagetable because that information is
+destroyed by fork() or KSM or swap. If we were to relay on that, we'd
+need to stay on the safe side and generate false positive wp faults
+for every swapped out page.
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-[peterx: switch to VM_WARN_ON_ONCE in mfill_atomic_pte; add brackets
- around "dst_vma->vm_flags & VM_WRITE"; fix wordings in comments and
- commit messages]
+[peterx: append _PAGE_UFD_WP to _PAGE_CHG_MASK]
 Reviewed-by: Jerome Glisse <jglisse@redhat.com>
 Reviewed-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- fs/userfaultfd.c                 |  5 +++--
- include/linux/userfaultfd_k.h    |  2 +-
- include/uapi/linux/userfaultfd.h | 11 +++++-----
- mm/userfaultfd.c                 | 36 ++++++++++++++++++++++----------
- 4 files changed, 35 insertions(+), 19 deletions(-)
+ arch/x86/Kconfig                     |  1 +
+ arch/x86/include/asm/pgtable.h       | 52 ++++++++++++++++++++++++++++
+ arch/x86/include/asm/pgtable_64.h    |  8 ++++-
+ arch/x86/include/asm/pgtable_types.h | 11 +++++-
+ include/asm-generic/pgtable.h        |  1 +
+ include/asm-generic/pgtable_uffd.h   | 51 +++++++++++++++++++++++++++
+ init/Kconfig                         |  5 +++
+ 7 files changed, 127 insertions(+), 2 deletions(-)
+ create mode 100644 include/asm-generic/pgtable_uffd.h
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 703c1c3faa6e..c49bef505775 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1724,11 +1724,12 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
- 	ret = -EINVAL;
- 	if (uffdio_copy.src + uffdio_copy.len <= uffdio_copy.src)
- 		goto out;
--	if (uffdio_copy.mode & ~UFFDIO_COPY_MODE_DONTWAKE)
-+	if (uffdio_copy.mode & ~(UFFDIO_COPY_MODE_DONTWAKE|UFFDIO_COPY_MODE_WP))
- 		goto out;
- 	if (mmget_not_zero(ctx->mm)) {
- 		ret = mcopy_atomic(ctx->mm, uffdio_copy.dst, uffdio_copy.src,
--				   uffdio_copy.len, &ctx->mmap_changing);
-+				   uffdio_copy.len, &ctx->mmap_changing,
-+				   uffdio_copy.mode);
- 		mmput(ctx->mm);
- 	} else {
- 		return -ESRCH;
-diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.h
-index 7b91b76aac58..dcd33172b728 100644
---- a/include/linux/userfaultfd_k.h
-+++ b/include/linux/userfaultfd_k.h
-@@ -36,7 +36,7 @@ extern vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..ca6f12f34d92 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -230,6 +230,7 @@ config X86
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
+ 	select PROC_PID_ARCH_STATUS		if PROC_FS
++	select HAVE_ARCH_USERFAULTFD_WP		if USERFAULTFD
  
- extern ssize_t mcopy_atomic(struct mm_struct *dst_mm, unsigned long dst_start,
- 			    unsigned long src_start, unsigned long len,
--			    bool *mmap_changing);
-+			    bool *mmap_changing, __u64 mode);
- extern ssize_t mfill_zeropage(struct mm_struct *dst_mm,
- 			      unsigned long dst_start,
- 			      unsigned long len,
-diff --git a/include/uapi/linux/userfaultfd.h b/include/uapi/linux/userfaultfd.h
-index 48f1a7c2f1f0..340f23bc251d 100644
---- a/include/uapi/linux/userfaultfd.h
-+++ b/include/uapi/linux/userfaultfd.h
-@@ -203,13 +203,14 @@ struct uffdio_copy {
- 	__u64 dst;
- 	__u64 src;
- 	__u64 len;
-+#define UFFDIO_COPY_MODE_DONTWAKE		((__u64)1<<0)
- 	/*
--	 * There will be a wrprotection flag later that allows to map
--	 * pages wrprotected on the fly. And such a flag will be
--	 * available if the wrprotection ioctl are implemented for the
--	 * range according to the uffdio_register.ioctls.
-+	 * UFFDIO_COPY_MODE_WP will map the page write protected on
-+	 * the fly.  UFFDIO_COPY_MODE_WP is available only if the
-+	 * write protected ioctl is implemented for the range
-+	 * according to the uffdio_register.ioctls.
- 	 */
--#define UFFDIO_COPY_MODE_DONTWAKE		((__u64)1<<0)
-+#define UFFDIO_COPY_MODE_WP			((__u64)1<<1)
- 	__u64 mode;
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index 7e118660bbd9..74f16d7e5b47 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -25,6 +25,7 @@
+ #include <asm/x86_init.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/fpu/api.h>
++#include <asm-generic/pgtable_uffd.h>
  
- 	/*
-diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-index 1b0d7abad1d4..44a5e5429fac 100644
---- a/mm/userfaultfd.c
-+++ b/mm/userfaultfd.c
-@@ -53,7 +53,8 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
- 			    struct vm_area_struct *dst_vma,
- 			    unsigned long dst_addr,
- 			    unsigned long src_addr,
--			    struct page **pagep)
-+			    struct page **pagep,
-+			    bool wp_copy)
- {
- 	struct mem_cgroup *memcg;
- 	pte_t _dst_pte, *dst_pte;
-@@ -99,9 +100,9 @@ static int mcopy_atomic_pte(struct mm_struct *dst_mm,
- 	if (mem_cgroup_try_charge(page, dst_mm, GFP_KERNEL, &memcg, false))
- 		goto out_release;
+ extern pgd_t early_top_pgt[PTRS_PER_PGD];
+ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+@@ -313,6 +314,23 @@ static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
+ 	return native_make_pte(v & ~clear);
+ }
  
--	_dst_pte = mk_pte(page, dst_vma->vm_page_prot);
--	if (dst_vma->vm_flags & VM_WRITE)
--		_dst_pte = pte_mkwrite(pte_mkdirty(_dst_pte));
-+	_dst_pte = pte_mkdirty(mk_pte(page, dst_vma->vm_page_prot));
-+	if ((dst_vma->vm_flags & VM_WRITE) && !wp_copy)
-+		_dst_pte = pte_mkwrite(_dst_pte);
- 
- 	dst_pte = pte_offset_map_lock(dst_mm, dst_pmd, dst_addr, &ptl);
- 	if (dst_vma->vm_file) {
-@@ -408,7 +409,8 @@ static __always_inline ssize_t mfill_atomic_pte(struct mm_struct *dst_mm,
- 						unsigned long dst_addr,
- 						unsigned long src_addr,
- 						struct page **page,
--						bool zeropage)
-+						bool zeropage,
-+						bool wp_copy)
- {
- 	ssize_t err;
- 
-@@ -425,11 +427,13 @@ static __always_inline ssize_t mfill_atomic_pte(struct mm_struct *dst_mm,
- 	if (!(dst_vma->vm_flags & VM_SHARED)) {
- 		if (!zeropage)
- 			err = mcopy_atomic_pte(dst_mm, dst_pmd, dst_vma,
--					       dst_addr, src_addr, page);
-+					       dst_addr, src_addr, page,
-+					       wp_copy);
- 		else
- 			err = mfill_zeropage_pte(dst_mm, dst_pmd,
- 						 dst_vma, dst_addr);
- 	} else {
-+		VM_WARN_ON_ONCE(wp_copy);
- 		if (!zeropage)
- 			err = shmem_mcopy_atomic_pte(dst_mm, dst_pmd,
- 						     dst_vma, dst_addr,
-@@ -447,7 +451,8 @@ static __always_inline ssize_t __mcopy_atomic(struct mm_struct *dst_mm,
- 					      unsigned long src_start,
- 					      unsigned long len,
- 					      bool zeropage,
--					      bool *mmap_changing)
-+					      bool *mmap_changing,
-+					      __u64 mode)
- {
- 	struct vm_area_struct *dst_vma;
- 	ssize_t err;
-@@ -455,6 +460,7 @@ static __always_inline ssize_t __mcopy_atomic(struct mm_struct *dst_mm,
- 	unsigned long src_addr, dst_addr;
- 	long copied;
- 	struct page *page;
-+	bool wp_copy;
- 
- 	/*
- 	 * Sanitize the command parameters:
-@@ -500,6 +506,14 @@ static __always_inline ssize_t __mcopy_atomic(struct mm_struct *dst_mm,
- 	    dst_vma->vm_flags & VM_SHARED))
- 		goto out_unlock;
- 
-+	/*
-+	 * validate 'mode' now that we know the dst_vma: don't allow
-+	 * a wrprotect copy if the userfaultfd didn't register as WP.
-+	 */
-+	wp_copy = mode & UFFDIO_COPY_MODE_WP;
-+	if (wp_copy && !(dst_vma->vm_flags & VM_UFFD_WP))
-+		goto out_unlock;
++#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
++static inline int pte_uffd_wp(pte_t pte)
++{
++	return pte_flags(pte) & _PAGE_UFFD_WP;
++}
 +
- 	/*
- 	 * If this is a HUGETLB vma, pass off to appropriate routine
- 	 */
-@@ -555,7 +569,7 @@ static __always_inline ssize_t __mcopy_atomic(struct mm_struct *dst_mm,
- 		BUG_ON(pmd_trans_huge(*dst_pmd));
- 
- 		err = mfill_atomic_pte(dst_mm, dst_pmd, dst_vma, dst_addr,
--				       src_addr, &page, zeropage);
-+				       src_addr, &page, zeropage, wp_copy);
- 		cond_resched();
- 
- 		if (unlikely(err == -ENOENT)) {
-@@ -602,14 +616,14 @@ static __always_inline ssize_t __mcopy_atomic(struct mm_struct *dst_mm,
- 
- ssize_t mcopy_atomic(struct mm_struct *dst_mm, unsigned long dst_start,
- 		     unsigned long src_start, unsigned long len,
--		     bool *mmap_changing)
-+		     bool *mmap_changing, __u64 mode)
++static inline pte_t pte_mkuffd_wp(pte_t pte)
++{
++	return pte_set_flags(pte, _PAGE_UFFD_WP);
++}
++
++static inline pte_t pte_clear_uffd_wp(pte_t pte)
++{
++	return pte_clear_flags(pte, _PAGE_UFFD_WP);
++}
++#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
++
+ static inline pte_t pte_mkclean(pte_t pte)
  {
- 	return __mcopy_atomic(dst_mm, dst_start, src_start, len, false,
--			      mmap_changing);
-+			      mmap_changing, mode);
+ 	return pte_clear_flags(pte, _PAGE_DIRTY);
+@@ -392,6 +410,23 @@ static inline pmd_t pmd_clear_flags(pmd_t pmd, pmdval_t clear)
+ 	return native_make_pmd(v & ~clear);
  }
  
- ssize_t mfill_zeropage(struct mm_struct *dst_mm, unsigned long start,
- 		       unsigned long len, bool *mmap_changing)
++#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
++static inline int pmd_uffd_wp(pmd_t pmd)
++{
++	return pmd_flags(pmd) & _PAGE_UFFD_WP;
++}
++
++static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
++{
++	return pmd_set_flags(pmd, _PAGE_UFFD_WP);
++}
++
++static inline pmd_t pmd_clear_uffd_wp(pmd_t pmd)
++{
++	return pmd_clear_flags(pmd, _PAGE_UFFD_WP);
++}
++#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
++
+ static inline pmd_t pmd_mkold(pmd_t pmd)
  {
--	return __mcopy_atomic(dst_mm, start, 0, len, true, mmap_changing);
-+	return __mcopy_atomic(dst_mm, start, 0, len, true, mmap_changing, 0);
- }
+ 	return pmd_clear_flags(pmd, _PAGE_ACCESSED);
+@@ -1377,6 +1412,23 @@ static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
+ #endif
+ #endif
+ 
++#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
++static inline pte_t pte_swp_mkuffd_wp(pte_t pte)
++{
++	return pte_set_flags(pte, _PAGE_SWP_UFFD_WP);
++}
++
++static inline int pte_swp_uffd_wp(pte_t pte)
++{
++	return pte_flags(pte) & _PAGE_SWP_UFFD_WP;
++}
++
++static inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
++{
++	return pte_clear_flags(pte, _PAGE_SWP_UFFD_WP);
++}
++#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
++
+ #define PKRU_AD_BIT 0x1
+ #define PKRU_WD_BIT 0x2
+ #define PKRU_BITS_PER_PKEY 2
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 0b6c4042942a..df1373415f11 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -189,7 +189,7 @@ extern void sync_global_pgds(unsigned long start, unsigned long end);
+  *
+  * |     ...            | 11| 10|  9|8|7|6|5| 4| 3|2| 1|0| <- bit number
+  * |     ...            |SW3|SW2|SW1|G|L|D|A|CD|WT|U| W|P| <- bit names
+- * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| X|X|SD|0| <- swp entry
++ * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| X|F|SD|0| <- swp entry
+  *
+  * G (8) is aliased and used as a PROT_NONE indicator for
+  * !present ptes.  We need to start storing swap entries above
+@@ -197,9 +197,15 @@ extern void sync_global_pgds(unsigned long start, unsigned long end);
+  * erratum where they can be incorrectly set by hardware on
+  * non-present PTEs.
+  *
++ * SD Bits 1-4 are not used in non-present format and available for
++ * special use described below:
++ *
+  * SD (1) in swp entry is used to store soft dirty bit, which helps us
+  * remember soft dirty over page migration
+  *
++ * F (2) in swp entry is used to record when a pagetable is
++ * writeprotected by userfaultfd WP support.
++ *
+  * Bit 7 in swp entry should be 0 because pmd_present checks not only P,
+  * but also L and G.
+  *
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 0239998d8cdc..e24a2ecf9475 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -32,6 +32,7 @@
+ 
+ #define _PAGE_BIT_SPECIAL	_PAGE_BIT_SOFTW1
+ #define _PAGE_BIT_CPA_TEST	_PAGE_BIT_SOFTW1
++#define _PAGE_BIT_UFFD_WP	_PAGE_BIT_SOFTW2 /* userfaultfd wrprotected */
+ #define _PAGE_BIT_SOFT_DIRTY	_PAGE_BIT_SOFTW3 /* software dirty tracking */
+ #define _PAGE_BIT_DEVMAP	_PAGE_BIT_SOFTW4
+ 
+@@ -100,6 +101,14 @@
+ #define _PAGE_SWP_SOFT_DIRTY	(_AT(pteval_t, 0))
+ #endif
+ 
++#ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
++#define _PAGE_UFFD_WP		(_AT(pteval_t, 1) << _PAGE_BIT_UFFD_WP)
++#define _PAGE_SWP_UFFD_WP	_PAGE_USER
++#else
++#define _PAGE_UFFD_WP		(_AT(pteval_t, 0))
++#define _PAGE_SWP_UFFD_WP	(_AT(pteval_t, 0))
++#endif
++
+ #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
+ #define _PAGE_NX	(_AT(pteval_t, 1) << _PAGE_BIT_NX)
+ #define _PAGE_DEVMAP	(_AT(u64, 1) << _PAGE_BIT_DEVMAP)
+@@ -118,7 +127,7 @@
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+ 			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
+-			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
++			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_UFFD_WP)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+ 
+ /*
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index e2e2bef07dd2..329b8c8ca703 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -10,6 +10,7 @@
+ #include <linux/mm_types.h>
+ #include <linux/bug.h>
+ #include <linux/errno.h>
++#include <asm-generic/pgtable_uffd.h>
+ 
+ #if 5 - defined(__PAGETABLE_P4D_FOLDED) - defined(__PAGETABLE_PUD_FOLDED) - \
+ 	defined(__PAGETABLE_PMD_FOLDED) != CONFIG_PGTABLE_LEVELS
+diff --git a/include/asm-generic/pgtable_uffd.h b/include/asm-generic/pgtable_uffd.h
+new file mode 100644
+index 000000000000..643d1bf559c2
+--- /dev/null
++++ b/include/asm-generic/pgtable_uffd.h
+@@ -0,0 +1,51 @@
++#ifndef _ASM_GENERIC_PGTABLE_UFFD_H
++#define _ASM_GENERIC_PGTABLE_UFFD_H
++
++#ifndef CONFIG_HAVE_ARCH_USERFAULTFD_WP
++static __always_inline int pte_uffd_wp(pte_t pte)
++{
++	return 0;
++}
++
++static __always_inline int pmd_uffd_wp(pmd_t pmd)
++{
++	return 0;
++}
++
++static __always_inline pte_t pte_mkuffd_wp(pte_t pte)
++{
++	return pte;
++}
++
++static __always_inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
++{
++	return pmd;
++}
++
++static __always_inline pte_t pte_clear_uffd_wp(pte_t pte)
++{
++	return pte;
++}
++
++static __always_inline pmd_t pmd_clear_uffd_wp(pmd_t pmd)
++{
++	return pmd;
++}
++
++static __always_inline pte_t pte_swp_mkuffd_wp(pte_t pte)
++{
++	return pte;
++}
++
++static __always_inline int pte_swp_uffd_wp(pte_t pte)
++{
++	return 0;
++}
++
++static __always_inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
++{
++	return pte;
++}
++#endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
++
++#endif /* _ASM_GENERIC_PGTABLE_UFFD_H */
+diff --git a/init/Kconfig b/init/Kconfig
+index 452bc1835cd4..329113eea531 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1554,6 +1554,11 @@ config ADVISE_SYSCALLS
+ 	  applications use these syscalls, you can disable this option to save
+ 	  space.
+ 
++config HAVE_ARCH_USERFAULTFD_WP
++	bool
++	help
++	  Arch has userfaultfd write protection support
++
+ config MEMBARRIER
+ 	bool "Enable membarrier() system call" if EXPERT
+ 	default y
 -- 
 2.24.1
 
