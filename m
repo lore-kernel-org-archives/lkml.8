@@ -2,190 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 888FFC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB928C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5702924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1557206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:58:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="B/NYU5Ng"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rhM3j0x8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBTO6J (ORCPT
+        id S1728295AbgBTO6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:58:09 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:53285 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbgBTO6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:58:09 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Nd4Z0WPBz9v9FJ;
-        Thu, 20 Feb 2020 15:58:06 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=B/NYU5Ng; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ffPZ90ywUBqr; Thu, 20 Feb 2020 15:58:06 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Nd4Y6LMNz9v9FH;
-        Thu, 20 Feb 2020 15:58:05 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582210685; bh=YKl2BkM+ZMJcivZiVdzoWT2DSPFZst5+HRjZAemkQK8=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=B/NYU5Ng+BidPgcdvM4af+d8Q+nkSCxcADtdLQtQnl/ZRujEK5hQyZkz2Hoi/OfHY
-         mMGVDeentj8+7wntw6mmohRzphBRTj+IFwEiG1AxQndtNbFEtH1OtBk8JieIAvBXg6
-         ntmtujtaLN5/171/lJnuEE56I/2o2ekHo4XHZLss=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4CC518B866;
-        Thu, 20 Feb 2020 15:58:07 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 6Isdy_XdtjpC; Thu, 20 Feb 2020 15:58:07 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B6A8C8B876;
-        Thu, 20 Feb 2020 15:58:06 +0100 (CET)
-Subject: Re: [PATCH] selftest/lkdtm: Don't pollute 'git status'
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <668b6ff463849ceee01f726fbf3e7110687575ec.1580976576.git.christophe.leroy@c-s.fr>
-Message-ID: <ca71e490-b4fa-bf53-7a60-b6954b9dd33e@c-s.fr>
-Date:   Thu, 20 Feb 2020 14:58:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Thu, 20 Feb 2020 09:58:38 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45805 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728206AbgBTO6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:58:37 -0500
+Received: by mail-oi1-f196.google.com with SMTP id v19so27785227oic.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fpwkKx7E4F4iGPP1d6IgP9CAngaHu/jtsv9MUOt6i20=;
+        b=rhM3j0x8usrirIjQD0qjSQ9jCCkuL46j6a4GYkPXKtnSgcJhk6Hx9Th+jZf4OPWbqZ
+         EDZz3oWYIE9EiZWJqp2PUKigyRRw/t6Q8UH8RqgRNGsTWV2dv9mCr2DcH4z2bQQ+xk2z
+         kYwaMe7GObMMSex4qojHOfzhjSgF0C0TaHxJYt1mQa7h1Ewq+OWpkkTj9lDdiomRk5M6
+         rRTAz/AFKDZMNW7yS5X69XPQn0UBAe7qzflPdGZWJ08eh9do95UBp6tUxa/M6BwZpMHp
+         3HF+uapICKyFdhOCgDzsKDrdTMOx5Xl1lWUMDmdY/3QoY8XGcpsi8+IoC8lTU4JBx+35
+         OQiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fpwkKx7E4F4iGPP1d6IgP9CAngaHu/jtsv9MUOt6i20=;
+        b=QeHjGzzT0MnZnBeA0duXHhrCA9aL00cdRC4aVCl5WWm5LS2QMTXLFPe3RGhLtE6nL4
+         H42yD7tEaaUR5MxB2HK30A9lDgOKnMpGMtOfIkXveZ9rUy4D66XQIpzrL5BbPrCJxL5h
+         ExLN/5FPlquAWUGmrQcORWYxbCJ8N0xp/tSQ+PpiqmHlEh5+qaTYz/bPQ6tpEDrvN2yq
+         ZWv47gMW8su3X0wtj0irpyz/MDkbu7NgXABJ8ZXqMszacgHGLWYSqaJZ7AXupKxUavIx
+         3ocdJvPBo7vpk3kPZmi+WTSmaMmPuJViJfK74bf7DbkaML7b0upBsMUUvUdJwNqVakKB
+         sxSQ==
+X-Gm-Message-State: APjAAAX6ckBYOlA8nSsGhNYvPp8XKN+MC91ltpKDeyfH9oMSnJ/I1G9W
+        XmEQuD9WUIHeqMDSg/gdsofTov+m1F6PulhCqXTQAQ==
+X-Google-Smtp-Source: APXvYqwLZrWv2noarPLEsgl5QTqzBVLNEume/NYspxHkGbrXT7XqrvirpoDtoOYD8R+IEePb15ICBTNX5VckUg08Qbg=
+X-Received: by 2002:aca:b187:: with SMTP id a129mr2344580oif.175.1582210716581;
+ Thu, 20 Feb 2020 06:58:36 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <668b6ff463849ceee01f726fbf3e7110687575ec.1580976576.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204558110.3299825.5080605285325995873.stgit@warthog.procyon.org.uk>
+ <CAG48ez0fsB_XTmNfE-2tuabH7JHyQdih8bu7Qwu9HGWJXti7tQ@mail.gmail.com> <628199.1582203532@warthog.procyon.org.uk>
+In-Reply-To: <628199.1582203532@warthog.procyon.org.uk>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 20 Feb 2020 15:58:10 +0100
+Message-ID: <CAG48ez03VMKEmJEmViSkxbF9J5dW=6vny9vKGdenBewtjF+nqQ@mail.gmail.com>
+Subject: Re: [PATCH 11/19] afs: Support fsinfo() [ver #16]
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping
+On Thu, Feb 20, 2020 at 1:59 PM David Howells <dhowells@redhat.com> wrote:
+> Jann Horn <jannh@google.com> wrote:
+>
+> > Ewww. So basically, having one static set of .fsinfo_attributes is not
+> > sufficiently flexible for everyone, but instead of allowing the
+> > filesystem to dynamically provide a list of supported attributes, you
+> > just duplicate the super_operations? Seems to me like it'd be cleaner
+> > to add a function pointer to the super_operations that can dynamically
+> > fill out the supported fsinfo attributes.
+> >
+> > It seems to me like the current API is going to be a dead end if you
+> > ever want to have decent passthrough of these things for e.g. FUSE, or
+> > overlayfs, or VirtFS?
+>
+> Ummm...
+>
+> Would it be sufficient to have a function that returns a list of attributes?
+> Or does it need to be able to call to vfs_do_fsinfo() if it supports an
+> attribute?
+>
+> There are two things I want to be able to do:
+>
+>  (1) Do the buffer wrangling in the core - which means the core needs to see
+>      the type of the attribute.  That's fine if, say, afs_fsinfo() can call
+>      vfs_do_fsinfo() with the definition for any attribute it wants to handle
+>      and, say, return -ENOPKG otherways so that the core can then fall back to
+>      its private list.
+>
+>  (2) Be able to retrieve the list of attributes and/or query an attribute.
+>      Now, I can probably manage this even through the same interface.  If,
+>      say, seeing FSINFO_ATTR_FSINFO_ATTRIBUTES causes the handler to simply
+>      append on the IDs of its own supported attributes (a helper can be
+>      provided for that).
+>
+>      If it sees FSINFO_ATR_FSINFO_ATTRIBUTE_INFO, it can just look to see if
+>      it has the attribute with the ID matching Nth and return that, else
+>      ENOPKG - again a helper could be provided.
+>
+> Chaining through overlayfs gets tricky.  You end up with multiple contributory
+> filesystems with different properties - and any one of those layers could
+> perhaps be another overlay.  Overlayfs would probably needs to integrate the
+> info and derive the lowest common set.
 
-On 02/06/2020 08:11 AM, Christophe Leroy wrote:
-> Commit 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
-> added generation of lkdtm test scripts.
-> 
-> Ignore those generated scripts when performing 'git status'
-> 
-> Fixes: 46d1a0f03d66 ("selftests/lkdtm: Add tests for LKDTM targets")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Without this, 'git status' now reports the following crap and real 
-problems are drowned in the middle, that's annoying.
-
-On branch saf3000-5.6
-Untracked files:
-   (use "git add <file>..." to include in what will be committed)
-	tools/testing/selftests/lkdtm/ACCESS_NULL.sh
-	tools/testing/selftests/lkdtm/ACCESS_USERSPACE.sh
-	tools/testing/selftests/lkdtm/ATOMIC_TIMING.sh
-	tools/testing/selftests/lkdtm/BUG.sh
-	tools/testing/selftests/lkdtm/CFI_FORWARD_PROTO.sh
-	tools/testing/selftests/lkdtm/CORRUPT_LIST_ADD.sh
-	tools/testing/selftests/lkdtm/CORRUPT_LIST_DEL.sh
-	tools/testing/selftests/lkdtm/CORRUPT_STACK.sh
-	tools/testing/selftests/lkdtm/CORRUPT_STACK_STRONG.sh
-	tools/testing/selftests/lkdtm/CORRUPT_USER_DS.sh
-	tools/testing/selftests/lkdtm/DOUBLE_FAULT.sh
-	tools/testing/selftests/lkdtm/EXCEPTION.sh
-	tools/testing/selftests/lkdtm/EXEC_DATA.sh
-	tools/testing/selftests/lkdtm/EXEC_KMALLOC.sh
-	tools/testing/selftests/lkdtm/EXEC_NULL.sh
-	tools/testing/selftests/lkdtm/EXEC_RODATA.sh
-	tools/testing/selftests/lkdtm/EXEC_STACK.sh
-	tools/testing/selftests/lkdtm/EXEC_USERSPACE.sh
-	tools/testing/selftests/lkdtm/EXEC_VMALLOC.sh
-	tools/testing/selftests/lkdtm/EXHAUST_STACK.sh
-	tools/testing/selftests/lkdtm/HARDLOCKUP.sh
-	tools/testing/selftests/lkdtm/HUNG_TASK.sh
-	tools/testing/selftests/lkdtm/LOOP.sh
-	tools/testing/selftests/lkdtm/OVERWRITE_ALLOCATION.sh
-	tools/testing/selftests/lkdtm/PANIC.sh
-	tools/testing/selftests/lkdtm/READ_AFTER_FREE.sh
-	tools/testing/selftests/lkdtm/READ_BUDDY_AFTER_FREE.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_ADD_NOT_ZERO_OVERFLOW.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_ADD_NOT_ZERO_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_ADD_OVERFLOW.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_ADD_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_ADD_ZERO.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_DEC_AND_TEST_NEGATIVE.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_DEC_AND_TEST_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_DEC_NEGATIVE.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_DEC_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_DEC_ZERO.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_INC_NOT_ZERO_OVERFLOW.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_INC_NOT_ZERO_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_INC_OVERFLOW.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_INC_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_INC_ZERO.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_SUB_AND_TEST_NEGATIVE.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_SUB_AND_TEST_SATURATED.sh
-	tools/testing/selftests/lkdtm/REFCOUNT_TIMING.sh
-	tools/testing/selftests/lkdtm/SLAB_FREE_CROSS.sh
-	tools/testing/selftests/lkdtm/SLAB_FREE_DOUBLE.sh
-	tools/testing/selftests/lkdtm/SLAB_FREE_PAGE.sh
-	tools/testing/selftests/lkdtm/SOFTLOCKUP.sh
-	tools/testing/selftests/lkdtm/SPINLOCKUP.sh
-	tools/testing/selftests/lkdtm/STACKLEAK_ERASING.sh
-	tools/testing/selftests/lkdtm/STACK_GUARD_PAGE_LEADING.sh
-	tools/testing/selftests/lkdtm/STACK_GUARD_PAGE_TRAILING.sh
-	tools/testing/selftests/lkdtm/UNALIGNED_LOAD_STORE_WRITE.sh
-	tools/testing/selftests/lkdtm/UNSET_SMEP.sh
-	tools/testing/selftests/lkdtm/USERCOPY_HEAP_SIZE_FROM.sh
-	tools/testing/selftests/lkdtm/USERCOPY_HEAP_SIZE_TO.sh
-	tools/testing/selftests/lkdtm/USERCOPY_HEAP_WHITELIST_FROM.sh
-	tools/testing/selftests/lkdtm/USERCOPY_HEAP_WHITELIST_TO.sh
-	tools/testing/selftests/lkdtm/USERCOPY_KERNEL.sh
-	tools/testing/selftests/lkdtm/USERCOPY_KERNEL_DS.sh
-	tools/testing/selftests/lkdtm/USERCOPY_STACK_BEYOND.sh
-	tools/testing/selftests/lkdtm/USERCOPY_STACK_FRAME_FROM.sh
-	tools/testing/selftests/lkdtm/USERCOPY_STACK_FRAME_TO.sh
-	tools/testing/selftests/lkdtm/WARNING.sh
-	tools/testing/selftests/lkdtm/WARNING_MESSAGE.sh
-	tools/testing/selftests/lkdtm/WRITE_AFTER_FREE.sh
-	tools/testing/selftests/lkdtm/WRITE_BUDDY_AFTER_FREE.sh
-	tools/testing/selftests/lkdtm/WRITE_KERN.sh
-	tools/testing/selftests/lkdtm/WRITE_RO.sh
-	tools/testing/selftests/lkdtm/WRITE_RO_AFTER_INIT.sh
-
-nothing added to commit but untracked files present (use "git add" to track)
-
-
-Thanks
-Christophe
-
-
-> ---
->   .gitignore | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/.gitignore b/.gitignore
-> index b849a72d69d5..bb05dce58f8e 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -100,6 +100,10 @@ modules.order
->   /include/ksym/
->   /arch/*/include/generated/
->   
-> +# Generated lkdtm tests
-> +/tools/testing/selftests/lkdtm/*.sh
-> +!/tools/testing/selftests/lkdtm/run.sh
-> +
->   # stgit generated dirs
->   patches-*
->   
-> 
+Hm - I guess just returning a list of attributes ought to be fine?
+Then AFS can just return one of its two statically-allocated attribute
+lists there, and a filesystem with more complicated circumstances
+(like FUSE or overlayfs or whatever) can compute a heap-allocated list
+on mount that is freed when the superblock goes away, or something
+like that?
