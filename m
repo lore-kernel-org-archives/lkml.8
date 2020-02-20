@@ -2,170 +2,170 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB56C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4F7C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E4B206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECC6206ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kJoyVX0x"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="crFreDBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgBTNJy (ORCPT
+        id S1728157AbgBTNLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:09:54 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:3866 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727868AbgBTNJy (ORCPT
+        Thu, 20 Feb 2020 08:11:36 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33210 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbgBTNLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:09:54 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KD4iRd017726;
-        Thu, 20 Feb 2020 14:09:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=wUo+rOcziXoZHOEnRfM4e41jdLfo3cichwE/6Du2kU0=;
- b=kJoyVX0xMt6C4QuB8S+tAO2HZw6Yc6+BOIDxPPR9n+gcYKdYjT4aMcjOgZ+E5ZLEZNb1
- LnF2deI6FYam1xmFRvMCjlZuSZGeLbaZDXNgCQI0DcW5y5bVf2tR2Gn8G92hq5wz84Eh
- g3YyK8u0bpA5gAUlrd7i/TLLkF23Ttl8gT5FyH7BEve03E8qjubZlEISK1+6ERek0Yt1
- xuSnpAYajYCr7JTkfkIGW8uGu2x7yubfy4xDcHOmHqmfsGmSdjd4+fDAyqVlyL4f3fhX
- CTC6HukbAhwwArQtz2I8Elb4evEMipW7sR5JITN3iP4rk/hR80CipVlqiXMAwEdNWK9n uA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y8ub5s6v0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Feb 2020 14:09:37 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C7F2E100038;
-        Thu, 20 Feb 2020 14:09:32 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 99C632B5006;
-        Thu, 20 Feb 2020 14:09:32 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 20 Feb
- 2020 14:09:31 +0100
-Subject: Re: [PATCH v2 0/2] Add GPIO level-sensitive interrupt support
-To:     Marek Vasut <marex@denx.de>, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <20200218131218.10789-1-alexandre.torgue@st.com>
- <b5a2dcab-06db-4863-ac5c-28f4ef0c5ac9@denx.de>
- <32e409e6-d475-802a-6a90-c8ba6c0cf6d5@st.com>
- <088e786c-511e-cf95-fc41-5343b8134407@denx.de>
- <d271f09b-6391-779a-b133-66bcdfbb0ec6@st.com>
- <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <66520848-f630-e210-aecb-96c8828605b7@st.com>
-Date:   Thu, 20 Feb 2020 14:09:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 08:11:36 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y6so4200392lji.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:11:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=95x/svoIHvKtwThYjiFAhoANuT+9jaK/n8hE5y8HQuM=;
+        b=crFreDBEqFDDkMhb8t3wiTSXcSXwcMBXrtLRBgy/EB6JgvFI6XWm7x1/wOie4gsbXL
+         QQ3QUTJ54ZQaY7DLyG0eMDhKW78NMtF0EpKV24KUqJAkpHjg8Unrzjo+h6ky+AFW6w2A
+         2cswn+BY3t7POXQu0hky4IgR2elmaN4migYzFs2WLjXV9imgcdbO5zf+rJEPXHq/b80S
+         DxB/WY+cbZK3AP5wy95Bxtl1lU+u53iV1tcCYhIPUmcdswhSOkvoqCu1k+2OFctN8IlA
+         oEYCzCmBsQCOym4VAMEm/FRo6zwAdtAGRmD61x+6BtVfCPZSk0yBaTr+Ih8D5DGdQUfE
+         u75A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=95x/svoIHvKtwThYjiFAhoANuT+9jaK/n8hE5y8HQuM=;
+        b=RksYfE/P1d7LDwWDHul6Q68I5FH6qis1jYA5z8wdJd/SEQh7OyWwtk512fDNTnMqUX
+         1Ot202+Xt4odeZ9XliGQGlGRPIgu+B8tREwZRdbRXh+WqymqdH4d1LuZDq6g5azmIJ0D
+         tOgX09GGwkxIxRk9fbJibgaQgPpmvf3cuy6NLs80iedOvPj/4iEPr0fZOUZ6PChJowTX
+         GFDh+NEG9QWbUggDidM+R+xAQt/KeNQOHDKSG5gmrimNKV1Ee2pqsnu0FDMLrUNdYbOc
+         qqOKf+R95UdVqvQ+Obfj6RlJAVqL4hf6MWDebM3OsSdNRavFatKPiB25P5uR3ulXEMTC
+         tJCw==
+X-Gm-Message-State: APjAAAVRjmp4YNuuziHfsLtRMzGAoFC2nPH7Ba9sPEv+NmP1cgKrhJiA
+        HG7/NfdiMkVk97DLejFWzEiPdA==
+X-Google-Smtp-Source: APXvYqwHcoB79WTtbZlwQ7P2hFgI1BkSfCjBHhn1dayq2xGKeB0Z18obfHCYvUiqt8PFH2LvliAXjw==
+X-Received: by 2002:a2e:8e84:: with SMTP id z4mr18170854ljk.207.1582204293381;
+        Thu, 20 Feb 2020 05:11:33 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id n13sm1784076lji.91.2020.02.20.05.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 05:11:32 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 0B508100FBB; Thu, 20 Feb 2020 16:12:02 +0300 (+03)
+Date:   Thu, 20 Feb 2020 16:12:02 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Subject: Re: [patch 1/2] mm, shmem: add thp fault alloc and fallback stats
+Message-ID: <20200220131202.i77zt3zj53mimrnu@box>
+References: <alpine.DEB.2.21.2002172139310.152060@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2002181828070.108053@chino.kir.corp.google.com>
+ <CAHbLzkrJ_=8f8STvZ2GPGH6Arup8cKgGqigj4FQXWpmD-C5wNQ@mail.gmail.com>
+ <alpine.DEB.2.21.2002181942460.155180@chino.kir.corp.google.com>
+ <CAHbLzkq20hzLdYM-EMOfWRqPOr+OQF8uq5yWR=Yb6vQY51LKwg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <38e7cf57-2f89-7615-0841-316355a9102f@denx.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkq20hzLdYM-EMOfWRqPOr+OQF8uq5yWR=Yb6vQY51LKwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek
-
-On 2/19/20 6:24 PM, Marek Vasut wrote:
-> On 2/19/20 10:20 AM, Alexandre Torgue wrote:
-> Hi,
-> [...]
->>>>>> This series adds the possibility to handle gpio interrupts on level.
->>>>>>
->>>>>> GPIO hardware block is directly linked to EXTI block but EXTI handles
->>>>>> external interrupts only on edge. To be able to handle GPIO
->>>>>> interrupt on
->>>>>> level a "hack" is done in gpio irq chip: parent interrupt (exti irq
->>>>>> chip)
->>>>>> is retriggered following interrupt type and gpio line value.
->>>>>>
->>>>>> In exti irq chip, retrigger ops function is added.
->>>>>
->>>>> btw. this might be unrelated, but is it possible to have e.g. gpioC2
->>>>> set
->>>>> as trigger-level-low and gpioD2 set as trigger-edge-falling ? It seems
->>>>> 8eb2dfee9fb1 ("pinctrl: stm32: add lock mechanism for irqmux
->>>>> selection")
->>>>> prevents that.
->>>>>
->>>>
->>>> No it's not possible. Each gpio line doesn't have a dedicated Exti line
->>>> Each Exti line is muxing between gpio banks.
->>>
->>> OK, that confirms my assumption.
->>>
->>>> Mapping is done as following:
->>>>
->>>> EXTI0 = A0 or B0 or C0 .... or Z0 : selected by Mux
->>>> EXTI1 = A1 or B1 or C1 ....or Z1 : selected by Mux
->>>> EXTI2 = A2 or B2 or C2 ....or Z2 : selected by Mux
->>>> ...
->>>
->>> Is it at least possible to have IRQs of the same type on the same exti
->>> line? E.g. gpioA2 of trigger-edge-falling and gpioB2
->>> trigger-edge-falling ?
->>>
->>
->> Sorry I don't catch your point. If you already succeed to get gpioA2,
->> then you will failed to get gpioB2 but looking at function call stack we
->> could get an other issue.
+On Wed, Feb 19, 2020 at 09:01:23AM -0800, Yang Shi wrote:
+> On Tue, Feb 18, 2020 at 7:44 PM David Rientjes <rientjes@google.com> wrote:
+> >
+> > On Tue, 18 Feb 2020, Yang Shi wrote:
+> >
+> > > > diff --git a/mm/shmem.c b/mm/shmem.c
+> > > > --- a/mm/shmem.c
+> > > > +++ b/mm/shmem.c
+> > > > @@ -1502,9 +1502,8 @@ static struct page *shmem_alloc_page(gfp_t gfp,
+> > > >         return page;
+> > > >  }
+> > > >
+> > > > -static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
+> > > > -               struct inode *inode,
+> > > > -               pgoff_t index, bool huge)
+> > > > +static struct page *shmem_alloc_and_acct_page(gfp_t gfp, struct inode *inode,
+> > > > +               pgoff_t index, bool fault, bool huge)
+> > > >  {
+> > > >         struct shmem_inode_info *info = SHMEM_I(inode);
+> > > >         struct page *page;
+> > > > @@ -1518,9 +1517,11 @@ static struct page *shmem_alloc_and_acct_page(gfp_t gfp,
+> > > >         if (!shmem_inode_acct_block(inode, nr))
+> > > >                 goto failed;
+> > > >
+> > > > -       if (huge)
+> > > > +       if (huge) {
+> > > >                 page = shmem_alloc_hugepage(gfp, info, index);
+> > > > -       else
+> > > > +               if (!page && fault)
+> > > > +                       count_vm_event(THP_FAULT_FALLBACK);
+> > > > +       } else
+> > > >                 page = shmem_alloc_page(gfp, info, index);
+> > > >         if (page) {
+> > > >                 __SetPageLocked(page);
+> > > > @@ -1832,11 +1833,10 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> > > >         }
+> > > >
+> > > >  alloc_huge:
+> > > > -       page = shmem_alloc_and_acct_page(gfp, inode, index, true);
+> > > > +       page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, true);
+> > > >         if (IS_ERR(page)) {
+> > > >  alloc_nohuge:
+> > > > -               page = shmem_alloc_and_acct_page(gfp, inode,
+> > > > -                                                index, false);
+> > > > +               page = shmem_alloc_and_acct_page(gfp, inode, index, vmf, false);
+> > > >         }
+> > > >         if (IS_ERR(page)) {
+> > > >                 int retry = 5;
+> > > > @@ -1871,8 +1871,11 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> > > >
+> > > >         error = mem_cgroup_try_charge_delay(page, charge_mm, gfp, &memcg,
+> > > >                                             PageTransHuge(page));
+> > > > -       if (error)
+> > > > +       if (error) {
+> > > > +               if (vmf && PageTransHuge(page))
+> > > > +                       count_vm_event(THP_FAULT_FALLBACK);
+> > > >                 goto unacct;
+> > > > +       }
+> > > >         error = shmem_add_to_page_cache(page, mapping, hindex,
+> > > >                                         NULL, gfp & GFP_RECLAIM_MASK);
+> > > >         if (error) {
+> > > > @@ -1883,6 +1886,8 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> > > >         mem_cgroup_commit_charge(page, memcg, false,
+> > > >                                  PageTransHuge(page));
+> > > >         lru_cache_add_anon(page);
+> > > > +       if (vmf && PageTransHuge(page))
+> > > > +               count_vm_event(THP_FAULT_ALLOC);
+> > >
+> > > I think shmem THP alloc is accounted to THP_FILE_ALLOC. And it has
+> > > been accounted by shmem_add_to_page_cache(). So, it sounds like a
+> > > double count.
+> > >
+> >
+> > I think we can choose to either include file allocations into both
+> > thp_fault_alloc and thp_fault_fallback or we can exclude them from both of
+> > them.  I don't think we can account for only one of them.
 > 
-> Considering the EXTI line limitations, I'd like to know what kind of IRQ
-> input configuration is allowed/valid and what kind of configuration is
-> not valid.
+> How's about the 3rd option, adding THP_FILE_FALLBACK.
 
-As a mux is used to select which GPIO[A..Z]_X has to be mapped on exti_X 
-line, only one GPIO can be used on the EXTI line.
+I like this option.
 
-For example, on EXTI2 you could map either gpioa2 or gpiob2 or 
-....gpioz2 but not gpioa2 and gpiob2 in the same time.
+Problem with THP_FAULT_* is that shmem_getpage_gfp() is called not only
+from fault path, but also from syscalls.
 
-
-> 
->> Lets take example where you succeed to get gpioa2 as interrupt (using
->> interrupt bindings) and now you try to do the same for gpiob2, you will
->> have (roughly):
->>
->> stm32_gpio_irq_request_resources (for gpiob2) --> succeed
->>
->> stm32_gpio_set_type
->>   |
->>   |--> stm32_exti_set_type type -> change exti line 2 trigger registers
->>                                    with gpiob2 binding.
->>
->> stm32_gpio_domain_activate --> failed as exti line2 is already used
->>                     by gpioa2.
->>
->> So as stm32_gpio_set_type is called before checking than exti line is
->> available, type could be changed and behavior of gpioa2 interrupt broken.
->>
->> Solution would be to move the exti line mux check from
->> stm32_gpio_domain_activate to  stm32_gpio_irq_request_resources callback.
-> 
-> So the hardware does support using both gpioA2 and gpioB2 as an
-> interrupt source, for different drivers, if they are of the same
-> interrupt type. Except the current implementation does not permit that.
-> 
-
-No hardware doesn't allow it for reason explain above.
-
-> If the interrupt types are different, that is not supported by the hardware.
-> 
-> Correct ?
-> 
+-- 
+ Kirill A. Shutemov
