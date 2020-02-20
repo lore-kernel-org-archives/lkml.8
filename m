@@ -2,100 +2,117 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A56C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E01CAC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F19320801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF23E2465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 07:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nN5J0iDj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2CTht/UP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgBTHix (ORCPT
+        id S1726826AbgBTHkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 02:38:53 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:21909 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbgBTHix (ORCPT
+        Thu, 20 Feb 2020 02:40:19 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:32872 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbgBTHkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 02:38:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1582184333; x=1613720333;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=oTbUz7ad+lxKA3pu5K3OeA9Qrfs1WDg7rWJbe6s8SN8=;
-  b=nN5J0iDjN42HNmj0aa1xR/FKNfZUiilZIxHwzJXPJ3m3W3SEZ7jzj6LI
-   Iaf9a3HdI+RepUlWTmd6SI6cKfKv2yukdxC4w6OPPCS20ZuLJT6eFScVF
-   KaaWTn5JTAkRf/vlgfFu7IzUkDQLZu7xFQF+yqXLDJJrrYNxa8fLqHWwg
-   U=;
-IronPort-SDR: 7oia2wUGTnZSKhBsUHoyFHSu4XYOms7J8LTwX6c8QbdH3mOgpX/FUSxZkCcb291HIO2wy49XeQ
- +TIudoxoYDrg==
-X-IronPort-AV: E=Sophos;i="5.70,463,1574121600"; 
-   d="scan'208";a="27647351"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 20 Feb 2020 07:38:50 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (Postfix) with ESMTPS id D2639A3168;
-        Thu, 20 Feb 2020 07:38:48 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Thu, 20 Feb 2020 07:38:48 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.235) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 20 Feb 2020 07:38:44 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-CC:     SeongJae Park <sjpark@amazon.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        SeongJae Park <sjpark@amazon.de>
-Subject: Re: Re: [PATCH] docs/kunit/start: Use '_KUNIT_TEST' config name suffix
-Date:   Thu, 20 Feb 2020 08:38:29 +0100
-Message-ID: <20200220073829.18382-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CAFd5g444shArgbdwaCdM3VBb9c7M1s7BJ5Dho7KEBU_fCsaJOw@mail.gmail.com> (raw)
+        Thu, 20 Feb 2020 02:40:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TtE3mlL5t0f9qnTzN7/JiHJ/6OUI4BCT1mqa2/farcY=; b=2CTht/UP19chea61+8j2T0TbdB
+        gmcz+vagWKsoDDg5x/HshwlgWGMnt5LofDcxxWMqkbTSefaRXyZvA8ADzB3Q7ayxHACgFhGq4vMhd
+        qIG/5mANVsp25mEC/YPw3csAfpSpyhS+o++k+4Hg37dmX1nqVf3q/m/B3HPE/aoP1UyJ+QJEk5wyS
+        CRbGb/a3U9WM2OmfjuWJze2L8g1Q/jf3EW129qQPVexfAbPqON5sPLuHIQkWGNi93lBalOZCfLDpQ
+        um7Kdmxrrkoe8hmT9VCSqYzdfjbgtPbApBxiOqqYVF+mCct/J6+YkMg3u5mA6/zCq2pFMneSAGQug
+        6iUsIfrA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4gQb-0007Nh-Jz; Thu, 20 Feb 2020 07:39:21 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 69E16305E21;
+        Thu, 20 Feb 2020 08:37:25 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 25E5120AFA9A9; Thu, 20 Feb 2020 08:39:18 +0100 (CET)
+Date:   Thu, 20 Feb 2020 08:39:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        Thomas Gleixner <tglx@linutronix.de>, paulmck@kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v3 02/22] x86,mce: Delete ist_begin_non_atomic()
+Message-ID: <20200220073918.GR18400@hirez.programming.kicks-ass.net>
+References: <20200219144724.800607165@infradead.org>
+ <20200219150744.488895196@infradead.org>
+ <20200219171309.GC32346@zn.tnic>
+ <CALCETrWBEDjenqze3wVc6TkUt_g+OFx9TQbYysLH+6fku=aWjQ@mail.gmail.com>
+ <20200219173358.GP18400@hirez.programming.kicks-ass.net>
+ <CALCETrVdNCRoToO2-mxhPxO2zaRU6urTffBn7iSTgHaGpB523Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.235]
-X-ClientProxiedBy: EX13D24UWB003.ant.amazon.com (10.43.161.222) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVdNCRoToO2-mxhPxO2zaRU6urTffBn7iSTgHaGpB523Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 14:16:03 -0800 Brendan Higgins <brendanhiggins@google.com> wrote:
+On Wed, Feb 19, 2020 at 02:12:13PM -0800, Andy Lutomirski wrote:
+> On Wed, Feb 19, 2020 at 9:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
 
-> Sorry, I didn't see this until now.
-
-Even I also almost forgot this.
-
+> > Do you really want to create code that unwinds enough of nmi_enter() to
+> > get you to a preemptible context? *shudder*
 > 
-> On Mon, Jan 27, 2020 at 7:32 AM <sjpark@amazon.com> wrote:
-> >
-> > From: SeongJae Park <sjpark@amazon.de>
-> >
-> > It is recommended to use '_KUNIT_TEST' config name suffix for kunit
-> > tests but the example is using only '_TEST' suffix.  This commit fixes
-> > it to also use '_KUNIT_TEST' suffix.
-> >
-> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> Well, there's another way to approach this:
 > 
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-
-Thanks for finding this! :D
-
-
-Thanks,
-SeongJae Park
-
+> void notrace nonothing do_machine_check(struct pt_regs *regs)
+> {
+>   if (user_mode(regs))
+>     do_sane_machine_check(regs);
+>   else
+>     do_awful_machine_check(regs);
+> }
 > 
-> Thanks!
+> void do_sane_machine_check(regs)
+> {
+>   nothing special here.  just a regular exception, more or less.
+> }
 > 
+> void do_awful_macine_check(regs)
+> {
+>   basically an NMI.  No funny business, no recovery possible.
+> task_work_add() not allowed.
+> }
+
+Right, that looks like major surgery to the current code though; I'd
+much prefer someone that knows that code do that.
+
+> I suppose the general consideration I'm trying to get at is: is
+> task_work_add() actually useful at all here?  For the case when a
+> kernel thread does memcpy_mcsafe() or similar, task work registered
+> using task_work_add() will never run.
+
+task_work isn't at all useful when we didn't come from userspace. In
+that case irq_work is the best option, but that doesn't provide a
+preemptible context.
