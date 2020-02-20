@@ -2,236 +2,199 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	TVD_PH_BODY_ACCOUNTS_PRE autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4B6C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F237C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25459207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C48B207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="deUwhqPq"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="i4l3wns6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbgBTIqX (ORCPT
+        id S1726859AbgBTItn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:46:23 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:19254 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgBTIqW (ORCPT
+        Thu, 20 Feb 2020 03:49:43 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60998 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726501AbgBTItn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:46:22 -0500
-X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 03:46:22 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1582188382;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JwHl4quXWDG9itkjDYku543f/vfU0gx98KV7jgfEzIs=;
-  b=deUwhqPq14V103UTUp8rLwhZ+mSjnmQ8rHFGKXIkn1HB22dXM9EEfTig
-   RNf1pAFhMnJv2dsF1UVrOXjAyszfVw/E0qwwKWK8iZcO1USzg/ekjgnDb
-   9Yv1HYp7KLYWy31ulaQZq1icmXdEpBUTlBvSvYWJCLjtc1fmZ8MI6agG1
-   M=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: MM0J4GlVDlB8jW19M11+P9HrOGhNxD8WXYL9vu3YBiAQ460tEWfz3gUg2Lw6ArGektClf8Nbag
- ZDMsNn+bIaHgvmiQrWsOTOXSdwNZIukFIJ+v8ThpcN5voCcqc9fpCjOv1dFXfaPkJlXRiaocNz
- Ey3nz+5z5gJ8Z3tkNDhfq+2pULZijq4YhGeqIYtykJ4RyOTbAeqOEVpuzrpMAKyUgCJObCNTDs
- ys4QXG50X3UKLzLY0I+Ya9hAkPZ3tBMhdhqXVkrciAd+JgmZ9nUhR/Mfl0wZ+8MU2oflNLNG06
- Zow=
-X-SBRS: 2.7
-X-MesageID: 12723432
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,463,1574139600"; 
-   d="scan'208";a="12723432"
-Date:   Thu, 20 Feb 2020 09:39:04 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Anchal Agarwal <anchalag@amazon.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <linux-pm@vger.kernel.org>,
-        <linux-mm@kvack.org>, <kamatam@amazon.com>,
-        <sstabellini@kernel.org>, <konrad.wilk@oracle.com>,
-        <axboe@kernel.dk>, <davem@davemloft.net>, <rjw@rjwysocki.net>,
-        <len.brown@intel.com>, <pavel@ucw.cz>, <peterz@infradead.org>,
-        <eduval@amazon.com>, <sblbir@amazon.com>,
-        <xen-devel@lists.xenproject.org>, <vkuznets@redhat.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>,
-        <benh@kernel.crashing.org>
-Subject: Re: [RFC PATCH v3 06/12] xen-blkfront: add callbacks for PM suspend
- and hibernation
-Message-ID: <20200220083904.GI4679@Air-de-Roger>
-References: <cover.1581721799.git.anchalag@amazon.com>
- <890c404c585d7790514527f0c021056a7be6e748.1581721799.git.anchalag@amazon.com>
- <20200217100509.GE4679@Air-de-Roger>
- <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200218091611.GN4679@Air-de-Roger>
- <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+        Thu, 20 Feb 2020 03:49:43 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K8meXW020417;
+        Thu, 20 Feb 2020 09:49:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=S5q9Ccf8BOo2PkevHXUiUGrg9bP7AFEyhsJFWCqfbU8=;
+ b=i4l3wns6Hn6EEtrK2zY9uHtzneAHnYfd1osV/2K2QMrqcJnmkrFKtQ+XHqErJ02tL9hd
+ Uo6Oq4vGND7hxp/fK33EMUEkzneb0ZxZUmP5mqGOu4kQzraEd9epglEizy7N6vjwbkK9
+ wJv3DrvbPP4LDjs9JRcJAiD/o1wTuRLjWPbxKR4mjJ0uZqrEG4unxSBiRqyPGZKRp/gm
+ AhkEi+5YqcHbB7cHDftxN3DCQgONzUjDjwwJhYWXsKpfhWmeeC+h9YHirSfOZ6v/t7Rz
+ UtPJY/xSy6HQ5BDD278+istL5nR3bEuG2kIPHzDNLYTmbI0MU1wbJvZij01NCqiXwUI6 /Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8uafqufs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Feb 2020 09:49:30 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7D28F10003B;
+        Thu, 20 Feb 2020 09:49:27 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6150F22243F;
+        Thu, 20 Feb 2020 09:49:27 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.47) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 09:49:26 +0100
+Subject: Re: [PATCH 3/9] remoteproc: add support to skip firmware load when
+ recovery
+To:     Peng Fan <peng.fan@nxp.com>, "ohad@wizery.com" <ohad@wizery.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1582097265-20170-1-git-send-email-peng.fan@nxp.com>
+ <1582097265-20170-4-git-send-email-peng.fan@nxp.com>
+ <0d90b2c2-cb02-d052-57cb-b11c5f815f07@st.com>
+ <AM0PR04MB4481F7E58E9D09F1779E279988100@AM0PR04MB4481.eurprd04.prod.outlook.com>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <a3263739-a201-835a-c6a7-849f57bee51f@st.com>
+Date:   Thu, 20 Feb 2020 09:49:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <AM0PR04MB4481F7E58E9D09F1779E279988100@AM0PR04MB4481.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_02:2020-02-19,2020-02-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for this work, please see below.
 
-On Wed, Feb 19, 2020 at 06:04:24PM +0000, Anchal Agarwal wrote:
-> On Tue, Feb 18, 2020 at 10:16:11AM +0100, Roger Pau Monné wrote:
-> > On Mon, Feb 17, 2020 at 11:05:53PM +0000, Anchal Agarwal wrote:
-> > > On Mon, Feb 17, 2020 at 11:05:09AM +0100, Roger Pau Monné wrote:
-> > > > On Fri, Feb 14, 2020 at 11:25:34PM +0000, Anchal Agarwal wrote:
-> > > > > From: Munehisa Kamata <kamatam@amazon.com
-> > > > > 
-> > > > > Add freeze, thaw and restore callbacks for PM suspend and hibernation
-> > > > > support. All frontend drivers that needs to use PM_HIBERNATION/PM_SUSPEND
-> > > > > events, need to implement these xenbus_driver callbacks.
-> > > > > The freeze handler stops a block-layer queue and disconnect the
-> > > > > frontend from the backend while freeing ring_info and associated resources.
-> > > > > The restore handler re-allocates ring_info and re-connect to the
-> > > > > backend, so the rest of the kernel can continue to use the block device
-> > > > > transparently. Also, the handlers are used for both PM suspend and
-> > > > > hibernation so that we can keep the existing suspend/resume callbacks for
-> > > > > Xen suspend without modification. Before disconnecting from backend,
-> > > > > we need to prevent any new IO from being queued and wait for existing
-> > > > > IO to complete.
-> > > > 
-> > > > This is different from Xen (xenstore) initiated suspension, as in that
-> > > > case Linux doesn't flush the rings or disconnects from the backend.
-> > > Yes, AFAIK in xen initiated suspension backend takes care of it. 
-> > 
-> > No, in Xen initiated suspension backend doesn't take care of flushing
-> > the rings, the frontend has a shadow copy of the ring contents and it
-> > re-issues the requests on resume.
-> > 
-> Yes, I meant suspension in general where both xenstore and backend knows
-> system is going under suspension and not flushing of rings.
 
-backend has no idea the guest is going to be suspended. Backend code
-is completely agnostic to suspension/resume.
+On 2/19/20 4:40 PM, Peng Fan wrote:
+> 
+>> Subject: Re: [PATCH 3/9] remoteproc: add support to skip firmware load when
+>> recovery
+>>
+>> Hi,
+>>
+>> On 2/19/20 8:27 AM, peng.fan@nxp.com wrote:
+>>> From: Peng Fan <peng.fan@nxp.com>
+>>>
+>>> Remote processor such as M4 inside i.MX8QXP is not handled by Linux
+>>> when it is configured to run inside its own hardware partition by
+>>> system control unit(SCU). So even remote processor crash reset, it is
+>>> handled by SCU, not linux. To such case, firmware load should be
+>>> ignored, So introduce skip_fw_load_recovery and platform driver should
+>>> set it if needed.
+>>>
+>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>>> ---
+>>>  drivers/remoteproc/remoteproc_core.c | 19 +++++++++++--------
+>>>  include/linux/remoteproc.h           |  1 +
+>>>  2 files changed, 12 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>> index 876b5420a32b..ca310e3582bf 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -1678,20 +1678,23 @@ int rproc_trigger_recovery(struct rproc *rproc)
+>>>  	if (ret)
+>>>  		goto unlock_mutex;
+>>>
+>>> -	/* generate coredump */
+>>> -	rproc_coredump(rproc);
+>>> +	if (!rproc->skip_fw_load_recovery) {
+>>> +		/* generate coredump */
+>>> +		rproc_coredump(rproc);
+>>>
+>>> -	/* load firmware */
+>>> -	ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>>> -	if (ret < 0) {
+>>> -		dev_err(dev, "request_firmware failed: %d\n", ret);
+>>> -		goto unlock_mutex;
+>>> +		/* load firmware */
+>>> +		ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>>> +		if (ret < 0) {
+>>> +			dev_err(dev, "request_firmware failed: %d\n", ret);
+>>> +			goto unlock_mutex;
+>>> +		}
+>>
+>> Any specific reason to not reuse skip_fw_load here?
+> 
+> Just thought firmware needs to be loaded by Linux when remote
+> processor crash, even if it initially booted ealy.
+> 
+> skip_fw_load just handles first boot which no need firmware.
+> But if recovery boot needs firwarem, skip_fw_load will not handle.
+> 
+> So I add this new bool.
+> 
+> Actually to my platform, skip_fw_load could work when recovery,
+> I just think other platforms might need firware load when recovery.
 
-> That happens
-> in frontend when backend indicates that state is closing and so on.
-> I may have written it in wrong context.
+Thanks for the clarification. For the ST platform, we can have both usecase
+By clearing skip_fw_load in case of crash we s should be able to handle this usecase.
+Anyway as discussion is still on going for the preloaded firmware topic, we have at least to take into account your
+use case.
 
-I'm afraid I'm not sure I fully understand this last sentence.
+Thanks,
+Arnaud
 
-> > > > > +static int blkfront_freeze(struct xenbus_device *dev)
-> > > > > +{
-> > > > > +	unsigned int i;
-> > > > > +	struct blkfront_info *info = dev_get_drvdata(&dev->dev);
-> > > > > +	struct blkfront_ring_info *rinfo;
-> > > > > +	/* This would be reasonable timeout as used in xenbus_dev_shutdown() */
-> > > > > +	unsigned int timeout = 5 * HZ;
-> > > > > +	int err = 0;
-> > > > > +
-> > > > > +	info->connected = BLKIF_STATE_FREEZING;
-> > > > > +
-> > > > > +	blk_mq_freeze_queue(info->rq);
-> > > > > +	blk_mq_quiesce_queue(info->rq);
-> > > > > +
-> > > > > +	for (i = 0; i < info->nr_rings; i++) {
-> > > > > +		rinfo = &info->rinfo[i];
-> > > > > +
-> > > > > +		gnttab_cancel_free_callback(&rinfo->callback);
-> > > > > +		flush_work(&rinfo->work);
-> > > > > +	}
-> > > > > +
-> > > > > +	/* Kick the backend to disconnect */
-> > > > > +	xenbus_switch_state(dev, XenbusStateClosing);
-> > > > 
-> > > > Are you sure this is safe?
-> > > > 
-> > > In my testing running multiple fio jobs, other test scenarios running
-> > > a memory loader works fine. I did not came across a scenario that would
-> > > have failed resume due to blkfront issues unless you can sugest some?
-> > 
-> > AFAICT you don't wait for the in-flight requests to be finished, and
-> > just rely on blkback to finish processing those. I'm not sure all
-> > blkback implementations out there can guarantee that.
-> > 
-> > The approach used by Xen initiated suspension is to re-issue the
-> > in-flight requests when resuming. I have to admit I don't think this
-> > is the best approach, but I would like to keep both the Xen and the PM
-> > initiated suspension using the same logic, and hence I would request
-> > that you try to re-use the existing resume logic (blkfront_resume).
-> > 
-> > > > I don't think you wait for all requests pending on the ring to be
-> > > > finished by the backend, and hence you might loose requests as the
-> > > > ones on the ring would not be re-issued by blkfront_restore AFAICT.
-> > > > 
-> > > AFAIU, blk_mq_freeze_queue/blk_mq_quiesce_queue should take care of no used
-> > > request on the shared ring. Also, we I want to pause the queue and flush all
-> > > the pending requests in the shared ring before disconnecting from backend.
-> > 
-> > Oh, so blk_mq_freeze_queue does wait for in-flight requests to be
-> > finished. I guess it's fine then.
-> > 
-> Ok.
-> > > Quiescing the queue seemed a better option here as we want to make sure ongoing
-> > > requests dispatches are totally drained.
-> > > I should accept that some of these notion is borrowed from how nvme freeze/unfreeze 
-> > > is done although its not apple to apple comparison.
-> > 
-> > That's fine, but I would still like to requests that you use the same
-> > logic (as much as possible) for both the Xen and the PM initiated
-> > suspension.
-> > 
-> > So you either apply this freeze/unfreeze to the Xen suspension (and
-> > drop the re-issuing of requests on resume) or adapt the same approach
-> > as the Xen initiated suspension. Keeping two completely different
-> > approaches to suspension / resume on blkfront is not suitable long
-> > term.
-> > 
-> I agree with you on overhaul of xen suspend/resume wrt blkfront is a good
-> idea however, IMO that is a work for future and this patch series should 
-> not be blocked for it. What do you think?
-
-It's not so much that I think an overhaul of suspend/resume in
-blkfront is needed, it's just that I don't want to have two completely
-different suspend/resume paths inside blkfront.
-
-So from my PoV I think the right solution is to either use the same
-code (as much as possible) as it's currently used by Xen initiated
-suspend/resume, or to also switch Xen initiated suspension to use the
-newly introduced code.
-
-Having two different approaches to suspend/resume in the same driver
-is a recipe for disaster IMO: it adds complexity by forcing developers
-to take into account two different suspend/resume approaches when
-there's no need for it.
-
-Thanks, Roger.
+ 
+> 
+> Regards,
+> Peng. 
+> 
+>> FYI i'm reworking the Loic's patch and i plan to implement the recovery part
+>> using skip_fw_load...
+> 
+> 
+> 
+>>
+>> Regards
+>> Arnaud
+>>
+>>>  	}
+>>>
+>>>  	/* boot the remote processor up again */
+>>>  	ret = rproc_start(rproc, firmware_p);
+>>>
+>>> -	release_firmware(firmware_p);
+>>> +	if (!rproc->skip_fw_load_recovery)
+>>> +		release_firmware(firmware_p);
+>>>
+>>>  unlock_mutex:
+>>>  	mutex_unlock(&rproc->lock);
+>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>> index 4fd5bedab4fa..fe6ee253b385 100644
+>>> --- a/include/linux/remoteproc.h
+>>> +++ b/include/linux/remoteproc.h
+>>> @@ -514,6 +514,7 @@ struct rproc {
+>>>  	bool has_iommu;
+>>>  	bool auto_boot;
+>>>  	bool skip_fw_load;
+>>> +	bool skip_fw_load_recovery;
+>>>  	struct list_head dump_segments;
+>>>  	int nb_vdev;
+>>>  };
+>>>
