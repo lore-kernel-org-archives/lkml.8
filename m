@@ -2,106 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF0EC11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FDCC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B46B520722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:08:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mLjP5rCd"
+	by mail.kernel.org (Postfix) with ESMTP id 466C920722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:09:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgBTUIa (ORCPT
+        id S1729107AbgBTUJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:08:30 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37899 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbgBTUIa (ORCPT
+        Thu, 20 Feb 2020 15:09:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43869 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729049AbgBTUJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:08:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a9so3415464wmj.3;
-        Thu, 20 Feb 2020 12:08:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kBIhuNzrd9/ICrWDQr4DVMV2/B2/59BRqjR58cRFSa8=;
-        b=mLjP5rCdAC6xFhQp9dOe10slf2tWdLGlp1jHu9A/olLcXXEAaYmvzZ7Zhy693tEkoj
-         fJqN/7P/bZ9+EZEqKuyp8WEevdfQinxoUWik/FWSYT6REWm1SvWUKhljrUdMpniafFYM
-         ZmLZCnPcMhKZ8OLKRd6LYyOv/AEV2vG3sKzuNcOHJ7XGwJhc2ghDW2nW7x6jVFJA9zBa
-         XUpl64Z+Isf9bF9r9yNS5Z6H1IVqCGbtRP0qs692nxBNDJ6iyn4ewCCcOOZb62L7Xzha
-         lYzWZDj4Rdc2AG3x+sT7qJu8nhN2EQHhApyzeIhU71KV3qfiS5zAWtTwpGUwfzmbbtks
-         6u6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kBIhuNzrd9/ICrWDQr4DVMV2/B2/59BRqjR58cRFSa8=;
-        b=Ge6MUy1eCa2afAM2rZyDO/FNl08f0Bshehx8EN4+AuwM0xHGas8ctbfTrsJ+YDwf+R
-         /6d/n9nYge6YvtwfD0BREtem0sMIeHaNXwAn1h1fNh8iW/poLCgbpOQedHZyYr3Ipqp5
-         bO6uZGOo2fOrtMO2c4R4mgZHLXhezwQGzCPe/lbUFugdxKFWaD1hCqkEdKNnhPhBg4wl
-         dgdvWJ95mv23z4l1dCbnRMGBWk31eX1pwPgQOWJe4RjKQow+KP8OkwyZyPzynb5Uy2Nd
-         lVQlNjTOq6XO3cxAo+81AsM1/oB6jxodSonTXYRey0ko/FbCB+eufM3PaHKKbUq9d2OV
-         8g2A==
-X-Gm-Message-State: APjAAAWNqFRvSpG9wgN/vflpHMq2Jf7mtkNVvhZFtyan8DnHTXbswQql
-        xxr8qJu1IGq4cfImesmuvPGskHuddBRKgZT5DTM=
-X-Google-Smtp-Source: APXvYqy7eptXAdEZnovXNA47MGEG44idKZd6tifmRJg1r8lBP52ZR9PRv5Q5jHU2VMNFc4VIVH+tkdwNPjyGtXAaRz0=
-X-Received: by 2002:a05:600c:2255:: with SMTP id a21mr6249867wmm.79.1582229308197;
- Thu, 20 Feb 2020 12:08:28 -0800 (PST)
+        Thu, 20 Feb 2020 15:09:20 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j4s8H-0006go-Bs; Thu, 20 Feb 2020 21:09:13 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 09CC31C1A4F;
+        Thu, 20 Feb 2020 21:09:13 +0100 (CET)
+Date:   Thu, 20 Feb 2020 20:09:12 -0000
+From:   "tip-bot2 for Morten Rasmussen" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/core] sched/topology: Remove SD_BALANCE_WAKE on
+ asymmetric capacity systems
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Quentin Perret <qperret@google.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200206191957.12325-3-valentin.schneider@arm.com>
+References: <20200206191957.12325-3-valentin.schneider@arm.com>
 MIME-Version: 1.0
-References: <20200214154854.6746-1-sashal@kernel.org> <20200214154854.6746-530-sashal@kernel.org>
- <CADnq5_Oq-6VYYMWgvSbTcs5S6+DHP1K+ambo3Cd_BBkYFQk8HQ@mail.gmail.com> <20200220192654.GJ1734@sasha-vm>
-In-Reply-To: <20200220192654.GJ1734@sasha-vm>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 20 Feb 2020 15:08:16 -0500
-Message-ID: <CADnq5_MRkgK=Of_GJ7n1FHnnuSzdb=OJ7zdQJegi0=xMUidKXg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.5 530/542] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "for 3.8" <stable@vger.kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158222935275.13786.15868508025016436097.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 2:26 PM Sasha Levin <sashal@kernel.org> wrote:
->
-> On Fri, Feb 14, 2020 at 11:31:31AM -0500, Alex Deucher wrote:
-> >On Fri, Feb 14, 2020 at 11:00 AM Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >> From: Alex Deucher <alexander.deucher@amd.com>
-> >>
-> >> [ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
-> >>
-> >> Cull out 0 clocks to avoid a warning in DC.
-> >>
-> >> Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-> >
-> >All of the upstream commits that reference this bug need to be applied
-> >or this patch set will be broken.  Please either apply them all or
-> >drop them.
->
-> Okay, so I have these 3 in 4.19-5.5:
->
-> c37243579d6c ("drm/amdgpu/display: handle multiple numbers of fclks in dcn_calcs.c (v2)")
-> 4d0a72b66065 ("drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_latency")
-> 1064ad4aeef9 ("drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage"
+The following commit has been merged into the sched/core branch of tip:
 
-Yes, that should do it.  Thanks!
+Commit-ID:     a526d466798d65cff120ee00ef92931075bf3769
+Gitweb:        https://git.kernel.org/tip/a526d466798d65cff120ee00ef92931075bf3769
+Author:        Morten Rasmussen <morten.rasmussen@arm.com>
+AuthorDate:    Thu, 06 Feb 2020 19:19:55 
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 20 Feb 2020 21:03:14 +01:00
 
-Alex
+sched/topology: Remove SD_BALANCE_WAKE on asymmetric capacity systems
 
->
-> --
-> Thanks,
-> Sasha
+SD_BALANCE_WAKE was previously added to lower sched_domain levels on
+asymmetric CPU capacity systems by commit:
+
+  9ee1cda5ee25 ("sched/core: Enable SD_BALANCE_WAKE for asymmetric capacity systems")
+
+to enable the use of find_idlest_cpu() and friends to find an appropriate
+CPU for tasks.
+
+That responsibility has now been shifted to select_idle_sibling() and
+friends, and hence the flag can be removed. Note that this causes
+asymmetric CPU capacity systems to no longer enter the slow wakeup path
+(find_idlest_cpu()) on wakeups - only on execs and forks (which is aligned
+with all other mainline topologies).
+
+Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
+[Changelog tweaks]
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Quentin Perret <qperret@google.com>
+Link: https://lkml.kernel.org/r/20200206191957.12325-3-valentin.schneider@arm.com
+
+---
+ kernel/sched/topology.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index dfb64c0..0091188 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1374,18 +1374,9 @@ sd_init(struct sched_domain_topology_level *tl,
+ 	 * Convert topological properties into behaviour.
+ 	 */
+ 
+-	if (sd->flags & SD_ASYM_CPUCAPACITY) {
+-		struct sched_domain *t = sd;
+-
+-		/*
+-		 * Don't attempt to spread across CPUs of different capacities.
+-		 */
+-		if (sd->child)
+-			sd->child->flags &= ~SD_PREFER_SIBLING;
+-
+-		for_each_lower_domain(t)
+-			t->flags |= SD_BALANCE_WAKE;
+-	}
++	/* Don't attempt to spread across CPUs of different capacities. */
++	if ((sd->flags & SD_ASYM_CPUCAPACITY) && sd->child)
++		sd->child->flags &= ~SD_PREFER_SIBLING;
+ 
+ 	if (sd->flags & SD_SHARE_CPUCAPACITY) {
+ 		sd->imbalance_pct = 110;
