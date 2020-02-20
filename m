@@ -2,79 +2,176 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308A0C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 889FFC11D13
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE90208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571C3208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:19:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="Q13xE83+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgBTRSn (ORCPT
+        id S1728629AbgBTRTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:18:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:47358 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbgBTRSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:18:43 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA4D631B;
-        Thu, 20 Feb 2020 09:18:42 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C3FB3F68F;
-        Thu, 20 Feb 2020 09:18:42 -0800 (PST)
-Date:   Thu, 20 Feb 2020 17:18:40 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] firmware: arm_scmi: driver: Replace zero-length array
- with flexible-array member
-Message-ID: <20200220171840.GB44840@bogus>
-References: <20200211231045.GA13956@embeddedor>
+        Thu, 20 Feb 2020 12:19:12 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42650 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbgBTRTL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:19:11 -0500
+Received: by mail-wr1-f66.google.com with SMTP id k11so5483021wrd.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:19:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=boCKpekBoONnu2x2vJLKUmcg4VOjDu6Z9N8Skkewyns=;
+        b=Q13xE83+LcPqrhNEh6NHQ1au8Z2/JdUbzmH/YLYPtNTl7+yBHFo+N44wCR6BcWL64h
+         qDDU/nED0VcmMpdOrIIWijZATAFcEesI6K53ZBUyGnTA257zjvpBTObdSBEoIVMFW084
+         w3bofiy4YocKcnWyPfO/IjtVY5KJO7gD9ldqZDn/YKapVyXablODffPaZnXim8QAXyod
+         JEiGZse4W9m+DuLYCD94g+KYCWiSlC4xLHlwyceulK0sYwmKqDrsQW36S072RVSWko4w
+         +A4VFlEdGAzmsR+9xGGvJZM1NjF2F0Rgqp5FcIiEW/YL8oE4/eBhgmdeSIBZ0UBUOOVW
+         +3hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=boCKpekBoONnu2x2vJLKUmcg4VOjDu6Z9N8Skkewyns=;
+        b=GIilfzY8t0WcwyrID2CvVqgCNSdsAei2MH+1AunDxr3nR4tH6p94xcCWAZe/s8aJqU
+         /MDCaFzciC6X066qW4KkgMVMe7zpHgT73ATfiFvBIKsQvdZrxIT+zIhOLSL+Bc3G7rii
+         s4C7suiP+I2ZzYuYt2u/Pw13ggrqtLseI0oQLSDrZX9nWvnKPF9TOvOK2dscj+xHlaLJ
+         3kjLuWfAnmdlhXLMXi5l/DfnUpiPnfqxdiSqyLneCRrtJReWefSsj7CvRJC/9xUlJBLD
+         OEutC3xmh7J6Q/lPHI0vQLvMOppP42TKYodloL6TQh3kFmHMREQawswh/49o0YREKRma
+         VYYg==
+X-Gm-Message-State: APjAAAX2fsZ8m4kR+o3LgrUjD3bfktqwm30/c0z0jd5SKYW0mbrTW+8n
+        YbUV1vQiFdNi5aHObkoIOBPcNQ==
+X-Google-Smtp-Source: APXvYqwHG2Hc/+mR7YXbYt7FoyW6wjBkMtpEc3eYy6RMHqggBSxh2ZgyVipp8ipV9eepl//YQQFw3g==
+X-Received: by 2002:adf:dfce:: with SMTP id q14mr44306523wrn.324.1582219149052;
+        Thu, 20 Feb 2020 09:19:09 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
+        by smtp.gmail.com with ESMTPSA id q1sm264777wrw.5.2020.02.20.09.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:19:08 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:19:06 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
+        Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+Subject: Re: [PATCHv10 02/13] PCI: mobiveil: Move the host initialization
+ into a function
+Message-ID: <20200220171906.GE19388@big-machine>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+ <20200213040644.45858-3-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200211231045.GA13956@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200213040644.45858-3-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 05:10:45PM -0600, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Thu, Feb 13, 2020 at 12:06:33PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> struct foo {
->         int stuff;
->         struct boo array[];
-> };
+> Move the host initialization related operations into a new
+> routine such that it can be reused by other incoming platform's
+> PCIe host driver, in which the Mobiveil GPEX is integrated.
 > 
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertenly introduced[3] to the codebase from now on.
-> 
-> This issue was found with the help of Coccinelle.
-> 
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Change the subject and change log slightly.
+> Change the function mobiveil_pcie_host_probe to static.
+> Add back the comments that was lost in v9.
 
-Applied these 3 patches [0][1][2] for v5.7
+Are these three lines above supposed to be in the history below the
+--- ?
 
---
-Regards,
-Sudeep
+Perhaps Lorenzo can change that when he applies it.
 
-[0]: https://lore.kernel.org/r/20200211231604.GA17274@embeddedor
-[1]: https://lore.kernel.org/r/20200211231252.GA14830@embeddedor
-[2]: https://lore.kernel.org/r/20200211231045.GA13956@embeddedor
+Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V10:
+>  - Refined the subject and change log.
+>  - Changed the mobiveil_pcie_host_probe() to a static function.
+>  - Added back the lost comments.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 39 +++++++++++++++-----------
+>  1 file changed, 23 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index d4de560cd711..01df04ea5b48 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -873,27 +873,15 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> -static int mobiveil_pcie_probe(struct platform_device *pdev)
+> +static int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+>  {
+> -	struct mobiveil_pcie *pcie;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+> +	struct pci_host_bridge *bridge = rp->bridge;
+> +	struct device *dev = &pcie->pdev->dev;
+>  	struct pci_bus *bus;
+>  	struct pci_bus *child;
+> -	struct pci_host_bridge *bridge;
+> -	struct device *dev = &pdev->dev;
+> -	struct mobiveil_root_port *rp;
+>  	int ret;
+>  
+> -	/* allocate the PCIe port */
+> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> -	if (!bridge)
+> -		return -ENOMEM;
+> -
+> -	pcie = pci_host_bridge_priv(bridge);
+> -	rp = &pcie->rp;
+> -	rp->bridge = bridge;
+> -
+> -	pcie->pdev = pdev;
+> -
+>  	ret = mobiveil_pcie_parse_dt(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
+> @@ -956,6 +944,25 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int mobiveil_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct mobiveil_pcie *pcie;
+> +	struct pci_host_bridge *bridge;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	/* allocate the PCIe port */
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+> +	pcie = pci_host_bridge_priv(bridge);
+> +	pcie->rp.bridge = bridge;
+> +
+> +	pcie->pdev = pdev;
+> +
+> +	return mobiveil_pcie_host_probe(pcie);
+> +}
+> +
+>  static const struct of_device_id mobiveil_pcie_of_match[] = {
+>  	{.compatible = "mbvl,gpex40-pcie",},
+>  	{},
+> -- 
+> 2.17.1
+> 
