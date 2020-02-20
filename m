@@ -2,175 +2,133 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830D5C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DF5C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E3E24676
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GAOxrJoB"
+	by mail.kernel.org (Postfix) with ESMTP id 4AE19208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:04:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbgBTLEE (ORCPT
+        id S1727789AbgBTLEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:04:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34962 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726837AbgBTLEE (ORCPT
+        Thu, 20 Feb 2020 06:04:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47625 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbgBTLEd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:04:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582196643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HMa4koWyLSARu7hw4Wcnh7n2N//Bgrplr2DvnwxKML0=;
-        b=GAOxrJoB7D27RTrlwA+hvHrDp2oqzGXEDSlqAPnZpZRF5pAqBV6shkH2RLSq+XV8mt/cWn
-        cHkd/QaUl540VkAQYeOtYu5RAQZZ+07hk5lntzcS+kWeeXGa7+FzLdJ312FvKVW0Y7DSBR
-        EXUeD80o5Q9bYy2TI+tgVAXq4B9oIzI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-CG_I3geeMzGOISkcw0L_kg-1; Thu, 20 Feb 2020 06:04:01 -0500
-X-MC-Unique: CG_I3geeMzGOISkcw0L_kg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B27C8800D48;
-        Thu, 20 Feb 2020 11:03:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B12AF5DA60;
-        Thu, 20 Feb 2020 11:03:57 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez0o3iHjQJNvh8V2Ao77g0CqfqGsv6caMCOFDy7w-VdtkQ@mail.gmail.com>
-References: <CAG48ez0o3iHjQJNvh8V2Ao77g0CqfqGsv6caMCOFDy7w-VdtkQ@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204550281.3299825.6344518327575765653.stgit@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] vfs: syscall: Add fsinfo() to query filesystem information [ver #16]
+        Thu, 20 Feb 2020 06:04:33 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4jd6-0003qg-PR; Thu, 20 Feb 2020 12:04:28 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4jd5-0005jf-NN; Thu, 20 Feb 2020 12:04:27 +0100
+Date:   Thu, 20 Feb 2020 12:04:27 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     kernel@pengutronix.de, linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
+        linux-leds@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 2/4] tty: rename tty_kopen() and add new function
+ tty_kopen_shared()
+Message-ID: <20200220110427.e6jgzvdhh3ysql3n@pengutronix.de>
+References: <20200213091600.554-1-uwe@kleine-koenig.org>
+ <20200213091600.554-3-uwe@kleine-koenig.org>
+ <20200219132113.GD32540@localhost>
+ <20200219163758.5rypsol4n6ucost4@pengutronix.de>
+ <20200219171759.GE32540@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <584178.1582196636.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 20 Feb 2020 11:03:56 +0000
-Message-ID: <584179.1582196636@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200219171759.GE32540@localhost>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+On Wed, Feb 19, 2020 at 06:17:59PM +0100, Johan Hovold wrote:
+> On Wed, Feb 19, 2020 at 05:37:58PM +0100, Uwe Kleine-König wrote:
+> > On Wed, Feb 19, 2020 at 02:21:13PM +0100, Johan Hovold wrote:
+> > > On Thu, Feb 13, 2020 at 10:15:58AM +0100, Uwe Kleine-König wrote:
+> > > > From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > 
+> > > > Introduce a new function tty_kopen_shared() that yields a struct
+> > > > tty_struct. The semantic difference to tty_kopen() is that the tty is
+> > > > expected to be used already. So rename tty_kopen() to
+> > > > tty_kopen_exclusive() for clearness, adapt the single user and put the
+> > > > common code in a new static helper function.
+> > > > 
+> > > > tty_kopen_shared is to be used to implement an LED trigger for tty
+> > > > devices in one of the next patches.
+> > > > 
+> > > > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > >  
+> > > > -/**
+> > > > - *	tty_kopen	-	open a tty device for kernel
+> > > > - *	@device: dev_t of device to open
+> > > > - *
+> > > > - *	Opens tty exclusively for kernel. Performs the driver lookup,
+> > > > - *	makes sure it's not already opened and performs the first-time
+> > > > - *	tty initialization.
+> > > > - *
+> > > > - *	Returns the locked initialized &tty_struct
+> > > > - *
+> > > > - *	Claims the global tty_mutex to serialize:
+> > > > - *	  - concurrent first-time tty initialization
+> > > > - *	  - concurrent tty driver removal w/ lookup
+> > > > - *	  - concurrent tty removal from driver table
+> > > > - */
+> > > > -struct tty_struct *tty_kopen(dev_t device)
+> > > > +static struct tty_struct *tty_kopen(dev_t device, int shared)
+> > > >  {
+> > > >  	struct tty_struct *tty;
+> > > >  	struct tty_driver *driver;
+> > > > @@ -1905,7 +1890,7 @@ struct tty_struct *tty_kopen(dev_t device)
+> > > >  
+> > > >  	/* check whether we're reopening an existing tty */
+> > > >  	tty = tty_driver_lookup_tty(driver, NULL, index);
+> > > > -	if (IS_ERR(tty))
+> > > > +	if (IS_ERR(tty) || shared)
+> > > 
+> > > So here you skip initialisation and return NULL if the tty isn't already
+> > > in use (e.g. is open) when shared is set.
+> > 
+> > Which is good, right? If I remember my tests correctly this even works
+> > if the tty isn't opened but just "exists".
+> 
+> No, this means that your trigger will never be installed unless the port
+> is already open, yet the sysfs interface still returns success (see
+> patch 4/4 dev_store()).
 
-> > +int fsinfo_string(const char *s, struct fsinfo_context *ctx)
-> ...
-> Please add a check here to ensure that "ret" actually fits into the
-> buffer (and use WARN_ON() if you think the check should never fire).
-> Otherwise I think this is too fragile.
+Ah I think I see. tty_driver_lookup_tty() might return NULL which for
+the trigger driver indicates that tty_kopen_shared should be retried,
+right?
 
-How about:
+> Note that the struct tty doesn't exist until the port is opened; it's
+> allocated in tty_init_dev() that you skip above when "shared" is set.
 
-	int fsinfo_string(const char *s, struct fsinfo_context *ctx)
-	{
-		unsigned int len;
-		char *p =3D ctx->buffer;
-		int ret =3D 0;
-		if (s) {
-			len =3D strlen(s);
-			if (len > ctx->buf_size - 1)
-				len =3D ctx->buf_size;
-			if (!ctx->want_size_only) {
-				memcpy(p, s, len);
-				p[len] =3D 0;
-			}
-			ret =3D len;
-		}
-		return ret;
-	}
+That needs fixing. I will try to resolve the dialog with Andy before
+addressing that in the next iteration.
 
-I've also added a check to eliminate the copy if userspace didn't actually
-supply a buffer.
+Best regards
+Uwe
 
-> > +       ret =3D vfs_statfs(path, &buf);
-> > +       if (ret < 0 && ret !=3D -ENOSYS)
-> > +               return ret;
-> ...
-> > +       memcpy(&p->f_fsid, &buf.f_fsid, sizeof(p->f_fsid));
-> =
-
-> What's going on here? If vfs_statfs() returns -ENOSYS, we just use the
-> (AFAICS uninitialized) buf.f_fsid anyway in the memcpy() below and
-> return it to userspace?
-
-Good point.  I've made the access to the buffer contingent on ret=3D=3D0. =
- If I
-don't set it, it will just be left pre-cleared.
-
-> > +       return sizeof(*attr);
-> =
-
-> I think you meant sizeof(*info).
-
-Yes.  I've renamed the buffer point to "p" in all cases so that it's more
-obvious.
-
-> > +       return ctx->usage;
-> =
-
-> It is kind of weird that you have to return the ctx->usage everywhere
-> even though the caller already has ctx...
-
-At this point, it's only used and returned by fsinfo_attributes() and real=
-ly
-is only for the use of the attribute getter function.
-
-I could, I suppose, return the amount of data in ctx->usage and then prese=
-t it
-for VSTRUCT-type objects.  Unfortunately, I can't make the getter return v=
-oid
-since it might have to return an error.
-
-> > +               ctx->buffer =3D kvmalloc(ctx->buf_size, GFP_KERNEL);
-> =
-
-> ctx->buffer is _almost_ always pre-zeroed (see vfs_do_fsinfo() below),
-> except if we have FSINFO_TYPE_OPAQUE or FSINFO_TYPE_LIST with a size
-> bigger than what the attribute's ->size field said? Is that
-> intentional?
-
-Fixed.
-
-> > +struct fsinfo_attribute {
-> > +       unsigned int            attr_id;        /* The ID of the attri=
-bute */
-> > +       enum fsinfo_value_type  type:8;         /* The type of the att=
-ribute's value(s) */
-> > +       unsigned int            flags:8;
-> > +       unsigned int            size:16;        /* - Value size (FSINF=
-O_STRUCT) */
-> > +       unsigned int            element_size:16; /* - Element size (FS=
-INFO_LIST) */
-> > +       int (*get)(struct path *path, struct fsinfo_context *params);
-> > +};
-> =
-
-> Why the bitfields? It doesn't look like that's going to help you much,
-> you'll just end up with 6 bytes of holes on x86-64:
-
-Expanding them to non-bitfields will require an extra 10 bytes, making the
-struct 8 bytes bigger with 4 bytes of padding.  I can do that if you'd rat=
-her.
-
-David
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
