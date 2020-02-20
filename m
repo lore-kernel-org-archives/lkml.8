@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B9AC11D42
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E017C11D40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E8E24656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7322024656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mqTSY/qA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lkhUfWRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgBTGXI (ORCPT
+        id S1726959AbgBTGXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:23:08 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34860 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBTGXG (ORCPT
+        Thu, 20 Feb 2020 01:23:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:40651 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBTGXJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:23:06 -0500
-Received: by mail-pf1-f194.google.com with SMTP id i19so1397832pfa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:06 -0800 (PST)
+        Thu, 20 Feb 2020 01:23:09 -0500
+Received: by mail-pj1-f65.google.com with SMTP id 12so427455pjb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:23:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xQ2hH1WuA3WIBV0TGGs6V9kr1LqyBnjsbugRrEFt9Ew=;
-        b=mqTSY/qAB/RCNO8ZmyzzeSV454kKhoI4MrnzIubx8FG9Hs1YDY8qgkYCOOZ03fnOpj
-         M9d3mq2QPbxb8DI9+NencQP10TelM1jX3r75i6nEudJJNC0pyPwTl5Zo70spE5jj6nwC
-         RYRBy2U0gZtVNXuoqBFMSLZN6PyqSMEXMIPUo=
+        bh=pwqRC5ctrH1VdFS0fVMzPmvmSqkqB6gbtE10lNJENwg=;
+        b=lkhUfWRBv1xyrfKXpHNpejXY5tjKati7oNSoxKJHDX6rEjBakEh/pvJ6R5b0vKWa+8
+         fFuI8to+e/O2K/EkjZncq5qHsxh23YMJ/zGsLCISXUDcwHodtMjokQjvVof8FpTN2Cfe
+         ep5kI5K973MmaHtbRS/OMeRU1o3JsZKE/zgdE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=xQ2hH1WuA3WIBV0TGGs6V9kr1LqyBnjsbugRrEFt9Ew=;
-        b=qeyE22qWiL2v3NI5+UynFp/Bs9fUkLQkINqsLz/t6iKyG9rU2OwWRR6jCXckAyQC16
-         FlYaOo2zUFJw//U5RIYkIxKCt2BBvZQ3qJtkRzRNT22mb8ExFiXaIr31LocKTnDXaI8v
-         Rf13FP6dqZhFPzEmgDATPE+WMROTZliwxl54b6j8q6/aTxUOCUL0HAmrMZuZKYIQJ6uF
-         Z6TvocyQCfGqvw40iqyiKpHyyHWzbNuy7OKEZz6ii/RuLnl046K2Ck0WkkfxNRNwKaQi
-         gb9rcB2pR+Nx8ftus2kKGUjEup31KlmOunJ6et6FbjPJ5gUKUgNvZk43tx/2UmFMVNLP
-         SCRA==
-X-Gm-Message-State: APjAAAUCs88dccjvvz3wfE3nRvzJ3NyRHfROms9p4kQBbGdUWrOFqqrW
-        /iKdLUjpWCeUzCfd5PlBht9zVg==
-X-Google-Smtp-Source: APXvYqzAN57Ts+Ho0KQDmWMLWunp5OP1KQlTHt9upDJZGi6oUtxg6xEDyffRcacLKD/SVypLHcvH+Q==
-X-Received: by 2002:a63:9251:: with SMTP id s17mr31193888pgn.127.1582179786195;
-        Wed, 19 Feb 2020 22:23:06 -0800 (PST)
+        bh=pwqRC5ctrH1VdFS0fVMzPmvmSqkqB6gbtE10lNJENwg=;
+        b=g4EjQY2/QgmkFRXQoe/FddSVJibcXwamK89Vlvr6s2Kj2pWZdkGSljTHCC3//T3d6M
+         qQimvI4JHU6DVThO0tXNZYMg++GwZJUvnM5WVvXQbjnX8CMaDFTNs9zpFy2aTDsb7nJ3
+         Kf/ortEKMeovSzfSxQ2WrvRNBt/Kbs17SFrcMvAW41duksBXOtQ4CG69HCKyx4eC/wmY
+         5ryTG7WRpD57AsUendZdz1NRlKjJfdH/mjcR1iI+Kw5cPSqFJL+La4TAzOp4P6GR+ClD
+         pkruIbLcVgOTv9kmIGh0ORvbEXBT0cjtiaJ9yZuePSOiHPGoa2xns0tQWBkqkeZX5RLX
+         L/qw==
+X-Gm-Message-State: APjAAAUr9TxJvP3++RsJtfR7L4MOqzg5yBWWFnOX72fvlCQz0A2jSBnz
+        BNp9Tg/mcQoxBB5Csb1qN7s0IFslNqI=
+X-Google-Smtp-Source: APXvYqxc7SwRv9hJB9uXL69HhsVrSo4krcpz/lGSTLscsB/VcFhXiDBgLa0uNSXkKjSieR7n61U/VA==
+X-Received: by 2002:a17:90a:f0c1:: with SMTP id fa1mr1784818pjb.129.1582179788586;
+        Wed, 19 Feb 2020 22:23:08 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u126sm1728668pfu.182.2020.02.19.22.23.05
+        by smtp.gmail.com with ESMTPSA id g9sm1814442pfm.150.2020.02.19.22.23.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 22:23:05 -0800 (PST)
+        Wed, 19 Feb 2020 22:23:07 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
 Cc:     Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] e1000: Distribute switch variables for initialization
-Date:   Wed, 19 Feb 2020 22:23:02 -0800
-Message-Id: <20200220062302.68898-1-keescook@chromium.org>
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: core: Distribute switch variables for initialization
+Date:   Wed, 19 Feb 2020 22:23:04 -0800
+Message-Id: <20200220062304.68942-1-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -84,39 +85,32 @@ direct initializations, the warnings remain.
 To avoid these problems, move such variables into the "case" where
 they're used or lift them up into the main function body.
 
-drivers/net/ethernet/intel/e1000/e1000_main.c: In function ‘e1000_xmit_frame’:
-drivers/net/ethernet/intel/e1000/e1000_main.c:3143:18: warning: statement will never be executed [-Wswitch-unreachable]
- 3143 |     unsigned int pull_size;
-      |                  ^~~~~~~~~
+net/core/skbuff.c: In function ‘skb_checksum_setup_ip’:
+net/core/skbuff.c:4809:7: warning: statement will never be executed [-Wswitch-unreachable]
+ 4809 |   int err;
+      |       ^~~
 
 [1] https://bugs.llvm.org/show_bug.cgi?id=44916
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/net/ethernet/intel/e1000/e1000_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/core/skbuff.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-index 2bced34c19ba..a540d0206129 100644
---- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-+++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-@@ -3140,8 +3140,9 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 		hdr_len = skb_transport_offset(skb) + tcp_hdrlen(skb);
- 		if (skb->data_len && hdr_len == len) {
- 			switch (hw->mac_type) {
-+			case e1000_82544: {
- 				unsigned int pull_size;
--			case e1000_82544:
-+
- 				/* Make sure we have room to chop off 4 bytes,
- 				 * and that the end alignment will work out to
- 				 * this hardware's requirements
-@@ -3162,6 +3163,7 @@ static netdev_tx_t e1000_xmit_frame(struct sk_buff *skb,
- 				}
- 				len = skb_headlen(skb);
- 				break;
-+			}
- 			default:
- 				/* do nothing */
- 				break;
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 864cb9e9622f..03d5bb1d469e 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -4805,9 +4805,9 @@ static __sum16 *skb_checksum_setup_ip(struct sk_buff *skb,
+ 				      typeof(IPPROTO_IP) proto,
+ 				      unsigned int off)
+ {
+-	switch (proto) {
+-		int err;
++	int err;
+ 
++	switch (proto) {
+ 	case IPPROTO_TCP:
+ 		err = skb_maybe_pull_tail(skb, off + sizeof(struct tcphdr),
+ 					  off + MAX_TCP_HDR_LEN);
 
