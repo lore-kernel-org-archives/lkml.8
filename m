@@ -2,218 +2,230 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5228C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D62C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B440A20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30E862465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ccstph9S"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fVfRouIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgBTJ3J (ORCPT
+        id S1726859AbgBTJcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:29:09 -0500
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:42489 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726637AbgBTJ3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:29:08 -0500
-Received: from [IPv6:2001:420:44c1:2577:1c10:d9c8:263c:14df]
- ([IPv6:2001:420:44c1:2577:1c10:d9c8:263c:14df])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 4i8kjA0BWyIme4i8njitt1; Thu, 20 Feb 2020 10:29:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1582190946; bh=Qo6Jh/zpoxM7+tR2Ygxuq+giN9gvq12UfP8nl0zpj7U=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=Ccstph9SYK7bKl0+qXR9LqJB3rB7iIcX8ER53EAZi4RKBjtJ1NGi7mlt70pMfpTm3
-         gwLq/OcFYWhI334UKMBuK2eT3EffIeva+kUqqfOj2Rlx+URHFC88wqAkmbapQ7fI0u
-         +gfnEZWvRa+0o6jJSZEfyLMwIaO666TOmZrbFRPF7CgbUR5Aqzi3YOKv8Y/Pv+nn5m
-         Pr/Z//CEbMwHw+18mw9yAD4HKCSqosXEpwd0Fqg0aZUcw4eFeCm2yh+atXh24GsagJ
-         3yzdCVcJxCVbZP4IAubBjyxLpti6PEYBmQCIM0Eih33yf6aWsmTeAQ1JUfjExZkuOz
-         xHWtqBXSj13Vw==
-Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, sboyd@kernel.org
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
- <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
- <920b4276-b2ca-646c-a21b-ca0b9bacf471@nvidia.com>
- <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
- <0f84d37c-105f-8de6-c922-186d2f9ea156@nvidia.com>
- <44fc39f4-8e9f-bcab-8642-fe1cb332016a@xs4all.nl>
- <fb5f1566-9347-8f34-ada0-15c831cbc394@nvidia.com>
- <87c1c97d-abd7-8ca5-0709-d7c64a7d7b39@nvidia.com>
- <32ebc124-cb2d-f545-a5a0-d71192af8219@nvidia.com>
- <d1505a3b-92e0-4f98-1882-c56bdab7e2f6@xs4all.nl>
- <fc7b975a-dffa-4826-7ae5-40abb1f16b3d@nvidia.com>
- <3adacc07-7e3a-2d06-8d18-003b004ede17@nvidia.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <dae3a6dd-f7ab-5e0f-08a9-2b0be4c68fe1@xs4all.nl>
-Date:   Thu, 20 Feb 2020 10:29:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 04:32:14 -0500
+Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:56033
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726637AbgBTJcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:32:14 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eCZDAENR4y143YoVtGHn0oTfmRrIvI23sELAEz0MhoOhVTNk1KvfAg/az1rJUYIsiUz/UUmE0BYA03L/DacKlLQ+wGXrFqZPUWDViyzrFX787nuD26cqIR/CToGSn+oIstj7F+8htGavtAv7vJfJpzSENGPkn5bSMaarupKF8XjeChk6B90Bpk/OwbxQ20onxmuL/me7tHm0vWdWwgWUuAasctfQVBkRvLKnNSSf1/oZv45OxLMV3py1/wD2cjI0Ds08xzBkJ2JBrwwdWleCJaIaEqhrwnYGx61A+ou6CWk29pBV6vwAFR1AfFYI+dlDiVW/mTXskVl1FNve35kIwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pt4oFgNoIYDPOjKqD2PTQdaYF/mkLL4PpREXj7qSy9w=;
+ b=SPi7gv3oMgqON/VbqaDzo+AvCUcOvoy+lYkL/+Oo1El0RSXff/6MBuW+0XgU/CM8rSgiubOzTIozYYjsZz/ZN5pLX3n+j22wukVA3KOQjIpwA8gbSoDNpCxjrQnggFuJsWCGl9upLFeZEZeDc4uoU6rmpxRskvlVmIGTPl0ZlTGoa2XpDGfCP0iqgb1zGJ3L6Iu901sWN2jVyuO/k4Go79FmR4r+8WL+h3ceUur1hzY92V1sFbHE6DigCcSh1sjySaotAtN/l8cpjMmwa/C4n3IjsNz8kA9DypHm71+ox5d2vayUMo6YwUEtKzJx06NWeBd4Teo6mCdnm0lz8fXVjg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=towertech.it smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pt4oFgNoIYDPOjKqD2PTQdaYF/mkLL4PpREXj7qSy9w=;
+ b=fVfRouIjdC2NgVCIoHzWXXeeIZMpvy27y7JjEZIa5JuPD+i9Oho9ukB8EltSom8SYPiqnDwU7tOieI/FJI27nZ60ra63V2EpasN6PKqQsbNgARSp8bYt6lzSRaNXq2BB2CQDZVpIESxYUjzlImV/TvD3WmdwgbDWra0+7FHoRZs=
+Received: from BN6PR02CA0045.namprd02.prod.outlook.com (2603:10b6:404:5f::31)
+ by MN2PR02MB6303.namprd02.prod.outlook.com (2603:10b6:208:1bd::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23; Thu, 20 Feb
+ 2020 09:32:08 +0000
+Received: from BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::208) by BN6PR02CA0045.outlook.office365.com
+ (2603:10b6:404:5f::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend
+ Transport; Thu, 20 Feb 2020 09:32:08 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; towertech.it; dkim=none (message not signed)
+ header.d=none;towertech.it; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT030.mail.protection.outlook.com (10.152.77.172) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
+ via Frontend Transport; Thu, 20 Feb 2020 09:32:07 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j4iBj-0003K5-60; Thu, 20 Feb 2020 01:32:07 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j4iBd-0003ay-W1; Thu, 20 Feb 2020 01:32:02 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1j4iBU-0003WD-Jl; Thu, 20 Feb 2020 01:31:53 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        michal.simek@xilinx.com, sgoud@xilinx.com, shubhraj@xilinx.com
+Cc:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, git@xilinx.com,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Srinivas Goud <srinivas.goud@xilinx.com>
+Subject: [PATCH] rtc: zynqmp: Add calibration set and get support
+Date:   Thu, 20 Feb 2020 15:01:46 +0530
+Message-Id: <1582191106-30431-1-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(39850400004)(189003)(199004)(54906003)(107886003)(8676002)(7696005)(2906002)(4326008)(70206006)(70586007)(5660300002)(316002)(336012)(8936002)(81156014)(81166006)(44832011)(36756003)(9786002)(186003)(356004)(2616005)(6666004)(478600001)(26005)(6636002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6303;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <3adacc07-7e3a-2d06-8d18-003b004ede17@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfKpnDRlyVAgVJ8cU1/lyw3XkRh89XFTSARDz31Fo42OwcBo2rT65KxcZ06sBsDNdclTnFnu4edsk2FmO3jrpkec83Cd+lqQb6+NXPZaRiligzZbh1Cg+
- tJ2tDCCGaDwTiPnBV1pVLp+yR3MMGMjCx+YsvvueAmsx1D2OlDrAExxXTgpHv5Qoro/9NOPoh2/VD7/1L7u6Vu/pmTpOPyp4vbT4O1o1RcPduafmdP7XtcPb
- ucm9QAWqoBS3Q5EoeL0gElGlJx3+mWHjloyg+I53sWhLeFFVtjrAh34LCSqtoZsiqSnOn8d6sLJRWKwsmVXoZOirkw4TcYj7Muhv1KuXyXgULQouGP9OQ+2p
- jpW9fx2izKhsaKIcvkM9Slpn203qQbl1WaCRDRnoCYbfSRtmtQxTabAINxxzb1hAi8DegHF4JTC5iWYfLLFBW2vMpq4m6J3bsj91yUJfDfEUPxIRk5vc3vJQ
- 1sc51/IrGxGQ8+RiSJcJLqQa9KdvM0w/V+0H9WxXCNxUqdEQTqpFmurdhUI/c8nW4IUHh7PhZOwoUCIXjhFuWB+TmRhEpabXuP8pgO59Ahqcc18VHtz+n1c8
- aY5hkQPH9oPBymu02Q24/LDVYJ+qfF3R5QoyouVitSA6XurHaJl0yLhNofiHCTLiT/I=
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4447bab0-e78c-4729-7572-08d7b5e7c136
+X-MS-TrafficTypeDiagnostic: MN2PR02MB6303:
+X-Microsoft-Antispam-PRVS: <MN2PR02MB63033723183F6279F5306D9FAF130@MN2PR02MB6303.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-Forefront-PRVS: 031996B7EF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: eGSZNQ6VCHm+qXuIv0LV+XowRyLN5O8erlPam7CPdfMmgMPujwiAoRI4uyGY03OLlYJokSNrJ4IptjnsJRypc8z0ZP+voZHvCQSFtgLTm4oY02BvRaak9XiOfddzgyFhG39aXwU4n1gTSJqwcU8LcboKmC3EpqNVFVw0JEqj1zVcJMzdAkkSo65qQEd557KsGOeGUQwqgpsTlS0twA99OIOfLm8YOw4uhGsQCgLP/wmMpF4j9wjxx6MinYAf6+Xxp9x4Zsx8ATAlA4K4U/377r/nBgvPszcmR0g/uVahm+95ztgPQF6sNagReHiNGf/UpVNOtd9BuHjtuslwm8I5WfCIqJlZNhL9uh86duUiJ1LzSCHtm6z4d4OsYGyUvPu/Gs76gCMKxbYZNL4mavp+pX0TbhpvO2IBl54qbkflO1FXMMxl1S0XnJZf4BZoG4Aa
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 09:32:07.7467
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4447bab0-e78c-4729-7572-08d7b5e7c136
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6303
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 1:09 AM, Sowjanya Komatineni wrote:
->> Thanks Hans. Probably dma address is not aligned properly. Will check.
-> 
-> 
-> I see this time repro happened right on power up during 1st run of 
-> compliance test and it shows kernel write to read-only error right 
-> during vb2_core_qbuf -> buf_prepare.
-> 
-> it happened after buffers allocation and during pre-queuing of buffers 
-> right before starting 1st stream on power up.
-> 
-> Hi Thierry,
-> 
-> Currently tegra vi driver don't use iommu. Could this be some issue with 
-> contig allocation as iommu is not being used?
+ZynqMp RTC controller has a calibration feature to compensate
+time deviation due to input clock inaccuracy.
+Set and get calibration API's are used for setting and getting
+calibration value from the controller calibration register.
 
-Nothing to do with that. The root cause is that struct tegra_channel_buffer
-must start with struct vb2_v4l2_buffer since that's what vb2 assumes. Instead
-it starts with 'chan'. The really surprising thing is that this didn't cause
-more problems sooner.
+Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+---
+ drivers/rtc/rtc-zynqmp.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-The patch below fixes this KASAN error. Whether it also fixes the original
-error you found is something you need to test, but I think that's very likely.
-
-Regards,
-
-	Hans
-
-diff --git a/drivers/staging/media/tegra/tegra-common.h b/drivers/staging/media/tegra/tegra-common.h
-index 79ec550c6f27..3980a8759e68 100644
---- a/drivers/staging/media/tegra/tegra-common.h
-+++ b/drivers/staging/media/tegra/tegra-common.h
-@@ -221,9 +221,9 @@ struct tegra_vi_channel {
-  * @mw_ack_sp_thresh: MW_ACK_DONE syncpoint threshold
-  */
- struct tegra_channel_buffer {
--	struct tegra_vi_channel *chan;
- 	struct vb2_v4l2_buffer buf;
- 	struct list_head queue;
-+	struct tegra_vi_channel *chan;
- 	dma_addr_t addr;
- 	u32 mw_ack_sp_thresh;
+diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
+index 4b1077e2f826..b4118e9e4fcc 100644
+--- a/drivers/rtc/rtc-zynqmp.c
++++ b/drivers/rtc/rtc-zynqmp.c
+@@ -40,6 +40,12 @@
+ #define RTC_CALIB_MASK		0x1FFFFF
+ #define RTC_ALRM_MASK          BIT(1)
+ #define RTC_MSEC               1000
++#define RTC_FR_MASK             0xF0000
++#define RTC_SEC_MAX_VAL         0xFFFFFFFF
++#define RTC_FR_MAX_TICKS        16
++#define RTC_OFFSET_MAX          150000
++#define RTC_OFFSET_MIN          -150000
++#define RTC_PPB                 1000000000LL
+ 
+ struct xlnx_rtc_dev {
+ 	struct rtc_device	*rtc;
+@@ -184,12 +190,84 @@ static void xlnx_init_rtc(struct xlnx_rtc_dev *xrtcdev)
+ 	writel(xrtcdev->calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
+ }
+ 
++static int xlnx_rtc_read_offset(struct device *dev, long *offset)
++{
++	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
++	long offset_val;
++	unsigned int reg;
++	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
++
++	reg = readl(xrtcdev->reg_base + RTC_CALIB_RD);
++
++	/* Offset with seconds ticks */
++	offset_val = reg & RTC_TICK_MASK;
++	offset_val = offset_val - xrtcdev->calibval;
++	offset_val = offset_val * tick_mult;
++
++	/* Offset with fractional ticks */
++	if (reg & RTC_FR_EN)
++		offset_val += ((reg & RTC_FR_MASK) >> RTC_FR_DATSHIFT)
++			* (tick_mult / RTC_FR_MAX_TICKS);
++	*offset = offset_val;
++
++	return 0;
++}
++
++static int xlnx_rtc_set_offset(struct device *dev, long offset)
++{
++	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
++	short int  max_tick;
++	unsigned char fract_tick = 0;
++	unsigned int  calibval;
++	int fract_offset;
++	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
++
++	/* Make sure offset value is within supported range */
++	if (offset < RTC_OFFSET_MIN || offset > RTC_OFFSET_MAX)
++		return -ERANGE;
++
++	/* Number ticks for given offset */
++	max_tick = div_s64_rem(offset, tick_mult, &fract_offset);
++
++	/* Number fractional ticks for given offset */
++	if (fract_offset) {
++		if (fract_offset < 0) {
++			fract_offset = fract_offset + tick_mult;
++			max_tick--;
++		}
++		if (fract_offset > (tick_mult / RTC_FR_MAX_TICKS)) {
++			for (fract_tick = 1; fract_tick < 16; fract_tick++) {
++				if (fract_offset <=
++				    (fract_tick *
++				     (tick_mult / RTC_FR_MAX_TICKS)))
++					break;
++			}
++		}
++	}
++
++	/* Zynqmp RTC uses second and fractional tick
++	 * counters for compensation
++	 */
++	calibval = max_tick + xrtcdev->calibval;
++
++	if (fract_tick)
++		calibval |= RTC_FR_EN;
++
++	calibval |= (fract_tick <<  RTC_FR_DATSHIFT);
++
++	writel(calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
++
++	return 0;
++}
++
+ static const struct rtc_class_ops xlnx_rtc_ops = {
+ 	.set_time	  = xlnx_rtc_set_time,
+ 	.read_time	  = xlnx_rtc_read_time,
+ 	.read_alarm	  = xlnx_rtc_read_alarm,
+ 	.set_alarm	  = xlnx_rtc_set_alarm,
+ 	.alarm_irq_enable = xlnx_rtc_alarm_irq_enable,
++	.read_offset    = xlnx_rtc_read_offset,
++	.set_offset     = xlnx_rtc_set_offset,
  };
-
-
-> 
-> 
-> [   54.041421]  tegra_channel_buffer_prepare+0x34/0x88
-> [   54.047666]  __buf_prepare+0x1c4/0x230
-> [   54.052094]  vb2_core_qbuf+0x454/0x508
-> [   54.056434]  __vb2_init_fileio+0x1f8/0x2b8
-> [   54.060519]  __vb2_perform_fileio+0x5a0/0x6b8
-> [   54.064864]  vb2_read+0x10/0x18
-> [   54.067996]  vb2_fop_read+0xb0/0xf8
-> [   54.071475]  v4l2_read+0x74/0xb8
-> [   54.074697]  __vfs_read+0x18/0x40
-> [   54.078003]  vfs_read+0x98/0x168
-> [   54.081222]  ksys_read+0x64/0xf0
-> [   54.084439]  __arm64_sys_read+0x14/0x20
-> [   54.088268]  el0_svc_common.constprop.2+0xb0/0x168
-> [   54.093047]  do_el0_svc_compat+0x18/0x38
-> [   54.096961]  el0_sync_compat_handler+0x13c/0x194
-> [   54.101565]  el0_sync_compat+0x144/0x180
-> [   54.105478] Code: b9407802 eb02007f 540001e8 b9007404 (f81f8001)
-> [   54.111559] ---[ end trace 7fbb77a9700492f1 ]---
-> 
->>>
->>>> [   41.222012] Mem abort info:
->>>> [   41.224807]   ESR = 0x9600004f
->>>> [   41.227852]   EC = 0x25: DABT (current EL), IL = 32 bits
->>>> [   41.233160]   SET = 0, FnV = 0
->>>> [   41.236204]   EA = 0, S1PTW = 0
->>>> [   41.239344] Data abort info:
->>>> [   41.242225]   ISV = 0, ISS = 0x0000004f
->>>> [   41.246058]   CM = 0, WnR = 1
->>>> [   41.249026] swapper pgtable: 4k pages, 48-bit VAs, 
->>>> pgdp=0000000081498000
->>>> [   41.255733] [ffff0000f5c3fff8] pgd=000000017f1f8003,
->>>> pud=000000017ec06003, pmd=000000017ea57003, pte=0060000175c3f793
->>>> [   41.266345] Internal error: Oops: 9600004f [#1] PREEMPT SMP
->>>> [   41.271905] Modules linked in: panel_simple tegra_drm
->>>> snd_hda_codec_hdmi snd_hda_tegra crct10dif_ce snd_hda_codec cec
->>>> drm_kms_helper snd_hda_core lp855x_bl drm pwm_tegra ip_tables x_tables
->>>> ipv6 nf_defrag_ipv6
->>>> [   41.290401] CPU: 3 PID: 532 Comm: v4l2-compliance Tainted: G
->>>> W         5.6.0-rc1-00035-g6a105c1c479a-dirty #1
->>>> [   41.300902] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
->>>> [   41.306807] pstate: 60000005 (nZCv daif -PAN -UAO)
->>>> [   41.311593] pc : tegra_channel_buffer_prepare+0x34/0x88
->>>> [   41.316807] lr : __buf_prepare+0x1c4/0x230
->>>> [   41.320891] sp : ffff800011f5baa0
->>>> [   41.324195] x29: ffff800011f5baa0 x28: ffff0000f58cc100
->>>> [   41.329494] x27: ffff800011f5bc58 x26: ffff80001100b780
->>>> [   41.334792] x25: ffff0000f81f1608 x24: ffff0000f7be7c00
->>>> [   41.340091] x23: 00000000c058565d x22: 0000000000000000
->>>> [   41.345390] x21: ffff0000f81f16e8 x20: 0000000000000000
->>>> [   41.350688] x19: ffff0000f5c40000 x18: 0000000000000000
->>>> [   41.355986] x17: 0000000000000000 x16: 0000000000000000
->>>> [   41.361285] x15: ffff0000f8553800 x14: 0000000000000000
->>>> [   41.366583] x13: 003f480000000000 x12: 003f500000000000
->>>> [   41.371881] x11: 0000000100000000 x10: 0000000000000000
->>>> [   41.377180] x9 : 0000000000000000 x8 : ffff0000f5c40258
->>>> [   41.382478] x7 : 0000000000000030 x6 : 0000000000000001
->>>> [   41.387776] x5 : 0000000000000000 x4 : 00000000003f4800
->>>> [   41.393074] x3 : 00000000003f4800 x2 : 00000000003f4800
->>>> [   41.398373] x1 : ffff0000f81f1080 x0 : ffff0000f5c40000
->>>> [   41.403671] Call trace:
->>>> [   41.406109]  tegra_channel_buffer_prepare+0x34/0x88
->>>> [   41.410974]  __buf_prepare+0x1c4/0x230
->>>> [   41.414713]  vb2_core_prepare_buf+0x94/0x110
->>>> [   41.418971]  vb2_prepare_buf+0x74/0xa8
->>>> [   41.422710]  vb2_ioctl_prepare_buf+0x54/0x60
->>>> [   41.426970]  v4l_prepare_buf+0x44/0x58
->>>> [   41.430707]  __video_do_ioctl+0x228/0x3e8
->>>> [   41.434705]  video_usercopy+0x1cc/0x4d0
->>>> [   41.438531]  video_ioctl2+0x14/0x20
->>>> [   41.442010]  v4l2_ioctl+0x44/0x68
->>>> [   41.445316]  v4l2_compat_ioctl32+0x21c/0x1420
->>>> [   41.449665]  __arm64_compat_sys_ioctl+0xc8/0x108
->>>> [   41.454273]  el0_svc_common.constprop.2+0xb0/0x168
->>>> [   41.459051]  do_el0_svc_compat+0x18/0x38
->>>> [   41.462964]  el0_sync_compat_handler+0x13c/0x194
->>>> [   41.467570]  el0_sync_compat+0x144/0x180
->>>> [   41.471483] Code: b9407802 eb02007f 540001e8 b9007404 (f81f8001)
->>>> [   41.477563] ---[ end trace 051c84051f60870a ]---
->>>>
->>>>>>>>>> With using minimum 3 buffers, this issue doesnt happen at all 
->>>>>>>>>> from
->>>>>>>>>> almost 72 hours of testing.
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Will try with setting vb2 queue field min_buffers_needed as 3
->>>>>>>>>> instead
->>>>>>>>>> of adding check in queue setup.
->>>>>>>>>>
->>>>>>>>>>>> +
->>>>>>>>>>>> +     return 0;
->>>>>>>>>>>> +}
+ 
+ static irqreturn_t xlnx_rtc_interrupt(int irq, void *id)
+-- 
+2.7.4
 
