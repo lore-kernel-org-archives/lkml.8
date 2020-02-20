@@ -2,158 +2,159 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3175C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA95C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C719C208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582208541;
-	bh=W1XxzghoGomPsmEhrSpUB0orTne/xvHkP5/NBHjVR6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YhpTc2A7kfExzgBNKIlTrDpTFG9vocTAQ5c7q0oykWRh1StnDAh9RpjGFlXGNubHV
-	 1QmimZGZdJXtdvVJY8sD/37GMmgGPz6JRovFC0Wat0Kk9WDrR9hk2Kk9BNUxPVu6wg
-	 quMRhWoP2gDR2+N5xloEyv97FgSDjYHjiGIRoOZc=
+	by mail.kernel.org (Postfix) with ESMTP id CFF07207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:24:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgBTOWU (ORCPT
+        id S1728276AbgBTOYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbgBTOWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:22:20 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9D3207FD;
-        Thu, 20 Feb 2020 14:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582208538;
-        bh=W1XxzghoGomPsmEhrSpUB0orTne/xvHkP5/NBHjVR6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aukdObaxSVYsNKMVYAMJUK+bIjeopCk3WB0kVw86qSBO96Nc4OpardnPbvs248AlF
-         NiOPdcTB6tZmQIVJmTflhGN5trI+GwEIQST54rJZWCWav+lRPvUyxyWtttoYqASXzr
-         bt25A9vCnTQHAB6/MklKtQthxtcU641JIWLBpc5Y=
-Date:   Thu, 20 Feb 2020 14:22:14 +0000
-From:   Will Deacon <will@kernel.org>
-To:     minyard@acm.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>
-Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
-Message-ID: <20200220142214.GC14459@willie-the-truck>
-References: <20200219152403.3495-1-minyard@acm.org>
+        Thu, 20 Feb 2020 09:24:03 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2451 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgBTOYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:24:03 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 548CFD875E8D61D40FC7;
+        Thu, 20 Feb 2020 14:23:59 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 20 Feb 2020 14:23:58 +0000
+Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 20 Feb
+ 2020 14:23:58 +0000
+Subject: Re: Questions about logic_pio
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+CC:     Wei Xu <xuwei5@hisilicon.com>, bhelgaas <bhelgaas@google.com>,
+        andyshevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Mips <linux-mips@vger.kernel.org>
+References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
+ <5E4E55F7.70800@hisilicon.com>
+ <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
+ <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
+Date:   Thu, 20 Feb 2020 14:23:57 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219152403.3495-1-minyard@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.45]
+X-ClientProxiedBy: lhreml738-chm.china.huawei.com (10.201.108.188) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 09:24:03AM -0600, minyard@acm.org wrote:
-> From: Corey Minyard <cminyard@mvista.com>
+> Also Cc MIPS list to check other's opinions.
 > 
-> I was working on a single-step bug on kgdb on an ARM64 system, and I saw
-> this scenario:
+> Hi John.
 > 
-> * A single step is setup to return to el1
-> * The ERET return to el1
-> * An interrupt is pending and runs before the instruction
-> * As soon as PSTATE.D (the debug disable bit) is cleared, the single
->     step happens in that location, not where it should have.
+
+Hi Jiaxun Yang,
+
+> Thanks for your kind explanation, however, I think this way is
+> violating how I/O ports supposed to work, at least in MIPS world.
+
+For a bit more history, please understand that the core PCI code was 
+managing non-native IO port space in the same way before we added the 
+logic PIO framework. The only real functional change here was that we 
+introduced the indirect-io region within the IO port space, under 
+CONFIG_INDIRECT_PIO.
+
 > 
-> This appears to be due to PSTATE.SS not being cleared when the exception
-> happens.  Per section D.2.12.5 of the ARMv8 reference manual, that
-> appears to be incorrect, it says "As part of exception entry, the PE
-> does all of the following: ...  Sets PSTATE.SS to 0."
-
-Sorry, but I don't follow you here. If PSTATE.SS is not cleared, why would
-you take the step exception?
-
-> However, I appear to not be the first person who has noticed this.  In
-> the el0-only portion of the kernel_entry macro in entry.S, I found the
-> following comment: "Ensure MDSCR_EL1.SS is clear, since we can unmask
-> debug exceptions when scheduling."  Exactly the same scenario, except
-> coming from a userland single step, not a kernel one.
-
-No, I think you might be conflating PSTATE.SS and MDSCR_EL1.SS.
-
-> As I was studying this, though, I realized that the following scenario
-> had an issue:
+>   > >>
+>   > >> After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
+>   > >> for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
+>   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
+>   > >> equal to hw address,
+>   >
+>   > I'm not sure what you mean by simply the hw address.
+>   >
 > 
-> * Kernel enables MDSCR.SS, MDSCR.KDE, MDSCR.MDE (unnecessary), and
->   PSTATE.SS to enable a single step in el1, for kgdb or kprobes,
->   on the current CPU's MDSCR register and the process' PSTATE.SS
->   register.
-> * Kernel returns from the exception with ERET.
-> * An interrupt or page fault happens on the instruction, causing the
->   instruction to not be run, but the exception handler runs.
-> * The exception causes the task to migrate to a new core.
-> * The return from the exception runs on a different processor now,
->   where the MDSCR values are not set up for a single step.
-> * The single step fails to happen.
+> I meant  hw_start should always equal to io_start.
 > 
-> This is bad for kgdb, of course, but it seems really bad for kprobes if
-> this happens.
-
-I don't see how this can happen for kprobes. Have you managed to reproduce
-the failure?
-
-> To fix both these problems, rework the handling of single steps to clear
-> things out upon entry to the kernel from el1, and then to set up single
-> step when returning to el1, and not do the setup in debug-monitors.c.
-> This means that single stepping does not use
-> enable/disable_debug_monitors(); it is no longer necessary to track
-> those flags for single stepping.  This is much like single stepping is
-> handled for el0.  A new flag is added in pt_regs to enable single
-> stepping from el1.  Unfortunately, the old value of PSTATE.SS cannot be
-> used for this because of the hardware bug mentioned earlier.
-
-I don't think there's a hardware bug.
-
-It sound like you're trying to make kernel debugging per-task instead
-of per-cpu, but I don't think that's the right thing to do. What if I /want/
-to debug an interrupt handler? For example, I might have a watchpoint on
-something accessed by timer interrupt.
-
-> As part of this, there is an interaction between single stepping and the
-> other users of debug monitors with the MDSCR.KDE bit.  That bit has to
-> be set for both hardware breakpoints at el1 and single stepping at el1.
-> A new variable was created to store the cpu-wide value of MDSCR.KDE; the
-> single stepping code makes sure not to clear that bit on kernel entry if
-> it's set in the per-cpu variable.
 > 
-> After fixing this and doing some more testing, I ran into another issue:
+> MIPS have their own wrapped inl/outl functions, 
+
+Can you please point me to these? I could not find them in arch/mips
+
+I will also note that arch/mips/include/asm/io.h does not include 
+asm-generic io.h today
+
+doing the samething with
+> PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
 > 
-> * Kernel enables the pt_regs single step
-> * Kernel returns from the exception with ERET.
-> * An interrupt or page fault happens on the instruction, causing the
->   instruction to not be run, but the exception handler runs.
+> Originally, the I/O ports layout seems like this:
+> 
+> 00000020-00000021 : pic1
+> 00000060-0000006f : i8042
+> 00000070-00000077 : rtc0
+> 000000a0-000000a1 : pic2
+> 00000170-00000177 : pata_atiixp
+> 000001f0-000001f7 : pata_atiixp
+> 00000376-00000376 : pata_atiixp
+> 000003f6-000003f6 : pata_atiixp
+> 00000800-000008ff : acpi
+> 00001000-00001008 : piix4_smbus
+> 00004000-0003ffff : pci io space
+>    00004000-00004fff : PCI Bus 0000:01
+>      00004000-000040ff : 0000:01:05.0
+>    00005000-00005fff : PCI Bus 0000:03
+>      00005000-0000501f : 0000:03:00.0
+> 
+> But with PCI_IOBASE defined, I got this:
+> 
+> host bridge /bus@10000000/pci@10000000 ranges:
+>        MEM 0x0040000000..0x007fffffff -> 0x0040000000
+>         IO 0x0000004000..0x0000007fff -> 0x0000004000
+> resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x0020-0x0021]
+> 
+> Because io_start was allocated to 0x0 by Logic PIO.
+> 
+> There are a lot of devices that have fixed ioports thanks to x86's legacy.
 
-This sounds like you've broken debug; we should take the step exception
-in the exception handler. That's the way this is supposed to work.
+Well, yes, I'm not so surprised.
 
-> There's no easy way to find the pt_regs that has the single step flag
-> set.  So a thread info flag was added so that the single step could be
-> disabled in this case.  Both that flag and the flag in pt_regs must be
-> set to enable a single step.
+So if MIPS does not have native IO port access, then surely you need 
+some host bridge to translate host CPU MMIO accesses to port I/O 
+accesses, right? Where are these CPU addresses defined?
 
-Honestly, I get the feeling that you don't really understand the code
-you're changing here and it's a tonne of effort to try to untangle what
-you're doing. That's not necessarily your fault because the debug
-architecture is a nightmare to comprehend, but I'm not keen to change it
-unless we have a really good justification. I'm sure kgdb is riddled with
-bugs but, as I said before, the fixes should be in kgdb, not by tearing
-up the low-level debug code (which has the potential to break other users).
+> For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveable,
+> and they can't be managed by logic pio subsystem. > Also, the PCI Hostbridge got implied by DeviceTree that it's I/O range
+> started from 0x4000 in bus side
 
-Maybe it would be easier if you tried to fix one problem per patch,
-preferably with a way to reproduce the issue you're seeing each time?
+which bus is this?
 
-Will
+, but then, Logic PIO remapped to PCI_IOBASE + 0x0.
+> The real address should be PCI_IOBASE + 0x4000,
+
+You seem to be using two methods to manage IO port space, and they seem 
+to be conflicting.
+
+> hardware never got correctly informed about that. And there is still no way to
+> transform to correct address as it's inside the MMIO_LIMIT.
+> 
+> So the question comes to why we're allocating io_start for MMIO PCI_IOBASE
+> rather than just check the range provided doesn't overlap each other or exceed
+> the MMIO_LIMIT.
+
+When PCI_IOBASE is defined, we work on the basis that any IO port range 
+in the system is registered for a logical PIO region, which manages the 
+actual IO port addresses - see logic_pio_trans_cpuaddr().
+
+Thanks,
+John
