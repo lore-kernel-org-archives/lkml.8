@@ -2,31 +2,31 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61DFC11D20
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B49DC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEDD207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41090206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgBTUhX (ORCPT
+        id S1729219AbgBTUhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:37:23 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:45146 "EHLO ale.deltatee.com"
+        Thu, 20 Feb 2020 15:37:34 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:45126 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbgBTUhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:37:03 -0500
+        id S1728582AbgBTUhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:37:01 -0500
 Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
         by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sZ8-0005cN-BQ; Thu, 20 Feb 2020 13:37:02 -0700
+        id 1j4sZ8-0005cd-KG; Thu, 20 Feb 2020 13:37:00 -0700
 Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
         (envelope-from <gunthorp@deltatee.com>)
-        id 1j4sZ7-0006y5-K0; Thu, 20 Feb 2020 13:36:57 -0700
+        id 1j4sZ8-0006yS-Ee; Thu, 20 Feb 2020 13:36:58 -0700
 From:   Logan Gunthorpe <logang@deltatee.com>
 To:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
 Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
@@ -34,16 +34,19 @@ Cc:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
         Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>,
         Max Gurtovoy <maxg@mellanox.com>,
         Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 20 Feb 2020 13:36:43 -0700
-Message-Id: <20200220203652.26734-1-logang@deltatee.com>
+        Logan Gunthorpe <logang@deltatee.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Date:   Thu, 20 Feb 2020 13:36:51 -0700
+Message-Id: <20200220203652.26734-9-logang@deltatee.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200220203652.26734-1-logang@deltatee.com>
+References: <20200220203652.26734-1-logang@deltatee.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, Chaitanya.Kulkarni@wdc.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org, hch@lst.de, sagi@grimberg.me, kbusch@kernel.org, axboe@fb.com, maxg@mellanox.com, sbates@raithlin.com, logang@deltatee.com, Chaitanya.Kulkarni@wdc.com, chaitanya.kulkarni@wdc.com
 X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v11 0/9]  nvmet: add target passthru commands support
+Subject: [PATCH v11 8/9] nvmet-passthru: Add enable/disable helpers
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,197 +54,220 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This patch adds helper functions which are used in the NVMeOF configfs
+when the user is configuring the passthru subsystem. Here we ensure
+that only one subsys is assigned to each nvme_ctrl by using an xarray
+on the cntlid.
 
-This is v11 of the passthru patchset. There was little review for v10
-so I'm hoping to get some more review this cycle.
+The subsystem's version number is overridden by the passed through
+controller's version. However, if that version is less than 1.2.1,
+then we bump the advertised version to that and print a warning
+in dmesg.
 
-v10 addressed the vast majority of Christoph's feedback from v9.There
-were a couple issues that were not addressed discussed below.
+Based-on-a-patch-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ drivers/nvme/target/configfs.c |  3 ++
+ drivers/nvme/target/core.c     | 10 +++-
+ drivers/nvme/target/nvmet.h    | 12 +++++
+ drivers/nvme/target/passthru.c | 87 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 111 insertions(+), 1 deletion(-)
 
-I don't think cloning the ctrl_id or the subsysnqn is a good idea.
-I sent an email trying to explain why here[1] but there was no response.
-In short, I think cloning the ctrl_id will break multipathing over
-fabrics and copying the subsysnqn only has the effect of breaking
-loopback; the user can always copy the underlying subsysnqn if it
-makes sense for their overall system.
-
-I maintain overriding the CMIC bit in the ctrl id is necessary to
-allow multipath over fabrics even if the underlying device did
-not support multipath.
-
-I also think the black list for admin commands is appropriate, and I
-added it based on Sagi's feedback[2]. There are plenty of commands that
-may be dangerous like firmware update and format NVM commands, and NS
-attach commands won't work out of the box because we don't copy the
-ctrl_id. It seems like there's more commands to be careful of than ones
-that are that are obviously acceptable. So, I think the prudent course
-is blacklisting by default until someone has a usecase and can show
-the command is safe seems and makes sense. For our present use cases,
-the identify, log page and vendor specific commands are all that we
-care about.
-
-A git branch is available here:
-
-https://github.com/sbates130272/linux-p2pmem nvmet_passthru_v11
-
-Thanks,
-
-Logan
-
-[1] https://lore.kernel.org/linux-block/247eca47-c3bc-6452-fb19-f7aa27b05a60@deltatee.com/
-[2] https://lore.kernel.org/linux-block/e4430207-7def-8776-0289-0d58689dc0cd@grimberg.me/
-
---
-
-v11 Changes:
-  1. Rebased onto v5.6-rc2
-  2. Collected Max's Reviewed-By tag
-
-v10 Changes:
-  1. Rebased onto v5.5-rc1
-  2. Disable all exports in core nvme if CONFIG_NVME_TARGET_PASSTHRU is
-     not set and put them near the end of the file with a big fat
-     comment (per Christoph)
-  3. Don't fake up the vs field: pass it through as is and bump
-     it to 1.2.1 if it is below that (per Christoph)
-  4. Rework how passthru requests are submitted into the core
-     with proper nvme_passthru_start/end handling (per Christoph)
-  5. Rework how commands are parsed with passthru hooks in
-     parse_admin_cmd() and nvmet_parse_io_cmd() (per Christoph)
-  6. Rework commands are handled so they are only done in a work
-     item if absolutely necessary (per Christoph)
-  7. The data_len hack was dropped as a patchset was introduced to
-     remove data_len altogether (per Christoph)
-  8. The passthru accounting changes are now in v5.5-rc1
-  9. A large number of other minor cleanups that were pointed out by
-     Christoph
-
-v9 Changes:
-  1. Rebased onto v5.4-rc2 (required adjusting nvme_identify_ns() usage)
-  2. Collected Sagi's Reviewed-By Tags
-  3. Squashed seperate Kconfig patch into passthru patch (Per Sagi)
-  4. Set REQ_FUA for flush requests and remove special casing
-     on RQF_IO_STAT (Per Sagi)
-
-v8 Changes:
-  1. Rebased onto v5.3-rc6
-  2. Collected Max's Reviewed-By tags
-  3. Converted admin command black-list to a white-list, but
-     allow all vendor specific commands. With this, we feel
-     it's safe to allow multiple connections from hosts.
-     (As per Sagi's feedback)
-
-v7 Changes:
-  1. Rebased onto v5.3-rc2
-  2. Rework nvme_ctrl_get_by_path() to use filp_open() instead of
-     the cdev changes that were in v6. (Per Al)
-  3. Override the cmic bit to allow multipath and allow
-     multiple connections from the same hostnqn. (At the same
-     time I cleaned up the method of rejecting multiple connections.)
-     See Patch 8)
-  4. Found a bug when used with the tcp transport (See Patch 10)
-
-v6 Changes:
-  1. Rebased onto v5.3-rc1
-  2. Rework configfs interface to simply be a passthru directory
-     within the existing subsystem. The directory is similar to
-     and consistent with a namespace directory.
-  3. Have the configfs take a path instead of a bare controller name
-  4. Renamed the main passthru file to io-cmd-passthru.c for consistency
-     with the file and block-dev methods.
-  5. Cleaned up all the CONFIG_NVME_TARGET_PASSTHRU usage to remove
-     all the inline #ifdefs
-  6. Restructured nvmet_passthru_make_request() a bit for clearer code
-  7. Moved nvme_find_get_ns() call into nvmet_passthru_execute_cmd()
-     seeing calling it in nvmet_req_init() causes a lockdep warning
-     due to nvme_find_get_ns() being able to sleep.
-  8. Added a check in nvmet_passthru_execute_cmd() to ensure we don't
-     violate queue_max_segments or queue_max_hw_sectors and overrode
-     mdts to ensure hosts don't intentionally submit commands
-     that will exceed these limits.
-  9. Reworked the code which ensures there's only one subsystem per
-     passthru controller to use an xarray instead of a list as this is
-     simpler and more easily fixed some bugs triggered by disabling
-     subsystems that weren't enabled.
- 10. Removed the overide of the target cntlid with the passthru cntlid;
-     this seemed like a really bad idea especially in the presence of
-     mixed systems as you could end up with two ctrlrs with the same
-     cntlid. For now, commands that depend on cntlid are black listed.
- 11. Implement block accounting for passthru so the target can track
-     usage using /proc/diskstats
- 12. A number of other minor bug fixes and cleanups
-
-v5 Changes (not sent to list, from Chaitanya):
-  1. Added workqueue for admin commands.
-  2. Added kconfig option for the pass-thru feature.
-  3. Restructure the parsing code according to your suggestion,
-     call nvmet_xxx_parse_cmd() from nvmet_passthru_parse_cmd().
-  4. Use pass-thru instead of pt.
-  5. Several cleanups and add comments at the appropriate locations.
-  6. Minimize the code for checking pass-thru ns across all the subsystems.
-  7. Removed the delays in the ns related admin commands since I was
-     not able to reproduce the previous bug.
-
-v4 Changes:
-  1. Add request polling interface to the block layer.
-  2. Use request polling interface in the NVMEoF target passthru code
-     path.
-  3. Add checks suggested by Sagi for creating one target ctrl per
-     passthru ctrl.
-  4. Don't enable the namespace if it belongs to the configured passthru
-     ctrl.
-  5. Adjust the code latest kernel.
-
-v3 Changes:
-  1. Split the addition of passthru command handlers and integration
-     into two different patches since we add guards to create one target
-     controller per passthru controller. This way it will be easier to
-     review the code.
-  2. Adjust the code for 4.18.
-
-v2 Changes:
-  1. Update the new nvme core controller find API naming and
-     changed the string comparison of the ctrl.
-  2. Get rid of the newly added #defines for target ctrl values.
-  3. Use the newly added structure members in the same patch where
-     they are used. Aggregate the passthru command handling support
-     and integration with nvmet-core into one patch.
-  4. Introduce global NVMe Target subsystem list for connected and
-     not connected subsystems on the target side.
-  5. Add check when configuring the target ns and target
-     passthru ctrl to allow only one target controller to be created
-     for one passthru subsystem.
-  6. Use the passthru ctrl cntlid when creating the
-     target controller.
-
-Chaitanya Kulkarni (1):
-  nvmet-passthru: Introduce NVMet passthru Kconfig option
-
-Logan Gunthorpe (8):
-  nvme-core: Clear any SGL flags in passthru commands
-  nvme: Create helper function to obtain command effects
-  nvme: Move nvme_passthru_[start|end]() calls to common helper
-  nvme-core: Introduce nvme_ctrl_get_by_path()
-  nvme: Export existing nvme core functions
-  nvmet-passthru: Add passthru code to process commands
-  nvmet-passthru: Add enable/disable helpers
-  nvmet-configfs: Introduce passthru configfs interface
-
- drivers/nvme/host/core.c        | 229 ++++++++++-------
- drivers/nvme/host/nvme.h        |  14 +
- drivers/nvme/target/Kconfig     |  10 +
- drivers/nvme/target/Makefile    |   1 +
- drivers/nvme/target/admin-cmd.c |   7 +-
- drivers/nvme/target/configfs.c  | 102 ++++++++
- drivers/nvme/target/core.c      |  13 +-
- drivers/nvme/target/nvmet.h     |  52 ++++
- drivers/nvme/target/passthru.c  | 435 ++++++++++++++++++++++++++++++++
- include/linux/nvme.h            |   1 +
- 10 files changed, 771 insertions(+), 93 deletions(-)
- create mode 100644 drivers/nvme/target/passthru.c
-
-
-base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
---
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index 98613a45bd3b..354d43fab8db 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -828,6 +828,9 @@ static ssize_t nvmet_subsys_attr_version_store(struct config_item *item,
+ 	int major, minor, tertiary = 0;
+ 	int ret;
+ 
++	/* passthru subsystems use the underlying controller's version */
++	if (nvmet_passthru_ctrl(subsys))
++		return -EINVAL;
+ 
+ 	ret = sscanf(page, "%d.%d.%d\n", &major, &minor, &tertiary);
+ 	if (ret != 2 && ret != 3)
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 40998b514439..b282fb4e45ed 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -522,6 +522,12 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
+ 
+ 	mutex_lock(&subsys->lock);
+ 	ret = 0;
++
++	if (nvmet_passthru_ctrl(subsys)) {
++		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
++		goto out_unlock;
++	}
++
+ 	if (ns->enabled)
+ 		goto out_unlock;
+ 
+@@ -1418,7 +1424,7 @@ struct nvmet_subsys *nvmet_subsys_alloc(const char *subsysnqn,
+ 	if (!subsys)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	subsys->ver = NVME_VS(1, 3, 0); /* NVMe 1.3.0 */
++	subsys->ver = NVMET_DEFAULT_VS;
+ 	/* generate a random serial number as our controllers are ephemeral: */
+ 	get_random_bytes(&subsys->serial, sizeof(subsys->serial));
+ 
+@@ -1459,6 +1465,8 @@ static void nvmet_subsys_free(struct kref *ref)
+ 
+ 	WARN_ON_ONCE(!list_empty(&subsys->namespaces));
+ 
++	nvmet_passthru_subsys_free(subsys);
++
+ 	kfree(subsys->subsysnqn);
+ 	kfree(subsys);
+ }
+diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+index 6e632d0a88ca..7c247d803015 100644
+--- a/drivers/nvme/target/nvmet.h
++++ b/drivers/nvme/target/nvmet.h
+@@ -20,6 +20,8 @@
+ #include <linux/blkdev.h>
+ #include <linux/radix-tree.h>
+ 
++#define NVMET_DEFAULT_VS		NVME_VS(1, 3, 0)
++
+ #define NVMET_ASYNC_EVENTS		4
+ #define NVMET_ERROR_LOG_SLOTS		128
+ #define NVMET_NO_ERROR_LOC		((u16)-1)
+@@ -230,6 +232,7 @@ struct nvmet_subsys {
+ 
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
+ 	struct nvme_ctrl	*passthru_ctrl;
++	char			*passthru_ctrl_path;
+ #endif /* CONFIG_NVME_TARGET_PASSTHRU */
+ };
+ 
+@@ -512,6 +515,9 @@ static inline u32 nvmet_dsm_len(struct nvmet_req *req)
+ }
+ 
+ #ifdef CONFIG_NVME_TARGET_PASSTHRU
++void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys);
++int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys);
++void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys);
+ u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req);
+ u16 nvmet_setup_passthru_command(struct nvmet_req *req);
+ static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
+@@ -519,6 +525,12 @@ static inline struct nvme_ctrl *nvmet_passthru_ctrl(struct nvmet_subsys *subsys)
+ 	return subsys->passthru_ctrl;
+ }
+ #else /* CONFIG_NVME_TARGET_PASSTHRU */
++static inline void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
++{
++}
++static inline void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++}
+ static inline u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
+ {
+ 	return 0;
+diff --git a/drivers/nvme/target/passthru.c b/drivers/nvme/target/passthru.c
+index 01127bfa6c8a..0705f4ff8b16 100644
+--- a/drivers/nvme/target/passthru.c
++++ b/drivers/nvme/target/passthru.c
+@@ -11,6 +11,11 @@
+ #include "../host/nvme.h"
+ #include "nvmet.h"
+ 
++/*
++ * xarray to maintain one passthru subsystem per nvme controller.
++ */
++static DEFINE_XARRAY(passthru_subsystems);
++
+ static void nvmet_passthru_execute_cmd_work(struct work_struct *w)
+ {
+ 	struct nvmet_req *req = container_of(w, struct nvmet_req, p.work);
+@@ -346,3 +351,85 @@ u16 nvmet_parse_passthru_admin_cmd(struct nvmet_req *req)
+ 		return NVME_SC_INVALID_OPCODE | NVME_SC_DNR;
+ 	}
+ }
++
++int nvmet_passthru_ctrl_enable(struct nvmet_subsys *subsys)
++{
++	struct nvme_ctrl *ctrl;
++	int ret = -EINVAL;
++	void *old;
++
++	mutex_lock(&subsys->lock);
++	if (!subsys->passthru_ctrl_path)
++		goto out_unlock;
++	if (subsys->passthru_ctrl)
++		goto out_unlock;
++
++	if (subsys->nr_namespaces) {
++		pr_info("cannot enable both passthru and regular namespaces for a single subsystem");
++		goto out_unlock;
++	}
++
++	ctrl = nvme_ctrl_get_by_path(subsys->passthru_ctrl_path);
++	if (IS_ERR(ctrl)) {
++		ret = PTR_ERR(ctrl);
++		pr_err("failed to open nvme controller %s\n",
++		       subsys->passthru_ctrl_path);
++
++		goto out_unlock;
++	}
++
++	old = xa_cmpxchg(&passthru_subsystems, ctrl->cntlid, NULL,
++			 subsys, GFP_KERNEL);
++	if (xa_is_err(old)) {
++		ret = xa_err(old);
++		goto out_put_ctrl;
++	}
++
++	if (old)
++		goto out_put_ctrl;
++
++	subsys->passthru_ctrl = ctrl;
++	subsys->ver = ctrl->vs;
++
++	if (subsys->ver < NVME_VS(1, 2, 1)) {
++		pr_warn("nvme controller version is too old: %d.%d.%d, advertising 1.2.1\n",
++			(int)NVME_MAJOR(subsys->ver),
++			(int)NVME_MINOR(subsys->ver),
++			(int)NVME_TERTIARY(subsys->ver));
++		subsys->ver = NVME_VS(1, 2, 1);
++	}
++
++	mutex_unlock(&subsys->lock);
++	return 0;
++
++out_put_ctrl:
++	nvme_put_ctrl(ctrl);
++out_unlock:
++	mutex_unlock(&subsys->lock);
++	return ret;
++}
++
++static void __nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++	if (subsys->passthru_ctrl) {
++		xa_erase(&passthru_subsystems, subsys->passthru_ctrl->cntlid);
++		nvme_put_ctrl(subsys->passthru_ctrl);
++	}
++	subsys->passthru_ctrl = NULL;
++	subsys->ver = NVMET_DEFAULT_VS;
++}
++
++void nvmet_passthru_ctrl_disable(struct nvmet_subsys *subsys)
++{
++	mutex_lock(&subsys->lock);
++	__nvmet_passthru_ctrl_disable(subsys);
++	mutex_unlock(&subsys->lock);
++}
++
++void nvmet_passthru_subsys_free(struct nvmet_subsys *subsys)
++{
++	mutex_lock(&subsys->lock);
++	__nvmet_passthru_ctrl_disable(subsys);
++	kfree(subsys->passthru_ctrl_path);
++	mutex_unlock(&subsys->lock);
++}
+-- 
 2.20.1
+
