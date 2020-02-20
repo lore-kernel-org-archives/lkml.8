@@ -2,148 +2,190 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F23C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ED7C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0E324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582192006;
-	bh=B/LqQCQnlMQX7649PVfVKS6FwJnxYggxUzAnKDE8Hjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zf33k6THTWBxoWK6UjmDOBRtUHyZkBChgGaZ/YTOOhxnOA9zQ0Fqvvm3xDKzPrG0C
-	 TKW4ffmrFcyutWRWvAwTYi7/Qz2fOJw3z2syvqiPkwnWzUJvX7vVQzFcBbTR8OoeJf
-	 SCUwFg9Pdy4MXxCnh/wnAIbBNDFpDajhrihxO4vE=
+	by mail.kernel.org (Postfix) with ESMTP id 41EE224656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkpaZeHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgBTJqo (ORCPT
+        id S1726967AbgBTJsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:46:44 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40325 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgBTJqo (ORCPT
+        Thu, 20 Feb 2020 04:48:41 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:50873 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbgBTJsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:46:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t3so3823637wru.7;
-        Thu, 20 Feb 2020 01:46:42 -0800 (PST)
+        Thu, 20 Feb 2020 04:48:40 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a5so1273717wmb.0;
+        Thu, 20 Feb 2020 01:48:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E4lJsyRn5c8MRRBS5Cfwnz0ljZFD9tB/hN4lq7BDblw=;
+        b=WkpaZeHVz17Y1TMUSg/nKktlNbfBErrdzoba0X8m4cd2P+F0769UaDz6I4KmBu48o2
+         lMoOi/Cwm+PHYYNbWqK7Ddg/jlaRJig2OiNl83hjM8JEctgMO879Fa5MFFDWMnuNi1k3
+         oB1m3BjwL1HKQZvs4FU4NBj4c0gf6LY8jqmIItkPOMh1NVaVIR8uNdWFlGs43xKkFye8
+         MIRnGs1ImZeWy/9DqLH6/lyVmwBM206+HSE37MuJ7ym2aMui87j7PTvT1b25lk2LHNCf
+         oSNvige6GVgAR0IuWMvroCs7ZPRfiu/roVTLsk7djT08it5jZA0EliiUAAzBaB6lW8jC
+         eAew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oRcv0oZQdOVrWzd1qr9lYtPniV+jiJ713yM3v9mJOlY=;
-        b=jRC5H94gY4zCIOQJxm8Qk622Y8og9gk8/ii6TNBdcpv3IOb4E3BY5Hvbfy3Dkm8fsa
-         5I5gDfJ60rWQ0Xr0ZgIphujHM9EKruwZiZBZU/lkuzxPgjG2NNbxooV8mVc6kNqkeHrm
-         UOirhlzVxEXBqO4ZiHJqiVkZ7yVKM3exYHL3UNP/zJB5o7xatKuMqdJgxXMvRWhy+161
-         1HPRIhz0xH0NFOtDCoih8LfNjmfwEHI9YZXe1Wz9MHaFZkFSw1wW8Lh30FbUxDnFg/K3
-         QdAp/A+FS7YVuC2HatQmjmBfcUwpW0Vy80ugN8m2Q/C141A0OcLXjPwa5YyZ7FNs+JeD
-         cdZg==
-X-Gm-Message-State: APjAAAWJL32EaVxh7Sx26DjfJk9kQWXIyvf6RAz0w87ulrSg2abf7nDD
-        pL85H7e5cEFI8nSSHjeYz2g=
-X-Google-Smtp-Source: APXvYqxVsZPoloFl8GWV4xlA+vljGixiQhWbtX8JzJzdcvTayL4q97ix36Y5HD94YcgGjeNyCYPj2A==
-X-Received: by 2002:adf:ed8e:: with SMTP id c14mr41341248wro.80.1582192001250;
-        Thu, 20 Feb 2020 01:46:41 -0800 (PST)
-Received: from localhost (ip-37-188-133-21.eurotel.cz. [37.188.133.21])
-        by smtp.gmail.com with ESMTPSA id h128sm4202184wmh.33.2020.02.20.01.46.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 01:46:40 -0800 (PST)
-Date:   Thu, 20 Feb 2020 10:46:39 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
-Message-ID: <20200220094639.GD20509@dhcp22.suse.cz>
-References: <20200219181219.54356-1-hannes@cmpxchg.org>
- <20200219183731.GC11847@dhcp22.suse.cz>
- <20200219191618.GB54486@cmpxchg.org>
- <20200219195332.GE11847@dhcp22.suse.cz>
- <20200219211735.GD54486@cmpxchg.org>
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E4lJsyRn5c8MRRBS5Cfwnz0ljZFD9tB/hN4lq7BDblw=;
+        b=Vf4yCgA2V6MZuKzB/BVzvJRQQeJQhdTnhHZgH7sqlNiUIvEtEcoeHhNfS6kKk4fGHU
+         otve9WyqqDoEtD7Kthu3NtUHWrR7CeLU3ejwoFdzI/vwRhpToZWRwKk5cnWU738LihNu
+         im3T7d+OpFmKuS2KPL96r5mN1jt/QhAm0219aRCveqYtxoPXuGXArYNVN+9Dcte/y9l4
+         6bphaohvmEdhdd08F8Bdo1ajh22Iaz9K1a1d7iQ35Qg3tka30K56vTf07jm1leTzEV/C
+         89JtZruUbY+QxiUH3+bWA4mSSXIpQ3hp4pFzf5+hu60wcoUToZlH5jjhN2f3x36sPnx/
+         0AZg==
+X-Gm-Message-State: APjAAAXHUcf4vKBg8qozoKJ7wXjMnjx0wfWvBdyXDNnyZZnWGrDWfDgA
+        mIfD4reU6XW0veQvJW+2Kt9Ge+N8+E2nUQ==
+X-Google-Smtp-Source: APXvYqyPmzwx/Erf5L+zeER2/OS5TZCx8jTOE2DdSiG/Rt9EQsSfncEy52jqOK7Nu9XPwLSMgu1jIg==
+X-Received: by 2002:a1c:451:: with SMTP id 78mr3269673wme.125.1582192117251;
+        Thu, 20 Feb 2020 01:48:37 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id k10sm3752046wrd.68.2020.02.20.01.48.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 01:48:36 -0800 (PST)
+Subject: Re: [RESEND PATCH v2 9/9] ath5k: Constify ioreadX() iomem argument
+ (as in generic implementation)
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Nick Kossifidis <mickflemm@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jon Mason <jdmason@kudzu.us>, Allen Hubbe <allenbh@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-media@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-ntb@googlegroups.com,
+        virtualization@lists.linux-foundation.org,
+        linux-arch@vger.kernel.org
+References: <20200219175007.13627-1-krzk@kernel.org>
+ <20200219175007.13627-10-krzk@kernel.org>
+From:   Jiri Slaby <jirislaby@gmail.com>
+Autocrypt: addr=jirislaby@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <518a9023-f802-17b3-fca5-582400bc34ae@gmail.com>
+Date:   Thu, 20 Feb 2020 10:48:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219211735.GD54486@cmpxchg.org>
+In-Reply-To: <20200219175007.13627-10-krzk@kernel.org>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-02-20 16:17:35, Johannes Weiner wrote:
-> On Wed, Feb 19, 2020 at 08:53:32PM +0100, Michal Hocko wrote:
-> > On Wed 19-02-20 14:16:18, Johannes Weiner wrote:
-[...]
-> > > [ This is generally work in process: for example, if you isolate
-> > >   workloads with memory.low, kswapd cpu time isn't accounted to the
-> > >   cgroup that causes it. Swap IO issued by kswapd isn't accounted to
-> > >   the group that is getting swapped.
-> > 
-> > Well, kswapd is a system activity and as such it is acceptable that it
-> > is accounted to the system. But in this case we are talking about a
-> > memcg configuration which influences all other workloads by stealing CPU
-> > cycles from them 
+On 19. 02. 20, 18:50, Krzysztof Kozlowski wrote:
+> The ioreadX() helpers have inconsistent interface.  On some architectures
+> void *__iomem address argument is a pointer to const, on some not.
 > 
-> From a user perspective this isn't a meaningful distinction.
+> Implementations of ioreadX() do not modify the memory under the address
+> so they can be converted to a "const" version for const-safety and
+> consistency among architectures.
 > 
-> If I partition my memory among containers and one cgroup is acting
-> out, I would want the culprit to be charged for the cpu cycles the
-> reclaim is causing. Whether I divide my machine up using memory.low or
-> using memory.max doesn't really matter: I'm choosing between the two
-> based on a *memory policy* I want to implement - work-conserving vs
-> non-conserving. I shouldn't have to worry about the kernel tracking
-> CPU cycles properly in the respective implementations of these knobs.
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> ---
+>  drivers/net/wireless/ath/ath5k/ahb.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> So kswapd is very much a cgroup-attributable activity, *especially* if
-> I'm using memory.low to delineate different memory domains.
+> diff --git a/drivers/net/wireless/ath/ath5k/ahb.c b/drivers/net/wireless/ath/ath5k/ahb.c
+> index 2c9cec8b53d9..8bd01df369fb 100644
+> --- a/drivers/net/wireless/ath/ath5k/ahb.c
+> +++ b/drivers/net/wireless/ath/ath5k/ahb.c
+> @@ -138,18 +138,18 @@ static int ath_ahb_probe(struct platform_device *pdev)
+>  
+>  	if (bcfg->devid >= AR5K_SREV_AR2315_R6) {
+>  		/* Enable WMAC AHB arbitration */
+> -		reg = ioread32((void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
+> +		reg = ioread32((const void __iomem *) AR5K_AR2315_AHB_ARB_CTL);
 
-While I understand what you are saying I do not think this is easily
-achievable with the current implementation. The biggest problem I can
-see is that you do not have a clear information who to charge for
-the memory shortage on a particular NUMA node with a pure low limit
-based balancing because the limit is not NUMA aware. Besides that the
-origin of the memory pressure might be outside of any memcg.  You can
-punish/account all memcgs in excess in some manner, e.g. proportionally
-to their size/excess but I am not really sure how fair that will
-be. Sounds like an interesting project but also sounds like tangent to
-this patch.
+While I understand why the parameter of ioread32 should be const, I
+don't see a reason for these casts on the users' side. What does it
+bring except longer code to read?
 
-High/Max limits are quite different because they are dealing with
-the internal memory pressure and you can attribute it to the
-cgroup/hierarchy which is in excess. There is a clear domain to reclaim
-from. This is an easier model to reason about IMHO.
-
-> > without much throttling on the consumer side - especially when the
-> > memory is reclaimable without a lot of sleeping or contention on
-> > locks etc.
-> 
-> The limiting factor on the consumer side is IO. Reading a page is way
-> more costly than reclaiming it, which is why we built our isolation
-> stack starting with memory and IO control and are only now getting to
-> working on proper CPU isolation.
-> 
-> > I am absolutely aware that we will never achieve a perfect isolation due
-> > to all sorts of shared data structures, lock contention and what not but
-> > this patch alone just allows spill over to unaccounted work way too
-> > easily IMHO.
-> 
-> I understand your concern about CPU cycles escaping, and I share
-> it. My point is that this patch isn't adding a problem that isn't
-> already there, nor is it that much of a practical concern at the time
-> of this writing given the state of CPU isolation in general.
-
-I beg to differ here. Ppu controller should be able to isolate user
-contexts performing high limit reclaim now. Your patch is changing that
-functionality to become unaccounted for a large part and that might be
-seen as a regression for those workloads which partition the system by
-using high limit and also rely on cpu controller because workloads are
-CPU sensitive.
-
-Without the CPU controller support this patch is not complete and I do
-not see an absolute must to marge it ASAP because it is not a regression
-fix or something we cannot live without.
+thanks,
 -- 
-Michal Hocko
-SUSE Labs
+js
