@@ -2,175 +2,105 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72D3C11D1C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DAAC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F77206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081C2206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582227971;
-	bh=8n/tGiChs7HK/SdTYqKi3okvm4Cg4Bv8EZZNVfm7Rl4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zFREWto6iJK2pb2YToFpvngDNa+S5X/b6MLLkqbNd08S9SwKROqsza36D0m0bPn3/
-	 n/3trQfMyRUzP0pq5gej7IAO6fdL9hwgOi+9gvO1PVtwFfLb7kZ9RUDb7TvMgoEJ3y
-	 1QAZgy0mx7R9Kyhw3elw6CfYcEIfqSB+Jba3qq2w=
+	s=default; t=1582227985;
+	bh=UmTOehUYik3GEC/kCFIcKCrKniVLy5goVYP5EfoTz5c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xeg8K7QN7M9hDDvGlJDJFqequ4BgJnprOUAKyrYPMUnG1edqb5iV3qY3oH8G/JSPd
+	 bcqk8CGCKAlbRwr4EQftXE/o5ftkn45Lxd1+/PALhbfOeUu9qAFDym0uGsgTXsD2Jv
+	 eRnIsH0Jc02leI7NbPhvxKkVWFgnlowrf3IS9XIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgBTTqK (ORCPT
+        id S1729011AbgBTTqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43602 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 14:46:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:50368 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgBTTqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:46:09 -0500
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E234324672;
-        Thu, 20 Feb 2020 19:46:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582227968;
-        bh=8n/tGiChs7HK/SdTYqKi3okvm4Cg4Bv8EZZNVfm7Rl4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rK4bxvA9PtMY23VLjMSOMRUCge4roI7ZgaALYYOFedEP37YZyJVCGZz4qvNuwG2jL
-         7uiuFMvQlbhERXukI9wesmMP2DAJ3XQQv/yQR6GcalXZA+FKiXTXQGXwwOeTbX9MYg
-         lytJ5qwTaDyn3KruD79UyF2pCyGco4GHouwww0Bw=
-Received: by mail-qk1-f170.google.com with SMTP id d11so4711935qko.8;
-        Thu, 20 Feb 2020 11:46:07 -0800 (PST)
-X-Gm-Message-State: APjAAAUn/Rsc/4W49ampcgSP/PAvoadjYcqDnAKr9ZgYyJvqUvQJ7GP6
-        NrA/y161AlqtqXmSrr2WWgmUHl2mTni2/Ea1nQ==
-X-Google-Smtp-Source: APXvYqzWa1YkLaYjcSJNWWPD1wry3UstiJMoWTLIXaiS3y/0QKi+7eErUwgmQh/kQZJAoWHjxM0DRmvkiefFTWvGDJw=
-X-Received: by 2002:a37:6457:: with SMTP id y84mr30478394qkb.254.1582227966959;
- Thu, 20 Feb 2020 11:46:06 -0800 (PST)
-MIME-Version: 1.0
-References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
- <1581704608-31219-4-git-send-email-skomatineni@nvidia.com>
- <20200218231503.GA19099@bogus> <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
-In-Reply-To: <5948bf42-9be2-8cf0-1c28-80f69b708c65@nvidia.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 Feb 2020 13:45:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-Message-ID: <CAL_JsqKAVBS-KvP60Bv2JBQjUzTUgicx33nShn4enFpvysS9YA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 3/6] dt-binding: tegra: Add VI and CSI bindings
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Frank Chen <frankc@nvidia.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-clk <linux-clk@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
+        id S1728334AbgBTTqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:46:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22FF830E;
+        Thu, 20 Feb 2020 11:46:23 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E3C23F68F;
+        Thu, 20 Feb 2020 11:46:22 -0800 (PST)
+Date:   Thu, 20 Feb 2020 19:46:20 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v2] ASoC: dt-bindings: renesas,rsnd: switch to yaml base
+ Documentation
+Message-ID: <20200220194620.GK3926@sirena.org.uk>
+References: <87d0ahzr9d.wl-kuninori.morimoto.gx@renesas.com>
+ <20200219161732.GB25095@bogus>
+ <874kvmt355.wl-kuninori.morimoto.gx@renesas.com>
+ <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YZQs1kEQY307C4ut"
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+VEQj9Nkyo_85RM3Ku1-D73_ot5BTAjidnJzJv7r1_Sw@mail.gmail.com>
+X-Cookie: You are number 6!  Who is number one?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 9:28 PM Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
->
->
-> On 2/18/20 3:15 PM, Rob Herring wrote:
-> > External email: Use caution opening links or attachments
-> >
-> >
-> > On Fri, Feb 14, 2020 at 10:23:25AM -0800, Sowjanya Komatineni wrote:
-> >> Tegra contains VI controller which can support up to 6 MIPI CSI
-> >> camera sensors.
-> >>
-> >> Each Tegra CSI port from CSI unit can be one-to-one mapper to
-> >> VI channel and can capture from an external camera sensor or
-> >> from built-in test pattern generator.
-> >>
-> >> This patch adds dt-bindings for Tegra VI and CSI.
-> >>
-> >> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> >> ---
-> >>   .../display/tegra/nvidia,tegra20-host1x.txt        | 55 ++++++++++++++++++----
-> >>   1 file changed, 47 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> >> index 9999255ac5b6..3d0ed540a646 100644
-> >> --- a/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> >> +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra20-host1x.txt
-> >> @@ -40,14 +40,24 @@ of the following host1x client modules:
-> >>
-> >>     Required properties:
-> >>     - compatible: "nvidia,tegra<chip>-vi"
-> >> -  - reg: Physical base address and length of the controller's registers.
-> >> +  - reg: Physical base address and length of the controller registers.
-> >>     - interrupts: The interrupt outputs from the controller.
-> >> -  - clocks: Must contain one entry, for the module clock.
-> >> +  - clocks: Must contain an entry for the module clock "vi"
-> >>       See ../clocks/clock-bindings.txt for details.
-> >>     - resets: Must contain an entry for each entry in reset-names.
-> >>       See ../reset/reset.txt for details.
-> >> -  - reset-names: Must include the following entries:
-> >> -    - vi
-> >> +  - reset-names: Must include the entry "vi"
-> >> +
-> >> +  Tegra210 has CSI part of VI sharing same host interface and register
-> >> +  space. So, VI device node should have CSI child node.
-> >> +
-> >> +  - csi: mipi csi interface to vi
-> >> +
-> >> +    Required properties:
-> >> +    - compatible: "nvidia,tegra<chip>-csi"
-> >> +    - reg: Physical base address and length of the controller registers.
-> >> +    - clocks: Must contain entries csi, cilab, cilcd, cile clocks.
-> >> +      See ../clocks/clock-bindings.txt for details.
-> >>
-> >>   - epp: encoder pre-processor
-> >>
-> >> @@ -310,12 +320,41 @@ Example:
-> >>                };
-> >>
-> >>                vi {
-> >> -                     compatible = "nvidia,tegra20-vi";
-> >> -                     reg = <0x54080000 0x00040000>;
-> >> +                     compatible = "nvidia,tegra210-vi";
-> >> +                     reg = <0x0 0x54080000 0x0 0x700>;
-> >>                        interrupts = <0 69 0x04>;
-> >> -                     clocks = <&tegra_car TEGRA20_CLK_VI>;
-> >> -                     resets = <&tegra_car 100>;
-> >> +                     assigned-clocks = <&tegra_car TEGRA210_CLK_VI>;
-> >> +                     assigned-clock-parents = <&tegra_car TEGRA210_CLK_PLL_C4_OUT0>;
-> >> +                     clocks = <&tegra_car TEGRA210_CLK_VI>;
-> >> +                     clock-names = "vi";
-> >> +                     resets = <&tegra_car 20>;
-> >>                        reset-names = "vi";
-> >> +
-> >> +                     #address-cells = <2>;
-> >> +                     #size-cells = <2>;
-> >> +
-> >> +                     ranges = <0x0 0x54080808 0x0 0x54080808 0x0 0x2000>;
-> >> +
-> >> +                     csi@0x54080838 {
-> > Drop '0x'
-> Will fix in v4
-> >
-> >> +                             compatible = "nvidia,tegra210-csi";
-> >> +                             reg = <0x0 0x54080838 0x0 0x2000>;
-> > Kind of odd that this address and ranges address are not the same. And
-> > also wrong that the size here exceeds the bounds of ranges.
-> >
-> > Also, best practice is to make the child address 0 or relative to the
-> > parent.
->
-> Actual CSI starts at offset 0x808 but we don't use couple of registers
-> at offset 0x808.
->
-> Will update ranges in v4 to start from 0x838 offset and will make child
-> address relative to parent.
 
-Seems odd, but okay. And you will never, ever need to use those
-registers no matter what, and we can reject any DT change trying to
-change it later?
+--YZQs1kEQY307C4ut
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Thu, Feb 20, 2020 at 01:33:56PM -0600, Rob Herring wrote:
+> On Wed, Feb 19, 2020 at 8:16 PM Kuninori Morimoto
+
+> > > > +  clock-frequency:
+> > > > +    description: for audio_clkout0/1/2/3
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
+
+> > > This already has a common definition and this conflicts with that.
+> > > 'clock-frequency' is a single uint32 or uint64.
+
+> > This needs clock array. Like this
+
+> >         clock-frequency = <12288000 11289600>;
+
+> Sorry, but the type is already defined in the spec. You'll still get
+> warnings from the common schema and you can't override that here.
+
+> Not sure what to suggest. Leave it with a fixme or move to
+> assigned-clocks-rates instead?
+
+Given that this is an existing schema we should really try to keep
+compatibility :/
+
+--YZQs1kEQY307C4ut
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O4gwACgkQJNaLcl1U
+h9DpNgf/T3NsUyExFf1KBDaf9LwB98JuIJZnPVN3szC+niqpV7pWTCL40vzSBGiV
+SSlCDGxnMV1mmFT1H6Mv+NWj/E9qf5ech4MVE/LdO6oeRfJ6vlJOhtRVGw9gZz9l
+0Jr+r4FrM/F4s+SiCJRpB9bpdBra89Rqy6hMftuOTYORGm4+F+gLM2wMiO0qS7Ro
+zVUinC0Toc+WXk2AVK8G2UrErAI9FdZRMXZYXyAYrWk/5cDQXVkWaifVwelDTyy8
+INeT1Y0DBOZ1t1In/sJAiw2OL/C+PDxoUE4znyjw53rNB48C0NSVt1XQOyjcXX0o
+d5yXeMAnmkXID2NzRS4q3H3OmyN3/w==
+=dMJr
+-----END PGP SIGNATURE-----
+
+--YZQs1kEQY307C4ut--
