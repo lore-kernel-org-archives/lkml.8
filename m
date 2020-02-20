@@ -2,201 +2,102 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F1DC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70022C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185EF206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:51:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582224714;
-	bh=BIb7muBRiTMmDaTPFIJ2G/FP0hMlkSebaL/qJ/Le4dQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jgX6GSrcwYnmjG122PVdgtKaIuvKAuDrcPMItGombgtCQYvRDufuJiGESe1wUYAAh
-	 3RZDFiH+SlB6OzpE7CMBr/5YXsKUzIfAFn6gOMHto0WIvVHZnxxPsJzOZ2koLOnytl
-	 p+x80qRV+TbpYlJ2y3dD62pq4ZPk66j0/PRmb1CQ=
+	by mail.kernel.org (Postfix) with ESMTP id 405D0206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:52:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AXhQLFrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbgBTSvw (ORCPT
+        id S1728855AbgBTSws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48424 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgBTSvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:51:52 -0500
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C6024687
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 18:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582224711;
-        bh=BIb7muBRiTMmDaTPFIJ2G/FP0hMlkSebaL/qJ/Le4dQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IgQMqpweoIv/kUDzsl9CIjVqxdzBRhoNct5ut+/3c/1W+bp4IzRC93ES5d/Q6qJp/
-         LUBa1hF5XZyH4Y7787+lNucQDReqAwCt2GAEglW2y7I/GPE7vuVwwYgCsJzO8WPHkb
-         j3rBW+QzM8+0tyzkAB3FCqGRt6XWTAYNgHWFMFpk=
-Received: by mail-wr1-f54.google.com with SMTP id r11so5783484wrq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 10:51:50 -0800 (PST)
-X-Gm-Message-State: APjAAAWwcDvhtwQ9W/o9GCrk2ZuDMTSvcHKjUbGZDPQ0SAm00FhI5+AG
-        38RtPSDj9HLVeKqfUmiNe+LlmanraEkIRhL89uk0LQ==
-X-Google-Smtp-Source: APXvYqxegNzYJn6ARUk+PJRm7v093kishGL72Bi413I9Bqd/49GjAa+reA0TGzaRyvGBRYkR2gwg9ESP1UT6PDqC+jg=
-X-Received: by 2002:adf:a354:: with SMTP id d20mr43299256wrb.257.1582224709127;
- Thu, 20 Feb 2020 10:51:49 -0800 (PST)
+        Thu, 20 Feb 2020 13:52:48 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49518 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgBTSwr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:52:47 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KIq3Th050543;
+        Thu, 20 Feb 2020 12:52:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582224723;
+        bh=CG0tyGJbtv0I8DXr8bqwQT8uM4lDoibn5681XyzQ1P4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AXhQLFrnGcIXakvPGLOqv/zrVizRfWyVaWHSwtTnw1vRRqMHfJj6v0EfAkRdCmcDb
+         TDrSXT90v12e/lWcpn5FGC5oWUh9WTsI21mDLoulRs+7xZoo/toBK8+H+kN8E7BDJo
+         vrrl3VFgJAEff67Knfr956Kpt8zpOSyWBKB3VuIU=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KIq2ij058863
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Feb 2020 12:52:03 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
+ Feb 2020 12:52:02 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 20 Feb 2020 12:52:02 -0600
+Received: from [128.247.59.107] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KIq1DS102364;
+        Thu, 20 Feb 2020 12:52:01 -0600
+Subject: Re: [PATCH] ASoC: tas2562: Add support for digital volume control
+To:     Mark Brown <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+References: <20200220172721.10547-1-dmurphy@ti.com>
+ <20200220184507.GF3926@sirena.org.uk>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <de0e8a5b-8c2a-ee04-856f-f0d678a3c66b@ti.com>
+Date:   Thu, 20 Feb 2020 12:46:57 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200209212609.7928-1-jarkko.sakkinen@linux.intel.com>
- <20200209212609.7928-11-jarkko.sakkinen@linux.intel.com> <15074c16-4832-456d-dd12-af8548e46d6d@linux.microsoft.com>
- <20200220181345.GD3972@linux.intel.com>
-In-Reply-To: <20200220181345.GD3972@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 20 Feb 2020 10:51:37 -0800
-X-Gmail-Original-Message-ID: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
-Message-ID: <CALCETrVXnSR8fBQtqv=3zFxJCFhcHE-6XNAy3suPW+uPgFvfvg@mail.gmail.com>
-Subject: Re: [PATCH v26 10/22] x86/sgx: Linux Enclave Driver
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jordan Hand <jorhand@linux.microsoft.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Andrew Lutomirski <luto@kernel.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>, puiterwijk@redhat.com,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200220184507.GF3926@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 10:13 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Tue, Feb 18, 2020 at 07:26:31PM -0800, Jordan Hand wrote:
-> > I ran our validation tests for the Open Enclave SDK against this patch
-> > set and came across a potential issue.
-> >
-> > On 2/9/20 1:25 PM, Jarkko Sakkinen wrote:
-> > > +/**
-> > > + * sgx_encl_may_map() - Check if a requested VMA mapping is allowed
-> > > + * @encl:          an enclave
-> > > + * @start:         lower bound of the address range, inclusive
-> > > + * @end:           upper bound of the address range, exclusive
-> > > + * @vm_prot_bits:  requested protections of the address range
-> > > + *
-> > > + * Iterate through the enclave pages contained within [@start, @end) to verify
-> > > + * the permissions requested by @vm_prot_bits do not exceed that of any enclave
-> > > + * page to be mapped.  Page addresses that do not have an associated enclave
-> > > + * page are interpreted to zero permissions.
-> > > + *
-> > > + * Return:
-> > > + *   0 on success,
-> > > + *   -EACCES if VMA permissions exceed enclave page permissions
-> > > + */
-> > > +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> > > +                unsigned long end, unsigned long vm_prot_bits)
-> > > +{
-> > > +   unsigned long idx, idx_start, idx_end;
-> > > +   struct sgx_encl_page *page;
-> > > +
-> > > +   /* PROT_NONE always succeeds. */
-> > > +   if (!vm_prot_bits)
-> > > +           return 0;
-> > > +
-> > > +   idx_start = PFN_DOWN(start);
-> > > +   idx_end = PFN_DOWN(end - 1);
-> > > +
-> > > +   for (idx = idx_start; idx <= idx_end; ++idx) {
-> > > +           mutex_lock(&encl->lock);
-> > > +           page = radix_tree_lookup(&encl->page_tree, idx);
-> > > +           mutex_unlock(&encl->lock);
-> > > +
-> > > +           if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
-> > > +                   return -EACCES;
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
-> > > +static struct sgx_encl_page *sgx_encl_page_alloc(struct sgx_encl *encl,
-> > > +                                            unsigned long offset,
-> > > +                                            u64 secinfo_flags)
-> > > +{
-> > > +   struct sgx_encl_page *encl_page;
-> > > +   unsigned long prot;
-> > > +
-> > > +   encl_page = kzalloc(sizeof(*encl_page), GFP_KERNEL);
-> > > +   if (!encl_page)
-> > > +           return ERR_PTR(-ENOMEM);
-> > > +
-> > > +   encl_page->desc = encl->base + offset;
-> > > +   encl_page->encl = encl;
-> > > +
-> > > +   prot = _calc_vm_trans(secinfo_flags, SGX_SECINFO_R, PROT_READ)  |
-> > > +          _calc_vm_trans(secinfo_flags, SGX_SECINFO_W, PROT_WRITE) |
-> > > +          _calc_vm_trans(secinfo_flags, SGX_SECINFO_X, PROT_EXEC);
-> > > +
-> > > +   /*
-> > > +    * TCS pages must always RW set for CPU access while the SECINFO
-> > > +    * permissions are *always* zero - the CPU ignores the user provided
-> > > +    * values and silently overwrites them with zero permissions.
-> > > +    */
-> > > +   if ((secinfo_flags & SGX_SECINFO_PAGE_TYPE_MASK) == SGX_SECINFO_TCS)
-> > > +           prot |= PROT_READ | PROT_WRITE;
-> > > +
-> > > +   /* Calculate maximum of the VM flags for the page. */
-> > > +   encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
-> >
-> > During mprotect (in mm/mprotect.c line 525) the following checks if
-> > READ_IMPLIES_EXECUTE and a PROT_READ is being requested. If so and
-> > VM_MAYEXEC is set, it also adds PROT_EXEC to the request.
-> >
-> >       if (rier && (vma->vm_flags & VM_MAYEXEC))
-> >               prot |= PROT_EXEC;
-> >
-> > But if we look at sgx_encl_page_alloc(), we see vm_max_prot_bits is set
-> > without taking VM_MAYEXEC into account:
-> >
-> >       encl_page->vm_max_prot_bits = calc_vm_prot_bits(prot, 0);
-> >
-> > sgx_encl_may_map() checks that the requested protection can be added with:
-> >
-> >       if (!page || (~page->vm_max_prot_bits & vm_prot_bits))
-> >               return -EACCESS
-> >
-> > This means that for any process where READ_IMPLIES_EXECUTE is set and
-> > page where (vma->vm_flags & VM_MAYEXEC) == true, mmap/mprotect calls to
-> > that request PROT_READ on a page that was not added with PROT_EXEC will
-> > fail.
->
-> I could've sworn this was discussed on the SGX list at one point, but
-> apparently we only discussed it internally.  Anyways...
->
-> More than likely, the READ_IMPLIES_EXECUTE (RIE) crud rears its head
-> because part of the enclave loader is written in assembly.  Unless
-> explicitly told otherwise, the linker assumes that any program with
-> assembly code may need an executable stack, which leads to the RIE
-> personality being set for the process.  Here's a fantastic write up for
-> more details: https://www.airs.com/blog/archives/518
->
-> There are essentially two paths we can take:
->
->  1) Exempt EPC pages from RIE during mmap()/mprotect(), i.e. don't add
->     PROT_EXEC for enclaves.
+Mark
 
-Seems reasonable.
+On 2/20/20 12:45 PM, Mark Brown wrote:
+> On Thu, Feb 20, 2020 at 11:27:21AM -0600, Dan Murphy wrote:
+>
+>> +	/* Set the Digital volume to -110dB */
+>> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4, 0x00);
+>> +	if (ret)
+>> +		return ret;
+>> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3, 0x00);
+>> +	if (ret)
+>> +		return ret;
+>> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2, 0x0d);
+>> +	if (ret)
+>> +		return ret;
+>> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1, 0x43);
+>> +	if (ret)
+>> +		return ret;
+> Is there a reason not to use the chip default here?  Otherwise this
+> looks good.
 
-Honestly, it probably makes sense to try to exempt almost everything
-from RIE.  I'd be a bit surprised if RIE is actually useful for
-anything other than plain anonymous pages and private file mappings.
+Chip default is set to 0dB full blast+ 0x40400000.  This sets the volume 
+to -110dB.
+
+I have the values backwards.  CFG4 should b 0x43 and CFG3 should be 0x0d 
+and CFG1&2 should be 0.
+
+I will resend v2 with this fixed.
+
+Dan
+
