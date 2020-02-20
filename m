@@ -2,94 +2,75 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FEFCC3404C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A856BC3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7D324656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A30D24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbgBTEwm (ORCPT
+        id S1727976AbgBTE43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 23:52:42 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:41359 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727806AbgBTEwl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 23:52:41 -0500
-Received: from callcc.thunk.org (guestnat-104-133-8-109.corp.google.com [104.133.8.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 01K4qYUN024408
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Feb 2020 23:52:35 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id CD0DC4211EF; Wed, 19 Feb 2020 23:52:33 -0500 (EST)
-Date:   Wed, 19 Feb 2020 23:52:33 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] ext4: fix potential race between online resizing and
- write operations
-Message-ID: <20200220045233.GC476845@mit.edu>
-References: <20200215233817.GA670792@mit.edu>
- <20200216121246.GG2935@paulmck-ThinkPad-P72>
- <20200217160827.GA5685@pc636>
- <20200217193314.GA12604@mit.edu>
- <20200218170857.GA28774@pc636>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218170857.GA28774@pc636>
+        Wed, 19 Feb 2020 23:56:29 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:46970 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727747AbgBTE42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 23:56:28 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 211A72003B7;
+        Thu, 20 Feb 2020 05:56:27 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D73FA20554F;
+        Thu, 20 Feb 2020 05:56:21 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D45E402AB;
+        Thu, 20 Feb 2020 12:56:15 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] arm64: dts: imx8mp: Add system counter timer node
+Date:   Thu, 20 Feb 2020 12:50:32 +0800
+Message-Id: <1582174232-14082-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 18, 2020 at 06:08:57PM +0100, Uladzislau Rezki wrote:
-> now it becomes possible to use it like: 
-> 	...
-> 	void *p = kvmalloc(PAGE_SIZE);
-> 	kvfree_rcu(p);
-> 	...
-> also have a look at the example in the mm/list_lru.c diff.
+System counter timer is necessary as broadcast timer for cpu-idle,
+add support for it.
 
-I certainly like the interface, thanks!  I'm going to be pushing
-patches to fix this using ext4_kvfree_array_rcu() since there are a
-number of bugs in ext4's online resizing which appear to be hitting
-multiple cloud providers (with reports from both AWS and GCP) and I
-want something which can be easily backported to stable kernels.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-But once kvfree_rcu() hits mainline, I'll switch ext4 to use it, since
-your kvfree_rcu() is definitely more efficient than my expedient
-jury-rig.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index 61cf373..71b0c8f 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -358,6 +358,14 @@
+ 				#pwm-cells = <2>;
+ 				status = "disabled";
+ 			};
++
++			system_counter: timer@306a0000 {
++				compatible = "nxp,sysctr-timer";
++				reg = <0x306a0000 0x20000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&osc_24m>;
++				clock-names = "per";
++			};
+ 		};
+ 
+ 		aips3: bus@30800000 {
+-- 
+2.7.4
 
-I don't feel entirely competent to review the implementation, but I do
-have one question.  It looks like the rcutiny implementation of
-kfree_call_rcu() isn't going to do the right thing with kvfree_rcu(p).
-Am I missing something?
-
-> diff --git a/include/linux/rcutiny.h b/include/linux/rcutiny.h
-> index 045c28b71f4f..a12ecc1645fa 100644
-> --- a/include/linux/rcutiny.h
-> +++ b/include/linux/rcutiny.h
-> @@ -34,7 +34,7 @@ static inline void synchronize_rcu_expedited(void)
->         synchronize_rcu();
->  }
-> 
-> -static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
-> +static inline void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func, void *ptr)
->  {
->         call_rcu(head, func);
->  }
-
-Thanks,
-
-					- Ted
