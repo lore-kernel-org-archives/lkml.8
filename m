@@ -2,66 +2,96 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A71DC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F9BC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA32206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7BD206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgBTT7M (ORCPT
+        id S1729069AbgBTT7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:59:12 -0500
-Received: from mga06.intel.com ([134.134.136.31]:16233 "EHLO mga06.intel.com"
+        Thu, 20 Feb 2020 14:59:48 -0500
+Received: from muru.com ([72.249.23.125]:56524 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728556AbgBTT7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:59:12 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 11:59:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="349230613"
-Received: from moriol-mobl.ger.corp.intel.com (HELO localhost) ([10.252.25.78])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2020 11:59:08 -0800
-Date:   Thu, 20 Feb 2020 21:59:06 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>
-Cc:     Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org, aik@ozlabs.ru,
-        david@gibson.dropbear.id.au, linux-kernel@vger.kernel.org,
-        nayna@linux.vnet.ibm.com, gcwilson@linux.ibm.com, jgg@ziepe.ca
-Subject: Re: [PATCH v2 0/4] Enable vTPM 2.0 for the IBM vTPM driver
-Message-ID: <20200220195906.GB23349@linux.intel.com>
-References: <20200213202329.898607-1-stefanb@linux.vnet.ibm.com>
- <f76ce5e5-0552-bc2c-4548-ae9552d4e3ba@linux.ibm.com>
+        id S1728770AbgBTT7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:59:47 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id CC9438080;
+        Thu, 20 Feb 2020 20:00:30 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
+        Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Rob Herring <robh@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv4 0/4] n_gsm serdev support and mfd driver for droid4 modem
+Date:   Thu, 20 Feb 2020 11:59:39 -0800
+Message-Id: <20200220195943.15314-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f76ce5e5-0552-bc2c-4548-ae9552d4e3ba@linux.ibm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 02:23:29PM -0500, Stefan Berger wrote:
-> On 2/13/20 3:23 PM, Stefan Berger wrote:
-> > From: Stefan Berger <stefanb@linux.ibm.com>
-> > 
-> > QEMU 5.0 will support the PAPR vTPM device model for TPM 1.2 and TPM 2.0.
-> > This series of patches enables vTPM 2.0 support for the IBM vTPM driver.
-> 
-> 
-> If there are no more comments to this series, maybe Jarkko can queue it?
+Hi all,
 
-Do not recall seeing this series before. Probably have missed it.
-I'll look into it next week.
+Here's v4 set of n_gsm serdev support patches, and the related MFD
+driver for the modem found on Motorola Mapphone phones and tablets
+like droid4.
 
-/Jarkkko
+This series only adds basic character device support for the MFD
+driver. Other serdev consumer drivers for specific devices will be
+posted separately.
+
+The patches are against v5.6-rc1.
+
+Regards,
+
+Tony
+
+Changes since v3:
+- Update list of folks in Cc, looks like I sent v3 only to Lee and lkml
+- Init privdata before motmdm_register_dlci calls gsm_serdev_register_dlci
+- Update binding based on Rob's comments for license and "allOf"
+
+Changes since v2:
+- Drop useless send_command indirection, use static motmdm_send_command
+
+Changes since v1:
+
+- Simplified usage and got rid of few pointless inline functions
+- Added consumer MFD driver, devicetree binding, and dts changes
+
+
+Tony Lindgren (4):
+  tty: n_gsm: Add support for serdev drivers
+  mfd: motmdm: Add Motorola TS 27.010 serdev modem driver for droid4
+  dt-bindings: mfd: motmdm: Add binding for motorola-mdm
+  ARM: dts: omap4-droid4: Enable basic modem support
+
+ .../mfd/motorola,mapphone-mdm6600.yaml        |   34 +
+ .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
+ drivers/mfd/Kconfig                           |    9 +
+ drivers/mfd/Makefile                          |    1 +
+ drivers/mfd/motorola-mdm.c                    | 1200 +++++++++++++++++
+ drivers/tty/n_gsm.c                           |  372 +++++
+ include/linux/serdev-gsm.h                    |  168 +++
+ 7 files changed, 1790 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
+ create mode 100644 drivers/mfd/motorola-mdm.c
+ create mode 100644 include/linux/serdev-gsm.h
+
+-- 
+2.25.1
