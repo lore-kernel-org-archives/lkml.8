@@ -2,137 +2,70 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB694C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7269BC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EAFF2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2F6208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbgBTRNK (ORCPT
+        id S1728685AbgBTROf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:13:10 -0500
-Received: from muru.com ([72.249.23.125]:56378 "EHLO muru.com"
+        Thu, 20 Feb 2020 12:14:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbgBTRNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:13:09 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id EEC0C8080;
-        Thu, 20 Feb 2020 17:13:52 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 09:13:05 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        linux-omap@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-Message-ID: <20200220171305.GL37466@atomide.com>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
- <20200220163703.GK37466@atomide.com>
+        id S1726871AbgBTROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:14:34 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89DAE20801;
+        Thu, 20 Feb 2020 17:14:33 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:14:31 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v2 4/8] bootconfig: Remove unneeded checksum
+Message-ID: <20200220121431.0de871fe@gandalf.local.home>
+In-Reply-To: <158220114239.26565.3917262826354805559.stgit@devnote2>
+References: <158220110257.26565.4812934676257459744.stgit@devnote2>
+        <158220114239.26565.3917262826354805559.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220163703.GK37466@atomide.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200220 16:37]:
-> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
-> > On 2/20/20 11:20 AM, Tony Lindgren wrote:
-> > > * Andrew F. Davis <afd@ti.com> [200220 16:04]:
-> > >> On 2/20/20 10:54 AM, Tony Lindgren wrote:
-> > >>> Andrew,
-> > >>>
-> > >>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
-> > >>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> > >>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
-> > >>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
-> > >>>> date:   3 weeks ago
-> > >>>> config: arm-randconfig-a001-20200213 (attached as .config)
-> > >>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
-> > >>>> reproduce:
-> > >>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> > >>>>         chmod +x ~/bin/make.cross
-> > >>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
-> > >>>>         # save the attached .config to linux build tree
-> > >>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
-> > >>>>
-> > >>>> If you fix the issue, kindly add following tag
-> > >>>> Reported-by: kbuild test robot <lkp@intel.com>
-> > >>>>
-> > >>>> All errors (new ones prefixed by >>):
-> > >>>>
-> > >>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
-> > >>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
-> > >>>
-> > >>> Have you looked at this one? Looks like there's still an unhandled
-> > >>> randconfig build case.
-> > >>>
-> > >>
-> > >>
-> > >> I've had a quick look, all the ARM config does:
-> > >>
-> > >> select HAVE_ARM_SMCCC if CPU_V7
-> > >>
-> > >> so I don't think this will happen in any real config, but if we want to
-> > >> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
-> > >> on it.
-> > > 
-> > > Seems to happen at least with omap2 only config where we don't have
-> > > CPU_V7. Something like below seems to fix it.
-> > > 
-> > > If that looks OK to you, I'll send out a proper fix.
-> > > 
-> > 
-> > 
-> > This looks fine to me.
-> > 
-> > A better later fix might be to later stub out the actual __arm_smccc_smc
-> > in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
-> > get the fix.
+On Thu, 20 Feb 2020 21:19:02 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Remove checksum of bootconfig because we already use a magic
+> word to identify bootconfig. This checksum was used for
+> checking whether there is a bootconfig at the end of initrd
+> or not. Since we have a bootconfig magic word to identify
+> the bootconfig data, we do not this checksum anymore.
 > 
-> Yeah seems that might be better. Adding Aaro and Marc to Cc.
+> Thus the block image of the initrd file with bootconfig is
+> as follows.
+> 
+> [initrd][bootconfig][size(u32)][#BOOTCONFIG\n]
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>
 
-But if we can in theory have some arm11 machine with smccc, then this
-local ifdef below is probably the way to go.
+Hmm, I think the checksum is still good to have, in case of a corrupted
+file. Does it hurt to keep it?
 
-Regards,
-
-Tony
-
-> > > 8< -----------------------
-> > > diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
-> > > --- a/arch/arm/mach-omap2/omap-secure.c
-> > > +++ b/arch/arm/mach-omap2/omap-secure.c
-> > > @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
-> > >  	return ret;
-> > >  }
-> > >  
-> > > +#ifdef CONFIG_HAVE_ARM_SMCCC
-> > >  void omap_smccc_smc(u32 fn, u32 arg)
-> > >  {
-> > >  	struct arm_smccc_res res;
-> > > @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
-> > >  		      0, 0, 0, 0, 0, 0, &res);
-> > >  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
-> > >  }
-> > > +#else
-> > > +void omap_smccc_smc(u32 fn, u32 arg)
-> > > +{
-> > > +}
-> > > +#endif
-> > >  
-> > >  void omap_smc1(u32 fn, u32 arg)
-> > >  {
-> > > 
+-- Steve
