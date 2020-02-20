@@ -2,219 +2,299 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE4C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BA3C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAACE208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA05208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:13:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="EiurU6QK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtIHmc02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgBTPNE (ORCPT
+        id S1728486AbgBTPN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:13:04 -0500
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17864 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728385AbgBTPNE (ORCPT
+        Thu, 20 Feb 2020 10:13:27 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38523 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727761AbgBTPN0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:13:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582211542;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=JRDtQsXpqUz7hsmkd0dK4lht0q0VWQmzqTzKRrMqjh0=;
-        b=EiurU6QK7jrqxanpBh2gS4bNHic3BztEaU/5KGB0lhv34MlDO5zaLfXfp1PiZj5K
-        oY/agn/b6K3fTACSKyRC7saahG3KzslxxSK4rOe4WEfcT9DBSlDCoLKtmVF4ac2OOlK
-        TGcDsYxdHabxhFeBtPLUAig4WusYdUxW3I7sepgg=
-Received: from mail.baihui.com by mx.zoho.com.cn
-        with SMTP id 1582211539685705.7136605582543; Thu, 20 Feb 2020 23:12:19 +0800 (CST)
-Date:   Thu, 20 Feb 2020 23:12:19 +0800
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     "John Garry" <john.garry@huawei.com>
-Cc:     "Wei Xu" <xuwei5@hisilicon.com>, "bhelgaas" <bhelgaas@google.com>,
-        "andyshevchenko" <andy.shevchenko@gmail.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "Linux Mips" <linux-mips@vger.kernel.org>
-Message-ID: <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
-In-Reply-To: <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
-References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
- <5E4E55F7.70800@hisilicon.com>
- <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
- <17062738bc0.c380503c6222.6801557833645076299@flygoat.com> <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
-Subject: Re: Questions about logic_pio
+        Thu, 20 Feb 2020 10:13:26 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so2447947wmj.3;
+        Thu, 20 Feb 2020 07:13:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gAx4KXlVlewXjqThUmSuBtfHB7stqcpEKawBiT/AQ28=;
+        b=DtIHmc02VW/aUElcz7bvPOQitvg86EmI8kLUWYaXblwwu7kq5auI/RyhyJoNMpJm6f
+         PCLldR4IkPqWSh9LS2zDgeeFSTuksggXDVk7I3Dhmq/kla2oDEzbLzn6I3dU4q/wJl/S
+         QOPsxH1i444QYahUhMExMxNQQLViBQ5v2wh1364Elg3fZ5Q4sMj1XB1UNm6lb80YPkzv
+         EPWaq8BazG1gt0gBwmvf9HHq48XxBStTtmFPJ9qx3ZHAffUfI60zOkmNTeSfpF1YxT1D
+         QPJvb1JRrSFbjOIOM/Q0XcxAOMA9gFQ1r3yaIAuiF6+eKgrQo361EUYwqB7Bnq5GiJlj
+         NpIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gAx4KXlVlewXjqThUmSuBtfHB7stqcpEKawBiT/AQ28=;
+        b=fJFtuRzxsowN+dBNhlhTrCKvx5m/VazCM/2r6q0DLRVrAoZoKrWwNXfJOHqMXAyvOr
+         UD363eCO2qibvZkxSqS2gG4LB4x+E56M5I2Bz+Gt4ECIoR3d5iSlHqRyQGcVDatkm8Ke
+         cPFvyADc3j5vb7K96taJ2y+gJEr7FZzYADd/PoX8dhJtk71hs62oIUpOXu/sNX+Q0xSR
+         9ZSoF6DLFqATyO5+n31wZWyfCr0EFcwMCvCXcoFkNCy823j8njH1fLKxDKZs+HcgYaAM
+         jw5Ztplu+aUx0TX31ZRZYeLBotxJNNyHptf7EYil9CCZhbQ2AYaxda9Ik0zKDmkJgd5c
+         nOYg==
+X-Gm-Message-State: APjAAAV/+pByvIIUycmTg7/17+1Pz0Qn9ngZ/tjwtCwyQcVpS+zc0li0
+        E/fbAsDIF5UJiy3Kg8D3kec=
+X-Google-Smtp-Source: APXvYqymPInvdztYl2kJryLNzkk9Uw1UNZcp4fwP7Q/r2mj/8P0xszABTfq/muaj6c8I0rXJ6HvCXA==
+X-Received: by 2002:a1c:b486:: with SMTP id d128mr5129347wmf.69.1582211603961;
+        Thu, 20 Feb 2020 07:13:23 -0800 (PST)
+Received: from Ansuel-XPS.localdomain (93-39-149-95.ip76.fastwebnet.it. [93.39.149.95])
+        by smtp.googlemail.com with ESMTPSA id d4sm4983642wra.14.2020.02.20.07.13.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 07:13:23 -0800 (PST)
+From:   Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] net: mdio: add ipq8064 mdio driver
+Date:   Thu, 20 Feb 2020 16:12:55 +0100
+Message-Id: <20200220151301.10564-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Priority: Medium
-User-Agent: ZohoCN Mail
-X-Mailer: ZohoCN Mail
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently ipq806x soc use generi bitbang driver to
+comunicate with the gmac ethernet interface.
+Add a dedicated driver created by chunkeey to fix this.
 
- ---- =E5=9C=A8 =E6=98=9F=E6=9C=9F=E5=9B=9B, 2020-02-20 22:23:57 John Garry=
- <john.garry@huawei.com> =E6=92=B0=E5=86=99 ----
- > > Also Cc MIPS list to check other's opinions.
- > >=20
- > > Hi John.
- > >=20
- >=20
- > Hi Jiaxun Yang,
- >=20
- > > Thanks for your kind explanation, however, I think this way is
- > > violating how I/O ports supposed to work, at least in MIPS world.
- >=20
- > For a bit more history, please understand that the core PCI code was=20
- > managing non-native IO port space in the same way before we added the=20
- > logic PIO framework. The only real functional change here was that we=20
- > introduced the indirect-io region within the IO port space, under=20
- > CONFIG_INDIRECT_PIO.
+Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+---
+ drivers/net/phy/Kconfig        |   8 ++
+ drivers/net/phy/Makefile       |   1 +
+ drivers/net/phy/mdio-ipq8064.c | 163 +++++++++++++++++++++++++++++++++
+ 3 files changed, 172 insertions(+)
+ create mode 100644 drivers/net/phy/mdio-ipq8064.c
 
-I'm going to do more investigation. Thanks.=20
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 9dabe03a668c..ec2a5493a7e8 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -157,6 +157,14 @@ config MDIO_I2C
+ 
+ 	  This is library mode.
+ 
++config MDIO_IPQ8064
++	tristate "Qualcomm IPQ8064 MDIO interface support"
++	depends on HAS_IOMEM && OF_MDIO
++	depends on MFD_SYSCON
++	help
++	  This driver supports the MDIO interface found in the network
++	  interface units of the IPQ8064 SoC
++
+ config MDIO_MOXART
+ 	tristate "MOXA ART MDIO interface support"
+ 	depends on ARCH_MOXART || COMPILE_TEST
+diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+index fe5badf13b65..8f02bd2089f3 100644
+--- a/drivers/net/phy/Makefile
++++ b/drivers/net/phy/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_MDIO_CAVIUM)	+= mdio-cavium.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
+ obj-$(CONFIG_MDIO_HISI_FEMAC)	+= mdio-hisi-femac.o
+ obj-$(CONFIG_MDIO_I2C)		+= mdio-i2c.o
++obj-$(CONFIG_MDIO_IPQ8064)	+= mdio-ipq8064.o
+ obj-$(CONFIG_MDIO_MOXART)	+= mdio-moxart.o
+ obj-$(CONFIG_MDIO_MSCC_MIIM)	+= mdio-mscc-miim.o
+ obj-$(CONFIG_MDIO_OCTEON)	+= mdio-octeon.o
+diff --git a/drivers/net/phy/mdio-ipq8064.c b/drivers/net/phy/mdio-ipq8064.c
+new file mode 100644
+index 000000000000..c76e6a647787
+--- /dev/null
++++ b/drivers/net/phy/mdio-ipq8064.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Qualcomm IPQ8064 MDIO interface driver
++//
++// Copyright (C) 2019 Christian Lamparter <chunkeey@gmail.com>
++
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/of_mdio.h>
++#include <linux/phy.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++
++/* MII address register definitions */
++#define MII_ADDR_REG_ADDR                       0x10
++#define MII_BUSY                                BIT(0)
++#define MII_WRITE                               BIT(1)
++#define MII_CLKRANGE_60_100M                    (0 << 2)
++#define MII_CLKRANGE_100_150M                   (1 << 2)
++#define MII_CLKRANGE_20_35M                     (2 << 2)
++#define MII_CLKRANGE_35_60M                     (3 << 2)
++#define MII_CLKRANGE_150_250M                   (4 << 2)
++#define MII_CLKRANGE_250_300M                   (5 << 2)
++#define MII_CLKRANGE_MASK			GENMASK(4, 2)
++#define MII_REG_SHIFT				6
++#define MII_REG_MASK				GENMASK(10, 6)
++#define MII_ADDR_SHIFT				11
++#define MII_ADDR_MASK				GENMASK(15, 11)
++
++#define MII_DATA_REG_ADDR                       0x14
++
++#define MII_MDIO_DELAY                          (1000)
++#define MII_MDIO_RETRY                          (10)
++
++struct ipq8064_mdio {
++	struct regmap *base; /* NSS_GMAC0_BASE */
++};
++
++static int
++ipq8064_mdio_wait_busy(struct ipq8064_mdio *priv)
++{
++	int i;
++
++	for (i = 0; i < MII_MDIO_RETRY; i++) {
++		unsigned int busy;
++
++		regmap_read(priv->base, MII_ADDR_REG_ADDR, &busy);
++		if (!(busy & MII_BUSY))
++			return 0;
++
++		udelay(MII_MDIO_DELAY);
++	}
++
++	return -ETIMEDOUT;
++}
++
++static int
++ipq8064_mdio_read(struct mii_bus *bus, int phy_addr, int reg_offset)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_BUSY | MII_CLKRANGE_250_300M;
++	u32 ret_val;
++	int err;
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	err = ipq8064_mdio_wait_busy(priv);
++	if (err)
++		return err;
++
++	regmap_read(priv->base, MII_DATA_REG_ADDR, &ret_val);
++	return (int)ret_val;
++}
++
++static int
++ipq8064_mdio_write(struct mii_bus *bus, int phy_addr, int reg_offset, u16 data)
++{
++	struct ipq8064_mdio *priv = bus->priv;
++	u32 miiaddr = MII_WRITE | MII_BUSY | MII_CLKRANGE_250_300M;
++
++	regmap_write(priv->base, MII_DATA_REG_ADDR, data);
++
++	miiaddr |= ((phy_addr << MII_ADDR_SHIFT) & MII_ADDR_MASK) |
++		   ((reg_offset << MII_REG_SHIFT) & MII_REG_MASK);
++
++	regmap_write(priv->base, MII_ADDR_REG_ADDR, miiaddr);
++	usleep_range(10, 20);
++
++	return ipq8064_mdio_wait_busy(priv);
++}
++
++static int
++ipq8064_mdio_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct ipq8064_mdio *priv;
++	struct mii_bus *bus;
++	int ret;
++
++	bus = devm_mdiobus_alloc_size(&pdev->dev, sizeof(*priv));
++	if (!bus)
++		return -ENOMEM;
++
++	bus->name = "ipq8064_mdio_bus";
++	bus->read = ipq8064_mdio_read;
++	bus->write = ipq8064_mdio_write;
++	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(&pdev->dev));
++	bus->parent = &pdev->dev;
++
++	priv = bus->priv;
++	priv->base = syscon_node_to_regmap(np);
++	if (IS_ERR_OR_NULL(priv->base)) {
++		priv->base = syscon_regmap_lookup_by_phandle(np, "master");
++		if (IS_ERR_OR_NULL(priv->base)) {
++			pr_err("master phandle not found\n");
++			return -EINVAL;
++		}
++	}
++
++	ret = of_mdiobus_register(bus, np);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, bus);
++	return 0;
++}
++
++static int
++ipq8064_mdio_remove(struct platform_device *pdev)
++{
++	struct mii_bus *bus = platform_get_drvdata(pdev);
++
++	mdiobus_unregister(bus);
++
++	return 0;
++}
++
++static const struct of_device_id ipq8064_mdio_dt_ids[] = {
++	{ .compatible = "qcom,ipq8064-mdio" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ipq8064_mdio_dt_ids);
++
++static struct platform_driver ipq8064_mdio_driver = {
++	.probe = ipq8064_mdio_probe,
++	.remove = ipq8064_mdio_remove,
++	.driver = {
++		.name = "ipq8064-mdio",
++		.of_match_table = ipq8064_mdio_dt_ids,
++	},
++};
++
++module_platform_driver(ipq8064_mdio_driver);
++
++MODULE_DESCRIPTION("Qualcomm IPQ8064 MDIO interface driver");
++MODULE_AUTHOR("Christian Lamparter <chunkeey@gmail.com>");
++MODULE_LICENSE("GPL");
+-- 
+2.25.0
 
- >=20
- > >=20
- > >   > >>
- > >   > >> After dig into logic pio logic, I found that logic pio is tryin=
-g to "allocate" an io_start
- > >   > >> for MMIO ranges, the allocation starts from 0x0. And later the =
-io_start is used to calculate
- > >   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio =
-address should always
- > >   > >> equal to hw address,
- > >   >
- > >   > I'm not sure what you mean by simply the hw address.
- > >   >
- > >=20
- > > I meant  hw_start should always equal to io_start.
- > >=20
- > >=20
- > > MIPS have their own wrapped inl/outl functions,=20
- >=20
- > Can you please point me to these? I could not find them in arch/mips
-
-They are built by __BUILD_IOPORT_PFX(bus, bwlq, type) macro.
-Just using mips_io_port_base + offset to handle inl/outl, the same way PCI_=
-IOBASE.
-
- >=20
- > I will also note that arch/mips/include/asm/io.h does not include=20
- > asm-generic io.h today
-
-Yes, and I'm attempting to take advantage of asm-generic.
-
- >=20
- > doing the samething with
- > > PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
- > >=20
- > > Originally, the I/O ports layout seems like this:
- > >=20
- > > 00000020-00000021 : pic1
- > > 00000060-0000006f : i8042
- > > 00000070-00000077 : rtc0
- > > 000000a0-000000a1 : pic2
- > > 00000170-00000177 : pata_atiixp
- > > 000001f0-000001f7 : pata_atiixp
- > > 00000376-00000376 : pata_atiixp
- > > 000003f6-000003f6 : pata_atiixp
- > > 00000800-000008ff : acpi
- > > 00001000-00001008 : piix4_smbus
- > > 00004000-0003ffff : pci io space
- > >    00004000-00004fff : PCI Bus 0000:01
- > >      00004000-000040ff : 0000:01:05.0
- > >    00005000-00005fff : PCI Bus 0000:03
- > >      00005000-0000501f : 0000:03:00.0
- > >=20
- > > But with PCI_IOBASE defined, I got this:
- > >=20
- > > host bridge /bus@10000000/pci@10000000 ranges:
- > >        MEM 0x0040000000..0x007fffffff -> 0x0040000000
- > >         IO 0x0000004000..0x0000007fff -> 0x0000004000
- > > resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x002=
-0-0x0021]
- > >=20
- > > Because io_start was allocated to 0x0 by Logic PIO.
- > >=20
- > > There are a lot of devices that have fixed ioports thanks to x86's leg=
-acy.
- >=20
- > Well, yes, I'm not so surprised.
- >=20
- > So if MIPS does not have native IO port access, then surely you need=20
- > some host bridge to translate host CPU MMIO accesses to port I/O=20
- > accesses, right? Where are these CPU addresses defined?
-
-It is defined by the variable mips_io_port_base.
-
- >=20
- > > For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveabl=
-e,
- > > and they can't be managed by logic pio subsystem. > Also, the PCI Host=
-bridge got implied by DeviceTree that it's I/O range
- > > started from 0x4000 in bus side
- >=20
- > which bus is this?
-
-They're all located under "ISA Range".  Just an MMIO range that will resend
-the request to ISA I/O. --ioports for both PCI and some legacy devices.
-
-In that range, base + 0x0000 to 0x4000 is preserved for PIO devices (e.g.) =
-I8259
-and base + 0x4000 to MMIO_LIMIT are for PCI devices under host bridge.
-For the host bridge, ioports it can decode starts from 0x4000.
-
-My intentional behavior is that when I'm specifying in dts that the IO Rang=
-e of PCI host
-bridge is 0x4000 to 0x7fff, it would request the IO_RESOURCE start from 0x4=
-000
-to 0x7fff, also tell the host driver to decode  0x4000 to 0x7fff in IO BAR,=
- And let the drivers
-access 0x4000 to 0x7fff via inl/outl, rather than allocate from PIO 0x0 to =
-0x3fff.
-
- >=20
- > , but then, Logic PIO remapped to PCI_IOBASE + 0x0.
- > > The real address should be PCI_IOBASE + 0x4000,
- >=20
- > You seem to be using two methods to manage IO port space, and they seem=
-=20
- > to be conflicting.
-
-So... Are there any way to handle these unmoveable devices in logic pio wor=
-ld?
-
- >=20
- > > hardware never got correctly informed about that. And there is still n=
-o way to
- > > transform to correct address as it's inside the MMIO_LIMIT.
- > >=20
- > > So the question comes to why we're allocating io_start for MMIO PCI_IO=
-BASE
- > > rather than just check the range provided doesn't overlap each other o=
-r exceed
- > > the MMIO_LIMIT.
- >=20
- > When PCI_IOBASE is defined, we work on the basis that any IO port range=
-=20
- > in the system is registered for a logical PIO region, which manages the=
-=20
- > actual IO port addresses - see logic_pio_trans_cpuaddr().
-
-The port is not the actual port.. It makes me confusing about what it's act=
-ually doing..
-Sorry but probably I'm still thinking in a vintage way -- need some hints a=
-bout how to
-deal with these legacy cases in a modern way.
-
-Thanks.
-
- >=20
- > Thanks,
- > John
- >
