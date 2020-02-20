@@ -2,112 +2,125 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758D4C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A025AC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E331206ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="K4vLOeea"
+	by mail.kernel.org (Postfix) with ESMTP id 7963E208C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582204429;
+	bh=IHgFRQu6vtgSjRH+EdzEs0RBHd01e1qO18Td6UiCAis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jeYQ5v56EUqUum1BiqI0YRDvm4WXpSLC7Mgu+26vG2ppSLWCANjHRQIF1wKGqUpxi
+	 mLDs1XicTLrgfk2rpAKALIqHkZd4eduSnIsD4Xrk/KckPqgWbdL6MoMQMqoZfnGyUJ
+	 pfh3/OGDnUp+0aNC0Sjh0AwwUZ4BfU2TqGQR046M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgBTNM7 (ORCPT
+        id S1728180AbgBTNNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:12:59 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42703 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgBTNM6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:12:58 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d10so4140628ljl.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 05:12:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GzNziDqoL/AUz4B68gds+Nqpq3Cs5xfNdbm3Hr7a7BQ=;
-        b=K4vLOeeal5lD62N5rp44dErrQJ/7YZhgd+S/o071QQuMO+lR5PNq/f5PuECNd0Ps3q
-         MDFxOM9hsuf/2N8nr6xRpX+q6eUKzDiIkACheNgp/epR22Dmsj6kg8hPT4IwAhrg8sbM
-         M0bnueZA88O5tbgFHu7UMcdwte23Yrr86E+JTLO6xc2nyJ+8KfdBxRJg11VJZH75W1re
-         8kRQR5K14xPczsg/eeg+nRKKi/7Q/pQvxSwxysUCo9U+MQXU7KAK7C0QW+pT/70uCUEC
-         m9P+xnzLHWkfhXmLd2mAV3KkScTdnSq7bGUrpKqXVUYVmieqMtdIFTNImeyN6SDIM+Bx
-         6Iqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GzNziDqoL/AUz4B68gds+Nqpq3Cs5xfNdbm3Hr7a7BQ=;
-        b=R9pm1hg6gSPZzPqhSm+L3suU5cilAOsDLy/lMZ0mfgiSaHyx1A6W9E/acQXX0FL34Z
-         y63F8Kb6xEQNbmeiwf2eoylNNbbquuDv1yWInbdX0H+u7/DCnY/dVzbXfXjCvxP9FSDt
-         s0W7yHPkJjbUFsJjYv+gQUf9Uk4RhEq6K5ou5jJME9zN7m0rm/06sj1xSm8qkiL5rQAI
-         WlW57wybqFcLlUadQ0gApYKBe1Xb4P7UA88f5XI4zrB10nROAKUKikFT5k4DBQDcABB8
-         GCqzz0XwTUYlx/OEO+ONnl8QUkFsBojezLuT9s4c65c8Hleg0N9MNc0AG12TvKU2eMpf
-         4dow==
-X-Gm-Message-State: APjAAAWazj13mAHo4d+Bln2jO4NSmVNjWNoM9sX2emc/cBt0faoY16wk
-        0AZ2djUmIVfpjXr9M5xh3wNlFA==
-X-Google-Smtp-Source: APXvYqwaE144CzFHNPc2ptsLvuY5jTWwyOCULsFygaInuVevwoDVdizIDXa1G2ZI2dDqhPsffLZD1w==
-X-Received: by 2002:a2e:88c4:: with SMTP id a4mr19216575ljk.174.1582204376901;
-        Thu, 20 Feb 2020 05:12:56 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n11sm1851850ljg.15.2020.02.20.05.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 05:12:56 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7F899100FBB; Thu, 20 Feb 2020 16:13:25 +0300 (+03)
-Date:   Thu, 20 Feb 2020 16:13:25 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Zi Yan <ziy@nvidia.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: Fix possible PMD dirty bit lost in
- set_pmd_migration_entry()
-Message-ID: <20200220131325.e56ttzhjcvxyic7i@box>
-References: <20200220075220.2327056-1-ying.huang@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220075220.2327056-1-ying.huang@intel.com>
+        Thu, 20 Feb 2020 08:13:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728051AbgBTNNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:13:47 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45113206ED;
+        Thu, 20 Feb 2020 13:13:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582204427;
+        bh=IHgFRQu6vtgSjRH+EdzEs0RBHd01e1qO18Td6UiCAis=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zhcN+w8O8nH3zuu0JNaiOHi/9YXh2rFG2X4sP3cBanfCx49cKOikccbhsyKoVDdaw
+         ymKYIvDS2oPQxbvGrvR35XhpKxnZoCPM1IUIMA6tvCSK6+LNx0n4gKgl0aMzl0HXqf
+         SdEoonAg7P9pbbhRflCgl5Jp9DT5E3btGkd2Ux9g=
+Date:   Thu, 20 Feb 2020 22:13:40 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: Re: [for-next][PATCH 12/26] Documentation: bootconfig: Add a doc
+ for extended boot config
+Message-Id: <20200220221340.2b66fd2051a5da74775c474b@kernel.org>
+In-Reply-To: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
+References: <23e371ca-5df8-3ae3-c685-b01c07b55540@web.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:52:20PM +0800, Huang, Ying wrote:
-> From: Huang Ying <ying.huang@intel.com>
-> 
-> In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
-> atomically.  But the PMD is read before that with an ordinary memory
-> reading.  If the THP (transparent huge page) is written between the
-> PMD reading and pmdp_invalidate(), the PMD dirty bit may be lost, and
-> cause data corruption.  The race window is quite small, but still
-> possible in theory, so need to be fixed.
-> 
-> The race is fixed via using the return value of pmdp_invalidate() to
-> get the original content of PMD, which is a read/modify/write atomic
-> operation.  So no THP writing can occur in between.
-> 
-> The race has been introduced when the THP migration support is added
-> in the commit 616b8371539a ("mm: thp: enable thp migration in generic
-> path").  But this fix depends on the commit d52605d7cb30 ("mm: do not
-> lose dirty and accessed bits in pmdp_invalidate()").  So it's easy to
-> be backported after v4.16.  But the race window is really small, so it
-> may be fine not to backport the fix at all.
-> 
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
+Hi,
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+On Thu, 20 Feb 2020 10:10:20 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
+
+> I wonder about a few details in the added text.
+> 
+> 
+> …
+> > +++ b/Documentation/admin-guide/bootconfig.rst
+> …
+> > +C onfig File Limitation
+> 
+> How do you think about to omit a space character at the beginning
+> of this line?
+
+That was my mistake. I used restructured text extension for vim
+which collapsed all sections and use "space" key to expand.
+Accidentally, I run into edit mode and hit "space" to expand it.
+(it actually expanded but also put a space there and I missed it...)
+
+Anyway, it has been fixed (pointed by Rundy)
+
+> > +Currently the maximum config size size is 32KB …
+> 
+> Would you like to avoid a word duplication here?
+
+Oops, still exist. Thanks!
+
+
+> > +Note: this is not the number of entries but nodes, an entry must consume
+> > +more than 2 nodes (a key-word and a value). …
+> 
+> I find the relevance of the term “nodes” unclear at the moment.
+
+Indeed, "node" is not well defined. What about this?
+---
+Each key consists of words separated by dot, and value also consists of
+values separated by comma. Here, each word and each value is generally
+called a "node".
+---
+
+> 
+> Could an other wording be nicer than the abbreviation “a doc for … config”
+> in the commit subject?
+
+OK, I'll try next time. 
+
+Thank you,
 
 -- 
- Kirill A. Shutemov
+Masami Hiramatsu <mhiramat@kernel.org>
