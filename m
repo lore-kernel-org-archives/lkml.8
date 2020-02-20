@@ -2,339 +2,174 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0227C11D19
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E120C11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA693208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7211208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WrQyjbYj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+AGTFn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgBTS1V (ORCPT
+        id S1728910AbgBTS1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:27:21 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:29819 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728813AbgBTS1T (ORCPT
+        Thu, 20 Feb 2020 13:27:39 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42446 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728111AbgBTS1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:27:19 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582223239; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=bhsJb7HicDLjaH3zB60iJ72a18KQ/U1jBQRM2V9JZUY=; b=WrQyjbYjmw0hdErD93BElJ09Mv1RQpW5XeGnU57gN8E0zmfmDYi10rNqOwcL9ZtWd2HnK0vT
- d13hNd1moCMT/s4u0ZwDpoImcglvzce5jp7XR+g0U1G91LkBCt11URTPtZG05cNvDdBy5jUd
- ZnA+wjBhQcGUeZH1pnpeaqGJ+5U=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4ecf79.7fb7b24fb420-smtp-out-n02;
- Thu, 20 Feb 2020 18:27:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 7F802C433A2; Thu, 20 Feb 2020 18:27:05 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A17EC433A2;
-        Thu, 20 Feb 2020 18:27:02 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A17EC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     smasetty@codeaurora.org, John Stultz <john.stultz@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2 1/4] dt-bindings: display: msm: Convert GMU bindings to YAML
-Date:   Thu, 20 Feb 2020 11:26:53 -0700
-Message-Id: <1582223216-23459-2-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
-References: <1582223216-23459-1-git-send-email-jcrouse@codeaurora.org>
+        Thu, 20 Feb 2020 13:27:39 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e8so1865753plt.9;
+        Thu, 20 Feb 2020 10:27:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VmqpUfS7f2aoqYJkutvBUagv5kF3shz4Bp6Brv8E6os=;
+        b=O+AGTFn04M7aP/iVgcnqG40JcbHTAudN3ibVIwRVostevCW1xNddYtNqPcfeLq0XI5
+         DdbyWFD9QUMwXAyAZw79yEMqocyTBCu9h+tRN6CGIcbQPzJI2l3PuO98OpSKUQCzCU5o
+         1TT37+bgBTc6E1Z5zkrgybQguIBtv2v7Q8rfEgBpZZUFWCMc7YXJL93s8fEXp2c/xBJm
+         ubFyOeGpFIlEgDhquJV8HlzQ0oObWariqEqMvO6BVRJKS+0wQA8IuQKUmzMKCyw1GxD+
+         aJwrQ3zs2iHUKJT/Z7Eb4hnvY34aepPaPLNYsCHk0HCH50oSO7qYnTVTuJNrjojTiuXg
+         QXWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VmqpUfS7f2aoqYJkutvBUagv5kF3shz4Bp6Brv8E6os=;
+        b=Y5NtCnhluPe2kOaVshQjqNLJI/FyqPXEJELUcXo9etrBG9Y91HOnZbs/KhOgIUV68M
+         ORxvzOTM6hncdFMYKe2TEnPXohWoEwa2Q8iXC6EuL04epmKv8jvLhNtRCdch90FURQdj
+         uZvgWgzi3dMWo2e+yEFsSzm0Lboo2WVsRHZyJA3xZKRZGgirmCKgljGezu9w1d+M1Q7o
+         q6lQF+3alBwgMkFLrC1eNkrhgxm9GluRrEKzWDHBfSa0KaaSiGk60sDGnrk4KUijoG3Z
+         1YNPQgyzDKGVXYA3LgkKphkGpuK9We/5t6WZBb0oP3s4acFv+PkROeRfzjLLwrrT6A7N
+         NbOA==
+X-Gm-Message-State: APjAAAUhhQjE/xf6Q2InetBYBUd1pZ5l/cL9LQYU4bvfWX0bbrhdD0sf
+        IqctFUxgdNIUJ5Wneq0xVLQ=
+X-Google-Smtp-Source: APXvYqyROkZ2zjGVppqnrtM/2nfRTP4DSo0oorLg/5xmp0QtM7hX9pcEpDTyuqSWCjh9UxQ9nj7rlw==
+X-Received: by 2002:a17:90a:6545:: with SMTP id f5mr5265540pjs.42.1582223258050;
+        Thu, 20 Feb 2020 10:27:38 -0800 (PST)
+Received: from [10.69.78.90] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d3sm272300pfn.113.2020.02.20.10.27.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 10:27:37 -0800 (PST)
+Subject: Re: [PATCH v2 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware
+ when present
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
+        wahrenst@gmx.net, Bjorn Helgaas <bhelgaas@google.com>
+References: <20200219123933.2792-1-nsaenzjulienne@suse.de>
+ <20200219123933.2792-4-nsaenzjulienne@suse.de>
+ <10a53db8-960e-eea7-1e8d-790de9a79e71@broadcom.com>
+ <cab8c0d70fd30c49579199d002b81b87ed34a920.camel@suse.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ a9BQwACgnzGuH1BVeT2J0Ra+ZYgkx7DaPR0=
+Message-ID: <816cccb3-be5d-f0d5-77bd-6afdba3c0848@gmail.com>
+Date:   Thu, 20 Feb 2020 10:27:35 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <cab8c0d70fd30c49579199d002b81b87ed34a920.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
-text bindings.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
 
- .../devicetree/bindings/display/msm/gmu.txt        | 116 ------------------
- .../devicetree/bindings/display/msm/gmu.yaml       | 130 +++++++++++++++++++++
- 2 files changed, 130 insertions(+), 116 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
- create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.yaml
+On 2/20/2020 10:14 AM, Nicolas Saenz Julienne wrote:
+> On Wed, 2020-02-19 at 11:21 -0800, Florian Fainelli wrote:
+>> On 2/19/20 4:39 AM, Nicolas Saenz Julienne wrote:
+>>> xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
+>>> RPi4's VideoCore firmware interface to be up and running. It's possible
+>>> for both initializations to race, so make sure it's available prior
+>>> starting.
+>>>
+>>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>>
+>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> It does not look like there is something making sure that
+>> CONFIG_RASPBERRYPI_FIRMWARE is being selected or depended on, should we
+>> have a "default XHCI_PCI" added to drivers/firmware/Kconfig?
+> 
+> I think having that would enable the firmware interface for all XHCI_PCI users,
+> which isn't ideal. The firmware call has stubs for the case the firmware
+> interace isn't compiled, so no problem there. Ultimately we want to enable
+> CONFIG_RASPBERRYPI_FIRMWARE only when the built image targets the RPi4
+> (reglardless of being arm64/arm32). But I don't think that's feasible.
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-deleted file mode 100644
-index bf9c7a2..0000000
---- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-+++ /dev/null
-@@ -1,116 +0,0 @@
--Qualcomm adreno/snapdragon GMU (Graphics management unit)
--
--The GMU is a programmable power controller for the GPU. the CPU controls the
--GMU which in turn handles power controls for the GPU.
--
--Required properties:
--- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
--    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
--  Note that you need to list the less specific "qcom,adreno-gmu"
--  for generic matches and the more specific identifier to identify
--  the specific device.
--- reg: Physical base address and length of the GMU registers.
--- reg-names: Matching names for the register regions
--  * "gmu"
--  * "gmu_pdc"
--  * "gmu_pdc_seg"
--- interrupts: The interrupt signals from the GMU.
--- interrupt-names: Matching names for the interrupts
--  * "hfi"
--  * "gmu"
--- clocks: phandles to the device clocks
--- clock-names: Matching names for the clocks
--   * "gmu"
--   * "cxo"
--   * "axi"
--   * "mnoc"
--- power-domains: should be:
--	<&clock_gpucc GPU_CX_GDSC>
--	<&clock_gpucc GPU_GX_GDSC>
--- power-domain-names: Matching names for the power domains
--- iommus: phandle to the adreno iommu
--- operating-points-v2: phandle to the OPP operating points
--
--Optional properties:
--- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
--        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
--
--Example:
--
--/ {
--	...
--
--	gmu: gmu@506a000 {
--		compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
--
--		reg = <0x506a000 0x30000>,
--			<0xb280000 0x10000>,
--			<0xb480000 0x10000>;
--		reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
--
--		interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
--		     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "hfi", "gmu";
--
--		clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
--			<&gpucc GPU_CC_CXO_CLK>,
--			<&gcc GCC_DDRSS_GPU_AXI_CLK>,
--			<&gcc GCC_GPU_MEMNOC_GFX_CLK>;
--		clock-names = "gmu", "cxo", "axi", "memnoc";
--
--		power-domains = <&gpucc GPU_CX_GDSC>,
--				<&gpucc GPU_GX_GDSC>;
--		power-domain-names = "cx", "gx";
--
--		iommus = <&adreno_smmu 5>;
--
--		operating-points-v2 = <&gmu_opp_table>;
--	};
--};
--
--a3xx example with OCMEM support:
--
--/ {
--	...
--
--	gpu: adreno@fdb00000 {
--		compatible = "qcom,adreno-330.2",
--		             "qcom,adreno";
--		reg = <0xfdb00000 0x10000>;
--		reg-names = "kgsl_3d0_reg_memory";
--		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "kgsl_3d0_irq";
--		clock-names = "core",
--		              "iface",
--		              "mem_iface";
--		clocks = <&mmcc OXILI_GFX3D_CLK>,
--		         <&mmcc OXILICX_AHB_CLK>,
--		         <&mmcc OXILICX_AXI_CLK>;
--		sram = <&gmu_sram>;
--		power-domains = <&mmcc OXILICX_GDSC>;
--		operating-points-v2 = <&gpu_opp_table>;
--		iommus = <&gpu_iommu 0>;
--	};
--
--	ocmem@fdd00000 {
--		compatible = "qcom,msm8974-ocmem";
--
--		reg = <0xfdd00000 0x2000>,
--		      <0xfec00000 0x180000>;
--		reg-names = "ctrl",
--		             "mem";
--
--		clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
--		         <&mmcc OCMEMCX_OCMEMNOC_CLK>;
--		clock-names = "core",
--		              "iface";
--
--		#address-cells = <1>;
--		#size-cells = <1>;
--
--		gmu_sram: gmu-sram@0 {
--			reg = <0x0 0x100000>;
--			ranges = <0 0 0xfec00000 0x100000>;
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/display/msm/gmu.yaml b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-new file mode 100644
-index 0000000..776ff92
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/msm/gmu.yaml
-@@ -0,0 +1,130 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright 2019-2020, The Linux Foundation, All Rights Reserved
-+%YAML 1.2
-+---
-+
-+$id: "http://devicetree.org/schemas/display/msm/gmu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Devicetree bindings for the GMU attached to certain Adreno GPUs
-+
-+maintainers:
-+  - Rob Clark <robdclark@gmail.com>
-+
-+description: |
-+  These bindings describe the Graphics Management Unit (GMU) that is attached
-+  to members of the Adreno A6xx GPU family. The GMU provides on-device power
-+  management and support to improve power efficiency and reduce the load on
-+  the CPU.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - qcom,adreno-gmu-630.2
-+      - const: qcom,adreno-gmu
-+
-+  reg:
-+    items:
-+      - description: Core GMU registers
-+      - description: GMU PDC registers
-+      - description: GMU PDC sequence registers
-+
-+  reg-names:
-+    items:
-+      - const: gmu
-+      - const: gmu_pdc
-+      - const: gmu_pdc_seq
-+
-+  clocks:
-+    items:
-+     - description: GMU clock
-+     - description: GPU CX clock
-+     - description: GPU AXI clock
-+     - description: GPU MEMNOC clock
-+
-+  clock-names:
-+    items:
-+      - const: gmu
-+      - const: cxo
-+      - const: axi
-+      - const: memnoc
-+
-+  interrupts:
-+    items:
-+     - description: GMU HFI interrupt
-+     - description: GMU interrupt
-+
-+
-+  interrupt-names:
-+    items:
-+      - const: hfi
-+      - const: gmu
-+
-+  power-domains:
-+     items:
-+       - description: CX power domain
-+       - description: GX power domain
-+
-+  power-domain-names:
-+     items:
-+       - const: cx
-+       - const: gx
-+
-+  iommus:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+       Phandle to a IOMMU device and stream ID. Refer to ../../iommu/iommu.txt
-+       for more information.
-+
-+  operating-points-v2:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the OPP table for the available GMU frequencies. Refer to
-+      ../../opp/opp.txt for more information.
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - interrupt-names
-+  - power-domains
-+  - power-domain-names
-+  - iommus
-+  - operating-points-v2
-+
-+examples:
-+ - |
-+   #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-+   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+   #include <dt-bindings/interrupt-controller/irq.h>
-+   #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+   gmu: gmu@506a000 {
-+        compatible="qcom,adreno-gmu-630.2", "qcom,adreno-gmu";
-+
-+        reg = <0x506a000 0x30000>,
-+              <0xb280000 0x10000>,
-+              <0xb480000 0x10000>;
-+        reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
-+
-+        clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
-+                 <&gpucc GPU_CC_CXO_CLK>,
-+                 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+                 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+        clock-names = "gmu", "cxo", "axi", "memnoc";
-+
-+        interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "hfi", "gmu";
-+
-+        power-domains = <&gpucc GPU_CX_GDSC>,
-+                        <&gpucc GPU_GX_GDSC>;
-+        power-domain-names = "cx", "gx";
-+
-+        iommus = <&adreno_smmu 5>;
-+        operating-points-v2 = <&gmu_opp_table>;
-+   };
+It would enable the driver, which is only functional if the matching
+Device Tree node is present, that seems like a reasonable price to pay
+for a multiplatform kernel. After all, this is a functional dependency
+for the Pi4.
 -- 
-2.7.4
+Florian
