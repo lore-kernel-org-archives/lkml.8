@@ -2,173 +2,142 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D4EC761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E6CC3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BAD620801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A1B20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 04:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="fXHLIE2x";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IF7UlWxQ"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="AwE8pWyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727966AbgBTEmZ (ORCPT
+        id S1728014AbgBTEmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 23:42:25 -0500
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:41471 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727469AbgBTEmZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 23:42:25 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id D6A73608;
-        Wed, 19 Feb 2020 23:42:23 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 19 Feb 2020 23:42:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        gQLg/u8G+UeVHb4xnmxvzs+U+CqS0x1Y3C2s8LsROHc=; b=fXHLIE2xqEA3A3Aa
-        g1483W+2PGufTEyqxEk/5ccDLQJH4544UhukQX9+afLFMR3Xoh9IiuaNCDwBh9od
-        avq9F+BVcovv9yR5pWpEQeBdg7t0s3Zab8SU3h0qoxmDjXDqxf5uRIYJExDzYfw5
-        XBSoUZBZDK5HeWXLkrejATZHXobna36M0m0/SpJH137sfASwhD1c3ZuuWyicGJGV
-        VO3DJN9Eq5qWMuUwKA8AoojRqbn3/aYRjTmS6PMV5KaIhd0NguxAtoQJ8an6+n0P
-        Z04Gwtjp5bSVPd7uzp+aDrPZSS2vpJsm2/J7pbqDULx8VMeD5cg/e9XKzzYgUwFZ
-        E5DZJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=gQLg/u8G+UeVHb4xnmxvzs+U+CqS0x1Y3C2s8LsRO
-        Hc=; b=IF7UlWxQKaGDh9JIgM2V9a9PWiYklF/X0uDH31JgpFojyd1nqLzln4VVo
-        V1SOJ5FCrSODw0heXdHK1LIy6elEaadyH+Ex10PciJInMu5EkqTyqnuYRP+Su9NE
-        maXuOvKYwauT8qEYAH7gNgyRPOqyebkz1wQDcL3K26HgCS6HDJjVuK1jPkbgsG/6
-        oMlGQAeKqpEzrwyOl4CPi2YVgwqqOK70SsJ6ZvcT6G22Z6ekN6KF/c4RtAL4OqyS
-        rVYIl7/DIg6OLvG15jKJOmaBVjocI+g3ZduMAGspW6CsLpTDy6vllbhZ8CpJOsBG
-        cCRmLxYINJ4mFTjff/xtH0pE4vFvg==
-X-ME-Sender: <xms:Lw5OXsM9kDX4xgW5s00E0n71w8XwKYH93bPxSozMwdtcUpnSurX6iA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedugdejhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    duieefrdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:Lw5OXki7WaKdB6a6MDoNeNx_br_EZ3fU9O0WBRKllT4bwUDXPa5_kw>
-    <xmx:Lw5OXigEYhudCQbWOcLuYm4FMyMXCu3zkvObmjES4lHhVYh--gfPzA>
-    <xmx:Lw5OXrKGVmjXQ2Tp5ceV7i33wKBW53VePd6RaIgmdkIQ1v7SBGnblQ>
-    <xmx:Lw5OXlBt-kCZlcKWsoVt2GKPtZ18WSvcAmd9ypYEDJAlEPfRclGtRA>
-Received: from mickey.themaw.net (unknown [118.208.163.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DFD023060BD1;
-        Wed, 19 Feb 2020 23:42:19 -0500 (EST)
-Message-ID: <c9a6f929b57e0c21c8845c211d1e3eab09d09633.camel@themaw.net>
-Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications
- [ver #16]
-From:   Ian Kent <raven@themaw.net>
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, mszeredi@redhat.com, christian@brauner.io,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Wed, 19 Feb 2020 23:42:50 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:39729 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727469AbgBTEmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 23:42:49 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 48NMQb1JZMz9sRt; Thu, 20 Feb 2020 15:42:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1582173767;
+        bh=DYCVUaJqREzhND+/ZTURlnZqhJ6ZboY/OqZaFazcPb8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AwE8pWycjubfvwD9jO89f6JQoUD0PilynV9mjD6EgLGfXn2d3qYuW5f621z4s0AuO
+         n0oljC15XWSLEOAYfJmx/kakMY9RHpZN8fD/lv8P3NAzgL/ExBzcE+VEF4r7yWKi3v
+         xdV9P5X1BTcXOlyh2fTwR3uBE/XK73IFWlxNilq0Wb/p6nsPcTIBX04UHmvahaIfkH
+         b3foH8VpvuUaEr7AAbde6NxMoTICRM7SXfPThMErfpcCkAGXpSfAXA73mRkkrdra0a
+         Sqf0DMVb0U5pubfX0hp3p/9JUMXzn82TJqmUFUKJVnsu9hkjKm3z3SeoY0HffLgRVK
+         Y/PQ2FWnOJgew==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     linux-kselftest@vger.kernel.org
+Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 20 Feb 2020 12:42:15 +0800
-In-Reply-To: <20200219144613.lc5y2jgzipynas5l@wittgenstein>
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-         <20200219144613.lc5y2jgzipynas5l@wittgenstein>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+Subject: [PATCH] selftests: Install settings files to fix TIMEOUT failures
+Date:   Thu, 20 Feb 2020 15:42:41 +1100
+Message-Id: <20200220044241.2878-1-mpe@ellerman.id.au>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-19 at 15:46 +0100, Christian Brauner wrote:
-> On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
-> > Here are a set of patches that adds system calls, that (a) allow
-> > information about the VFS, mount topology, superblock and files to
-> > be
-> > retrieved and (b) allow for notifications of mount topology
-> > rearrangement
-> > events, mount and superblock attribute changes and other superblock
-> > events,
-> > such as errors.
-> > 
-> > ============================
-> > FILESYSTEM INFORMATION QUERY
-> > ============================
-> > 
-> > The first system call, fsinfo(), allows information about the
-> > filesystem at
-> > a particular path point to be queried as a set of attributes, some
-> > of which
-> > may have more than one value.
-> > 
-> > Attribute values are of four basic types:
-> > 
-> >  (1) Version dependent-length structure (size defined by type).
-> > 
-> >  (2) Variable-length string (up to 4096, including NUL).
-> > 
-> >  (3) List of structures (up to INT_MAX size).
-> > 
-> >  (4) Opaque blob (up to INT_MAX size).
-> 
-> I mainly have an organizational question. :) This is a huge patchset
-> with lots and lots of (good) features. Wouldn't it make sense to make
-> the fsinfo() syscall a completely separate patchset from the
-> watch_mount() and watch_sb() syscalls? It seems that they don't need
-> to
-> depend on each other at all. This would make reviewing this so much
-> nicer and likely would mean that fsinfo() could proceed a little
-> faster.
+Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
+timeout per test") added a 45 second timeout for tests, and also added
+a way for tests to customise the timeout via a settings file.
 
-The remainder of the fsinfo() series would need to remain useful
-if this was done.
+For example the ftrace tests take multiple minutes to run, so they
+were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
+timeout setting").
 
-For context I want work on improving handling of large mount
-tables.
+This works when the tests are run from the source tree. However if the
+tests are installed with "make -C tools/testing/selftests install",
+the settings files are not copied into the install directory. When the
+tests are then run from the install directory the longer timeouts are
+not applied and the tests timeout incorrectly.
 
-Ultimately I expect to solve a very long standing autofs problem
-of using large direct mount maps without prohibitive performance
-overhead (and there a lot of rather challenging autofs changes to
-do for this too) and I believe the fsinfo() system call, and
-related bits, is the way to do this.
+So add the settings files to TEST_FILES of the appropriate Makefiles
+to cause the settings files to be installed using the existing install
+logic.
 
-But improving the handling of large mount tables for autofs
-will have the side effect of improvements for other mount table
-users, even in the early stages of this work.
+Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ tools/testing/selftests/ftrace/Makefile    | 2 +-
+ tools/testing/selftests/livepatch/Makefile | 2 ++
+ tools/testing/selftests/net/mptcp/Makefile | 2 ++
+ tools/testing/selftests/rseq/Makefile      | 2 ++
+ tools/testing/selftests/rtc/Makefile       | 2 ++
+ 5 files changed, 9 insertions(+), 1 deletion(-)
 
-For example I want to use this for mount table handling improvements
-in libmount. Clearly that ultimately needs mount change notification
-in the end but ...
-
-There's a bunch of things that need to be done alone the way
-to even get started.
-
-One thing that's needed is the ability to call fsinfo() to get
-information on a mount to avoid constant reading of the proc based
-mount table, which happens a lot (since the mount info. needs
-to be up to date) so systemd (and others) would see an improvement
-with the fsinfo() system call alone able to be used in libmount.
-
-But for the fsinfo() system call to be used for this the file
-system specific mount options need to also be obtained when
-using fsinfo(). That means the super block operation fsinfo uses
-to provide this must be implemented for at least most file systems.
-
-So separating out the notifications part, leaving whatever is needed
-to still be able to do this, should be fine and the system call
-would be immediately useful once the super operation is implemented
-for the needed file systems.
-
-Whether the implementation of the super operation should be done
-as part of this series is another question but would certainly
-be a challenge and make the series more complicated. But is needed
-for the change to be useful in my case.
-
-Ian
+diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+index cd1f5b3a7774..d6e106fbce11 100644
+--- a/tools/testing/selftests/ftrace/Makefile
++++ b/tools/testing/selftests/ftrace/Makefile
+@@ -2,7 +2,7 @@
+ all:
+ 
+ TEST_PROGS := ftracetest
+-TEST_FILES := test.d
++TEST_FILES := test.d settings
+ EXTRA_CLEAN := $(OUTPUT)/logs/*
+ 
+ include ../lib.mk
+diff --git a/tools/testing/selftests/livepatch/Makefile b/tools/testing/selftests/livepatch/Makefile
+index 3876d8d62494..1acc9e1fa3fb 100644
+--- a/tools/testing/selftests/livepatch/Makefile
++++ b/tools/testing/selftests/livepatch/Makefile
+@@ -8,4 +8,6 @@ TEST_PROGS := \
+ 	test-state.sh \
+ 	test-ftrace.sh
+ 
++TEST_FILES := settings
++
+ include ../lib.mk
+diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+index 93de52016dde..ba450e62dc5b 100644
+--- a/tools/testing/selftests/net/mptcp/Makefile
++++ b/tools/testing/selftests/net/mptcp/Makefile
+@@ -8,6 +8,8 @@ TEST_PROGS := mptcp_connect.sh
+ 
+ TEST_GEN_FILES = mptcp_connect
+ 
++TEST_FILES := settings
++
+ EXTRA_CLEAN := *.pcap
+ 
+ include ../../lib.mk
+diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
+index d6469535630a..f1053630bb6f 100644
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -19,6 +19,8 @@ TEST_GEN_PROGS_EXTENDED = librseq.so
+ 
+ TEST_PROGS = run_param_test.sh
+ 
++TEST_FILES := settings
++
+ include ../lib.mk
+ 
+ $(OUTPUT)/librseq.so: rseq.c rseq.h rseq-*.h
+diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
+index de9c8566672a..90fa1a346908 100644
+--- a/tools/testing/selftests/rtc/Makefile
++++ b/tools/testing/selftests/rtc/Makefile
+@@ -6,4 +6,6 @@ TEST_GEN_PROGS = rtctest
+ 
+ TEST_GEN_PROGS_EXTENDED = setdate
+ 
++TEST_FILES := settings
++
+ include ../lib.mk
+-- 
+2.21.1
 
