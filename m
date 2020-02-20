@@ -2,155 +2,123 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17894C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C73C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4A920659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W7Xbyozo"
+	by mail.kernel.org (Postfix) with ESMTP id 1C63524656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582214215;
+	bh=VNyp7lBvT7OkfPkutXyCOLUpkCyVU4q5GYk6PBFJlRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wWXVk9WqN5yDbAVV9cYV4RXKCWxfAQRJhkAsEB6ODBWLAS2wR8jt0dZbkL00y3mYf
+	 ck8MZmT8wfHM8qIrZeiz+PR0D6eepdlaxA/+CpNVbGWwJpo5Zowhw5rXsLTo8jwSiJ
+	 uNNiXpUKQ3HPB8o468H8kINNuIv6ZBLbUvIgjuYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgBTP4h (ORCPT
+        id S1728627AbgBTP4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:56:37 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:36784 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgBTP4h (ORCPT
+        Thu, 20 Feb 2020 10:56:53 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:45118 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728460AbgBTP4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:56:37 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KFlRVe131311;
-        Thu, 20 Feb 2020 15:56:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=G+CFuAFevU0UvGzgyujY9EHrI4dfidkI/fcfUAghG+4=;
- b=W7XbyozorUajWdI0DAxjDS4ikVXI6pha0O/yUYkQE0l6ZvBpAwfvPBIu0uT2ldGBm6JV
- 2noaNC8ZksCzTEOis8r4yq6VF+z6HWa/r+oWxc9UVpk1CdKS4OINeZHEI4FVOfBVysK0
- 4lkB2MDBgZimm5SyoLHoKO/1stLhSqHbLgN5HmjcrRWFP5bGBlToum0/IZhHSZnDWelU
- hyNJZXHSxLQLhRdULphUSs2fRZB/0hR0914G8NUWhfvz+SfdpbpObd+rlSVDe96RdY5Q
- ldDn9JZNKAhC7dvF4rm8mv1SrriBrXVhqezsb3Hf3OP7ec0OP7Bo385YgSZFS5BNf90X MQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2y8udkjnam-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 15:56:13 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KFlsYW012773;
-        Thu, 20 Feb 2020 15:56:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2y8ud43uqx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 15:56:12 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KFu9GJ023160;
-        Thu, 20 Feb 2020 15:56:09 GMT
-Received: from [192.168.0.195] (/69.207.174.138)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Feb 2020 07:56:09 -0800
-Subject: Re: [PATCH v3 0/3] Introduce per-task latency_nice for scheduler
- hints
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Parth Shah <parth@linux.ibm.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "patrick.bellasi@matbug.net" <patrick.bellasi@matbug.net>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "dhaval.giani@oracle.com" <dhaval.giani@oracle.com>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "qais.yousef@arm.com" <qais.yousef@arm.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "qperret@qperret.net" <qperret@qperret.net>,
-        "pjt@google.com" <pjt@google.com>, "tj@kernel.org" <tj@kernel.org>
-References: <20200116120230.16759-1-parth@linux.ibm.com>
- <8ed0f40c-eeb4-c487-5420-a8eb185b5cdd@linux.ibm.com>
- <c7e5b9da-66a3-3d69-d7aa-0319de3aa736@oracle.com>
- <3ce2e8940fb14d95b011c8b30892aa62@AcuMS.aculab.com>
- <10f42efa-3750-491a-74fe-d84c9c4924e3@oracle.com>
- <2870e44f41414fd58b58f7831d7386fe@AcuMS.aculab.com>
-From:   chris hyser <chris.hyser@oracle.com>
-Message-ID: <7b50c0ee-5e2b-5cec-a7f6-514abdc5ee18@oracle.com>
-Date:   Thu, 20 Feb 2020 10:55:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 20 Feb 2020 10:56:53 -0500
+Received: by mail-qk1-f194.google.com with SMTP id a2so3965723qko.12;
+        Thu, 20 Feb 2020 07:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WrIAIkuYfbohT4URY+WT9f9IMynxvVzhUx7hJqz7oAk=;
+        b=ESOkYp4wOyqNJWtsVeoAd/ssWk0nvkvCqnwMaCaF3sumNcZ7bZUGH+0ucazaesndy0
+         yirD6ztauUJJvTh2k0qQOCMIuSy8y0I5Op0djhJN8tXc86SkhYb3GRAvPH0Xdg20PLhR
+         tkP4CLoOD5zcFyv/N+6KLjwu32UptfltbOtBQhs2lFBq9bhdey1qQykNbSqzme1HWTvF
+         YJKe9824y9fv3QDFnPj2iRvGn8faVc36cGixbcfn6JihAAnsRa6TRztLTkXfYeKmfck4
+         JQ0bQjj5RuwY3aPQVQLPJ5lDRI+ouoTLCgEgk4zeilfjXu6dAxWPxxTsm/zvTFmQrkVB
+         y1rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=WrIAIkuYfbohT4URY+WT9f9IMynxvVzhUx7hJqz7oAk=;
+        b=JZjH+GfTO+qhT4RqZgv/Nro+yYKDSYRQMNWbe8StRtYrtDXcoEDREy3YS2NYcT8q1G
+         4tUrFPnDViVwxAqzk6vA7+AIHPE1u1FzW59Mrd/vAI2OqTunE7DnwciZ3IboEu0jTaN2
+         uC0bnRtTsdIh01226K74aYyaehAbojJLCDN36pmDPNzqRldxD0pR1MneZvIy1V7Nlh46
+         wKegmJratMlleWlAHtwJTr0665t8hgCgbKaHTxpbW15+Nctszza880Spad7J1Wp5ronM
+         EtxVoKnoiDctjDUbITWZjqIL//k9nO2QsBkgrRcp0rCtH6yEvIPKVT9y864kQcyYUpTb
+         V53w==
+X-Gm-Message-State: APjAAAUz/7k9alrbtjVRIOGEETlMmBN93uiXFNZmwjLSAKDn+Z3ACfTJ
+        MyfzMx/eQDjdLXNu/1SfVyQ=
+X-Google-Smtp-Source: APXvYqxl2VFYhPNB5rqU5j+Wp99qIWsjSoVAVV6XHVaiOidOGQt4AO4LYzBpRqNGmdzKRoW3+dg+/w==
+X-Received: by 2002:a05:620a:31b:: with SMTP id s27mr28175423qkm.105.1582214212209;
+        Thu, 20 Feb 2020 07:56:52 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::5e31])
+        by smtp.gmail.com with ESMTPSA id x66sm57180qkb.101.2020.02.20.07.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 07:56:51 -0800 (PST)
+Date:   Thu, 20 Feb 2020 10:56:51 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] mm: memcontrol: asynchronous reclaim for memory.high
+Message-ID: <20200220155651.GG698990@mtj.thefacebook.com>
+References: <20200219181219.54356-1-hannes@cmpxchg.org>
+ <20200219183731.GC11847@dhcp22.suse.cz>
+ <20200219191618.GB54486@cmpxchg.org>
+ <20200219195332.GE11847@dhcp22.suse.cz>
+ <20200219214112.4kt573kyzbvmbvn3@ca-dmjordan1.us.oracle.com>
+ <20200219220859.GF54486@cmpxchg.org>
+ <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <2870e44f41414fd58b58f7831d7386fe@AcuMS.aculab.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
- mlxlogscore=779 suspectscore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 mlxlogscore=833 phishscore=0 impostorscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220154524.dql3i5brnjjwecft@ca-dmjordan1.us.oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 20, 2020 at 10:45:24AM -0500, Daniel Jordan wrote:
+> Ok, consistency with io and memory is one advantage to doing it that way.
+> Creating kthreads in cgroups also seems viable so far, and it's unclear whether
+> either approach is significantly simpler or more maintainable than the other,
+> at least to me.
 
+The problem with separate kthread approach is that many of these work
+units are tiny, and cgroup membership might not be known or doesn't
+agree with the processing context from the beginning
 
-On 2/20/20 9:39 AM, David Laight wrote:
-> From: chris hyser <chris.hyser@oracle.com>
->> Sent: 19 February 2020 17:17
->>
->> On 2/19/20 6:18 AM, David Laight wrote:
->>> From: chris hyser
->>>> Sent: 18 February 2020 23:00
->>> ...
->>>> All, I was asked to take a look at the original latency_nice patchset.
->>>> First, to clarify objectives, Oracle is not
->>>> interested in trading throughput for latency.
->>>> What we found is that the DB has specific tasks which do very little but
->>>> need to do this as absolutely quickly as possible, ie extreme latency
->>>> sensitivity. Second, the key to latency reduction
->>>> in the task wakeup path seems to be limiting variations of "idle cpu" search.
->>>> The latter particularly interests me as an example of "platform size
->>>> based latency" which I believe to be important given all the varying size
->>>> VMs and containers.
->>>
->>>   From my experiments there are a few things that seem to affect latency
->>> of waking up real time (sched fifo) tasks on a normal kernel:
->>
->> Sorry. I was only ever talking about sched_other as per the original patchset. I realize the term
->> extreme latency
->> sensitivity may have caused confusion. What that means to DB people is no doubt different than audio
->> people. :-)
-> 
-> Shorter lines.....
-> 
-> ISTM you are making some already complicated code even more complex.
-> Better to make it simpler instead.
+For example, the ownership of network packets can't be determined till
+processing has progressed quite a bit in shared contexts and each item
+too small to bounce around. The only viable way I can think of
+splitting aggregate overhead according to the number of packets (or
+some other trivially measureable quntity) processed.
 
-The code already exists to set a limit to bail out of what is sometimes a needlessly excessive search. Setting that 
-based on an integer doesn't seem particularly complex. Now whether that is actually useful is what I'm currently looking at.
+Anything sitting in reclaim layer is the same. Reclaim should be
+charged to the cgroup whose memory is reclaimed *but* shouldn't block
+other cgroups which are waiting for that memory. It has to happen in
+the context of the highest priority entity waiting for memory but the
+costs incurred must be charged to the memory owners.
 
-> 
-> If you need a thread to run as soon as possible after it is woken
-> why not use the RT scheduler (eg SCHED_FIFO) that is what it is for.
+So, one way or the other, I think we'll need back charging and once
+back charging is needed for big ticket items like network and reclaim,
+it's kinda silly to use separate mechanisms for other stuff.
 
-Overkill and doesn't play well with cpu cgroup controller.
+> Is someone on your side working on remote charging right now?  I was planning
+> to post an RFD comparing these soon and it would make sense to include them.
 
+It's been on the to do list but nobody is working on it yet.
 
-> 
-> If there are delays finding an idle cpu to migrate a process to
-> (especially on systems with large numbers of cpu) then that is a
-> general problem that can be addressed without extra knobs.
+Thanks.
 
-There is no if. It is a brute force search. There are delays proportional to the search domain size. You can optimize 
-the hell of out the brute force, or you use obtained knowledge to bail out early. Getting that knowledge from the user 
-is a time honored tradition. :-)
-
--chrish
+-- 
+tejun
