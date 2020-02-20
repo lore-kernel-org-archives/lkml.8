@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE7AC11D81
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7525DC3404C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D14E24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9FC24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:12:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SNXlrIU9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Acq69Agx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbgBTFMW (ORCPT
+        id S1727943AbgBTFMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:12:22 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37480 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBTFMU (ORCPT
+        Thu, 20 Feb 2020 00:12:25 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40746 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbgBTFMW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:12:20 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so1308252pfn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:12:19 -0800 (PST)
+        Thu, 20 Feb 2020 00:12:22 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b185so1299202pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:12:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9wb/P3LPDlbugq1CDyVA5kSUSv6vOvUhfJXNTDD+0wY=;
-        b=SNXlrIU9vBkpDfdPdssBSOmNPnkkuPS8e9u8DKOKxgUG2zjLVLmiawotnQ7HGxuBvp
-         TtmFtfHu9I5EAyoS14CaZ1dEJe/YpiXVccQYzt/ombDO0lbXOesSmoybJcyQwQWH1+yi
-         qYCh8vavpMm6H6Wt6RLSv4ImGte9dPS5TZfryLqP6SFK/9wnlhYyf81sChx4KqTyGnDP
-         Wq2ctFI2eUql1q0CGLCgYPytPx1kosaKCW3mFFybgRqfflwuAojiY860V+C4p+vQ9Mji
-         1CSnkGQtP78B77oscphEFESc+dR4BpUJuVmgD7MNkYkSN331A0bDPIf0N0e8U8PCQuT8
-         iy6w==
+        bh=2X37snKsWsbjnSC5G8JKDN8U4XxTo8mCwhpNzWhIZ/g=;
+        b=Acq69AgxNmIWtDhcNNl9N3V0JLpmicXt0Bv9AbkvFUJAHq3y91fvxJdDryQwz+cnpi
+         Pfm0pSzDI/CaisNYqIVBO/V1ClVjL+SXL2KT3EUETedpQ2XWinfVYgT2AedKKPkhoQDP
+         zxQYofRDAjLEWzKHaPf6ToP1AT4OtI5kDOlfdbtkcMlqY9KfEekAaNk2ULAWA5Kr9uRs
+         mmI87WTsKFiasYV6UZhrWx6G3gd29kPFGn9SQ0UruMk33Np3tYR2tTmJ644tm7wB466E
+         m1vb18qsNVNnanSgzygrz3lHf1Ngfg0Ef2TOYBJOp5clE9xXnggl972BSJLHQkS87Dg8
+         QMlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9wb/P3LPDlbugq1CDyVA5kSUSv6vOvUhfJXNTDD+0wY=;
-        b=CVvY8h6P0LkwDl6xzzujnJDoITA/pTVkGyPXjwv20GtQzQDovOt5oEkuqtiGAeLdRp
-         fyMDcsAaLSJ56VDdDSo8k4Au9POpH+kCO5FpBiS5xfBAwrVOENssi/YSNlKOeQvEIoav
-         nfKamqBt/3f5hDept08jP/up9Jh2mW7pqcuQVqhwIXTsxt12k9p6gadVTkS8++38Fj0v
-         rbMK6ntkD0Q7yW2zbIcpIbxA0B+Y7HUCZvNhP43lNGyxj3syxkaAe4tIVqhfxhBzug5V
-         y7K80uMi8Dq/tmlGdBSbgKhuLKpuAvZAn66VzWey3hF0vnhjwRjePZKH8nRCJCMdp+kg
-         OYXw==
-X-Gm-Message-State: APjAAAXbSGlPjOryP24oIveraUJV13a84d3igAJ1lx8GJO4wmK5+6r3x
-        nmCYH+ywRv4MVL2wb2NazTI=
-X-Google-Smtp-Source: APXvYqxGhH1XvgsCzvYlxhVrJSu1Cx/AEALUQCK1x+DR5+5e9wZy+smGUonK+C39lOt0K325+K/Rjg==
-X-Received: by 2002:a62:1cd6:: with SMTP id c205mr30226967pfc.179.1582175538873;
-        Wed, 19 Feb 2020 21:12:18 -0800 (PST)
+        bh=2X37snKsWsbjnSC5G8JKDN8U4XxTo8mCwhpNzWhIZ/g=;
+        b=ogbW3ZE8PELgGuWe+0DHOKDyZnuuBNoScdCJrrGYSyl2+5Ye/enq574ZowHW0GciZ0
+         AOXABkFKnBQoXxEUhONpGYeaRIm61A+VmQibLwNxKyP82LcHbP6N56F/58ecg2Edn5iA
+         k7lJ+QQb08yGphH/Ni937uFntieHdDHlGnoiWf6bPe/cbr4VPHLMuKGk96a7Xs9C7+Bu
+         t+OA9VvLYEtRjwzb5kZx7AUfwmo2lPijWiisc4RGoXyF3IhqcXcI9zNXH2pqXrzizqgZ
+         Nf9prUDjFj3MF95J95Dy3pF5XlSqC5Ue4ZpjhlaZkURwuOHXLJqpqct+uqPoMfrHdRq2
+         2AMg==
+X-Gm-Message-State: APjAAAW3fW2thw0AY+ubjnEWjqLPEfbIVk5liDWZgs8Kv4pDvWCQFSHo
+        F/Z7sBSIb3K8KF/xGE1bbQQ=
+X-Google-Smtp-Source: APXvYqzj2jLsMKBB2X799oxwYMJQK2EJEVp0IToh9yv4SjwCu5TpPnSa2+xq1RiJnio9Ww+ylpkcJA==
+X-Received: by 2002:a62:18c9:: with SMTP id 192mr29983465pfy.117.1582175542013;
+        Wed, 19 Feb 2020 21:12:22 -0800 (PST)
 Received: from localhost.localdomain ([114.206.198.176])
-        by smtp.gmail.com with ESMTPSA id t15sm1472599pgr.60.2020.02.19.21.12.15
+        by smtp.gmail.com with ESMTPSA id t15sm1472599pgr.60.2020.02.19.21.12.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Feb 2020 21:12:18 -0800 (PST)
+        Wed, 19 Feb 2020 21:12:21 -0800 (PST)
 From:   js1304@gmail.com
 X-Google-Original-From: iamjoonsoo.kim@lge.com
 To:     Andrew Morton <akpm@linux-foundation.org>
@@ -67,9 +67,9 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Vlastimil Babka <vbabka@suse.cz>,
         Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: [PATCH v2 5/9] mm/workingset: use the node counter if memcg is the root memcg
-Date:   Thu, 20 Feb 2020 14:11:49 +0900
-Message-Id: <1582175513-22601-6-git-send-email-iamjoonsoo.kim@lge.com>
+Subject: [PATCH v2 6/9] mm/workingset: handle the page without memcg
+Date:   Thu, 20 Feb 2020 14:11:50 +0900
+Message-Id: <1582175513-22601-7-git-send-email-iamjoonsoo.kim@lge.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
 References: <1582175513-22601-1-git-send-email-iamjoonsoo.kim@lge.com>
@@ -80,49 +80,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-In the following patch, workingset detection is implemented for the
-swap cache. Swap cache's node is usually allocated by kswapd and it
-isn't charged by kmemcg since it is from the kernel thread. So the swap
-cache's shadow node is managed by the node list of the list_lru rather
-than the memcg specific one.
+When implementing workingset detection for anonymous page, I found
+some swapcache pages with NULL memcg. From the code reading, I found
+two reasons.
 
-If counting the shadow node on the root memcg happens to reclaim the slab
-object, the shadow node count returns the number of the shadow node on
-the node list of the list_lru since root memcg has the kmem_cache_id, -1.
+One is the case that swap-in readahead happens. The other is the
+corner case related to the shmem cache. These two problems should be
+fixed, but, it's not straight-forward to fix. For example, when swap-off,
+all swapped-out pages are read into swapcache. In this case, who's the
+owner of the swapcache page?
 
-However, the size of pages on the LRU is calculated by using the specific
-memcg, so mismatch happens. This causes the number of shadow node not to
-be increased to the enough size and, therefore, workingset detection
-cannot work correctly. This patch fixes this bug by checking if the memcg
-is the root memcg or not. If it is the root memcg, instead of using
-the memcg-specific LRU, the system-wide LRU is used to calculate proper
-size of the shadow node so that the number of the shadow node can grow
-as expected.
+Since this problem doesn't look trivial, I decide to leave the issue and
+handles this corner case on the place where the error occurs.
 
 Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 ---
- mm/workingset.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ mm/workingset.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/mm/workingset.c b/mm/workingset.c
-index 5fb8f85..a9f474a 100644
+index a9f474a..8d2e83a 100644
 --- a/mm/workingset.c
 +++ b/mm/workingset.c
-@@ -468,7 +468,13 @@ static unsigned long count_shadow_nodes(struct shrinker *shrinker,
- 	 * PAGE_SIZE / xa_nodes / node_entries * 8 / PAGE_SIZE
- 	 */
- #ifdef CONFIG_MEMCG
--	if (sc->memcg) {
-+	/*
-+	 * Kernel allocation on root memcg isn't regarded as allocation of
-+	 * specific memcg. So, if sc->memcg is the root memcg, we need to
-+	 * use the count for the node rather than one for the specific
-+	 * memcg.
-+	 */
-+	if (sc->memcg && !mem_cgroup_is_root(sc->memcg)) {
- 		struct lruvec *lruvec;
- 		int i;
+@@ -257,6 +257,10 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
+ 	VM_BUG_ON_PAGE(page_count(page), page);
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
  
++	/* page_memcg() can be NULL if swap-in readahead happens */
++	if (!page_memcg(page))
++		return NULL;
++
+ 	advance_inactive_age(page_memcg(page), pgdat, is_file);
+ 
+ 	lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
 -- 
 2.7.4
 
