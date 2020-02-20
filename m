@@ -2,185 +2,131 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AAFC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6097EC11D0A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F590206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pCKRt1az"
+	by mail.kernel.org (Postfix) with ESMTP id 38C56206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582208204;
+	bh=ELL3hEpGo9sAinW5R6kKrZvV1yKEFg4R0dnJKKl/e5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TktMJ33l1wmU1RLxT0MgCTxVLRFvdYybE7sAR/q6CTnOly9G/tNhvJR9BIDP4tK2C
+	 HIrLa6icpe3rEHlFyih5Qrz5Z/+caBi+SU0wKlz553QDgMtJM+0tkjx/npFJiw8vlx
+	 cFZOgdOhjzVQ4gSceRirf/GjnJLOG1/3zg00swBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgBTOQ0 (ORCPT
+        id S1728341AbgBTOQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:16:26 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45454 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727088AbgBTOQZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:16:25 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KEFGMm051288;
-        Thu, 20 Feb 2020 08:15:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582208116;
-        bh=Axzg4rCh+ok1KaDsGcP9AyakqPBpC/mwibitdg3IGVw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pCKRt1az0CeDDzXENnEc0MpcujZQB0YGekohRP4P5jXgjcreBXflff1LrL4Ub1TZL
-         DxnB5RImn2+G2ZNRAVYSsuCfZIUK4AoioyfGKQNj8G3Qufr3OerZ/OA32JqhUfiHat
-         rpVl02uBPoe3igOGt4IAxogn0D0GewhssAGRTp5A=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KEFGMQ012068
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Feb 2020 08:15:16 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 08:15:16 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 08:15:16 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KEFCgO095562;
-        Thu, 20 Feb 2020 08:15:12 -0600
-Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
- graph card
-To:     Sebastian Reichel <sre@kernel.org>
-CC:     Tony Lindgren <tony@atomide.com>,
+        Thu, 20 Feb 2020 09:16:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727088AbgBTOQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:16:42 -0500
+Received: from localhost (static-140-208-78-212.thenetworkfactory.nl [212.78.208.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC20B208E4;
+        Thu, 20 Feb 2020 14:16:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582208201;
+        bh=ELL3hEpGo9sAinW5R6kKrZvV1yKEFg4R0dnJKKl/e5E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QbjHw5kA8g04sBo+4CIz97a/75O3v3KPnvVZEWPkhLl9HNfY8YSJVGOU0eHiS6wBI
+         sGzdXyEQ5LQVkLw+CI8Ti/rlYUV+mrdoF+jILKt7dL6Bb8Buoh5f5oR35Sf7QC0ijM
+         yqtry28uArBqZ/Forgszj6uh9kyddJIl9X41IZdA=
+Date:   Thu, 20 Feb 2020 15:16:37 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        "Arthur D ." <spinal.by@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
-        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
-References: <20200211171645.41990-1-tony@atomide.com>
- <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
- <20200212143543.GI64767@atomide.com>
- <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
- <20200214170322.GZ64767@atomide.com>
- <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
- <20200217231001.GC35972@atomide.com>
- <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
- <20200218211631.fxojsxzvttoidfed@earth.universe>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
-Date:   Thu, 20 Feb 2020 16:15:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Russell King <linux@armlinux.org.uk>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RESEND RFC PATCH v3] clk: Use new helper in managed functions
+Message-ID: <20200220141637.GA3433108@kroah.com>
+References: <f48d1df3-fc1f-ac5c-b11e-330f18aad539@free.fr>
+ <20200220112700.GJ3374196@kroah.com>
+ <8866e533-967f-e208-1ec8-888d72f3052e@free.fr>
 MIME-Version: 1.0
-In-Reply-To: <20200218211631.fxojsxzvttoidfed@earth.universe>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8866e533-967f-e208-1ec8-888d72f3052e@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
+On Thu, Feb 20, 2020 at 03:05:54PM +0100, Marc Gonzalez wrote:
+> On 20/02/2020 12:27, Greg Kroah-Hartman wrote:
+> 
+> > On Thu, Feb 20, 2020 at 11:04:58AM +0100, Marc Gonzalez wrote:
+> >
+> >> Introduce devm_add() to wrap devres_alloc() / devres_add() calls.
+> >>
+> >> Using that helper produces simpler code, and smaller object size.
+> >> E.g. with gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu:
+> >>
+> >>     text	   data	    bss	    dec	    hex	filename
+> >> -   1708	     80	      0	   1788	    6fc	drivers/clk/clk-devres.o
+> >> +   1524	     80	      0	   1604	    644	drivers/clk/clk-devres.o
+> >>
+> >> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> >> ---
+> >> Differences from v2 to v3
+> >> x Make devm_add() return an error-code rather than the raw data pointer
+> >>   (in case devres_alloc ever returns an ERR_PTR) as suggested by Geert
+> >> x Provide a variadic version devm_vadd() to work with structs as suggested
+> >>   by Geert
+> >> x Don't use nested ifs in clk_devm* implementations (hopefully simpler
+> >>   code logic to follow) as suggested by Geert
+> >>
+> >> Questions:
+> >> x This patch might need to be split in two? (Introduce the new API, then use it)
+> >> x Convert other subsystems to show the value of this proposal?
+> >> x Maybe comment the API usage somewhere
+> >> ---
+> >>  drivers/base/devres.c    | 15 ++++++
+> >>  drivers/clk/clk-devres.c | 99 ++++++++++++++--------------------------
+> >>  include/linux/device.h   |  3 ++
+> >>  3 files changed, 53 insertions(+), 64 deletions(-)
+> >>
+> >> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+> >> index 0bbb328bd17f..b2603789755b 100644
+> >> --- a/drivers/base/devres.c
+> >> +++ b/drivers/base/devres.c
+> >> @@ -685,6 +685,21 @@ int devres_release_group(struct device *dev, void *id)
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(devres_release_group);
+> >>  
+> >> +int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
+> > 
+> > Please add a bunch of kerneldoc here, as I have no idea what this
+> > function does just by looking at the name of it :(
+> 
+> Fair enough. (This was one of my "Questions" in the patch comments.)
+> 
+> Note: My patch adds a new function, then makes use of said function.
+> Is this typically done in two patches or one?
+> 
+> Patch 1/2 augmenting the API.
+> Patch 2/2 making use of the new function.
 
-On 18/02/2020 23.16, Sebastian Reichel wrote:
->> The simplest use cases you want to support:
->> A. McBSP3 <-> CPCAP_voice (playback/capture)
->> B. MDM6600 <-> CPCAP_voice (handset mic/speaker voice call)
->> C. MDM6600 <-> WL1285 (BT voice call)
->> D. McBSP3 <-> BT (VoIP?)
-> 
-> Your description matches my understanding of the hardware setup.
-> 
->> I would not bother with recording the call as you would need tom
->> reconfigure the McBSP playback pin (is it even possible) as input to
->> OMAP4, I think..
->>
->> B/C is codec2codec, McBSP3 is not involved at all.
->> A/D is when McBSP3 is used only.
->>
->> Imho this can be represented as
->> McBSP2: 1 port
->> 	1.1: to CPCAP_hifi
->>
->> McBSP3: 1 port, 2 endpoint
->> 	2.1: to CPCAP_voice
->> 	2.2: to WL1285
->> CPCAP: 2 ports
->> 	hifi:	3.1: to McBSP2
->> 	voice:	4.1: to McBSP3
->> 		4.2: to MDM6600
->> MDM6600: 2 ports
-> 
-> I suppose you mean 1 port, 2 endpoints?
-
-Oh yes. Numbers....
-
-> 
->> 	5.1: to CPAC_voice
->> 	5.2: to WL1285
->> WL1285: 2 ports
-> 
-> and here too?
-
-here too ;)
-
-> 
->> 	6.1: to McBSP3
->> 	6.2: to MDM6600
->>
->> The machine driver should switch between the graph links based on the
->> use case for the interconnected devices:
->> A: 2.2 <-> 4.1
->> B: 4.2 <-> 5.1
->> C: 6.2 <-> 5.1
->> D: 2.2 <-> 6.1
->>
->> Can a generic card provide such a functionality?
-> 
-> I suppose in the end its a question if generic card can provide TDM
-> support.
-
-Sure it can, but can it handle the switching between the paths based on
-use cases?
-There should be machine level DAPM widgets to kick codec2codec (MDM6600
-- CPAC_voice for example) and also to make sure that when you switch
-between them the system is not going to get misconfigured.
-Switching between CPAC and BT route during call?
-Not allowing VoIP while on call, etc.
-
->> In case of B/C you should not have a running stream imho.
-> 
-> I would expect, that MDM6600 codec marks itself as running/stopped
-> based on call state. That should enable DAPM widgets automatically
-> when CPCAP_voice is routed to MDM6600?
-> 
->> In all cases CPCAP_voice should be able to run the clocks on i2s,
->> even if it is not used by the audio setup.
->> Not sure if you can just turn Wl1285 as master, but it is possible
->> that it is master, but silent when it is not used?
-> 
-> I provided CPCAP registers for BT call, which should be enough to
-> figure this out (I did not yet analyze the results myself).
-
-I got the datasheet from NXP (thanks for the pointer!), I try to look at
-it in a coming days.
-
->> I'm not sure if we should span out dummy dais for endpoints within a
->> port. Imho the port _is_ the dai. Different endpoints might use
->> different TDM slots on the port (or the same slot, which makes them
->> exclusive).
-> 
-> Makes sense to me.
-> 
-> -- Sebastian
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2 is usual.
