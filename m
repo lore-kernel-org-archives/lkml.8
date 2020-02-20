@@ -2,102 +2,99 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A003C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C78F9C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7246D24672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7AF24676
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b1XelOjv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h+lPWXRD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgBTAUt (ORCPT
+        id S1727099AbgBTAU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:20:49 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35611 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726729AbgBTAUt (ORCPT
+        Wed, 19 Feb 2020 19:20:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58910 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgBTAU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:20:49 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so799184plt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:20:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/jTaHDD+09W3xPLB5zxqrZcfKt5xjlZG4YPPLRu8eAo=;
-        b=b1XelOjvj05D0Bwh2OQjpR9HZva2lUVZkRpxeC9Q98tZq8EZ4K9eDHdlUPwmiOOop8
-         QkMHi2N81LsFtlBSeEFLuFw3VZUe+PpiUS4er8PSCtS5Tt8WBr3C2D2/RiSBm/RQ/aId
-         920+6K4rD3kfJybAs0JO6Bag2lo7zANivnhIc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/jTaHDD+09W3xPLB5zxqrZcfKt5xjlZG4YPPLRu8eAo=;
-        b=WFrg0g25/IEdoWVs8KREXptPThc9NJuI36BiD+JOM+5vY/35q9Dx8ruYSmnB1V/Gb6
-         ocT+XCmgv1nO/DMYZgy0aFGbc+B0DJqHca6lpPX7oAlVBYapuBrbj7x6FG6OEHXWU3sL
-         jdy+9z4t7THNmfg96GZUnEocK9gg1y/VgF3LXjkbKet7iFuShZrQbNPyvr3tfZlDf29B
-         lgPV742NzIomZNNxNm4RlZjMMvkmGTI/LTge9ZkLJQ+ouspnPnD5pOAT4fGrKx4gcwrf
-         hzKNhzkmbG1NO8YHr5vLB+hEkTkYx96hTbtmiTWaNSJ1wcXB1flgDAGe+sszgX2XVF/6
-         FBug==
-X-Gm-Message-State: APjAAAXF6tue2PZOA/Hpqy377VIIHOOBjtkQ9rDcST8s1ODgtVLyBmtx
-        1reV5cm+SNZEbduIasnuTsWUJg==
-X-Google-Smtp-Source: APXvYqxZJROEl7Go9mJ14zcRqIEZy8MOQhYz52cxdH9LK3/ms/0tqs13Hch4RiI8ug3rWwZp182Wog==
-X-Received: by 2002:a17:902:104:: with SMTP id 4mr28045532plb.24.1582158048735;
-        Wed, 19 Feb 2020 16:20:48 -0800 (PST)
-Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id g21sm804731pfb.126.2020.02.19.16.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 16:20:48 -0800 (PST)
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH] watchdog: qcom: Use irq flags from firmware
-Date:   Wed, 19 Feb 2020 16:20:47 -0800
-Message-Id: <20200220002047.115000-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        Wed, 19 Feb 2020 19:20:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K0Dw6E106404;
+        Thu, 20 Feb 2020 00:20:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=QWEL2irsvo55ZuVX9rYS+HXpqn01G2Z2MKSCHVrtka0=;
+ b=h+lPWXRDgcy4sltXvrrlq8TtBRRSGu1GpX2n8kLYsVaj23Kj2NTvbXVhIcN/t70jst+9
+ kF28bH7om4O7uLeBN2un5zoRztPAWsuOF/V0BJavu2kqNnJKfFlaSu/aV3xKDy7VRnir
+ tLDY+Q2jKzLPwdSJpMGdEpJQCKxPs1lma9evBRE+YEatgLTQbNZYyjAisVNyMO2/Ec/W
+ FUa8piTrGfjGvcNnsJBwWbiHbOn2FSxVjmJMNU7wu5RJG+DMuc40SK1MV7pUz/NO09Ng
+ i6OECB/9lwTQxut22NGK+6i0BJdcFG7dNCSxvg/roTyLV3uKJBlvqjI4SZozllsVyaTG uA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2y8udkek3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 00:20:51 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01K0BlGE024708;
+        Thu, 20 Feb 2020 00:18:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2y8ud4j3ka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 00:18:50 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01K0InE9026820;
+        Thu, 20 Feb 2020 00:18:49 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Feb 2020 16:18:48 -0800
+Subject: Re: [PATCH v12 9/9] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ docs
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200211213128.73302-1-almasrymina@google.com>
+ <20200211213128.73302-9-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <5f57d4c2-8bf2-e544-a7ba-efb8fe64a25a@oracle.com>
+Date:   Wed, 19 Feb 2020 16:18:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200211213128.73302-9-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ adultscore=0 spamscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200000
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9536 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DT or ACPI tables should tell the driver what the irq flags are.
-Given that this driver probes only on DT based platforms and those DT
-platforms specify the irq flags we can safely drop the forced irq flag
-setting here.
+On 2/11/20 1:31 PM, Mina Almasry wrote:
+> Add docs for how to use hugetlb_cgroup reservations, and their behavior.
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/watchdog/qcom-wdt.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Thanks for updating the documentation.
 
-diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
-index eb47fe5ed280..c70e89013101 100644
---- a/drivers/watchdog/qcom-wdt.c
-+++ b/drivers/watchdog/qcom-wdt.c
-@@ -248,8 +248,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
- 	/* check if there is pretimeout support */
- 	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0) {
--		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
--				       IRQF_TRIGGER_RISING,
-+		ret = devm_request_irq(dev, irq, qcom_wdt_isr, 0,
- 				       "wdt_bark", &wdt->wdd);
- 		if (ret)
- 			return ret;
+Acked-by: Mike Kravetz <mike.kravetz@oracle.com>
+
 -- 
-Sent by a computer, using git, on the internet
-
+Mike Kravetz
