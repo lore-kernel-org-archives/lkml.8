@@ -2,110 +2,131 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9737C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD038C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FFB208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933DB20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Y/aOJcaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgBTNuq (ORCPT
+        id S1728265AbgBTNxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:50:46 -0500
-Received: from mga17.intel.com ([192.55.52.151]:51148 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgBTNuq (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:50:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 05:50:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="228910710"
-Received: from jding10-desk2.ccr.corp.intel.com (HELO [10.254.215.155]) ([10.254.215.155])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Feb 2020 05:50:43 -0800
-Subject: Re: [PATCH v1 0/2] perf report: Support annotation of code without
- symbols
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20200220005902.8952-1-yao.jin@linux.intel.com>
- <20200220115629.GC565976@krava>
- <ca3fa091-f407-51e2-d617-90a842b36295@linux.intel.com>
- <20200220120655.GA586895@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <3a0a66ad-e266-b37d-d7ec-e194f2191c2d@linux.intel.com>
-Date:   Thu, 20 Feb 2020 21:50:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 08:53:21 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54472 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728219AbgBTNxV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 08:53:21 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 63B1CE7C;
+        Thu, 20 Feb 2020 14:53:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1582206798;
+        bh=bIqv4ZGZOGT3b6xmaqujXh3xaygrfzUiArc2j1fuRB0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y/aOJcazvIBhp5356NPaYzBh8ptng3KYAzVlkyNIahWk4GT+WfCiq+Uv781MXXdHy
+         wmwvMnJXDs1t/Mwf7e/OEdrwWCpQmsstG307HQv5+Cn7yXMtFU8Ptp5zHZMPPw9LOJ
+         VCrPmcpkEf4a+liOR16kPm7uV/zJy8w1+qv8Efp8=
+Date:   Thu, 20 Feb 2020 15:52:59 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@suse.de>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/6] drm/bridge: anx6345: Clean up error handling in
+ probe()
+Message-ID: <20200220135259.GC4998@pendragon.ideasonboard.com>
+References: <20200220083508.792071-1-anarsoul@gmail.com>
+ <20200220083508.792071-3-anarsoul@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220120655.GA586895@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200220083508.792071-3-anarsoul@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Vasily,
 
+Thank you for the patch.
 
-On 2/20/2020 8:06 PM, Jiri Olsa wrote:
-> On Thu, Feb 20, 2020 at 08:03:18PM +0800, Jin, Yao wrote:
->>
->>
->> On 2/20/2020 7:56 PM, Jiri Olsa wrote:
->>> On Thu, Feb 20, 2020 at 08:59:00AM +0800, Jin Yao wrote:
->>>> For perf report on stripped binaries it is currently impossible to do
->>>> annotation. The annotation state is all tied to symbols, but there are
->>>> either no symbols, or symbols are not covering all the code.
->>>>
->>>> We should support the annotation functionality even without symbols.
->>>>
->>>> The first patch uses al_addr to print because it's easy to dump
->>>> the instructions from this address in binary for branch mode.
->>>>
->>>> The second patch supports the annotation on stripped binary.
->>>>
->>>> Jin Yao (2):
->>>>     perf util: Print al_addr when symbol is not found
->>>>     perf annotate: Support interactive annotation of code without symbols
->>>
->>> looks good, but I'm getting crash when annotating unresolved kernel address:
->>>
->>> jirka
->>>
->>>
->>
->> Thanks for reporting the issue.
->>
->> I guess you are trying the "0xffffffff81c00ae7", let me try to reproduce
->> this issue.
+On Thu, Feb 20, 2020 at 12:35:04AM -0800, Vasily Khoruzhick wrote:
+> devm_regulator_get() returns either a dummy regulator or -EPROBE_DEFER,
+> we don't need to print scary message in either case.
 > 
-> yes, I also checked and it did not happen before
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
 > 
-> jirka
-> 
+> diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> index 0d8d083b0207..0204bbe4f0a0 100644
+> --- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> +++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+> @@ -713,17 +713,13 @@ static int anx6345_i2c_probe(struct i2c_client *client,
+>  
+>  	/* 1.2V digital core power regulator  */
+>  	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
+> -	if (IS_ERR(anx6345->dvdd12)) {
+> -		DRM_ERROR("dvdd12-supply not found\n");
+> +	if (IS_ERR(anx6345->dvdd12))
+>  		return PTR_ERR(anx6345->dvdd12);
+> -	}
 
+There could be other errors such as -EBUSY or -EPERM. The following
+would ensure a message gets printed in those cases, while avoiding
+spamming the kernel log in the EPROBE_DEFER case.
 
-I can reproduce it now.
+	if (IS_ERR(anx6345->dvdd12)) {
+		if (PTR_ERR(anx6345->dvdd12) != -EPROBE_DEFER)
+			DRM_ERROR("Failed to get dvdd12 supply (%d)\n",
+				  PTR_ERR(anx6345->dvdd12));
+		return PTR_ERR(anx6345->dvdd12);
+	}
 
-perf record -e cycles:u ls
-perf report --stdio
+But maybe it's overkill ? With or without that change (for the second
+regulator below too),
 
-     75.29%  ls       ld-2.27.so        [.] do_lookup_x
-     23.64%  ls       ld-2.27.so        [.] __GI___tunables_init
-      1.04%  ls       [unknown]         [k] 0xffffffff85c01210
-      0.03%  ls       ld-2.27.so        [.] _start
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Looks it's caused by skid.
+>  	/* 2.5V digital core power regulator  */
+>  	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
+> -	if (IS_ERR(anx6345->dvdd25)) {
+> -		DRM_ERROR("dvdd25-supply not found\n");
+> +	if (IS_ERR(anx6345->dvdd25))
+>  		return PTR_ERR(anx6345->dvdd25);
+> -	}
+>  
+>  	/* GPIO for chip reset */
+>  	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
 
-Thanks
-Jin Yao
+-- 
+Regards,
 
+Laurent Pinchart
