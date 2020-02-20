@@ -2,230 +2,185 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6734DC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1E9C11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4BA207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:43:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0n5lFSg0"
+	by mail.kernel.org (Postfix) with ESMTP id CAD18208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582238615;
+	bh=fqS/GgJhbDw3EiROWcshwv2AULT4Lp4hI49kgB6rvjI=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=lX5NAFijn/7qgSnfpdJFirB/icXXa3cR8XGFC1qbHZaIESX+iD9C9VnLFYvXcEyB0
+	 7pJjmJCDLOFVQn5emnpsz1NUT6EU9Wc3bbYmCBQejqjnBFE7dgFE3Z9TX8Y0098Qqy
+	 9qoB+4E4X7JQhiwLk+D8PcWlECbM//OWh9n0cmp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgBTWn3 (ORCPT
+        id S1729287AbgBTWne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:43:29 -0500
-Received: from mail-mw2nam10on2051.outbound.protection.outlook.com ([40.107.94.51]:26017
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727845AbgBTWn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:43:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V1MFYRSjuiK/uAsmFbPRgvz8HUBTRgtpUOpB9SHigemsrl84jPshqUTvX1tkZeBS33HvVW71QiLq6hgWv9G5gRShzMFLZpUHpr6mgpEtjMdzg9Z85ZxA+HQsbH9jSxyvPAURGmCGWUGXIJSytICJADKmxSfwvkwDjyu4udf5PqBoKodOD3zk8+SvTUQHshILN4/OPuGJyh7WsObqrD1BEi/l2zY0LXX1vD1cdwHYIQ/EWkxaRr7e0BcaJLfdmSqAE0PtTm7xqYzz8ilGtrTf9cwlusIsPjm20bmavi3XxZdWnP+VJvkZEexir0JdeMMfRB0UH3V8+DfEr1M42/w3Cw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noE/f7Aw1yupon/2r4/lcqnbXq2dMkhqmS9AoHss8qc=;
- b=LETVS8e68fucM43W3IxHFtCoLE6m9n0FBZx8mi019Cj63Nop7HGVeqBWwhgEJheGF93fNPXjM9oLdWEsMIbrLdXf2p48gdD8DNF5zAcxgYA0T2MEsPCdLIHEha/BNaB/yy/1R0841ZBZvE3sDPxL1Y0xAAJzcEgGphqCsMtzSjuLZUs0R5CEUCo793nBwXgoVCihxvLlTJWBXjCZE3E01DTFud+mEZUYKYtF+ERi0oIB1LkhD1s6mxbAW6x25KpdeQxIkdGiidxax/7aIHgg9Z3E5VrqnQfh6xSdFgN1Zqqr8qJQs+RjIs5p1qQTsEeb2ve2ayxDUCK5qdhW5AIkqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 20 Feb 2020 17:43:34 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42861 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727845AbgBTWnd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 17:43:33 -0500
+Received: by mail-io1-f65.google.com with SMTP id z1so238589iom.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 14:43:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noE/f7Aw1yupon/2r4/lcqnbXq2dMkhqmS9AoHss8qc=;
- b=0n5lFSg0AFQotw1pg+FDOVd2opJi23+GXj1CBtNO7LokQ297oDeH4PoPO7G48U6R5QadJG1kafHvQRDLUgYfnnIJWeXfFvdGWC7kuIvAcMZrDcsLaH5FXJF91DQNdsavz1YQmKx/6ur/6Fkzg02L+zLVefPfVIt/03t0e3rAk2U=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com (10.175.59.139) by
- CY4PR12MB1829.namprd12.prod.outlook.com (10.175.60.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.25; Thu, 20 Feb 2020 22:43:25 +0000
-Received: from CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4]) by CY4PR12MB1926.namprd12.prod.outlook.com
- ([fe80::e5ec:63d5:a9a8:74c4%12]) with mapi id 15.20.2729.032; Thu, 20 Feb
- 2020 22:43:25 +0000
-Cc:     brijesh.singh@amd.com, Andy Lutomirski <luto@amacapital.net>,
-        Ashish Kalra <ashish.kalra@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <Thomas.Lendacky@amd.com>,
-        David Rientjes <rientjes@google.com>, x86@kernel.org,
-        KVM list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 10/12] mm: x86: Invoke hypercall when page encryption
- status is changed
-To:     Steve Rutherford <srutherford@google.com>
-References: <CABayD+ch3XBvJgJc+uoF6JSP0qZGq2zKHN-hTc0Vode-pi80KA@mail.gmail.com>
- <52450536-AF7B-4206-8F05-CF387A216031@amacapital.net>
- <3de6e962-3277-ddbd-8c78-eaf754973928@amd.com>
- <CABayD+fBpP-W_jfVuy_+shh+Sj_id79+ECG+R5H=W9Jmcii8qg@mail.gmail.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <e5ef78d4-2764-cbbb-d3d6-69621e1d6490@amd.com>
-Date:   Thu, 20 Feb 2020 16:43:20 -0600
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QMjt5eMffPrxsp8wLASdON0xDaLfdUvYn5lYknm2C7s=;
+        b=U5BnmuHOGKVpr/W6Cro6664PAOER/DtOGOsEpfY5j6rtJSGN9oL0XY/pMjcABpYdAK
+         nQp3dt8cHofYWcHKPvSP2oThQHseVJShwHXr49gfQrO3wh6N6CB6jYZb725MViJB5CEX
+         Oe/gc/VYz5Cz9/0vnBKWZzKirh1zXqDLTtkF8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QMjt5eMffPrxsp8wLASdON0xDaLfdUvYn5lYknm2C7s=;
+        b=mbc/xvxRe9uHTNlwHKgo0F+NLRg7hTCtY5Ns870MJoWQLYirf8TgQYa8Pva+GcuTPI
+         43BE6BpaGh4HU9oUT8hXL4cz9SHYk4LAfe6HMRlUCuZtbUWQ5DdPiZ2Ts/UD6jwkiURl
+         ejFBOMxVKC+Lm9qQJdtxtdQwhJ5uaIWPMtaVzkIqSpNSgWRccf0N0XelUp7H77tVHws9
+         AN9cluyK1XvW6/Qhjp3DW/yZi0PFl878WJKcuMUtNrtaRqhQA7+/LMZEMWLTrqnolHd2
+         cD4VIxc2gn86KlHblUs8S6LfjjU0YDH2ZtVU+d8ICWQ/l5b0pZ0BV2NgsvjG1GnPjyLH
+         fUug==
+X-Gm-Message-State: APjAAAXxFjLyp6/XQIYaIxcTnrZTruL7RjU+32wKhjNEDIizMERuTg9d
+        3fDFNyyMw5nfFa+qzMF6LTkjHq9oPws=
+X-Google-Smtp-Source: APXvYqwCY4UOWE++mhaJRMIkoNG+w9qtz8+0BXm1Ky4fUgUzfUISeECpFGgnh904ZRETno0/85HHnQ==
+X-Received: by 2002:a5d:8ad8:: with SMTP id e24mr27269446iot.291.1582238611058;
+        Thu, 20 Feb 2020 14:43:31 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h19sm229536ild.76.2020.02.20.14.43.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 14:43:30 -0800 (PST)
+Subject: Re: [PATCH] selftests: Install settings files to fix TIMEOUT failures
+To:     Joe Lawrence <joe.lawrence@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kselftest@vger.kernel.org
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200220044241.2878-1-mpe@ellerman.id.au>
+ <85385291-b039-c72d-508a-0b988c1302b5@redhat.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <d3965bbe-973a-ddc2-044d-4a79864710a9@linuxfoundation.org>
+Date:   Thu, 20 Feb 2020 15:43:29 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-In-Reply-To: <CABayD+fBpP-W_jfVuy_+shh+Sj_id79+ECG+R5H=W9Jmcii8qg@mail.gmail.com>
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <85385291-b039-c72d-508a-0b988c1302b5@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN6PR04CA0097.namprd04.prod.outlook.com
- (2603:10b6:805:f2::38) To CY4PR12MB1926.namprd12.prod.outlook.com
- (2603:10b6:903:11b::11)
-MIME-Version: 1.0
-Received: from [10.236.31.95] (165.204.77.1) by SN6PR04CA0097.namprd04.prod.outlook.com (2603:10b6:805:f2::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25 via Frontend Transport; Thu, 20 Feb 2020 22:43:22 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8eb515c2-2d0c-4152-1f2d-08d7b6564b9e
-X-MS-TrafficTypeDiagnostic: CY4PR12MB1829:|CY4PR12MB1829:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CY4PR12MB18292407A7BE0FF7B2D20A20E5130@CY4PR12MB1829.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 031996B7EF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(346002)(136003)(366004)(396003)(199004)(189003)(16576012)(31696002)(44832011)(8936002)(66476007)(86362001)(54906003)(66556008)(956004)(2616005)(316002)(7416002)(66946007)(478600001)(53546011)(186003)(16526019)(26005)(6916009)(52116002)(5660300002)(36756003)(81156014)(6486002)(81166006)(2906002)(8676002)(31686004)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1829;H:CY4PR12MB1926.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8F8MPatHR7XnpwJS9pa0foyhhxIC8fjld1+pT92alD2wzgKkMbbYl2h1X3BOqYouudNd/RMWU+4uPXkuCIvGKZN/wU1aHy2D8yNR7X8e5YuqcZuzb73uv1woy6fr7eUchMQTcHhc7lbFbNJNY+S88hyddCOlEhWUtcjFSaQk2wkZoajSyk5lnLS3mEgCWpalSDNN9vBisrOgS2uSct/dLlCKGJs4+/XP89UfpSLQ3WaORHV4MsPuy0mNOy1aRl1rWIA0hEw6jO5zE9OVQ9usKRTYCSEpVt4eIlA6e+zNUQSz94Qfmcpxn1aZ3mhuDAqV68esLgYtqzdb7pxOMEpRmKX/fwimxn+YUXkaaZe11sG4lt/u/8ezYHDTjUhOEi7cTUprmhBOqRJwVZp9EtX19KNngxw1S3pub/JndFfcLNf8+ng4yeMYEEhhh3spPgny
-X-MS-Exchange-AntiSpam-MessageData: RPiabCkvv8ytqLNdaA3Z6Nh5L5As8Ry3XuKTnrY2CaTpaxry0ZmSE2B8l/TOvwVR8JEL3zdZHepPk0zQoRUn3v66scL7/D6fuUL6fbcM+hjb/njnFEH3k0jc1AumFXcP8AFQFqpesP+L5s48oRGy1g==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8eb515c2-2d0c-4152-1f2d-08d7b6564b9e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 22:43:25.0160
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3iA+tHNq4QBSmQPyGvWs3lmbjGUJKQpJCNYXcLd/Gz2TJyeArmctyyP/ehaedp+Ij8ojt4eBecQ1oge0ppD13g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1829
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/20/20 2:43 PM, Steve Rutherford wrote:
-> On Thu, Feb 20, 2020 at 7:55 AM Brijesh Singh <brijesh.singh@amd.com> wrote:
+On 2/20/20 3:25 PM, Joe Lawrence wrote:
+> On 2/19/20 11:42 PM, Michael Ellerman wrote:
+>> Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
+>> timeout per test") added a 45 second timeout for tests, and also added
+>> a way for tests to customise the timeout via a settings file.
 >>
+>> For example the ftrace tests take multiple minutes to run, so they
+>> were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
+>> timeout setting").
 >>
+>> This works when the tests are run from the source tree. However if the
+>> tests are installed with "make -C tools/testing/selftests install",
+>> the settings files are not copied into the install directory. When the
+>> tests are then run from the install directory the longer timeouts are
+>> not applied and the tests timeout incorrectly.
 >>
->> On 2/19/20 8:12 PM, Andy Lutomirski wrote:
->>>
->>>
->>>> On Feb 19, 2020, at 5:58 PM, Steve Rutherford <srutherford@google.com> wrote:
->>>>
->>>> ﻿On Wed, Feb 12, 2020 at 5:18 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
->>>>>
->>>>> From: Brijesh Singh <brijesh.singh@amd.com>
->>>>>
->>>>> Invoke a hypercall when a memory region is changed from encrypted ->
->>>>> decrypted and vice versa. Hypervisor need to know the page encryption
->>>>> status during the guest migration.
->>>>
->>>> One messy aspect, which I think is fine in practice, is that this
->>>> presumes that pages are either treated as encrypted or decrypted. If
->>>> also done on SEV, the in-place re-encryption supported by SME would
->>>> break SEV migration. Linux doesn't do this now on SEV, and I don't
->>>> have an intuition for why Linux might want this, but we will need to
->>>> ensure it is never done in order to ensure that migration works down
->>>> the line. I don't believe the AMD manual promises this will work
->>>> anyway.
->>>>
->>>> Something feels a bit wasteful about having all future kernels
->>>> universally announce c-bit status when SEV is enabled, even if KVM
->>>> isn't listening, since it may be too old (or just not want to know).
->>>> Might be worth eliding the hypercalls if you get ENOSYS back? There
->>>> might be a better way of passing paravirt config metadata across than
->>>> just trying and seeing if the hypercall succeeds, but I'm not super
->>>> familiar with it.
->>>
->>> I actually think this should be a hard requirement to merge this. The host needs to tell the guest that it supports this particular migration strategy and the guest needs to tell the host that it is using it.  And the guest needs a way to tell the host that it’s *not* using it right now due to kexec, for example.
->>>
->>> I’m still uneasy about a guest being migrated in the window where the hypercall tracking and the page encryption bit don’t match.  I guess maybe corruption in this window doesn’t matter?
->>>
+>> So add the settings files to TEST_FILES of the appropriate Makefiles
+>> to cause the settings files to be installed using the existing install
+>> logic.
 >>
->> I don't think there is a corruption issue here. Let's consider the below
->> case:
+>> Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second 
+>> timeout per test")
+>> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> ---
+>>   tools/testing/selftests/ftrace/Makefile    | 2 +-
+>>   tools/testing/selftests/livepatch/Makefile | 2 ++
+>>   tools/testing/selftests/net/mptcp/Makefile | 2 ++
+>>   tools/testing/selftests/rseq/Makefile      | 2 ++
+>>   tools/testing/selftests/rtc/Makefile       | 2 ++
+>>   5 files changed, 9 insertions(+), 1 deletion(-)
 >>
->> 1) A page is transmitted as C=1 (encrypted)
+>> diff --git a/tools/testing/selftests/ftrace/Makefile 
+>> b/tools/testing/selftests/ftrace/Makefile
+>> index cd1f5b3a7774..d6e106fbce11 100644
+>> --- a/tools/testing/selftests/ftrace/Makefile
+>> +++ b/tools/testing/selftests/ftrace/Makefile
+>> @@ -2,7 +2,7 @@
+>>   all:
+>>   TEST_PROGS := ftracetest
+>> -TEST_FILES := test.d
+>> +TEST_FILES := test.d settings
+>>   EXTRA_CLEAN := $(OUTPUT)/logs/*
+>>   include ../lib.mk
+>> diff --git a/tools/testing/selftests/livepatch/Makefile 
+>> b/tools/testing/selftests/livepatch/Makefile
+>> index 3876d8d62494..1acc9e1fa3fb 100644
+>> --- a/tools/testing/selftests/livepatch/Makefile
+>> +++ b/tools/testing/selftests/livepatch/Makefile
+>> @@ -8,4 +8,6 @@ TEST_PROGS := \
+>>       test-state.sh \
+>>       test-ftrace.sh
+>> +TEST_FILES := settings
+>> +
+>>   include ../lib.mk
+>> diff --git a/tools/testing/selftests/net/mptcp/Makefile 
+>> b/tools/testing/selftests/net/mptcp/Makefile
+>> index 93de52016dde..ba450e62dc5b 100644
+>> --- a/tools/testing/selftests/net/mptcp/Makefile
+>> +++ b/tools/testing/selftests/net/mptcp/Makefile
+>> @@ -8,6 +8,8 @@ TEST_PROGS := mptcp_connect.sh
+>>   TEST_GEN_FILES = mptcp_connect
+>> +TEST_FILES := settings
+>> +
+>>   EXTRA_CLEAN := *.pcap
+>>   include ../../lib.mk
+>> diff --git a/tools/testing/selftests/rseq/Makefile 
+>> b/tools/testing/selftests/rseq/Makefile
+>> index d6469535630a..f1053630bb6f 100644
+>> --- a/tools/testing/selftests/rseq/Makefile
+>> +++ b/tools/testing/selftests/rseq/Makefile
+>> @@ -19,6 +19,8 @@ TEST_GEN_PROGS_EXTENDED = librseq.so
+>>   TEST_PROGS = run_param_test.sh
+>> +TEST_FILES := settings
+>> +
+>>   include ../lib.mk
+>>   $(OUTPUT)/librseq.so: rseq.c rseq.h rseq-*.h
+>> diff --git a/tools/testing/selftests/rtc/Makefile 
+>> b/tools/testing/selftests/rtc/Makefile
+>> index de9c8566672a..90fa1a346908 100644
+>> --- a/tools/testing/selftests/rtc/Makefile
+>> +++ b/tools/testing/selftests/rtc/Makefile
+>> @@ -6,4 +6,6 @@ TEST_GEN_PROGS = rtctest
+>>   TEST_GEN_PROGS_EXTENDED = setdate
+>> +TEST_FILES := settings
+>> +
+>>   include ../lib.mk
 >>
->> 2) During the migration window, the page encryption bit is changed
->>    to C=0 (decrypted)
->>
->> 3) #2 will cause a change in page table memory, thus dirty memory
->>    the tracker will create retransmission of the page table memory.
->>
->> 4) The page itself will not be re-transmitted because there was
->>    no change to the content of the page.
->>
->> On destination, the read from the page will get the ciphertext.
->>
->> The encryption bit change in the page table is used on the next access.
->> The user of the page needs to ensure that data is written with the
->> correct encryption bit before reading.
->>
->> thanks
 > 
+> Looks good to me,
 > 
-> I think the issue results from a slightly different perspective than
-> the one you are using. I think the situation Andy is interested in is
-> when a c-bit change and a write happen close in time. There are five
-> events, and the ordering matters:
-> 1) Guest dirties the c-bit in the guest
-> 2) Guest dirties the page
-> 3) Host userspace observes the c-bit logs
-> 4) Host userspace observes the page dirty logs
-> 5) Host transmits the page
-> 
-> If these are reordered to:
-> 3) Host userspace observes the c-bit logs
-> 1) Guest dirties the c-bit in the guest
-> 2) Guest dirties the page
-> 4) Host userspace observes the page dirty logs
-> 5) Host transmits the page (from the wrong c-bit perspective!)
-> 
-> Then the host will transmit a page with the wrong c-bit status and
-> clear the dirty bit for that page. If the guest page is not
-> retransmitted incidentally later, then this page will be corrupted.
-> 
-> If you treat pages with dirty c-bits as dirty pages, then you will
-> check the c-bit logs later and observe the dirty c-bit and retransmit.
-> There might be some cleverness around enforcing that you always fetch
-> the c-bit logs after fetching the dirty logs, but I haven't convinced
-> myself that this works yet. I think it might, since then the c-bits
-> are at least as fresh as the dirty bits.
-> 
-
-Unlike the dirty log, the c-bit log maintains the complete state.
-So, I think it is the Host userspace responsibility to ensure that it
-either keeps track of any c-bit log changes since it last sync'ed.
-During the migration, after pausing the guest it can get the recent
-c-bit log and compare if something has changed since it last sync'ed.
-If so, then retransmit the page with new c-bit state.
-
-> The main uncertainty that comes to mind for that strategy is if, on
-> multi-vCPU VMs, the page dirtying event (from the new c-bit
-> perspective) and the c-bit status change hypercall can themselves
-> race. If a write from the new c-bit perspective can arrive before the
-> c-bit status change arrives in the c-bit logs, we will need to treat
-> pages with dirty c-bits as dirty pages.
+> Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
 > 
 
-I believe if host userspace tracks the changes in the c-bit log since
-it last synced then this problem can be avoided. Do you think we should
-consider tracking the last sync changes in KVM or let the host userspace
-handle it.
+Thanks for Ack. I already applied it to kselftest fixes branch.
 
-> Note that I do agree that if the c-bit status flips, and no one writes
-> to the page, it doesn't really matter if you retransmit that page. If
-> a guest wants to read nonsense, it can.
-> 
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=fixes
+
+thanks,
+-- Shuah
+
+
+
