@@ -2,72 +2,105 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3BBC761A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24D9C34031
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C292C2465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CbW97kDs"
+	by mail.kernel.org (Postfix) with ESMTP id 94D112465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbgBTFza (ORCPT
+        id S1726637AbgBTF6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:55:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34320 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbgBTFza (ORCPT
+        Thu, 20 Feb 2020 00:58:09 -0500
+Received: from segapp02.wistron.com ([103.200.3.19]:63247 "EHLO
+        segapp03.wistron.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726150AbgBTF6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:55:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=+eNQsSzMxKIRXtkGmW5paSfUyPGKx+4eYCIxkVfvX10=; b=CbW97kDsBMkSuye8j1XAw2xR5D
-        YSkCbLJMFiY+iRIlFyoRLpawmeKmIOk+5gVTH5Sg7sHgXOU+wwCS5O4gmigAFvEUPvG5gdSPXUdqi
-        enY6GcL+k3lAH7W9pxA7dLwp5d9MdZNLqTgW6eV73LDnpr+UTm4kHX8/51dYNojH7EdStbJjF3v71
-        actu0U/bLh7l97IJTUY4MoWWliC7yXGLX1cl4xfcGDQ7EEfnLMUWLjUECJBoDGcm4kbtx1E7gsmhj
-        ng9EB4LskVIDJw1m4GHnfl6PboX3DEg906vqlFDWH0se+opylFZHN1jMKlv5OIQDcCEQY8OiKWsiN
-        cEuw7arw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j4eo4-0004pf-6J; Thu, 20 Feb 2020 05:55:28 +0000
-Subject: Re: linux-next: Tree for Feb 20 (mmc/mmc_hsq.c)
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org
-References: <20200220144408.359a7e02@canb.auug.org.au>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <dba0c486-46e9-0b96-bd71-b9e81b362c85@infradead.org>
-Date:   Wed, 19 Feb 2020 21:55:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 00:58:09 -0500
+X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Feb 2020 00:58:07 EST
+Received: from EXCHAPP04.whq.wistron (unverified [10.37.38.27]) by TWNHUMSW4.wistron.com
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tdd6f484d45c0a816721080@TWNHUMSW4.wistron.com>;
+ Thu, 20 Feb 2020 13:53:01 +0800
+Received: from EXCHAPP04.whq.wistron (10.37.38.27) by EXCHAPP04.whq.wistron
+ (10.37.38.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 20 Feb
+ 2020 13:53:00 +0800
+Received: from gitserver.wistron.com (10.37.38.233) by EXCHAPP04.whq.wistron
+ (10.37.38.27) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 20 Feb 2020 13:53:00 +0800
+From:   Ben Pai <Ben_Pai@wistron.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <joel@jms.id.au>,
+        <andrew@aj.id.au>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <wangat@tw.ibm.com>, <Claire_Ku@wistron.com>,
+        Ben Pai <Ben_Pai@wistron.com>
+Subject: [PATCH v1] ARM: dts: mihawk: Change the name of mihawk led
+Date:   Thu, 20 Feb 2020 13:52:55 +0800
+Message-ID: <20200220055255.22809-1-Ben_Pai@wistron.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200220144408.359a7e02@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 878E35D0BF548269343F48DBF623908D488A6736306ADE4D4D02D482038B268B2000:8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 7:44 PM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Changes since 20200219:
-> 
+1.Change the name of power, fault and rear-id.
+2.Remove the two leds.
 
-on i386:
+Signed-off-by: Ben Pai <Ben_Pai@wistron.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts | 17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o
-
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+index e55cc454b17f..6c11854b9006 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-mihawk.dts
+@@ -120,35 +120,24 @@
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+-		fault {
++		front-fault {
+ 			retain-state-shutdown;
+ 			default-state = "keep";
+ 			gpios = <&gpio ASPEED_GPIO(AA, 0) GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		power {
++		power-button {
+ 			retain-state-shutdown;
+ 			default-state = "keep";
+ 			gpios = <&gpio ASPEED_GPIO(AA, 1) GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		rear-id {
++		front-id {
+ 			retain-state-shutdown;
+ 			default-state = "keep";
+ 			gpios = <&gpio ASPEED_GPIO(AA, 2) GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		rear-g {
+-			retain-state-shutdown;
+-			default-state = "keep";
+-			gpios = <&gpio ASPEED_GPIO(AA, 4) GPIO_ACTIVE_LOW>;
+-		};
+-
+-		rear-ok {
+-			retain-state-shutdown;
+-			default-state = "keep";
+-			gpios = <&gpio ASPEED_GPIO(Y, 0) GPIO_ACTIVE_LOW>;
+-		};
+ 
+ 		fan0 {
+ 			retain-state-shutdown;
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.17.1
+
