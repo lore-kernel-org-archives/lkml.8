@@ -2,112 +2,88 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E1CC11D1B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F4FC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58E7206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AF9206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:52:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgBTTvx (ORCPT
+        id S1729045AbgBTTwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:51:53 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55785 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgBTTvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:51:52 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j4rrS-0006UR-54; Thu, 20 Feb 2020 19:51:50 +0000
-Date:   Thu, 20 Feb 2020 20:51:49 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/9] sysfs: add sysfs_link_change_owner()
-Message-ID: <20200220195149.xha7jltmfzs3xs7g@wittgenstein>
-References: <20200218162943.2488012-1-christian.brauner@ubuntu.com>
- <20200218162943.2488012-3-christian.brauner@ubuntu.com>
- <20200220111443.GD3374196@kroah.com>
+        Thu, 20 Feb 2020 14:52:05 -0500
+Received: from muru.com ([72.249.23.125]:56502 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728448AbgBTTwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 14:52:05 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 133708080;
+        Thu, 20 Feb 2020 19:52:49 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 11:52:02 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mfd: motmdm: Add Motorola TS 27.010 serdev modem
+ driver for droid4
+Message-ID: <20200220195202.GV37466@atomide.com>
+References: <20200219170106.38543-1-tony@atomide.com>
+ <20200219170106.38543-3-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220111443.GD3374196@kroah.com>
+In-Reply-To: <20200219170106.38543-3-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 12:14:43PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Feb 18, 2020 at 05:29:36PM +0100, Christian Brauner wrote:
-> > Add a helper to change the owner of a sysfs link.
-> > This function will be used to correctly account for kobject ownership
-> > changes, e.g. when moving network devices between network namespaces.
-> > 
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > ---
-> > /* v2 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add comment how ownership of sysfs object is changed.
-> > 
-> > /* v3 */
-> > -  Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> >    - Add explicit uid/gid parameters.
-> > ---
-> >  fs/sysfs/file.c       | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/sysfs.h | 10 ++++++++++
-> >  2 files changed, 50 insertions(+)
-> > 
-> > diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-> > index 32bb04b4d9d9..df5107d7b3fd 100644
-> > --- a/fs/sysfs/file.c
-> > +++ b/fs/sysfs/file.c
-> > @@ -570,6 +570,46 @@ static int internal_change_owner(struct kernfs_node *kn, struct kobject *kobj,
-> >  	return kernfs_setattr(kn, &newattrs);
-> >  }
-> >  
-> > +/**
-> > + *	sysfs_link_change_owner - change owner of a link.
-> > + *	@kobj:	object of the kernfs_node the symlink is located in.
-> > + *	@targ:	object of the kernfs_node the symlink points to.
-> > + *	@name:	name of the link.
-> > + *	@kuid:	new owner's kuid
-> > + *	@kgid:	new owner's kgid
-> > + */
-> > +int sysfs_link_change_owner(struct kobject *kobj, struct kobject *targ,
-> > +			    const char *name, kuid_t kuid, kgid_t kgid)
-> > +{
-> > +	struct kernfs_node *parent, *kn = NULL;
-> > +	int error;
-> > +
-> > +	if (!kobj)
-> > +		parent = sysfs_root_kn;
-> > +	else
-> > +		parent = kobj->sd;
-> 
-> I don't understand this, why would (!kobj) ever be a valid situation?
+* Tony Lindgren <tony@atomide.com> [700101 00:00]:
+> +static int motmdm_register_dlci(struct device *dev,
+> +				struct motmdm_dlci *mot_dlci)
+> +{
+> +	struct motmdm *ddata;
+> +	struct gsm_serdev *gsd;
+> +	struct gsm_serdev_dlci *gsm_dlci;
+> +	int err;
+> +
+> +	if (!dev || !mot_dlci || !mot_dlci->line)
+> +		return -EINVAL;
+> +
+> +	err = pm_runtime_get_sync(dev);
+> +	if ((err != -EINPROGRESS) && err < 0) {
+> +		pm_runtime_put_noidle(dev);
+> +
+> +		return err;
+> +	}
+> +
+> +	ddata = gsm_serdev_get_drvdata(dev);
+> +	gsd = &ddata->gsd;
+> +	gsm_dlci = &mot_dlci->gsm_dlci;
+> +	INIT_LIST_HEAD(&mot_dlci->list);
+> +	init_waitqueue_head(&mot_dlci->read_queue);
+> +	gsm_dlci->line = mot_dlci->line;
+> +	gsm_dlci->receive_buf = motmdm_dlci_receive_buf;
+> +
+> +	err = gsm_serdev_register_dlci(gsd, gsm_dlci);
+> +	if (err) {
+> +		dev_warn(dev, "error registering dlci%i: %i\n",
+> +			 mot_dlci->line, err);
+> +		kfifo_free(&mot_dlci->read_fifo);
+> +		memset(gsm_dlci, 0, sizeof(*gsm_dlci));
+> +	} else {
+> +		mot_dlci->privdata = ddata;
+> +	}
 
-Yeah, a caller could just pass in "sysfs_root_kn" itself if they for
-some reason needed to.
+Here we want mot_dlci->privdata initialized before
+gsm_serdev_register_dlci, otherwise we may get an interrupt
+between gsm_serdev_register_dlci and setting mot_dlci->privdata.
 
-> 
-> > +	if (!targ->state_in_sysfs)
-> > +		return -EINVAL;
-> 
-> Should you also check kobj->state_in_sysfs as well?
+So I'll be sending out v4 series.
 
-Probably. I'll take a closer look now.
+Regards,
 
-Thanks!
-Christian
+Tony
