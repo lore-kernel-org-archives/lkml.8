@@ -2,119 +2,158 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D9DC11D13
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB9DC11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1513207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01BA1207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a9QKLynW"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ajY+f6+o";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fiZBiIh2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgBTRWm (ORCPT
+        id S1728748AbgBTRX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:22:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29090 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728799AbgBTRWQ (ORCPT
+        Thu, 20 Feb 2020 12:23:26 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:42897 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728173AbgBTRX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:22:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582219335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=rZyXD5q+onhmCDPHKZnUNJAstGhWUGrhi7Vh7fDt5g0=;
-        b=a9QKLynW6RUm++W22qLQQxtWjevCgd061TBDDHsrTYQ6nYITuvStFDXPItVzdd71dDodCt
-        0SytloLUuu3DN5cT6yVU0mJQ160bta3lGis185UIHS/akE7F+Gpx/wV6nlCXbo1fMQZctF
-        V4KOxWt2xRTfurypSgVE2+WKcZBKNEs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-bcBnArHeOgy92JiMr2GuWw-1; Thu, 20 Feb 2020 12:22:10 -0500
-X-MC-Unique: bcBnArHeOgy92JiMr2GuWw-1
-Received: by mail-wr1-f70.google.com with SMTP id j4so2029701wrs.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:22:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rZyXD5q+onhmCDPHKZnUNJAstGhWUGrhi7Vh7fDt5g0=;
-        b=q0KB22nB86Vm42SNonRqycJ9i6a0JD9i1t08HZgq5r5sRkImIik0uFDHLgEE74W7AM
-         dQv81NlwrpztfJHfS9tVRri2ipOZR4Kt00Uy554BF5WwIEA0yjwLszgIPbLP+FMo7V3p
-         3NeFr3Iwjn2oZe9n+ynMJTpr1VFrhpXKhaLLp5NTc9vXsnKTGizwCxxo1ZFV+5+h32Qj
-         1Tp98ri3/m0Z5LX68HCAwbSpZQ+tc645EEFCCDLrLIvFQeq4uJgVgPUb79tqXTF2QamF
-         MPBOLAom+PE8T9USuC4UJvkBsiBY3s8pFZr+hmzXfx7Qrjny54xLllXKg1khRBRIyiLy
-         BHZA==
-X-Gm-Message-State: APjAAAU5BfubofoNihtjTPlMEr8gUV7R9wXg3uzEGSl0/z2KlSpewnFE
-        w/AxuRC10x6tje8HgJZ7E0v8b/odwo7UB2+G4/9769CFLVjFq8tGnHo4Prf5890GK7j065bXcbo
-        OMxTnFhgQnGil1IqF2uwuYCCx
-X-Received: by 2002:adf:fd87:: with SMTP id d7mr45699843wrr.226.1582219328193;
-        Thu, 20 Feb 2020 09:22:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyznpk/Mju2cxo6UDLosBl/WALhWP2M64Z82L2SgtLE3m4B2Qb1Kh7smxIT3jRFYoOJt4jZkQ==
-X-Received: by 2002:adf:fd87:: with SMTP id d7mr45699820wrr.226.1582219327916;
-        Thu, 20 Feb 2020 09:22:07 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a184sm5355891wmf.29.2020.02.20.09.22.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 09:22:07 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 0/2] KVM: nVMX: fix apicv disablement for L1
-Date:   Thu, 20 Feb 2020 18:22:03 +0100
-Message-Id: <20200220172205.197767-1-vkuznets@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Thu, 20 Feb 2020 12:23:26 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id BBB4021E29;
+        Thu, 20 Feb 2020 12:23:25 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:23:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=vbvI29EQ0v8H6J4KfL2LWXgZy9K
+        YsqNtddfsF3hvK68=; b=ajY+f6+oQcGeRKarwVpE9Yi1OOem4Ka7HuzwJqJwqyn
+        nRWtiEhP6XHwd0kci0kCV+LE3tGIdAOR79YosPBczTLT3pa3r5Pr9c+nH0VLz3Cm
+        azkXzJSb33yaxX1fIFuTeu290KZKyjUs+CHNwmXuvRz1wM5QaSVf2uvyfLqlcGgh
+        4KD5uHZGi3FQKSZ6lbMCzD4H5uY9zdZsmj2SVerUEFTTdMb+4gxNzE7ojqhFOCe9
+        Gd1CRT0asFYI5DXTLors4fH7Zf+F8NKXedLaP4O1ZOgPWMNuaf2jVdpnNScLy+An
+        XltbPA70DuvRE6AyvUTzf52EYBlmPqRaVQnEasdUz0w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vbvI29
+        EQ0v8H6J4KfL2LWXgZy9KYsqNtddfsF3hvK68=; b=fiZBiIh2MzQrDMzZaPhzVZ
+        XUs09j+V726JW9G8OmfADC8oJT1dVdLoNkbvMkrylFXB8SUBK3/O/CfM7iw7xWB7
+        TDPkz1XL7Dv6/au5VA1OsQU8LLcNWMvWP6vRCB/yGHJFBteA1VNSdOma5H7VTsPu
+        QYYV6GCJIMETbYphucDpRSaWA8R1bH00B5eoWy8kPMuEqxtS99wLRvfzh3pJ1X9Y
+        QvWpfZ1vt5ywJ7gdQy5QckmelIHiKY1uSWvPvuPaYtgPirWzGSuLSeqN716teg+C
+        tpsv8cmP5+w/7NMlAloMv6/90u8iH2oCNy2MOLO6xx/hA1z2fZxnRNk0LCBPrrqA
+        ==
+X-ME-Sender: <xms:jMBOXpoTszGApMQqaWMuP_TfBQNkNYyb7fCcmlslDqMVV_o3_ctncQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:jMBOXsYSqqXSTc0ZkfbaHClmHG83dM5_0KmNul_PJGIWZui7_nB51g>
+    <xmx:jMBOXqAhxezaAXxV1RwoHrTTdvhQV4eEgvP8moiqpgTfrREUqbYT4A>
+    <xmx:jMBOXme_vgWaV1dFv66xNiuIeJbqfyeqrI7CphkbP4KYUmwL0cj7gw>
+    <xmx:jcBOXhG6PMBYwIQkIavaIA1kfyU_zcpnZ2Wa5cc_hmrbfrxRkYZztw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7E5D3328005D;
+        Thu, 20 Feb 2020 12:23:24 -0500 (EST)
+Date:   Thu, 20 Feb 2020 18:23:23 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH 3/5] ARM: dts: sun7i: Add LVDS panel support on A20
+Message-ID: <20200220172323.lgeb4zqmbg6kcvr6@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200219180858.4806-1-andrey.lebedev@gmail.com>
+ <20200219180858.4806-4-andrey.lebedev@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d6sfey5dsbwbndvm"
+Content-Disposition: inline
+In-Reply-To: <20200219180858.4806-4-andrey.lebedev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It was found that fine-grained VMX feature enablement in QEMU is broken
-when combined with SynIC:
 
-    qemu-system-x86_64 -machine q35,accel=kvm -cpu host,hv_vpindex,hv_synic -smp 2 -m 16384 -vnc :0
-    qemu-system-x86_64: error: failed to set MSR 0x48d to 0xff00000016
-    qemu-system-x86_64: <...>: kvm_buf_set_msrs: Assertion `ret == cpu->kvm_msr_buf->nmsrs' failed.
-    Aborted
+--d6sfey5dsbwbndvm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-QEMU thread: https://lists.gnu.org/archive/html/qemu-devel/2020-02/msg04838.html
+On Wed, Feb 19, 2020 at 08:08:56PM +0200, Andrey Lebedev wrote:
+> From: Andrey Lebedev <andrey@lebedev.lt>
+>
+> Define pins for LVDS channels 0 and 1, configure reset line for tcon0 and
+> provide sample LVDS panel, connected to tcon0.
+>
+> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 30 ++++++++++++++++++++++++++----
+>  1 file changed, 26 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index 92b5be97085d..d50263c1ca9a 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -47,6 +47,7 @@
+>  #include <dt-bindings/dma/sun4i-a10.h>
+>  #include <dt-bindings/clock/sun7i-a20-ccu.h>
+>  #include <dt-bindings/reset/sun4i-a10-ccu.h>
+> +#include <dt-bindings/pinctrl/sun4i-a10.h>
+>
+>  / {
+>  	interrupt-parent = <&gic>;
+> @@ -404,11 +405,12 @@
+>  		};
+>
+>  		tcon0: lcd-controller@1c0c000 {
+> -			compatible = "allwinner,sun7i-a20-tcon";
+> +			compatible = "allwinner,sun7i-a20-tcon0",
+> +				     "allwinner,sun7i-a20-tcon";
+>  			reg = <0x01c0c000 0x1000>;
+>  			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> -			resets = <&ccu RST_TCON0>;
+> -			reset-names = "lcd";
+> +			resets = <&ccu RST_TCON0>, <&ccu RST_LVDS>;
+> +			reset-names = "lcd", "lvds";
+>  			clocks = <&ccu CLK_AHB_LCD0>,
+>  				 <&ccu CLK_TCON0_CH0>,
+>  				 <&ccu CLK_TCON0_CH1>;
+> @@ -444,6 +446,11 @@
+>  					#size-cells = <0>;
+>  					reg = <1>;
+>
+> +					tcon0_out_lvds: endpoint@0 {
+> +						reg = <0>;
+> +						allwinner,tcon-channel = <0>;
+> +					};
+> +
 
-Turns out, this is a KVM issue: when SynIC is enabled, PIN_BASED_POSTED_INTR
-gets filtered out from VMX MSRs for all newly created (but not existent!)
-vCPUS. Patch1 addresses this. Also, apicv disablement for L1 doesn't seem
-to disable it for L2 (at least on CPU0) so unless there's a good reason
-to not allow this we need to make it work. PATCH2, suggested by Paolo,
-is supposed to do the job.
+This isn't necessarily true. The endpoint would be the same for an RGB
+panel for example. I've followed what we're doing elsewhere and
+removed that endpoint entirely while applying, thanks!
+Maxime
 
-RFC: I looked at the code and ran some tests and nothing suspicious popped
-out, however, I'm still not convinced this is a good idea to have apicv
-enabled for L2 when it's disabled for L1... Also, we may prefer to merge
-or re-order these two patches.
+--d6sfey5dsbwbndvm
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Vitaly Kuznetsov (2):
-  KVM: nVMX: clear PIN_BASED_POSTED_INTR from nested pinbased_ctls only
-    when apicv is globally disabled
-  KVM: nVMX: handle nested posted interrupts when apicv is disabled for
-    L1
+-----BEGIN PGP SIGNATURE-----
 
- arch/x86/include/asm/kvm_host.h |  2 +-
- arch/x86/kvm/lapic.c            |  5 +----
- arch/x86/kvm/svm.c              |  7 ++++++-
- arch/x86/kvm/vmx/capabilities.h |  1 +
- arch/x86/kvm/vmx/nested.c       |  5 ++---
- arch/x86/kvm/vmx/nested.h       |  3 +--
- arch/x86/kvm/vmx/vmx.c          | 23 +++++++++++++----------
- 7 files changed, 25 insertions(+), 21 deletions(-)
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7AiwAKCRDj7w1vZxhR
+xbrdAP9X63/5hBLxm5f2JSxXpC2INrkCYBsgrd+YWuJGEwqb2wEAmkyx5BXcSBsi
++JmpgeKEkfyHNnXY6iu8ddp9SayGMgI=
+=1aoH
+-----END PGP SIGNATURE-----
 
--- 
-2.24.1
-
+--d6sfey5dsbwbndvm--
