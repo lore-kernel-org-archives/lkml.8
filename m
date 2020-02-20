@@ -2,270 +2,182 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81ED6C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11299C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B9E24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDFDF2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Un0y7ZRp"
+	dkim=pass (1024-bit key) header.d=qubes-os.org header.i=frederic.pierret@qubes-os.org header.b="C036gvuC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgBTSEx (ORCPT
+        id S1728315AbgBTSJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:04:53 -0500
-Received: from mout.web.de ([212.227.15.14]:34947 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727298AbgBTSEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:04:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1582221886;
-        bh=cED0tHcFWzQhYnuQNvhD6+a83OOv92ePG6aWKNeLv9Y=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=Un0y7ZRp+gADQR8u6zJrF8HSgozZRdBmiVH5npvs+8iaL4kvxaOKdoLF+IQwkFGMU
-         /V4Kg9kckTledA9+L7zsEmlNqUm5r0t13UnKzL8PIafiB9oQEsBajab6XDpLvsLZu7
-         klCO4FLrd3i8VSrheIXXrjeyvMOL1RDFzllsild4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from luklap ([94.134.180.199]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lzs0p-1jZD011LVb-0152pg; Thu, 20
- Feb 2020 19:04:46 +0100
-Date:   Thu, 20 Feb 2020 19:04:45 +0100
-From:   Lukas Straub <lukasstraub2@web.de>
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Cc:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        dm-devel <dm-devel@redhat.com>
-Subject: [PATCH] dm-integrity: Prevent RMW for full tag area writes
-Message-ID: <20200220190445.2222af54@luklap>
+        Thu, 20 Feb 2020 13:09:29 -0500
+Received: from sender4-of-o58.zoho.com ([136.143.188.58]:21807 "EHLO
+        sender4-of-o58.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbgBTSJ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:09:29 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1582222159; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=IhZrbv3LTYkKC0B91LP6afzc/JR2dokKMlVIyk4/2XJyTI1aR2Un4DuyHL+PRgH0FxChRBC0Vw6yfZ2nPmUXclYAqpXTa7Tbc49ahLPSvX9+9BGgaiWOF6LIWOcMRWtoGjyeBgdpoH06sLPCTeJj1yZFSkDeGC6/DJ4VI+vpfeM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1582222159; h=Content-Type:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=xw/sotA4oNFNJ04Z9OYEFDPVK+QMI4XGv7s7J3CTotQ=; 
+        b=hc3uTlOBpX+CUrKjMVfTRdd681Z3GHnvGmQSoPPvs9WBBjEu09BbXXWGtuqlEUdaVVzYzEOCikGPcrvJrvGI0qIP09QAV+djYTdqd17mqiWerpiU8DlJh+rirzcIiOQ6P9EgQ6NvSEdxCdhp5bOW5eTPUXi1nM+KZf1e2dNUW+A=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=qubes-os.org;
+        spf=pass  smtp.mailfrom=frederic.pierret@qubes-os.org;
+        dmarc=pass header.from=<frederic.pierret@qubes-os.org> header.from=<frederic.pierret@qubes-os.org>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1582222159;
+        s=s; d=qubes-os.org; i=frederic.pierret@qubes-os.org;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type;
+        bh=xw/sotA4oNFNJ04Z9OYEFDPVK+QMI4XGv7s7J3CTotQ=;
+        b=C036gvuCI6PgqiMq2RqXs7sWe3NdWmzr2TqcGGnLCNMtpfROXd1zm1JDQI8Gri6A
+        3xqNM5+Ytq+j5RNn1qSSPuzQNQbqb8m+iOUQNj2b+SaEn0xUoOiHleHeQZd2/hFR+J0
+        Bg+bxomaJvwW25C6i0lR0Tx10qGb/TDmuuGHp4ks=
+Received: from [10.137.0.45] (82.102.18.6 [82.102.18.6]) by mx.zohomail.com
+        with SMTPS id 1582222157595579.3135438206202; Thu, 20 Feb 2020 10:09:17 -0800 (PST)
+Subject: Re: [Nouveau] [PATCH] nv50_disp_chan_mthd: ensure mthd is not NULL
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <dac89843-5258-5bed-ee86-7038e94e56da@qubes-os.org>
+ <c94ce223-56d5-e31a-2a2c-59defb988b28@qubes-os.org>
+ <CAKb7Uvh8Ob592LOizH9FGZz5ag=VJ3R=dh0G5iZSg2-JzWZFMQ@mail.gmail.com>
+From:   =?UTF-8?B?RnLDqWTDqXJpYyBQaWVycmV0?= 
+        <frederic.pierret@qubes-os.org>
+Message-ID: <ea846dcd-0fc9-01a6-4bb4-dde68888d06e@qubes-os.org>
+Date:   Thu, 20 Feb 2020 19:09:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:j/VhRjSkDO6znn4FrHt3mC8n7LlVlbZVwkVTUlm/MVlZnqIEN/E
- Q+Q63qWJCXLRysqLWXYyI5sNRzNR+nGrjrwhjDL4AmIDX2z/tbid1AOZi9cSolIRjDJ+E6G
- DpcGJbKsRMvzxriSnblo6CEIuPT08lG584MRJ7/JMFo51AfBGgF9FQx3nvZ/8dDueft3vqE
- tg0Rg+vgmApE9S/rn6h0g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:634g0Ktj+5Q=:OeZZsXReddB08MfLeqtxs0
- aR3FIXFQVklIZVpkbWdK1bZpWyfc7djbSeGEZrQGoo3dMIypBGlgDGaWsuip2P9orzj1K6H8L
- 608zJQn8tOapXyKRHZZiV6jcsO+AnPqhHRksRJhqZwKo9IqATTOg7Cg2ulu2Swkh6HpIacpK9
- ocnzDTx15Giux/YoWWZqSNb2zJza7uPOAINUtC4CdT32l2/YsUcAUXdFgcGOJjgwtRWA5WEbE
- HjU0zL+h3L26r72nK1m6FzHdqKjhcnimIza5VQmJLSJ3QJQuWdqx1jWakMuBajKMJr6wmLWsR
- b1zdq4yP9nIeWXrusutgDHydrMRwvpDtALPte4a2jOM70tGAL8+klwAySC8fRpFLv+ky0DLx/
- HEG680CRO6Ugn73qWA+04uLuLFg4WeECqNBJPrPbwegwk2F2QYxLwqldTtUZhFI+ceeZU4w0H
- 8bL9GyU1upbHGcRoQBJvqDB1fsq6X53A7nq44anR61Rh9uYE6drDelNKskmKoBeErf76Q+D3T
- OEvh06DIhR4f10Igwfgox+NwgBb9igZOyzrggesZmJCHDVEPmu9nkc2U6dEK0K8NjpyMIDPQN
- EyNwbhS4aa3JlP1sU7WrfsBPTS3ycGlZACp6jN+brmmY8APQEP05yDdfyL6Tg54XcZDSN/JNv
- FloOqdHkJtc1f4ZTEu72uE5TaCs+i465myRpT519jV0q/ww4Ei98S8luXtWjoSVWcqqY5+mlW
- bRgffY83z0WyQUNrMHFPG17qrIQ//f0lYCDYl0YrHAsv2Lnz1iAFwXTURiwY42e+ssComG1Ee
- azeqSpNYur8h+aW1mcCeI/2WqyADj64LNGsTAiGyQjLAvdaKWvGF5EtRw2m7R1ub8RLDPaNZv
- 744U5sncz2Ni/S/+1+DZaLb0kq0ihkbgx5nUIdW52Btft4fjqKwMj4AJhTW29/jrBvto8FQpk
- EwacYMkvw3a7ILT7buj+zg8cR1MN+T4cphpmSRY7IAQoiuwQRPlDnGGTS1cPZNvkgxr6Q3c4g
- wwD1LrOtktt99A7XeRd2RERBJwiweTp8eXEJnApIFQ9mE/qxg++ZjCM033/XFjtlp7kn3Tp8r
- CZiLvWPDslG3s5raDK9dyckajifS6kxqnBHAXgIwHYrnGv1RSK5sAABbx6yHiZMSwKQ69NO2c
- x45hbhF+LSC1mqv6vl7NcadHCTVCYE2My2bVuAXc2Y3eko5NFVHb2KWX+DiiXj6xUlapQYktx
- muWXXnnvOWYEcKusS
+In-Reply-To: <CAKb7Uvh8Ob592LOizH9FGZz5ag=VJ3R=dh0G5iZSg2-JzWZFMQ@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="hkI44MPNhtb0IuTBA6t4rXJyj69YDa5QI"
+X-Zoho-Virus-Status: 1
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a full tag area is being written, don't read it first. This prevents a
-read-modify-write cycle and increases performance on HDDs considerably.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--hkI44MPNhtb0IuTBA6t4rXJyj69YDa5QI
+Content-Type: multipart/mixed; boundary="WLJy850lTfsTLeed3UAVaXbc1Hmlnodt8"
 
-To do this we now calculate the checksums for all sectors in the bio in on=
-e
-go in integrity_metadata and then pass the result to dm_integrity_rw_tag,
-which now checks if we overwrite the whole tag area.
+--WLJy850lTfsTLeed3UAVaXbc1Hmlnodt8
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Benchmarking with a 5400RPM HDD with bitmap mode:
-integritysetup format --no-wipe --batch-mode --interleave-sectors $((64*10=
-24)) -t 4 -s 512 -I crc32c -B /dev/sdc
-integritysetup open -I crc32c -B /dev/sdc hdda_integ
-dd if=3D/dev/zero of=3D/dev/mapper/hdda_integ bs=3D64K count=3D$((16*1024*=
-4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
+Hi Ilia,
+Well...if Ben made it's own version you mean using my patch given on comm=
+ent https://bugzilla.kernel.org/show_bug.cgi?id=3D206299#c9 and then addi=
+ng commit message without quoting me as reporter ok...
 
-Without patch:
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 400.326 s, 10.7 MB/s
+At least, upstream is patched.
 
-With patch:
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 41.2057 s, 104 MB/s
+Best,
+Fr=C3=A9d=C3=A9ric
 
-Signed-off-by: Lukas Straub <lukasstraub2@web.de>
-=2D--
- drivers/md/dm-integrity.c | 80 ++++++++++++++++++++++-----------------
- 1 file changed, 46 insertions(+), 34 deletions(-)
+On 2020-02-20 18:32, Ilia Mirkin wrote:
+> Hi Fr=C3=A9d=C3=A9ric,
+>=20
+> It appears Ben made his own version of this patch (probably based on
+> the one you added to the kernel bz), and it's already upstream:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?h=3Dv5.6-rc2&id=3D0e6176c6d286316e9431b4f695940cfac4ffe6c2
+>=20
+> Cheers,
+>=20
+>   -ilia
+>=20
+> On Thu, Feb 20, 2020 at 12:19 PM Fr=C3=A9d=C3=A9ric Pierret
+> <frederic.pierret@qubes-os.org> wrote:
+>>
+>> Hi,
+>> Is anything missing here? How can I get this merged?
+>>
+>> Best regards,
+>> Fr=C3=A9d=C3=A9ric Pierret
+>>
+>> On 2020-02-08 20:43, Fr=C3=A9d=C3=A9ric Pierret wrote:
+>>> Pointer to structure array is assumed not NULL by default. It has
+>>> the consequence to raise a kernel panic when it's not the case.
+>>>
+>>> Basically, running at least a RTX2080TI on Xen makes a bad mmio error=
 
-diff --git a/drivers/md/dm-integrity.c b/drivers/md/dm-integrity.c
-index b225b3e445fa..0e5ddcf44935 100644
-=2D-- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -1309,9 +1309,16 @@ static int dm_integrity_rw_tag(struct dm_integrity_=
-c *ic, unsigned char *tag, se
- 		if (unlikely(r))
- 			return r;
+>>> which causes having 'mthd' pointer to be NULL in 'channv50.c'. From t=
+he
+>>> code, it's assumed to be not NULL by accessing directly 'mthd->data[0=
+]'
+>>> which is the reason of the kernel panic. Simply check if the pointer
+>>> is not NULL before continuing.
+>>>
+>>> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D206299
+>>> Cc: stable@vger.kernel.org
+>>> Signed-off-by: Fr=C3=A9d=C3=A9ric Pierret (fepitre) <frederic.pierret=
+@qubes-os.org>
+>>> ---
+>>>  drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c b/dr=
+ivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+>>> index bcf32d92ee5a..50e3539f33d2 100644
+>>> --- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+>>> +++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/channv50.c
+>>> @@ -74,6 +74,8 @@ nv50_disp_chan_mthd(struct nv50_disp_chan *chan, in=
+t debug)
+>>>
+>>>       if (debug > subdev->debug)
+>>>               return;
+>>> +     if (!mthd)
+>>> +             return;
+>>>
+>>>       for (i =3D 0; (list =3D mthd->data[i].mthd) !=3D NULL; i++) {
+>>>               u32 base =3D chan->head * mthd->addr;
+>>>
+>>
+>> _______________________________________________
+>> Nouveau mailing list
+>> Nouveau@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/nouveau
 
--		data =3D dm_bufio_read(ic->bufio, *metadata_block, &b);
--		if (IS_ERR(data))
--			return PTR_ERR(data);
-+		/* Don't read tag area from disk if we're going to overwrite it complet=
-ely */
-+		if (op =3D=3D TAG_WRITE && *metadata_offset =3D=3D 0 && total_size >=3D=
- ic->metadata_run) {
-+			data =3D dm_bufio_new(ic->bufio, *metadata_block, &b);
-+			if (IS_ERR(data))
-+				return PTR_ERR(data);
-+		} else {
-+			data =3D dm_bufio_read(ic->bufio, *metadata_block, &b);
-+			if (IS_ERR(data))
-+				return PTR_ERR(data);
-+		}
 
- 		to_copy =3D min((1U << SECTOR_SHIFT << ic->log2_buffer_sectors) - *meta=
-data_offset, total_size);
- 		dp =3D data + *metadata_offset;
-@@ -1514,6 +1521,8 @@ static void integrity_metadata(struct work_struct *w=
-)
- {
- 	struct dm_integrity_io *dio =3D container_of(w, struct dm_integrity_io, =
-work);
- 	struct dm_integrity_c *ic =3D dio->ic;
-+	unsigned sectors_to_process =3D dio->range.n_sectors;
-+	sector_t sector =3D dio->range.logical_sector;
+--WLJy850lTfsTLeed3UAVaXbc1Hmlnodt8--
 
- 	int r;
+--hkI44MPNhtb0IuTBA6t4rXJyj69YDa5QI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-@@ -1522,16 +1531,14 @@ static void integrity_metadata(struct work_struct =
-*w)
- 		struct bio_vec bv;
- 		unsigned digest_size =3D crypto_shash_digestsize(ic->internal_hash);
- 		struct bio *bio =3D dm_bio_from_per_bio_data(dio, sizeof(struct dm_inte=
-grity_io));
--		char *checksums;
-+		char *checksums, *checksums_ptr;
- 		unsigned extra_space =3D unlikely(digest_size > ic->tag_size) ? digest_=
-size - ic->tag_size : 0;
- 		char checksums_onstack[HASH_MAX_DIGESTSIZE];
--		unsigned sectors_to_process =3D dio->range.n_sectors;
--		sector_t sector =3D dio->range.logical_sector;
+-----BEGIN PGP SIGNATURE-----
 
- 		if (unlikely(ic->mode =3D=3D 'R'))
- 			goto skip_io;
+iQIzBAEBCAAdFiEEn6ZLkvlecGvyjiymSEAQtc3FduIFAl5Oy0gACgkQSEAQtc3F
+duLVXQ//UcaE2INvYMM1EVdYZv3qU9YSA1kGBFofdUewle8ME//5XfA1y9+Regdz
+m/iunXPFn06NOCv13zYYTtmvs0PbHEdjWyi0GmfU5Qvmmr7Z+jsFetBDTi3y8IZu
+CffSroIMUGSEP0l06JA0Bg4gWJv/fGCIOXcn5rAdL1L0kbE1jAP3Y6nxhQExTgYq
+OvvSa2sxOBZ82fkuTTzN/qRKIMY+UGsHzMx+wUbGkRI4ncyxO0M6ZFqBAt4nTFA2
+k+FWQc9e8+mUXxQJSQ/8d8z+o2c16ss30CektB8KHQNQX3UqvrzXaOo1+VS3LduG
+3HI8kU4KnHT/K3Dy0Bf5AhyAHInS1URBETVEyANzQOMYQ3IOX6ORjdUP6pXeBiht
+lGf6OgakKWAos6gAcYYcYbpRFBFZEJEhfYcjvboPmL0WjhuKnmPjwS0UZVdA9iKr
+PD8BVzRZW+twgblxMvr1KNfIAyWCYckP53tpsqPq9+WbOEBBg5ub3o/S1UqLp2cH
+9h2jTzZoYjY6u+Kuaxw69aL4uZGwToKDD6sD6MW+dND5QE+N4E0zuDUCiUzDmmPm
+Aw7DFYVdHJIKDgbWPtdKAePZd3WVZ5OxBGgZAzslY7O26CUyvkUS8GnRqoB3UTdd
+aVghJwC5dw0lEXpast9xk0nPyd1TQIoFHFVXnxbxTV38LQ3xrrQ=
+=RGFd
+-----END PGP SIGNATURE-----
 
--		checksums =3D kmalloc((PAGE_SIZE >> SECTOR_SHIFT >> ic->sb->log2_sector=
-s_per_block) * ic->tag_size + extra_space,
-+		checksums =3D kmalloc((dio->range.n_sectors >> ic->sb->log2_sectors_per=
-_block) * ic->tag_size + extra_space,
- 				    GFP_NOIO | __GFP_NORETRY | __GFP_NOWARN);
- 		if (!checksums) {
- 			checksums =3D checksums_onstack;
-@@ -1542,49 +1549,45 @@ static void integrity_metadata(struct work_struct =
-*w)
- 			}
- 		}
-
-+		checksums_ptr =3D checksums;
- 		__bio_for_each_segment(bv, bio, iter, dio->orig_bi_iter) {
- 			unsigned pos;
--			char *mem, *checksums_ptr;
--
--again:
-+			char *mem;
- 			mem =3D (char *)kmap_atomic(bv.bv_page) + bv.bv_offset;
- 			pos =3D 0;
--			checksums_ptr =3D checksums;
- 			do {
- 				integrity_sector_checksum(ic, sector, mem + pos, checksums_ptr);
--				checksums_ptr +=3D ic->tag_size;
--				sectors_to_process -=3D ic->sectors_per_block;
-+
-+				if (likely(checksums !=3D checksums_onstack)) {
-+					checksums_ptr +=3D ic->tag_size;
-+				} else {
-+					r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio-=
->metadata_offset,
-+								ic->tag_size, !dio->write ? TAG_CMP : TAG_WRITE);
-+					if (unlikely(r))
-+						goto internal_hash_error;
-+				}
-+
- 				pos +=3D ic->sectors_per_block << SECTOR_SHIFT;
- 				sector +=3D ic->sectors_per_block;
--			} while (pos < bv.bv_len && sectors_to_process && checksums !=3D check=
-sums_onstack);
-+				sectors_to_process -=3D ic->sectors_per_block;
-+			} while (pos < bv.bv_len && sectors_to_process);
- 			kunmap_atomic(mem);
-
--			r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio->m=
-etadata_offset,
--						checksums_ptr - checksums, !dio->write ? TAG_CMP : TAG_WRITE);
--			if (unlikely(r)) {
--				if (r > 0) {
--					DMERR_LIMIT("Checksum failed at sector 0x%llx",
--						    (unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag=
-_size)));
--					r =3D -EILSEQ;
--					atomic64_inc(&ic->number_of_mismatches);
--				}
--				if (likely(checksums !=3D checksums_onstack))
--					kfree(checksums);
--				goto error;
--			}
--
- 			if (!sectors_to_process)
- 				break;
-+		}
-
--			if (unlikely(pos < bv.bv_len)) {
--				bv.bv_offset +=3D pos;
--				bv.bv_len -=3D pos;
--				goto again;
-+		if (likely(checksums !=3D checksums_onstack)) {
-+			r =3D dm_integrity_rw_tag(ic, checksums, &dio->metadata_block, &dio->m=
-etadata_offset,
-+						(dio->range.n_sectors >> ic->sb->log2_sectors_per_block) * ic->tag_=
-size,
-+						!dio->write ? TAG_CMP : TAG_WRITE);
-+			if (unlikely(r)) {
-+				kfree(checksums);
-+				goto internal_hash_error;
- 			}
-+			kfree(checksums);
- 		}
-
--		if (likely(checksums !=3D checksums_onstack))
--			kfree(checksums);
- 	} else {
- 		struct bio_integrity_payload *bip =3D dio->orig_bi_integrity;
-
-@@ -1615,6 +1618,13 @@ static void integrity_metadata(struct work_struct *=
-w)
- skip_io:
- 	dec_in_flight(dio);
- 	return;
-+internal_hash_error:
-+	if (r > 0) {
-+		DMERR_LIMIT("Checksum failed at sector 0x%llx",
-+				(unsigned long long)(sector - ((r + ic->tag_size - 1) / ic->tag_size)=
-));
-+		r =3D -EILSEQ;
-+		atomic64_inc(&ic->number_of_mismatches);
-+	}
- error:
- 	dio->bi_status =3D errno_to_blk_status(r);
- 	dec_in_flight(dio);
-@@ -3019,6 +3029,8 @@ static void dm_integrity_io_hints(struct dm_target *=
-ti, struct queue_limits *lim
- 		limits->physical_block_size =3D ic->sectors_per_block << SECTOR_SHIFT;
- 		blk_limits_io_min(limits, ic->sectors_per_block << SECTOR_SHIFT);
- 	}
-+
-+	blk_limits_io_opt(limits, (1U << ic->sb->log2_interleave_sectors));
- }
-
- static void calculate_journal_section_size(struct dm_integrity_c *ic)
-=2D-
-2.20.1
+--hkI44MPNhtb0IuTBA6t4rXJyj69YDa5QI--
