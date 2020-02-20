@@ -2,83 +2,110 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33637C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BF3C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14BE20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CNL7p2Q8"
+	by mail.kernel.org (Postfix) with ESMTP id DF4792467B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582190504;
+	bh=o7emLQ8G4ybHBADSYTkl7UcF8plupI0v+fzIXCTR3s0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=etqzVj2wTzAV9asdEauMhfv8d024LAMP4siOJI2Rjw5ams7uSI9DtcQeKNvqKMBwI
+	 aTPK02zmTNUnDMuO6VWCfxTxa0dX0+le0B3mqwqcuj47X4Mx0NK5CGY/zEighhCeZh
+	 OcImE6VzYUj0aqIKH+I4vDj1/aCWyCs7BIZmeasY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgBTJVd (ORCPT
+        id S1726989AbgBTJVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:21:33 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35045 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726779AbgBTJVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:21:33 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582190493; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=dhe4B0dkTt3o0wEmiBXq3W/0qsFNC1MylHSP57FFsW0=; b=CNL7p2Q8eSw72Sud90V6OWbDnu3IYuXJUFt+Vb/U7fG/Biq5kdEQuzCgS6gl7pT2BYDBEByt
- NHeDQ6BC44Vz2ARlNexPxqza9WDZYQ3hIBedO1bcedI9rCVGeaYakT1lDWcNF8lPWQ50feQX
- xhZ4EziyHWMvW4dAzL8o9NVsekc=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4e4f9c.7f138f12c148-smtp-out-n03;
- Thu, 20 Feb 2020 09:21:32 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F113BC447A0; Thu, 20 Feb 2020 09:21:30 +0000 (UTC)
-Received: from sayalil-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 20 Feb 2020 04:21:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726501AbgBTJVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:21:43 -0500
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: sayalil)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CF827C43383;
-        Thu, 20 Feb 2020 09:21:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CF827C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sayalil@codeaurora.org
-From:   Sayali Lokhande <sayalil@codeaurora.org>
-To:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        ppvk@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, mka@chromium.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
-        Sayali Lokhande <sayalil@codeaurora.org>
-Subject: [PATCH RFC] Toggle fifo write clk after ungating sdcc clk
-Date:   Thu, 20 Feb 2020 14:50:45 +0530
-Message-Id: <1582190446-4778-1-git-send-email-sayalil@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F44B2467B
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582190503;
+        bh=o7emLQ8G4ybHBADSYTkl7UcF8plupI0v+fzIXCTR3s0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K3suDMIOMPfg0PyCMSwGTsI6vmhxg3dG7cTiQPqDNHyGwHzOTvd6OceOzoQIXrQ+t
+         hhIm7PK1PLr5nFZLfm2vI63EGcUi4bkeMibxf0jVsTd+eCBXwAc1QexlWya+zkNvRf
+         ThtTaAf5zvF+7DEEaOE99l+LCdIGsTjhOaPpe7vk=
+Received: by mail-wm1-f53.google.com with SMTP id a5so1186997wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 01:21:43 -0800 (PST)
+X-Gm-Message-State: APjAAAVO9SYLAFtHOcMve/b2eTgiLd74lm7IREfJkgUvslO0LVxhalaZ
+        5SET5lBG84eVVpLyddyvifs7hqF9gN3CaC2Tod8FSQ==
+X-Google-Smtp-Source: APXvYqylKi+HKLokR0+lqgERlKcgEjSrkJqeR5Xg1UtM54odKXFIDNYSdZxM+tDoCulLawQ2Z1FxlrES8lM3xvPTQGI=
+X-Received: by 2002:a1c:bc46:: with SMTP id m67mr3245339wmf.40.1582190501386;
+ Thu, 20 Feb 2020 01:21:41 -0800 (PST)
+MIME-Version: 1.0
+References: <1582289580-24045-1-git-send-email-jingxiangfeng@huawei.com>
+In-Reply-To: <1582289580-24045-1-git-send-email-jingxiangfeng@huawei.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 20 Feb 2020 10:21:29 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu930691BaDLuoVOU_gz0V8MtfWbfSTKcYuHxDvLz5hAiA@mail.gmail.com>
+Message-ID: <CAKv+Gu930691BaDLuoVOU_gz0V8MtfWbfSTKcYuHxDvLz5hAiA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] arm64: Support to find mirrored memory ranges
+To:     Jing Xiangfeng <jingxiangfeng@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During GCC level clock gating of MCLK, the async FIFO
-gets into some hang condition, such that for the next
-transfer after MCLK ungating, first bit of CMD response
-doesn't get written in to the FIFO. This cause the CPSM
-to hang eventually leading to SW timeout.
+On Thu, 20 Feb 2020 at 04:43, Jing Xiangfeng <jingxiangfeng@huawei.com> wrote:
+>
+> This series enable finding mirrored memory ranges
+> functionality on arm64 platform. This feature has been
+> implemented on the x86 platform, so we move some
+> functions from x86.
+>
 
-To fix the issue, toggle the FIFO write clock after
-MCLK ungated to get the FIFO pointers and flags to
-valid states.
+Hello Jing Xiangfeng,
 
-Ram Prakash Gupta (1):
-  mmc: sdhci-msm: Toggle fifo write clk after ungating sdcc clk
+Could you explain your use case a bit better? Usually, the firmware is
+a better place to make modifications to the EFI memory map.
 
- drivers/mmc/host/sdhci-msm.c | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+The reason I am asking is that currently, on ARM and arm64, we never
+make *any* changes to the firmware provided tables (EFI system table,
+EFI memory map, DT/ACPI/SMBIOS tables etc), in order to ensure that
+kexec is idempotent, i.e., it will always see the exact same state as
+far as the firmware is concerned. This is a bit different from x86,
+where the memory map is already modified for various other reasons, so
+using it for fake memory regions is not such a big deal.
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Do you see a use case for this in production?
+
+> Jing Xiangfeng (2):
+>   efi: allow EFI_FAKE_MEMMAP on arm64 platform
+>   arm64/efi: support to find mirrored memory ranges
+>
+>  arch/x86/include/asm/efi.h      |  5 -----
+>  arch/x86/platform/efi/efi.c     | 39 ---------------------------------------
+>  drivers/firmware/efi/Kconfig    |  2 +-
+>  drivers/firmware/efi/arm-init.c |  2 ++
+>  drivers/firmware/efi/efi.c      | 23 +++++++++++++++++++++++
+>  drivers/firmware/efi/memmap.c   | 16 ++++++++++++++++
+>  include/linux/efi.h             |  5 +++++
+>  7 files changed, 47 insertions(+), 45 deletions(-)
+>
+> --
+> 1.8.3.1
+>
