@@ -2,420 +2,124 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 319C8C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E84C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C8C24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6EE524654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 12:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgBTM5M (ORCPT
+        id S1728085AbgBTM6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 07:57:12 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56352 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgBTM5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 07:57:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 2C29DAC54;
-        Thu, 20 Feb 2020 12:57:09 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 13:57:07 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vsprintf: sanely handle NULL passed to %pe
-Message-ID: <20200220125707.hbcox3xgevpezq4l@pathway.suse.cz>
-References: <CAHk-=wjEd-gZ1g52kgi_g8gq-QCF2E01TkQd5Hmj4W5aThLw3A@mail.gmail.com>
- <20200219082155.6787-1-linux@rasmusvillemoes.dk>
- <CAOi1vP-4=QCSZ2A89g1po2p=6n_g09SXUCa0_r2SBJm2greRmw@mail.gmail.com>
- <0fef2a1f-9391-43a9-32d5-2788ae96c529@rasmusvillemoes.dk>
- <20200219134826.qqdhy2z67ubsnr2m@pathway.suse.cz>
- <5459eb50-48e2-2fd9-3560-0bc921e3678c@rasmusvillemoes.dk>
- <20200219144558.2jbawr52qb63vysq@pathway.suse.cz>
- <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
+        Thu, 20 Feb 2020 07:58:03 -0500
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:12341 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbgBTM6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:58:03 -0500
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Allan.Nielsen@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="Allan.Nielsen@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Allan.Nielsen@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; spf=Pass smtp.mailfrom=Allan.Nielsen@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: DQl9fXxlcrwCXqm1XMZdzYAl4AupcDPWhlGkyTIyUTBdmL40P1e82GDoCa9p4Y3iOnECXnWDK2
+ 2Ea+n/UoAkChLpjhxiFbLfvv0YwCsKXt5etWoFNnxqbiJ0Pj7kONAyexWtcbwhEcBe7m6q0+qn
+ /8irrb26zOaYzFUxj3U7xbxl/PSbwPccw/f6m/EOvF6M5LvidZJIJDTX6m0RxSZ+mGaVQgLrRS
+ faEqBnLs+Mgic7v0wFMiLn0RtnTwCseoK882Pn4l0vnqGLDlSZxIXlQoM0S8dx7S8pqvWuj03f
+ 2sY=
+X-IronPort-AV: E=Sophos;i="5.70,464,1574146800"; 
+   d="scan'208";a="66147402"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Feb 2020 05:58:02 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 20 Feb 2020 05:58:09 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Thu, 20 Feb 2020 05:58:01 -0700
+Date:   Thu, 20 Feb 2020 13:58:00 +0100
+From:   "Allan W. Nielsen" <allan.nielsen@microchip.com>
+To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <jiri@resnulli.us>,
+        <ivecera@redhat.com>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <anirudh.venkataramanan@intel.com>,
+        <olteanv@gmail.com>, <andrew@lunn.ch>,
+        <jeffrey.t.kirsher@intel.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next v3 00/10] net: bridge: mrp: Add support for Media
+ Redundancy Protocol (MRP)
+Message-ID: <20200220125800.c3qyc4wxtdt6hv4b@lx-anielsen.microsemi.net>
+References: <20200124161828.12206-1-horatiu.vultur@microchip.com>
+ <20200218121811.xo3o6zzrhl5p3j2s@lx-anielsen.microsemi.net>
+ <3afba55f-f953-7aaa-8425-14777db1b27d@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Disposition: inline
-In-Reply-To: <bcfb2f94-e7a8-0860-86e3-9fc866d98742@rasmusvillemoes.dk>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <3afba55f-f953-7aaa-8425-14777db1b27d@cumulusnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2020-02-19 16:40:08, Rasmus Villemoes wrote:
-> On 19/02/2020 15.45, Petr Mladek wrote:
-> > On Wed 2020-02-19 14:56:32, Rasmus Villemoes wrote:
-> >> On 19/02/2020 14.48, Petr Mladek wrote:
-> >>> On Wed 2020-02-19 12:53:22, Rasmus Villemoes wrote:
-> >>>> --- a/lib/vsprintf.c
-> >>>> +++ b/lib/vsprintf.c
-> >>> The test should go into null_pointer() instead of errptr().
-> >>
-> >> Eh, no, the behaviour of %pe is tested by errptr(). I'll keep it that
-> >> way. But I should add a #else section that tests how %pe behaves without
-> >> CONFIG_SYMBOLIC_ERRNAME - though that's orthogonal to this patch.
-> > 
-> > OK, we should agree on some structure first.
-> > 
-> > We already have two top level functions that test how a particular
-> > pointer is printed using different pointer modifiers:
-> > 
-> > 	null_pointer();     -> NULL with %p, %pX, %pE
-> > 	invalid_pointer();  -> random pointer with %p, %pX, %pE
-> > 
-> > Following this logic, errptr() should test how a pointer from IS_ERR() range
-> > is printed using different pointer formats.
-> 
-> Oh please. I wrote test_printf.c originally and structured it with one
-> helper for each %p<whatever>. How are your additions null_pointer and
-> invalid_pointer good examples for what the existing style is?
+Hi Nik,
 
-I see, I was the one who broke the style. Please, find below a patch
-that tries to fix it. If you agree with the approach then I could
-split it into smaller steps.
+On 20.02.2020 12:48, Nikolay Aleksandrov wrote:
+> In light of all the discussions and details that were explained, and as you've
+> noted above, I think more code should be put in kernel space at the very least
+> the performance/latency critical parts would benefit from being executed in the
+> kernel (kind of control/data-plane separation). It seems from the switchdev calls there's
+> a minimal state working set which define the behaviour and can be used to make
+> decisions (similar to STP) in the kernel, but the complex logic how to set them can be
+> executed in user-space meaning that maybe these hw-offload calls can have a simple SW
+> fallback logic based on their current values. I think it is worth considering if this can
+> be achieved before going to full in-kernel implementation of the state machine.
+> Since you intend to hw-offload it then putting in some SW fallback logic would be good
+> when the HW can't offload everything, what you suggest above also sounds good to me and
+> I think you'll have to extend mdb and the multicast code to do it, but IIRC you already
+> have code to do that based on previous discussions.
+Sounds good. We will continue working on defining a good control/data-plane separation
+and only keep the data-plane in the kernel. Also it seems that we agree that the SW fallback
+of the data-plane should stay in the kernel - we will do that.
 
-Also it would make sense to add checks for NULL and ERR pointer
-into each existing %p modifier check. It will make sure that
-check_pointer() is called in all handlers.
+> As was already suggested you can put the MRP options in the bridge's options and
+> process them from the bridge netlink code, that should simplify your code.
+I'm okay with this.
 
+The main argument I see for creating a seperate MRP netlink interface
+instead of extending the bridge, is that MRP is properly not the last
+bridge protocol we will want to work on.
 
-> So yeah, I'm going to continue testing the behaviour of %pe in errptr, TYVM.
+To complete the MRP-2018 implementation, we will also need some CFM
+support (defined in 802.1Qag or the latest version of 802.1Q). And
+furhter out we will properly want to implement the full CFM protocol.
 
-OK.
+DLR may also be relevant at some point, and there may be other.
 
-> >>>> BTW., your original patch for %p lacks corresponding update of
-> >>>> test_vsprintf.c. Please add appropriate test cases.
-> >>>
-> >>> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> >>> index 2d9f520d2f27..1726a678bccd 100644
-> >>> --- a/lib/test_printf.c
-> >>> +++ b/lib/test_printf.c
-> >>> @@ -333,7 +333,7 @@ test_hashed(const char *fmt, const void *p)
-> >>>  static void __init
-> >>>  null_pointer(void)
-> >>>  {
-> >>> -	test_hashed("%p", NULL);
-> >>> +	test(ZEROS "00000000", "%p", NULL);
-> >>
-> >> No, it most certainly also needs to check a few "%p", ERR_PTR(-4) cases
-> >> (where one of course has to use explicit integers and not E* constants).
-> > 
-> > Yes, it would be great to add checks for %p, %px for IS_ERR() range.
-> > But it is different story. The above change is for the original patch
-> > and it was about NULL pointer handling.
-> 
-> Wrong. The original patch (i.e. Ilya's) had subject "vsprintf: don't
-> obfuscate NULL and error pointers" and did
-> 
-> +	if (IS_ERR_OR_NULL(ptr))
-> 
-> so the tests that should be part of that patch very much need to cover
-> both NULL and ERR_PTRs passed to plain %p.
+My main point is, that at some point we will properly want to do
+seperate NETLINK interfaces for this. Not sure if that is now or later.
 
-Grr, I see. I was too fast yesterday. OK, I suggest to fix the
-structure of the tests first. All these patches are for 5.7
-anyway.
+> You could also make the port's "mrp_aware" bool into an internal port
+> flag (use net_bridge_port's flags field) so it can be quickly tested
+> and in a hot cache line.
+Good point, we will do that.
 
-
-Here is the proposed clean up:
-
-From 855909f2a1945d3a5bf490ddf4f2cca775ef967b Mon Sep 17 00:00:00 2001
-From: Petr Mladek <pmladek@suse.com>
-Date: Thu, 20 Feb 2020 12:53:43 +0100
-Subject: [PATCH] lib/test_printf: Clean up basic pointer testing
-
-The pointer testing has been originally split by the %p modifiers,
-for example, the function dentry() tested %pd and %pD handling.
-
-There were recently added tests that do not really fit into
-the existing structure, namely:
-
-  + hashed pointers tested by a maze of functions
-  + null and invalid pointer handling with various modifiers
-
-The hash pointer test is really special because the hash depends
-on a random key that is generated during boot. Though, it is
-still possible to check some aspects:
-
-  + output string length
-  + hash differs from the original pointer value
-  + top half bites are zeroed on 64-bit systems
-
-Let's put all these checks into test_hashed() function that has
-the same behavior as the test() functions for well-defined output.
-It increments the number of tests and eventual failures. It prints
-warnings/errors when some aspects of the output are not as expected.
-
-Most of these checks were there even before. The only addition is
-the check whether hash differs from the original pointer value.
-There is a small chance of a false error. It might be reduced
-by checking more pointers but let's keep it simple for now.
-
-The existing null_pointer() and invalid_pointer() checks are
-newly split per-format modifier. And there is also fixed
-difference between invalid pointer in the IS_ERR() range
-and invalid pointer that looks like a valid one.
-
-The invalid pointer Oxdeaddead00000000 should work on most
-architectures. But I am not able to check it everywhere.
-So there is a small chance of a false error. It might get
-fixed when anyone reports a problem.
-
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- lib/test_printf.c | 162 ++++++++++++++++++++----------------------------------
- 1 file changed, 59 insertions(+), 103 deletions(-)
-
-diff --git a/lib/test_printf.c b/lib/test_printf.c
-index 2d9f520d2f27..4e89b508def6 100644
---- a/lib/test_printf.c
-+++ b/lib/test_printf.c
-@@ -206,146 +206,101 @@ test_string(void)
- }
- 
- #define PLAIN_BUF_SIZE 64	/* leave some space so we don't oops */
-+#define PTR_ERROR ERR_PTR(-EFAULT)
-+#define PTR_VAL_ERROR "fffffff2"
- 
- #if BITS_PER_LONG == 64
- 
- #define PTR_WIDTH 16
- #define PTR ((void *)0xffff0123456789abUL)
- #define PTR_STR "ffff0123456789ab"
-+#define PTR_INVALID ((void *)0xdeaddead000000ab)
-+#define PTR_VAL_INVALID "deaddead000000ab"
- #define PTR_VAL_NO_CRNG "(____ptrval____)"
-+#define ONES "ffffffff"		/* hex 32 one bits */
- #define ZEROS "00000000"	/* hex 32 zero bits */
- 
--static int __init
--plain_format(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int nchars;
--
--	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
--
--	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
--		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
--			PTR_VAL_NO_CRNG);
--		return 0;
--	}
--
--	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
--		return -1;
--
--	return 0;
--}
--
- #else
- 
- #define PTR_WIDTH 8
- #define PTR ((void *)0x456789ab)
- #define PTR_STR "456789ab"
-+#define PTR_INVALID ((void *)0x000000ab)
-+#define PTR_VAL_INVALID "000000ab"
- #define PTR_VAL_NO_CRNG "(ptrval)"
-+#define ONES ""
- #define ZEROS ""
- 
--static int __init
--plain_format(void)
--{
--	/* Format is implicitly tested for 32 bit machines by plain_hash() */
--	return 0;
--}
--
- #endif	/* BITS_PER_LONG == 64 */
- 
--static int __init
--plain_hash_to_buffer(const void *p, char *buf, size_t len)
-+static void __init
-+test_hashed(const char *fmt, const void *p)
- {
-+	char pointer[PLAIN_BUF_SIZE];
-+	char hash[PLAIN_BUF_SIZE];
- 	int nchars;
- 
--	nchars = snprintf(buf, len, "%p", p);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
-+	total_tests++;
- 
--	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
--		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
--			PTR_VAL_NO_CRNG);
--		return 0;
-+	nchars = snprintf(pointer, sizeof(pointer), "%px", p);
-+	if (nchars != PTR_WIDTH) {
-+		pr_err("error in test suite: vsprintf(\"%%px\", p) returned number of characters %d, expected %d\n",
-+		       nchars, PTR_WIDTH);
-+		goto err;
- 	}
- 
--	return 0;
--}
--
--static int __init
--plain_hash(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int ret;
--
--	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return ret;
--
--	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
--		return -1;
--
--	return 0;
--}
--
--/*
-- * We can't use test() to test %p because we don't know what output to expect
-- * after an address is hashed.
-- */
--static void __init
--plain(void)
--{
--	int err;
--
--	err = plain_hash();
--	if (err) {
--		pr_warn("plain 'p' does not appear to be hashed\n");
--		failed_tests++;
--		return;
-+	nchars = snprintf(hash, sizeof(hash), fmt, p);
-+	if (nchars != PTR_WIDTH) {
-+		pr_warn("vsprintf(\"%s\", p) returned number of characters %d, expected %d\n",
-+			fmt, nchars, PTR_WIDTH);
-+		goto err;
- 	}
- 
--	err = plain_format();
--	if (err) {
--		pr_warn("hashing plain 'p' has unexpected format\n");
--		failed_tests++;
-+	if (strncmp(hash, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
-+		pr_warn_once("crng possibly not yet initialized. vsprinf(\"%s\", p) printed \"%s\"",
-+			     fmt, hash);
-+		total_tests--;
-+		return;
- 	}
--}
--
--static void __init
--test_hashed(const char *fmt, const void *p)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int ret;
- 
- 	/*
--	 * No need to increase failed test counter since this is assumed
--	 * to be called after plain().
-+	 * There is a small chance of a false negative on 32-bit systems
-+	 * when the hash is the same as the pointer value.
- 	 */
--	ret = plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return;
-+	if (strncmp(hash, pointer, PTR_WIDTH) == 0) {
-+		pr_warn("vsprintf(\"%s\", p) returned %s, expected hashed pointer\n",
-+			fmt, hash);
-+		goto err;
-+	}
-+
-+#if BITS_PER_LONG == 64
-+	if (strncmp(hash, ZEROS, PTR_WIDTH / 2) != 0) {
-+		pr_warn("vsprintf(\"%s\", p) returned %s, expected %s in the top half bits\n",
-+			fmt, hash, ZEROS);
-+		goto err;
-+	}
-+#endif
-+	return;
- 
--	test(buf, fmt, p);
-+err:
-+	failed_tests++;
- }
- 
- static void __init
--null_pointer(void)
-+plain_pointer(void)
- {
- 	test_hashed("%p", NULL);
--	test(ZEROS "00000000", "%px", NULL);
--	test("(null)", "%pE", NULL);
-+	test_hashed("%p", PTR_ERROR);
-+	test_hashed("%p", PTR_INVALID);
- }
- 
--#define PTR_INVALID ((void *)0x000000ab)
- 
- static void __init
--invalid_pointer(void)
-+real_pointer(void)
- {
--	test_hashed("%p", PTR_INVALID);
--	test(ZEROS "000000ab", "%px", PTR_INVALID);
--	test("(efault)", "%pE", PTR_INVALID);
-+	test(ZEROS "00000000", "%px", NULL);
-+	test(ONES PTR_VAL_ERROR, "%px", PTR_ERROR);
-+	test(PTR_VAL_INVALID, "%px", PTR_INVALID);
- }
- 
- static void __init
-@@ -372,6 +327,8 @@ addr(void)
- static void __init
- escaped_str(void)
- {
-+	test("(null)", "%pE", NULL);
-+	test("(efault)", "%pE", PTR_ERROR);
- }
- 
- static void __init
-@@ -458,9 +415,9 @@ dentry(void)
- 	test("foo", "%pd2", &test_dentry[0]);
- 
- 	test("(null)", "%pd", NULL);
--	test("(efault)", "%pd", PTR_INVALID);
-+	test("(efault)", "%pd", PTR_ERROR);
- 	test("(null)", "%pD", NULL);
--	test("(efault)", "%pD", PTR_INVALID);
-+	test("(efault)", "%pD", PTR_ERROR);
- 
- 	test("romeo", "%pd", &test_dentry[3]);
- 	test("alfa/romeo", "%pd2", &test_dentry[3]);
-@@ -647,9 +604,8 @@ errptr(void)
- static void __init
- test_pointer(void)
- {
--	plain();
--	null_pointer();
--	invalid_pointer();
-+	plain_pointer();
-+	real_pointer();
- 	symbol_ptr();
- 	kernel_ptr();
- 	struct_resource();
--- 
-2.16.4
-
+/Allan
