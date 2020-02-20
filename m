@@ -2,89 +2,128 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5150DC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB8BC11D1B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B73208C4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2809E222C4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 19:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DApX65vZ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z70rwuoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbgBTTaB (ORCPT
+        id S1728834AbgBTTbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 14:30:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:53176 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbgBTTaA (ORCPT
+        Thu, 20 Feb 2020 14:31:08 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:34236 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728334AbgBTTbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 14:30:00 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KJTJ7k059691;
-        Thu, 20 Feb 2020 13:29:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582226959;
-        bh=7VYc8CJ2y2APcsIbYj7iN6/uBegeLD4mvzWH1dQDQa8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=DApX65vZNJ/d9RG5qjp3W88p5qEPBfEW3+vakGKqMQ7Rg95D2WdiaIzJoDke+qBf/
-         OwfGlJlU90vBDTsyxmfAL3/tWP76RSUQz81JHgqtqLrA0y06FGLdQFkUJLls4N55LS
-         1gRh9F39eST9pH4TnaE/wa7Px0KKSPOIc6UE7imQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KJTJRN003290;
-        Thu, 20 Feb 2020 13:29:19 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 13:29:19 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 13:29:19 -0600
-Received: from [128.247.59.107] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KJTJPt053232;
-        Thu, 20 Feb 2020 13:29:19 -0600
-Subject: Re: [PATCH v3 0/2] Introduce the TLV320ADCx140 codec family
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-References: <20200219125942.22013-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <1d2b79f5-a928-adc5-b6f8-e73e0c061f75@ti.com>
-Date:   Thu, 20 Feb 2020 13:24:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 14:31:08 -0500
+Received: by mail-pj1-f65.google.com with SMTP id f2so1428838pjq.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 11:31:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sXrvFoJPqvg02BUxIE3UTho5sV5nybX8qyPHpbQqr8E=;
+        b=Z70rwuoFsDifWDdSPas8zJnF+Mg+i8+o1G2DC8mif0hkptJNC5ARTCELec1tul0u6Y
+         yW3yPrYySlq+1gxFpLFMrXTbm/A3s0PUqIIgeJz2ykBzrTW8epYftwgCqTttoU8OK9rU
+         hSdVAXqZQYqWTG83XN557bG6e1C0aHluhJeeM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sXrvFoJPqvg02BUxIE3UTho5sV5nybX8qyPHpbQqr8E=;
+        b=dtCaS32QMuP4X9KOak36oBoIPHaNwJbamJkFI5eiRHEyBYwxAxIMjcPdbz+H7XZkSe
+         os2TvrIo5amSr5da6Lln5I+bzSKXg2A/nkbQTDMo+ZuW14GYYxVid/RgXp1KKP2VdoPx
+         1gdeLfyZtPzxKo3KQ3Eb3uA0nCRiUcWtvMef25gVqXpUnUO2oJybG8+SxXyuq9iG3gpW
+         vRVGke1xgDBof9k/ZgA1m0M1TTCgaRXXAONvi+RBQz+KSkiZcHObmzSmdtTBlz9moUxG
+         Wh1oegmB4TiQ1aFSATYIS0Vm1PratE4i1CFnruKiMkoM05UlpYYQgt3yDXXjQbpnkDr0
+         xyjQ==
+X-Gm-Message-State: APjAAAU5MyjK67MBq7MZ/bEOtwtMZlzm1Dg1jpmPwAaMMZMIhG86xsis
+        QNsWq8FZWwzc12mP1lsLMgcpQQ==
+X-Google-Smtp-Source: APXvYqz9mp7EYWo84cTExZVyCFz4HlzngV4TM7788p/mvz2FPEMPzJOeDtaA6kvPL6z9ON/ddq4yjw==
+X-Received: by 2002:a17:90a:ac0e:: with SMTP id o14mr5557795pjq.11.1582227066988;
+        Thu, 20 Feb 2020 11:31:06 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id 199sm376209pfu.71.2020.02.20.11.31.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 11:31:06 -0800 (PST)
+Date:   Thu, 20 Feb 2020 11:31:05 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     swboyd@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, agross@kernel.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org
+Subject: Re: [PATCH v5 1/7] drivers: qcom: rpmh: fix macro to accept NULL
+ argument
+Message-ID: <20200220193105.GB24720@google.com>
+References: <1582108810-21263-1-git-send-email-mkshah@codeaurora.org>
+ <1582108810-21263-2-git-send-email-mkshah@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200219125942.22013-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1582108810-21263-2-git-send-email-mkshah@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hi Maulik,
 
-On 2/19/20 6:59 AM, Dan Murphy wrote:
-> Hello
->
-> Introducing the Texas Instruments TLV320ADCx140 quad channel audio ADC.
-> This device supports 4 analog inputs, 8 digital inputs or a combination of
-> analog and digital microphones.
->
-> TLV320ADC3140 - http://www.ti.com/lit/gpn/tlv320adc3140
-> TLV320ADC5140 - http://www.ti.com/lit/gpn/tlv320adc5140
-> TLV320ADC6140 - http://www.ti.com/lit/gpn/tlv320adc6140
+this patch and '[v5,2/7] drivers: qcom: rpmh: remove rpmh_flush
+export' already landed in the QCOM tree (in the branch 'drivers-for-5.7'):
 
-Please let me know if there are any additional review comments on this 
-code I have 2 more feature add patches on top of this patch that I 
-developed a couple days ago and don't want to submit them for review 
-until this driver is integrated.
+d5e205079c34a drivers: qcom: rpmh: remove rpmh_flush export
+aff9cc0847a58 drivers: qcom: rpmh: fix macro to accept NULL argument
 
-Dan
+Please rebase your working tree and stop sending these.
 
+Thanks
+
+Matthias
+
+On Wed, Feb 19, 2020 at 04:10:04PM +0530, Maulik Shah wrote:
+> Device argument matches with dev variable declared in RPMH message.
+> Compiler reports error when the argument is NULL since the argument
+> matches the name of the property. Rename dev argument to device to
+> fix this.
+> 
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  drivers/soc/qcom/rpmh.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> index 035091f..3a4579d 100644
+> --- a/drivers/soc/qcom/rpmh.c
+> +++ b/drivers/soc/qcom/rpmh.c
+> @@ -23,7 +23,7 @@
+>  
+>  #define RPMH_TIMEOUT_MS			msecs_to_jiffies(10000)
+>  
+> -#define DEFINE_RPMH_MSG_ONSTACK(dev, s, q, name)	\
+> +#define DEFINE_RPMH_MSG_ONSTACK(device, s, q, name)	\
+>  	struct rpmh_request name = {			\
+>  		.msg = {				\
+>  			.state = s,			\
+> @@ -33,7 +33,7 @@
+>  		},					\
+>  		.cmd = { { 0 } },			\
+>  		.completion = q,			\
+> -		.dev = dev,				\
+> +		.dev = device,				\
+>  		.needs_free = false,				\
+>  	}
+>  
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
