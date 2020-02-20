@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28FAC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C67C11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB7624672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0E524654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:36:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVRLDXHV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+fgwF/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgBTIgJ (ORCPT
+        id S1727393AbgBTIgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:36:09 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36718 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgBTIf7 (ORCPT
+        Thu, 20 Feb 2020 03:36:15 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36716 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgBTIf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:35:59 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a6so1280975plm.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:35:59 -0800 (PST)
+        Thu, 20 Feb 2020 03:35:56 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a6so1280932plm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 00:35:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=y/c4HnHL8fMAg6Wo4pqS2IgOW97h7pKxh9Qxew+UstU=;
-        b=jVRLDXHVy8oHPRXfBedHbTNAtkdvnd1bwk1Yk+NWpCm/JqBBDPwJ9SwMP2gddlZHrj
-         eiH61428+Mx0koFTtoxOq/ed6ErAnMpwyX7WLDs6BsLZWPf8+L676n0n1mW0E5emvZfg
-         F5+aCZiyNd8sYg4PTwDKiHu1mijlAYUvJpQz8nfG+2V/L6IjmvnzJCAi1B4rQjr4h4ez
-         r/SovY9JQefHPaXoUPLbLifoW/vfy8NtG2zCQMpExwlSLys2m17/ALM8umf1gXJFw2Fv
-         XFKAnroF69zdiP1fKBrCMTnf3hFwupOuxRSAJXIh8RaLVOk97vdz7/LqzngPSP3SZPVA
-         uHnw==
+        bh=wYQONlA9lvcFld0G+NwhV5rBbyIu6fNUKkg/bhapB14=;
+        b=N+fgwF/6e6JTKFlrJgQIRnbOLpsKCtZYnIYWWcKNnfKNY9CCUMr6V9Gw9TGF6pjJIB
+         EHSAyjOJyfeCwqQkmI4hUnJOnoferabWuW52Jemsyz3ozxX45q3P64AnHJpigGKXMWzg
+         wBZNL9EgTQWFnkbTSNbeoeGpldgIni5ogrZfMmarImqShr+dejWNmNW96uI2OQSM/DiG
+         TbWyOd6OuhzcE+KwC0rYa/X8GMZFSoOWT0/63ZQIGG5D9x0EvG1IvBxr9J8jYpAcdO0a
+         4Za6FD12Z2xqA0PCoc8lNH2bo+yCBkGwRyZmRXN6uApIHstunbaeA/WX/yObPRwoUFUG
+         f+NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=y/c4HnHL8fMAg6Wo4pqS2IgOW97h7pKxh9Qxew+UstU=;
-        b=FWJZx89St8/Guq21jTqY1pM2p7FvWsQUT+udoeVqyk0NJzziMdEmd/JyHQsIdDc0oe
-         D1vDjcEm+35OV6HMusjUYYlUdOXcZ/TLVgRtakTBQyxda/Xe2cMxqrfPn/GzrrSZP3tD
-         7DJK7yDv/nANuOZRfZHcc9NDWlWHTIEYBnzOCBVRnAaOYR51NCtiRZRnGaCBKODr2J6G
-         Nglh9p4R9vUVLOpxr/g+NsdDuV2DPAsej2QXTWvcpz0qYVC0ZmnG8qAvTggkSFy15FPm
-         RalInIxjWDc+NRgmwlTWvEOTbLGaWYk9VyFcQrn3hdcxhcUQFGajLCy5Px4sEBG95Hz7
-         dHmg==
-X-Gm-Message-State: APjAAAVRk7rtT8oM2GNyp1qyUnNjXuAUwrDId3vXX/WN7tiCYOiswPMr
-        PU81IYoGpcV6CTtq+CowYz8=
-X-Google-Smtp-Source: APXvYqyYpW3EXASVj7XV5DEOPQswxo7hRbJnjHbgKCDrhVP4i9xGeNsgJjGu3JKIdyetfAZGHkiGCg==
-X-Received: by 2002:a17:90a:a48c:: with SMTP id z12mr2330695pjp.38.1582187758576;
-        Thu, 20 Feb 2020 00:35:58 -0800 (PST)
+        bh=wYQONlA9lvcFld0G+NwhV5rBbyIu6fNUKkg/bhapB14=;
+        b=jnFT6diFITU+b5gHGaIu7Dk2ppvu7UIeP3+k3evXq8Z3+iPTvqfvK6rq45a9G6u/0A
+         8cQwc6PSofVkmz1uuwk6nlQyTm/a3tCRzGV/53n2ekEaMoVez7IJ1itrCAVh0pY9sk8j
+         Q9r7msR0suJNt2NKwvwbxvJlfO4ZLjv7BQ2OwK83lLoomcTghaMyQBE6as3Im09dgcCS
+         AaRPMeUqV2RA/bnXfNCT8fM/3HBnTaymiAKx8RDZlty+yrsR6BvS1FRBXtoY7BeKQHcT
+         EvGAol7uWO1DdBCYBxNG6Y++AXP64JwkK2f5JIaHeQs+UHVk/nrUoL9lWVnasqeRplnv
+         D7Dw==
+X-Gm-Message-State: APjAAAVL3ixtTod76Pm7EmOlz1Nh23HUE7R5mb+sAshFTbVg2jKpcfDi
+        5Noz5/lQ7WsJlxaCqEUF1NI=
+X-Google-Smtp-Source: APXvYqwAMzlg3ox1kckOd8OArhVChc+fFh1B8FYzsDIg77886p2/0Fs+/up3ECkbKsMtzNNlm8jUUQ==
+X-Received: by 2002:a17:90a:c216:: with SMTP id e22mr2300961pjt.134.1582187755353;
+        Thu, 20 Feb 2020 00:35:55 -0800 (PST)
 Received: from anarsoul-thinkpad.lan (216-71-213-236.dyn.novuscom.net. [216.71.213.236])
-        by smtp.gmail.com with ESMTPSA id l13sm2319038pjq.23.2020.02.20.00.35.57
+        by smtp.gmail.com with ESMTPSA id l13sm2319038pjq.23.2020.02.20.00.35.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 00:35:58 -0800 (PST)
+        Thu, 20 Feb 2020 00:35:54 -0800 (PST)
 From:   Vasily Khoruzhick <anarsoul@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Sam Ravnborg <sam@ravnborg.org>,
@@ -81,9 +81,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Cc:     Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 5/6] drm/panel: simple: Add NewEast Optoelectronics CO., LTD WJFH116008A panel support
-Date:   Thu, 20 Feb 2020 00:35:07 -0800
-Message-Id: <20200220083508.792071-6-anarsoul@gmail.com>
+Subject: [PATCH 2/6] drm/bridge: anx6345: Clean up error handling in probe()
+Date:   Thu, 20 Feb 2020 00:35:04 -0800
+Message-Id: <20200220083508.792071-3-anarsoul@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200220083508.792071-1-anarsoul@gmail.com>
 References: <20200220083508.792071-1-anarsoul@gmail.com>
@@ -94,79 +94,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds support for the NewEast Optoelectronics CO., LTD
-WJFH116008A 11.6" 1920x1080 TFT LCD panel.
+devm_regulator_get() returns either a dummy regulator or -EPROBE_DEFER,
+we don't need to print scary message in either case.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 47 ++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ drivers/gpu/drm/bridge/analogix/analogix-anx6345.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index e14c14ac62b5..aa04afaf3d26 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2224,6 +2224,50 @@ static const struct panel_desc netron_dy_e231732 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+index 0d8d083b0207..0204bbe4f0a0 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix-anx6345.c
+@@ -713,17 +713,13 @@ static int anx6345_i2c_probe(struct i2c_client *client,
  
-+static const struct drm_display_mode neweast_wjfh116008a_modes[] = {
-+{
-+	.clock = 138500,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 48,
-+	.hsync_end = 1920 + 48 + 32,
-+	.htotal = 1920 + 48 + 32 + 80,
-+	.vdisplay = 1080,
-+	.vsync_start = 1080 + 3,
-+	.vsync_end = 1080 + 3 + 5,
-+	.vtotal = 1080 + 3 + 5 + 23,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+}, {
-+	.clock = 110920,
-+	.hdisplay = 1920,
-+	.hsync_start = 1920 + 48,
-+	.hsync_end = 1920 + 48 + 32,
-+	.htotal = 1920 + 48 + 32 + 80,
-+	.vdisplay = 1080,
-+	.vsync_start = 1080 + 3,
-+	.vsync_end = 1080 + 3 + 5,
-+	.vtotal = 1080 + 3 + 5 + 23,
-+	.vrefresh = 48,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+} };
-+
-+static const struct panel_desc neweast_wjfh116008a = {
-+	.modes = neweast_wjfh116008a_modes,
-+	.num_modes = 2,
-+	.bpc = 6,
-+	.size = {
-+		.width = 260,
-+		.height = 150,
-+	},
-+	.delay = {
-+		.prepare = 110,
-+		.enable = 20,
-+		.unprepare = 500,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
-+	.connector_type = DRM_MODE_CONNECTOR_eDP,
-+};
-+
- static const struct drm_display_mode newhaven_nhd_43_480272ef_atxl_mode = {
- 	.clock = 9000,
- 	.hdisplay = 480,
-@@ -3399,6 +3443,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "netron-dy,e231732",
- 		.data = &netron_dy_e231732,
-+	}, {
-+		.compatible = "neweast,wjfh116008a",
-+		.data = &neweast_wjfh116008a,
- 	}, {
- 		.compatible = "newhaven,nhd-4.3-480272ef-atxl",
- 		.data = &newhaven_nhd_43_480272ef_atxl,
+ 	/* 1.2V digital core power regulator  */
+ 	anx6345->dvdd12 = devm_regulator_get(dev, "dvdd12");
+-	if (IS_ERR(anx6345->dvdd12)) {
+-		DRM_ERROR("dvdd12-supply not found\n");
++	if (IS_ERR(anx6345->dvdd12))
+ 		return PTR_ERR(anx6345->dvdd12);
+-	}
+ 
+ 	/* 2.5V digital core power regulator  */
+ 	anx6345->dvdd25 = devm_regulator_get(dev, "dvdd25");
+-	if (IS_ERR(anx6345->dvdd25)) {
+-		DRM_ERROR("dvdd25-supply not found\n");
++	if (IS_ERR(anx6345->dvdd25))
+ 		return PTR_ERR(anx6345->dvdd25);
+-	}
+ 
+ 	/* GPIO for chip reset */
+ 	anx6345->gpiod_reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
 -- 
 2.25.0
 
