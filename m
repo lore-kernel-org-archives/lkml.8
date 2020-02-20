@@ -2,92 +2,218 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9520DC11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5228C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6090220801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B440A20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:29:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fgz01I+q"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Ccstph9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgBTJ2o (ORCPT
+        id S1727091AbgBTJ3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:28:44 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38203 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726637AbgBTJ2n (ORCPT
+        Thu, 20 Feb 2020 04:29:09 -0500
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:42489 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbgBTJ3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:28:43 -0500
-Received: by mail-lf1-f66.google.com with SMTP id r14so2506781lfm.5;
-        Thu, 20 Feb 2020 01:28:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aXBYI7iN04ln6Ion90FgCxJnmbc7ifsuLMedAnCxmZg=;
-        b=Fgz01I+qAuo3DyELQn4YOkmmqdbZG0GyFC0OM551PnYPk0qWHczUrMpYYKUKJiPI4g
-         iEc3V4+CzggO/N5X4p3T1ke0BzSBUvUsrfXSt8xvRgx9AhbQ8kSTtWcp+0UtcNTJLtzp
-         jo3xbT0JiMidrEoSaZMPPP1+pJhaotHe5GlbjapHTvN13jyXawb1yuQA4H4aqb3bgjX5
-         tj+0nCcCQASUvGIr5ueSo9yxS/zn+iGnsX8pA1DlPO1DOGgEPaIopjlfryIflIKGjX6K
-         wwPFOb0DQByw0cGYJ9eG0hnfrSREMghHAxvzV+VU2SuJsjziF60f+vDrQ5RB+tB0pe8O
-         CHWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aXBYI7iN04ln6Ion90FgCxJnmbc7ifsuLMedAnCxmZg=;
-        b=F8xP31rlgWn6GJuCu13IdGBmioOlc1l41YjipAgJ5WUjuGgGr+MGXbtLwvDaq1qpg+
-         o6kMcl6YaDGnhPtK7r0xOsX+bpXk58hnAZz01xtgsNqDwtbS2dIvxsmCHLCHRWqXaQIP
-         H5JdCNCXenbkwfVhtJzEts1f2zL55WT8WMDz7r0AcM1TeRtlQ1AvSp5PzvAAp0bSDGel
-         VUT+ebvnnwguB/bjAyqh6X2w/67YrOqH3jDJx283+gEcBo/PJY4SS3a2XElA+yvKZ11i
-         2YsPcGjm+0VYaoyQZfGGM+OR2lk0FYyiqxYX3XkZTqY4U/62BB+LDWTmPPcB6USWLhqm
-         1/4g==
-X-Gm-Message-State: APjAAAUwSHiu0Xkm2k6X4CLJElb3TzzWh5nKE/FeSeMpDAsUx8bS4ij0
-        as60Z1grVMH2Rl+6EuDl0fGJcZLZT3dob0ByDDE=
-X-Google-Smtp-Source: APXvYqzqPQ9BCBt2x2OiYVmwTljlYndEM577r2iYLn7YqzpJ1YQgQCYJ1SjotvYnvWD0v8GZKl4r3TDCXgAkgUM7iSc=
-X-Received: by 2002:a05:6512:78:: with SMTP id i24mr16504662lfo.10.1582190921659;
- Thu, 20 Feb 2020 01:28:41 -0800 (PST)
+        Thu, 20 Feb 2020 04:29:08 -0500
+Received: from [IPv6:2001:420:44c1:2577:1c10:d9c8:263c:14df]
+ ([IPv6:2001:420:44c1:2577:1c10:d9c8:263c:14df])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 4i8kjA0BWyIme4i8njitt1; Thu, 20 Feb 2020 10:29:06 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1582190946; bh=Qo6Jh/zpoxM7+tR2Ygxuq+giN9gvq12UfP8nl0zpj7U=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Ccstph9SYK7bKl0+qXR9LqJB3rB7iIcX8ER53EAZi4RKBjtJ1NGi7mlt70pMfpTm3
+         gwLq/OcFYWhI334UKMBuK2eT3EffIeva+kUqqfOj2Rlx+URHFC88wqAkmbapQ7fI0u
+         +gfnEZWvRa+0o6jJSZEfyLMwIaO666TOmZrbFRPF7CgbUR5Aqzi3YOKv8Y/Pv+nn5m
+         Pr/Z//CEbMwHw+18mw9yAD4HKCSqosXEpwd0Fqg0aZUcw4eFeCm2yh+atXh24GsagJ
+         3yzdCVcJxCVbZP4IAubBjyxLpti6PEYBmQCIM0Eih33yf6aWsmTeAQ1JUfjExZkuOz
+         xHWtqBXSj13Vw==
+Subject: Re: [RFC PATCH v3 4/6] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, sboyd@kernel.org
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1581704608-31219-1-git-send-email-skomatineni@nvidia.com>
+ <1581704608-31219-5-git-send-email-skomatineni@nvidia.com>
+ <30e417ba-84e1-63d2-de74-22cfe859bddb@xs4all.nl>
+ <920b4276-b2ca-646c-a21b-ca0b9bacf471@nvidia.com>
+ <6bb124db-681c-55c1-e328-6e1f766a8bb3@nvidia.com>
+ <0f84d37c-105f-8de6-c922-186d2f9ea156@nvidia.com>
+ <44fc39f4-8e9f-bcab-8642-fe1cb332016a@xs4all.nl>
+ <fb5f1566-9347-8f34-ada0-15c831cbc394@nvidia.com>
+ <87c1c97d-abd7-8ca5-0709-d7c64a7d7b39@nvidia.com>
+ <32ebc124-cb2d-f545-a5a0-d71192af8219@nvidia.com>
+ <d1505a3b-92e0-4f98-1882-c56bdab7e2f6@xs4all.nl>
+ <fc7b975a-dffa-4826-7ae5-40abb1f16b3d@nvidia.com>
+ <3adacc07-7e3a-2d06-8d18-003b004ede17@nvidia.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <dae3a6dd-f7ab-5e0f-08a9-2b0be4c68fe1@xs4all.nl>
+Date:   Thu, 20 Feb 2020 10:29:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200220071140.14080-1-masahiroy@kernel.org>
-In-Reply-To: <20200220071140.14080-1-masahiroy@kernel.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 20 Feb 2020 10:28:30 +0100
-Message-ID: <CANiq72kqxdGrZO7NokY6Zkh=e8owBVJCpK5DxWLnwiuxyzCybg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] vdso: remove meaningless undefining CONFIG_OPTIMIZE_INLINING
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        sparclinux@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3adacc07-7e3a-2d06-8d18-003b004ede17@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfKpnDRlyVAgVJ8cU1/lyw3XkRh89XFTSARDz31Fo42OwcBo2rT65KxcZ06sBsDNdclTnFnu4edsk2FmO3jrpkec83Cd+lqQb6+NXPZaRiligzZbh1Cg+
+ tJ2tDCCGaDwTiPnBV1pVLp+yR3MMGMjCx+YsvvueAmsx1D2OlDrAExxXTgpHv5Qoro/9NOPoh2/VD7/1L7u6Vu/pmTpOPyp4vbT4O1o1RcPduafmdP7XtcPb
+ ucm9QAWqoBS3Q5EoeL0gElGlJx3+mWHjloyg+I53sWhLeFFVtjrAh34LCSqtoZsiqSnOn8d6sLJRWKwsmVXoZOirkw4TcYj7Muhv1KuXyXgULQouGP9OQ+2p
+ jpW9fx2izKhsaKIcvkM9Slpn203qQbl1WaCRDRnoCYbfSRtmtQxTabAINxxzb1hAi8DegHF4JTC5iWYfLLFBW2vMpq4m6J3bsj91yUJfDfEUPxIRk5vc3vJQ
+ 1sc51/IrGxGQ8+RiSJcJLqQa9KdvM0w/V+0H9WxXCNxUqdEQTqpFmurdhUI/c8nW4IUHh7PhZOwoUCIXjhFuWB+TmRhEpabXuP8pgO59Ahqcc18VHtz+n1c8
+ aY5hkQPH9oPBymu02Q24/LDVYJ+qfF3R5QoyouVitSA6XurHaJl0yLhNofiHCTLiT/I=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 8:12 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> It it about two years since 28128c61e08e. Nobody has reported a
+On 2/20/20 1:09 AM, Sowjanya Komatineni wrote:
+>> Thanks Hans. Probably dma address is not aligned properly. Will check.
+> 
+> 
+> I see this time repro happened right on power up during 1st run of 
+> compliance test and it shows kernel write to read-only error right 
+> during vb2_core_qbuf -> buf_prepare.
+> 
+> it happened after buffers allocation and during pre-queuing of buffers 
+> right before starting 1st stream on power up.
+> 
+> Hi Thierry,
+> 
+> Currently tegra vi driver don't use iommu. Could this be some issue with 
+> contig allocation as iommu is not being used?
 
-Nit: "It it" -> "it is"
+Nothing to do with that. The root cause is that struct tegra_channel_buffer
+must start with struct vb2_v4l2_buffer since that's what vb2 assumes. Instead
+it starts with 'chan'. The really surprising thing is that this didn't cause
+more problems sooner.
 
-> It is ugly and unreliable to attempt to undefine a CONFIG option from
-> C files, and anyway the inlining heuristic is up to the compiler.
+The patch below fixes this KASAN error. Whether it also fixes the original
+error you found is something you need to test, but I think that's very likely.
 
-+1
+Regards,
 
-Acked-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+	Hans
 
-Cheers,
-Miguel
+diff --git a/drivers/staging/media/tegra/tegra-common.h b/drivers/staging/media/tegra/tegra-common.h
+index 79ec550c6f27..3980a8759e68 100644
+--- a/drivers/staging/media/tegra/tegra-common.h
++++ b/drivers/staging/media/tegra/tegra-common.h
+@@ -221,9 +221,9 @@ struct tegra_vi_channel {
+  * @mw_ack_sp_thresh: MW_ACK_DONE syncpoint threshold
+  */
+ struct tegra_channel_buffer {
+-	struct tegra_vi_channel *chan;
+ 	struct vb2_v4l2_buffer buf;
+ 	struct list_head queue;
++	struct tegra_vi_channel *chan;
+ 	dma_addr_t addr;
+ 	u32 mw_ack_sp_thresh;
+ };
+
+
+> 
+> 
+> [   54.041421]  tegra_channel_buffer_prepare+0x34/0x88
+> [   54.047666]  __buf_prepare+0x1c4/0x230
+> [   54.052094]  vb2_core_qbuf+0x454/0x508
+> [   54.056434]  __vb2_init_fileio+0x1f8/0x2b8
+> [   54.060519]  __vb2_perform_fileio+0x5a0/0x6b8
+> [   54.064864]  vb2_read+0x10/0x18
+> [   54.067996]  vb2_fop_read+0xb0/0xf8
+> [   54.071475]  v4l2_read+0x74/0xb8
+> [   54.074697]  __vfs_read+0x18/0x40
+> [   54.078003]  vfs_read+0x98/0x168
+> [   54.081222]  ksys_read+0x64/0xf0
+> [   54.084439]  __arm64_sys_read+0x14/0x20
+> [   54.088268]  el0_svc_common.constprop.2+0xb0/0x168
+> [   54.093047]  do_el0_svc_compat+0x18/0x38
+> [   54.096961]  el0_sync_compat_handler+0x13c/0x194
+> [   54.101565]  el0_sync_compat+0x144/0x180
+> [   54.105478] Code: b9407802 eb02007f 540001e8 b9007404 (f81f8001)
+> [   54.111559] ---[ end trace 7fbb77a9700492f1 ]---
+> 
+>>>
+>>>> [   41.222012] Mem abort info:
+>>>> [   41.224807]   ESR = 0x9600004f
+>>>> [   41.227852]   EC = 0x25: DABT (current EL), IL = 32 bits
+>>>> [   41.233160]   SET = 0, FnV = 0
+>>>> [   41.236204]   EA = 0, S1PTW = 0
+>>>> [   41.239344] Data abort info:
+>>>> [   41.242225]   ISV = 0, ISS = 0x0000004f
+>>>> [   41.246058]   CM = 0, WnR = 1
+>>>> [   41.249026] swapper pgtable: 4k pages, 48-bit VAs, 
+>>>> pgdp=0000000081498000
+>>>> [   41.255733] [ffff0000f5c3fff8] pgd=000000017f1f8003,
+>>>> pud=000000017ec06003, pmd=000000017ea57003, pte=0060000175c3f793
+>>>> [   41.266345] Internal error: Oops: 9600004f [#1] PREEMPT SMP
+>>>> [   41.271905] Modules linked in: panel_simple tegra_drm
+>>>> snd_hda_codec_hdmi snd_hda_tegra crct10dif_ce snd_hda_codec cec
+>>>> drm_kms_helper snd_hda_core lp855x_bl drm pwm_tegra ip_tables x_tables
+>>>> ipv6 nf_defrag_ipv6
+>>>> [   41.290401] CPU: 3 PID: 532 Comm: v4l2-compliance Tainted: G
+>>>> W         5.6.0-rc1-00035-g6a105c1c479a-dirty #1
+>>>> [   41.300902] Hardware name: NVIDIA Jetson TX1 Developer Kit (DT)
+>>>> [   41.306807] pstate: 60000005 (nZCv daif -PAN -UAO)
+>>>> [   41.311593] pc : tegra_channel_buffer_prepare+0x34/0x88
+>>>> [   41.316807] lr : __buf_prepare+0x1c4/0x230
+>>>> [   41.320891] sp : ffff800011f5baa0
+>>>> [   41.324195] x29: ffff800011f5baa0 x28: ffff0000f58cc100
+>>>> [   41.329494] x27: ffff800011f5bc58 x26: ffff80001100b780
+>>>> [   41.334792] x25: ffff0000f81f1608 x24: ffff0000f7be7c00
+>>>> [   41.340091] x23: 00000000c058565d x22: 0000000000000000
+>>>> [   41.345390] x21: ffff0000f81f16e8 x20: 0000000000000000
+>>>> [   41.350688] x19: ffff0000f5c40000 x18: 0000000000000000
+>>>> [   41.355986] x17: 0000000000000000 x16: 0000000000000000
+>>>> [   41.361285] x15: ffff0000f8553800 x14: 0000000000000000
+>>>> [   41.366583] x13: 003f480000000000 x12: 003f500000000000
+>>>> [   41.371881] x11: 0000000100000000 x10: 0000000000000000
+>>>> [   41.377180] x9 : 0000000000000000 x8 : ffff0000f5c40258
+>>>> [   41.382478] x7 : 0000000000000030 x6 : 0000000000000001
+>>>> [   41.387776] x5 : 0000000000000000 x4 : 00000000003f4800
+>>>> [   41.393074] x3 : 00000000003f4800 x2 : 00000000003f4800
+>>>> [   41.398373] x1 : ffff0000f81f1080 x0 : ffff0000f5c40000
+>>>> [   41.403671] Call trace:
+>>>> [   41.406109]  tegra_channel_buffer_prepare+0x34/0x88
+>>>> [   41.410974]  __buf_prepare+0x1c4/0x230
+>>>> [   41.414713]  vb2_core_prepare_buf+0x94/0x110
+>>>> [   41.418971]  vb2_prepare_buf+0x74/0xa8
+>>>> [   41.422710]  vb2_ioctl_prepare_buf+0x54/0x60
+>>>> [   41.426970]  v4l_prepare_buf+0x44/0x58
+>>>> [   41.430707]  __video_do_ioctl+0x228/0x3e8
+>>>> [   41.434705]  video_usercopy+0x1cc/0x4d0
+>>>> [   41.438531]  video_ioctl2+0x14/0x20
+>>>> [   41.442010]  v4l2_ioctl+0x44/0x68
+>>>> [   41.445316]  v4l2_compat_ioctl32+0x21c/0x1420
+>>>> [   41.449665]  __arm64_compat_sys_ioctl+0xc8/0x108
+>>>> [   41.454273]  el0_svc_common.constprop.2+0xb0/0x168
+>>>> [   41.459051]  do_el0_svc_compat+0x18/0x38
+>>>> [   41.462964]  el0_sync_compat_handler+0x13c/0x194
+>>>> [   41.467570]  el0_sync_compat+0x144/0x180
+>>>> [   41.471483] Code: b9407802 eb02007f 540001e8 b9007404 (f81f8001)
+>>>> [   41.477563] ---[ end trace 051c84051f60870a ]---
+>>>>
+>>>>>>>>>> With using minimum 3 buffers, this issue doesnt happen at all 
+>>>>>>>>>> from
+>>>>>>>>>> almost 72 hours of testing.
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Will try with setting vb2 queue field min_buffers_needed as 3
+>>>>>>>>>> instead
+>>>>>>>>>> of adding check in queue setup.
+>>>>>>>>>>
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +     return 0;
+>>>>>>>>>>>> +}
+
