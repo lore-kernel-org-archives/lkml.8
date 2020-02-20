@@ -2,250 +2,317 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D09C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC40EC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3644924654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795BC2467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N9icSXGO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vCKjmQ4a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgBTKge (ORCPT
+        id S1727905AbgBTKgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:36:34 -0500
-Received: from mail-eopbgr30056.outbound.protection.outlook.com ([40.107.3.56]:49991
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726885AbgBTKge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:36:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lhXFfh4QnufXS8W9fZMsraFVVQ3t9NQRbYJCE5qsaXq0qPDWHyulHAhafjQpxgvsjgs1Jo9LcdRhkHqCaHu0JzX6pbyx9Z3W9HEnYCbO+7MmlpA3E48JdVME5ZwF4gT8I6UyW/M4TsNikmUd68l7GUhm7rdhON7d1mhSkC6fGj+JhvWZrlPRyY4RRPg9cno19tKQ8mjhr8T4ADZ4jOyfcXQsqpBlnBgliqjez/Z+ynAjTEEO+vJCs2/CRH55bZcSDz/kChWK2TRXJmWOfcSKQBzoyxivQevPUoFiqvhak1C7SeSVx3iDiKVlEp6VxO+aVC4SyW1QlTVqN6qThxoP4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfJkiPU1P7+hcVylpJJ9h06sDqfJmm+OyWKbZKpSb1Y=;
- b=UijyUrtZz4HpEJjLHGUoLk9LRrYV5mXkUBcnCCF+nYuXJ/8Ox8JTiJMea4jCU4/vv29Y/cy5ARi1plB5IefjDtz+60KJo9CRkuikMhaVPT0c2+b4PWlyjSjAtnNad6IE0eIavcug4BZ4u3GJEuTIX64zD75OC+GeOWLcsi60b7BzdzkIIb2vRiN76zLY7ssmPrtIvcPJnwafGNMCOG+qhuQ4EzYNrtxtNfvqgMCQ9JSW7mg9md8OFP43/6zByxHQQsYq7oTjms0J1k7WiKUuhAkj5Zn3B1cMrl1Hc6lp1audwBml2RtOsQfgxkdNw0dpFgScoFUxY6+IX8tqS3cjNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YfJkiPU1P7+hcVylpJJ9h06sDqfJmm+OyWKbZKpSb1Y=;
- b=N9icSXGOcimHqk8p3QfoFDUMqL8Zz++jHf+Pl6z2rP65IvQp01cdsMDUMM22bdp7o3CO6OXoTxyB+ofa/jFq9Roefmc+3D+pQ2zvVPy2fwONyYBGz1tFuao5vd7wr3f4SF+e7av1poAnlqgpLku/qn5uj9k8XfC1zxNUWDTxfQE=
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com (52.135.139.151) by
- DB7PR04MB4857.eurprd04.prod.outlook.com (20.176.233.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.29; Thu, 20 Feb 2020 10:36:25 +0000
-Received: from DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca]) by DB7PR04MB4618.eurprd04.prod.outlook.com
- ([fe80::5cb4:81c8:1618:5ca%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
- 10:36:25 +0000
-From:   Joakim Zhang <qiangqing.zhang@nxp.com>
-To:     kajoljain <kjain@linux.ibm.com>,
-        "acme@kernel.org" <acme@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: RE: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Thread-Topic: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Thread-Index: AQHV4WcV2Y0K+6EYb0mNmxH19eS7KageuXkAgAUq9oCAAAnqYA==
-Date:   Thu, 20 Feb 2020 10:36:24 +0000
-Message-ID: <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20200212054102.9259-1-kjain@linux.ibm.com>
- <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
-In-Reply-To: <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiangqing.zhang@nxp.com; 
-x-originating-ip: [222.93.202.38]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4dc54dad-9722-4ff8-7684-08d7b5f0bc38
-x-ms-traffictypediagnostic: DB7PR04MB4857:
-x-microsoft-antispam-prvs: <DB7PR04MB48576CD18309A9C7F4F5BA5CE6130@DB7PR04MB4857.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(189003)(199004)(6506007)(71200400001)(5660300002)(9686003)(76116006)(66946007)(7416002)(81156014)(8676002)(81166006)(7696005)(8936002)(55016002)(53546011)(4326008)(52536014)(2906002)(26005)(33656002)(186003)(316002)(478600001)(64756008)(66556008)(66476007)(86362001)(66446008)(110136005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4857;H:DB7PR04MB4618.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8v5yR+bhQw9Ckx1ESJFkIlXBngOXf8E5UnpVY0ZEBEgw283z9QTuqPwWMIWXGkQRC+4cyLc877I4a/PCje/d6pYu2ES8gTJO8wXRVANTFWCA31Ad9OZu+30hY+04965bT4kV9zPV1pv+GepQ6mR3IitOuQDIvca9bpixpZADibg+MJo3Pojzmt+gem/fiR18ZPrnGD5KnOdekD2despv12kRUvHeVrEjE3izcYu4w2qVJ9y7XddTII6kamwJHre3Uh6t9lKprsRsjcgSZqgOyW/HgjYyiBo9yZBaeUmzizIHACfvh2UlwA4Fx8CIchoN/9M8al0jwi66BWRKco+UZXtcd10/5BDcyRiuebPf8rDML3alYnCS1HAZOmAKFyj2EgFP3u7Y9lgaTVayLqvTZHFztiiTGa87CTv17o0upNCBd2HbdLsyjZ7l9XTjCjmH
-x-ms-exchange-antispam-messagedata: TDUT9HnbNvVxj1i8FYRlhLbITf97awu9FCIgT7/G4KqiKSDa3IZBpLOuh+sB3KoWrgwid+u24pvt47hJV+mOl5pHSHHFcKZF232IBOdrafZEptO4qR553lfseQpMwnyUAvk7oAgOn0AJHRxvd4Lm8A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Thu, 20 Feb 2020 05:36:53 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38203 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726885AbgBTKgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 05:36:53 -0500
+Received: by mail-wm1-f68.google.com with SMTP id a9so1453700wmj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:36:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=c1ucrX6kDoqvuZrczpj1ygyv9b4mpN9HnFpGLVezX98=;
+        b=vCKjmQ4avuiQBvVA6v1AT5yPxgLjWilXAa3IbRPPoqQSGbbDHfykkYQPTrFbu56HLx
+         4toUN2RbU7MBOB98GLjqCAO/p9LXZSFr/IjZ9kCUzwASPIZ/GfzylD/kfmWocSS6haw0
+         XjERbolm52cqchB3EvtAZ1aJbzaK8FwcMmNckqYrt+LeMMZz/hIUyea22WTPpsOIoPKt
+         mPjODwb7mqsc5bjW72nf7XJdjQobxwJB8tJXrGevmtVRZUpLi0fA0C6YDPewhbSZsuLa
+         XxsH77CuRbdlr8AMV54/KN31JofLp/cyBvDSmgFm4P6h7cTQBZn5gYO4EH5W9S3EOOEP
+         HLcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c1ucrX6kDoqvuZrczpj1ygyv9b4mpN9HnFpGLVezX98=;
+        b=BkjW17QiJz+3ecWC9TW3vyjBkLq8cCJIxEkhKuhJ+tOEoZyUqa0vQEHf4vi9LD9WGI
+         s7nkcmfNQMdvAqGS2bwnnFfd9yz8wWDk7beK5c3Wiuf2/mRIvvVuTQbtBdi6NLpvsUfE
+         knC1ZHWovmGVTu8DGRSC92vO1q8y14mY51ZXLTv7cFbzfs+QF+oiQreOM4QvFxpGhKwN
+         HgMtN6p8LEwJIqUXnid794hwmab+AYJWcsKOYaaD0jDmVcqWGLHk+RHLw30jQDs9QqxM
+         aeXVuC74buBe7XKOzAuvhqLCyx7/j0+5UZtfxPYTPtP8vC08O2ct8ozELB81cBsv4iE3
+         7UBw==
+X-Gm-Message-State: APjAAAVrGd01zs+9vLK4eBgEE6J0/Q8n24KVcOf8COOGuJLocT299kZ4
+        1qYrGZFRgIeOr1wPT+I5jfuMPcmswxA=
+X-Google-Smtp-Source: APXvYqyhMe/4kMqii0zRl6GDawQWobGJyJ0OvQlM3cE7fc+wpSIzdtfNPunm+Sili4biQo/BAg/QwA==
+X-Received: by 2002:a1c:b486:: with SMTP id d128mr3753873wmf.69.1582195009938;
+        Thu, 20 Feb 2020 02:36:49 -0800 (PST)
+Received: from [192.168.0.41] (6.198.22.93.rev.sfr.net. [93.22.198.6])
+        by smtp.googlemail.com with ESMTPSA id x7sm3996843wrq.41.2020.02.20.02.36.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2020 02:36:49 -0800 (PST)
+Subject: Re: [PATCH v4 3/3] clocksource: Add Low Power STM32 timers driver
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>, lee.jones@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        tglx@linutronix.de, fabrice.gasnier@st.com
+Cc:     devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Pascal Paillet <p.paillet@st.com>
+References: <20200217134546.14562-1-benjamin.gaignard@st.com>
+ <20200217134546.14562-4-benjamin.gaignard@st.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <687ab83c-6381-57aa-3bc1-3628e27644b5@linaro.org>
+Date:   Thu, 20 Feb 2020 11:36:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc54dad-9722-4ff8-7684-08d7b5f0bc38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 10:36:24.8911
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: loTLT5NZyYcVn1XTxt9P161kU3cwe1aQMboQ++SlSf2a+P6ZLdOcoTHjR1M7t9rOgG5bIC2l2/MGXDMjv5aCgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4857
+In-Reply-To: <20200217134546.14562-4-benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGtham9samFpbiA8a2phaW5A
-bGludXguaWJtLmNvbT4NCj4gU2VudDogMjAyMMTqMtTCMjDI1SAxNzo1NA0KPiBUbzogSm9ha2lt
-IFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IGFjbWVAa2VybmVsLm9yZw0KPiBDYzog
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5l
-bC5vcmc7IEppcmkgT2xzYQ0KPiA8am9sc2FAa2VybmVsLm9yZz47IEFsZXhhbmRlciBTaGlzaGtp
-biA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT47DQo+IEFuZGkgS2xlZW4gPGFr
-QGxpbnV4LmludGVsLmNvbT47IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT47
-IFBldGVyDQo+IFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz47IEppbiBZYW8gPHlhby5q
-aW5AbGludXguaW50ZWwuY29tPjsgTWFkaGF2YW4NCj4gU3Jpbml2YXNhbiA8bWFkZHlAbGludXgu
-dm5ldC5pYm0uY29tPjsgQW5qdSBUIFN1ZGhha2FyDQo+IDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNv
-bT47IFJhdmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2NF0gdG9vbHMvcGVyZi9tZXRyaWNncm91cDogRml4IHByaW50aW5nIGV2
-ZW50IG5hbWVzIG9mDQo+IG1ldHJpYyBncm91cCB3aXRoIG11bHRpcGxlIGV2ZW50cyBpbmNhc2Ug
-b2Ygb3ZlcmxhcHBpbmcgZXZlbnRzDQo+IA0KPiANCj4gDQo+IE9uIDIvMTcvMjAgODo0MSBBTSwg
-Sm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+ID4+IEZyb206IGxpbnV4LXBlcmYtdXNlcnMtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+ID4+
-IDxsaW51eC1wZXJmLXVzZXJzLW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEth
-am9sIEphaW4NCj4gPj4gU2VudDogMjAyMMTqMtTCMTLI1SAxMzo0MQ0KPiA+PiBUbzogYWNtZUBr
-ZXJuZWwub3JnDQo+ID4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1w
-ZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsNCj4gPj4ga2phaW5AbGludXguaWJtLmNvbTsgSmly
-aSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgQWxleGFuZGVyIFNoaXNoa2luDQo+ID4+IDxhbGV4
-YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tPjsgQW5kaSBLbGVlbg0KPiA+PiA8YWtAbGlu
-dXguaW50ZWwuY29tPjsgS2FuIExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPjsgUGV0
-ZXINCj4gPj4gWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPjsgSmluIFlhbyA8eWFvLmpp
-bkBsaW51eC5pbnRlbC5jb20+Ow0KPiA+PiBNYWRoYXZhbiBTcmluaXZhc2FuIDxtYWRkeUBsaW51
-eC52bmV0LmlibS5jb20+OyBBbmp1IFQgU3VkaGFrYXINCj4gPj4gPGFuanVAbGludXgudm5ldC5p
-Ym0uY29tPjsgUmF2aSBCYW5nb3JpYQ0KPiA+PiA8cmF2aS5iYW5nb3JpYUBsaW51eC5pYm0uY29t
-Pg0KPiA+PiBTdWJqZWN0OiBbUEFUQ0ggdjRdIHRvb2xzL3BlcmYvbWV0cmljZ3JvdXA6IEZpeCBw
-cmludGluZyBldmVudCBuYW1lcw0KPiA+PiBvZiBtZXRyaWMgZ3JvdXAgd2l0aCBtdWx0aXBsZSBl
-dmVudHMgaW5jYXNlIG9mIG92ZXJsYXBwaW5nIGV2ZW50cw0KPiA+Pg0KPiA+PiBDb21taXQgZjAx
-NjQyZTQ5MTJiICgicGVyZiBtZXRyaWNncm91cDogU3VwcG9ydCBtdWx0aXBsZSBldmVudHMgZm9y
-DQo+ID4+IG1ldHJpY2dyb3VwIikgaW50cm9kdWNlZCBzdXBwb3J0IGZvciBtdWx0aXBsZSBldmVu
-dHMgaW4gYSBtZXRyaWMNCj4gPj4gZ3JvdXAuIEJ1dCB3aXRoIHRoZSBjdXJyZW50IHVwc3RyZWFt
-LCBtZXRyaWMgZXZlbnRzIG5hbWVzIGFyZSBub3QNCj4gPj4gcHJpbnRlZCBwcm9wZXJseSBpbmNh
-c2Ugd2UgdHJ5IHRvIHJ1biBtdWx0aXBsZSBtZXRyaWMgZ3JvdXBzIHdpdGgNCj4gb3ZlcmxhcHBp
-bmcgZXZlbnQuDQo+ID4+DQo+ID4+IFdpdGggY3VycmVudCB1cHN0cmVhbSB2ZXJzaW9uLCBpbmNh
-c2Ugb2Ygb3ZlcmxhcHBpbmcgbWV0cmljIGV2ZW50cw0KPiA+PiBpc3N1ZSBpcywgd2UgYWx3YXlz
-IHN0YXJ0IG91ciBjb21wYXJpc2lvbiBsb2dpYyBmcm9tIHN0YXJ0Lg0KPiA+PiBTbywgdGhlIGV2
-ZW50cyB3aGljaCBhbHJlYWR5IG1hdGNoZWQgd2l0aCBzb21lIG1ldHJpYyBncm91cCBhbHNvIHRh
-a2UNCj4gPj4gcGFydCBpbiBjb21wYXJpc2lvbiBsb2dpYy4gQmVjYXVzZSBvZiB0aGF0IHdoZW4g
-d2UgaGF2ZSBvdmVybGFwcGluZw0KPiA+PiBldmVudHMsIHdlIGVuZCB1cCBtYXRjaGluZyBjdXJy
-ZW50IG1ldHJpYyBncm91cCBldmVudCB3aXRoIGFscmVhZHkNCj4gbWF0Y2hlZCBvbmUuDQo+ID4+
-DQo+ID4+IEZvciBleGFtcGxlLCBpbiBza3lsYWtlIG1hY2hpbmUgd2UgaGF2ZSBtZXRyaWMgZXZl
-bnQgQ29yZUlQQyBhbmQNCj4gPj4gSW5zdHJ1Y3Rpb25zLiBCb3RoIG9mIHRoZW0gbmVlZCAnaW5z
-dF9yZXRpcmVkLmFueScgZXZlbnQgdmFsdWUuDQo+ID4+IEFzIGV2ZW50cyBpbiBJbnN0cnVjdGlv
-bnMgaXMgc3Vic2V0IG9mIGV2ZW50cyBpbiBDb3JlSVBDLCB0aGV5IGVuZHVwDQo+ID4+IGluIHBv
-aW50aW5nIHRvIHNhbWUgJ2luc3RfcmV0aXJlZC5hbnknIHZhbHVlLg0KPiA+Pg0KPiA+PiBJbiBz
-a3lsYWtlIHBsYXRmb3JtOg0KPiA+Pg0KPiA+PiBjb21tYW5kOiMgLi9wZXJmIHN0YXQgLU0gQ29y
-ZUlQQyxJbnN0cnVjdGlvbnMgIC1DIDAgc2xlZXAgMQ0KPiA+Pg0KPiA+PiAgUGVyZm9ybWFuY2Ug
-Y291bnRlciBzdGF0cyBmb3IgJ0NQVShzKSAwJzoNCj4gPj4NCj4gPj4gICAgICAxLDI1NCw5OTIs
-NzkwICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjIDEyNTQ5OTI3OTAuMA0KPiA+Pg0K
-PiBJbnN0cnVjdGlvbnMNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAjICAgICAgMS4zDQo+ID4+IENvcmVJUEMNCj4gPj4gICAgICAgIDk3Nywx
-NzIsODA1ICAgICAgY3ljbGVzDQo+ID4+ICAgICAgMSwyNTQsOTkyLDc1NiAgICAgIGluc3RfcmV0
-aXJlZC5hbnkNCj4gPj4NCj4gPj4gICAgICAgIDEuMDAwODAyNTk2IHNlY29uZHMgdGltZSBlbGFw
-c2VkDQo+ID4+DQo+ID4+IGNvbW1hbmQ6IyBzdWRvIC4vcGVyZiBzdGF0IC1NIFVQSSxJUEMgc2xl
-ZXAgMQ0KPiA+Pg0KPiA+PiAgICBQZXJmb3JtYW5jZSBjb3VudGVyIHN0YXRzIGZvciAnc2xlZXAg
-MSc6DQo+ID4+DQo+ID4+ICAgICAgICAgICAgOTQ4LDY1MCAgICAgIHVvcHNfcmV0aXJlZC5yZXRp
-cmVfc2xvdHMNCj4gPj4gICAgICAgICAgICA4NjYsMTgyICAgICAgaW5zdF9yZXRpcmVkLmFueSAg
-ICAgICAgICAjICAgICAgMC43IElQQw0KPiA+PiAgICAgICAgICAgIDg2NiwxODIgICAgICBpbnN0
-X3JldGlyZWQuYW55DQo+ID4+ICAgICAgICAgIDEsMTc1LDY3MSAgICAgIGNwdV9jbGtfdW5oYWx0
-ZWQudGhyZWFkDQo+ID4+DQo+ID4+IFBhdGNoIGZpeGVzIHRoZSBpc3N1ZSBieSBhZGRpbmcgYSBu
-ZXcgYm9vbCBwb2ludGVyICdldmxpc3RfdXNlZCcgdG8NCj4gPj4ga2VlcCB0cmFjayBvZiBldmVu
-dHMgd2hpY2ggYWxyZWFkeSBtYXRjaGVkIHdpdGggc29tZSBncm91cCBieSBzZXR0aW5nIGl0DQo+
-IHRydWUuDQo+ID4+IFNvLCB3ZSBza2lwIGFsbCB1c2VkIGV2ZW50cyBpbiBsaXN0IHdoZW4gd2Ug
-c3RhcnQgY29tcGFyaXNpb24gbG9naWMuDQo+ID4+IFBhdGNoIGFsc28gbWFrZSBzb21lIGNoYW5n
-ZXMgaW4gY29tcGFyaXNpb24gbG9naWMsIGluY2FzZSB3ZSBnZXQgYQ0KPiA+PiBtYXRjaCBtaXNz
-LCB3ZSBkaXNjYXJkIHRoZSB3aG9sZSBtYXRjaCBhbmQgc3RhcnQgYWdhaW4gd2l0aCBmaXJzdA0K
-PiA+PiBldmVudCBpZCBpbiBtZXRyaWMgZXZlbnQuDQo+ID4+DQo+ID4+IFdpdGggdGhpcyBwYXRj
-aDoNCj4gPj4gSW4gc2t5bGFrZSBwbGF0Zm9ybToNCj4gPj4NCj4gPj4gY29tbWFuZDojIC4vcGVy
-ZiBzdGF0IC1NIENvcmVJUEMsSW5zdHJ1Y3Rpb25zICAtQyAwIHNsZWVwIDENCj4gPj4NCj4gPj4g
-IFBlcmZvcm1hbmNlIGNvdW50ZXIgc3RhdHMgZm9yICdDUFUocykgMCc6DQo+ID4+DQo+ID4+ICAg
-ICAgICAgIDMsMzQ4LDQxNSAgICAgIGluc3RfcmV0aXJlZC5hbnkgICAgICAgICAgIyAgICAgIDAu
-Mw0KPiBDb3JlSVBDDQo+ID4+ICAgICAgICAgMTEsNzc5LDAyNiAgICAgIGN5Y2xlcw0KPiA+PiAg
-ICAgICAgICAzLDM0OCwzODEgICAgICBpbnN0X3JldGlyZWQuYW55ICAgICAgICAgICMgMzM0ODM4
-MS4wDQo+ID4+DQo+IEluc3RydWN0aW9ucw0KPiA+Pg0KPiA+PiAgICAgICAgMS4wMDE2NDkwNTYg
-c2Vjb25kcyB0aW1lIGVsYXBzZWQNCj4gPj4NCj4gPj4gY29tbWFuZDojIC4vcGVyZiBzdGF0IC1N
-IFVQSSxJUEMgc2xlZXAgMQ0KPiA+Pg0KPiA+PiAgUGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBm
-b3IgJ3NsZWVwIDEnOg0KPiA+Pg0KPiA+PiAgICAgICAgICAxLDAyMywxNDggICAgICB1b3BzX3Jl
-dGlyZWQucmV0aXJlX3Nsb3RzICMgICAgICAxLjEgVVBJDQo+ID4+ICAgICAgICAgICAgOTI0LDk3
-NiAgICAgIGluc3RfcmV0aXJlZC5hbnkNCj4gPj4gICAgICAgICAgICA5MjQsOTc2ICAgICAgaW5z
-dF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC42IElQQw0KPiA+PiAgICAgICAgICAxLDQ4
-OSw0MTQgICAgICBjcHVfY2xrX3VuaGFsdGVkLnRocmVhZA0KPiA+Pg0KPiA+PiAgICAgICAgMS4w
-MDMwNjQ2NzIgc2Vjb25kcyB0aW1lIGVsYXBzZWQNCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTog
-S2Fqb2wgSmFpbiA8a2phaW5AbGludXguaWJtLmNvbT4NCj4gPj4gQ2M6IEppcmkgT2xzYSA8am9s
-c2FAa2VybmVsLm9yZz4NCj4gPj4gQ2M6IEFsZXhhbmRlciBTaGlzaGtpbiA8YWxleGFuZGVyLnNo
-aXNoa2luQGxpbnV4LmludGVsLmNvbT4NCj4gPj4gQ2M6IEFuZGkgS2xlZW4gPGFrQGxpbnV4Lmlu
-dGVsLmNvbT4NCj4gPj4gQ2M6IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4N
-Cj4gPj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4NCj4gPj4gQ2M6
-IEppbiBZYW8gPHlhby5qaW5AbGludXguaW50ZWwuY29tPg0KPiA+PiBDYzogTWFkaGF2YW4gU3Jp
-bml2YXNhbiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPg0KPiA+PiBDYzogQW5qdSBUIFN1ZGhh
-a2FyIDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gPj4gQ2M6IFJhdmkgQmFuZ29yaWEgPHJh
-dmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICB0b29scy9wZXJmL3V0
-aWwvbWV0cmljZ3JvdXAuYyB8IDUwDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tLS0tDQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
-b25zKC0pDQo+ID4NCj4gPiBIaSBLYWpvbCwNCj4gPg0KPiA+IEkgYW0gbm90IHN1cmUgaWYgaXQg
-aXMgZ29vZCB0byBhc2sgYSBxdWVzdGlvbiBoZXJlIDotKQ0KPiA+DQo+ID4gSSBlbmNvdW50ZXJl
-ZCBhIHBlcmYgbWV0cmljZ3JvdXAgaXNzdWUsIHRoZSByZXN1bHQgaXMgaW5jb3JyZWN0IHdoZW4g
-dGhlDQo+IG1ldHJpYyBpbmNsdWRlcyBtb3JlIHRoYW4gMiBldmVudHMuDQo+ID4NCj4gPiBnaXQg
-bG9nIC0tb25lbGluZSB0b29scy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuYw0KPiA+IDM2MzViMjdj
-YzA1OCBwZXJmIG1ldHJpY2dyb3VwOiBGaXggcHJpbnRpbmcgZXZlbnQgbmFtZXMgb2YgbWV0cmlj
-DQo+ID4gZ3JvdXAgd2l0aCBtdWx0aXBsZSBldmVudHMgZjAxNjQyZTQ5MTJiIHBlcmYgbWV0cmlj
-Z3JvdXA6IFN1cHBvcnQNCj4gPiBtdWx0aXBsZSBldmVudHMgZm9yIG1ldHJpY2dyb3VwDQo+ID4g
-Mjg3ZjI2NDlmNzkxIHBlcmYgbWV0cmljZ3JvdXA6IFNjYWxlIHRoZSBtZXRyaWMgcmVzdWx0DQo+
-ID4NCj4gPiBJIGRpZCBhIHNpbXBsZSB0ZXN0LCBiZWxvdyBpcyB0aGUgSlNPTiBmaWxlIGFuZCBy
-ZXN1bHQuDQo+ID4gWw0KPiA+ICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAiUHVibGljRGVz
-Y3JpcHRpb24iOiAiQ2FsY3VsYXRlIEREUjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbg0KPiB3aGlj
-aCB2YXJ5IGZyb20gRERSMCBjb250cm9sbGVyIGNsb2NrIGZyZXF1ZW5jeSIsDQo+ID4gICAgICAg
-ICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogImlteDhxbTogZGRyMCBidXMgYWN0dWFsIHV0aWxp
-emF0aW9uIiwNCj4gPiAgICAgICAgICAgICAgIk1ldHJpY05hbWUiOiAiaW14OHFtLWRkcjAtYnVz
-LXV0aWwiLA0KPiA+ICAgICAgICAgICAgICAiTWV0cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3Jl
-YWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBcXC93cml0ZVxcLWN5Y2xlc1xcLyApIiwNCj4g
-PiAgICAgICAgICAgICAgIk1ldHJpY0dyb3VwIjogImkuTVg4UU1fRERSMF9CVVNfVVRJTCINCj4g
-PiAgICAgICAgIH0NCj4gPiBdDQo+ID4gLi9wZXJmIHN0YXQgLUkgMTAwMCAtTSBpbXg4cW0tZGRy
-MC1idXMtdXRpbA0KPiA+ICMgICAgICAgICAgIHRpbWUgICAgICAgICAgICAgY291bnRzIHVuaXQg
-ZXZlbnRzDQo+ID4gICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgMTY3MjAgICAgICBpbXg4
-X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDIyOTIxLjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4g
-PiAgICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAgNjIwMSAgICAgIGlteDhfZGRyMC93cml0
-ZS1jeWNsZXMvDQo+ID4gICAgICAyLjAwMDUyNTYyNSAgICAgICAgICAgICAgIDgzMTYgICAgICBp
-bXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDEyNzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwN
-Cj4gPiAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAgICAgICAgMjczOCAgICAgIGlteDhfZGRyMC93
-cml0ZS1jeWNsZXMvDQo+ID4gICAgICAzLjAwMDgxOTEyNSAgICAgICAgICAgICAgIDEwNTYgICAg
-ICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA0MTM2LjcgaW14OHFtLWRkcjAtYnVzLXV0
-aWwNCj4gPiAgICAgIDMuMDAwODE5MTI1ICAgICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRy
-MC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICA0LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDYyNjAg
-ICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA5MTQ5LjggaW14OHFtLWRkcjAtYnVz
-LXV0aWwNCj4gPiAgICAgIDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgMjMxNyAgICAgIGlteDhf
-ZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIw
-ODQgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA0NTE2LjAgaW14OHFtLWRkcjAt
-YnVzLXV0aWwNCj4gPiAgICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgIDYwMSAgICAgIGlt
-eDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4NCj4gPiBZb3UgY2FuIHNlZSB0aGF0IG9ubHkgdGhl
-IGZpcnN0IHJlc3VsdCBpcyBjb3JyZWN0LCBjb3VsZCB0aGlzIGJlIHJlcHJvZHVjZWQgYXQNCj4g
-eW91IHNpZGU/DQo+IA0KPiBIaSBKb2FraW0sDQo+ICAgICAgICAgV2lsbCB0cnkgdG8gbG9vayBp
-bnRvIGl0IGZyb20gbXkgc2lkZS4NCg0KDQpUaGFua3MgS2Fqb2wgZm9yIHlvdXIgaGVscCwgSSBs
-b29rIGludG8gdGhpcyBpc3N1ZSwgYnV0IGRvbid0IGtub3cgaG93IHRvIGZpeCBpdC4NCg0KVGhl
-IHJlc3VsdHMgYXJlIGFsd2F5cyBjb3JyZWN0IGlmIHNpZ25hbCBldmVudCB1c2VkIGluICJNZXRy
-aWNFeHByIiB3aXRoICItSSIgcGFyYW1ldGVycywgYnV0IHRoZSByZXN1bHRzIGFyZSBpbmNvcnJl
-Y3Qgd2hlbiBtb3JlIHRoYW4gb25lIGV2ZW50cyB1c2VkIGluICJNZXRyaWNFeHByIi4NCg0KSG9w
-ZSB5b3UgY2FuIGZpbmQgdGhlIHJvb3QgY2F1c2UgOi0pDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtp
-bSBaaGFuZw0KPiBUaGFua3MsDQo+IEtham9sDQo+ID4NCj4gPiBUaGFua3MgYSBsb3QhDQo+ID4N
-Cj4gPiBCZXN0IFJlZ2FyZHMsDQo+ID4gSm9ha2ltIFpoYW5nDQo+ID4NCg==
+On 17/02/2020 14:45, Benjamin Gaignard wrote:
+> From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> 
+> Implement clock event driver using low power STM32 timers.
+> Low power timer counters running even when CPUs are stopped.
+> It could be used as clock event broadcaster to wake up CPUs but not like
+> a clocksource because each it rise an interrupt the counter restart from 0.
+> 
+> Low power timers have a 16 bits counter and a prescaler which allow to
+> divide the clock per power of 2 to up 128 to target a 32KHz rate.
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Signed-off-by: Pascal Paillet <p.paillet@st.com>
+> ---
+> version 4:
+> - move defines in mfd/stm32-lptimer.h
+> - change compatiblename
+> - reword commit message
+> - make driver Kconfig depends of MFD_STM32_LPTIMER
+> - remove useless include
+> - remove rate and clk fields from the private structure
+> - to add comments about the registers sequence in stm32_clkevent_lp_set_timer
+> - rework probe function and use devm_request_irq()
+> - do not allow module to be removed
+> - make sure that wakeup interrupt is set
+> 
+>  drivers/clocksource/Kconfig          |   7 ++
+>  drivers/clocksource/Makefile         |   1 +
+>  drivers/clocksource/timer-stm32-lp.c | 213 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 221 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-stm32-lp.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index cc909e465823..9fc2b513db6f 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -292,6 +292,13 @@ config CLKSRC_STM32
+>  	select CLKSRC_MMIO
+>  	select TIMER_OF
+>  
+> +config CLKSRC_STM32_LP
+> +	bool "Low power clocksource for STM32 SoCs"
+> +	depends on MFD_STM32_LPTIMER || COMPILE_TEST
+> +	help
+> +	  This option enables support for STM32 low power clockevent available
+> +	  on STM32 SoCs
+> +
+>  config CLKSRC_MPS2
+>  	bool "Clocksource for MPS2 SoCs" if COMPILE_TEST
+>  	depends on GENERIC_SCHED_CLOCK
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 713686faa549..c00fffbd4769 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_BCM_KONA_TIMER)	+= bcm_kona_timer.o
+>  obj-$(CONFIG_CADENCE_TTC_TIMER)	+= timer-cadence-ttc.o
+>  obj-$(CONFIG_CLKSRC_EFM32)	+= timer-efm32.o
+>  obj-$(CONFIG_CLKSRC_STM32)	+= timer-stm32.o
+> +obj-$(CONFIG_CLKSRC_STM32_LP)	+= timer-stm32-lp.o
+>  obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+= exynos_mct.o
+>  obj-$(CONFIG_CLKSRC_LPC32XX)	+= timer-lpc32xx.o
+>  obj-$(CONFIG_CLKSRC_MPS2)	+= mps2-timer.o
+> diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
+> new file mode 100644
+> index 000000000000..50eecdb88216
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-stm32-lp.c
+> @@ -0,0 +1,213 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
+> + * Authors: Benjamin Gaignard <benjamin.gaignard@st.com> for STMicroelectronics.
+> + *	    Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/stm32-lptimer.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_wakeirq.h>
+> +
+> +#define CFGR_PSC_OFFSET		9
+> +#define STM32_LP_RATING		400
+> +#define STM32_TARGET_CLKRATE	(32000 * HZ)
+> +#define STM32_LP_MAX_PSC	7
+> +
+> +struct stm32_lp_private {
+> +	struct regmap *reg;
+> +	struct clock_event_device clkevt;
+> +	unsigned long period;
+> +};
+> +
+> +static struct stm32_lp_private*
+> +to_priv(struct clock_event_device *clkevt)
+> +{
+> +	return container_of(clkevt, struct stm32_lp_private, clkevt);
+> +}
+> +
+> +static int stm32_clkevent_lp_shutdown(struct clock_event_device *clkevt)
+> +{
+> +	struct stm32_lp_private *priv = to_priv(clkevt);
+> +
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+> +	regmap_write(priv->reg, STM32_LPTIM_IER, 0);
+> +	/* clear pending flags */
+> +	regmap_write(priv->reg, STM32_LPTIM_ICR, STM32_LPTIM_ARRMCF);
+> +
+> +	return 0;
+> +}
+> +
+> +static int stm32_clkevent_lp_set_timer(unsigned long evt,
+> +				       struct clock_event_device *clkevt,
+> +				       int is_periodic)
+> +{
+> +	struct stm32_lp_private *priv = to_priv(clkevt);
+> +
+> +	/* disable LPTIMER to be able to write into IER register*/
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, 0);
+> +	/* enable ARR interrupt */
+> +	regmap_write(priv->reg, STM32_LPTIM_IER, STM32_LPTIM_ARRMIE);
+> +	/* enable LPTIMER to be able to write into ARR register */
+> +	regmap_write(priv->reg, STM32_LPTIM_CR, STM32_LPTIM_ENABLE);
+> +	/* set next event counter */
+> +	regmap_write(priv->reg, STM32_LPTIM_ARR, evt);
+> +
+> +	/* start counter */
+> +	if (is_periodic)
+> +		regmap_write(priv->reg, STM32_LPTIM_CR,
+> +			     STM32_LPTIM_CNTSTRT | STM32_LPTIM_ENABLE);
+> +	else
+> +		regmap_write(priv->reg, STM32_LPTIM_CR,
+> +			     STM32_LPTIM_SNGSTRT | STM32_LPTIM_ENABLE);
+
+The regmap config in stm32-lptimer is not defined with the fast_io flag
+(on purpose or not?) that means we can potentially deadlock here as the
+lock is a mutex.
+
+Isn't it detected with the lock validation scheme?
+
+> +	return 0;
+> +}
+> +static int stm32_clkevent_lp_remove(struct platform_device *pdev)
+> +{
+> +	return -EBUSY; /* cannot unregister clockevent */
+> +}
+
+Won't be the mfd into an inconsistent state here? The other subsystems
+will be removed but this one will prevent to unload the module leading
+to a situation where the mfd is partially removed but still there
+without a possible recovery, no?
+
+> +static const struct of_device_id stm32_clkevent_lp_of_match[] = {
+> +	{ .compatible = "st,stm32-lptimer-timer", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stm32_clkevent_lp_of_match);
+> +
+> +static struct platform_driver stm32_clkevent_lp_driver = {
+> +	.probe	= stm32_clkevent_lp_probe,
+> +	.remove = stm32_clkevent_lp_remove,
+> +	.driver	= {
+> +		.name = "stm32-lptimer-timer",
+> +		.of_match_table = of_match_ptr(stm32_clkevent_lp_of_match),
+> +	},
+> +};
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
