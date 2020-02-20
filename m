@@ -2,157 +2,71 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6B2C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C968C11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33FF924672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="KYzgbjNX"
+	by mail.kernel.org (Postfix) with ESMTP id 1F8DB24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgBTRZa (ORCPT
+        id S1728850AbgBTRZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:25:30 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52092 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbgBTRZa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:25:30 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t23so2892334wmi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:25:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6yo/wEFYTgODGKnbWEUDj+nf8O3PSpjHxesG5sknQ/A=;
-        b=KYzgbjNX1K0CzUdOqySZxyADNE1VkZOd+lFmYKJzXNKvDdxhmo4+L5Z+A9zUWAZm6Y
-         MXOaTeHGZYDQeZuL9/XRuAHG6o5QpfwBWIuhIi5k5Fh112a1u4Fy+65475Ko8TjrjHTu
-         FgBtGghky4L0w6i64qMwjwuWxgYOPPL2kH1i7YYoOQOnEglhbyux1AeBVzsvu79Qb9yH
-         cVXsZLya4qevlYaCviYxBRU7Rp93DncQYLGRYjBwiKZSlR8z36kiIve9ZIjVmQdw3uaF
-         Q0wZ0sFjblB5LjlFdl3ZxALrBPX/05fn/MH2oRzRc5ZYx3PmJCjJ7Q8CsgXrKtlI95ne
-         kXwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6yo/wEFYTgODGKnbWEUDj+nf8O3PSpjHxesG5sknQ/A=;
-        b=F3w9UIgUoC9/tl3B9gJZTho2PNFf4BXu+zXcX3B+DNgYMROq4irrqaIXBH7GMbwPTA
-         jzWcvNp5s63ScEZ7L8XrAYU22YpZYjN1bDKzVqGJ8BLSB8u1ZirP3GNS68a1wM6meToH
-         FSS68b0JsFGOjCXM0DFnpbcX8cJILW6B9MG66D2H68b8y4ecKMl/HgOf+6V40JQh0RxL
-         jJne9J/0+D7wenQDkcAM59q67fxuq4sdhch/o0KvEitaULwNbWS4ofYMVEFD8Okh/TdS
-         LIdAIbsBYdnEKyfIwN9xtztmdyJl9Q2z5D16ofFfsD6qAzgLKz4pFGzWbZqSw97QOsT7
-         EtNw==
-X-Gm-Message-State: APjAAAUHT3YrkvU4Ehzo2/jiyOKQ3qJYvmbsrGBrm8Qxr81pcCFL3sqL
-        TEC0TltkLx4302PYmbw7aPuR5w==
-X-Google-Smtp-Source: APXvYqxFOHbigA4u8XgOj9oDgXx9MToMJN0LilNw8H81qX/4WzYdOGoBOHPXL6cb43VJZ9gbrJzAmQ==
-X-Received: by 2002:a7b:c8c5:: with SMTP id f5mr5442945wml.44.1582219528295;
-        Thu, 20 Feb 2020 09:25:28 -0800 (PST)
-Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
-        by smtp.gmail.com with ESMTPSA id r1sm267897wrx.11.2020.02.20.09.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 09:25:27 -0800 (PST)
-Date:   Thu, 20 Feb 2020 17:25:25 +0000
-From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
-        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
-        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
-        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
-        Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv10 05/13] PCI: mobiveil: Add callback function for
- interrupt initialization
-Message-ID: <20200220172525.GG19388@big-machine>
-References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
- <20200213040644.45858-6-Zhiqiang.Hou@nxp.com>
+        Thu, 20 Feb 2020 12:25:54 -0500
+Received: from sauhun.de ([88.99.104.3]:35042 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728706AbgBTRZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:25:54 -0500
+Received: from localhost (p5486CC48.dip0.t-ipconnect.de [84.134.204.72])
+        by pokefinder.org (Postfix) with ESMTPSA id D7BF52C1EBA;
+        Thu, 20 Feb 2020 18:25:50 +0100 (CET)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH 1/7] i2c: add sanity check for parameter of i2c_verify_client()
+Date:   Thu, 20 Feb 2020 18:23:57 +0100
+Message-Id: <20200220172403.26062-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213040644.45858-6-Zhiqiang.Hou@nxp.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:06:36PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The Mobiveil GPEX internal MSI/INTx controller may not be used
-> by other platforms in which the Mobiveil GPEX is integrated.
-> This patch is to allow these platforms to implement their
-> specific interrupt initialization.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+We export this function, so we should check the paramter to make it
+NULL-compatible.
 
-Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/i2c/i2c-core-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> V10:
->  - Introduced a helper function mobiveil_pcie_integrated_interrupt_init().
-> 
->  drivers/pci/controller/mobiveil/pcie-mobiveil-host.c | 12 +++++++++++-
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h      |  7 +++++++
->  2 files changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> index ea90d2f8692e..53ab8412a1de 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> @@ -499,7 +499,7 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
->  	return 0;
->  }
->  
-> -static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
-> +static int mobiveil_pcie_integrated_interrupt_init(struct mobiveil_pcie *pcie)
->  {
->  	struct platform_device *pdev = pcie->pdev;
->  	struct device *dev = &pdev->dev;
-> @@ -539,6 +539,16 @@ static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
->  	return 0;
->  }
->  
-> +static int mobiveil_pcie_interrupt_init(struct mobiveil_pcie *pcie)
-> +{
-> +	struct mobiveil_root_port *rp = &pcie->rp;
-> +
-> +	if (rp->ops->interrupt_init)
-> +		return rp->ops->interrupt_init(pcie);
-> +
-> +	return mobiveil_pcie_integrated_interrupt_init(pcie);
-> +}
-> +
->  int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
->  {
->  	struct mobiveil_root_port *rp = &pcie->rp;
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index 81ffbbd48c08..0e6b5468c026 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -130,10 +130,17 @@ struct mobiveil_msi {			/* MSI information */
->  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);
->  };
->  
-> +struct mobiveil_pcie;
-> +
-> +struct mobiveil_rp_ops {
-> +	int (*interrupt_init)(struct mobiveil_pcie *pcie);
-> +};
-> +
->  struct mobiveil_root_port {
->  	char root_bus_nr;
->  	void __iomem *config_axi_slave_base;	/* endpoint config base */
->  	struct resource *ob_io_res;
-> +	struct mobiveil_rp_ops *ops;
->  	int irq;
->  	raw_spinlock_t intx_mask_lock;
->  	struct irq_domain *intx_domain;
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index cefad0881942..8f46d1bb8c62 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -517,7 +517,7 @@ EXPORT_SYMBOL_GPL(i2c_client_type);
+  */
+ struct i2c_client *i2c_verify_client(struct device *dev)
+ {
+-	return (dev->type == &i2c_client_type)
++	return (dev && dev->type == &i2c_client_type)
+ 			? to_i2c_client(dev)
+ 			: NULL;
+ }
+-- 
+2.20.1
+
