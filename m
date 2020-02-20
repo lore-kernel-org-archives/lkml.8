@@ -2,79 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18468C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD02CC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA36024654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25C524654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 08:21:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BEaW8O6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgBTIUD (ORCPT
+        id S1726830AbgBTIVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 03:20:03 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10658 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726766AbgBTIUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 03:20:03 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 70D15595F2CA640EE134;
-        Thu, 20 Feb 2020 16:20:00 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 20 Feb
- 2020 16:19:50 +0800
-Subject: Re: [PATCH v3] erofs: convert workstn to XArray
-To:     Gao Xiang <gaoxiang25@huawei.com>, <linux-erofs@lists.ozlabs.org>
-CC:     Matthew Wilcox <willy@infradead.org>,
+        Thu, 20 Feb 2020 03:21:30 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:45722 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726771AbgBTIVa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 03:21:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1582186889; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=aS4q7m+l6u86tFZHKQJn03pGD9rpfrnXXM1l29HIlXE=; b=BEaW8O6rVczEylDX5spSgTZQ4tCNR6VUdch0HYyRGkMCfCISxsZkinnUrsS9adxXXYMZjOvp
+ O4zzOGqGaKtVMDgwFTDO8hAVS3RzhHEFbbmzrDe/OcCJrIdmV6ETjyS9ZIUIlwvXeEYDn6hH
+ sd0MTHeTGbYbPXPQoAzFO9OiHhk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4e4181.7f0c5b632960-smtp-out-n01;
+ Thu, 20 Feb 2020 08:21:21 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CCB5BC4479D; Thu, 20 Feb 2020 08:21:21 +0000 (UTC)
+Received: from [192.168.1.227] (unknown [123.201.165.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A68CDC43383;
+        Thu, 20 Feb 2020 08:21:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A68CDC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add A618 gpu dt blob
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, dri-devel@freedesktop.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Miao Xie <miaoxie@huawei.com>
-References: <20200220024642.91529-1-gaoxiang25@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <c3372d97-ec77-6928-719e-39195c8c33f8@huawei.com>
-Date:   Thu, 20 Feb 2020 16:19:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+References: <1581320465-15854-1-git-send-email-smasetty@codeaurora.org>
+ <1581320465-15854-2-git-send-email-smasetty@codeaurora.org>
+ <CAD=FV=VH4954bnD_PzOhFPaYRto5sRVCCuOHgm67=uz5Be_b0Q@mail.gmail.com>
+From:   Sharat Masetty <smasetty@codeaurora.org>
+Message-ID: <db3cca19-d40d-b1d8-0260-09463d4b9a1b@codeaurora.org>
+Date:   Thu, 20 Feb 2020 13:50:03 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200220024642.91529-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+In-Reply-To: <CAD=FV=VH4954bnD_PzOhFPaYRto5sRVCCuOHgm67=uz5Be_b0Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/20 10:46, Gao Xiang wrote:
-> XArray has friendly APIs and it will replace the old radix
-> tree in the near future.
-> 
-> This convert makes use of __xa_cmpxchg when inserting on
-> a just inserted item by other thread. In detail, instead
-> of totally looking up again as what we did for the old
-> radix tree, it will try to legitimize the current in-tree
-> item in the XArray therefore more effective.
-> 
-> In addition, naming is rather a challenge for non-English
-> speaker like me. The basic idea of workstn is to provide
-> a runtime sparse array with items arranged in the physical
-> block number order. Such items (was called workgroup) can be
-> used to record compress clusters or for later new features.
-> 
-> However, both workgroup and workstn seem not good names from
-> whatever point of view, so I'd like to rename them as pslot
-> and managed_pslots to stand for physical slots. This patch
-> handles the second as a part of the radix tree convert.
-> 
-> Cc: Chao Yu <yuchao0@huawei.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 
-Looks good to me.
-
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-
-Thanks,
+On 2/11/2020 2:51 AM, Doug Anderson wrote:
+> Hi,
+>
+> On Sun, Feb 9, 2020 at 11:41 PM Sharat Masetty <smasetty@codeaurora.org> wrote:
+>> This patch adds the required dt nodes and properties
+>> to enabled A618 GPU.
+>>
+>> Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
+> In v4 I added my tags [1].  Please keep them for future patches unless
+> something major changes.  AKA:
+>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+>
+>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 102 insertions(+)
+> Just to summarize where we are:
+>
+> * As per my notes in v3 and v4 [1], this can't land until
+> "mem_iface_clk" is in the bindings.  Please post a patch for this and
+> reply with a link here so others can follow the disucssion.
+I posted a patch for this @https://patchwork.freedesktop.org/patch/354130/
+>
+> * This also can't land until the gpucc bindings change from Taniya
+> recently [2] lands.
+>
+> ...so we're in limbo waiting for the bindings to be resolved, but
+> otherwise this patch looks good.
+>
+>
+> [1] https://lore.kernel.org/r/CAD=FV=UEQ0mOXuDrSZrcJ8g6jb0eLf1Ttn+Mn7T6d2TpCMUcuA@mail.gmail.com
+> [2] https://lore.kernel.org/r/1581307266-26989-1-git-send-email-tdas@codeaurora.org
+>
+>
+> -Doug
