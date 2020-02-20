@@ -2,164 +2,195 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B28C11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F917C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC3120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC20020722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:01:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QBQdV8q+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgBTRAQ (ORCPT
+        id S1728654AbgBTRA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:00:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25592 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727915AbgBTRAP (ORCPT
+        Thu, 20 Feb 2020 12:00:59 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49440 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727915AbgBTRA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:00:15 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KGx8Ev060299
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:00:13 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubve73k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 12:00:11 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 20 Feb 2020 17:00:09 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Feb 2020 17:00:05 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01KH03Pb30212520
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Feb 2020 17:00:03 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 868B211C04C;
-        Thu, 20 Feb 2020 17:00:03 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6E2011C052;
-        Thu, 20 Feb 2020 17:00:02 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.146.44])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Feb 2020 17:00:02 +0000 (GMT)
-Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <20200220160606.53156-2-pasic@linux.ibm.com> <20200220161146.GA12709@lst.de>
- <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
- <20200220163135.GA13192@lst.de>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Thu, 20 Feb 2020 18:00:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 12:00:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGtQPp034532;
+        Thu, 20 Feb 2020 17:00:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=OEQ8Sxa54D6VnD4JhJWJER8N7HEKh6e9JKT56rZDleE=;
+ b=QBQdV8q+xwhUQQ4QZzAVwG0KL3dPMu9uuKVM94+Ujg0HER7/QBiUcfYiDbKJ0Xm+ep09
+ ZpQkJLCgP273WVkvIbjWPOBmobhFZnSWnpVWvCMETYx25BUSjU/ynJli1rhCpU32RNIl
+ OnLBYqyDlLW0XU8kcSZAUacZaLYcpndbNgPXHMvLLskvDNjhi59YDVIUryBdRZyZr/XT
+ 2toggFLuD4atkvW3oicIJ7M+mgye7DHrbiT0SPBaQm14/EBmzEAU8heQTaWTYoMiRsFf
+ fNpKdtRcAaRVRess/Wfr9rGovbbMEQxthGY2es7coZzi5L0CYVvHApyjgI9XB2QbZc/m uA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2y8udkk4j9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 17:00:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01KGwPjn165758;
+        Thu, 20 Feb 2020 17:00:39 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2y8udd650q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 17:00:39 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01KH0bXN014803;
+        Thu, 20 Feb 2020 17:00:37 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Feb 2020 09:00:36 -0800
+Date:   Thu, 20 Feb 2020 09:00:35 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+Message-ID: <20200220170035.GY9506@magnolia>
+References: <x4936bcdfso.fsf@segfault.boston.devel.redhat.com>
+ <20200214215759.GA20548@iweiny-DESK2.sc.intel.com>
+ <x49y2t4bz8t.fsf@segfault.boston.devel.redhat.com>
+ <x49tv3sbwu5.fsf@segfault.boston.devel.redhat.com>
+ <20200218023535.GA14509@iweiny-DESK2.sc.intel.com>
+ <x49zhdgasal.fsf@segfault.boston.devel.redhat.com>
+ <20200218235429.GB14509@iweiny-DESK2.sc.intel.com>
+ <20200220162027.GA20772@iweiny-DESK2.sc.intel.com>
+ <20200220163024.GV9506@magnolia>
+ <20200220164957.GB20772@iweiny-DESK2.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220163135.GA13192@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022017-0016-0000-0000-000002E8AD89
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022017-0017-0000-0000-0000334BCAF3
-Message-Id: <c41d567c-85ba-0f19-e56f-1b6cc4581d89@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- spamscore=0 priorityscore=1501 mlxlogscore=739 bulkscore=0 malwarescore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 mlxscore=0 suspectscore=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220164957.GB20772@iweiny-DESK2.sc.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 suspectscore=0 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002200126
+ definitions=main-2002200125
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9537 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 suspectscore=0
+ spamscore=0 priorityscore=1501 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 phishscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002200125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 20.02.20 17:31, Christoph Hellwig wrote:
-> On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntraeger wrote:
->> >From a users perspective it makes absolutely perfect sense to use the
->> bounce buffers when they are NEEDED. 
->> Forcing the user to specify iommu_platform just because you need bounce buffers
->> really feels wrong. And obviously we have a severe performance issue
->> because of the indirections.
+On Thu, Feb 20, 2020 at 08:49:57AM -0800, Ira Weiny wrote:
+> On Thu, Feb 20, 2020 at 08:30:24AM -0800, Darrick J. Wong wrote:
+> > On Thu, Feb 20, 2020 at 08:20:28AM -0800, Ira Weiny wrote:
+> > > On Tue, Feb 18, 2020 at 03:54:30PM -0800, 'Ira Weiny' wrote:
+> > > > On Tue, Feb 18, 2020 at 09:22:58AM -0500, Jeff Moyer wrote:
+> > > > > Ira Weiny <ira.weiny@intel.com> writes:
+> > > > > > If my disassembly of read_pages is correct it looks like readpage is null which
+> > > > > > makes sense because all files should be IS_DAX() == true due to the mount option...
+> > > > > >
+> > > > > > But tracing code indicates that the patch:
+> > > > > >
+> > > > > > 	fs: remove unneeded IS_DAX() check
+> > > > > >
+> > > > > > ... may be the culprit and the following fix may work...
+> > > > > >
+> > > > > > diff --git a/mm/filemap.c b/mm/filemap.c
+> > > > > > index 3a7863ba51b9..7eaf74a2a39b 100644
+> > > > > > --- a/mm/filemap.c
+> > > > > > +++ b/mm/filemap.c
+> > > > > > @@ -2257,7 +2257,7 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+> > > > > >         if (!count)
+> > > > > >                 goto out; /* skip atime */
+> > > > > >  
+> > > > > > -       if (iocb->ki_flags & IOCB_DIRECT) {
+> > > > > > +       if (iocb->ki_flags & IOCB_DIRECT || IS_DAX(inode)) {
+> > > > > >                 struct file *file = iocb->ki_filp;
+> > > > > >                 struct address_space *mapping = file->f_mapping;
+> > > > > >                 struct inode *inode = mapping->host;
+> > > > > 
+> > > > > Well, you'll have to up-level the inode variable instantiation,
+> > > > > obviously.  That solves this particular issue.
+> > > > 
+> > > > Well...  This seems to be a random issue.  I've had BMC issues with
+> > > > my server most of the day...  But even with this patch I still get the failure
+> > > > in read_pages().  :-/
+> > > > 
+> > > > And I have gotten it to both succeed and fail with qemu...  :-/
+> > > 
+> > > ... here is the fix.  I made the change in xfs_diflags_to_linux() early on with
+> > > out factoring in the flag logic changes we have agreed upon...
+> > > 
+> > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > > index 62d9f622bad1..d592949ad396 100644
+> > > --- a/fs/xfs/xfs_ioctl.c
+> > > +++ b/fs/xfs/xfs_ioctl.c
+> > > @@ -1123,11 +1123,11 @@ xfs_diflags_to_linux(
+> > >                 inode->i_flags |= S_NOATIME;
+> > >         else
+> > >                 inode->i_flags &= ~S_NOATIME;
+> > > -       if (xflags & FS_XFLAG_DAX)
+> > > +
+> > > +       if (xfs_inode_enable_dax(ip))
+> > >                 inode->i_flags |= S_DAX;
+> > >         else
+> > >                 inode->i_flags &= ~S_DAX;
+> > > -
+> > >  }
+> > > 
+> > > But the one thing which tripped me up, and concerns me, is we have 2 functions
+> > > which set the inode flags.
+> > > 
+> > > xfs_diflags_to_iflags()
+> > > xfs_diflags_to_linux()
+> > > 
+> > > xfs_diflags_to_iflags() is geared toward initialization but logically they do
+> > > the same thing.  I see no reason to keep them separate.  Does anyone?
+> > > 
+> > > Based on this find, the discussion on behavior in this thread, and the comments
+> > > from Dave I'm reworking the series because the flag check/set functions have
+> > > all changed and I really want to be as clear as possible with both the patches
+> > > and the resulting code.[*]  So v4 should be out today including attempting to
+> > > document what we have discussed here and being as clear as possible on the
+> > > behavior.  :-D
+> > > 
+> > > Thanks so much for testing this!
+> > > 
+> > > Ira
+> > > 
+> > > [*] I will probably throw in a patch to remove xfs_diflags_to_iflags() as I
+> > > really don't see a reason to keep it.
+> > > 
+> > 
+> > I prefer you keep the one in xfs_iops.c since ioctls are a higher level
+> > function than general inode operations.
 > 
-> The point is that the user should not have to specify iommu_platform.
+> Makes sense.  Do you prefer the xfs_diflags_to_iflags() name as well?
 
-I (and Halil) agree on that. From a user perspective we want to
-have the right thing in the guest without any command option. The iommu_plaform
-thing was indeed a first step to make things work. 
+I don't really care one way or another, so ... iflags wins by arbitrary
+choice! 8)
 
-I might mis-read Halils patch, but isnt one effect of this patch set 
-that things WILL work without iommu_platform?
+--D
 
-
-> We need to make sure any new hypervisor (especially one that might require
-> bounce buffering) always sets it, as was a rather bogus legacy hack
-> that isn't extensibe for cases that for example require bounce buffering.
-
+> Ira
+> 
+> > 
+> > --D
