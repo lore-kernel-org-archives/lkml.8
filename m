@@ -2,154 +2,88 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EE5C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AB9C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2909820659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C81C20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GhANP2g0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="otE+N0vt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgBTP46 (ORCPT
+        id S1728672AbgBTP52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:56:58 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34803 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728460AbgBTP4y (ORCPT
+        Thu, 20 Feb 2020 10:57:28 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:57658 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbgBTP52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:56:54 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j4so2150883pgi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rNBzr+gKL7W/4+tMuEJmqqL2ELw8zx9/UXsCB1+eKjY=;
-        b=GhANP2g0294bY7ihToE8mRKMYwYIxEuzTTlWpZSq/Oj/DNB7wcAnz6UBnSA/0JlzO1
-         zQgrDPIGpwOyPqKz3rhBKLyBVINls8WEGLZ3i38vALuFb74X4TA2EQdBwdsRdEqMClwJ
-         7O6L2YGcyC6eoVlx39mkCRWCcNx4o+Iv397gKPOTx0tqlh/+B3R7Sm1uW4vNC3l3/E6E
-         uYudBzcX7IR1ofHCR+nbozHYZ5oAl97JP2DFKmeN2P1pBfUJJQBSyxzMxf021nn65FTI
-         x0h4wu/RANDJ/gFpme5Stsyy2G1FMyFjvLmgLy2zW8nr5FgDNhLBm8J7G0+vKQfU12Po
-         xnhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rNBzr+gKL7W/4+tMuEJmqqL2ELw8zx9/UXsCB1+eKjY=;
-        b=KikM4fl3SrYQHcwD8j1xGMQG4QljxVEnRiT3q8g5sAGTIsrm15JHgSloglDbZaku6X
-         VJLYdXdyoITteZut8mz7eRqR9IHfLNqMdv5G4C1XRpHDkjURlfEqwhrooMgUnb0MsBKO
-         gp1UCBfkmbOoOUJK7CaA63eLGW38MC2WK1DC3u3eTNrhA+bfqoxLNCIrOzmgKwM+RnDr
-         QY3gjyvLKT2UCbMfrA+R4n1yFbzqiUEkQCwlE1sugWPCK7xYwxo5zfGzWTOWn4r3Y2PU
-         1TvlrFloeGZyGiUolJxO9hmPRR+g2xdFks7R0vwlj02GLHjlG/nBR3ancAPZ7dBDsEya
-         X5cg==
-X-Gm-Message-State: APjAAAViV+95kpTe2vI/dDNeTqZxR8lFZUE8rwSat2PcCpwugvf31VyU
-        +KenO3vwZjNfK47HbspiVFkV8GUSNaM=
-X-Google-Smtp-Source: APXvYqxgmpLr0iQFDhJMwwmGPN0p+UlmPhonwyMbkL9R2pkVjF5jGqMHkbnHZVBJ+BMwHtftaA4qJw==
-X-Received: by 2002:a63:33c4:: with SMTP id z187mr33761577pgz.114.1582214212585;
-        Thu, 20 Feb 2020 07:56:52 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f13sm4218442pgk.12.2020.02.20.07.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 07:56:51 -0800 (PST)
-Date:   Thu, 20 Feb 2020 07:55:56 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] driver core: Set deferred_probe_timeout to a
- longer default if CONFIG_MODULES is set
-Message-ID: <20200220155556.GE955802@ripper>
-References: <20200220050440.45878-1-john.stultz@linaro.org>
- <20200220050440.45878-3-john.stultz@linaro.org>
+        Thu, 20 Feb 2020 10:57:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+/UHJ6F1pbYDweJDUZAgvqKfayrQBowwGTnz0WdYGiI=; b=otE+N0vtlyX9xN010Sejc78VWm
+        +Z6Nhr8BvmGUNrIO9afuJHhxoLPaunjuFqSB3Vbfkg92cFJ3CGndTAJiSloW8688jbu+LsyPnwsfM
+        7+EZh4a1KpVzbLiwzv7LZrgnYjvExYmxe48vBmhmvCOPmZ7sVJnLeHwyQwYksv3nnnaQLNldoXsYQ
+        u1gQv6uFtIOengP5ajM30qweiLUQ49UDY3r+ygUvyonu17lsTwaYIiH/5oz7IhvQ4fhsYNWJY/9Ww
+        eOATcZg8cPjWf2FcknrxS05+tCQGLf31jvSwLk8Ndl9n4CBxBjuYStE6NyuIbPzCKDkbX2IXV3hgI
+        bWJ8ZdIw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4oCd-0000Ht-HF; Thu, 20 Feb 2020 15:57:27 +0000
+Date:   Thu, 20 Feb 2020 07:57:27 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "cluster-devel@redhat.com" <cluster-devel@redhat.com>,
+        "ocfs2-devel@oss.oracle.com" <ocfs2-devel@oss.oracle.com>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v7 14/24] btrfs: Convert from readpages to readahead
+Message-ID: <20200220155727.GA32232@infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-15-willy@infradead.org>
+ <SN4PR0401MB35987D7B76007B93B1C5CE5E9B130@SN4PR0401MB3598.namprd04.prod.outlook.com>
+ <20200220134849.GV24185@bombadil.infradead.org>
+ <20200220154658.GA19577@infradead.org>
+ <20200220155452.GX24185@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220050440.45878-3-john.stultz@linaro.org>
+In-Reply-To: <20200220155452.GX24185@bombadil.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19 Feb 21:04 PST 2020, John Stultz wrote:
-
-> When using modules, its common for the modules not to be loaded
-> until quite late by userland. With the current code,
-> driver_deferred_probe_check_state() will stop returning
-> EPROBE_DEFER after late_initcall, which can cause module
-> dependency resolution to fail after that.
+On Thu, Feb 20, 2020 at 07:54:52AM -0800, Matthew Wilcox wrote:
+> On Thu, Feb 20, 2020 at 07:46:58AM -0800, Christoph Hellwig wrote:
+> > On Thu, Feb 20, 2020 at 05:48:49AM -0800, Matthew Wilcox wrote:
+> > > btrfs: Convert from readpages to readahead
+> > >   
+> > > Implement the new readahead method in btrfs.  Add a readahead_page_batch()
+> > > to optimise fetching a batch of pages at once.
+> > 
+> > Shouldn't this readahead_page_batch heper go into a separate patch so
+> > that it clearly stands out?
 > 
-> So allow a longer window of 30 seconds (picked somewhat
-> arbitrarily, but influenced by the similar regulator core
-> timeout value) in the case where modules are enabled.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Change-Id: I9c5a02a54915ff53f9f14d49c601f41d7105e05e
+> I'll move it into 'Put readahead pages in cache earlier' for v8 (the
+> same patch where we add readahead_page())
 
-Change-Id...
+One argument for keeping it in a patch of its own is that btrfs appears
+to be the only user, and Goldwyn has a WIP conversion of btrfs to iomap,
+so it might go away pretty soon and we could just revert the commit.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> ---
-> v4:
-> * Split out into its own patch as suggested by Mark
-> * Made change conditional on CONFIG_MODULES
-> ---
->  drivers/base/dd.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index bb383dca39c1..fa138f24e2d3 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -224,7 +224,16 @@ static int deferred_devs_show(struct seq_file *s, void *data)
->  }
->  DEFINE_SHOW_ATTRIBUTE(deferred_devs);
->  
-> +#ifdef CONFIG_MODULES
-> +/*
-> + * In the case of modules, set the default probe timeout to
-> + * 30 seconds to give userland some time to load needed modules
-> + */
-> +static int deferred_probe_timeout = 30;
-> +#else
-> +/* In the case of !modules, no probe timeout needed */
->  static int deferred_probe_timeout = -1;
-> +#endif
->  static int __init deferred_probe_timeout_setup(char *str)
->  {
->  	int timeout;
-> -- 
-> 2.17.1
-> 
+But this starts to get into really minor details, so I'll shut up now :)
