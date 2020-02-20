@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98E6C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7299EC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A610024656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42CF521D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 03:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgBTDR7 (ORCPT
+        id S1727943AbgBTDVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 22:17:59 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10652 "EHLO huawei.com"
+        Wed, 19 Feb 2020 22:21:55 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46696 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727476AbgBTDR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 22:17:59 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4EA016CB1DDE32654D92;
-        Thu, 20 Feb 2020 11:17:57 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
- 11:17:49 +0800
-Subject: Re: [PATCH v4 04/20] irqchip/gic-v4.1: Map the ITS SGIR register page
+        id S1727208AbgBTDVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 22:21:54 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8EB969452846FC500A28;
+        Thu, 20 Feb 2020 11:21:52 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Feb 2020
+ 11:21:44 +0800
+Subject: Re: [PATCH v4 05/20] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
 To:     Marc Zyngier <maz@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
@@ -39,14 +39,14 @@ CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
 References: <20200214145736.18550-1-maz@kernel.org>
- <20200214145736.18550-5-maz@kernel.org>
+ <20200214145736.18550-6-maz@kernel.org>
 From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <154bd918-de16-e810-d10d-e7642e340415@huawei.com>
-Date:   Thu, 20 Feb 2020 11:17:47 +0800
+Message-ID: <b1053b00-721a-cfd3-8f2f-04c674490121@huawei.com>
+Date:   Thu, 20 Feb 2020 11:21:43 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20200214145736.18550-5-maz@kernel.org>
+In-Reply-To: <20200214145736.18550-6-maz@kernel.org>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -57,18 +57,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+
+
 On 2020/2/14 22:57, Marc Zyngier wrote:
-> One of the new features of GICv4.1 is to allow virtual SGIs to be
-> directly signaled to a VPE. For that, the ITS has grown a new
-> 64kB page containing only a single register that is used to
-> signal a SGI to a given VPE.
+> Since GICv4.1 has the capability to inject 16 SGIs into each VPE,
+> and that I'm keen not to invent too many specific interfaces to
+> manupulate these interrupts, let's pretend that each of these SGIs
+manipulate?
+
+> is an actual Linux interrupt.
 > 
-> Add a second mapping covering this new 64kB range, and take this
-> opportunity to limit the original mapping to 64kB, which is enough
-> to cover the span of the ITS registers.
-
-Yes, no need to do ioremap for the translation register.
-
+> For that matter, let's introduce a minimal irqchip and irqdomain
+> setup that will get fleshed up in the following patches.
 > 
 > Signed-off-by: Marc Zyngier<maz@kernel.org>
 
