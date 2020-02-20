@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD14C11D03
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB65C11D01
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8703A24658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CC102465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rExLqXLA"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MvYPf8Da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbgBTC6S (ORCPT
+        id S1728000AbgBTC6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:58:18 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:18732 "EHLO
+        Wed, 19 Feb 2020 21:58:12 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:43998 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727989AbgBTC6O (ORCPT
+        by vger.kernel.org with ESMTP id S1727943AbgBTC6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:58:14 -0500
+        Wed, 19 Feb 2020 21:58:09 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582167494; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1582167488; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=bml65BiZKqC8La35iek9YW4e+KEfIXfCCZ0eFO8GDNY=; b=rExLqXLAVyMqFJr3AqkGuVDXASmw/LBEfYBjmsPmahM5pE/fNFgGjCLjg/SJAmXMS5DfPUov
- BVuTe7MhlgA4VjZ9If4GB0QcuGxzkoR3R6rgzbvo4IAppXawJUQd4K9AJnPSy8XWk4mzf9iN
- 8zqCi9gDnXw5HvEEZR2H2K/69JM=
+ bh=5JIRtNHluZr5GIQ50gh49RvAzL0md3OiFBvUWmipEzo=; b=MvYPf8DavRoZQy/haG+KpMgXo+S8JoWvyNEuIBuOz4uyBfrxKCK/Oe2fJ67ZWHZFKJrDVGej
+ SFM5VprYsQp0GLtZja3ZBB3wbavZahG9f+pqXbAgi6VzU4OCqFv5KhQrRHixl6xKI8QtwBMD
+ DiLl7vlasKvnRp81Ute4yWeeCTc=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4df5b2.7fb5fd02cf48-smtp-out-n01;
- Thu, 20 Feb 2020 02:57:54 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4df5b5.7faad1eb2c70-smtp-out-n01;
+ Thu, 20 Feb 2020 02:57:57 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 219BFC43383; Thu, 20 Feb 2020 02:57:54 +0000 (UTC)
+        id 3E049C4479C; Thu, 20 Feb 2020 02:57:57 +0000 (UTC)
 Received: from sidgup-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sidgup)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02FFDC4479C;
-        Thu, 20 Feb 2020 02:57:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02FFDC4479C
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37EC0C447A0;
+        Thu, 20 Feb 2020 02:57:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37EC0C447A0
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
 From:   Siddharth Gupta <sidgup@codeaurora.org>
@@ -52,9 +52,9 @@ Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
         linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
         psodagud@codeaurora.org, rishabhb@codeaurora.org
-Subject: [PATCH 1/6] remoteproc: sysmon: Add ability to send type of notification
-Date:   Wed, 19 Feb 2020 18:57:40 -0800
-Message-Id: <1582167465-2549-2-git-send-email-sidgup@codeaurora.org>
+Subject: [PATCH 6/6] remoteproc: qcom: Add notification types to SSR
+Date:   Wed, 19 Feb 2020 18:57:45 -0800
+Message-Id: <1582167465-2549-7-git-send-email-sidgup@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
 References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
@@ -63,142 +63,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current implementation of the sysmon driver does not support adding
-notifications for other remoteproc events - prepare, start, unprepare.
-Clients on the remoteproc side might be interested in knowing when a
-remoteproc boots up. This change adds the ability to send the notification
-type along with the name. For example, audio DSP is interested in knowing
-when modem has crashed so that it can perform cleanup and wait for modem to
-boot up before it starts processing data again.
+The SSR subdevice only adds callback for the unprepare event. Add callbacks
+for unprepare, start and prepare events. The client driver for a particular
+remoteproc might be interested in knowing the status of the remoteproc
+while undergoing SSR, not just when the remoteproc has finished shutting
+down.
 
 Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
 ---
- drivers/remoteproc/qcom_sysmon.c | 54 +++++++++++++++++++++++++++-------------
- 1 file changed, 37 insertions(+), 17 deletions(-)
+ drivers/remoteproc/qcom_common.c | 39 +++++++++++++++++++++++++++++++++++----
+ include/linux/remoteproc.h       | 15 +++++++++++++++
+ 2 files changed, 50 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
-index faf3822..1366050 100644
---- a/drivers/remoteproc/qcom_sysmon.c
-+++ b/drivers/remoteproc/qcom_sysmon.c
-@@ -46,6 +46,25 @@ struct qcom_sysmon {
- 	struct sockaddr_qrtr ssctl;
- };
- 
-+enum {
-+	SSCTL_SSR_EVENT_BEFORE_POWERUP,
-+	SSCTL_SSR_EVENT_AFTER_POWERUP,
-+	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
-+	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
-+};
-+
-+static const char * const sysmon_state_string[] = {
-+	[SSCTL_SSR_EVENT_BEFORE_POWERUP]	= "before_powerup",
-+	[SSCTL_SSR_EVENT_AFTER_POWERUP]		= "after_powerup",
-+	[SSCTL_SSR_EVENT_BEFORE_SHUTDOWN]	= "before_shutdown",
-+	[SSCTL_SSR_EVENT_AFTER_SHUTDOWN]	= "after_shutdown",
-+};
-+
-+struct sysmon_event {
-+	const char *subsys_name;
-+	u32 ssr_event;
-+};
-+
- static DEFINE_MUTEX(sysmon_lock);
- static LIST_HEAD(sysmon_list);
- 
-@@ -54,13 +73,15 @@ static LIST_HEAD(sysmon_list);
-  * @sysmon:	sysmon context
-  * @name:	other remote's name
+diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+index 6714f27..6f04a5b 100644
+--- a/drivers/remoteproc/qcom_common.c
++++ b/drivers/remoteproc/qcom_common.c
+@@ -183,9 +183,9 @@ EXPORT_SYMBOL_GPL(qcom_remove_smd_subdev);
+  *
+  * Returns pointer to srcu notifier head on success, ERR_PTR on failure.
+  *
+- * This registers the @notify function as handler for restart notifications. As
+- * remote processors are stopped this function will be called, with the rproc
+- * pointer passed as a parameter.
++ * This registers the @notify function as handler for powerup/shutdown
++ * notifications. This function will be invoked inside the callbacks registered
++ * for the ssr subdevice, with the rproc pointer passed as a parameter.
   */
--static void sysmon_send_event(struct qcom_sysmon *sysmon, const char *name)
-+static void sysmon_send_event(struct qcom_sysmon *sysmon,
-+			      const struct sysmon_event *event)
+ void *qcom_register_ssr_notifier(struct rproc *rproc, struct notifier_block *nb)
  {
- 	char req[50];
- 	int len;
- 	int ret;
- 
--	len = snprintf(req, sizeof(req), "ssr:%s:before_shutdown", name);
-+	len = snprintf(req, sizeof(req), "ssr:%s:%s", event->subsys_name,
-+		       sysmon_state_string[event->ssr_event]);
- 	if (len >= sizeof(req))
- 		return;
- 
-@@ -149,13 +170,6 @@ static int sysmon_callback(struct rpmsg_device *rpdev, void *data, int count,
- #define SSCTL_SUBSYS_NAME_LENGTH	15
- 
- enum {
--	SSCTL_SSR_EVENT_BEFORE_POWERUP,
--	SSCTL_SSR_EVENT_AFTER_POWERUP,
--	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
--	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
--};
--
--enum {
- 	SSCTL_SSR_EVENT_FORCED,
- 	SSCTL_SSR_EVENT_GRACEFUL,
- };
-@@ -331,7 +345,8 @@ static void ssctl_request_shutdown(struct qcom_sysmon *sysmon)
-  * @sysmon:	sysmon context
-  * @name:	other remote's name
-  */
--static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
-+static void ssctl_send_event(struct qcom_sysmon *sysmon,
-+			     const struct sysmon_event *event)
- {
- 	struct ssctl_subsys_event_resp resp;
- 	struct ssctl_subsys_event_req req;
-@@ -346,9 +361,9 @@ static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
- 	}
- 
- 	memset(&req, 0, sizeof(req));
--	strlcpy(req.subsys_name, name, sizeof(req.subsys_name));
-+	strlcpy(req.subsys_name, event->subsys_name, sizeof(req.subsys_name));
- 	req.subsys_name_len = strlen(req.subsys_name);
--	req.event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN;
-+	req.event = event->ssr_event;
- 	req.evt_driven_valid = true;
- 	req.evt_driven = SSCTL_SSR_EVENT_FORCED;
- 
-@@ -432,8 +447,12 @@ static int sysmon_start(struct rproc_subdev *subdev)
- static void sysmon_stop(struct rproc_subdev *subdev, bool crashed)
- {
- 	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon, subdev);
-+	struct sysmon_event event = {
-+		.subsys_name = sysmon->name,
-+		.ssr_event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN
-+	};
- 
--	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)sysmon->name);
-+	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
- 
- 	/* Don't request graceful shutdown if we've crashed */
- 	if (crashed)
-@@ -456,19 +475,20 @@ static int sysmon_notify(struct notifier_block *nb, unsigned long event,
- {
- 	struct qcom_sysmon *sysmon = container_of(nb, struct qcom_sysmon, nb);
- 	struct rproc *rproc = sysmon->rproc;
--	const char *ssr_name = data;
-+	struct sysmon_event *sysmon_event = data;
- 
- 	/* Skip non-running rprocs and the originating instance */
--	if (rproc->state != RPROC_RUNNING || !strcmp(data, sysmon->name)) {
-+	if (rproc->state != RPROC_RUNNING ||
-+	    !strcmp(sysmon_event->subsys_name, sysmon->name)) {
- 		dev_dbg(sysmon->dev, "not notifying %s\n", sysmon->name);
- 		return NOTIFY_DONE;
- 	}
- 
- 	/* Only SSCTL version 2 supports SSR events */
- 	if (sysmon->ssctl_version == 2)
--		ssctl_send_event(sysmon, ssr_name);
-+		ssctl_send_event(sysmon, sysmon_event);
- 	else if (sysmon->ept)
--		sysmon_send_event(sysmon, ssr_name);
-+		sysmon_send_event(sysmon, sysmon_event);
- 
- 	return NOTIFY_DONE;
+@@ -227,11 +227,39 @@ int qcom_unregister_ssr_notifier(void *notify, struct notifier_block *nb)
  }
+ EXPORT_SYMBOL_GPL(qcom_unregister_ssr_notifier);
+ 
++static int ssr_notify_prepare(struct rproc_subdev *subdev)
++{
++	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
++
++	srcu_notifier_call_chain(ssr->rproc_notif_list,
++				 RPROC_BEFORE_POWERUP, (void *)ssr->name);
++	return 0;
++}
++
++static int ssr_notify_start(struct rproc_subdev *subdev)
++{
++	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
++
++	srcu_notifier_call_chain(ssr->rproc_notif_list,
++				 RPROC_AFTER_POWERUP, (void *)ssr->name);
++	return 0;
++}
++
++static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
++{
++	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
++
++	srcu_notifier_call_chain(ssr->rproc_notif_list,
++				 RPROC_BEFORE_SHUTDOWN, (void *)ssr->name);
++}
++
++
+ static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+ {
+ 	struct qcom_rproc_ssr *ssr = to_ssr_subdev(subdev);
+ 
+-	srcu_notifier_call_chain(ssr->rproc_notif_list, 0, (void *)ssr->name);
++	srcu_notifier_call_chain(ssr->rproc_notif_list,
++				 RPROC_AFTER_SHUTDOWN, (void *)ssr->name);
+ }
+ 
+ /**
+@@ -248,6 +276,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
+ {
+ 	ssr->name = ssr_name;
+ 	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
++	ssr->subdev.prepare = ssr_notify_prepare;
++	ssr->subdev.start = ssr_notify_start;
++	ssr->subdev.stop = ssr_notify_stop;
+ 	ssr->subdev.unprepare = ssr_notify_unprepare;
+ 	ssr->rproc_notif_list = kzalloc(sizeof(struct srcu_notifier_head),
+ 								GFP_KERNEL);
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index e2f60cc..4be4478 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -449,6 +449,21 @@ struct rproc_dump_segment {
+ };
+ 
+ /**
++ * enum rproc_notif_type - Different stages of remoteproc notifications
++ * @RPROC_BEFORE_SHUTDOWN:	unprepare stage of  remoteproc
++ * @RPROC_AFTER_SHUTDOWN:	stop stage of  remoteproc
++ * @RPROC_BEFORE_POWERUP:	prepare stage of  remoteproc
++ * @RPROC_AFTER_POWERUP:	start stage of  remoteproc
++ */
++enum rproc_notif_type {
++	RPROC_BEFORE_SHUTDOWN,
++	RPROC_AFTER_SHUTDOWN,
++	RPROC_BEFORE_POWERUP,
++	RPROC_AFTER_POWERUP,
++	RPROC_MAX
++};
++
++/**
+  * struct rproc - represents a physical remote processor device
+  * @node: list node of this rproc object
+  * @domain: iommu domain
 -- 
 Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
