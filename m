@@ -2,178 +2,115 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30214C761A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB63EC11D80
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014A624656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B8B24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 05:48:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dj/PTuGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbgBTFpn convert rfc822-to-8bit (ORCPT
+        id S1726494AbgBTFss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 00:45:43 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33725 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbgBTFpn (ORCPT
+        Thu, 20 Feb 2020 00:48:48 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39978 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgBTFss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 00:45:43 -0500
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1j4eea-0003Ev-4n
-        for linux-kernel@vger.kernel.org; Thu, 20 Feb 2020 05:45:40 +0000
-Received: by mail-pl1-f200.google.com with SMTP id w17so1590274plq.16
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:45:40 -0800 (PST)
+        Thu, 20 Feb 2020 00:48:48 -0500
+Received: by mail-ot1-f67.google.com with SMTP id i6so2569432otr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 21:48:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b0F6mdIbbyqJ8pmrP/z43Dyul8vyOpgKKbRJlBxceSI=;
+        b=Dj/PTuGcX5bvKKNndi7kNoL5fDDrnj8sA5ecSWCgXS5spldvi9f+HfbQiZk1BZ4Q27
+         BqVHTzq3Jf/QSqAp8/o6T1qrNhMFBsPsukftmAY6VAtLwds2AtYb1zdRi6JHsHzMHyPP
+         pUeCmkvyJt0aPlrTsOCCPfW0xGxsF4RZiM+L5AoVWG7xz6Ool8zSOAEy72MrFFrFIr8J
+         /9s8GKi1Vt8QkHBdpOr3i0EPmG2GCBqdRJDwC0d/9CboaJyQi3o230tDWy1i3vTVABT7
+         gZBTcuyBl/po1AuNmHZazbR6K82R+/fFvOvgzIIUHoJyr4xEwtTxTQAY2J2XDOKzxFfx
+         qP+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=r+7eTHe8KL+VeIoWLw3hko3fa/QAiy+7oilQugEJ+og=;
-        b=KJ1jW+2lRIHMAKz410WN2GkDM3YDKLHagnI5hEVeyGMmm0lhDZ7S1P2LS8QABxnrao
-         +i1Y0LOFnzel1B71eXKh149Mmw7lTFl6y+gC5L+EiAtMswzM4tpMr8j20JnuWynDlNml
-         m5vTuIVbJyV1yPw74Pke1fFo9Irb5i43/qLWi/+8oTnvJZlZtluRoCZryZhv0KtanNfF
-         RUK0M2b3CKUJ6budbS7VqgYjYmp+AN2S2C8uDOxDSqts/LKuDLivxw82xS0nXrA79XEB
-         qx51gFwyZTokxS1grrOMrou9t/uYGmQ9128cIDsyGM5g+BMcGZ+EOP7YPBLx8iOtmo3d
-         tlew==
-X-Gm-Message-State: APjAAAXBoBo6Ov562rj4iEVlPZ2InYbin9dOzZbKFOKPDbDSF1Uq/rwn
-        x2FmdLdfTLsYvpDpFUpJYTZFRMn6AutE2AMYemVGzXpBIRIMTg8+tEGeKh2vy3CVR4fEkLg+XLK
-        j5RNjHaSGhjdG6oZvbCbJCkA0+HhhrPuhxSS2gohL5Q==
-X-Received: by 2002:a63:de0d:: with SMTP id f13mr32467303pgg.12.1582177538612;
-        Wed, 19 Feb 2020 21:45:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw2DlR3aide/wjBmgWYBGl91XfJf+GJLWBQ3TEMQbtUy+spD7m3Ptf6W65rzIuhL93pK8cH6Q==
-X-Received: by 2002:a63:de0d:: with SMTP id f13mr32467283pgg.12.1582177538290;
-        Wed, 19 Feb 2020 21:45:38 -0800 (PST)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id 64sm1572652pfd.48.2020.02.19.21.45.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Feb 2020 21:45:37 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] ata: ahci: Add sysfs attribute to show remapped NVMe
- device count
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200207100016.32605-1-kai.heng.feng@canonical.com>
-Date:   Thu, 20 Feb 2020 13:45:36 +0800
-Cc:     anthony.wong@canonical.com,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D1CCEA35-D7D4-40E3-85C4-E82FD1154AB7@canonical.com>
-References: <20200207100016.32605-1-kai.heng.feng@canonical.com>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b0F6mdIbbyqJ8pmrP/z43Dyul8vyOpgKKbRJlBxceSI=;
+        b=p8LSftx0UgVk3wTpc6Xv2DWiPaWQEAiChWv6n1A5CIG5GFcZkXzkWW+KNdLGjcpSGh
+         SwUh8Lij2Ld62osc3bcvI5lL0lnVD8J0XSnJ1H8KAcalLgbJihJ6UfL8mbBBeYMPfRuD
+         aDOt65y7IFyrwYUpPVbsRtwlA55IkZdXeLRzdatpFqkO7E5Rmz4ckwdJ9ialS9tVww/c
+         KxFSc24RpqXc6AIV4Ds6FV52alvtrHs3AtseDNbHs8LeHGsj7FiZyo6gNsO8bGWbjyou
+         0ccF1QbwIp8zYafDAVyEQO98l/x1qLpR2XUiUEspuEUTTx05zngLBbmPZX0ymRKBgpxM
+         rf4A==
+X-Gm-Message-State: APjAAAVGCxwuctzIpF5VbHAoKZigPgAXRNKEmwi4apAMS5cF0MX9HzLe
+        FFtkji9LAX45MvxotOZ8IictrY2RA91o8xau2QT5Hg==
+X-Google-Smtp-Source: APXvYqzKncDhV3hzHRxI4jFA2zFrFbfgTQzje+xro87W+aJ9SnJ1h1RBfXJLiqq06+0n0Lm5UwlHJjEcfTJS0vOnrPs=
+X-Received: by 2002:a9d:7d93:: with SMTP id j19mr23329830otn.102.1582177725955;
+ Wed, 19 Feb 2020 21:48:45 -0800 (PST)
+MIME-Version: 1.0
+References: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
+In-Reply-To: <1582147978-31475-1-git-send-email-jcrouse@codeaurora.org>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 19 Feb 2020 21:48:34 -0800
+Message-ID: <CALAqxLUzCN=xuF1Kx0Op_E0zMXK7PbHqynPu6TDozTMRrAuxkw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/4] msm/gpu/a6xx: use the DMA-API for GMU memory allocations
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 19, 2020 at 1:33 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> When CONFIG_INIT_ON_ALLOC_DEFAULT_ON the GMU memory allocator runs afoul of
+> cache coherency issues because it is mapped as write-combine without clearing
+> the cache after it was zeroed.
+>
+> Rather than duplicate the hacky workaround we use in the GEM allocator for the
+> same reason it turns out that we don't need to have a bespoke memory allocator
+> for the GMU anyway. It uses a flat, global address space and there are only
+> two relatively minor allocations anyway. In short, this is essentially what the
+> DMA API was created for so replace a bunch of memory management code with two
+> calls to allocate and free DMA memory and we're fine.
+>
+> The only wrinkle is that the memory allocations need to be in a very specific
+> location in the GMU virtual address space so in order to get the iova allocator
+> to do the right thing we need to specify the dma-ranges property in the device
+> tree for the GMU node. Since we've not yet converted the GMU bindings over to
+> YAML two patches quickly turn into four but at the end of it we have at least
+> one bindings file converted to YAML and 99 less lines of code to worry about.
+>
+> Jordan Crouse (4):
+>   dt-bindings: display: msm: Convert GMU bindings to YAML
+>   dt-bindings: display: msm: Add required dma-range property
+>   arm64: dts: sdm845: Set the virtual address range for GMU allocations
+>   drm/msm/a6xx: Use the DMA API for GMU memory objects
 
-> On Feb 7, 2020, at 18:00, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
-> 
-> Add a new sysfs attribute to show how many NVMe devices are remapped.
-> 
-> Userspace like distro installer can use this info to ask user to change
-> the BIOS setting.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Awesome! Thanks so much for the quick turnaround on this! This set
+resolves the crashes I was seeing with
+CONFIG_INIT_ON_ALLOC_DEFAULT_ON.
 
-A gentle ping...
+Tested-by: John Stultz <john.stultz@linaro.org>
 
-> ---
-> drivers/ata/ahci.c | 28 ++++++++++++++++++++++++----
-> drivers/ata/ahci.h |  1 +
-> 2 files changed, 25 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> index 11ea1aff40db..cdbd995a7a6b 100644
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -1488,7 +1488,7 @@ static irqreturn_t ahci_thunderx_irq_handler(int irq, void *dev_instance)
-> static void ahci_remap_check(struct pci_dev *pdev, int bar,
-> 		struct ahci_host_priv *hpriv)
-> {
-> -	int i, count = 0;
-> +	int i;
-> 	u32 cap;
-> 
-> 	/*
-> @@ -1509,13 +1509,14 @@ static void ahci_remap_check(struct pci_dev *pdev, int bar,
-> 			continue;
-> 
-> 		/* We've found a remapped device */
-> -		count++;
-> +		hpriv->remapped_nvme++;
-> 	}
-> 
-> -	if (!count)
-> +	if (!hpriv->remapped_nvme)
-> 		return;
-> 
-> -	dev_warn(&pdev->dev, "Found %d remapped NVMe devices.\n", count);
-> +	dev_warn(&pdev->dev, "Found %u remapped NVMe devices.\n",
-> +		 hpriv->remapped_nvme);
-> 	dev_warn(&pdev->dev,
-> 		 "Switch your BIOS from RAID to AHCI mode to use them.\n");
-> 
-> @@ -1635,6 +1636,18 @@ static void ahci_intel_pcs_quirk(struct pci_dev *pdev, struct ahci_host_priv *hp
-> 	}
-> }
-> 
-> +static ssize_t remapped_nvme_show(struct device *dev,
-> +				  struct device_attribute *attr,
-> +				  char *buf)
-> +{
-> +	struct ata_host *host = dev_get_drvdata(dev);
-> +	struct ahci_host_priv *hpriv = host->private_data;
-> +
-> +	return sprintf(buf, "%u\n", hpriv->remapped_nvme);
-> +}
-> +
-> +static DEVICE_ATTR_RO(remapped_nvme);
-> +
-> static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> {
-> 	unsigned int board_id = ent->driver_data;
-> @@ -1735,6 +1748,10 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
-> 	/* detect remapped nvme devices */
-> 	ahci_remap_check(pdev, ahci_pci_bar, hpriv);
-> 
-> +	sysfs_add_file_to_group(&pdev->dev.kobj,
-> +				&dev_attr_remapped_nvme.attr,
-> +				NULL);
-> +
-> 	/* must set flag prior to save config in order to take effect */
-> 	if (ahci_broken_devslp(pdev))
-> 		hpriv->flags |= AHCI_HFLAG_NO_DEVSLP;
-> @@ -1886,6 +1903,9 @@ static void ahci_shutdown_one(struct pci_dev *pdev)
-> 
-> static void ahci_remove_one(struct pci_dev *pdev)
-> {
-> +	sysfs_remove_file_from_group(&pdev->dev.kobj,
-> +				     &dev_attr_remapped_nvme.attr,
-> +				     NULL);
-> 	pm_runtime_get_noresume(&pdev->dev);
-> 	ata_pci_remove_one(pdev);
-> }
-> diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-> index 3dbf398c92ea..d991dd46e89c 100644
-> --- a/drivers/ata/ahci.h
-> +++ b/drivers/ata/ahci.h
-> @@ -336,6 +336,7 @@ struct ahci_host_priv {
-> 	u32 			em_loc; /* enclosure management location */
-> 	u32			em_buf_sz;	/* EM buffer size in byte */
-> 	u32			em_msg_type;	/* EM message type */
-> +	u32			remapped_nvme;	/* NVMe remapped device count */
-> 	bool			got_runtime_pm; /* Did we do pm_runtime_get? */
-> 	struct clk		*clks[AHCI_MAX_CLKS]; /* Optional */
-> 	struct reset_control	*rsts;		/* Optional */
-> -- 
-> 2.17.1
-> 
-
+thanks again!
+-john
