@@ -2,80 +2,102 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C6C761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A003C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D355207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7246D24672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b1XelOjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgBTATb convert rfc822-to-8bit (ORCPT
+        id S1727021AbgBTAUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:19:31 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:49372 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726677AbgBTATb (ORCPT
+        Wed, 19 Feb 2020 19:20:49 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35611 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726729AbgBTAUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:19:31 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1897915BCF42D;
-        Wed, 19 Feb 2020 16:19:30 -0800 (PST)
-Date:   Wed, 19 Feb 2020 16:19:29 -0800 (PST)
-Message-Id: <20200219.161929.816816918618854813.davem@davemloft.net>
-To:     ilias.apalodimas@linaro.org
-Cc:     netdev@vger.kernel.org, jonathan.lemon@gmail.com,
-        lorenzo@kernel.org, toke@redhat.com, thomas.petazzoni@bootlin.com,
-        jaswinder.singh@linaro.org, peppe.cavallaro@st.com,
-        alexandre.torgue@st.com, joabreu@synopsys.com,
-        mcoquelin.stm32@gmail.com, hawk@kernel.org, kuba@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net-next v4] net: page_pool: API cleanup and comments
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200218141031.377860-1-ilias.apalodimas@linaro.org>
-References: <20200218141031.377860-1-ilias.apalodimas@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Feb 2020 16:19:30 -0800 (PST)
+        Wed, 19 Feb 2020 19:20:49 -0500
+Received: by mail-pl1-f193.google.com with SMTP id g6so799184plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:20:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jTaHDD+09W3xPLB5zxqrZcfKt5xjlZG4YPPLRu8eAo=;
+        b=b1XelOjvj05D0Bwh2OQjpR9HZva2lUVZkRpxeC9Q98tZq8EZ4K9eDHdlUPwmiOOop8
+         QkMHi2N81LsFtlBSeEFLuFw3VZUe+PpiUS4er8PSCtS5Tt8WBr3C2D2/RiSBm/RQ/aId
+         920+6K4rD3kfJybAs0JO6Bag2lo7zANivnhIc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/jTaHDD+09W3xPLB5zxqrZcfKt5xjlZG4YPPLRu8eAo=;
+        b=WFrg0g25/IEdoWVs8KREXptPThc9NJuI36BiD+JOM+5vY/35q9Dx8ruYSmnB1V/Gb6
+         ocT+XCmgv1nO/DMYZgy0aFGbc+B0DJqHca6lpPX7oAlVBYapuBrbj7x6FG6OEHXWU3sL
+         jdy+9z4t7THNmfg96GZUnEocK9gg1y/VgF3LXjkbKet7iFuShZrQbNPyvr3tfZlDf29B
+         lgPV742NzIomZNNxNm4RlZjMMvkmGTI/LTge9ZkLJQ+ouspnPnD5pOAT4fGrKx4gcwrf
+         hzKNhzkmbG1NO8YHr5vLB+hEkTkYx96hTbtmiTWaNSJ1wcXB1flgDAGe+sszgX2XVF/6
+         FBug==
+X-Gm-Message-State: APjAAAXF6tue2PZOA/Hpqy377VIIHOOBjtkQ9rDcST8s1ODgtVLyBmtx
+        1reV5cm+SNZEbduIasnuTsWUJg==
+X-Google-Smtp-Source: APXvYqxZJROEl7Go9mJ14zcRqIEZy8MOQhYz52cxdH9LK3/ms/0tqs13Hch4RiI8ug3rWwZp182Wog==
+X-Received: by 2002:a17:902:104:: with SMTP id 4mr28045532plb.24.1582158048735;
+        Wed, 19 Feb 2020 16:20:48 -0800 (PST)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g21sm804731pfb.126.2020.02.19.16.20.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 16:20:48 -0800 (PST)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH] watchdog: qcom: Use irq flags from firmware
+Date:   Wed, 19 Feb 2020 16:20:47 -0800
+Message-Id: <20200220002047.115000-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Date: Tue, 18 Feb 2020 16:10:31 +0200
+The DT or ACPI tables should tell the driver what the irq flags are.
+Given that this driver probes only on DT based platforms and those DT
+platforms specify the irq flags we can safely drop the forced irq flag
+setting here.
 
-> Functions starting with __ usually indicate those which are exported,
-> but should not be called directly. Update some of those declared in the
-> API and make it more readable.
-> 
-> page_pool_unmap_page() and page_pool_release_page() were doing
-> exactly the same thing calling __page_pool_clean_page().  Let's
-> rename __page_pool_clean_page() to page_pool_release_page() and
-> export it in order to show up on perf logs and get rid of
-> page_pool_unmap_page().
-> 
-> Finally rename __page_pool_put_page() to page_pool_put_page() since we
-> can now directly call it from drivers and rename the existing
-> page_pool_put_page() to page_pool_put_full_page() since they do the same
-> thing but the latter is trying to sync the full DMA area.
-> 
-> This patch also updates netsec, mvneta and stmmac drivers which use
-> those functions.
-> 
-> Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-> Signed-off-by: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/watchdog/qcom-wdt.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-This doesn't apply cleanly, please respin.
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index eb47fe5ed280..c70e89013101 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -248,8 +248,7 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+ 	/* check if there is pretimeout support */
+ 	irq = platform_get_irq_optional(pdev, 0);
+ 	if (irq > 0) {
+-		ret = devm_request_irq(dev, irq, qcom_wdt_isr,
+-				       IRQF_TRIGGER_RISING,
++		ret = devm_request_irq(dev, irq, qcom_wdt_isr, 0,
+ 				       "wdt_bark", &wdt->wdd);
+ 		if (ret)
+ 			return ret;
+-- 
+Sent by a computer, using git, on the internet
 
-Thank you.
