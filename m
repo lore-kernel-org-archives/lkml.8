@@ -2,199 +2,162 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A242C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1EBC11D13
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F861207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83ED1207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:22:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="VUHxBO0z";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tbv/SagD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgBTRVj (ORCPT
+        id S1728792AbgBTRWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:21:39 -0500
-Received: from foss.arm.com ([217.140.110.172]:47444 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgBTRVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:21:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A769931B;
-        Thu, 20 Feb 2020 09:21:38 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3533A3F68F;
-        Thu, 20 Feb 2020 09:21:37 -0800 (PST)
-Subject: Re: [PATCH 1/2] dma-mapping: support setting memory uncached in place
-To:     Christoph Hellwig <hch@lst.de>, Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200220170139.387354-1-hch@lst.de>
- <20200220170139.387354-2-hch@lst.de>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <502fa745-ddad-f91b-52bc-52edecf8fdbc@arm.com>
-Date:   Thu, 20 Feb 2020 17:21:35 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 20 Feb 2020 12:22:00 -0500
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:37869 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728692AbgBTRV7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:21:59 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 593AF21D6E;
+        Thu, 20 Feb 2020 12:21:58 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Feb 2020 12:21:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=F59Fd4S1GGUgMmZ4kteMtbJWPk0
+        n14U6PXOXNH3ut34=; b=VUHxBO0zQwwgUd9v0sbrKeNgkepO9x6Mgsf07D+aXm3
+        7sh5tSnnfbQduIEa0niXhJJ5PzhwSD/VJZNM1Iy22X2BVUZifuds1zoB/Yw1WfqK
+        98piyQbeTHBkz9Nm3BeA83uYYfVwIgd1kqDxJRZLJG3dff4R5PvzJCFgk7LKK3gL
+        P6NH8pDPpzdlaBQJcfsnfkSDBCm6eh4LD3zKyOOsrke8T55Jc409Y38bCimGuQ3l
+        mXUQP6N407IkE0BT7Ro6GovOkpO03VTbRtUxXMF71lmQ0URuFWhY0OiZ7KSfPi+g
+        rhI2eidcHWV+qPj/v1AOB3vajzk8iL42niuNjlhK6rg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=F59Fd4
+        S1GGUgMmZ4kteMtbJWPk0n14U6PXOXNH3ut34=; b=tbv/SagDhZJx3TKjU5lu6L
+        zMypsEcVI8cEuzk3Nj5rMqlQv6saXzs7QM4MbnsPXzFuKeb7ysS/G5Px2MmeTHn1
+        ghedvtWLg5IINkkR3n4O1f9VNJP92F9wak2qI4A9hfwR5iBP6UdzqAv+sOAH1Ac/
+        rMyAXPRpKcPiWO8NX/683vsry8LfOyRu+jyx5KYLpLqueQagi/CNvoOS9Qva7Eeq
+        xMLWmRPwaIIhBVCOR8XJkYPVzyrIVEgFZAeQWZx6/lUoUQXcWhuHp/aysYOgvDCw
+        C85AlMDbj/IDpJcwyOnlm+ZX04tJLcrNJLECm4fdEs+1SukHoquNuKdapMRBTbFA
+        ==
+X-ME-Sender: <xms:NMBOXh5gW9DW_VmHBw2G2rJbcSkCbLDB3ab3Mdk8FfMFwAGmXYJdZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddutddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:NMBOXmewfMVZna6p87U6QqUTqxdkUT2TPDuxwOyHXJU9ZpvimFj_Jg>
+    <xmx:NMBOXoGwMiiWv6LCVibC0HK3Ppdss-9frps9SgLoMTHGUraftXxyBQ>
+    <xmx:NMBOXm5syPAax3Qji5RA2VsbgY0ut2rhdyQUPoU4ox94h9oucR10rw>
+    <xmx:NsBOXpE_AC7_DOPIOVE5t_snJM9O6yxDIt5Wxju4LDxy0VFHvoVewA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4926D328005A;
+        Thu, 20 Feb 2020 12:21:56 -0500 (EST)
+Date:   Thu, 20 Feb 2020 18:21:54 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Andrey Lebedev <andrey.lebedev@gmail.com>
+Cc:     wens@csie.org, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Andrey Lebedev <andrey@lebedev.lt>
+Subject: Re: [PATCH 1/5] drm/sun4i: tcon: Introduce LVDS setup routine setting
+Message-ID: <20200220172154.22gw55s2mzyr45tj@gilmour.lan>
+References: <20200210195633.GA21832@kedthinkpad>
+ <20200219180858.4806-1-andrey.lebedev@gmail.com>
+ <20200219180858.4806-2-andrey.lebedev@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200220170139.387354-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="c624jhpfn4hat26s"
+Content-Disposition: inline
+In-Reply-To: <20200219180858.4806-2-andrey.lebedev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/02/2020 5:01 pm, Christoph Hellwig wrote:
-> We currently only support remapping memory as uncached through vmap
-> or a magic uncached segment provided by some architectures.  But there
-> is a simpler and much better way available on some architectures where
-> we can just remap the memory in place.  The advantages are:
-> 
->   1) no aliasing is possible, which prevents speculating into the
->      cached alias
->   2) there is no need to allocate new ptes and thus no need for a special
->      pre-allocated pool of memory that can be used with GFP_ATOMIC DMA
->      allocations
-> 
-> The downside is that architectures must provide a way to set arbitrary
-> pages uncached in the kernel mapping, which might not be possible on
-> architecture that have a special implicit kernel mapping, and requires
-> splitting of huge page kernel mappings where they exist.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+--c624jhpfn4hat26s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 19, 2020 at 08:08:54PM +0200, Andrey Lebedev wrote:
+> From: Andrey Lebedev <andrey@lebedev.lt>
+>
+> Different sunxi flavors require slightly different sequence for enabling
+> LVDS output. This allows to differentiate between them.
+>
+> Signed-off-by: Andrey Lebedev <andrey@lebedev.lt>
 > ---
->   include/linux/dma-noncoherent.h |  3 +++
->   kernel/dma/Kconfig              |  8 ++++++++
->   kernel/dma/direct.c             | 28 ++++++++++++++++++----------
->   3 files changed, 29 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
-> index ca9b5770caee..0820ec58f119 100644
-> --- a/include/linux/dma-noncoherent.h
-> +++ b/include/linux/dma-noncoherent.h
-> @@ -111,4 +111,7 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
->   void *uncached_kernel_address(void *addr);
->   void *cached_kernel_address(void *addr);
->   
-> +int arch_dma_set_uncached(void *cpu_addr, size_t size);
-> +void arch_dma_clear_uncached(void *cpu_addr, size_t size);
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 68 ++++++++++++++++--------------
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h |  3 ++
+>  2 files changed, 39 insertions(+), 32 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index c81cdce6ed55..cc6b05ca2c69 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -114,46 +114,48 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+>  	}
+>  }
+>
+> +static void sun6i_tcon_setup_lvds_phy(struct sun4i_tcon *tcon,
+> +				      const struct drm_encoder *encoder)
+> +{
+> +	u8 val;
 > +
->   #endif /* _LINUX_DMA_NONCOHERENT_H */
-> diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-> index 4c103a24e380..7bc0b77f1243 100644
-> --- a/kernel/dma/Kconfig
-> +++ b/kernel/dma/Kconfig
-> @@ -83,6 +83,14 @@ config DMA_DIRECT_REMAP
->   	bool
->   	select DMA_REMAP
->   
-> +#
-> +# Should be selected if the architecture can remap memory from the page
-> +# allocator and CMA as uncached and provides the arch_dma_set_uncached and
-> +# arch_dma_clear_uncached helpers
-> +#
-> +config ARCH_HAS_DMA_SET_UNCACHED
-> +	bool
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN6I_TCON0_LVDS_ANA0_C(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_V(3) |
+> +		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+> +		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+> +	udelay(2);
 > +
->   config DMA_CMA
->   	bool "DMA Contiguous Memory Allocator"
->   	depends on HAVE_DMA_CONTIGUOUS && CMA
-> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> index 6af7ae83c4ad..73fe65a4cbc0 100644
-> --- a/kernel/dma/direct.c
-> +++ b/kernel/dma/direct.c
-> @@ -169,11 +169,8 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->   		ret = dma_common_contiguous_remap(page, PAGE_ALIGN(size),
->   				dma_pgprot(dev, PAGE_KERNEL, attrs),
->   				__builtin_return_address(0));
-> -		if (!ret) {
-> -			dma_free_contiguous(dev, page, size);
-> -			return ret;
-> -		}
-> -
-> +		if (!ret)
-> +			goto out_free_pages;
->   		memset(ret, 0, size);
->   		goto done;
->   	}
-> @@ -186,8 +183,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->   		 * so log an error and fail.
->   		 */
->   		dev_info(dev, "Rejecting highmem page from CMA.\n");
-> -		dma_free_contiguous(dev, page, size);
-> -		return NULL;
-> +		goto out_free_pages;
->   	}
->   
->   	ret = page_address(page);
-> @@ -196,10 +192,15 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->   
->   	memset(ret, 0, size);
->   
-> -	if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-> -	    dma_alloc_need_uncached(dev, attrs)) {
-> +	if (dma_alloc_need_uncached(dev, attrs)) {
->   		arch_dma_prep_coherent(page, size);
-> -		ret = uncached_kernel_address(ret);
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+> +	udelay(2);
 > +
-> +		if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED)) {
-> +			if (!arch_dma_set_uncached(ret, size))
-> +				goto out_free_pages;
-> +		} else if (IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT)) {
-> +			ret = uncached_kernel_address(ret);
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+> +			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+> +
+> +	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+> +		val = 7;
+> +	else
+> +		val = 0xf;
+> +
+> +	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+> +			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
+> +
+> +}
+> +
 
-Hmm, would we actually need to keep ARCH_HAS_UNCACHED_SEGMENT? If 
-arch_dma_set_uncached() returned void*/ERR_PTR instead, then it could 
-work for both cases (with arch_dma_clear_uncached() being a no-op for 
-segments).
+There's an extra blank line here that was reported by checkpatch. I've
+fixed it up while applying.
 
-Robin.
+Maxime
 
-> +		}
->   	}
->   done:
->   	if (force_dma_unencrypted(dev))
-> @@ -207,6 +208,9 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
->   	else
->   		*dma_handle = phys_to_dma(dev, page_to_phys(page));
->   	return ret;
-> +out_free_pages:
-> +	dma_free_contiguous(dev, page, size);
-> +	return NULL;
->   }
->   
->   void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
-> @@ -230,6 +234,8 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
->   
->   	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
->   		vunmap(cpu_addr);
-> +	else if (IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED))
-> +		arch_dma_clear_uncached(cpu_addr, size);
->   
->   	dma_free_contiguous(dev, dma_direct_to_page(dev, dma_addr), size);
->   }
-> @@ -238,6 +244,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
->   		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
->   {
->   	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-> +	    !IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
->   	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
->   	    dma_alloc_need_uncached(dev, attrs))
->   		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
-> @@ -248,6 +255,7 @@ void dma_direct_free(struct device *dev, size_t size,
->   		void *cpu_addr, dma_addr_t dma_addr, unsigned long attrs)
->   {
->   	if (!IS_ENABLED(CONFIG_ARCH_HAS_UNCACHED_SEGMENT) &&
-> +	    !IS_ENABLED(CONFIG_ARCH_HAS_DMA_SET_UNCACHED) &&
->   	    !IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
->   	    dma_alloc_need_uncached(dev, attrs))
->   		arch_dma_free(dev, size, cpu_addr, dma_addr, attrs);
-> 
+--c624jhpfn4hat26s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXk7AMgAKCRDj7w1vZxhR
+xRPmAQCP8Snrmn5Bhh4728GFgDNTv5Vaa/Z6hDqOEA60JuEqfwEAjU5pw2xAgG6t
+RZ127dNTQF3BXJ+J4Y6udTTvuGBrRwo=
+=Jwt1
+-----END PGP SIGNATURE-----
+
+--c624jhpfn4hat26s--
