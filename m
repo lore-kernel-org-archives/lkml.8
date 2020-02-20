@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8206C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F34DC11D24
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A90E207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D681A206EF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgBTUoD (ORCPT
+        id S1729151AbgBTUoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:44:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:13656 "EHLO mga12.intel.com"
+        Thu, 20 Feb 2020 15:44:02 -0500
+Received: from mga12.intel.com ([192.55.52.136]:13654 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbgBTUoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:44:00 -0500
+        id S1728582AbgBTUn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 15:43:59 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
   by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 12:43:59 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="349237104"
+   d="scan'208";a="349237101"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by fmsmga001.fm.intel.com with ESMTP; 20 Feb 2020 12:43:59 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 05/10] KVM: nVMX: Use vpid_sync_vcpu_addr() to emulate INVVPID with address
-Date:   Thu, 20 Feb 2020 12:43:51 -0800
-Message-Id: <20200220204356.8837-6-sean.j.christopherson@intel.com>
+Subject: [PATCH 04/10] KVM: VMX: Fold vpid_sync_vcpu_{single,global}() into vpid_sync_context()
+Date:   Thu, 20 Feb 2020 12:43:50 -0800
+Message-Id: <20200220204356.8837-5-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200220204356.8837-1-sean.j.christopherson@intel.com>
 References: <20200220204356.8837-1-sean.j.christopherson@intel.com>
@@ -49,39 +49,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use vpid_sync_vcpu_addr() to emulate the "individual address" variant of
-INVVPID now that said function handles the fallback case of the (host)
-CPU not supporting "individual address".
-
-Note, the "vpid == 0" checks in the vpid_sync_*() helpers aren't
-actually redundant with the "!operand.vpid" check in handle_invvpid(),
-as the vpid passed to vpid_sync_vcpu_addr() is a KVM (host) controlled
-value, i.e. vpid02 can be zero even if operand.vpid is non-zero.
+Fold vpid_sync_vcpu_global() and vpid_sync_vcpu_single() into their sole
+caller.  KVM should always prefer the single variant, i.e. the only
+reason to use the global variant is if the CPU doesn't support
+invalidating a single VPID, which is the entire purpose of wrapping the
+calls with vpid_sync_context().
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/x86/kvm/vmx/ops.h | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 19ac4083667f..5a174be314e5 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5150,11 +5150,7 @@ static int handle_invvpid(struct kvm_vcpu *vcpu)
- 		    is_noncanonical_address(operand.gla, vcpu))
- 			return nested_vmx_failValid(vcpu,
- 				VMXERR_INVALID_OPERAND_TO_INVEPT_INVVPID);
--		if (cpu_has_vmx_invvpid_individual_addr()) {
--			__invvpid(VMX_VPID_EXTENT_INDIVIDUAL_ADDR,
--				vpid02, operand.gla);
--		} else
--			vpid_sync_context(vpid02);
-+		vpid_sync_vcpu_addr(vpid02, operand.gla);
- 		break;
- 	case VMX_VPID_EXTENT_SINGLE_CONTEXT:
- 	case VMX_VPID_EXTENT_SINGLE_NON_GLOBAL:
+diff --git a/arch/x86/kvm/vmx/ops.h b/arch/x86/kvm/vmx/ops.h
+index 612df1bdb26b..eb6adc77a55d 100644
+--- a/arch/x86/kvm/vmx/ops.h
++++ b/arch/x86/kvm/vmx/ops.h
+@@ -253,29 +253,17 @@ static inline void __invept(unsigned long ext, u64 eptp, gpa_t gpa)
+ 	vmx_asm2(invept, "r"(ext), "m"(operand), ext, eptp, gpa);
+ }
+ 
+-static inline void vpid_sync_vcpu_single(int vpid)
++static inline void vpid_sync_context(int vpid)
+ {
+ 	if (vpid == 0)
+ 		return;
+ 
+ 	if (cpu_has_vmx_invvpid_single())
+ 		__invvpid(VMX_VPID_EXTENT_SINGLE_CONTEXT, vpid, 0);
+-}
+-
+-static inline void vpid_sync_vcpu_global(void)
+-{
+-	if (cpu_has_vmx_invvpid_global())
++	else
+ 		__invvpid(VMX_VPID_EXTENT_ALL_CONTEXT, 0, 0);
+ }
+ 
+-static inline void vpid_sync_context(int vpid)
+-{
+-	if (cpu_has_vmx_invvpid_single())
+-		vpid_sync_vcpu_single(vpid);
+-	else
+-		vpid_sync_vcpu_global();
+-}
+-
+ static inline void vpid_sync_vcpu_addr(int vpid, gva_t addr)
+ {
+ 	if (vpid == 0)
 -- 
 2.24.1
 
