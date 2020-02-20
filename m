@@ -2,162 +2,413 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0DC11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D77FC11D10
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1A1206F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C062465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:13:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=thegoodpenguin-co-uk.20150623.gappssmtp.com header.i=@thegoodpenguin-co-uk.20150623.gappssmtp.com header.b="iVh9ETFT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgBTRIL (ORCPT
+        id S1728692AbgBTRNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:08:11 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:56324 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728701AbgBTRIJ (ORCPT
+        Thu, 20 Feb 2020 12:13:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39536 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTRNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:08:09 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KGxu1W015666;
-        Thu, 20 Feb 2020 12:08:08 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2y8udumrex-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Feb 2020 12:08:07 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 01KH86vl003517
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 20 Feb 2020 12:08:06 -0500
-Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
- SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 20 Feb 2020 09:08:04 -0800
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
- SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Thu, 20 Feb 2020 09:08:03 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 20 Feb 2020 09:08:03 -0800
-Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01KH80KI001949;
-        Thu, 20 Feb 2020 12:08:00 -0500
-From:   Alexandru Tachici <alexandru.tachici@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH] iio: industrialio-core: Fix debugfs read
-Date:   Thu, 20 Feb 2020 19:07:26 +0200
-Message-ID: <20200220170726.9580-1-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 20 Feb 2020 12:13:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so5490081wrt.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 09:13:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=thegoodpenguin-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ol3Y90+yikMLSLeaOyoTNTDqWzKvu/tflPpzS3YJnLU=;
+        b=iVh9ETFTFOPTFGDO2qeaCVyMm+dprGUXaF5AkG5VxNfmTgY3dtwIzu9HEIhmDmrQiz
+         QKTuY6dss0izXId7QGhgbnDmp6SND+uKPQo4afPdByOSWy3kMy/Kg1oSAYdZf60+wU1G
+         Pl5W6KnFgkiyDg5hN2l1e6HRtH1VHAi9jHj9nN2lVbE7x8+VTSRuAKi1NeuegxFOs++6
+         ollqzuFcbb844tUq0BKFADqOqcYrvCyLiior3iGh/DP5HGVRjbjt+aZMkZ9yvUxEqIpJ
+         gR21MhzIEYqSYoli7nXUlwMG867iNMNZksmtwTkJbdvs8RywRoeVZNEyXyJlbsrsT2ms
+         jdfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ol3Y90+yikMLSLeaOyoTNTDqWzKvu/tflPpzS3YJnLU=;
+        b=COdDs9tKHPK/WjEU8TNi2C79RB7MUtmym96MLz/Ur7nIoppLfoxX6J8wANuSgfo5ki
+         eqXifviZXedCh7JEKqlfT0e21kZqjJ2GB2dhcEhpxALRa2boSiQK/QyfElalOreO8tmQ
+         N4t8wAs/fF7/oS5z+dzpts+3M+U+ckxSj47pox9gGgedCmeHgVljbDj2epz7r9LBn7nx
+         kfDBQXtKh8GTqMyejrX6+S22G4dQbaMDYA3YeGzLk6/g5JBHAnwypOq1WZnk1y/GN6/6
+         yCuSGLiUokBs9+tzeAa5E5CocpcEK3caoDSypSnk/X4+rJnP2PW3nu2GtHq2AGxyJ4Dk
+         lmzA==
+X-Gm-Message-State: APjAAAWM0TbArxut1zm8QA9ll9P9yPJ2bfLcAbhNxxtpKdj9iR+zQiIs
+        r7z3GOTdnp/HltHN4VOtMDKhKA==
+X-Google-Smtp-Source: APXvYqxZx6HjS2DKlsfjbpqq9GWGnZZoWtamGVCo1O9FNJx45sTN3CUoxDrSBdThfsbryQH22ZbQVA==
+X-Received: by 2002:a5d:4dc5:: with SMTP id f5mr44600717wru.114.1582218782031;
+        Thu, 20 Feb 2020 09:13:02 -0800 (PST)
+Received: from big-machine ([2a00:23c5:dd80:8400:98d8:49e6:cdcc:25df])
+        by smtp.gmail.com with ESMTPSA id e18sm199802wrw.70.2020.02.20.09.13.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 09:13:01 -0800 (PST)
+Date:   Thu, 20 Feb 2020 17:12:59 +0000
+From:   Andrew Murray <amurray@thegoodpenguin.co.uk>
+To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
+        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
+        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
+        leoyang.li@nxp.com, lorenzo.pieralisi@arm.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, Mingkai.Hu@nxp.com,
+        Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
+Subject: Re: [PATCHv10 01/13] PCI: mobiveil: Introduce a new structure
+ mobiveil_root_port
+Message-ID: <20200220171259.GD19388@big-machine>
+References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+ <20200213040644.45858-2-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-20_04:2020-02-19,2020-02-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 suspectscore=0 mlxlogscore=900
- phishscore=0 mlxscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002200126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200213040644.45858-2-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently iio_debugfs_read_reg calls debugfs_reg_access
-every time it is ran. Reading the same hardware register
-multiple times during the same reading of a debugfs file
-can cause unintended effects.
+On Thu, Feb 13, 2020 at 12:06:32PM +0800, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> The Mobiveil PCIe controller can work in either Root Complex
+> mode or Endpoint mode. So introduce a new structure
+> mobiveil_root_port, and abstract the RC related members into
+> it such that the code can be used by both mode.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-For example for each: cat iio:device0/direct_reg_access
-the file_operations.read function will be called at least
-twice. First will return the full length of the string in
-bytes  and the second will return 0.
+Reviewed-by: Andrew Murray <amurray@thegoodpenguin.co.uk>
 
-This patch makes iio_debugfs_read_reg to call debugfs_reg_access
-only when the user's buffer position (*ppos) is 0. (meaning
-it is the beginning of a new reading of the debugfs file).
-
-Fixes: e553f182d55b ("staging: iio: core: Introduce debugfs support, add support for direct register access")
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
----
- drivers/iio/industrialio-core.c | 34 +++++++++++++++++++++++----------
- include/linux/iio/iio.h         |  2 ++
- 2 files changed, 26 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 65ff0d067018..637cea14afdb 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -297,26 +297,40 @@ static void __exit iio_exit(void)
- }
- 
- #if defined(CONFIG_DEBUG_FS)
--static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
--			      size_t count, loff_t *ppos)
-+static int iio_debugfs_get_reg_string(struct iio_dev *indio_dev)
- {
--	struct iio_dev *indio_dev = file->private_data;
--	char buf[20];
-+	const struct iio_info *info = indio_dev->info;
- 	unsigned val = 0;
--	ssize_t len;
- 	int ret;
- 
--	ret = indio_dev->info->debugfs_reg_access(indio_dev,
--						  indio_dev->cached_reg_addr,
--						  0, &val);
-+	ret = info->debugfs_reg_access(indio_dev, indio_dev->cached_reg_addr,
-+				       0, &val);
- 	if (ret) {
- 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
- 		return ret;
- 	}
-+	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
-+					   sizeof(indio_dev->read_buf),
-+					   "0x%X\n", val);
-+	return 0;
-+}
- 
--	len = snprintf(buf, sizeof(buf), "0x%X\n", val);
-+static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
-+				    size_t count, loff_t *ppos)
-+{
-+	struct iio_dev *indio_dev = file->private_data;
-+	loff_t pos = *ppos;
-+	int ret;
-+
-+	if (pos == 0) {
-+		ret = iio_debugfs_get_reg_string(indio_dev);
-+		if (ret)
-+			return ret;
-+	}
- 
--	return simple_read_from_buffer(userbuf, count, ppos, buf, len);
-+	return simple_read_from_buffer(userbuf, count, ppos,
-+				       indio_dev->read_buf,
-+				       indio_dev->read_buf_len);
- }
- 
- static ssize_t iio_debugfs_write_reg(struct file *file,
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 862ce0019eba..eed58ed2f368 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -568,6 +568,8 @@ struct iio_dev {
- #if defined(CONFIG_DEBUG_FS)
- 	struct dentry			*debugfs_dentry;
- 	unsigned			cached_reg_addr;
-+	char				read_buf[20];
-+	unsigned int			read_buf_len;
- #endif
- };
- 
--- 
-2.20.1
-
+> ---
+> V10:
+>  - Refined the subject and change log.
+>  - Added prefix mobiveil to the root port structure.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 99 ++++++++++++++++----------
+>  1 file changed, 60 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 3a696ca45bfa..d4de560cd711 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -3,7 +3,10 @@
+>   * PCIe host controller driver for Mobiveil PCIe Host controller
+>   *
+>   * Copyright (c) 2018 Mobiveil Inc.
+> + * Copyright 2019-2020 NXP
+> + *
+>   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> + *	   Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+>   */
+>  
+>  #include <linux/delay.h>
+> @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI information */
+>  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);
+>  };
+>  
+> +struct mobiveil_root_port {
+> +	char root_bus_nr;
+> +	void __iomem *config_axi_slave_base;	/* endpoint config base */
+> +	struct resource *ob_io_res;
+> +	int irq;
+> +	raw_spinlock_t intx_mask_lock;
+> +	struct irq_domain *intx_domain;
+> +	struct mobiveil_msi msi;
+> +	struct pci_host_bridge *bridge;
+> +};
+> +
+>  struct mobiveil_pcie {
+>  	struct platform_device *pdev;
+> -	void __iomem *config_axi_slave_base;	/* endpoint config base */
+>  	void __iomem *csr_axi_slave_base;	/* root port config base */
+>  	void __iomem *apb_csr_base;	/* MSI register base */
+>  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
+> -	struct irq_domain *intx_domain;
+> -	raw_spinlock_t intx_mask_lock;
+> -	int irq;
+>  	int apio_wins;
+>  	int ppio_wins;
+>  	int ob_wins_configured;		/* configured outbound windows */
+>  	int ib_wins_configured;		/* configured inbound windows */
+> -	struct resource *ob_io_res;
+> -	char root_bus_nr;
+> -	struct mobiveil_msi msi;
+> +	struct mobiveil_root_port rp;
+>  };
+>  
+>  /*
+> @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
+>  {
+>  	struct mobiveil_pcie *pcie = bus->sysdata;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+>  
+>  	/* Only one device down on each root port */
+> -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
+> +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
+>  		return false;
+>  
+>  	/*
+>  	 * Do not read more than one device on the bus directly
+>  	 * attached to RC
+>  	 */
+> -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+> +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
+>  		return false;
+>  
+>  	return true;
+> @@ -304,13 +313,14 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  					   unsigned int devfn, int where)
+>  {
+>  	struct mobiveil_pcie *pcie = bus->sysdata;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+>  	u32 value;
+>  
+>  	if (!mobiveil_pcie_valid_device(bus, devfn))
+>  		return NULL;
+>  
+>  	/* RC config access */
+> -	if (bus->number == pcie->root_bus_nr)
+> +	if (bus->number == rp->root_bus_nr)
+>  		return pcie->csr_axi_slave_base + where;
+>  
+>  	/*
+> @@ -325,7 +335,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
+>  
+>  	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
+>  
+> -	return pcie->config_axi_slave_base + where;
+> +	return rp->config_axi_slave_base + where;
+>  }
+>  
+>  static struct pci_ops mobiveil_pcie_ops = {
+> @@ -339,7 +349,8 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  	struct irq_chip *chip = irq_desc_get_chip(desc);
+>  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
+>  	struct device *dev = &pcie->pdev->dev;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+> +	struct mobiveil_msi *msi = &rp->msi;
+>  	u32 msi_data, msi_addr_lo, msi_addr_hi;
+>  	u32 intr_status, msi_status;
+>  	unsigned long shifted_status;
+> @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
+>  		shifted_status >>= PAB_INTX_START;
+>  		do {
+>  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
+> -				virq = irq_find_mapping(pcie->intx_domain,
+> +				virq = irq_find_mapping(rp->intx_domain,
+>  							bit + 1);
+>  				if (virq)
+>  					generic_handle_irq(virq);
+> @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct platform_device *pdev = pcie->pdev;
+>  	struct device_node *node = dev->of_node;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+>  	struct resource *res;
+>  
+>  	/* map config resource */
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>  					   "config_axi_slave");
+> -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> -	if (IS_ERR(pcie->config_axi_slave_base))
+> -		return PTR_ERR(pcie->config_axi_slave_base);
+> -	pcie->ob_io_res = res;
+> +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
+> +	if (IS_ERR(rp->config_axi_slave_base))
+> +		return PTR_ERR(rp->config_axi_slave_base);
+> +	rp->ob_io_res = res;
+>  
+>  	/* map csr resource */
+>  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> @@ -455,9 +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
+>  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
+>  		pcie->ppio_wins = MAX_PIO_WINDOWS;
+>  
+> -	pcie->irq = platform_get_irq(pdev, 0);
+> -	if (pcie->irq <= 0) {
+> -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
+> +	rp->irq = platform_get_irq(pdev, 0);
+> +	if (rp->irq <= 0) {
+> +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
+>  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+>  {
+>  	phys_addr_t msg_addr = pcie->pcie_reg_base;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+> -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
+> +	msi->num_of_vectors = PCI_NUM_MSI;
+>  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
+>  
+>  	writel_relaxed(lower_32_bits(msg_addr),
+> @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
+>  
+>  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  {
+> -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+> +	struct pci_host_bridge *bridge = rp->bridge;
+>  	u32 value, pab_ctrl, type;
+>  	struct resource_entry *win;
+>  
+> @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
+>  	 */
+>  
+>  	/* config outbound translation window */
+> -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
+> -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
+> +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
+> +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
+>  
+>  	/* memory inbound translation window */
+>  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
+> @@ -667,32 +680,36 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(data->irq);
+>  	struct mobiveil_pcie *pcie;
+> +	struct mobiveil_root_port *rp;
+>  	unsigned long flags;
+>  	u32 mask, shifted_val;
+>  
+>  	pcie = irq_desc_get_chip_data(desc);
+> +	rp = &pcie->rp;
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+>  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val &= ~mask;
+>  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+>  }
+>  
+>  static void mobiveil_unmask_intx_irq(struct irq_data *data)
+>  {
+>  	struct irq_desc *desc = irq_to_desc(data->irq);
+>  	struct mobiveil_pcie *pcie;
+> +	struct mobiveil_root_port *rp;
+>  	unsigned long flags;
+>  	u32 shifted_val, mask;
+>  
+>  	pcie = irq_desc_get_chip_data(desc);
+> +	rp = &pcie->rp;
+>  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
+> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
+> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
+>  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
+>  	shifted_val |= mask;
+>  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
+> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
+> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
+>  }
+>  
+>  static struct irq_chip intx_irq_chip = {
+> @@ -760,7 +777,7 @@ static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
+>  					 unsigned int nr_irqs, void *args)
+>  {
+>  	struct mobiveil_pcie *pcie = domain->host_data;
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  	unsigned long bit;
+>  
+>  	WARN_ON(nr_irqs != 1);
+> @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
+>  {
+>  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
+>  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+>  	mutex_lock(&msi->lock);
+>  
+> @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
+> -	struct mobiveil_msi *msi = &pcie->msi;
+> +	struct mobiveil_msi *msi = &pcie->rp.msi;
+>  
+> -	mutex_init(&pcie->msi.lock);
+> +	mutex_init(&msi->lock);
+>  	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
+>  						&msi_domain_ops, pcie);
+>  	if (!msi->dev_domain) {
+> @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  {
+>  	struct device *dev = &pcie->pdev->dev;
+>  	struct device_node *node = dev->of_node;
+> +	struct mobiveil_root_port *rp = &pcie->rp;
+>  	int ret;
+>  
+>  	/* setup INTx */
+> -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> -						  &intx_domain_ops, pcie);
+> +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
+> +						&intx_domain_ops, pcie);
+>  
+> -	if (!pcie->intx_domain) {
+> +	if (!rp->intx_domain) {
+>  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>  		return -ENOMEM;
+>  	}
+>  
+> -	raw_spin_lock_init(&pcie->intx_mask_lock);
+> +	raw_spin_lock_init(&rp->intx_mask_lock);
+>  
+>  	/* setup MSI */
+>  	ret = mobiveil_allocate_msi_domains(pcie);
+> @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	struct pci_bus *child;
+>  	struct pci_host_bridge *bridge;
+>  	struct device *dev = &pdev->dev;
+> +	struct mobiveil_root_port *rp;
+>  	int ret;
+>  
+>  	/* allocate the PCIe port */
+> @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	pcie = pci_host_bridge_priv(bridge);
+> +	rp = &pcie->rp;
+> +	rp->bridge = bridge;
+>  
+>  	pcie->pdev = pdev;
+>  
+> @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
+> +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
+>  
+>  	/* Initialize bridge */
+>  	bridge->dev.parent = dev;
+>  	bridge->sysdata = pcie;
+> -	bridge->busnr = pcie->root_bus_nr;
+> +	bridge->busnr = rp->root_bus_nr;
+>  	bridge->ops = &mobiveil_pcie_ops;
+>  	bridge->map_irq = of_irq_parse_and_map_pci;
+>  	bridge->swizzle_irq = pci_common_swizzle;
+> -- 
+> 2.17.1
+> 
