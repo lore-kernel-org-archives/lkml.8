@@ -2,209 +2,125 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1A5C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991D4C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F492071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2E92071E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="uM5cDtY+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HZMTb91b"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ax4tPD2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgBTLbF (ORCPT
+        id S1727545AbgBTLfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:31:05 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:34625 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726882AbgBTLbF (ORCPT
+        Thu, 20 Feb 2020 06:35:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28916 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726825AbgBTLfm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:31:05 -0500
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 95C1A327;
-        Thu, 20 Feb 2020 06:31:03 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 20 Feb 2020 06:31:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
-        eLiud/Rsy5p8XN8U+ILzeII/ojMGZfdK4TZW/by/ETA=; b=uM5cDtY+Tk/pn+Nz
-        phelYPraeZgfOzC/O1Gir8zTC4oVFFCl9lqApSg6y/6oZbpNDNcGIctYMXDKzyaz
-        U7xjpMlKdeHKUxXhXwuHgiTKN/2PRHdXFI7mOzzzc3X22Np6QhmWBoAgTGo9YZEj
-        E5gLduzKccjRYQsm/QAm3GHzIlQ+m50hPHY8HJG7rs+uKkfw9XyMJae0MmfDwm90
-        ngYYH3gY9pUGeicxKPpe5GM22LouA/cfcv6v3pxoJ7EtKfkNU3pMWpbS/4LENtGk
-        F4L8pYAR2+T+qVrYnWhgdaVUFiiVqO4da1OE0OWuvt3jMMGmo6Nfq2Ryi6S8P7mD
-        wbzXEw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=eLiud/Rsy5p8XN8U+ILzeII/ojMGZfdK4TZW/by/E
-        TA=; b=HZMTb91bgBRCQ9c0vzNcFiyYPfhFofjwN3wQiIjeJ4GbsXQ1MGE7Qnxha
-        Ja5C18UY0kFMv/WtOTKmU+6nRtXbYSzJc7gfCAMljdwIr8HT5i3rCO3pLuP3EBJo
-        wKmj58K7wlMvS9bB7DerkmnZW0maFDKYOePV/XOeWNylVFGK6L7LmYo+zEP82I6v
-        9grcrvHUYpzHGUWzNcMf6BfY7cUBKipV9qJkgTNE3CKP5eZZbY3elppP3xm1t5mk
-        EiMlwndlvLiJZsU7OG/bd64Lrgh22Dhg3ExJQyQEn2icdg52zM62Nx/cfHszZIqt
-        mPzG8/VobF8+xiIS1HLc8ORKs/FIQ==
-X-ME-Sender: <xms:9m1OXoz2FNs3ecB2yx2tuWzwpEjst1yim2H8UVvIOvR04kCABBUuDw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrkedvgddvlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdekrd
-    duieefrdefvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpehrrghvvghnsehthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:9m1OXrLo7tHFFS3GpyJEMjGLMHH71J5Fev23zZ0-IFlKxPAVwvAs8w>
-    <xmx:9m1OXquLV81nO7mM6AurtarK5fhBMllap-VqlVPrd4bXK4kinMUXVQ>
-    <xmx:9m1OXrgiq0zZrU_LQHY2DGnlyRJPK-J4xR-mQmDeo-1yUppHcei6jw>
-    <xmx:921OXqnwnjTkgrPApnIVqxjG5gU2VeEXS4tVmbo23cEphWauDJq4tA>
-Received: from mickey.themaw.net (unknown [118.208.163.32])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AAF1F3280060;
-        Thu, 20 Feb 2020 06:30:58 -0500 (EST)
-Message-ID: <80b70aa96c2e386719a7683d7627fc4d5a6caade.camel@themaw.net>
-Subject: Re: [PATCH 00/19] VFS: Filesystem information and notifications
- [ver #16]
-From:   Ian Kent <raven@themaw.net>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk,
-        mszeredi@redhat.com, christian@brauner.io,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 20 Feb 2020 19:30:54 +0800
-In-Reply-To: <20200220090939.4e2mpmdixcyruzda@wittgenstein>
-References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
-         <20200219144613.lc5y2jgzipynas5l@wittgenstein>
-         <c9a6f929b57e0c21c8845c211d1e3eab09d09633.camel@themaw.net>
-         <20200220090939.4e2mpmdixcyruzda@wittgenstein>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Thu, 20 Feb 2020 06:35:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582198540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qLmJc92NAYctHXMZ0dWlfak7zr37dopUurK0FZ6BiyY=;
+        b=Ax4tPD2QT9s2/A3w8V7KdXQPH29k/se/hAqpspg24larzfRgzTIII7OTPUetmxCns3yw+B
+        TLDSwrg/2nRGUlzOaiwLQoDavPBelEDNy39g8Xip5r8EF2CCpg7AKQbE6B+RMtvVEGt9Mw
+        fUd+HIhJGOwL0HboCxflN1RFVIW+4lg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-221-Z8jsiTzxP1-xQMUA42qMeA-1; Thu, 20 Feb 2020 06:35:36 -0500
+X-MC-Unique: Z8jsiTzxP1-xQMUA42qMeA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4699801E6D;
+        Thu, 20 Feb 2020 11:35:34 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AD2E35C219;
+        Thu, 20 Feb 2020 11:35:32 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 12:35:30 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        namhyung@kernel.org, ravi.bangoria@linux.ibm.com,
+        yao.jin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH 4/5] perf metricgroup: Support metric constraint
+Message-ID: <20200220113530.GA565976@krava>
+References: <1582139320-75181-1-git-send-email-kan.liang@linux.intel.com>
+ <1582139320-75181-5-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1582139320-75181-5-git-send-email-kan.liang@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-20 at 10:09 +0100, Christian Brauner wrote:
-> On Thu, Feb 20, 2020 at 12:42:15PM +0800, Ian Kent wrote:
-> > On Wed, 2020-02-19 at 15:46 +0100, Christian Brauner wrote:
-> > > On Tue, Feb 18, 2020 at 05:04:55PM +0000, David Howells wrote:
-> > > > Here are a set of patches that adds system calls, that (a)
-> > > > allow
-> > > > information about the VFS, mount topology, superblock and files
-> > > > to
-> > > > be
-> > > > retrieved and (b) allow for notifications of mount topology
-> > > > rearrangement
-> > > > events, mount and superblock attribute changes and other
-> > > > superblock
-> > > > events,
-> > > > such as errors.
-> > > > 
-> > > > ============================
-> > > > FILESYSTEM INFORMATION QUERY
-> > > > ============================
-> > > > 
-> > > > The first system call, fsinfo(), allows information about the
-> > > > filesystem at
-> > > > a particular path point to be queried as a set of attributes,
-> > > > some
-> > > > of which
-> > > > may have more than one value.
-> > > > 
-> > > > Attribute values are of four basic types:
-> > > > 
-> > > >  (1) Version dependent-length structure (size defined by type).
-> > > > 
-> > > >  (2) Variable-length string (up to 4096, including NUL).
-> > > > 
-> > > >  (3) List of structures (up to INT_MAX size).
-> > > > 
-> > > >  (4) Opaque blob (up to INT_MAX size).
-> > > 
-> > > I mainly have an organizational question. :) This is a huge
-> > > patchset
-> > > with lots and lots of (good) features. Wouldn't it make sense to
-> > > make
-> > > the fsinfo() syscall a completely separate patchset from the
-> > > watch_mount() and watch_sb() syscalls? It seems that they don't
-> > > need
-> > > to
-> > > depend on each other at all. This would make reviewing this so
-> > > much
-> > > nicer and likely would mean that fsinfo() could proceed a little
-> > > faster.
-> > 
-> > The remainder of the fsinfo() series would need to remain useful
-> > if this was done.
-> > 
-> > For context I want work on improving handling of large mount
-> > tables.
+On Wed, Feb 19, 2020 at 11:08:39AM -0800, kan.liang@linux.intel.com wrote:
+
+SNIP
+
+> +static bool violate_nmi_constraint;
+> +
+> +static bool metricgroup__has_constraint(struct pmu_event *pe)
+> +{
+> +	if (!pe->metric_constraint)
+> +		return false;
+> +
+> +	if (!strcmp(pe->metric_constraint, "NO_NMI_WATCHDOG") &&
+> +	    sysctl__nmi_watchdog_enabled()) {
+> +		pr_warning("Splitting metric group %s into standalone metrics.\n",
+> +			   pe->metric_name);
+> +		violate_nmi_constraint = true;
+
+no static flags plz.. can't you just print that rest of the warning in here?
+
+jirka
+
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  				   struct list_head *group_list)
+>  {
+> @@ -460,7 +490,10 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  			if (events->len > 0)
+>  				strbuf_addf(events, ",");
+>  
+> -			metricgroup__add_metric_weak_group(events, ids, idnum);
+> +			if (metricgroup__has_constraint(pe))
+> +				metricgroup__add_metric_non_group(events, ids, idnum);
+> +			else
+> +				metricgroup__add_metric_weak_group(events, ids, idnum);
+>  
+>  			eg = malloc(sizeof(struct egroup));
+>  			if (!eg) {
+> @@ -544,6 +577,13 @@ int metricgroup__parse_groups(const struct option *opt,
+>  	strbuf_release(&extra_events);
+>  	ret = metricgroup__setup_events(&group_list, perf_evlist,
+>  					metric_events);
+> +
+> +	if (violate_nmi_constraint) {
+> +		pr_warning("Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:\n"
+> +			   "    echo 0 > /proc/sys/kernel/nmi_watchdog\n"
+> +			   "    perf stat ...\n"
+> +			   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
+> +	}
+>  out:
+>  	metricgroup__free_egroups(&group_list);
+>  	return ret;
+> -- 
+> 2.7.4
 > 
-> Yeah, I've talked to David about this; polling on a large mountinfo
-> file
-> is not great, I agree.
-> 
-> > Ultimately I expect to solve a very long standing autofs problem
-> > of using large direct mount maps without prohibitive performance
-> > overhead (and there a lot of rather challenging autofs changes to
-> > do for this too) and I believe the fsinfo() system call, and
-> > related bits, is the way to do this.
-> > 
-> > But improving the handling of large mount tables for autofs
-> > will have the side effect of improvements for other mount table
-> > users, even in the early stages of this work.
-> > 
-> > For example I want to use this for mount table handling
-> > improvements
-> > in libmount. Clearly that ultimately needs mount change
-> > notification
-> > in the end but ...
-> > 
-> > There's a bunch of things that need to be done alone the way
-> > to even get started.
-> > 
-> > One thing that's needed is the ability to call fsinfo() to get
-> > information on a mount to avoid constant reading of the proc based
-> > mount table, which happens a lot (since the mount info. needs
-> > to be up to date) so systemd (and others) would see an improvement
-> > with the fsinfo() system call alone able to be used in libmount.
-> > 
-> > But for the fsinfo() system call to be used for this the file
-> > system specific mount options need to also be obtained when
-> > using fsinfo(). That means the super block operation fsinfo uses
-> > to provide this must be implemented for at least most file systems.
-> > 
-> > So separating out the notifications part, leaving whatever is
-> > needed
-> > to still be able to do this, should be fine and the system call
-> > would be immediately useful once the super operation is implemented
-> > for the needed file systems.
-> > 
-> > Whether the implementation of the super operation should be done
-> > as part of this series is another question but would certainly
-> > be a challenge and make the series more complicated. But is needed
-> > for the change to be useful in my case.
-> 
-> I think what would might work - and what David had already brought up
-> briefly - is to either base the fsinfo branch on top of the mount
-> notificaiton branch or break the notification counters pieces into a
-> separate patch and base both mount notifications and fsinfo on top of
-> it.
-
-Possibly, but I'm pretty sure David has more fsinfo patches.
-
-So I suspect there will be a right time to post patches for the
-fsinfo super block operation that David doesn't already have. I'm
-going to have to find time for that ...
-
-The post was more to let David know what my first goal is and what
-I need for it, and to let others know there is someone wanting to
-use this for user space improvements and give some initial insight
-into my longer term goals.
-
-Ian
 
