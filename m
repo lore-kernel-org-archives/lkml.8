@@ -2,118 +2,94 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905C0C5ACC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC0FC5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B8221D56
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825E521D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgBTBka (ORCPT
+        id S1727637AbgBTBqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:40:30 -0500
-Received: from kernel.crashing.org ([76.164.61.194]:32960 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgBTBka (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:40:30 -0500
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 01K1dkWX028195
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 19 Feb 2020 19:39:49 -0600
-Message-ID: <55e77bcb37ec780094b8d226f89bd5557e30d913.camel@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] usb: gadget: aspeed: fixup usb1 device descriptor
- at init time
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     rentao.bupt@gmail.com, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com
-Date:   Thu, 20 Feb 2020 12:39:45 +1100
-In-Reply-To: <20200218235600.6763-3-rentao.bupt@gmail.com>
-References: <20200218235600.6763-1-rentao.bupt@gmail.com>
-         <20200218235600.6763-3-rentao.bupt@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Wed, 19 Feb 2020 20:46:09 -0500
+Received: from mx.socionext.com ([202.248.49.38]:33097 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbgBTBqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:46:09 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 20 Feb 2020 10:46:07 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4F39418008C;
+        Thu, 20 Feb 2020 10:46:07 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 20 Feb 2020 10:46:07 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 27FAC40376;
+        Thu, 20 Feb 2020 10:46:07 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id EC1FE12047F;
+        Thu, 20 Feb 2020 10:46:06 +0900 (JST)
+Date:   Thu, 20 Feb 2020 10:46:07 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20200219135344.GA15319@bogus>
+References: <1582077141-16793-2-git-send-email-hayashi.kunihiko@socionext.com> <20200219135344.GA15319@bogus>
+Message-Id: <20200220104606.53AA.4A936039@socionext.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-18 at 15:56 -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
-> 
-> This patch moves fixup-usb1-device-descriptor logic from get_descriptor
-> handler to "ast_vhub_fixup_dev_desc" function so the device descriptor
-> is only patched once (at vhub init time).
+Hi Rob,
+Thanks for pointing out.
 
-I don't like this either. We should make ast_vhub_dev_desc and patch a
-copy here too. I know today there's only one instance of the vhub in a
-given SoC but that might not always be the case.
+On Wed, 19 Feb 2020 07:53:44 -0600 <robh@kernel.org> wrote:
 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> ---
->  drivers/usb/gadget/udc/aspeed-vhub/hub.c | 20 +++++++++-----------
->  1 file changed, 9 insertions(+), 11 deletions(-)
+> On Wed, 19 Feb 2020 10:52:20 +0900, Kunihiko Hayashi wrote:
+> > Add devicetree binding documentation for external DMA controller
+> > implemented on Socionext UniPhier SOCs.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 63 ++++++++++++++++++++++
+> >  1 file changed, 63 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > 
 > 
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/hub.c b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> index 4e3ef83283a6..b8bf54b12adc 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/hub.c
-> @@ -76,13 +76,6 @@ static struct usb_device_descriptor ast_vhub_dev_desc = {
->  	.bNumConfigurations	= 1,
->  };
->  
-> -/* Patches to the above when forcing USB1 mode */
-> -static void ast_vhub_patch_dev_desc_usb1(struct usb_device_descriptor *desc)
-> -{
-> -	desc->bcdUSB = cpu_to_le16(0x0100);
-> -	desc->bDeviceProtocol = 0;
-> -}
-> -
->  /*
->   * Configuration descriptor: same comments as above
->   * regarding handling USB1 mode.
-> @@ -316,10 +309,6 @@ static int ast_vhub_rep_desc(struct ast_vhub_ep *ep,
->  	if (len > dsize)
->  		len = dsize;
->  
-> -	/* Patch it if forcing USB1 */
-> -	if (desc_type == USB_DT_DEVICE && ep->vhub->force_usb1)
-> -		ast_vhub_patch_dev_desc_usb1(ep->buf);
-> -
->  	/* Shoot it from the EP buffer */
->  	return ast_vhub_reply(ep, NULL, len);
->  }
-> @@ -878,6 +867,15 @@ static void ast_vhub_fixup_dev_desc(struct ast_vhub *vhub)
->  		if (of_str[id])
->  			ast_vhub_str_array[i].s = of_str[id];
->  	}
-> +
-> +	/*
-> +	 * Update USB Release Number and Protocol code if vhub is running
-> +	 * at USB 1.x speed.
-> +	 */
-> +	if (vhub->force_usb1) {
-> +		ast_vhub_dev_desc.bcdUSB = cpu_to_le16(0x0100);
-> +		ast_vhub_dev_desc.bDeviceProtocol = 0;
-> +	}
->  }
->  
->  void ast_vhub_init_hub(struct ast_vhub *vhub)
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml: Additional properties are not allowed ('additinalProperties' was unexpected)
+> Documentation/devicetree/bindings/Makefile:12: recipe for target 'Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts' failed
+> make[1]: *** [Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.example.dts] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+> 
+> See https://patchwork.ozlabs.org/patch/1240464
+> Please check and re-submit.
+
+Something was missing the string by mistake.
+I'll resubmit it.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
 
