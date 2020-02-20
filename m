@@ -2,459 +2,229 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B653C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA74C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B6520722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5EE20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 16:30:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rAl0vrUd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgBTQak (ORCPT
+        id S1728778AbgBTQan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 11:30:40 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47988 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728134AbgBTQaj (ORCPT
+        Thu, 20 Feb 2020 11:30:43 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36404 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbgBTQam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 11:30:39 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 8F3E22951E1
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264 P/B0/B1 reflists
-Date:   Thu, 20 Feb 2020 13:30:12 -0300
-Message-Id: <20200220163016.21708-3-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200220163016.21708-1-ezequiel@collabora.com>
-References: <20200220163016.21708-1-ezequiel@collabora.com>
+        Thu, 20 Feb 2020 11:30:42 -0500
+Received: by mail-oi1-f195.google.com with SMTP id c16so28158282oic.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 08:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=y9HQfeZQmR3ITWVRctdqux0hlFnrN0+7nUWBuGoGzbI=;
+        b=rAl0vrUdgC6BPCfHywHFImldtnI3m6Nj5ysAz5uBGUmEKyEPKdjcAq4t7lUO2stDK+
+         1t3k0thBRBULY6f2rwgUO2JbXJGA0QlMISutM6QHwTyDBTBJlbmBD42BOKB1LWHD9cCb
+         lLr8xuRQr6btT8GLq7QtB/mgo10L0lG4LZsXg4XoI0rCuOBHvgdD4fTMHBUmOrNKYVvI
+         Y2wkvJ93jpOQUYL2074hW4b9p6uKhmFrj1nT9Ujn/a1+5BWhVVbwa+ul+fLPkqZcp7yX
+         fFdEp07Q+lRUC7+7z07jRmsN4cOg07ydrTv4s7yBhE4Guyzi7TlUG+LCHTGLVXck9aFH
+         rVpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=y9HQfeZQmR3ITWVRctdqux0hlFnrN0+7nUWBuGoGzbI=;
+        b=a0DDAQdhdZZUMHd8PPJTRm/3a+4sR3nga5JmfHcDYLVJysPvnlUSGABcFqP1pIVq3x
+         dsL98ylbGm6xP8/ql2JKvoDoyTfmiHCMuvwCxy3RHgDWZbLxf3XWspj2m5Vx1CL9+ilU
+         Dmx00NlszsdAWbgah5G5r3ZYCLEpSADuph+chcXoq5PUpGcFQCShSh7HTX/X+klrZCN1
+         K69iD+37ErdFNZJiA3X3x7v3vWuDOpFFqzW2yfFIQQCwHOaIuPmF5YDAQxCRt3Tu+DQk
+         oBYmp3ZtDgF+fpWjuaiuwO9O2vXrN58hoF8zrqDXYIJMu+BhQ+iSGAADIkfS8W1a4AJQ
+         obIQ==
+X-Gm-Message-State: APjAAAWMdCsZHQBBSo5c9vCyP3BesUzwe2p6kSWXE0rrPqg5JWYcedf0
+        fMxnGrmFgfHY5p/lXuVqGuxeHUw=
+X-Google-Smtp-Source: APXvYqzJvnK1s6UOpaxFEdvEcJ3Bw6Mh437NhoRzotRpwK6fSKE5IJWYi7CGh3MjxZGTDTSpff+Czw==
+X-Received: by 2002:aca:d484:: with SMTP id l126mr2584473oig.114.1582216241151;
+        Thu, 20 Feb 2020 08:30:41 -0800 (PST)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id 9sm1299958otx.75.2020.02.20.08.30.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 08:30:40 -0800 (PST)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:9129:b2b8:445c:a4ff])
+        by serve.minyard.net (Postfix) with ESMTPSA id D290B18000D;
+        Thu, 20 Feb 2020 16:30:39 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 10:30:38 -0600
+From:   Corey Minyard <minyard@acm.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH v2] arm64:kgdb: Fix kernel single-stepping
+Message-ID: <20200220163038.GJ3704@minyard.net>
+Reply-To: minyard@acm.org
+References: <20200219152403.3495-1-minyard@acm.org>
+ <20200220142214.GC14459@willie-the-truck>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220142214.GC14459@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
+On Thu, Feb 20, 2020 at 02:22:14PM +0000, Will Deacon wrote:
+> On Wed, Feb 19, 2020 at 09:24:03AM -0600, minyard@acm.org wrote:
+> > From: Corey Minyard <cminyard@mvista.com>
+> > 
+> > I was working on a single-step bug on kgdb on an ARM64 system, and I saw
+> > this scenario:
+> > 
+> > * A single step is setup to return to el1
+> > * The ERET return to el1
+> > * An interrupt is pending and runs before the instruction
+> > * As soon as PSTATE.D (the debug disable bit) is cleared, the single
+> >     step happens in that location, not where it should have.
+> > 
+> > This appears to be due to PSTATE.SS not being cleared when the exception
+> > happens.  Per section D.2.12.5 of the ARMv8 reference manual, that
+> > appears to be incorrect, it says "As part of exception entry, the PE
+> > does all of the following: ...  Sets PSTATE.SS to 0."
+> 
+> Sorry, but I don't follow you here. If PSTATE.SS is not cleared, why would
+> you take the step exception?
 
-Building those list is a standard procedure described in section
-'8.2.4 Decoding process for reference picture lists construction' of
-the H264 specification.
+I don't follow.  If PSTATE.SS is set and MDSCR_EL1.SS is set, the
+processor will take a single-step exception as soon as the debug
+exceptions are enabled.  That's what I'm seeing.  The hardware bug is
+that PSTATE.SS is not cleared on an exception, and MDSCR_EL1.SS is not
+cleared on kernel entry from el1.
 
-We already have 2 drivers needing the same logic (hantro and rkvdec) and
-I suspect we will soon have more.
+I'm not 100% sure that PSTATE.SS is supposed to clear on an exception.
+The debug handling documentation in the ARM64 manual is extremely hard
+to follow.  But I'm pretty sure about this, as you would see this
+problem on every processor and it would be obvious.  You could never
+continue from a breakpoint, because the following happens when
+continuing from a breakpoint in what I'm seeing:
 
-Let's provide generic helpers to create those lists.
+* gdb disables the breakpoint
+* gdb does a single step
+* The single step triggers when debug excecption are enabled, not
+  after the instruction in question.
+* gdb restores the breakpoint and continues
+* The breakpoint occurs again because the single step never really
+  happened.
 
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
- drivers/media/v4l2-core/Kconfig     |   4 +
- drivers/media/v4l2-core/Makefile    |   1 +
- drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
- include/media/v4l2-h264.h           |  85 +++++++++
- 4 files changed, 348 insertions(+)
- create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
- create mode 100644 include/media/v4l2-h264.h
+> 
+> > However, I appear to not be the first person who has noticed this.  In
+> > the el0-only portion of the kernel_entry macro in entry.S, I found the
+> > following comment: "Ensure MDSCR_EL1.SS is clear, since we can unmask
+> > debug exceptions when scheduling."  Exactly the same scenario, except
+> > coming from a userland single step, not a kernel one.
+> 
+> No, I think you might be conflating PSTATE.SS and MDSCR_EL1.SS.
 
-diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
-index 39e3fb30ba0b..8a4ccfbca8cf 100644
---- a/drivers/media/v4l2-core/Kconfig
-+++ b/drivers/media/v4l2-core/Kconfig
-@@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
- config VIDEO_TUNER
- 	tristate
- 
-+# Used by drivers that need v4l2-h264.ko
-+config V4L2_H264
-+	tristate
-+
- # Used by drivers that need v4l2-mem2mem.ko
- config V4L2_MEM2MEM_DEV
- 	tristate
-diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
-index 786bd1ec4d1b..c5c53e0941ad 100644
---- a/drivers/media/v4l2-core/Makefile
-+++ b/drivers/media/v4l2-core/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
- obj-$(CONFIG_VIDEO_TUNER) += tuner.o
- 
- obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
-+obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
- 
- obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
- 
-diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-core/v4l2-h264.c
-new file mode 100644
-index 000000000000..4f68c27ec7fd
---- /dev/null
-+++ b/drivers/media/v4l2-core/v4l2-h264.c
-@@ -0,0 +1,258 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * V4L2 H264 helpers.
-+ *
-+ * Copyright (C) 2019 Collabora, Ltd.
-+ *
-+ * Author: Boris Brezillon <boris.brezillon@collabora.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/sort.h>
-+
-+#include <media/v4l2-h264.h>
-+
-+/**
-+ * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
-+ *				      builder
-+ *
-+ * @b: the builder context to initialize
-+ * @dec_params: decode parameters control
-+ * @slice_params: first slice parameters control
-+ * @sps: SPS control
-+ * @dpb: DPB to use when creating the reference list
-+ */
-+void
-+v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
-+		const struct v4l2_ctrl_h264_decode_params *dec_params,
-+		const struct v4l2_ctrl_h264_slice_params *slice_params,
-+		const struct v4l2_ctrl_h264_sps *sps,
-+		const struct v4l2_h264_dpb_entry *dpb)
-+{
-+	int cur_frame_num, max_frame_num;
-+	unsigned int i;
-+
-+	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
-+	cur_frame_num = slice_params->frame_num;
-+
-+	memset(b, 0, sizeof(*b));
-+	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
-+		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
-+					     dec_params->top_field_order_cnt);
-+	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
-+		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
-+	else
-+		b->cur_pic_order_count = dec_params->top_field_order_cnt;
-+
-+	for (i = 0; i < 16; i++) {
-+		u32 pic_order_count;
-+
-+		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-+			continue;
-+
-+		b->refs[i].pic_num = dpb[i].pic_num;
-+		if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_LONG_TERM)
-+			b->refs[i].longterm = true;
-+
-+		/*
-+		 * Handle frame_num wraparound as described in section
-+		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
-+		 * TODO: This logic will have to be adjusted when we start
-+		 * supporting interlaced content.
-+		 */
-+		if (dpb[i].frame_num > cur_frame_num)
-+			b->refs[i].frame_num = (int)dpb[i].frame_num -
-+					       max_frame_num;
-+		else
-+			b->refs[i].frame_num = dpb[i].frame_num;
-+
-+		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-+			pic_order_count = min(dpb[i].top_field_order_cnt,
-+					      dpb[i].bottom_field_order_cnt);
-+		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-+			pic_order_count = dpb[i].bottom_field_order_cnt;
-+		else
-+			pic_order_count = dpb[i].top_field_order_cnt;
-+
-+		b->refs[i].pic_order_count = pic_order_count;
-+		b->unordered_reflist[b->num_valid] = i;
-+		b->num_valid++;
-+	}
-+
-+	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
-+		b->unordered_reflist[i] = i;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
-+
-+static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
-+				    const void *data)
-+{
-+	const struct v4l2_h264_reflist_builder *builder = data;
-+	u8 idxa, idxb;
-+
-+	idxa = *((u8 *)ptra);
-+	idxb = *((u8 *)ptrb);
-+
-+	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {
-+		/* Short term pics first. */
-+		if (!builder->refs[idxa].longterm)
-+			return -1;
-+		else
-+			return 1;
-+	}
-+
-+	/*
-+	 * Short term pics in descending pic num order, long term ones in
-+	 * ascending order.
-+	 */
-+	if (!builder->refs[idxa].longterm)
-+		return builder->refs[idxb].frame_num <
-+		       builder->refs[idxa].frame_num ?
-+		       -1 : 1;
-+
-+	return builder->refs[idxa].pic_num < builder->refs[idxb].pic_num ?
-+	       -1 : 1;
-+}
-+
-+static int v4l2_h264_b0_ref_list_cmp(const void *ptra, const void *ptrb,
-+				     const void *data)
-+{
-+	const struct v4l2_h264_reflist_builder *builder = data;
-+	s32 poca, pocb;
-+	u8 idxa, idxb;
-+
-+	idxa = *((u8 *)ptra);
-+	idxb = *((u8 *)ptrb);
-+
-+	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {
-+		/* Short term pics first. */
-+		if (!builder->refs[idxa].longterm)
-+			return -1;
-+		else
-+			return 1;
-+	}
-+
-+	/* Long term pics in ascending pic num order. */
-+	if (builder->refs[idxa].longterm)
-+		return builder->refs[idxa].pic_num <
-+		       builder->refs[idxb].pic_num ?
-+		       -1 : 1;
-+
-+	poca = builder->refs[idxa].pic_order_count;
-+	pocb = builder->refs[idxb].pic_order_count;
-+
-+	/*
-+	 * Short term pics with POC < cur POC first in POC descending order
-+	 * followed by short term pics with POC > cur POC in POC ascending
-+	 * order.
-+	 */
-+	if ((poca < builder->cur_pic_order_count) !=
-+	     (pocb < builder->cur_pic_order_count))
-+		return poca < pocb ? -1 : 1;
-+	else if (poca < builder->cur_pic_order_count)
-+		return pocb < poca ? -1 : 1;
-+
-+	return poca < pocb ? -1 : 1;
-+}
-+
-+static int v4l2_h264_b1_ref_list_cmp(const void *ptra, const void *ptrb,
-+				     const void *data)
-+{
-+	const struct v4l2_h264_reflist_builder *builder = data;
-+	s32 poca, pocb;
-+	u8 idxa, idxb;
-+
-+	idxa = *((u8 *)ptra);
-+	idxb = *((u8 *)ptrb);
-+
-+	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {
-+		/* Short term pics first. */
-+		if (!builder->refs[idxa].longterm)
-+			return -1;
-+		else
-+			return 1;
-+	}
-+
-+	/* Long term pics in ascending pic num order. */
-+	if (builder->refs[idxa].longterm)
-+		return builder->refs[idxa].pic_num <
-+		       builder->refs[idxb].pic_num ?
-+		       -1 : 1;
-+
-+	poca = builder->refs[idxa].pic_order_count;
-+	pocb = builder->refs[idxb].pic_order_count;
-+
-+	/*
-+	 * Short term pics with POC > cur POC first in POC ascending order
-+	 * followed by short term pics with POC < cur POC in POC descending
-+	 * order.
-+	 */
-+	if ((poca < builder->cur_pic_order_count) !=
-+	    (pocb < builder->cur_pic_order_count))
-+		return pocb < poca ? -1 : 1;
-+	else if (poca < builder->cur_pic_order_count)
-+		return pocb < poca ? -1 : 1;
-+
-+	return poca < pocb ? -1 : 1;
-+}
-+
-+/**
-+ * v4l2_h264_build_p_ref_list() - Build the P reference list
-+ *
-+ * @builder: reference list builder context
-+ * @reflist: 16-bytes array used to store the P reference list. Each entry
-+ *	     is an index in the DPB
-+ *
-+ * This functions builds the P reference lists. This procedure is describe in
-+ * section '8.2.4 Decoding process for reference picture lists construction'
-+ * of the H264 spec. This function can be used by H264 decoder drivers that
-+ * need to pass a P reference list to the hardware.
-+ */
-+void
-+v4l2_h264_build_p_ref_list(const struct v4l2_h264_reflist_builder *builder,
-+			   u8 *reflist)
-+{
-+	memcpy(reflist, builder->unordered_reflist,
-+	       sizeof(builder->unordered_reflist));
-+	sort_r(reflist, builder->num_valid, sizeof(*reflist),
-+	       v4l2_h264_p_ref_list_cmp, NULL, builder);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_h264_build_p_ref_list);
-+
-+/**
-+ * v4l2_h264_build_b_ref_lists() - Build the B0/B1 reference lists
-+ *
-+ * @builder: reference list builder context
-+ * @b0_reflist: 16-bytes array used to store the B0 reference list. Each entry
-+ *		is an index in the DPB
-+ * @b1_reflist: 16-bytes array used to store the B1 reference list. Each entry
-+ *		is an index in the DPB
-+ *
-+ * This functions builds the B0/B1 reference lists. This procedure is described
-+ * in section '8.2.4 Decoding process for reference picture lists construction'
-+ * of the H264 spec. This function can be used by H264 decoder drivers that
-+ * need to pass B0/B1 reference lists to the hardware.
-+ */
-+void
-+v4l2_h264_build_b_ref_lists(const struct v4l2_h264_reflist_builder *builder,
-+			    u8 *b0_reflist, u8 *b1_reflist)
-+{
-+	memcpy(b0_reflist, builder->unordered_reflist,
-+	       sizeof(builder->unordered_reflist));
-+	sort_r(b0_reflist, builder->num_valid, sizeof(*b0_reflist),
-+	       v4l2_h264_b0_ref_list_cmp, NULL, builder);
-+
-+	memcpy(b1_reflist, builder->unordered_reflist,
-+	       sizeof(builder->unordered_reflist));
-+	sort_r(b1_reflist, builder->num_valid, sizeof(*b1_reflist),
-+	       v4l2_h264_b1_ref_list_cmp, NULL, builder);
-+
-+	if (builder->num_valid > 1 &&
-+	    !memcmp(b1_reflist, b0_reflist, builder->num_valid))
-+		swap(b1_reflist[0], b1_reflist[1]);
-+}
-+EXPORT_SYMBOL_GPL(v4l2_h264_build_b_ref_lists);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("V4L2 H264 Helpers");
-+MODULE_AUTHOR("Boris Brezillon <boris.brezillon@collabora.com>");
-diff --git a/include/media/v4l2-h264.h b/include/media/v4l2-h264.h
-new file mode 100644
-index 000000000000..36d25c27cc31
---- /dev/null
-+++ b/include/media/v4l2-h264.h
-@@ -0,0 +1,85 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+/*
-+ * Helper functions for H264 codecs.
-+ *
-+ * Copyright (c) 2019 Collabora, Ltd.
-+ *
-+ * Author: Boris Brezillon <boris.brezillon@collabora.com>
-+ */
-+
-+#ifndef _MEDIA_V4L2_H264_H
-+#define _MEDIA_V4L2_H264_H
-+
-+#include <media/h264-ctrls.h>
-+
-+/**
-+ * struct v4l2_h264_reflist_builder - Reference list builder object
-+ *
-+ * @refs.pic_order_count: reference picture order count
-+ * @refs.frame_num: reference frame number
-+ * @refs.pic_num: reference picture number
-+ * @refs.longterm: set to true for a long term reference
-+ * @refs: array of references
-+ * @cur_pic_order_count: picture order count of the frame being decoded
-+ * @unordered_reflist: unordered list of references. Will be used to generate
-+ *		       ordered P/B0/B1 lists
-+ * @num_valid: number of valid references in the refs array
-+ *
-+ * This object stores the context of the P/B0/B1 reference list builder.
-+ * This procedure is described in section '8.2.4 Decoding process for reference
-+ * picture lists construction' of the H264 spec.
-+ */
-+struct v4l2_h264_reflist_builder {
-+	struct {
-+		s32 pic_order_count;
-+		int frame_num;
-+		u16 pic_num;
-+		u16 longterm : 1;
-+	} refs[16];
-+	s32 cur_pic_order_count;
-+	u8 unordered_reflist[16];
-+	u8 num_valid;
-+};
-+
-+void
-+v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
-+		const struct v4l2_ctrl_h264_decode_params *dec_params,
-+		const struct v4l2_ctrl_h264_slice_params *slice_params,
-+		const struct v4l2_ctrl_h264_sps *sps,
-+		const struct v4l2_h264_dpb_entry *dpb);
-+
-+/**
-+ * v4l2_h264_build_b_ref_lists() - Build the B0/B1 reference lists
-+ *
-+ * @builder: reference list builder context
-+ * @b0_reflist: 16-bytes array used to store the B0 reference list. Each entry
-+ *		is an index in the DPB
-+ * @b1_reflist: 16-bytes array used to store the B1 reference list. Each entry
-+ *		is an index in the DPB
-+ *
-+ * This functions builds the B0/B1 reference lists. This procedure is described
-+ * in section '8.2.4 Decoding process for reference picture lists construction'
-+ * of the H264 spec. This function can be used by H264 decoder drivers that
-+ * need to pass B0/B1 reference lists to the hardware.
-+ */
-+void
-+v4l2_h264_build_b_ref_lists(const struct v4l2_h264_reflist_builder *builder,
-+			    u8 *b0_reflist, u8 *b1_reflist);
-+
-+/**
-+ * v4l2_h264_build_b_ref_lists() - Build the P reference list
-+ *
-+ * @builder: reference list builder context
-+ * @p_reflist: 16-bytes array used to store the P reference list. Each entry
-+ *	       is an index in the DPB
-+ *
-+ * This functions builds the P reference lists. This procedure is describe in
-+ * section '8.2.4 Decoding process for reference picture lists construction'
-+ * of the H264 spec. This function can be used by H264 decoder drivers that
-+ * need to pass a P reference list to the hardware.
-+ */
-+void
-+v4l2_h264_build_p_ref_list(const struct v4l2_h264_reflist_builder *builder,
-+			   u8 *reflist);
-+
-+#endif /* _MEDIA_V4L2_H264_H */
--- 
-2.25.0
+Not exactly.  If the processor clears PSTATE.SS, why would you need to
+clear MDSCR_EL1.SS?  You can just ignore it.  But looking at the git
+commit where that code was introduced, I can see that wasn't the reason.
 
+> 
+> > As I was studying this, though, I realized that the following scenario
+> > had an issue:
+> > 
+> > * Kernel enables MDSCR.SS, MDSCR.KDE, MDSCR.MDE (unnecessary), and
+> >   PSTATE.SS to enable a single step in el1, for kgdb or kprobes,
+> >   on the current CPU's MDSCR register and the process' PSTATE.SS
+> >   register.
+> > * Kernel returns from the exception with ERET.
+> > * An interrupt or page fault happens on the instruction, causing the
+> >   instruction to not be run, but the exception handler runs.
+> > * The exception causes the task to migrate to a new core.
+> > * The return from the exception runs on a different processor now,
+> >   where the MDSCR values are not set up for a single step.
+> > * The single step fails to happen.
+> > 
+> > This is bad for kgdb, of course, but it seems really bad for kprobes if
+> > this happens.
+> 
+> I don't see how this can happen for kprobes. Have you managed to reproduce
+> the failure?
+
+Can a migration happen if kprobes sets up a single-step, does the step,
+and an interrupt or page fault happens before the single step occurs?
+If so, that single-step will never happen.
+
+I would be hard to reproduce.  I think I could force this to happen by
+modifying the kernel to force a migration in the single-step code, but
+it would be hard without modifying the kernel.
+
+> 
+> > To fix both these problems, rework the handling of single steps to clear
+> > things out upon entry to the kernel from el1, and then to set up single
+> > step when returning to el1, and not do the setup in debug-monitors.c.
+> > This means that single stepping does not use
+> > enable/disable_debug_monitors(); it is no longer necessary to track
+> > those flags for single stepping.  This is much like single stepping is
+> > handled for el0.  A new flag is added in pt_regs to enable single
+> > stepping from el1.  Unfortunately, the old value of PSTATE.SS cannot be
+> > used for this because of the hardware bug mentioned earlier.
+> 
+> I don't think there's a hardware bug.
+> 
+> It sound like you're trying to make kernel debugging per-task instead
+> of per-cpu, but I don't think that's the right thing to do. What if I /want/
+> to debug an interrupt handler? For example, I might have a watchpoint on
+> something accessed by timer interrupt.
+> 
+> > As part of this, there is an interaction between single stepping and the
+> > other users of debug monitors with the MDSCR.KDE bit.  That bit has to
+> > be set for both hardware breakpoints at el1 and single stepping at el1.
+> > A new variable was created to store the cpu-wide value of MDSCR.KDE; the
+> > single stepping code makes sure not to clear that bit on kernel entry if
+> > it's set in the per-cpu variable.
+> > 
+> > After fixing this and doing some more testing, I ran into another issue:
+> > 
+> > * Kernel enables the pt_regs single step
+> > * Kernel returns from the exception with ERET.
+> > * An interrupt or page fault happens on the instruction, causing the
+> >   instruction to not be run, but the exception handler runs.
+> 
+> This sounds like you've broken debug; we should take the step exception
+> in the exception handler. That's the way this is supposed to work.
+
+Ok, here is the disconnect, I think.  If that is the case, then what I'm
+seeing is working like it should.  That doesn't work with gdb, though,
+gdb expects to be able to single-step and get to the next instruction.
+The scenario I mentioned at the top of this email.
+
+Let me look at this a bit more.  I'll look at this on qemu and maybe a
+pi.
+
+-corey
+
+> 
+> > There's no easy way to find the pt_regs that has the single step flag
+> > set.  So a thread info flag was added so that the single step could be
+> > disabled in this case.  Both that flag and the flag in pt_regs must be
+> > set to enable a single step.
+> 
+> Honestly, I get the feeling that you don't really understand the code
+> you're changing here and it's a tonne of effort to try to untangle what
+> you're doing. That's not necessarily your fault because the debug
+> architecture is a nightmare to comprehend, but I'm not keen to change it
+> unless we have a really good justification. I'm sure kgdb is riddled with
+> bugs but, as I said before, the fixes should be in kgdb, not by tearing
+> up the low-level debug code (which has the potential to break other users).
+> 
+> Maybe it would be easier if you tried to fix one problem per patch,
+> preferably with a way to reproduce the issue you're seeing each time?
+> 
+> Will
