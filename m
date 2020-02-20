@@ -2,169 +2,155 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D203CC11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD496C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCB124673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DC02467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVJVOjF/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgBTR0K (ORCPT
+        id S1728986AbgBTR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:26:10 -0500
-Received: from sauhun.de ([88.99.104.3]:35160 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728706AbgBTRZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:25:56 -0500
-Received: from localhost (p5486CC48.dip0.t-ipconnect.de [84.134.204.72])
-        by pokefinder.org (Postfix) with ESMTPSA id E09212C1EC3;
-        Thu, 20 Feb 2020 18:25:53 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Kieran Bingham <kieran@ksquared.org.uk>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [RFC PATCH 6/7] i2c: of: mark a whole array of regs as reserved
-Date:   Thu, 20 Feb 2020 18:24:02 +0100
-Message-Id: <20200220172403.26062-7-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
-References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
+        Thu, 20 Feb 2020 12:26:20 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46991 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728386AbgBTR0R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:26:17 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so1789999pll.13;
+        Thu, 20 Feb 2020 09:26:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=rd9V9UVot8QU4dxlhd2hiItv4T8JnKu0tmvJU9d76Mc=;
+        b=DVJVOjF/NpMyaCti9AT2IcWEgTOh97ItS+8v/GkN/axFHO6cpdKDcNjVaIYzNsuW4d
+         pWVzXr8VWbeXYsSazvJEpGEylMBOahWyJ4WkjtDLIB2j7HIy6OgrIKmpVWyWmhsWa/y1
+         6UCKir+Oze+XMJ6f94yZ3zOWO86YlzTcvXmwK5CyBXMR4Pt2nNef7jVpLkvk/xLN5FRO
+         EiHyf9bVz8GkJ7LlFTTAUxMHwqGZMPls8OY2nXQ9iWn4OUMD145nBXumjibd4qk3sJGK
+         UgPkVby+Eqk8+08do88I0FqUrgGwFmu047iGhPxL4qKsTQxYoVkh3PfaTwgGuq3TA/sN
+         4Y1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=rd9V9UVot8QU4dxlhd2hiItv4T8JnKu0tmvJU9d76Mc=;
+        b=qC9plWDVAz+9o5T2Usn6Bv+YB4TEdvT16ihDnZp3QTTZGTBfy22JBDzWm5DwSO5xmF
+         BV2qnhmJxPdFMZW/ZjGavHEBcPMFok07FJ5obn209XJ7MglBFl0UyN2/7kuiMEGXyMu6
+         uPkHqOKaXisS37ZqWwtpegUVkJ6RyFbiWDaa4sN96djKFU7jOCKL4jNNXYWJZ9wcTeut
+         ZeET4qtoH5GYvs3lMa+brrmQR22hQ5zsMyqgCaMCG2fDkB65uel0W5jJrS+6c78Ugnvd
+         Tr2tS+St6eZ9pkDqQ2BU92i042XKqdikYsmQAlTc6+VshdYGVLJWO48zxXafgDsLCpFA
+         axGQ==
+X-Gm-Message-State: APjAAAVf2+ND9h3krY5n2rdzqZs9QkeWQqlgt5OR4d3oPvHQjCho0lze
+        0J4h6f+xkJZ8Uiipl1cwJSM=
+X-Google-Smtp-Source: APXvYqzzYrRNU74LyvTtgsiXF8m+qglQOpoFbG3DJDW9Hmj/MkCj/EzGIFcOmbG/UgoZKBG8o9QuvQ==
+X-Received: by 2002:a17:902:fe13:: with SMTP id g19mr32897315plj.216.1582219576802;
+        Thu, 20 Feb 2020 09:26:16 -0800 (PST)
+Received: from ast-mbp ([2620:10d:c090:500::5:f03d])
+        by smtp.gmail.com with ESMTPSA id c3sm177528pfj.159.2020.02.20.09.26.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Feb 2020 09:26:15 -0800 (PST)
+Date:   Thu, 20 Feb 2020 09:26:13 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     "Bird, Tim" <Tim.Bird@sony.com>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        shuah <shuah@kernel.org>,
+        Daniel =?utf-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        BPF-dev-list <bpf@vger.kernel.org>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: Kernel 5.5.4 build fail for BPF-selftests with latest LLVM
+Message-ID: <20200220172612.7aqmiwrnizgsukvm@ast-mbp>
+References: <20200219180348.40393e28@carbon>
+ <CAEf4Bza9imKymHfv_LpSFE=kNB5=ZapTS3SCdeZsDdtrUrUGcg@mail.gmail.com>
+ <20200219192854.6b05b807@carbon>
+ <CAEf4BzaRAK6-7aCCVOA6hjTevKuxgvZZnHeVgdj_ZWNn8wibYQ@mail.gmail.com>
+ <20200219210609.20a097fb@carbon>
+ <CAEUSe79Vn8wr=BOh0RzccYij_snZDY=2XGmHmR494wsQBBoo5Q@mail.gmail.com>
+ <20200220002748.kpwvlz5xfmjm5fd5@ast-mbp>
+ <4a26e6c6-500e-7b92-1e26-16e1e0233889@kernel.org>
+ <20200220173740.7a3f9ad7@carbon>
+ <MWHPR13MB0895649219625C5F7380314FFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <MWHPR13MB0895649219625C5F7380314FFD130@MWHPR13MB0895.namprd13.prod.outlook.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Back then, 'reg' properties in I2C DT bindings only contained one
-address and this address was assigned a device and, thus, blocked.
-Meanwhile, chips using multiple addresses are common and the 'reg'
-property can be an array described by 'reg-names'. This code enhances
-I2C DT parsing, so it will reserve all addresses described in an array.
-They will be bound to the 'dummy' driver as 'reserved' iff the first
-address can be assigned successfully. If that is not the case, the array
-is not further considered. If one later address of the array can not be
-assigned, it will be reported but we don't bail out. The driver has to
-decide if that address is critical or not.
+On Thu, Feb 20, 2020 at 05:02:25PM +0000, Bird, Tim wrote:
+> 
+> 
+> > -----Original Message-----
+> > From:  Jesper Dangaard Brouer
+> > 
+> > On Wed, 19 Feb 2020 17:47:23 -0700
+> > shuah <shuah@kernel.org> wrote:
+> > 
+> > > On 2/19/20 5:27 PM, Alexei Starovoitov wrote:
+> > > > On Wed, Feb 19, 2020 at 03:59:41PM -0600, Daniel Díaz wrote:
+> > > >>>
+> > > >>> When I download a specific kernel release, how can I know what LLVM
+> > > >>> git-hash or version I need (to use BPF-selftests)?
+> > > >
+> > > > as discussed we're going to add documentation-like file that will
+> > > > list required commits in tools.
+> > > > This will be enforced for future llvm/pahole commits.
+> > > >
+> > > >>> Do you think it is reasonable to require end-users to compile their own
+> > > >>> bleeding edge version of LLVM, to use BPF-selftests?
+> > > >
+> > > > absolutely.
+> 
+> Is it just the BPF-selftests that require the bleeding edge version of LLVM,
+> or do BPF features themselves need the latest LLVM.  If the latter, then this
+> is quite worrisome, and I fear the BPF developers are getting ahead of themselves.
+> We don't usually have a kernel dependency on the latest compiler version (some
+> recent security fixes are an anomaly).  In fact deprecating support for older compiler
+> versions has been quite slow and methodical over the years.
+> 
+> It's quite dangerous to be baking stuff into the kernel that depends on features
+> from compilers that haven't even made it to release yet.
+> 
+> I'm sorry, but I'm coming into the middle of this thread.  Can you please explain
+> what the features are in the latest LLVM that are required for BPF-selftests?
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/i2c/i2c-core-of.c | 68 +++++++++++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 24 deletions(-)
+Above is correct. bpf kernel features do depend on the latest pahole and llvm
+features that did not make it into a release. That was the case for many years
+now and still the case. The first commit 8 years ago relied on something that
+can generate those instructions. For many years llvm was the only compiler that
+could generate them. Right now there is GCC backend as well. New features (like
+new instructions) depend on the compiler.
 
-diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-index 74b9f3fbb5ef..316db0c3b3c8 100644
---- a/drivers/i2c/i2c-core-of.c
-+++ b/drivers/i2c/i2c-core-of.c
-@@ -21,20 +21,12 @@
- 
- #include "i2c-core.h"
- 
--int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
-+static void of_i2c_decode_board_info(struct device_node *node, u32 addr,
-+				     bool first_addr, struct i2c_board_info *info)
- {
--	u32 addr;
--	int ret;
--
- 	memset(info, 0, sizeof(*info));
- 
--	ret = of_property_read_u32(node, "reg", &addr);
--	if (ret) {
--		pr_err("invalid reg on %pOF\n", node);
--		return ret;
--	}
--
--	if (of_modalias_node(node, info->type, sizeof(info->type)) < 0)
-+	if (!first_addr || of_modalias_node(node, info->type, sizeof(info->type)) < 0)
- 		strlcpy(info->type, I2C_RESERVED_DRV_NAME, sizeof(I2C_RESERVED_DRV_NAME));
- 
- 	if (addr & I2C_TEN_BIT_ADDRESS) {
-@@ -51,11 +43,27 @@ int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
- 	info->of_node = node;
- 	info->fwnode = of_fwnode_handle(node);
- 
--	if (of_property_read_bool(node, "host-notify"))
--		info->flags |= I2C_CLIENT_HOST_NOTIFY;
-+	if (first_addr) {
-+		if (of_property_read_bool(node, "host-notify"))
-+			info->flags |= I2C_CLIENT_HOST_NOTIFY;
-+
-+		if (of_get_property(node, "wakeup-source", NULL))
-+			info->flags |= I2C_CLIENT_WAKE;
-+	}
-+}
-+
-+int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
-+{
-+	u32 addr;
-+	int ret;
-+
-+	ret = of_property_read_u32(node, "reg", &addr);
-+	if (ret) {
-+		pr_err("invalid reg on %pOF\n", node);
-+		return ret;
-+	}
- 
--	if (of_get_property(node, "wakeup-source", NULL))
--		info->flags |= I2C_CLIENT_WAKE;
-+	of_i2c_decode_board_info(node, addr, true, info);
- 
- 	return 0;
- }
-@@ -64,21 +72,33 @@ EXPORT_SYMBOL_GPL(of_i2c_get_board_info);
- static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
- 						 struct device_node *node)
- {
--	struct i2c_client *client;
-+	struct i2c_client *client, *first_client = ERR_PTR(-ENOENT);
- 	struct i2c_board_info info;
--	int ret;
-+	bool first_reg = true;
-+	struct property *prop;
-+	const __be32 *cur;
-+	u32 reg;
- 
- 	pr_debug("register %pOF\n", node);
- 
--	ret = of_i2c_get_board_info(node, &info);
--	if (ret)
--		return ERR_PTR(ret);
-+	of_property_for_each_u32(node, "reg", prop, cur, reg) {
-+		of_i2c_decode_board_info(node, reg, first_reg, &info);
-+
-+		client = i2c_new_client_device(adap, &info);
-+		if (IS_ERR(client)) {
-+			pr_err("failure registering addr 0x%02x for %pOF\n",
-+				reg, node);
-+			if (first_reg)
-+				return client;
-+		}
- 
--	client = i2c_new_client_device(adap, &info);
--	if (IS_ERR(client))
--		pr_err("failure registering %pOF\n", node);
-+		if (first_reg) {
-+			first_client = client;
-+			first_reg = false;
-+		}
-+	}
- 
--	return client;
-+	return first_client;
- }
- 
- void of_i2c_register_devices(struct i2c_adapter *adap)
--- 
-2.20.1
+selftests/bpf are not testing kernel's bpf features. They are testing the whole
+bpf ecosystem. They test llvm, pahole, libbpf, bpftool, and kernel together.
+Hence it's a requirement to install the latest pahole and llvm.
 
+When I'm talking about selftests/bpf I'm talking about all the tests in that
+directory combined. There are several unit tests scattered across repos. The
+unit tests for llvm bpf backend are inside llvm repo.
+selftests/bpf/test_verifier and test_maps are unit tests for the verifier and
+for maps. They are llvm independent. They test a combination of kernel and
+libbpf only. But majority of the selftests/bpf are done via test_progs which
+are the whole ecosystem tests.
