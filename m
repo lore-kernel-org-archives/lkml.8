@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8B6C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD14C11D03
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053E52465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8703A24658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 02:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LIoI+Ne1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rExLqXLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgBTC6P (ORCPT
+        id S1727756AbgBTC6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 21:58:15 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:58776 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727944AbgBTC6K (ORCPT
+        Wed, 19 Feb 2020 21:58:18 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:18732 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727989AbgBTC6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 21:58:10 -0500
+        Wed, 19 Feb 2020 21:58:14 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1582167489; h=References: In-Reply-To: Message-Id: Date:
+ s=smtp; t=1582167494; h=References: In-Reply-To: Message-Id: Date:
  Subject: Cc: To: From: Sender;
- bh=9u8BlgWrFHwG4Ht6CWfv3d3zqguh9fPrghJWyshx0+Y=; b=LIoI+Ne1t7akHbK8nAo9jwkC3E6deFg/S8RlzquekuBG4RKOSIRMIIqZHUfKka3mcbs8HP8n
- CZ6o3OD/MvHv/Wlgmf/P2va6zgnCIe4X1mlwxxYNFSPo2p7ZJ7ehVVpc8Gr1Llt+aoMPxHpy
- 5xGXz3CqUYiDsFYhDFTkp243gNY=
-X-Mailgun-Sending-Ip: 104.130.122.27
+ bh=bml65BiZKqC8La35iek9YW4e+KEfIXfCCZ0eFO8GDNY=; b=rExLqXLAVyMqFJr3AqkGuVDXASmw/LBEfYBjmsPmahM5pE/fNFgGjCLjg/SJAmXMS5DfPUov
+ BVuTe7MhlgA4VjZ9If4GB0QcuGxzkoR3R6rgzbvo4IAppXawJUQd4K9AJnPSy8XWk4mzf9iN
+ 8zqCi9gDnXw5HvEEZR2H2K/69JM=
+X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4df5b4.7fcf295124c8-smtp-out-n02;
- Thu, 20 Feb 2020 02:57:56 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e4df5b2.7fb5fd02cf48-smtp-out-n01;
+ Thu, 20 Feb 2020 02:57:54 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id F279AC4479D; Thu, 20 Feb 2020 02:57:55 +0000 (UTC)
+        id 219BFC43383; Thu, 20 Feb 2020 02:57:54 +0000 (UTC)
 Received: from sidgup-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sidgup)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E6962C43383;
-        Thu, 20 Feb 2020 02:57:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E6962C43383
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 02FFDC4479C;
+        Thu, 20 Feb 2020 02:57:52 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 02FFDC4479C
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
 From:   Siddharth Gupta <sidgup@codeaurora.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     Rishabh Bhatnagar <rishabhb@codeaurora.org>,
+Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
         linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, Siddharth Gupta <sidgup@codeaurora.org>
-Subject: [PATCH 4/6] drivers: remoteproc: Add name field for every subdevice
-Date:   Wed, 19 Feb 2020 18:57:43 -0800
-Message-Id: <1582167465-2549-5-git-send-email-sidgup@codeaurora.org>
+        psodagud@codeaurora.org, rishabhb@codeaurora.org
+Subject: [PATCH 1/6] remoteproc: sysmon: Add ability to send type of notification
+Date:   Wed, 19 Feb 2020 18:57:40 -0800
+Message-Id: <1582167465-2549-2-git-send-email-sidgup@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
 References: <1582167465-2549-1-git-send-email-sidgup@codeaurora.org>
@@ -63,92 +63,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Current implementation of the sysmon driver does not support adding
+notifications for other remoteproc events - prepare, start, unprepare.
+Clients on the remoteproc side might be interested in knowing when a
+remoteproc boots up. This change adds the ability to send the notification
+type along with the name. For example, audio DSP is interested in knowing
+when modem has crashed so that it can perform cleanup and wait for modem to
+boot up before it starts processing data again.
 
-When a client driver wishes to utilize functionality from a particular
-subdevice of a remoteproc, it cannot differentiate between the subdevices
-that have been added. This patch allows the client driver to distinguish
-between subdevices and thus utilize their functionality.
-
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
 ---
- drivers/remoteproc/qcom_common.c | 6 ++++++
- include/linux/remoteproc.h       | 2 ++
- 2 files changed, 8 insertions(+)
+ drivers/remoteproc/qcom_sysmon.c | 54 +++++++++++++++++++++++++++-------------
+ 1 file changed, 37 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-index 60650bc..5d59538 100644
---- a/drivers/remoteproc/qcom_common.c
-+++ b/drivers/remoteproc/qcom_common.c
-@@ -58,6 +58,7 @@ void qcom_add_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glink)
- 	glink->dev = dev;
- 	glink->subdev.start = glink_subdev_start;
- 	glink->subdev.stop = glink_subdev_stop;
-+	glink->subdev.name = kstrdup("glink", GFP_KERNEL);
+diff --git a/drivers/remoteproc/qcom_sysmon.c b/drivers/remoteproc/qcom_sysmon.c
+index faf3822..1366050 100644
+--- a/drivers/remoteproc/qcom_sysmon.c
++++ b/drivers/remoteproc/qcom_sysmon.c
+@@ -46,6 +46,25 @@ struct qcom_sysmon {
+ 	struct sockaddr_qrtr ssctl;
+ };
  
- 	rproc_add_subdev(rproc, &glink->subdev);
- }
-@@ -73,6 +74,7 @@ void qcom_remove_glink_subdev(struct rproc *rproc, struct qcom_rproc_glink *glin
- 	if (!glink->node)
++enum {
++	SSCTL_SSR_EVENT_BEFORE_POWERUP,
++	SSCTL_SSR_EVENT_AFTER_POWERUP,
++	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
++	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
++};
++
++static const char * const sysmon_state_string[] = {
++	[SSCTL_SSR_EVENT_BEFORE_POWERUP]	= "before_powerup",
++	[SSCTL_SSR_EVENT_AFTER_POWERUP]		= "after_powerup",
++	[SSCTL_SSR_EVENT_BEFORE_SHUTDOWN]	= "before_shutdown",
++	[SSCTL_SSR_EVENT_AFTER_SHUTDOWN]	= "after_shutdown",
++};
++
++struct sysmon_event {
++	const char *subsys_name;
++	u32 ssr_event;
++};
++
+ static DEFINE_MUTEX(sysmon_lock);
+ static LIST_HEAD(sysmon_list);
+ 
+@@ -54,13 +73,15 @@ static LIST_HEAD(sysmon_list);
+  * @sysmon:	sysmon context
+  * @name:	other remote's name
+  */
+-static void sysmon_send_event(struct qcom_sysmon *sysmon, const char *name)
++static void sysmon_send_event(struct qcom_sysmon *sysmon,
++			      const struct sysmon_event *event)
+ {
+ 	char req[50];
+ 	int len;
+ 	int ret;
+ 
+-	len = snprintf(req, sizeof(req), "ssr:%s:before_shutdown", name);
++	len = snprintf(req, sizeof(req), "ssr:%s:%s", event->subsys_name,
++		       sysmon_state_string[event->ssr_event]);
+ 	if (len >= sizeof(req))
  		return;
  
-+	kfree(glink->subdev.name);
- 	rproc_remove_subdev(rproc, &glink->subdev);
- 	of_node_put(glink->node);
- }
-@@ -154,6 +156,7 @@ void qcom_add_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
- 	smd->dev = dev;
- 	smd->subdev.start = smd_subdev_start;
- 	smd->subdev.stop = smd_subdev_stop;
-+	smd->subdev.name = kstrdup("smd", GFP_KERNEL);
+@@ -149,13 +170,6 @@ static int sysmon_callback(struct rpmsg_device *rpdev, void *data, int count,
+ #define SSCTL_SUBSYS_NAME_LENGTH	15
  
- 	rproc_add_subdev(rproc, &smd->subdev);
- }
-@@ -169,6 +172,7 @@ void qcom_remove_smd_subdev(struct rproc *rproc, struct qcom_rproc_subdev *smd)
- 	if (!smd->node)
- 		return;
- 
-+	kfree(smd->subdev.name);
- 	rproc_remove_subdev(rproc, &smd->subdev);
- 	of_node_put(smd->node);
- }
-@@ -220,6 +224,7 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
- 			 const char *ssr_name)
- {
- 	ssr->name = ssr_name;
-+	ssr->subdev.name = kstrdup("ssr_notifs", GFP_KERNEL);
- 	ssr->subdev.unprepare = ssr_notify_unprepare;
- 
- 	rproc_add_subdev(rproc, &ssr->subdev);
-@@ -233,6 +238,7 @@ EXPORT_SYMBOL_GPL(qcom_add_ssr_subdev);
+ enum {
+-	SSCTL_SSR_EVENT_BEFORE_POWERUP,
+-	SSCTL_SSR_EVENT_AFTER_POWERUP,
+-	SSCTL_SSR_EVENT_BEFORE_SHUTDOWN,
+-	SSCTL_SSR_EVENT_AFTER_SHUTDOWN,
+-};
+-
+-enum {
+ 	SSCTL_SSR_EVENT_FORCED,
+ 	SSCTL_SSR_EVENT_GRACEFUL,
+ };
+@@ -331,7 +345,8 @@ static void ssctl_request_shutdown(struct qcom_sysmon *sysmon)
+  * @sysmon:	sysmon context
+  * @name:	other remote's name
   */
- void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr)
+-static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
++static void ssctl_send_event(struct qcom_sysmon *sysmon,
++			     const struct sysmon_event *event)
  {
-+	kfree(ssr->subdev.name);
- 	rproc_remove_subdev(rproc, &ssr->subdev);
- }
- EXPORT_SYMBOL_GPL(qcom_remove_ssr_subdev);
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index e2eaba9..e2f60cc 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -519,6 +519,7 @@ struct rproc {
- /**
-  * struct rproc_subdev - subdevice tied to a remoteproc
-  * @node: list node related to the rproc subdevs list
-+ * @name: name of the subdevice
-  * @prepare: prepare function, called before the rproc is started
-  * @start: start function, called after the rproc has been started
-  * @stop: stop function, called before the rproc is stopped; the @crashed
-@@ -527,6 +528,7 @@ struct rproc {
-  */
- struct rproc_subdev {
- 	struct list_head node;
-+	char *name;
+ 	struct ssctl_subsys_event_resp resp;
+ 	struct ssctl_subsys_event_req req;
+@@ -346,9 +361,9 @@ static void ssctl_send_event(struct qcom_sysmon *sysmon, const char *name)
+ 	}
  
- 	int (*prepare)(struct rproc_subdev *subdev);
- 	int (*start)(struct rproc_subdev *subdev);
+ 	memset(&req, 0, sizeof(req));
+-	strlcpy(req.subsys_name, name, sizeof(req.subsys_name));
++	strlcpy(req.subsys_name, event->subsys_name, sizeof(req.subsys_name));
+ 	req.subsys_name_len = strlen(req.subsys_name);
+-	req.event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN;
++	req.event = event->ssr_event;
+ 	req.evt_driven_valid = true;
+ 	req.evt_driven = SSCTL_SSR_EVENT_FORCED;
+ 
+@@ -432,8 +447,12 @@ static int sysmon_start(struct rproc_subdev *subdev)
+ static void sysmon_stop(struct rproc_subdev *subdev, bool crashed)
+ {
+ 	struct qcom_sysmon *sysmon = container_of(subdev, struct qcom_sysmon, subdev);
++	struct sysmon_event event = {
++		.subsys_name = sysmon->name,
++		.ssr_event = SSCTL_SSR_EVENT_BEFORE_SHUTDOWN
++	};
+ 
+-	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)sysmon->name);
++	blocking_notifier_call_chain(&sysmon_notifiers, 0, (void *)&event);
+ 
+ 	/* Don't request graceful shutdown if we've crashed */
+ 	if (crashed)
+@@ -456,19 +475,20 @@ static int sysmon_notify(struct notifier_block *nb, unsigned long event,
+ {
+ 	struct qcom_sysmon *sysmon = container_of(nb, struct qcom_sysmon, nb);
+ 	struct rproc *rproc = sysmon->rproc;
+-	const char *ssr_name = data;
++	struct sysmon_event *sysmon_event = data;
+ 
+ 	/* Skip non-running rprocs and the originating instance */
+-	if (rproc->state != RPROC_RUNNING || !strcmp(data, sysmon->name)) {
++	if (rproc->state != RPROC_RUNNING ||
++	    !strcmp(sysmon_event->subsys_name, sysmon->name)) {
+ 		dev_dbg(sysmon->dev, "not notifying %s\n", sysmon->name);
+ 		return NOTIFY_DONE;
+ 	}
+ 
+ 	/* Only SSCTL version 2 supports SSR events */
+ 	if (sysmon->ssctl_version == 2)
+-		ssctl_send_event(sysmon, ssr_name);
++		ssctl_send_event(sysmon, sysmon_event);
+ 	else if (sysmon->ept)
+-		sysmon_send_event(sysmon, ssr_name);
++		sysmon_send_event(sysmon, sysmon_event);
+ 
+ 	return NOTIFY_DONE;
+ }
 -- 
 Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
