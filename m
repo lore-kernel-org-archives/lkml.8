@@ -2,227 +2,185 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1395C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AAFC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6C2206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F590206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dn4hLPZz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pCKRt1az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgBTOQE (ORCPT
+        id S1728325AbgBTOQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:16:04 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:55100 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgBTOQE (ORCPT
+        Thu, 20 Feb 2020 09:16:26 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45454 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgBTOQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:16:04 -0500
-Received: by mail-wr1-f74.google.com with SMTP id s13so1787738wrb.21
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 06:16:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=KvrVRvnTainfLUNEVicj5vB+FMWhRD8P5T9JfeiRjxw=;
-        b=Dn4hLPZzP4Wq+3lQKKQDzCrXFsLroOr2keN+yERs6KPoFLjyLqYD9MyCCNxPx6gPq3
-         1YffiJE8nHIyAJ3zk5A52BJ+9jwupFPXaSNowIRuI3SHBncKdRaUUfHD51x5o6d3IvUt
-         sSqvak99GeOt5ydDAsT8V5MkH09/XfcpE/xdpKF3bgLKdjGFUXFQ2CATGLBfAitSJpjU
-         Uq8Vjt6WPB/SHhir+wAFH2p8YuQBf1w2BJx3Y4aUscSuQVDyl8Cp5m0fQuXp84uCIJxD
-         2oz9kBiLHoJqLETVJ/nPs9KHUIfyLujXC34c5ZOp+EbWRoU5Q0s/AsS0Jh9BiC7hSU1k
-         4KQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=KvrVRvnTainfLUNEVicj5vB+FMWhRD8P5T9JfeiRjxw=;
-        b=iZX7ucZcUFBXrNTeVDLSSUJILDODR6Ge9kkJXdfuFGeIKTip51KAUHMCQR5wcNFvDC
-         Qa6jaiKoI2fzmvxcME8Rvq68mOp8143pBIBRsNk9GxLyE2z5aczLOHl7CZGJsZjFeoeJ
-         Pzf0pyTHYLQ3dbeFYF6g/y56iKiIAAhmHisZyvxKY/L1VrvStZdINkbRw9Ykw6iUMLM0
-         4qwt1atsGWW/nvKuvPtWY7xfyiT47BTlwlf1PXoz4K85C6P/NzPG+w63iE/pbSP8YDPn
-         rPkne5S/MXcxofqG0z/T0JMawPuCYD/oagjNyJ8wBr0DTowqXIQkwEjYwcPLuoM9C8Hy
-         1Y4w==
-X-Gm-Message-State: APjAAAXXIcSWdlckHs77HyD2WEN3e1yrQ0+PTn4V3oZUD+AbDzQH0Lcl
-        AmJACWOCkagYB0I8vUWc1gP8487JGA==
-X-Google-Smtp-Source: APXvYqyndiE2Em6oOXX0sfHnwiPxmpukYQXNV9O1aK2cKl3XVtom1sjmQen61bnVokyLg/fsSIvm3DV7Mg==
-X-Received: by 2002:adf:ef92:: with SMTP id d18mr40898485wro.234.1582208159510;
- Thu, 20 Feb 2020 06:15:59 -0800 (PST)
-Date:   Thu, 20 Feb 2020 15:15:51 +0100
-Message-Id: <20200220141551.166537-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH] kcsan: Add option to allow watcher interruptions
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Feb 2020 09:16:25 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KEFGMm051288;
+        Thu, 20 Feb 2020 08:15:16 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582208116;
+        bh=Axzg4rCh+ok1KaDsGcP9AyakqPBpC/mwibitdg3IGVw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=pCKRt1az0CeDDzXENnEc0MpcujZQB0YGekohRP4P5jXgjcreBXflff1LrL4Ub1TZL
+         DxnB5RImn2+G2ZNRAVYSsuCfZIUK4AoioyfGKQNj8G3Qufr3OerZ/OA32JqhUfiHat
+         rpVl02uBPoe3igOGt4IAxogn0D0GewhssAGRTp5A=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KEFGMQ012068
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Feb 2020 08:15:16 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
+ Feb 2020 08:15:16 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 20 Feb 2020 08:15:16 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KEFCgO095562;
+        Thu, 20 Feb 2020 08:15:12 -0600
+Subject: Re: [PATCH] ASoC: ti: Allocate dais dynamically for TDM and audio
+ graph card
+To:     Sebastian Reichel <sre@kernel.org>
+CC:     Tony Lindgren <tony@atomide.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        "Arthur D ." <spinal.by@gmail.com>,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Merlijn Wajer <merlijn@wizzup.org>, Pavel Machek <pavel@ucw.cz>
+References: <20200211171645.41990-1-tony@atomide.com>
+ <cd46c6ec-80e3-332f-4922-e58a3acbfc61@ti.com>
+ <20200212143543.GI64767@atomide.com>
+ <346dfd2b-23f8-87e0-6f45-27a5099b1066@ti.com>
+ <20200214170322.GZ64767@atomide.com>
+ <d9a43fcb-ed0f-5cd5-7e22-58924d571d17@ti.com>
+ <20200217231001.GC35972@atomide.com>
+ <5402eba8-4f84-0973-e11b-6ab2667ada85@ti.com>
+ <20200218211631.fxojsxzvttoidfed@earth.universe>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <a263a857-bb8a-0e37-6932-dd07df98ad63@ti.com>
+Date:   Thu, 20 Feb 2020 16:15:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200218211631.fxojsxzvttoidfed@earth.universe>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add option to allow interrupts while a watchpoint is set up. This can be
-enabled either via CONFIG_KCSAN_INTERRUPT_WATCHER or via the boot
-parameter 'kcsan.interrupt_watcher=1'.
+Hi Sebastian,
 
-Note that, currently not all safe per-CPU access primitives and patterns
-are accounted for, which could result in false positives. For example,
-asm-generic/percpu.h uses plain operations, which by default are
-instrumented. On interrupts and subsequent accesses to the same
-variable, KCSAN would currently report a data race with this option.
+On 18/02/2020 23.16, Sebastian Reichel wrote:
+>> The simplest use cases you want to support:
+>> A. McBSP3 <-> CPCAP_voice (playback/capture)
+>> B. MDM6600 <-> CPCAP_voice (handset mic/speaker voice call)
+>> C. MDM6600 <-> WL1285 (BT voice call)
+>> D. McBSP3 <-> BT (VoIP?)
+> 
+> Your description matches my understanding of the hardware setup.
+> 
+>> I would not bother with recording the call as you would need tom
+>> reconfigure the McBSP playback pin (is it even possible) as input to
+>> OMAP4, I think..
+>>
+>> B/C is codec2codec, McBSP3 is not involved at all.
+>> A/D is when McBSP3 is used only.
+>>
+>> Imho this can be represented as
+>> McBSP2: 1 port
+>> 	1.1: to CPCAP_hifi
+>>
+>> McBSP3: 1 port, 2 endpoint
+>> 	2.1: to CPCAP_voice
+>> 	2.2: to WL1285
+>> CPCAP: 2 ports
+>> 	hifi:	3.1: to McBSP2
+>> 	voice:	4.1: to McBSP3
+>> 		4.2: to MDM6600
+>> MDM6600: 2 ports
+> 
+> I suppose you mean 1 port, 2 endpoints?
 
-Therefore, this option should currently remain disabled by default, but
-may be enabled for specific test scenarios.
+Oh yes. Numbers....
 
-Signed-off-by: Marco Elver <elver@google.com>
----
+> 
+>> 	5.1: to CPAC_voice
+>> 	5.2: to WL1285
+>> WL1285: 2 ports
+> 
+> and here too?
 
-As an example, the first data race that this found:
+here too ;)
 
-write to 0xffff88806b3324b8 of 4 bytes by interrupt on cpu 0:
- rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]
- __rcu_read_lock+0x3c/0x50 kernel/rcu/tree_plugin.h:373
- rcu_read_lock include/linux/rcupdate.h:599 [inline]
- cpuacct_charge+0x36/0x80 kernel/sched/cpuacct.c:347
- cgroup_account_cputime include/linux/cgroup.h:773 [inline]
- update_curr+0xe2/0x1d0 kernel/sched/fair.c:860
- enqueue_entity+0x130/0x5d0 kernel/sched/fair.c:4005
- enqueue_task_fair+0xb0/0x420 kernel/sched/fair.c:5260
- enqueue_task kernel/sched/core.c:1302 [inline]
- activate_task+0x6d/0x110 kernel/sched/core.c:1324
- ttwu_do_activate.isra.0+0x40/0x60 kernel/sched/core.c:2266
- ttwu_queue kernel/sched/core.c:2411 [inline]
- try_to_wake_up+0x3be/0x6c0 kernel/sched/core.c:2645
- wake_up_process+0x10/0x20 kernel/sched/core.c:2669
- hrtimer_wakeup+0x4c/0x60 kernel/time/hrtimer.c:1769
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x274/0x5f0 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x22d/0x490 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
- smp_apic_timer_interrupt+0xdc/0x280 arch/x86/kernel/apic/apic.c:1144
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- delay_tsc+0x38/0xc0 arch/x86/lib/delay.c:68                   <--- interrupt while delayed
- __delay arch/x86/lib/delay.c:161 [inline]
- __const_udelay+0x33/0x40 arch/x86/lib/delay.c:175
- __udelay+0x10/0x20 arch/x86/lib/delay.c:181
- kcsan_setup_watchpoint+0x17f/0x400 kernel/kcsan/core.c:428
- check_access kernel/kcsan/core.c:550 [inline]
- __tsan_read4+0xc6/0x100 kernel/kcsan/core.c:685               <--- Enter KCSAN runtime
- rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]  <---+
- __rcu_read_lock+0x2a/0x50 kernel/rcu/tree_plugin.h:373            |
- rcu_read_lock include/linux/rcupdate.h:599 [inline]               |
- lock_page_memcg+0x31/0x110 mm/memcontrol.c:1972                   |
-                                                                   |
-read to 0xffff88806b3324b8 of 4 bytes by task 6131 on cpu 0:       |
- rcu_preempt_read_enter kernel/rcu/tree_plugin.h:353 [inline]  ----+
- __rcu_read_lock+0x2a/0x50 kernel/rcu/tree_plugin.h:373
- rcu_read_lock include/linux/rcupdate.h:599 [inline]
- lock_page_memcg+0x31/0x110 mm/memcontrol.c:1972
+> 
+>> 	6.1: to McBSP3
+>> 	6.2: to MDM6600
+>>
+>> The machine driver should switch between the graph links based on the
+>> use case for the interconnected devices:
+>> A: 2.2 <-> 4.1
+>> B: 4.2 <-> 5.1
+>> C: 6.2 <-> 5.1
+>> D: 2.2 <-> 6.1
+>>
+>> Can a generic card provide such a functionality?
+> 
+> I suppose in the end its a question if generic card can provide TDM
+> support.
 
-The writer is doing 'current->rcu_read_lock_nesting++'. The read is as
-vulnerable to compiler optimizations and would therefore conclude this
-is a valid data race.
----
- kernel/kcsan/core.c | 30 ++++++++----------------------
- lib/Kconfig.kcsan   | 11 +++++++++++
- 2 files changed, 19 insertions(+), 22 deletions(-)
+Sure it can, but can it handle the switching between the paths based on
+use cases?
+There should be machine level DAPM widgets to kick codec2codec (MDM6600
+- CPAC_voice for example) and also to make sure that when you switch
+between them the system is not going to get misconfigured.
+Switching between CPAC and BT route during call?
+Not allowing VoIP while on call, etc.
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 589b1e7f0f253..43eb5f850c68e 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -21,6 +21,7 @@ static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
- static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
- static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
- static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
-+static bool kcsan_interrupt_watcher = IS_ENABLED(CONFIG_KCSAN_INTERRUPT_WATCHER);
- 
- #ifdef MODULE_PARAM_PREFIX
- #undef MODULE_PARAM_PREFIX
-@@ -30,6 +31,7 @@ module_param_named(early_enable, kcsan_early_enable, bool, 0);
- module_param_named(udelay_task, kcsan_udelay_task, uint, 0644);
- module_param_named(udelay_interrupt, kcsan_udelay_interrupt, uint, 0644);
- module_param_named(skip_watch, kcsan_skip_watch, long, 0644);
-+module_param_named(interrupt_watcher, kcsan_interrupt_watcher, bool, 0444);
- 
- bool kcsan_enabled;
- 
-@@ -354,7 +356,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	unsigned long access_mask;
- 	enum kcsan_value_change value_change = KCSAN_VALUE_CHANGE_MAYBE;
- 	unsigned long ua_flags = user_access_save();
--	unsigned long irq_flags;
-+	unsigned long irq_flags = 0;
- 
- 	/*
- 	 * Always reset kcsan_skip counter in slow-path to avoid underflow; see
-@@ -370,26 +372,9 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		goto out;
- 	}
- 
--	/*
--	 * Disable interrupts & preemptions to avoid another thread on the same
--	 * CPU accessing memory locations for the set up watchpoint; this is to
--	 * avoid reporting races to e.g. CPU-local data.
--	 *
--	 * An alternative would be adding the source CPU to the watchpoint
--	 * encoding, and checking that watchpoint-CPU != this-CPU. There are
--	 * several problems with this:
--	 *   1. we should avoid stealing more bits from the watchpoint encoding
--	 *      as it would affect accuracy, as well as increase performance
--	 *      overhead in the fast-path;
--	 *   2. if we are preempted, but there *is* a genuine data race, we
--	 *      would *not* report it -- since this is the common case (vs.
--	 *      CPU-local data accesses), it makes more sense (from a data race
--	 *      detection point of view) to simply disable preemptions to ensure
--	 *      as many tasks as possible run on other CPUs.
--	 *
--	 * Use raw versions, to avoid lockdep recursion via IRQ flags tracing.
--	 */
--	raw_local_irq_save(irq_flags);
-+	if (!kcsan_interrupt_watcher)
-+		/* Use raw to avoid lockdep recursion via IRQ flags tracing. */
-+		raw_local_irq_save(irq_flags);
- 
- 	watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
- 	if (watchpoint == NULL) {
-@@ -524,7 +509,8 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 
- 	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
- out_unlock:
--	raw_local_irq_restore(irq_flags);
-+	if (!kcsan_interrupt_watcher)
-+		raw_local_irq_restore(irq_flags);
- out:
- 	user_access_restore(ua_flags);
- }
-diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index ba9268076cfbc..0f1447ff8f558 100644
---- a/lib/Kconfig.kcsan
-+++ b/lib/Kconfig.kcsan
-@@ -101,6 +101,17 @@ config KCSAN_SKIP_WATCH_RANDOMIZE
- 	  KCSAN_WATCH_SKIP. If false, the chosen value is always
- 	  KCSAN_WATCH_SKIP.
- 
-+config KCSAN_INTERRUPT_WATCHER
-+	bool "Interruptible watchers"
-+	help
-+	  If enabled, a task that set up a watchpoint may be interrupted while
-+	  delayed. This option will allow KCSAN to detect races between
-+	  interrupted tasks and other threads of execution on the same CPU.
-+
-+	  Currently disabled by default, because not all safe per-CPU access
-+	  primitives and patterns may be accounted for, and therefore could
-+	  result in false positives.
-+
- config KCSAN_REPORT_ONCE_IN_MS
- 	int "Duration in milliseconds, in which any given race is only reported once"
- 	default 3000
--- 
-2.25.0.265.gbab2e86ba0-goog
+>> In case of B/C you should not have a running stream imho.
+> 
+> I would expect, that MDM6600 codec marks itself as running/stopped
+> based on call state. That should enable DAPM widgets automatically
+> when CPCAP_voice is routed to MDM6600?
+> 
+>> In all cases CPCAP_voice should be able to run the clocks on i2s,
+>> even if it is not used by the audio setup.
+>> Not sure if you can just turn Wl1285 as master, but it is possible
+>> that it is master, but silent when it is not used?
+> 
+> I provided CPCAP registers for BT call, which should be enough to
+> figure this out (I did not yet analyze the results myself).
 
+I got the datasheet from NXP (thanks for the pointer!), I try to look at
+it in a coming days.
+
+>> I'm not sure if we should span out dummy dais for endpoints within a
+>> port. Imho the port _is_ the dai. Different endpoints might use
+>> different TDM slots on the port (or the same slot, which makes them
+>> exclusive).
+> 
+> Makes sense to me.
+> 
+> -- Sebastian
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
