@@ -2,120 +2,125 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3693C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72FC11D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57FA207FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A3A207FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 22:39:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tRp/RfyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgBTWih (ORCPT
+        id S1729290AbgBTWjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 17:38:37 -0500
-Received: from smtp.uniroma2.it ([160.80.6.23]:58786 "EHLO smtp.uniroma2.it"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729006AbgBTWih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 17:38:37 -0500
-Received: from utente-Aspire-V3-572G ([160.80.225.138])
-        by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with SMTP id 01KMXax2031786;
-        Thu, 20 Feb 2020 23:33:41 +0100
-Date:   Thu, 20 Feb 2020 23:33:36 +0100
-From:   Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
-To:     David Ahern <dsahern@gmail.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ahmed.abdelsalam@gssi.it,
-        dav.lebrun@gmail.com, andrea.mayer@uniroma2.it,
-        paolo.lungaroni@cnit.it, hiroki.shirokura@linecorp.com
-Subject: Re: [net-next 1/2] Perform IPv4 FIB lookup in a predefined FIB
- table
-Message-Id: <20200220233336.53eda87e7a76ed24317e0165@uniroma2.it>
-In-Reply-To: <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
-References: <20200213010932.11817-1-carmine.scarpitta@uniroma2.it>
-        <20200213010932.11817-2-carmine.scarpitta@uniroma2.it>
-        <7302c1f7-b6d1-90b7-5df1-3e5e0ba98f53@gmail.com>
-        <20200219005007.23d724b7f717ef89ad3d75e5@uniroma2.it>
-        <cd18410f-7065-ebea-74c5-4c016a3f1436@gmail.com>
-        <20200219034924.272d991505ee68d95566ff8d@uniroma2.it>
-        <a39867b0-c40f-e588-6cf9-1524581bb145@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+        Thu, 20 Feb 2020 17:39:10 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49450 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgBTWjK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 17:39:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PJX15g/idnsbi9mBK4m/qgB4NAR6fjeo4oenehrzb84=; b=tRp/RfyOc8MMAOEnFbjVZPeWaN
+        2KkzEKXiN/S1p09Bqu90S2Z278xQaeJcCcxdgeXrdpytnUBFOLEh/tcVUgBOZ3WDQA1fyr25gzLyH
+        gRM7sCok3nV4KM0JhdGQW17PpL0/Q+08nFcey+vxgYObaAojcT6v9r7vvwC4L45gbM+E1ObajSRbu
+        9fqhh3Le7FzPdJj54Iv5P1uuGStaEN80lg311yLhBq1nMBvGvQ80nBsaseT/97o8elxjyPsMZtK46
+        3NBlICNdJTCPRvVzyFRBHETaOyBq9s1mCrpI3p5mh7mcYzLn6aixyJdO3+xKTmslXOd/sUkUMeqtP
+        kTySNnYQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4uTN-0006hx-9M; Thu, 20 Feb 2020 22:39:09 +0000
+Date:   Thu, 20 Feb 2020 14:39:09 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     dsterba@suse.cz, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 00/23] Change readahead API
+Message-ID: <20200220223909.GB24185@bombadil.infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200220175400.GB2902@twin.jikos.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220175400.GB2902@twin.jikos.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Thu, Feb 20, 2020 at 06:54:00PM +0100, David Sterba wrote:
+> On Wed, Feb 19, 2020 at 01:00:39PM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > This series adds a readahead address_space operation to eventually
+> > replace the readpages operation.  The key difference is that
+> > pages are added to the page cache as they are allocated (and
+> > then looked up by the filesystem) instead of passing them on a
+> > list to the readpages operation and having the filesystem add
+> > them to the page cache.  It's a net reduction in code for each
+> > implementation, more efficient than walking a list, and solves
+> > the direct-write vs buffered-read problem reported by yu kuai at
+> > https://lore.kernel.org/linux-fsdevel/20200116063601.39201-1-yukuai3@huawei.com/
+> > 
+> > The only unconverted filesystems are those which use fscache.
+> > Their conversion is pending Dave Howells' rewrite which will make the
+> > conversion substantially easier.
+> > 
+> > I want to thank the reviewers; Dave Chinner, John Hubbard and Christoph
+> > Hellwig have done a marvellous job of providing constructive criticism.
+> > Eric Biggers pointed out how I'd broken ext4 (which led to a substantial
+> > change).  I've tried to take it all on board, but I may have missed
+> > something simply because you've done such a thorough job.
+> > 
+> > This series can also be found at
+> > http://git.infradead.org/users/willy/linux-dax.git/shortlog/refs/tags/readahead_v7
+> > (I also pushed the readahead_v6 tag there in case anyone wants to diff, and
+> > they're both based on 5.6-rc2 so they're easy to diff)
+> > 
+> > v7:
+> >  - Now passes an xfstests run on ext4!
+> 
+> On btrfs it still chokes on the first test btrfs/001, with the following
+> warning, the test is stuck there.
 
-Regarding your question. 
+Thanks.  The warning actually wasn't the problem, but it did need to
+be addressed.  I got a test system up & running with btrfs, and it's
+currently on generic/027 with the following patch:
 
-Our use-case is more than doing lookup into a VRF. 
-
-What we are working on a multi-tenant automated DC fabric that supports 
-overlay, traffic engineering (TE) and service function chaining (SFC). 
-We are leveraging the SRv6 implementation in Linux. 
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 9c782c15f7f7..d23a224d2ad2 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -676,7 +676,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 		struct page **array, unsigned int array_sz)
+ {
+ 	unsigned int i = 0;
+-	XA_STATE(xas, &rac->mapping->i_pages, rac->_index);
++	XA_STATE(xas, &rac->mapping->i_pages, 0);
+ 	struct page *page;
  
-For the overlay we leverage: 
-- SRv6 T.Encaps to encapsulate both IPv4 and IPv6 traffic of the tenant 
-   (T.Encaps is supported since kernel 4.10) 
-- SRv6 End.DT4 to decapsulate the overlay encapsulation and does the 
-lookup inside the tenants VRF (this is the only missing piece)
-
-For TE we leverage: 
-- SRv6 End and End.X functions to steer traffic through one or more midpoints
-to avoid congested links, etc. (End and End.X are supported since kernel 4.14)
-
-For SFC we leverage some network functions that supports SRv6: 
-- iptables already supports matching SRv6 header since kernel 4.16. 
-- There is some work in progress of adding support to nftables as well. 
-
-On top of that we are using BGP as a control plane to advertise the VPN/Egress 
-tunnel endpoints. 
-
-Part of this is already running in production at LINE corporation [1]. 
-
-As you can see, what is missing is having SRv6 End.DT4 supported to do 
-decapsulation and VRF lookup.  
-
-We introduced this flag to avoid duplicating the IPv4 FIB lookup code. 
-
-For the "tbl_known" flag, we can wrap the check of the flag inside 
-a "#ifdef CONFIG_IP_MULTIPLE_TABLES" directive. 
-If CONFIG_IP_MULTIPLE_TABLES is not set, we won't do any check.  
-
-Thanks, 
-Carmine 
-
-
-[1] https://speakerdeck.com/line_developers/line-data-center-networking-with-srv6
-
-
-On Tue, 18 Feb 2020 21:29:31 -0700
-David Ahern <dsahern@gmail.com> wrote:
-
-> On 2/18/20 7:49 PM, Carmine Scarpitta wrote:
-> > Hi David,
-> > Thanks for the reply.
-> > 
-> > The problem is not related to the table lookup. Calling fib_table_lookup and then rt_dst_alloc from seg6_local.c is good.
-> > 
-> 
-> you did not answer my question. Why do all of the existing policy
-> options (mark, L3 domains, uid) to direct the lookup to the table of
-> interest not work for this use case?
-> 
-> What you want is not unique. There are many ways to make it happen.
-> Bleeding policy details to route.c and adding a flag that is always
-> present and checked even when not needed (e.g.,
-> CONFIG_IP_MULTIPLE_TABLES is disabled) is not the right way to do it.
-
-
--- 
-Carmine Scarpitta <carmine.scarpitta@uniroma2.it>
+ 	BUG_ON(rac->_batch_count > rac->_nr_pages);
+@@ -684,6 +684,8 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 	rac->_index += rac->_batch_count;
+ 	rac->_batch_count = 0;
+ 
++	xas_set(&xas, rac->_index);
++	rcu_read_lock();
+ 	xas_for_each(&xas, page, rac->_index + rac->_nr_pages - 1) {
+ 		VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 		VM_BUG_ON_PAGE(PageTail(page), page);
+@@ -702,6 +704,7 @@ static inline unsigned int __readahead_batch(struct readahead_control *rac,
+ 		if (i == array_sz)
+ 			break;
+ 	}
++	rcu_read_unlock();
+ 
+ 	return i;
+ }
