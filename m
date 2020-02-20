@@ -2,128 +2,138 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE2C11D24
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75ECC11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC66E20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8912520679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 21:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q8g3waLH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgBTU7A (ORCPT
+        id S1729090AbgBTVAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:59:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44155 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729172AbgBTU4i (ORCPT
+        Thu, 20 Feb 2020 16:00:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25834 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728936AbgBTVAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 15:56:38 -0500
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j4sre-0007U2-1G; Thu, 20 Feb 2020 21:56:06 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 7EBD710408E;
-        Thu, 20 Feb 2020 21:56:04 +0100 (CET)
-Message-Id: <20200220204618.426525659@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Thu, 20 Feb 2020 21:45:28 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 11/20] bpf/tests: Use migrate disable instead of preempt disable
-References: <20200220204517.863202864@linutronix.de>
+        Thu, 20 Feb 2020 16:00:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582232416;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m+oWt3SPhWAiuaw2Ro+zpYFjBbPlPq0cBH/yGGKJ2v4=;
+        b=Q8g3waLHcnVXlskojcgiSzZubcmx3+p5VDVJI/vSCW8vMG0tCcMXI1zgFha7BQ0NYRC0Fo
+        XK2J53fD4wApTvOvzCRbfjpomfnb2mfXGv/UfobKSQbIVaMqsdNMJWLGrPrh1V08+JtT/N
+        DT/wp5M+MV1sDrwPgZFpSo6Pqlh2bHc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-488-Mw8hiM-SNR-m9qEdvYcFwA-1; Thu, 20 Feb 2020 16:00:14 -0500
+X-MC-Unique: Mw8hiM-SNR-m9qEdvYcFwA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC50110CE78A;
+        Thu, 20 Feb 2020 21:00:12 +0000 (UTC)
+Received: from w520.home (ovpn-116-28.phx2.redhat.com [10.3.116.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 403C760C87;
+        Thu, 20 Feb 2020 21:00:12 +0000 (UTC)
+Date:   Thu, 20 Feb 2020 14:00:11 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        kevin.tian@intel.com, shaopeng.he@intel.com, yi.l.liu@intel.com
+Subject: Re: [RFC PATCH v3 1/9] vfio/pci: export vfio_pci_device public and
+ add vfio_pci_device_private
+Message-ID: <20200220140011.79621d7f@w520.home>
+In-Reply-To: <20200211101038.20772-1-yan.y.zhao@intel.com>
+References: <20200211095727.20426-1-yan.y.zhao@intel.com>
+        <20200211101038.20772-1-yan.y.zhao@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Miller <davem@davemloft.net>
+On Tue, 11 Feb 2020 05:10:38 -0500
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-Replace the preemption disable/enable with migrate_disable/enable() to
-reflect the actual requirement and to allow PREEMPT_RT to substitute it
-with an actual migration disable mechanism which does not disable
-preemption.
+> (1) make vfio_pci_device public, so it is accessible from external code.
+> (2) add a private struct vfio_pci_device_private, which is only accessible
+> from internal code. It extends struct vfio_pci_device.
+> 
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+> ---
+>  drivers/vfio/pci/vfio_pci.c         | 256 +++++++++++++++-------------
+>  drivers/vfio/pci/vfio_pci_config.c  | 186 ++++++++++++--------
+>  drivers/vfio/pci/vfio_pci_igd.c     |  19 ++-
+>  drivers/vfio/pci/vfio_pci_intrs.c   | 186 +++++++++++---------
+>  drivers/vfio/pci/vfio_pci_nvlink2.c |  22 +--
+>  drivers/vfio/pci/vfio_pci_private.h |   7 +-
+>  drivers/vfio/pci/vfio_pci_rdwr.c    |  40 +++--
+>  include/linux/vfio.h                |   5 +
+>  8 files changed, 408 insertions(+), 313 deletions(-)
 
-[ tglx: Switched it over to migrate disable ]
+[SNIP!]
 
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> diff --git a/include/linux/vfio.h b/include/linux/vfio.h
+> index e42a711a2800..70a2b8fb6179 100644
+> --- a/include/linux/vfio.h
+> +++ b/include/linux/vfio.h
+> @@ -195,4 +195,9 @@ extern int vfio_virqfd_enable(void *opaque,
+>  			      void *data, struct virqfd **pvirqfd, int fd);
+>  extern void vfio_virqfd_disable(struct virqfd **pvirqfd);
+>  
+> +struct vfio_pci_device {
+> +	struct pci_dev			*pdev;
+> +	int				num_regions;
+> +	int				irq_type;
+> +};
+>  #endif /* VFIO_H */
 
----
- lib/test_bpf.c     |    4 ++--
- net/bpf/test_run.c |    8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hi Yan,
 
---- a/lib/test_bpf.c
-+++ b/lib/test_bpf.c
-@@ -6660,14 +6660,14 @@ static int __run_one(const struct bpf_pr
- 	u64 start, finish;
- 	int ret = 0, i;
- 
--	preempt_disable();
-+	migrate_disable();
- 	start = ktime_get_ns();
- 
- 	for (i = 0; i < runs; i++)
- 		ret = BPF_PROG_RUN(fp, data);
- 
- 	finish = ktime_get_ns();
--	preempt_enable();
-+	migrate_enable();
- 
- 	*duration = finish - start;
- 	do_div(*duration, runs);
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -37,7 +37,7 @@ static int bpf_test_run(struct bpf_prog
- 		repeat = 1;
- 
- 	rcu_read_lock();
--	preempt_disable();
-+	migrate_disable();
- 	time_start = ktime_get_ns();
- 	for (i = 0; i < repeat; i++) {
- 		bpf_cgroup_storage_set(storage);
-@@ -54,18 +54,18 @@ static int bpf_test_run(struct bpf_prog
- 
- 		if (need_resched()) {
- 			time_spent += ktime_get_ns() - time_start;
--			preempt_enable();
-+			migrate_enable();
- 			rcu_read_unlock();
- 
- 			cond_resched();
- 
- 			rcu_read_lock();
--			preempt_disable();
-+			migrate_disable();
- 			time_start = ktime_get_ns();
- 		}
- 	}
- 	time_spent += ktime_get_ns() - time_start;
--	preempt_enable();
-+	migrate_enable();
- 	rcu_read_unlock();
- 
- 	do_div(time_spent, repeat);
+Sorry for the delay.  I'm still not very happy with this result, I was
+hoping the changes could be done less intrusively.  Maybe here's
+another suggestion, why can't the vendor driver use a struct
+vfio_pci_device* as an opaque pointer?  If you only want these three
+things initially, I think this whole massive patch can be reduced to:
+
+struct pci_dev *vfio_pci_pdev(struct vfio_pci_device *vdev)
+{
+	return vdev->pdev;
+}
+EXPORT_SYMBOL_GPL(vfio_pci_dev);
+
+int vfio_pci_num_regions(struct vfio_pci_device *vdev)
+{
+	return vdev->num_regions;
+}
+EXPORT_SYMBOL_GPL(vfio_pci_num_region);
+
+int vfio_pci_irq_type(struct vfio_pci_device *vdev)
+{
+	return vdev->irq_type;
+}
+EXPORT_SYMBOL_GPL(vfio_pci_irq_type);
+
+This is how vfio-pci works with vfio, we don't know a struct
+vfio_device as anything other than an opaque pointer and we have access
+function where we need to see some property of that object.
+
+Patch 5/9 would become a vfio_pci_set_vendor_regions() interface.
+
+Thanks,
+Alex
 
