@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252D9C11D25
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E864C11D20
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F8620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE71208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 20:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729588AbgBTU61 (ORCPT
+        id S1729598AbgBTU6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 15:58:27 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44145 "EHLO
+        Thu, 20 Feb 2020 15:58:33 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:44149 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729029AbgBTU4i (ORCPT
+        with ESMTP id S1729141AbgBTU4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 15:56:38 -0500
 Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j4sra-0007T2-OQ; Thu, 20 Feb 2020 21:56:02 +0100
+        id 1j4srj-0007dT-Kz; Thu, 20 Feb 2020 21:56:11 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 24B2110408A;
-        Thu, 20 Feb 2020 21:56:02 +0100 (CET)
-Message-Id: <20200220204617.440152945@linutronix.de>
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 6A4B7104098;
+        Thu, 20 Feb 2020 21:56:06 +0100 (CET)
+Message-Id: <20200220204619.234597434@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Thu, 20 Feb 2020 21:45:18 +0100
+Date:   Thu, 20 Feb 2020 21:45:36 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
@@ -45,7 +45,7 @@ Cc:     David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Vinicius Costa Gomes <vinicius.gomes@intel.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 01/20] bpf: Enforce preallocation for all instrumentation programs
+Subject: [patch V2 19/20] bpf, lpm: Make locking RT friendly
 References: <20200220204517.863202864@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,78 +57,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The assumption that only programs attached to perf NMI events can deadlock
-on memory allocators is wrong. Assume the following simplified callchain:
+The LPM trie map cannot be used in contexts like perf, kprobes and tracing
+as this map type dynamically allocates memory.
 
- kmalloc() from regular non BPF context
-  cache empty
-   freelist empty
-    lock(zone->lock);
-     tracepoint or kprobe
-      BPF()
-       update_elem()
-        lock(bucket)
-          kmalloc()
-           cache empty
-            freelist empty
-             lock(zone->lock);  <- DEADLOCK
+The memory allocation happens with a raw spinlock held which is a truly
+spinning lock on a PREEMPT RT enabled kernel which disables preemption and
+interrupts.
 
-There are other ways which do not involve locking to create wreckage:
+As RT does not allow memory allocation from such a section for various
+reasons, convert the raw spinlock to a regular spinlock.
 
- kmalloc() from regular non BPF context
-  local_irq_save();
-   ...
-    obj = percpu_slab_first();
-     kprobe()
-      BPF()
-       update_elem()
-        lock(bucket)
-         kmalloc()
-          local_irq_save();
-           ...
-            obj = percpu_slab_first(); <- Same object as above ...
+On a RT enabled kernel these locks are substituted by 'sleeping' spinlocks
+which provide the proper protection but keep the code preemptible.
 
-So preallocation _must_ be enforced for all variants of intrusive
-instrumentation.
+On a non-RT kernel regular spinlocks map to raw spinlocks, i.e. this does
+not cause any functional change.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
-V2: New patch
----
- kernel/bpf/verifier.c |   18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ kernel/bpf/lpm_trie.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -8144,19 +8144,23 @@ static int check_map_prog_compatibility(
- 					struct bpf_prog *prog)
+--- a/kernel/bpf/lpm_trie.c
++++ b/kernel/bpf/lpm_trie.c
+@@ -34,7 +34,7 @@ struct lpm_trie {
+ 	size_t				n_entries;
+ 	size_t				max_prefixlen;
+ 	size_t				data_size;
+-	raw_spinlock_t			lock;
++	spinlock_t			lock;
+ };
  
- {
--	/* Make sure that BPF_PROG_TYPE_PERF_EVENT programs only use
--	 * preallocated hash maps, since doing memory allocation
--	 * in overflow_handler can crash depending on where nmi got
--	 * triggered.
-+	/*
-+	 * Make sure that trace type programs only use preallocated hash
-+	 * maps. Perf programs obviously can't do memory allocation in NMI
-+	 * context and all other types can deadlock on a memory allocator
-+	 * lock when a tracepoint/kprobe triggers a BPF program inside a
-+	 * lock held region or create inconsistent state when the probe is
-+	 * within an interrupts disabled critical region in the memory
-+	 * allocator.
- 	 */
--	if (prog->type == BPF_PROG_TYPE_PERF_EVENT) {
-+	if ((is_tracing_prog_type(prog->type)) {
- 		if (!check_map_prealloc(map)) {
--			verbose(env, "perf_event programs can only use preallocated hash map\n");
-+			verbose(env, "tracing programs can only use preallocated hash map\n");
- 			return -EINVAL;
- 		}
- 		if (map->inner_map_meta &&
- 		    !check_map_prealloc(map->inner_map_meta)) {
--			verbose(env, "perf_event programs can only use preallocated inner hash map\n");
-+			verbose(env, "tracing programs can only use preallocated inner hash map\n");
- 			return -EINVAL;
- 		}
+ /* This trie implements a longest prefix match algorithm that can be used to
+@@ -315,7 +315,7 @@ static int trie_update_elem(struct bpf_m
+ 	if (key->prefixlen > trie->max_prefixlen)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&trie->lock, irq_flags);
++	spin_lock_irqsave(&trie->lock, irq_flags);
+ 
+ 	/* Allocate and fill a new node */
+ 
+@@ -422,7 +422,7 @@ static int trie_update_elem(struct bpf_m
+ 		kfree(im_node);
  	}
+ 
+-	raw_spin_unlock_irqrestore(&trie->lock, irq_flags);
++	spin_unlock_irqrestore(&trie->lock, irq_flags);
+ 
+ 	return ret;
+ }
+@@ -442,7 +442,7 @@ static int trie_delete_elem(struct bpf_m
+ 	if (key->prefixlen > trie->max_prefixlen)
+ 		return -EINVAL;
+ 
+-	raw_spin_lock_irqsave(&trie->lock, irq_flags);
++	spin_lock_irqsave(&trie->lock, irq_flags);
+ 
+ 	/* Walk the tree looking for an exact key/length match and keeping
+ 	 * track of the path we traverse.  We will need to know the node
+@@ -518,7 +518,7 @@ static int trie_delete_elem(struct bpf_m
+ 	kfree_rcu(node, rcu);
+ 
+ out:
+-	raw_spin_unlock_irqrestore(&trie->lock, irq_flags);
++	spin_unlock_irqrestore(&trie->lock, irq_flags);
+ 
+ 	return ret;
+ }
+@@ -575,7 +575,7 @@ static struct bpf_map *trie_alloc(union
+ 	if (ret)
+ 		goto out_err;
+ 
+-	raw_spin_lock_init(&trie->lock);
++	spin_lock_init(&trie->lock);
+ 
+ 	return &trie->map;
+ out_err:
 
