@@ -2,182 +2,162 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24682C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD01C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 041682068F
+	by mail.kernel.org (Postfix) with ESMTP id EB0992068F
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgBTK5Z (ORCPT
+        id S1727898AbgBTK50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Feb 2020 05:57:26 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53205 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727827AbgBTK5Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Feb 2020 05:57:25 -0500
-Received: from mga03.intel.com ([134.134.136.65]:50598 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727662AbgBTK5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:57:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 02:57:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,464,1574150400"; 
-   d="scan'208";a="224826205"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 20 Feb 2020 02:57:20 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1j4jWE-003VkL-Fe; Thu, 20 Feb 2020 12:57:22 +0200
-Date:   Thu, 20 Feb 2020 12:57:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        yixin.zhu@intel.com
-Subject: Re: [PATCH v2 2/2] phy: intel: Add driver support for Combophy
-Message-ID: <20200220105722.GB10400@smile.fi.intel.com>
-References: <208fcb9660abd560aeab077442d158d84a3dddee.1582021248.git.eswara.kota@linux.intel.com>
- <b49e2f94631da003fb4b1409adc42fb81f77877b.1582021248.git.eswara.kota@linux.intel.com>
- <20200219101435.GM10400@smile.fi.intel.com>
- <3c73c805-55a6-dcc0-4cd4-dd452f1d002d@linux.intel.com>
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4jWC-0002uz-Ny; Thu, 20 Feb 2020 11:57:20 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1j4jWB-00059I-0P; Thu, 20 Feb 2020 11:57:19 +0100
+Date:   Thu, 20 Feb 2020 11:57:18 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Sascha Hauer <kernel@pengutronix.de>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Jiri Slaby <jslaby@suse.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 1/4] lib: new helper kstrtodev_t()
+Message-ID: <20200220105718.eoevd3kb63zzrotu@pengutronix.de>
+References: <20200213091600.554-1-uwe@kleine-koenig.org>
+ <20200213091600.554-2-uwe@kleine-koenig.org>
+ <CAHp75VcStj5sE3f0uK2deOWC=ojfx-z1fbrh6Lu6jAor9F9PgA@mail.gmail.com>
+ <20200220074901.ohcrisjgd26555ya@pengutronix.de>
+ <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3c73c805-55a6-dcc0-4cd4-dd452f1d002d@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHp75VcxXWputX1y90t8f-c0a3dw2CHU6=ebQ+o6e8Z1GymiDw@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:58:41PM +0800, Dilip Kota wrote:
-> On 2/19/2020 6:14 PM, Andy Shevchenko wrote:
-> > On Wed, Feb 19, 2020 at 11:31:30AM +0800, Dilip Kota wrote:
+Hello Andy,
 
-...
-
-> > 	return regmap_update_bits(..., mask, val);
-> > 
-> > ?
-> Still it is taking more than 80 characters with mask, need to be in 2 lines
+On Thu, Feb 20, 2020 at 12:22:36PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 20, 2020 at 9:49 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Feb 19, 2020 at 09:50:54PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Feb 13, 2020 at 11:27 AM Uwe Kleine-König <uwe@kleine-koenig.org> wrote:
+> > > >
+> > > > This function is in the same spirit as the other kstrto* functions and
+> > > > uses the same calling convention. It expects the input string to be in
+> > > > the format %u:%u and implements stricter parsing than sscanf as it
+> > > > returns an error on trailing data (other than the usual \n).
 > 
-> return regmap_update_bits(...,
->                                                      mask, val);
-
-It's up to maintainer, I was talking about use of temporary variable for mask.
-
-> > > +static int intel_cbphy_pcie_refclk_cfg(struct intel_cbphy_iphy *iphy, bool set)
-> > > +{
-> > > +	struct intel_combo_phy *cbphy = iphy->parent;
-> > > +	const u32 pad_dis_cfg_off = 0x174;
-> > > +	u32 val, bitn;
-> > > +
-> > > +	bitn = cbphy->id * 2 + iphy->id;
-> > > +
-> > > +	/* Register: 0 is enable, 1 is disable */
-> > > +	val = set ? 0 : BIT(bitn);
-> > > +
-> > > +	return regmap_update_bits(cbphy->syscfg, pad_dis_cfg_off, BIT(bitn),
-> > > +				 val);
-> > Ditto.
-> Here it can with go in single line with mask,
-
-Here I meant all changes from previous function, yes, temporary variable mask
-in particular.
-
-> > > +}
-
-...
-
-> > > +	case PHY_PCIE_MODE:
-> > > +		cb_mode = (aggr == PHY_DL_MODE) ?
-> > > +			  PCIE_DL_MODE : PCIE0_PCIE1_MODE;
-> > I think one line is okay here.
-
-> its taking 82 characters.
-
-Up to maintainer, but I consider the two lines approach is worse to read.
-
-> > > +		break;
-
-...
-
-> > > +		ret = intel_cbphy_iphy_cfg(iphy,
-> > > +					   intel_cbphy_pcie_en_pad_refclk);
-> > One line is fine here.
-> It is taking 81 characters, so kept in 2 lines.
-
-Ditto.
-
-> > > +		if (ret)
-> > > +			return ret;
-
-...
-
-> > > +		ret = intel_cbphy_iphy_cfg(iphy,
-> > > +					   intel_cbphy_pcie_dis_pad_refclk);
-> > Ditto.
-> 82 characters here.
-
-Ditto.
-
-> > > +		if (ret)
-> > > +			return ret;
-
-...
-
-> > > +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
-> > > +						 "intel,syscfg", NULL, 1, 0,
-> > > +						 &ref);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	fwnode_handle_put(ref.fwnode);
-> > Why here?
+> ...
 > 
-> Instructed to do:
+> > > On top of that, why kstrtodev_t is so important? How many users are
+> > > already in the kernel to get an advantage out of it?
+> >
+> > Does it need to be important? It matches the other kstrto* functions and
+> > so it seemed more natural to me to put it near the other functions. I'm
+> > not aware of other potential users and surprised you seem to suggest
+> > this as a requirement.
 > 
-> " Caller is responsible to call fwnode_handle_put() on the returned  
-> args->fwnode pointer"
+> Yes it does. The kstrtox() are quite generic, what you are proposing
+> is rather one particular case with blurry understanding how many users
+> will be out of it.
 
-Right...
+In my understanding one user is a hard requirement.
 
-> > > +	cbphy->id = ref.args[0];
-> > > +	cbphy->syscfg = device_node_to_regmap(ref.fwnode->dev->of_node);
+> If you had told "look, we have 1234 users which may benefit out of
+> it", I would have given no comment against.
 
-...and here you called unreferenced one. Is it okay?
-If it's still being referenced, that is fine, but otherwise it may gone already.
+Sure, having >1000 potential users would be a good argument pro this
+function. But having only one isn't a good contra IMHO.
 
-
-> > > +	ret = fwnode_property_get_reference_args(dev_fwnode(dev), "intel,hsio",
-> > > +						 NULL, 1, 0, &ref);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	fwnode_handle_put(ref.fwnode);
-> > > +	cbphy->bid = ref.args[0];
-> > > +	cbphy->hsiocfg = device_node_to_regmap(ref.fwnode->dev->of_node);
-> > Ditto.
-> > 
-> > > +	if (!device_property_read_u32(dev, "intel,phy-mode", &prop)) {
-> > Hmm... Why to mix device_property_*() vs. fwnode_property_*() ?
-> device_property_* are wrapper functions to fwnode_property_*().
-> Calling the fwnode_property_*() ending up doing the same work of
-> device_property_*().
+> > > What to do with all other possible variants ("%d:%d", "%dx%d" and its
+> > > %u variant, etc)?
+> >
+> > I don't see how %d:%d is relevant, major and minor cannot be negative
+> > can they? I never saw 'x' as separator between major and minor. I
+> > considered shortly parsing %u, but given that (I think) this is an
+> > internal representation only I chose to not make it more visible than it
+> > already is.
 > 
-> If the best practice is to maintain symmetry, will call fwnode_property_*().
+> See above, if we are going to make it generic, perhaps better to cover
+> more possible users, right?
+> Otherwise your change provokes pile of (replaced)
+> kstrto_resolution() /* %ux:%u */
+> kstrto_range() /* %d:%d */
+> kstrto_you_name_it()
 
-The best practice to keep consistency as much as possible.
-If you call two similar APIs in one scope, it's not okay.
+Given there are respective types that this can be stored to, I don't
+object more functions of this type and don't see a good reason to not
+add such a function. And in my eyes I prefer to have such a function in
+a visible place (i.e. where all the other kstrto* functions are) to
+prevent code duplication.
+
+Also I don't understand yet, what you want me to do. Assume I'd be
+willing to use simple_strtoul, I'd still want to have a function that
+gives me a dev_t from a given string. Should I put this directly in my
+led-trigger driver?
+
+> > > Why simple_strto*() can't be used?
+> >
+> > I didn't really consider it, but looking in more detail I don't like it
+> > much. Without having tried it I think simple_strtoull accepts
+> > "1000000000000000000000000000000000000000000" returning some arbitrary
+> > value without an error indication.
+> 
+> So what? User has a lot of possibilities to shoot into the foot.
+> Since you interpret this as device major:minor, not founding a device
+> will be first level of error, next one when your code will try to do
+> something out of it. It shouldn't be a problem of kstrtox generic
+> helpers.
+
+I fail to follow your argument here. In my eyes if the user writes a
+valid major:minor it should work, and if they write an invalid one this
+should result in an error and not a usage of a device that just happens
+to have the major:minor that simple_strtoull happens to return for the
+two components.
+
+> > And given that I was asked for strict
+> > parsing (i.e. not accepting 2:4:something) I'd say using simple_strto*
+> > is a step backwards. Also simple_strtoul() has "This function is obsolete.
+> > Please use kstrtoul instead." in its docstring which seems to apply to
+> > the other simple_strto*() functions, too.
+> 
+> I specifically fixed a doc string to approve its use in the precisely
+> cases you have here.
+
+Can you please be a bit more constructive here and point to the change
+you talk about? I didn't find a commit in next.
+
+Best regards
+Uwe
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
