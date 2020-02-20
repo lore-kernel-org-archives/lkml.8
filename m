@@ -2,159 +2,331 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6386CC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A57C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3758220722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7478206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 13:21:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="eNYosroi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="x7h8Orqv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbgBTNSy (ORCPT
+        id S1728145AbgBTNVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 08:18:54 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19949 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbgBTNSy (ORCPT
+        Thu, 20 Feb 2020 08:21:39 -0500
+Received: from gateway22.websitewelcome.com ([192.185.47.179]:30850 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727996AbgBTNVj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 08:18:54 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4e86f40000>; Thu, 20 Feb 2020 05:17:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 05:18:53 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 20 Feb 2020 05:18:53 -0800
-Received: from [10.2.160.62] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
- 2020 13:18:51 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: Fix possible PMD dirty bit lost in
- set_pmd_migration_entry()
-Date:   Thu, 20 Feb 2020 08:18:49 -0500
-X-Mailer: MailMate (1.13.1r5676)
-Message-ID: <51A5D10D-0ABA-4FA2-A749-EBF60DB4FEE6@nvidia.com>
-In-Reply-To: <20200220075220.2327056-1-ying.huang@intel.com>
-References: <20200220075220.2327056-1-ying.huang@intel.com>
+        Thu, 20 Feb 2020 08:21:39 -0500
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 86B145F27
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 07:21:37 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 4llpjvNqSRP4z4llpjLRj6; Thu, 20 Feb 2020 07:21:37 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=aBVqKO+u3fecGVX4F0/4pATO5Sy+gKRtKWeV4k7qRzo=; b=x7h8Orqvf8KxMai8yvij1HqxiF
+        GxEp7yxJNcdmd0JZlW7bZconjwlIuu657HChS6j8ndOOaAuDbbJJB76LrNag9KyRwjd1BuSeOohB0
+        GNRLWnfXVTLFgH+Bqk6TtpyzFVIedbEgchwnMJmtuXdnRM35CCR6yutu994l0ocdjGuM8rB1S0ScT
+        NklxiPZea+ehf+TAvoxd9p132/UW/FWDtVko2d72G3idzES/pDk6OtpyNkhjrG8GKfiyhTWoyA/hl
+        d5Y7qUrGkJmiBFXbZG8C3CHcC4RKh+nvAT+BqUu8JrHWJyolTDALC2b2IxR02mIbdarlgJZ2+tTXa
+        RkHzKCpQ==;
+Received: from [201.144.174.47] (port=7747 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j4lln-003avg-Mu; Thu, 20 Feb 2020 07:21:35 -0600
+Date:   Thu, 20 Feb 2020 07:24:20 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] sound: Replace zero-length array with flexible-array member
+Message-ID: <20200220132420.GA29765@embeddedor>
 MIME-Version: 1.0
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_EFBAB02F-7B4D-42C6-BD8F-4DD342D56792_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582204661; bh=ia8C50FcJ9IqTIPFRX/pHZ9Hj3Et0GVBStcW+vilTEY=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=eNYosroi46W+zx8zsp1OtVS6ILZzDW/iAZHv00QPonKlRd9u/3lAW1OB49/bAfd8Y
-         mOuo5+A+VaurchlLr1UD7/hEqc0oNoB2fJKX0vE7r/6AwW9hJur36lpnwcL0ceBTmd
-         0pfgWaS+kktCppKn7ibyslh8bv+3nK+1YuNgayW70MTmgLwoQX0MB07HPrGNennver
-         j/s/KsjurG0LIOV0746RCTeuJv/R2BOaj9OAySwycML9q5NBDaDw5XBervQUORXOOu
-         b7ylJMV5eSckq6nhGwvY3mK6jBG5QzUumXNdHg8Yv42RRa0wUjwbs/HIWpISA+c8NG
-         W2GvzTowuUdEQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.144.174.47
+X-Source-L: No
+X-Exim-ID: 1j4lln-003avg-Mu
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.144.174.47]:7747
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 25
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=_MailMate_EFBAB02F-7B4D-42C6-BD8F-4DD342D56792_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-On 20 Feb 2020, at 2:52, Huang, Ying wrote:
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> From: Huang Ying <ying.huang@intel.com>
->
-> In set_pmd_migration_entry(), pmdp_invalidate() is used to change PMD
-> atomically.  But the PMD is read before that with an ordinary memory
-> reading.  If the THP (transparent huge page) is written between the
-> PMD reading and pmdp_invalidate(), the PMD dirty bit may be lost, and
-> cause data corruption.  The race window is quite small, but still
-> possible in theory, so need to be fixed.
->
-> The race is fixed via using the return value of pmdp_invalidate() to
-> get the original content of PMD, which is a read/modify/write atomic
-> operation.  So no THP writing can occur in between.
->
-> The race has been introduced when the THP migration support is added
-> in the commit 616b8371539a ("mm: thp: enable thp migration in generic
-> path").  But this fix depends on the commit d52605d7cb30 ("mm: do not
-> lose dirty and accessed bits in pmdp_invalidate()").  So it's easy to
-> be backported after v4.16.  But the race window is really small, so it
-> may be fine not to backport the fix at all.
->
-> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Zi Yan <ziy@nvidia.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/huge_memory.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 580098e115bd..b1e069e68189 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -3060,8 +3060,7 @@ void set_pmd_migration_entry(struct page_vma_mapp=
-ed_walk *pvmw,
->                 return;
->
->         flush_cache_range(vma, address, address + HPAGE_PMD_SIZE);
-> -       pmdval =3D *pvmw->pmd;
-> -       pmdp_invalidate(vma, address, pvmw->pmd);
-> +       pmdval =3D pmdp_invalidate(vma, address, pvmw->pmd);
->         if (pmd_dirty(pmdval))
->                 set_page_dirty(page);
->         entry =3D make_migration_entry(page, pmd_write(pmdval));
-> --
-> 2.25.0
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Looks good to me. Thanks.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
+This issue was found with the help of Coccinelle.
 
-=E2=80=94
-Best Regards,
-Yan Zi
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
---=_MailMate_EFBAB02F-7B4D-42C6-BD8F-4DD342D56792_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/sound/control.h                  | 2 +-
+ include/sound/intel-nhlt.h               | 6 +++---
+ include/sound/soc-dapm.h                 | 2 +-
+ include/sound/soc.h                      | 2 +-
+ include/uapi/sound/asound.h              | 2 +-
+ include/uapi/sound/skl-tplg-interface.h  | 2 +-
+ sound/core/oss/pcm_plugin.h              | 2 +-
+ sound/firewire/fireworks/fireworks.h     | 2 +-
+ sound/soc/intel/atom/sst-atom-controls.h | 2 +-
+ sound/soc/intel/skylake/skl-i2s.h        | 2 +-
+ sound/soc/intel/skylake/skl-topology.h   | 4 ++--
+ sound/soc/intel/skylake/skl.h            | 2 +-
+ sound/usb/usx2y/usbusx2y.h               | 2 +-
+ 13 files changed, 16 insertions(+), 16 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/include/sound/control.h b/include/sound/control.h
+index 11feeee31e35..aeaed2a05bae 100644
+--- a/include/sound/control.h
++++ b/include/sound/control.h
+@@ -75,7 +75,7 @@ struct snd_kcontrol {
+ 	unsigned long private_value;
+ 	void *private_data;
+ 	void (*private_free)(struct snd_kcontrol *kcontrol);
+-	struct snd_kcontrol_volatile vd[0];	/* volatile data */
++	struct snd_kcontrol_volatile vd[];	/* volatile data */
+ };
+ 
+ #define snd_kcontrol(n) list_entry(n, struct snd_kcontrol, list)
+diff --git a/include/sound/intel-nhlt.h b/include/sound/intel-nhlt.h
+index f657fd8fc0ad..743c2f442280 100644
+--- a/include/sound/intel-nhlt.h
++++ b/include/sound/intel-nhlt.h
+@@ -50,7 +50,7 @@ enum nhlt_device_type {
+ 
+ struct nhlt_specific_cfg {
+ 	u32 size;
+-	u8 caps[0];
++	u8 caps[];
+ } __packed;
+ 
+ struct nhlt_fmt_cfg {
+@@ -60,7 +60,7 @@ struct nhlt_fmt_cfg {
+ 
+ struct nhlt_fmt {
+ 	u8 fmt_count;
+-	struct nhlt_fmt_cfg fmt_config[0];
++	struct nhlt_fmt_cfg fmt_config[];
+ } __packed;
+ 
+ struct nhlt_endpoint {
+@@ -80,7 +80,7 @@ struct nhlt_endpoint {
+ struct nhlt_acpi_table {
+ 	struct acpi_table_header header;
+ 	u8 endpoint_count;
+-	struct nhlt_endpoint desc[0];
++	struct nhlt_endpoint desc[];
+ } __packed;
+ 
+ struct nhlt_resource_desc  {
+diff --git a/include/sound/soc-dapm.h b/include/sound/soc-dapm.h
+index 1a9c5dd40228..f870f927b70c 100644
+--- a/include/sound/soc-dapm.h
++++ b/include/sound/soc-dapm.h
+@@ -688,7 +688,7 @@ struct snd_soc_dapm_context {
+ /* A list of widgets associated with an object, typically a snd_kcontrol */
+ struct snd_soc_dapm_widget_list {
+ 	int num_widgets;
+-	struct snd_soc_dapm_widget *widgets[0];
++	struct snd_soc_dapm_widget *widgets[];
+ };
+ 
+ #define for_each_dapm_widgets(list, i, widget)				\
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index f0e4f36f83bf..9944b978ae70 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1146,7 +1146,7 @@ struct snd_soc_pcm_runtime {
+ 	unsigned int fe_compr:1; /* for Dynamic PCM */
+ 
+ 	int num_components;
+-	struct snd_soc_component *components[0]; /* CPU/Codec/Platform */
++	struct snd_soc_component *components[]; /* CPU/Codec/Platform */
+ };
+ #define for_each_rtd_components(rtd, i, component)			\
+ 	for ((i) = 0;							\
+diff --git a/include/uapi/sound/asound.h b/include/uapi/sound/asound.h
+index 535a7229e1d9..3809993f6cb4 100644
+--- a/include/uapi/sound/asound.h
++++ b/include/uapi/sound/asound.h
+@@ -1071,7 +1071,7 @@ struct snd_ctl_elem_value {
+ struct snd_ctl_tlv {
+ 	unsigned int numid;	/* control element numeric identification */
+ 	unsigned int length;	/* in bytes aligned to 4 */
+-	unsigned int tlv[0];	/* first TLV */
++	unsigned int tlv[];	/* first TLV */
+ };
+ 
+ #define SNDRV_CTL_IOCTL_PVERSION	_IOR('U', 0x00, int)
+diff --git a/include/uapi/sound/skl-tplg-interface.h b/include/uapi/sound/skl-tplg-interface.h
+index 9eee32f5e407..62f76f154d19 100644
+--- a/include/uapi/sound/skl-tplg-interface.h
++++ b/include/uapi/sound/skl-tplg-interface.h
+@@ -149,7 +149,7 @@ struct skl_dfw_algo_data {
+ 	__u32 rsvd:30;
+ 	__u32 param_id;
+ 	__u32 max;
+-	char params[0];
++	char params[];
+ } __packed;
+ 
+ enum skl_tkn_dir {
+diff --git a/sound/core/oss/pcm_plugin.h b/sound/core/oss/pcm_plugin.h
+index 8d2f7a4e3ab6..46e273bd4a78 100644
+--- a/sound/core/oss/pcm_plugin.h
++++ b/sound/core/oss/pcm_plugin.h
+@@ -64,7 +64,7 @@ struct snd_pcm_plugin {
+ 	char *buf;
+ 	snd_pcm_uframes_t buf_frames;
+ 	struct snd_pcm_plugin_channel *buf_channels;
+-	char extra_data[0];
++	char extra_data[];
+ };
+ 
+ int snd_pcm_plugin_build(struct snd_pcm_substream *handle,
+diff --git a/sound/firewire/fireworks/fireworks.h b/sound/firewire/fireworks/fireworks.h
+index dda797209a27..654e28a6669f 100644
+--- a/sound/firewire/fireworks/fireworks.h
++++ b/sound/firewire/fireworks/fireworks.h
+@@ -177,7 +177,7 @@ struct snd_efw_phys_meters {
+ 	u32 in_meters;
+ 	u32 reserved4;
+ 	u32 reserved5;
+-	u32 values[0];
++	u32 values[];
+ } __packed;
+ enum snd_efw_clock_source {
+ 	SND_EFW_CLOCK_SOURCE_INTERNAL	= 0,
+diff --git a/sound/soc/intel/atom/sst-atom-controls.h b/sound/soc/intel/atom/sst-atom-controls.h
+index 5356e954a732..620b48d2a064 100644
+--- a/sound/soc/intel/atom/sst-atom-controls.h
++++ b/sound/soc/intel/atom/sst-atom-controls.h
+@@ -410,7 +410,7 @@ struct sst_cmd_set_gain_dual {
+ struct sst_cmd_set_params {
+ 	struct sst_destination_id dst;
+ 	u16 command_id;
+-	char params[0];
++	char params[];
+ } __packed;
+ 
+ 
+diff --git a/sound/soc/intel/skylake/skl-i2s.h b/sound/soc/intel/skylake/skl-i2s.h
+index d7c15873c0d4..dfce91e11be1 100644
+--- a/sound/soc/intel/skylake/skl-i2s.h
++++ b/sound/soc/intel/skylake/skl-i2s.h
+@@ -46,7 +46,7 @@ struct skl_i2s_config_mclk {
+ struct skl_i2s_config_mclk_ext {
+ 	u32 mdivctrl;
+ 	u32 mdivr_count;
+-	u32 mdivr[0];
++	u32 mdivr[];
+ } __packed;
+ 
+ struct skl_i2s_config_blob_signature {
+diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
+index e967800dbb62..d2cd8ef8e97f 100644
+--- a/sound/soc/intel/skylake/skl-topology.h
++++ b/sound/soc/intel/skylake/skl-topology.h
+@@ -119,7 +119,7 @@ struct skl_cpr_gtw_cfg {
+ struct skl_dma_control {
+ 	u32 node_id;
+ 	u32 config_length;
+-	u32 config_data[0];
++	u32 config_data[];
+ } __packed;
+ 
+ struct skl_cpr_cfg {
+@@ -152,7 +152,7 @@ struct skl_up_down_mixer_cfg {
+ 
+ struct skl_algo_cfg {
+ 	struct skl_base_cfg  base_cfg;
+-	char params[0];
++	char params[];
+ } __packed;
+ 
+ struct skl_base_outfmt_cfg {
+diff --git a/sound/soc/intel/skylake/skl.h b/sound/soc/intel/skylake/skl.h
+index 2bfbf59277c4..26057f38a014 100644
+--- a/sound/soc/intel/skylake/skl.h
++++ b/sound/soc/intel/skylake/skl.h
+@@ -49,7 +49,7 @@ struct skl_astate_param {
+ 
+ struct skl_astate_config {
+ 	u32 count;
+-	struct skl_astate_param astate_table[0];
++	struct skl_astate_param astate_table[];
+ };
+ 
+ struct skl_fw_config {
+diff --git a/sound/usb/usx2y/usbusx2y.h b/sound/usb/usx2y/usbusx2y.h
+index e0f77172ce8f..144b85f57bd2 100644
+--- a/sound/usb/usx2y/usbusx2y.h
++++ b/sound/usb/usx2y/usbusx2y.h
+@@ -18,7 +18,7 @@ struct snd_usX2Y_AsyncSeq {
+ struct snd_usX2Y_urbSeq {
+ 	int	submitted;
+ 	int	len;
+-	struct urb	*urb[0];
++	struct urb	*urb[];
+ };
+ 
+ #include "usx2yhwdeppcm.h"
+-- 
+2.25.0
 
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl5OhzkPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKjrYP+wRxjEtsawolB0Qpu1nGeCQaY62q6Ow0XfrE
-86x1IysDD+KB1PFZskbi3Ju/uwWtnKXNDam1Uh1onWzCs6oBT1vuBuzUkHFRfRa1
-B0ZEflHKkCX0Ns1s567TUNBL00uxFUVIcDazppXTozHyDnnAXyD0IeHlJIRasglj
-XqZYwFs4QD1LBZsHd6RSzFqP5iOoWdYn4LzMlTWoJF3sxup9ARpthb89gfNlIgMU
-xCuHeenQsDLVJtfq48qiK8yVyLTx0DMjCdbz2/VENOJmTvNEalY7F5V/4o/I3GMy
-OTQnwu+oy74ovXA6ZFYsvHogqs/M2bzNAfF5UHP7HKNLkn1eMG0XL6q/HXymESoQ
-w+yOVRrv+KoyQ8dB+7Vlw8ZXjUTh2LjjWhS2/AhIKkskDO7IiISU9rCFtR4x5twI
-+hpmwnjmIIbJxEjcb9AsmAezW64n3ZMduf9SJsdIyumT7K5n3WTjf+1FQiN4TUMF
-AjovWJdhIRiY3iPVuBw1khiCB1UO9H4ISWvRWhHEyMuAmht7De9fn9Mo6A5GGHrA
-Y9yvHCqSAluoptFDaJwemUvO2WxIEAgoWxeQF5uhjNsUcBu2cnXd2Sm+fARJMZxF
-Kabw8mVOu9+bn7LZGnh/QjwsK15lyC4WULedD8Wbhwe0CnOJ53uTCteeKS1daHtr
-D5e/tIaV
-=T38A
------END PGP SIGNATURE-----
-
---=_MailMate_EFBAB02F-7B4D-42C6-BD8F-4DD342D56792_=--
