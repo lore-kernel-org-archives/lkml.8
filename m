@@ -2,193 +2,101 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE46C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC62C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4DF24654
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA2A82467A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582195124;
-	bh=W9W0MuG4COhbzPlLew5RRd1cYSLCmlDiQ07Hi48eKa0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eoPwUS0ftfxfnWafNrmETw5DoHTgcoSbpvV9GpvCNLl19oOMbwSeozJUEzkbdauKI
-	 lIC1OqUg4uJK3pUENB95q3Mtir5ymLc9dkPuD2mKu0Ppn99LZK3HqMScoZ63HzDGuj
-	 AfGxVzCHW5mpSMykV4i/l2JH66VsAhpFIs2EYuUQ=
+	s=default; t=1582195134;
+	bh=5/Diy9ZKVyA5vlQHoEgKBQrgGCrvICrp/OzFQIB4RLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JevO87DPZWcfZSMwXMUFJ21k0W24A6EStSIZb8qakvzARXy+tnw4loEG3BoMXzSw+
+	 t2t/kSGTirHKu7vviSa3pRDvjzSUPFyU5W2JqcX6Sohi4y7/h/dl0+rBVOGFT3JlQY
+	 WhBFS3hU/YU9Tz33FubI1z4BnVICJfy7LuGFoT0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgBTKim (ORCPT
+        id S1727875AbgBTKix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:38:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37253 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgBTKim (ORCPT
+        Thu, 20 Feb 2020 05:38:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38722 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgBTKix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:38:42 -0500
-Received: by mail-ot1-f65.google.com with SMTP id b3so1994291otp.4;
-        Thu, 20 Feb 2020 02:38:42 -0800 (PST)
+        Thu, 20 Feb 2020 05:38:53 -0500
+Received: by mail-wr1-f66.google.com with SMTP id e8so4029676wrm.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:38:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wjs+bqcPT9MeOZqbAU1vmO7aFhPK7e0+qLDFpmywzq4=;
-        b=m3GZoBhDtyB7gY7DzYlaemYZnZRVUVj0XYQx/6+cnAIB5qgKggQubd1XNqXLTiDUh9
-         15ClbmHo+gh4q+trF+GaWbGOvzMSZMBsIHJFVMjlDO4uYGOVLymXs2nrusEF3O4abr+y
-         rLdij/pSdqde6yOZShCSWLlmu/fyRI5VERGFB4B94zDub4ZobTnoXw0+Is+12Tz5uxDw
-         3Zt58XeAnNhr2ATZzcegX4F3IX2/p+iS1YxE8N9pw9+Vn1yu1Lkhjf//CwNscEzMQ9PJ
-         LZNG3NOzR4kPEeFU1i6xHtDPoNgunIMnv0ghHzFHEA8CBEitQylJauEKtf0pAocRa+7x
-         aaEA==
-X-Gm-Message-State: APjAAAVCYR+X8X6gNV7g9cXebS068lqPXdDqlTGFBuwZr9enKGnsFxq5
-        D+cxeYs1HBhJbgplMqUnoI4Cr2b8cNVnkoHzLwQ=
-X-Google-Smtp-Source: APXvYqzFBZk9/DZvDaNVAs2YXI+6x9S5FHh4UEDtVxtEFLg6U8vLB5gaWR5bRdb2UxhDyTJbbFbm3WvaqaLD9En2BgY=
-X-Received: by 2002:a9d:67d7:: with SMTP id c23mr23055702otn.262.1582195121545;
- Thu, 20 Feb 2020 02:38:41 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ht1b2Gn12WUgyUngBOy6cF6YFNd2DyC26HhQ0+Z/imw=;
+        b=pPvECpqze1JTo8iFOWJcZyZvIn/nlzyOtmaTANlaqersOdPXTtBU7HNjYhvDufZiYg
+         uySVBkzB4oK99LagzHeWtvlR90brmTTL/rdv+ipRQSzB1wmb0G8pfgHBcVyuFm+dcekH
+         5tMBSVZlJA43YH7iIPLyo9jshQ2R4Wl7Wjm+0mbR7gaYVKvf0ZWWSdL1JfPd2juQnUmq
+         ZHcklZjSK3VX4EAKHwqAqLwpe1Elp0tOVI3McoRPcfNpcsQB+m3qrwiAo1rABZUPUg1k
+         K7+kcP9sfHVLddDGRJomaoyzBCCQQ6dV0cKWoUPKR+BiNJx1WGuB05/0FtkCcLFnn8AW
+         GqHQ==
+X-Gm-Message-State: APjAAAUIc81lazLVxD1/Zkr+6Q/NHE3c+y1UNpbnbyCFqxxsDVKuVizI
+        DJ8QJG8wUbx1OjiILzwyawA=
+X-Google-Smtp-Source: APXvYqx9uGPq79/Y37GnvXyltn1NCMABFOX+xrRpc44HyxfkCeZH95pJYQQfgSCA/8RHbNnLBE0JqQ==
+X-Received: by 2002:adf:d4c7:: with SMTP id w7mr42913682wrk.101.1582195131500;
+        Thu, 20 Feb 2020 02:38:51 -0800 (PST)
+Received: from localhost (ip-37-188-133-21.eurotel.cz. [37.188.133.21])
+        by smtp.gmail.com with ESMTPSA id b17sm4061890wrp.49.2020.02.20.02.38.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2020 02:38:50 -0800 (PST)
+Date:   Thu, 20 Feb 2020 11:38:49 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        david@redhat.com, osalvador@suse.de, dan.j.williams@intel.com,
+        rppt@linux.ibm.com, robin.murphy@arm.com
+Subject: Re: [PATCH v2 0/7] mm/hotplug: Only use subsection map in VMEMMAP
+ case
+Message-ID: <20200220103849.GG20509@dhcp22.suse.cz>
+References: <20200220043316.19668-1-bhe@redhat.com>
 MIME-Version: 1.0
-References: <20200220050440.45878-1-john.stultz@linaro.org> <20200220050440.45878-5-john.stultz@linaro.org>
-In-Reply-To: <20200220050440.45878-5-john.stultz@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 Feb 2020 11:38:30 +0100
-Message-ID: <CAJZ5v0i8KGMwWCuJJPNyXXP0LvM_S61=m0UoYS97tEi_PNAUCw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] driver core: Remove driver_deferred_probe_check_state_continue()
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200220043316.19668-1-bhe@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 6:05 AM John Stultz <john.stultz@linaro.org> wrote:
->
-> Now that driver_deferred_probe_check_state() works better, and
-> we've converted the only user of
-> driver_deferred_probe_check_state_continue() we can simply
-> remove it and simplify some of the logic.
->
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Kevin Hilman <khilman@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Len Brown <len.brown@intel.com>
-> Cc: Todd Kjos <tkjos@google.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> Change-Id: Id5cd5e9264cfb0fbd70a702715174cc4b10006f4
+On Thu 20-02-20 12:33:09, Baoquan He wrote:
+> Memory sub-section hotplug was added to fix the issue that nvdimm could
+> be mapped at non-section aligned starting address. A subsection map is
+> added into struct mem_section_usage to implement it. However, sub-section
+> is only supported in VMEMMAP case.
 
-Nice!
+Why? Is there any fundamental reason or just a lack of implementation?
+VMEMMAP should be really only an implementation detail unless I am
+missing something subtle.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Hence there's no need to operate
+> subsection map in SPARSEMEM|!VMEMMAP case. In this patchset, change
+> codes to make sub-section map and the relevant operation only available
+> in VMEMMAP case.
+> 
+> And since sub-section hotplug added, the hot add/remove functionality
+> have been broken in SPARSEMEM|!VMEMMAP case. Wei Yang and I, each of us
+> make one patch to fix one of the failures. In this patchset, the patch
+> 1/7 from me is used to fix the hot remove failure. Wei Yang's patch has
+> been merged by Andrew.
 
-> ---
->  drivers/base/dd.c             | 49 +++++------------------------------
->  include/linux/device/driver.h |  1 -
->  2 files changed, 6 insertions(+), 44 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index fa138f24e2d3..408e4da081da 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -244,19 +244,6 @@ static int __init deferred_probe_timeout_setup(char *str)
->  }
->  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
->
-> -static int __driver_deferred_probe_check_state(struct device *dev)
-> -{
-> -       if (!initcalls_done || deferred_probe_timeout > 0)
-> -               return -EPROBE_DEFER;
-> -
-> -       if (!deferred_probe_timeout) {
-> -               dev_WARN(dev, "deferred probe timeout, ignoring dependency");
-> -               return -ETIMEDOUT;
-> -       }
-> -
-> -       return 0;
-> -}
-> -
->  /**
->   * driver_deferred_probe_check_state() - Check deferred probe state
->   * @dev: device to check
-> @@ -272,43 +259,19 @@ static int __driver_deferred_probe_check_state(struct device *dev)
->   */
->  int driver_deferred_probe_check_state(struct device *dev)
->  {
-> -       int ret;
-> +       if (!initcalls_done || deferred_probe_timeout > 0)
-> +               return -EPROBE_DEFER;
->
-> -       ret = __driver_deferred_probe_check_state(dev);
-> -       if (ret < 0)
-> -               return ret;
-> +       if (!deferred_probe_timeout) {
-> +               dev_WARN(dev, "deferred probe timeout, ignoring dependency");
-> +               return -ETIMEDOUT;
-> +       }
->
->         dev_warn(dev, "ignoring dependency for device, assuming no driver");
->
->         return -ENODEV;
->  }
->
-> -/**
-> - * driver_deferred_probe_check_state_continue() - check deferred probe state
-> - * @dev: device to check
-> - *
-> - * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
-> - * -EPROBE_DEFER otherwise.
-> - *
-> - * Drivers or subsystems can opt-in to calling this function instead of
-> - * directly returning -EPROBE_DEFER.
-> - *
-> - * This is similar to driver_deferred_probe_check_state(), but it allows the
-> - * subsystem to keep deferring probe after built-in drivers have had a chance
-> - * to probe. One scenario where that is useful is if built-in drivers rely on
-> - * resources that are provided by modular drivers.
-> - */
-> -int driver_deferred_probe_check_state_continue(struct device *dev)
-> -{
-> -       int ret;
-> -
-> -       ret = __driver_deferred_probe_check_state(dev);
-> -       if (ret < 0)
-> -               return ret;
-> -
-> -       return -EPROBE_DEFER;
-> -}
-> -
->  static void deferred_probe_timeout_work_func(struct work_struct *work)
->  {
->         struct device_private *private, *p;
-> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-> index 1188260f9a02..5242afabfaba 100644
-> --- a/include/linux/device/driver.h
-> +++ b/include/linux/device/driver.h
-> @@ -238,7 +238,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
->
->  void driver_deferred_probe_add(struct device *dev);
->  int driver_deferred_probe_check_state(struct device *dev);
-> -int driver_deferred_probe_check_state_continue(struct device *dev);
->  void driver_init(void);
->
->  /**
-> --
+Not sure I understand. Are there more issues to be fixed?
+>  include/linux/mmzone.h |   2 +
+>  mm/sparse.c            | 178 +++++++++++++++++++++++++++++------------
+>  2 files changed, 127 insertions(+), 53 deletions(-)
+
+Why do we need to add so much code to remove a functionality from one
+memory model?
+-- 
+Michal Hocko
+SUSE Labs
