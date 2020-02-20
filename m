@@ -2,137 +2,227 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702B8C11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D679C11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A50224673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:34:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582194859;
-	bh=TZ7pML+A/CdO4i/BaO0lPdvmFDaIgMU+HKt6u+UYLNM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BIFhyC1aO85dc7uLH1f2NX/2GdGIR1EHcatyo0dAUuWMXW2hth0fxpNZg3825VsU5
-	 pym6TWLwEShGixM28yXsQ/ublOpgxKRKkjQrd8oFwzEEqEdSGsbeXBD1u3Q7yVESRj
-	 ifOdcg27rdO0W/OKkydK3yeamV8R41BZSZXtAF/c=
+	by mail.kernel.org (Postfix) with ESMTP id 2190724672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:34:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NjDV+Hdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgBTKeR (ORCPT
+        id S1727393AbgBTKep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:34:17 -0500
-Received: from mail-oi1-f176.google.com ([209.85.167.176]:34818 "EHLO
-        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgBTKeR (ORCPT
+        Thu, 20 Feb 2020 05:34:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43784 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727088AbgBTKeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:34:17 -0500
-Received: by mail-oi1-f176.google.com with SMTP id b18so27076827oie.2;
-        Thu, 20 Feb 2020 02:34:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VAP40k6HR+6LKosbEIXZrUrjkDmLImj5HhCg+dOGS6g=;
-        b=hCXCxjaL0arZq7Mt6L0VY1KmxZ3S4aTZLSRFXbg4e3Ralvtzr3fWxZ2Z6vIcbkT0BL
-         csNWls07d4p3WpWqojOy9sejBvNvJPxEuLO70+h/mxr7WIhZOd7DdSUWGqahgddBHOJV
-         2bUi38qlgAZ7S6i1NSe7QcVg3rMZtRSFGfola/ztzFyCyMANObqTbB9u6fq1M5bdH5XD
-         NL0NgftZBUfgTY3xwiPDKzdb0x8ZM55D8BQvwzNoWxYzaOXSKFn05vth3rhh4AkMZQbg
-         YcnjLT40iamQOiajmgmky5tX1k0V29dmNXCaUqNSjmx+gV1GhXNzd1A705y2Y6KUEzCJ
-         elXQ==
-X-Gm-Message-State: APjAAAU4URjUlmGWEPorwgAEsqIIRAYdfZgT9PPTFbsHaGpgIQSo1/HA
-        jYHEY9/i+ax4dkjDGTywQjtQbRwv7Ogl5usUqMM=
-X-Google-Smtp-Source: APXvYqxofCC5wkjMP+nnXS7Hd45Hjl/OC5qNpLdFit8SZ20DA4UkgIppGZx0Jh5bzPvWsHc4pCJIzjWzfolo2wunR4k=
-X-Received: by 2002:a54:4e96:: with SMTP id c22mr1527235oiy.110.1582194856166;
- Thu, 20 Feb 2020 02:34:16 -0800 (PST)
+        Thu, 20 Feb 2020 05:34:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582194882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IbRiHn2UAAo1XhaSQjnQaPYh19kM6Kh7056eiuL/Ryo=;
+        b=NjDV+Hdyxg0zMBZB8zr582tLfOk1YjRYU+3uvqFltugQn9LSf5bHAY1Jhol7FQ3zJVF6dN
+        j3OrKzU47eKawxteomPfgxACihDdS8iB+A5wY9xOWT1UzWxSla7cUgDwFirqQBX7wNTKfT
+        idPoF+/t41ftlu5eP4Yj/Clk4E+iLBc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-117-qU9IaiWhN92zMfQkTauxHw-1; Thu, 20 Feb 2020 05:34:40 -0500
+X-MC-Unique: qU9IaiWhN92zMfQkTauxHw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F8D1801FA6;
+        Thu, 20 Feb 2020 10:34:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBEF85DA76;
+        Thu, 20 Feb 2020 10:34:36 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200219163128.GB9496@magnolia>
+References: <20200219163128.GB9496@magnolia> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204550281.3299825.6344518327575765653.stgit@warthog.procyon.org.uk>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        mszeredi@redhat.com, christian@brauner.io,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/19] vfs: syscall: Add fsinfo() to query filesystem information [ver #16]
 MIME-Version: 1.0
-References: <0955D72C-D24D-402E-884F-C706578BF477@canonical.com>
- <a9fd25cd0a151d20e975ce79ab70197e39ef01e1.camel@linux.intel.com>
- <235CF4F8-19BF-4B00-8C92-E59CB2D476A7@canonical.com> <CAJZ5v0jXvo0ceNMp=kstTi24Ne7F-ZGMcD0T0TSMpcZZWsJsUA@mail.gmail.com>
- <CA007B3C-C084-429E-B774-70264A9E609F@canonical.com>
-In-Reply-To: <CA007B3C-C084-429E-B774-70264A9E609F@canonical.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 20 Feb 2020 11:34:05 +0100
-Message-ID: <CAJZ5v0in-v9iu88Wj0gAg_th-E-QWDSHZ_XvgyoOuqE=CZPtqQ@mail.gmail.com>
-Subject: Re: Hard Disk consumes lots of power in s2idle
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Kent Lin <kent.lin@canonical.com>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <542410.1582194875.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 20 Feb 2020 10:34:35 +0000
+Message-ID: <542411.1582194875@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 11:25 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
->
->
-> > On Feb 20, 2020, at 18:12, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Feb 20, 2020 at 9:08 AM Kai-Heng Feng
-> > <kai.heng.feng@canonical.com> wrote:
-> >>
-> >> Hi Srinivas,
-> >>
-> >>> On Feb 20, 2020, at 02:36, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com> wrote:
-> >>>
-> >>> Hi Kai,
-> >>>
-> >>> On Wed, 2020-02-19 at 22:22 +0800, Kai-Heng Feng wrote:
-> >>>> Hi Srinivas,
-> >>>>
-> >>>> Your previous work to support DEVSLP works well on SATA SSDs, so I am
-> >>>> asking you the issue I am facing:
-> >>>> Once a laptop has a HDD installed, the power consumption during
-> >>>> S2Idle increases ~0.4W, which is quite a lot.
-> >>>> However, HDDs don't seem to support DEVSLP, so I wonder if you know
-> >>>> to do proper power management for HDDs?
-> >>> What is the default here
-> >>> cat /sys/power/mem_sleep
-> >>> s2idle or deep?
-> >>
-> >> It defaults to s2idle.
-> >>
-> >>>
-> >>> Please follow debug steps here:
-> >>> https://01.org/blogs/qwang59/2018/how-achieve-s0ix-states-linux
-> >>>
-> >>> We need to check whether you get any PC10 residency or not.
-> >>
-> >> Yes it reaches PC10. It doesn't reach SLP_S0 though.
-> >> The real number on S2Idle power consumption:
-> >> No HDD: ~1.4W
-> >> One HDD: ~1.8W
-> >>
-> >> If the SoC doesn't hit PC10 the number should be significantly higher.
-> >> That's why I think the issue is the power management on HDD itself.
-> >
-> > I'm assuming that you mean a non-SSD device here.
->
-> Yes, it's spinning rust here.
->
-> >
-> > That would be handled via ata_port_suspend() I gather and whatever
-> > that does should do the right thing.
-> >
-> > Do you think that the disk doesn't spin down or it spins down, but the
-> > logic stays on?
->
-> The spin sound is audible, so I am certain the HDD spins down during S2Idle.
+Darrick J. Wong <darrick.wong@oracle.com> wrote:
 
-OK
+> > +	p->f_blocks.hi	=3D 0;
+> > +	p->f_blocks.lo	=3D buf.f_blocks;
+> =
 
-> How do I know if the logic is on or off?
+> Er... are there filesystems (besides that (xfs++)++ one) that require
+> u128 counters?  I suspect that the Very Large Fields are for future
+> expandability, but I also wonder about the whether it's worth the
+> complexity of doing this, since the structures can always be
+> version-revved later.
 
-Well, if it were off, it would not draw power. :-)
+I'm making a relatively cheap allowance for future expansion.  Dave Chinne=
+r
+has mentioned at one of the LSFs that 16EiB may be exceeded soon (though I
+hate to think of fscking such a beastie).  I know that the YFS variant of =
+AFS
+supports 96-bit vnode numbers (which I translate to inode numbers).  What =
+I'm
+trying to avoid is the problem we have with stat/statfs where under some
+circumstances we have to return an error (ERANGE?) because we can't repres=
+ent
+the number if someone asks for an older version of the struct.
 
-So IMO it is reasonable to assume that the logic on the drive stays
-on.  I'm not aware of anything that can be done to turn it off,
-however.
+Since the buffer is (meant to be) pre-cleared, the filesystem can just ign=
+ore
+the high word if it's never going to set it.  In fact, fsinfo_generic_stat=
+fs
+doesn't need to set them either.
+
+> XFS inodes are u64 values...
+> ...and the max symlink target length is 1k, not PAGE_SIZE...
+
+Yeah, and AFS(YFS) has 96-bit inode numbers.  The filesystem's fsinfo tabl=
+e is
+read first so that the filesystem can override this.
+
+> ...so is the usage model here that XFS should call fsinfo_generic_limits
+> to fill out the fsinfo_limits structure, modify the values in
+> ctx->buffer as appropriate for XFS, and then return the structure size?
+
+Actually, I should export some these so that you can do that.  I'll export
+fsinfo_generic_{timestamp_info,supports,limits} for now.
+
+> > +#define FSINFO_ATTR_VOLUME_ID		0x05	/* Volume ID (string) */
+> > +#define FSINFO_ATTR_VOLUME_UUID		0x06	/* Volume UUID (LE uuid) */
+> > +#define FSINFO_ATTR_VOLUME_NAME		0x07	/* Volume name (string) */
+> =
+
+> I think I've muttered about the distinction between volume id and
+> volume name before, but I'm still wondering how confusing that will be
+> for users?  Let me check my assumptions, though:
+> =
+
+> Volume ID is whatever's in super_block.s_id, which (at least for xfs and
+> ext4) is the device name (e.g. "sda1").  I guess that's useful for
+> correlating a thing you can call fsinfo() on against strings that were
+> logged in dmesg.
+>
+> Volume name I think is the fs label (e.g. "home"), which I think will
+> have to be implemented separately by each filesystem, and that's why
+> there's no generic vfs implementation.
+
+Yes.  For AFS, for example, this would be the name of the volume (which ma=
+y be
+changed), whereas the volume ID is the number in the protocol that actuall=
+y
+refers to the volume (which cannot be changed).
+
+And, as you say, for blockdev mounts, the ID is the device name and the vo=
+lume
+name is filesystem specific.
+
+> The 7 -> 0 -> 1 sequence here confused me until I figured out that
+> QUERY_TYPE is the mask for QUERY_{PATH,FD}.
+
+Changed to FSINFO_FLAGS_QUERY_MASK.
+
+> > +struct fsinfo_limits {
+> > +...
+> > +	__u32	__reserved[1];
+> =
+
+> I wonder if these structures ought to reserve more space than a single u=
+32...
+
+No need.  Part of the way the interface is designed is that the version nu=
+mber
+for a particular VSTRUCT-type attribute is also the length.  So a newer
+version is also longer.  All the old fields must be retained and filled in=
+.
+New fields are tagged on the end.
+
+If userspace asks for an older version than is supported, it gets a trunca=
+ted
+return.  If it asks for a newer version, the extra fields it is expecting =
+are
+all set to 0.  Either way, the length (and thus the version) the kernel
+supports is returned - not the length copied.
+
+The __reserved fields are there because they represent padding (the struct=
+ is
+going to be aligned/padded according to __u64 in this case).  Ideally, I'd
+mark the structs __packed, but this messes with the alignment and may make=
+ the
+compiler do funny tricks to get out any field larger than a byte.
+
+I've renamed them to __padding.
+
+> > +struct fsinfo_supports {
+> > +	__u64	stx_attributes;		/* What statx::stx_attributes are supported *=
+/
+> > +	__u32	stx_mask;		/* What statx::stx_mask bits are supported */
+> > +	__u32	ioc_flags;		/* What FS_IOC_* flags are supported */
+> =
+
+> "IOC"?  That just means 'ioctl'.  Is this field supposed to return the
+> supported FS_IOC_GETFLAGS flags, or the supported FS_IOC_FSGETXATTR
+> flags?
+
+FS_IOC_[GS]ETFLAGS is what I meant.
+
+> I suspect it would also be a big help to be able to tell userspace which
+> of the flags can be set, and which can be cleared.
+
+How about:
+
+	__u32	fs_ioc_getflags;	/* What FS_IOC_GETFLAGS may return */
+	__u32	fs_ioc_setflags_set;	/* What FS_IOC_SETFLAGS may set */
+	__u32	fs_ioc_setflags_clear;	/* What FS_IOC_SETFLAGS may clear */
+
+> > +struct fsinfo_timestamp_one {
+> > +	__s64	minimum;	/* Minimum timestamp value in seconds */
+> > +	__u64	maximum;	/* Maximum timestamp value in seconds */
+> =
+
+> Given that time64_t is s64, why is the maximum here u64?
+
+Well, I assume it extremely unlikely that the maximum can be before 1970, =
+so
+there doesn't seem any need to allow the maximum to be negative.  Furtherm=
+ore,
+it would be feasible that you could encounter a filesystem with a u64
+filesystem that doesn't support dates before 1970.
+
+On the other hand, if Linux is still going when __s64 seconds from 1970 wr=
+aps,
+it will be impressive, but I'm not sure we'll be around to see it...  Some=
+one
+will have to cast a resurrection spell on Arnd to fix that one.
+
+However, since signed/unsigned comparisons may have issues, I can turn it =
+into
+an __s64 also if that is preferred.
+
+David
+
