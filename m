@@ -2,102 +2,112 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C854C11D0B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C582C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF76208CD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 686C2208CD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iJiqZm/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgBTPJG (ORCPT
+        id S1728352AbgBTPKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:09:06 -0500
-Received: from muru.com ([72.249.23.125]:56274 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728176AbgBTPJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:09:06 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id DE1ED8080;
-        Thu, 20 Feb 2020 15:09:48 +0000 (UTC)
-Date:   Thu, 20 Feb 2020 07:09:01 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        agx@sigxcpu.org, daniel.thompson@linaro.org, jingoohan1@gmail.com,
-        dri-devel@lists.freedesktop.org, tomi.valkeinen@ti.com,
-        jjhiblot@ti.com
-Subject: Re: [PATCH] backlight: add led-backlight driver
-Message-ID: <20200220150901.GG37466@atomide.com>
-References: <20200219191412.GA15905@amd>
- <20200219194540.GD37466@atomide.com>
- <20200220074849.GF3494@dell>
+        Thu, 20 Feb 2020 10:10:17 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:15494 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728176AbgBTPKQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 10:10:16 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e4ea14a0000>; Thu, 20 Feb 2020 07:10:02 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Feb 2020 07:10:15 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 07:10:15 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 15:10:12 +0000
+Subject: Re: [PATCH v3 06/10] ASoC: tegra: add Tegra186 based DSPK driver
+To:     Sameer Pujar <spujar@nvidia.com>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <digetx@gmail.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+References: <1582180492-25297-1-git-send-email-spujar@nvidia.com>
+ <1582180492-25297-7-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <21f89564-2e04-7d06-bb07-5fa488d9ee8f@nvidia.com>
+Date:   Thu, 20 Feb 2020 15:10:10 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200220074849.GF3494@dell>
+In-Reply-To: <1582180492-25297-7-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582211402; bh=DqhgkJnHxUcz8diUkAKKorYICLcz915PBRp2VzGuspI=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=iJiqZm/8CmQ+plBvUef6JAzfIwThPCK7ELdBLATXQ1HHnhpPGcC6AMs5eGG50IHC/
+         qZyeHfJ4KuLem1QhEnqfHr6Tw/j4PStoRmi5VYIWKizvoGMfNxm3Q/qALQygxJgU1j
+         DMUp3OoK8kZFgspILqGleRn4nDu9vdFkWMH33SQdG5n2KpGXM9uOxXhGu5Z8yeOO5U
+         mLp06zsH2VCH/z3sfEieQ+gQ+CVLPvzCQekA0fqtYrFUnw+txu0u2KTUzLzE6Ita7k
+         sJqSWo/Wj6KwwDfuuQKSBG3TIfVF0QYsr9Pm4Ka69rKw75EcrftJ/J+mX1c/Wd/HTz
+         mwFQxuse41eKw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [200220 07:49]:
-> On Wed, 19 Feb 2020, Tony Lindgren wrote:
+
+On 20/02/2020 06:34, Sameer Pujar wrote:
+> The Digital Speaker Controller (DSPK) converts the multi-bit Pulse Code
+> Modulation (PCM) audio input to oversampled 1-bit Pulse Density Modulation
+> (PDM) output. From the signal flow perpsective, the DSPK can be viewed as
+> a PDM transmitter that up-samples the input to the desired sampling rate
+> by interpolation then converts the oversampled PCM input to the desired
+> 1-bit output via Delta Sigma Modulation (DSM).
 > 
-> > * Pavel Machek <pavel@ucw.cz> [200219 19:15]:
-> > > From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > > 
-> > > This patch adds a led-backlight driver (led_bl), which is similar to
-> > > pwm_bl except the driver uses a LED class driver to adjust the
-> > > brightness in the HW. Multiple LEDs can be used for a single backlight.
-> > > 
-> > > Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > > Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > > Acked-by: Tony Lindgren <tony@atomide.com>
-> > > Tested-by: Tony Lindgren <tony@atomide.com>
-> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > > ---
-> > >  drivers/video/backlight/Kconfig  |   7 ++
-> > >  drivers/video/backlight/Makefile |   1 +
-> > >  drivers/video/backlight/led_bl.c | 260 +++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 268 insertions(+)
-> > >  create mode 100644 drivers/video/backlight/led_bl.c
-> > > 
-> > > Hi!
-> > > 
-> > > Here's the version of the driver I have. AFAICT
-> > > default-brightness-level handling is ok, so does not need to be
-> > > changed.
-> > > 
-> > > Lee, it would be easiest for me if you could apply it to your tree and
-> > > push, but given enough time I can push it to Linus, too.
-> > 
-> > Oh you're using quoted-printable for patches.. Got it applied now,
-> > and it still works. Below is also the related dts change that
-> > I tested with.
-> > 
-> > Feel free to pick the dts change too, naturally that should
-> > not be applied before the driver.
-> > 
-> > If you guys instead want me to pick these both into my fixes
-> > branch, just let me know and I'll do the explaining why these
-> > are needed as fixes. Basically we no longer have a way to enable
-> > the LCD backlight for droid4 manually starting with v5.6-rc1
-> > unlike earlier.
+> This patch registers DSPK component with ASoC framework. The component
+> driver exposes DAPM widgets, routes and kcontrols for the device. The DAI
+> driver exposes DSPK interfaces, which can be used to connect different
+> components in the ASoC layer. Makefile and Kconfig support is added to
+> allow to build the driver. The DSPK devices can be enabled in the DT via
+> "nvidia,tegra186-dspk" compatible binding. This driver can be used
+> on Tegra194 chip as well.
 > 
-> Please do.  You already have my Ack.
+> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+> ---
+>  sound/soc/tegra/Kconfig         |  13 +
+>  sound/soc/tegra/Makefile        |   2 +
+>  sound/soc/tegra/tegra186_dspk.c | 510 ++++++++++++++++++++++++++++++++++++++++
+>  sound/soc/tegra/tegra186_dspk.h |  73 ++++++
+>  4 files changed, 598 insertions(+)
+>  create mode 100644 sound/soc/tegra/tegra186_dspk.c
+>  create mode 100644 sound/soc/tegra/tegra186_dspk.h
 
-OK pushed out these two patches in omap-for-v5.6/droid4-lcd-fix.
+Aside from Randy's comment ...
 
-Thanks,
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 
-Tony
+Cheers
+Jon
+
+-- 
+nvpublic
