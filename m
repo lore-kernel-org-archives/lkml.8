@@ -2,259 +2,101 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC82C11D01
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819F4C5ACC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A6324671
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1372465D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582161715;
+	bh=/gXQCLejWet2wB1RtNnXTfft6r8xlIGrgmxJlT/VpK8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cSdxaNpt1ubEjg3H8rQ3HN1vC95uwff/iWFYQzuBz3aRfM/HIZffDx8sr4BDAEMc9
+	 z59zd4fuJ1sXyV8T3NI8zKUZ+ntFVs/IhzgmNszuob/KJe8I9yhWhE40Qoj6NHRDFb
+	 zFMZI0pBaK1wmUI+Mw2ysnFB566FQkZx6npCoIi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727840AbgBTBRJ (ORCPT
+        id S1727476AbgBTBVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:17:09 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:55620 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727171AbgBTBQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:16:58 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BF392013D3;
-        Thu, 20 Feb 2020 02:16:56 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 81CB020273A;
-        Thu, 20 Feb 2020 02:16:40 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 07720402DD;
-        Thu, 20 Feb 2020 09:16:14 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
-        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
-        aisheng.dong@nxp.com, linux@roeck-us.net,
-        srinivas.kandagatla@linaro.org, krzk@kernel.org,
-        fugang.duan@nxp.com, peng.fan@nxp.com, daniel.baluta@nxp.com,
-        bjorn.andersson@linaro.org, olof@lixom.net, dinguyen@kernel.org,
-        leonard.crestez@nxp.com, marcin.juszkiewicz@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V15 RESEND 3/5] thermal: imx_sc: add i.MX system controller thermal support
-Date:   Thu, 20 Feb 2020 09:10:26 +0800
-Message-Id: <1582161028-2844-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
-References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 19 Feb 2020 20:21:53 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36848 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgBTBVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Feb 2020 20:21:53 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f24so1701420lfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 17:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LbQuf+GtIv5ENkR5EOBV/0SjhBAjvOXcFmXLUjHR2lU=;
+        b=XnycSrB0jCwOgjAd3Tk6WrvlvVoT7sGo/6hbjO/h17hHZbwSad2xHVSEurbThdfKcw
+         IjbcEMvts9odqDAPeKQrOB+po4yNFk6ZQwUgiYxvXDRHn/9ZXwwMjrof8oZcnJ1NLe3F
+         1a4LZIPhqkrmhgz/lVmfbuWYq8UagFoajp4YI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LbQuf+GtIv5ENkR5EOBV/0SjhBAjvOXcFmXLUjHR2lU=;
+        b=W652yYKfImmJq0Pa4Pq/ua/1kEh/G5dEiZcu95qYbgOq9tYlzARChvhOg5U84cNm+s
+         UDUHobPyrroRcdK24yPe8LTLFASKolYbEBn0Kq4R1NtOW2zVFJzAEsBndgxVxWdx8m3K
+         vF5f5ijH9wg78YsV3/TtjH53qRlnyhMYoViEDiEAj0lfWjQnj9/BLzzZ+vN3O1uO3Nxx
+         TPDOE1d+oyBEtjJSDJqyxZz+hOoiPbqThzpChbTgkT5dqSthc9k7N+cKjAELCh5ngNdY
+         cQ2yscdi27YLiZCADY9VcC81mEjyJ6XaYW3Pug7LXJ33TFMBF1ijTayxtWL9R6+CWNMr
+         Clmg==
+X-Gm-Message-State: APjAAAUTHsXG7Gi0i2qhlm4AAaChyBjCXiz1h59Ws8BLcrnTtSchuBVg
+        73XJg52q00v6fep8xxWidbiDksWkSq8=
+X-Google-Smtp-Source: APXvYqx1Uhs0oMaR89/j9aseniboyF2Ck6tyDQBH5usWea+YE7OnRvP3pSfEkEO5X5DV0IF33MlAag==
+X-Received: by 2002:ac2:55a8:: with SMTP id y8mr15181167lfg.117.1582161711140;
+        Wed, 19 Feb 2020 17:21:51 -0800 (PST)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id e5sm696678lfn.66.2020.02.19.17.21.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Feb 2020 17:21:50 -0800 (PST)
+Received: by mail-lj1-f173.google.com with SMTP id o15so2415890ljg.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 17:21:49 -0800 (PST)
+X-Received: by 2002:a2e:461a:: with SMTP id t26mr17213618lja.204.1582161709449;
+ Wed, 19 Feb 2020 17:21:49 -0800 (PST)
+MIME-Version: 1.0
+References: <158215745745.386537.12978619503606431141.stgit@warthog.procyon.org.uk>
+In-Reply-To: <158215745745.386537.12978619503606431141.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Feb 2020 17:21:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whOAg2EJycA=x=8RzBy3dnDFsgnyxrjREyNu6-8+eTTHA@mail.gmail.com>
+Message-ID: <CAHk-=whOAg2EJycA=x=8RzBy3dnDFsgnyxrjREyNu6-8+eTTHA@mail.gmail.com>
+Subject: Re: [RFC PATCH] afs: Create a mountpoint through symlink() and remove
+ through rmdir()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-afs@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and thermal sensors etc..
+On Wed, Feb 19, 2020 at 4:11 PM David Howells <dhowells@redhat.com> wrote:
+>
+> If symlink() is given a magic prefix in the target string, turn it into a
+> mountpoint instead.
+>
+> The prefix is "//_afs3_mount:".
 
-This patch adds i.MX system controller thermal driver support,
-Linux kernel has to communicate with system controller via MU
-(message unit) IPC to get each thermal sensor's temperature,
-it supports multiple sensors which are passed from device tree,
-please see the binding doc for details.
+That sounds sane.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-No change.
----
- drivers/thermal/Kconfig          |  11 +++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/imx_sc_thermal.c | 142 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 154 insertions(+)
- create mode 100644 drivers/thermal/imx_sc_thermal.c
+Your argument that if the prefix is made really long it couldn't be a
+valid symlink at all on AFS is fair, but seems somewhat excessive.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 5a05db5..d1cb8dc 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -251,6 +251,17 @@ config IMX_THERMAL
- 	  cpufreq is used as the cooling device to throttle CPUs when the
- 	  passive trip is crossed.
- 
-+config IMX_SC_THERMAL
-+	tristate "Temperature sensor driver for NXP i.MX SoCs with System Controller"
-+	depends on ARCH_MXC && IMX_SCU
-+	depends on OF
-+	help
-+	  Support for Temperature Monitor (TEMPMON) found on NXP i.MX SoCs with
-+	  system controller inside, Linux kernel has to communicate with system
-+	  controller via MU (message unit) IPC to get temperature from thermal
-+	  sensor. It supports one critical trip point and one
-+	  passive trip point for each thermal sensor.
-+
- config MAX77620_THERMAL
- 	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
- 	depends on MFD_MAX77620
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 9fb88e2..a11a6d8 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -43,6 +43,7 @@ obj-$(CONFIG_DB8500_THERMAL)	+= db8500_thermal.o
- obj-$(CONFIG_ARMADA_THERMAL)	+= armada_thermal.o
- obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
- obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
-+obj-$(CONFIG_IMX_SC_THERMAL)	+= imx_sc_thermal.o
- obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
- obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
- obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
-diff --git a/drivers/thermal/imx_sc_thermal.c b/drivers/thermal/imx_sc_thermal.c
-new file mode 100644
-index 0000000..d406ecb
---- /dev/null
-+++ b/drivers/thermal/imx_sc_thermal.c
-@@ -0,0 +1,142 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018-2019 NXP.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/firmware/imx/sci.h>
-+#include <linux/firmware/imx/types.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/thermal.h>
-+
-+#include "thermal_core.h"
-+
-+#define IMX_SC_MISC_FUNC_GET_TEMP	13
-+
-+static struct imx_sc_ipc *thermal_ipc_handle;
-+
-+struct imx_sc_sensor {
-+	struct thermal_zone_device *tzd;
-+	u32 resource_id;
-+};
-+
-+struct req_get_temp {
-+	u16 resource_id;
-+	u8 type;
-+} __packed;
-+
-+struct resp_get_temp {
-+	u16 celsius;
-+	u8 tenths;
-+} __packed;
-+
-+struct imx_sc_msg_misc_get_temp {
-+	struct imx_sc_rpc_msg hdr;
-+	union {
-+		struct req_get_temp req;
-+		struct resp_get_temp resp;
-+	} data;
-+};
-+
-+static int imx_sc_thermal_get_temp(void *data, int *temp)
-+{
-+	struct imx_sc_msg_misc_get_temp msg;
-+	struct imx_sc_rpc_msg *hdr = &msg.hdr;
-+	struct imx_sc_sensor *sensor = data;
-+	int ret;
-+
-+	msg.data.req.resource_id = sensor->resource_id;
-+	msg.data.req.type = IMX_SC_C_TEMP;
-+
-+	hdr->ver = IMX_SC_RPC_VERSION;
-+	hdr->svc = IMX_SC_RPC_SVC_MISC;
-+	hdr->func = IMX_SC_MISC_FUNC_GET_TEMP;
-+	hdr->size = 2;
-+
-+	ret = imx_scu_call_rpc(thermal_ipc_handle, &msg, true);
-+	if (ret) {
-+		dev_err(&sensor->tzd->device, "read temp sensor %d failed, ret %d\n",
-+			sensor->resource_id, ret);
-+		return ret;
-+	}
-+
-+	*temp = msg.data.resp.celsius * 1000 + msg.data.resp.tenths * 100;
-+
-+	return 0;
-+}
-+
-+static const struct thermal_zone_of_device_ops imx_sc_thermal_ops = {
-+	.get_temp = imx_sc_thermal_get_temp,
-+};
-+
-+static int imx_sc_thermal_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np, *child, *sensor_np;
-+	struct imx_sc_sensor *sensor;
-+	int ret;
-+
-+	ret = imx_scu_get_handle(&thermal_ipc_handle);
-+	if (ret)
-+		return ret;
-+
-+	np = of_find_node_by_name(NULL, "thermal-zones");
-+	if (!np)
-+		return -ENODEV;
-+
-+	sensor_np = of_node_get(pdev->dev.of_node);
-+
-+	for_each_available_child_of_node(np, child) {
-+		sensor = devm_kzalloc(&pdev->dev, sizeof(*sensor), GFP_KERNEL);
-+		if (!sensor) {
-+			of_node_put(sensor_np);
-+			return -ENOMEM;
-+		}
-+
-+		ret = thermal_zone_of_get_sensor_id(child,
-+						    sensor_np,
-+						    &sensor->resource_id);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev,
-+				"failed to get valid sensor resource id: %d\n",
-+				ret);
-+			break;
-+		}
-+
-+		sensor->tzd = devm_thermal_zone_of_sensor_register(&pdev->dev,
-+								   sensor->resource_id,
-+								   sensor,
-+								   &imx_sc_thermal_ops);
-+		if (IS_ERR(sensor->tzd)) {
-+			dev_err(&pdev->dev, "failed to register thermal zone\n");
-+			ret = PTR_ERR(sensor->tzd);
-+			break;
-+		}
-+	}
-+
-+	of_node_put(sensor_np);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id imx_sc_thermal_table[] = {
-+	{ .compatible = "fsl,imx-sc-thermal", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, imx_sc_thermal_table);
-+
-+static struct platform_driver imx_sc_thermal_driver = {
-+		.probe = imx_sc_thermal_probe,
-+		.driver = {
-+			.name = "imx-sc-thermal",
-+			.of_match_table = imx_sc_thermal_table,
-+		},
-+};
-+module_platform_driver(imx_sc_thermal_driver);
-+
-+MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
-+MODULE_DESCRIPTION("Thermal driver for NXP i.MX SoCs with system controller");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+The only issue I see with this interface is that you can now create
+these kinds of things by untarring a tar-ball etc.
 
+I can see that being both very convenient and a possible security
+pain. But I'm assuming that the real security is on the server side
+anyway and not just anybody can create arbitrary things like these?
+
+         Linus
