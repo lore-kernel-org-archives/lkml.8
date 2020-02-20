@@ -2,210 +2,193 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B2BC11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE46C11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CB02467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:37:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jA55lcjy"
+	by mail.kernel.org (Postfix) with ESMTP id 0C4DF24654
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:38:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582195124;
+	bh=W9W0MuG4COhbzPlLew5RRd1cYSLCmlDiQ07Hi48eKa0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eoPwUS0ftfxfnWafNrmETw5DoHTgcoSbpvV9GpvCNLl19oOMbwSeozJUEzkbdauKI
+	 lIC1OqUg4uJK3pUENB95q3Mtir5ymLc9dkPuD2mKu0Ppn99LZK3HqMScoZ63HzDGuj
+	 AfGxVzCHW5mpSMykV4i/l2JH66VsAhpFIs2EYuUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgBTKhq (ORCPT
+        id S1727799AbgBTKim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:37:46 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42440 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgBTKhp (ORCPT
+        Thu, 20 Feb 2020 05:38:42 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37253 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTKim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:37:45 -0500
-Received: by mail-qt1-f193.google.com with SMTP id r5so2482448qtt.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:37:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+L7+FQcGBr8q70euhVbn25PNyS+UmjbMnhO14ByiE0w=;
-        b=jA55lcjyKchTjKedLP1Wj0EVdUaYmPyaSRofNRJZYIMyBkdwfDu2zKEAG3/YWxQ99w
-         nz3cOyoo4/3epPmSFOF4VQt4TFbLGxzPtbksWAAKpx2+tKkZn+qCN0jkwVZSCMlQFAkG
-         Uf6s1v909+xdLurZ3YSirXD4CT+ejRhw86LaavcvgITFXkpNAm0PXUcRYdbAzkshbO7f
-         vxp5jtRfNxvUG7955zn+hTm9K/Zcz1YjuERzRmHGqKIlsetT2Z0T3r6j2rp0R2L1zBBO
-         bMtwudyrb62KTOXC2FOHR2wlZz/N0dJnFmaWy+1fkxqQcn0fKNb2+tjPgvtlV+GTo7lv
-         Z0Cw==
+        Thu, 20 Feb 2020 05:38:42 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b3so1994291otp.4;
+        Thu, 20 Feb 2020 02:38:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+L7+FQcGBr8q70euhVbn25PNyS+UmjbMnhO14ByiE0w=;
-        b=n87Fro+1kLYg4esD5ArWWbHCiIrE55ThbVQ5yzQHum/cGr18j4x+jp39mu0QE5YJch
-         ZP3Blyw83SxgTnUOdrYgs1WUU5rKf1scZ36AMi2PXWFjCAkS2uzUSzocFOqQJx8fe5cO
-         mKq69GRdSNxZTcKXT34VkFK0RBkLpxEJN+RT+Ink3pTXRaRsp6G3ibUQswIRc/kbJ5jb
-         GU37yH4Ke0hCFbl2AelQsXWSce21KiXwJ9ogU61CSqrbPRY0u0P0qCrHsKPfWao+zzVk
-         GuDXvOYGrJY3gVA2g/1kfPX66Mrai3lqSTvXbNw22j52cNSwclxbmD0IdaaekCiM7Q0b
-         JCYw==
-X-Gm-Message-State: APjAAAXlwYfQBS+gEVio1myXwiMemdun+zlILd2PncQdSrTSpPMu2gOr
-        LoewEn+cS8M4yRKbXWthzUROpHvrTor3oeSLMUuBnw==
-X-Google-Smtp-Source: APXvYqyfb7yOWKobd/t82hIUD1+XI++wuCcNV55LY8LnxBBwkaX0UMRW6CI35HdCB5KAi21LZP1we98OnRawhnsYxc4=
-X-Received: by 2002:ac8:340c:: with SMTP id u12mr25564787qtb.257.1582195063751;
- Thu, 20 Feb 2020 02:37:43 -0800 (PST)
+        bh=Wjs+bqcPT9MeOZqbAU1vmO7aFhPK7e0+qLDFpmywzq4=;
+        b=m3GZoBhDtyB7gY7DzYlaemYZnZRVUVj0XYQx/6+cnAIB5qgKggQubd1XNqXLTiDUh9
+         15ClbmHo+gh4q+trF+GaWbGOvzMSZMBsIHJFVMjlDO4uYGOVLymXs2nrusEF3O4abr+y
+         rLdij/pSdqde6yOZShCSWLlmu/fyRI5VERGFB4B94zDub4ZobTnoXw0+Is+12Tz5uxDw
+         3Zt58XeAnNhr2ATZzcegX4F3IX2/p+iS1YxE8N9pw9+Vn1yu1Lkhjf//CwNscEzMQ9PJ
+         LZNG3NOzR4kPEeFU1i6xHtDPoNgunIMnv0ghHzFHEA8CBEitQylJauEKtf0pAocRa+7x
+         aaEA==
+X-Gm-Message-State: APjAAAVCYR+X8X6gNV7g9cXebS068lqPXdDqlTGFBuwZr9enKGnsFxq5
+        D+cxeYs1HBhJbgplMqUnoI4Cr2b8cNVnkoHzLwQ=
+X-Google-Smtp-Source: APXvYqzFBZk9/DZvDaNVAs2YXI+6x9S5FHh4UEDtVxtEFLg6U8vLB5gaWR5bRdb2UxhDyTJbbFbm3WvaqaLD9En2BgY=
+X-Received: by 2002:a9d:67d7:: with SMTP id c23mr23055702otn.262.1582195121545;
+ Thu, 20 Feb 2020 02:38:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20200219144724.800607165@infradead.org> <20200219150745.651901321@infradead.org>
- <CACT4Y+Y+nPcnbb8nXGQA1=9p8BQYrnzab_4SvuPwbAJkTGgKOQ@mail.gmail.com>
- <20200219163025.GH18400@hirez.programming.kicks-ass.net> <20200219172014.GI14946@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200219172014.GI14946@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 20 Feb 2020 11:37:32 +0100
-Message-ID: <CACT4Y+ZfxqMuiL_UF+rCku628hirJwp3t3vW5WGM8DWG6OaCeg@mail.gmail.com>
-Subject: Re: [PATCH v3 22/22] x86/int3: Ensure that poke_int3_handler() is not sanitized
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
+References: <20200220050440.45878-1-john.stultz@linaro.org> <20200220050440.45878-5-john.stultz@linaro.org>
+In-Reply-To: <20200220050440.45878-5-john.stultz@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Feb 2020 11:38:30 +0100
+Message-ID: <CAJZ5v0i8KGMwWCuJJPNyXXP0LvM_S61=m0UoYS97tEi_PNAUCw@mail.gmail.com>
+Subject: Re: [PATCH v4 4/6] driver core: Remove driver_deferred_probe_check_state_continue()
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Todd Kjos <tkjos@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 19, 2020 at 6:20 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Feb 20, 2020 at 6:05 AM John Stultz <john.stultz@linaro.org> wrote:
 >
-> On Wed, Feb 19, 2020 at 05:30:25PM +0100, Peter Zijlstra wrote:
+> Now that driver_deferred_probe_check_state() works better, and
+> we've converted the only user of
+> driver_deferred_probe_check_state_continue() we can simply
+> remove it and simplify some of the logic.
 >
-> > By inlining everything in poke_int3_handler() (except bsearch :/) we can
-> > mark the whole function off limits to everything and call it a day. That
-> > simplicity has been the guiding principle so far.
-> >
-> > Alternatively we can provide an __always_inline variant of bsearch().
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Change-Id: Id5cd5e9264cfb0fbd70a702715174cc4b10006f4
+
+Nice!
+
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+> ---
+>  drivers/base/dd.c             | 49 +++++------------------------------
+>  include/linux/device/driver.h |  1 -
+>  2 files changed, 6 insertions(+), 44 deletions(-)
 >
-> This reduces the __no_sanitize usage to just the exception entry
-> (do_int3) and the critical function: poke_int3_handler().
->
-> Is this more acceptible?
-
-Let's say it's more acceptable.
-
-Acked-by: Dmitry Vyukov <dvyukov@google.com>
-
-I guess there is no ideal solution here.
-
-Just a straw man proposal: expected number of elements is large enough
-to make bsearch profitable, right? I see 1 is a common case, but the
-other case has multiple entries.
-
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -979,7 +979,7 @@ static __always_inline void *text_poke_a
->         return _stext + tp->rel_addr;
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index fa138f24e2d3..408e4da081da 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -244,19 +244,6 @@ static int __init deferred_probe_timeout_setup(char *str)
 >  }
+>  __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
 >
-> -static int notrace __no_sanitize patch_cmp(const void *key, const void *elt)
-> +static __always_inline int patch_cmp(const void *key, const void *elt)
->  {
->         struct text_poke_loc *tp = (struct text_poke_loc *) elt;
->
-> @@ -989,7 +989,6 @@ static int notrace __no_sanitize patch_c
->                 return 1;
->         return 0;
->  }
-> -NOKPROBE_SYMBOL(patch_cmp);
->
->  int notrace __no_sanitize poke_int3_handler(struct pt_regs *regs)
->  {
-> @@ -1024,9 +1023,9 @@ int notrace __no_sanitize poke_int3_hand
->          * Skip the binary search if there is a single member in the vector.
->          */
->         if (unlikely(desc->nr_entries > 1)) {
-> -               tp = bsearch(ip, desc->vec, desc->nr_entries,
-> -                            sizeof(struct text_poke_loc),
-> -                            patch_cmp);
-> +               tp = __bsearch(ip, desc->vec, desc->nr_entries,
-> +                              sizeof(struct text_poke_loc),
-> +                              patch_cmp);
->                 if (!tp)
->                         goto out_put;
->         } else {
-> --- a/include/linux/bsearch.h
-> +++ b/include/linux/bsearch.h
-> @@ -4,7 +4,29 @@
->
->  #include <linux/types.h>
->
-> -void *bsearch(const void *key, const void *base, size_t num, size_t size,
-> -             cmp_func_t cmp);
-> +static __always_inline
-> +void *__bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
-> +{
-> +       const char *pivot;
-> +       int result;
-> +
-> +       while (num > 0) {
-> +               pivot = base + (num >> 1) * size;
-> +               result = cmp(key, pivot);
-> +
-> +               if (result == 0)
-> +                       return (void *)pivot;
-> +
-> +               if (result > 0) {
-> +                       base = pivot + size;
-> +                       num--;
-> +               }
-> +               num >>= 1;
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
-> +extern void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp);
->
->  #endif /* _LINUX_BSEARCH_H */
-> --- a/lib/bsearch.c
-> +++ b/lib/bsearch.c
-> @@ -28,27 +28,9 @@
->   * the key and elements in the array are of the same type, you can use
->   * the same comparison function for both sort() and bsearch().
->   */
-> -void __no_sanitize *bsearch(const void *key, const void *base, size_t num, size_t size,
-> -             cmp_func_t cmp)
-> +void *bsearch(const void *key, const void *base, size_t num, size_t size, cmp_func_t cmp)
->  {
-> -       const char *pivot;
-> -       int result;
+> -static int __driver_deferred_probe_check_state(struct device *dev)
+> -{
+> -       if (!initcalls_done || deferred_probe_timeout > 0)
+> -               return -EPROBE_DEFER;
 > -
-> -       while (num > 0) {
-> -               pivot = base + (num >> 1) * size;
-> -               result = cmp(key, pivot);
-> -
-> -               if (result == 0)
-> -                       return (void *)pivot;
-> -
-> -               if (result > 0) {
-> -                       base = pivot + size;
-> -                       num--;
-> -               }
-> -               num >>= 1;
+> -       if (!deferred_probe_timeout) {
+> -               dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> -               return -ETIMEDOUT;
 > -       }
 > -
-> -       return NULL;
-> +       __bsearch(key, base, num, size, cmp);
+> -       return 0;
+> -}
+> -
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+> @@ -272,43 +259,19 @@ static int __driver_deferred_probe_check_state(struct device *dev)
+>   */
+>  int driver_deferred_probe_check_state(struct device *dev)
+>  {
+> -       int ret;
+> +       if (!initcalls_done || deferred_probe_timeout > 0)
+> +               return -EPROBE_DEFER;
+>
+> -       ret = __driver_deferred_probe_check_state(dev);
+> -       if (ret < 0)
+> -               return ret;
+> +       if (!deferred_probe_timeout) {
+> +               dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+> +               return -ETIMEDOUT;
+> +       }
+>
+>         dev_warn(dev, "ignoring dependency for device, assuming no driver");
+>
+>         return -ENODEV;
 >  }
->  EXPORT_SYMBOL(bsearch);
->  NOKPROBE_SYMBOL(bsearch);
+>
+> -/**
+> - * driver_deferred_probe_check_state_continue() - check deferred probe state
+> - * @dev: device to check
+> - *
+> - * Returns -ETIMEDOUT if deferred probe debug timeout has expired, or
+> - * -EPROBE_DEFER otherwise.
+> - *
+> - * Drivers or subsystems can opt-in to calling this function instead of
+> - * directly returning -EPROBE_DEFER.
+> - *
+> - * This is similar to driver_deferred_probe_check_state(), but it allows the
+> - * subsystem to keep deferring probe after built-in drivers have had a chance
+> - * to probe. One scenario where that is useful is if built-in drivers rely on
+> - * resources that are provided by modular drivers.
+> - */
+> -int driver_deferred_probe_check_state_continue(struct device *dev)
+> -{
+> -       int ret;
+> -
+> -       ret = __driver_deferred_probe_check_state(dev);
+> -       if (ret < 0)
+> -               return ret;
+> -
+> -       return -EPROBE_DEFER;
+> -}
+> -
+>  static void deferred_probe_timeout_work_func(struct work_struct *work)
+>  {
+>         struct device_private *private, *p;
+> diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
+> index 1188260f9a02..5242afabfaba 100644
+> --- a/include/linux/device/driver.h
+> +++ b/include/linux/device/driver.h
+> @@ -238,7 +238,6 @@ driver_find_device_by_acpi_dev(struct device_driver *drv, const void *adev)
+>
+>  void driver_deferred_probe_add(struct device *dev);
+>  int driver_deferred_probe_check_state(struct device *dev);
+> -int driver_deferred_probe_check_state_continue(struct device *dev);
+>  void driver_init(void);
+>
+>  /**
+> --
