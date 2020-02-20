@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2789AC11D10
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643C5C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39B32467A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4179124673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgBTR0G (ORCPT
+        id S1728959AbgBTR0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:26:06 -0500
-Received: from sauhun.de ([88.99.104.3]:35170 "EHLO pokefinder.org"
+        Thu, 20 Feb 2020 12:26:11 -0500
+Received: from sauhun.de ([88.99.104.3]:35158 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbgBTRZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:25:57 -0500
+        id S1728856AbgBTRZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:25:56 -0500
 Received: from localhost (p5486CC48.dip0.t-ipconnect.de [84.134.204.72])
-        by pokefinder.org (Postfix) with ESMTPSA id 721632C1EC5;
-        Thu, 20 Feb 2020 18:25:54 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 4E2892C1EC1;
+        Thu, 20 Feb 2020 18:25:53 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
@@ -33,9 +33,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-i3c@lists.infradead.org,
         Vladimir Zapolskiy <vz@mleia.com>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Wolfram Sang <wsa+renesas@sang-engineering.com>
-Subject: [RFC PATCH 7/7] i2c: core: hand over reserved devices when requesting ancillary addresses
-Date:   Thu, 20 Feb 2020 18:24:03 +0100
-Message-Id: <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH 5/7] i2c: of: error message unification
+Date:   Thu, 20 Feb 2020 18:24:01 +0100
+Message-Id: <20200220172403.26062-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
 References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com>
@@ -46,52 +46,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With i2c_new_ancillary_address, we can check if the intended driver is
-requesting a reserved address. Update the function to do these checks.
-If the check passes, the "reserved" device will become a regular "dummy"
-device.
+- don't prefix the device if %pOF is provided. That information is
+  enough.
+- move the prefix to pr_fmt
+- change prefix from "of_i2c" to "i2c_of" because the code was moved
+  out of the of-domain long ago
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/i2c/i2c-core-base.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/i2c/i2c-core-of.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 4000a4384306..ba325f8107a3 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -975,6 +975,8 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
- 						u16 default_addr)
- {
- 	struct device_node *np = client->dev.of_node;
-+	struct device *reserved_dev, *adapter_dev = &client->adapter->dev;
-+	struct i2c_client *reserved_client;
- 	u32 addr = default_addr;
- 	int i;
+diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
+index 710704cd583e..74b9f3fbb5ef 100644
+--- a/drivers/i2c/i2c-core-of.c
++++ b/drivers/i2c/i2c-core-of.c
+@@ -8,6 +8,8 @@
+  * Copyright (C) 2013, 2018 Wolfram Sang <wsa@the-dreams.de>
+  */
  
-@@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
- 			of_property_read_u32_index(np, "reg", i, &addr);
++#define pr_fmt(fmt) "i2c_of: " fmt
++
+ #include <dt-bindings/i2c/i2c.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+@@ -28,7 +30,7 @@ int of_i2c_get_board_info(struct device_node *node, struct i2c_board_info *info)
+ 
+ 	ret = of_property_read_u32(node, "reg", &addr);
+ 	if (ret) {
+-		pr_err("of_i2c: invalid reg on %pOF\n", node);
++		pr_err("invalid reg on %pOF\n", node);
+ 		return ret;
  	}
  
--	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
-+	dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
-+
-+	/* No need to scan muxes, siblings must sit on the same adapter */
-+	reserved_dev = device_find_child(adapter_dev, &addr, __i2c_check_addr_busy);
-+	reserved_client = i2c_verify_client(reserved_dev);
-+
-+	if (reserved_client) {
-+		if (reserved_client->dev.of_node != np ||
-+		    strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) != 0)
-+			return ERR_PTR(-EBUSY);
-+
-+		strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
-+		return reserved_client;
-+	}
-+
- 	return i2c_new_dummy_device(client->adapter, addr);
+@@ -66,7 +68,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+ 	struct i2c_board_info info;
+ 	int ret;
+ 
+-	dev_dbg(&adap->dev, "of_i2c: register %pOF\n", node);
++	pr_debug("register %pOF\n", node);
+ 
+ 	ret = of_i2c_get_board_info(node, &info);
+ 	if (ret)
+@@ -74,7 +76,7 @@ static struct i2c_client *of_i2c_register_device(struct i2c_adapter *adap,
+ 
+ 	client = i2c_new_client_device(adap, &info);
+ 	if (IS_ERR(client))
+-		dev_err(&adap->dev, "of_i2c: Failure registering %pOF\n", node);
++		pr_err("failure registering %pOF\n", node);
+ 
+ 	return client;
  }
- EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
+@@ -88,7 +90,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+ 	if (!adap->dev.of_node)
+ 		return;
+ 
+-	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
++	dev_dbg(&adap->dev, "walking child nodes\n");
+ 
+ 	bus = of_get_child_by_name(adap->dev.of_node, "i2c-bus");
+ 	if (!bus)
+@@ -100,9 +102,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
+ 
+ 		client = of_i2c_register_device(adap, node);
+ 		if (IS_ERR(client)) {
+-			dev_err(&adap->dev,
+-				 "Failed to create I2C device for %pOF\n",
+-				 node);
++			pr_err("failed to create I2C device for %pOF\n", node);
+ 			of_node_clear_flag(node, OF_POPULATED);
+ 		}
+ 	}
+@@ -243,8 +243,7 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
+ 
+ 		client = of_i2c_register_device(adap, rd->dn);
+ 		if (IS_ERR(client)) {
+-			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
+-				 rd->dn);
++			pr_err("failed to create client for '%pOF'\n", rd->dn);
+ 			put_device(&adap->dev);
+ 			of_node_clear_flag(rd->dn, OF_POPULATED);
+ 			return notifier_from_errno(PTR_ERR(client));
 -- 
 2.20.1
 
