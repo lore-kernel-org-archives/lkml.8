@@ -2,219 +2,93 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB42C11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D559BC11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 039EE24673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A525424673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 18:45:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582224311;
+	bh=pha4rbkELR+MlKiZpAxJZCb6i63te+xfEwqIiyC67gE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h2xxp07dSVST3YZA+dJPb3P53nLXH5ciRvWSm4jeky64INhBOP0ZEuqIIaGDNsG66
+	 CAlBlHGNN2c4kWx/cnozU1vF5SunwffGGmjrdrmCxLkIfFvOrGvYRJEtgV6UCunSO3
+	 rgWOXleSF59zkV/XvQZd6Xiz5+2uk1T0ktJ0lxnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbgBTSoW (ORCPT
+        id S1728770AbgBTSpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 13:44:22 -0500
-Received: from mga09.intel.com ([134.134.136.24]:59791 "EHLO mga09.intel.com"
+        Thu, 20 Feb 2020 13:45:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:49440 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbgBTSoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 13:44:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 10:44:21 -0800
-X-IronPort-AV: E=Sophos;i="5.70,465,1574150400"; 
-   d="scan'208";a="236329771"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 10:44:21 -0800
-Message-ID: <7d3c732d9ec7725dcb5a90c1dc8e9859fbe6ccc0.camel@linux.intel.com>
-Subject: Re: [PATCH v17 4/9] mm: Introduce Reported pages
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Mel Gorman <mgorman@techsingularity.net>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, david@redhat.com, mst@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, yang.zhang.wz@gmail.com,
-        pagupta@redhat.com, konrad.wilk@oracle.com, nitesh@redhat.com,
-        riel@surriel.com, willy@infradead.org, lcapitulino@redhat.com,
-        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com, mhocko@kernel.org,
-        vbabka@suse.cz, osalvador@suse.de
-Date:   Thu, 20 Feb 2020 10:44:21 -0800
-In-Reply-To: <20200219145511.GS3466@techsingularity.net>
-References: <20200211224416.29318.44077.stgit@localhost.localdomain>
-         <20200211224635.29318.19750.stgit@localhost.localdomain>
-         <20200219145511.GS3466@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        id S1726959AbgBTSpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 13:45:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA4B130E;
+        Thu, 20 Feb 2020 10:45:09 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1E7B63F6CF;
+        Thu, 20 Feb 2020 10:45:08 -0800 (PST)
+Date:   Thu, 20 Feb 2020 18:45:07 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: tas2562: Add support for digital volume control
+Message-ID: <20200220184507.GF3926@sirena.org.uk>
+References: <20200220172721.10547-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hK8Uo4Yp55NZU70L"
+Content-Disposition: inline
+In-Reply-To: <20200220172721.10547-1-dmurphy@ti.com>
+X-Cookie: You are number 6!  Who is number one?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-19 at 14:55 +0000, Mel Gorman wrote:
-> On Tue, Feb 11, 2020 at 02:46:35PM -0800, Alexander Duyck wrote:
-> > diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-> > new file mode 100644
-> > index 000000000000..1047c6872d4f
-> > --- /dev/null
-> > +++ b/mm/page_reporting.c
-> > @@ -0,0 +1,319 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include <linux/mm.h>
-> > +#include <linux/mmzone.h>
-> > +#include <linux/page_reporting.h>
-> > +#include <linux/gfp.h>
-> > +#include <linux/export.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/scatterlist.h>
-> > +
-> > +#include "page_reporting.h"
-> > +#include "internal.h"
-> > +
-> > +#define PAGE_REPORTING_DELAY	(2 * HZ)
-> 
-> I assume there is nothing special about 2 seconds other than "do some
-> progress every so often".
 
-Yes, nothing special. I played around with a few different values. I just
-settled on 2 seconds as I figured with that and 1/16 of the list per pass
-it came out to about 30 seconds which I felt is about the right time for a
-fully utilized system to settle back to the inactive state.
+--hK8Uo4Yp55NZU70L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Feb 20, 2020 at 11:27:21AM -0600, Dan Murphy wrote:
 
-> > 
-> > +static int
-> > +page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
-> > +		     unsigned int order, unsigned int mt,
-> > +		     struct scatterlist *sgl, unsigned int *offset)
-> > +{
-> > +	struct free_area *area = &zone->free_area[order];
-> > +	struct list_head *list = &area->free_list[mt];
-> > +	unsigned int page_len = PAGE_SIZE << order;
-> > +	struct page *page, *next;
-> > +	int err = 0;
-> > +
-> > +	/*
-> > +	 * Perform early check, if free area is empty there is
-> > +	 * nothing to process so we can skip this free_list.
-> > +	 */
-> > +	if (list_empty(list))
-> > +		return err;
-> > +
-> > +	spin_lock_irq(&zone->lock);
-> > +
-> > +	/* loop through free list adding unreported pages to sg list */
-> > +	list_for_each_entry_safe(page, next, list, lru) {
-> > +		/* We are going to skip over the reported pages. */
-> > +		if (PageReported(page))
-> > +			continue;
-> > +
-> > +		/* Attempt to pull page from list */
-> > +		if (!__isolate_free_page(page, order))
-> > +			break;
-> > +
-> 
-> Might want to note that you are breaking because the only reason to fail
-> the isolation is that watermarks are not met and we are likely under
-> memory pressure. It's not a big issue.
-> 
-> However, while I think this is correct, it's hard to follow. This loop can
-> be broken out of with pages still on the scatter gather list. The current
-> flow guarantees that err will not be set at this point so the caller
-> cleans it up so we always drain the list either here or in the caller.
+> +	/* Set the Digital volume to -110dB */
+> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG4, 0x00);
+> +	if (ret)
+> +		return ret;
+> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG3, 0x00);
+> +	if (ret)
+> +		return ret;
+> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG2, 0x0d);
+> +	if (ret)
+> +		return ret;
+> +	ret = snd_soc_component_write(component, TAS2562_DVC_CFG1, 0x43);
+> +	if (ret)
+> +		return ret;
 
-I can probably submit a follow-up patch to update the comments. The reason
-for not returning an error is because I didn't consider it an error that
-we encountered the watermark and were not able to pull any more pages.
-Instead I considered that the "stop" point for this pass and have it just
-exit out of the loop and flush the data.
+Is there a reason not to use the chip default here?  Otherwise this
+looks good.
 
-At the start of the next pass we will check against the low watermark
-instead of the minimum watermark and if that check fails we will simply
-stop reporting pages for the zone until additional pages are freed.
+--hK8Uo4Yp55NZU70L
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I can probably also update the description for page_reporting_cycle since
-it may not be clear that the output for this is a partially filled in-
-progress scatterlist so we always have to reporting any remaining entries
-at the end of processing a given zone. It might make more sense if I move
-the bits related to "leftover" in page_reporting_process_zone into their
-own function.
+-----BEGIN PGP SIGNATURE-----
 
-> While I think it works, it's a bit fragile. I recommend putting a comment
-> above this noting why it's safe and put a VM_WARN_ON_ONCE(err) before the
-> break in case someone tries to change this in a years time and does not
-> spot that the flow to reach page_reporting_drain *somewhere* is critical.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5O07IACgkQJNaLcl1U
+h9DAjQf/cHDeWkaSRl4OHbk2bFU+NNUeICiEs7d2VmUuNe3pOWY4jw6w2tx/LGZ0
+s0Ikm3/e6VYxuCqbUND6kIbzypru4df7TSoxV8nR5/5vM1mbVGKh1/zB2pURJ0M3
+ZY1fEqA2gZLpdyJD1HwryukT7PnyhzbK1ACp+cnvdI8W6X2sV/7pIe/W33EvuHj7
+BrxixQa7E3SGdOa0MM7014WUsOhcuh7KPjKswKH9j/hKNGYlLB0FI02qFFUR0fkT
+1aFocXH34YKqP2NDRyDSY/0yijWTlf02Sa0kDgaIgTrOrwjBAtNkj1QwgSVbT477
+s9fpTvqt7E5DAudi/+TK2YsORkI5JQ==
+=Q0Wc
+-----END PGP SIGNATURE-----
 
-I assume this isn't about this section, but the section below?
-
-> > +		/* Add page to scatter list */
-> > +		--(*offset);
-> > +		sg_set_page(&sgl[*offset], page, page_len, 0);
-> > +
-> > +		/* If scatterlist isn't full grab more pages */
-> > +		if (*offset)
-> > +			continue;
-> > +
-> > +		/* release lock before waiting on report processing */
-> > +		spin_unlock_irq(&zone->lock);
-> > +
-> > +		/* begin processing pages in local list */
-> > +		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
-> > +
-
-So one thing I can do is probably add a comment here as well to more
-thoroughly explain the reason why we wait to call the break until we are
-in the block below.
-
-> > +		/* reset offset since the full list was reported */
-> > +		*offset = PAGE_REPORTING_CAPACITY;
-> > +
-> > +		/* reacquire zone lock and resume processing */
-> > +		spin_lock_irq(&zone->lock);
-> > +
-> > +		/* flush reported pages from the sg list */
-> > +		page_reporting_drain(prdev, sgl, PAGE_REPORTING_CAPACITY, !err);
-> > +
-> > +		/*
-> > +		 * Reset next to first entry, the old next isn't valid
-> > +		 * since we dropped the lock to report the pages
-> > +		 */
-> > +		next = list_first_entry(list, struct page, lru);
-> > +
-> > +		/* exit on error */
-> > +		if (err)
-> > +			break;
-
-And I assume you meant to add the VM_WARN_ON_ONCE here? The statement
-above wouldn't make much sense since err would always be 0.
-
-> > +	}
-> > +
-> > +	spin_unlock_irq(&zone->lock);
-> > +
-> > +	return err;
-> > +}
-> 
-> I complained about the use of zone lock before but in this version, I
-> think I'm ok with it. The lock is held for the free list manipulations
-> which is what it's for. The state management with atomics seems
-> reasonable.
-> 
-> Otherwise I think this is ok and I think the implementation right. Of
-> great importance to me was the allocator fast paths but they seem to be
-> adequately protected by a static branch so
-> 
-> Acked-by: Mel Gorman <mgorman@techsingularity.net>
-> 
-> The ack applies regardless of whether you decide to document and
-> defensively protect page_reporting_cycle against losing pages on the
-> scatter/gather list but I do recommend it.
-
-Thanks for reviewing this. I appreciate the feedback.
-
-- Alex
-
-
+--hK8Uo4Yp55NZU70L--
