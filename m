@@ -2,230 +2,365 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D62C11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802AEC11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E862465D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464AB20801
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 09:35:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fVfRouIj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qfW0oX06"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgBTJcO (ORCPT
+        id S1726875AbgBTJf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 04:32:14 -0500
-Received: from mail-bn7nam10on2066.outbound.protection.outlook.com ([40.107.92.66]:56033
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726637AbgBTJcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 04:32:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eCZDAENR4y143YoVtGHn0oTfmRrIvI23sELAEz0MhoOhVTNk1KvfAg/az1rJUYIsiUz/UUmE0BYA03L/DacKlLQ+wGXrFqZPUWDViyzrFX787nuD26cqIR/CToGSn+oIstj7F+8htGavtAv7vJfJpzSENGPkn5bSMaarupKF8XjeChk6B90Bpk/OwbxQ20onxmuL/me7tHm0vWdWwgWUuAasctfQVBkRvLKnNSSf1/oZv45OxLMV3py1/wD2cjI0Ds08xzBkJ2JBrwwdWleCJaIaEqhrwnYGx61A+ou6CWk29pBV6vwAFR1AfFYI+dlDiVW/mTXskVl1FNve35kIwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pt4oFgNoIYDPOjKqD2PTQdaYF/mkLL4PpREXj7qSy9w=;
- b=SPi7gv3oMgqON/VbqaDzo+AvCUcOvoy+lYkL/+Oo1El0RSXff/6MBuW+0XgU/CM8rSgiubOzTIozYYjsZz/ZN5pLX3n+j22wukVA3KOQjIpwA8gbSoDNpCxjrQnggFuJsWCGl9upLFeZEZeDc4uoU6rmpxRskvlVmIGTPl0ZlTGoa2XpDGfCP0iqgb1zGJ3L6Iu901sWN2jVyuO/k4Go79FmR4r+8WL+h3ceUur1hzY92V1sFbHE6DigCcSh1sjySaotAtN/l8cpjMmwa/C4n3IjsNz8kA9DypHm71+ox5d2vayUMo6YwUEtKzJx06NWeBd4Teo6mCdnm0lz8fXVjg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=towertech.it smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pt4oFgNoIYDPOjKqD2PTQdaYF/mkLL4PpREXj7qSy9w=;
- b=fVfRouIjdC2NgVCIoHzWXXeeIZMpvy27y7JjEZIa5JuPD+i9Oho9ukB8EltSom8SYPiqnDwU7tOieI/FJI27nZ60ra63V2EpasN6PKqQsbNgARSp8bYt6lzSRaNXq2BB2CQDZVpIESxYUjzlImV/TvD3WmdwgbDWra0+7FHoRZs=
-Received: from BN6PR02CA0045.namprd02.prod.outlook.com (2603:10b6:404:5f::31)
- by MN2PR02MB6303.namprd02.prod.outlook.com (2603:10b6:208:1bd::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.23; Thu, 20 Feb
- 2020 09:32:08 +0000
-Received: from BL2NAM02FT030.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by BN6PR02CA0045.outlook.office365.com
- (2603:10b6:404:5f::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.17 via Frontend
- Transport; Thu, 20 Feb 2020 09:32:08 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; towertech.it; dkim=none (message not signed)
- header.d=none;towertech.it; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT030.mail.protection.outlook.com (10.152.77.172) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2750.18
- via Frontend Transport; Thu, 20 Feb 2020 09:32:07 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j4iBj-0003K5-60; Thu, 20 Feb 2020 01:32:07 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j4iBd-0003ay-W1; Thu, 20 Feb 2020 01:32:02 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1j4iBU-0003WD-Jl; Thu, 20 Feb 2020 01:31:53 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        michal.simek@xilinx.com, sgoud@xilinx.com, shubhraj@xilinx.com
-Cc:     linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, git@xilinx.com,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Srinivas Goud <srinivas.goud@xilinx.com>
-Subject: [PATCH] rtc: zynqmp: Add calibration set and get support
-Date:   Thu, 20 Feb 2020 15:01:46 +0530
-Message-Id: <1582191106-30431-1-git-send-email-srinivas.neeli@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(376002)(39850400004)(189003)(199004)(54906003)(107886003)(8676002)(7696005)(2906002)(4326008)(70206006)(70586007)(5660300002)(316002)(336012)(8936002)(81156014)(81166006)(44832011)(36756003)(9786002)(186003)(356004)(2616005)(6666004)(478600001)(26005)(6636002)(426003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6303;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+        Thu, 20 Feb 2020 04:35:28 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:7404 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726637AbgBTJf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 04:35:27 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01K9U0mB029558;
+        Thu, 20 Feb 2020 10:35:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=3jdW5PZJwk6QMyC1Ny5sW7d40wmzJPgi/QtFD80zun8=;
+ b=qfW0oX06Ud0LG7ZE5pK44o5fLorDKBDfF6gjoWw5YacIzCZFe6mF31xK7D5pl6KcOXbi
+ PVmNjEY6tORLs2CfIZHzxK93QpqLHz2NmxlwNeueg1LrfN1UoOWukKEk4g7S9Et1K9WL
+ gEhy9nbiik3Vk5hkZbY1ORN5xdEGAR/IENWRhjj156WGXlFlmFTI3nuZFva5iubxr8Qq
+ a2Mn7xu1d2XG/3ElVBV3zeOR25HvWee/zrjHuwTwm+1dnxnTOCgs7kmtQfLudXCVRXWg
+ D3eljFIAFraUwra22kr3f2BfGM72q1zc7wAh7wVoPTkx6cupTGcssOie/uuW/9WcRQ0Q 7g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1g0dt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Feb 2020 10:35:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EC00410003A;
+        Thu, 20 Feb 2020 10:35:10 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D06B72A5D10;
+        Thu, 20 Feb 2020 10:35:10 +0100 (CET)
+Received: from lmecxl0889.lme.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Feb
+ 2020 10:35:10 +0100
+Subject: Re: [PATCH v5 1/3] remoteproc: add support for co-processor loaded
+ and booted before kernel
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20200211174205.22247-1-arnaud.pouliquen@st.com>
+ <20200211174205.22247-2-arnaud.pouliquen@st.com>
+ <20200213200813.GA14415@xps15> <24947b31-bef6-cfb3-686e-80bef6f974e3@st.com>
+ <CANLsYkxhWWgVFVe3=5WOYkYGQgV7g+3FvDKRDKi7y9kuk4_G8w@mail.gmail.com>
+ <d6e09b93-f287-78a0-a6d9-3d9ea0a5f3d7@st.com>
+ <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <07d5bea4-1585-db55-4ca0-ae28dcf81d41@st.com>
+Date:   Thu, 20 Feb 2020 10:35:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4447bab0-e78c-4729-7572-08d7b5e7c136
-X-MS-TrafficTypeDiagnostic: MN2PR02MB6303:
-X-Microsoft-Antispam-PRVS: <MN2PR02MB63033723183F6279F5306D9FAF130@MN2PR02MB6303.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
-X-Forefront-PRVS: 031996B7EF
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eGSZNQ6VCHm+qXuIv0LV+XowRyLN5O8erlPam7CPdfMmgMPujwiAoRI4uyGY03OLlYJokSNrJ4IptjnsJRypc8z0ZP+voZHvCQSFtgLTm4oY02BvRaak9XiOfddzgyFhG39aXwU4n1gTSJqwcU8LcboKmC3EpqNVFVw0JEqj1zVcJMzdAkkSo65qQEd557KsGOeGUQwqgpsTlS0twA99OIOfLm8YOw4uhGsQCgLP/wmMpF4j9wjxx6MinYAf6+Xxp9x4Zsx8ATAlA4K4U/377r/nBgvPszcmR0g/uVahm+95ztgPQF6sNagReHiNGf/UpVNOtd9BuHjtuslwm8I5WfCIqJlZNhL9uh86duUiJ1LzSCHtm6z4d4OsYGyUvPu/Gs76gCMKxbYZNL4mavp+pX0TbhpvO2IBl54qbkflO1FXMMxl1S0XnJZf4BZoG4Aa
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2020 09:32:07.7467
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4447bab0-e78c-4729-7572-08d7b5e7c136
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6303
+In-Reply-To: <CANLsYkzQz5yyu+KViEL8GwWtp7cfBotS8Fuvs1MJzvYq4LxOig@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_02:2020-02-19,2020-02-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ZynqMp RTC controller has a calibration feature to compensate
-time deviation due to input clock inaccuracy.
-Set and get calibration API's are used for setting and getting
-calibration value from the controller calibration register.
 
-Signed-off-by: Srinivas Goud <srinivas.goud@xilinx.com>
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
----
- drivers/rtc/rtc-zynqmp.c | 78 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
 
-diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-index 4b1077e2f826..b4118e9e4fcc 100644
---- a/drivers/rtc/rtc-zynqmp.c
-+++ b/drivers/rtc/rtc-zynqmp.c
-@@ -40,6 +40,12 @@
- #define RTC_CALIB_MASK		0x1FFFFF
- #define RTC_ALRM_MASK          BIT(1)
- #define RTC_MSEC               1000
-+#define RTC_FR_MASK             0xF0000
-+#define RTC_SEC_MAX_VAL         0xFFFFFFFF
-+#define RTC_FR_MAX_TICKS        16
-+#define RTC_OFFSET_MAX          150000
-+#define RTC_OFFSET_MIN          -150000
-+#define RTC_PPB                 1000000000LL
- 
- struct xlnx_rtc_dev {
- 	struct rtc_device	*rtc;
-@@ -184,12 +190,84 @@ static void xlnx_init_rtc(struct xlnx_rtc_dev *xrtcdev)
- 	writel(xrtcdev->calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
- }
- 
-+static int xlnx_rtc_read_offset(struct device *dev, long *offset)
-+{
-+	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
-+	long offset_val;
-+	unsigned int reg;
-+	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
-+
-+	reg = readl(xrtcdev->reg_base + RTC_CALIB_RD);
-+
-+	/* Offset with seconds ticks */
-+	offset_val = reg & RTC_TICK_MASK;
-+	offset_val = offset_val - xrtcdev->calibval;
-+	offset_val = offset_val * tick_mult;
-+
-+	/* Offset with fractional ticks */
-+	if (reg & RTC_FR_EN)
-+		offset_val += ((reg & RTC_FR_MASK) >> RTC_FR_DATSHIFT)
-+			* (tick_mult / RTC_FR_MAX_TICKS);
-+	*offset = offset_val;
-+
-+	return 0;
-+}
-+
-+static int xlnx_rtc_set_offset(struct device *dev, long offset)
-+{
-+	struct xlnx_rtc_dev *xrtcdev = dev_get_drvdata(dev);
-+	short int  max_tick;
-+	unsigned char fract_tick = 0;
-+	unsigned int  calibval;
-+	int fract_offset;
-+	unsigned int tick_mult = RTC_PPB / xrtcdev->calibval;
-+
-+	/* Make sure offset value is within supported range */
-+	if (offset < RTC_OFFSET_MIN || offset > RTC_OFFSET_MAX)
-+		return -ERANGE;
-+
-+	/* Number ticks for given offset */
-+	max_tick = div_s64_rem(offset, tick_mult, &fract_offset);
-+
-+	/* Number fractional ticks for given offset */
-+	if (fract_offset) {
-+		if (fract_offset < 0) {
-+			fract_offset = fract_offset + tick_mult;
-+			max_tick--;
-+		}
-+		if (fract_offset > (tick_mult / RTC_FR_MAX_TICKS)) {
-+			for (fract_tick = 1; fract_tick < 16; fract_tick++) {
-+				if (fract_offset <=
-+				    (fract_tick *
-+				     (tick_mult / RTC_FR_MAX_TICKS)))
-+					break;
-+			}
-+		}
-+	}
-+
-+	/* Zynqmp RTC uses second and fractional tick
-+	 * counters for compensation
-+	 */
-+	calibval = max_tick + xrtcdev->calibval;
-+
-+	if (fract_tick)
-+		calibval |= RTC_FR_EN;
-+
-+	calibval |= (fract_tick <<  RTC_FR_DATSHIFT);
-+
-+	writel(calibval, (xrtcdev->reg_base + RTC_CALIB_WR));
-+
-+	return 0;
-+}
-+
- static const struct rtc_class_ops xlnx_rtc_ops = {
- 	.set_time	  = xlnx_rtc_set_time,
- 	.read_time	  = xlnx_rtc_read_time,
- 	.read_alarm	  = xlnx_rtc_read_alarm,
- 	.set_alarm	  = xlnx_rtc_set_alarm,
- 	.alarm_irq_enable = xlnx_rtc_alarm_irq_enable,
-+	.read_offset    = xlnx_rtc_read_offset,
-+	.set_offset     = xlnx_rtc_set_offset,
- };
- 
- static irqreturn_t xlnx_rtc_interrupt(int irq, void *id)
--- 
-2.7.4
+On 2/19/20 9:56 PM, Mathieu Poirier wrote:
+> Hey Arnaud,
+> 
+> On Tue, 18 Feb 2020 at 10:31, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>>
+>> Hi Mathieu, Bjorn,
+>>
+>> On 2/17/20 7:40 PM, Mathieu Poirier wrote:
+>>> On Fri, 14 Feb 2020 at 09:33, Arnaud POULIQUEN <arnaud.pouliquen@st.com> wrote:
+>>>>
+>>>> Hi Mathieu,
+>>>>
+>>>> On 2/13/20 9:08 PM, Mathieu Poirier wrote:
+>>>>> Good day,
+>>>>>
+>>>>> On Tue, Feb 11, 2020 at 06:42:03PM +0100, Arnaud Pouliquen wrote:
+>>>>>> From: Loic Pallardy <loic.pallardy@st.com>
+>>>>>>
+>>>>>> Remote processor could boot independently or be loaded/started before
+>>>>>> Linux kernel by bootloader or any firmware.
+>>>>>> This patch introduces a new property in rproc core, named skip_fw_load,
+>>>>>> to be able to allocate resources and sub-devices like vdev and to
+>>>>>> synchronize with current state without loading firmware from file system.
+>>>>>> It is platform driver responsibility to implement the right firmware
+>>>>>> load ops according to HW specificities.
+>>>>>>
+>>>>>> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+>>>>>> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>>>>>> ---
+>>>>>>  drivers/remoteproc/remoteproc_core.c | 67 ++++++++++++++++++++++------
+>>>>>>  include/linux/remoteproc.h           |  2 +
+>>>>>>  2 files changed, 55 insertions(+), 14 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>>>>>> index 097f33e4f1f3..876b5420a32b 100644
+>>>>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>>>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>>>>> @@ -1358,8 +1358,19 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>>>>>>      return ret;
+>>>>>>  }
+>>>>>>
+>>>>>> -/*
+>>>>>> - * take a firmware and boot a remote processor with it.
+>>>>>> +/**
+>>>>>> + * rproc_fw_boot() - boot specified remote processor according to specified
+>>>>>> + * firmware
+>>>>>> + * @rproc: handle of a remote processor
+>>>>>> + * @fw: pointer on firmware to handle
+>>>>>> + *
+>>>>>> + * Handle resources defined in resource table, load firmware and
+>>>>>> + * start remote processor.
+>>>>>> + *
+>>>>>> + * If firmware pointer fw is NULL, firmware is not handled by remoteproc
+>>>>>> + * core, but under the responsibility of platform driver.
+>>>>>> + *
+>>>>>> + * Returns 0 on success, and an appropriate error value otherwise.
+>>>>>>   */
+>>>>>>  static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>>>>>>  {
+>>>>>> @@ -1371,7 +1382,11 @@ static int rproc_fw_boot(struct rproc *rproc, const struct firmware *fw)
+>>>>>>      if (ret)
+>>>>>>              return ret;
+>>>>>>
+>>>>>> -    dev_info(dev, "Booting fw image %s, size %zd\n", name, fw->size);
+>>>>>> +    if (fw)
+>>>>>> +            dev_info(dev, "Booting fw image %s, size %zd\n", name,
+>>>>>> +                     fw->size);
+>>>>>> +    else
+>>>>>> +            dev_info(dev, "Synchronizing with preloaded co-processor\n");
+>>>>>>
+>>>>>>      /*
+>>>>>>       * if enabling an IOMMU isn't relevant for this rproc, this is
+>>>>>> @@ -1718,16 +1733,22 @@ static void rproc_crash_handler_work(struct work_struct *work)
+>>>>>>   * rproc_boot() - boot a remote processor
+>>>>>>   * @rproc: handle of a remote processor
+>>>>>>   *
+>>>>>> - * Boot a remote processor (i.e. load its firmware, power it on, ...).
+>>>>>> + * Boot a remote processor (i.e. load its firmware, power it on, ...) from
+>>>>>> + * different contexts:
+>>>>>> + * - power off
+>>>>>> + * - preloaded firmware
+>>>>>> + * - started before kernel execution
+>>>>>> + * The different operations are selected thanks to properties defined by
+>>>>>> + * platform driver.
+>>>>>>   *
+>>>>>> - * If the remote processor is already powered on, this function immediately
+>>>>>> - * returns (successfully).
+>>>>>> + * If the remote processor is already powered on at rproc level, this function
+>>>>>> + * immediately returns (successfully).
+>>>>>>   *
+>>>>>>   * Returns 0 on success, and an appropriate error value otherwise.
+>>>>>>   */
+>>>>>>  int rproc_boot(struct rproc *rproc)
+>>>>>>  {
+>>>>>> -    const struct firmware *firmware_p;
+>>>>>> +    const struct firmware *firmware_p = NULL;
+>>>>>>      struct device *dev;
+>>>>>>      int ret;
+>>>>>>
+>>>>>> @@ -1758,11 +1779,20 @@ int rproc_boot(struct rproc *rproc)
+>>>>>>
+>>>>>>      dev_info(dev, "powering up %s\n", rproc->name);
+>>>>>>
+>>>>>> -    /* load firmware */
+>>>>>> -    ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>>>>>> -    if (ret < 0) {
+>>>>>> -            dev_err(dev, "request_firmware failed: %d\n", ret);
+>>>>>> -            goto downref_rproc;
+>>>>>> +    if (!rproc->skip_fw_load) {
+>>>>>> +            /* load firmware */
+>>>>>> +            ret = request_firmware(&firmware_p, rproc->firmware, dev);
+>>>>>> +            if (ret < 0) {
+>>>>>> +                    dev_err(dev, "request_firmware failed: %d\n", ret);
+>>>>>> +                    goto downref_rproc;
+>>>>>> +            }
+>>>>>> +    } else {
+>>>>>> +            /*
+>>>>>> +             * Set firmware name pointer to null as remoteproc core is not
+>>>>>> +             * in charge of firmware loading
+>>>>>> +             */
+>>>>>> +            kfree(rproc->firmware);
+>>>>>> +            rproc->firmware = NULL;
+>>>>>
+>>>>> If the MCU with pre-loaded FW crashes request_firmware() in
+>>>>> rproc_trigger_recovery() will return an error and rproc_start()
+>>>>> never called.
+>>>>
+>>>> Right, something is missing in the recovery function to prevent request_firmware call if skip_fw_load is set
+>>>>
+>>>> We also identify an issue if recovery fails:
+>>>> In case of recovery issue the rproc state is RPROC_CRASHED, so that it is no more possible to load a new firmware from
+>>>> user space.
+>>>> This issue is not linked to this patchset. We have patches on our shelves for this.
+>>>>
+>>>>>>      }
+>>>>>>
+>>>>>>      ret = rproc_fw_boot(rproc, firmware_p);
+>>>>>> @@ -1916,8 +1946,17 @@ int rproc_add(struct rproc *rproc)
+>>>>>>      /* create debugfs entries */
+>>>>>>      rproc_create_debug_dir(rproc);
+>>>>>>
+>>>>>> -    /* if rproc is marked always-on, request it to boot */
+>>>>>> -    if (rproc->auto_boot) {
+>>>>>> +    if (rproc->skip_fw_load) {
+>>>>>> +            /*
+>>>>>> +             * If rproc is marked already booted, no need to wait
+>>>>>> +             * for firmware.
+>>>>>> +             * Just handle associated resources and start sub devices
+>>>>>> +             */
+>>>>>> +            ret = rproc_boot(rproc);
+>>>>>> +            if (ret < 0)
+>>>>>> +                    return ret;
+>>>>>> +    } else if (rproc->auto_boot) {
+>>>>>> +            /* if rproc is marked always-on, request it to boot */
+>>>>>
+>>>>> I spent way too much time staring at this modification...  I can't decide if a
+>>>>> system where the FW has been pre-loaded should be considered "auto_boot".
+>>>>> Indeed the result is the same, i.e the MCU is started at boot time without user
+>>>>> intervention.
+>>>>
+>>>> The main difference is that the firmware is loaded by the Linux remote proc in case of auto-boot.
+>>>> In auto-boot mode the remoteproc loads a firmware, on probe, with a specified name without any request from user space.
+>>>> One constraint of this mode is that the file system has to be accessible before the rproc probe.
+>>>
+>>> Indeed, but in both cases the MCU is booted automatically.  In one
+>>> case the FW is loaded by the framework and in the other it is not.  As
+>>> such both scenarios are "auto_boot", they simply have different
+>>> flavours.
+>> Regarding your concerns i would like to propose an alternative that will answer to following use cases:
+>>
+>> In term of use cases we can start the remote proc firmware in following modes:
+>> - auto boot with FW loading, resource table parsing and FW start/stop
+>> - auto boot without FW loading, with FW resource table parsing and FW start/stop
+>> - auto boot with FW attachment and  resource table parsing
+>> - boot on userspace request with FW loading, resource table parsing and FW start/stop
+>> - boot on userspace request without FW loading, with FW resource table parsing and FW start/stop
+>> - boot on userspace request with FW attachment and  resource table parsing
+>>
+>> I considered the recovery covered by these use cases...
+>>
+>> I tried to concatenate all use case to determine the behavior of the core and platform driver:
+>> - "auto-boot" used to decide if boot is from driver or user space request (independently from fw loading and live cycle management)
+>> - "skip_fw_load" allows to determine if a firmware has to be loaded or not.
+>> - remote Firmware live cycle (start,stop,...) are managed by the platform driver, it would have to determine the manage the remote proc depending on the mode detected.
+>>
+>> If i apply this for stm32mp1 driver:
+>> normal boot( FW started on user space request):
+>>   - auto-boot = 0
+>>   - skip_fw_load = 0
+>> FW loaded and started by the bootloader
+>>   - auto-boot = 1
+>>   - skip_firmware = 1;
+>>
+>> => on a stop: the "auto-boot" and "skip_firmware flag will be reset by the stm32rproc driver, to allow user space to load a new firmware or reste the system.
+>> this is considered as a ack by Bjorn today, if you have an alternative please share.
+> 
+> I wonder if we can achieve the same results without needing
+> rproc::skip_fw_load...  For cases where the FW would have been loaded
+> and the MCU started by another entity we could simply set rproc->state
+> = RPROC_RUNNING in the platform driver.  That way when the MCU is
+> stopped or crashes, there is no flag to reset, rproc->state is simply
+> set correctly by the current code.
+> 
+> I would also set auto_boot =1 in order to start the AP synchronisation
+> as quickly as possible and add a check in rproc_trigger_auto_boot() to
+> see if rproc->state == RPROC_RUNNING.  If so simply call rproc_boot()
+> where platform specific rproc_ops would be tailored to handle a
+> running processor.
 
+Your proposal is interesting, what concerns me is that seems to work only
+for a first start. And calling rproc_boot, while state is RPROC_RUNNING seems
+pretty strange for me.
+Also, as Peng mentions in https://patchwork.kernel.org/patch/11390485/,
+the need also exists to skip the load of the firmware on recovery.
+How to manage ROM/XIP Firmwares, no handling of the FW code only management
+of the live cycle (using sysfs, crash management ....)?
+
+> 
+> In my opinion the above would represent the state of the MCU rather
+> than the state of the FW used by the MCU.  It would also provide an
+> opening for supporting systems where the MCU is not the life cycle
+> manager.
+Not sure to catch your point here. By "above" you mention your proposal or mine?
+In my opinion, rproc->state already represents the MCU state
+what seems missing is the FW state
+Could you clarify what you mean by "systems where the MCU is not the life cycle
+manager" MCU = rproc framework?
+
+Regards
+Arnaud
+
+> 
+> Let me know what you think...
+> 
+>>
+>> I need to rework the patchset in consequence but i would appreciate your feedback on this proposal before, to be sure that i well interpreted your concerns...
+>>
+>> Regards,
+>> Arnaud
+>>
+>>>
+>>>> This is not necessary the case, even if EPROBE_DEFER is used. In this case the driver has to be build as kernel module.
+>>>>
+>>>> Thanks,
+>>>> Arnaud
+>>>>>
+>>>>> I'd welcome other people's opinion on this.
+>>>>>
+>>>>>>              ret = rproc_trigger_auto_boot(rproc);
+>>>>>>              if (ret < 0)
+>>>>>>                      return ret;
+>>>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>>>>> index 16ad66683ad0..4fd5bedab4fa 100644
+>>>>>> --- a/include/linux/remoteproc.h
+>>>>>> +++ b/include/linux/remoteproc.h
+>>>>>> @@ -479,6 +479,7 @@ struct rproc_dump_segment {
+>>>>>>   * @table_sz: size of @cached_table
+>>>>>>   * @has_iommu: flag to indicate if remote processor is behind an MMU
+>>>>>>   * @auto_boot: flag to indicate if remote processor should be auto-started
+>>>>>> + * @skip_fw_load: remote processor has been preloaded before start sequence
+>>>>>>   * @dump_segments: list of segments in the firmware
+>>>>>>   * @nb_vdev: number of vdev currently handled by rproc
+>>>>>>   */
+>>>>>> @@ -512,6 +513,7 @@ struct rproc {
+>>>>>>      size_t table_sz;
+>>>>>>      bool has_iommu;
+>>>>>>      bool auto_boot;
+>>>>>> +    bool skip_fw_load;
+>>>>>>      struct list_head dump_segments;
+>>>>>>      int nb_vdev;
+>>>>>>  };
+>>>>>> --
+>>>>>> 2.17.1
+>>>>>>
