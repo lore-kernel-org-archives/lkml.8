@@ -2,186 +2,107 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E77FC11D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E4CC11D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C732071E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 462A724672
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 10:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L95S4k+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgBTKaz (ORCPT
+        id S1727833AbgBTKbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 05:30:55 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45579 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726871AbgBTKaz (ORCPT
+        Thu, 20 Feb 2020 05:31:38 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41603 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgBTKbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 05:30:55 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v19so27016872oic.12;
-        Thu, 20 Feb 2020 02:30:54 -0800 (PST)
+        Thu, 20 Feb 2020 05:31:37 -0500
+Received: by mail-lj1-f194.google.com with SMTP id h23so3643559ljc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 02:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ombemeBuSWqa0cr6v8Icg8IDYVOYL7pKXjeA/5N6FzM=;
+        b=L95S4k+QmoSueLaeSj3bsP8Cf9yA01n5JDC8JpELKhHbDR5xkkjjQXDe/+1HONIaFl
+         Fi6PRFHV9ZVoVQ8DbMN/wxni9kBThoUZHw24GGeLFgb6snambZACeGM+7CL8jKN5mjNu
+         lPj0MSeii4XJyQZ1u67d3k+oQbu6pCLeg4IOsg79YT67xMHBePNJOA9c84JG/u48v5UO
+         ksl0v0Qt3Nh94vIrrxmb/d/4HLJhciaCUpwqC4Rsqv+PVYQs2LM6LhchzrHdEjY9ZueJ
+         rvtzi38RZbbgefIiFJY7xWnK1R7h1yY6xIpdwDSFXj89ivGg36M4QSYlPxevKS5KGI8T
+         Q3SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LaRxy7mSTm2TUALpIGXjpz65a6FCoe/jI7xl5xTwPto=;
-        b=dg8r1ikTI1ZZyBUFISRbgw9825x7ZU7/j2y4g68FQho6dczEffo/LCNoC7KhGwksCu
-         a61e62SvqJ5bhNrQbJV1G2RAsNuXFRolPI3ccoITbf6O4SekxA5808H0PS+ULgNKDZS7
-         SjERN3VZN4N2o8aGIhGIYkuMiN+IbM0ksvQgROyVVqumGaPONWIWkIlQJ0n3OWXka7L7
-         Bo9IUXdu4i7SrraqxBHSo70UFByIDrn2LOSAIegPqkH+UA3V3oOCLfOSCLe38J+q3ZIk
-         TbhtTPXZ7Mak14oUwuO/34Pe4MwTRIDYlIxXH6c92Ne2qArIOzyIhOsq88FLjzJBCWJa
-         QZvw==
-X-Gm-Message-State: APjAAAWdkJdsb+0OrOLkm7X2j7M3QORAoobg1x6Nbia5BouJ8B4wW6PE
-        LLjgM0mqJeuAVyH6uWSCjTbJ34AZ6onqOJ/xutkG64HQ
-X-Google-Smtp-Source: APXvYqzyg5SeUJapHnGnohk1i8hiYxXjg3x2KCPKIyEqlh7N9USv+WlDEtilOjkYsCFxXxjfurKt3yb828JFZbfyqQw=
-X-Received: by 2002:aca:48cd:: with SMTP id v196mr1496275oia.102.1582194654310;
- Thu, 20 Feb 2020 02:30:54 -0800 (PST)
+        bh=ombemeBuSWqa0cr6v8Icg8IDYVOYL7pKXjeA/5N6FzM=;
+        b=eCjCfSO4Iwfvu8kAvFQ9AO88gXYWWhtkQeKWu3ssh/ATVai2fY3lWvRwzqI7zOwvq9
+         1v0VWDeYTwuPbJRxU6C8+N4z13aZHNsCreQFKwqS1mRj9v0zEK2F9cldtBR1ZFqdorh6
+         Xr1AwHS9axp9ljyFvUHrQqQL06UpVAw2L4flfATRY7+vSUqVd282Tm6PS5VwOVRnJWjD
+         m2abfv1Hj9oV8coE/wR9E1Y109X06/SakMT+CPo7skJePmjZ+wjKKzZZ1fsr8i2phlr0
+         XTAxhbBcPrsdMwtgRhqDE/zKnxBbKD2uMgy05NM/NjwH9gWHua9OPlVD4ZBdmZULlCc2
+         iyEA==
+X-Gm-Message-State: APjAAAUXWPyoU28Qjogbfcv5VjXJZlrvdES2biLlMzhbfZ3OTySe9W8F
+        /3Dft7ff/APdwIK/rKYESLeZiam7ddE8589caXEL0Q==
+X-Google-Smtp-Source: APXvYqwnkhN82t7bmsO6FQeHCgOkS46PlgZ3YUcENV9JCtgDVFgH3zadu7vOARUTzKxgvF5miRfOu5+vUG+6DG8dTMI=
+X-Received: by 2002:a2e:8699:: with SMTP id l25mr17761213lji.137.1582194695210;
+ Thu, 20 Feb 2020 02:31:35 -0800 (PST)
 MIME-Version: 1.0
-References: <1582018657-5720-1-git-send-email-nbelin@baylibre.com> <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
-In-Reply-To: <1582018657-5720-3-git-send-email-nbelin@baylibre.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Feb 2020 11:30:43 +0100
-Message-ID: <CAMuHMdWPgUKOHyspV3bL_4YKsxgXvEgQqdOzoo-8s8gi_g3rVw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: leds: Shiji Lighting APA102C LED driver
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Lukas Wunner <lukas@wunner.de>
+References: <1582183784-13502-1-git-send-email-qiwuchen55@gmail.com>
+ <CAKfTPtDzb9XD5wrMhcvGn+dz27nh58taDrdp36YHKNusp739Og@mail.gmail.com> <20200220100915.GA14721@cqw-OptiPlex-7050>
+In-Reply-To: <20200220100915.GA14721@cqw-OptiPlex-7050>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 20 Feb 2020 11:31:23 +0100
+Message-ID: <CAKfTPtCm-Vn1YAC8j-XFLritQxQ-B7d=pqO9U6=c2vCuTNUpsg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: add !se->on_rq check before dequeue entity
+To:     chenqiwu <qiwuchen55@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        chenqiwu <chenqiwu@xiaomi.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
-
-CC devicetree, Lukas
-
-On Tue, Feb 18, 2020 at 10:39 AM Nicolas Belin <nbelin@baylibre.com> wrote:
-> Document Shiji Lighting APA102C LED driver device tree bindings.
+On Thu, 20 Feb 2020 at 11:09, chenqiwu <qiwuchen55@gmail.com> wrote:
 >
-> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
-> ---
->  .../devicetree/bindings/leds/leds-apa102c.yaml     | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-apa102c.yaml
+> On Thu, Feb 20, 2020 at 10:38:02AM +0100, Vincent Guittot wrote:
+> > On Thu, 20 Feb 2020 at 08:29, <qiwuchen55@gmail.com> wrote:
+> > >
+> > > From: chenqiwu <chenqiwu@xiaomi.com>
+> > >
+> > > We igonre checking for !se->on_rq condition before dequeue one
+> > > entity from cfs rq. It must be required in case the entity has
+> > > been dequeued.
+> >
+> > Do you have a use case that triggers this situation ?
+> >
+> > This is the only way to reach this situation seems to be dequeuing a
+> > task on a throttled cfs_rq
+> >
+> Sorry, I have no use case triggers this situation. It's just found by
+> reading code.
+> I agree the situation you mentioned above may have a racy with
+> dequeue_task_fair() in the following code path:
+> __schedule
+>         pick_next_task_fair
+>                 put_prev_entity
+>                         check_cfs_rq_runtime
+>                                 throttle_cfs_rq
+>                                         dequeue_entity
 >
-> diff --git a/Documentation/devicetree/bindings/leds/leds-apa102c.yaml b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
-> new file mode 100644
-> index 000000000000..24bc2fc19fcb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-apa102c.yaml
-> @@ -0,0 +1,91 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-apa102c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for Shiji Lighting - APA102C
-> +
-> +maintainers:
-> +  - Nicolas Belin <nbelin@baylibre.com>
-> +
-> +description:
-> +  Each LED is represented as a sub-node of the leds-apa102c device.  Each LED
-> +  is a three color RGB LED with 32 levels brightness adjustment that can be
-> +  cascaded so that multiple LEDs can be set with a single command.
-> +
-> +properties:
-> +  compatible:
-> +    const: shiji,apa102c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 1000000
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - spi-max-frequency
-> +  - '#address-cells'
-> +  - '#size-cells'
-> +
-> +patternProperties:
-> +  "^led@[0-9]+$":
-> +    type: object
-> +    description: |
-> +      Properties for an array of connected LEDs.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          This property corresponds to the led index. It has to be between 0
-> +          and the number of managed leds minus 1
-> +        maxItems: 1
-> +
-> +      label:
-> +        description: |
-> +          This property corresponds to the name of the led. If not set,
-> +          the led index will be used to create the led name instead
-> +        maxItems: 1
-> +
-> +      linux,default-trigger: true
-> +
-> +    required:
-> +      - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        led-controller@0 {
-> +            compatible = "shiji,apa102c";
-> +            reg = <0>;
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +            spi-max-frequency = <1000000>;
-> +            led@0 {
-> +                reg = <0>;
-> +                label = "led1";
-> +            };
-> +
-> +            led@1 {
-> +                reg = <1>;
-> +                label = "led2";
-> +            };
-> +
-> +            led@2 {
-> +                reg = <2>;
-> +                label = "led3";
-> +            };
-> +        };
-> +    };
+> So this check is worth to be added for dequeue_task_fair().
 
-Perhaps this should use "#daisy-chained-devices" instead of listing all LEDs
-explicitly?
-Or would that cause problems w.r.t. LED labeling?
-
-Documentation/devicetree/bindings/common-properties.txt
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+In fact the check is already done thanks to the: if (cfs_rq_throttled(cfs_rq))
+AFAICT, there is no other way to enqueue a task on a cfs_rq for which
+the group entity is not enqueued
