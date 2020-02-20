@@ -2,157 +2,122 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8CBC761A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4599C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8AD20801
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783BE24656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 06:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Pa3mrgJU";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="rI9PQQUb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fRDY4Kkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgBTGUX (ORCPT
+        id S1726801AbgBTGWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 01:20:23 -0500
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:22769 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgBTGUW (ORCPT
+        Thu, 20 Feb 2020 01:22:46 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52264 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgBTGWq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 01:20:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582179622; x=1613715622;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=1KahjHCuwgcxukeQmjCX+ECQvIKAvnoC0fRy0r+M5xg=;
-  b=Pa3mrgJUMdhSxPRnbtRcSbFVRID+qgc0iRzAXQeGZLuSaGHmvLgDJIU5
-   6baQJ4SCYcjeBPDgoyvSiX7+ukaXSDdKtCkz4xn252mOsdRwJMqf3qiBx
-   m1LrMoT9BH5JH0vc6CIhCipeWPTt85PnhwxPW8ymkrcPkPhYAT/AOHmvD
-   yqOSOhB6YEHj4kGIGNCitZQvcas45ZBqGbuJK9hv7KJvVAHju/wTtYYGg
-   NVRMWd3uo8i4TIQUK0gZkAwWBwd7ISMy/mjhHbrXgYbJ46/nfQAMENcS1
-   ZnzuTcOlotPH5iJwcctVgQEI7jNsJr+y+Gcclkn3g5LzAAEi6MsysqHUe
-   w==;
-IronPort-SDR: 4asB45K+lkxvzQB9RQ3nOJ2luaWtHascoSWQCyb9m2aB34NPxcpiBb/cHdlEJgVTnQzLZPPanr
- eEuz50gGiQdnyZwwAIszP3Ja7logTDraxD0HNmajEOI8tO5WjdmJ4kWyNivZbNRhWaJdfFdcwN
- WuU8RRokHxohPCeZmrQJneDjX3R9kLUE6PeUHbSGf+z6iBEwZm6MmJ31ydp4Q0tX9bqVZniQLQ
- FRHJTVdZiBUkIqCnEnnVvj9hDbywwV8kNhv7NTlu2vdpjEIASMRCg8YcxKcaMD28nnB1zx2xUa
- odM=
-X-IronPort-AV: E=Sophos;i="5.70,463,1574092800"; 
-   d="scan'208";a="130776957"
-Received: from mail-mw2nam12lp2044.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.44])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Feb 2020 14:20:20 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EjOwodqX87dEWMq+inw73xEqPtaTer3qksxs4p87Xob2H7uUwICQJ1g0oYfI0cf5+CvbXtgLGfcpcoqJ3poR7j393n/lTLPSaL2udbAJE6CRSm5AmuCt4L3AJv3bJjvvZUEgeLNscNFiCEjqSQXCCcnXWgCynq635fmLUCoJL8KJJ03bXIgfDvg39W7j8ifvVMdx5HWkKYbDLb+oYtVqCxmcf0X4Y4grbMz8cWi4EhsER6CD0c27UpkvhDqBKNRbO4hJuqMU55PcQ8quuSQuIxfTgKjiSEy1TYCjeVj0UXCFmlXe1MYgchR+x0hn1EsvCAudDIzQTJGINCWqchDqqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=82/fcUnDyl4GO8eAtMYMZzgJG7xxmMSL2bZ4gJd7dPQ=;
- b=dCx7Q4sW9EwlnTY+V28iOSzUCxU+bsFUXGUY1FWe2xFJW2y6DBrftWgoQQyPPro5pnvbwUxU2mGO64HN45XefeyFAHDIK+XtTVuZEYQqUXKG7hfM7n6tgaCMOf691AIHI7d0mkkrl42UsV87BD94XoekwSkQzjv+MjJZfzpQPBc9sETwIEuEYWAQXajwETeCUf5EdDvHt9/Va62HK4DEBfLgLtFE+78UChuyahWY9PWu6bkUw1/U3aMOMDpfdjQquQtYibaGepQ1N/G0Y7qGr6+09tcWTwQZRH2uOmz1CUHtS4MbHf2r5dSa1HeyrwJFK/UmVWKYwclGHvZ+bgyuCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Thu, 20 Feb 2020 01:22:46 -0500
+Received: by mail-pj1-f68.google.com with SMTP id ep11so431415pjb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 22:22:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=82/fcUnDyl4GO8eAtMYMZzgJG7xxmMSL2bZ4gJd7dPQ=;
- b=rI9PQQUbyqXlrjVNfYNUUipYHHjnmCK6xkdugItwMIzq/tbNS2ashNGhlXFoDu4rU30v26C5lvxt31hR/pacdXFoDqnNY5KYPF/2s8YQks7hgK1qb8lZ+hPbB90tRaN5dXiBdrxicCNfMWfMvQGGGsoL7KNoIgK/xsD//C4wmFY=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
- by MN2PR04MB6141.namprd04.prod.outlook.com (2603:10b6:208:da::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Thu, 20 Feb
- 2020 06:20:19 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2729.033; Thu, 20 Feb 2020
- 06:20:19 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Can Guo <cang@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
-        "hongwus@codeaurora.org" <hongwus@codeaurora.org>,
-        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "kernel-team@android.com" <kernel-team@android.com>,
-        "saravanak@google.com" <saravanak@google.com>,
-        "salyzyn@google.com" <salyzyn@google.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: ufs: Enable HOST_PA_TACTIVATE quirk for WDC UFS
- devices
-Thread-Topic: [PATCH] scsi: ufs: Enable HOST_PA_TACTIVATE quirk for WDC UFS
- devices
-Thread-Index: AQHV3MaMtgu8HMpv5UGzOGGhOPfwHKgjsEbg
-Date:   Thu, 20 Feb 2020 06:20:19 +0000
-Message-ID: <MN2PR04MB6991569990279CA1985BE92DFC130@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1580977315-19321-1-git-send-email-cang@codeaurora.org>
-In-Reply-To: <1580977315-19321-1-git-send-email-cang@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 48fc2f2f-7566-4e3b-9568-08d7b5ccf57b
-x-ms-traffictypediagnostic: MN2PR04MB6141:
-x-microsoft-antispam-prvs: <MN2PR04MB61413F5A9C4EDDD03F28C59AFC130@MN2PR04MB6141.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 031996B7EF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(346002)(366004)(39860400002)(396003)(376002)(189003)(199004)(71200400001)(64756008)(4326008)(33656002)(316002)(66446008)(478600001)(66946007)(52536014)(55016002)(66556008)(2906002)(110136005)(7696005)(54906003)(76116006)(9686003)(66476007)(5660300002)(7416002)(4744005)(26005)(81166006)(81156014)(86362001)(8936002)(6506007)(186003)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6141;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ENkrAAgtuCgsOERnAm91pyiz9VFKBvdQXp8v/k2JgVRHmXphHWOxdbdrDD2uCHIlRTVD3UB6/bzjQEBIXMvkSwa9pVIXSXmuChQhHippEIP38AR01jaDxeoUDlTcE1pe04yw/gt9ro9JHbcPX75AwAJECYo9ifKfaZpWqSokeyDKdwDlX/eeMUMhTqypfVOSmBQ2tn4R+loExl/eryb8xwVLzGwla+ry5Hyob/7vWaD+tels9GrGmEhH9WTnOeD3KLPlnGwM+GI58oCSvK5Kcs9YrKQnV3b7bti4mEn010Vm0VX4HU1FFzsoMCH+m7Ze+3PjQ6ycdGpobXY1xqOJ7DtH+nzB+p5BeGdfJybFIDUgsST1OkLCOcbzVPeeBikSyJ/d2AEBW6eVcbVRFXTkwXEdABLfBxun6OPiHreiU+h1Z75pX9xUlnqFe7bWhiy3
-x-ms-exchange-antispam-messagedata: rUnyCsAd+cWkol5UQ30fZ7WKtNjLy+ZTxsU74rZOUFYA0mY0fNql2Zbgfypd0FQzzYhyMWySRH7qM0AV+aVMrd1NMBT2fdWkmbcB9Alttax+3jxAKHtBfJknm7yohKIAencTfWCvJ2QbtiLvlife4A==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4HmaMrg/A0ePGN0EoT7LOXLlO0HcR/QAQGKc66IQiBw=;
+        b=fRDY4KkruK7J3WvWuRYCMBR/HFq68axyRau9YhW75xxf3hmvY0zQZh0pHSJdxCvJX7
+         OQMw9MatyxS8oE7/oWzN1VFUJ+cdS3Iy4OW3bcuoCgn4/ByJ9PNnV6JA7ZyFauySNe/A
+         SAhzTtQ7YoXLrfvYJSrfL6HXeiIm/S7OEWuQw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4HmaMrg/A0ePGN0EoT7LOXLlO0HcR/QAQGKc66IQiBw=;
+        b=cnK78+1LOaI2lhUjWmANTEsLrL13VhawnZPzINyrmRpxMNk/JWBN7OFByGaxNf4OBz
+         EPPx9oRg9ZkSsqX00BpmOtGeJzynGF376ougmAlw6WghK3HP0Go+t1e52vkOa6dsylN+
+         J9Rrs/lptksDCHVmd3mM/+qZya5l9x2aeGHv0UbKEKwN//Yq+kjiQz7ec3X/rL01IuW0
+         0jtiUwhIqilw+Q7SdNlnTLEAUwSeIOSHCtczum003ovP3WE+wO02jTT5gz90pNSoMMba
+         DY6gahTjUp0KsdnoZE8z5rbHpsvA8GjyjCgKtc2olDNz/AqcByaiAU1m0rDmLVX35Jge
+         HEBg==
+X-Gm-Message-State: APjAAAUEp94npWaKjJvblmdEJ+D3D3TGMmDj4qrPgG10Ge2aLGU5toTG
+        wyaaAnoWHoYYcrtDP2umF/Jlzw==
+X-Google-Smtp-Source: APXvYqzUBh4ei9Kl84PAl7GiBD2O/P0w5AgGuNUUZTL7tvsylTFtzNcyGxmNyNSGpG+A0WeGLDo+4A==
+X-Received: by 2002:a17:90a:348a:: with SMTP id p10mr1787055pjb.120.1582179765345;
+        Wed, 19 Feb 2020 22:22:45 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k2sm1836863pgk.84.2020.02.19.22.22.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2020 22:22:44 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/edid: Distribute switch variables for initialization
+Date:   Wed, 19 Feb 2020 22:22:29 -0800
+Message-Id: <20200220062229.68762-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48fc2f2f-7566-4e3b-9568-08d7b5ccf57b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2020 06:20:19.2020
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: El7XmBK+hVePOoPkRogk51i/CyNIa9EhenpRw/icNr60LBt68IKdtejbB2T2j/0w0TlR4IT6pnrdOK2RtOaAtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6141
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Variables declared in a switch statement before any case statements
+cannot be automatically initialized with compiler instrumentation (as
+they are not part of any execution flow). With GCC's proposed automatic
+stack variable initialization feature, this triggers a warning (and they
+don't get initialized). Clang's automatic stack variable initialization
+(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
+doesn't initialize such variables[1]. Note that these warnings (or silent
+skipping) happen before the dead-store elimination optimization phase,
+so even when the automatic initializations are later elided in favor of
+direct initializations, the warnings remain.
 
->=20
->  /**
->   * ufs_dev_fix - ufs device quirk info
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 1fe0a97..a066f00 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -239,6 +239,8 @@ struct ufs_pm_lvl_states ufs_pm_lvl_states[] =3D {
->                 UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME),
->         UFS_FIX(UFS_VENDOR_SKHYNIX, "hB8aL1" /*H28U62301AMR*/,
->                 UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME),
-> +       UFS_FIX(UFS_VENDOR_WDC, UFS_ANY_MODEL,
-> +               UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE),
-We are objecting to apply this quirk categorically for all SOC vendors.
-Please use a vendor-specific quirk for that.
+To avoid these problems, move such variables into the "case" where
+they're used or lift them up into the main function body.
 
-Thanks,
-Avri
+drivers/gpu/drm/drm_edid.c: In function ‘drm_edid_to_eld’:
+drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be executed [-Wswitch-unreachable]
+ 4395 |     int sad_count;
+      |         ^~~~~~~~~
+
+[1] https://bugs.llvm.org/show_bug.cgi?id=44916
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/gpu/drm/drm_edid.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 805fb004c8eb..2941b65b427f 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -4392,9 +4392,9 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+ 			dbl = cea_db_payload_len(db);
+ 
+ 			switch (cea_db_tag(db)) {
+-				int sad_count;
++			case AUDIO_BLOCK: {
+ 
+-			case AUDIO_BLOCK:
++				int sad_count;
+ 				/* Audio Data Block, contains SADs */
+ 				sad_count = min(dbl / 3, 15 - total_sad_count);
+ 				if (sad_count >= 1)
+@@ -4402,6 +4402,7 @@ static void drm_edid_to_eld(struct drm_connector *connector, struct edid *edid)
+ 					       &db[1], sad_count * 3);
+ 				total_sad_count += sad_count;
+ 				break;
++			}
+ 			case SPEAKER_BLOCK:
+ 				/* Speaker Allocation Data Block */
+ 				if (dbl >= 1)
+
