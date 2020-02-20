@@ -2,131 +2,220 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6097EC11D0A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1BCC11D05
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C56206E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582208204;
-	bh=ELL3hEpGo9sAinW5R6kKrZvV1yKEFg4R0dnJKKl/e5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TktMJ33l1wmU1RLxT0MgCTxVLRFvdYybE7sAR/q6CTnOly9G/tNhvJR9BIDP4tK2C
-	 HIrLa6icpe3rEHlFyih5Qrz5Z/+caBi+SU0wKlz553QDgMtJM+0tkjx/npFJiw8vlx
-	 cFZOgdOhjzVQ4gSceRirf/GjnJLOG1/3zg00swBQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3EA21206E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 14:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="KGwHxUG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgBTOQm (ORCPT
+        id S1728303AbgBTORq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 09:16:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbgBTOQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 09:16:42 -0500
-Received: from localhost (static-140-208-78-212.thenetworkfactory.nl [212.78.208.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC20B208E4;
-        Thu, 20 Feb 2020 14:16:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582208201;
-        bh=ELL3hEpGo9sAinW5R6kKrZvV1yKEFg4R0dnJKKl/e5E=;
+        Thu, 20 Feb 2020 09:17:46 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54786 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgBTORp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 09:17:45 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B7561563;
+        Thu, 20 Feb 2020 15:17:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1582208263;
+        bh=bI53Zug+890prNNaPfPGhR8GpYv+Klbg8yJ37Qnbv4A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QbjHw5kA8g04sBo+4CIz97a/75O3v3KPnvVZEWPkhLl9HNfY8YSJVGOU0eHiS6wBI
-         sGzdXyEQ5LQVkLw+CI8Ti/rlYUV+mrdoF+jILKt7dL6Bb8Buoh5f5oR35Sf7QC0ijM
-         yqtry28uArBqZ/Forgszj6uh9kyddJIl9X41IZdA=
-Date:   Thu, 20 Feb 2020 15:16:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+        b=KGwHxUG7b/Z2UkYUp9M/oxLXj3mb0DpKs8DSFQyfN6VrcdC9FiYW/vH3DHE9hKJiM
+         qtAGmy5/ZUui2EMb2r4xc911A8o4H9PS8FCT7JlsTFVzthx1bNVc/UHvri25X+ueKc
+         abTm7XDPazs+OtI+5sUlO+NXZFjNOd/npqA+0alY=
+Date:   Thu, 20 Feb 2020 16:17:25 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND RFC PATCH v3] clk: Use new helper in managed functions
-Message-ID: <20200220141637.GA3433108@kroah.com>
-References: <f48d1df3-fc1f-ac5c-b11e-330f18aad539@free.fr>
- <20200220112700.GJ3374196@kroah.com>
- <8866e533-967f-e208-1ec8-888d72f3052e@free.fr>
+        Maxime Ripard <maxime@cerno.tech>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Icenowy Zheng <icenowy@aosc.io>, Torsten Duwe <duwe@suse.de>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Samuel Holland <samuel@sholland.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 6/6] arm64: allwinner: a64: enable LCD-related hardware
+ for Pinebook
+Message-ID: <20200220141725.GG4998@pendragon.ideasonboard.com>
+References: <20200220083508.792071-1-anarsoul@gmail.com>
+ <20200220083508.792071-7-anarsoul@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8866e533-967f-e208-1ec8-888d72f3052e@free.fr>
+In-Reply-To: <20200220083508.792071-7-anarsoul@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 03:05:54PM +0100, Marc Gonzalez wrote:
-> On 20/02/2020 12:27, Greg Kroah-Hartman wrote:
-> 
-> > On Thu, Feb 20, 2020 at 11:04:58AM +0100, Marc Gonzalez wrote:
-> >
-> >> Introduce devm_add() to wrap devres_alloc() / devres_add() calls.
-> >>
-> >> Using that helper produces simpler code, and smaller object size.
-> >> E.g. with gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu:
-> >>
-> >>     text	   data	    bss	    dec	    hex	filename
-> >> -   1708	     80	      0	   1788	    6fc	drivers/clk/clk-devres.o
-> >> +   1524	     80	      0	   1604	    644	drivers/clk/clk-devres.o
-> >>
-> >> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> >> ---
-> >> Differences from v2 to v3
-> >> x Make devm_add() return an error-code rather than the raw data pointer
-> >>   (in case devres_alloc ever returns an ERR_PTR) as suggested by Geert
-> >> x Provide a variadic version devm_vadd() to work with structs as suggested
-> >>   by Geert
-> >> x Don't use nested ifs in clk_devm* implementations (hopefully simpler
-> >>   code logic to follow) as suggested by Geert
-> >>
-> >> Questions:
-> >> x This patch might need to be split in two? (Introduce the new API, then use it)
-> >> x Convert other subsystems to show the value of this proposal?
-> >> x Maybe comment the API usage somewhere
-> >> ---
-> >>  drivers/base/devres.c    | 15 ++++++
-> >>  drivers/clk/clk-devres.c | 99 ++++++++++++++--------------------------
-> >>  include/linux/device.h   |  3 ++
-> >>  3 files changed, 53 insertions(+), 64 deletions(-)
-> >>
-> >> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> >> index 0bbb328bd17f..b2603789755b 100644
-> >> --- a/drivers/base/devres.c
-> >> +++ b/drivers/base/devres.c
-> >> @@ -685,6 +685,21 @@ int devres_release_group(struct device *dev, void *id)
-> >>  }
-> >>  EXPORT_SYMBOL_GPL(devres_release_group);
-> >>  
-> >> +int devm_add(struct device *dev, dr_release_t func, void *arg, size_t size)
-> > 
-> > Please add a bunch of kerneldoc here, as I have no idea what this
-> > function does just by looking at the name of it :(
-> 
-> Fair enough. (This was one of my "Questions" in the patch comments.)
-> 
-> Note: My patch adds a new function, then makes use of said function.
-> Is this typically done in two patches or one?
-> 
-> Patch 1/2 augmenting the API.
-> Patch 2/2 making use of the new function.
+Hi Vasily,
 
-2 is usual.
+Thank you for the patch.
+
+On Thu, Feb 20, 2020 at 12:35:08AM -0800, Vasily Khoruzhick wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+> 
+> Pinebook has an ANX6345 bridge connected to the RGB666 LCD output and
+> eDP panel input. The bridge is controlled via I2C that's connected to
+> R_I2C bus.
+> 
+> Enable all this hardware in device tree.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> ---
+>  .../dts/allwinner/sun50i-a64-pinebook.dts     | 69 ++++++++++++++++++-
+>  1 file changed, 68 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> index c06c540e6c08..f5633f550d8a 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+> @@ -48,6 +48,18 @@ lid_switch {
+>  		};
+>  	};
+>  
+> +	panel_edp: panel-edp {
+> +		compatible = "neweast,wjfh116008a";
+> +		backlight = <&backlight>;
+> +		power-supply = <&reg_dc1sw>;
+> +
+> +		port {
+> +			panel_edp_in: endpoint {
+> +				remote-endpoint = <&anx6345_out_edp>;
+> +			};
+> +		};
+> +	};
+> +
+>  	reg_vbklt: vbklt {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "vbklt";
+> @@ -109,6 +121,10 @@ &dai {
+>  	status = "okay";
+>  };
+>  
+> +&de {
+> +	status = "okay";
+> +};
+> +
+>  &ehci0 {
+>  	phys = <&usbphy 0>;
+>  	phy-names = "usb";
+> @@ -119,6 +135,10 @@ &ehci1 {
+>  	status = "okay";
+>  };
+>  
+> +&mixer0 {
+> +	status = "okay";
+> +};
+> +
+>  &mmc0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mmc0_pins>;
+> @@ -177,12 +197,45 @@ &pwm {
+>  	status = "okay";
+>  };
+>  
+> -/* The ANX6345 eDP-bridge is on r_i2c */
+>  &r_i2c {
+>  	clock-frequency = <100000>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&r_i2c_pl89_pins>;
+>  	status = "okay";
+> +
+> +	anx6345: anx6345@38 {
+> +		compatible = "analogix,anx6345";
+> +		reg = <0x38>;
+> +		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
+> +		dvdd25-supply = <&reg_dldo2>;
+> +		dvdd12-supply = <&reg_fldo1>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			anx6345_in: port@0 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <0>;
+> +				anx6345_in_tcon0: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&tcon0_out_anx6345>;
+> +				};
+
+As there's a single endpoint, you can drop the reg property, the @0
+suffix, and the #address-cells and #size-cells property in the port@0
+node (but not in the ports node).
+
+> +			};
+> +
+> +			anx6345_out: port@1 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = <1>;
+> +
+> +				anx6345_out_edp: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&panel_edp_in>;
+> +				};
+
+Same here.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &r_pio {
+> @@ -357,6 +410,20 @@ &sound {
+>  			"MIC2", "Internal Microphone Right";
+>  };
+>  
+> +&tcon0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&lcd_rgb666_pins>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&tcon0_out {
+> +	tcon0_out_anx6345: endpoint@0 {
+> +		reg = <0>;
+> +		remote-endpoint = <&anx6345_in_tcon0>;
+> +	};
+> +};
+> +
+>  &uart0 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart0_pb_pins>;
+
+-- 
+Regards,
+
+Laurent Pinchart
