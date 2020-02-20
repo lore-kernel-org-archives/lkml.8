@@ -2,175 +2,228 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CEAC11D0C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BBC11D15
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8D820637
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ThSMj1Um"
+	by mail.kernel.org (Postfix) with ESMTP id 8027D20637
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgBTRje (ORCPT
+        id S1728732AbgBTRj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:39:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41178 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbgBTRje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:39:34 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01KHd68E106724;
-        Thu, 20 Feb 2020 11:39:06 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582220346;
-        bh=2O/eJDRurhlK+Uid76ayPbW+cmUlm8yAGh78vqav2FA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ThSMj1Umzdak92WxISLY2K33pIUGicW/cVHfI4wVSMAQVr/iUiO0wg5FCHuRO+zBN
-         +sjcr0fcy7J9FfOEVjBglc27GDtLFNbO1aN/Z+msr8fAsR2NZbm0kSXMFC3UHzOVSz
-         xYBhQ83KwRGZUsmsZUiOiRXbc7AwBB2EkCT8WtC0=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01KHd6TK062321
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Feb 2020 11:39:06 -0600
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 20
- Feb 2020 11:39:06 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 20 Feb 2020 11:39:06 -0600
-Received: from [10.250.77.18] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01KHd5u7059364;
-        Thu, 20 Feb 2020 11:39:05 -0600
-Subject: Re: omap-secure.c:undefined reference to `__arm_smccc_smc'
-To:     Tony Lindgren <tony@atomide.com>
-CC:     <kbuild-all@lists.01.org>, <linux-kernel@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>,
-        <linux-omap@vger.kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <202002131856.VeW4PhBJ%lkp@intel.com>
- <20200220155429.GH37466@atomide.com>
- <55ddcd29-ed8b-529e-dd54-cbac5cf74e42@ti.com>
- <20200220162012.GI37466@atomide.com>
- <d7b685b6-16a2-3743-1786-a5240726ed9c@ti.com>
- <20200220163703.GK37466@atomide.com> <20200220171305.GL37466@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <281e895b-720d-5bab-63cf-8b3e389dc767@ti.com>
-Date:   Thu, 20 Feb 2020 12:39:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 20 Feb 2020 12:39:56 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2452 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgBTRjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 12:39:55 -0500
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id EFE1B51D0DBE5344DF09;
+        Thu, 20 Feb 2020 17:39:52 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 20 Feb 2020 17:39:52 +0000
+Received: from [127.0.0.1] (10.210.167.243) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 20 Feb
+ 2020 17:39:51 +0000
+Subject: Re: Questions about logic_pio
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+CC:     "xuwei (O)" <xuwei5@huawei.com>, bhelgaas <bhelgaas@google.com>,
+        andyshevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Mips <linux-mips@vger.kernel.org>
+References: <1705dbe62ce.10ae800394772.9222265269135747883@flygoat.com>
+ <5E4E55F7.70800@hisilicon.com>
+ <e3ddd7de-54b2-bdba-2233-6ace40072430@huawei.com>
+ <17062738bc0.c380503c6222.6801557833645076299@flygoat.com>
+ <1ebf4461-eb37-ff58-1faf-dd24d83f85cf@huawei.com>
+ <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <e54a9936-5cf3-777d-3e91-58d2be96bf1c@huawei.com>
+Date:   Thu, 20 Feb 2020 17:39:50 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-In-Reply-To: <20200220171305.GL37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <170632822e1.12fede49a6919.5706082545515934736@flygoat.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.210.167.243]
+X-ClientProxiedBy: lhreml723-chm.china.huawei.com (10.201.108.74) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/20/20 12:13 PM, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [200220 16:37]:
->> * Andrew F. Davis <afd@ti.com> [200220 16:24]:
->>> On 2/20/20 11:20 AM, Tony Lindgren wrote:
->>>> * Andrew F. Davis <afd@ti.com> [200220 16:04]:
->>>>> On 2/20/20 10:54 AM, Tony Lindgren wrote:
->>>>>> Andrew,
->>>>>>
->>>>>> * kbuild test robot <lkp@intel.com> [200213 10:27]:
->>>>>>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>>>>>> head:   0bf999f9c5e74c7ecf9dafb527146601e5c848b9
->>>>>>> commit: c37baa06f8a970e4a533d41f7d33e5e57de5ad25 ARM: OMAP2+: Fix undefined reference to omap_secure_init
->>>>>>> date:   3 weeks ago
->>>>>>> config: arm-randconfig-a001-20200213 (attached as .config)
->>>>>>> compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
->>>>>>> reproduce:
->>>>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>>>>>         chmod +x ~/bin/make.cross
->>>>>>>         git checkout c37baa06f8a970e4a533d41f7d33e5e57de5ad25
->>>>>>>         # save the attached .config to linux build tree
->>>>>>>         GCC_VERSION=7.5.0 make.cross ARCH=arm 
->>>>>>>
->>>>>>> If you fix the issue, kindly add following tag
->>>>>>> Reported-by: kbuild test robot <lkp@intel.com>
->>>>>>>
->>>>>>> All errors (new ones prefixed by >>):
->>>>>>>
->>>>>>>    arch/arm/mach-omap2/omap-secure.o: In function `omap_smccc_smc':
->>>>>>>>> omap-secure.c:(.text+0x94): undefined reference to `__arm_smccc_smc'
->>>>>>
->>>>>> Have you looked at this one? Looks like there's still an unhandled
->>>>>> randconfig build case.
->>>>>>
->>>>>
->>>>>
->>>>> I've had a quick look, all the ARM config does:
->>>>>
->>>>> select HAVE_ARM_SMCCC if CPU_V7
->>>>>
->>>>> so I don't think this will happen in any real config, but if we want to
->>>>> prevent randconfig issue this we could force ARCH_OMAP2PLUS to "depend"
->>>>> on it.
->>>>
->>>> Seems to happen at least with omap2 only config where we don't have
->>>> CPU_V7. Something like below seems to fix it.
->>>>
->>>> If that looks OK to you, I'll send out a proper fix.
->>>>
->>>
->>>
->>> This looks fine to me.
->>>
->>> A better later fix might be to later stub out the actual __arm_smccc_smc
->>> in common code if CONFIG_HAVE_ARM_SMCCC is not set, so any platform will
->>> get the fix.
->>
->> Yeah seems that might be better. Adding Aaro and Marc to Cc.
+On 20/02/2020 15:12, Jiaxun Yang wrote:
 > 
-> But if we can in theory have some arm11 machine with smccc, then this
-> local ifdef below is probably the way to go.
+>   ---- 在 星期四, 2020-02-20 22:23:57 John Garry <john.garry@huawei.com> 撰写 ----
+>   > > Also Cc MIPS list to check other's opinions.
+>   > >
+>   > > Hi John.
+>   > >
+>   >
+>   > Hi Jiaxun Yang,
+>   >
+>   > > Thanks for your kind explanation, however, I think this way is
+>   > > violating how I/O ports supposed to work, at least in MIPS world.
+>   >
+>   > For a bit more history, please understand that the core PCI code was
+>   > managing non-native IO port space in the same way before we added the
+>   > logic PIO framework. The only real functional change here was that we
+>   > introduced the indirect-io region within the IO port space, under
+>   > CONFIG_INDIRECT_PIO.
+> 
+> I'm going to do more investigation. Thanks.
+> 
+>   >
+>   > >
+>   > >   > >>
+>   > >   > >> After dig into logic pio logic, I found that logic pio is trying to "allocate" an io_start
+>   > >   > >> for MMIO ranges, the allocation starts from 0x0. And later the io_start is used to calculate
+>   > >   > >> cpu_address.  In my opinion, for direct MMIO access, logic_pio address should always
+>   > >   > >> equal to hw address,
+>   > >   >
+>   > >   > I'm not sure what you mean by simply the hw address.
+>   > >   >
+>   > >
+>   > > I meant  hw_start should always equal to io_start.
+>   > >
+>   > >
+>   > > MIPS have their own wrapped inl/outl functions,
+>   >
+>   > Can you please point me to these? I could not find them in arch/mips
+> 
+> They are built by __BUILD_IOPORT_PFX(bus, bwlq, type) macro.
+> Just using mips_io_port_base + offset to handle inl/outl, the same way PCI_IOBASE.
+
+Right, so I had a glance through the code and mips has it own management 
+of this IO port space. And, like you say, mips_io_port_base is 
+equivalent to PCI_IOBASE.
+
+> 
+>   >
+>   > I will also note that arch/mips/include/asm/io.h does not include
+>   > asm-generic io.h today
+> 
+> Yes, and I'm attempting to take advantage of asm-generic.
+
+I just don't think it's as simple as saying we want to take advantage of 
+asm-generic. asm-generic io.h includes logic_pio.h, which uses logical 
+PIO to manage IO port space and relies on PIO_IOBASE. This is 
+incompatible with having some other framework - like mips_io_port_base - 
+managing IO port space at the same time.
+
+The core PCI code relies on logical PIO to manage IO port space for when 
+PCI_IOBASE is defined.
+
+> 
+>   >
+>   > doing the samething with
+>   > > PCI_IOBASE enabled one. I was just trying to use PCI_IOBASE instead.
+>   > >
+>   > > Originally, the I/O ports layout seems like this:
+>   > >
+>   > > 00000020-00000021 : pic1
+>   > > 00000060-0000006f : i8042
+>   > > 00000070-00000077 : rtc0
+>   > > 000000a0-000000a1 : pic2
+>   > > 00000170-00000177 : pata_atiixp
+>   > > 000001f0-000001f7 : pata_atiixp
+>   > > 00000376-00000376 : pata_atiixp
+>   > > 000003f6-000003f6 : pata_atiixp
+>   > > 00000800-000008ff : acpi
+>   > > 00001000-00001008 : piix4_smbus
+>   > > 00004000-0003ffff : pci io space
+>   > >    00004000-00004fff : PCI Bus 0000:01
+>   > >      00004000-000040ff : 0000:01:05.0
+>   > >    00005000-00005fff : PCI Bus 0000:03
+>   > >      00005000-0000501f : 0000:03:00.0
+>   > >
+>   > > But with PCI_IOBASE defined, I got this:
+>   > >
+>   > > host bridge /bus@10000000/pci@10000000 ranges:
+>   > >        MEM 0x0040000000..0x007fffffff -> 0x0040000000
+>   > >         IO 0x0000004000..0x0000007fff -> 0x0000004000
+>   > > resource collision: [io  0x0000-0x3fff] conflicts with pic1 [io  0x0020-0x0021]
+>   > >
+>   > > Because io_start was allocated to 0x0 by Logic PIO.
+>   > >
+>   > > There are a lot of devices that have fixed ioports thanks to x86's legacy.
+>   >
+>   > Well, yes, I'm not so surprised.
+>   >
+>   > So if MIPS does not have native IO port access, then surely you need
+>   > some host bridge to translate host CPU MMIO accesses to port I/O
+>   > accesses, right? Where are these CPU addresses defined?
+> 
+> It is defined by the variable mips_io_port_base.
+> 
+>   >
+>   > > For example, in my hardware, ioports for RTC, PIC, I8042 are unmoveable,
+>   > > and they can't be managed by logic pio subsystem. > Also, the PCI Hostbridge got implied by DeviceTree that it's I/O range
+>   > > started from 0x4000 in bus side
+>   >
+>   > which bus is this?
+> 
+> They're all located under "ISA Range".  Just an MMIO range that will resend
+> the request to ISA I/O. --ioports for both PCI and some legacy devices.
+> 
+> In that range, base + 0x0000 to 0x4000 is preserved for PIO devices (e.g.) I8259
+> and base + 0x4000 to MMIO_LIMIT are for PCI devices under host bridge.
+> For the host bridge, ioports it can decode starts from 0x4000.
+> 
+> My intentional behavior is that when I'm specifying in dts that the IO Range of PCI host
+> bridge is 0x4000 to 0x7fff, it would request the IO_RESOURCE start from 0x4000
+> to 0x7fff, also tell the host driver to decode  0x4000 to 0x7fff in IO BAR, And let the drivers
+> access 0x4000 to 0x7fff via inl/outl, rather than allocate from PIO 0x0 to 0x3fff.
+> 
+>   >
+>   > , but then, Logic PIO remapped to PCI_IOBASE + 0x0.
+>   > > The real address should be PCI_IOBASE + 0x4000,
+>   >
+>   > You seem to be using two methods to manage IO port space, and they seem
+>   > to be conflicting.
+> 
+> So... Are there any way to handle these unmoveable devices in logic pio world?
+
+When you say that they are unmovable, they are at a fixed address on 
+this "ISA Range", right? If so, yes, you should be able to handle it in 
+logical PIO. You just need to deal with translating logical PIO 
+addresses to ISA bus addresses. We do this very thing in our LPC driver 
+- see drivers/bus/hisi_lpc.c
+
+This driver deals with legacy IO ports where we need to bitbang 
+accesses, i.e. we don't support MMIO for this.
+> 
+>   >
+>   > > hardware never got correctly informed about that. And there is still no way to
+>   > > transform to correct address as it's inside the MMIO_LIMIT.
+>   > >
+>   > > So the question comes to why we're allocating io_start for MMIO PCI_IOBASE
+>   > > rather than just check the range provided doesn't overlap each other or exceed
+>   > > the MMIO_LIMIT.
+>   >
+>   > When PCI_IOBASE is defined, we work on the basis that any IO port range
+>   > in the system is registered for a logical PIO region, which manages the
+>   > actual IO port addresses - see logic_pio_trans_cpuaddr().
+> 
+> The port is not the actual port.. It makes me confusing about what it's actually doing..
+> Sorry but probably I'm still thinking in a vintage way -- need some hints about how to
+> deal with these legacy cases in a modern way.
+> 
+> Thanks.
+> 
+>   >
+>   > Thanks,
+>   > John
+>   >
 > 
 
-If the machine has SMCCC then it will also have the
-CONFIG_HAVE_ARM_SMCCC set and so nothing would change.
 
-Andrew
-
-
-> Regards,
-> 
-> Tony
-> 
->>>> 8< -----------------------
->>>> diff --git a/arch/arm/mach-omap2/omap-secure.c b/arch/arm/mach-omap2/omap-secure.c
->>>> --- a/arch/arm/mach-omap2/omap-secure.c
->>>> +++ b/arch/arm/mach-omap2/omap-secure.c
->>>> @@ -77,6 +77,7 @@ u32 omap_secure_dispatcher(u32 idx, u32 flag, u32 nargs, u32 arg1, u32 arg2,
->>>>  	return ret;
->>>>  }
->>>>  
->>>> +#ifdef CONFIG_HAVE_ARM_SMCCC
->>>>  void omap_smccc_smc(u32 fn, u32 arg)
->>>>  {
->>>>  	struct arm_smccc_res res;
->>>> @@ -85,6 +86,11 @@ void omap_smccc_smc(u32 fn, u32 arg)
->>>>  		      0, 0, 0, 0, 0, 0, &res);
->>>>  	WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
->>>>  }
->>>> +#else
->>>> +void omap_smccc_smc(u32 fn, u32 arg)
->>>> +{
->>>> +}
->>>> +#endif
->>>>  
->>>>  void omap_smc1(u32 fn, u32 arg)
->>>>  {
->>>>
