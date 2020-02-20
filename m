@@ -2,39 +2,45 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2517EC11D05
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB27C11D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0020620659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F5C20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 15:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgBTP7s (ORCPT
+        id S1728619AbgBTP7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 10:59:48 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47612 "EHLO
+        Thu, 20 Feb 2020 10:59:20 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47586 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728653AbgBTP7W (ORCPT
+        with ESMTP id S1728305AbgBTP7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 10:59:22 -0500
+        Thu, 20 Feb 2020 10:59:20 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id E421529519F
+        with ESMTPSA id EC9B428E68F
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
         bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        pmalani@chromium.org
-Subject: [PATCH 4/8] platform/chrome: cros_ec_chardev: Use cros_ec_cmd_xfer_status helper
-Date:   Thu, 20 Feb 2020 16:58:55 +0100
-Message-Id: <20200220155859.906647-5-enric.balletbo@collabora.com>
+        pmalani@chromium.org, Enrico Granata <egranata@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ting Shen <phoenixshen@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Fei Shao <fshao@chromium.org>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Evan Green <evgreen@chromium.org>, linux-input@vger.kernel.org
+Subject: [PATCH 0/8] Migrate all cros_ec_cmd_xfer() calls to cros_ec_cmd_xfer_status()
+Date:   Thu, 20 Feb 2020 16:58:51 +0100
+Message-Id: <20200220155859.906647-1-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200220155859.906647-1-enric.balletbo@collabora.com>
-References: <20200220155859.906647-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,31 +48,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch makes use of cros_ec_cmd_xfer_status() instead of
-cros_ec_cmd_xfer(). In this case the change is trivial and the only
-reason to do it is because we want to make cros_ec_cmd_xfer() a private
-function for the EC protocol and let people only use the
-cros_ec_cmd_xfer_status() to return Linux standard error codes.
+Dear all,
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+The purpose of this series is get rid of the remaining places where the
+cros_ec_cmd_xfer() function is used in favour of the
+cros_ec_cmd_xfer_status() helper. This allows us to make the
+cros_ec_cmd_xfer() function private and only expose to the users a
+single way to send commands to the Embedded Controller.
 
- drivers/platform/chrome/cros_ec_chardev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+With these changes we also want to help future improvements in the
+interface, like the Prashant's series (i.e [1]) to introduce a
+cros_ec_cmd() that will allow us to remove more duplicated code in
+different places.
 
-diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-index c65e70bc168d..b51ab24055f3 100644
---- a/drivers/platform/chrome/cros_ec_chardev.c
-+++ b/drivers/platform/chrome/cros_ec_chardev.c
-@@ -301,7 +301,7 @@ static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
- 	}
- 
- 	s_cmd->command += ec->cmd_offset;
--	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, s_cmd);
- 	/* Only copy data to userland if data was received. */
- 	if (ret < 0)
- 		goto exit;
+Best regards,
+ Enric
+
+Note: Prashant, looks like you should fix your sendmail as the patches
+      are not threaded.
+
+[1] https://lkml.org/lkml/2020/2/5/614
+
+Enric Balletbo i Serra (8):
+  platform/chrome: cros_ec_proto: Report command not supported
+  Input: cros_ec_keyb: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec_vbc: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec_chardev: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec_sysfs: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec_lightbar: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec: Use cros_ec_cmd_xfer_status helper
+  platform/chrome: cros_ec_proto: Do not export cros_ec_cmd_xfer()
+
+ drivers/input/keyboard/cros_ec_keyb.c       | 14 +++---
+ drivers/platform/chrome/cros_ec.c           |  2 +-
+ drivers/platform/chrome/cros_ec_chardev.c   |  2 +-
+ drivers/platform/chrome/cros_ec_lightbar.c  | 50 ++++++---------------
+ drivers/platform/chrome/cros_ec_proto.c     | 14 ++++--
+ drivers/platform/chrome/cros_ec_sysfs.c     | 36 +++++++--------
+ drivers/platform/chrome/cros_ec_vbc.c       |  4 +-
+ include/linux/platform_data/cros_ec_proto.h |  3 --
+ 8 files changed, 50 insertions(+), 75 deletions(-)
+
 -- 
 2.25.0
 
