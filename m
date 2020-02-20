@@ -2,162 +2,384 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B46C11D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F29C11D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9534E20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jHrzk5Ns"
+	by mail.kernel.org (Postfix) with ESMTP id 688B320679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 11:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBTLrU (ORCPT
+        id S1727921AbgBTLvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 06:47:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:41898 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbgBTLrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 06:47:20 -0500
-Received: from zn.tnic (p200300EC2F0ADE008C2E3AE544E50E0D.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:de00:8c2e:3ae5:44e5:e0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 87B811EC0304;
-        Thu, 20 Feb 2020 12:47:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1582199238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=0MD+9fFNXTuMWu81/KO9VPDu9Nw1MgQLDJAbVPJBUXU=;
-        b=jHrzk5Ns2tZlTZAetpNNXjFWfauU3PdopKHDlWC2YW82hOeB2+SXBmHpsK8ATfFzgOVksN
-        gyt0/22RQanxmECicOKZuU8Mo+FmdegupqgOcUSfwmOLvki7RRze8J3+eVnQPlCNmYgt4X
-        6O8f9HlkrQJVjq/0yKjv/cTuHW/RKbg=
-Date:   Thu, 20 Feb 2020 12:47:13 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH v2 1/8] x86/fpu/xstate: Define new macros for supervisor
- and user xstates
-Message-ID: <20200220114713.GB30188@zn.tnic>
-References: <20200121201843.12047-1-yu-cheng.yu@intel.com>
- <20200121201843.12047-2-yu-cheng.yu@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200121201843.12047-2-yu-cheng.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Feb 2020 06:51:04 -0500
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:61592 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726921AbgBTLvE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 06:51:04 -0500
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 20 Feb 2020 03:51:03 -0800
+Received: from sivaprak-linux.qualcomm.com ([10.201.3.202])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 20 Feb 2020 03:51:00 -0800
+Received: by sivaprak-linux.qualcomm.com (Postfix, from userid 459349)
+        id F03FB214C7; Thu, 20 Feb 2020 17:20:58 +0530 (IST)
+From:   Sivaprakash Murugesan <sivaprak@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     sivaprak@codeaurora.org
+Subject: [PATCH V2] arm64: dts: ipq6018: Add a few device nodes
+Date:   Thu, 20 Feb 2020 17:20:46 +0530
+Message-Id: <1582199446-29890-1-git-send-email-sivaprak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 21, 2020 at 12:18:36PM -0800, Yu-cheng Yu wrote:
-> From: Fenghua Yu <fenghua.yu@intel.com>
-> 
-> XCNTXT_MASK is 'all supported xfeatures' before introducing supervisor
-> xstates.  Rename it to SUPPORTED_XFEATURES_MASK_USER to make clear that
-> these are user xstates.
-> 
-> XFEATURE_MASK_SUPERVISOR is replaced with the following:
-> - SUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently nothing.  ENQCMD and
->   Control-flow Enforcement Technology (CET) will be introduced in separate
->   series.
-> - UNSUPPORTED_XFEATURES_MASK_SUPERVISOR: Currently only Processor Trace.
-> - ALL_XFEATURES_MASK_SUPERVISOR: the combination of above.
-> 
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Co-developed-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-> Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
->  arch/x86/include/asm/fpu/xstate.h | 36 ++++++++++++++++++++-----------
->  arch/x86/kernel/fpu/init.c        |  3 ++-
->  arch/x86/kernel/fpu/xstate.c      | 26 +++++++++++-----------
->  3 files changed, 38 insertions(+), 27 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-> index c6136d79f8c0..014c386deaa3 100644
-> --- a/arch/x86/include/asm/fpu/xstate.h
-> +++ b/arch/x86/include/asm/fpu/xstate.h
-> @@ -21,19 +21,29 @@
->  #define XSAVE_YMM_SIZE	    256
->  #define XSAVE_YMM_OFFSET    (XSAVE_HDR_SIZE + XSAVE_HDR_OFFSET)
->  
-> -/* Supervisor features */
-> -#define XFEATURE_MASK_SUPERVISOR (XFEATURE_MASK_PT)
-> -
-> -/* All currently supported features */
-> -#define XCNTXT_MASK		(XFEATURE_MASK_FP | \
-> -				 XFEATURE_MASK_SSE | \
-> -				 XFEATURE_MASK_YMM | \
-> -				 XFEATURE_MASK_OPMASK | \
-> -				 XFEATURE_MASK_ZMM_Hi256 | \
-> -				 XFEATURE_MASK_Hi16_ZMM	 | \
-> -				 XFEATURE_MASK_PKRU | \
-> -				 XFEATURE_MASK_BNDREGS | \
-> -				 XFEATURE_MASK_BNDCSR)
-> +/* All currently supported user features */
-> +#define SUPPORTED_XFEATURES_MASK_USER (XFEATURE_MASK_FP | \
-> +				       XFEATURE_MASK_SSE | \
-> +				       XFEATURE_MASK_YMM | \
-> +				       XFEATURE_MASK_OPMASK | \
-> +				       XFEATURE_MASK_ZMM_Hi256 | \
-> +				       XFEATURE_MASK_Hi16_ZMM	 | \
-> +				       XFEATURE_MASK_PKRU | \
-> +				       XFEATURE_MASK_BNDREGS | \
-> +				       XFEATURE_MASK_BNDCSR)
-> +
-> +/* All currently supported supervisor features */
-> +#define SUPPORTED_XFEATURES_MASK_SUPERVISOR (0)
-> +
-> +/*
-> + * Unsupported supervisor features. When a supervisor feature in this mask is
-> + * supported in the future, move it to the supported supervisor feature mask.
-> + */
-> +#define UNSUPPORTED_XFEATURES_MASK_SUPERVISOR (XFEATURE_MASK_PT)
-> +
-> +/* All supervisor states including supported and unsupported states. */
-> +#define ALL_XFEATURES_MASK_SUPERVISOR (SUPPORTED_XFEATURES_MASK_SUPERVISOR | \
-> +				       UNSUPPORTED_XFEATURES_MASK_SUPERVISOR)
+add i2c, spi, crypto, rng, watchdog, peripheral nodes, also add
+support for wcss Q6 remoteproc driver and enable hw mutex, smem,
+mailbox, smp2p and rpmsg drivers
 
-So frankly having the namespace prepended in those macros makes it more
-readable to me: you know that those masks all belong together if you had
-this:
+Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+---
+[V2] * Addressed review comments from Stephen
+This patch depends on Sricharan's ipq6018 dts patch
+https://patchwork.kernel.org/patch/11340681/
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts |  34 ++++
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi        | 226 +++++++++++++++++++++++++++
+ 2 files changed, 260 insertions(+)
 
-XFEATURE_MASK_SUPERVISOR
-XFEATURE_MASK_SUPERVISOR_SUPPORTED
-XFEATURE_MASK_SUPERVISOR_UNSUPPORTED
-XFEATURE_MASK_SUPERVISOR_ALL
-XFEATURE_MASK_USER_SUPPORTED
-
-Now they all begin with different words: "ALL", "UNSUPPORTED",
-"SUPPORTED", ... and makes you go and look up the mask to make sure it
-is the correct type of mask used.
-
-Even more so if the single feature masks also start with
-"XFEATURE_MASK_" so it is only logical to have them all start with
-XFEATURE_MASK_ IMO.
-
-Thx.
-
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+index 897b4b2..b31117a 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
++++ b/arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts
+@@ -28,3 +28,37 @@
+ 	pinctrl-names = "default";
+ 	status = "ok";
+ };
++
++&i2c_1 {
++	pinctrl-0 = <&i2c_1_pins>;
++	pinctrl-names = "default";
++	status = "ok";
++};
++
++&spi_0 {
++	cs-select = <0>;
++	status = "ok";
++
++	m25p80@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		reg = <0>;
++		compatible = "n25q128a11";
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&tlmm {
++	i2c_1_pins: i2c-1-pins {
++		pins = "gpio42", "gpio43";
++		function = "blsp2_i2c";
++		drive-strength = <8>;
++	};
++
++	spi_0_pins: spi-0-pins {
++		pins = "gpio38", "gpio39", "gpio40", "gpio41";
++		function = "blsp0_spi";
++		drive-strength = <8>;
++		bias-pull-down;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 0fb44e5..1aa8d85 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -7,6 +7,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
++#include <dt-bindings/reset/qcom,gcc-ipq6018.h>
+ 
+ / {
+ 	#address-cells = <2>;
+@@ -69,6 +70,18 @@
+ 		};
+ 	};
+ 
++	firmware {
++		scm {
++			compatible = "qcom,scm";
++		};
++	};
++
++	tcsr_mutex: hwlock {
++		compatible = "qcom,tcsr-mutex";
++		syscon = <&tcsr_mutex_regs 0 0x80>;
++		#hwlock-cells = <1>;
++	};
++
+ 	pmuv8: pmu {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) |
+@@ -89,6 +102,22 @@
+ 			reg = <0x0 0x48500000 0x0 0x00200000>;
+ 			no-map;
+ 		};
++
++		smem_region: memory@4aa00000 {
++			reg = <0x0 0x4aa00000 0x0 0x00100000>;
++			no-map;
++		};
++
++		q6_region: memory@4ab00000 {
++			reg = <0x0 0x4ab00000 0x0 0x02800000>;
++			no-map;
++		};
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++		hwlocks = <&tcsr_mutex 0>;
+ 	};
+ 
+ 	soc: soc {
+@@ -98,6 +127,36 @@
+ 		dma-ranges;
+ 		compatible = "simple-bus";
+ 
++		prng: qrng@e1000 {
++			compatible = "qcom,prng-ee";
++			reg = <0xe3000 0x1000>;
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "core";
++		};
++
++		cryptobam: dma@704000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x00704000 0x20000>;
++			interrupts = <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <1>;
++			qcom,controlled-remotely = <1>;
++			qcom,config-pipe-trust-reg = <0>;
++		};
++
++		crypto: crypto@73a000 {
++			compatible = "qcom,crypto-v5.1";
++			reg = <0x0073a000 0x6000>;
++			clocks = <&gcc GCC_CRYPTO_AHB_CLK>,
++				<&gcc GCC_CRYPTO_AXI_CLK>,
++				<&gcc GCC_CRYPTO_CLK>;
++			clock-names = "iface", "bus", "core";
++			dmas = <&cryptobam 2>, <&cryptobam 3>;
++			dma-names = "rx", "tx";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq6018-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+@@ -125,6 +184,26 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		tcsr_mutex_regs: syscon@1905000 {
++			compatible = "syscon";
++			reg = <0x01905000 0x8000>;
++		};
++
++		tcsr_q6: syscon@1945000 {
++			compatible = "syscon";
++			reg = <0x01945000 0xe000>;
++		};
++
++		blsp_dma: dma@7884000 {
++			compatible = "qcom,bam-v1.7.0";
++			reg = <0x07884000 0x2b000>;
++			interrupts = <GIC_SPI 238 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "bam_clk";
++			#dma-cells = <1>;
++			qcom,ee = <0>;
++		};
++
+ 		blsp1_uart3: serial@78b1000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x078b1000 0x200>;
+@@ -135,6 +214,66 @@
+ 			status = "disabled";
+ 		};
+ 
++		spi_0: spi@78b5000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b5000 0x600>;
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP1_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 12>, <&blsp_dma 13>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		spi_1: spi@78b6000 {
++			compatible = "qcom,spi-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			spi-max-frequency = <50000000>;
++			clocks = <&gcc GCC_BLSP1_QUP2_SPI_APPS_CLK>,
++				<&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			dmas = <&blsp_dma 14>, <&blsp_dma 15>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		i2c_0: i2c@78b6000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b6000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 15>, <&blsp_dma 14>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
++		i2c_1: i2c@78b7000 { /* BLSP1 QUP2 */
++			compatible = "qcom,i2c-qup-v2.2.1";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x078b7000 0x600>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				<&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			clock-frequency  = <400000>;
++			dmas = <&blsp_dma 17>, <&blsp_dma 16>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		intc: interrupt-controller@b000000 {
+ 			compatible = "qcom,msm-qgic2";
+ 			interrupt-controller;
+@@ -146,6 +285,21 @@
+ 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
++		watchdog@b017000 {
++			compatible = "qcom,kpss-wdt";
++			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
++			reg = <0x0b017000 0x40>;
++			clocks = <&sleep_clk>;
++			timeout-sec = <10>;
++		};
++
++		apcs_glb: mailbox@b111000 {
++			compatible = "qcom,ipq8074-apcs-apps-global";
++			reg = <0x0b111000 0xc>;
++
++			#mbox-cells = <1>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+@@ -213,5 +367,77 @@
+ 			};
+ 		};
+ 
++		q6v5_wcss: remoteproc@cd00000 {
++			compatible = "qcom,ipq8074-wcss-pil";
++			reg = <0x0cd00000 0x4040>,
++				<0x004ab000 0x20>;
++			reg-names = "qdsp6",
++				    "rmb";
++			interrupts-extended = <&intc GIC_SPI 325 IRQ_TYPE_EDGE_RISING>,
++					      <&wcss_smp2p_in 0 0>,
++					      <&wcss_smp2p_in 1 0>,
++					      <&wcss_smp2p_in 2 0>,
++					      <&wcss_smp2p_in 3 0>;
++			interrupt-names = "wdog",
++					  "fatal",
++					  "ready",
++					  "handover",
++					  "stop-ack";
++
++			resets = <&gcc GCC_WCSSAON_RESET>,
++				 <&gcc GCC_WCSS_BCR>,
++				 <&gcc GCC_WCSS_Q6_BCR>;
++
++			reset-names = "wcss_aon_reset",
++				      "wcss_reset",
++				      "wcss_q6_reset";
++
++			clocks = <&gcc GCC_PRNG_AHB_CLK>;
++			clock-names = "prng";
++
++			qcom,halt-regs = <&tcsr_q6 0xa000 0xd000 0x0>;
++
++			qcom,smem-states = <&wcss_smp2p_out 0>,
++					   <&wcss_smp2p_out 1>;
++			qcom,smem-state-names = "shutdown",
++						"stop";
++
++			memory-region = <&q6_region>;
++
++			glink-edge {
++				interrupts = <GIC_SPI 321 IRQ_TYPE_EDGE_RISING>;
++				qcom,remote-pid = <1>;
++				mboxes = <&apcs_glb 8>;
++
++				qrtr_requests {
++					qcom,glink-channels = "IPCRTR";
++				};
++			};
++		};
++
++	};
++
++	wcss: wcss-smp2p {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <GIC_SPI 322 IRQ_TYPE_EDGE_RISING>;
++
++		mboxes = <&apcs_glb 9>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		wcss_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		wcss_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
+ 	};
+ };
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
