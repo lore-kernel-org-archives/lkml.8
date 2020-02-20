@@ -2,132 +2,99 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C20C11D13
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC39C11D0C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D7220722
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DC0206F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 17:06:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBE6H7N6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgBTRGN (ORCPT
+        id S1728698AbgBTRGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 12:06:13 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:59432 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727915AbgBTRGM (ORCPT
+        Thu, 20 Feb 2020 12:06:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50751 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728354AbgBTRGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 12:06:12 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TqSIWZ0_1582218362;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TqSIWZ0_1582218362)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 21 Feb 2020 01:06:05 +0800
-Subject: Re: [v3 PATCH] move_pages.2: Returning positive value is a new error
- case
-To:     mtk.manpages@gmail.com
-Cc:     Michal Hocko <mhocko@kernel.org>, david@redhat.com,
-        akpm@linux-foundation.org, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1580757507-120233-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200210093635.GC10636@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <92f30e24-7b77-b21a-ed3a-efc55bc500c6@linux.alibaba.com>
-Date:   Thu, 20 Feb 2020 09:06:00 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 20 Feb 2020 12:06:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582218408;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3M6kLg4BjF+DuWA5DcTOS8t/8X/cJ0Opg0BqCTy4sKU=;
+        b=MBE6H7N6KAOUpDWGX3mzGHWn9ntHPYysErKiju0w1LpyWMl24rrXNppZVJHe7lhqAkDBbA
+        4r2ajqMbxV3US10zQ8LjCa5Wusg+ATN7uPap33nUJgVOXgSi8kSMn1h9mVTRlLoaef0Uor
+        VMJ+38u7lomJuWlEoJqS6ZEUagWgLtY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-287-Y7n3AiXIOXK816aJw8_wdQ-1; Thu, 20 Feb 2020 12:06:46 -0500
+X-MC-Unique: Y7n3AiXIOXK816aJw8_wdQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44F09100550E;
+        Thu, 20 Feb 2020 17:06:42 +0000 (UTC)
+Received: from redhatnow.users.ipa.redhat.com (ovpn-117-1.phx2.redhat.com [10.3.117.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D2E0419756;
+        Thu, 20 Feb 2020 17:06:32 +0000 (UTC)
+Subject: Re: [RFC PATCH 04/11] cpufreq: Remove Calxeda driver
+To:     Rob Herring <robh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        soc@kernel.org, Andre Przywara <andre.przywara@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        Jon Loeliger <jdl@jdl.com>, Alexander Graf <graf@amazon.com>,
+        Matthias Brugger <mbrugger@suse.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        James Morse <james.morse@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        kvm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        netdev@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Will Deacon <will@kernel.org>
+References: <20200218171321.30990-1-robh@kernel.org>
+ <20200218171321.30990-5-robh@kernel.org>
+From:   Mark Langsdorf <mlangsdo@redhat.com>
+Message-ID: <16a38b0d-8609-653a-64e8-3a0d4f4b1a45@redhat.com>
+Date:   Thu, 20 Feb 2020 11:06:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200210093635.GC10636@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200218171321.30990-5-robh@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/18/20 11:13 AM, Rob Herring wrote:
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-
-On 2/10/20 1:36 AM, Michal Hocko wrote:
-> On Tue 04-02-20 03:18:27, Yang Shi wrote:
->> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
->> the semantic of move_pages() has changed to return the number of
->> non-migrated pages if they were result of a non-fatal reasons (usually a
->> busy page).  This was an unintentional change that hasn't been noticed
->> except for LTP tests which checked for the documented behavior.
->>
->> There are two ways to go around this change.  We can even get back to the
->> original behavior and return -EAGAIN whenever migrate_pages is not able
->> to migrate pages due to non-fatal reasons.  Another option would be to
->> simply continue with the changed semantic and extend move_pages
->> documentation to clarify that -errno is returned on an invalid input or
->> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
->> number of pages that couldn't have been migrated due to ephemeral
->> reasons (e.g. page is pinned or locked for other reasons).
->>
->> We decided to keep the second option in kernel because this behavior is in
->> place for some time without anybody complaining and possibly new users
->> depending on it.  Also it allows to have a slightly easier error handling
->> as the caller knows that it is worth to retry when err > 0.
->>
->> Update man pages to reflect the new semantic.
->>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-
-Hi Michael,
-
-Would you please consider take this patch? The kernel change has been 
-upstreamed.
-
-Thanks,
-Yang
-
-> Acked-by: Michal Hocko <mhocko@suse.com>
->
->> ---
->> v3: * Fixed the comments from David Hildenbrand.
->>      * Fixed the inaccuracy about pre-initialized status array values.
->> v2: * Added notes about status array per Michal.
->>      * Added Michal's Acked-by.
->>
->>   man2/move_pages.2 | 10 ++++++++--
->>   1 file changed, 8 insertions(+), 2 deletions(-)
->>
->> diff --git a/man2/move_pages.2 b/man2/move_pages.2
->> index 1bf1053..50c83a4 100644
->> --- a/man2/move_pages.2
->> +++ b/man2/move_pages.2
->> @@ -104,7 +104,9 @@ pages that need to be moved.
->>   is an array of integers that return the status of each page.
->>   The array contains valid values only if
->>   .BR move_pages ()
->> -did not return an error.
->> +did not return an error.  Pre-initialization of the array to the value
->> +which cannot represent a real numa node or valid error of status array
->> +could help to identify pages that have been migrated
->>   .PP
->>   .I flags
->>   specify what types of pages to move.
->> @@ -164,9 +166,13 @@ returns zero.
->>   .\" do the right thing?
->>   On error, it returns \-1, and sets
->>   .I errno
->> -to indicate the error.
->> +to indicate the error. If positive value is returned, it is the number of
->> +non-migrated pages.
->>   .SH ERRORS
->>   .TP
->> +.B Positive value
->> +The number of non-migrated pages if they were the result of non-fatal
->> +reasons (since version 4.17).
->>   .B E2BIG
->>   Too many pages to move.
->>   Since Linux 2.6.29,
->> -- 
->> 1.8.3.1
+Acked-by: Mark Langsdorf <mark.langsdorf@gmail.com>
 
