@@ -2,364 +2,288 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5952C11D82
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB216C761A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7468424672
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A8C521D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 00:55:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BSs9cShG"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T8QSF4op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBTAst (ORCPT
+        id S1727224AbgBTAzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 19:48:49 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44481 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbgBTAsp (ORCPT
+        Wed, 19 Feb 2020 19:55:24 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37494 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgBTAzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 19:48:45 -0500
-Received: by mail-pg1-f194.google.com with SMTP id g3so985615pgs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2020 16:48:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sKqnGcIb54G+edEpjgURZj2ckSacGktuDw7MmMglohk=;
-        b=BSs9cShGZFGiI9sZygDzkEzvKX6e6aqkV4bGP99Z5fL8jm6htE2z7+H3VG/VWhBFwp
-         T8r9ah3EHYPdpPdoboP8LhlDwtJfbItMXl1pOUqpioO7nVu7Y1EbVBl88aNPH/r2lsgI
-         iD+uB3kuvC+3HWBWwH6uISzpoBirKSknZ18N0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sKqnGcIb54G+edEpjgURZj2ckSacGktuDw7MmMglohk=;
-        b=rTjQcQdoxRKmJxhZxLTM3qMmGbodh1EMgs142mU/1rEIQbSVnrc3g5GuVX/SeGzflx
-         nIcHQ6GGlE25/UZ1yKfFR6GME+/wCSdicO0+y/hwMrbnjO4K5Lt1N2Ex/UHDY0n9vSX2
-         O61bkwiHfQacFW8UmSZ01R5if0KqrB7ca8mdmbchAXIOTkPM+fFVCITy3Tx9hhnr8gHz
-         5PGCKm6U+Xp7cEnnYUuZjXfhhCNBYodkJmDSHYmbcSu0qmBlOxgtj3rRqbOhUxt1k0nJ
-         5njI2S80RC2Gy6AZSqIqAjjEPklqF0khwRBd56l/ZhCZqMcY5oC+MxECE0pO5Dsf76RS
-         YUWg==
-X-Gm-Message-State: APjAAAXGmOYSmDD7XJDawu1QS351fMLkk4D5ylAumwBq8L1FxqBM35rF
-        3rrCRkqxiL+UIaGA2Vm1o/Ezqg==
-X-Google-Smtp-Source: APXvYqyrkIEPT6+Jx8Y5tp5dlOBSB6ZMiISr/An4swXe7HDPYmVNUZN4vn2G4NHST43aoQbbmjVwOg==
-X-Received: by 2002:a63:e509:: with SMTP id r9mr32152531pgh.274.1582159724952;
-        Wed, 19 Feb 2020 16:48:44 -0800 (PST)
-Received: from lbrmn-lnxub113.broadcom.net ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id 64sm816323pfd.48.2020.02.19.16.48.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2020 16:48:44 -0800 (PST)
-From:   Scott Branden <scott.branden@broadcom.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Brown <david.brown@linaro.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Shuah Khan <shuah@kernel.org>, bjorn.andersson@linaro.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Olof Johansson <olof@lixom.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Kees Cook <keescook@chromium.org>,
-        Takashi Iwai <tiwai@suse.de>, linux-kselftest@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Scott Branden <scott.branden@broadcom.com>
-Subject: [PATCH v2 2/7] firmware: add offset to request_firmware_into_buf
-Date:   Wed, 19 Feb 2020 16:48:20 -0800
-Message-Id: <20200220004825.23372-3-scott.branden@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200220004825.23372-1-scott.branden@broadcom.com>
-References: <20200220004825.23372-1-scott.branden@broadcom.com>
+        Wed, 19 Feb 2020 19:55:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Ohb2InZKPvxlOicmdRvhyYCKfLB1DxvoDzY/kCt1K4s=; b=T8QSF4op0/rp9L38+C8q1g5ut5
+        dIzRuTyJsLjo1s7MHYOVnttoiBMOu18ZMR9nCrAc/3v6n0bUKbM7+CxeQ2c45NxYZEXzyq7BrGQc9
+        4+Er0bHhyLuyRtrLSPA23QZowPc6kmneaQFuNuR2+tJajx7V7lvqBhwrpnIpInQ/rzBNDj3Fq9LIi
+        XY63dCV+ea5NFbAlKOynKaP+IVAxVPCQfJHn9IBh3GF7o7P1TzPawymIlp0B6SA8GbLA56LE2Rmce
+        JFUBoks0X1tBf73MBYAPJ6xfkkVQTBZalie3+lRDInqxSukH+8HUeFlLPL+4ztK8qNo4YQfGURT7I
+        hq0T/FoQ==;
+Received: from [2603:3004:32:9a00::4074]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j4a7c-00019t-5V; Thu, 20 Feb 2020 00:55:20 +0000
+Subject: Re: [PATCH v13 2/2] zonefs: Add documentation
+To:     Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Dave Chinner <david@fromorbit.com>
+References: <20200207031606.641231-1-damien.lemoal@wdc.com>
+ <20200207031606.641231-3-damien.lemoal@wdc.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a6f0eaf4-933f-8c15-6f0c-18400204791f@infradead.org>
+Date:   Wed, 19 Feb 2020 16:55:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200207031606.641231-3-damien.lemoal@wdc.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add offset to request_firmware_into_buf to allow for portions
-of firmware file to be read into a buffer.  Necessary where firmware
-needs to be loaded in portions from file in memory constrained systems.
+Hi Damien,
 
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
----
- drivers/base/firmware_loader/firmware.h |  5 +++
- drivers/base/firmware_loader/main.c     | 49 +++++++++++++++++--------
- drivers/soc/qcom/mdt_loader.c           |  7 +++-
- include/linux/firmware.h                |  8 +++-
- lib/test_firmware.c                     |  4 +-
- 5 files changed, 53 insertions(+), 20 deletions(-)
+Typo etc. corrections below:
 
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
-index 8656e5239a80..9f4fddcb1ab7 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -29,6 +29,8 @@
-  *	firmware caching mechanism.
-  * @FW_OPT_NOFALLBACK_SYSFS: Disable the sysfs fallback mechanism. Takes
-  *	precedence over &FW_OPT_UEVENT and &FW_OPT_USERHELPER.
-+ * @FW_OPT_PARTIAL: Allow partial read of firmware instead of needing to read
-+ *	entire file.
-  */
- enum fw_opt {
- 	FW_OPT_UEVENT			= BIT(0),
-@@ -37,6 +39,7 @@ enum fw_opt {
- 	FW_OPT_NO_WARN			= BIT(3),
- 	FW_OPT_NOCACHE			= BIT(4),
- 	FW_OPT_NOFALLBACK_SYSFS		= BIT(5),
-+	FW_OPT_PARTIAL			= BIT(6),
- };
- 
- enum fw_status {
-@@ -64,6 +67,8 @@ struct fw_priv {
- 	void *data;
- 	size_t size;
- 	size_t allocated_size;
-+	size_t offset;
-+	unsigned int flags;
- #ifdef CONFIG_FW_LOADER_PAGED_BUF
- 	bool is_paged_buf;
- 	struct page **pages;
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index 57133a9dad09..28312309aab4 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -167,7 +167,8 @@ static int fw_cache_piggyback_on_request(const char *name);
- 
- static struct fw_priv *__allocate_fw_priv(const char *fw_name,
- 					  struct firmware_cache *fwc,
--					  void *dbuf, size_t size)
-+					  void *dbuf, size_t size,
-+					  size_t offset, unsigned int flags)
- {
- 	struct fw_priv *fw_priv;
- 
-@@ -185,6 +186,8 @@ static struct fw_priv *__allocate_fw_priv(const char *fw_name,
- 	fw_priv->fwc = fwc;
- 	fw_priv->data = dbuf;
- 	fw_priv->allocated_size = size;
-+	fw_priv->offset = offset;
-+	fw_priv->flags = flags;
- 	fw_state_init(fw_priv);
- #ifdef CONFIG_FW_LOADER_USER_HELPER
- 	INIT_LIST_HEAD(&fw_priv->pending_list);
-@@ -210,9 +213,11 @@ static struct fw_priv *__lookup_fw_priv(const char *fw_name)
- static int alloc_lookup_fw_priv(const char *fw_name,
- 				struct firmware_cache *fwc,
- 				struct fw_priv **fw_priv, void *dbuf,
--				size_t size, enum fw_opt opt_flags)
-+				size_t size, enum fw_opt opt_flags,
-+				size_t offset)
- {
- 	struct fw_priv *tmp;
-+	unsigned int pread_flags;
- 
- 	spin_lock(&fwc->lock);
- 	if (!(opt_flags & FW_OPT_NOCACHE)) {
-@@ -226,7 +231,12 @@ static int alloc_lookup_fw_priv(const char *fw_name,
- 		}
- 	}
- 
--	tmp = __allocate_fw_priv(fw_name, fwc, dbuf, size);
-+	if (opt_flags & FW_OPT_PARTIAL)
-+		pread_flags = KERNEL_PREAD_FLAG_PART;
-+	else
-+		pread_flags = KERNEL_PREAD_FLAG_WHOLE;
-+
-+	tmp = __allocate_fw_priv(fw_name, fwc, dbuf, size, offset, pread_flags);
- 	if (tmp) {
- 		INIT_LIST_HEAD(&tmp->list);
- 		if (!(opt_flags & FW_OPT_NOCACHE))
-@@ -493,8 +503,9 @@ fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
- 		}
- 
- 		fw_priv->size = 0;
--		rc = kernel_read_file_from_path(path, &buffer, &size,
--						msize, id);
-+		rc = kernel_pread_file_from_path(path, &buffer, &size,
-+						 fw_priv->offset, msize,
-+						 fw_priv->flags, id);
- 		if (rc) {
- 			if (rc != -ENOENT)
- 				dev_warn(device, "loading %s failed with error %d\n",
-@@ -685,7 +696,7 @@ int assign_fw(struct firmware *fw, struct device *device,
- static int
- _request_firmware_prepare(struct firmware **firmware_p, const char *name,
- 			  struct device *device, void *dbuf, size_t size,
--			  enum fw_opt opt_flags)
-+			  enum fw_opt opt_flags, size_t offset)
- {
- 	struct firmware *firmware;
- 	struct fw_priv *fw_priv;
-@@ -704,7 +715,7 @@ _request_firmware_prepare(struct firmware **firmware_p, const char *name,
- 	}
- 
- 	ret = alloc_lookup_fw_priv(name, &fw_cache, &fw_priv, dbuf, size,
--				  opt_flags);
-+				  opt_flags, offset);
- 
- 	/*
- 	 * bind with 'priv' now to avoid warning in failure path
-@@ -751,7 +762,7 @@ static void fw_abort_batch_reqs(struct firmware *fw)
- static int
- _request_firmware(const struct firmware **firmware_p, const char *name,
- 		  struct device *device, void *buf, size_t size,
--		  enum fw_opt opt_flags)
-+		  enum fw_opt opt_flags, size_t offset)
- {
- 	struct firmware *fw = NULL;
- 	int ret;
-@@ -765,7 +776,7 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
- 	}
- 
- 	ret = _request_firmware_prepare(&fw, name, device, buf, size,
--					opt_flags);
-+					opt_flags, offset);
- 	if (ret <= 0) /* error or already assigned */
- 		goto out;
- 
-@@ -825,7 +836,7 @@ request_firmware(const struct firmware **firmware_p, const char *name,
- 	/* Need to pin this module until return */
- 	__module_get(THIS_MODULE);
- 	ret = _request_firmware(firmware_p, name, device, NULL, 0,
--				FW_OPT_UEVENT);
-+				FW_OPT_UEVENT, 0);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
-@@ -852,7 +863,7 @@ int firmware_request_nowarn(const struct firmware **firmware, const char *name,
- 	/* Need to pin this module until return */
- 	__module_get(THIS_MODULE);
- 	ret = _request_firmware(firmware, name, device, NULL, 0,
--				FW_OPT_UEVENT | FW_OPT_NO_WARN);
-+				FW_OPT_UEVENT | FW_OPT_NO_WARN, 0);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
-@@ -877,7 +888,7 @@ int request_firmware_direct(const struct firmware **firmware_p,
- 	__module_get(THIS_MODULE);
- 	ret = _request_firmware(firmware_p, name, device, NULL, 0,
- 				FW_OPT_UEVENT | FW_OPT_NO_WARN |
--				FW_OPT_NOFALLBACK_SYSFS);
-+				FW_OPT_NOFALLBACK_SYSFS, 0);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
-@@ -914,6 +925,8 @@ EXPORT_SYMBOL_GPL(firmware_request_cache);
-  * @device: device for which firmware is being loaded and DMA region allocated
-  * @buf: address of buffer to load firmware into
-  * @size: size of buffer
-+ * @offset: offset into file to read
-+ * @pread_flags: KERNEL_PREAD_FLAG_PART to allow partial file read
-  *
-  * This function works pretty much like request_firmware(), but it doesn't
-  * allocate a buffer to hold the firmware data. Instead, the firmware
-@@ -924,16 +937,22 @@ EXPORT_SYMBOL_GPL(firmware_request_cache);
-  */
- int
- request_firmware_into_buf(const struct firmware **firmware_p, const char *name,
--			  struct device *device, void *buf, size_t size)
-+			  struct device *device, void *buf, size_t size,
-+			  size_t offset, unsigned int pread_flags)
- {
- 	int ret;
-+	enum fw_opt opt_flags;
- 
- 	if (fw_cache_is_setup(device, name))
- 		return -EOPNOTSUPP;
- 
- 	__module_get(THIS_MODULE);
-+	opt_flags = FW_OPT_UEVENT | FW_OPT_NOCACHE;
-+	if (pread_flags & KERNEL_PREAD_FLAG_PART)
-+		opt_flags |= FW_OPT_PARTIAL;
-+
- 	ret = _request_firmware(firmware_p, name, device, buf, size,
--				FW_OPT_UEVENT | FW_OPT_NOCACHE);
-+				opt_flags, offset);
- 	module_put(THIS_MODULE);
- 	return ret;
- }
-@@ -972,7 +991,7 @@ static void request_firmware_work_func(struct work_struct *work)
- 	fw_work = container_of(work, struct firmware_work, work);
- 
- 	_request_firmware(&fw, fw_work->name, fw_work->device, NULL, 0,
--			  fw_work->opt_flags);
-+			  fw_work->opt_flags, 0);
- 	fw_work->cont(fw, fw_work->context);
- 	put_device(fw_work->device); /* taken in request_firmware_nowait() */
- 
-diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-index 24cd193dec55..00f3359f4f61 100644
---- a/drivers/soc/qcom/mdt_loader.c
-+++ b/drivers/soc/qcom/mdt_loader.c
-@@ -246,8 +246,11 @@ static int __qcom_mdt_load(struct device *dev, const struct firmware *fw,
- 		} else if (phdr->p_filesz) {
- 			/* Firmware not large enough, load split-out segments */
- 			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
--			ret = request_firmware_into_buf(&seg_fw, fw_name, dev,
--							ptr, phdr->p_filesz);
-+			ret = request_firmware_into_buf
-+						(&seg_fw, fw_name, dev,
-+						 ptr, phdr->p_filesz,
-+						 0,
-+						 KERNEL_PREAD_FLAG_WHOLE);
- 			if (ret) {
- 				dev_err(dev, "failed to load %s\n", fw_name);
- 				break;
-diff --git a/include/linux/firmware.h b/include/linux/firmware.h
-index 2dd566c91d44..c81162a8d709 100644
---- a/include/linux/firmware.h
-+++ b/include/linux/firmware.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/types.h>
- #include <linux/compiler.h>
-+#include <linux/fs.h>
- #include <linux/gfp.h>
- 
- #define FW_ACTION_NOHOTPLUG 0
-@@ -51,7 +52,9 @@ int request_firmware_nowait(
- int request_firmware_direct(const struct firmware **fw, const char *name,
- 			    struct device *device);
- int request_firmware_into_buf(const struct firmware **firmware_p,
--	const char *name, struct device *device, void *buf, size_t size);
-+			      const char *name, struct device *device,
-+			      void *buf, size_t size,
-+			      size_t offset, unsigned int pread_flags);
- 
- void release_firmware(const struct firmware *fw);
- #else
-@@ -89,7 +92,8 @@ static inline int request_firmware_direct(const struct firmware **fw,
- }
- 
- static inline int request_firmware_into_buf(const struct firmware **firmware_p,
--	const char *name, struct device *device, void *buf, size_t size)
-+	const char *name, struct device *device, void *buf, size_t size,
-+	size_t offset, unsigned int pread_flags);
- {
- 	return -EINVAL;
- }
-diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-index 251213c872b5..7d1d97fa9a23 100644
---- a/lib/test_firmware.c
-+++ b/lib/test_firmware.c
-@@ -622,7 +622,9 @@ static int test_fw_run_batch_request(void *data)
- 						    req->name,
- 						    req->dev,
- 						    test_buf,
--						    TEST_FIRMWARE_BUF_SIZE);
-+						    TEST_FIRMWARE_BUF_SIZE,
-+						    0,
-+						    KERNEL_PREAD_FLAG_WHOLE);
- 		if (!req->fw)
- 			kfree(test_buf);
- 	} else {
+On 2/6/20 7:16 PM, Damien Le Moal wrote:
+> Add the new file Documentation/filesystems/zonefs.txt to document
+> zonefs principles and user-space tool usage.
+> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  Documentation/filesystems/zonefs.txt | 404 +++++++++++++++++++++++++++
+>  MAINTAINERS                          |   1 +
+>  2 files changed, 405 insertions(+)
+>  create mode 100644 Documentation/filesystems/zonefs.txt
+> 
+> diff --git a/Documentation/filesystems/zonefs.txt b/Documentation/filesystems/zonefs.txt
+> new file mode 100644
+> index 000000000000..935bf22031ca
+> --- /dev/null
+> +++ b/Documentation/filesystems/zonefs.txt
+> @@ -0,0 +1,404 @@
+> +ZoneFS - Zone filesystem for Zoned block devices
+> +
+> +Introduction
+> +============
+> +
+...
+> +
+> +Zoned block devices
+> +-------------------
+> +
+...
+> +
+> +Zonefs Overview
+> +===============
+> +
+...
+
+> +
+> +On-disk metadata
+> +----------------
+> +
+...
+
+> +
+> +Zone type sub-directories
+> +-------------------------
+> +
+...
+
+> +
+> +Zone files
+> +----------
+> +
+...
+
+> +
+> +Conventional zone files
+> +-----------------------
+> +
+...
+
+> +
+> +Sequential zone files
+> +---------------------
+> +
+> +The size of sequential zone files grouped in the "seq" sub-directory represents
+> +the file's zone write pointer position relative to the zone start sector.
+> +
+> +Sequential zone files can only be written sequentially, starting from the file
+> +end, that is, write operations can only be append writes. Zonefs makes no
+> +attempt at accepting random writes and will fail any write request that has a
+> +start offset not corresponding to the end of the file, or to the end of the last
+> +write issued and still in-flight (for asynchrnous I/O operations).
+                                         asynchronous
+
+> +
+> +Since dirty page writeback by the page cache does not guarantee a sequential
+> +write pattern, zonefs prevents buffered writes and writeable shared mappings
+> +on sequential files. Only direct I/O writes are accepted for these files.
+> +zonefs relies on the sequential delivery of write I/O requests to the device
+> +implemented by the block layer elevator. An elevator implementing the sequential
+> +write feature for zoned block device (ELEVATOR_F_ZBD_SEQ_WRITE elevator feature)
+> +must be used. This type of elevator (e.g. mq-deadline) is the set by default
+
+                                                          is set by default
+
+> +for zoned block devices on device initialization.
+> +
+...
+
+> +
+> +Format options
+> +--------------
+> +
+...
+
+> +
+> +IO error handling
+> +-----------------
+> +
+...
+
+> +
+> +
+> +* Unaligned write errors: These errors result from the host issuing write
+> +  requests with a start sector that does not correspond to a zone write pointer
+> +  position when the write request is executed by the device. Even though zonefs
+> +  enforces sequential file write for sequential zones, unaligned write errors
+> +  may still happen in the case of a partial failure of a very large direct I/O
+> +  operation split into multiple BIOs/requests or asynchronous I/O operations.
+> +  If one of the write request within the set of sequential write requests
+> +  issued to the device fails, all write requests after queued after it will
+
+                                           requests queued after it
+
+> +  become unaligned and fail.
+> +
+...
+
+> +
+> +All I/O errors detected by zonefs are notified to the user with an error code
+> +return for the system call that trigered or detected the error. The recovery
+
+                                   triggered
+
+> +actions taken by zonefs in response to I/O errors depend on the I/O type (read
+> +vs write) and on the reason for the error (bad sector, unaligned writes or zone
+> +condition change).
+> +
+...
+
+> +
+> +Zonefs minimal I/O error recovery may change a file size and a file access
+
+                                                            and file access
+
+> +permissions.
+> +
+> +* File size changes:
+> +  Immediate or delayed write errors in a sequential zone file may cause the file
+> +  inode size to be inconsistent with the amount of data successfully written in
+> +  the file zone. For instance, the partial failure of a multi-BIO large write
+> +  operation will cause the zone write pointer to advance partially, even though
+> +  the entire write operation will be reported as failed to the user. In such
+> +  case, the file inode size must be advanced to reflect the zone write pointer
+> +  change and eventually allow the user to restart writing at the end of the
+> +  file.
+> +  A file size may also be reduced to reflect a delayed write error detected on
+> +  fsync(): in this case, the amount of data effectively written in the zone may
+> +  be less than originally indicated by the file inode size. After such I/O
+> +  error, zonefs always fixes a file inode size to reflect the amount of data
+
+                          fixes the file inode size
+
+> +  persistently stored in the file zone.
+> +
+> +* Access permission changes:
+...
+
+> +
+> +Further notes:
+> +* The "errors=remount-ro" mount option is the default behavior of zonefs I/O
+> +  error processing if no errors mount option is specified.
+> +* With the "errors=remount-ro" mount option, the change of the file access
+> +  permissions to read-only applies to all files. The file system is remounted
+> +  read-only.
+> +* Access permission and file size changes due to the device transitioning zones
+> +  to the offline condition are permanent. Remounting or reformating the device
+
+                                             usually:      reformatting
+
+> +  with mkfs.zonefs (mkzonefs) will not change back offline zone files to a good
+> +  state.
+> +* File access permission changes to read-only due to the device transitioning
+> +  zones to the read-only condition are permanent. Remounting or reformating
+
+                                                                   reformatting
+
+> +  the device will not re-enable file write access.
+> +* File access permission changes implied by the remount-ro, zone-ro and
+> +  zone-offline mount options are temporary for zones in a good condition.
+> +  Unmounting and remounting the file system will restore the previous default
+> +  (format time values) access rights to the files affected.
+> +* The repair mount option triggers only the minimal set of I/O error recovery
+> +  actions, that is, file size fixes for zones in a good condition. Zones
+> +  indicated as being read-only or offline by the device still imply changes to
+> +  the zone file access permissions as noted in the table above.
+> +
+> +Mount options
+> +-------------
+> +
+> +zonefs define the "errors=<behavior>" mount option to allow the user to specify
+> +zonefs behavior in response to I/O errors, inode size inconsistencies or zone
+> +condition chages. The defined behaviors are as follow:
+
+             changes.
+
+> +* remount-ro (default)
+> +* zone-ro
+> +* zone-offline
+> +* repair
+> +
+> +The I/O error actions defined for each behavior is detailed in the previous
+
+                                                   are
+
+> +section.
+> +
+> +Zonefs User Space Tools
+> +=======================
+> +
+...
+> +
+> +Examples
+> +--------
+> +
+...
+
+
+HTH.
 -- 
-2.17.1
-
+~Randy
