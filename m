@@ -2,121 +2,88 @@ Return-Path: <SRS0=NukP=4I=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC4C11D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8201C7619D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC03124671
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FC121D56
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Feb 2020 01:38:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="wz426QWD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkFjNXjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBTBhO (ORCPT
+        id S1727578AbgBTBiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Feb 2020 20:37:14 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:41586 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbgBTBhN (ORCPT
+        Wed, 19 Feb 2020 20:38:24 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34327 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgBTBiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Feb 2020 20:37:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1582162631; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=g/qGIDqkgIozFpdOtlMp+Dtu76f8lgaOYvJWkuAfEMw=;
-        b=wz426QWDY0aAgnJ0mydROr4g5rQFH4aMNVQWOmSvFmaQc3DLt1kqFqoSyu8wLMHEuYNlgv
-        32i2A1fLG0X2CksRvPxLmRzlItTLSlcUIB9oJmJihRxyNXSEErZozb1HRXj/MvvJBBM/Od
-        XWvUxzlU/1w/+gVPITvNW9s4CyLTe84=
-Date:   Wed, 19 Feb 2020 22:36:57 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: ingenic: Make unreachable path more robust
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Message-Id: <1582162617.3.1@crapouillou.net>
-In-Reply-To: <20200217151804.yymflofpbiqjqnnz@treble>
-References: <73f0c9915473d9e4b3681fb5cc55144291a43192.1581698101.git.jpoimboe@redhat.com>
-        <1581706938.3.5@crapouillou.net> <20200214203738.af3y4gskukctvvum@treble>
-        <1581734224.3.14@crapouillou.net> <20200217151804.yymflofpbiqjqnnz@treble>
+        Wed, 19 Feb 2020 20:38:24 -0500
+Received: by mail-qk1-f196.google.com with SMTP id c20so2156907qkm.1;
+        Wed, 19 Feb 2020 17:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GpgT11HrgjWFQfXeiCnU+shDArWQ/syReLAvDvizJT0=;
+        b=HkFjNXjICbc2pOh4JI2x337BkMQ9PMYaXMXb6jI0sPH2yHMiHigayqFCruQtjFVr4G
+         DgLOdceRQ9WGX3YutaS27BJ6I6eXG6SZPVcumHRqxd1z8xunL0VzsgFagQb3Uw1JEw2k
+         wnt7BiyoZ6ZqLz4Cvyp+VG3D/o7GGQAuFAs0z+fVNmf1PG2On049Uq9b0GnFIsv5qNDA
+         VkzMf6JwLDeJ9X5YbxklNkN7LZRGjaWdA7wUlCQLCHDz2ETEcClgoXaZlkgkPtxyfJy5
+         Jyw90z0E47ZsArVsmySJtWcHR0dMcKFUdpp65UBNbVMsizKxdGy3Hij/9ZbPsGnY9rYQ
+         +GHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GpgT11HrgjWFQfXeiCnU+shDArWQ/syReLAvDvizJT0=;
+        b=BERRSXzbaehRw0MmXD2F3xf2so83oid7fkDoMHGzGCafrPYQ8ucoB+4CombrVzco13
+         OxsPjeEFdh1GoPI7Fkwp+8ICZ0+uph0bZhDQrzcpQBfoLJ8jkD56rtarFZU+pEQekgGp
+         Lm+l6zLDUmASa8iua96hZItGIgH/CcwG1lEye0n1AeWSiqVSVcbK0rjpcgwJ7GICVrEX
+         aOBt3sYlrWFJ/9e0qBtC3G/e1806yyAjKKYJBmLFRGWz6KkK8+JgWUpYV/9J6idAsVb5
+         osPaFQ1WOhMCo61duFm5s3x0yxwfn/dbjFRVcDZ2bhI6zcnlipd5Ip7rvXMTCW3BJVhz
+         Mo+Q==
+X-Gm-Message-State: APjAAAUJnRs+dGhBv7EValh9HvZu7Pu3yI2RKWeYNWopnuBxYlvLFLGW
+        32xzlAc2k/EBhVRw+fjTWqzyUaGWHKKinV2+KGJ44s1bXR8=
+X-Google-Smtp-Source: APXvYqyTxVwLzprhzVCuX+e2Y8nC4FuYn0wtHUuXS+To9JosB3Z2zM/8nUcqJmf2uxsHkullKFPGjtFTowdhwiRjV1U=
+X-Received: by 2002:a37:2710:: with SMTP id n16mr26606714qkn.235.1582162703104;
+ Wed, 19 Feb 2020 17:38:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20200220103105.01d7c0c1@canb.auug.org.au>
+In-Reply-To: <20200220103105.01d7c0c1@canb.auug.org.au>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Thu, 20 Feb 2020 09:38:12 +0800
+Message-ID: <CADBw62pLjzq83Gzfr0T7fmxFRevb+m5P4LQuq4dPmgRswOhMoQ@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the mmc tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josh,
+Hi Stephen,
 
-Le lun., f=E9vr. 17, 2020 at 09:18, Josh Poimboeuf <jpoimboe@redhat.com>=20
-a =E9crit :
-> On Fri, Feb 14, 2020 at 11:37:04PM -0300, Paul Cercueil wrote:
->>  > >  I don't like the idea that you change this driver's code just=20
->> to
->>  > > work around
->>  > >  a bug in objtool, and I don't like the idea of working around a
->>  > > future bug
->>  > >  that shouldn't be introduced in the first place.
->>  >
->>  > It's not an objtool bug.  It's a byproduct of the fact that GCC's
->>  > undefined behavior is inscrutable, and there's no way to=20
->> determine that
->>  > it actually *wants* to jump to a random function.
->>  >
->>  > And anyway, regardless of objtool, the patch is meant to make the=20
->> code
->>  > more robust.
->>  >
->>  > Do you not agree that BUG (defined behavior) is more robust than
->>  > unreachable (undefined behavior)?
->>=20
->>  It's a dead code path. That would be an undefined behaviour, if it=20
->> was
->>  taken, but it's not.
->=20
-> Given your confidence that humans don't introduce bugs, would you
-> recommend that we
->=20
->   s/BUG()/unreachable()/
->=20
-> tree-wide?
+On Thu, Feb 20, 2020 at 7:31 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the mmc tree, today's linux-next build (x86_64 allmodconfig)
+> produced this warning:
+>
+> WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o
+> see include/linux/module.h for more information
 
-Of course not.
+I am sorry I missed this warning before, and I've sent out a patch to
+fix this warning[1]. Thanks for reporting.
 
-> Another option would be to remove the unreachable() statement, which
-> would actually improve the generated code by making it more compact=20
-> (16
-> bytes of i-cache savings), on top of removing the "fallthrough to next
-> function" nastiness.
-
-I'd prefer that, yes.
-
--Paul
-
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 96f04d121ebd..13c7d3351ed5 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -2158,7 +2158,8 @@ static int ingenic_pinconf_set(struct=20
-> pinctrl_dev *pctldev, unsigned int pin,
->  			break;
->=20
->  		default:
-> -			unreachable();
-> +			/* unreachable */
-> +			break;
->  		}
->  	}
->=20
->=20
-
-=
-
+[1] https://lore.kernel.org/patchwork/patch/1196938/
