@@ -2,106 +2,152 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E885C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BB4C3566F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3EF206D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:22:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 950D4206D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgBUWV4 (ORCPT
+        id S1729019AbgBUWW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:21:56 -0500
-Received: from 13.mo5.mail-out.ovh.net ([87.98.182.191]:55923 "EHLO
-        13.mo5.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUWV4 (ORCPT
+        Fri, 21 Feb 2020 17:22:56 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38362 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgBUWW4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:21:56 -0500
-X-Greylist: delayed 1497 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Feb 2020 17:21:56 EST
-Received: from player691.ha.ovh.net (unknown [10.108.57.140])
-        by mo5.mail-out.ovh.net (Postfix) with ESMTP id 874EA26A280
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 22:56:57 +0100 (CET)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player691.ha.ovh.net (Postfix) with ESMTPSA id 15BC4FBA4A9C;
-        Fri, 21 Feb 2020 21:56:49 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 22:56:42 +0100
-From:   Stephen Kitt <steve@sk2.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Fri, 21 Feb 2020 17:22:56 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 8C1681C0411; Fri, 21 Feb 2020 23:22:53 +0100 (CET)
+Date:   Fri, 21 Feb 2020 23:22:53 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: remove MPX from the x86 toc
-Message-ID: <20200221225642.006495c9@heffalump.sk2.org>
-In-Reply-To: <cc401ede-c94e-3688-5295-fd4d4a1806a4@intel.com>
-References: <20200221205733.26351-1-steve@sk2.org>
-        <cc401ede-c94e-3688-5295-fd4d4a1806a4@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 112/191] x86/nmi: Remove irq_work from the long
+ duration NMI handler
+Message-ID: <20200221222252.GA14067@amd>
+References: <20200221072250.732482588@linuxfoundation.org>
+ <20200221072304.373890261@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- boundary="Sig_/ihKFjSlpszGJc1baMk1NeBZ"; protocol="application/pgp-signature"
-X-Ovh-Tracer-Id: 5920263185231203636
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedugedrkeeggdduheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvffukfgjfhfogggtsehgtderreertdejnecuhfhrohhmpefuthgvphhhvghnucfmihhtthcuoehsthgvvhgvsehskhdvrdhorhhgqeenucfkpheptddrtddrtddrtddpkedvrdeihedrvdehrddvtddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrieeluddrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpehsthgvvhgvsehskhdvrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Content-Disposition: inline
+In-Reply-To: <20200221072304.373890261@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ihKFjSlpszGJc1baMk1NeBZ
-Content-Type: text/plain; charset=UTF-8
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 21 Feb 2020 13:03:46 -0800, Dave Hansen <dave.hansen@intel.com> wro=
-te:
-> On 2/21/20 12:57 PM, Stephen Kitt wrote:
-> > MPX was removed in commit 45fc24e89b7c ("x86/mpx: remove MPX from
-> > arch/x86"), this removes the corresponding entry in the x86 toc.
-> >=20
-> > This was suggested by a Sphinx warning. =20
+Hi!
+
+On Fri 2020-02-21 08:41:25, Greg Kroah-Hartman wrote:
+> From: Changbin Du <changbin.du@gmail.com>
 >=20
-> Pretty obvious miss on my part.  Thanks for finding and fixing it.
+> [ Upstream commit 248ed51048c40d36728e70914e38bffd7821da57 ]
 >=20
-> It might be nice to add:
+> First, printk() is NMI-context safe now since the safe printk() has been
+> implemented and it already has an irq_work to make NMI-context safe.
 >=20
-> Fixes: 45fc24e89b7cc ("x86/mpx: remove MPX from arch/x86")
-
-Ah yes, it would be. What=E2=80=99s the etiquette here? Should I respin, or=
- can
-whoever merges this (Jon?) add this to the commit message?
-
-> In any case:
+> Second, this NMI irq_work actually does not work if a NMI handler causes
+> panic by watchdog timeout. It has no chance to run in such case, while
+> the safe printk() will flush its per-cpu buffers before panicking.
 >=20
-> Acked-by: Dave Hansen <dave.hansen@intel.com>
+> While at it, repurpose the irq_work callback into a function which
+> concentrates the NMI duration checking and makes the code easier to
+> follow.
 
-Thanks!
+I know there were printk() changes recently, but are they all in 4.19?
 
-Stephen
+Does this actually fix any bug in 4.19?
 
---Sig_/ihKFjSlpszGJc1baMk1NeBZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Best regards,
+								Pavel
+							=09
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 086cf1d1d71d8..0f8b9b900b0e7 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -102,18 +102,22 @@ static int __init nmi_warning_debugfs(void)
+>  }
+>  fs_initcall(nmi_warning_debugfs);
+> =20
+> -static void nmi_max_handler(struct irq_work *w)
+> +static void nmi_check_duration(struct nmiaction *action, u64 duration)
+>  {
+> -	struct nmiaction *a =3D container_of(w, struct nmiaction, irq_work);
+> +	u64 whole_msecs =3D READ_ONCE(action->max_duration);
+>  	int remainder_ns, decimal_msecs;
+> -	u64 whole_msecs =3D READ_ONCE(a->max_duration);
+> +
+> +	if (duration < nmi_longest_ns || duration < action->max_duration)
+> +		return;
+> +
+> +	action->max_duration =3D duration;
+> =20
+>  	remainder_ns =3D do_div(whole_msecs, (1000 * 1000));
+>  	decimal_msecs =3D remainder_ns / 1000;
+> =20
+>  	printk_ratelimited(KERN_INFO
+>  		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+> -		a->handler, whole_msecs, decimal_msecs);
+> +		action->handler, whole_msecs, decimal_msecs);
+>  }
+> =20
+>  static int nmi_handle(unsigned int type, struct pt_regs *regs)
+> @@ -140,11 +144,7 @@ static int nmi_handle(unsigned int type, struct pt_r=
+egs *regs)
+>  		delta =3D sched_clock() - delta;
+>  		trace_nmi_handler(a->handler, (int)delta, thishandled);
+> =20
+> -		if (delta < nmi_longest_ns || delta < a->max_duration)
+> -			continue;
+> -
+> -		a->max_duration =3D delta;
+> -		irq_work_queue(&a->irq_work);
+> +		nmi_check_duration(a, delta);
+>  	}
+> =20
+>  	rcu_read_unlock();
+> @@ -162,8 +162,6 @@ int __register_nmi_handler(unsigned int type, struct =
+nmiaction *action)
+>  	if (!action->handler)
+>  		return -EINVAL;
+> =20
+> -	init_irq_work(&action->irq_work, nmi_max_handler);
+> -
+>  	raw_spin_lock_irqsave(&desc->lock, flags);
+> =20
+>  	/*
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAEBCgAdFiEEnPVX/hPLkMoq7x0ggNMC9Yhtg5wFAl5QUhoACgkQgNMC9Yht
-g5x5mQ//a6qVDMQffPy2kF6FlGU9g/Vd/M0mU7P7XaZ1xl/COpAFzFcP1ZjK6HWl
-oWA/HVAEHimBAxVI4T5+DiExj0H90sGu9bD8VoHVuZZHQSfHubHS1Ynw/4+HGkUl
-3Mchb5DT1LoQqq7Hy49lbNbNeaWmC1VW3Z3LNq6rmdGsex78xJ0SWkd3eknj92n5
-AQ7BKpSqt7dmN6+sEmhQ46fZ41JoXV1fZ8NRIHGoPKHmU9AUA6CCSzSA2JO/Hu4e
-k1Ua6vACPMvs/fByE1ug6uBiWeWD+4CfwuX1AoJSedgipWc8v3najtjUt+u3rYDh
-tALuPbQ1SFach6PLFB8mVHb8wjTwVTgnwE+T7utFu5OssKgwKMUOAgh0+zMPr0xV
-mI740ofTm3pjV21pZHEygAuHK7wSCwWTwlh2rz9Lxu9HLBCmZD5tw2Tvj9ShsE4c
-3fGRowjdL43d1X1zhBBJ8hI6E/JVpissSkfoD275ffbqtIyZ7Iw/+8/jSeLFyGBj
-SWEIHji+7S68k1l0CAoNdQYppWS+TP1XZpWMU65mp1XEIhD1+5F/Nj1V0kwFN2sP
-ETE2EIoI33le9mANu5JzY7lGs/SguILmky3nyw84Td2ekNvVMssEDV68LWlQwY/a
-U2yi49NSGURrLR/Vo2EV9eUGSyLY3goQgrjpfFM8pqPrmem1gLI=
-=VQbm
+iEYEARECAAYFAl5QWDwACgkQMOfwapXb+vK8pQCfXc7L7u+EWDJS97tDbbXFdWo0
+VmcAn1KMa2N/gyXeOJZWraFurLztLMMk
+=pvgT
 -----END PGP SIGNATURE-----
 
---Sig_/ihKFjSlpszGJc1baMk1NeBZ--
+--Q68bSM7Ycu6FN28Q--
