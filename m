@@ -2,111 +2,141 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C779C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DCC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02EAE24650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YG2Me4Pv"
+	by mail.kernel.org (Postfix) with ESMTP id 0B0B9208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgBUNte (ORCPT
+        id S1728460AbgBUNts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:49:34 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38489 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727352AbgBUNte (ORCPT
+        Fri, 21 Feb 2020 08:49:48 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728112AbgBUNtr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 08:49:34 -0500
-Received: by mail-lf1-f65.google.com with SMTP id r14so1534239lfm.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 05:49:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PyeTvkkAnCUH4kZEoAfj76XyH5K0PchtC9IwnXWSMfs=;
-        b=YG2Me4PvMR7Nd4Rf3b4HuL0McVpAs2ooY3qUvclfGG6VO4MC/BBM0kQvM5dScEvBXr
-         vLeI2IDKOaJ8uWbNrA6AcwrvTaDzjGvV/AJVCyf2NW98WsAGjXW5Z38taX4+3FP6BWDa
-         ZhPxOuFJMqcsj8NFTN7q6izUJ5i3ydx3J1wyHqXRdMY8bOeh5SqZkJL/Sxl1xWoC5j60
-         3TkvEeBUfubdnzFGAgOzJfMLzr9rS7PmQle/hlnsWoYThcmwnlzsk63lYUJDi5RR+bzr
-         ulT/1tSnlezUrU0rBX6AwR70JEzyLctsHwyss5YrYaMNZ7c/lTVw9PYduwyD04b54Pq5
-         sbvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PyeTvkkAnCUH4kZEoAfj76XyH5K0PchtC9IwnXWSMfs=;
-        b=JHw1wpl+EG+072kASpLqDe1gQlKeqdHGx3z3MSXxjeOAOsn3D7gob0opqtDro/vQJ/
-         1fCuMTP6hmraxXxCTqtjQSbDNuBgKfeUAUEmaJrNlzPtP4rj8Mk2ziu4ZTETT5c+j/Zr
-         IRJcc6gWer0R7021nPZlAmGLhRRhUyoThGv2mYJLAWDSXPlaPBmTmBnqr9eWZatX50V3
-         rDUz6kQnwk3fQvzr92RgDzJpLyrMo4ZaASIgS7m+Ck5o4DrStvMSb6F5xvdCPoxrUIlH
-         xSJzLVh6Va05FFHXxGe/BU1wMB90hGvJZJ4CtNqL5E4B3ukZCB9dzpVeCpS07yHkNH9E
-         EezQ==
-X-Gm-Message-State: APjAAAVlc3FtY8243eULJKqj/zTxo/rJ8MCwSKN55Ds6LzNSp8mCBz0T
-        +3XZzfK2LIiSN1Vh7hKRFDZ0hciNiES8OddfaN7pMQ==
-X-Google-Smtp-Source: APXvYqyD6Dr4b4HePic8xdZLes9fbr6+6iEYjYET6yQoleUZB8SKOT+AsIr4ANsP3MzU8OsOa8AganE0j95rngWdD5Q=
-X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20061128lfb.21.1582292972470;
- Fri, 21 Feb 2020 05:49:32 -0800 (PST)
+        Fri, 21 Feb 2020 08:49:47 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LDe5Y8009152
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:49:46 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yafh8t6e8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:49:46 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 13:49:43 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 13:49:39 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LDncmK46792746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 13:49:38 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 182E942042;
+        Fri, 21 Feb 2020 13:49:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 875A14203F;
+        Fri, 21 Feb 2020 13:49:37 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 13:49:37 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 14:49:36 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
+ VIRTIO_F_IOMMU_PLATFORM
+In-Reply-To: <20200220163055-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220163055-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <cover.1581597365.git.matti.vaittinen@fi.rohmeurope.com> <1d333e88974571322c14cf3e881b9a854e94bd9d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <1d333e88974571322c14cf3e881b9a854e94bd9d.1581597365.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 14:49:21 +0100
-Message-ID: <CACRpkdY1oa859bkVrgwA4iai7982GL_EMxns5+wAhQr+ggf9Kw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/5] power: Add linear_range helper
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022113-4275-0000-0000-000003A42EE8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022113-4276-0000-0000-000038B83E39
+Message-Id: <20200221144936.2102bcce.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 impostorscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 adultscore=0 mlxscore=0
+ clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 14, 2020 at 8:37 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+On Thu, 20 Feb 2020 16:33:35 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-> Many devices have control registers which control some measurable
-> property. Often a register contains control field so that change in
-> this field causes linear change in the controlled property. It is not
-> a rare case that user wants to give 'meaningfull' control values and
-> driver needs to convert them to register field values. Even more
-> often user wants to 'see' the currently set value - again in
-> meaningfull units - and driver needs to convert the values it reads
-> from register to these meaningfull units.
+> On Thu, Feb 20, 2020 at 05:06:04PM +0100, Halil Pasic wrote:
+> > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
+> > effect The vhost code assumes it the addresses on the virtio descriptor
+> > ring are not guest physical addresses but iova's, and insists on doing a
+> > translation of these regardless of what transport is used (e.g. whether
+> > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
+> > "vhost: new device IOTLB API".) On s390 this results in severe
+> > performance degradation (c.a. factor 10). BTW with ccw I/O there is
+> > (architecturally) no IOMMU, so the whole address translation makes no
+> > sense in the context of virtio-ccw.
+> 
+> So it sounds like a host issue: the emulation of s390 unnecessarily complicated.
+> Working around it by the guest looks wrong ...
 
-Rename meaningfull -> meaningful
+While do think that forcing IOMMU_PLATFORM on devices that do not
+want or need it, just to trigger DMA API usage in guest is conceptually
+wrong, I do agree, that we might have a host issue. Namely, unlike PCI,
+CCW does not have an IOMMU, and the spec clearly states that "Whether
+accesses are actually limited or translated is described by
+platform-specific means.". With CCW devices we don't have address translation
+by IOMMU, and in that sense vhost is probably wrong about trying to do
+the translation. That is why I mentioned the patch, and that it's done
+regardless of the transport/platform.
 
-> This ideas is stol... borrowed from regulator framework's
-> regulator_linear_ranges handling.
+Regards,
+Halil
 
-Hehe maybe one day we can move the whole thing to lib/
-but let's take one step at a time.
 
-> Provide a linear_range helper which can do conversion from user value
-> to register value 'selector'.
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->
-> Where should we put these?
+> 
+> > Halil Pasic (2):
+> >   mm: move force_dma_unencrypted() to mem_encrypt.h
+> >   virtio: let virtio use DMA API when guest RAM is protected
+> > 
+> >  drivers/virtio/virtio_ring.c |  3 +++
+> >  include/linux/dma-direct.h   |  9 ---------
+> >  include/linux/mem_encrypt.h  | 10 ++++++++++
+> >  3 files changed, 13 insertions(+), 9 deletions(-)
+> > 
+> > 
+> > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> > -- 
+> > 2.17.1
+> 
 
-This works.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
