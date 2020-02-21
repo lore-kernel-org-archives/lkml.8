@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1623AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E34C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA7824650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C0524650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272681;
-	bh=LF0kKZuLa+zTPv5urFxUqbzEBwsa/nVldpj14g4r4Ks=;
+	s=default; t=1582272685;
+	bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DB/LI6Eq9P579jTyLO4JD7FuxovkuPqoOTg1gPtLh7u6iqz5GMRJNli2WIs83bLZH
-	 eI9tHovIKbsRnmuAlO+HVa6mYfHAQD8nH+QAblLXJ3/PJwSR73qeNDZq5TGGqUBaSD
-	 R4mlO6/xkLawC9hd9ThYxB+IHJ4rQOZqEoDrRHME=
+	b=ghA23geoTSYuV2SdaV9qJEOHGd9e6gI2Wl9XJT8WF2ptkkIPYX3ibnZ7YYoFP/BV9
+	 OD1i4Egc0R8kLlurrHjCez1K+QgRjcyftqTIkZqbXL2vLihpUiJehnguWMwJicIYae
+	 2ip5kfeAEKpoqHFlb5qoDLz2Oip0mb4DC20LxpnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732676AbgBUILU (ORCPT
+        id S1732411AbgBUILY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46726 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:11:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732662AbgBUILS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:18 -0500
+        id S1732675AbgBUILU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29DA520578;
-        Fri, 21 Feb 2020 08:11:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7D7820578;
+        Fri, 21 Feb 2020 08:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272677;
-        bh=LF0kKZuLa+zTPv5urFxUqbzEBwsa/nVldpj14g4r4Ks=;
+        s=default; t=1582272680;
+        bh=kLfit3+l6JmuMoFIOggjqVIq/2lixWIxyIbQSNqbNQA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yHs1RFt9zSBpkYKqemKnpVtSevknrcxOQtNAwei72eKqmqhDQd3BEfzLRaqLUV77H
-         RlYAxiEPz/bH5HlC70ynSH+926o4eEU6+GPbW01h0tjme8LRKmCuSkoHXODlLcufqu
-         vhyONL0Jvfc2AIddtGKM4yOXyIXYlN5oo0XzYfvQ=
+        b=R8+jt0UgRF/JbvQpxiCkRC/CqEaGkFzENR5TcJjlrDaWSOuCJCp5L9qm4zSFY8trj
+         ixKRuPOKro3E8t63fsp94qTl2gHBRfYR3GIZpalEqm0OYJCFaz7iGMMINma3N+qjHu
+         RjSZDDt/0ygMCzlk34xUwzUBefwSdc3gpZlh94S4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 234/344] iommu/arm-smmu-v3: Use WRITE_ONCE() when changing validity of an STE
-Date:   Fri, 21 Feb 2020 08:40:33 +0100
-Message-Id: <20200221072410.556723055@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 235/344] ALSA: usb-audio: unlock on error in probe
+Date:   Fri, 21 Feb 2020 08:40:34 +0100
+Message-Id: <20200221072410.646085992@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,38 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d71e01716b3606a6648df7e5646ae12c75babde4 ]
+[ Upstream commit a3afa29942b84b4e2548beacccc3a68b8d77e3dc ]
 
-If, for some bizarre reason, the compiler decided to split up the write
-of STE DWORD 0, we could end up making a partial structure valid.
+We need to unlock before we returning on this error path.
 
-Although this probably won't happen, follow the example of the
-context-descriptor code and use WRITE_ONCE() to ensure atomicity of the
-write.
-
-Reported-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 73ac9f5e5b43 ("ALSA: usb-audio: Add boot quirk for MOTU M Series")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200115174604.rhanfgy4j3uc65cx@kili.mountain
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/usb/card.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index ee8d48d863e16..ef6af714a7e64 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1643,7 +1643,8 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
- 						 STRTAB_STE_1_EATS_TRANS));
+diff --git a/sound/usb/card.c b/sound/usb/card.c
+index e6a618a239948..54f9ce38471e6 100644
+--- a/sound/usb/card.c
++++ b/sound/usb/card.c
+@@ -599,7 +599,7 @@ static int usb_audio_probe(struct usb_interface *intf,
+ 	if (! chip) {
+ 		err = snd_usb_apply_boot_quirk_once(dev, intf, quirk, id);
+ 		if (err < 0)
+-			return err;
++			goto __error;
  
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
--	dst[0] = cpu_to_le64(val);
-+	/* See comment in arm_smmu_write_ctx_desc() */
-+	WRITE_ONCE(dst[0], cpu_to_le64(val));
- 	arm_smmu_sync_ste_for_sid(smmu, sid);
- 
- 	/* It's likely that we'll want to use the new STE soon */
+ 		/* it's a fresh one.
+ 		 * now look for an empty slot and create a new card instance
 -- 
 2.20.1
 
