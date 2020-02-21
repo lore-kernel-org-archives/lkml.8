@@ -2,148 +2,282 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05580C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8258C35644
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93152067D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VgMcsDTd"
+	by mail.kernel.org (Postfix) with ESMTP id 693252071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582275400;
+	bh=BMINGId4oJOOVJ0qaN3fAj6biyBWAwSpjG7KGPv2NSw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aqx7O1hZ1yFZ+/xGGr6t6Um+xlHAWf9TdCWwN4OpdOlvWKxOdDTeC2xnJoupAkQor
+	 oRMbgNjFClOAb/Eg8JEFWYTc/wG7hpPevo+swWCCdKSs++QZ5xQtbDBzCeiNBM+Pwc
+	 dWcWQhbjqKmCaGBDCXmQE51nIj+wcoTgrR3mVxRw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730300AbgBUI4a (ORCPT
+        id S1731458AbgBUI4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:56:30 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45803 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727859AbgBUI4a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:56:30 -0500
-Received: by mail-lj1-f195.google.com with SMTP id e18so1346524ljn.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 00:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Svypjvy2UZNno/1cMDgFktputdE7RJsU9QZEtR8/pZM=;
-        b=VgMcsDTdKVJcnFKGkUOW2mfFv22Gwkw27lKwgL1Kienz7zftcpFzN2A18juJ8D2Cw7
-         FjhI4shpHMxqRangwynFGoEpX6R33NMJcGpi5uIRfhowZG4glWzs01yerh6Dtsadk9NA
-         pyAuAm7klnSfCKUKpWxPnqxt/8VpSMEctw0fV6leDA7vEO1T0qhRy8DHU2z5y5pGix4/
-         7KSPvsj4eCjpshuk9e3HPbd8hSwv56iTitKCk1RHtCMNy6UXZebtrAhDjZ2lcn30gvOW
-         rsJi62ccjK39TUMREQVw5IZ6eEzZvlCpLciV88YiEOAcXSJSDkd7hmHT0GCXHd8P2kuD
-         +WUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Svypjvy2UZNno/1cMDgFktputdE7RJsU9QZEtR8/pZM=;
-        b=IbZBOQ8rVJ4guRupTIW6g1zQuUI/8c8nK+a5r/7JrA3/ZaBTfxXg4Ijfq84wXvKLD3
-         lc5NjjcF4RMtQvaSt74RL2IcD2s9hImOD4ZbsaAZd69ZKIN9THF1DUp3/VzeiSZfvHpD
-         p3q6J4wmNjDFfr3E1eLYXyjybY7APymcQVnueyyUWRy5JS6GRyY5Y11ghH9KvE1C5J8D
-         iCTUB79CpvvIJ6Ug/nO/uD/LHOw24diXHAtQUlAfHLDFlqSB/vJc/HI56PNtT/oe+zwJ
-         KBOMAfK7xeHmhIvDsImDWMvwTGQ4k907wzPQa4FI+An2AbWHTFTDo7L13mPsLgAHtDCp
-         Wpaw==
-X-Gm-Message-State: APjAAAVgjQR8koQumkJPufs8vY8bDiA0gBMC6VRxOzcx45WN5FKwfmzD
-        YRVQmkwuTCZhqFlRVDojQCiaF5kdqKjqIsUBR7xblQ==
-X-Google-Smtp-Source: APXvYqxfxoFP8x91+J1mmeOGslBwmvMwE1BggW+LcwTJJx0btrjPjfv120D1iNr4ZSiWFSU2woeR/wb4PZobxBzxgmo=
-X-Received: by 2002:a2e:8699:: with SMTP id l25mr20628240lji.137.1582275388201;
- Fri, 21 Feb 2020 00:56:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org> <9fe822fc-c311-2b97-ae14-b9269dd99f1e@arm.com>
- <CAKfTPtD4kz07hikCuU2_cm67ntruopN9CdJEP+fg5L4_N=qEgg@mail.gmail.com> <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
-In-Reply-To: <d9f78b94-2455-e000-82bd-c00cfb9bbc8e@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Fri, 21 Feb 2020 09:56:16 +0100
-Message-ID: <CAKfTPtAQ_09wVM7zjrHDB+gJXpb5OH6CBvfKC7OB_Bo0Hd41vA@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
-        Hillf Danton <hdanton@sina.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 21 Feb 2020 03:56:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730355AbgBUI4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:56:38 -0500
+Received: from e123331-lin.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E443206DB;
+        Fri, 21 Feb 2020 08:56:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582275397;
+        bh=BMINGId4oJOOVJ0qaN3fAj6biyBWAwSpjG7KGPv2NSw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ysy/tb1YFpy5JwR+n2E1EFlRJ9km+8IRIc8QyBDQK1OrTEt8c2XVe8zKSIlH7Sss2
+         di17lQvofSvRgCT7enRTW2rjLWnom02jkyObqx+rpqKoZorgSLhbBxTcxHxnHiYLVJ
+         kKyTOILvRLdTbzUg1maI3EM33kjSF9cbTGoVIIE8=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] EFI updates for v5.7
+Date:   Fri, 21 Feb 2020 09:56:30 +0100
+Message-Id: <20200221085630.27093-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 17:11, Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 20/02/2020 14:36, Vincent Guittot wrote:
-> > I agree that setting by default to SCHED_CAPACITY_SCALE is too much
-> > for little core.
-> > The problem for little core can be fixed by using the cpu capacity instead
-> >
->
-> So that's indeed better for big.LITTLE & co. Any reason however for not
-> aligning with the initialization of util_avg ?
+Hello Ingo, Thomas,
 
-The runnable_avg is the unweighted version of the load_avg so they
-should both be sync at init and SCHED_CAPACITY_SCALE is in fact the
-right value. Using cpu_scale is the same for smp and big core so we
-can use it instead.
+I am sending this as an ordinary PR this time, given the size. Please let
+me know if instead, you prefer me to send it out piecemeal as usual. Either
+works for me, I was just reluctant to spam people unsolicited.
 
-Then, the initial value of util_avg has never reflected some kind of
-realistic value for the utilization of a new task, especially if those
-tasks will become big ones. Runnable_avg now balances this effect to
-say that we don't know what will be the behavior of the new task,
-which might end up using all spare capacity although current
-utilization is low and CPU is not "fully used". In fact, this is
-exactly the purpose of runnable: highlight that there is maybe no
-spare capacity even if CPU's utilization is low because of external
-event like task migration or having new tasks with most probably wrong
-utilization.
+Note that EFI for RISC-V may still arrive this cycle as well. 
 
-That being said, there is a bigger problem with the current version of
-this patch, which is that I forgot to use runnable in
-update_sg_wakeup_stats(). I have a patch that fixes this problem.
+Please take special note of the GDT changes by Arvind. They were posted to
+the list without any feedback, and they look fine to me, but I know very
+little about these x86 CPU low level details.
 
-Also, I have tested both proposals with hackbench on my octo cores and
-using cpu_scale gives slightly better results than util_avg, which
-probably reflects the case I mentioned above.
+This was all build and boot tested on various different kinds of hardware,
+and all minor issues were fixed along the way.
 
-grp     cpu_scale            util_avg               improvement
-1       1,191(+/-0.77 %)     1,204(+/-1.16 %)       -1.07 %
-4       1,147(+/-1.14 %)     1,195(+/-0.52 %)       -4.21 %
-8       1,112(+/-1,52 %)     1,124(+/-1,45 %)       -1.12 %
-16      1,163(+/-1.72 %)     1,169(+/-1.58 %)       -0,45 %
 
->
-> With the default MC imbalance_pct (117), it takes 875 utilization to make
-> a single CPU group (with 1024 capacity) overloaded (group_is_overloaded()).
-> For a completely idle CPU, that means forking at least 3 tasks (512 + 256 +
-> 128 util_avg)
->
-> With your change, it only takes 2 tasks. I know I'm being nitpicky here, but
-> I feel like those should be aligned, unless we have a proper argument against
+The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
 
-I don't see any reason for keeping them aligned
+  Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
 
-> it - in which case this should also appear in the changelog with so far only
-> mentions issues with util_avg migration, not the fork time initialization.
->
-> > @@ -796,6 +794,8 @@ void post_init_entity_util_avg(struct task_struct *p)
-> >                 }
-> >         }
-> >
-> > +       sa->runnable_avg = cpu_scale;
-> > +
-> >         if (p->sched_class != &fair_sched_class) {
-> >                 /*
-> >                  * For !fair tasks do:
-> >>
-> >>>               sa->load_avg = scale_load_down(se->load.weight);
-> >>> +     }
-> >>>
-> >>>       /* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
-> >>>  }
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git efi-next
+
+for you to fetch changes up to c0cd4ad8a865f910e646f37b16566a2f408e63a4:
+
+  efi: Bump the Linux EFI stub major version number to #1 (2020-02-21 09:04:34 +0100)
+
+----------------------------------------------------------------
+This time, the set of changes for the EFI subsystem is much larger than
+usual. The main reasons are:
+- Get things cleaned up before EFI support for RISC-V arrives, which will
+  increase the size of the validation matrix, and therefore the threshold to
+  making drastic changes,
+- After years of defunct maintainership, the GRUB project has finally started
+  to consider changes from the distros regarding UEFI boot, some of which are
+  highly specific to the way x86 does UEFI secure boot and measured boot,
+  based on knowledge of both shim internals and the layout of bootparams and
+  the x86 setup header. Having this maintenance burden on other architectures
+  (which don't need shim in the first place) is hard to justify, so instead,
+  we are introducing a generic Linux/UEFI boot protocol.
+
+Summary of changes:
+- Boot time GDT handling changes (Arvind)
+- Simplify handling of EFI properties table on arm64
+- Generic EFI stub cleanups, to improve command line handling, file I/O,
+  memory allocation, etc.
+- Introduce a generic initrd loading method based on calling back into
+  the firmware, instead of relying on the x86 EFI handover protocol or
+  device tree.
+- Introduce a mixed mode boot method that does not rely on the x86 EFI
+  handover protocol either, and could potentially be adopted by other
+  architectures (if another one ever surfaces where one execution mode
+  is a superset of another)
+- Clean up the contents of struct efi, and move out everything that
+  doesn't need to be stored there.
+- Incorporate support for UEFI spec v2.8A changes that permit firmware
+  implementations to return EFI_UNSUPPORTED from UEFI runtime services at
+  OS runtime, and expose a mask of which ones are supported or unsupported
+  via a configuration table.
+- Add kerneldoc for the memory allocation routines in the stub (Heinrich)
+- Partial fix for the lack of by-VA cache maintenance in the decompressor
+  on 32-bit ARM. Note that these patches were deliberately put at the
+  beginning so they can be used as a stable branch that will be shared with
+  a PR containing the complete fix, which I will send to the ARM tree.
+
+----------------------------------------------------------------
+Ard Biesheuvel (66):
+      efi/arm: Work around missing cache maintenance in decompressor handover
+      efi/arm: Pass start and end addresses to cache_clean_flush()
+      efi/libstub/arm: Make efi_entry() an ordinary PE/COFF entrypoint
+      efi/libstub/arm64: Use 1:1 mapping of RT services if property table exists
+      efi/libstub/x86: Remove pointless zeroing of apm_bios_info
+      efi/libstub/x86: Avoid overflowing code32_start on PE entry
+      efi/libstub: Use hidden visibility for all source files
+      efi/libstub/arm: Relax FDT alignment requirement
+      efi/libstub: Move memory map handling and allocation routines to mem.c
+      efi/libstub: Simplify efi_high_alloc() and rename to efi_allocate_pages()
+      efi/libstub/x86: Incorporate eboot.c into libstub
+      efi/libstub: Use consistent type names for file I/O protocols
+      efi/libstub/x86: Permit bootparams struct to be allocated above 4 GB
+      efi/libstub: Move stub specific declarations into efistub.h
+      efi/libstub/x86: Permit cmdline data to be allocated above 4 GB
+      efi/libstub: Move efi_random_alloc() into separate source file
+      efi/libstub: Move get_dram_base() into arm-stub.c
+      efi/libstub: Move file I/O support code into separate file
+      efi/libstub: Rewrite file I/O routine
+      efi/libstub: Take soft and hard memory limits into account for initrd loading
+      efi/libstub: Clean up command line parsing routine
+      efi/libstub: Expose LocateDevicePath boot service
+      efi/libstub: Make the LoadFile EFI protocol accessible
+      efi/x86: Reindent struct initializer for legibility
+      efi/x86: Replace #ifdefs with IS_ENABLED() checks
+      efi/dev-path-parser: Add struct definition for vendor type device path nodes
+      efi/libstub: Add support for loading the initrd from a device path
+      efi/libstub: Take noinitrd cmdline argument into account for devpath initrd
+      efi: Drop handling of 'boot_info' configuration table
+      efi/ia64: Move HCDP and MPS table handling into IA64 arch code
+      efi: Move UGA and PROP table handling to x86 code
+      efi: Make rng_seed table handling local to efi.c
+      efi: Move mem_attr_table out of struct efi
+      efi: Make memreserve table handling local to efi.c
+      efi: Merge EFI system table revision and vendor checks
+      efi/ia64: Use existing helpers to locate ESI table
+      efi/ia64: Use local variable for EFI system table address
+      efi/ia64: Switch to efi_config_parse_tables()
+      efi: Make efi_config_init() x86 only
+      efi: Clean up config_parse_tables()
+      efi/x86: Remove runtime table address from kexec EFI setup data
+      efi/x86: Make fw_vendor, config_table and runtime sysfs nodes x86 specific
+      efi/x86: Merge assignments of efi.runtime_version
+      efi: Add 'runtime' pointer to struct efi
+      efi/arm: Drop unnecessary references to efi.systab
+      efi/x86: Drop 'systab' member from struct efi
+      efi/x86: Drop redundant .bss section
+      efi/libstub/x86: Make loaded_image protocol handling mixed mode safe
+      efi/libstub/x86: Use Exit() boot service to exit the stub on errors
+      efi/x86: Implement mixed mode boot without the handover protocol
+      efi/x86: Add true mixed mode entry point into .compat section
+      efi/arm: Move FDT param discovery code out of efi.c
+      efi/arm: Move FDT specific definitions into fdtparams.c
+      efi/arm: Rewrite FDT param discovery routines
+      efi: Store mask of supported runtime services in struct efi
+      efi: Add support for EFI_RT_PROPERTIES table
+      efi: Use more granular check for availability for variable services
+      efi: Register EFI rtc platform device only when available
+      infiniband: hfi1: Use EFI GetVariable only when available
+      scsi: iscsi: Use EFI GetVariable only when available
+      efi: Use EFI ResetSystem only when available
+      x86/ima: Use EFI GetVariable only when available
+      integrity: Check properly whether EFI GetVariable() is available
+      efi/x86: Use symbolic constants in PE header instead of bare numbers
+      efi/libstub: Introduce symbolic constants for the stub major/minor version
+      efi: Bump the Linux EFI stub major version number to #1
+
+Arvind Sankar (8):
+      x86/boot: Remove KEEP_SEGMENTS support
+      efi/x86: Don't depend on firmware GDT layout
+      x86/boot: Reload GDTR after copying to the end of the buffer
+      x86/boot: Clear direction and interrupt flags in startup_64
+      efi/x86: Remove GDT setup from efi_main
+      x86/boot: GDT limit value should be size - 1
+      x86/boot: Micro-optimize GDT loading instructions
+      efi/x86: Mark setup_graphics static
+
+Gustavo A. R. Silva (1):
+      efi/apple-properties: Replace zero-length array with flexible-array member
+
+Hans de Goede (1):
+      efi/bgrt: Accept BGRT tables with a version of 0
+
+Heinrich Schuchardt (4):
+      efi/libstub: Add function description of efi_allocate_pages()
+      efi/libstub: Simplify efi_get_memory_map()
+      efi/libstub: Describe memory functions
+      efi/libstub: Describe efi_relocate_kernel()
+
+ Documentation/x86/boot.rst                         |   8 +-
+ arch/arm/boot/compressed/efi-header.S              |   6 +-
+ arch/arm/boot/compressed/head.S                    |  64 +-
+ arch/arm64/include/asm/efi.h                       |  10 -
+ arch/arm64/kernel/efi-entry.S                      |  64 +-
+ arch/arm64/kernel/efi-header.S                     |   6 +-
+ arch/arm64/kernel/image-vars.h                     |   1 +
+ arch/ia64/kernel/efi.c                             |  55 +-
+ arch/ia64/kernel/esi.c                             |  21 +-
+ arch/x86/boot/Makefile                             |   2 +-
+ arch/x86/boot/compressed/Makefile                  |   5 +-
+ arch/x86/boot/compressed/eboot.h                   |  31 -
+ arch/x86/boot/compressed/efi_thunk_64.S            |  29 +-
+ arch/x86/boot/compressed/head_32.S                 |  48 +-
+ arch/x86/boot/compressed/head_64.S                 | 125 +++-
+ arch/x86/boot/header.S                             |  87 +--
+ arch/x86/boot/tools/build.c                        |  69 +-
+ arch/x86/include/asm/efi.h                         |  23 +-
+ arch/x86/kernel/asm-offsets_32.c                   |   5 +
+ arch/x86/kernel/head_32.S                          |   6 -
+ arch/x86/kernel/ima_arch.c                         |   2 +-
+ arch/x86/kernel/kexec-bzimage64.c                  |   5 +-
+ arch/x86/platform/efi/efi.c                        | 283 ++++---
+ arch/x86/platform/efi/efi_32.c                     |  13 +-
+ arch/x86/platform/efi/efi_64.c                     |  14 +-
+ arch/x86/platform/efi/efi_stub_32.S                |  21 +-
+ arch/x86/platform/efi/quirks.c                     |   2 +-
+ drivers/firmware/efi/Makefile                      |   1 +
+ drivers/firmware/efi/apple-properties.c            |  12 +-
+ drivers/firmware/efi/arm-init.c                    |  83 +--
+ drivers/firmware/efi/arm-runtime.c                 |  18 -
+ drivers/firmware/efi/dev-path-parser.c             |  38 +-
+ drivers/firmware/efi/efi-bgrt.c                    |   7 +-
+ drivers/firmware/efi/efi-pstore.c                  |   2 +-
+ drivers/firmware/efi/efi.c                         | 418 ++++-------
+ drivers/firmware/efi/efivars.c                     |   2 +-
+ drivers/firmware/efi/fdtparams.c                   | 126 ++++
+ drivers/firmware/efi/libstub/Makefile              |   7 +-
+ drivers/firmware/efi/libstub/arm-stub.c            | 193 ++---
+ drivers/firmware/efi/libstub/arm32-stub.c          |   1 +
+ drivers/firmware/efi/libstub/arm64-stub.c          |  11 +-
+ drivers/firmware/efi/libstub/efi-stub-helper.c     | 822 ++++-----------------
+ drivers/firmware/efi/libstub/efistub.h             | 611 ++++++++++++++-
+ drivers/firmware/efi/libstub/fdt.c                 |   7 +-
+ drivers/firmware/efi/libstub/file.c                | 258 +++++++
+ drivers/firmware/efi/libstub/hidden.h              |   6 +
+ drivers/firmware/efi/libstub/mem.c                 | 309 ++++++++
+ drivers/firmware/efi/libstub/random.c              | 114 ---
+ drivers/firmware/efi/libstub/randomalloc.c         | 124 ++++
+ drivers/firmware/efi/libstub/string.c              |  63 ++
+ .../firmware/efi/libstub/x86-stub.c                | 258 +++----
+ drivers/firmware/efi/memattr.c                     |  13 +-
+ drivers/firmware/efi/reboot.c                      |   4 +-
+ drivers/firmware/efi/runtime-wrappers.c            |   4 +-
+ drivers/firmware/pcdp.c                            |   8 +-
+ drivers/infiniband/hw/hfi1/efivar.c                |   2 +-
+ drivers/rtc/Makefile                               |   4 -
+ drivers/rtc/rtc-efi-platform.c                     |  35 -
+ drivers/scsi/isci/init.c                           |   2 +-
+ fs/efivarfs/super.c                                |   2 +-
+ include/linux/efi.h                                | 691 +++--------------
+ include/linux/pe.h                                 |  21 +
+ security/integrity/platform_certs/load_uefi.c      |   2 +-
+ 63 files changed, 2667 insertions(+), 2617 deletions(-)
+ delete mode 100644 arch/x86/boot/compressed/eboot.h
+ create mode 100644 drivers/firmware/efi/fdtparams.c
+ create mode 100644 drivers/firmware/efi/libstub/file.c
+ create mode 100644 drivers/firmware/efi/libstub/hidden.h
+ create mode 100644 drivers/firmware/efi/libstub/mem.c
+ create mode 100644 drivers/firmware/efi/libstub/randomalloc.c
+ rename arch/x86/boot/compressed/eboot.c => drivers/firmware/efi/libstub/x86-stub.c (82%)
+ delete mode 100644 drivers/rtc/rtc-efi-platform.c
