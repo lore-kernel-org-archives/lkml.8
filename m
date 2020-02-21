@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BE8C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDFEC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4734D24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCC99222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271533;
-	bh=SGwJ19PYYNJ30y9HmCXBx8/78rLo48SVOdN2zqLluVU=;
+	s=default; t=1582271536;
+	bh=+QlcluC9QLk6waoQcGx030akdh5WEF/5dwtHWd7jK7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJdHpvKI8u2KQ+eRe8syC7Cf6OhFXnRrQPxs5RMTa+raCH+wISa8PJlQFv6H1i1jt
-	 phvddQLvA7t8Y5NVkb38rUDZ6ulfY9WwkY8XY8Kn/OmnSih5GcA4G90rCzznRwt161
-	 H9MFsSsxIplXSDxL4SPsBtCOUef8cRyH+066zKrw=
+	b=iVY9QCHpWERcj47Byt3o+Z3HBxI/kOy9t95p3t7T6S+UzN05fKg/SsuKT/Ae8H92W
+	 19CMOA6TTKtehaTvmiKrIMlVlTK+E5+b/jj35bNp70pEaeZ0akxhzmPwesQ4p/2QjU
+	 iIQhNT5KfKXPI+n6pAhqsD1e6Wn8Nzn+bwxzebyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgBUHwM (ORCPT
+        id S1729880AbgBUHwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:52:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49872 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728922AbgBUHwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:09 -0500
+        id S1729870AbgBUHwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55562073A;
-        Fri, 21 Feb 2020 07:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE8D20578;
+        Fri, 21 Feb 2020 07:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271528;
-        bh=SGwJ19PYYNJ30y9HmCXBx8/78rLo48SVOdN2zqLluVU=;
+        s=default; t=1582271525;
+        bh=+QlcluC9QLk6waoQcGx030akdh5WEF/5dwtHWd7jK7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9CjUSgPObZjpGmXxlFfXkukA0PK80roPX3OeegNv8rUjRPyUazWwb6K2bpzyCF6E
-         mGyr8h+PKUywulBdbZZJYrr4pfKBq794jgmcJxSH8LFxRH/gqXBZ3yMxTWhpd07kWW
-         1Rc2PtnbNzwF/E853DrDcxO0b58CQulKmlbdt2kA=
+        b=CELuC8tOl5x7NLlS2zpE8aLIU5IYf88JcJ8KIb71dbZfagmoVnSY5qJWUvGEM+xxX
+         g8Uhbkdcu0MN4RNtwduu9TfO7/dI7HTEM7TX6mQzlQ9dx/7k4HakF31CFpAFsy29+B
+         MFJDGsNYL/WCXDf4Ms3FgDD7ayawKTDjLhelWzSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
+        stable@vger.kernel.org, James Sewart <jamessewart@arista.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 193/399] drm/fbdev: Fallback to non tiled mode if all tiles not present
-Date:   Fri, 21 Feb 2020 08:38:38 +0100
-Message-Id: <20200221072421.574891894@linuxfoundation.org>
+Subject: [PATCH 5.5 152/399] PCI: Add nr_devfns parameter to pci_add_dma_alias()
+Date:   Fri, 21 Feb 2020 08:37:57 +0100
+Message-Id: <20200221072417.259270897@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,164 +60,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manasi Navare <manasi.d.navare@intel.com>
+From: James Sewart <jamessewart@arista.com>
 
-[ Upstream commit f25c7a006cd1c07254780e3406e45cee4842b933 ]
+[ Upstream commit 09298542cd891b43778db1f65aa3613aa5a562eb ]
 
-In case of tiled displays, if we hotplug just one connector,
-fbcon currently just selects the preferred mode and if it is
-tiled mode then that becomes a problem if rest of the tiles are
-not present.
-So in the fbdev driver on hotplug when we probe the client modeset,
-if we dont find all the connectors for all tiles, then on a connector
-with one tile, just fallback to the first available non tiled mode
-to display over a single connector.
-On the hotplug of the consecutive tiled connectors, if the tiled mode
-no longer exists because of fbcon size limitation, then return
-no modes for consecutive tiles but retain the non tiled mode
-on the 0th tile.
-Use the same logic in case of connected boot case as well.
-This has been tested with Dell UP328K tiled monitor.
+Add a "nr_devfns" parameter to pci_add_dma_alias() so it can be used to
+create DMA aliases for a range of devfns.
 
-v2:
-* Set the modes on consecutive hotplugged tiles to no mode
-if tiled mode is pruned (Dave)
-v1:
-* Just handle the 1st connector hotplug case
-* v1 Reviewed-by: Dave Airlie <airlied@redhat.com>
-
-Suggested-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Suggested-by: Dave Airlie <airlied@redhat.com>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Manasi Navare <manasi.d.navare@intel.com>
-Reviewed-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191113222952.9231-1-manasi.d.navare@intel.com
+[bhelgaas: incorporate nr_devfns fix from James, update
+quirk_pex_vca_alias() and setup_aliases()]
+Signed-off-by: James Sewart <jamessewart@arista.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_client_modeset.c | 72 ++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/iommu/amd_iommu.c |  7 ++-----
+ drivers/pci/pci.c         | 22 +++++++++++++++++-----
+ drivers/pci/quirks.c      | 23 +++++++++--------------
+ include/linux/pci.h       |  2 +-
+ 4 files changed, 29 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index 895b73f23079a..6d4a29e99ae26 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -114,6 +114,33 @@ drm_client_find_modeset(struct drm_client_dev *client, struct drm_crtc *crtc)
- 	return NULL;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index bd25674ee4dba..7a6c056b9b9cc 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -230,11 +230,8 @@ static struct pci_dev *setup_aliases(struct device *dev)
+ 	 */
+ 	ivrs_alias = amd_iommu_alias_table[pci_dev_id(pdev)];
+ 	if (ivrs_alias != pci_dev_id(pdev) &&
+-	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number) {
+-		pci_add_dma_alias(pdev, ivrs_alias & 0xff);
+-		pci_info(pdev, "Added PCI DMA alias %02x.%d\n",
+-			PCI_SLOT(ivrs_alias), PCI_FUNC(ivrs_alias));
+-	}
++	    PCI_BUS_NUM(ivrs_alias) == pdev->bus->number)
++		pci_add_dma_alias(pdev, ivrs_alias & 0xff, 1);
+ 
+ 	clone_aliases(pdev);
+ 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 7b5fa2eabe095..951099279192d 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5998,7 +5998,8 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
+ /**
+  * pci_add_dma_alias - Add a DMA devfn alias for a device
+  * @dev: the PCI device for which alias is added
+- * @devfn: alias slot and function
++ * @devfn_from: alias slot and function
++ * @nr_devfns: number of subsequent devfns to alias
+  *
+  * This helper encodes an 8-bit devfn as a bit number in dma_alias_mask
+  * which is used to program permissible bus-devfn source addresses for DMA
+@@ -6014,8 +6015,13 @@ EXPORT_SYMBOL_GPL(pci_pr3_present);
+  * cannot be left as a userspace activity).  DMA aliases should therefore
+  * be configured via quirks, such as the PCI fixup header quirk.
+  */
+-void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
++void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns)
+ {
++	int devfn_to;
++
++	nr_devfns = min(nr_devfns, (unsigned) MAX_NR_DEVFNS - devfn_from);
++	devfn_to = devfn_from + nr_devfns - 1;
++
+ 	if (!dev->dma_alias_mask)
+ 		dev->dma_alias_mask = bitmap_zalloc(MAX_NR_DEVFNS, GFP_KERNEL);
+ 	if (!dev->dma_alias_mask) {
+@@ -6023,9 +6029,15 @@ void pci_add_dma_alias(struct pci_dev *dev, u8 devfn)
+ 		return;
+ 	}
+ 
+-	set_bit(devfn, dev->dma_alias_mask);
+-	pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
+-		 PCI_SLOT(devfn), PCI_FUNC(devfn));
++	bitmap_set(dev->dma_alias_mask, devfn_from, nr_devfns);
++
++	if (nr_devfns == 1)
++		pci_info(dev, "Enabling fixed DMA alias to %02x.%d\n",
++				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from));
++	else if (nr_devfns > 1)
++		pci_info(dev, "Enabling fixed DMA alias for devfn range from %02x.%d to %02x.%d\n",
++				PCI_SLOT(devfn_from), PCI_FUNC(devfn_from),
++				PCI_SLOT(devfn_to), PCI_FUNC(devfn_to));
  }
  
-+static struct drm_display_mode *
-+drm_connector_get_tiled_mode(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			return mode;
-+	}
-+	return NULL;
-+}
-+
-+static struct drm_display_mode *
-+drm_connector_fallback_non_tiled_mode(struct drm_connector *connector)
-+{
-+	struct drm_display_mode *mode;
-+
-+	list_for_each_entry(mode, &connector->modes, head) {
-+		if (mode->hdisplay == connector->tile_h_size &&
-+		    mode->vdisplay == connector->tile_v_size)
-+			continue;
-+		return mode;
-+	}
-+	return NULL;
-+}
-+
- static struct drm_display_mode *
- drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int height)
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2)
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index c0b7aa4dc0f51..9aa590eb712fe 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3927,7 +3927,7 @@ int pci_dev_specific_reset(struct pci_dev *dev, int probe)
+ static void quirk_dma_func0_alias(struct pci_dev *dev)
  {
-@@ -348,8 +375,15 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 	struct drm_connector *connector;
- 	u64 conn_configured = 0;
- 	int tile_pass = 0;
-+	int num_tiled_conns = 0;
- 	int i;
+ 	if (PCI_FUNC(dev->devfn) != 0)
+-		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0));
++		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 0), 1);
+ }
  
-+	for (i = 0; i < connector_count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
-+	}
-+
- retry:
- 	for (i = 0; i < connector_count; i++) {
- 		connector = connectors[i];
-@@ -399,6 +433,28 @@ retry:
- 			list_for_each_entry(modes[i], &connector->modes, head)
- 				break;
+ /*
+@@ -3941,7 +3941,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_RICOH, 0xe476, quirk_dma_func0_alias);
+ static void quirk_dma_func1_alias(struct pci_dev *dev)
+ {
+ 	if (PCI_FUNC(dev->devfn) != 1)
+-		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1));
++		pci_add_dma_alias(dev, PCI_DEVFN(PCI_SLOT(dev->devfn), 1), 1);
+ }
+ 
+ /*
+@@ -4026,7 +4026,7 @@ static void quirk_fixed_dma_alias(struct pci_dev *dev)
+ 
+ 	id = pci_match_id(fixed_dma_alias_tbl, dev);
+ 	if (id)
+-		pci_add_dma_alias(dev, id->driver_data);
++		pci_add_dma_alias(dev, id->driver_data, 1);
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ADAPTEC2, 0x0285, quirk_fixed_dma_alias);
+ 
+@@ -4067,9 +4067,9 @@ DECLARE_PCI_FIXUP_HEADER(0x8086, 0x244e, quirk_use_pcie_bridge_dma_alias);
+  */
+ static void quirk_mic_x200_dma_alias(struct pci_dev *pdev)
+ {
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0));
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0));
+-	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3));
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x10, 0x0), 1);
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x11, 0x0), 1);
++	pci_add_dma_alias(pdev, PCI_DEVFN(0x12, 0x3), 1);
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2260, quirk_mic_x200_dma_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2264, quirk_mic_x200_dma_alias);
+@@ -4093,13 +4093,8 @@ static void quirk_pex_vca_alias(struct pci_dev *pdev)
+ 	const unsigned int num_pci_slots = 0x20;
+ 	unsigned int slot;
+ 
+-	for (slot = 0; slot < num_pci_slots; slot++) {
+-		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0));
+-		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x1));
+-		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x2));
+-		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x3));
+-		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x4));
+-	}
++	for (slot = 0; slot < num_pci_slots; slot++)
++		pci_add_dma_alias(pdev, PCI_DEVFN(slot, 0x0), 5);
+ }
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2954, quirk_pex_vca_alias);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x2955, quirk_pex_vca_alias);
+@@ -5334,7 +5329,7 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+ 			pci_dbg(pdev,
+ 				"Aliasing Partition %d Proxy ID %02x.%d\n",
+ 				pp, PCI_SLOT(devfn), PCI_FUNC(devfn));
+-			pci_add_dma_alias(pdev, devfn);
++			pci_add_dma_alias(pdev, devfn, 1);
  		}
-+		/*
-+		 * In case of tiled mode if all tiles not present fallback to
-+		 * first available non tiled mode.
-+		 * After all tiles are present, try to find the tiled mode
-+		 * for all and if tiled mode not present due to fbcon size
-+		 * limitations, use first non tiled mode only for
-+		 * tile 0,0 and set to no mode for all other tiles.
-+		 */
-+		if (connector->has_tile) {
-+			if (num_tiled_conns <
-+			    connector->num_h_tile * connector->num_v_tile ||
-+			    (connector->tile_h_loc == 0 &&
-+			     connector->tile_v_loc == 0 &&
-+			     !drm_connector_get_tiled_mode(connector))) {
-+				DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+					      connector->base.id);
-+				modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+			} else {
-+				modes[i] = drm_connector_get_tiled_mode(connector);
-+			}
-+		}
-+
- 		DRM_DEBUG_KMS("found mode %s\n", modes[i] ? modes[i]->name :
- 			  "none");
- 		conn_configured |= BIT_ULL(i);
-@@ -515,6 +571,7 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	bool fallback = true, ret = true;
- 	int num_connectors_enabled = 0;
- 	int num_connectors_detected = 0;
-+	int num_tiled_conns = 0;
- 	struct drm_modeset_acquire_ctx ctx;
+ 	}
  
- 	if (!drm_drv_uses_atomic_modeset(dev))
-@@ -532,6 +589,11 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	memcpy(save_enabled, enabled, count);
- 	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
-+	for (i = 0; i < count; i++) {
-+		if (connectors[i]->has_tile &&
-+		    connectors[i]->status == connector_status_connected)
-+			num_tiled_conns++;
-+	}
- retry:
- 	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
-@@ -631,6 +693,16 @@ retry:
- 				      connector->name);
- 			modes[i] = &connector->state->crtc->mode;
- 		}
-+		/*
-+		 * In case of tiled modes, if all tiles are not present
-+		 * then fallback to a non tiled mode.
-+		 */
-+		if (connector->has_tile &&
-+		    num_tiled_conns < connector->num_h_tile * connector->num_v_tile) {
-+			DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
-+				      connector->base.id);
-+			modes[i] = drm_connector_fallback_non_tiled_mode(connector);
-+		}
- 		crtcs[i] = new_crtc;
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index c393dff2d66f6..930fab2930736 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -2310,7 +2310,7 @@ static inline struct eeh_dev *pci_dev_to_eeh_dev(struct pci_dev *pdev)
+ }
+ #endif
  
- 		DRM_DEBUG_KMS("connector %s on [CRTC:%d:%s]: %dx%d%s\n",
+-void pci_add_dma_alias(struct pci_dev *dev, u8 devfn);
++void pci_add_dma_alias(struct pci_dev *dev, u8 devfn_from, unsigned nr_devfns);
+ bool pci_devs_are_dma_aliases(struct pci_dev *dev1, struct pci_dev *dev2);
+ int pci_for_each_dma_alias(struct pci_dev *pdev,
+ 			   int (*fn)(struct pci_dev *pdev,
 -- 
 2.20.1
 
