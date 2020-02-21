@@ -2,113 +2,162 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1B1C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8980BC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B1C2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:31:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UFoVyIMo"
+	by mail.kernel.org (Postfix) with ESMTP id 5F91D2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582299134;
+	bh=UfuVbClZVSx0qFISnoFOSwyIOrb5otA2TZO/yhNa6Uk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=N77b14p5Xzprr37BVvapBKTbWcqSRjaBL3pbabTO/DBjYXPsvFeUviZ8i86mJQ0Ot
+	 FIwNY6qdjZ6epn3kFjzMB+5L4iwuVeWOcEBuLoUjw4kmt0+ZBS3E6YFUkwpSwVew8z
+	 0ruZmvqZOP7Bic0V62ySH4PAx+F1Ys9jVrzH/nnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgBUPbV (ORCPT
+        id S1728550AbgBUPcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:31:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41452 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgBUPbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:31:19 -0500
-Received: by mail-lj1-f193.google.com with SMTP id h23so2600151ljc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=umwufImp+RAKAXYwNmIfHSar8yKzL+hitzXL/t+Eqo4=;
-        b=UFoVyIMokBF9uMtOCiNiPbsM2bcjPQ+rSe1suiXN9tHQ2gXelPi7omzcHdFjHomGFx
-         2wXd9ifKNWI/ND8syyRtKd+Wk3RJLsAB27RsLnX3/w+pm8nGyfC5R/uS7HtXafLgra6L
-         Cu5d684iOB4wqdn+8TY2FbwH0ovff16NXGl7eKvscbJaws92YsNk1QNB84h+ePLE2AHH
-         fqyzrUNEo/7gmZjxOjfkpXcU8z9w003F8xC5Kp5tWkzpGAzcCzgJTzbJbdLvYcoiljMH
-         1dsMko1/zy8EYMXbJ78z+RoYyexW5mlpD+2VhbAmc1QkxKXjuU0H40X94LRR9Oj99DpV
-         5+qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=umwufImp+RAKAXYwNmIfHSar8yKzL+hitzXL/t+Eqo4=;
-        b=SAIppuesddmAUg0SAHZkBH1YTkvpTYKZ+HiI3Avis2s5h5O0Vkj5FeozegYFpRy0sO
-         2s6De/ZZ8Tk6JeATc8cUcX1UXPsMzozGRJDh43JnRAnwPq8UHf1LpRvLFV26XRbFJi+C
-         cyFOw8KtDnSQRyObYNNvopMrGQh8XSYsu7oMXp3aMvh3HmRf/gBjCYmSxl1ZPHbbEyVm
-         YwlSa27dk2U+KWCqlYiJi0Bv6s4sNMXw8xfi5AkzS4XVkuG1XRehWvgp07TD7XpmqAyD
-         G3XCbuHk9DOQUcrSPKXsntEhHoxDQJrmcq4+VRvsKgl0qhhSaIffr4Ls0hvSId9bsB1V
-         Sf/Q==
-X-Gm-Message-State: APjAAAWacCIOTPJXaZ+GrutQS7oSIt8/un4tN7ZQFWdEwYiEU1M+cY5C
-        hMgW2fIZf5sWC+7xQVVMbA7hBvgr1RLixizKpvkaxw==
-X-Google-Smtp-Source: APXvYqy40L7BUxSoL4RPpdy6dgmoozwbqU5Au4UJypIZx6/XGeiyRlZMQAfFrJbPwb+oGeu+EOX8ahlhnv3TyHgZTaM=
-X-Received: by 2002:a2e:9013:: with SMTP id h19mr23128266ljg.223.1582299076864;
- Fri, 21 Feb 2020 07:31:16 -0800 (PST)
+        Fri, 21 Feb 2020 10:32:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbgBUPcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:32:13 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FF752073A;
+        Fri, 21 Feb 2020 15:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582299131;
+        bh=UfuVbClZVSx0qFISnoFOSwyIOrb5otA2TZO/yhNa6Uk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CWrhu4z0ZBpYccjZ8/pXxXVDmmNSZcqcSoGtWyGQ7VFTWP6iCruUxv81YEPFwSzO1
+         +s5tYpD+cUV+b2XYt/9rHI8J/m4wfVARnDKTBErefe3JG4nfVRIWNYO2WdGT0NdT9I
+         xhwc+HFwOtkNTgDvK2OM6w3+exyhMm4bvAVug3Yc=
+Date:   Fri, 21 Feb 2020 15:32:02 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Sergiu <sergiu.cuciurean@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: amplifiers: ad8366: add support for HMC1119
+ Attenuator
+Message-ID: <20200221153202.00cc62da@archlinux>
+In-Reply-To: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
+References: <20200220092821.11050-1-sergiu.cuciurean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <bc20fdbcb826512cf76b7dfd0972740875931b19.1582212881.git.jpoimboe@redhat.com>
-In-Reply-To: <bc20fdbcb826512cf76b7dfd0972740875931b19.1582212881.git.jpoimboe@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 16:31:05 +0100
-Message-ID: <CACRpkdbXLKpzOwc7pkdPEN8DAQk64P=5qTo3HfW5tvZnYL70UA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: ingenic: Improve unreachable code generation
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 4:35 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Thu, 20 Feb 2020 11:28:21 +0200
+Sergiu <sergiu.cuciurean@analog.com> wrote:
 
-> In the second loop of ingenic_pinconf_set(), it annotates the switch
-> default case as unreachable().  The annotation is technically correct,
-> because that same case would have resulted in an early function return
-> in the previous loop.
->
-> However, the compiled code is suboptimal.  GCC seems to work extra hard
-> to ensure that the unreachable code path triggers undefined behavior.
-> The function would fall through to start executing whatever function
-> happens to be next in the compilation unit.
->
-> This is problematic because:
->
->   a) it adds unnecessary 'ensure undefined behavior' logic, and
->      corresponding i-cache footprint; and
->
->   b) it's less robust -- if a bug were to be introduced, falling through
->      to the next function would be catastrophic.
->
-> Yet another issue is that, while objtool normally understands
-> unreachable() annotations, there's one special case where it doesn't:
-> when the annotation occurs immediately after a 'ret' instruction.  That
-> happens to be the case here because unreachable() is immediately before
-> the return.
->
-> Remove the unreachable() annotation and replace it with a comment.  This
-> simplifies the code generation and changes the unreachable error path to
-> just silently return instead of corrupting execution.
->
-> This fixes the following objtool warning:
->
->   drivers/pinctrl/pinctrl-ingenic.o: warning: objtool: ingenic_pinconf_set() falls through to next function ingenic_pinconf_group_set()
->
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> This change adds support for the HMC1119 Silicon Digial Attenuator. The
+> HMC1119 is a broadband, highly accurate, 7-bit digital attenuator,
+> operating from 0.1 GHz to 6.0 GHz with 31.5 dB attenuation control range
+> in 0.25 dB steps.
+> 
+> Link: https://www.analog.com/media/en/technical-documentation/data-sheets/hmc1119.pdf
+> 
+> Signed-off-by: Sergiu <sergiu.cuciurean@analog.com>
 
-Patch applied.
+Sign offs need to be full names, and match the from of the email.
+See the Developer Certificate of Origin stuff in Documentation/process/submitting patches.
 
-Yours,
-Linus Walleij
+Otherwise the patch looks fine to me.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+>  drivers/iio/amplifiers/ad8366.c | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
+> index 95972ab60f42..62167b87caea 100644
+> --- a/drivers/iio/amplifiers/ad8366.c
+> +++ b/drivers/iio/amplifiers/ad8366.c
+> @@ -5,6 +5,7 @@
+>   *   AD8366 Dual-Digital Variable Gain Amplifier (VGA)
+>   *   ADA4961 BiCMOS RF Digital Gain Amplifier (DGA)
+>   *   ADL5240 Digitally controlled variable gain amplifier (VGA)
+> + *   HMC1119 0.25 dB LSB, 7-Bit, Silicon Digital Attenuator
+>   *
+>   * Copyright 2012-2019 Analog Devices Inc.
+>   */
+> @@ -27,6 +28,7 @@ enum ad8366_type {
+>  	ID_AD8366,
+>  	ID_ADA4961,
+>  	ID_ADL5240,
+> +	ID_HMC1119,
+>  };
+>  
+>  struct ad8366_info {
+> @@ -62,6 +64,10 @@ static struct ad8366_info ad8366_infos[] = {
+>  		.gain_min = -11500,
+>  		.gain_max = 20000,
+>  	},
+> +	[ID_HMC1119] = {
+> +		.gain_min = -31750,
+> +		.gain_max = 0,
+> +	},
+>  };
+>  
+>  static int ad8366_write(struct iio_dev *indio_dev,
+> @@ -84,6 +90,9 @@ static int ad8366_write(struct iio_dev *indio_dev,
+>  	case ID_ADL5240:
+>  		st->data[0] = (ch_a & 0x3F);
+>  		break;
+> +	case ID_HMC1119:
+> +		st->data[0] = ch_a;
+> +		break;
+>  	}
+>  
+>  	ret = spi_write(st->spi, st->data, indio_dev->num_channels);
+> @@ -118,6 +127,9 @@ static int ad8366_read_raw(struct iio_dev *indio_dev,
+>  		case ID_ADL5240:
+>  			gain = 20000 - 31500 + code * 500;
+>  			break;
+> +		case ID_HMC1119:
+> +			gain = -1 * code * 250;
+> +			break;
+>  		}
+>  
+>  		/* Values in dB */
+> @@ -164,6 +176,9 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
+>  	case ID_ADL5240:
+>  		code = ((gain - 500 - 20000) / 500) & 0x3F;
+>  		break;
+> +	case ID_HMC1119:
+> +		code = (abs(gain) / 250) & 0x7F;
+> +		break;
+>  	}
+>  
+>  	mutex_lock(&st->lock);
+> @@ -246,6 +261,7 @@ static int ad8366_probe(struct spi_device *spi)
+>  		break;
+>  	case ID_ADA4961:
+>  	case ID_ADL5240:
+> +	case ID_HMC1119:
+>  		st->reset_gpio = devm_gpiod_get(&spi->dev, "reset",
+>  			GPIOD_OUT_HIGH);
+>  		indio_dev->channels = ada4961_channels;
+> @@ -298,6 +314,7 @@ static const struct spi_device_id ad8366_id[] = {
+>  	{"ad8366",  ID_AD8366},
+>  	{"ada4961", ID_ADA4961},
+>  	{"adl5240", ID_ADL5240},
+> +	{"hmc1119", ID_HMC1119},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, ad8366_id);
+
