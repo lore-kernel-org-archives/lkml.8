@@ -2,84 +2,114 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EB1C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE44BC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F2520722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1DE220722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:44:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="MXIwQKRt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgBUKob (ORCPT
+        id S1728049AbgBUKox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:44:31 -0500
-Received: from smtp21.cstnet.cn ([159.226.251.21]:52974 "EHLO cstnet.cn"
+        Fri, 21 Feb 2020 05:44:53 -0500
+Received: from mail-co1nam11on2066.outbound.protection.outlook.com ([40.107.220.66]:6255
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726325AbgBUKob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:44:31 -0500
-Received: from ubuntu.localdomain (unknown [183.131.110.113])
-        by APP-01 (Coremail) with SMTP id qwCowACXdzCQsU9eDiW+BA--.42124S2;
-        Fri, 21 Feb 2020 18:31:47 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     alex@digriz.org.uk, jason@lakedaemon.net, andrew@lunn.ch
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: orion5x: ts78xx: Remove unneeded variable ret
-Date:   Fri, 21 Feb 2020 18:31:41 +0800
-Message-Id: <20200221103141.3633-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: qwCowACXdzCQsU9eDiW+BA--.42124S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFW3uFWUAFykJrWUuF1DGFg_yoWfArcE9r
-        4Sgwn7WryfAF4j9r15G3Z3Gr17Ka4vqFs0gryqqwsxAr17Zw13urWDZwnxGry8WFy8Gr4S
-        qrZ7Ja4ak3ZrGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbwkYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8Jr0_Cr
-        1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF
-        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-        IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-        wI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU59jjPUUUUU==
-X-Originating-IP: [183.131.110.113]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAMNA1z4ixYqcgADsj
+        id S1726325AbgBUKox (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:44:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CN+BDGfLFMX9DVCCMIChGMkYdFBtxdJBOGIBf0JAcH95D3SX945cUL/j7tTVUDlYIMmj/SMN1tkBJIY9vPfxth2juoKOBtV+UUK5pVSEk0bXomfx17j7GU6H/fCpQv+ve1dhVRr84b5Y/CGUcGlLc3hz3vRlsxITNN6Z9lWXQbTweeS/htmhbnF90wSjWQBVZs7uFgs8MhE8bBxJAWTXYV5MyAtlPtoDdR8Xt2wYahKMhKMY3laD84GXNfT8tbkytI+c3MWm40sohI/Oe8TqpyDoDy547qC+cSO3Q8OVMzFeBmCyzJlqPaBMLsME/3752aVekt7ai47d1YQigJIpuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0yKMONHiuBf2VsFkqxQTxYQqMZfGxNuIOvHK8P9lq+Q=;
+ b=LcdyYEI23mOfjkni658aYNwRs9RCXY5NzobDudZayA37Ftrs5BNss6F+UbrNuOLXyRflUdAXTUWTUOycUYnMTUjT5ZsJofRYz9mWMCkKxTBp8hzzWyKB6qIbD/jHV3V2XTxM/GMk69dVz1Q3IdstV4YaVVjmZhmQnqfoxJGt62gc5J1V4VU4Pb4XV/VnVN9DVPClWGHcvCSQ/OiLng2i2iurejNpJhXKm32tnZj5sY5eidyIRu8OJV/upqzV2YNEVRQroZwSMvTsuH+yfiihSvT4HtiK5E3TP2GXEu8KOV8LvlYn37VHuf38lMnFfcFpNYGbrh4/aiXBbPlGfxXK7Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
+ dkim=pass header.d=silabs.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0yKMONHiuBf2VsFkqxQTxYQqMZfGxNuIOvHK8P9lq+Q=;
+ b=MXIwQKRtzbFDXl3nPhXMM4Lcs0uWKdBZFCmsW4FnArMotOqSgb9u0lhpDP2w/KCfgiiccAlzy3ADYQ9mSSv6b5XQ37xEzDpyFzgGjEgCgo1bh3vCg/q47Uy4St79c/ThWFHf9FKJVn1sgatuXNgUotH7ux8szpKQJ350hvxz2VE=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jerome.Pouiller@silabs.com; 
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com (2603:10b6:208:13f::22)
+ by MN2PR11MB4270.namprd11.prod.outlook.com (2603:10b6:208:18c::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.25; Fri, 21 Feb
+ 2020 10:44:49 +0000
+Received: from MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3]) by MN2PR11MB4063.namprd11.prod.outlook.com
+ ([fe80::ade4:5702:1c8b:a2b3%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
+ 10:44:48 +0000
+From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
+        <jerome.pouiller@silabs.com>
+Subject: [PATCH] mmc: core: Fix indentation
+Date:   Fri, 21 Feb 2020 11:43:41 +0100
+Message-Id: <20200221104341.583028-1-Jerome.Pouiller@silabs.com>
+X-Mailer: git-send-email 2.25.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-ClientProxiedBy: PR0P264CA0041.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1::29) To MN2PR11MB4063.namprd11.prod.outlook.com
+ (2603:10b6:208:13f::22)
+MIME-Version: 1.0
+Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0041.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2750.18 via Frontend Transport; Fri, 21 Feb 2020 10:44:47 +0000
+X-Mailer: git-send-email 2.25.0
+X-Originating-IP: [37.71.187.125]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3a3ceceb-db80-4fb3-f400-08d7b6bb12b1
+X-MS-TrafficTypeDiagnostic: MN2PR11MB4270:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MN2PR11MB427049C92D28EA398C65698993120@MN2PR11MB4270.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-Forefront-PRVS: 0320B28BE1
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(346002)(396003)(189003)(199004)(6666004)(52116002)(66476007)(478600001)(66556008)(316002)(4326008)(66946007)(2616005)(2906002)(7696005)(956004)(107886003)(4744005)(6916009)(5660300002)(16526019)(26005)(36756003)(1076003)(186003)(81156014)(86362001)(8676002)(81166006)(6486002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4270;H:MN2PR11MB4063.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: silabs.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nXcT6t3R5zoXFzL3+zcvs2j8UQQJ0dqzqo9g1yKFWon7H2zH9n2UWyBw2bHnBCvASwuzLkhNAqeZeJaxKf8/fXklBnspdpbDOza+CxNoOLICYqZ3OpxElNiimUB8INNI6e6cz654sM0XjmBH7EhkO0SXa8LsdEGe6Xr92m+g5fk4BUyg/7yhLE67UgQyz68JiAgty6TmbOAQa8Vv7icfpH9rbXQU/Kdmew9kgc5hG8IiMUapnl54uazMMoau5EsCnibviehfSabEw33i3BQCeW5mGlFUhqwB/9m/r2nmo8xcvRsOGT4iQBxrx2TlCd6LSS8WJCG0XiSVs/opf1UZBiZ+Ubp+6fz1xXXI0h1MD2nDlVzLYYvpOde8qlNktHS9SvZw8QZLgtgAgTunw8xhovXhRfAH8GberkVcBUEsyKFp+U9iPWfQi4CJ2snKYk78
+X-MS-Exchange-AntiSpam-MessageData: d2/b6EoSrF/kLaPhqH19ZtUMgXG5dQPeJmRuc/P7/7SDcTrbXTGuPKgRPMH2U7ix31FmpYfr/IaKzTpZp+3jBUhdwChfMaoeHER99TphHoXcEAuEV6OMyFhnQZOt3/xrifJquSjdzqb8K2fwxho9mw==
+X-OriginatorOrg: silabs.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a3ceceb-db80-4fb3-f400-08d7b6bb12b1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2020 10:44:48.9323
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HpHTaIlW64tTPvySDdrgJHIRU03Oc7y1NGOFdNyb5gVyXkby3V3iqy/X+HY8y+8kv1HUTqatySRkWfKUuFizXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4270
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded variable ret used to store return value,just return 0.
-
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- arch/arm/mach-orion5x/ts78xx-setup.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm/mach-orion5x/ts78xx-setup.c b/arch/arm/mach-orion5x/ts78xx-setup.c
-index fda9b75c3a33..a39764faf2a0 100644
---- a/arch/arm/mach-orion5x/ts78xx-setup.c
-+++ b/arch/arm/mach-orion5x/ts78xx-setup.c
-@@ -398,7 +398,6 @@ static int ts78xx_fpga_load_devices(void)
- 
- static int ts78xx_fpga_unload_devices(void)
- {
--	int ret = 0;
- 
- 	if (ts78xx_fpga.supports.ts_rtc.present == 1)
- 		ts78xx_ts_rtc_unload();
-@@ -407,7 +406,7 @@ static int ts78xx_fpga_unload_devices(void)
- 	if (ts78xx_fpga.supports.ts_rng.present == 1)
- 		ts78xx_ts_rng_unload();
- 
--	return ret;
-+	return 0;
- }
- 
- static int ts78xx_fpga_load(void)
--- 
-2.17.1
-
+RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKc2Rp
+b19zaW5nbGVfaXJxX3NldCgpIHdhcyBpbmRlbnRlZCB3aXRoIGEgbWl4IG9mIHRhYnMgYW5kIHNw
+YWNlcy4KClNpZ25lZC1vZmYtYnk6IErDqXLDtG1lIFBvdWlsbGVyIDxqZXJvbWUucG91aWxsZXJA
+c2lsYWJzLmNvbT4KLS0tCiBkcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMgfCAxMiArKysrKyst
+LS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvY29yZS9zZGlvX2lycS5jIGIvZHJpdmVycy9tbWMvY29y
+ZS9zZGlvX2lycS5jCmluZGV4IDkwMDg3MTA3M2JkNy4uZmFlMjVmYzY1Yjk1IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL21tYy9jb3JlL3NkaW9faXJxLmMKKysrIGIvZHJpdmVycy9tbWMvY29yZS9zZGlv
+X2lycS5jCkBAIC0yNzgsMTIgKzI3OCwxMiBAQCBzdGF0aWMgdm9pZCBzZGlvX3NpbmdsZV9pcnFf
+c2V0KHN0cnVjdCBtbWNfY2FyZCAqY2FyZCkKIAlpZiAoKGNhcmQtPmhvc3QtPmNhcHMgJiBNTUNf
+Q0FQX1NESU9fSVJRKSAmJgogCSAgICBjYXJkLT5ob3N0LT5zZGlvX2lycXMgPT0gMSkKIAkJZm9y
+IChpID0gMDsgaSA8IGNhcmQtPnNkaW9fZnVuY3M7IGkrKykgewotCQkgICAgICAgZnVuYyA9IGNh
+cmQtPnNkaW9fZnVuY1tpXTsKLQkJICAgICAgIGlmIChmdW5jICYmIGZ1bmMtPmlycV9oYW5kbGVy
+KSB7Ci0JCQkgICAgICAgY2FyZC0+c2Rpb19zaW5nbGVfaXJxID0gZnVuYzsKLQkJCSAgICAgICBi
+cmVhazsKLQkJICAgICAgIH0KLQkgICAgICAgfQorCQkJZnVuYyA9IGNhcmQtPnNkaW9fZnVuY1tp
+XTsKKwkJCWlmIChmdW5jICYmIGZ1bmMtPmlycV9oYW5kbGVyKSB7CisJCQkJY2FyZC0+c2Rpb19z
+aW5nbGVfaXJxID0gZnVuYzsKKwkJCQlicmVhazsKKwkJCX0KKwkJfQogfQogCiAvKioKLS0gCjIu
+MjUuMAoK
