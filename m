@@ -2,52 +2,54 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A364DC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0091DC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6CC246B3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7FC6246A6
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273517;
-	bh=vlf97Y1nqpYO4jMzzG3f0waHkPIn4KcjspbyRaKjCcQ=;
+	s=default; t=1582273521;
+	bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLZqw3AEnybcMEDE0crf6eE2bvkwaZLM90xrDz4FL7O/QExG5DWzV+iSBOeFIUxcF
-	 AxRIZyr6MONSAAN6nM4Pb+h0JJh+Duydds0Q2YFkXSaSGjDlBXN8q7bqbm5IolCCIe
-	 KQIhwKkz7PPRfSHBGdQui4KID0DWArrUcy1w5Kc8=
+	b=1gv8EftlNMUH5mm+UEBRQyDzR3Gly9NDhx31LIbIkozszzyaJvMeh/AV0MqRa0RdV
+	 P/U2RqzXZ0gND8eF9ADeL++1zqq4zhJ4OxX74RtmBzHkEcw1k4GJnbkEsumvU5S4wl
+	 /TKnoh4AigX+MQ5OML+Z0HYYdPV6pIokK5UKutPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388776AbgBUIZP (ORCPT
+        id S2388798AbgBUIZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37874 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:25:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388322AbgBUIZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:25:08 -0500
+        id S2388774AbgBUIZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:25:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0891E2469D;
-        Fri, 21 Feb 2020 08:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B728F246A6;
+        Fri, 21 Feb 2020 08:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273508;
-        bh=vlf97Y1nqpYO4jMzzG3f0waHkPIn4KcjspbyRaKjCcQ=;
+        s=default; t=1582273514;
+        bh=Ryr712IRyEGx3V2UFQBgJGfJ7BJcj/Aea1W03uMesHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PfAM9JD7RfBsDZdmkiXYYNVwkWhAf6IHl284j+7x+zWAe9cdXcQRKvXATsB9KAzN8
-         MNbT/cHw2/27nvRnjMRfNgzEWGcj20feATlOrCVDougsZhPu7vt4BAy/vOHPO+4J9/
-         HKfYWulk91SuEJ8Fv7/Fbi+1GxZqB1B9p6oLfyqo=
+        b=SNRIIrQfwrkAXX+fDNfRcmB+V2f0FlLLTHmqmPxcCBbwRVzElpmhSKV0MYr/6Nf4A
+         duHm9J8zHQxcN9qQCRoswfr/qSr8E9ndoYlbLpryJ0xCpSS/ofVZvWA1b2ADx9aNvv
+         ZJ8B2u4pUC3BT5ST/PQ6UY2K0I2q4xkLIMG8nGyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 173/191] ftrace: fpid_next() should increase position index
-Date:   Fri, 21 Feb 2020 08:42:26 +0100
-Message-Id: <20200221072311.466978394@linuxfoundation.org>
+Subject: [PATCH 4.19 165/191] hostap: Adjust indentation in prism2_hostapd_add_sta
+Date:   Fri, 21 Feb 2020 08:42:18 +0100
+Message-Id: <20200221072310.519216242@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,61 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit e4075e8bdffd93a9b6d6e1d52fabedceeca5a91b ]
+[ Upstream commit b61156fba74f659d0bc2de8f2dbf5bad9f4b8faf ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+Clang warns:
 
-Without patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- no pid
- 2+1 records in
- 2+1 records out
- 10 bytes copied, 0.000213285 s, 46.9 kB/s
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2511:3: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        if (sta->tx_supp_rates & WLAN_RATE_5M5)
+        ^
+../drivers/net/wireless/intersil/hostap/hostap_ap.c:2509:2: note:
+previous statement is here
+        if (sta->tx_supp_rates & WLAN_RATE_2M)
+        ^
+1 warning generated.
 
-Notice the "id" followed by "no pid".
+This warning occurs because there is a space before the tab on this
+line. Remove it so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
 
-With the patch:
- # dd bs=4 skip=1 if=/sys/kernel/tracing/set_ftrace_pid
- dd: /sys/kernel/tracing/set_ftrace_pid: cannot skip to specified offset
- id
- 0+1 records in
- 0+1 records out
- 3 bytes copied, 0.000202112 s, 14.8 kB/s
-
-Notice that it only prints "id" and not the "no pid" afterward.
-
-Link: http://lkml.kernel.org/r/4f87c6ad-f114-30bb-8506-c32274ce2992@virtuozzo.com
-
-https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: ff1d2767d5a4 ("Add HostAP wireless driver.")
+Link: https://github.com/ClangBuiltLinux/linux/issues/813
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 53795237e9751..0c379cd40bea3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6525,9 +6525,10 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
- 	struct trace_array *tr = m->private;
- 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
- 
--	if (v == FTRACE_NO_PIDS)
-+	if (v == FTRACE_NO_PIDS) {
-+		(*pos)++;
- 		return NULL;
--
-+	}
- 	return trace_pid_next(pid_list, v, pos);
- }
- 
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index 0094b1d2b5770..3ec46f48cfde1 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -2508,7 +2508,7 @@ static int prism2_hostapd_add_sta(struct ap_data *ap,
+ 		sta->supported_rates[0] = 2;
+ 	if (sta->tx_supp_rates & WLAN_RATE_2M)
+ 		sta->supported_rates[1] = 4;
+- 	if (sta->tx_supp_rates & WLAN_RATE_5M5)
++	if (sta->tx_supp_rates & WLAN_RATE_5M5)
+ 		sta->supported_rates[2] = 11;
+ 	if (sta->tx_supp_rates & WLAN_RATE_11M)
+ 		sta->supported_rates[3] = 22;
 -- 
 2.20.1
 
