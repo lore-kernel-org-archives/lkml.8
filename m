@@ -2,102 +2,204 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D06C35655
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7BDC35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155D7206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410B6206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582287682;
+	bh=SzoxK55YANU74un0mDIQMr1necinE4YKS3fCLL0An9w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nFSuWR3YFhk8hFNuv89sJ5WuCBQw4wLpsI+8WLLpP8OTtFVkkC2psfpY6P2dNsMKX
+	 C3F7W8rzP+8Wu9/8Pqy2NgTHhjiL7XlJOxhLmfaG756ZAfzUcUUd8Le1EKLM5SYFkp
+	 5NXdQcQip5LKIJN/R6oSQPoa3HVW5aZQP5sAzkXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgBUMUB (ORCPT
+        id S1727448AbgBUMVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:20:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:38146 "EHLO foss.arm.com"
+        Fri, 21 Feb 2020 07:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbgBUMUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:20:01 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C9BBD30E;
-        Fri, 21 Feb 2020 04:20:00 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F5BA3F68F;
-        Fri, 21 Feb 2020 04:19:58 -0800 (PST)
-Date:   Fri, 21 Feb 2020 12:19:56 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bhelgaas@google.com, robh+dt@kernel.org, andrew.murray@arm.com,
-        arnd@arndb.de, mark.rutland@arm.com, l.subrahmanya@mobiveil.co.in,
-        shawnguo@kernel.org, m.karthikeyan@mobiveil.co.in,
-        leoyang.li@nxp.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com, Xiaowei.Bao@nxp.com
-Subject: Re: [PATCHv10 00/13] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200221121956.GC12711@e121166-lin.cambridge.arm.com>
-References: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
+        id S1726410AbgBUMVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:21:21 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C80CF206EF;
+        Fri, 21 Feb 2020 12:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582287679;
+        bh=SzoxK55YANU74un0mDIQMr1necinE4YKS3fCLL0An9w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=m13QhdBWIn12Vi3xYU2a49RoFx7Rvr+z6V6DnAiXf1Lnl5XejsxtksYl2TfZ1ANW6
+         Yci5OPut3Sby3Gk0sBgACWsJ4nWz2ScHUj4YY3D+peI+6kXI24DMr5tM5QxwGFjSCS
+         xSuQLNZqgXIBv1956GNTe+/9EF3LYtpbzs0rz7K8=
+Date:   Fri, 21 Feb 2020 12:21:15 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/5] iio: buffer-dmaengine: add dev-managed calls for
+ buffer alloc/free
+Message-ID: <20200221122115.48d8ca90@archlinux>
+In-Reply-To: <20200220150317.1864-1-alexandru.ardelean@analog.com>
+References: <20200220150317.1864-1-alexandru.ardelean@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200213040644.45858-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 12:06:31PM +0800, Zhiqiang Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch set is to recode the Mobiveil driver and add
-> PCIe support for NXP Layerscape series SoCs integrated
-> Mobiveil's PCIe Gen4 controller.
-> 
-> Hou Zhiqiang (13):
->   PCI: mobiveil: Introduce a new structure mobiveil_root_port
->   PCI: mobiveil: Move the host initialization into a function
->   PCI: mobiveil: Collect the interrupt related operations into a
->     function
->   PCI: mobiveil: Modularize the Mobiveil PCIe Host Bridge IP driver
->   PCI: mobiveil: Add callback function for interrupt initialization
->   PCI: mobiveil: Add callback function for link up check
->   PCI: mobiveil: Allow mobiveil_host_init() to be used to re-init host
->   PCI: mobiveil: Add 8-bit and 16-bit CSR register accessors
->   PCI: mobiveil: Add Header Type field check
->   dt-bindings: PCI: Add NXP Layerscape SoCs PCIe Gen4 controller
->   PCI: mobiveil: Add PCIe Gen4 RC driver for NXP Layerscape SoCs
->   arm64: dts: lx2160a: Add PCIe controller DT nodes
->   arm64: defconfig: Enable CONFIG_PCIE_LAYERSCAPE_GEN4
-> 
->  .../bindings/pci/layerscape-pcie-gen4.txt     |  52 ++
->  MAINTAINERS                                   |  10 +-
->  .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 +++++
->  arch/arm64/configs/defconfig                  |   1 +
->  drivers/pci/controller/Kconfig                |  11 +-
->  drivers/pci/controller/Makefile               |   2 +-
->  drivers/pci/controller/mobiveil/Kconfig       |  33 +
->  drivers/pci/controller/mobiveil/Makefile      |   5 +
->  .../mobiveil/pcie-layerscape-gen4.c           | 267 +++++++++
->  .../pcie-mobiveil-host.c}                     | 564 ++++--------------
->  .../controller/mobiveil/pcie-mobiveil-plat.c  |  61 ++
->  .../pci/controller/mobiveil/pcie-mobiveil.c   | 230 +++++++
->  .../pci/controller/mobiveil/pcie-mobiveil.h   | 226 +++++++
->  13 files changed, 1170 insertions(+), 455 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/layerscape-pcie-gen4.txt
->  create mode 100644 drivers/pci/controller/mobiveil/Kconfig
->  create mode 100644 drivers/pci/controller/mobiveil/Makefile
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c
->  rename drivers/pci/controller/{pcie-mobiveil.c => mobiveil/pcie-mobiveil-host.c} (54%)
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil-plat.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.c
->  create mode 100644 drivers/pci/controller/mobiveil/pcie-mobiveil.h
+On Thu, 20 Feb 2020 17:03:13 +0200
+Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
 
-I dropped the last two patches since they must be re-routed via arm-soc
-(defconfig update and dts), I tweaked most of commit logs and applied
-the series to pci/mobiveil, please check everything is in order.
+> Currently, when using a 'iio_dmaengine_buffer_alloc()', an matching call =
+to
+> 'iio_dmaengine_buffer_free()' must be made.
+>=20
+> With this change, this can be avoided by using
+> 'devm_iio_dmaengine_buffer_alloc()'. The buffer will get free'd via the
+> device's devres handling.
+>=20
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  .../buffer/industrialio-buffer-dmaengine.c    | 70 +++++++++++++++++++
+>  include/linux/iio/buffer-dmaengine.h          |  5 ++
+>  2 files changed, 75 insertions(+)
+>=20
+> diff --git a/drivers/iio/buffer/industrialio-buffer-dmaengine.c b/drivers=
+/iio/buffer/industrialio-buffer-dmaengine.c
+> index b129693af0fd..eff89037e3f5 100644
+> --- a/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+> +++ b/drivers/iio/buffer/industrialio-buffer-dmaengine.c
+> @@ -229,6 +229,76 @@ void iio_dmaengine_buffer_free(struct iio_buffer *bu=
+ffer)
+>  }
+>  EXPORT_SYMBOL_GPL(iio_dmaengine_buffer_free);
+> =20
+> +static void __devm_iio_dmaengine_buffer_free(struct device *dev, void *r=
+es)
+> +{
+> +	iio_dmaengine_buffer_free(*(struct iio_buffer **)res);
+> +}
+> +
+> +/**
+> + * devm_iio_dmaengine_buffer_alloc() - Resource-managed iio_dmaengine_bu=
+ffer_alloc()
+> + * @dev: Parent device for the buffer
+> + * @channel: DMA channel name, typically "rx".
+> + *
+> + * This allocates a new IIO buffer which internally uses the DMAengine f=
+ramework
+> + * to perform its transfers. The parent device will be used to request t=
+he DMA
+> + * channel.
+> + *
+> + * Once done using the buffer iio_dmaengine_buffer_free() should be used=
+ to
+> + * release it.
+
+Umm.  It really shouldn't!
+
+> + */
+> +struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
+> +	const char *channel)
+> +{
+> +	struct iio_buffer **bufferp, *buffer;
+> +
+> +	bufferp =3D devres_alloc(__devm_iio_dmaengine_buffer_free,
+> +			       sizeof(*bufferp), GFP_KERNEL);
+> +	if (!bufferp)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	buffer =3D iio_dmaengine_buffer_alloc(dev, channel);
+> +	if (!IS_ERR(buffer)) {
+> +		*bufferp =3D buffer;
+> +		devres_add(dev, bufferp);
+
+=46rom a flow point of view I'd prefer.
+
+	if (IS_ERR(buffer) {
+		devres_free(buferp)
+		return buffer;
+	}
+
+	*bufferp =3D buffer;
+	devres_add(dev, bufferp);
+
+	return buffer;
+
+
+> +	} else {
+> +		devres_free(bufferp);
+> +	}
+> +
+> +	return buffer;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_alloc);
+> +
+> +static int devm_iio_dmaengine_buffer_match(struct device *dev, void *res,
+> +	void *data)
+> +{
+> +	struct iio_buffer **r =3D res;
+> +
+> +	if (!r || !*r) {
+> +		WARN_ON(!r || !*r);
+> +		return 0;
+> +	}
+> +
+> +	return *r =3D=3D data;
+> +}
+> +
+> +/**
+> + * devm_iio_dmaengine_buffer_free - iio_dmaengine_buffer_free
+> + * @dev: Device this iio_buffer belongs to
+> + * @buffer: The iio_buffer associated with the device
+> + *
+> + * Free buffer allocated with devm_iio_dmaengine_buffer_alloc().
+> + */
+> +void devm_iio_dmaengine_buffer_free(struct device *dev,
+> +	struct iio_buffer *buffer)
+> +{
+> +	int rc;
+> +
+> +	rc =3D devres_release(dev, __devm_iio_dmaengine_buffer_free,
+> +			    devm_iio_dmaengine_buffer_match, buffer);
+> +	WARN_ON(rc);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_iio_dmaengine_buffer_free);
+> +
+>  MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
+>  MODULE_DESCRIPTION("DMA buffer for the IIO framework");
+>  MODULE_LICENSE("GPL");
+> diff --git a/include/linux/iio/buffer-dmaengine.h b/include/linux/iio/buf=
+fer-dmaengine.h
+> index b3a57444a886..8dcd973d76c1 100644
+> --- a/include/linux/iio/buffer-dmaengine.h
+> +++ b/include/linux/iio/buffer-dmaengine.h
+> @@ -14,4 +14,9 @@ struct iio_buffer *iio_dmaengine_buffer_alloc(struct de=
+vice *dev,
+>  	const char *channel);
+>  void iio_dmaengine_buffer_free(struct iio_buffer *buffer);
+> =20
+> +struct iio_buffer *devm_iio_dmaengine_buffer_alloc(struct device *dev,
+> +	const char *channel);
+> +void devm_iio_dmaengine_buffer_free(struct device *dev,
+> +	struct iio_buffer *buffer);
+Please align parameters with opening bracket where possible.
 
 Thanks,
-Lorenzo
+
+Jonathan
+
+> +
+>  #endif
+
