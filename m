@@ -2,52 +2,54 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE720C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745E6C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9245520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8B0222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272543;
-	bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+	s=default; t=1582272547;
+	bh=teUobBFCXUBEpKpDbbEGdq0BcRMk1aP5qnU0nEch0KU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eXCCAuPZ6zRxlnHn6MuruNPhEDOTDRABSy1X4sCRhVYXznW7/+imYizffJ4QGtysi
-	 sz/fIRT4FJHVss7ednWGwfVpY6U0tFw7IFvw5KYuKkk6BmNOGUJ4VK3gYuJukrZL75
-	 psQsEYohRM6erVS5YCmeIBG6NwJc0lGFjL5dAhy0=
+	b=IdmXt/TgpINgmVi4Oy3m8kVSd9F2blbUFrbv0JWdYh4848iU5U4l4oRCeEOFZ+Nkm
+	 CIqovQaJowQjeUJwJXxIdCxyIFzNnZwoqtLLGqxZi5b6bEERo7DIEew3B6tq8lS3sP
+	 z1wTgq0Ga9OKuelNKHjhedsRFz0ApklLCqAEX19M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbgBUIJB (ORCPT
+        id S1732298AbgBUIJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:09:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43668 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:09:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732279AbgBUII6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:58 -0500
+        id S1732284AbgBUIJB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:09:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A76620722;
-        Fri, 21 Feb 2020 08:08:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6BBC222C4;
+        Fri, 21 Feb 2020 08:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272537;
-        bh=KuEgsFhctq+NMX/iGUxTFyaBIdZHanXPB/FL5E3J6L8=;
+        s=default; t=1582272540;
+        bh=teUobBFCXUBEpKpDbbEGdq0BcRMk1aP5qnU0nEch0KU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9Zi+z6nGRkJLo0UgQg+CDSK/5ZVQkhBkoWY1XMOsM+BWJykVubfXsjDGT2UcM6cb
-         i0DMpCfg1TqygnTHtcoIdnzjfajKyo+6YHGf9+VNyUt4PGUHx1B/HRdVu0UhWVgGLx
-         eVUFY4Ui2C6eBALwcuYMdwss/gC8MRFxX/owHNGA=
+        b=ma16ei1uLtk6T9vJAjlCcWNPBgnGK3ocPVMaboKxj6MlgS4bUI4MLrciOXMVeflYX
+         o0KLoXVBUb1euFDXbaYXv0W4MjrCek8IasaPI4USUezQy+RBYVtTm9k+8Yjjffhj5U
+         jgo5Z7eVAPmENZVT0wqkzNz3I7IevmqnIPPGBs3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Elia Geretto <elia.f.geretto@gmail.com>,
+        Bob Moore <robert.moore@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 179/344] net: phy: fixed_phy: fix use-after-free when checking link GPIO
-Date:   Fri, 21 Feb 2020 08:39:38 +0100
-Message-Id: <20200221072405.222419056@linuxfoundation.org>
+Subject: [PATCH 5.4 144/344] ACPICA: Disassembler: create buffer fields in ACPI_PARSE_LOAD_PASS1
+Date:   Fri, 21 Feb 2020 08:39:03 +0100
+Message-Id: <20200221072401.882481704@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,45 +62,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-[ Upstream commit d266f19f3ae7fbcaf92229639b78d2110ae44f33 ]
+[ Upstream commit 5ddbd77181dfca61b16d2e2222382ea65637f1b9 ]
 
-If we fail to locate GPIO for any reason other than deferral or
-not-found-GPIO, we try to print device tree node info, however if might
-be freed already as we called of_node_put() on it.
+ACPICA commit 29cc8dbc5463a93625bed87d7550a8bed8913bf4
 
-Acked-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+create_buffer_field is a deferred op that is typically processed in
+load pass 2. However, disassembly of control method contents walk the
+parse tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are
+processed in a later walk. This is a problem when there is a control
+method that has the same name as the AML_CREATE object. In this case,
+any use of the name segment will be detected as a method call rather
+than a reference to a buffer field. If this is detected as a method
+call, it can result in a mal-formed parse tree if the control methods
+have parameters.
+
+This change in processing AML_CREATE ops earlier solves this issue by
+inserting the named object in the ACPI namespace so that references
+to this name would be detected as a name string rather than a method
+call.
+
+Link: https://github.com/acpica/acpica/commit/29cc8dbc
+Reported-by: Elia Geretto <elia.f.geretto@gmail.com>
+Tested-by: Elia Geretto <elia.f.geretto@gmail.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/fixed_phy.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/acpi/acpica/dsfield.c |  2 +-
+ drivers/acpi/acpica/dswload.c | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/fixed_phy.c b/drivers/net/phy/fixed_phy.c
-index 7c5265fd2b94d..4190f9ed5313d 100644
---- a/drivers/net/phy/fixed_phy.c
-+++ b/drivers/net/phy/fixed_phy.c
-@@ -212,16 +212,13 @@ static struct gpio_desc *fixed_phy_get_gpiod(struct device_node *np)
- 	 */
- 	gpiod = gpiod_get_from_of_node(fixed_link_node, "link-gpios", 0,
- 				       GPIOD_IN, "mdio");
--	of_node_put(fixed_link_node);
--	if (IS_ERR(gpiod)) {
--		if (PTR_ERR(gpiod) == -EPROBE_DEFER)
--			return gpiod;
--
-+	if (IS_ERR(gpiod) && PTR_ERR(gpiod) != -EPROBE_DEFER) {
- 		if (PTR_ERR(gpiod) != -ENOENT)
- 			pr_err("error getting GPIO for fixed link %pOF, proceed without\n",
- 			       fixed_link_node);
- 		gpiod = NULL;
- 	}
-+	of_node_put(fixed_link_node);
+diff --git a/drivers/acpi/acpica/dsfield.c b/drivers/acpi/acpica/dsfield.c
+index cf4e061bb0f0b..8438e33aa4474 100644
+--- a/drivers/acpi/acpica/dsfield.c
++++ b/drivers/acpi/acpica/dsfield.c
+@@ -244,7 +244,7 @@ cleanup:
+  * FUNCTION:    acpi_ds_get_field_names
+  *
+  * PARAMETERS:  info            - create_field info structure
+- *  `           walk_state      - Current method state
++ *              walk_state      - Current method state
+  *              arg             - First parser arg for the field name list
+  *
+  * RETURN:      Status
+diff --git a/drivers/acpi/acpica/dswload.c b/drivers/acpi/acpica/dswload.c
+index c88fd31208a5b..4bcf15bf03ded 100644
+--- a/drivers/acpi/acpica/dswload.c
++++ b/drivers/acpi/acpica/dswload.c
+@@ -410,6 +410,27 @@ acpi_status acpi_ds_load1_end_op(struct acpi_walk_state *walk_state)
+ 	ACPI_DEBUG_PRINT((ACPI_DB_DISPATCH, "Op=%p State=%p\n", op,
+ 			  walk_state));
  
- 	return gpiod;
- }
++	/*
++	 * Disassembler: handle create field operators here.
++	 *
++	 * create_buffer_field is a deferred op that is typically processed in load
++	 * pass 2. However, disassembly of control method contents walk the parse
++	 * tree with ACPI_PARSE_LOAD_PASS1 and AML_CREATE operators are processed
++	 * in a later walk. This is a problem when there is a control method that
++	 * has the same name as the AML_CREATE object. In this case, any use of the
++	 * name segment will be detected as a method call rather than a reference
++	 * to a buffer field.
++	 *
++	 * This earlier creation during disassembly solves this issue by inserting
++	 * the named object in the ACPI namespace so that references to this name
++	 * would be a name string rather than a method call.
++	 */
++	if ((walk_state->parse_flags & ACPI_PARSE_DISASSEMBLE) &&
++	    (walk_state->op_info->flags & AML_CREATE)) {
++		status = acpi_ds_create_buffer_field(op, walk_state);
++		return_ACPI_STATUS(status);
++	}
++
+ 	/* We are only interested in opcodes that have an associated name */
+ 
+ 	if (!(walk_state->op_info->flags & (AML_NAMED | AML_FIELD))) {
 -- 
 2.20.1
 
