@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA783C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5B7C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02352469C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17C72467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273364;
-	bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+	s=default; t=1582273369;
+	bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vJQKPrF3WBLhpeBUzTR65detNVK0pv12MpiGeFLqQQrDUtZu+2VYMJYAijq9iK0cC
-	 jKibLBEx1TXgy+QbEY7yh4ciGuGz6hz/Oo+dObpinD7YkLrFfIusAmIHh3/e/VKx2F
-	 yB58ZlWursDh5PAEu7D8sl3qOMJJEwuqDWElzwtc=
+	b=EsrNTt+PBV56vgBESJSaHD6TFa71V+aHxB8mxq1y0UHvUAlOhTmQhy54QIODOSvSN
+	 lxBupajfquVfYTSkN5QXyUl8QRLMME2IC1XtlvhOepcYabKqnyUMN+82FjBFldz0R1
+	 3Le2Wd/kXRv9BMLy8WVN7xvSalKeq0+ifOeeM/So=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388360AbgBUIWn (ORCPT
+        id S2388367AbgBUIWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34324 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:22:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388343AbgBUIWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:40 -0500
+        id S2388199AbgBUIWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CA782467D;
-        Fri, 21 Feb 2020 08:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE80A222C4;
+        Fri, 21 Feb 2020 08:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273359;
-        bh=rjrhQW09Vso9tajVY7leCL9tNge/xnc21nLf2tfe578=;
+        s=default; t=1582273362;
+        bh=Wt3NAeACM4K4qNvn/QVuLHb67CRV4buzK2nKtMV9C+Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qf6AY+0V9YVE/qIdl/dSTcOVOErmJoH9f/OFJx8EGVbqzktNEfBlJYAugt5jqMIwz
-         1JjOxL93eeCuGxW7bDGQird/fwqdmlMGgHebM9EtxTWQVFW9delfBjjCGWFq7D6J3B
-         tOh2RUFlTYPFE1M7JCBacTkKGtp0gguOxVv+JKa0=
+        b=Y/jwv5a/R3bpuZzDAd4Rj/lHNGsCWMIB3E31yGfm2Qe3mRj4//OUY+IcN+tpt0w76
+         uIGXSI/mUn3z2YVCMwy1Dq7a3rEsfvkQasOuAmKDG0nXDjoTPrG85G9WW7r8vvC0rh
+         F9MrlM0WZ6rvab0sQ8XhG0svWbonVZtUBJqkS7wg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 142/191] ide: serverworks: potential overflow in svwks_set_pio_mode()
-Date:   Fri, 21 Feb 2020 08:41:55 +0100
-Message-Id: <20200221072307.706109376@linuxfoundation.org>
+Subject: [PATCH 4.19 143/191] pwm: Remove set but not set variable pwm
+Date:   Fri, 21 Feb 2020 08:41:56 +0100
+Message-Id: <20200221072307.804170047@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,43 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: yu kuai <yukuai3@huawei.com>
 
-[ Upstream commit ce1f31b4c0b9551dd51874dd5364654ed4ca13ae ]
+[ Upstream commit 9871abffc81048e20f02e15d6aa4558a44ad53ea ]
 
-The "drive->dn" variable is a u8 controlled by root.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	drivers/pwm/pwm-pca9685.c: In function ‘pca9685_pwm_gpio_free’:
+	drivers/pwm/pwm-pca9685.c:162:21: warning: variable ‘pwm’ set but not used [-Wunused-but-set-variable]
+
+It is never used, and so can be removed. In that case, hold and release
+the lock 'pca->lock' can be removed since nothing will be done between
+them.
+
+Fixes: e926b12c611c ("pwm: Clear chip_data in pwm_put()")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ide/serverworks.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pwm/pwm-pca9685.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/ide/serverworks.c b/drivers/ide/serverworks.c
-index a97affca18abe..0f57d45484d1d 100644
---- a/drivers/ide/serverworks.c
-+++ b/drivers/ide/serverworks.c
-@@ -114,6 +114,9 @@ static void svwks_set_pio_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 	struct pci_dev *dev = to_pci_dev(hwif->dev);
- 	const u8 pio = drive->pio_mode - XFER_PIO_0;
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index 567f5e2771c47..e1e5dfcb16f36 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -170,13 +170,9 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
+ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
+ {
+ 	struct pca9685 *pca = gpiochip_get_data(gpio);
+-	struct pwm_device *pwm;
  
-+	if (drive->dn >= ARRAY_SIZE(drive_pci))
-+		return;
-+
- 	pci_write_config_byte(dev, drive_pci[drive->dn], pio_modes[pio]);
+ 	pca9685_pwm_gpio_set(gpio, offset, 0);
+ 	pm_runtime_put(pca->chip.dev);
+-	mutex_lock(&pca->lock);
+-	pwm = &pca->chip.pwms[offset];
+-	mutex_unlock(&pca->lock);
+ }
  
- 	if (svwks_csb_check(dev)) {
-@@ -140,6 +143,9 @@ static void svwks_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
- 
- 	u8 ultra_enable	 = 0, ultra_timing = 0, dma_timing = 0;
- 
-+	if (drive->dn >= ARRAY_SIZE(drive_pci2))
-+		return;
-+
- 	pci_read_config_byte(dev, (0x56|hwif->channel), &ultra_timing);
- 	pci_read_config_byte(dev, 0x54, &ultra_enable);
- 
+ static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,
 -- 
 2.20.1
 
