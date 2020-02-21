@@ -2,105 +2,144 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9E9C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3741C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3B720679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:35:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274156;
-	bh=eZh0i0gIregeCPldQnezjgGWqhzibJDxeHddPP7JMnI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvgIAcgwy0icaNz1rCZVZGLMuiMbUvvKSIa6CFLXRoW7elL8RtRk7okMq06So7DHV
-	 iVuqZ+PlslQHfFlEYGRcGC0kelwrcyrcmux2q1QldkcUaeaqgImQkVDTndYeIe8SSD
-	 vrbf7XXnRhJsnWyGctCt/qpVOLtAuxAES3WDXxFQ=
+	by mail.kernel.org (Postfix) with ESMTP id A57E920679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:36:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z2GvPJvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgBUIGv (ORCPT
+        id S1732985AbgBUIf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731977AbgBUIGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:42 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 21 Feb 2020 03:35:58 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29048 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731974AbgBUIGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582272408;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nZPMKkDRpIygusMljWBR/rOUYIWd4dKR+JmAgMAgsbA=;
+        b=Z2GvPJvRkWsfuiiAD27KB6TojxSjhRQp9S9Av5hbeOWTA4eru/Ntys8T8U3ZjjGUVGKFyo
+        LK4BLomJMkfe1UkZOHpR15hsVBTaTZVlHPXsg0kARuVsP4OXebVj1B5visGXu4zEsUj1Hb
+        3Lks0tO/7IUluBqN0C2ELNogBuAfwuA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-db6s2tGWP_mUlg7iG2WDtg-1; Fri, 21 Feb 2020 03:06:47 -0500
+X-MC-Unique: db6s2tGWP_mUlg7iG2WDtg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 864FE2465D;
-        Fri, 21 Feb 2020 08:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272402;
-        bh=eZh0i0gIregeCPldQnezjgGWqhzibJDxeHddPP7JMnI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsPaf/ItEMTKYsBt7K1+zouphu2gX3ai6ISsLTDGYP/tIgwqk9t64ORX9KfYC5HN7
-         +BD3SUbn8t/HW+A5m549r3K8iTcHSLi8/6gDf8LOPpxCJrgS3QkJkp+EDpSJlMMBea
-         njI2qzo1GZLsIk0U0Xu/mxvwb72P2lc0rTiDUVyw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/344] r8169: check that Realtek PHY driver module is loaded
-Date:   Fri, 21 Feb 2020 08:38:48 +0100
-Message-Id: <20200221072400.571282819@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247D0107ACCA;
+        Fri, 21 Feb 2020 08:06:44 +0000 (UTC)
+Received: from [10.72.13.208] (ovpn-13-208.pek2.redhat.com [10.72.13.208])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A64978B740;
+        Fri, 21 Feb 2020 08:06:25 +0000 (UTC)
+Subject: Re: [PATCH V4 4/5] virtio: introduce a vDPA based transport
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     "mst@redhat.com" <mst@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "aadam@redhat.com" <aadam@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Shahaf Shuler <shahafs@mellanox.com>,
+        "hanand@xilinx.com" <hanand@xilinx.com>,
+        "mhabets@solarflare.com" <mhabets@solarflare.com>
+References: <20200220061141.29390-1-jasowang@redhat.com>
+ <20200220061141.29390-5-jasowang@redhat.com>
+ <20200220151914.GW23930@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d6d910bb-8431-7e95-8808-9ed2d6ec9211@redhat.com>
+Date:   Fri, 21 Feb 2020 16:06:24 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200220151914.GW23930@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
 
-[ Upstream commit f325937735498afb054a0195291bbf68d0b60be5 ]
-
-Some users complained about problems with r8169 and it turned out that
-the generic PHY driver was used instead instead of the dedicated one.
-In all cases reason was that r8169.ko was in initramfs, but realtek.ko
-not. Manually adding realtek.ko to initramfs fixed the issues.
-Root cause seems to be that tools like dracut and genkernel don't
-consider softdeps. Add a check for loaded Realtek PHY driver module
-and provide the user with a hint if it's not loaded.
-
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/realtek/r8169_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-index 5ae0b5663d540..a2cef6a004e73 100644
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -7064,6 +7064,15 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	int chipset, region;
- 	int jumbo_max, rc;
- 
-+	/* Some tools for creating an initramfs don't consider softdeps, then
-+	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
-+	 * PHY driver is used that doesn't work with most chip versions.
-+	 */
-+	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
-+		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
-+		return -ENOENT;
-+	}
-+
- 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
- 	if (!dev)
- 		return -ENOMEM;
--- 
-2.20.1
+On 2020/2/20 =E4=B8=8B=E5=8D=8811:19, Jason Gunthorpe wrote:
+> On Thu, Feb 20, 2020 at 02:11:40PM +0800, Jason Wang wrote:
+>> +static int virtio_vdpa_probe(struct vdpa_device *vdpa)
+>> +{
+>> +	const struct vdpa_config_ops *ops =3D vdpa->config;
+>> +	struct virtio_vdpa_device *vd_dev;
+>> +	int ret =3D -EINVAL;
+>> +
+>> +	vd_dev =3D kzalloc(sizeof(*vd_dev), GFP_KERNEL);
+>> +	if (!vd_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	vd_dev->vdev.dev.parent =3D vdpa_get_dma_dev(vdpa);
+>> +	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
+>> +	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
+>> +	vd_dev->vdpa =3D vdpa;
+>> +	INIT_LIST_HEAD(&vd_dev->virtqueues);
+>> +	spin_lock_init(&vd_dev->lock);
+>> +
+>> +	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
+>> +	if (vd_dev->vdev.id.device =3D=3D 0)
+>> +		goto err;
+>> +
+>> +	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
+>> +	ret =3D register_virtio_device(&vd_dev->vdev);
+>> +	if (ret)
+>> +		goto err;
+> This error unwind is wrong. register_virtio_device() does
+> device_initialize() as it's first action. After that point error
+> unwind must be done with put_device() - particularly calling
+> kfree(vd_dev) after doing dev_set_name() leaks memory.
 
 
+Exactly.
+
+
+>
+> Looks like about half of the register_virtio_device() users did this
+> right, the others not. Perhaps you should fix them too...
+>
+> Jason
+
+
+Will do.
+
+Thanks
+
+
+>
 
