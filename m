@@ -2,60 +2,131 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A5EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B9CC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B754207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65AB207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgBUJp3 (ORCPT
+        id S1728152AbgBUJqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:45:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:35226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726244AbgBUJp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:45:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 261F831B;
-        Fri, 21 Feb 2020 01:45:28 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E2AC3F68F;
-        Fri, 21 Feb 2020 01:45:26 -0800 (PST)
-Subject: Re: [PATCH v3 4/5] sched/pelt: Add a new runnable average signal
-To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
-        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
-Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
-        hdanton@sina.com
-References: <20200214152729.6059-5-vincent.guittot@linaro.org>
- <20200219125513.8953-1-vincent.guittot@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <e6b4bcbb-82a2-137f-8801-bab561cb7343@arm.com>
-Date:   Fri, 21 Feb 2020 10:44:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 04:46:09 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40007 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728080AbgBUJqJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:46:09 -0500
+Received: by mail-ot1-f68.google.com with SMTP id i6so1454151otr.7;
+        Fri, 21 Feb 2020 01:46:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q+uBU7L8RtfoD9SLjOzf0Rj4Gw7Zsw7mjIUjKd/bLlA=;
+        b=eEtP4yfJN9tAMzt4hNdO7woE20WkXq5gQ2E7ttq3s4VtpHzo5mFyYSi3HY6whbt+rm
+         oOYNdwPyXpJ+hGASyof4DhdRP687Dbvld3VcUWS0RLschBpk87DE5CwLQnkRTL5btsje
+         2mpnzVhIPrXCngouk1o/Eyh2AkfBBSsuLa3sPFmgns/x6G+tJyE4/O1eVD85CMRpDp+0
+         RHXcS0Fejv/H4xDTfqcleGPezJawUqipVhq14BEYobQIQuQVlmX3oIkRfUkdA2w8kG3d
+         hj8Qyvu7RISZWLytnOWI+YM+QrZqc/m21hzDaddoHME/1AmOhhCn4SwPXpAtDUzBxNPU
+         SuYg==
+X-Gm-Message-State: APjAAAX+aoFwd7cEdbA6hqbcGRT+yzkVg89CQCqpDrhJ9br5y31okBa8
+        9ZOlin72KsoFACIhlH6yKNwcikiZJpa11CMTqalpVg==
+X-Google-Smtp-Source: APXvYqzHAA/ed2jeLWXuh4z7co4qvtSPYestcYmLDnJ4+FLkiCB9VRH2RECFnS6fJXo92EVQSWytPJR5zyzfcKJeHHo=
+X-Received: by 2002:a9d:7602:: with SMTP id k2mr27652055otl.39.1582278368260;
+ Fri, 21 Feb 2020 01:46:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200219125513.8953-1-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200220172403.26062-4-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Feb 2020 10:45:57 +0100
+Message-ID: <CAMuHMdWaPfc050dZiRr+gAFzsdjSo9Vo70ztWgrMGPJxLUqupw@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/7] i2c: allow DT nodes without 'compatible'
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/02/2020 13:55, Vincent Guittot wrote:
+Hi Wolfram,
 
-[...]
+On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Sometimes, we have unknown devices in a system and still want to block
+> their address. For that, we allow DT nodes with only a 'reg' property.
+> These devices will be bound to the "dummy" driver but with the name
+> "reserved". That way, we can distinguish them and even hand them over to
+> the "dummy" driver later when they are really requested using
+> i2c_new_ancillary_device().
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> +static inline long se_runnable(struct sched_entity *se)
-> +{
+Thanks for your patch!
 
-Why returning long here? sched_entity::runnable_weight is unsigned long
-but could be unsigned int (cfs_rq::h_nr_running is unsigned int).
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+but one question below.
 
-___update_load_sum() has 'unsigned long runnable' as parameter.
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -50,7 +50,6 @@ Examples:
+>                 reg-io-width = <1>;     /* 8 bit read/write */
+>
+>                 dummy@60 {
+> -                       compatible = "dummy";
+>                         reg = <0x60>;
+>                 };
+>         };
+
+There's a second instance to remove 18 lines below.
+
+> --- a/drivers/i2c/i2c-core-of.c
+> +++ b/drivers/i2c/i2c-core-of.c
+> @@ -27,17 +27,15 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
+>
+>         memset(info, 0, sizeof(*info));
+>
+> -       if (of_modalias_node(node, info->type, sizeof(info->type)) < 0) {
+> -               dev_err(dev, "of_i2c: modalias failure on %pOF\n", node);
+> -               return -EINVAL;
+> -       }
+> -
+>         ret = of_property_read_u32(node, "reg", &addr);
+>         if (ret) {
+>                 dev_err(dev, "of_i2c: invalid reg on %pOF\n", node);
+>                 return ret;
+>         }
+>
+> +       if (of_modalias_node(node, info->type, sizeof(info->type)) < 0)
+> +               strlcpy(info->type, I2C_RESERVED_DRV_NAME, sizeof(I2C_RESERVED_DRV_NAME));
+
+Could this cause a regression, e.g. if people already have such dummy
+nodes in their DTS, and use sysfs new_device from userspace to
+instantiate the device later?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
