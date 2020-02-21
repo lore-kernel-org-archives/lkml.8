@@ -2,117 +2,141 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C6CC35659
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2693BC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E5D3222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCB4208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:36:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXtayFz7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7JCJhFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgBURc6 (ORCPT
+        id S1726829AbgBURgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:32:58 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57284 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726082AbgBURc5 (ORCPT
+        Fri, 21 Feb 2020 12:36:19 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:37524 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgBURgT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:32:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582306376;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=o96Yvzi87DPePCMyKdFlIusrR00b35JbPu9d8slr560=;
-        b=aXtayFz7oDLrtuZJ+w0OlOjX68eTYuW+goE4UL0e3dRX49/AzAj7JLe+nVcYcZcLDcYFT9
-        ZI3krBdLn2WCKkWA1bvCSvXSHOErP/i+55lqcOh9C0cqQoiXQ+thf/PZhCffNpXAA7NDM3
-        D3Gu//70az2lDvq98rqOYtUKQ5WMmPs=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-DVqGwWi5N-ie9CRVQ2YvHw-1; Fri, 21 Feb 2020 12:32:54 -0500
-X-MC-Unique: DVqGwWi5N-ie9CRVQ2YvHw-1
-Received: by mail-wm1-f69.google.com with SMTP id b205so907599wmh.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:32:54 -0800 (PST)
+        Fri, 21 Feb 2020 12:36:19 -0500
+Received: by mail-pj1-f65.google.com with SMTP id m13so1060279pjb.2;
+        Fri, 21 Feb 2020 09:36:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xCuUVG8i9sUDnafZb9V7mQjHX9/dckJtwGg3rmaaHo4=;
+        b=I7JCJhFZz8SRs2jNQKKGxgwzmYk7nx4qwqEm8xoUGhzbEX+jz77yNShT8//TUNew7o
+         m9B2eLslNGYfGQ2F335wUDgqaUROFv6w8orB6SPR2bL80icZ6IVgKkbAHw/OZP9m0W42
+         jJqOp8HalM194W7hG3xcHHTwJcZko+ncvfVT5MDko2o3akKrx3F2KNPPghDsPPu9NGvQ
+         oj85orP2I77EIa0H3YQq71kOdC+jULP1NmHTZN/Fm2lgda/i7xjO+iwgfxDY5+Gu0gfP
+         BZjn0BMzUEWVqzP3qGhtYJg/72AvYi60eYSO7NNZxmb+gqgGNoFeppczIl2n2chtkzzA
+         UPag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o96Yvzi87DPePCMyKdFlIusrR00b35JbPu9d8slr560=;
-        b=SLh8ybAhFKClg+k0gcmt+tSYijUihWxx49zv2jRkQaYq/ndKMKwGl8JgQEm5gEg1VX
-         b/1nlWC+lvr1AIlkpOhePqJv2QM5Hain69EUEClrUqwKnfk+nVGUWb9GDHcmq2iG3MqV
-         NkcV+HjFqfUFce9ad2wJ3QKcxjfMdq16XZ/AR+SRkYqaCHMLVITXCwQNzAmXwsNvWS/j
-         /JsC7vSUXjGzFoZuGOIR58WZwFop4RDbRQtz1nIkH1nZ8MamVBI5QQQUEFUCaq51ySEt
-         Y1sMPVEXtVXqQuPlKSLtOCaWjh5cc40nx3nV8UWpnMvwl4454MWBm83AkteBHAMBiWkB
-         KHxQ==
-X-Gm-Message-State: APjAAAW1CeB+F7HtDNqG64qwzZqMKvLtHFxKs+OtPhAosfGVZz4m6Ufe
-        vQCq4pJSNTakXEvjiRQg+nfPGJA/i1JN7sul2VvxqqE9a/8uE9xJGGriOu9NCMXdSq2Q7WIVMK4
-        c+qkLbCElDlR5KMcGWituElHO
-X-Received: by 2002:a1c:a4c3:: with SMTP id n186mr4955226wme.25.1582306373146;
-        Fri, 21 Feb 2020 09:32:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxayLNZ1h9vLVc5mYWPuuY1cdEKYHllZpJcPEvt3/MdMtEG+xA001YejVgYA0jVDbPLZm/vlg==
-X-Received: by 2002:a1c:a4c3:: with SMTP id n186mr4955201wme.25.1582306372831;
-        Fri, 21 Feb 2020 09:32:52 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.135.128])
-        by smtp.gmail.com with ESMTPSA id x11sm4493300wmg.46.2020.02.21.09.32.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:32:52 -0800 (PST)
-Subject: Re: [PATCH 06/10] KVM: x86: Move "flush guest's TLB" logic to
- separate kvm_x86_ops hook
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200220204356.8837-1-sean.j.christopherson@intel.com>
- <20200220204356.8837-7-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <ca7bcbc2-d7eb-bc7c-4e15-a77831af8a73@redhat.com>
-Date:   Fri, 21 Feb 2020 18:32:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xCuUVG8i9sUDnafZb9V7mQjHX9/dckJtwGg3rmaaHo4=;
+        b=svwfsmAN6hxv2Xdch4/9S6q9YV1Iyr9m7IwKeMZIJhy64QVtGqb88jyHL7eC70pdfd
+         ct6EQ9WKxCaDBTmGPVargjzLZjHdXprZPRHFpaJvdChrXh5AJ/4PgkkheF7nqJadu5In
+         Zr+b3SK0sjyHd2WAN2bUeKQAek5i35lCTCY+oGwwmXN5KHih8kJ8jncii2pjGaOT++tw
+         K4388clMRN2O2+UeHL8CpYy+Zhl7QU/ZtqBfu2Ona2PCidj8EGKnGwMMmO7j/F8ZMD6s
+         0H+ZF/JvceTmHhGne0I3wr5gHCfaR1nuybcQ0eTNUz14PmsE5VT2P5cQPxZFAYxEnKyG
+         tQ3A==
+X-Gm-Message-State: APjAAAXQ9cBoE4ttnfqH/EF/XuFw6g05hxU3Z/kS9AwIAng/Uy8XLx3e
+        Ypj4dEOtgOdZj7l4XB3WLA==
+X-Google-Smtp-Source: APXvYqyViuIGu2NMjKXfV2oi5e71Y2nv4Ub8Ajrnm77/jV9pFx3oWcpx0XVU8lPi+Cpf68UC7E4Sjg==
+X-Received: by 2002:a17:90a:c084:: with SMTP id o4mr4192690pjs.35.1582306578445;
+        Fri, 21 Feb 2020 09:36:18 -0800 (PST)
+Received: from madhuparna-HP-Notebook ([2402:3a80:1ee0:fe5e:d03d:769b:c838:c146])
+        by smtp.gmail.com with ESMTPSA id l15sm3044096pgi.31.2020.02.21.09.35.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 09:36:17 -0800 (PST)
+From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
+Date:   Fri, 21 Feb 2020 23:05:34 +0530
+To:     Jiri Pirko <jiri@resnulli.us>
+Cc:     madhuparnabhowmik10@gmail.com, jiri@mellanox.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, joel@joelfernandes.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH] net: core: devlink.c: Use built-in RCU list checking
+Message-ID: <20200221173533.GA13198@madhuparna-HP-Notebook>
+References: <20200221165141.24630-1-madhuparnabhowmik10@gmail.com>
+ <20200221172008.GA2181@nanopsycho>
 MIME-Version: 1.0
-In-Reply-To: <20200220204356.8837-7-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221172008.GA2181@nanopsycho>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/02/20 21:43, Sean Christopherson wrote:
-> Add a dedicated hook to handle flushing TLB entries on behalf of the
-> guest, i.e. for a paravirtualized TLB flush, and use it directly instead
-> of bouncing through kvm_vcpu_flush_tlb().  Change the effective VMX
-> implementation to never do INVEPT, i.e. to always flush via INVVPID.
-> The INVEPT performed by __vmx_flush_tlb() when @invalidate_gpa=false and
-> enable_vpid=0 is unnecessary, as it will only flush GPA->HPA mappings;
-> GVA->GPA and GVA->HPA translations are flushed by VM-Enter when VPID is
-> disabled, and changes in the guest pages tables only affect GVA->*PA
-> mappings.
+On Fri, Feb 21, 2020 at 06:20:08PM +0100, Jiri Pirko wrote:
+> Fri, Feb 21, 2020 at 05:51:41PM CET, madhuparnabhowmik10@gmail.com wrote:
+> >From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> >
+> >list_for_each_entry_rcu() has built-in RCU and lock checking.
+> >
+> >Pass cond argument to list_for_each_entry_rcu() to silence
+> >false lockdep warning when CONFIG_PROVE_RCU_LIST is enabled
+> >by default.
+> >
+> >Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 > 
-> When EPT and VPID are enabled, doing INVVPID is not required (by Intel's
-> architecture) to invalidate GPA mappings, i.e. TLB entries that cache
-> GPA->HPA translations can live across INVVPID as GPA->HPA mappings are
-> associated with an EPTP, not a VPID.  The intent of @invalidate_gpa is
-> to inform vmx_flush_tlb() that it needs to "invalidate gpa mappings",
-> i.e. do INVEPT and not simply INVVPID.  Other than nested VPID handling,
-> which now calls vpid_sync_context() directly, the only scenario where
-> KVM can safely do INVVPID instead of INVEPT (when EPT is enabled) is if
-> KVM is flushing TLB entries from the guest's perspective, i.e. is
-> invalidating GLA->GPA mappings.
+> Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+> 
+> Thanks.
+> 
+> However, there is a callpath where not devlink lock neither rcu read is
+> taken:
+> devlink_dpipe_table_register()->devlink_dpipe_table_find()
+>
+Hi,
 
-Since you need a v2, can you replace the name of mappings with "linear",
-"guest-physical" and "combined" as in the SDM?  It takes a little to get
-used to them but it avoids three-letter acronym soup.
+Yes I had noticed this, but I was not sure if there is some other lock
+which is being used.
 
-Paolo
+If yes, then can you please tell me which lock is held in this case,
+and I can add that condition as well to list_for_each_entry_rcu() usage.
 
+And if no lock or rcu_read_lock is held then may be we should
+use rcu_read_lock/unlock here.
+
+Let me know what you think about this.
+
+Thank you,
+Madhuparna
+
+> I guess that was not the trace you were seeing, right?
+> 
+> 
+> >---
+> > net/core/devlink.c | 3 ++-
+> > 1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> >diff --git a/net/core/devlink.c b/net/core/devlink.c
+> >index 4c63c9a4c09e..3e8c94155d93 100644
+> >--- a/net/core/devlink.c
+> >+++ b/net/core/devlink.c
+> >@@ -2107,7 +2107,8 @@ devlink_dpipe_table_find(struct list_head *dpipe_tables,
+> > {
+> > 	struct devlink_dpipe_table *table;
+> > 
+> >-	list_for_each_entry_rcu(table, dpipe_tables, list) {
+> >+	list_for_each_entry_rcu(table, dpipe_tables, list,
+> >+				lockdep_is_held(&devlink->lock)) {
+> > 		if (!strcmp(table->name, table_name))
+> > 			return table;
+> > 	}
+> >-- 
+> >2.17.1
+> >
