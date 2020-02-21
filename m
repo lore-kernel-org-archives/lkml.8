@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F3BC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED8BC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2C52467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02A924670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272934;
-	bh=S3Nc5wzGIiH5GB3g7PUxAN4EYIumqeMsxMMOXpWjoMg=;
+	s=default; t=1582272938;
+	bh=QhfUCZL8nu16Ecebx/J93uNXs5f9BdBGnXmkpIxjlMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3Bh7iVUFn3xeYfE6I40tSN0gwO445XRykSl6VLzyNnQavGwExhFRfKWe8XPVi2uk
-	 KVnHe+LYo7Y4rF7G8iDysW3QpRWgoLGnp+ptpxvjD0v6JwlnziOpnnyZbPBMeenIRA
-	 xxLmSn5pbUZLG95TYFWyFwanffwY/PaYXg2mJliA=
+	b=A8VCQHmOuN6Y40FBiekC0WaFW7nxgUGja0toQobXDBR3bHZAhgxykURAva6kTn7wn
+	 uHwRXF40HydlRNjVllnkoWd5KjOgi4g8++Crt8ys5CcfTW2Uxni4Vzkp9yE4nA4Ey+
+	 YrjFgBBUPjbyMu7bpOPRGCSwKmt43zinRKQkVBEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387396AbgBUIPc (ORCPT
+        id S2387403AbgBUIPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:15:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52236 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:15:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732343AbgBUIP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:15:26 -0500
+        id S2387394AbgBUIPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:15:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B50F824680;
-        Fri, 21 Feb 2020 08:15:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EEF724670;
+        Fri, 21 Feb 2020 08:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272926;
-        bh=S3Nc5wzGIiH5GB3g7PUxAN4EYIumqeMsxMMOXpWjoMg=;
+        s=default; t=1582272932;
+        bh=QhfUCZL8nu16Ecebx/J93uNXs5f9BdBGnXmkpIxjlMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fvgazyIzAWpscasGsdh1j7ld62yqy8sOIJ52Ebxsq0FgOBl+nNpQHJsq8gGCpw6Dx
-         BPl8F5TZVoeRrf9RaWxwGgDolgEqp6mpJWgVAzZD2mbGqXCMnWqqvmZoMW1J5a2mYG
-         A9PFj2n9s5z+yS1WcjtNeqtLXmRvyf5GEbBV6j1M=
+        b=Cd3i/KSV+cLxCwdRLIaT5Qk5PkAxNMBubeLAMXqG/NoydsV6TaPnhKQr+j6FbGO8t
+         t97Zku8rU1QNM+/Cbdb+H8NktaBv+Dt40OFzc11tb8z/ca0cVPljEdVCvzg8eWFfOf
+         dIZ/L69jj4B3RAAStkblGYr8GHqlY0Nlpln6dVQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Amol Grover <frextrite@gmail.com>,
-        Keith Busch <kbusch@kernel.org>,
+        stable@vger.kernel.org,
+        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 326/344] nvmet: Pass lockdep expression to RCU lists
-Date:   Fri, 21 Feb 2020 08:42:05 +0100
-Message-Id: <20200221072419.831805995@linuxfoundation.org>
+Subject: [PATCH 5.4 328/344] iwlwifi: mvm: Fix thermal zone registration
+Date:   Fri, 21 Feb 2020 08:42:07 +0100
+Message-Id: <20200221072420.064251641@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,51 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
 
-[ Upstream commit 4ac76436a6d07dec1c3c766f234aa787a16e8f65 ]
+[ Upstream commit baa6cf8450b72dcab11f37c47efce7c5b9b8ad0f ]
 
-ctrl->subsys->namespaces and subsys->namespaces are traversed with
-list_for_each_entry_rcu outside an RCU read-side critical section but
-under the protection of ctrl->subsys->lock and subsys->lock respectively.
+Use a unique name when registering a thermal zone. Otherwise, with
+multiple NICS, we hit the following warning during the unregistration.
 
-Hence, add the corresponding lockdep expression to the list traversal
-primitive to silence false-positive lockdep warnings, and harden RCU
-lists.
+WARNING: CPU: 2 PID: 3525 at fs/sysfs/group.c:255
+ RIP: 0010:sysfs_remove_group+0x80/0x90
+ Call Trace:
+  dpm_sysfs_remove+0x57/0x60
+  device_del+0x5a/0x350
+  ? sscanf+0x4e/0x70
+  device_unregister+0x1a/0x60
+  hwmon_device_unregister+0x4a/0xa0
+  thermal_remove_hwmon_sysfs+0x175/0x1d0
+  thermal_zone_device_unregister+0x188/0x1e0
+  iwl_mvm_thermal_exit+0xe7/0x100 [iwlmvm]
+  iwl_op_mode_mvm_stop+0x27/0x180 [iwlmvm]
+  _iwl_op_mode_stop.isra.3+0x2b/0x50 [iwlwifi]
+  iwl_opmode_deregister+0x90/0xa0 [iwlwifi]
+  __exit_compat+0x10/0x2c7 [iwlmvm]
+  __x64_sys_delete_module+0x13f/0x270
+  do_syscall_64+0x5a/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 3a67e244e5685..57a4062cbb59e 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -555,7 +555,8 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
- 	} else {
- 		struct nvmet_ns *old;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+index f0c539b37ea70..a630e4edd9b4d 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tt.c
+@@ -731,7 +731,8 @@ static  struct thermal_zone_device_ops tzone_ops = {
+ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
+ {
+ 	int i;
+-	char name[] = "iwlwifi";
++	char name[16];
++	static atomic_t counter = ATOMIC_INIT(0);
  
--		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link) {
-+		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link,
-+					lockdep_is_held(&subsys->lock)) {
- 			BUG_ON(ns->nsid == old->nsid);
- 			if (ns->nsid < old->nsid)
- 				break;
-@@ -1174,7 +1175,8 @@ static void nvmet_setup_p2p_ns_map(struct nvmet_ctrl *ctrl,
+ 	if (!iwl_mvm_is_tt_in_fw(mvm)) {
+ 		mvm->tz_device.tzone = NULL;
+@@ -741,6 +742,7 @@ static void iwl_mvm_thermal_zone_register(struct iwl_mvm *mvm)
  
- 	ctrl->p2p_client = get_device(req->p2p_client);
+ 	BUILD_BUG_ON(ARRAY_SIZE(name) >= THERMAL_NAME_LENGTH);
  
--	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link)
-+	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link,
-+				lockdep_is_held(&ctrl->subsys->lock))
- 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
- }
- 
++	sprintf(name, "iwlwifi_%u", atomic_inc_return(&counter) & 0xFF);
+ 	mvm->tz_device.tzone = thermal_zone_device_register(name,
+ 							IWL_MAX_DTS_TRIPS,
+ 							IWL_WRITABLE_TRIPS_MSK,
 -- 
 2.20.1
 
