@@ -2,135 +2,115 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E79CC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF52C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54C6A20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="m5iOI48L"
+	by mail.kernel.org (Postfix) with ESMTP id 431C5222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582274614;
+	bh=6j1K92uXQHGUNZx44H0eiABCvbiGImXRdsQbp3X8P6A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oKg+19w0prvnkqHXR7//sjTGXm+d8QQIC6rY8F1cVid9jL9a+KxMEv3qErRi4/SuT
+	 IUPWb7pe9FYU3NyYv7xZXQGWNOkWt3GTqBovzw6Rlr9/vpHA9lh6rYafaIuifET+sn
+	 87wLlKjJQYcMy2Eq5xJZC+ypWnMiPxWLJ2TGxaC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731537AbgBUIn0 (ORCPT
+        id S1729924AbgBUHxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:43:26 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45942 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730127AbgBUHxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:38 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01L7rABf123736;
-        Fri, 21 Feb 2020 01:53:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1582271590;
-        bh=4oe8zWumyH1U/XLfwq2hHrnruwHoFbfKJKSxe0/eD4A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=m5iOI48LxCt9hBXs9jVzOFlNoQDGfM09SOucuNdRdLcsBPGKDvT8cTIa/2A1Mn3os
-         bqsUUuzUX9mRu4cqGRLtOGsCSGHzvqYLKqk4kqDZ4eeI40lK6MgJqvswYpcFoDT0Yq
-         bUft9eWP9YpyyHFYDM49x2uuO8EZZX7KIr4Ct3fQ=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01L7rA9Q023230
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Feb 2020 01:53:10 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
- Feb 2020 01:53:09 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 21 Feb 2020 01:53:09 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01L7r5hr091996;
-        Fri, 21 Feb 2020 01:53:05 -0600
-Subject: Re: [PATCH v2 2/3] can: m_can: m_can_platform: Add support for
- enabling transceiver
-To:     Dan Murphy <dmurphy@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <catalin.marinas@arm.com>, <mark.rutland@arm.com>,
-        <robh+dt@kernel.org>, <mkl@pengutronix.de>, <wg@grandegger.com>,
-        <sriram.dash@samsung.com>
-References: <20200217142836.23702-1-faiz_abbas@ti.com>
- <20200217142836.23702-3-faiz_abbas@ti.com>
- <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <8885c00b-7b73-0448-7e9d-ecb19fe84adf@ti.com>
-Date:   Fri, 21 Feb 2020 13:24:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 02:53:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729337AbgBUHxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61EAD2465D;
+        Fri, 21 Feb 2020 07:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582271611;
+        bh=6j1K92uXQHGUNZx44H0eiABCvbiGImXRdsQbp3X8P6A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xn8jmPn1MEhpos4bca0VKzERWXQ/J8fYjte8gDmz/O4+w1BqhLdoTssuMzC9wLoSL
+         YATxcvBIKf45UBUE2vMvhHvzmwZrl1m1u0KpkSyv9jK2v39Cee4q+wmhvQuH/nfpmB
+         +CkKzTZQc8NmgJ2oJW/oqpY1uIKF5Lm2r/M+58Mo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 231/399] Input: edt-ft5x06 - work around first register access error
+Date:   Fri, 21 Feb 2020 08:39:16 +0100
+Message-Id: <20200221072425.239736964@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
+References: <20200221072402.315346745@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <250f905a-33c3-dd17-15c9-e282299dd742@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-On 17/02/20 8:40 pm, Dan Murphy wrote:
-> Faiz
-> 
-> On 2/17/20 8:28 AM, Faiz Abbas wrote:
->> CAN transceivers on some boards have a standby line which can be
->> toggled to enable/disable the transceiver. Model this as an optional
->> fixed xceiver regulator.
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> Acked-by: Sriram Dash <sriram.dash@samsung.com>
->> ---
->>   drivers/net/can/m_can/m_can_platform.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/drivers/net/can/m_can/m_can_platform.c
->> b/drivers/net/can/m_can/m_can_platform.c
->> index 38ea5e600fb8..719468fab507 100644
->> --- a/drivers/net/can/m_can/m_can_platform.c
->> +++ b/drivers/net/can/m_can/m_can_platform.c
->> @@ -6,6 +6,7 @@
->>   // Copyright (C) 2018-19 Texas Instruments Incorporated -
->> http://www.ti.com/
->>     #include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->>     #include "m_can.h"
->>   @@ -57,6 +58,7 @@ static int m_can_plat_probe(struct platform_device
->> *pdev)
->>   {
->>       struct m_can_classdev *mcan_class;
->>       struct m_can_plat_priv *priv;
->> +    struct regulator *reg_xceiver;
->>       struct resource *res;
->>       void __iomem *addr;
->>       void __iomem *mram_addr;
->> @@ -111,6 +113,10 @@ static int m_can_plat_probe(struct
->> platform_device *pdev)
->>         m_can_init_ram(mcan_class);
->>   +    reg_xceiver = devm_regulator_get_optional(&pdev->dev, "xceiver");
->> +    if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
->> +        return -EPROBE_DEFER;
->> +
-> 
-> Where is this regulator enabled?
+[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
 
-I have set regulator-boot-on flag in the dt so this didn't require an
-enable.
+The EP0700MLP1 returns bogus data on the first register read access
+(reading the threshold parameter from register 0x00):
 
-> Shouldn't the regulator be managed by runtime PM as well?
-> 
+    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
 
-Let me try this out.
+It ignores writes until then. This patch adds a dummy read after which
+the number of sensors and parameter read/writes work correctly.
 
-Thanks,
-Faiz
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index d61731c0037d1..b87b1e074f624 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -1050,6 +1050,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ {
+ 	const struct edt_i2c_chip_data *chip_data;
+ 	struct edt_ft5x06_ts_data *tsdata;
++	u8 buf[2] = { 0xfc, 0x00 };
+ 	struct input_dev *input;
+ 	unsigned long irq_flags;
+ 	int error;
+@@ -1140,6 +1141,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	/*
++	 * Dummy read access. EP0700MLP1 returns bogus data on the first
++	 * register read access and ignores writes.
++	 */
++	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
++
+ 	edt_ft5x06_ts_set_regs(tsdata);
+ 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
+ 	edt_ft5x06_ts_get_parameters(tsdata);
+-- 
+2.20.1
+
+
 
