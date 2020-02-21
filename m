@@ -2,70 +2,70 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94451C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0563EC11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F8C24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC67424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 00:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QlbJzQqq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AUcRv6kl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgBUAov (ORCPT
+        id S1729652AbgBUAo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 19:44:51 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17960 "EHLO
+        Thu, 20 Feb 2020 19:44:58 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:17964 "EHLO
         esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729570AbgBUAos (ORCPT
+        with ESMTP id S1729588AbgBUAot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 19:44:48 -0500
+        Thu, 20 Feb 2020 19:44:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1582245905; x=1613781905;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nhyjH1m/YNUPQsnIW3Js/eLrtunWQfKMGyEdyDDDGmI=;
-  b=QlbJzQqqT5bBASXLoX7rN6flNy+kxzG4Cp/yjVMBm/eBmCPxo6z/EVYg
-   K/DIJuUs0vwcBBXXnvy219CAUB4djH49/F2Reni3CGRjEFWZ/xXpeQFZk
-   Uf3cF+nlln72XThVAlMfWxOOMg/miyBtBfxWI338rCIrGsiBEIrWTt6TN
-   pXhMb7Mg/dxpQJ2Zxf5r9n4FnKzXH9rWdBbxbyxDTrG+k/bmATFQy8Dgk
-   Wyok82mlqjF3APFWCborJGTvom/CnWO2FC6Tg0eTUySsqkSKnnCx5RrBN
-   tS05ooigCZqkjATUkNuw34286n8yECnsSrz3naMJi01CV1nEXnz30ovcb
-   w==;
-IronPort-SDR: YIKjOLJaLQuKsPTU84pfIDDq9P5bY8n1+t+Ymm7KcjR+dSCJtDXHQ/ApCpQuISo6iatG/8k6GE
- qftKWc0y1YePmI+/UtPJMDGsb+rwAFP9cQyT2N/6NjtTkTHCv5i/fRIPFlDEo6KxsS5nxWHuzQ
- MLx5L4/+i12HyigQxYvaq1yvpklnDVqMt/KPPFTdgy2Db2IqgnoXCouXZU+faWhvs5b4t5cPJd
- HCqRDN6Lp7pldwnGRsxutMxUk2ylf9HItLIYNiYBJSiV/NPIBn7vwolRnpkVtNNbOp5z5Bnvc3
- VAI=
+  t=1582245907; x=1613781907;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mkH3jLLtkTicXkgvXT4tQe8W1GcI/fSzczfYIAf9uBI=;
+  b=AUcRv6kl5fYjGm8CUUmn3wu/cjKSnoNH4ZMDOTm7FbjN/E8GgrUXYJfz
+   M9/LzXHUtwnf5t9fbUAxKRbx//W9s5oyQ/IzmwWkok5fzpVuNxYkYzuj2
+   WWQ9C2SxOwZrLM8Pv/55Q/9lt2ZA5Qzh+oJu6YmP8aS911EJUh4ePIIZM
+   UwiMc1OSd4wo+ajnpkKA/lesZztvZ+jydZco82BchEE3KrUsdJDGC/1rC
+   MK21Aq/F4qcAPNOjmKSYDXgmHS3VpzAytLLosI//5ythlGqBQxrNKw+dK
+   aEUYRgeQeSVIK8VB3pbvivrpeRCZbxbCjXN6WI+CAe/SMvQmSGxxTyIyd
+   A==;
+IronPort-SDR: P13bopKmF/xsblGBvpw8xMf3pD4DMbydASg1Ndmf8/qHP9a3UGPrfh5cEu3jRFQsK+qwgrORKG
+ tPvtmsXpuj580R57YI/tW/kE/sVoqDUdU+tzJEB9gyJVTctwXNXqKpd6A6vQCrH6eX2m+eOpE+
+ /BrBI6XnuvtvoQl43Dh6RnC1XvaQlWu9/cMOo4zP+jCLeu2K0FV3RYnwXpFus7joPMoWhDsGpf
+ arpnYk2bOBc5rel96zTue1vre6k8iZ0faeT5pZz6e5/p8f6cxjmQLlMzWYARxMlV1XFnF0Sf9m
+ 46I=
+X-URL-LookUp-ScanningError: 1
 X-IronPort-AV: E=Sophos;i="5.70,466,1574092800"; 
-   d="scan'208";a="232211066"
+   d="scan'208";a="232211042"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Feb 2020 08:45:04 +0800
-IronPort-SDR: BWwTJ7kFyhf0tsb0jJqE4fzYWw62uH2Eav66JV1L5otoqIwYXl8BLClkawcVakOcbeEJNQJMA6
- 4CnC6+6jjvubf+k9CGUDVeGU1KrCNNnj76Yt1XahNPZ/9mebFyB4dvxX5nS9xd9QCmeAnw9YKP
- T0hVNrpdIr5wxMwhMCaYrQsvvubn84vhpF2HLoOIq8u02PuEv4N72Of9sb7tjcwOyYodbT9Bk4
- Ju7rZx4+Rxyum7MsjjwHbV6UiVEOLoYquS+kmzJD/P7/RcOdtQzzWY/2Pkh87ydtRv9mH2/Zn8
- bIcLynvDAK/9A4dmXo+BwIFD
+  by ob1.hgst.iphmx.com with ESMTP; 21 Feb 2020 08:45:00 +0800
+IronPort-SDR: 0F2sqiDQBVKBZ7nVuQrOUFIrL02hboAGqY2aQ8gNVRcLLol4YDnZGCrR34pgeZ8gSPKlPu6a8o
+ bvn8DH2WYcqIGwbX1v80KcICuD4Rj0GZzhrp4UyUrheH1E6hQd8WZhHygNnqd0d+kGP+7UbbSy
+ ZI/UNv2HAVzW0l1Y9W6A4w4Bo5dpX7rL4iEkDn6/3Dfutyd/vAALkQ7qu9lAnlGKjJkIitDvJ6
+ dOH7r9CkMCgqKkyfNCF6T//w8H7gq/365Jq0GCj2FFzRSMJ5mqlY1AfGKJ+wXUsgjRSp5VY3NR
+ 4fE9w1ZgMi8sQOaxjoXLvwm8
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:37:22 -0800
-IronPort-SDR: T3Q0usEbKB2E3Ptp9L6npnU+u+gfmFz7XmCbUXSJL/F5HNPRC1nAx6KmLRpYFmzPJHGyxjBcPH
- vYog1yhH3g4MOcyUP4Q2EGRNXqVlh/UgblitZ6eXcgN5u5s0xXlqFd+bGJQKApqIy/fdDgvMOT
- T7R/KkjIUqlVSYaSalWewyc0xvUBlMPskMKoshF3L+dpIHfTtKLCqEJhyGbnB6O9L75yF9U3yv
- AMujM6+ImpgXp92zMAq0pDaaj5K40fuAYDbASCodqHxhT2vvIM6SV43KuJq1QLCrPByjen9TjI
- +pQ=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 16:37:20 -0800
+IronPort-SDR: G5zwEfdYQvKlhSAbse4AV5OdYGtseAfJTPnF5rorr3ir/WzPC6RyWAaIHIPvPNTP7S9tHaFh5g
+ eTUKT9dGTuYZ6EiM6AgwggDkQFaaPOi8Ou7COIf+26oIrvh7UE1ZDWNygCkSXyXVbitD5r3MYC
+ 8ZfY5jUvETdPwSbpVAI6/gJ6T0gNQ7vrZd5KuN5DfbtSut2fd4Ssg3hT2Rsd16x3fESrhxAaDg
+ wgmEhs7xzfsAo3Y7Gg60YVyErb8geddvKhO64HgBkcso/IIvhqbdoQwmH+Fb0LZBuf60PUL9j8
+ d4M=
 WDCIronportException: Internal
 Received: from yoda.sdcorp.global.sandisk.com (HELO yoda.int.fusionio.com) ([10.196.158.80])
-  by uls-op-cesaip01.wdc.com with ESMTP; 20 Feb 2020 16:44:47 -0800
+  by uls-op-cesaip01.wdc.com with ESMTP; 20 Feb 2020 16:44:44 -0800
 From:   Atish Patra <atish.patra@wdc.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Atish Patra <atish.patra@wdc.com>,
-        Anup Patel <anup@brainfault.org>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        Borislav Petkov <bp@suse.de>,
+        Anup Patel <anup@brainfault.org>, Borislav Petkov <bp@suse.de>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
@@ -82,12 +82,10 @@ Cc:     Atish Patra <atish.patra@wdc.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vincent Chen <vincent.chen@sifive.com>
-Subject: [PATCH v9 05/12] RISC-V: Implement new SBI v0.2 extensions
-Date:   Thu, 20 Feb 2020 16:44:06 -0800
-Message-Id: <20200221004413.12869-6-atish.patra@wdc.com>
+Subject: [PATCH v9 00/12] Add support for SBI v0.2 and CPU hotplug
+Date:   Thu, 20 Feb 2020 16:44:01 -0800
+Message-Id: <20200221004413.12869-1-atish.patra@wdc.com>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200221004413.12869-1-atish.patra@wdc.com>
-References: <20200221004413.12869-1-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -95,341 +93,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few v0.1 SBI calls are being replaced by new SBI calls that follows v0.2
-calling convention.
+The Supervisor Binary Interface(SBI) specification[1] now defines a
+base extension that provides extendability to add future extensions
+while maintaining backward compatibility with previous versions.
+The new version is defined as 0.2 and older version is marked as 0.1.
 
-Implement the replacement extensions and few additional new SBI function calls
-that makes way for a better SBI interface in future.
+This series adds following features to RISC-V Linux.
+1. Adds support for SBI v0.2
+2. A Unified calling convention implementation between 0.1 and 0.2. 
+3. SBI Hart state management extension (HSM)
+4. Ordered booting of harts
+4. CPU hotplug 
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Reviewed-by: Anup Patel <anup@brainfault.org>
----
- arch/riscv/include/asm/sbi.h |  14 ++
- arch/riscv/include/asm/smp.h |   7 +
- arch/riscv/kernel/sbi.c      | 246 ++++++++++++++++++++++++++++++++++-
- 3 files changed, 263 insertions(+), 4 deletions(-)
+Dependencies:
+The base support for SBI v0.2 is already available in OpenSBI v0.5.
+It also adds SBI HSM extension and cpu-hotplug support for RISC-V
+which requires additional patches[3] in OpenSBI.
 
-diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
-index 4d67bef8f894..d55d8090ab5c 100644
---- a/arch/riscv/include/asm/sbi.h
-+++ b/arch/riscv/include/asm/sbi.h
-@@ -96,6 +96,20 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- 				unsigned long start,
- 				unsigned long size,
- 				unsigned long asid);
-+int sbi_remote_hfence_gvma(const unsigned long *hart_mask,
-+			   unsigned long start,
-+			   unsigned long size);
-+int sbi_remote_hfence_gvma_vmid(const unsigned long *hart_mask,
-+				unsigned long start,
-+				unsigned long size,
-+				unsigned long vmid);
-+int sbi_remote_hfence_vvma(const unsigned long *hart_mask,
-+			   unsigned long start,
-+			   unsigned long size);
-+int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
-+				unsigned long start,
-+				unsigned long size,
-+				unsigned long asid);
- int sbi_probe_extension(int ext);
- 
- /* Check if current SBI specification version is 0.1 or not */
-diff --git a/arch/riscv/include/asm/smp.h b/arch/riscv/include/asm/smp.h
-index a83451d73a4e..023f74fb8b3b 100644
---- a/arch/riscv/include/asm/smp.h
-+++ b/arch/riscv/include/asm/smp.h
-@@ -61,5 +61,12 @@ static inline unsigned long cpuid_to_hartid_map(int cpu)
- 	return boot_cpu_hartid;
- }
- 
-+static inline void riscv_cpuid_to_hartid_mask(const struct cpumask *in,
-+					      struct cpumask *out)
-+{
-+	cpumask_clear(out);
-+	cpumask_set_cpu(boot_cpu_hartid, out);
-+}
-+
- #endif /* CONFIG_SMP */
- #endif /* _ASM_RISCV_SMP_H */
-diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
-index 73e53833c008..38ec99415060 100644
---- a/arch/riscv/kernel/sbi.c
-+++ b/arch/riscv/kernel/sbi.c
-@@ -8,6 +8,7 @@
- #include <linux/init.h>
- #include <linux/pm.h>
- #include <asm/sbi.h>
-+#include <asm/smp.h>
- 
- /* default SBI version is 0.1 */
- unsigned long sbi_spec_version = SBI_SPEC_VERSION_DEFAULT;
-@@ -189,6 +190,149 @@ static int __sbi_rfence_v01(int fid, const unsigned long *hart_mask,
- }
- #endif /* CONFIG_RISCV_SBI_V01 */
- 
-+static void __sbi_set_timer_v02(uint64_t stime_value)
-+{
-+#if __riscv_xlen == 32
-+	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value,
-+			  stime_value >> 32, 0, 0, 0, 0);
-+#else
-+	sbi_ecall(SBI_EXT_TIME, SBI_EXT_TIME_SET_TIMER, stime_value, 0,
-+		  0, 0, 0, 0);
-+#endif
-+}
-+
-+static int __sbi_send_ipi_v02(const unsigned long *hart_mask)
-+{
-+	unsigned long hartid, hmask_val, hbase;
-+	struct cpumask tmask;
-+	struct sbiret ret = {0};
-+	int result;
-+
-+	if (!hart_mask || !(*hart_mask)) {
-+		riscv_cpuid_to_hartid_mask(cpu_online_mask, &tmask);
-+		hart_mask = cpumask_bits(&tmask);
-+	}
-+
-+	hmask_val = hbase = 0;
-+	for_each_set_bit(hartid, hart_mask, NR_CPUS) {
-+		if (hmask_val && ((hbase + BITS_PER_LONG) <= hartid)) {
-+			ret = sbi_ecall(SBI_EXT_IPI, SBI_EXT_IPI_SEND_IPI,
-+					hmask_val, hbase, 0, 0, 0, 0);
-+			if (ret.error)
-+				goto ecall_failed;
-+			hmask_val = hbase = 0;
-+		}
-+		if (!hmask_val)
-+			hbase = hartid;
-+		hmask_val |= 1UL << (hartid - hbase);
-+	}
-+
-+	if (hmask_val) {
-+		ret = sbi_ecall(SBI_EXT_IPI, SBI_EXT_IPI_SEND_IPI,
-+				hmask_val, hbase, 0, 0, 0, 0);
-+		if (ret.error)
-+			goto ecall_failed;
-+	}
-+
-+	return 0;
-+
-+ecall_failed:
-+	result = sbi_err_map_linux_errno(ret.error);
-+	pr_err("%s: hbase = [%lu] hmask = [0x%lx] failed (error [%d])\n",
-+		__func__, hbase, hmask_val, result);
-+	return result;
-+}
-+
-+static int __sbi_rfence_v02_call(unsigned long fid, unsigned long hmask_val,
-+				 unsigned long hbase, unsigned long start,
-+				 unsigned long size, unsigned long arg4,
-+				 unsigned long arg5)
-+{
-+	struct sbiret ret = {0};
-+	int ext = SBI_EXT_RFENCE;
-+	int result = 0;
-+
-+	switch (fid) {
-+	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, 0, 0, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, arg4, 0);
-+		break;
-+
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, arg4, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, 0, 0);
-+		break;
-+	case SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID:
-+		ret = sbi_ecall(ext, fid, hmask_val, hbase, start,
-+				size, arg4, 0);
-+		break;
-+	default:
-+		pr_err("unknown function ID [%lu] for SBI extension [%d]\n",
-+			fid, ext);
-+		result = -EINVAL;
-+	}
-+
-+	if (ret.error) {
-+		result = sbi_err_map_linux_errno(ret.error);
-+		pr_err("%s: hbase = [%lu] hmask = [0x%lx] failed (error [%d])\n",
-+			__func__, hbase, hmask_val, result);
-+	}
-+
-+	return result;
-+}
-+
-+static int __sbi_rfence_v02(int fid, const unsigned long *hart_mask,
-+			    unsigned long start, unsigned long size,
-+			    unsigned long arg4, unsigned long arg5)
-+{
-+	unsigned long hmask_val, hartid, hbase;
-+	struct cpumask tmask;
-+	int result;
-+
-+	if (!hart_mask || !(*hart_mask)) {
-+		riscv_cpuid_to_hartid_mask(cpu_online_mask, &tmask);
-+		hart_mask = cpumask_bits(&tmask);
-+	}
-+
-+	hmask_val = hbase = 0;
-+	for_each_set_bit(hartid, hart_mask, NR_CPUS) {
-+		if (hmask_val && ((hbase + BITS_PER_LONG) <= hartid)) {
-+			result = __sbi_rfence_v02_call(fid, hmask_val, hbase,
-+						       start, size, arg4, arg5);
-+			if (result)
-+				return result;
-+			hmask_val = hbase = 0;
-+		}
-+		if (!hmask_val)
-+			hbase = hartid;
-+		hmask_val |= 1UL << (hartid - hbase);
-+	}
-+
-+	if (hmask_val) {
-+		result = __sbi_rfence_v02_call(fid, hmask_val, hbase,
-+					       start, size, arg4, arg5);
-+		if (result)
-+			return result;
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * sbi_set_timer() - Program the timer for next timer event.
-  * @stime_value: The value after which next timer event should fire.
-@@ -265,6 +409,85 @@ void sbi_remote_sfence_vma_asid(const unsigned long *hart_mask,
- }
- EXPORT_SYMBOL(sbi_remote_sfence_vma_asid);
- 
-+/**
-+ * sbi_remote_hfence_gvma() - Execute HFENCE.GVMA instructions on given remote
-+ *			   harts for the specified guest physical address range.
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the guest physical address
-+ * @size: Total size of the guest physical address range.
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_gvma(const unsigned long *hart_mask,
-+					 unsigned long start,
-+					 unsigned long size)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA,
-+			    hart_mask, start, size, 0, 0);
-+}
-+EXPORT_SYMBOL_GPL(sbi_remote_hfence_gvma);
-+
-+/**
-+ * sbi_remote_hfence_gvma_vmid() - Execute HFENCE.GVMA instructions on given
-+ * remote harts for a guest physical address range belonging to a specific VMID.
-+ *
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the guest physical address
-+ * @size: Total size of the guest physical address range.
-+ * @vmid: The value of guest ID (VMID).
-+ *
-+ * Return: 0 if success, Error otherwise.
-+ */
-+int sbi_remote_hfence_gvma_vmid(const unsigned long *hart_mask,
-+					      unsigned long start,
-+					      unsigned long size,
-+					      unsigned long vmid)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA_VMID,
-+			    hart_mask, start, size, vmid, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_gvma_vmid);
-+
-+/**
-+ * sbi_remote_hfence_vvma() - Execute HFENCE.VVMA instructions on given remote
-+ *			     harts for the current guest virtual address range.
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the current guest virtual address
-+ * @size: Total size of the current guest virtual address range.
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_vvma(const unsigned long *hart_mask,
-+					 unsigned long start,
-+					 unsigned long size)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA,
-+			    hart_mask, start, size, 0, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_vvma);
-+
-+/**
-+ * sbi_remote_hfence_vvma_asid() - Execute HFENCE.VVMA instructions on given
-+ * remote harts for current guest virtual address range belonging to a specific
-+ * ASID.
-+ *
-+ * @hart_mask: A cpu mask containing all the target harts.
-+ * @start: Start of the current guest virtual address
-+ * @size: Total size of the current guest virtual address range.
-+ * @asid: The value of address space identifier (ASID).
-+ *
-+ * Return: None
-+ */
-+int sbi_remote_hfence_vvma_asid(const unsigned long *hart_mask,
-+					      unsigned long start,
-+					      unsigned long size,
-+					      unsigned long asid)
-+{
-+	return __sbi_rfence(SBI_EXT_RFENCE_REMOTE_HFENCE_VVMA_ASID,
-+			    hart_mask, start, size, asid, 0);
-+}
-+EXPORT_SYMBOL(sbi_remote_hfence_vvma_asid);
-+
- /**
-  * sbi_probe_extension() - Check if an SBI extension ID is supported or not.
-  * @extid: The extension ID to be probed.
-@@ -331,11 +554,26 @@ int __init sbi_init(void)
- 	if (!sbi_spec_is_0_1()) {
- 		pr_info("SBI implementation ID=0x%lx Version=0x%lx\n",
- 			sbi_get_firmware_id(), sbi_get_firmware_version());
-+		if (sbi_probe_extension(SBI_EXT_TIME) > 0) {
-+			__sbi_set_timer = __sbi_set_timer_v02;
-+			pr_info("SBI v0.2 TIME extension detected\n");
-+		} else
-+			__sbi_set_timer = __sbi_set_timer_v01;
-+		if (sbi_probe_extension(SBI_EXT_IPI) > 0) {
-+			__sbi_send_ipi	= __sbi_send_ipi_v02;
-+			pr_info("SBI v0.2 IPI extension detected\n");
-+		} else
-+			__sbi_send_ipi	= __sbi_send_ipi_v01;
-+		if (sbi_probe_extension(SBI_EXT_RFENCE) > 0) {
-+			__sbi_rfence	= __sbi_rfence_v02;
-+			pr_info("SBI v0.2 RFENCE extension detected\n");
-+		} else
-+			__sbi_rfence	= __sbi_rfence_v01;
-+	} else {
-+		__sbi_set_timer = __sbi_set_timer_v01;
-+		__sbi_send_ipi	= __sbi_send_ipi_v01;
-+		__sbi_rfence	= __sbi_rfence_v01;
- 	}
- 
--	__sbi_set_timer = __sbi_set_timer_v01;
--	__sbi_send_ipi	= __sbi_send_ipi_v01;
--	__sbi_rfence	= __sbi_rfence_v01;
--
- 	return 0;
- }
--- 
+[1] https://github.com/riscv/riscv-sbi-doc/blob/master/riscv-sbi.adoc
+[3] http://lists.infradead.org/pipermail/opensbi/2020-January/001050.html
+
+The patches are also available in following github repositery.
+
+OpenSBI     : https://github.com/atishp04/opensbi/tree/sbi_hsm_v1
+Linux Kernel: https://github.com/atishp04/linux/tree/sbi_v0.2_v9
+
+Patches 1-5 implements the SBI v0.2 and unified calling convention.
+Patches 6-7 adds a cpu_ops method that allows different booting protocols
+dynamically.
+Patches 9-10 adds HSM extension and ordered hart booting support.
+Patche  11 adds cpu hotplug support.
+
+Changes from v8->v9:
+1. Added a sliding window hart base method to support larger hart masks.
+2. Added a callback to disable interrupts when cpu go offline.
+3. Made the HSM extension series more modular.
+
+Changes from v7-v8:
+1. Refactored to code to have modular cpu_ops calls.
+2. Refactored HSM extension from sbi.c to cpu_ops_sbi.c.
+3. Fix plic driver to handle cpu hotplug.
+
+Changes from v6-v7:
+1. Rebased on v5.5
+2. Fixed few compilation issues for !CONFIG_SMP and !CONFIG_RISCV_SBI
+3. Added SBI HSM extension
+4. Add CPU hotplug support
+
+Changes from v5->v6
+1. Fixed few compilation issues around config.
+2. Fixed hart mask generation issues for RFENCE & IPI extensions.
+
+Changes from v4->v5
+1. Fixed few minor comments related to static & inline.
+2. Make sure that every patch is boot tested individually.
+
+Changes from v3->v4.
+1. Rebased on for-next.
+2. Fixed issuses with checkpatch --strict.
+3. Unfied all IPI/fence related functions.
+4. Added Hfence related SBI calls.
+
+Changes from v2->v3.
+1. Moved v0.1 extensions to a new config.
+2. Added support for relacement extensions of v0.1 extensions.
+
+Changes from v1->v2
+1. Removed the legacy calling convention.
+2. Moved all SBI related calls to sbi.c.
+3. Moved all SBI related macros to uapi.
+
+Atish Patra (12):
+RISC-V: Mark existing SBI as 0.1 SBI.
+RISC-V: Add basic support for SBI v0.2
+RISC-V: Add SBI v0.2 extension definitions
+RISC-V: Introduce a new config for SBI v0.1
+RISC-V: Implement new SBI v0.2 extensions
+RISC-V: Move relocate and few other functions out of __init
+RISC-V: Add cpu_ops and modify default booting method
+RISC-V: Export SBI error to linux error mapping function
+RISC-V: Add SBI HSM extension definitions
+RISC-V: Add supported for ordered booting method using HSM
+RISC-V: Support cpu hotplug
+irqchip/sifive-plic: Initialize the plic handler when cpu comes online
+
+arch/riscv/Kconfig                   |  19 +-
+arch/riscv/include/asm/cpu_ops.h     |  46 +++
+arch/riscv/include/asm/sbi.h         | 194 +++++----
+arch/riscv/include/asm/smp.h         |  24 ++
+arch/riscv/kernel/Makefile           |   6 +
+arch/riscv/kernel/cpu-hotplug.c      |  87 ++++
+arch/riscv/kernel/cpu_ops.c          |  46 +++
+arch/riscv/kernel/cpu_ops_sbi.c      | 115 ++++++
+arch/riscv/kernel/cpu_ops_spinwait.c |  42 ++
+arch/riscv/kernel/head.S             | 179 +++++----
+arch/riscv/kernel/sbi.c              | 567 ++++++++++++++++++++++++++-
+arch/riscv/kernel/setup.c            |  24 +-
+arch/riscv/kernel/smpboot.c          |  53 +--
+arch/riscv/kernel/traps.c            |   4 +-
+arch/riscv/kernel/vmlinux.lds.S      |   5 +-
+drivers/irqchip/irq-sifive-plic.c    |  38 +-
+include/linux/cpuhotplug.h           |   1 +
+17 files changed, 1275 insertions(+), 175 deletions(-)
+create mode 100644 arch/riscv/include/asm/cpu_ops.h
+create mode 100644 arch/riscv/kernel/cpu-hotplug.c
+create mode 100644 arch/riscv/kernel/cpu_ops.c
+create mode 100644 arch/riscv/kernel/cpu_ops_sbi.c
+create mode 100644 arch/riscv/kernel/cpu_ops_spinwait.c
+
+--
 2.25.0
 
