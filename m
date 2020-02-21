@@ -2,123 +2,302 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4297EC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C002C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19306208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3672F208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HR2+2PNt"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sMAwRf6n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728922AbgBUOYB (ORCPT
+        id S1728953AbgBUOYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:24:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56141 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728392AbgBUOYB (ORCPT
+        Fri, 21 Feb 2020 09:24:18 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:57316 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbgBUOYS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:24:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582295040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=c8mWqxlRjMqzWv3h3wuv1G8u9oII3zP+jyI9+XnLcJA=;
-        b=HR2+2PNt7ChpqxRVT0QC6isaDDjOcejMK69/XW7Y7Soo4lkjqgNIX+DehWrJ6orfJm3rUt
-        WZnCE8Yb358XKbwBCSo/z9818lph/gNENv5tRs/2OirLRZMvwGkPdYXl1ryf2i60FwvHMB
-        LK99pTUUsX+aAHFwTPSdEuX0VtULCrg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295-K3W4URiHOyKQlUHyroESXw-1; Fri, 21 Feb 2020 09:23:58 -0500
-X-MC-Unique: K3W4URiHOyKQlUHyroESXw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 086AF8010EB;
-        Fri, 21 Feb 2020 14:23:57 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B95A60BE0;
-        Fri, 21 Feb 2020 14:23:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com>
-References: <CAG48ez2B2J_3-+EjR20ukRu3noPnAccZsOTaea0jtKK4=+bkhQ@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204561120.3299825.5242636508455859327.stgit@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 15/19] vfs: Add superblock notifications [ver #16]
+        Fri, 21 Feb 2020 09:24:18 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01LEO4lU085797;
+        Fri, 21 Feb 2020 08:24:04 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1582295044;
+        bh=15N8zWLORDmnGs7RDBa6ODbKVeHGFcdp+UVeeu3/p+E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=sMAwRf6n5HWOUKOsawIhxpmOYk3T6wwOcWggB+X7xV1Pv9v9gzmVIBJ2picu0F2Mp
+         Tr1bX0sH4KaIpfP1R8fPGFnKn+4AIhgcYq1CZyixIoMJml2Ba4ohQ1OTKuFJmpR9US
+         GYoedWU36kRaN8DUeUyR+zTxhLBiR+kaD07XMPeM=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01LEO4eO072663
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 21 Feb 2020 08:24:04 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 21
+ Feb 2020 08:24:03 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 21 Feb 2020 08:24:03 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01LEO2YH007676;
+        Fri, 21 Feb 2020 08:24:03 -0600
+Subject: Re: [PATCH net-next v3] net: phy: dp83867: Add speed optimization
+ feature
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>
+CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200218141130.28825-1-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f7512515-f684-4086-200c-2b7326183d19@ti.com>
+Date:   Fri, 21 Feb 2020 08:18:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1897787.1582295034.1@warthog.procyon.org.uk>
-Date:   Fri, 21 Feb 2020 14:23:54 +0000
-Message-ID: <1897788.1582295034@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200218141130.28825-1-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+Bump
 
-> > +               if (!s->s_watchers) {
-> 
-> READ_ONCE() ?
-
-I'm not sure it matters.  It can only be set once, and the next time we read
-it we're inside the lock.  And at this point, I don't actually dereference it,
-and if it's non-NULL, it's not going to change.
-
-> > +                       ret = add_watch_to_object(watch, s->s_watchers);
-> > +                       if (ret == 0) {
-> > +                               spin_lock(&sb_lock);
-> > +                               s->s_count++;
-> > +                               spin_unlock(&sb_lock);
-> 
-> Where is the corresponding decrement of s->s_count? I'm guessing that
-> it should be in the ->release_watch() handler, except that there isn't
-> one...
-
-Um.  Good question.  I think this should do the job:
-
-	static void sb_release_watch(struct watch *watch)
-	{
-		put_super(watch->private);
-	}
-
-And this then has to be set later:
-
-	init_watch_list(wlist, sb_release_watch);
-
-> > +       } else {
-> > +               ret = -EBADSLT;
-> > +               if (READ_ONCE(s->s_watchers)) {
-> 
-> (Nit: I don't get why you do a lockless check here before taking the
-> lock - it'd be more straightforward to take the lock first, and it's
-> not like you want to optimize for the case where someone calls
-> sys_watch_sb() with invalid arguments...)
-
-Fair enough.  I'll remove it.
-
-> > +#ifdef CONFIG_SB_NOTIFICATIONS
-> > +       if (unlikely(s->s_watchers)) {
-> 
-> READ_ONCE() ?
-
-Shouldn't matter.  It's only read once and then a decision is made on it
-immediately thereafter.  And if it's non-NULL, the value cannot change
-thereafter.
-
-David
-
+On 2/18/20 8:11 AM, Dan Murphy wrote:
+> Set the speed optimization bit on the DP83867 PHY.
+> This feature can also be strapped on the 64 pin PHY devices
+> but the 48 pin devices do not have the strap pin available to enable
+> this feature in the hardware.  PHY team suggests to have this bit set.
+>
+> With this bit set the PHY will auto negotiate and report the link
+> parameters in the PHYSTS register.  This register provides a single
+> location within the register set for quick access to commonly accessed
+> information.
+>
+> In this case when auto negotiation is on the PHY core reads the bits
+> that have been configured or if auto negotiation is off the PHY core
+> reads the BMCR register and sets the phydev parameters accordingly.
+>
+> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
+> 4-wire cable.  If this should occur the PHYSTS register contains the
+> current negotiated speed and duplex mode.
+>
+> In overriding the genphy_read_status the dp83867_read_status will do a
+> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
+> register is read and the phydev speed and duplex mode settings are
+> updated.
+>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>
+> v3 - Add the tunable feature into the driver for downshift.  Change speed optimization
+> nomenclature to dwonshift
+>
+>   drivers/net/phy/dp83867.c | 150 ++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 150 insertions(+)
+>
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index 967f57ed0b65..13f7f2d5a2ea 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/delay.h>
+>   #include <linux/netdevice.h>
+>   #include <linux/etherdevice.h>
+> +#include <linux/bitfield.h>
+>   
+>   #include <dt-bindings/net/ti-dp83867.h>
+>   
+> @@ -21,6 +22,7 @@
+>   #define DP83867_DEVADDR		0x1f
+>   
+>   #define MII_DP83867_PHYCTRL	0x10
+> +#define MII_DP83867_PHYSTS	0x11
+>   #define MII_DP83867_MICR	0x12
+>   #define MII_DP83867_ISR		0x13
+>   #define DP83867_CFG2		0x14
+> @@ -118,6 +120,24 @@
+>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_MASK	(0x1f << 8)
+>   #define DP83867_IO_MUX_CFG_CLK_O_SEL_SHIFT	8
+>   
+> +/* PHY STS bits */
+> +#define DP83867_PHYSTS_1000			BIT(15)
+> +#define DP83867_PHYSTS_100			BIT(14)
+> +#define DP83867_PHYSTS_DUPLEX			BIT(13)
+> +#define DP83867_PHYSTS_LINK			BIT(10)
+> +
+> +/* CFG2 bits */
+> +#define DP83867_DOWNSHIFT_EN		(BIT(8) | BIT(9))
+> +#define DP83867_DOWNSHIFT_ATTEMPT_MASK	(BIT(10) | BIT(11))
+> +#define DP83867_DOWNSHIFT_1_COUNT_VAL	0
+> +#define DP83867_DOWNSHIFT_2_COUNT_VAL	1
+> +#define DP83867_DOWNSHIFT_4_COUNT_VAL	2
+> +#define DP83867_DOWNSHIFT_8_COUNT_VAL	3
+> +#define DP83867_DOWNSHIFT_1_COUNT	1
+> +#define DP83867_DOWNSHIFT_2_COUNT	2
+> +#define DP83867_DOWNSHIFT_4_COUNT	4
+> +#define DP83867_DOWNSHIFT_8_COUNT	8
+> +
+>   /* CFG3 bits */
+>   #define DP83867_CFG3_INT_OE			BIT(7)
+>   #define DP83867_CFG3_ROBUST_AUTO_MDIX		BIT(9)
+> @@ -287,6 +307,126 @@ static int dp83867_config_intr(struct phy_device *phydev)
+>   	return phy_write(phydev, MII_DP83867_MICR, micr_status);
+>   }
+>   
+> +static int dp83867_read_status(struct phy_device *phydev)
+> +{
+> +	int status = phy_read(phydev, MII_DP83867_PHYSTS);
+> +	int ret;
+> +
+> +	ret = genphy_read_status(phydev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (status < 0)
+> +		return status;
+> +
+> +	if (status & DP83867_PHYSTS_DUPLEX)
+> +		phydev->duplex = DUPLEX_FULL;
+> +	else
+> +		phydev->duplex = DUPLEX_HALF;
+> +
+> +	if (status & DP83867_PHYSTS_1000)
+> +		phydev->speed = SPEED_1000;
+> +	else if (status & DP83867_PHYSTS_100)
+> +		phydev->speed = SPEED_100;
+> +	else
+> +		phydev->speed = SPEED_10;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dp83867_get_downshift(struct phy_device *phydev, u8 *data)
+> +{
+> +	int val, cnt, enable, count;
+> +
+> +	val = phy_read(phydev, DP83867_CFG2);
+> +	if (val < 0)
+> +		return val;
+> +
+> +	enable = FIELD_GET(DP83867_DOWNSHIFT_EN, val);
+> +	cnt = FIELD_GET(DP83867_DOWNSHIFT_ATTEMPT_MASK, val);
+> +
+> +	switch (cnt) {
+> +	case DP83867_DOWNSHIFT_1_COUNT_VAL:
+> +		count = DP83867_DOWNSHIFT_1_COUNT;
+> +		break;
+> +	case DP83867_DOWNSHIFT_2_COUNT_VAL:
+> +		count = DP83867_DOWNSHIFT_2_COUNT;
+> +		break;
+> +	case DP83867_DOWNSHIFT_4_COUNT_VAL:
+> +		count = DP83867_DOWNSHIFT_4_COUNT;
+> +		break;
+> +	case DP83867_DOWNSHIFT_8_COUNT_VAL:
+> +		count = DP83867_DOWNSHIFT_8_COUNT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	};
+> +
+> +	*data = enable ? count : DOWNSHIFT_DEV_DISABLE;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dp83867_set_downshift(struct phy_device *phydev, u8 cnt)
+> +{
+> +	int val, count;
+> +
+> +	if (cnt > DP83867_DOWNSHIFT_8_COUNT)
+> +		return -E2BIG;
+> +
+> +	if (!cnt)
+> +		return phy_clear_bits(phydev, DP83867_CFG2,
+> +				      DP83867_DOWNSHIFT_EN);
+> +
+> +	switch (cnt) {
+> +		case DP83867_DOWNSHIFT_1_COUNT:
+> +			count = DP83867_DOWNSHIFT_1_COUNT_VAL;
+> +			break;
+> +		case DP83867_DOWNSHIFT_2_COUNT:
+> +			count = DP83867_DOWNSHIFT_2_COUNT_VAL;
+> +			break;
+> +		case DP83867_DOWNSHIFT_4_COUNT:
+> +			count = DP83867_DOWNSHIFT_4_COUNT_VAL;
+> +			break;
+> +		case DP83867_DOWNSHIFT_8_COUNT:
+> +			count = DP83867_DOWNSHIFT_8_COUNT_VAL;
+> +			break;
+> +		default:
+> +			phydev_err(phydev,
+> +				   "Downshift count must be 1, 2, 4 or 8\n");
+> +			return -EINVAL;
+> +	};
+> +
+> +	val = DP83867_DOWNSHIFT_EN;
+> +	val |= FIELD_PREP(DP83867_DOWNSHIFT_ATTEMPT_MASK, count);
+> +
+> +	return phy_modify(phydev, DP83867_CFG2,
+> +			  DP83867_DOWNSHIFT_EN | DP83867_DOWNSHIFT_ATTEMPT_MASK,
+> +			  val);
+> +}
+> +
+> +static int dp83867_get_tunable(struct phy_device *phydev,
+> +				struct ethtool_tunable *tuna, void *data)
+> +{
+> +	switch (tuna->id) {
+> +	case ETHTOOL_PHY_DOWNSHIFT:
+> +		return dp83867_get_downshift(phydev, data);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+> +static int dp83867_set_tunable(struct phy_device *phydev,
+> +				struct ethtool_tunable *tuna, const void *data)
+> +{
+> +	switch (tuna->id) {
+> +	case ETHTOOL_PHY_DOWNSHIFT:
+> +		return dp83867_set_downshift(phydev, *(const u8 *)data);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+>   static int dp83867_config_port_mirroring(struct phy_device *phydev)
+>   {
+>   	struct dp83867_private *dp83867 =
+> @@ -467,6 +607,12 @@ static int dp83867_config_init(struct phy_device *phydev)
+>   	int ret, val, bs;
+>   	u16 delay;
+>   
+> +	/* Force speed optimization for the PHY even if it strapped */
+> +	ret = phy_modify(phydev, DP83867_CFG2, DP83867_DOWNSHIFT_EN,
+> +			 DP83867_DOWNSHIFT_EN);
+> +	if (ret)
+> +		return ret;
+> +
+>   	ret = dp83867_verify_rgmii_cfg(phydev);
+>   	if (ret)
+>   		return ret;
+> @@ -655,6 +801,10 @@ static struct phy_driver dp83867_driver[] = {
+>   		.config_init	= dp83867_config_init,
+>   		.soft_reset	= dp83867_phy_reset,
+>   
+> +		.read_status	= dp83867_read_status,
+> +		.get_tunable	= dp83867_get_tunable,
+> +		.set_tunable	= dp83867_set_tunable,
+> +
+>   		.get_wol	= dp83867_get_wol,
+>   		.set_wol	= dp83867_set_wol,
+>   
