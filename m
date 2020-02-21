@@ -2,205 +2,85 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7CC11D00
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8048DC11D25
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F39D92071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KeLcOadt"
+	by mail.kernel.org (Postfix) with ESMTP id 617DF208CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:26:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbgBUBZ7 (ORCPT
+        id S1729576AbgBUB0d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:25:59 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41309 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729476AbgBUBZ7 (ORCPT
+        Thu, 20 Feb 2020 20:26:33 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:59810 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729476AbgBUB0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:25:59 -0500
-Received: by mail-pf1-f194.google.com with SMTP id j9so326413pfa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2020 17:25:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=J27tQOPYceXfH5oaFJMMhJDT732qIsb34aA7vP0bweA=;
-        b=KeLcOadtXcfeKufQnhfHWukRpP0rcjyigVh9n2QuBfFREEOJgQ9cERYSzBVO1H24bf
-         GslQJhgovU12DwmWhdY1905yRIetjAfxvF7MTGnZ2UE9m8YX3B2TXbn2ONVNoNQ+/ySK
-         CkCd9IBBjpBTwn/oXa+CPLoM/O9/n5cl7IGqM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=J27tQOPYceXfH5oaFJMMhJDT732qIsb34aA7vP0bweA=;
-        b=fAUPgdpkP3lz8FDOVfknS+xuG4V7W7nR+Zvys7xdHbx661traHHPpQ/SkQwmWfJ8Fn
-         L92/gnF2eOesTgyX3XfGFx2WAB/LKygWzUeGtw4Wp8wIjbCwLsJIhs1ocNr2Nd1zwX/T
-         TWbWTYE0/3w6wUdjoZnoqvMlQJQhJmfa67zdwUp68EfJhtmjbgAtAQG03j7xXtyG/b8r
-         7W2/Ddw4JWPKPCwSxLTaySAoIW9xHCx1J1n4LE7IZi8QthcwdA1IBuxfNbyQnPi2HdsR
-         N9t1nPIuZa8vAIosuiCkuogUtRo+4Z9N4E4/t6IjzG+Wl1xpquxaOG7W64CbsxAcnlzM
-         EdPw==
-X-Gm-Message-State: APjAAAUkWfCtYD3QtTPMtmhJGQbynB17o2idU57+wkGbee69nwaWQmzZ
-        EN9qJljhrRSaYZgSrwGtVws64g==
-X-Google-Smtp-Source: APXvYqwnp1RJPUUY+xeDLnhF608PQs6KEBc6Qiwmq2RWYeRfku/XGkGrTRPkQ7mJPGNM+td+uYP8jA==
-X-Received: by 2002:a63:ed16:: with SMTP id d22mr8697865pgi.314.1582248356653;
-        Thu, 20 Feb 2020 17:25:56 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id j17sm818392pfa.16.2020.02.20.17.25.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 17:25:56 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 20 Feb 2020 20:26:32 -0500
+Received: from dread.disaster.area (pa49-195-185-106.pa.nsw.optusnet.com.au [49.195.185.106])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id EF33682017D;
+        Fri, 21 Feb 2020 12:26:26 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j4x5F-000591-FM; Fri, 21 Feb 2020 12:26:25 +1100
+Date:   Fri, 21 Feb 2020 12:26:25 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH V4 01/13] fs/xfs: Remove unnecessary initialization of
+ i_rwsem
+Message-ID: <20200221012625.GT10776@dread.disaster.area>
+References: <20200221004134.30599-1-ira.weiny@intel.com>
+ <20200221004134.30599-2-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
-References: <1581413771-18005-1-git-send-email-vbadigan@codeaurora.org> <1582105474-27866-1-git-send-email-vbadigan@codeaurora.org>
-Subject: Re: [PATCH V2] mmc: mmc_test: Pass different sg lists for non-blocking requests
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, dianders@google.com,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Date:   Thu, 20 Feb 2020 17:25:55 -0800
-Message-ID: <158224835519.184098.16667027079485274979@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221004134.30599-2-ira.weiny@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
+        a=bkRQb8bsQZKWSSj4M57YXw==:117 a=bkRQb8bsQZKWSSj4M57YXw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=QyXUC8HyAAAA:8 a=7-415B0cAAAA:8 a=V8yeCck6NC70EfR_wKwA:9
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Veerabhadrarao Badiganti (2020-02-19 01:44:31)
-> Supply a separate sg list for each of the request in non-blocking
-> IO test cases where two requests will be issued at same time.
->=20
-> Otherwise, sg memory may get unmapped when a request is done while
-> same memory is being accessed by controller from the other request,
-> and it leads to iommu errors with below call stack:
->=20
->         __arm_lpae_unmap+0x2e0/0x478
->         arm_lpae_unmap+0x54/0x70
->         arm_smmu_unmap+0x64/0xa4
->         __iommu_unmap+0xb8/0x1f0
->         iommu_unmap_fast+0x38/0x48
->         __iommu_dma_unmap+0x88/0x108
->         iommu_dma_unmap_sg+0x90/0xa4
->         sdhci_post_req+0x5c/0x78
->         mmc_test_start_areq+0x10c/0x120 [mmc_test]
->         mmc_test_area_io_seq+0x150/0x264 [mmc_test]
->         mmc_test_rw_multiple+0x174/0x1c0 [mmc_test]
->         mmc_test_rw_multiple_sg_len+0x44/0x6c [mmc_test]
->         mmc_test_profile_sglen_wr_nonblock_perf+0x6c/0x94 [mmc_test]
->         mtf_test_write+0x238/0x3cc [mmc_test]
->=20
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->=20
-> ---
+On Thu, Feb 20, 2020 at 04:41:22PM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> xfs_reinit_inode() -> inode_init_always() already handles calling
+> init_rwsem(i_rwsem).  Doing so again is unneeded.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Except that this inode has been destroyed and freed by the VFS, and
+we are now recycling it back into the VFS before we actually
+physically freed it.
 
-> Changes since V1:
->         - Freeing-up sg_areq memory.
->         - Added check to ensure sg length is equal for both the sg-lists
->           supplied in case of non-blocking requests.
-> ---
->  drivers/mmc/core/mmc_test.c | 42 ++++++++++++++++++++++++++++++++++++---=
----
->  1 file changed, 36 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/mmc/core/mmc_test.c b/drivers/mmc/core/mmc_test.c
-> index 492dd45..f8f884a 100644
-> --- a/drivers/mmc/core/mmc_test.c
-> +++ b/drivers/mmc/core/mmc_test.c
-> @@ -1411,6 +1417,22 @@ static int mmc_test_area_map(struct mmc_test_card =
-*test, unsigned long sz,
->                 err =3D mmc_test_map_sg(t->mem, sz, t->sg, 1, t->max_segs,
->                                       t->max_seg_sz, &t->sg_len, min_sg_l=
-en);
->         }
-> +
-> +       if (err || !nonblock)
-> +               goto err;
-> +
-> +       if (max_scatter) {
-> +               err =3D mmc_test_map_sg_max_scatter(t->mem, sz, t->sg_are=
-q,
-> +                                                 t->max_segs, t->max_seg=
-_sz,
-> +                                                 &sg_len);
-> +       } else {
-> +               err =3D mmc_test_map_sg(t->mem, sz, t->sg_areq, 1, t->max=
-_segs,
+Hence we have re-initialise the semaphore because the semaphore can
+contain internal state that is specific to it's new life cycle (e.g.
+the lockdep context) that will cause problems if we just assume that
+the inode is the same inode as it was before we recycled it back
+into the VFS caches.
 
-'repeat' is always set to 1. Why not remove that argument and update the
-code? As a follow up patch.
+So, yes, we actually do need to re-initialise the rwsem here.
 
-> +                                     t->max_seg_sz, &sg_len, min_sg_len);
-> +       }
-> +       if (!err && sg_len !=3D t->sg_len)
-> +               err =3D -EINVAL;
-> +
-> +err:
->         if (err)
->                 pr_info("%s: Failed to map sg list\n",
->                        mmc_hostname(test->card->host));
-> @@ -1458,15 +1480,16 @@ static int mmc_test_area_io_seq(struct mmc_test_c=
-ard *test, unsigned long sz,
->                         sz =3D max_tfr;
->         }
-> =20
-> -       ret =3D mmc_test_area_map(test, sz, max_scatter, min_sg_len);
-> +       ret =3D mmc_test_area_map(test, sz, max_scatter, min_sg_len, nonb=
-lock);
->         if (ret)
->                 return ret;
-> =20
->         if (timed)
->                 ktime_get_ts64(&ts1);
->         if (nonblock)
-> -               ret =3D mmc_test_nonblock_transfer(test, t->sg, t->sg_len,
-> -                                dev_addr, t->blocks, 512, write, count);
-> +               ret =3D mmc_test_nonblock_transfer(test, t->sg, t->sg_are=
-q,
-> +                                t->sg_len, dev_addr, t->blocks, 512, wri=
-te,
-> +                                count);
+Cheers,
 
-This is only called one time so it may be simpler to pass 't' instead of
-pick it apart and pass it as many arguments. Not a problem in this
-patch, besides that we're now passing even more arguments here making
-this harder to read. Also, the blksz could be hardcoded in the function
-instead of passing it as 512.
-
->         else
->                 for (i =3D 0; i < count && ret =3D=3D 0; i++) {
->                         ret =3D mmc_test_area_transfer(test, dev_addr, wr=
-ite);
-> @@ -1584,6 +1608,12 @@ static int mmc_test_area_init(struct mmc_test_card=
- *test, int erase, int fill)
->                 goto out_free;
->         }
-> =20
-> +       t->sg_areq =3D kmalloc_array(t->max_segs, sizeof(*t->sg), GFP_KER=
-NEL);
-
-It's more idiomatic to use sizeof(*t->sq_areq) here.
-
-> +       if (!t->sg_areq) {
-> +               ret =3D -ENOMEM;
-> +               goto out_free;
-> +       }
-> +
->         t->dev_addr =3D mmc_test_capacity(test->card) / 2;
->         t->dev_addr -=3D t->dev_addr % (t->max_sz >> 9);
->
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
