@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99228C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C46206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F28206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274506;
-	bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
+	s=default; t=1582274509;
+	bh=qkr6acl5AOx9HxzNSn2Ffkl5YYxSy9LryyRo9RewjuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UKR/u8ZXs0dE7YQHyDBpjjDk4WXgHxM5Ar4XHLP0gfyY1OFRicbeYtN1vwT6D/lB2
-	 JBY8IeBM8EzNi7ahLpKdb63fcSgn8LNmWsGl2APUhb8/jrixXX1FxLMpjuOsQOPNYz
-	 2u+JeRZ4UoqdxTvPnwy1nnKH0oMpDABPKkIWgZdU=
+	b=aDwyeixbuh/Y0uxy5Mt20Cm6Cc9CXhQHrK7pcJESQ9wkErr5P2JjupQRoX3Ej4Gw/
+	 ZGy4rfX8J0LlGbIGMt88vDbExdvK0GQx0ZekmCy2RQVIUmQX/d30AJMeoddryBRqu7
+	 V90DHwR1l91qbou+RDBRIgKg/uZPwSafg4bn9m34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbgBUH4k (ORCPT
+        id S1730994AbgBUIls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:56:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55948 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:41:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgBUH4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:32 -0500
+        id S1730481AbgBUH4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 224DC20578;
-        Fri, 21 Feb 2020 07:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0ED820578;
+        Fri, 21 Feb 2020 07:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271792;
-        bh=11ds414/iVeTj4WTOhRtPXdUUxm9wT7k1cnNpmj1euk=;
+        s=default; t=1582271800;
+        bh=qkr6acl5AOx9HxzNSn2Ffkl5YYxSy9LryyRo9RewjuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BcX3nK9uAJVFxYXG1JiCV7S2QsAsguWg2H1X2sWV8cdgBmWjwJSp8uYhYPbeQ/5/N
-         V2T9REqdvYv/VarmEZvAkPvx5Q/pgQHNeTL4NEFcdnF1VDyCgMrEIXyeIuvC85ley9
-         JDsXGZkMEAReIpIiSop9zeKVlquskgLh2s2ZzVLE=
+        b=BmzB5hL3xkLVZ3nAxA65I7L94eI3pmDBLAWE9Xt1VhcZj7gOez0DgsiGuEnbE6Hc4
+         lAYd8g24Eayvbo1a6lbVh91lUN1aP1HG1oR0qjo8bBo3r5VuXSNfH43qAo7MeV841D
+         R9PXPM03PDFBGttTVWrbb5XH7xwYzecRytU2yF40=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 300/399] x86/mm: Fix NX bit clearing issue in kernel_map_pages_in_pgd
-Date:   Fri, 21 Feb 2020 08:40:25 +0100
-Message-Id: <20200221072430.888387229@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 276/399] crypto: essiv - fix AEAD capitalization and preposition use in help text
+Date:   Fri, 21 Feb 2020 08:40:01 +0100
+Message-Id: <20200221072428.921963176@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -59,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 75fbef0a8b6b4bb19b9a91b5214f846c2dc5139e ]
+[ Upstream commit ab3d436bf3e9d05f58ceaa85ff7475bfcd6e45af ]
 
-The following commit:
+"AEAD" is capitalized everywhere else.
+Use "an" when followed by a written or spoken vowel.
 
-  15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()")
-
-modified kernel_map_pages_in_pgd() to manage writable permissions
-of memory mappings in the EFI page table in a different way, but
-in the process, it removed the ability to clear NX attributes from
-read-only mappings, by clobbering the clear mask if _PAGE_RW is not
-being requested.
-
-Failure to remove the NX attribute from read-only mappings is
-unlikely to be a security issue, but it does prevent us from
-tightening the permissions in the EFI page tables going forward,
-so let's fix it now.
-
-Fixes: 15f003d20782 ("x86/mm/pat: Don't implicitly allow _PAGE_RW in kernel_map_pages_in_pgd()
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200113172245.27925-5-ardb@kernel.org
+Fixes: be1eb7f78aa8fbe3 ("crypto: essiv - create wrapper template for ESSIV generation")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/pageattr.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ crypto/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 1b99ad05b1177..f42780ba08937 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -2215,7 +2215,7 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 		.pgd = pgd,
- 		.numpages = numpages,
- 		.mask_set = __pgprot(0),
--		.mask_clr = __pgprot(0),
-+		.mask_clr = __pgprot(~page_flags & (_PAGE_NX|_PAGE_RW)),
- 		.flags = 0,
- 	};
+diff --git a/crypto/Kconfig b/crypto/Kconfig
+index 5575d48473bd4..cdb51d4272d0c 100644
+--- a/crypto/Kconfig
++++ b/crypto/Kconfig
+@@ -511,10 +511,10 @@ config CRYPTO_ESSIV
+ 	  encryption.
  
-@@ -2224,12 +2224,6 @@ int __init kernel_map_pages_in_pgd(pgd_t *pgd, u64 pfn, unsigned long address,
- 	if (!(__supported_pte_mask & _PAGE_NX))
- 		goto out;
- 
--	if (!(page_flags & _PAGE_NX))
--		cpa.mask_clr = __pgprot(_PAGE_NX);
--
--	if (!(page_flags & _PAGE_RW))
--		cpa.mask_clr = __pgprot(_PAGE_RW);
--
- 	if (!(page_flags & _PAGE_ENC))
- 		cpa.mask_clr = pgprot_encrypted(cpa.mask_clr);
- 
+ 	  This driver implements a crypto API template that can be
+-	  instantiated either as a skcipher or as a aead (depending on the
++	  instantiated either as an skcipher or as an AEAD (depending on the
+ 	  type of the first template argument), and which defers encryption
+ 	  and decryption requests to the encapsulated cipher after applying
+-	  ESSIV to the input IV. Note that in the aead case, it is assumed
++	  ESSIV to the input IV. Note that in the AEAD case, it is assumed
+ 	  that the keys are presented in the same format used by the authenc
+ 	  template, and that the IV appears at the end of the authenticated
+ 	  associated data (AAD) region (which is how dm-crypt uses it.)
 -- 
 2.20.1
 
