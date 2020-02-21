@@ -2,135 +2,155 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1757C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19306C35655
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A81E4222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:02:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UKFOzCl6"
+	by mail.kernel.org (Postfix) with ESMTP id E557D24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 12:05:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582286727;
+	bh=WIk1USnqAYkVxVYxm8jkcz/+F+dnJUCoVZThI8VfNkg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xdD5qH4XzMBOaaLVsxpN531eWtDewjkDvACJ5TzH7Jg1zMxevw3pM7YvhT94+9aNq
+	 YWau8i9WRNgA0UY8DryhcckIwWc2wpShJGnQjeqIeG02UVIdffJLp4iMFuzsCVK51+
+	 p4rO62FkS8BUUdN+ScvViQegAcW+qvyOlFZi4rhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgBUMCo (ORCPT
+        id S1727910AbgBUMFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 07:02:44 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44513 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbgBUMCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 07:02:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id m16so1728663wrx.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 04:02:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XEMXcf1Qym5KZXe7M87kC8LbHamJQ0UMLSMngcLuhOU=;
-        b=UKFOzCl6q4/cR/NsAjylHV5Gebfb6qxNZdL5rw1XT2ToRS3Q+BmEAaQt3KQowks3FV
-         O2f4DMGkYVUc9KYLH3UeegG+7DhMaBXhBb8dvjuLIFosDhSaBHSmk3y0GcXVyKS00HDn
-         CB3v4G6PN2dB9kj8W5qmjzuUQudPYm7QpNcUs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XEMXcf1Qym5KZXe7M87kC8LbHamJQ0UMLSMngcLuhOU=;
-        b=VwKPyw5v9lOPoZvgIo5Yx3MQGBY1gxMRu5gXCg0I5RQGiTq9IFYO7BRNckorkdcpg1
-         P/jFMZnlcM9vUXLult4SxX1clhaotjicnQ1wvMCdrRUojSTiAHmPKC4eiM9dbFFsbvu9
-         WCg84JnBYL7zKauWpdgi5hC4FI6PNzeTav3P/VpnqOKoW3vdQ3JtyyVt2/HSiBDO+Io7
-         jYSJhbpC2NR+70HHIigYATvpA5CBdHiF9pTkvDeFCf0UOTCOfBsxaJl12L6OlGCDZT9g
-         5IN70cAkx6TXv+CaCFAYFw4YKynkN3CPjXmyJZa4aMLdRONvFkgsvrjAMqahKAacdsc/
-         zF4A==
-X-Gm-Message-State: APjAAAW9BAOj/y3mz/8LP6yj3dY4TnIP5JN98xh3PIcK9Hk/n/iOVpV0
-        gCYlw45BG46mIWsyOE7Fw4QxCw==
-X-Google-Smtp-Source: APXvYqzsuM0rMnESdMtK5OBkUXp1jDKWa+okCPaVGYbgB20R7139xAB9Mq1tDbbjbEUGQCmxgxSxBQ==
-X-Received: by 2002:a5d:61cb:: with SMTP id q11mr50890228wrv.71.1582286562277;
-        Fri, 21 Feb 2020 04:02:42 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id x21sm3322107wmi.30.2020.02.21.04.02.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 04:02:41 -0800 (PST)
-Date:   Fri, 21 Feb 2020 13:02:40 +0100
-From:   KP Singh <kpsingh@chromium.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v4 5/8] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <CACYkzJ6E7FDE0xnnZPCmxgC+vEw1o4qcu9szV1DMeDeukbnFxQ@mail.gmail.com>
-References: <20200220175250.10795-1-kpsingh@chromium.org>
- <20200220175250.10795-6-kpsingh@chromium.org>
- <20200221021755.3z7ifyyeh6seo3zs@ast-mbp>
+        Fri, 21 Feb 2020 07:05:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbgBUMFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 07:05:25 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80F4B24656;
+        Fri, 21 Feb 2020 12:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582286724;
+        bh=WIk1USnqAYkVxVYxm8jkcz/+F+dnJUCoVZThI8VfNkg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KtCnfAra6d8zyENZqf6RSr+3ZUy4jJnz9Yaz0D7BcMlgtGksKzAbq0l4pFEU86z2x
+         f4y550bi4rYlZk7WqL7Pg0yNOULb3Zlumegz4RCtIY+ZuKwjVYMU0V11WV68JBByrH
+         wvRgl1HEziNnUgsB5cqI9CHcH4+x1SizLQeRiGo8=
+Date:   Fri, 21 Feb 2020 12:05:19 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
+Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] iio: vcnl4000: Export near level property for
+ proximity sensor
+Message-ID: <20200221120519.43b72007@archlinux>
+In-Reply-To: <4a8075acde807225a2d9aeb4164fff881013bbe2.1581947007.git.agx@sigxcpu.org>
+References: <cover.1581947007.git.agx@sigxcpu.org>
+        <4a8075acde807225a2d9aeb4164fff881013bbe2.1581947007.git.agx@sigxcpu.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221021755.3z7ifyyeh6seo3zs@ast-mbp>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-Feb 18:17, Alexei Starovoitov wrote:
-> On Thu, Feb 20, 2020 at 06:52:47PM +0100, KP Singh wrote:
-> > +
-> > +   /* This is the first program to be attached to the LSM hook, the hook
-> > +    * needs to be enabled.
-> > +    */
-> > +   if (prog->type == BPF_PROG_TYPE_LSM && tr->progs_cnt[kind] == 1)
-> > +           err = bpf_lsm_set_enabled(prog->aux->attach_func_name, true);
-> >  out:
-> >     mutex_unlock(&tr->mutex);
-> >     return err;
-> > @@ -336,7 +348,11 @@ int bpf_trampoline_unlink_prog(struct bpf_prog *prog)
-> >     }
-> >     hlist_del(&prog->aux->tramp_hlist);
-> >     tr->progs_cnt[kind]--;
-> > -   err = bpf_trampoline_update(prog->aux->trampoline);
-> > +   err = bpf_trampoline_update(prog);
-> > +
-> > +   /* There are no more LSM programs, the hook should be disabled */
-> > +   if (prog->type == BPF_PROG_TYPE_LSM && tr->progs_cnt[kind] == 0)
-> > +           err = bpf_lsm_set_enabled(prog->aux->attach_func_name, false);
->
-> Overall looks good, but I don't think above logic works.
-> Consider lsm being attached, then fexit, then lsm detached, then fexit detached.
-> Both are kind==fexit and static_key stays enabled.
+On Mon, 17 Feb 2020 14:44:47 +0100
+Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 
-You're right. I was weary of introducing a new kind (something like
-BPF_TRAMP_LSM) since they are just fexit trampolines. For now, I
-added nr_lsm_progs as a member in struct bpf_trampoline and refactored
-the increment and decrement logic into inline helper functions e.g.
+> When an object can be considered close to the sensor is hardware
+> dependent. Allowing to configure the property via device tree
+> allows to configure this device specific value.
+>=20
+> This is useful for e.g. iio-sensor-proxy to indicate to userspace
+> if an object is close to the sensor.
+>=20
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
 
-static inline void bpf_trampoline_dec_progs(struct bpf_prog *prog,
-                                            enum bpf_tramp_prog_type kind)
-{
-        struct bpf_trampoline *tr = prog->aux->trampoline;
+I'd like this to sit for a while on the mailing list and hopefully get
+some input from others.
 
-        if (prog->type == BPF_PROG_TYPE_LSM)
-                tr->nr_lsm_progs--;
+However, it needs documentation and I think this should be in the
+generic docs, or at least proximity specific ones.
 
-        tr->progs_cnt[kind]--;
-}
+Documentation/ABI/testing/sysfs-bus-iio-proximity would be the obvious
+place.
 
-and doing the check as:
+Thanks,
 
-  if (prog->type == BPF_PROG_TYPE_LSM && tr->nr_lsm_progs == 0)
-        err = bpf_lsm_set_enabled(prog->aux->attach_func_name, false);
+Jonathan
 
-This should work, If you're okay with it, I will update it in the next
-revision of the patch-set.
+> ---
+>  drivers/iio/light/vcnl4000.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>=20
+> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
+> index 38fcd9a26046..7111118e0fda 100644
+> --- a/drivers/iio/light/vcnl4000.c
+> +++ b/drivers/iio/light/vcnl4000.c
+> @@ -83,6 +83,7 @@ struct vcnl4000_data {
+>  	struct mutex vcnl4000_lock;
+>  	struct vcnl4200_channel vcnl4200_al;
+>  	struct vcnl4200_channel vcnl4200_ps;
+> +	uint32_t near_level;
+>  };
+> =20
+>  struct vcnl4000_chip_spec {
+> @@ -342,6 +343,26 @@ static const struct vcnl4000_chip_spec vcnl4000_chip=
+_spec_cfg[] =3D {
+>  	},
+>  };
+> =20
+> +
+> +static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
+> +					uintptr_t priv,
+> +					const struct iio_chan_spec *chan,
+> +					char *buf)
+> +{
+> +	struct vcnl4000_data *data =3D iio_priv(indio_dev);
+> +
+> +	return sprintf(buf, "%u\n", data->near_level);
+> +}
+> +
+> +static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] =3D {
+> +	{
+> +		.name =3D "near_level",
+> +		.shared =3D IIO_SEPARATE,
+> +		.read =3D vcnl4000_read_near_level,
+> +	},
+> +	{ /* sentinel */ }
+> +};
+> +
+>  static const struct iio_chan_spec vcnl4000_channels[] =3D {
+>  	{
+>  		.type =3D IIO_LIGHT,
+> @@ -350,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[]=
+ =3D {
+>  	}, {
+>  		.type =3D IIO_PROXIMITY,
+>  		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),
+> +		.ext_info =3D vcnl4000_ext_info,
+>  	}
+>  };
+> =20
+> @@ -439,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
+>  	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
+>  		data->chip_spec->prod, data->rev);
+> =20
+> +	if (device_property_read_u32(&client->dev, "near-level",
+> +				     &data->near_level) < 0)
+> +		data->near_level =3D 0;
+> +
+>  	indio_dev->dev.parent =3D &client->dev;
+>  	indio_dev->info =3D &vcnl4000_info;
+>  	indio_dev->channels =3D vcnl4000_channels;
 
-- KP
