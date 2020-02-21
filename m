@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14145C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA2C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFA2D20801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C59A924653
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271171;
-	bh=I3GG6lSlT9TzpTOQSFRaoFpe2xLdXe/3lR+hI2etkKg=;
+	s=default; t=1582271174;
+	bh=m4jyVE18pfZq4qi+TJEPKig9Dd0guUKdRgNJXmVZibI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P4OQ6nu9JcTBdoNp1YV+H06yvlTBM7VRxmF3wTVJKFx+2Tmj+atxAnOLEDKwEem1n
-	 N0IqJ6pbVbWl1EqPoC2G9wu7NcGUMvr/fTO7Biq8miVEyb/3S1TJjVibvQ9kxOz+zC
-	 p3N2WsBCjLOKKl4JBP6rRTFovFU3gZPeeDFFeHoM=
+	b=sdXjY9eNwR71GKwChOKYFj/zq7IFDcUNZacQzGMCD+bvyOb5Dj1IlUfOSH2MtBA9H
+	 F0nj5F4k3IREg4G73tXCkt/FAJRMAVRVLQANdrPZ883NIzeQa/4OeMXCDEUIcwQNAD
+	 5KZp2LWE1lhDwxU4F5bxMb5HwrHg6Eigyp+B7VrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbgBUHqK (ORCPT
+        id S1728648AbgBUHqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41516 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbgBUHqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:08 -0500
+        id S1728616AbgBUHqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2048F24672;
-        Fri, 21 Feb 2020 07:46:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DDC824673;
+        Fri, 21 Feb 2020 07:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271167;
-        bh=I3GG6lSlT9TzpTOQSFRaoFpe2xLdXe/3lR+hI2etkKg=;
+        s=default; t=1582271170;
+        bh=m4jyVE18pfZq4qi+TJEPKig9Dd0guUKdRgNJXmVZibI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2rB9QXHqfrUlkRZhmXg68kWHpMKBoKPcejTHfoWNu4P7sdmT5rrh17x851nc24Lp
-         Cz/qcfPp9BCcqHKKyAh6gCuHdQJOimEJT+0bIjA4sycGvaj/HPVV4bE7MV12Js8ZtG
-         klVMfkVLbAmOFI58dVoX4zJMK17MS1xD6b8P5K1I=
+        b=OBJox8ve3LEncH7UMCcme+d2ZHnrGc05i0zdInZbH21APtJ3ucnXfnW3NbnZU+LkA
+         sX9QYW75n6eEqPhe0hT3ARg+GL+J+jsnwfEQe/yradoZpKc7H8sGO4dPQbYkcT3Q/s
+         QM9dSQsNxIJbMFWolbg+L19vbGtQU4f2+pgKvtB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiecheng Zhou <Tiecheng.Zhou@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 063/399] drm/amdgpu/sriov: workaround on rev_id for Navi12 under sriov
-Date:   Fri, 21 Feb 2020 08:36:28 +0100
-Message-Id: <20200221072408.516417950@linuxfoundation.org>
+Subject: [PATCH 5.5 064/399] spi: fsl-lpspi: fix only one cs-gpio working
+Date:   Fri, 21 Feb 2020 08:36:29 +0100
+Message-Id: <20200221072408.604738913@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,42 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-[ Upstream commit df5e984c8bd414561c320d6cbbb66d53abf4c7e2 ]
+[ Upstream commit bc3a8b295e5bca9d1ec2622a6ba38289f9fd3d8a ]
 
-guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
-as a consequence, the rev_id and external_rev_id are wrong.
+Why it does not work at the moment:
+- num_chipselect sets the number of cs-gpios that are in the DT.
+  This comes from drivers/spi/spi.c
+- num_chipselect gets set with devm_spi_register_controller, that is
+  called in drivers/spi/spi.c
+- devm_spi_register_controller got called after num_chipselect has
+  been used.
 
-workaround it by hardcoding the rev_id to 0, which is the default value.
+How this commit fixes the issue:
+- devm_spi_register_controller gets called before num_chipselect is
+  being used.
 
-v2. add comment in the code
-
-Signed-off-by: Tiecheng Zhou <Tiecheng.Zhou@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: c7a402599504 ("spi: lpspi: use the core way to implement cs-gpio function")
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Link: https://lore.kernel.org/r/20191204141312.1411251-1-philippe.schenker@toradex.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/nv.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/spi/spi-fsl-lpspi.c | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/nv.c b/drivers/gpu/drm/amd/amdgpu/nv.c
-index 0ba66bef57468..de40bf12c4a8c 100644
---- a/drivers/gpu/drm/amd/amdgpu/nv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/nv.c
-@@ -701,6 +701,12 @@ static int nv_common_early_init(void *handle)
- 		adev->pg_flags = AMD_PG_SUPPORT_VCN |
- 			AMD_PG_SUPPORT_VCN_DPG |
- 			AMD_PG_SUPPORT_ATHUB;
-+		/* guest vm gets 0xffffffff when reading RCC_DEV0_EPF0_STRAP0,
-+		 * as a consequence, the rev_id and external_rev_id are wrong.
-+		 * workaround it by hardcoding rev_id to 0 (default value).
-+		 */
-+		if (amdgpu_sriov_vf(adev))
-+			adev->rev_id = 0;
- 		adev->external_rev_id = adev->rev_id + 0xa;
- 		break;
- 	default:
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index 2cc0ddb4a9889..1375bdfc587bf 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -862,6 +862,22 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 	fsl_lpspi->dev = &pdev->dev;
+ 	fsl_lpspi->is_slave = is_slave;
+ 
++	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
++	controller->transfer_one = fsl_lpspi_transfer_one;
++	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
++	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
++	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
++	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
++	controller->dev.of_node = pdev->dev.of_node;
++	controller->bus_num = pdev->id;
++	controller->slave_abort = fsl_lpspi_slave_abort;
++
++	ret = devm_spi_register_controller(&pdev->dev, controller);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "spi_register_controller error.\n");
++		goto out_controller_put;
++	}
++
+ 	if (!fsl_lpspi->is_slave) {
+ 		for (i = 0; i < controller->num_chipselect; i++) {
+ 			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
+@@ -885,16 +901,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 		controller->prepare_message = fsl_lpspi_prepare_message;
+ 	}
+ 
+-	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
+-	controller->transfer_one = fsl_lpspi_transfer_one;
+-	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
+-	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
+-	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+-	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
+-	controller->dev.of_node = pdev->dev.of_node;
+-	controller->bus_num = pdev->id;
+-	controller->slave_abort = fsl_lpspi_slave_abort;
+-
+ 	init_completion(&fsl_lpspi->xfer_done);
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -952,12 +958,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
+ 
+-	ret = devm_spi_register_controller(&pdev->dev, controller);
+-	if (ret < 0) {
+-		dev_err(&pdev->dev, "spi_register_controller error.\n");
+-		goto out_controller_put;
+-	}
+-
+ 	return 0;
+ 
+ out_controller_put:
 -- 
 2.20.1
 
