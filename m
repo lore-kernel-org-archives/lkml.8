@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E51C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29680C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CCD20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1512206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274362;
-	bh=8nF09Mx0R0VykZIsatHCLOID3H5n0MCFoFllwCAnXoI=;
+	s=default; t=1582274365;
+	bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afKLVPx/NT4wla9HtnBEj1AANTHDJmghoxDSpPfIrCrphEVm6kxHuk+m6/+OILjCV
-	 XNF1USTaZ8VTSekXjl02HIHxUHnGbhAAg/roDF7DglttC2aAmEySZC9A2f/kCg9ll3
-	 6DJTwaKdEjz3lLEip08Wck/jr5f/XKz1dvZYbeSg=
+	b=tOeoXsTCxOwY4i7PkrRQiQGVR0Yy1URvI2EjZQXQ7OMOdgy5LHFCjo5NvYjf8LEKx
+	 PwUGq0bqBmfTWwjmeV6SY85qzrfuKHVFYqzUG/+ewuO+75xpzm4GZo9DO8VaFUYRSx
+	 tVnCjxc9xEAyeamZb5VP5aNhWE/1Of+ZxeTAHvYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731172AbgBUIBN (ORCPT
+        id S1731855AbgBUIjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:01:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33404 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:39:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731157AbgBUIBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:01:07 -0500
+        id S1731166AbgBUIBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:01:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37AF424672;
-        Fri, 21 Feb 2020 08:01:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40A6D2073A;
+        Fri, 21 Feb 2020 08:01:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272066;
-        bh=8nF09Mx0R0VykZIsatHCLOID3H5n0MCFoFllwCAnXoI=;
+        s=default; t=1582272071;
+        bh=H0djIpIgCKD0Tf20YOgU5LkJ2ifFfJbbpxqtLDzx5TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jn0WDFIlrXZ4e+CitKHx9IOAom5LIQ0FhSd8I6w0lMsRek/A4yd4DZzi82nt4Dubj
-         fFuC1vFVZZUQ0Ys1FAQzx1FcC2M6/D0fLTCp9R9Syu9HfBAvMdGJasFKvKElV6N3Tc
-         yxy6wFakmv5PbA/uRoDcVm+qnUc/TGhhNXDAV+fs=
+        b=XhmlP9rOrzRabEaY8SH4QiI/uFSRCm0DSvLHmgAEnhyek0iZhxv6s7UD99Q2w+spq
+         U5oJX+BFbJRzzp5WZzvJB8KMahJIsKJxqNiBe7HaKuyojKKeMt3NGd/W5EH+oDYApI
+         VP1mODx4JXc2HR/7AH7ZeYs/jWhWopx9GPv6X+I8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 396/399] mlxsw: spectrum_dpipe: Add missing error path
-Date:   Fri, 21 Feb 2020 08:42:01 +0100
-Message-Id: <20200221072438.349040400@linuxfoundation.org>
+Subject: [PATCH 5.5 398/399] drm/amdgpu/display: handle multiple numbers of fclks in dcn_calcs.c (v2)
+Date:   Fri, 21 Feb 2020 08:42:03 +0100
+Message-Id: <20200221072438.501365877@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,43 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 3a99cbb6fa7bca1995586ec2dc21b0368aad4937 ]
+[ Upstream commit c37243579d6c881c575dcfb54cf31c9ded88f946 ]
 
-In case devlink_dpipe_entry_ctx_prepare() failed, release RTNL that was
-previously taken and free the memory allocated by
-mlxsw_sp_erif_entry_prepare().
+We might get different numbers of clocks from powerplay depending
+on what the OEM has populated.
 
-Fixes: 2ba5999f009d ("mlxsw: spectrum: Add Support for erif table entries access")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+v2: add assert for at least one level
+
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
+Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ .../gpu/drm/amd/display/dc/calcs/dcn_calcs.c  | 34 +++++++++++++------
+ 1 file changed, 23 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-index 49933818c6f59..2dc0978428e64 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_dpipe.c
-@@ -215,7 +215,7 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
- start_again:
- 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
- 	if (err)
--		return err;
-+		goto err_ctx_prepare;
- 	j = 0;
- 	for (; i < rif_count; i++) {
- 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
-@@ -247,6 +247,7 @@ start_again:
- 	return 0;
- err_entry_append:
- err_entry_get:
-+err_ctx_prepare:
- 	rtnl_unlock();
- 	devlink_dpipe_entry_clear(&entry);
- 	return err;
+diff --git a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
+index 9b2cb57bf2bad..c9a241fe46cf4 100644
+--- a/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
++++ b/drivers/gpu/drm/amd/display/dc/calcs/dcn_calcs.c
+@@ -1438,6 +1438,7 @@ void dcn_bw_update_from_pplib(struct dc *dc)
+ 	struct dc_context *ctx = dc->ctx;
+ 	struct dm_pp_clock_levels_with_voltage fclks = {0}, dcfclks = {0};
+ 	bool res;
++	unsigned vmin0p65_idx, vmid0p72_idx, vnom0p8_idx, vmax0p9_idx;
+ 
+ 	/* TODO: This is not the proper way to obtain fabric_and_dram_bandwidth, should be min(fclk, memclk) */
+ 	res = dm_pp_get_clock_levels_by_type_with_voltage(
+@@ -1449,17 +1450,28 @@ void dcn_bw_update_from_pplib(struct dc *dc)
+ 		res = verify_clock_values(&fclks);
+ 
+ 	if (res) {
+-		ASSERT(fclks.num_levels >= 3);
+-		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 = 32 * (fclks.data[0].clocks_in_khz / 1000.0) / 1000.0;
+-		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 = dc->dcn_soc->number_of_channels *
+-				(fclks.data[fclks.num_levels - (fclks.num_levels > 2 ? 3 : 2)].clocks_in_khz / 1000.0)
+-				* ddr4_dram_factor_single_Channel / 1000.0;
+-		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 = dc->dcn_soc->number_of_channels *
+-				(fclks.data[fclks.num_levels - 2].clocks_in_khz / 1000.0)
+-				* ddr4_dram_factor_single_Channel / 1000.0;
+-		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 = dc->dcn_soc->number_of_channels *
+-				(fclks.data[fclks.num_levels - 1].clocks_in_khz / 1000.0)
+-				* ddr4_dram_factor_single_Channel / 1000.0;
++		ASSERT(fclks.num_levels);
++
++		vmin0p65_idx = 0;
++		vmid0p72_idx = fclks.num_levels -
++			(fclks.num_levels > 2 ? 3 : (fclks.num_levels > 1 ? 2 : 1));
++		vnom0p8_idx = fclks.num_levels - (fclks.num_levels > 1 ? 2 : 1);
++		vmax0p9_idx = fclks.num_levels - 1;
++
++		dc->dcn_soc->fabric_and_dram_bandwidth_vmin0p65 =
++			32 * (fclks.data[vmin0p65_idx].clocks_in_khz / 1000.0) / 1000.0;
++		dc->dcn_soc->fabric_and_dram_bandwidth_vmid0p72 =
++			dc->dcn_soc->number_of_channels *
++			(fclks.data[vmid0p72_idx].clocks_in_khz / 1000.0)
++			* ddr4_dram_factor_single_Channel / 1000.0;
++		dc->dcn_soc->fabric_and_dram_bandwidth_vnom0p8 =
++			dc->dcn_soc->number_of_channels *
++			(fclks.data[vnom0p8_idx].clocks_in_khz / 1000.0)
++			* ddr4_dram_factor_single_Channel / 1000.0;
++		dc->dcn_soc->fabric_and_dram_bandwidth_vmax0p9 =
++			dc->dcn_soc->number_of_channels *
++			(fclks.data[vmax0p9_idx].clocks_in_khz / 1000.0)
++			* ddr4_dram_factor_single_Channel / 1000.0;
+ 	} else
+ 		BREAK_TO_DEBUGGER();
+ 
 -- 
 2.20.1
 
