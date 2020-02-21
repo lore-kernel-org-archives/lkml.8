@@ -2,51 +2,53 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7062EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B081C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E05F20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501462467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272709;
-	bh=MKD/d1HpsdK+H30i3L+CguO/x1O7XcUgODhV2+4aquk=;
+	s=default; t=1582272712;
+	bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IkxAkr1OfTfiPd0OJMdK1Uf0DWz2EvsWAJWjI6XWXi1AdzYEr5fZfYzYZviSk8DE+
-	 8mLu82ZTxYAnqU60zeLyy2Oy0Mn9sSJIdAF7irUgKHV0x7R61V0Bl7kpY4J6J/Nky/
-	 16bUGqcKaFb4bWWxu+8E0i9THAzoJdVdndsAYYcM=
+	b=snnXXUZZg6UDazzBojLdqAP7Z43Ho2jHYrKxkWQaOX23AnXRBnWZU2P+5fTW6PJJn
+	 a6O/f3LqhRhKtUhdRp+DPW87dTmxWiUcqVc505T1cmdGx6e8jfEc2DQ+l5odZ3++5j
+	 +3dCdQqG2HcuWqDrZdH/OrXef/tw8A1OD4wlFnSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732741AbgBUILr (ORCPT
+        id S1732745AbgBUILv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:11:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47316 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:11:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732522AbgBUILo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:11:44 -0500
+        id S1732466AbgBUILs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:11:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD206206ED;
-        Fri, 21 Feb 2020 08:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8EE420722;
+        Fri, 21 Feb 2020 08:11:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272703;
-        bh=MKD/d1HpsdK+H30i3L+CguO/x1O7XcUgODhV2+4aquk=;
+        s=default; t=1582272708;
+        bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zra2cALqOaNL9RcojlXUZF5UpfcgEb1A4oEHRQOUQCl+aGw1+R6/unAMlHc+adzLc
-         3mekKIWJGHlSkDuePRDjPd4zVWprYC9hfeglfyY8st18WUU2IpokrqLS5gnDFAmnsZ
-         SZEjjXmibEcESbXPO4pt0BFm7g7afBmgAK6fhEpQ=
+        b=w8ZeF1qx2jagMbURjq80fhdAyX/3FthZHNbjGZ7OKV+zITPc1omeS85S4jmrbTBHN
+         XTCUC29VDJ+7++gXS8gKc59i/6gPYwklVfSwBzPU5srJtwWYsiwzIOebCwQCHBlurs
+         QH9d+ACbbVE35lALyPtcmj5MSnOs5o9Zbe6XZ000=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leon Romanovsky <leonro@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 243/344] RDMA/mlx5: Dont fake udata for kernel path
-Date:   Fri, 21 Feb 2020 08:40:42 +0100
-Message-Id: <20200221072411.448691012@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 245/344] arm64: fix alternatives with LLVMs integrated assembler
+Date:   Fri, 21 Feb 2020 08:40:44 +0100
+Message-Id: <20200221072411.649211484@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,167 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-[ Upstream commit 4835709176e8ccf6561abc9f5c405293e008095f ]
+[ Upstream commit c54f90c2627cc316d365e3073614731e17dbc631 ]
 
-Kernel paths must not set udata and provide NULL pointer,
-instead of faking zeroed udata struct.
+LLVM's integrated assembler fails with the following error when
+building KVM:
 
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+  <inline asm>:12:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:21:6: error: expected absolute expression
+   .if kvm_update_va_mask == 0
+       ^
+  <inline asm>:24:2: error: unrecognized instruction mnemonic
+          NOT_AN_INSTRUCTION
+          ^
+  LLVM ERROR: Error parsing inline asm
+
+These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
+which test for the existence of the callback parameter in inline
+assembly using the following expression:
+
+  " .if " __stringify(cb) " == 0\n"
+
+This works with GNU as, but isn't supported by LLVM. This change
+splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
+to fix the LLVM build.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/472
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/main.c | 34 +++++++++++++++----------------
- 1 file changed, 16 insertions(+), 18 deletions(-)
+ arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
-index e1cfbedefcbc9..9a918db9e8db4 100644
---- a/drivers/infiniband/hw/mlx5/main.c
-+++ b/drivers/infiniband/hw/mlx5/main.c
-@@ -829,6 +829,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 				struct ib_device_attr *props,
- 				struct ib_udata *uhw)
- {
-+	size_t uhw_outlen = (uhw) ? uhw->outlen : 0;
- 	struct mlx5_ib_dev *dev = to_mdev(ibdev);
- 	struct mlx5_core_dev *mdev = dev->mdev;
- 	int err = -ENOMEM;
-@@ -842,12 +843,12 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 	u64 max_tso;
+diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
+index b9f8d787eea9f..324e7d5ab37ed 100644
+--- a/arch/arm64/include/asm/alternative.h
++++ b/arch/arm64/include/asm/alternative.h
+@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
+ static inline void apply_alternatives_module(void *start, size_t length) { }
+ #endif
  
- 	resp_len = sizeof(resp.comp_mask) + sizeof(resp.response_length);
--	if (uhw->outlen && uhw->outlen < resp_len)
-+	if (uhw_outlen && uhw_outlen < resp_len)
- 		return -EINVAL;
- 	else
- 		resp.response_length = resp_len;
+-#define ALTINSTR_ENTRY(feature,cb)					      \
++#define ALTINSTR_ENTRY(feature)					              \
+ 	" .word 661b - .\n"				/* label           */ \
+-	" .if " __stringify(cb) " == 0\n"				      \
+ 	" .word 663f - .\n"				/* new instruction */ \
+-	" .else\n"							      \
++	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
++	" .byte 662b-661b\n"				/* source len      */ \
++	" .byte 664f-663f\n"				/* replacement len */
++
++#define ALTINSTR_ENTRY_CB(feature, cb)					      \
++	" .word 661b - .\n"				/* label           */ \
+ 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
+-	" .endif\n"							      \
+ 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
+ 	" .byte 662b-661b\n"				/* source len      */ \
+ 	" .byte 664f-663f\n"				/* replacement len */
+@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+  *
+  * Alternatives with callbacks do not generate replacement instructions.
+  */
+-#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
++#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
+ 	".if "__stringify(cfg_enabled)" == 1\n"				\
+ 	"661:\n\t"							\
+ 	oldinstr "\n"							\
+ 	"662:\n"							\
+ 	".pushsection .altinstructions,\"a\"\n"				\
+-	ALTINSTR_ENTRY(feature,cb)					\
++	ALTINSTR_ENTRY(feature)						\
+ 	".popsection\n"							\
+-	" .if " __stringify(cb) " == 0\n"				\
+ 	".pushsection .altinstr_replacement, \"a\"\n"			\
+ 	"663:\n\t"							\
+ 	newinstr "\n"							\
+@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
+ 	".popsection\n\t"						\
+ 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
+ 	".org	. - (662b-661b) + (664b-663b)\n"			\
+-	".else\n\t"							\
++	".endif\n"
++
++#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
++	".if "__stringify(cfg_enabled)" == 1\n"				\
++	"661:\n\t"							\
++	oldinstr "\n"							\
++	"662:\n"							\
++	".pushsection .altinstructions,\"a\"\n"				\
++	ALTINSTR_ENTRY_CB(feature, cb)					\
++	".popsection\n"							\
+ 	"663:\n\t"							\
+ 	"664:\n\t"							\
+-	".endif\n"							\
+ 	".endif\n"
  
--	if (uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
-+	if (uhw && uhw->inlen && !ib_is_udata_cleared(uhw, 0, uhw->inlen))
- 		return -EINVAL;
+ #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
+-	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
++	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
  
- 	memset(props, 0, sizeof(*props));
-@@ -911,7 +912,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			props->raw_packet_caps |=
- 				IB_RAW_PACKET_CAP_CVLAN_STRIPPING;
+ #define ALTERNATIVE_CB(oldinstr, cb) \
+-	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
++	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
+ #else
  
--		if (field_avail(typeof(resp), tso_caps, uhw->outlen)) {
-+		if (field_avail(typeof(resp), tso_caps, uhw_outlen)) {
- 			max_tso = MLX5_CAP_ETH(mdev, max_lso_cap);
- 			if (max_tso) {
- 				resp.tso_caps.max_tso = 1 << max_tso;
-@@ -921,7 +922,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			}
- 		}
- 
--		if (field_avail(typeof(resp), rss_caps, uhw->outlen)) {
-+		if (field_avail(typeof(resp), rss_caps, uhw_outlen)) {
- 			resp.rss_caps.rx_hash_function =
- 						MLX5_RX_HASH_FUNC_TOEPLITZ;
- 			resp.rss_caps.rx_hash_fields_mask =
-@@ -941,9 +942,9 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			resp.response_length += sizeof(resp.rss_caps);
- 		}
- 	} else {
--		if (field_avail(typeof(resp), tso_caps, uhw->outlen))
-+		if (field_avail(typeof(resp), tso_caps, uhw_outlen))
- 			resp.response_length += sizeof(resp.tso_caps);
--		if (field_avail(typeof(resp), rss_caps, uhw->outlen))
-+		if (field_avail(typeof(resp), rss_caps, uhw_outlen))
- 			resp.response_length += sizeof(resp.rss_caps);
- 	}
- 
-@@ -1066,7 +1067,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 						MLX5_MAX_CQ_PERIOD;
- 	}
- 
--	if (field_avail(typeof(resp), cqe_comp_caps, uhw->outlen)) {
-+	if (field_avail(typeof(resp), cqe_comp_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.cqe_comp_caps);
- 
- 		if (MLX5_CAP_GEN(dev->mdev, cqe_compression)) {
-@@ -1084,7 +1085,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), packet_pacing_caps, uhw->outlen) &&
-+	if (field_avail(typeof(resp), packet_pacing_caps, uhw_outlen) &&
- 	    raw_support) {
- 		if (MLX5_CAP_QOS(mdev, packet_pacing) &&
- 		    MLX5_CAP_GEN(mdev, qos)) {
-@@ -1103,7 +1104,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 	}
- 
- 	if (field_avail(typeof(resp), mlx5_ib_support_multi_pkt_send_wqes,
--			uhw->outlen)) {
-+			uhw_outlen)) {
- 		if (MLX5_CAP_ETH(mdev, multi_pkt_send_wqe))
- 			resp.mlx5_ib_support_multi_pkt_send_wqes =
- 				MLX5_IB_ALLOW_MPW;
-@@ -1116,7 +1117,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 			sizeof(resp.mlx5_ib_support_multi_pkt_send_wqes);
- 	}
- 
--	if (field_avail(typeof(resp), flags, uhw->outlen)) {
-+	if (field_avail(typeof(resp), flags, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.flags);
- 
- 		if (MLX5_CAP_GEN(mdev, cqe_compression_128))
-@@ -1132,8 +1133,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		resp.flags |= MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT;
- 	}
- 
--	if (field_avail(typeof(resp), sw_parsing_caps,
--			uhw->outlen)) {
-+	if (field_avail(typeof(resp), sw_parsing_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.sw_parsing_caps);
- 		if (MLX5_CAP_ETH(mdev, swp)) {
- 			resp.sw_parsing_caps.sw_parsing_offloads |=
-@@ -1153,7 +1153,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), striding_rq_caps, uhw->outlen) &&
-+	if (field_avail(typeof(resp), striding_rq_caps, uhw_outlen) &&
- 	    raw_support) {
- 		resp.response_length += sizeof(resp.striding_rq_caps);
- 		if (MLX5_CAP_GEN(mdev, striding_rq)) {
-@@ -1170,8 +1170,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 		}
- 	}
- 
--	if (field_avail(typeof(resp), tunnel_offloads_caps,
--			uhw->outlen)) {
-+	if (field_avail(typeof(resp), tunnel_offloads_caps, uhw_outlen)) {
- 		resp.response_length += sizeof(resp.tunnel_offloads_caps);
- 		if (MLX5_CAP_ETH(mdev, tunnel_stateless_vxlan))
- 			resp.tunnel_offloads_caps |=
-@@ -1192,7 +1191,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
- 				MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP;
- 	}
- 
--	if (uhw->outlen) {
-+	if (uhw_outlen) {
- 		err = ib_copy_to_udata(uhw, &resp, resp.response_length);
- 
- 		if (err)
-@@ -4738,7 +4737,6 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
- 	struct ib_device_attr *dprops = NULL;
- 	struct ib_port_attr *pprops = NULL;
- 	int err = -ENOMEM;
--	struct ib_udata uhw = {.inlen = 0, .outlen = 0};
- 
- 	pprops = kzalloc(sizeof(*pprops), GFP_KERNEL);
- 	if (!pprops)
-@@ -4748,7 +4746,7 @@ static int __get_port_caps(struct mlx5_ib_dev *dev, u8 port)
- 	if (!dprops)
- 		goto out;
- 
--	err = mlx5_ib_query_device(&dev->ib_dev, dprops, &uhw);
-+	err = mlx5_ib_query_device(&dev->ib_dev, dprops, NULL);
- 	if (err) {
- 		mlx5_ib_warn(dev, "query_device failed %d\n", err);
- 		goto out;
+ #include <asm/assembler.h>
 -- 
 2.20.1
 
