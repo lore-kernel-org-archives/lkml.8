@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED859C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB574C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43F920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B4520801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272616;
-	bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
+	s=default; t=1582272621;
+	bh=IMsQ7+myA2VFgMAOR1pcDR51QxoVGL6Z14/X9w+j5No=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJ13m2zcoKB9j0tyUx+e51kgRxa0MWk6JpKmtdHKQiuvjIJ1KuGk56934RGEjGzUH
-	 g2hv7C5N4fX+PmPML8HE8DA2iF3TkHQE77U0ZtNrYzmvef1iyG2urdsnuHAQOxDvkn
-	 Zk/gOC3+ayooOcWtg0M9HujaLVJZmTQO/CqjKJWA=
+	b=O8x9Eve3JUja3axEYMvjqeexxOUj9MJcN42AEl7F3tUKfW8c72oaRLUT+QPupk1MD
+	 XaIEdwv5gdaA7O9eTKSNKrIPD1lXredEJQHQnlFsoZN4LfFmtc+9z5TsvZwt7Yp8Ru
+	 cjjGk2/R4w8kNIxniyb11ItFClJzYbPdZHPUKRpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbgBUIKP (ORCPT
+        id S1732508AbgBUIKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45382 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732202AbgBUIKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:10:12 -0500
+        id S1732115AbgBUIKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CD2420578;
-        Fri, 21 Feb 2020 08:10:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DADB32073A;
+        Fri, 21 Feb 2020 08:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272611;
-        bh=kpIYvkygOL80jCOC4mTASNNjnr+Ez++17Cyd5v07r7w=;
+        s=default; t=1582272617;
+        bh=IMsQ7+myA2VFgMAOR1pcDR51QxoVGL6Z14/X9w+j5No=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAP22lPpBi2s5rcd8FbMn+OsdNYYHSlyLFDEKMYhE7OtpI82hlcLG0C0Ad0EMgUZe
-         DN1WN8R0xDEpYtmVKgOQDgeODHSAcsm2hys+BljWTCkzVBFE9e07Sd38hP46rIpVzc
-         GovntIA7f3zk7htnf4wL5aVYR8IN45Lif4PyFfAw=
+        b=P3OuVIu8wkQBUW1RAMdhV4m+DfNk+1/yunrFGFQA3DRSkn0ZBMZM4Oq1FV4ZXjsBh
+         qLtsUQ2tc/ryO5O+y89wIJEuPgUJAPuqdTU2KTX8eFK/4G4wG0aP8tJuOjaXsRjwJm
+         Bv5QcO8Q0rInXpSfHaqln6bUW7E18ol9ilGwbGFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Jonker <jbx6244@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 208/344] arm64: dts: rockchip: add reg property to brcmf sub-nodes
-Date:   Fri, 21 Feb 2020 08:40:07 +0100
-Message-Id: <20200221072408.010904293@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 183/344] x86/unwind/orc: Fix !CONFIG_MODULES build warning
+Date:   Fri, 21 Feb 2020 08:39:42 +0100
+Message-Id: <20200221072405.636628179@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,88 +66,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Jonker <jbx6244@gmail.com>
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-[ Upstream commit 96ff264bccb22175bbe2185a1eb5204ca3c5f03f ]
+[ Upstream commit 22a7fa8848c5e881d87ef2f7f3c2ea77b286e6f9 ]
 
-An experimental test with the command below gives this error:
-rk3399-firefly.dt.yaml: dwmmc@fe310000: wifi@1:
-'reg' is a required property
-rk3399-orangepi.dt.yaml: dwmmc@fe310000: wifi@1:
-'reg' is a required property
-rk3399-khadas-edge.dt.yaml: dwmmc@fe310000: wifi@1:
-'reg' is a required property
-rk3399-khadas-edge-captain.dt.yaml: dwmmc@fe310000: wifi@1:
-'reg' is a required property
-rk3399-khadas-edge-v.dt.yaml: dwmmc@fe310000: wifi@1:
-'reg' is a required property
-So fix this by adding a reg property to the brcmf sub node.
-Also add #address-cells and #size-cells to prevent more warnings.
+To fix follwowing warning due to ORC sort moved to build time:
 
-make ARCH=arm64 dtbs_check
-DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+  arch/x86/kernel/unwind_orc.c:210:12: warning: ‘orc_sort_cmp’ defined but not used [-Wunused-function]
+  arch/x86/kernel/unwind_orc.c:190:13: warning: ‘orc_sort_swap’ defined but not used [-Wunused-function]
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Link: https://lore.kernel.org/r/20200110142128.13522-1-jbx6244@gmail.com
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/c9c81536-2afc-c8aa-c5f8-c7618ecd4f54@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-firefly.dts      | 3 +++
- arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi | 3 +++
- arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts     | 3 +++
- 3 files changed, 9 insertions(+)
+ arch/x86/kernel/unwind_orc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-index c706db0ee9ec6..76f5db696009b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
-@@ -669,9 +669,12 @@
- 	vqmmc-supply = &vcc1v8_s3;	/* IO line */
- 	vmmc-supply = &vcc_sdio;	/* card's power */
+diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
+index 332ae6530fa88..7a9306bc5982f 100644
+--- a/arch/x86/kernel/unwind_orc.c
++++ b/arch/x86/kernel/unwind_orc.c
+@@ -187,6 +187,8 @@ static struct orc_entry *orc_find(unsigned long ip)
+ 	return orc_ftrace_find(ip);
+ }
  
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
++#ifdef CONFIG_MODULES
++
+ static void orc_sort_swap(void *_a, void *_b, int size)
+ {
+ 	struct orc_entry *orc_a, *orc_b;
+@@ -229,7 +231,6 @@ static int orc_sort_cmp(const void *_a, const void *_b)
+ 	return orc_a->sp_reg == ORC_REG_UNDEFINED && !orc_a->end ? -1 : 1;
+ }
  
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-index 4944d78a0a1cb..e87a04477440e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-khadas-edge.dtsi
-@@ -654,9 +654,12 @@
- 	sd-uhs-sdr104;
- 	vqmmc-supply = <&vcc1v8_s3>;
- 	vmmc-supply = <&vccio_sd>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
- 
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-index 0541dfce924d6..9c659f3115c88 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-orangepi.dts
-@@ -648,9 +648,12 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
- 	sd-uhs-sdr104;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
- 	status = "okay";
- 
- 	brcmf: wifi@1 {
-+		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio0>;
- 		interrupts = <RK_PA3 GPIO_ACTIVE_HIGH>;
+-#ifdef CONFIG_MODULES
+ void unwind_module_init(struct module *mod, void *_orc_ip, size_t orc_ip_size,
+ 			void *_orc, size_t orc_size)
+ {
 -- 
 2.20.1
 
