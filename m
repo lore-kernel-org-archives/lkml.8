@@ -2,398 +2,550 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9963CC35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66717C35647
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D45A208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:53:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303EB208C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBULxe (ORCPT
+        id S1727978AbgBULyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:53:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34938 "EHLO mx2.suse.de"
+        Fri, 21 Feb 2020 06:54:21 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35416 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbgBULxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:53:34 -0500
+        id S1727137AbgBULyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:54:21 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BC900B0AE;
-        Fri, 21 Feb 2020 11:53:28 +0000 (UTC)
-Subject: Re: [PATCH v8 0/6] arm/arm64: mediatek: Fix mmsys device probing
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        CK Hu <ck.hu@mediatek.com>
-Cc:     mark.rutland@arm.com, Kate Stewart <kstewart@linuxfoundation.org>,
-        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>, airlied@linux.ie,
-        mturquette@baylibre.com, dri-devel@lists.freedesktop.org,
-        Richard Fontana <rfontana@redhat.com>,
-        laurent.pinchart@ideasonboard.com, ulrich.hecht+renesas@gmail.com,
-        Collabora Kernel ML <kernel@collabora.com>,
-        linux-clk@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>, wens@csie.org,
-        Allison Randal <allison@lohutok.net>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, frank-w@public-files.de,
-        Seiya Wang <seiya.wang@mediatek.com>, sean.wang@mediatek.com,
-        Houlong Wei <houlong.wei@mediatek.com>, robh+dt@kernel.org,
-        linux-mediatek@lists.infradead.org, hsinyi@chromium.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabien Parent <fparent@baylibre.com>, sboyd@kernel.org,
+        by mx2.suse.de (Postfix) with ESMTP id DC046ACF2;
+        Fri, 21 Feb 2020 11:54:16 +0000 (UTC)
+Date:   Fri, 21 Feb 2020 12:54:16 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Vetter <daniel@ffwll.ch>, matthias.bgg@kernel.org
-References: <20200220172147.919996-1-enric.balletbo@collabora.com>
- <1582259996.1846.7.camel@mtksdaap41>
- <7a87b486-1622-7f27-f5af-427b94a14c00@collabora.com>
- <1582277229.25992.9.camel@mtksdaap41>
- <1393a8c5-065f-cccb-2563-8b159c951d4b@suse.com>
- <1582283518.5889.10.camel@mtksdaap41>
- <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
-From:   Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
- 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
- HxUCQ9Y1Y/Ct
-Message-ID: <6eb9da70-9a0c-27fc-6c31-3ac62ede5a35@suse.com>
-Date:   Fri, 21 Feb 2020 12:53:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: more barriers: Re: [PATCH 1/2] printk: add lockless buffer
+Message-ID: <20200221115416.wo6ovakxt2c7hgkc@pathway.suse.cz>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <6deab0a4-44a6-a15f-ac01-374f818b267c@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128161948.8524-2-john.ogness@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+the new full barrier in desc_reserve() made me to think more about
+the existing ones.
+
+If I get it correctly, the used cmpxchg_relaxed() variants does
+not provide full barriers. They are just able to prevent parallel
+manipulation of the modified variable.
+
+Because of this, I think that we need some more barriers to synchronize
+reads and writes of the tail/head values of the three ring buffers.
+See below for more details.
+
+It is possible that some of the barriers are superfluous because
+some read barriers are hidden in desc_read(). But I think that
+barriers are sometimes needed even before the first read or
+after the last read in desc_read().
 
 
-On 21/02/2020 12:37, Enric Balletbo i Serra wrote:
-> Hi CK and Matthias,
+On Tue 2020-01-28 17:25:47, John Ogness wrote:
+> Introduce a multi-reader multi-writer lockless ringbuffer for storing
+> the kernel log messages. Readers and writers may use their API from
+> any context (including scheduler and NMI). This ringbuffer will make
+> it possible to decouple printk() callers from any context, locking,
+> or console constraints. It also makes it possible for readers to have
+> full access to the ringbuffer contents at any time and context (for
+> example from any panic situation).
 > 
-> On 21/2/20 12:11, CK Hu wrote:
->> Hi, Matthias:
->>
->> On Fri, 2020-02-21 at 11:24 +0100, Matthias Brugger wrote:
->>>
->>> On 21/02/2020 10:27, CK Hu wrote:
->>>> Hi, Enric:
->>>>
->>>> On Fri, 2020-02-21 at 09:56 +0100, Enric Balletbo i Serra wrote:
->>>>> Hi CK,
->>>>>
->>>>> Thanks for your quick answer.
->>>>>
->>>>> On 21/2/20 5:39, CK Hu wrote:
->>>>>> Hi, Enric:
->>>>>>
->>>>>> On Thu, 2020-02-20 at 18:21 +0100, Enric Balletbo i Serra wrote:
->>>>>>> Dear all,
->>>>>>>
->>>>>>> Those patches are intended to solve an old standing issue on some
->>>>>>> Mediatek devices (mt8173, mt2701 and mt2712) in a slightly different way
->>>>>>> to the precedent series.
->>>>>>>
->>>>>>> Up to now both drivers, clock and drm are probed with the same device tree
->>>>>>> compatible. But only the first driver get probed, which in effect breaks
->>>>>>> graphics on those devices.
->>>>>>>
->>>>>>> The version eight of the series tries to solve the problem with a
->>>>>>> different approach than the previous series but similar to how is solved
->>>>>>> on other Mediatek devices.
->>>>>>>
->>>>>>> The MMSYS (Multimedia subsystem) in Mediatek SoCs has some registers to
->>>>>>> control clock gates (which is used in the clk driver) and some registers
->>>>>>> to set the routing and enable the differnet blocks of the display
->>>>>>> and MDP (Media Data Path) subsystem. On this series the clk driver is
->>>>>>> not a pure clock controller but a system controller that can provide
->>>>>>> access to the shared registers between the different drivers that need
->>>>>>> it (mediatek-drm and mediatek-mdp). And the biggest change is, that in
->>>>>>> this version, clk driver is the entry point (parent) which will trigger
->>>>>>> the probe of the corresponding mediatek-drm driver and pass its MMSYS
->>>>>>> platform data for display configuration.
->>>>>>
->>>>>> When mmsys is a system controller, I prefer to place mmsys in
->>>>>> drivers/soc/mediatek, and it share registers for clock, display, and mdp
->>>>>> driver. This means the probe function is placed in
->>>>>> drivers/soc/mediatek ,its display clock function, mdp clock function are
->>>>>> placed in drivers/clk, display routing are placed in drivers/gpu/drm,
->>>>>> and mdp routing are placed in dirvers/video.
->>>>>>
->>>>>
->>>>> I understand what you mean but I am not sure this makes the code clearer and
->>>>> useful. The driver in drivers/soc/mediatek will be a simple dummy implementation
->>>>> of a "simple-mfd" device (a driver that simply matches with
->>>>> "mediatek,mt8173-mmsys" and instantiates the "clk-mt8173-mm" and the
->>>>> "mediatek-drm" driver (note that mediatek-mdp" is already instantiated via
->>>>> device-tree).
->>>>>
->>>>
->>>> It's clear that mmsys is neither a pure clock controller nor a pure
->>>> routing controller for display and mdp. 
->>>>
->>>>> It'd be nice had a proper device-tree with a "simple-mfd" for mmsys from the
->>>>> beginning representing how really hardwware is, but I think that, change this
->>>>> now, will break backward compatibility.
->>>>
->>>> Maybe this is a solution. Current device tree would work only on old
->>>> kernel version with a bug, so this mean there is no any device tree
->>>> works on kernel version without bug. Why do we compatible with such
->>>> device tree?
->>>>
->>>
-> 
-> So the only reason why current DT worked at some point is because there was a
-> kernel bug?
-> 
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> new file mode 100644
+> index 000000000000..796257f226ee
+> --- /dev/null
+> +++ b/kernel/printk/printk_ringbuffer.c
+> +/*
+> + * Take a given descriptor out of the committed state by attempting
+> + * the transition from committed to reusable. Either this task or some
+> + * other task will have been successful.
+> + */
+> +static void desc_make_reusable(struct prb_desc_ring *desc_ring,
+> +			       unsigned long id)
+> +{
+> +	struct prb_desc *desc = to_desc(desc_ring, id);
+> +	atomic_long_t *state_var = &desc->state_var;
+> +	unsigned long val_committed = id | DESC_COMMITTED_MASK;
+> +	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
+> +
+> +	atomic_long_cmpxchg_relaxed(state_var, val_committed,
+> val_reusable);
 
-I'd say you can call it a kernel bug:
-https://patchwork.kernel.org/patch/10367877/#22078767
+IMHO, we should add smp_wmb() here to make sure that the reusable
+state is written before we shuffle the desc_ring->tail_id/head_id.
+
+It would pair with the read part of smp_mb() in desc_reserve()
+before the extra check if the descriptor is really in reusable state.
 
 
-> If that's the case I think we shouldn't worry about break DT compatibility (I'm
-> sorry for those that having a buggy kernel makes display working)
-> 
->>> The idea behind this is, that the device-tree could be passed by some boot
->>> firmware, so that the OS do not care about it. For this we need a stable DTS as
->>> otherwise newer kernel with older FW would break.
->>>
->>> DTS is supposed to be just a different description of the HW like ACPI. So it
->>> has to be compatible (newer kernel with older DTS and if possible vice versa).
->>
->> In my view, there is no FW (except some bug-inside FW) which works on
->> this dts, so this dts is in a initial state. I think the compatibility
->> is based on that dts correctly describe the HW. If we find this dts does
->> not correctly describe the HW and it's in a initial state, should we
->> still make it compatible?
->>
-> 
-> In this case I think we don't need to worry about buggy kernels, the only thing
-> that we need to take in consideration is that mmsys is instantiated on both (the
-> old DT and the new DT), we shouldn't expect display working (because never
-> worked, right?)
-> 
-> With that in mind, I agree that is a good opportunity to fix properly the HW
-> topology.
-> 
-> What thing that worries me is that I see this pattern on all Mediatek SoCs, does
-> this mean that display was never well supported for Mediatek SoCs?
-> 
+> +}
+> +
+> +/*
+> + * For a given data ring (text or dict) and its current tail lpos:
+> + * for each data block up until @lpos, make the associated descriptor
+> + * reusable.
+> + *
+> + * If there is any problem making the associated descriptor reusable,
+> + * either the descriptor has not yet been committed or another writer
+> + * task has already pushed the tail lpos past the problematic data
+> + * block. Regardless, on error the caller can re-load the tail lpos
+> + * to determine the situation.
+> + */
+> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+> +			       struct prb_data_ring *data_ring,
+> +			       unsigned long tail_lpos, unsigned long lpos,
+> +			       unsigned long *lpos_out)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	struct prb_data_blk_lpos *blk_lpos;
+> +	struct prb_data_block *blk;
+> +	enum desc_state d_state;
+> +	struct prb_desc desc;
+> +	unsigned long id;
+> +
+> +	/*
+> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+> +	 * blk_lpos within the local copy of the descriptor.
+> +	 */
+> +	if (data_ring == &rb->text_data_ring)
+> +		blk_lpos = &desc.text_blk_lpos;
+> +	else
+> +		blk_lpos = &desc.dict_blk_lpos;
+> +
+> +	/* Loop until @tail_lpos has advanced to or beyond @lpos. */
+> +	while ((lpos - tail_lpos) - 1 < DATA_SIZE(data_ring)) {
+> +		blk = to_block(data_ring, tail_lpos);
 
-That's exactly the case. Actually there were some patches for mt762x (can't
-remember if mt7623 or mt7622) whcih got pushed back, because we would need to
-fix the mmsys problem first.
+IMHO, we need smp_rmb() here to make sure that we read blk->id
+that we written after pushing the tail_lpos.
 
-Ok, so if we come to the conclusion that this actually only worked because of a
-bug, then we can remodel the whole thing.
-In this case, I think the best would be to do what CK proposed:
-https://patchwork.kernel.org/patch/11381201/#23158169
+It would pair with the write barrier in data_alloc() before
+before writing blk->id. It is there after updating head_lpos.
+But head_lpos could be updated only after updating tail_lpos.
+See the comment in data_alloc() below.
 
-Making everything below 0x14000000 a subdevice of mmsys (mdp, ovl, rdma, you
-name it).
+> +		id = READ_ONCE(blk->id);
 
-Regards,
-Matthias
 
-> Thanks.
-> 
->> If you have better solution, just let's forget this.
->>
->> Regards,
->> CK
->>
->>>
->>> Regards,
->>> Matthias
->>>
->>>> Regards,
->>>> CK
->>>>
->>>>>
->>>>> IMHO I think that considering the clk driver as entry point is fine, but this is
->>>>> something that the clock maintainers should decide.
->>>>>
->>>>> Also note that this is not only a MT8173 problem I am seeing the same problem on
->>>>> all other Mediatek SoCs.
->>>>>
->>>>> Thanks.
->>>>>
->>>>>> Regards,
->>>>>> CK
->>>>>>
->>>>>>>
->>>>>>> All this series was tested on the Acer R13 Chromebook only.
->>>>>>>
->>>>>>> For reference, here are the links to the old discussions:
->>>>>>>
->>>>>>> * v7: https://patchwork.kernel.org/project/linux-mediatek/list/?series=241217
->>>>>>> * v6: https://patchwork.kernel.org/project/linux-mediatek/list/?series=213219
->>>>>>> * v5: https://patchwork.kernel.org/project/linux-mediatek/list/?series=44063
->>>>>>> * v4:
->>>>>>>   * https://patchwork.kernel.org/patch/10530871/
->>>>>>>   * https://patchwork.kernel.org/patch/10530883/
->>>>>>>   * https://patchwork.kernel.org/patch/10530885/
->>>>>>>   * https://patchwork.kernel.org/patch/10530911/
->>>>>>>   * https://patchwork.kernel.org/patch/10530913/
->>>>>>> * v3:
->>>>>>>   * https://patchwork.kernel.org/patch/10367857/
->>>>>>>   * https://patchwork.kernel.org/patch/10367861/
->>>>>>>   * https://patchwork.kernel.org/patch/10367877/
->>>>>>>   * https://patchwork.kernel.org/patch/10367875/
->>>>>>>   * https://patchwork.kernel.org/patch/10367885/
->>>>>>>   * https://patchwork.kernel.org/patch/10367883/
->>>>>>>   * https://patchwork.kernel.org/patch/10367889/
->>>>>>>   * https://patchwork.kernel.org/patch/10367907/
->>>>>>>   * https://patchwork.kernel.org/patch/10367909/
->>>>>>>   * https://patchwork.kernel.org/patch/10367905/
->>>>>>> * v2: No relevant discussion, see v3
->>>>>>> * v1:
->>>>>>>   * https://patchwork.kernel.org/patch/10016497/
->>>>>>>   * https://patchwork.kernel.org/patch/10016499/
->>>>>>>   * https://patchwork.kernel.org/patch/10016505/
->>>>>>>   * https://patchwork.kernel.org/patch/10016507/
->>>>>>>
->>>>>>> Best regards,
->>>>>>>  Enric
->>>>>>>
->>>>>>> Changes in v8:
->>>>>>> - Be a builtin_platform_driver like other mediatek mmsys drivers.
->>>>>>> - New patches introduced in this series.
->>>>>>>
->>>>>>> Changes in v7:
->>>>>>> - Add R-by from CK
->>>>>>> - Add R-by from CK
->>>>>>> - Fix check of return value of of_clk_get
->>>>>>> - Fix identation
->>>>>>> - Free clk_data->clks as well
->>>>>>> - Get rid of private data structure
->>>>>>>
->>>>>>> Enric Balletbo i Serra (2):
->>>>>>>   drm/mediatek: Move MMSYS configuration to include/linux/platform_data
->>>>>>>   clk/drm: mediatek: Fix mediatek-drm device probing
->>>>>>>
->>>>>>> Matthias Brugger (4):
->>>>>>>   drm/mediatek: Use regmap for register access
->>>>>>>   drm/mediatek: Omit warning on probe defers
->>>>>>>   media: mtk-mdp: Check return value of of_clk_get
->>>>>>>   clk: mediatek: mt8173: Switch MMSYS to platform driver
->>>>>>>
->>>>>>>  drivers/clk/mediatek/Kconfig                  |   6 +
->>>>>>>  drivers/clk/mediatek/Makefile                 |   1 +
->>>>>>>  drivers/clk/mediatek/clk-mt2701-mm.c          |  30 +++
->>>>>>>  drivers/clk/mediatek/clk-mt2712-mm.c          |  44 +++++
->>>>>>>  drivers/clk/mediatek/clk-mt8173-mm.c          | 172 ++++++++++++++++++
->>>>>>>  drivers/clk/mediatek/clk-mt8173.c             | 104 -----------
->>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_color.c     |   5 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c       |   5 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_disp_rdma.c      |   5 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_dpi.c            |  12 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c       |   4 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c        |  53 +++---
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h        |   4 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h   |  56 +-----
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c        | 113 +-----------
->>>>>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h        |  13 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c            |   8 +-
->>>>>>>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |   4 +-
->>>>>>>  drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |   6 +
->>>>>>>  include/linux/platform_data/mtk_mmsys.h       |  73 ++++++++
->>>>>>>  20 files changed, 401 insertions(+), 317 deletions(-)
->>>>>>>  create mode 100644 drivers/clk/mediatek/clk-mt8173-mm.c
->>>>>>>  create mode 100644 include/linux/platform_data/mtk_mmsys.h
->>>>>>>
->>>>>>
->>>>>
->>>>> _______________________________________________
->>>>> Linux-mediatek mailing list
->>>>> Linux-mediatek@lists.infradead.org
->>>>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>>>
->>>
->>> _______________________________________________
->>> Linux-mediatek mailing list
->>> Linux-mediatek@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
->>
+> +
+> +		d_state = desc_read(desc_ring, id,
+> +				    &desc); /* LMM(data_make_reusable:A) */
+> +
+> +		switch (d_state) {
+> +		case desc_miss:
+> +			return false;
+> +		case desc_reserved:
+> +			return false;
+> +		case desc_committed:
+> +			/*
+> +			 * This data block is invalid if the descriptor
+> +			 * does not point back to it.
+> +			 */
+> +			if (blk_lpos->begin != tail_lpos)
+> +				return false;
+> +			desc_make_reusable(desc_ring, id);
+> +			break;
+> +		case desc_reusable:
+> +			/*
+> +			 * This data block is invalid if the descriptor
+> +			 * does not point back to it.
+> +			 */
+> +			if (blk_lpos->begin != tail_lpos)
+> +				return false;
+> +			break;
+> +		}
+> +
+> +		/* Advance @tail_lpos to the next data block. */
+> +		tail_lpos = blk_lpos->next;
+> +	}
+> +
+> +	*lpos_out = tail_lpos;
+> +
+> +	return true;
+> +}
+> +
+> +/*
+> + * Advance the data ring tail to at least @lpos. This function puts all
+> + * descriptors into the reusable state if the tail will be pushed beyond
+> + * their associated data block.
+> + */
+> +static bool data_push_tail(struct printk_ringbuffer *rb,
+> +			   struct prb_data_ring *data_ring,
+> +			   unsigned long lpos)
+> +{
+> +	unsigned long tail_lpos;
+> +	unsigned long next_lpos;
+> +
+> +	/* If @lpos is not valid, there is nothing to do. */
+> +	if (lpos == INVALID_LPOS)
+> +		return true;
+> +
+> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+> +
+> +	do {
+> +		/* If @lpos is no longer valid, there is nothing to do. */
+> +		if (lpos - tail_lpos >= DATA_SIZE(data_ring))
+> +			break;
+> +
+> +		/*
+> +		 * Make all descriptors reusable that are associated with
+> +		 * data blocks before @lpos.
+> +		 */
+> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
+> +					&next_lpos)) {
+> +			/*
+> +			 * data_make_reusable() performed state loads. Make
+> +			 * sure they are loaded before reloading the tail lpos
+> +			 * in order to see a new tail in the case that the
+> +			 * descriptor has been recycled. This pairs with
+> +			 * desc_reserve:A.
+> +			 */
+> +			smp_rmb(); /* LMM(data_push_tail:A) */
+> +
+> +			/*
+> +			 * Reload the tail lpos.
+> +			 *
+> +			 * Memory barrier involvement:
+> +			 *
+> +			 * No possibility of missing a recycled descriptor.
+> +			 * If data_make_reusable:A reads from desc_reserve:B,
+> +			 * then data_push_tail:B reads from desc_push_tail:A.
+> +			 *
+> +			 * Relies on:
+> +			 *
+> +			 * MB from desc_push_tail:A to desc_reserve:B
+> +			 *    matching
+> +			 * RMB from data_make_reusable:A to data_push_tail:B
+> +			 */
+> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
+> +						); /* LMM(data_push_tail:B) */
+> +			if (next_lpos == tail_lpos)
+> +				return false;
+> +
+> +			/* Another task pushed the tail. Try again. */
+> +			tail_lpos = next_lpos;
+> +		}
+> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
+> +			&tail_lpos, next_lpos)); /* can be relaxed? */
+
+IMHO, we need smp_wmb() here so that others see the updated
+data_ring->tail_lpos before this thread allocates the space
+by pushing head_pos.
+
+It would be paired with a read barrier in data_alloc() between
+reading head_lpos and tail_lpos, see below.
+
+> +
+> +	return true;
+> +}
+> +
+> +/*
+> + * Advance the desc ring tail. This function advances the tail by one
+> + * descriptor, thus invalidating the oldest descriptor. Before advancing
+> + * the tail, the tail descriptor is made reusable and all data blocks up to
+> + * and including the descriptor's data block are invalidated (i.e. the data
+> + * ring tail is pushed past the data block of the descriptor being made
+> + * reusable).
+> + */
+> +static bool desc_push_tail(struct printk_ringbuffer *rb,
+> +			   unsigned long tail_id)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	enum desc_state d_state;
+> +	struct prb_desc desc;
+> +
+> +	d_state = desc_read(desc_ring, tail_id, &desc);
+> +
+> +	switch (d_state) {
+> +	case desc_miss:
+> +		/*
+> +		 * If the ID is exactly 1 wrap behind the expected, it is
+> +		 * in the process of being reserved by another writer and
+> +		 * must be considered reserved.
+> +		 */
+> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
+> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
+> +			return false;
+> +		}
+> +		return true;
+> +	case desc_reserved:
+> +		return false;
+> +	case desc_committed:
+> +		desc_make_reusable(desc_ring, tail_id);
+> +		break;
+> +	case desc_reusable:
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Data blocks must be invalidated before their associated
+> +	 * descriptor can be made available for recycling. Invalidating
+> +	 * them later is not possible because there is no way to trust
+> +	 * data blocks once their associated descriptor is gone.
+> +	 */
+> +
+> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
+> +		return false;
+> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
+> +		return false;
+> +
+> +	/* The data ring tail(s) were pushed: LMM(desc_push_tail:A) */
+> +
+> +	/*
+> +	 * Check the next descriptor after @tail_id before pushing the tail to
+> +	 * it because the tail must always be in a committed or reusable
+> +	 * state. The implementation of prb_first_seq() relies on this.
+> +	 *
+> +	 * A successful read implies that the next descriptor is less than or
+> +	 * equal to @head_id so there is no risk of pushing the tail past the
+> +	 * head.
+> +	 */
+> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
+> +			    &desc); /* LMM(desc_push_tail:B) */
+> +	if (d_state == desc_committed || d_state == desc_reusable) {
+> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
+> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:C) */
+
+IMHO, we need smp_wmb() here so that everyone see updated
+desc_ring->tail_id before we push the head as well.
+
+It would pair with read barrier in desc_reserve() between reading
+tail_id and head_id.
+
+> +	} else {
+> +		/*
+> +		 * Guarantee the last state load from desc_read() is before
+> +		 * reloading @tail_id in order to see a new tail in the case
+> +		 * that the descriptor has been recycled. This pairs with
+> +		 * desc_reserve:A.
+> +		 */
+> +		smp_rmb(); /* LMM(desc_push_tail:D) */
+> +
+> +		/*
+> +		 * Re-check the tail ID. The descriptor following @tail_id is
+> +		 * not in an allowed tail state. But if the tail has since
+> +		 * been moved by another task, then it does not matter.
+> +		 *
+> +		 * Memory barrier involvement:
+> +		 *
+> +		 * No possibility of missing a pushed tail.
+> +		 * If desc_push_tail:B reads from desc_reserve:B, then
+> +		 * desc_push_tail:E reads from desc_push_tail:C.
+> +		 *
+> +		 * Relies on:
+> +		 *
+> +		 * MB from desc_push_tail:C to desc_reserve:B
+> +		 *    matching
+> +		 * RMB from desc_push_tail:B to desc_push_tail:E
+> +		 */
+> +		if (atomic_long_read(&desc_ring->tail_id) ==
+> +					tail_id) { /* LMM(desc_push_tail:E) */
+> +			return false;
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+> +/* Reserve a new descriptor, invalidating the oldest if necessary. */
+> +static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	unsigned long prev_state_val;
+> +	unsigned long id_prev_wrap;
+> +	struct prb_desc *desc;
+> +	unsigned long head_id;
+> +	unsigned long id;
+> +
+> +	head_id = atomic_long_read(&desc_ring->head_id);
+> +
+> +	do {
+> +		desc = to_desc(desc_ring, head_id);
+> +
+> +		id = DESC_ID(head_id + 1);
+> +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
+
+IMHO, we need smp_rmb() here to to guarantee reading head_id before
+desc_ring->tail_id.
+
+It would pair with write barrier in desc_push_tail() after updating
+tail_id, see above.
+
+> +
+> +		if (id_prev_wrap == atomic_long_read(&desc_ring->tail_id)) {
+> +			/*
+> +			 * Make space for the new descriptor by
+> +			 * advancing the tail.
+> +			 */
+> +			if (!desc_push_tail(rb, id_prev_wrap))
+> +				return false;
+> +		}
+> +	} while (!atomic_long_try_cmpxchg_relaxed(&desc_ring->head_id,
+> +						  &head_id, id));
+> +
+> +	/*
+> +	 * Guarantee any data ring tail changes are stored before recycling
+> +	 * the descriptor. A full memory barrier is needed since another
+> +	 * task may have pushed the data ring tails. This pairs with
+> +	 * data_push_tail:A.
+> +	 *
+> +	 * Guarantee a new tail ID is stored before recycling the descriptor.
+> +	 * A full memory barrier is needed since another task may have pushed
+> +	 * the tail ID. This pairs with desc_push_tail:D and prb_first_seq:C.
+> +	 */
+> +	smp_mb(); /* LMM(desc_reserve:A) */
+
+I am a bit confused by the full barrier here. The description is not
+clear. All the three tags (data_push_tail:A, desc_push_tail:D and
+prb_first_seq:C) refers read barriers. This would suggest that write
+barrier would be enough here.
+
+OK, this barrier is between writing desc_ring->head_id and
+reading/writing desc->state_var.
+
+A write barrier here would require a code that reads
+desc->state_var before reading head_id, tail_id of desc
+or data rings when they check if the descriptor was
+reused before. It seems that all the mentioned paring
+read barriers are correct. So the above description of
+the write barrier part looks correct.
+
+Now, the question is why the read barrier would be needed
+here. The only reason might be the check of the desc->state_var.
+The pairing write barrier should allow reusing of the descriptor.
+For this, we might need to add a write barrier either into
+prb_commit() or desc_make_reusable() after updating
+the state variable.
+
+We check here if the descriptor is really reusable. So it should
+be enough to add write barrier into desc_make_reusable().
+
+
+> +
+> +	desc = to_desc(desc_ring, id);
+> +
+> +	/* If the descriptor has been recycled, verify the old state val. */
+> +	prev_state_val = atomic_long_read(&desc->state_var);
+> +	if (prev_state_val && prev_state_val != (id_prev_wrap |
+> +						 DESC_COMMITTED_MASK |
+> +						 DESC_REUSE_MASK)) {
+> +		WARN_ON_ONCE(1);
+> +		return false;
+> +	}
+> +
+> +	/* Assign the descriptor a new ID and set its state to reserved. */
+> +	if (!atomic_long_try_cmpxchg_relaxed(&desc->state_var,
+> +			&prev_state_val, id | 0)) { /* LMM(desc_reserve:B) */
+> +		WARN_ON_ONCE(1);
+> +		return false;
+> +	}
+> +
+> +	/*
+> +	 * Guarantee the new descriptor ID and state is stored before making
+> +	 * any other changes. This pairs with desc_read:D.
+> +	 */
+> +	smp_wmb(); /* LMM(desc_reserve:C) */
+> +
+> +	/* Now data in @desc can be modified: LMM(desc_reserve:D) */
+> +
+> +	*id_out = id;
+> +	return true;
+> +}
+> +
+> +/*
+> + * Allocate a new data block, invalidating the oldest data block(s)
+> + * if necessary. This function also associates the data block with
+> + * a specified descriptor.
+> + */
+> +static char *data_alloc(struct printk_ringbuffer *rb,
+> +			struct prb_data_ring *data_ring, unsigned long size,
+> +			struct prb_data_blk_lpos *blk_lpos, unsigned long id)
+> +{
+> +	struct prb_data_block *blk;
+> +	unsigned long begin_lpos;
+> +	unsigned long next_lpos;
+> +
+> +	if (!data_ring->data || size == 0) {
+> +		/* Specify a data-less block. */
+> +		blk_lpos->begin = INVALID_LPOS;
+> +		blk_lpos->next = INVALID_LPOS;
+> +		return NULL;
+> +	}
+> +
+> +	size = to_blk_size(size);
+> +
+> +	begin_lpos = atomic_long_read(&data_ring->head_lpos);
+> +
+> +	do {
+> +		next_lpos = get_next_lpos(data_ring, begin_lpos, size);
+> +
+
+IMHO, we need smp_rmb() here to read begin_lpos before we read
+tail_lpos in data_push_tail()
+
+It would pair with a write barrier in data_push_tail() after
+updating data_ring->tail_lpos.
+
+> +		if (!data_push_tail(rb, data_ring,
+> +				    next_lpos - DATA_SIZE(data_ring))) {
+> +			/* Failed to allocate, specify a data-less block. */
+> +			blk_lpos->begin = INVALID_LPOS;
+> +			blk_lpos->next = INVALID_LPOS;
+> +			return NULL;
+> +		}
+> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->head_lpos,
+> +						  &begin_lpos, next_lpos));
+> +
+
+IMHO, we need smp_wmb() here to guarantee that others see the updated
+data_ring->head_lpos before we write anything into the data buffer.
+
+It would pair with a read barrier in data_make_reusable
+between reading tail_lpos and blk->id in data_make_reusable().
+
+
+> +	blk = to_block(data_ring, begin_lpos);
+> +	blk->id = id;
+> +
+> +	if (DATA_WRAPS(data_ring, begin_lpos) !=
+> +	    DATA_WRAPS(data_ring, next_lpos)) {
+> +		/* Wrapping data blocks store their data at the beginning. */
+> +		blk = to_block(data_ring, 0);
+> +		blk->id = id;
+> +	}
+> +
+> +	blk_lpos->begin = begin_lpos;
+> +	blk_lpos->next = next_lpos;
+> +
+> +	return &blk->data[0];
+> +}
+
+Best Regards,
+Petr
