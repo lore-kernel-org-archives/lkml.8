@@ -2,111 +2,162 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3255C35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2618C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A922620722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:10:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OOSnv5KO"
+	by mail.kernel.org (Postfix) with ESMTP id 99F3F24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582279913;
+	bh=6dpwMXiS279BFjVKhR4J8qsC0ooza4efDgKeRZh2MuI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kWdTIqXfiWGPw8JNQhw6Jkc0Sr+HDYvKahdBGHQ+FHA8fMmzBBASEPtg8jJUxCAtN
+	 nvgoOKfb7DE7XQSBBIFAwmnZJmTDBDsbXGi5XbGVKfqNbpj+DSIwogohVnsoNgiKbT
+	 wymERjSsH8wP2SNrp0TR22fQJI7Yni65MTerPRdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgBUKKL (ORCPT
+        id S1728375AbgBUKLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:10:11 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14297 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgBUKKL (ORCPT
+        Fri, 21 Feb 2020 05:11:52 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54358 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbgBUKLw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:10:11 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4fac610001>; Fri, 21 Feb 2020 02:09:37 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 21 Feb 2020 02:10:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 21 Feb 2020 02:10:11 -0800
-Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 10:10:08 +0000
-Subject: Re: [PATCH 5.5 000/399] 5.5.6-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200221072402.315346745@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <dea062e3-48c7-f878-c733-addf39a9c4f3@nvidia.com>
-Date:   Fri, 21 Feb 2020 10:10:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 21 Feb 2020 05:11:52 -0500
+Received: by mail-wm1-f68.google.com with SMTP id n3so1092399wmk.4;
+        Fri, 21 Feb 2020 02:11:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6zP/5ARV9Z0j3qqlT+U93tg/6H0b/blVsI4MpzZxVfM=;
+        b=XhDK3OmWvho/2t57L0FREFevEGrBUB9gLGKZwgOjHRsalaOmhoQok8y6iyFwxYB4dy
+         C3yrBh4mp3gf+Fb2GJu/TRBfgLCHTLpKj/mUPYpJNtqIJzAUNUzbRAHoEls10JH/71/L
+         HkqpD4dLa/bLRN1OR0w77ln5tTYTDWkdusJU2SYYOfJG3oZqOFKVauazRR9LtibMHW5n
+         7TGeCBxXwEd6mwHbrj2HjzF5cGyIjazNuNrgD7pZ7oCot91uCaIPbm1L3OMlV+PGE4BK
+         ftSIS9pmoaf9PnLDS2iedaOJSwb7bItarzgiZMgIKhR9suQ/3yTud0crxFF1oHL3iDc0
+         8OeQ==
+X-Gm-Message-State: APjAAAXBIx9fjX6jEIW/DVlNi1tIAMQFpg6uWAG8+ou3bVhGg+sqOX+X
+        Y7kmg/VGpE6eYO0+pYeFOSYnv8S5
+X-Google-Smtp-Source: APXvYqyGH7jwWXt/GPQ821RP3ryu7W+8ERCfEaKJ0x9dVQFNTZpaswY9yzL4ZQ/qO357BQ/1DcPGvg==
+X-Received: by 2002:a1c:bdc5:: with SMTP id n188mr2857996wmf.124.1582279909011;
+        Fri, 21 Feb 2020 02:11:49 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id 59sm3592478wre.29.2020.02.21.02.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 02:11:48 -0800 (PST)
+Date:   Fri, 21 Feb 2020 11:11:47 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH v2 3/3] mm: memcontrol: recursive memory.low protection
+Message-ID: <20200221101147.GO20509@dhcp22.suse.cz>
+References: <20200213154731.GE31689@dhcp22.suse.cz>
+ <20200213155249.GI88887@mtj.thefacebook.com>
+ <20200213163636.GH31689@dhcp22.suse.cz>
+ <20200213165711.GJ88887@mtj.thefacebook.com>
+ <20200214071537.GL31689@dhcp22.suse.cz>
+ <20200214135728.GK88887@mtj.thefacebook.com>
+ <20200214151318.GC31689@dhcp22.suse.cz>
+ <20200214165311.GA253674@cmpxchg.org>
+ <20200217084100.GE31531@dhcp22.suse.cz>
+ <20200218195253.GA13406@cmpxchg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582279777; bh=+W8p+ZYg9vxNr3QG7jfIrRIVlosHQFFO0vdkqfyoFfY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OOSnv5KO70aHCA8exUuM5wn7fI3/Oa8WJDgvvR89qSNuihLt/aSrqiYznkYrZ0UDy
-         x4GlBGwLlvulf54Tnx/nmXkA0Ljdr2YkR5JzOkqm0MxBrLg8xLSn1Cu3Akya6jL3d4
-         F/58RUdzXq3WvfKR2Q8MeGEBgrZO8hQOftM3EAJWAzWsFLu72NmfPYdxCJX3C3zTtQ
-         b8xQEkEL3F5cEhpF15mAtoviPGyYHPcJ/rHiAL8Ew8Aa0OExgMe/iZd3n7kTZBw3KV
-         uF+G0UvbetuHIO3/pkIcGV20419rQLDnZ/qfX45xBP+7ctSJauLqTx4JoncSFwWeb3
-         UfhktOv6IxEmg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200218195253.GA13406@cmpxchg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[Sorry I didn't get to this email thread sooner]
 
-On 21/02/2020 07:35, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.6 release.
-> There are 399 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue 18-02-20 14:52:53, Johannes Weiner wrote:
+> On Mon, Feb 17, 2020 at 09:41:00AM +0100, Michal Hocko wrote:
+> > On Fri 14-02-20 11:53:11, Johannes Weiner wrote:
+> > [...]
+> > > The proper solution to implement the kind of resource hierarchy you
+> > > want to express in cgroup2 is to reflect it in the cgroup tree. Yes,
+> > > the_workload might have been started by user 100 in session c2, but in
+> > > terms of resources, it's prioritized over system.slice and user.slice,
+> > > and so that's the level where it needs to sit:
+> > > 
+> > >                                root
+> > >                        /        |                 \
+> > >                system.slice  user.slice       the_workload
+> > >                /    |           |
+> > >            cron  journal     user-100.slice
+> > >                                 |
+> > >                              session-c2.scope
+> > >                                 |
+> > >                              misc
+> > > 
+> > > Then you can configure not just memory.low, but also a proper io
+> > > weight and a cpu weight. And the tree correctly reflects where the
+> > > workload is in the pecking order of who gets access to resources.
+> > 
+> > I have already mentioned that this would be the only solution when the
+> > protection would work, right. But I am also saying that this a trivial
+> > example where you simply _can_ move your workload to the 1st level. What
+> > about those that need to reflect organization into the hierarchy. Please
+> > have a look at http://lkml.kernel.org/r/20200214075916.GM31689@dhcp22.suse.cz
+> > Are you saying they are just not supported? Are they supposed to use
+> > cgroup v1 for the organization and v2 for the resource control?
 > 
-> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> Anything received after that time might be too late.
+> >From that email:
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.6-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> and the diffstat can be found below.
+>     > Let me give you an example. Say you have a DB workload which is the
+>     > primary thing running on your system and which you want to protect from
+>     > an unrelated activity (backups, frontends, etc). Running it inside a
+>     > cgroup with memory.low while other components in other cgroups without
+>     > any protection achieves that. If those cgroups are top level then this
+>     > is simple and straightforward configuration.
+>     > 
+>     > Things would get much more tricky if you want run the same workload
+>     > deeper down the hierarchy - e.g. run it in a container. Now your
+>     > "root" has to use an explicit low protection as well and all other
+>     > potential cgroups that are in the same sub-hierarchy (read in the same
+>     > container) need to opt-out from the protection because they are not
+>     > meant to be protected.
 > 
-> thanks,
-> 
-> greg k-h
+> You can't prioritize some parts of a cgroup higher than the outside of
+> the cgroup, and other parts lower than the outside. That's just not
+> something that can be sanely supported from the controller interface.
 
+I am sorry but I do not follow. We do allow to opt out from the reclaim
+protection with the current semantic and it seems to be reasonably sane.
+I also have hard time to grasp what you actually mean by the above.
+Let's say you have hiearchy where you split out low limit unevenly
+              root (5G of memory)
+             /    \
+   (low 3G) A      D (low 1,5G)
+           / \
+ (low 1G) B   C (low 2G)
 
-All tests are passing for Tegra ...
+B gets lower priority than C and D while C gets higher priority than
+D? Is there any problem with such a configuration from the semantic
+point of view?
 
-Test results for stable-v5.5:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    40 tests:	40 pass, 0 fail
+> However, that doesn't mean this usecase isn't supported. You *can*
+> always split cgroups for separate resource policies.
 
-Linux version:	5.5.6-rc1-g84fa24740caa
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
+What if the split up is not possible or impractical. Let's say you want
+to control how much CPU share does your container workload get comparing
+to other containers running on the system? Or let's say you want to
+treat the whole container as a single entity from the OOM perspective
+(this would be an example of the logical organization constrain) because
+you do not want to leave any part of that workload lingering behind if
+the global OOM kicks in. I am pretty sure there are many other reasons
+to run related workload that doesn't really share the memory protection
+demand under a shared cgroup hierarchy.
 -- 
-nvpublic
+Michal Hocko
+SUSE Labs
