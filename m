@@ -2,53 +2,56 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 799AAC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01486C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B4F24656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C97EE222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271850;
-	bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
+	s=default; t=1582271852;
+	bh=Hdbg/i1SNHrm0XAIf5X+OPhCdN37FWW6cRNgc8Owv6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMavJoNCyvTqNBRiDGs9vOhZaHTmvNhaEqfqhD2za4tQ0ShIzSrDPIJpFQdtSv66p
-	 878Xr8LXSXWF+PegSKZLjwEh7BwyjOlovnNe1LElkiw36Um/zhu6XJtc6DVZIeWG5k
-	 nFwTG5Rv9eE2Vx9EOZ019kGVQo2pgbDKU+60ZF5M=
+	b=d40dXMFXcJDDSO91OJj2HVx4WV4R4I8d/3jVM0+dqewtYjDIfSUzvue3vFzGnwHrU
+	 WOrlvSl99WivMrnjW9NMnIw07lgcJTX/CkOFshJMAnt8F4DX6Mom+DvzJP7sO0cLTN
+	 PwA2OdaaklUBw+3Bt5Wz2BM8rsY+o9bHXARCc42w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730624AbgBUH53 (ORCPT
+        id S1730635AbgBUH5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:57:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbgBUH5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:57:25 -0500
+        id S1730443AbgBUH51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC429222C4;
-        Fri, 21 Feb 2020 07:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713412465D;
+        Fri, 21 Feb 2020 07:57:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271844;
-        bh=/eTuMA1+EKSBwjBLo0bimCwtlU8PRo/V9j/mbKbSwU4=;
+        s=default; t=1582271846;
+        bh=Hdbg/i1SNHrm0XAIf5X+OPhCdN37FWW6cRNgc8Owv6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cUxPIRnoz0sEPP/rdP4UApZCXFImpVoEobqFjkrGyrK1cPtQhkKkgqaPnd+vm7w6
-         2mLsyD6BwJuQk1L3dlfSp++AFLGdcun7ZpP+I4hbPgRZYcrguwTik2hT578hA6k9gd
-         dEC4h44ps5gWmAGtWWH+6eTqDPzHhFRfMEHzv0cE=
+        b=v18KYSKYLNQD3fll2M5xZes/U8UAGaSJQg6I1HkihglDgmH7z16hWgeJY/IW6BwCX
+         kHmHsg8KeocLAPCNEpWveLFzav4LGdyX76q67JYFvo9UaIktw+HQn/Ymwyyp7Mqa/a
+         UW11vrnuMuoq6fj8JFAmIx9Shg2VZknyqMmWAH7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 282/399] arm64: fix alternatives with LLVMs integrated assembler
-Date:   Fri, 21 Feb 2020 08:40:07 +0100
-Message-Id: <20200221072429.379585529@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Black <nlb@google.com>,
+        Salman Qazi <sqazi@google.com>, Junho Ryu <jayr@google.com>,
+        Khazhismel Kumykov <khazhy@google.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 273/399] scsi: iscsi: Dont destroy session if there are outstanding connections
+Date:   Fri, 21 Feb 2020 08:39:58 +0100
+Message-Id: <20200221072428.701103790@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,117 +64,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Nick Black <nlb@google.com>
 
-[ Upstream commit c54f90c2627cc316d365e3073614731e17dbc631 ]
+[ Upstream commit 54155ed4199c7aa3fd20866648024ab63c96d579 ]
 
-LLVM's integrated assembler fails with the following error when
-building KVM:
+A faulty userspace that calls destroy_session() before destroying the
+connections can trigger the failure.  This patch prevents the issue by
+refusing to destroy the session if there are outstanding connections.
 
-  <inline asm>:12:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:21:6: error: expected absolute expression
-   .if kvm_update_va_mask == 0
-       ^
-  <inline asm>:24:2: error: unrecognized instruction mnemonic
-          NOT_AN_INSTRUCTION
-          ^
-  LLVM ERROR: Error parsing inline asm
+------------[ cut here ]------------
+kernel BUG at mm/slub.c:306!
+invalid opcode: 0000 [#1] SMP PTI
+CPU: 1 PID: 1224 Comm: iscsid Not tainted 5.4.0-rc2.iscsi+ #7
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+RIP: 0010:__slab_free+0x181/0x350
+[...]
+[ 1209.686056] RSP: 0018:ffffa93d4074fae0 EFLAGS: 00010246
+[ 1209.686694] RAX: ffff934efa5ad800 RBX: 000000008010000a RCX: ffff934efa5ad800
+[ 1209.687651] RDX: ffff934efa5ad800 RSI: ffffeb4041e96b00 RDI: ffff934efd402c40
+[ 1209.688582] RBP: ffffa93d4074fb80 R08: 0000000000000001 R09: ffffffffbb5dfa26
+[ 1209.689425] R10: ffff934efa5ad800 R11: 0000000000000001 R12: ffffeb4041e96b00
+[ 1209.690285] R13: ffff934efa5ad800 R14: ffff934efd402c40 R15: 0000000000000000
+[ 1209.691213] FS:  00007f7945dfb540(0000) GS:ffff934efda80000(0000) knlGS:0000000000000000
+[ 1209.692316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1209.693013] CR2: 000055877fd3da80 CR3: 0000000077384000 CR4: 00000000000006e0
+[ 1209.693897] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 1209.694773] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 1209.695631] Call Trace:
+[ 1209.695957]  ? __wake_up_common_lock+0x8a/0xc0
+[ 1209.696712]  iscsi_pool_free+0x26/0x40
+[ 1209.697263]  iscsi_session_teardown+0x2f/0xf0
+[ 1209.698117]  iscsi_sw_tcp_session_destroy+0x45/0x60
+[ 1209.698831]  iscsi_if_rx+0xd88/0x14e0
+[ 1209.699370]  netlink_unicast+0x16f/0x200
+[ 1209.699932]  netlink_sendmsg+0x21a/0x3e0
+[ 1209.700446]  sock_sendmsg+0x4f/0x60
+[ 1209.700902]  ___sys_sendmsg+0x2ae/0x320
+[ 1209.701451]  ? cp_new_stat+0x150/0x180
+[ 1209.701922]  __sys_sendmsg+0x59/0xa0
+[ 1209.702357]  do_syscall_64+0x52/0x160
+[ 1209.702812]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1209.703419] RIP: 0033:0x7f7946433914
+[...]
+[ 1209.706084] RSP: 002b:00007fffb99f2378 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+[ 1209.706994] RAX: ffffffffffffffda RBX: 000055bc869eac20 RCX: 00007f7946433914
+[ 1209.708082] RDX: 0000000000000000 RSI: 00007fffb99f2390 RDI: 0000000000000005
+[ 1209.709120] RBP: 00007fffb99f2390 R08: 000055bc84fe9320 R09: 00007fffb99f1f07
+[ 1209.710110] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000038
+[ 1209.711085] R13: 000055bc8502306e R14: 0000000000000000 R15: 0000000000000000
+ Modules linked in:
+ ---[ end trace a2d933ede7f730d8 ]---
 
-These errors come from ALTERNATIVE_CB and __ALTERNATIVE_CFG,
-which test for the existence of the callback parameter in inline
-assembly using the following expression:
-
-  " .if " __stringify(cb) " == 0\n"
-
-This works with GNU as, but isn't supported by LLVM. This change
-splits __ALTERNATIVE_CFG and ALTINSTR_ENTRY into separate macros
-to fix the LLVM build.
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/472
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Tested-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20191226203148.2172200-1-krisman@collabora.com
+Signed-off-by: Nick Black <nlb@google.com>
+Co-developed-by: Salman Qazi <sqazi@google.com>
+Signed-off-by: Salman Qazi <sqazi@google.com>
+Co-developed-by: Junho Ryu <jayr@google.com>
+Signed-off-by: Junho Ryu <jayr@google.com>
+Co-developed-by: Khazhismel Kumykov <khazhy@google.com>
+Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+Co-developed-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/alternative.h | 32 ++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ drivers/scsi/iscsi_tcp.c            |  4 ++++
+ drivers/scsi/scsi_transport_iscsi.c | 26 +++++++++++++++++++++++---
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/alternative.h b/arch/arm64/include/asm/alternative.h
-index b9f8d787eea9f..324e7d5ab37ed 100644
---- a/arch/arm64/include/asm/alternative.h
-+++ b/arch/arm64/include/asm/alternative.h
-@@ -35,13 +35,16 @@ void apply_alternatives_module(void *start, size_t length);
- static inline void apply_alternatives_module(void *start, size_t length) { }
- #endif
- 
--#define ALTINSTR_ENTRY(feature,cb)					      \
-+#define ALTINSTR_ENTRY(feature)					              \
- 	" .word 661b - .\n"				/* label           */ \
--	" .if " __stringify(cb) " == 0\n"				      \
- 	" .word 663f - .\n"				/* new instruction */ \
--	" .else\n"							      \
-+	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
-+	" .byte 662b-661b\n"				/* source len      */ \
-+	" .byte 664f-663f\n"				/* replacement len */
+diff --git a/drivers/scsi/iscsi_tcp.c b/drivers/scsi/iscsi_tcp.c
+index 0bc63a7ab41c8..b5dd1caae5e92 100644
+--- a/drivers/scsi/iscsi_tcp.c
++++ b/drivers/scsi/iscsi_tcp.c
+@@ -887,6 +887,10 @@ free_host:
+ static void iscsi_sw_tcp_session_destroy(struct iscsi_cls_session *cls_session)
+ {
+ 	struct Scsi_Host *shost = iscsi_session_to_shost(cls_session);
++	struct iscsi_session *session = cls_session->dd_data;
 +
-+#define ALTINSTR_ENTRY_CB(feature, cb)					      \
-+	" .word 661b - .\n"				/* label           */ \
- 	" .word " __stringify(cb) "- .\n"		/* callback */	      \
--	" .endif\n"							      \
- 	" .hword " __stringify(feature) "\n"		/* feature bit     */ \
- 	" .byte 662b-661b\n"				/* source len      */ \
- 	" .byte 664f-663f\n"				/* replacement len */
-@@ -62,15 +65,14 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
-  *
-  * Alternatives with callbacks do not generate replacement instructions.
-  */
--#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled, cb)	\
-+#define __ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg_enabled)	\
- 	".if "__stringify(cfg_enabled)" == 1\n"				\
- 	"661:\n\t"							\
- 	oldinstr "\n"							\
- 	"662:\n"							\
- 	".pushsection .altinstructions,\"a\"\n"				\
--	ALTINSTR_ENTRY(feature,cb)					\
-+	ALTINSTR_ENTRY(feature)						\
- 	".popsection\n"							\
--	" .if " __stringify(cb) " == 0\n"				\
- 	".pushsection .altinstr_replacement, \"a\"\n"			\
- 	"663:\n\t"							\
- 	newinstr "\n"							\
-@@ -78,17 +80,25 @@ static inline void apply_alternatives_module(void *start, size_t length) { }
- 	".popsection\n\t"						\
- 	".org	. - (664b-663b) + (662b-661b)\n\t"			\
- 	".org	. - (662b-661b) + (664b-663b)\n"			\
--	".else\n\t"							\
-+	".endif\n"
++	if (WARN_ON_ONCE(session->leadconn))
++		return;
+ 
+ 	iscsi_tcp_r2tpool_free(cls_session->dd_data);
+ 	iscsi_session_teardown(cls_session);
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index ed8d9709b9b96..271afea654e2b 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -2947,6 +2947,24 @@ iscsi_set_path(struct iscsi_transport *transport, struct iscsi_uevent *ev)
+ 	return err;
+ }
+ 
++static int iscsi_session_has_conns(int sid)
++{
++	struct iscsi_cls_conn *conn;
++	unsigned long flags;
++	int found = 0;
 +
-+#define __ALTERNATIVE_CFG_CB(oldinstr, feature, cfg_enabled, cb)	\
-+	".if "__stringify(cfg_enabled)" == 1\n"				\
-+	"661:\n\t"							\
-+	oldinstr "\n"							\
-+	"662:\n"							\
-+	".pushsection .altinstructions,\"a\"\n"				\
-+	ALTINSTR_ENTRY_CB(feature, cb)					\
-+	".popsection\n"							\
- 	"663:\n\t"							\
- 	"664:\n\t"							\
--	".endif\n"							\
- 	".endif\n"
- 
- #define _ALTERNATIVE_CFG(oldinstr, newinstr, feature, cfg, ...)	\
--	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg), 0)
-+	__ALTERNATIVE_CFG(oldinstr, newinstr, feature, IS_ENABLED(cfg))
- 
- #define ALTERNATIVE_CB(oldinstr, cb) \
--	__ALTERNATIVE_CFG(oldinstr, "NOT_AN_INSTRUCTION", ARM64_CB_PATCH, 1, cb)
-+	__ALTERNATIVE_CFG_CB(oldinstr, ARM64_CB_PATCH, 1, cb)
- #else
- 
- #include <asm/assembler.h>
++	spin_lock_irqsave(&connlock, flags);
++	list_for_each_entry(conn, &connlist, conn_list) {
++		if (iscsi_conn_get_sid(conn) == sid) {
++			found = 1;
++			break;
++		}
++	}
++	spin_unlock_irqrestore(&connlock, flags);
++
++	return found;
++}
++
+ static int
+ iscsi_set_iface_params(struct iscsi_transport *transport,
+ 		       struct iscsi_uevent *ev, uint32_t len)
+@@ -3524,10 +3542,12 @@ iscsi_if_recv_msg(struct sk_buff *skb, struct nlmsghdr *nlh, uint32_t *group)
+ 		break;
+ 	case ISCSI_UEVENT_DESTROY_SESSION:
+ 		session = iscsi_session_lookup(ev->u.d_session.sid);
+-		if (session)
+-			transport->destroy_session(session);
+-		else
++		if (!session)
+ 			err = -EINVAL;
++		else if (iscsi_session_has_conns(ev->u.d_session.sid))
++			err = -EBUSY;
++		else
++			transport->destroy_session(session);
+ 		break;
+ 	case ISCSI_UEVENT_UNBIND_SESSION:
+ 		session = iscsi_session_lookup(ev->u.d_session.sid);
 -- 
 2.20.1
 
