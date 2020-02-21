@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF445C35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A23C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDFC2467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9FA624681
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273566;
-	bh=6uuL2kpSArz8OwtyYslYE7k2qCheH7HvEGUTMDexYsI=;
+	s=default; t=1582273575;
+	bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLDEx3zGOmrzUJb0dIv3HC+nRIpxpcL8C0KYL7VH+cNCQWeOiwKS1AXWoQUywXrTH
-	 rn85r+8bl4pswykoAHqjrO1El1L8WYvLPgCsGAIccRmvVcVgxMwmOjCdcnH/AjPrzA
-	 BHAyA4cMipndMsskByph/cqpn8rJu7q5p1I+zIG4=
+	b=oeq82oJ8vXp2QnGMmW07X5rMbM3nN/LTvQm7zj53anLzbRH7YmE8BojRdcsyFKPNp
+	 MbZPABv5Wan6szb4si4Gvq09V2B6fMEy73Sf+6vfKMkd1CeNFQ1Ay5krHn994JuGXb
+	 ycEdrJxFc1i89dfKL9rMX6xlLJlCgUeQCvjnijiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388692AbgBUIYs (ORCPT
+        id S2388316AbgBUIYI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:24:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37152 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:24:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388391AbgBUIYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:24:36 -0500
+        id S2388254AbgBUIYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:24:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA1B3246A9;
-        Fri, 21 Feb 2020 08:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FE002467D;
+        Fri, 21 Feb 2020 08:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273476;
-        bh=6uuL2kpSArz8OwtyYslYE7k2qCheH7HvEGUTMDexYsI=;
+        s=default; t=1582273445;
+        bh=o5gr58TJGS5RzeBoS44nmEv9hIX3Y2a8lUvTlTQQlMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFl6EAomVZOM9MnLrcwbaetsiHfNE1VL95YjzNN5h2ZCIb967318g8t3muCe753H9
-         lW0mdUaTaIdwdlEKQIsUud42Jpp+J6l4An19XuFRc2kn3NWb+hYkkvzLZRhowHZZyQ
-         rStLjQWSQoz0t7iW+O5Pnuowxzm1M+lUG3OnTcRk=
+        b=i+doDxnR8xdDT+FPKtAOAaP4HVRURXTJcQORWfHNkDGfe3nF41lpD2gvz2GTA72E7
+         Tz9JsDC5qLeaYZuaffI+vhZc1NDYhFVm/Km6NIOZTwbIVaJehJiHbO8tN0I0EgQR56
+         HXWJE9It1twHFSzaVuU8eFKP07mWhq1Yvjdazb+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 185/191] drm/amdgpu/smu10: fix smu10_get_clock_by_type_with_voltage
-Date:   Fri, 21 Feb 2020 08:42:38 +0100
-Message-Id: <20200221072312.966159239@linuxfoundation.org>
+Subject: [PATCH 4.19 166/191] iwlegacy: ensure loop counter addr does not wrap and cause an infinite loop
+Date:   Fri, 21 Feb 2020 08:42:19 +0100
+Message-Id: <20200221072310.618357945@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -60,39 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 1064ad4aeef94f51ca230ac639a9e996fb7867a0 ]
+[ Upstream commit c2f9a4e4a5abfc84c01b738496b3fd2d471e0b18 ]
 
-Cull out 0 clocks to avoid a warning in DC.
+The loop counter addr is a u16 where as the upper limit of the loop
+is an int. In the unlikely event that the il->cfg->eeprom_size is
+greater than 64K then we end up with an infinite loop since addr will
+wrap around an never reach upper loop limit. Fix this by making addr
+an int.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/963
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Addresses-Coverity: ("Infinite loop")
+Fixes: be663ab67077 ("iwlwifi: split the drivers for agn and legacy devices 3945/4965")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Stanislaw Gruszka <stf_xl@wp.pl>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-index 3fa6e8123b8eb..48e31711bc68f 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-@@ -1048,9 +1048,11 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 6514baf799fef..e16f2597c2199 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -717,7 +717,7 @@ il_eeprom_init(struct il_priv *il)
+ 	u32 gp = _il_rd(il, CSR_EEPROM_GP);
+ 	int sz;
+ 	int ret;
+-	u16 addr;
++	int addr;
  
- 	clocks->num_levels = 0;
- 	for (i = 0; i < pclk_vol_table->count; i++) {
--		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
--		clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
--		clocks->num_levels++;
-+		if (pclk_vol_table->entries[i].clk) {
-+			clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
-+			clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
-+			clocks->num_levels++;
-+		}
- 	}
- 
- 	return 0;
+ 	/* allocate eeprom */
+ 	sz = il->cfg->eeprom_size;
 -- 
 2.20.1
 
