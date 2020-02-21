@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC4AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85CBC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA3320801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F8592073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272310;
-	bh=Dalcud8G3DF/3fo1QodJmuZ93FL/HOW+boXVE+ef1Cw=;
+	s=default; t=1582272313;
+	bh=BvI1Wvm5Gi7agi+XZRfqk2PKyoFwI1R06nXhT/Qs+S8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=skjwFQz4q/j0TfMx9ftSnWntJDA8qumLXK2rrSvP+KaAdbBZjk27+0xab6MYiPos5
-	 4V15mTjk/l5RWb52tT0968RkmvM0UWfKyZaFip4o97ob61A+AnN98ZZdR+6UAJBthT
-	 is6aAZWE3ITqIh4x/lWVZGQQYpEXAhfvOadXrUmM=
+	b=yRLdweXmYLJcnCbzsp6ik+17cHgddNoLqO0bMP3J6ccs80V3A4yk9XO/lP7r9IG3f
+	 /Ko1MTPtnCu6Ppm5gy7ZW8+gcwBdH1doIvkWrdZJN1e3YWRLSp4S3IHhVzHrUVsWIH
+	 WelzKtWf+bO5AVBsvX/Bf/XSBeHgZyZ5WmRhiB+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731766AbgBUIFJ (ORCPT
+        id S1731279AbgBUIFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731572AbgBUIFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:07 -0500
+        id S1731748AbgBUIFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10AF2073A;
-        Fri, 21 Feb 2020 08:05:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E70224670;
+        Fri, 21 Feb 2020 08:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272307;
-        bh=Dalcud8G3DF/3fo1QodJmuZ93FL/HOW+boXVE+ef1Cw=;
+        s=default; t=1582272304;
+        bh=BvI1Wvm5Gi7agi+XZRfqk2PKyoFwI1R06nXhT/Qs+S8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/oLgZF1fmtAbdCX5JNRXnzwzHLfxgHe2XrCLq4qagUq+NSMaTj9g/RBOft+Zc6Ym
-         Pwmdbw7hyVKyvhWQzD1zzKooqJDm0m4U2JEQ7zbpvxQY7m2zK4FCHuNNfNYqblbaFf
-         cER1g+smTRgOWLkUrskfexwpla2pfZJk/uy6SQYw=
+        b=N+IA/FIviTZlfp5k+Y3sGO2W0MuBk4V0JindT1MWoFwg19P3i9qgscPv5Rriy+Kdd
+         FVUaYwojNzKFQk17sA11NvZlYe4u2ajbghh2iiLREXJsBRmmApez2C5CK38nSk/qyA
+         Kf8QZ/IGON+ulU6WSNrfF5zgc73n3OCxMiTGriSQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Zhao <Yong.Zhao@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 093/344] drm/amdkfd: Fix a bug in SDMA RLC queue counting under HWS mode
-Date:   Fri, 21 Feb 2020 08:38:12 +0100
-Message-Id: <20200221072357.407635741@linuxfoundation.org>
+Subject: [PATCH 5.4 092/344] clk: qcom: rcg2: Dont crash if our parent cant be found; return an error
+Date:   Fri, 21 Feb 2020 08:38:11 +0100
+Message-Id: <20200221072357.319340100@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,55 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhao <Yong.Zhao@amd.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-[ Upstream commit f38abc15d157b7b31fa7f651dc8bf92858c963f8 ]
+[ Upstream commit 908b050114d8fefdddc57ec9fbc213c3690e7f5f ]
 
-The sdma_queue_count increment should be done before
-execute_queues_cpsch(), which calls pm_calc_rlib_size() where
-sdma_queue_count is used to calculate whether over_subscription is
-triggered.
+When I got my clock parenting slightly wrong I ended up with a crash
+that looked like this:
 
-With the previous code, when a SDMA queue is created,
-compute_queue_count in pm_calc_rlib_size() is one more than the
-actual compute queue number, because the queue_count has been
-incremented while sdma_queue_count has not. This patch fixes that.
+  Unable to handle kernel NULL pointer dereference at virtual
+  address 0000000000000000
+  ...
+  pc : clk_hw_get_rate+0x14/0x44
+  ...
+  Call trace:
+   clk_hw_get_rate+0x14/0x44
+   _freq_tbl_determine_rate+0x94/0xfc
+   clk_rcg2_determine_rate+0x2c/0x38
+   clk_core_determine_round_nolock+0x4c/0x88
+   clk_core_round_rate_nolock+0x6c/0xa8
+   clk_core_round_rate_nolock+0x9c/0xa8
+   clk_core_set_rate_nolock+0x70/0x180
+   clk_set_rate+0x3c/0x6c
+   of_clk_set_defaults+0x254/0x360
+   platform_drv_probe+0x28/0xb0
+   really_probe+0x120/0x2dc
+   driver_probe_device+0x64/0xfc
+   device_driver_attach+0x4c/0x6c
+   __driver_attach+0xac/0xc0
+   bus_for_each_dev+0x84/0xcc
+   driver_attach+0x2c/0x38
+   bus_add_driver+0xfc/0x1d0
+   driver_register+0x64/0xf8
+   __platform_driver_register+0x4c/0x58
+   msm_drm_register+0x5c/0x60
+   ...
 
-Signed-off-by: Yong Zhao <Yong.Zhao@amd.com>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+It turned out that clk_hw_get_parent_by_index() was returning NULL and
+we weren't checking.  Let's check it so that we don't crash.
+
+Fixes: ac269395cdd8 ("clk: qcom: Convert to clk_hw based provider APIs")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Link: https://lkml.kernel.org/r/20200203103049.v4.1.I7487325fe8e701a68a07d3be8a6a4b571eca9cfa@changeid
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/clk/qcom/clk-rcg2.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-index f335f73919d15..a2ed9c257cb0d 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device_queue_manager.c
-@@ -1181,16 +1181,18 @@ static int create_queue_cpsch(struct device_queue_manager *dqm, struct queue *q,
+diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+index 5174222cbfab2..a88101480e337 100644
+--- a/drivers/clk/qcom/clk-rcg2.c
++++ b/drivers/clk/qcom/clk-rcg2.c
+@@ -217,6 +217,9 @@ static int _freq_tbl_determine_rate(struct clk_hw *hw, const struct freq_tbl *f,
  
- 	list_add(&q->list, &qpd->queues_list);
- 	qpd->queue_count++;
+ 	clk_flags = clk_hw_get_flags(hw);
+ 	p = clk_hw_get_parent_by_index(hw, index);
++	if (!p)
++		return -EINVAL;
 +
-+	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
-+		dqm->sdma_queue_count++;
-+	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
-+		dqm->xgmi_sdma_queue_count++;
-+
- 	if (q->properties.is_active) {
- 		dqm->queue_count++;
- 		retval = execute_queues_cpsch(dqm,
- 				KFD_UNMAP_QUEUES_FILTER_DYNAMIC_QUEUES, 0);
- 	}
- 
--	if (q->properties.type == KFD_QUEUE_TYPE_SDMA)
--		dqm->sdma_queue_count++;
--	else if (q->properties.type == KFD_QUEUE_TYPE_SDMA_XGMI)
--		dqm->xgmi_sdma_queue_count++;
- 	/*
- 	 * Unconditionally increment this counter, regardless of the queue's
- 	 * type or whether the queue is active.
+ 	if (clk_flags & CLK_SET_RATE_PARENT) {
+ 		rate = f->freq;
+ 		if (f->pre_div) {
 -- 
 2.20.1
 
