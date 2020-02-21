@@ -2,84 +2,131 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1E9C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 244B3C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C37920722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:06:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L7LkB1ec"
+	by mail.kernel.org (Postfix) with ESMTP id 061B6222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgBURGb (ORCPT
+        id S1728135AbgBURHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:06:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43260 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726672AbgBURGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:06:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582304789;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=d+gE6bobfHvUgEPpbnKCxsxKvbbzJfwCBMRpBF3lPck=;
-        b=L7LkB1ecgtPwJku+KKKSKenK31Jq4WtCnfcmSVK4BBvNy2UJmq5kyC5+eGAF3rC/k2Xdz1
-        oenaR5QwhaWiSExP/m1981oDHl5RPKOGml6HBiDtJ7fqDvx9vF1zCOoqXJwiSNvP3ZkaXe
-        px5+TGihgbXipxMEMpv9gd46OtGEgbI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-0uMjhGtxP-6dmQbVqLoaRw-1; Fri, 21 Feb 2020 12:06:26 -0500
-X-MC-Unique: 0uMjhGtxP-6dmQbVqLoaRw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50889800EB4;
-        Fri, 21 Feb 2020 17:06:25 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-122-163.rdu2.redhat.com [10.10.122.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 652A519E9C;
-        Fri, 21 Feb 2020 17:06:23 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com>
-References: <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com> <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk> <158204559631.3299825.5358385352169781990.stgit@warthog.procyon.org.uk> <CAG48ez3ZMg4O5US3n=p1CYK-2AAgLRY+pjnUXp2p5hdwbjCRSA@mail.gmail.com> <1808070.1582287889@warthog.procyon.org.uk>
-To:     Jann Horn <jannh@google.com>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        raven@themaw.net, Miklos Szeredi <mszeredi@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 13/19] vfs: Add a mount-notification facility [ver #16]
+        Fri, 21 Feb 2020 12:07:01 -0500
+Received: from mga11.intel.com ([192.55.52.93]:21383 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726829AbgBURHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 12:07:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Feb 2020 09:06:44 -0800
+X-IronPort-AV: E=Sophos;i="5.70,469,1574150400"; 
+   d="scan'208";a="229906480"
+Received: from unknown (HELO [10.24.14.134]) ([10.24.14.134])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 21 Feb 2020 09:06:43 -0800
+Subject: Re: [PATCH v2] x86/resctrl: Preserve CDP enable over cpuhp
+To:     James Morse <james.morse@arm.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+References: <20200214181600.38779-1-james.morse@arm.com>
+ <214c845b-d093-bafc-02d0-dfd810283f1a@intel.com>
+ <32c563f9-c645-5c04-ed0b-18b3348c9c7f@arm.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+Message-ID: <6e9f1a93-9665-6bef-7285-5f4de920471a@intel.com>
+Date:   Fri, 21 Feb 2020 09:06:41 -0800
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2113717.1582304782.1@warthog.procyon.org.uk>
-Date:   Fri, 21 Feb 2020 17:06:22 +0000
-Message-ID: <2113718.1582304782@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <32c563f9-c645-5c04-ed0b-18b3348c9c7f@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jann Horn <jannh@google.com> wrote:
+Hi James,
 
-> > What's the best way to write a lockdep assertion?
-> >
-> >         BUG_ON(!lockdep_is_held(lock));
+On 2/21/2020 7:25 AM, James Morse wrote:
+> Hi Reinette,
 > 
-> lockdep_assert_held(lock) is the normal way, I think - that will
-> WARN() if lockdep is enabled and the lock is not held.
+> On 14/02/2020 19:24, Reinette Chatre wrote:
+>> On 2/14/2020 10:16 AM, James Morse wrote:
+>>> Resctrl assumes that all CPUs are online when the filesystem is
+>>> mounted, and that CPUs remember their CDP-enabled state over CPU
+>>> hotplug.
+>>>
+>>> This goes wrong when resctrl's CDP-enabled state changes while all
+>>> the CPUs in a domain are offline.
+>>>
+>>> When a domain comes online, enable (or disable!) CDP to match resctrl's
+>>> current setting.
+> 
+>>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> index 064e9ef44cd6..5967320a1951 100644
+>>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>> @@ -1831,6 +1831,9 @@ static int set_cache_qos_cfg(int level, bool enable)
+>>>  	struct rdt_domain *d;
+>>>  	int cpu;
+>>>  
+>>> +	 /* CDP state is restored during cpuhp, which takes this lock */
+>>> +	lockdep_assert_held(&rdtgroup_mutex);
+>>> +
+>>
+>> I think this hunk can be dropped. (1) The code path where this
+>> annotation is added is not part of this fix. (2) The comment implies
+>> that the taking of the mutex is something new/unique added in the CPU
+>> hotplug path but that is not accurate since this mutex is also taken in
+>> the only other existing call path of this snippet that is handling the
+>> mounting of the filesystem.
+> 
+> These things answer the question: "what stops rdt_domain_reconfigure_cdp() racing with
+> set_cache_qos_cfg() on the mount path, causing the wrong value to be restored?".
+> 
+> We can try and answer that in the commit message, or comments, but these will quickly be
+> lost, stale, or wrong.
+> 
+> These annotations serve as a comment, and let lockdep check its still true.
+> (I think you can never have enough lockdep annotations!)
 
-Okay.  But what's the best way with a seqlock_t?  It has two dep maps in it.
-Do I just ignore the one attached to the spinlock?
+I agree that lockdep annotations are valuable. My comment was specific
+to this one hunk, not all lockdep annotations in your patch. Please
+consider my comment in the spirit of patch guidance (per
+Documentation/process/submitting-patches.rst) noting that all logical
+changes should be in separate patches. This specific hunk is unrelated
+to the bug being fixed in this patch but can surely be done in a
+separate patch submitted together with this fix.
 
-David
+>> You do mention that these annotations is helpful for the MPAM work.
+> 
+> Indeed, it splits up the, er, "big RDT mutex", these annotations mean lockdep catches me
+> out if I do something wrong, and makes it very clear when changing something subtle.
+> 
+> 
+>> Could the annotations instead be added as a separate patch forming part
+>> of that work?
+> 
+> Ideally these things are there from the beginning. Adding them over time as part of other
+> reviewed patches works. I don't think adding them in one go before refactoring helps: you
+> wouldn't have the confidence that they were correct in the first place.
+> 
+> I'll drop these.
 
+My comment was just specific to the one lockdep annotation added to an
+area that was unrelated to the bugfix. I noticed that you removed all
+annotations in your new version, that was not my intention. You could
+surely keep the lockdep annotation that is in the new code path
+introduced in this fix and a separate patch with the other lockdep
+annotation would also be welcome (with accurate comment).
+
+Thank you
+
+Reinette
