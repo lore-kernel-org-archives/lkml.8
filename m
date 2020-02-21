@@ -6,123 +6,221 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53167C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12805C11D00
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC3524653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E01DD2465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 02:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgBUCqu (ORCPT
+        id S1729615AbgBUCqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 21:46:50 -0500
+        Thu, 20 Feb 2020 21:46:53 -0500
 Received: from mga12.intel.com ([192.55.52.136]:38414 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbgBUCqt (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 21:46:49 -0500
+        id S1729259AbgBUCqv (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 21:46:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 18:46:49 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Feb 2020 18:46:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,466,1574150400"; 
-   d="scan'208";a="259488901"
+   d="scan'208";a="259488913"
 Received: from kbl.sh.intel.com ([10.239.159.24])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Feb 2020 18:46:46 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 20 Feb 2020 18:46:49 -0800
 From:   Jin Yao <yao.jin@linux.intel.com>
 To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
         mingo@redhat.com, alexander.shishkin@linux.intel.com
 Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
         kan.liang@intel.com, yao.jin@intel.com,
         Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 1/2] perf util: Print al_addr when symbol is not found
-Date:   Fri, 21 Feb 2020 10:46:07 +0800
-Message-Id: <20200221024608.1847-2-yao.jin@linux.intel.com>
+Subject: [PATCH v2 2/2] perf annotate: Support interactive annotation of code without symbols
+Date:   Fri, 21 Feb 2020 10:46:08 +0800
+Message-Id: <20200221024608.1847-3-yao.jin@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200221024608.1847-1-yao.jin@linux.intel.com>
 References: <20200221024608.1847-1-yao.jin@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For branch mode, if the symbol is not found, it prints
-the address.
+For perf report on stripped binaries it is currently impossible to do
+annotation. The annotation state is all tied to symbols, but there are
+either no symbols, or symbols are not covering all the code.
 
-For example, 0x0000555eee0365a0 in below output.
+We should support the annotation functionality even without symbols.
 
-Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-  17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-   6.11%  div      div                   [.] 0x0000555eee0365a0                   [.] rand
-   6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000555eee036769
-   5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-   5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-   5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-   5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-   4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-   4.49%  div      div                   [.] 0x0000555eee036779                   [.] 0x0000555eee0365ff
-   4.25%  div      div                   [.] 0x0000555eee0365fa                   [.] 0x0000555eee036760
-
-But it's not very easy to understand what the instructions
-are in the binary. So this patch uses the al_addr instead.
-
-With this patch, the output is
-
-Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-  17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-   6.11%  div      div                   [.] 0x00000000000005a0                   [.] rand
-   6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000000000000769
-   5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-   5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-   5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-   5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-   4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-   4.49%  div      div                   [.] 0x0000000000000779                   [.] 0x00000000000005ff
-   4.25%  div      div                   [.] 0x00000000000005fa                   [.] 0x0000000000000760
-
-Now we can use objdump to dump the object starting from 0x5a0.
+This patch fakes a symbol and the symbol name is the string of address.
+After that, we just follow current annotation working flow.
 
 For example,
-objdump -d --start-address 0x5a0 div
 
-00000000000005a0 <rand@plt>:
- 5a0:   ff 25 2a 0a 20 00       jmpq   *0x200a2a(%rip)        # 200fd0 <__cxa_finalize@plt+0x200a20>
- 5a6:   68 02 00 00 00          pushq  $0x2
- 5ab:   e9 c0 ff ff ff          jmpq   570 <srand@plt-0x10>
- ...
+1. perf report
+
+Overhead  Command  Shared Object     Symbol
+  20.67%  div      libc-2.27.so      [.] __random_r
+  17.29%  div      libc-2.27.so      [.] __random
+  10.59%  div      div               [.] 0x0000000000000628
+   9.25%  div      div               [.] 0x0000000000000612
+   6.11%  div      div               [.] 0x0000000000000645
+
+2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
+
+Annotate 0x0000000000000628
+Zoom into div thread
+Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+Browse map details
+Run scripts for samples of symbol [0x0000000000000628]
+Run scripts for all samples
+Switch to another data file in PWD
+Exit
+
+3. Select the "Annotate 0x0000000000000628" and ENTER.
+
+Percent│
+       │
+       │
+       │     Disassembly of section .text:
+       │
+       │     0000000000000628 <.text+0x68>:
+       │       divsd %xmm4,%xmm0
+       │       divsd %xmm3,%xmm1
+       │       movsd (%rsp),%xmm2
+       │       addsd %xmm1,%xmm0
+       │       addsd %xmm2,%xmm0
+       │       movsd %xmm0,(%rsp)
+
+Now we can see the dump of object starting from 0x628.
 
  v2:
  ---
- No change
+ Fix a crash issue when annotating an address in "unknown" object.
+
+ The steps to reproduce this issue:
+
+ perf record -e cycles:u ls
+ perf report
+
+    75.29%  ls       ld-2.27.so        [.] do_lookup_x
+    23.64%  ls       ld-2.27.so        [.] __GI___tunables_init
+     1.04%  ls       [unknown]         [k] 0xffffffff85c01210
+     0.03%  ls       ld-2.27.so        [.] _start
+
+ When annotating 0xffffffff85c01210, the crash happens.
+
+ v2 adds checking for ms->map in add_annotate_opt(). If the object is
+ "unknown", ms->map is NULL.
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 ---
- tools/perf/util/sort.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/hists.c | 51 +++++++++++++++++++++++++++++-----
+ tools/perf/util/annotate.h     |  2 ++
+ 2 files changed, 46 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index ab0cfd790ad0..e860595576c2 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -869,7 +869,8 @@ static int hist_entry__sym_from_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *from = &he->branch_info->from;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index f36dee499320..5144528b2931 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2465,13 +2465,47 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	return 0;
+ }
  
--		return _hist_entry__sym_snprintf(&from->ms, from->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&from->ms, from->al_addr,
-+						 he->level, bf, size, width);
- 	}
++static struct symbol *new_annotate_sym(u64 addr, struct map *map,
++				       struct annotation_options *opts)
++{
++	struct symbol *sym;
++	struct annotated_source *src;
++	char name[64];
++
++	snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
++
++	sym = symbol__new(addr,
++			  opts->annotate_dummy_len ?
++			  opts->annotate_dummy_len : ANNOTATION_DUMMY_LEN,
++			  0, 0, name);
++	if (sym) {
++		src = symbol__hists(sym, 1);
++		if (!src) {
++			symbol__delete(sym);
++			return NULL;
++		}
++
++		dso__insert_symbol(map->dso, sym);
++	}
++
++	return sym;
++}
++
+ static int
+-add_annotate_opt(struct hist_browser *browser __maybe_unused,
++add_annotate_opt(struct hist_browser *browser,
+ 		 struct popup_action *act, char **optstr,
+-		 struct map_symbol *ms)
++		 struct map_symbol *ms,
++		 u64 addr)
+ {
+-	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
+-	    symbol__annotation(ms->sym)->src == NULL)
++	if (!ms->map || !ms->map->dso || ms->map->dso->annotate_warned)
++		return 0;
++
++	if (!ms->sym) {
++		ms->sym = new_annotate_sym(addr, ms->map,
++					   browser->annotation_opts);
++	}
++
++	if (ms->sym == NULL || symbol__annotation(ms->sym)->src == NULL)
+ 		return 0;
  
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
-@@ -881,7 +882,8 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *to = &he->branch_info->to;
+ 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
+@@ -3219,17 +3253,20 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 			nr_options += add_annotate_opt(browser,
+ 						       &actions[nr_options],
+ 						       &options[nr_options],
+-						       &bi->from.ms);
++						       &bi->from.ms,
++						       bi->from.al_addr);
+ 			if (bi->to.ms.sym != bi->from.ms.sym)
+ 				nr_options += add_annotate_opt(browser,
+ 							&actions[nr_options],
+ 							&options[nr_options],
+-							&bi->to.ms);
++							&bi->to.ms,
++							bi->to.al_addr);
+ 		} else {
+ 			nr_options += add_annotate_opt(browser,
+ 						       &actions[nr_options],
+ 						       &options[nr_options],
+-						       browser->selection);
++						       browser->selection,
++						       browser->he_selection->ip);
+ 		}
+ skip_annotation:
+ 		nr_options += add_thread_opt(browser, &actions[nr_options],
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 455403e8fede..40ca4b58cd17 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -74,6 +74,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
+ #define ANNOTATION__CYCLES_WIDTH 6
+ #define ANNOTATION__MINMAX_CYCLES_WIDTH 19
+ #define ANNOTATION__AVG_IPC_WIDTH 36
++#define ANNOTATION_DUMMY_LEN	256
  
--		return _hist_entry__sym_snprintf(&to->ms, to->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
-+						 he->level, bf, size, width);
- 	}
+ struct annotation_options {
+ 	bool hide_src_code,
+@@ -97,6 +98,7 @@ struct annotation_options {
+ 	const char *prefix;
+ 	const char *prefix_strip;
+ 	unsigned int percent_type;
++	int  annotate_dummy_len;
+ };
  
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+ enum {
 -- 
 2.17.1
 
