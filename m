@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4E4C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E785C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264B12467B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D112465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271125;
-	bh=h5EqkVv0DO84hWwSL2dDOcUgBtNX3MwH2uaDNvbe5qg=;
+	s=default; t=1582271131;
+	bh=QDbcSE8Xu5JeiofYS9+dLJs+2AYt2A/dcxPo4yHaiRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W33iAmGQk5S/xePx93zN43XfgJdV9WabXF3PzY8dHhGAChxAmfDP1EaBqbOE1r7s6
-	 1cdqnmltAqLyAUHUBHUuie1DXW0+Xlw47SEQekG2LnK8jcdzQv/iJWMB702um+Wnks
-	 eZKj3B3nDl04Xb6Sh6L8lf5jdsz2uGp4fdP36RnQ=
+	b=Hlw+e9Z9mkKXrwsKTs+27ERp/tkSBkBEn1UpzR+nmIYfZdpe90hXhnd5gRSsKG0EU
+	 D9G9MQQZPZi/dRKfCOgSqUJYrxg5xprhwt/yATaCTA9VTDm5vZsFxgrHOakb7spkcZ
+	 J/HJAUrkqA8IE8UvSg5tP1JSn6ax/vGsN8N//IDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgBUHpX (ORCPT
+        id S1728396AbgBUHp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:45:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40464 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:45:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728340AbgBUHpW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:45:22 -0500
+        id S1727646AbgBUHp2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:45:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CDD24672;
-        Fri, 21 Feb 2020 07:45:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1F362465D;
+        Fri, 21 Feb 2020 07:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271121;
-        bh=h5EqkVv0DO84hWwSL2dDOcUgBtNX3MwH2uaDNvbe5qg=;
+        s=default; t=1582271127;
+        bh=QDbcSE8Xu5JeiofYS9+dLJs+2AYt2A/dcxPo4yHaiRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvHLSN4sNJYIgu4fxGJzy6t1b6Mbiuwf4XlwIRr16huX0SVtgiwx99fv96tpAZpnN
-         SUIeAabIK8+6vuuF+En/iIdqAvm+mRutLEs0cSy0yzf4+suMBiZFjg3qf6GBhYz1aG
-         VjG9PivT6Be1si2Kj/W35qD9/7zykNwRMA1O1nho=
+        b=lhWiRdGs3dR8LPeipRJrZHrCLKIUw9YJRTWJcmljcR9BmGY27isFdQ4/eaLs0k3Hb
+         nSA5MPOdK7SLuK89YrILxoNPZl2oucSlCRPB/xUiq56bjkWnhsRPKpnHbOeMR6CJev
+         DEAm6pf6pNOrC23jAHanhssO98hqrKYUmiuHbPYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 048/399] iommu/vt-d: Fix off-by-one in PASID allocation
-Date:   Fri, 21 Feb 2020 08:36:13 +0100
-Message-Id: <20200221072407.029447182@linuxfoundation.org>
+        stable@vger.kernel.org, Heinz Mauelshagen <heinzm@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 050/399] dm raid: table line rebuild status fixes
+Date:   Fri, 21 Feb 2020 08:36:15 +0100
+Message-Id: <20200221072407.209419820@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,37 +60,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Heinz Mauelshagen <heinzm@redhat.com>
 
-[ Upstream commit 39d630e332144028f56abba83d94291978e72df1 ]
+[ Upstream commit 43f3952a51f8198d365acb7f51fe42d578fe5d0a ]
 
-PASID allocator uses IDR which is exclusive for the end of the
-allocation range. There is no need to decrement pasid_max.
+raid_status() wasn't emitting rebuild flags on the table line properly
+because the rdev number was not yet set properly; index raid component
+devices array directly to solve.
 
-Fixes: af39507305fb ("iommu/vt-d: Apply global PASID in SVA")
-Reported-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Also fix wrong argument count on emitted table line caused by 1 too
+many rebuild/write_mostly argument and consider any journal_(dev|mode)
+pairs.
+
+Link: https://bugzilla.redhat.com/1782045
+Signed-off-by: Heinz Mauelshagen <heinzm@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../admin-guide/device-mapper/dm-raid.rst     |  2 +
+ drivers/md/dm-raid.c                          | 43 ++++++++++---------
+ 2 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index dca88f9fdf29a..ff7a3f9add325 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -317,7 +317,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
- 		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
- 		ret = intel_pasid_alloc_id(svm,
- 					   !!cap_caching_mode(iommu->cap),
--					   pasid_max - 1, GFP_KERNEL);
-+					   pasid_max, GFP_KERNEL);
- 		if (ret < 0) {
- 			kfree(svm);
- 			kfree(sdev);
+diff --git a/Documentation/admin-guide/device-mapper/dm-raid.rst b/Documentation/admin-guide/device-mapper/dm-raid.rst
+index f6344675e3951..695a2ea1d1ae2 100644
+--- a/Documentation/admin-guide/device-mapper/dm-raid.rst
++++ b/Documentation/admin-guide/device-mapper/dm-raid.rst
+@@ -419,3 +419,5 @@ Version History
+ 	rebuild errors.
+  1.15.0 Fix size extensions not being synchronized in case of new MD bitmap
+         pages allocated;  also fix those not occuring after previous reductions
++ 1.15.1 Fix argument count and arguments for rebuild/write_mostly/journal_(dev|mode)
++        on the status line.
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index c412eaa975fc0..9a18bef0a5ff0 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -129,7 +129,9 @@ struct raid_dev {
+ 				  CTR_FLAG_RAID10_COPIES | \
+ 				  CTR_FLAG_RAID10_FORMAT | \
+ 				  CTR_FLAG_DELTA_DISKS | \
+-				  CTR_FLAG_DATA_OFFSET)
++				  CTR_FLAG_DATA_OFFSET | \
++				  CTR_FLAG_JOURNAL_DEV | \
++				  CTR_FLAG_JOURNAL_MODE)
+ 
+ /* Valid options definitions per raid level... */
+ 
+@@ -3001,7 +3003,6 @@ static int raid_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 		{ 1, 254, "Cannot understand number of raid devices parameters" }
+ 	};
+ 
+-	/* Must have <raid_type> */
+ 	arg = dm_shift_arg(&as);
+ 	if (!arg) {
+ 		ti->error = "No arguments";
+@@ -3508,8 +3509,7 @@ static void raid_status(struct dm_target *ti, status_type_t type,
+ 	unsigned long recovery;
+ 	unsigned int raid_param_cnt = 1; /* at least 1 for chunksize */
+ 	unsigned int sz = 0;
+-	unsigned int rebuild_disks;
+-	unsigned int write_mostly_params = 0;
++	unsigned int rebuild_writemostly_count = 0;
+ 	sector_t progress, resync_max_sectors, resync_mismatches;
+ 	enum sync_state state;
+ 	struct raid_type *rt;
+@@ -3593,18 +3593,20 @@ static void raid_status(struct dm_target *ti, status_type_t type,
+ 	case STATUSTYPE_TABLE:
+ 		/* Report the table line string you would use to construct this raid set */
+ 
+-		/* Calculate raid parameter count */
+-		for (i = 0; i < rs->raid_disks; i++)
+-			if (test_bit(WriteMostly, &rs->dev[i].rdev.flags))
+-				write_mostly_params += 2;
+-		rebuild_disks = memweight(rs->rebuild_disks, DISKS_ARRAY_ELEMS * sizeof(*rs->rebuild_disks));
+-		raid_param_cnt += rebuild_disks * 2 +
+-				  write_mostly_params +
++		/*
++		 * Count any rebuild or writemostly argument pairs and subtract the
++		 * hweight count being added below of any rebuild and writemostly ctr flags.
++		 */
++		for (i = 0; i < rs->raid_disks; i++) {
++			rebuild_writemostly_count += (test_bit(i, (void *) rs->rebuild_disks) ? 2 : 0) +
++						     (test_bit(WriteMostly, &rs->dev[i].rdev.flags) ? 2 : 0);
++		}
++		rebuild_writemostly_count -= (test_bit(__CTR_FLAG_REBUILD, &rs->ctr_flags) ? 2 : 0) +
++					     (test_bit(__CTR_FLAG_WRITE_MOSTLY, &rs->ctr_flags) ? 2 : 0);
++		/* Calculate raid parameter count based on ^ rebuild/writemostly argument counts and ctr flags set. */
++		raid_param_cnt += rebuild_writemostly_count +
+ 				  hweight32(rs->ctr_flags & CTR_FLAG_OPTIONS_NO_ARGS) +
+-				  hweight32(rs->ctr_flags & CTR_FLAG_OPTIONS_ONE_ARG) * 2 +
+-				  (test_bit(__CTR_FLAG_JOURNAL_DEV, &rs->ctr_flags) ? 2 : 0) +
+-				  (test_bit(__CTR_FLAG_JOURNAL_MODE, &rs->ctr_flags) ? 2 : 0);
+-
++				  hweight32(rs->ctr_flags & CTR_FLAG_OPTIONS_ONE_ARG) * 2;
+ 		/* Emit table line */
+ 		/* This has to be in the documented order for userspace! */
+ 		DMEMIT("%s %u %u", rs->raid_type->name, raid_param_cnt, mddev->new_chunk_sectors);
+@@ -3612,11 +3614,10 @@ static void raid_status(struct dm_target *ti, status_type_t type,
+ 			DMEMIT(" %s", dm_raid_arg_name_by_flag(CTR_FLAG_SYNC));
+ 		if (test_bit(__CTR_FLAG_NOSYNC, &rs->ctr_flags))
+ 			DMEMIT(" %s", dm_raid_arg_name_by_flag(CTR_FLAG_NOSYNC));
+-		if (rebuild_disks)
++		if (test_bit(__CTR_FLAG_REBUILD, &rs->ctr_flags))
+ 			for (i = 0; i < rs->raid_disks; i++)
+-				if (test_bit(rs->dev[i].rdev.raid_disk, (void *) rs->rebuild_disks))
+-					DMEMIT(" %s %u", dm_raid_arg_name_by_flag(CTR_FLAG_REBUILD),
+-							 rs->dev[i].rdev.raid_disk);
++				if (test_bit(i, (void *) rs->rebuild_disks))
++					DMEMIT(" %s %u", dm_raid_arg_name_by_flag(CTR_FLAG_REBUILD), i);
+ 		if (test_bit(__CTR_FLAG_DAEMON_SLEEP, &rs->ctr_flags))
+ 			DMEMIT(" %s %lu", dm_raid_arg_name_by_flag(CTR_FLAG_DAEMON_SLEEP),
+ 					  mddev->bitmap_info.daemon_sleep);
+@@ -3626,7 +3627,7 @@ static void raid_status(struct dm_target *ti, status_type_t type,
+ 		if (test_bit(__CTR_FLAG_MAX_RECOVERY_RATE, &rs->ctr_flags))
+ 			DMEMIT(" %s %d", dm_raid_arg_name_by_flag(CTR_FLAG_MAX_RECOVERY_RATE),
+ 					 mddev->sync_speed_max);
+-		if (write_mostly_params)
++		if (test_bit(__CTR_FLAG_WRITE_MOSTLY, &rs->ctr_flags))
+ 			for (i = 0; i < rs->raid_disks; i++)
+ 				if (test_bit(WriteMostly, &rs->dev[i].rdev.flags))
+ 					DMEMIT(" %s %d", dm_raid_arg_name_by_flag(CTR_FLAG_WRITE_MOSTLY),
+@@ -4029,7 +4030,7 @@ static void raid_resume(struct dm_target *ti)
+ 
+ static struct target_type raid_target = {
+ 	.name = "raid",
+-	.version = {1, 15, 0},
++	.version = {1, 15, 1},
+ 	.module = THIS_MODULE,
+ 	.ctr = raid_ctr,
+ 	.dtr = raid_dtr,
 -- 
 2.20.1
 
