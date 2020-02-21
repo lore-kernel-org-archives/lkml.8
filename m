@@ -2,192 +2,126 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5049BC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E991C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DEAB208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:51:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tlMLwZAe"
+	by mail.kernel.org (Postfix) with ESMTP id 10C3924650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582285954;
+	bh=fD0A4i7ST85sMfr8X97BCWyBGGZcF1CFchsdK+XT4Ko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FVnWly9ta75g8Kg7MFsj6HWdRyPJ2Sm5SJRX1mTAYf5SOEQ2DrollVToXMn87rj7W
+	 044+AHptSXJU+4Tcm401BMMr7qTLTS06JgBYB2hgEL99wdbjWXY6AKTVPgWYebWGSI
+	 L8T+tQCe8au2otKnv8uSr2XTjHOO7G1V3TuHC7mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbgBULve (ORCPT
+        id S1727876AbgBULwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:51:34 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45950 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgBULvb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:51:31 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so1070586pfg.12;
-        Fri, 21 Feb 2020 03:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WnHYv3vr0Vwr6SMzoPca2DWynWDX4pzqXsyYD0aAcdw=;
-        b=tlMLwZAeuQrDyJX8AZNoeIo2YfboK9p4SE46ZRQpG4+pfzDSpdE1ISp8jEXZI4v5za
-         4RyDc8e880iVMBjW49x5i6ae1xaMKsbZOAQSUoq/UIVQShyl6gPunQlONAITjCSwAyjs
-         qwWkxxOpKOO0nc5lwsVJ0o2ZztkmBdUEVBvsuhJUpKmFtKLK34snMz1rUqk3ZX06/aZA
-         Pqc+WHWyuWmWru3hH/VqGNUq/H6HjSg5CC9iMj6yE4/9QZDmmZuaOa0Hkiwcq3z6OSQf
-         A9q6Z+ir2W2yZd4dt0i2MORgk+uMxDh8XFlqTqb1qYnNJI00HcrMXoxAheoD3tsXA/EK
-         gW+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WnHYv3vr0Vwr6SMzoPca2DWynWDX4pzqXsyYD0aAcdw=;
-        b=QKWSajq5QLrXRwhcJc1LR6kut6zTIglfuy8W9cp6GvafsTyqdMHuRCRHFcdq5rYmHg
-         fskhUd1IBZwMYX/vMeC5Dw/NTD/g3ddmBomjW4B+9hzo8UmFu39k8DEKq84ibUn7wdw/
-         ntD9KQ/YmVQbfmM7hTTlk6N7yLN6w4onh6E1GTd/87IsCJ2i2qONzlEBt2doh9KOwY6O
-         +JJPnGGbiiy83rQgmxldTNtUZyckD0kBWYqToJBR0aJA5+7fneliy9uu14IG2pkTZlRt
-         OqHhLte5E+RJw5HHFarbzDDNXdTVwfdwz/IILpFdKQ/GL8LMoBza/ofbmUnf6MwLNLQR
-         PBYg==
-X-Gm-Message-State: APjAAAUAyOzVFtzhqL844eEeeQQCWiAwNdaIW6TI6XkWmLgg3z49wYym
-        dnkD0IiWw6rU2EM6fkjRbGaf0Ufw
-X-Google-Smtp-Source: APXvYqzBmSYxsK4Bi3JUNs8UL8dCVaqVjKL77TmqJ5dRRRq9CNPBnKKjLJyvdlzQsGr09gwcowROyg==
-X-Received: by 2002:a63:e50a:: with SMTP id r10mr27377086pgh.27.1582285890946;
-        Fri, 21 Feb 2020 03:51:30 -0800 (PST)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id 196sm2706469pfy.86.2020.02.21.03.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 03:51:30 -0800 (PST)
-Date:   Fri, 21 Feb 2020 03:51:28 -0800
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     min.li.xe@renesas.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/2] ptp: Add a ptp clock driver for IDT
- 82P33 SMU.
-Message-ID: <20200221115128.GA1692@localhost>
-References: <1582234109-6296-1-git-send-email-min.li.xe@renesas.com>
+        Fri, 21 Feb 2020 06:52:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726909AbgBULwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:52:32 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5740E208C4;
+        Fri, 21 Feb 2020 11:52:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582285951;
+        bh=fD0A4i7ST85sMfr8X97BCWyBGGZcF1CFchsdK+XT4Ko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vBksp1iFJRObYfBEPPhfNm7oh5LD50AgE+h7nbC7zrlruU2QrxEq0MTlYFcB3rbiO
+         ekOqkGl2LPLxsbHt2cOw1GimvpzlmjmZYgKalG6nk2uHoLjIVaSqsLpjG6NTI1ssWZ
+         eh5lFbu+ZlHbIXppox1O9gS1yMg7gvNk59T8zNfQ=
+Date:   Fri, 21 Feb 2020 12:52:29 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vitor Soares <Vitor.Soares@synopsys.com>
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "wsa@the-dreams.de" <wsa@the-dreams.de>,
+        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: Re: [PATCH v3 3/5] i3c: master: add i3c_for_each_dev helper
+Message-ID: <20200221115229.GA116368@kroah.com>
+References: <cover.1582069402.git.vitor.soares@synopsys.com>
+ <868e5b37fd817b65e6953ed7279f5063e5fc06c5.1582069402.git.vitor.soares@synopsys.com>
+ <20200219073548.GA2728338@kroah.com>
+ <CH2PR12MB4216D5141E562974634430B8AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582234109-6296-1-git-send-email-min.li.xe@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CH2PR12MB4216D5141E562974634430B8AE120@CH2PR12MB4216.namprd12.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 04:28:29PM -0500, min.li.xe@renesas.com wrote:
+On Fri, Feb 21, 2020 at 11:47:22AM +0000, Vitor Soares wrote:
+> Hi Greg,
+> 
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Date: Wed, Feb 19, 2020 at 07:35:48
+> 
+> > On Wed, Feb 19, 2020 at 01:20:41AM +0100, Vitor Soares wrote:
+> > > Introduce i3c_for_each_dev(), an i3c device iterator for use by i3cdev.
+> > > 
+> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+> > > ---
+> > >  drivers/i3c/internals.h |  1 +
+> > >  drivers/i3c/master.c    | 12 ++++++++++++
+> > >  2 files changed, 13 insertions(+)
+> > > 
+> > > diff --git a/drivers/i3c/internals.h b/drivers/i3c/internals.h
+> > > index bc062e8..a6deedf 100644
+> > > --- a/drivers/i3c/internals.h
+> > > +++ b/drivers/i3c/internals.h
+> > > @@ -24,4 +24,5 @@ int i3c_dev_enable_ibi_locked(struct i3c_dev_desc *dev);
+> > >  int i3c_dev_request_ibi_locked(struct i3c_dev_desc *dev,
+> > >  			       const struct i3c_ibi_setup *req);
+> > >  void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev);
+> > > +int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *));
+> > >  #endif /* I3C_INTERNAL_H */
+> > > diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+> > > index 21c4372..8e22da2 100644
+> > > --- a/drivers/i3c/master.c
+> > > +++ b/drivers/i3c/master.c
+> > > @@ -2640,6 +2640,18 @@ void i3c_dev_free_ibi_locked(struct i3c_dev_desc *dev)
+> > >  	dev->ibi = NULL;
+> > >  }
+> > >  
+> > > +int i3c_for_each_dev(void *data, int (*fn)(struct device *, void *))
+> > > +{
+> > > +	int res;
+> > > +
+> > > +	mutex_lock(&i3c_core_lock);
+> > > +	res = bus_for_each_dev(&i3c_bus_type, NULL, data, fn);
+> > > +	mutex_unlock(&i3c_core_lock);
+> > 
+> > Ick, why the lock?  Are you _sure_ you need that?  The core should
+> > handle any list locking issues here, right?
+> 
+> I want to make sure that no new devices (eg: Hot-Join capable device) are 
+> added during this iteration and after this call, each new device will 
+> release a bus notification.
+> 
+> > 
+> > I don't see bus-specific-locks around other subsystem functions that do
+> > this (like usb_for_each_dev).
+> 
+> I based in I2C use case.
 
-> +module_param(phase_snap_threshold, uint, 0);
-> +MODULE_PARM_DESC(phase_snap_threshold,
-> +"threshold in nanosecond below which adjtime would ignore and do nothing");
+Check to see if this is really needed, for some reason I doubt it...
 
-If it is important not to snap small offsets, can't the driver
-calculate the threshold itself?  It will be difficult for users to
-guess this value.
+thanks,
 
-> +/* static function declaration for ptp_clock_info*/
-> +
-> +static int idt82p33_enable(struct ptp_clock_info *ptp,
-> +			   struct ptp_clock_request *rq, int on);
-> +
-> +static int idt82p33_adjfreq(struct ptp_clock_info *ptp, s32 ppb);
-> +
-> +static int idt82p33_settime(struct ptp_clock_info *ptp,
-> +			    const struct timespec64 *ts);
-> +
-> +static int idt82p33_adjtime(struct ptp_clock_info *ptp, s64 delta_ns);
-> +
-> +static int idt82p33_gettime(struct ptp_clock_info *ptp, struct timespec64 *ts);
-> +
-> +static void idt82p33_sync_tod_work_handler(struct work_struct *work);
-
-As a matter of coding style, forward declarations are to be avoided in
-network drivers.  You can avoid these by moving the functions,
-idt82p33_channel_init() and idt82p33_caps_init() further down.
-
-> +static void idt82p33_byte_array_to_timespec(struct timespec64 *ts,
-> +static void idt82p33_timespec_to_byte_array(struct timespec64 const *ts,
-> +static int idt82p33_xfer(struct idt82p33 *idt82p33,
-
-These three are identical to the functions in ptp_clockmatrix.c.  Why
-not introduce a common, shared source file to refactor this code?
-
-> +static int idt82p33_page_offset(struct idt82p33 *idt82p33, unsigned char val)
-> +static int idt82p33_rdwr(struct idt82p33 *idt82p33, unsigned int regaddr,
-> +static int idt82p33_read(struct idt82p33 *idt82p33, unsigned int regaddr,
-> +static int idt82p33_write(struct idt82p33 *idt82p33, unsigned int regaddr,
-
-If I am not wrong, these are identical as well.
-
-> +static int idt82p33_enable_channel(struct idt82p33 *idt82p33, u32 index)
-> +{
-> +	struct idt82p33_channel *channel;
-> +	int err;
-> +
-> +	if (!(index < MAX_PHC_PLL))
-> +		return -EINVAL;
-> +
-> +	channel = &idt82p33->channel[index];
-> +
-> +	err = idt82p33_channel_init(channel, index);
-> +	if (err)
-> +		return err;
-> +
-> +	channel->idt82p33 = idt82p33;
-> +
-> +	idt82p33_caps_init(&channel->caps);
-> +	snprintf(channel->caps.name, sizeof(channel->caps.name),
-> +		 "IDT 82P33 PLL%u", index);
-> +	channel->caps.n_per_out = hweight8(channel->output_mask);
-> +
-> +	err = idt82p33_dpll_set_mode(channel, PLL_MODE_DCO);
-> +	if (err)
-> +		return err;
-> +
-> +	err = idt82p33_enable_tod(channel);
-> +	if (err)
-> +		return err;
-> +
-> +	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
-> +
-> +	if (IS_ERR(channel->ptp_clock)) {
-> +		err = PTR_ERR(channel->ptp_clock);
-> +		channel->ptp_clock = NULL;
-> +		return err;
-> +	}
-
-The function, ptp_clock_register(), can also return NULL.  Please
-handle that case as well.
-
-> +
-> +	if (!channel->ptp_clock)
-> +		return -ENOTSUPP;
-> +
-> +	dev_info(&idt82p33->client->dev, "PLL%d registered as ptp%d\n",
-> +		 index, channel->ptp_clock->index);
-> +
-> +	return 0;
-> +}
-
-
-> +static int idt82p33_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
-> +{
-
-Please implement the .adjfine() method instead.  It offers better
-resolution.
-
-(The .adjfreq() method is deprecated.)
-
-> +	struct idt82p33_channel *channel =
-> +			container_of(ptp, struct idt82p33_channel, caps);
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +
-> +	mutex_lock(&idt82p33->reg_lock);
-> +	err = _idt82p33_adjfreq(channel, ppb);
-> +	mutex_unlock(&idt82p33->reg_lock);
-> +
-> +	return err;
-> +}
-
-Thanks,
-Richard
+greg k-h
