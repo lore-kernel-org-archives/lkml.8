@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E971EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0B8C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03A420679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8562067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:34:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274072;
-	bh=dvE44OfBTrD5yaVr32CYxZ9E+07kwMmWlVXEWMen15s=;
+	s=default; t=1582274076;
+	bh=M5bDtOSaKOorgrGmBZmg62PQvqREkOUogOkzfz94Uy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w6A/uRHLGaQfAgQ4U/XqfOAKLHTUMdwnkJ1rSCDOwMJkk/7U0uBnFuFaXUbKtiQ4N
-	 5Fx/v6SEXWG9OVFoPRBo5/aPU6NVcFh09aLoB/vNFQwvCp3bCsS8ekhm7lkZx8vzTk
-	 rPLlcvLLN2oGjvka9LubFJsKALc0kHp9RROiys0o=
+	b=dwdrA3vyD1ER4oBKZX64Jsd5TKubXNQD1JZvngHhRmia8YFQMqP3Zjzwt7OxxzlmQ
+	 hcVUO9z+bn6xyI2nZ/W7x5x0leuqx10JU8zKwCUMH5I1pnSh+uqZ/7zH3Kk2BBCCpR
+	 J3+X97EdY3/yiYeRBlEFEY3QAaJiIsEle6tUV3qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732783AbgBUIeb (ORCPT
+        id S1731932AbgBUIJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:34:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44186 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:09:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732336AbgBUIJV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:09:21 -0500
+        id S1732322AbgBUIJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:09:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAD3420722;
-        Fri, 21 Feb 2020 08:09:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1FD20722;
+        Fri, 21 Feb 2020 08:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272561;
-        bh=dvE44OfBTrD5yaVr32CYxZ9E+07kwMmWlVXEWMen15s=;
+        s=default; t=1582272552;
+        bh=M5bDtOSaKOorgrGmBZmg62PQvqREkOUogOkzfz94Uy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvPEVToXOSjN4UxxBFcd2te4mX610z3j8QcKAZDxLv/8E378JXXW9lSGdsDjECxsZ
-         xelKyVSqugfki9NtjX2SSjG6lYiQem1GCX9uSFCvylumllUPUYewcyC1jlAEU0e3C0
-         9jcEFnxori5SD/cviIyxjBcgtMGcBq/mM2Zyq544=
+        b=ZrhSOpTNqinFZWLi1ihQykLkp/uc9h/sBWHJRJXIM1Ti/t6zH7oWDazEq4u+ozDZB
+         zZcU1C0tw5D8FkWfksQSbQ/HlTl1VraO8hlbnxUJlILUK0ABgxAXWmMdjuQdXwPzAw
+         SfAeTrQvhj/aEBIcDf1kg/fCqL+EmWHvRXiaRDkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dingchen Zhang <dingchen.zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 190/344] drm: remove the newline for CRC source name.
-Date:   Fri, 21 Feb 2020 08:39:49 +0100
-Message-Id: <20200221072406.296314189@linuxfoundation.org>
+        stable@vger.kernel.org, Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 149/344] drm/mediatek: handle events when enabling/disabling crtc
+Date:   Fri, 21 Feb 2020 08:39:08 +0100
+Message-Id: <20200221072402.322430311@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,46 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dingchen Zhang <dingchen.zhang@amd.com>
+From: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-[ Upstream commit 72a848f5c46bab4c921edc9cbffd1ab273b2be17 ]
+[ Upstream commit 411f5c1eacfebb1f6e40b653d29447cdfe7282aa ]
 
-userspace may transfer a newline, and this terminating newline
-is replaced by a '\0' to avoid followup issues.
+The driver currently handles vblank events only when updating planes on
+an already enabled CRTC. The atomic update API however allows requesting
+an event when enabling or disabling a CRTC. This currently leads to
+event objects being leaked in the kernel and to events not being sent
+out. Fix it.
 
-'len-1' is the index to replace the newline of CRC source name.
-
-v3: typo fix (Sam)
-
-v2: update patch subject, body and format. (Sam)
-
-Cc: Leo Li <sunpeng.li@amd.com>
-Cc: Harry Wentland <Harry.Wentland@amd.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Dingchen Zhang <dingchen.zhang@amd.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190610134751.14356-1-dingchen.zhang@amd.com
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index be1b7ba92ffe1..6a626c82e264b 100644
---- a/drivers/gpu/drm/drm_debugfs_crc.c
-+++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -140,8 +140,8 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
- 	if (IS_ERR(source))
- 		return PTR_ERR(source);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index 34a7317557912..0b3d284d19569 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -298,6 +298,7 @@ err_pm_runtime_put:
+ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ {
+ 	struct drm_device *drm = mtk_crtc->base.dev;
++	struct drm_crtc *crtc = &mtk_crtc->base;
+ 	int i;
  
--	if (source[len] == '\n')
--		source[len] = '\0';
-+	if (source[len - 1] == '\n')
-+		source[len - 1] = '\0';
+ 	DRM_DEBUG_DRIVER("%s\n", __func__);
+@@ -319,6 +320,13 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+ 	mtk_disp_mutex_unprepare(mtk_crtc->mutex);
  
- 	ret = crtc->funcs->verify_crc_source(crtc, source, &values_cnt);
- 	if (ret)
+ 	pm_runtime_put(drm->dev);
++
++	if (crtc->state->event && !crtc->state->active) {
++		spin_lock_irq(&crtc->dev->event_lock);
++		drm_crtc_send_vblank_event(crtc, crtc->state->event);
++		crtc->state->event = NULL;
++		spin_unlock_irq(&crtc->dev->event_lock);
++	}
+ }
+ 
+ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
 -- 
 2.20.1
 
