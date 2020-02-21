@@ -2,104 +2,130 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B98C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84443C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CB924673
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:44:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a5RX33mA"
+	by mail.kernel.org (Postfix) with ESMTP id 57A0624650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582299900;
+	bh=48BvdhEQtUJU8+6OGE8cEsvGVyAAiBApYV9aIFVank0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=c4eE9L19IWLlLSlrbfdSnxZqR2lYB107ocX+aBz9+g78gUtlqCW4ec9Cg4p8N54Ny
+	 8akvyx+Ijcvzir+ghhXfeInBM2XeiEkLnLf4LDm6hoDKKwZDTWesmqxnBCjtcpkBlI
+	 VW6ZFG3gj9SlXP4fa+ejYj5Y5klBTyfuU/UIdpjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgBUPoP (ORCPT
+        id S1728815AbgBUPo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:44:15 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33270 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729181AbgBUPoO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:44:14 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m10so5454510wmc.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2hlS8uh302ck8d7C7CZX+ehT/azcPcgkvr5+mGQ69YQ=;
-        b=a5RX33mAffMVrIDgMTaztmSD+eWGJlZaEKzfTDHcULYB45n9pX1a0hDlHVLSjVHi92
-         BcnwA1WjQbsvMjRZZzg4lIOlJ6HJEtNbk4WGnIm7tZwTUOVgjaKk8EQibqLXzfBCqo/c
-         0I6id7eHku1rJ7heOghiXletnT0STJwoD7225/TjDKZhiUe/zfag5sAJ1N27HjL37VXJ
-         Aoise+ais0A3HJZ3uJsHnV6BXq7FcL3ru+KDeIq2Do+xrbDfI0/X+I8P8dNRhdOMaX8z
-         99/sR1guvCs2DtPptnkbZ/5jyF+sjSr+X0/VjiORi4xOYUK4IEJY8AVcHBpZyuRD6dHw
-         1JnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2hlS8uh302ck8d7C7CZX+ehT/azcPcgkvr5+mGQ69YQ=;
-        b=KpVNV17N2yTiwzZhB98JMmDd/moEBIez9SnwWLvQuX1l/7ATna2QrIPfElWxofvSAW
-         VrY4q+CoKEvcc1Zt7lDQPm/lmeWYsDG6yQvHbw8NUUyaG8zpTYugtmnaNdRVU69S1SGp
-         +U2rsM8D41muKEnWDB1fJCpQRUPmmUTMWtFmZi3tng3iwtqGJN0njbJNQ7KEa4PUX6D0
-         ebwb8T8vJp+paskgajQPu/Bq/y8QwRoPyKMunEZgUQaNmqVMkvkIe7rTwbjF4I5zIcC3
-         GbkCCUyWKHm3NJyw+2+NVS4bhECyiECrzBezTBNrNyOTjff7BIJTsTwbST6BrUWTPt+a
-         dwYw==
-X-Gm-Message-State: APjAAAWmUIdeKzGrj8gaINwJu5x4dmy5X9IYeXtB13kwY68GWMt+RPVm
-        DgQMIrm22EFX8A20LEIqR0evuw==
-X-Google-Smtp-Source: APXvYqw3MpYXm74zDyUvYS1IEClp/DjjD7sjq6g9gEA1iHcMzwd87lVu7ETDNrlzQjko/voWzgE8Ew==
-X-Received: by 2002:a05:600c:290e:: with SMTP id i14mr4539761wmd.139.1582299852664;
-        Fri, 21 Feb 2020 07:44:12 -0800 (PST)
-Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
-        by smtp.gmail.com with ESMTPSA id s15sm4362854wrp.4.2020.02.21.07.44.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 21 Feb 2020 07:44:11 -0800 (PST)
-Date:   Fri, 21 Feb 2020 16:44:09 +0100
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        Jasper Korten <jja2000@gmail.com>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 12/17] cpuidle: Refactor and move out NVIDIA Tegra20
- driver into drivers/cpuidle
-Message-ID: <20200221154409.GP10516@linaro.org>
-References: <20200212235134.12638-1-digetx@gmail.com>
- <20200212235134.12638-13-digetx@gmail.com>
+        Fri, 21 Feb 2020 10:44:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728299AbgBUPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:44:58 -0500
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2EBC206E2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 15:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582299898;
+        bh=48BvdhEQtUJU8+6OGE8cEsvGVyAAiBApYV9aIFVank0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EeetZYvCiRffEBrR3vT2K7sU04weXZLuuKpi/lSjnx858FiAS8Vuw5I21HOLAMJav
+         V6v5Ik2uyu3LOuJIvFJCG41DwAhNvAa8DVH2Vpw1BtGiNeCsC6yHm+NeeXWSOX89Xg
+         WNOFMnRpBOvnsYjFnkheYpBZB1XIrgbvhylxC5Uw=
+Received: by mail-wm1-f50.google.com with SMTP id p9so2264690wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:44:57 -0800 (PST)
+X-Gm-Message-State: APjAAAUwcTWjUuVU7alau2ubJJ6zEbyIm43wQ/Uqqd3biaNMC3FKZUIW
+        8gHBD+88XvnG8YyvTGophjFY3x0H8Te7Xzw0iZlU1g==
+X-Google-Smtp-Source: APXvYqxzVHxjianXZjn/dPOJ4coC5k84JaxX22gy7hY+6Ilv2pBdV7pd1dPSP/HhLDtWoyZe+gt8xKr0YvD2FW5TBY8=
+X-Received: by 2002:a05:600c:248:: with SMTP id 8mr4493608wmj.1.1582299896175;
+ Fri, 21 Feb 2020 07:44:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200212235134.12638-13-digetx@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200221152430.GA20788@embeddedor>
+In-Reply-To: <20200221152430.GA20788@embeddedor>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Fri, 21 Feb 2020 16:44:43 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
+Message-ID: <CAKv+Gu9wZ1PjDVQmFPaoxwyDZRYev2LAXr5vBkBGAstdf-5W7w@mail.gmail.com>
+Subject: Re: [PATCH] efi/apple-properties: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 02:51:29AM +0300, Dmitry Osipenko wrote:
-> The driver's code is refactored in a way that will make it easy to
-> support Tegra30/114/124 SoCs by this unified driver later on. The
-> current functionality is equal to the old Tegra20 driver, only the
-> code's structure changed a tad. This is also a proper platform driver
-> now.
-> 
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+On Fri, 21 Feb 2020 at 16:41, Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Please don't send duplicates. I already queued this in efi/next, and
+responded accordingly.
+
 > ---
->  arch/arm/mach-tegra/Makefile          |   3 -
->  arch/arm/mach-tegra/cpuidle-tegra20.c | 216 --------------------
->  arch/arm/mach-tegra/cpuidle.c         |  14 +-
->  arch/arm/mach-tegra/cpuidle.h         |   4 -
->  drivers/cpuidle/Kconfig.arm           |   8 +
->  drivers/cpuidle/Makefile              |   1 +
->  drivers/cpuidle/cpuidle-tegra.c       | 277 ++++++++++++++++++++++++++
-
-Is it possible to use -M option here to make the review easier?
-
+>  drivers/firmware/efi/apple-properties.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/apple-properties.c b/drivers/firmware/efi/apple-properties.c
+> index 5ccf39986a14..084942846f4d 100644
+> --- a/drivers/firmware/efi/apple-properties.c
+> +++ b/drivers/firmware/efi/apple-properties.c
+> @@ -31,7 +31,7 @@ __setup("dump_apple_properties", dump_properties_enable);
+>  struct dev_header {
+>         u32 len;
+>         u32 prop_count;
+> -       struct efi_dev_path path[0];
+> +       struct efi_dev_path path[];
+>         /*
+>          * followed by key/value pairs, each key and value preceded by u32 len,
+>          * len includes itself, value may be empty (in which case its len is 4)
+> @@ -42,7 +42,7 @@ struct properties_header {
+>         u32 len;
+>         u32 version;
+>         u32 dev_count;
+> -       struct dev_header dev_header[0];
+> +       struct dev_header dev_header[];
+>  };
+>
+>  static void __init unmarshal_key_value_pairs(struct dev_header *dev_header,
+> --
+> 2.25.0
+>
