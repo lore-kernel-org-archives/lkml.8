@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783ACC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15397C35643
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A01E2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0D024650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272221;
-	bh=di8khRlYDSskFUMn8Lp9Smww22MVmawjUEsgEdLehbA=;
+	s=default; t=1582272223;
+	bh=IN9g0QVSJw1Ko04U/o5oXCUMcEqF0UvHQNwT1l5gu9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hfidG3tNyUJhhNwjnghfrSbWybq/+thJfCQwJ3RPxZsrtRlVIpcOxANPl7mtJoLfw
-	 Z305efL42IpSw+tjyBwHUwCJMJRgWZKfxn1fErv/X8bvexF9FVNShMVrp4M18aB5NV
-	 YAb2SVM/9rEY+rC36M3oYuZdNHZzcGrbkuAD9vxg=
+	b=YE2H8y0fXAgCn4NLpcTp52TO4a645etz3gnZZAo4caYSJT6z/qbXPNP4vauf7Mquv
+	 R4m/Lb/ScS6KBlZvIbbCWA7W7krSitXlQteNlkcmRl0JpWVUBp71jUqm578vO7OlS1
+	 fswylSMEscOkCv/BLtNknI83VWO240pGP5vW8T14=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731512AbgBUIDk (ORCPT
+        id S1731519AbgBUIDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:03:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36426 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:03:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbgBUIDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:03:37 -0500
+        id S1731506AbgBUIDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:03:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F8B2073A;
-        Fri, 21 Feb 2020 08:03:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A468B2073A;
+        Fri, 21 Feb 2020 08:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272216;
-        bh=di8khRlYDSskFUMn8Lp9Smww22MVmawjUEsgEdLehbA=;
+        s=default; t=1582272219;
+        bh=IN9g0QVSJw1Ko04U/o5oXCUMcEqF0UvHQNwT1l5gu9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4bmnBDoX6x6SL97l3DKFlrr4Bfs+KF3xdDPJ8GqAU2D06luuRsvAuy1nNitYawt0
-         LYfQHX2ETcx8IwrkEjse+a+bhG6BHbD9Jo/6qDpjkGjeHAflJxsYnlGs41V66pDEZP
-         tpJtf+2vZjdTARnP0psj+B6yrsVZebD/ptnogINU=
+        b=iL77YhhpKjS4LWfIMPGZw0zr4NsP5Db83amoGEjQCpmRTpC04wp03kwGDpj5Rkt4/
+         3iJ5f5ZMrSyvAuOrF2b7TJ5IKf1Z51OS/A/H6n0rSzKL3N+I2dvXKwSBtr15gcxcCK
+         S2GiydVUjDtYjHRy31CFBdFVkpo4sJSKttdK3ELk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/344] drm/msm/adreno: fix zap vs no-zap handling
-Date:   Fri, 21 Feb 2020 08:37:11 +0100
-Message-Id: <20200221072352.071700387@linuxfoundation.org>
+Subject: [PATCH 5.4 059/344] usb: gadget: udc: fix possible sleep-in-atomic-context bugs in gr_probe()
+Date:   Fri, 21 Feb 2020 08:37:38 +0100
+Message-Id: <20200221072354.393277008@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,84 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 15ab987c423df561e0949d77fb5043921ae59956 ]
+[ Upstream commit 9c1ed62ae0690dfe5d5e31d8f70e70a95cb48e52 ]
 
-We can have two cases, when it comes to "zap" fw.  Either the fw
-requires zap fw to take the GPU out of secure mode at boot, or it does
-not and we can write RBBM_SECVID_TRUST_CNTL directly.  Previously we
-decided based on whether zap fw load succeeded, but this is not a great
-plan because:
+The driver may sleep while holding a spinlock.
+The function call path (from bottom to top) in Linux 4.19 is:
 
-1) we could have zap fw in the filesystem on a device where it is not
-   required
-2) we could have the inverse case
+drivers/usb/gadget/udc/core.c, 1175:
+	kzalloc(GFP_KERNEL) in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Instead, shift to deciding based on whether we have a 'zap-shader' node
-in dt.  In practice, there is only one device (currently) with upstream
-dt that does not use zap (cheza), and it already has a /delete-node/ for
-the zap-shader node.
+drivers/usb/gadget/udc/core.c, 1195:
+	mutex_lock in usb_add_gadget_udc_release
+drivers/usb/gadget/udc/core.c, 1272:
+	usb_add_gadget_udc_release in usb_add_gadget_udc
+drivers/usb/gadget/udc/gr_udc.c, 2186:
+	usb_add_gadget_udc in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+	spin_lock in gr_probe
 
-Fixes: abccb9fe3267 ("drm/msm/a6xx: Add zap shader load")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+drivers/usb/gadget/udc/gr_udc.c, 212:
+	debugfs_create_file in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2197:
+	gr_dfs_create in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+drivers/usb/gadget/udc/gr_udc.c, 2114:
+	devm_request_threaded_irq in gr_request_irq
+drivers/usb/gadget/udc/gr_udc.c, 2202:
+	gr_request_irq in gr_probe
+drivers/usb/gadget/udc/gr_udc.c, 2183:
+    spin_lock in gr_probe
+
+kzalloc(GFP_KERNEL), mutex_lock(), debugfs_create_file() and
+devm_request_threaded_irq() can sleep at runtime.
+
+To fix these possible bugs, usb_add_gadget_udc(), gr_dfs_create() and
+gr_request_irq() are called without handling the spinlock.
+
+These bugs are found by a static analysis tool STCheck written by myself.
+
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c | 11 +++++++++--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 11 +++++++++--
- 2 files changed, 18 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/udc/gr_udc.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index e9c55d1d6c044..99cd6e62a9715 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -726,11 +726,18 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
- 		gpu->funcs->flush(gpu, gpu->rb[0]);
- 		if (!a5xx_idle(gpu, gpu->rb[0]))
- 			return -EINVAL;
--	} else {
--		/* Print a warning so if we die, we know why */
-+	} else if (ret == -ENODEV) {
-+		/*
-+		 * This device does not use zap shader (but print a warning
-+		 * just in case someone got their dt wrong.. hopefully they
-+		 * have a debug UART to realize the error of their ways...
-+		 * if you mess this up you are about to crash horribly)
-+		 */
- 		dev_warn_once(gpu->dev->dev,
- 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
- 		gpu_write(gpu, REG_A5XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	} else {
-+		return ret;
+diff --git a/drivers/usb/gadget/udc/gr_udc.c b/drivers/usb/gadget/udc/gr_udc.c
+index 7a0e9a58c2d84..116d386472efe 100644
+--- a/drivers/usb/gadget/udc/gr_udc.c
++++ b/drivers/usb/gadget/udc/gr_udc.c
+@@ -2176,8 +2176,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  	}
  
- 	/* Last step - yield the ringbuffer */
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index dc8ec2c94301b..686c34d706b0d 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -537,12 +537,19 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 		a6xx_flush(gpu, gpu->rb[0]);
- 		if (!a6xx_idle(gpu, gpu->rb[0]))
- 			return -EINVAL;
--	} else {
--		/* Print a warning so if we die, we know why */
-+	} else if (ret == -ENODEV) {
-+		/*
-+		 * This device does not use zap shader (but print a warning
-+		 * just in case someone got their dt wrong.. hopefully they
-+		 * have a debug UART to realize the error of their ways...
-+		 * if you mess this up you are about to crash horribly)
-+		 */
- 		dev_warn_once(gpu->dev->dev,
- 			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
- 		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
- 		ret = 0;
-+	} else {
-+		return ret;
+-	spin_lock(&dev->lock);
+-
+ 	/* Inside lock so that no gadget can use this udc until probe is done */
+ 	retval = usb_add_gadget_udc(dev->dev, &dev->gadget);
+ 	if (retval) {
+@@ -2186,15 +2184,21 @@ static int gr_probe(struct platform_device *pdev)
  	}
+ 	dev->added = 1;
+ 
++	spin_lock(&dev->lock);
++
+ 	retval = gr_udc_init(dev);
+-	if (retval)
++	if (retval) {
++		spin_unlock(&dev->lock);
+ 		goto out;
+-
+-	gr_dfs_create(dev);
++	}
+ 
+ 	/* Clear all interrupt enables that might be left on since last boot */
+ 	gr_disable_interrupts_and_pullup(dev);
+ 
++	spin_unlock(&dev->lock);
++
++	gr_dfs_create(dev);
++
+ 	retval = gr_request_irq(dev, dev->irq);
+ 	if (retval) {
+ 		dev_err(dev->dev, "Failed to request irq %d\n", dev->irq);
+@@ -2223,8 +2227,6 @@ static int gr_probe(struct platform_device *pdev)
+ 		dev_info(dev->dev, "regs: %p, irq %d\n", dev->regs, dev->irq);
  
  out:
+-	spin_unlock(&dev->lock);
+-
+ 	if (retval)
+ 		gr_remove(pdev);
+ 
 -- 
 2.20.1
 
