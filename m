@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD5AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B860C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629C62073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79E02073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272052;
-	bh=Yi9pz/ne4bmU10ZVJ5yO0fZjC2dJYgduYi8RFyzbxhU=;
+	s=default; t=1582272055;
+	bh=TWzxZdh+1w/QN9Qql6vnCAe/bCVTUibqvLYrczzLyag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1l7bVCEZ0pMddYMcNYcnrEhSCrLdJ0beRu5iWY82pYYDpjHmEVG0Z/viUbVZkzuzs
-	 3L/NWKfIQ0s82ep0IMwNT65g3Fz4u+8OK6b5Xjaplw6Kcq+lZ/j8byn2SGDSs7iKXh
-	 VTljcRQjGQ61rX2I3Ou2UInSy6GV7GZSOfWAdKfo=
+	b=W6uIMvP9NaCWVpVFTlrv6vL5W/IRgWzSCU1bvVHYygQB41C5zMvE+r7mUN635hEKu
+	 VusWBsrOQTpjv2ET1CQWUDxvTYPPDcNyxq+0L7MfHOKjduclLNpi50J6S5MlhtBXmj
+	 Po73FMHGFVj+92hP1XWKGcc83d+QSjDbWJPOSVXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730965AbgBUIAv (ORCPT
+        id S1729908AbgBUIAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:00:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32994 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:00:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731114AbgBUIAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:00:46 -0500
+        id S1730649AbgBUIAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:00:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3100C2073A;
-        Fri, 21 Feb 2020 08:00:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB4F4206ED;
+        Fri, 21 Feb 2020 08:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272045;
-        bh=Yi9pz/ne4bmU10ZVJ5yO0fZjC2dJYgduYi8RFyzbxhU=;
+        s=default; t=1582272048;
+        bh=TWzxZdh+1w/QN9Qql6vnCAe/bCVTUibqvLYrczzLyag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpYKv+QEgfEG/LSwHCwtyneAt7RQnrEAqCLgvM9jEEySZ5rCc+kzTG+awaCJddwv1
-         YVhrd1h1WRW6xbQ9TNj7KZ+QrooFPeLJu10plZkeR26d4qcyyGkHPY1xGljnXmHjCz
-         mg/u/kOAiNB2MV5YUx3kdzVXWbcjTw0Trzn5ecVA=
+        b=AWni3B6WyJfZeTLItnORaIyUmkPLOmlPEic644lXPPgTdIFQ7m0b/S92TLZ7e2HDR
+         lHemk/04rWYDXAcm2D52N/VtvksXsXkERIQXq+YD9W5ISmST2vFKlfjwXs0ksFDr5h
+         wdeG3mxa6MfgKXDgPzIXXWhwAT1+CZdrTfRvINAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dor Askayo <dor.askayo@gmail.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 358/399] drm/amd/display: do not allocate display_mode_lib unnecessarily
-Date:   Fri, 21 Feb 2020 08:41:23 +0100
-Message-Id: <20200221072435.593389308@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Heyi Guo <guoheyi@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 359/399] irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
+Date:   Fri, 21 Feb 2020 08:41:24 +0100
+Message-Id: <20200221072435.666064688@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,65 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dor Askayo <dor.askayo@gmail.com>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit bb67bfd2e7101bf2ac5327b0b7a847cd9fb9723f ]
+[ Upstream commit 926b5dfa6b8dc666ff398044af6906b156e1d949 ]
 
-This allocation isn't required and can fail when resuming from suspend.
+We currently allocate redistributor region structures for
+individual redistributors when ACPI doesn't present us with
+compact MMIO regions covering multiple redistributors.
 
-Bug: https://gitlab.freedesktop.org/drm/amd/issues/1009
-Signed-off-by: Dor Askayo <dor.askayo@gmail.com>
-Reviewed-by: Leo Li <sunpeng.li@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+It turns out that we allocate these structures even when
+the redistributor is flagged as disabled by ACPI. It works
+fine until someone actually tries to tarse one of these
+structures, and access the corresponding MMIO region.
+
+Instead, track the number of enabled redistributors, and
+only allocate what is required. This makes sure that there
+is no invalid data to misuse.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reported-by: Heyi Guo <guoheyi@huawei.com>
+Tested-by: Heyi Guo <guoheyi@huawei.com>
+Link: https://lore.kernel.org/r/20191216062745.63397-1-guoheyi@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/irqchip/irq-gic-v3.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 32f31bf919151..8904a85186aab 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -2396,12 +2396,7 @@ void dc_set_power_state(
- 	enum dc_acpi_cm_power_state power_state)
- {
- 	struct kref refcount;
--	struct display_mode_lib *dml = kzalloc(sizeof(struct display_mode_lib),
--						GFP_KERNEL);
--
--	ASSERT(dml);
--	if (!dml)
--		return;
-+	struct display_mode_lib *dml;
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index d6218012097b4..3f5baa5043db4 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1821,6 +1821,7 @@ static struct
+ 	struct redist_region *redist_regs;
+ 	u32 nr_redist_regions;
+ 	bool single_redist;
++	int enabled_rdists;
+ 	u32 maint_irq;
+ 	int maint_irq_mode;
+ 	phys_addr_t vcpu_base;
+@@ -1915,8 +1916,10 @@ static int __init gic_acpi_match_gicc(union acpi_subtable_headers *header,
+ 	 * If GICC is enabled and has valid gicr base address, then it means
+ 	 * GICR base is presented via GICC
+ 	 */
+-	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address)
++	if ((gicc->flags & ACPI_MADT_ENABLED) && gicc->gicr_base_address) {
++		acpi_data.enabled_rdists++;
+ 		return 0;
++	}
  
- 	switch (power_state) {
- 	case DC_ACPI_CM_POWER_STATE_D0:
-@@ -2423,6 +2418,12 @@ void dc_set_power_state(
- 		 * clean state, and dc hw programming optimizations will not
- 		 * cause any trouble.
- 		 */
-+		dml = kzalloc(sizeof(struct display_mode_lib),
-+				GFP_KERNEL);
-+
-+		ASSERT(dml);
-+		if (!dml)
-+			return;
+ 	/*
+ 	 * It's perfectly valid firmware can pass disabled GICC entry, driver
+@@ -1946,8 +1949,10 @@ static int __init gic_acpi_count_gicr_regions(void)
  
- 		/* Preserve refcount */
- 		refcount = dc->current_state->refcount;
-@@ -2436,10 +2437,10 @@ void dc_set_power_state(
- 		dc->current_state->refcount = refcount;
- 		dc->current_state->bw_ctx.dml = *dml;
+ 	count = acpi_table_parse_madt(ACPI_MADT_TYPE_GENERIC_INTERRUPT,
+ 				      gic_acpi_match_gicc, 0);
+-	if (count > 0)
++	if (count > 0) {
+ 		acpi_data.single_redist = true;
++		count = acpi_data.enabled_rdists;
++	}
  
-+		kfree(dml);
-+
- 		break;
- 	}
--
--	kfree(dml);
+ 	return count;
  }
- 
- void dc_resume(struct dc *dc)
 -- 
 2.20.1
 
