@@ -2,165 +2,147 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C0C3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE090C35661
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97188208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:44:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a7VTt7wp"
+	by mail.kernel.org (Postfix) with ESMTP id 9DD0424650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBUTox (ORCPT
+        id S1726828AbgBUTry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:44:53 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:4544 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726443AbgBUTow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:44:52 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5033120000>; Fri, 21 Feb 2020 11:44:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 21 Feb 2020 11:44:51 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 21 Feb 2020 11:44:51 -0800
-Received: from [10.19.66.63] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 19:44:48 +0000
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-CC:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        <lkft-triage@lists.linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
-Date:   Fri, 21 Feb 2020 11:44:44 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582314258; bh=7shXhAKVgprX3db7vtD29I37u9MzanrNF1PL2vZ849Q=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=a7VTt7wpU5aNVkKuGK6qVz4fq2LyufFJxJgeavB2kNlKkNGb8XQPD7gs/iIZIipLF
-         v6HdKUZHce4DkLZnOeRNRanlML/DlWI2rQA446bSGXlIA+b6+kHxc2WBiXj+aiWP1r
-         w/qijGjZO12R9ATf6TMQvgUUVIrD8T45ixk1XzVYGVzRAN/tdYXR9Eqn0a5THPu4+f
-         pT3kuZ9YeogIrWF+0iypHoYCeM1JloARB7oGBU5qZA+aTS/+zKVxeaW+gyc+jRfGxl
-         B9WnyAv/H29QAbFHaGP/zmD9x50NwX99MFc+s3WUqHURHxk2teovD4YHgchxIuAK8I
-         2NRGr48pndxkw==
+        Fri, 21 Feb 2020 14:47:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:46888 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgBUTry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:47:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D56F30E;
+        Fri, 21 Feb 2020 11:47:53 -0800 (PST)
+Received: from e123648.arm.com (unknown [10.37.12.243])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D09A63F703;
+        Fri, 21 Feb 2020 11:47:42 -0800 (PST)
+From:   Lukasz Luba <lukasz.luba@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-omap@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     Morten.Rasmussen@arm.com, Dietmar.Eggemann@arm.com,
+        javi.merino@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, rjw@rjwysocki.net, sudeep.holla@arm.com,
+        viresh.kumar@linaro.org, nm@ti.com, sboyd@kernel.org,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        daniel.lezcano@linaro.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        rostedt@goodmis.org, qperret@google.com, bsegall@google.com,
+        mgorman@suse.de, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        festevam@gmail.com, kernel@pengutronix.de, khilman@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org, robh@kernel.org,
+        matthias.bgg@gmail.com, steven.price@arm.com,
+        tomeu.vizoso@collabora.com, alyssa.rosenzweig@collabora.com,
+        airlied@linux.ie, daniel@ffwll.ch, liviu.dudau@arm.com,
+        lorenzo.pieralisi@arm.com, lukasz.luba@arm.com,
+        patrick.bellasi@matbug.net, orjan.eide@arm.com
+Subject: [PATCH v3 0/4] Add support for devices in the Energy Model
+Date:   Fri, 21 Feb 2020 19:47:27 +0000
+Message-Id: <20200221194731.13814-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 1:48 AM, Ulf Hansson wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>
->> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>
->>> On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->>>>
->>>
->>> Try to restore the value for the cache flush timeout, by updating the
->>> define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
->>
->> I have increased the timeout to 10 minutes but it did not help.
->> Same error found.
->> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
->> [  608.684964] mmc1: cache flush error -110
->> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
->> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
->>
->> OTOH, What best i could do for my own experiment to revert all three patches and
->> now the reported error gone and device mount successfully [1].
->>
->> List of patches reverted,
->>    mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
->>    mmc: block: Use generic_cmd6_time when modifying
->>      INAND_CMD38_ARG_EXT_CSD
->>    mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
->>
->> [1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
->>
->> - Naresh
-> 
-> Thanks for testing!
-> 
-> This sounds a bit weird, I must say. Also, while looking into the
-> logs, it seems like you are comparing a v5.5 kernel with v5.6-rc2, but
-> maybe I didn't read the logs carefully enough.
-> 
->   In any case, I am looking into creating a debug patch so we can
-> narrow down the problem a bit further.
-> 
-> Kind regards
-> Uffe
-> 
+Hi all,
 
-Hi Ulf,
+This patch set introduces support for devices in the Energy Model (EM)
+framework. It will unify the power model for thermal subsystem and make it
+simpler. The 1st patch refactors EM framework and adds support for devices.
+The 2nd patch changes dev_pm_opp_of_register_em() in OPP/OF which now should
+take as an argument struct device pointer. It touches a few trees
+(OMAP, NXP, Mediatek) updating their CPUfreq drivers to the new interface.
+Patch 3/4 changes thermal devfreq cooling removing old code for calculating
+local power table. It simplifies the code and uses EM for requested power
+calculation. Last patch 4/4 adds EM to Panfrost driver.
 
-  I see that Jetson-TX2 / Jetson-Xavier suspend test is aborted and 
-below error is seen due to the commit 
-24ed3bd01d6a844fd5e8a75f48d0a3d10ed71bf9  ("mmc: core: Specify timeouts 
-for BKOPS and CACHE_FLUSH for eMMC"):
+The patch set is based on linux-next tag next-20200221.
 
-##
-[  268.976197] Freezing user space processes ... (elapsed 0.001 seconds) 
-done.
-[  268.984414] OOM killer disabled.
-[  268.987635] Freezing remaining freezable tasks ... (elapsed 0.000 
-seconds) done.
-[  269.217471] PM: dpm_run_callback(): mmc_bus_suspend+0x0/0x58 returns -110
-[  269.224255] PM: Device mmc1:0001 failed to suspend: error -110
-[  269.230080] PM: Some devices failed to suspend, or early wake event 
-detected
-##
+Changes:
+v3:
+- added back the cpumask 'cpus' in the em_perf_domain due potential cache misses
+- removed _is_cpu_em() since there is no need for it
+- changed function name from em_pd_energy() to em_cpu_energy(), which is
+  optimized for usage from the scheduler making some assumptions and not
+  validating arguments to speed-up, there is a comment stressing that it should
+  be used only for CPUs em_perf_domain
+- changed em_get_pd() to em_pd_get() which is now aligned with em_cpu_get()
+  naming
+- extended comment in em_cpu_get() describing the need for this function
+- fixed build warning reported on x86 by kbuild test robot in devfreq_cooling.c
+- updated documentation in the energy-model.rst
+- changed print messages from 'energy_model' to 'EM'
+- changed dev_warn to dev_dbg, should calm down test scripts in case the
+  platform has OPPs less efficient in the OPP table (some of them are there for
+  cooling reasons, we shouldn't warn in this case, debug info is enough)
 
-  I find that from the commit the changes in mmc_flush_cache below is 
-the cause.
+v2 [2]:
+- changed EM API em_register_perf_domain() adding cpumask_t pointer
+  as last argument (which was discussed with Dietmar and Quentin)
+- removed dependency on PM_OPP, thanks to the cpumask_t argument
+- removed enum em_type and em->type dependent code
+- em_get_pd() can handle CPU device as well as devfreq device
+- updated EM documentation
+- in devfreq cooling added code which prevents from race condition with
+  devfreq governors which are trying to use OPPs while thermal is in the middle
+  of disabling them.
+- in devfreq cooling added code which updates state of the devfreq device to
+  avoid working on stale data when governor has not updated it for a long time
+- in devfreq cooling added backward compatibility frequency table for drivers
+  which did not provide EM
+- added Steven's Reviewed-by to trace code in thermal
+- added another CPUFreq driver which needs to be updated to the new API
 
-##
-@@ -961,7 +963,8 @@ int mmc_flush_cache(struct mmc_card *card)
-                         (card->ext_csd.cache_size > 0) &&
-                         (card->ext_csd.cache_ctrl & 1)) {
-                 err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
--                               EXT_CSD_FLUSH_CACHE, 1, 0);
-+                                EXT_CSD_FLUSH_CACHE, 1,
-+                                MMC_CACHE_FLUSH_TIMEOUT_MS);
+The v1 can be found here [1].
 
-##
+Regards,
+Lukasz Luba
 
-  Do you have suggestion to try for the suspend errors ?
+[1] https://lkml.org/lkml/2020/1/16/619
+[2] https://lkml.org/lkml/2020/2/6/377
 
--regards,
-  Bitan
+
+Lukasz Luba (4):
+  PM / EM: add devices to Energy Model
+  OPP: change parameter to device pointer in dev_pm_opp_of_register_em()
+  thermal: devfreq_cooling: Refactor code and switch to use Energy Model
+  drm/panfrost: Register to the Energy Model with devfreq device
+
+ Documentation/power/energy-model.rst        | 133 +++---
+ Documentation/scheduler/sched-energy.rst    |   2 +-
+ drivers/cpufreq/cpufreq-dt.c                |   2 +-
+ drivers/cpufreq/imx6q-cpufreq.c             |   2 +-
+ drivers/cpufreq/mediatek-cpufreq.c          |   2 +-
+ drivers/cpufreq/omap-cpufreq.c              |   2 +-
+ drivers/cpufreq/qcom-cpufreq-hw.c           |   2 +-
+ drivers/cpufreq/scmi-cpufreq.c              |  11 +-
+ drivers/cpufreq/scpi-cpufreq.c              |   2 +-
+ drivers/cpufreq/vexpress-spc-cpufreq.c      |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_devfreq.c |   3 +
+ drivers/opp/of.c                            |  45 +--
+ drivers/thermal/cpufreq_cooling.c           |  10 +-
+ drivers/thermal/devfreq_cooling.c           | 425 +++++++++-----------
+ include/linux/devfreq_cooling.h             |  17 -
+ include/linux/energy_model.h                | 107 +++--
+ include/linux/pm_opp.h                      |  14 +-
+ include/trace/events/thermal.h              |  19 +-
+ kernel/power/energy_model.c                 | 400 ++++++++++++++----
+ kernel/sched/fair.c                         |   2 +-
+ kernel/sched/topology.c                     |   4 +-
+ 21 files changed, 711 insertions(+), 495 deletions(-)
+
+-- 
+2.17.1
 
