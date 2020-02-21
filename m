@@ -2,146 +2,191 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A26BFC35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2373FC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA80206E2
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E20206E2
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LQyBJ4J1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SeJRcOMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbgBUPmX (ORCPT
+        id S1728668AbgBUPnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:42:23 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:52430 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728177AbgBUPmX (ORCPT
+        Fri, 21 Feb 2020 10:43:24 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35675 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728177AbgBUPnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:42:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582299741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=d1xiBHabr0cI0nVkv2W8qe7S3hdWOCkmluHZNS5Fdjo=;
-        b=LQyBJ4J1NTEk80WtxtbOOS250EOJUSGrdk9/V/MFOxMHoZfQEx6h2JvLEaBI3gZpVcoAbv
-        236SoT0QJolujSRa1JjScas/J52yCBQ6+X4+tZM2pk0s8EE5qIruTB+/11B0NBdQIRn6gu
-        iaTr/DHwUpoEMd6Le9iBV6evEPfcxKo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-491--wjrvbvTO5yo1uW5zNe7kg-1; Fri, 21 Feb 2020 10:42:19 -0500
-X-MC-Unique: -wjrvbvTO5yo1uW5zNe7kg-1
-Received: by mail-wm1-f70.google.com with SMTP id g26so769593wmk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:42:19 -0800 (PST)
+        Fri, 21 Feb 2020 10:43:24 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w12so2577466wrt.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=TdgQZoYzFfHTGZzoJ00i9pnvONpQW5SeDrs/ilsmT00=;
+        b=SeJRcOMNQfp1YCK33Vxody1eFQHvooFc3aOxbrhnjIylgD+1EasJ36ecMI30d4lvXJ
+         tFbOsgjuMMH1upUe7MG9/b93+Xu8uHTGEm1D5gsDmwkmRmkNAeOIoLKcwBxPuSV8aJ7h
+         Ms3hnu6dnqi1cSACFPr3bhE+qvz3NmVD92i9eVka12Hu/z3PvxTkEMltJ7o4GgJvHK80
+         vz86CRyz/atoOBtJG018gxPiZFjvniehVkLHbe0raVqjgbA2CvMllU6O80ZIkuV/FFAb
+         fMIDelRJeH3fHbnEbfV/vZGh1lJv9Efe8Sz6wVsmA8X8EZfJBj+PZ1r3pwj+zmidHdYO
+         a8Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d1xiBHabr0cI0nVkv2W8qe7S3hdWOCkmluHZNS5Fdjo=;
-        b=HBKxPf5eFJ/TlbHoKKVGg2pW7Zy3yBDt56o8Pxm9SblCKeE4nOv4HnmN9DwFnJde4C
-         eWtDf2zDFWhwFLKL1N5QfGugifM85d1VzoSIyqVcQZfTCpDyiRyToqJCLQLmEhQrniIt
-         N+gpAWDrTWtnVXWUsuxt1PlJsjuyUozby2RimgCkd+P87UNTZNJgCHm+UeujK4B9L0oE
-         h/beKG2Jc9O6YO/4PgArjQNR9hEkBGVVtGgXwesl0AGdsmFkJH17Z0QlRB6WkJ40K+1Y
-         tF42Pd2Az6vtHEDBQjD6wR0OwwYH1j69uY5dwjZvYjiTSX1SYeGI1sOkROVzv2CurD8d
-         N3rA==
-X-Gm-Message-State: APjAAAWBZWQrAz6Q5rnMROBrKp7L94lhmNrojzDulcRLmS7OqTAJdxpR
-        F6AigsdfywZuv+P0whwA2lGtRJEWGwCjxO6PBrvffnD9ger+tHNow5sZfNAGdodMR9UU/Nbp1TC
-        UOS81vJd8LV7nFSRAiJW9DO2j
-X-Received: by 2002:a7b:c753:: with SMTP id w19mr4665156wmk.34.1582299738379;
-        Fri, 21 Feb 2020 07:42:18 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzSWhT4n2jDvp8FWxa5PtF0QnBD+5CXqoCnpF/WyJoVcrZZSoX+kB/LMcPcy2QzVI9BPmha7Q==
-X-Received: by 2002:a7b:c753:: with SMTP id w19mr4665132wmk.34.1582299738067;
-        Fri, 21 Feb 2020 07:42:18 -0800 (PST)
-Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id c9sm4238078wme.41.2020.02.21.07.42.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:42:17 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Hannes Reinecke <hare@suse.com>, io-uring@vger.kernel.org
-Subject: [PATCH] io_uring: prevent sq_thread from spinning when it should stop
-Date:   Fri, 21 Feb 2020 16:42:16 +0100
-Message-Id: <20200221154216.206367-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=TdgQZoYzFfHTGZzoJ00i9pnvONpQW5SeDrs/ilsmT00=;
+        b=ucCwScvlzC6lwNCZwE1K0LZFlVguJIf8EVPdchhpuBcYBbSwPyP8kFrNc6Gfj3l0YG
+         fgYv5W7+1jXBgKWINeLxF6oD7cAZIjANMmYrCJCE6nHdScs4DIsEDX0odUy9u3Ac2Di3
+         sG6UCYUqo28hq571TmOPDIinAvaN3edft0YIbLgoJHlPLdFdB+9tV83PHceA8cGqna+J
+         0WUhSPCbjumZEMt9LCcoT99XsOI5VECdt/NLnMuVMx9sTDmBVTg7+4jO0aOL1Kdal3ls
+         G49W/EzKUE8dCEB64YhjqE0UhAHB/qz64zxU8qYjNEmPNbDEKUIHW7c0DvnBxeAv4IjP
+         a+Pg==
+X-Gm-Message-State: APjAAAUetQ1nypVFlPJHawyhqyWzMEXMAkh5TQs+Jvu8NHG91Lq8unAC
+        EDD9Qa7BOkrfNol/iPJkuBU4SA==
+X-Google-Smtp-Source: APXvYqwaokzBdL5Sy902QAplCeDWKw29jbJ4njjIRsN8Wt1MCzTD3diqBlzSjsr/TGqqT9voteJxTg==
+X-Received: by 2002:a5d:5452:: with SMTP id w18mr47054218wrv.333.1582299801751;
+        Fri, 21 Feb 2020 07:43:21 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id v15sm4646081wrf.7.2020.02.21.07.43.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 07:43:20 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:43:18 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+Message-ID: <20200221154318.GO10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212235134.12638-10-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch drops 'cur_mm' before calling cond_resched(), to prevent
-the sq_thread from spinning even when the user process is finished.
+On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+> It is possible that something may go wrong with the secondary CPU, in that
+> case it is much nicer to get a dump of the flow-controller state before
+> hanging machine.
+> 
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  arch/arm/mach-tegra/cpuidle-tegra20.c | 47 +++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
+> index 9672c619f4bc..bcc158b72e67 100644
+> --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
+> +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
+> @@ -83,14 +83,57 @@ static inline void tegra20_wake_cpu1_from_reset(void)
+>  }
+>  #endif
+>  
+> +static void tegra20_report_cpus_state(void)
+> +{
+> +	unsigned long cpu, lcpu, csr;
+> +
+> +	for_each_cpu(lcpu, cpu_possible_mask) {
+> +		cpu = cpu_logical_map(lcpu);
+> +		csr = flowctrl_read_cpu_csr(cpu);
+> +
+> +		pr_err("cpu%lu: online=%d flowctrl_csr=0x%08lx\n",
+> +		       cpu, cpu_online(lcpu), csr);
+> +	}
+> +}
+> +
+> +static int tegra20_wait_for_secondary_cpu_parking(void)
+> +{
+> +	unsigned int retries = 3;
+> +
+> +	while (retries--) {
+> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
 
-Before this patch, if the user process ended without closing the
-io_uring fd, the sq_thread continues to spin until the
-'sq_thread_idle' timeout ends.
+Oops I missed this one. Do not use ktime_get() in this code path, use jiffies.
 
-In the worst case where the 'sq_thread_idle' parameter is bigger than
-INT_MAX, the sq_thread will spin forever.
+> +
+> +		/*
+> +		 * The primary CPU0 core shall wait for the secondaries
+> +		 * shutdown in order to power-off CPU's cluster safely.
+> +		 * The timeout value depends on the current CPU frequency,
+> +		 * it takes about 40-150us  in average and over 1000us in
+> +		 * a worst case scenario.
+> +		 */
+> +		do {
+> +			if (tegra_cpu_rail_off_ready())
+> +				return 0;
+> +
+> +		} while (ktime_before(ktime_get(), timeout));
 
-Fixes: 6c271ce2f1d5 ("io_uring: add submission polling")
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
+So this loop will aggresively call tegra_cpu_rail_off_ready() and retry 3
+times. The tegra_cpu_rail_off_ready() function can be called thoushand of times
+here but the function will hang 1.5s :/
 
-Hi Jens,
-I'm also sending a test to liburing for this case.
+I suggest something like:
 
-Cheers,
-Stefano
----
- fs/io_uring.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+	while (retries--i && !tegra_cpu_rail_off_ready()) 
+		udelay(100);
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 5a826017ebb8..f902f77964ef 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -5138,6 +5138,18 @@ static int io_sq_thread(void *data)
- 		 * to enter the kernel to reap and flush events.
- 		 */
- 		if (!to_submit || ret == -EBUSY) {
-+			/*
-+			 * Drop cur_mm before scheduling, we can't hold it for
-+			 * long periods (or over schedule()). Do this before
-+			 * adding ourselves to the waitqueue, as the unuse/drop
-+			 * may sleep.
-+			 */
-+			if (cur_mm) {
-+				unuse_mm(cur_mm);
-+				mmput(cur_mm);
-+				cur_mm = NULL;
-+			}
-+
- 			/*
- 			 * We're polling. If we're within the defined idle
- 			 * period, then let us spin without work before going
-@@ -5152,18 +5164,6 @@ static int io_sq_thread(void *data)
- 				continue;
- 			}
- 
--			/*
--			 * Drop cur_mm before scheduling, we can't hold it for
--			 * long periods (or over schedule()). Do this before
--			 * adding ourselves to the waitqueue, as the unuse/drop
--			 * may sleep.
--			 */
--			if (cur_mm) {
--				unuse_mm(cur_mm);
--				mmput(cur_mm);
--				cur_mm = NULL;
--			}
--
- 			prepare_to_wait(&ctx->sqo_wait, &wait,
- 						TASK_INTERRUPTIBLE);
- 
+So <retries> calls to tegra_cpu_rail_off_ready() and 100us x <retries> maximum
+impact.
+
+> +		pr_err("secondary CPU taking too long to park\n");
+> +
+> +		tegra20_report_cpus_state();
+> +	}
+> +
+> +	pr_err("timed out waiting secondaries to park\n");
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+>  static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
+>  					   struct cpuidle_driver *drv,
+>  					   int index)
+>  {
+>  	bool ret;
+>  
+> -	while (!tegra_cpu_rail_off_ready())
+> -		cpu_relax();
+> +	if (tegra20_wait_for_secondary_cpu_parking())
+> +		return false;
+>  
+>  	ret = !tegra_pm_enter_lp2();
+>  
+> -- 
+> 2.24.0
+> 
+
 -- 
-2.24.1
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
