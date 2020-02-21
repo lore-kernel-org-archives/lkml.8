@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF25C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422B1C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0912D206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3BF206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274590;
-	bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+	s=default; t=1582274595;
+	bh=Blrkqpo0ttDNFxksJ/K85sjcbAzpjsltlkyUQBX/ffY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2RDqERQSmuKHTuKRIYHYWbcDQh+HWCzrlpYdDoEiTsJK0SCSR4BkGDvOQNOHAeNPE
-	 FZkFPV2vlqJiHOkUqAt1CXFI5cuhJoGg4PT/P8xohF/P6K4VIUSrxKgH/mdZozgu5I
-	 cRsRxwC9/lx6ADgZFoFA3ysE6RW5EIrYOyGWpYHQ=
+	b=rWzOJHOewg90efBKXTF01X+wpjt2VJhiSxQRUTWaBoBBua8maSiSpz0/IREiUOdzE
+	 3xqdsIUi4f53nWlhKwiHJiR6yPL9aeaW90yJH+sjVGr09fM35mVdWSky3ai3iT47Dp
+	 I6M3ZJgrIyiWaPxYIXp6AUF0imne1O7UctjRz13Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbgBUInJ (ORCPT
+        id S1730172AbgBUHxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52416 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:53:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbgBUHx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:53:59 -0500
+        id S1729831AbgBUHxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:53:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 072AA24650;
-        Fri, 21 Feb 2020 07:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74C2E222C4;
+        Fri, 21 Feb 2020 07:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271638;
-        bh=ab0ALA7QeyFFt8xfeX1sv16lhosGZFNhWcq5ie5xykg=;
+        s=default; t=1582271630;
+        bh=Blrkqpo0ttDNFxksJ/K85sjcbAzpjsltlkyUQBX/ffY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yg2on6zcCJC/yWp27CGATPdnysutNpdUcCI5CDtWpKQFhAYphKshMB9OoWkaRXOfR
-         x4JLYAOUF/qicPv8VSRGhoS9nbo79nnXsO6QB2qRLqVOjtBF+5CZXk6WmdRINhzRDL
-         FJ+aIZVObCNUqg+Mrl6krID72pIOqvhmbIHojcwU=
+        b=thU5nkE3TrWsnaCISU6jCbroDK2NOVs6ni/SyUKS4sO7i0mUKYwlBC701jhrXVMXt
+         cLZaR+28mAVpyfeAaiYVFgMCsgldv7zbSU0vRmRF6lTMHhCmWXUfpegGPCWiM/O96i
+         4VD/FRGUouNl2TVwMxUAQPTRb7yzn+xAv68q3dQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 243/399] raid6/test: fix a compilation warning
-Date:   Fri, 21 Feb 2020 08:39:28 +0100
-Message-Id: <20200221072426.124477833@linuxfoundation.org>
+Subject: [PATCH 5.5 201/399] ALSA: sh: Fix unused variable warnings
+Date:   Fri, 21 Feb 2020 08:38:46 +0100
+Message-Id: <20200221072422.367785032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,57 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 5e5ac01c2b8802921fee680518a986011cb59820 ]
+[ Upstream commit 5da116f164ce265e397b8f59af5c39e4a61d61a5 ]
 
-The compilation warning is redefination showed as following:
+Remove unused variables that are left over after the conversion of new
+PCM ops:
+  sound/sh/sh_dac_audio.c:166:26: warning: unused variable 'runtime'
+  sound/sh/sh_dac_audio.c:186:26: warning: unused variable 'runtime'
+  sound/sh/sh_dac_audio.c:205:26: warning: unused variable 'runtime'
 
-        In file included from tables.c:2:
-        ../../../include/linux/export.h:180: warning: "EXPORT_SYMBOL" redefined
-         #define EXPORT_SYMBOL(sym)  __EXPORT_SYMBOL(sym, "")
-
-        In file included from tables.c:1:
-        ../../../include/linux/raid/pq.h:61: note: this is the location of the previous definition
-         #define EXPORT_SYMBOL(sym)
-
-Fixes: 69a94abb82ee ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
-Signed-off-by: Zhengyuan Liu <liuzhengyuan@kylinos.cn>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: 1cc2f8ba0b3e ("ALSA: sh: Convert to the new PCM ops")
+Link: https://lore.kernel.org/r/20200104110057.13875-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/raid/pq.h | 2 ++
- lib/raid6/mktables.c    | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ sound/sh/sh_dac_audio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
-index 0b6e7ad9cd2a8..e0ddb47f44020 100644
---- a/include/linux/raid/pq.h
-+++ b/include/linux/raid/pq.h
-@@ -58,7 +58,9 @@ extern const char raid6_empty_zero_page[PAGE_SIZE];
- #define enable_kernel_altivec()
- #define disable_kernel_altivec()
+diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
+index f9e36abc98ac7..725992937e8f1 100644
+--- a/sound/sh/sh_dac_audio.c
++++ b/sound/sh/sh_dac_audio.c
+@@ -175,7 +175,6 @@ static int snd_sh_dac_pcm_copy(struct snd_pcm_substream *substream,
+ {
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
-+#undef	EXPORT_SYMBOL
- #define EXPORT_SYMBOL(sym)
-+#undef	EXPORT_SYMBOL_GPL
- #define EXPORT_SYMBOL_GPL(sym)
- #define MODULE_LICENSE(licence)
- #define MODULE_DESCRIPTION(desc)
-diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
-index 9c485df1308fb..f02e10fa62381 100644
---- a/lib/raid6/mktables.c
-+++ b/lib/raid6/mktables.c
-@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
- 	uint8_t v;
- 	uint8_t exptbl[256], invtbl[256];
+ 	if (copy_from_user_toio(chip->data_buffer + pos, src, count))
+ 		return -EFAULT;
+@@ -195,7 +194,6 @@ static int snd_sh_dac_pcm_copy_kernel(struct snd_pcm_substream *substream,
+ {
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
--	printf("#include <linux/raid/pq.h>\n");
- 	printf("#include <linux/export.h>\n");
-+	printf("#include <linux/raid/pq.h>\n");
+ 	memcpy_toio(chip->data_buffer + pos, src, count);
+ 	chip->buffer_end = chip->data_buffer + pos + count;
+@@ -214,7 +212,6 @@ static int snd_sh_dac_pcm_silence(struct snd_pcm_substream *substream,
+ {
+ 	/* channel is not used (interleaved data) */
+ 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
+-	struct snd_pcm_runtime *runtime = substream->runtime;
  
- 	/* Compute multiplication table */
- 	printf("\nconst u8  __attribute__((aligned(256)))\n"
+ 	memset_io(chip->data_buffer + pos, 0, count);
+ 	chip->buffer_end = chip->data_buffer + pos + count;
 -- 
 2.20.1
 
