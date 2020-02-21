@@ -2,381 +2,273 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C3C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE57CC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8E6206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nKxVgXbu"
+	by mail.kernel.org (Postfix) with ESMTP id 9BB29206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:07:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582297674;
+	bh=QbzsH1rdu5rS8dVWQGh+5kwltd8Y/KBAWxKBBTeFYm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0jtEUJxeOAEyZ1UQQs69ZW8oHR2O+YpQCkanGcA/876SlsVXJra9B5hh/coIROIvm
+	 3Xe0wkFPnHZdKNK6tqPgD8iwPqJkO7x2lvej2ZlxsR2e6q4HsPSjSIrOO01lR115Nb
+	 C61KqTjdZFeBmQyH8sb0bsiKxtqJ37qGmNlgcLVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbgBUPHj (ORCPT
+        id S1729087AbgBUPHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:07:39 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53521 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728690AbgBUPHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:07:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s10so2138545wmh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:07:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
-        bh=e0L4/lKklK0pPHv+p72Qf9pkHd2IRBOpN8nR2j+6GjM=;
-        b=nKxVgXbuLxoFN5LZ1SEgJEJ6Q+p9oRBvp6Mu7yEf7xwANCpQC6zNg72BHYf0NA82S7
-         iBjBZ8gpnUD0HqJRWDiyVUPZU21XfXavtUUFOJ2sF4aeABbxhFGisVHwvtnE13iP7ql/
-         aiSblwtCEnHfPFaqwonU2maDbKsViGQ/fXAcwxb2Jf6XrBFIsRShH5v15u2sdmbB9P2N
-         qGsI7c/fdyT+DkNgYRMegxb3nd+kxF/GpPhdmGv4SK+bUd7MgOB6WxwgxaDb137PrXsQ
-         CEYzz70M6nU3SIgNU3ng4xQKpB/A27n3/rfqCOnzXRFUU5LAbAfMjRKDbbwwcSOz2Ynx
-         zy/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=e0L4/lKklK0pPHv+p72Qf9pkHd2IRBOpN8nR2j+6GjM=;
-        b=UFoxwTgVeqqstHVvlPNqyvh1eRCNKFVyQxO5vtg4jSFoJpgly1hl8p/7FKSdqU8paz
-         OL7V4GaDFfskaM55FHh/UXAnX9tEjkaIVw+H0BdeRVrOxv8aTDV8unuu1t2BvsJxMT7G
-         uNtancwvG4TtTk5NAl6bgiu0R6y9Di1BAs44NcMnTJWegwQhwSLpiCSJczoHjsTK5Far
-         5H9F4qK96a5YuglIAx0KV9fHvSAIdxf85gMmtKG32KwN+1mjkTuciIKYIbyVaoEaPzPt
-         hlc3JpPi/jp3afBtreBBSjp4htdBrdEnG7AxFfurnnjIZF4bUVpCjGF0WsTTYCqPGvA2
-         1/sA==
-X-Gm-Message-State: APjAAAXawyaIHX/VZSMKvQEJTJkLQd9Z0zuiskb/UCDze7E1whx5OA8h
-        LlQLy3eb59eNQgZdMEN7TF5kQw==
-X-Google-Smtp-Source: APXvYqyuqN+IUjfBMyk8cWX21uCBxSpBZ1yH0FZnXDsBtGAM+msBu1kqHkIEg+2hGsqiibQjHskgcQ==
-X-Received: by 2002:a1c:a952:: with SMTP id s79mr4582992wme.83.1582297656460;
-        Fri, 21 Feb 2020 07:07:36 -0800 (PST)
-Received: from localhost (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id w22sm4143316wmk.34.2020.02.21.07.07.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:07:34 -0800 (PST)
-References: <20200221122242.1500093-1-jbrunet@baylibre.com> <20200221122242.1500093-3-jbrunet@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] ASoC: meson: g12a: add internal DAC glue driver
-In-reply-to: <20200221122242.1500093-3-jbrunet@baylibre.com>
-Date:   Fri, 21 Feb 2020 16:07:33 +0100
-Message-ID: <1jo8ts2d3e.fsf@starbuckisacylon.baylibre.com>
+        Fri, 21 Feb 2020 10:07:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727315AbgBUPHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 10:07:53 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF7DC206EF;
+        Fri, 21 Feb 2020 15:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582297671;
+        bh=QbzsH1rdu5rS8dVWQGh+5kwltd8Y/KBAWxKBBTeFYm8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zh9Qq9O2QoH+szrVZUv/fd0qB2W1LWpnfcP1Us/p9f3Rvf2JB31XobGAay/yJ/oAn
+         WhgcK859xlt7vOrpAuM9oh1/+8RHxuakHGanMZ+9wS+nf8ZsRdctAn7s3PCLS9GO1e
+         J2V1w/EXZDhm5xNf3YVn3d3Bx7iseeRQ+JV8DhQo=
+Date:   Fri, 21 Feb 2020 15:07:47 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: Re: [PATCH v4 2/2] dt-bindings: iio: dac: Add docs for AD5770R DAC
+Message-ID: <20200221150748.2b7c0b2a@archlinux>
+In-Reply-To: <20200218121031.27233-3-alexandru.tachici@analog.com>
+References: <20200218121031.27233-1-alexandru.tachici@analog.com>
+        <20200218121031.27233-3-alexandru.tachici@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 18 Feb 2020 14:10:31 +0200
+Alexandru Tachici <alexandru.tachici@analog.com> wrote:
 
-On Fri 21 Feb 2020 at 13:22, Jerome Brunet <jbrunet@baylibre.com> wrote:
-
-> Add support for the internal audio DAC glue found on the Amlogic g12a
-> and sm1 SoC families. This allows to connect the TDM outputs of the SoC
-> to the internal t9015 audio DAC.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Please ignore this patch. It is incomplete, a part was mistakenly
-squashed with another change I'm preparing
-
+> Adding dt-bindings documentation for AD5770R DAC.
+> 
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
 > ---
->  sound/soc/meson/Kconfig         |   9 ++
->  sound/soc/meson/Makefile        |   2 +
->  sound/soc/meson/g12a-toacodec.c | 240 ++++++++++++++++++++++++++++++++
->  3 files changed, 251 insertions(+)
->  create mode 100644 sound/soc/meson/g12a-toacodec.c
->
-> diff --git a/sound/soc/meson/Kconfig b/sound/soc/meson/Kconfig
-> index d27e9180b453..8b6295283989 100644
-> --- a/sound/soc/meson/Kconfig
-> +++ b/sound/soc/meson/Kconfig
-> @@ -109,6 +109,15 @@ config SND_MESON_GX_SOUND_CARD
->  	help
->  	  Select Y or M to add support for the GXBB/GXL SoC sound card
->  
-> +config SND_MESON_G12A_TOACODEC
-> +	tristate "Amlogic G12A To Internal DAC Control Support"
-> +	select SND_MESON_CODEC_GLUE
-> +	select REGMAP_MMIO
-> +	imply SND_SOC_MESON_T9015
-> +	help
-> +	  Select Y or M to add support for the internal audio DAC on the
-> +	  g12a SoC family
-> +
->  config SND_MESON_G12A_TOHDMITX
->  	tristate "Amlogic G12A To HDMI TX Control Support"
->  	select REGMAP_MMIO
-> diff --git a/sound/soc/meson/Makefile b/sound/soc/meson/Makefile
-> index 3c9d48846816..e446bc980481 100644
-> --- a/sound/soc/meson/Makefile
-> +++ b/sound/soc/meson/Makefile
-> @@ -22,6 +22,7 @@ snd-soc-meson-axg-pdm-objs := axg-pdm.o
->  snd-soc-meson-card-utils-objs := meson-card-utils.o
->  snd-soc-meson-codec-glue-objs := meson-codec-glue.o
->  snd-soc-meson-gx-sound-card-objs := gx-card.o
-> +snd-soc-meson-g12a-toacodec-objs := g12a-toacodec.o
->  snd-soc-meson-g12a-tohdmitx-objs := g12a-tohdmitx.o
->  snd-soc-meson-t9015-objs := t9015.o
->  
-> @@ -40,5 +41,6 @@ obj-$(CONFIG_SND_MESON_AXG_PDM) += snd-soc-meson-axg-pdm.o
->  obj-$(CONFIG_SND_MESON_CARD_UTILS) += snd-soc-meson-card-utils.o
->  obj-$(CONFIG_SND_MESON_CODEC_GLUE) += snd-soc-meson-codec-glue.o
->  obj-$(CONFIG_SND_MESON_GX_SOUND_CARD) += snd-soc-meson-gx-sound-card.o
-> +obj-$(CONFIG_SND_MESON_G12A_TOACODEC) += snd-soc-meson-g12a-toacodec.o
->  obj-$(CONFIG_SND_MESON_G12A_TOHDMITX) += snd-soc-meson-g12a-tohdmitx.o
->  obj-$(CONFIG_SND_SOC_MESON_T9015) += snd-soc-meson-t9015.o
-> diff --git a/sound/soc/meson/g12a-toacodec.c b/sound/soc/meson/g12a-toacodec.c
+>  .../bindings/iio/dac/adi,ad5770r.yaml         | 185 ++++++++++++++++++
+>  1 file changed, 185 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
 > new file mode 100644
-> index 000000000000..719bbe9966b1
+> index 000000000000..13d6b5ff479d
 > --- /dev/null
-> +++ b/sound/soc/meson/g12a-toacodec.c
-> @@ -0,0 +1,240 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2020 BayLibre, SAS.
-> +// Author: Jerome Brunet <jbrunet@baylibre.com>
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> @@ -0,0 +1,185 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5770r.yaml#
+Umm. adc?  Please make sure you run the build tests on bindings and that
+you have a recent version of the dt schema stuff.
+
+I have applied with that fixed, but will be looking to add an Ack from Rob
+ideally before I push this out as a non rebasing tree.
+
+Thanks,
+
+Jonathan
+
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <sound/pcm_params.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/reset.h>
-> +#include <sound/soc.h>
-> +#include <sound/soc-dai.h>
+> +title: Analog Devices AD5770R DAC device driver
 > +
-> +#include <dt-bindings/sound/meson-g12a-toacodec.h>
-> +#include "axg-tdm.h"
-> +#include "meson-codec-glue.h"
+> +maintainers:
+> +  - Mircea Caprioru <mircea.caprioru@analog.com>
 > +
-> +#define G12A_TOACODEC_DRV_NAME "g12a-toacodec"
+> +description: |
+> +  Bindings for the Analog Devices AD5770R current DAC device. Datasheet can be
+> +  found here:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5770R.pdf
 > +
-> +#define TOACODEC_CTRL0			0x0
-> +#define  CTRL0_ENABLE_SHIFT		31
-> +#define  CTRL0_DAT_SEL			GENMASK(15, 14)
-> +#define  CTRL0_LANE_SEL			12
-> +#define  CTRL0_LRCLK_SEL		GENMASK(9, 8)
-> +#define  CTRL0_BLK_CAP_INV		BIT(7)
-> +#define  CTRL0_BCLK_O_INV		BIT(6)
-> +#define  CTRL0_BCLK_SEL			GENMASK(5, 4)
-> +#define  CTRL0_MCLK_SEL			GENMASK(2, 0)
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad5770r
 > +
-> +#define TOACODEC_OUT_CHMAX		2
+> +  reg:
+> +    maxItems: 1
 > +
-> +static const char * const g12a_toacodec_mux_texts[] = {
-> +	"I2S A", "I2S B", "I2S C",
-> +};
+> +  avdd-supply:
+> +    description:
+> +      AVdd voltage supply. Represents two different supplies in the datasheet
+> +      that are in fact the same.
 > +
-> +static int g12a_toacodec_get_mux(struct snd_soc_component *component)
-> +{
-> +	unsigned int val;
+> +  iovdd-supply:
+> +    description:
+> +      Voltage supply for the chip interface.
 > +
-> +	snd_soc_component_read(component, TOACODEC_CTRL0, &val);
-> +	return FIELD_GET(CTRL0_DAT_SEL, val);
-> +}
+> +  vref-supply:
+> +    description: Specify the voltage of the external reference used.
+> +      Available reference options are 1.25 V or 2.5 V. If no
+> +      external reference declared then the device will use the
+> +      internal reference of 1.25 V.
 > +
-> +static int g12a_toacodec_put_mux(struct snd_soc_component *component,
-> +				 unsigned int mux)
-> +{
-> +	snd_soc_component_update_bits(component, TOACODEC_CTRL0,
-> +				      CTRL0_DAT_SEL |
-> +				      CTRL0_LRCLK_SEL |
-> +				      CTRL0_BCLK_SEL,
-> +				      FIELD_PREP(CTRL0_DAT_SEL, mux) |
-> +				      FIELD_PREP(CTRL0_LRCLK_SEL, mux) |
-> +				      FIELD_PREP(CTRL0_BCLK_SEL, mux));
+> +  adi,external-resistor:
+> +    description: Specify if an external 2.5k ohm resistor is used. If not
+> +      specified the device will use an internal 2.5k ohm resistor.
+> +      The precision resistor is used for reference current generation.
+> +    type: boolean
 > +
-> +	/*
-> +	 * FIXME:
-> +	 * On this soc, the glue gets the MCLK directly from the clock
-> +	 * controller instead of going the through the TDM interface.
-> +	 *
-> +	 * Here we assume interface A uses clock A, etc ... While it is
-> +	 * true for now, it could be different. Instead the glue should
-> +	 * find out the clock used by the interface and select the same
-> +	 * source. For that, we will need regmap backed clock mux which
-> +	 * is a work in progress
-> +	 */
-> +	snd_soc_component_update_bits(component, TOACODEC_CTRL0,
-> +				      CTRL0_MCLK_SEL,
-> +				      FIELD_PREP(CTRL0_MCLK_SEL, mux));
+> +  reset-gpios:
+> +    description: GPIO spec for the RESET pin. If specified, it will be
+> +      asserted during driver probe.
+> +    maxItems: 1
 > +
-> +	return 0;
-> +}
+> +  channel0:
+> +    description: Represents an external channel which are
+> +      connected to the DAC. Channel 0 can act both as a current
+> +      source and sink.
+> +    type: object
 > +
-> +static MESON_CODEC_GLUE_ENUM_DECL(g12a_toacodec_mux_glue,
-> +				  g12a_toacodec_mux_texts,
-> +				  g12a_toacodec_get_mux,
-> +				  g12a_toacodec_put_mux);
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          const: 0
 > +
-> +static const struct snd_kcontrol_new g12a_toacodec_mux =
-> +	SOC_DAPM_ENUM_EXT("Source", g12a_toacodec_mux_enum,
-> +			  snd_soc_dapm_get_enum_double,
-> +			  g12a_toacodec_mux_put_enum);
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/int32-array
+> +            - items:
+> +                - enum: [0 300000]
+> +                - enum: [-60000 0]
+> +                - enum: [-60000 300000]
 > +
-> +static const struct snd_kcontrol_new g12a_toacodec_out_enable =
-> +	SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOACODEC_CTRL0,
-> +				    CTRL0_ENABLE_SHIFT, 1, 0);
+> +  channel1:
+> +    description: Represents an external channel which are
+> +      connected to the DAC.
+> +    type: object
 > +
-> +static const struct snd_soc_dapm_widget g12a_toacodec_widgets[] = {
-> +	SND_SOC_DAPM_MUX("SRC", SND_SOC_NOPM, 0, 0,
-> +			 &g12a_toacodec_mux),
-> +	SND_SOC_DAPM_SWITCH("OUT EN", SND_SOC_NOPM, 0, 0,
-> +			    &g12a_toacodec_out_enable),
-> +};
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          const: 1
 > +
-> +static int g12a_toacodec_input_hw_params(struct snd_pcm_substream *substream,
-> +					 struct snd_pcm_hw_params *params,
-> +					 struct snd_soc_dai *dai)
-> +{
-> +	struct meson_codec_glue_input *data;
-> +	int ret;
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 140000]
+> +                - enum: [0 250000]
 > +
-> +	ret = meson_codec_glue_input_hw_params(substream, params, dai);
-> +	if (ret)
-> +		return ret;
+> +  channel2:
+> +    description: Represents an external channel which are
+> +      connected to the DAC.
+> +    type: object
 > +
-> +	/* The glue will provide 1 lane out of the 4 to the output */
-> +	data = meson_codec_glue_input_get_data(dai);
-> +	data->params.channels_min = min_t(unsigned int, TOACODEC_OUT_CHMAX,
-> +					data->params.channels_min);
-> +	data->params.channels_max = min_t(unsigned int, TOACODEC_OUT_CHMAX,
-> +					data->params.channels_max);
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          const: 2
 > +
-> +	return 0;
-> +}
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 140000]
+> +                - enum: [0 250000]
 > +
-> +static const struct snd_soc_dai_ops g12a_toacodec_input_ops = {
-> +	.hw_params	= g12a_toacodec_input_hw_params,
-> +	.set_fmt	= meson_codec_glue_input_set_fmt,
-> +};
+> +patternProperties:
+> +  "^channel@([3-5])$":
+> +    type: object
+> +    description: Represents the external channels which are connected to the DAC.
+> +    properties:
+> +      num:
+> +        description: This represents the channel number.
+> +        items:
+> +          minimum: 3
+> +          maximum: 5
 > +
-> +static const struct snd_soc_dai_ops g12a_toacodec_output_ops = {
-> +	.startup	= meson_codec_glue_output_startup,
-> +};
+> +      adi,range-microamp:
+> +          description: Output range of the channel.
+> +          oneOf:
+> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +            - items:
+> +                - enum: [0 45000]
+> +                - enum: [0 100000]
 > +
-> +#define TOACODEC_STREAM(xname, xsuffix, xchmax)			\
-> +{								\
-> +	.stream_name	= xname " " xsuffix,			\
-> +	.channels_min	= 1,					\
-> +	.channels_max	= (xchmax),				\
-> +	.rate_min       = 5512,					\
-> +	.rate_max	= 192000,				\
-> +	.formats	= AXG_TDM_FORMATS,			\
-> +}
+> +required:
+> +- reg
+> +- diff-channels
+> +- channel0
+> +- channel1
+> +- channel2
+> +- channel3
+> +- channel4
+> +- channel5
 > +
-> +#define TOACODEC_INPUT(xname, xid) {					\
-> +	.name = xname,							\
-> +	.id = (xid),							\
-> +	.playback = TOACODEC_STREAM(xname, "Playback", 8),		\
-> +	.ops = &g12a_toacodec_input_ops,				\
-> +	.probe = meson_codec_glue_input_dai_probe,			\
-> +	.remove = meson_codec_glue_input_dai_remove,			\
-> +}
+> +examples:
+> +  - |
+> +        spi {
+> +                #address-cells = <1>;
+> +                #size-cells = <0>;
 > +
-> +#define TOACODEC_OUTPUT(xname, xid) {					\
-> +	.name = xname,							\
-> +	.id = (xid),							\
-> +	.capture = TOACODEC_STREAM(xname, "Capture", TOACODEC_OUT_CHMAX), \
-> +	.ops = &g12a_toacodec_output_ops,				\
-> +}
+> +                ad5770r@0 {
+> +                        compatible = "ad5770r";
+> +                        reg = <0>;
+> +                        spi-max-frequency = <1000000>;
+> +                        vref-supply = <&vref>;
+> +                        adi,external-resistor;
+> +                        reset-gpios = <&gpio 22 0>;
 > +
-> +static struct snd_soc_dai_driver g12a_toacodec_dai_drv[] = {
-> +	TOACODEC_INPUT("IN A", TOACODEC_IN_A),
-> +	TOACODEC_INPUT("IN B", TOACODEC_IN_B),
-> +	TOACODEC_INPUT("IN C", TOACODEC_IN_C),
-> +	TOACODEC_OUTPUT("OUT", TOACODEC_OUT),
-> +};
+> +                        channel@0 {
+> +                                num = <0>;
+> +                                adi,range-microamp = <(-60000) 300000>;
+> +                        };
 > +
-> +static int g12a_toacodec_component_probe(struct snd_soc_component *c)
-> +{
-> +	/* Initialize the static clock parameters */
-> +	return snd_soc_component_write(c, TOACODEC_CTRL0,
-> +				       CTRL0_BLK_CAP_INV);
-> +}
+> +                        channel@1 {
+> +                                num = <1>;
+> +                                adi,range-microamp = <0 140000>;
+> +                        };
 > +
-> +static const struct snd_soc_dapm_route g12a_toacodec_routes[] = {
-> +	{ "SRC", "I2S A", "IN A Playback" },
-> +	{ "SRC", "I2S B", "IN B Playback" },
-> +	{ "SRC", "I2S C", "IN C Playback" },
-> +	{ "OUT EN", "Switch", "SRC" },
-> +	{ "OUT Capture", NULL, "OUT EN" },
-> +};
+> +                        channel@2 {
+> +                                num = <2>;
+> +                                adi,range-microamp = <0 55000>;
+> +                        };
 > +
-> +static const struct snd_kcontrol_new g12a_toacodec_controls[] = {
-> +	SOC_SINGLE("Lane Select", TOACODEC_CTRL0, CTRL0_LANE_SEL, 3, 0),
-> +};
+> +                        channel@3 {
+> +                                num = <3>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
 > +
-> +static const struct snd_soc_component_driver g12a_toacodec_component_drv = {
-> +	.probe			= g12a_toacodec_component_probe,
-> +	.controls		= g12a_toacodec_controls,
-> +	.num_controls		= ARRAY_SIZE(g12a_toacodec_controls),
-> +	.dapm_widgets		= g12a_toacodec_widgets,
-> +	.num_dapm_widgets	= ARRAY_SIZE(g12a_toacodec_widgets),
-> +	.dapm_routes		= g12a_toacodec_routes,
-> +	.num_dapm_routes	= ARRAY_SIZE(g12a_toacodec_routes),
-> +	.endianness		= 1,
-> +	.non_legacy_dai_naming	= 1,
-> +};
+> +                        channel@4 {
+> +                                num = <4>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
 > +
-> +static const struct regmap_config g12a_toacodec_regmap_cfg = {
-> +	.reg_bits	= 32,
-> +	.val_bits	= 32,
-> +	.reg_stride	= 4,
-> +};
-> +
-> +static const struct of_device_id g12a_toacodec_of_match[] = {
-> +	{ .compatible = "amlogic,g12a-toacodec", },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, g12a_toacodec_of_match);
-> +
-> +static int g12a_toacodec_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	void __iomem *regs;
-> +	struct regmap *map;
-> +	int ret;
-> +
-> +	ret = device_reset(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	regs = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(regs))
-> +		return PTR_ERR(regs);
-> +
-> +	map = devm_regmap_init_mmio(dev, regs, &g12a_toacodec_regmap_cfg);
-> +	if (IS_ERR(map)) {
-> +		dev_err(dev, "failed to init regmap: %ld\n",
-> +			PTR_ERR(map));
-> +		return PTR_ERR(map);
-> +	}
-> +
-> +	return devm_snd_soc_register_component(dev,
-> +			&g12a_toacodec_component_drv, g12a_toacodec_dai_drv,
-> +			ARRAY_SIZE(g12a_toacodec_dai_drv));
-> +}
-> +
-> +static struct platform_driver g12a_toacodec_pdrv = {
-> +	.driver = {
-> +		.name = G12A_TOACODEC_DRV_NAME,
-> +		.of_match_table = g12a_toacodec_of_match,
-> +	},
-> +	.probe = g12a_toacodec_probe,
-> +};
-> +module_platform_driver(g12a_toacodec_pdrv);
-> +
-> +MODULE_AUTHOR("Jerome Brunet <jbrunet@baylibre.com>");
-> +MODULE_DESCRIPTION("Amlogic G12a To Internal DAC Codec Driver");
-> +MODULE_LICENSE("GPL v2");
+> +                        channel@5 {
+> +                                num = <5>;
+> +                                adi,range-microamp = <0 45000>;
+> +                        };
+> +                };
+> +        };
+> +...
 
