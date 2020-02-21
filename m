@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA57C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400A9C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513D4206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F9C2071E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274919;
-	bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
+	s=default; t=1582274925;
+	bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=liDdDlPdmkYu+tuDOQs8M+jO6QhKYkQ9dgbOPjKFgbMD+WH75Fv9ai/U+veMCXp75
-	 qhvqSFIOsyYP9tuLwrS4P8j933f/8Qcu7XYtQDpT+AaTULT9vZ6tLRUmH5Y61w5KOH
-	 zaIR5aMhw15AGOKaMU3BZdCXiqIJFEGkNA2ICZ8M=
+	b=YQb+tczDgOTpNSsbHtohowZyNJ4wOWYdODMv1Dmhvi63yiVFDQA0pmaZLK6tWu1P+
+	 mLJKWvZCtTGYCzctNBFx3avkRK5EjCl7RXbLksqaJhQmWEpqC6iGbczdn9pa64BKQb
+	 W68vhoqqLhltC2YKMjZo0CnCi7AzLu91FrmjV7fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbgBUIsi (ORCPT
+        id S1728725AbgBUHqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:48:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42242 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbgBUHqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:39 -0500
+        id S1727966AbgBUHq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A88124656;
-        Fri, 21 Feb 2020 07:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D342B20801;
+        Fri, 21 Feb 2020 07:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271199;
-        bh=t+HGHp5WXwS0C0Tt94knmpE+cBtGP+NH5K22SJzMyk0=;
+        s=default; t=1582271186;
+        bh=ERfQ3eAbohrmh759MhxBh8l+4EKx0sFujaFwkM2jL3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jgb9oTYQ2Yw7f265m5QzMYnNQg9m0HBLli1n7S/TWxH5Lmoo2hh/ZaS4sN416A8Gt
-         3wjIHQA2YAT0+0p62FL5NnslGHmoORcxct6XWWYGngapHpPBLBS1FjD1fXlcywK0PV
-         lCOxjWCR6T1QwLOk4Q+cyKdhrn+0wjDutDpKOznA=
+        b=DUFiQYgME23YXqWoM7z0YbWA1l2TVWtNkeOlmuZeuEeFw0M4DThA+HkjG3uJNdn20
+         x0zwCkb8YJY7O8a5czSxuwlbyoNW9tDQKvq4oyXaAUZ0PnTKIm85DUDIlI2SyNFFt7
+         B40+iGYPUH32IWcPWefNAna+jg/sAhKDF99DmyNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Siddhesh Poyarekar <siddhesh@gotplt.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Tim Bird <tim.bird@sony.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 039/399] media: ov5640: Fix check for PLL1 exceeding max allowed rate
-Date:   Fri, 21 Feb 2020 08:36:04 +0100
-Message-Id: <20200221072406.165679359@linuxfoundation.org>
+Subject: [PATCH 5.5 070/399] kselftest: Minimise dependency of get_size on C library interfaces
+Date:   Fri, 21 Feb 2020 08:36:35 +0100
+Message-Id: <20200221072409.158041132@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,40 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Siddhesh Poyarekar <siddhesh@gotplt.org>
 
-[ Upstream commit 2e3df204f9af42a47823ee955c08950373417420 ]
+[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
 
-The variable _rate is by ov5640_compute_sys_clk() which returns
-zero if the PLL exceeds 1GHz.  Unfortunately, the check to see
-if the max PLL1 output is checking 'rate' and not '_rate' and
-'rate' does not ever appear to be 0.
+It was observed[1] on arm64 that __builtin_strlen led to an infinite
+loop in the get_size selftest.  This is because __builtin_strlen (and
+other builtins) may sometimes result in a call to the C library
+function.  The C library implementation of strlen uses an IFUNC
+resolver to load the most efficient strlen implementation for the
+underlying machine and hence has a PLT indirection even for static
+binaries.  Because this binary avoids the C library startup routines,
+the PLT initialization never happens and hence the program gets stuck
+in an infinite loop.
 
-This patch changes the check against the returned value of
-'_rate' to determine if the PLL1 output exceeds 1GHz.
+On x86_64 the __builtin_strlen just happens to expand inline and avoid
+the call but that is not always guaranteed.
 
-Fixes: aa2882481cad ("media: ov5640: Adjust the clock based on the expected rate")
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Further, while testing on x86_64 (Fedora 31), it was observed that the
+test also failed with a segfault inside write() because the generated
+code for the write function in glibc seems to access TLS before the
+syscall (probably due to the cancellation point check) and fails
+because TLS is not initialised.
+
+To mitigate these problems, this patch reduces the interface with the
+C library to just the syscall function.  The syscall function still
+sets errno on failure, which is undesirable but for now it only
+affects cases where syscalls fail.
+
+[1] https://bugs.linaro.org/show_bug.cgi?id=5479
+
+Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
+Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+Reviewed-by: Tim Bird <tim.bird@sony.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov5640.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 5e495c833d329..bb968e764f318 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -874,7 +874,7 @@ static unsigned long ov5640_calc_sys_clk(struct ov5640_dev *sensor,
- 			 * We have reached the maximum allowed PLL1 output,
- 			 * increase sysdiv.
- 			 */
--			if (!rate)
-+			if (!_rate)
- 				break;
+diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
+index 2ad45b9443550..2980b1a63366b 100644
+--- a/tools/testing/selftests/size/get_size.c
++++ b/tools/testing/selftests/size/get_size.c
+@@ -11,23 +11,35 @@
+  * own execution.  It also attempts to have as few dependencies
+  * on kernel features as possible.
+  *
+- * It should be statically linked, with startup libs avoided.
+- * It uses no library calls, and only the following 3 syscalls:
++ * It should be statically linked, with startup libs avoided.  It uses
++ * no library calls except the syscall() function for the following 3
++ * syscalls:
+  *   sysinfo(), write(), and _exit()
+  *
+  * For output, it avoids printf (which in some C libraries
+  * has large external dependencies) by  implementing it's own
+  * number output and print routines, and using __builtin_strlen()
++ *
++ * The test may crash if any of the above syscalls fails because in some
++ * libc implementations (e.g. the GNU C Library) errno is saved in
++ * thread-local storage, which does not get initialized due to avoiding
++ * startup libs.
+  */
  
- 			/*
+ #include <sys/sysinfo.h>
+ #include <unistd.h>
++#include <sys/syscall.h>
+ 
+ #define STDOUT_FILENO 1
+ 
+ static int print(const char *s)
+ {
+-	return write(STDOUT_FILENO, s, __builtin_strlen(s));
++	size_t len = 0;
++
++	while (s[len] != '\0')
++		len++;
++
++	return syscall(SYS_write, STDOUT_FILENO, s, len);
+ }
+ 
+ static inline char *num_to_str(unsigned long num, char *buf, int len)
+@@ -79,12 +91,12 @@ void _start(void)
+ 	print("TAP version 13\n");
+ 	print("# Testing system size.\n");
+ 
+-	ccode = sysinfo(&info);
++	ccode = syscall(SYS_sysinfo, &info);
+ 	if (ccode < 0) {
+ 		print("not ok 1");
+ 		print(test_name);
+ 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
+-		_exit(ccode);
++		syscall(SYS_exit, ccode);
+ 	}
+ 	print("ok 1");
+ 	print(test_name);
+@@ -100,5 +112,5 @@ void _start(void)
+ 	print(" ...\n");
+ 	print("1..1\n");
+ 
+-	_exit(0);
++	syscall(SYS_exit, 0);
+ }
 -- 
 2.20.1
 
