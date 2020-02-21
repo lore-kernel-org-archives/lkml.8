@@ -2,148 +2,77 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2831C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1774CC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8DE20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC28B208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgBUQeP (ORCPT
+        id S1726681AbgBUQf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:34:15 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:46488 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgBUQeO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:34:14 -0500
-Received: by mail-oi1-f194.google.com with SMTP id a22so2122755oid.13;
-        Fri, 21 Feb 2020 08:34:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q0P9tu6IOsuIOQ9cj+JFMIkV9AXW3CYPDjGH2uYPm8M=;
-        b=TQan+uI+buGQSXnVw9oHBVYIl68M0Y0nZhJSw3qYaBAcnViQ2WE+xmpF7EGWl0C5MG
-         AFAYukVTvmPds0Yt1uZHImTdyhsE57op0/EoFBu7UANTInihLVOHjJ2LuuxNDyz+Jxt5
-         7h/VB8CivGoN5BgC06wfIYUC2h3LJvDv/OxXHq4rZlUlfTTmDYkv9NBQzpq7VUdloguW
-         8eoYJEWhtm6ny7lvbKekL9xfjF4BUUP+z6C8cw/H0tD/alyL93c0X4K1e5/SHII8ppNO
-         iqn+eSP95Mm7EtABezqcGciJ5oFvwGqNYbrDzjkyPXDc7kyk+w1Xlz4yDWNfx67VQt1P
-         BXJg==
-X-Gm-Message-State: APjAAAUrHi/8Nfwh6StJyLqXLHMdvEPp2NO2ws7uODFnGje9uJdNbnzN
-        3/JwM+hRTMVwoUN/M3rvgWXyaM5ZKqkYy8A6KLg=
-X-Google-Smtp-Source: APXvYqzPNoAH+zVsto1+IiOMGfW8xsdQo0YD/gttJz8Iqi71pUo1KidDfXV90s/3JMzKKHdE/I36dl+GbJbfTmLaY4E=
-X-Received: by 2002:aca:c4d2:: with SMTP id u201mr2773907oif.54.1582302853428;
- Fri, 21 Feb 2020 08:34:13 -0800 (PST)
+        Fri, 21 Feb 2020 11:35:27 -0500
+Received: from verein.lst.de ([213.95.11.211]:56364 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726150AbgBUQf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:35:27 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 1B84A68BFE; Fri, 21 Feb 2020 17:35:24 +0100 (CET)
+Date:   Fri, 21 Feb 2020 17:35:23 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+Message-ID: <20200221163523.GA10054@lst.de>
+References: <20200220160606.53156-1-pasic@linux.ibm.com> <20200220160606.53156-3-pasic@linux.ibm.com> <20200220154904-mutt-send-email-mst@kernel.org> <20200221141230.13eebc35.pasic@linux.ibm.com> <20200221104901-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <20200218151812.7816-1-geert+renesas@glider.be>
- <20200218151812.7816-5-geert+renesas@glider.be> <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-In-Reply-To: <e2530fff-a17c-ae90-ba92-360b828582da@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Feb 2020 17:34:02 +0100
-Message-ID: <CAMuHMdUFV0nbfrpxY60av2x+UUN62wDiVLbcEG83133aqfFcUQ@mail.gmail.com>
-Subject: Re: [PATCH v5 4/5] docs: gpio: Add GPIO Aggregator documentation
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harish Jenny K N <harish_kandiga@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Alexander Graf <graf@amazon.com>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Phil Reid <preid@electromag.com.au>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        QEMU Developers <qemu-devel@nongnu.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221104901-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Fri, Feb 21, 2020 at 10:56:45AM -0500, Michael S. Tsirkin wrote:
+> > >   - DMA API is giving us addresses that are actually also physical
+> > >     addresses
+> > 
+> > In case of s390 this is given.
+> > I talked with the power people before
+> > posting this, and they ensured me they can are willing to deal with
+> > this. I was hoping to talk abut this with the AMD SEV people here (hence
+> > the cc).
+> 
+> We'd need a part of DMA API that promises this though. Platform
+> maintainers aren't going to go out of their way to do the
+> right thing just for virtio, and I can't track all arches
+> to make sure they don't violate virtio requirements.
 
-On Tue, Feb 18, 2020 at 7:30 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 2/18/20 7:18 AM, Geert Uytterhoeven wrote:
-> > Document the GPIO Aggregator, and the two typical use-cases.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> > --- /dev/null
-> > +++ b/Documentation/admin-guide/gpio/gpio-aggregator.rst
-> > @@ -0,0 +1,102 @@
-> > +.. SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +GPIO Aggregator
-> > +===============
-> > +
-> > +The GPIO Aggregator allows to aggregate GPIOs, and expose them as a new
->
-> "allows" really wants an object following the verb [although the kernel sources
-> and docs have many cases of it not having an object].  Something like
->
->                        allows {you, one, someone, users, a user} to aggregate
-
-Changing to:
-
-    provides a mechanism to aggregate GPIOs
-
-> > +gpio_chip.  This supports the following use cases.
-> > +
-> > +
-> > +Aggregating GPIOs using Sysfs
-> > +-----------------------------
-> > +
-> > +GPIO controllers are exported to userspace using /dev/gpiochip* character
-> > +devices.  Access control to these devices is provided by standard UNIX file
-> > +system permissions, on an all-or-nothing basis: either a GPIO controller is
-> > +accessible for a user, or it is not.
-> > +
-> > +The GPIO Aggregator allows access control for individual GPIOs, by aggregating
-
-Changing to:
-
-    provides access control for a set of one or more GPIOs
-
-> > +them into a new gpio_chip, which can be assigned to a group or user using
-> > +standard UNIX file ownership and permissions.  Furthermore, this simplifies and
-> > +hardens exporting GPIOs to a virtual machine, as the VM can just grab the full
-> > +GPIO controller, and no longer needs to care about which GPIOs to grab and
-> > +which not, reducing the attack surface.
-
-> > +Generic GPIO Driver
-> > +-------------------
-> > +
-> > +The GPIO Aggregator can also be used as a generic driver for a simple
-> > +GPIO-operated device described in DT, without a dedicated in-kernel driver.
-> > +This is useful in industrial control, and is not unlike e.g. spidev, which
-> > +allows to communicate with an SPI device from userspace.
->
->    allows {choose an object} to communicate
-
-Changing to:
-
-    allows the user to communicate
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+There is no way the DMA API is going to promise that you.  All kinds
+of platforms have offsets to DMA, and they are communicated through
+interfaces like the device tree or ACPI.  But the good thing is that
+your hypervisors is in control of that, neither the DMA API nor
+virtio have any business to interfer with that.  In fact for harware
+virtio device we might need such an offset for them to work on
+lots of SOCs.
