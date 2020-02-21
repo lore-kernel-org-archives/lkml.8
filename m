@@ -2,172 +2,72 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB55C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC97C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A08024653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="J0V7r8oR"
+	by mail.kernel.org (Postfix) with ESMTP id BD573207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgBUJ5O (ORCPT
+        id S1728477AbgBUJ6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:57:14 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:29217 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728075AbgBUJ5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1582279033; x=1613815033;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=e4QQfY4+kh4/5c0M4CxyYRoWkV+vVtnx2zkOMh3EI50=;
-  b=J0V7r8oR8DBAQaA/gEkA8Je/2uO2BUpmeSLGdbGRvBAATFl0w31DCNOh
-   K86R2EMvh/qlZ8YmWz2zSjy1cH2WZvOI6YNfBLbm5fnwo3APE/Vfo+Ejx
-   8WndnwCC0i27T8AWHMY8kmSe1bu5BfgW+5JS/yKwo/AVrCJV7KFxF3VAT
-   Q=;
-IronPort-SDR: HuQ9cSFHeNKk7dCI11cVnq1lonnC570Q+PYoUh6O5AdSOjhkfL8Kl6ED/gcJt/hqZdNNUI/R86
- RKhbBseMiGsg==
-X-IronPort-AV: E=Sophos;i="5.70,467,1574121600"; 
-   d="scan'208";a="19014899"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-87a10be6.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 21 Feb 2020 09:56:59 +0000
-Received: from EX13MTAUWA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2c-87a10be6.us-west-2.amazon.com (Postfix) with ESMTPS id 14380A21DF;
-        Fri, 21 Feb 2020 09:56:57 +0000 (UTC)
-Received: from EX13D07UWA004.ant.amazon.com (10.43.160.32) by
- EX13MTAUWA001.ant.amazon.com (10.43.160.118) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 21 Feb 2020 09:56:56 +0000
-Received: from EX13D32EUC003.ant.amazon.com (10.43.164.24) by
- EX13D07UWA004.ant.amazon.com (10.43.160.32) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 21 Feb 2020 09:56:55 +0000
-Received: from EX13D32EUC003.ant.amazon.com ([10.43.164.24]) by
- EX13D32EUC003.ant.amazon.com ([10.43.164.24]) with mapi id 15.00.1367.000;
- Fri, 21 Feb 2020 09:56:54 +0000
-From:   "Durrant, Paul" <pdurrant@amazon.co.uk>
-To:     =?utf-8?B?Um9nZXIgUGF1IE1vbm7DqQ==?= <roger.pau@citrix.com>
-CC:     "Agarwal, Anchal" <anchalag@amazon.com>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>, "hpa@zytor.com" <hpa@zytor.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>
-Subject: RE: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks for
- PM suspend and hibernation
-Thread-Topic: [Xen-devel] [RFC PATCH v3 06/12] xen-blkfront: add callbacks for
- PM suspend and hibernation
-Thread-Index: AQHV446AUecZloiSDUiowKQxKdi9t6gfLFuAgADaIoCAAKqFgIACJekAgAD0YQCAAAHOgIAAdTyAgAAHU1CAAAptgIAAAgSwgAETnYCAAAiO8A==
-Date:   Fri, 21 Feb 2020 09:56:54 +0000
-Message-ID: <5ddf980a3fba4fb39571184e688cefc5@EX13D32EUC003.ant.amazon.com>
-References: <20200217100509.GE4679@Air-de-Roger>
- <20200217230553.GA8100@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200218091611.GN4679@Air-de-Roger>
- <20200219180424.GA17584@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200220083904.GI4679@Air-de-Roger>
- <f986b845491b47cc8469d88e2e65e2a7@EX13D32EUC003.ant.amazon.com>
- <20200220154507.GO4679@Air-de-Roger>
- <c9662397256a4568a5cc7d70a84940e5@EX13D32EUC003.ant.amazon.com>
- <20200220164839.GR4679@Air-de-Roger>
- <e42fa35800f04b6f953e4af87f2c1a02@EX13D32EUC003.ant.amazon.com>
- <20200221092219.GU4679@Air-de-Roger>
-In-Reply-To: <20200221092219.GU4679@Air-de-Roger>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.171]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 04:58:03 -0500
+Received: from foss.arm.com ([217.140.110.172]:35472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726989AbgBUJ6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 04:58:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C165F31B;
+        Fri, 21 Feb 2020 01:58:02 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F23693F68F;
+        Fri, 21 Feb 2020 01:58:00 -0800 (PST)
+Subject: Re: [PATCH v2 3/5] sched/pelt: Remove unused runnable load average
+To:     Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com, rostedt@goodmis.org,
+        bsegall@google.com, mgorman@suse.de, linux-kernel@vger.kernel.org
+Cc:     pauld@redhat.com, parth@linux.ibm.com, valentin.schneider@arm.com,
+        hdanton@sina.com
+References: <20200214152729.6059-1-vincent.guittot@linaro.org>
+ <20200214152729.6059-4-vincent.guittot@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <e115029f-d577-ba31-e8b1-bb0d1a3f0f80@arm.com>
+Date:   Fri, 21 Feb 2020 10:57:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200214152729.6059-4-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2dlciBQYXUgTW9ubsOpIDxy
-b2dlci5wYXVAY2l0cml4LmNvbT4NCj4gU2VudDogMjEgRmVicnVhcnkgMjAyMCAwOToyMg0KPiBU
-bzogRHVycmFudCwgUGF1bCA8cGR1cnJhbnRAYW1hem9uLmNvLnVrPg0KPiBDYzogQWdhcndhbCwg
-QW5jaGFsIDxhbmNoYWxhZ0BhbWF6b24uY29tPjsgVmFsZW50aW4sIEVkdWFyZG8NCj4gPGVkdXZh
-bEBhbWF6b24uY29tPjsgbGVuLmJyb3duQGludGVsLmNvbTsgcGV0ZXJ6QGluZnJhZGVhZC5vcmc7
-DQo+IGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZzsgeDg2QGtlcm5lbC5vcmc7IGxpbnV4LW1tQGt2
-YWNrLm9yZzsNCj4gcGF2ZWxAdWN3LmN6OyBocGFAenl0b3IuY29tOyB0Z2x4QGxpbnV0cm9uaXgu
-ZGU7IHNzdGFiZWxsaW5pQGtlcm5lbC5vcmc7DQo+IGZsbGluZGVuQGFtYW96bi5jb207IEthbWF0
-YSwgTXVuZWhpc2EgPGthbWF0YW1AYW1hem9uLmNvbT47DQo+IG1pbmdvQHJlZGhhdC5jb207IHhl
-bi1kZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZzsgU2luZ2gsIEJhbGJpcg0KPiA8c2JsYmlyQGFt
-YXpvbi5jb20+OyBheGJvZUBrZXJuZWwuZGs7IGtvbnJhZC53aWxrQG9yYWNsZS5jb207DQo+IGJw
-QGFsaWVuOC5kZTsgYm9yaXMub3N0cm92c2t5QG9yYWNsZS5jb207IGpncm9zc0BzdXNlLmNvbTsN
-Cj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOyByandA
-cmp3eXNvY2tpLm5ldDsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgdmt1em5ldHNA
-cmVkaGF0LmNvbTsgZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsNCj4gV29vZGhvdXNlLCBEYXZpZCA8ZHdt
-d0BhbWF6b24uY28udWs+DQo+IFN1YmplY3Q6IFJlOiBbWGVuLWRldmVsXSBbUkZDIFBBVENIIHYz
-IDA2LzEyXSB4ZW4tYmxrZnJvbnQ6IGFkZCBjYWxsYmFja3MNCj4gZm9yIFBNIHN1c3BlbmQgYW5k
-IGhpYmVybmF0aW9uDQo+IA0KPiBPbiBUaHUsIEZlYiAyMCwgMjAyMCBhdCAwNTowMTo1MlBNICsw
-MDAwLCBEdXJyYW50LCBQYXVsIHdyb3RlOg0KPiA+ID4gPiBIb3BlZnVsbHkgd2hhdCBJIHNhaWQg
-YWJvdmUgaWxsdXN0cmF0ZXMgd2h5IGl0IG1heSBub3QgYmUgMTAwJQ0KPiBjb21tb24uDQo+ID4g
-Pg0KPiA+ID4gWWVzLCB0aGF0J3MgZmluZS4gSSBkb24ndCBleHBlY3QgaXQgdG8gYmUgMTAwJSBj
-b21tb24gKGFzIEkgZ3Vlc3MNCj4gPiA+IHRoYXQgdGhlIGhvb2tzIHdpbGwgaGF2ZSBkaWZmZXJl
-bnQgcHJvdG90eXBlcyksIGJ1dCBJIGV4cGVjdA0KPiA+ID4gdGhhdCByb3V0aW5lcyBjYW4gYmUg
-c2hhcmVkLCBhbmQgdGhhdCB0aGUgYXBwcm9hY2ggdGFrZW4gY2FuIGJlIHRoZQ0KPiA+ID4gc2Ft
-ZS4NCj4gPiA+DQo+ID4gPiBGb3IgZXhhbXBsZSBvbmUgbmVjZXNzYXJ5IGRpZmZlcmVuY2Ugd2ls
-bCBiZSB0aGF0IHhlbmJ1cyBpbml0aWF0ZWQNCj4gPiA+IHN1c3BlbmQgd29uJ3QgY2xvc2UgdGhl
-IFBWIGNvbm5lY3Rpb24sIGluIGNhc2Ugc3VzcGVuc2lvbiBmYWlscy4gT24gUE0NCj4gPiA+IHN1
-c3BlbmQgeW91IHNlZW0gdG8gYWx3YXlzIGNsb3NlIHRoZSBjb25uZWN0aW9uIGJlZm9yZWhhbmQs
-IHNvIHlvdQ0KPiA+ID4gd2lsbCBhbHdheXMgaGF2ZSB0byByZS1uZWdvdGlhdGUgb24gcmVzdW1l
-IGV2ZW4gaWYgc3VzcGVuc2lvbiBmYWlsZWQuDQo+ID4gPg0KPiA+ID4gV2hhdCBJJ20gbW9zdGx5
-IHdvcnJpZWQgYWJvdXQgaXMgdGhlIGRpZmZlcmVudCBhcHByb2FjaCB0byByaW5nDQo+ID4gPiBk
-cmFpbmluZy4gSWU6IGVpdGhlciB4ZW5idXMgaXMgY2hhbmdlZCB0byBmcmVlemUgdGhlIHF1ZXVl
-cyBhbmQgZHJhaW4NCj4gPiA+IHRoZSBzaGFyZWQgcmluZ3MsIG9yIFBNIHVzZXMgdGhlIGFscmVh
-ZHkgZXhpc3RpbmcgbG9naWMgb2Ygbm90DQo+ID4gPiBmbHVzaGluZyB0aGUgcmluZ3MgYW4gcmUt
-aXNzdWluZyBpbi1mbGlnaHQgcmVxdWVzdHMgb24gcmVzdW1lLg0KPiA+ID4NCj4gPg0KPiA+IFll
-cywgdGhhdCdzIG5lZWRzIGNvbnNpZGVyYXRpb24uIEkgZG9u4oCZdCB0aGluayB0aGUgc2FtZSBz
-ZW1hbnRpYyBjYW4gYmUNCj4gc3VpdGFibGUgZm9yIGJvdGguIEUuZy4gaW4gYSB4ZW4tc3VzcGVu
-ZCB3ZSBuZWVkIHRvIGZyZWV6ZSB3aXRoIGFzIGxpdHRsZQ0KPiBwcm9jZXNzaW5nIGFzIHBvc3Np
-YmxlIHRvIGF2b2lkIGRpcnR5aW5nIFJBTSBsYXRlIGluIHRoZSBtaWdyYXRpb24gY3ljbGUsDQo+
-IGFuZCB3ZSBrbm93IHRoYXQgaW4tZmxpZ2h0IGRhdGEgY2FuIHdhaXQuIEJ1dCBpbiBhIHRyYW5z
-aXRpb24gdG8gUzQgd2UNCj4gbmVlZCB0byBtYWtlIHN1cmUgdGhhdCBhdCBsZWFzdCBhbGwgdGhl
-IGluLWZsaWdodCBibGtpZiByZXF1ZXN0cyBnZXQNCj4gY29tcGxldGVkLCBzaW5jZSB0aGV5IHBy
-b2JhYmx5IGNvbnRhaW4gYml0cyBvZiB0aGUgZ3Vlc3QncyBtZW1vcnkgaW1hZ2UNCj4gYW5kIHRo
-YXQncyBub3QgZ29pbmcgdG8gZ2V0IHNhdmVkIGFueSBvdGhlciB3YXkuDQo+IA0KPiBUaGFua3Ms
-IHRoYXQgbWFrZXMgc2Vuc2UgYW5kIHNvbWV0aGluZyBhbG9uZyB0aGlzIGxpbmVzIHNob3VsZCBi
-ZQ0KPiBhZGRlZCB0byB0aGUgY29tbWl0IG1lc3NhZ2UgSU1PLg0KPiANCj4gV29uZGVyaW5nIGFi
-b3V0IFM0LCBzaG91bGRuJ3Qgd2UgZXhwZWN0IHRoZSBxdWV1ZXMgdG8gYWxyZWFkeSBiZQ0KPiBl
-bXB0eT8gQXMgYW55IHN1YnN5c3RlbSB0aGF0IHdhbnRlZCB0byBzdG9yZSBzb21ldGhpbmcgdG8g
-ZGlzayBzaG91bGQNCj4gbWFrZSBzdXJlIHJlcXVlc3RzIGhhdmUgYmVlbiBzdWNjZXNzZnVsbHkg
-Y29tcGxldGVkIGJlZm9yZQ0KPiBzdXNwZW5kaW5nLg0KDQpXaGF0IGFib3V0IHdyaXRpbmcgdGhl
-IHN1c3BlbmQgaW1hZ2UgaXRzZWxmPyBOb3JtYWwgZmlsZXN5c3RlbSBJL08gd2lsbCBoYXZlIGJl
-ZW4gZmx1c2hlZCBvZiBjb3Vyc2UsIGJ1dCB3aGF0ZXZlciB2ZXN0aWdpYWwga2VybmVsIGFjdHVh
-bGx5IHdyaXRlcyBvdXQgdGhlIGhpYmVybmF0aW9uIGZpbGUgbWF5IHdlbGwgZXhwZWN0IGEgZmlu
-YWwgRDAtPkQzIG9uIHRoZSBzdG9yYWdlIGRldmljZSB0byBjYXVzZSBhIGZsdXNoLiBBZ2Fpbiwg
-SSBkb24ndCBrbm93IHRoZSBzcGVjaWZpY3MgZm9yIExpbnV4IChhbmQgV2luZG93cyBhY3R1YWxs
-eSB1c2VzIGFuIGluY2FybmF0aW9uIG9mIHRoZSBjcmFzaCBrZXJuZWwgdG8gZG8gdGhlIGpvYiwg
-d2hpY2ggYnJpbmdzIHdpdGggaXQgYSB3aG9sZSBvdGhlciBzZXQgb2YgY29tcGxleGl0eSBhcyBm
-YXIgYXMgUFYgZHJpdmVycyBnbykuDQoNCiAgUGF1bA0KDQo+IA0KPiBUaGFua3MsIFJvZ2VyLg0K
+On 14/02/2020 16:27, Vincent Guittot wrote:
+
+[...]
+
+fdef CONFIG_SMP
+> @@ -2940,15 +2913,12 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>  		u32 divider = LOAD_AVG_MAX - 1024 + se->avg.period_contrib;
+>  
+>  		se->avg.load_avg = div_u64(se_weight(se) * se->avg.load_sum, divider);
+> -		se->avg.runnable_load_avg =
+> -			div_u64(se_runnable(se) * se->avg.runnable_load_sum, divider);
+>  	} while (0);
+>  #endif
+>  
+>  	enqueue_load_avg(cfs_rq, se);
+>  	if (se->on_rq) {
+>  		account_entity_enqueue(cfs_rq, se);
+> -		enqueue_runnable_load_avg(cfs_rq, se);
+>  	}
+
+Nit pick: No curly brackets needed anymore.
+
+[...]
