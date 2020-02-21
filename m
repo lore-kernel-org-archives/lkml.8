@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F75EC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1723AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4C782073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C7720801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272128;
-	bh=WR9Oaq7I2qiVdzYcJS2BkJV1ZDAdhC9BSSC5ISkdASE=;
+	s=default; t=1582272131;
+	bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1l+RvoOWQm0vJqWJFoCkH77VudG1ybSd1nTCS7onIWFjUdoCT50T/OHCOTdfcGd8H
-	 9q4l8iPPO4tnIYJGYv78WfqIq5UxsImfw92qqPzYtnVfGNTz/B1jIMgpRwcxocslhz
-	 zakfcUxS7rtncgbuvFBaAVghOMLhJxA0uJ5gNcSM=
+	b=iYU3kvcL2QoY1RGKKUDEwh11IxZpV/q8Qvd1w62B2m2EUXxOqBNVu/4c5ZWXFlBja
+	 I7wz+pudKuDpOrTMG33Qu70fIs6pWpIUqVtqS0MkfXDzt0DFSOmsqEIJK/ntNvL3Cg
+	 lqASYlfpB1A48F/dYpHd3AJHz3JU1SZNgCGPPLjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbgBUICH (ORCPT
+        id S1731314AbgBUICK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:02:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:02:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731289AbgBUICD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:02:03 -0500
+        id S1731003AbgBUICF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:02:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB663206ED;
-        Fri, 21 Feb 2020 08:02:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7899D20801;
+        Fri, 21 Feb 2020 08:02:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272122;
-        bh=WR9Oaq7I2qiVdzYcJS2BkJV1ZDAdhC9BSSC5ISkdASE=;
+        s=default; t=1582272124;
+        bh=7+wHRW/OFH6ZSv2n77YPfpKBJ3mqYTMJDhk1Z2zwpLs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmXz8KLV1dkLp1F2uIo1kHUIekh1m0xIK9G5+wkF+bsB4mmcctwDew4gupnsmovdN
-         +34NsMQYKetsA3ik1gvZlN3/FX7Fg6DvVwP9brjeqtaHeynPKqQBN5PjC5zi8/Qdpv
-         aHurTk3z0DsP6DUOTKuxYK4bJ1eDQ59zS+8TWlFU=
+        b=RoJStspxSGy1JsfjyM9S6ai2wXVhTA92RQyVg6nZBmwI9E/ixqiaBJeAKc7KpRkKK
+         uvFEcZIsEYHVQ9KIqjn/tm7dvWm4wCd0sfe2ZdIrsy5bZ6h4e2o864iu8FrWu1zN2O
+         VvKQHQ06NCsfr3RwpsJEzePxhldMjxIYrHlV1LHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikola Cornij <nikola.cornij@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 024/344] drm/amd/display: Map ODM memory correctly when doing ODM combine
-Date:   Fri, 21 Feb 2020 08:37:03 +0100
-Message-Id: <20200221072351.380418585@linuxfoundation.org>
+        stable@vger.kernel.org, Zahari Petkov <zahari@balena.io>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 025/344] leds: pca963x: Fix open-drain initialization
+Date:   Fri, 21 Feb 2020 08:37:04 +0100
+Message-Id: <20200221072351.466635614@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,87 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikola Cornij <nikola.cornij@amd.com>
+From: Zahari Petkov <zahari@balena.io>
 
-[ Upstream commit ec5b356c58941bb8930858155d9ce14ceb3d30a0 ]
+[ Upstream commit 697529091ac7a0a90ca349b914bb30641c13c753 ]
 
-[why]
-Up to 4 ODM memory pieces are required per ODM combine and cannot
-overlap, i.e. each ODM "session" has to use its own memory pieces.
-The ODM-memory mapping is currently broken for generic case.
+Before commit bb29b9cccd95 ("leds: pca963x: Add bindings to invert
+polarity") Mode register 2 was initialized directly with either 0x01
+or 0x05 for open-drain or totem pole (push-pull) configuration.
 
-The maximum number of memory pieces is ASIC-dependent, but it's always
-big enough to satisfy maximum number of ODM combines. Memory pieces
-are mapped as a bit-map, i.e. one memory piece corresponds to one bit.
-The OPTC doing ODM needs to select memory pieces by setting the
-corresponding bits, making sure there's no overlap with other OPTC
-instances that might be doing ODM.
+Afterwards, MODE2 initialization started using bitwise operations on
+top of the default MODE2 register value (0x05). Using bitwise OR for
+setting OUTDRV with 0x01 and 0x05 does not produce correct results.
+When open-drain is used, instead of setting OUTDRV to 0, the driver
+keeps it as 1:
 
-The current mapping works only for OPTC instance indexes smaller than
-3. For instance indexes 3 and up it practically maps no ODM memory,
-causing black, gray or white screen in display configs that include
-ODM on OPTC instance 3 or up.
+Open-drain: 0x05 | 0x01 -> 0x05 (0b101 - incorrect)
+Totem pole: 0x05 | 0x05 -> 0x05 (0b101 - correct but still wrong)
 
-[how]
-Statically map two unique ODM memory pieces for each OPTC instance
-and piece them together when programming ODM combine mode.
+Now OUTDRV setting uses correct bitwise operations for initialization:
 
-Signed-off-by: Nikola Cornij <nikola.cornij@amd.com>
-Reviewed-by: Jun Lei <Jun.Lei@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Open-drain: 0x05 & ~0x04 -> 0x01 (0b001 - correct)
+Totem pole: 0x05 | 0x04 -> 0x05 (0b101 - correct)
+
+Additional MODE2 register definitions are introduced now as well.
+
+Fixes: bb29b9cccd95 ("leds: pca963x: Add bindings to invert polarity")
+Signed-off-by: Zahari Petkov <zahari@balena.io>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../gpu/drm/amd/display/dc/dcn20/dcn20_optc.c    | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/leds/leds-pca963x.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-index dda90995ba933..8d5cfd5357c75 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_optc.c
-@@ -233,12 +233,13 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
- 		struct dc_crtc_timing *timing)
- {
- 	struct optc *optc1 = DCN10TG_FROM_TG(optc);
--	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192 */
- 	int mpcc_hactive = (timing->h_addressable + timing->h_border_left + timing->h_border_right)
- 			/ opp_cnt;
--	int memory_mask = mpcc_hactive <= 2560 ? 0x3 : 0xf;
-+	uint32_t memory_mask;
- 	uint32_t data_fmt = 0;
+diff --git a/drivers/leds/leds-pca963x.c b/drivers/leds/leds-pca963x.c
+index 4afc317901a89..66cdc003b8f42 100644
+--- a/drivers/leds/leds-pca963x.c
++++ b/drivers/leds/leds-pca963x.c
+@@ -40,6 +40,8 @@
+ #define PCA963X_LED_PWM		0x2	/* Controlled through PWM */
+ #define PCA963X_LED_GRP_PWM	0x3	/* Controlled through PWM/GRPPWM */
  
-+	ASSERT(opp_cnt == 2);
-+
- 	/* TODO: In pseudocode but does not affect maximus, delete comment if we dont need on asic
- 	 * REG_SET(OTG_GLOBAL_CONTROL2, 0, GLOBAL_UPDATE_LOCK_EN, 1);
- 	 * Program OTG register MASTER_UPDATE_LOCK_DB_X/Y to the position before DP frame start
-@@ -246,9 +247,17 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
- 	 *		MASTER_UPDATE_LOCK_DB_X, 160,
- 	 *		MASTER_UPDATE_LOCK_DB_Y, 240);
- 	 */
-+
-+	/* 2 pieces of memory required for up to 5120 displays, 4 for up to 8192,
-+	 * however, for ODM combine we can simplify by always using 4.
-+	 * To make sure there's no overlap, each instance "reserves" 2 memories and
-+	 * they are uniquely combined here.
-+	 */
-+	memory_mask = 0x3 << (opp_id[0] * 2) | 0x3 << (opp_id[1] * 2);
-+
- 	if (REG(OPTC_MEMORY_CONFIG))
- 		REG_SET(OPTC_MEMORY_CONFIG, 0,
--			OPTC_MEM_SEL, memory_mask << (optc->inst * 4));
-+			OPTC_MEM_SEL, memory_mask);
++#define PCA963X_MODE2_OUTDRV	0x04	/* Open-drain or totem pole */
++#define PCA963X_MODE2_INVRT	0x10	/* Normal or inverted direction */
+ #define PCA963X_MODE2_DMBLNK	0x20	/* Enable blinking */
  
- 	if (timing->pixel_encoding == PIXEL_ENCODING_YCBCR422)
- 		data_fmt = 1;
-@@ -257,7 +266,6 @@ void optc2_set_odm_combine(struct timing_generator *optc, int *opp_id, int opp_c
- 
- 	REG_UPDATE(OPTC_DATA_FORMAT_CONTROL, OPTC_DATA_FORMAT, data_fmt);
- 
--	ASSERT(opp_cnt == 2);
- 	REG_SET_3(OPTC_DATA_SOURCE_SELECT, 0,
- 			OPTC_NUM_OF_INPUT_SEGMENT, 1,
- 			OPTC_SEG0_SRC_SEL, opp_id[0],
+ #define PCA963X_MODE1		0x00
+@@ -438,12 +440,12 @@ static int pca963x_probe(struct i2c_client *client,
+ 						    PCA963X_MODE2);
+ 		/* Configure output: open-drain or totem pole (push-pull) */
+ 		if (pdata->outdrv == PCA963X_OPEN_DRAIN)
+-			mode2 |= 0x01;
++			mode2 &= ~PCA963X_MODE2_OUTDRV;
+ 		else
+-			mode2 |= 0x05;
++			mode2 |= PCA963X_MODE2_OUTDRV;
+ 		/* Configure direction: normal or inverted */
+ 		if (pdata->dir == PCA963X_INVERTED)
+-			mode2 |= 0x10;
++			mode2 |= PCA963X_MODE2_INVRT;
+ 		i2c_smbus_write_byte_data(pca963x->chip->client, PCA963X_MODE2,
+ 					  mode2);
+ 	}
 -- 
 2.20.1
 
