@@ -2,119 +2,133 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F7C35644
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B4FC35644
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F84120722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:13:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="XOuYvc4t"
+	by mail.kernel.org (Postfix) with ESMTP id 0448024650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 10:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgBUKNS (ORCPT
+        id S1728652AbgBUKOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 05:13:18 -0500
-Received: from mail-eopbgr1410112.outbound.protection.outlook.com ([40.107.141.112]:44244
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727150AbgBUKNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 05:13:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fkIO6MIE7bz0XkV+Km8/+m0/kbzUuGIz4E5YpGW7nfxWhX3oftInf0ipPGhqt+o2k7s0NtstxqM6eGJCOoHg5eyuUHwMV28Dm2SLfwNC5g0KipmjOGrwsQVHNhxOAsnUD7BbJVBiZ8uN4vbQXjG2Kk3+kf4tHYxykHelsXb/kpLzmRZJf7MKCw7ALcuQYPEGoZokw+1q3stKcPiR3csuWsfNPfEUl7ncxxijLVDXXGfHJQ7yaRP9h5Q+ySjXBOqyrfk7wFsDCh4c8vtSgn+jqvzr3yuhf33+P1MPYeA40Jr8yItA5WXk64C7SYs3/v7fsNJ1X4E4YD9shS443q/C1w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lWyOzyK9USraGk+KqxItGj4sL/sIeI3C9dVxC9LKKHY=;
- b=e4iLaeR2wTPASwqcGu0usilVhjG7A8KdsgKQNcTusUh0seJ0lPdxGIT+aPmLyaWBOq7FBAWVAmv6jtQpJETn2zRWUmcvT/V7QLPtWcd9tH0rYN5zfQSiqBTzkU3cIu0l4nxJirtpx1uNa5NAQRdE3MN+GMjc0bKWIu5aZsydtSENZEXoVcGieoIpLf+haP5XJ8YDEC7b6UDj005Xj7rWprHrB64nNnwzsFdpb245knqIWQL1Do7c7Y7pC6rH5a2+PDfbHESKP5A13SZ3dZB7Oh2D5LyImL6FaoUrVds4dhCWeYyjElzLr4H4o03W1sZBVMRgipn5aUE9Gj0/R//cQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lWyOzyK9USraGk+KqxItGj4sL/sIeI3C9dVxC9LKKHY=;
- b=XOuYvc4tAqSpF4TUwMRTZQ1h03iNRIWZGYR/6DfBfncLepSmWFEx5OcYo3I582s24HYWapd8X4XL121xpiD2VQUjC1RzDYQBlDlWZetmcSJUesgegPHrODtbGfJYL9CKLKwMHAxEa//efUUZchrxkqYdxWIjb1+WhSAr8EWmyOk=
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
- TYAPR01MB2669.jpnprd01.prod.outlook.com (20.177.102.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.22; Fri, 21 Feb 2020 10:13:15 +0000
-Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
- ([fe80::1045:4879:77ed:8a70%7]) with mapi id 15.20.2729.033; Fri, 21 Feb 2020
- 10:13:15 +0000
-From:   Chris Paterson <Chris.Paterson2@renesas.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 4.19 000/191] 4.19.106-stable review
-Thread-Topic: [PATCH 4.19 000/191] 4.19.106-stable review
-Thread-Index: AQHV6I9JzS0hdk3yWkilhKK8EfzpqKglbVjQ
-Date:   Fri, 21 Feb 2020 10:13:15 +0000
-Message-ID: <TYAPR01MB2285808EB540D90E812B514FB7120@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <20200221072250.732482588@linuxfoundation.org>
-In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chris.Paterson2@renesas.com; 
-x-originating-ip: [176.27.142.199]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4f92d8eb-98a2-43bd-2134-08d7b6b6aa54
-x-ms-traffictypediagnostic: TYAPR01MB2669:
-x-microsoft-antispam-prvs: <TYAPR01MB2669DA50015AA1F025CB331FB7120@TYAPR01MB2669.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0320B28BE1
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(199004)(189003)(8676002)(26005)(66946007)(66446008)(52536014)(66556008)(76116006)(64756008)(66476007)(9686003)(966005)(8936002)(81166006)(81156014)(5660300002)(186003)(33656002)(110136005)(7696005)(498600001)(2906002)(4326008)(86362001)(55016002)(71200400001)(4744005)(7416002)(54906003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB2669;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Yk16zoauf77nqPU7FDnfuTqzspG8Lm56z2/ojk9irOdB5kndJBB98pkx3+A5hdoAOVihsrYywQRhSWF9ZR34Xxm4RHxsoWAhY3kKI1XlXLQOMiOJlMX+EJl3UZ3Vn7SDtkFGhi6OYEr2W79n42yQON8qMU5JD/AtQlbOvpwfVoSpeqhJhRSKKCDDRWtpgHQwLhVt30zeJMo971+W157lVxk91ys3QMmKMO8Zy5timli6/euvt6NfuG31K+0JguXZ7P0zF0L6zT+fPjcJjpP9nFznODM2E7m8s2FxHcnNbKFa0y8lIesGLFGVowzcpiMSHFTjJeaNO2fvoMpAnMV1ejXp0AJJS9Mdn2FPdWNVbfbRdoUt0JN1KulZZvszUooDSvxOyWbUR4pkveLxLvL5uaUTEbMrbNMOUXkTsc8VkJz/+QksFBebYkgvgVdhTH5A9ibCwfsWRoehmsn6ciV2vx1+yrozckYJ4Bk0HiN8UMzhmCx+czvJ0j7GZsFwRJSxvV1pVhp7v2ZAedijm3WQxA==
-x-ms-exchange-antispam-messagedata: BgnPpS4sUOpHM3L2sMdK8EI2/ktFZ65cXEJCjMBe3bE2PR+ltBJ2tXSmS62EK/1YJ5cASM3DpdsvOuaVPWQtJ0Oz+M6XEO/GaCfA+/2mpRZ7QnjulA3r0recakCLZT4dw+fKZsANDn+UYKSaxwnZZw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 21 Feb 2020 05:14:01 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38911 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbgBUKOA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 05:14:00 -0500
+Received: by mail-oi1-f196.google.com with SMTP id r137so1078645oie.5;
+        Fri, 21 Feb 2020 02:13:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IZocKraqIUJZ35HEbFK9lQ7GF0tGKhiv0gssLBu8UR0=;
+        b=f0k3A63MKX/hki582NVNwPguuS2v7MpC3FCzOcSLgfoMib+o125m+oqmZ8luRMi8wj
+         qWQAIIeJvSa1AD3ifJ6wyZv7bhei3nAenf3eia1YLIEL8zz9ABGuSnZVUgrS4pG1flN8
+         oNtrT2L6V5GEoybEaJEjewyDun+1O8LmHvrJVk0dj5uZuNqCHcwYnzi6GTLbAXkRxjIg
+         TrWZnHSKqP5ApK6+ui0GKKZTiG+CmLrv8ooQIhEZiDLgg991FFUIbiCsuM8lA6rWhu89
+         hNwnJih1b1XC+5bPU6yS2ls1Gu+9A3H2hIFcjpW+4q0u2e0u0SpxC3mqiDgDVCN+maYG
+         qWqw==
+X-Gm-Message-State: APjAAAU034Fpx1GadIVJRFVnst7WGBObHsCJ+S7UTUTv4G7u8vpQDapz
+        o2Gdc40l2WyUVy4Gk9LTos8OIWU4u6hJceXn7JxOg8o/
+X-Google-Smtp-Source: APXvYqy8ctrMdeADSQHxwR9cRnUsbwVavhFTJOapRHb2udJuBdEfDAXWSOiRn1HggkpBEl/pTw91mKIAc1cco0Xe+B8=
+X-Received: by 2002:aca:1a06:: with SMTP id a6mr1284059oia.148.1582280039481;
+ Fri, 21 Feb 2020 02:13:59 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f92d8eb-98a2-43bd-2134-08d7b6b6aa54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2020 10:13:15.2358
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4mSR6DeLGWwcA34r2rqCFUCU9kUkA66SkCBXr1giRehT2q4q99MMkifmK7fZSoovHBSC1162+3PCKgxzPCDILYlPM6dHSlnqynDnCcvkNy8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB2669
+References: <20200220172403.26062-1-wsa+renesas@sang-engineering.com> <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20200220172403.26062-8-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Feb 2020 11:13:48 +0100
+Message-ID: <CAMuHMdV-dfjukuSKiFg4vb4Ntn+XWU0XwHPxyoaWs1vtQVg4cw@mail.gmail.com>
+Subject: Re: [RFC PATCH 7/7] i2c: core: hand over reserved devices when
+ requesting ancillary addresses
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-i3c@lists.infradead.org,
+        Kieran Bingham <kieran@ksquared.org.uk>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Luca Ceresoli <luca@lucaceresoli.net>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gR3JlZywNCg0KPiBGcm9tOiBzdGFibGUtb3duZXJAdmdlci5rZXJuZWwub3JnIDxzdGFi
-bGUtb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbg0KPiBCZWhhbGYgT2YgR3JlZyBLcm9haC1IYXJ0
-bWFuDQo+IFNlbnQ6IDIxIEZlYnJ1YXJ5IDIwMjAgMDc6NDANCj4gDQo+IFRoaXMgaXMgdGhlIHN0
-YXJ0IG9mIHRoZSBzdGFibGUgcmV2aWV3IGN5Y2xlIGZvciB0aGUgNC4xOS4xMDYgcmVsZWFzZS4N
-Cj4gVGhlcmUgYXJlIDE5MSBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBhbGwgd2lsbCBiZSBwb3N0
-ZWQgYXMgYSByZXNwb25zZQ0KPiB0byB0aGlzIG9uZS4gIElmIGFueW9uZSBoYXMgYW55IGlzc3Vl
-cyB3aXRoIHRoZXNlIGJlaW5nIGFwcGxpZWQsIHBsZWFzZQ0KPiBsZXQgbWUga25vdy4NCj4gDQo+
-IFJlc3BvbnNlcyBzaG91bGQgYmUgbWFkZSBieSBTdW4sIDIzIEZlYiAyMDIwIDA3OjE5OjQ5ICsw
-MDAwLg0KPiBBbnl0aGluZyByZWNlaXZlZCBhZnRlciB0aGF0IHRpbWUgbWlnaHQgYmUgdG9vIGxh
-dGUuDQoNCk5vIGlzc3VlcyBzZWVuIGZvciBDSVAgY29uZmlncyBmb3IgTGludXggNC4xOS4xMDYt
-cmMxICgyN2FjOTg0NDkwMTcpLg0KDQpCdWlsZC90ZXN0IGxvZ3M6IGh0dHBzOi8vZ2l0bGFiLmNv
-bS9jaXAtcHJvamVjdC9jaXAtdGVzdGluZy9saW51eC1zdGFibGUtcmMtY2kvcGlwZWxpbmVzLzEx
-OTg1NjUyNw0KUGlwZWxpbmU6IGh0dHBzOi8vZ2l0bGFiLmNvbS9jaXAtcHJvamVjdC9jaXAtdGVz
-dGluZy9saW51eC1jaXAtcGlwZWxpbmVzLy0vYmxvYi9iYTMyMzM0Yi90cmVlcy9saW51eC00LjE5
-LnkueW1sDQoNCktpbmQgcmVnYXJkcywgQ2hyaXMNCg==
+Hi Wolfram,
+
+On Thu, Feb 20, 2020 at 6:26 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> With i2c_new_ancillary_address, we can check if the intended driver is
+> requesting a reserved address. Update the function to do these checks.
+> If the check passes, the "reserved" device will become a regular "dummy"
+> device.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Thanks for your patch!
+
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -975,6 +975,8 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
+>                                                 u16 default_addr)
+>  {
+>         struct device_node *np = client->dev.of_node;
+> +       struct device *reserved_dev, *adapter_dev = &client->adapter->dev;
+> +       struct i2c_client *reserved_client;
+>         u32 addr = default_addr;
+>         int i;
+>
+> @@ -984,7 +986,21 @@ struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
+>                         of_property_read_u32_index(np, "reg", i, &addr);
+>         }
+>
+> -       dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
+> +       dev_info(adapter_dev, "Address for %s : 0x%x\n", name, addr);
+> +
+> +       /* No need to scan muxes, siblings must sit on the same adapter */
+> +       reserved_dev = device_find_child(adapter_dev, &addr, __i2c_check_addr_busy);
+> +       reserved_client = i2c_verify_client(reserved_dev);
+> +
+> +       if (reserved_client) {
+> +               if (reserved_client->dev.of_node != np ||
+> +                   strcmp(reserved_client->name, I2C_RESERVED_DRV_NAME) != 0)
+> +                       return ERR_PTR(-EBUSY);
+
+Missing put_device(reserved_dev).
+
+> +
+> +               strlcpy(reserved_client->name, I2C_DUMMY_DRV_NAME, sizeof(client->name));
+> +               return reserved_client;
+> +       }
+
+else put_device(reserved_dev)
+
+(perhaps i2c_verify_client() checking dev was not such a great idea, as
+ callers need to act on dev && !verified anyway?)
+
+> +
+>         return i2c_new_dummy_device(client->adapter, addr);
+>  }
+>  EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
