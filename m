@@ -2,166 +2,132 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740F7C11D28
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAACC11D28
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA622071E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E1720722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 03:58:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oCi6E75t"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="HLO+Fko5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgBUDum (ORCPT
+        id S1729701AbgBUD6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 22:50:42 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16239 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729546AbgBUDul (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:50:41 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e4f53820000>; Thu, 20 Feb 2020 19:50:26 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Feb 2020 19:50:40 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Feb 2020 19:50:40 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 21 Feb
- 2020 03:50:40 +0000
-Subject: Re: [PATCH v7 11/24] mm: Move end_index check out of readahead loop
-To:     Matthew Wilcox <willy@infradead.org>,
-        <linux-fsdevel@vger.kernel.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        <linux-ext4@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        <cluster-devel@redhat.com>, <ocfs2-devel@oss.oracle.com>,
-        <linux-xfs@vger.kernel.org>
-References: <20200219210103.32400-1-willy@infradead.org>
- <20200219210103.32400-12-willy@infradead.org>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
-Date:   Thu, 20 Feb 2020 19:50:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 20 Feb 2020 22:58:45 -0500
+Received: from mout.gmx.net ([212.227.15.18]:48053 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729546AbgBUD6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 22:58:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1582257517;
+        bh=0IkpDyUNGf8U+GU3Ugfd91n4u77CmkJzZe7yNXdKVlU=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=HLO+Fko5bBmMEX7nbVRH0agKHmoLAF1X2Vqw7tpPPFlw8OFmWkqquZqYyedDMEQ4W
+         fSh0EwwHzVni1fYuhoQ3bNi+H1dlKXAB2nlTbD6esZcP9TiCY0Wl2Iao2jmQhntPea
+         zPxypL8FvBaauMOKyptEuFoRNmo1o5YveqAYAdho=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from LT02.fritz.box ([84.119.33.160]) by mail.gmx.com (mrgmx005
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1M7K3i-1j64rB0uwm-007jai; Fri, 21
+ Feb 2020 04:58:37 +0100
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] efi/libstub: add libstub/mem.c to documentation tree
+Date:   Fri, 21 Feb 2020 04:58:32 +0100
+Message-Id: <20200221035832.144960-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200219210103.32400-12-willy@infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1582257026; bh=tk14qMbQgXhzPHJvBXnjmNLCT+UAZJLvtKqXUx6iDgc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=oCi6E75tCEIn+Ss5EINKDG6zfT/kx05YcufkjkALI/HJzrO/QVaq0+TS7NDuf6dDG
-         3KJUx4kwLE0srSqcQb7ewkvP+MwPzM4WzzCl9NCAzj0iF7hBEKUI95wSnO5C+VYO8N
-         PBHbwat8gbjdVT/oYADJD3U9KNdo/nsrMbDFNPGW66rGomZN4nRYnGdVhk/MG8IqMF
-         qrYsOtbFP9PSayIDVKbUcW4lGHlBbQ/hIiN9gWwSGKey8zhdYc7nXNitnRnVppR8hu
-         ugDl43YDuHfHI/5RPeAj7AoT/5aAHccP0NTXqSNiQSxuAloaSAzsHHurCa1NnOWQDL
-         yLHsrmucQ0bFA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:B5zMMZzZDcEChRX8xM7s90huWv02KHcZWjl4Nr7fYZneXQWEuX4
+ c2qPlVGV1QyT+9iDia7ameJq2AxWyJw9RHxL5ph3jN8triHQJfV+OGbMKZup0c6eUqUjavD
+ CniqN+Yb5+OmaQL+/f02tBxa9aoyXkuYeZ0t638XcHCRubvz2a7gF9vYiFNIbx/16UBkgoA
+ kBHrIVA+/bI7dTV7Per4w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vRkxicBFAd0=:kvE8new1AGXfkHQG1SvdVZ
+ lorl0TLijFGxw9LSDT2FyptnFv/2sMKD32TX8ru7K9SY2VOaDmp23ry/8wsZom3o4qn/YNHHP
+ egD65Ax/I0UrsArm4Uwf1csmKtEfsuU4fVsrxFblJ4vPNn186iHGzjdxVSeRKM1mW1q+4oYqD
+ D6VmWx/NXVpxInY5eFcZ2vR0Eq+ZBUHcBPtdw2L2V5DZ6gFvckQ+f0as/6wZiFGoXuHQOk3d0
+ n/ze9ivqyOH3XmaEQBPb26kqY26PWQLmrvFiEHKbXl8EJQM70EByW46mbgFb1q6xGfhvF1VAj
+ 6AgYznyy2vLUG8ltV98KNQ0ocu9Cb7n6QXMNEv1e1WO69eMQ41lbREcVnW+uKuFWD/7YNziGz
+ kvinH+UqTN5qlRRKjO1SdJY3BtFi+/zmAaMiyGoAVJklC5gycX4mNkK4+ksx7L1LiPMXK5wW/
+ Tv0xz0TKvWUCSF7AoASZBzGbs0EVW/73zz0ICk+FXR946CFSFzfxEX+bFkJE0AsJ3PRbmzX6N
+ ZUTAhhud0qljw9iyQtUKpJ64F1JM8hhXFtt5BbiULgQpcPc/L6yPMxunpRrroxkOQpkIjpOzZ
+ fT4qNUB75zepatAGtym2mmMB8/vTBQVQp+CkhPw9vGEaZApXiK+I0QlEio/KZlNb57JHSx8pS
+ Xq8FCB6jhG0cmqgSrnxGbq0u8WhK+xMC9n5xb6WZQMUZcBQonWHFx40J7BNfA1/fyBxY77OCI
+ tZIIrZptF766V/TxNT+L1P0M/iSrA+vaFNZcEyance5tT/1+TfCfAQD+YTza+mcHw1lKCiUwM
+ 9XkkpFqbmwb/VV8gXh34s0xrgl/4CI/EYA/wWlTaz+hSP8uHyI9t6D7X7VrZywfss+L6+28oJ
+ FtXYA0wW0jb0QIiH/JXV2CVYF3KSo0Xk4WAgO84MloV9JxAgrv5vIFxSmAVTjkfvwneJZ4dMl
+ G+sCTKMnP1i4+/A2Fin7DJ7fF5oTZcpI0mJjrArsQXBBl89Ib4ylEwmaN5dx5+9t41WBrVUXx
+ 6VM21J374Yzq7QIB1LtYNxWrHHF+9A+h4McuHlAq2VZn4cB3jQHduzOCtb/ZhhJ1V0O8Oup16
+ xQLCiDnLqSOunvrD5WVKwEbUgQwUe9LTRmEEgHPBpEgakMNlUCr9CAt/C4z8C24zyCDVcqxxx
+ vglkbWUA3tBpAavZoPu9Nm31zzR5iRQUyAT8eevpLmTUowzkSQC4ccpFJ5jOEWQUyoQR1MwAc
+ QKwyAzDMb/j0qvI4H
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/19/20 1:00 PM, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> By reducing nr_to_read, we can eliminate this check from inside the loop.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  mm/readahead.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/mm/readahead.c b/mm/readahead.c
-> index 07cdfbf00f4b..ace611f4bf05 100644
-> --- a/mm/readahead.c
-> +++ b/mm/readahead.c
-> @@ -166,8 +166,6 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		unsigned long lookahead_size)
->  {
->  	struct inode *inode = mapping->host;
-> -	struct page *page;
-> -	unsigned long end_index;	/* The last page we want to read */
->  	LIST_HEAD(page_pool);
->  	loff_t isize = i_size_read(inode);
->  	gfp_t gfp_mask = readahead_gfp_mask(mapping);
-> @@ -179,22 +177,27 @@ void __do_page_cache_readahead(struct address_space *mapping,
->  		._nr_pages = 0,
->  	};
->  	unsigned long i;
-> +	pgoff_t end_index;	/* The last page we want to read */
->  
->  	if (isize == 0)
->  		return;
->  
-> -	end_index = ((isize - 1) >> PAGE_SHIFT);
-> +	end_index = (isize - 1) >> PAGE_SHIFT;
-> +	if (index > end_index)
-> +		return;
-> +	if (index + nr_to_read < index)
-> +		nr_to_read = ULONG_MAX - index + 1;
-> +	if (index + nr_to_read >= end_index)
-> +		nr_to_read = end_index - index + 1;
+Let the description of the efi/libstub/mem.c functions appear in the Kerne=
+l
+API documentation in chapter
 
+    The Linux driver implementer=E2=80=99s API guide
+        Linux Firmware API
+            UEFI Support
+                UEFI stub library functions
 
-This tiny patch made me pause, because I wasn't sure at first of the exact
-intent of the lines above. Once I worked it out, it seemed like it might
-be helpful (or overkill??) to add a few hints for the reader, especially since
-there are no hints in the function's (minimal) documentation header. What
-do you think of this?
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+The corresponding source patches are still in efi/next.
 
-	/*
-	 * If we can't read *any* pages without going past the inodes's isize
-	 * limit, give up entirely:
-	 */
-	if (index > end_index)
-		return;
+https://lkml.org/lkml/2020/2/20/115
+https://lkml.org/lkml/2020/2/18/37
+https://lkml.org/lkml/2020/2/16/154
+=2D--
+ Documentation/driver-api/firmware/efi/index.rst | 11 +++++++++++
+ Documentation/driver-api/firmware/index.rst     |  1 +
+ 2 files changed, 12 insertions(+)
+ create mode 100644 Documentation/driver-api/firmware/efi/index.rst
 
-	/* Cap nr_to_read, in order to avoid overflowing the ULONG type: */
-	if (index + nr_to_read < index)
-		nr_to_read = ULONG_MAX - index + 1;
+diff --git a/Documentation/driver-api/firmware/efi/index.rst b/Documentati=
+on/driver-api/firmware/efi/index.rst
+new file mode 100644
+index 000000000000..4fe8abba9fc6
+=2D-- /dev/null
++++ b/Documentation/driver-api/firmware/efi/index.rst
+@@ -0,0 +1,11 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++UEFI Support
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++UEFI stub library functions
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
++
++.. kernel-doc:: drivers/firmware/efi/libstub/mem.c
++   :internal:
+diff --git a/Documentation/driver-api/firmware/index.rst b/Documentation/d=
+river-api/firmware/index.rst
+index 29da39ec4b8a..57415d657173 100644
+=2D-- a/Documentation/driver-api/firmware/index.rst
++++ b/Documentation/driver-api/firmware/index.rst
+@@ -6,6 +6,7 @@ Linux Firmware API
 
-	/* Cap nr_to_read, to avoid reading past the inode's isize limit: */
-	if (index + nr_to_read >= end_index)
-		nr_to_read = end_index - index + 1;
+    introduction
+    core
++   efi/index
+    request_firmware
+    other_interfaces
 
+=2D-
+2.25.0
 
-Either way, it looks corrected written to me, so:
-
-    Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
->  
->  	/*
->  	 * Preallocate as many pages as we will need.
->  	 */
->  	for (i = 0; i < nr_to_read; i++) {
-> -		if (index + i > end_index)
-> -			break;
-> +		struct page *page = xa_load(&mapping->i_pages, index + i);
->  
->  		BUG_ON(index + i != rac._index + rac._nr_pages);
->  
-> -		page = xa_load(&mapping->i_pages, index + i);
->  		if (page && !xa_is_value(page)) {
->  			/*
->  			 * Page already present?  Kick off the current batch of
-> 
