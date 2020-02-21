@@ -2,82 +2,100 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B692C35647
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D406C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77FC20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4220B222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:06:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fd40N3pz"
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="sUGL2Eyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgBUOFk (ORCPT
+        id S1728777AbgBUOGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:05:40 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58564 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728392AbgBUOFk (ORCPT
+        Fri, 21 Feb 2020 09:06:02 -0500
+Received: from www.linux-watchdog.org ([185.87.125.42]:53430 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727836AbgBUOGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:05:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Aazh1RhyvXOGHb09Cwj8jGdosZoKwm2UiHbqdSBwAKU=; b=fd40N3pzJ32R/3wJ8wHUq3Y7EM
-        KQ6wR5fs2s/OA2v9a9kNtotfVWhmqzTk+67KJ/h3z+Ukt8DpONxv2WYuE6oAFdYak/IUrF8MFp6/1
-        YBCSHbvW1n0Jk7of9hgA7CJ5twxkEo7J37RWBRg0CmubObOcAhIH85ia+DFeVXywQE3exP/k2ziil
-        SCAXMgRVYFzeP7jWnyhAtC9IqN9zdkkHY76rDhLgp+PKgblbKX0FD18DQL6SfTKdap1hnlPgplMYM
-        mHJQtystu0p5dieKYBbg0z6hv13kOk5kp7olmhjNAaQPD08+GkvKWIu/vhmtGDjFjVnHhZ93KeuGl
-        vjY3ABcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58vb-0006qW-3a; Fri, 21 Feb 2020 14:05:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5CCE430220B;
-        Fri, 21 Feb 2020 15:03:19 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 821E329B59038; Fri, 21 Feb 2020 15:05:12 +0100 (CET)
-Date:   Fri, 21 Feb 2020 15:05:12 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Fri, 21 Feb 2020 09:06:01 -0500
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id 0A8AB409DB; Fri, 21 Feb 2020 14:15:49 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org 0A8AB409DB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1582290950;
+        bh=FcZySqhyMAh9lhbUP3TGUj05n+xie8vP4kFrH3asFSs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sUGL2Eyw7ZvNBTVhZpFSwCmasMbiGhBCLkENp72UmNpG7U38DgtL+ZVa3+xsYsUB2
+         8eIpN6bRGM9nQDW3NE0ChuikpJzG40yDEuupKZVswdaDO1fgt2gvDSFx18yGp2wRXm
+         ZyqepsqmARYTa+SbmFhZv1/tKOvcmAfxPP9rxp+I=
+Date:   Fri, 21 Feb 2020 14:15:49 +0100
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sebastian Sewior <bigeasy@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Will Drewry <wad@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [RFC patch 09/19] bpf: Use BPF_PROG_RUN_PIN_ON_CPU() at simple
- call sites.
-Message-ID: <20200221140512.GG18400@hirez.programming.kicks-ass.net>
-References: <20200214133917.304937432@linutronix.de>
- <20200214161503.804093748@linutronix.de>
- <87a75ftkwu.fsf@linux.intel.com>
- <875zg3q7cn.fsf@nanos.tec.linutronix.de>
- <202002201616.21FA55E@keescook>
- <87lfownip5.fsf@nanos.tec.linutronix.de>
+        Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [GIT PULL REQUEST] watchdog - v5.6 Fixes
+Message-ID: <20200221131549.GA13194@www.linux-watchdog.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87lfownip5.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 03:00:54PM +0100, Thomas Gleixner wrote:
-> Of course not. If we'd run the same thread on multiple CPUs in parallel
-> the ordering of your BPF programs would be the least of your worries.
+Hi Linus,
 
-Been there, done that. It goes sideways *REALLY* fast :-)
+Please pull the watchdog fixes for the v5.6 release cycle.
+
+This series contains:
+* mtk_wdt.c: RESET_CONTROLLER build error fix
+* da9062: fix power management ops
+* da9062: do not ping the hw during stop()
+* da9062: Add dependency on I2C
+
+The output from git request-pull:
+----------------------------------------------------------------
+The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
+
+  Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
+
+are available in the git repository at:
+
+  git://www.linux-watchdog.org/linux-watchdog.git tags/linux-watchdog-5.6-rc3
+
+for you to fetch changes up to 44144c809e39d64ff9931c7e8956c42b2baa89e6:
+
+  watchdog: da9062: Add dependency on I2C (2020-02-17 13:19:08 +0100)
+
+----------------------------------------------------------------
+linux-watchdog 5.6-rc3 tag
+
+----------------------------------------------------------------
+Guenter Roeck (1):
+      watchdog: da9062: Add dependency on I2C
+
+Marco Felsch (2):
+      watchdog: da9062: do not ping the hw during stop()
+      watchdog: da9062: fix power management ops
+
+Randy Dunlap (1):
+      watchdog: fix mtk_wdt.c RESET_CONTROLLER build error
+
+ drivers/watchdog/Kconfig      |  2 ++
+ drivers/watchdog/da9062_wdt.c | 19 ++++++++++++-------
+ 2 files changed, 14 insertions(+), 7 deletions(-)
+----------------------------------------------------------------
+
+Kind regards,
+Wim.
+
