@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F80C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 558DDC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5271D2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2331220801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271988;
-	bh=4jo9KR+p8Pvoztd6WQ9nIREIO+yassnhD6D/AMCTV7Q=;
+	s=default; t=1582271993;
+	bh=zgVsgEnnXQ7LrYe7AE7KvemzilGGhK+OX2oKdOz0gEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c6GefZIezixBjotB8eqz5f+3ZKdhlT30gIWuaCN/Jmh62hu/WHb6WAMawc7JQDDNs
-	 KEPM1wY848yJd+Tapo5VerORIAFZY56Gjrebv6X/Yv/zrpsa1tEMpLhMv5LDEp+aCm
-	 bj0flxMKgK9DdpWHHHk9X19iaH/HIfpWBMHXgYKQ=
+	b=C06RuEbcJtcuXhfnEYhq3ciZ9txFdPo9rfUV69Q7+T/KkneG6y5lfBRztv2zUIJ7i
+	 VYWHlnh1P+fKBubCBD5yO1HmMJnXOaetQ2rpGUlSqcsLnn9cUe4btBsvjdg9OAj5//
+	 ezff8eFfxx+5v99E8YPEesLEBkXNWLc35k1Yys08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbgBUH7q (ORCPT
+        id S1730834AbgBUH7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:59:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59874 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:59:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730955AbgBUH7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:59:44 -0500
+        id S1730626AbgBUH7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:59:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6F4222C4;
-        Fri, 21 Feb 2020 07:59:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73ED8222C4;
+        Fri, 21 Feb 2020 07:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271983;
-        bh=4jo9KR+p8Pvoztd6WQ9nIREIO+yassnhD6D/AMCTV7Q=;
+        s=default; t=1582271988;
+        bh=zgVsgEnnXQ7LrYe7AE7KvemzilGGhK+OX2oKdOz0gEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12GUs59v3xp3TWjI1oYUTeYZYf3BrqMmRR60i4EEAvaexIYIImQxfYCrhFebk8Yej
-         RIPgC9sOL+LH6ZsXwyoR6MSTEFUT/BBi5AssxjlbxpsONmf7hVH+LUYLT1zq64SY3b
-         sowCRyQs/JVTrEd5iYJ+yJBJdZ5Xy2cOohgiFLnA=
+        b=GqgQVrmz3eoARox4mz8EHj7VU/QqnhXEepWBykuZJKYjQsMl7b74SWpVNS2HKpwyX
+         quqb39HeX1eztOnOzIoMWoUC/4Kd+UT4/8qOpVH9qYhjLpEMlDOZT901yQcGcddnzH
+         +ZDuipg4VJUvVZXtFUwY/X1DFVUZxLkHBwBE6qRA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 355/399] ceph: check availability of mds cluster on mount after wait timeout
-Date:   Fri, 21 Feb 2020 08:41:20 +0100
-Message-Id: <20200221072435.393145622@linuxfoundation.org>
+Subject: [PATCH 5.5 374/399] bcache: explicity type cast in bset_bkey_last()
+Date:   Fri, 21 Feb 2020 08:41:39 +0100
+Message-Id: <20200221072436.745148874@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,57 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 97820058fb2831a4b203981fa2566ceaaa396103 ]
+[ Upstream commit 7c02b0055f774ed9afb6e1c7724f33bf148ffdc0 ]
 
-If all the MDS daemons are down for some reason, then the first mount
-attempt will fail with EIO after the mount request times out.  A mount
-attempt will also fail with EIO if all of the MDS's are laggy.
+In bset.h, macro bset_bkey_last() is defined as,
+    bkey_idx((struct bkey *) (i)->d, (i)->keys)
 
-This patch changes the code to return -EHOSTUNREACH in these situations
-and adds a pr_info error message to help the admin determine the cause.
+Parameter i can be variable type of data structure, the macro always
+works once the type of struct i has member 'd' and 'keys'.
 
-URL: https://tracker.ceph.com/issues/4386
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+bset_bkey_last() is also used in macro csum_set() to calculate the
+checksum of a on-disk data structure. When csum_set() is used to
+calculate checksum of on-disk bcache super block, the parameter 'i'
+data type is struct cache_sb_disk. Inside struct cache_sb_disk (also in
+struct cache_sb) the member keys is __u16 type. But bkey_idx() expects
+unsigned int (a 32bit width), so there is problem when sending
+parameters via stack to call bkey_idx().
+
+Sparse tool from Intel 0day kbuild system reports this incompatible
+problem. bkey_idx() is part of user space API, so the simplest fix is
+to cast the (i)->keys to unsigned int type in macro bset_bkey_last().
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 +--
- fs/ceph/super.c      | 5 +++++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/md/bcache/bset.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 145d46ba25ae2..816d49aed96bc 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -2558,8 +2558,7 @@ static void __do_request(struct ceph_mds_client *mdsc,
- 		if (!(mdsc->fsc->mount_options->flags &
- 		      CEPH_MOUNT_OPT_MOUNTWAIT) &&
- 		    !ceph_mdsmap_is_cluster_available(mdsc->mdsmap)) {
--			err = -ENOENT;
--			pr_info("probably no mds server is up\n");
-+			err = -EHOSTUNREACH;
- 			goto finish;
- 		}
- 	}
-diff --git a/fs/ceph/super.c b/fs/ceph/super.c
-index 9b5536451528b..5a708ac9a54c3 100644
---- a/fs/ceph/super.c
-+++ b/fs/ceph/super.c
-@@ -1066,6 +1066,11 @@ static int ceph_get_tree(struct fs_context *fc)
- 	return 0;
+diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+index c71365e7c1fac..a50dcfda656f5 100644
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -397,7 +397,8 @@ void bch_btree_keys_stats(struct btree_keys *b, struct bset_stats *state);
  
- out_splat:
-+	if (!ceph_mdsmap_is_cluster_available(fsc->mdsc->mdsmap)) {
-+		pr_info("No mds server is up or the cluster is laggy\n");
-+		err = -EHOSTUNREACH;
-+	}
-+
- 	ceph_mdsc_close_sessions(fsc->mdsc);
- 	deactivate_locked_super(sb);
- 	goto out_final;
+ /* Bkey utility code */
+ 
+-#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
++#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
++					 (unsigned int)(i)->keys)
+ 
+ static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned int idx)
+ {
 -- 
 2.20.1
 
