@@ -2,100 +2,142 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575C9C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF6F9C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F3AE207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7366207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 22:11:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYQ6WQet"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="NKbG4bYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgBUWKq (ORCPT
+        id S1728723AbgBUWK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 17:10:46 -0500
-Received: from mail-pf1-f169.google.com ([209.85.210.169]:44196 "EHLO
-        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726725AbgBUWKq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 17:10:46 -0500
-Received: by mail-pf1-f169.google.com with SMTP id y5so1967230pfb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 14:10:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7vKq81cD/QN29xYHn6q6pJWs0yVIhFoN9EiGZra3Ihw=;
-        b=XYQ6WQet1tacXR1VZfT7hTWyzI8rHIS8e6kJpBHmweWfwysSxzwwZv1FlW0mZAAA+S
-         Q8RKr3SEZ0MdVEiqis1bDZKsAlRSEYCjfHJ+yc8t8exywStwLFFFveNLM7mvEB2wtWmm
-         Ohdqgk5YfUSCkVSUnlm4LlNyKpU7bzOvffvFQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7vKq81cD/QN29xYHn6q6pJWs0yVIhFoN9EiGZra3Ihw=;
-        b=XzRYi7F6YaQJ5st8CC6HMzMQoLvnNQjbcxH2QIcQFEWMKY8J6li9/fJDdf8cOmuuPM
-         0WYL2eC30xvZuwGSrA227Q6wYSpYVuXOuDq7wVOdScwbiie78xNwlYLcDqNA3HoDztCq
-         iEoXFcmFANRwjdRe6Fqp3L9ZLdINxsqTGKic/XgSa83MftGAkBMMCJRIjHigtnUHe9J0
-         iAFmHuzBhFZarXsDaud8vRN6x9Zf54dUVCbiSICT8oVoHSmMUSQFbPwwk6+Xn+gfjPQw
-         nvOAhBavRL6dynhY/77sR9g4Qrue5jpaeLjMNKoGUBzbeKnqFICePAm+EvV+OuanWNqN
-         oFTw==
-X-Gm-Message-State: APjAAAUEAle8Ap1IjlU82XL8fM/Wr7a/r6SDRuG9/n+3zZE+jbYjIetr
-        F2E2Ro0azsIqU5MMUYs+1xZcOw==
-X-Google-Smtp-Source: APXvYqw1OjW+NvIwbFd4uPw3koB9DcsYvuSNcix0/b9rql+L6DY8NMjXU0Ynp257vp3bAlge4aSuxQ==
-X-Received: by 2002:aa7:9f47:: with SMTP id h7mr37799596pfr.13.1582323045355;
-        Fri, 21 Feb 2020 14:10:45 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b25sm3816338pfo.38.2020.02.21.14.10.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 14:10:43 -0800 (PST)
-Date:   Fri, 21 Feb 2020 14:10:42 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
+        Fri, 21 Feb 2020 17:10:59 -0500
+Received: from mx1.riseup.net ([198.252.153.129]:45096 "EHLO mx1.riseup.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726725AbgBUWK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 17:10:58 -0500
+Received: from capuchin.riseup.net (capuchin-pn.riseup.net [10.0.1.176])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (Client CN "*.riseup.net", Issuer "Sectigo RSA Domain Validation Secure Server CA" (not verified))
+        by mx1.riseup.net (Postfix) with ESMTPS id 48PQdY5BjczFbgR;
+        Fri, 21 Feb 2020 14:10:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+        t=1582323057; bh=xDOULZRpbeY7KpvwA2rDOTseM/Ct7CH+yfVqbVPQOHw=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NKbG4bYO6gvtg2/bKnLk14xCYOMnhVr53RVGZaHsJRKqOMLZYPIJHRemEdQBpTEC0
+         YOffv3QOfRBikqTDT1mzdN90/tOwANwm8zeAYggJCnV4yrebrZf61fLzv5ph30uc11
+         EDyn92fFGa9PAAdGClcARYwpQgaQ6FREOZAenCBY=
+X-Riseup-User-ID: 40F904F66C7E578679E7FE1A4FD79D280A24236C0758237B6635A1E2D09F48C0
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+         by capuchin.riseup.net (Postfix) with ESMTPSA id 48PQdY15XFz8v7L;
+        Fri, 21 Feb 2020 14:10:57 -0800 (PST)
+From:   Francisco Jerez <currojerez@riseup.net>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [Regression] Docs build broken by commit 51e46c7a4007
-Message-ID: <202002211406.69D0BAFD@keescook>
-References: <CAJZ5v0he=WQ6159fyaYYffdi66y596rVo7z1yLyGFcH45PXNUg@mail.gmail.com>
- <202002201158.2911CE2388@keescook>
- <CAJZ5v0hkKUi7FUOneEy2nO-=RM8ZbcoG1uHRYNWzrjONEhKYxQ@mail.gmail.com>
- <202002201448.62894C394@keescook>
- <CAJZ5v0gu_2wkncukKK7u340KLzSCVL_7F9cJTz3wVhxfogR8NQ@mail.gmail.com>
- <20200221014841.3137229d@lwn.net>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        "Pandruvada\, Srinivas" <srinivas.pandruvada@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 00/28] PM: QoS: Get rid of unuseful code and rework CPU latency QoS interface
+In-Reply-To: <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
+References: <1654227.8mz0SueHsU@kreacher> <87wo8rjsa4.fsf@riseup.net> <CAJZ5v0hAn0V-QhebFt=vqKK6gBLxjTq7SNOWOStt7huCXMSH7g@mail.gmail.com> <CAJZ5v0hrOma52rocMsitvYUK6WxHAa0702_8XJn1UJZVyhz=rQ@mail.gmail.com> <877e0qj4bm.fsf@riseup.net> <CAJZ5v0hH1XiphdakYFPmHLL+hFKw2U3YNU9HSRxsdRUV6ZtM5g@mail.gmail.com>
+Date:   Fri, 21 Feb 2020 14:10:54 -0800
+Message-ID: <87ftf3fv69.fsf@riseup.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221014841.3137229d@lwn.net>
+Content-Type: multipart/signed; boundary="==-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 01:48:41AM -0700, Jonathan Corbet wrote:
-> On Fri, 21 Feb 2020 09:40:01 +0100
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> 
-> > 1.6.5 (I realize that it is older than recommended, but it had been
-> > working fine before 5.5-rc1 :-)).
-> 
-> We still intend to support back to 1.4; this version should work.
-> 
-> > I've tried that too, but most often I do something like "make
-> > O=../build/somewhere/ htmldocs".
-> > 
-> > But I can do "make O=../build/somewhere/ -j 2 htmldocs" too just fine. :-)
-> 
-> I suspect that the O= plays into this somehow; that's not something I do
-> in my own testing.  I'll try to take a look at this, but I'm on the road
-> and somewhat distracted at the moment...
+--==-=-=
+Content-Type: multipart/mixed; boundary="=-=-="
 
-Ah! Yes, I've not used O= before. I bet it's something weird between the
-parallelism detection of a pre-1.7 version and the O=. I'll see if I can
-find the problem...
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
--- 
-Kees Cook
+"Rafael J. Wysocki" <rafael@kernel.org> writes:
+
+> On Thu, Feb 13, 2020 at 9:09 AM Francisco Jerez <currojerez@riseup.net> wrote:
+>>
+>> "Rafael J. Wysocki" <rafael@kernel.org> writes:
+>>
+>> > On Thu, Feb 13, 2020 at 1:16 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>> >>
+>> >> On Thu, Feb 13, 2020 at 12:31 AM Francisco Jerez <currojerez@riseup.net> wrote:
+>> >> >
+>
+> [cut]
+>
+>> >
+>> > And BTW, posting patches as RFC is fine even if they have not been
+>> > tested.  At least you let people know that you work on something this
+>> > way, so if they work on changes in the same area, they may take that
+>> > into consideration.
+>> >
+>>
+>> Sure, that was going to be the first RFC.
+>>
+>> > Also if there are objections to your proposal, you may save quite a
+>> > bit of time by sending it early.
+>> >
+>> > It is unfortunate that this series has clashed with the changes that
+>> > you were about to propose, but in this particular case in my view it
+>> > is better to clean up things and start over.
+>> >
+>>
+>> Luckily it doesn't clash with the second RFC I was meaning to send,
+>> maybe we should just skip the first?
+>
+> Yes, please.
+>
+>> Or maybe it's valuable as a curiosity anyway?
+>
+> No, let's just focus on the latest one.
+>
+> Thanks!
+
+We don't seem to have reached much of an agreement on the general
+direction of RFC2, so I can't really get started with it.  Here is RFC1
+for the record:
+
+https://github.com/curro/linux/commits/intel_pstate-lp-hwp-v10.8-alt
+
+Specifically the following patch conflicts with this series:
+
+https://github.com/curro/linux/commit/9a16f35531bbb76d38493da892ece088e31dc2e0
+
+Series improves performance-per-watt of GfxBench gl_4 (AKA Car Chase) by
+over 15% on my system with the branch above, actual FPS "only" improves
+about 5.9% on ICL laptop due to it being very lightly TDP-bound with its
+rather huge TDP.  The performance of almost every graphics benchmark
+I've tried improves significantly with it (a number of SynMark
+test-cases are improved by around 40% in perf-per-watt, Egypt
+perf-per-watt improves by about 25%).
+
+Hopefully we can come up with some alternative plan of action.
+
+--=-=-=--
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEAREIAB0WIQST8OekYz69PM20/4aDmTidfVK/WwUCXlBVbgAKCRCDmTidfVK/
+W/gtAP0dDbIUxAKRzrls42EXSlpM90oykm1O5NuaXw5FQsrp6wD7BqAQtSgtC7kt
+xSSD+vYRPoTK1cLrAHb6gTD2l3BeQRQ=
+=U3Wm
+-----END PGP SIGNATURE-----
+--==-=-=--
