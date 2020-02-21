@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF10DC35643
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45550C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C312465D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077702073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272399;
-	bh=8uG1pKmllG6vODb9BHuyO83kQ55D5RpViPviNkzTLOs=;
+	s=default; t=1582272406;
+	bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rEBnWp/7tvuyD2nKobnIMH32Vk+YdCyjTVnMT0WQfqAHnfpr0vzTXaopjH367Egyn
-	 nMiWx0dLUbu6XDUTEKV1jwfjGmpzFmXcRbt8//FnocJDyucdHd0T/nyLNAp/7GTDXq
-	 YUDLzLyKvttAo3eD1ODjtP/VcwJwsLtzdH3+/t/4=
+	b=h6RF4tKcn8sX2m2WAjszCldoSfm52dPjCZKlzV5WgqFjm2bdk/eeLoBjaexgzR9gr
+	 NAt/XKZwG8dF1zohibSrC7CKOp5D1ZiDt1pgT1R+0XbxxE4qF+zROKBHtrnidvy52k
+	 XsXSj/nISP0+EaF0W1c8IIw5kzJCK6rdEBNUWGpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbgBUIGi (ORCPT
+        id S1731987AbgBUIGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:06:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:06:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731946AbgBUIG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:06:27 -0500
+        id S1731974AbgBUIGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:06:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54E0D24670;
-        Fri, 21 Feb 2020 08:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10B9620801;
+        Fri, 21 Feb 2020 08:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272386;
-        bh=8uG1pKmllG6vODb9BHuyO83kQ55D5RpViPviNkzTLOs=;
+        s=default; t=1582272399;
+        bh=+6OD4s2vRRb+ORzvSH/0sh+5jFUR8ccoPu4YOS3Y5Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QpFuzaIBAXs0TcQaSzz0S8Hdl80HGMKyIks8PktFetxSFzWnYNDjEHr3pZNXDTjs8
-         P+tlft6YtvSe7sTkyfmDekiKCAYVpuCbdt+KNF4j3N6s2EAFZInxGyWQrdcJ+s0eO6
-         e9foMSkkLAMlNQVBX0EVpUJn9B3FI8brh+f7cZF8=
+        b=gUqOSJIrL1b/ivRPSHEP2AXeXxkJS049JW/EY6RSGecI/QAcwxWENybsEIAKE6nGU
+         hC+2AGshJizmooAjdCh2JwUIRmE0RnfwlpQiqhVjIp24ZiGKqJlUoe1NIs8ZRXM2BJ
+         gvfhntJoKy49a9Q0MVBkPbyH/37hNCdCmCSx8dzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        John Hurley <john.hurley@netronome.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 123/344] Revert "nfp: abm: fix memory leak in nfp_abm_u32_knode_replace"
-Date:   Fri, 21 Feb 2020 08:38:42 +0100
-Message-Id: <20200221072400.039652706@linuxfoundation.org>
+Subject: [PATCH 5.4 128/344] samples/bpf: Set -fno-stack-protector when building BPF programs
+Date:   Fri, 21 Feb 2020 08:38:47 +0100
+Message-Id: <20200221072400.485232607@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,72 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit 1d1997db870f4058676439ef7014390ba9e24eb2 ]
+[ Upstream commit 450278977acbf494a20367c22fbb38729772d1fc ]
 
-This reverts commit 78beef629fd9 ("nfp: abm: fix memory leak in
-nfp_abm_u32_knode_replace").
+It seems Clang can in some cases turn on stack protection by default, which
+doesn't work with BPF. This was reported once before[0], but it seems the
+flag to explicitly turn off the stack protector wasn't added to the
+Makefile, so do that now.
 
-The quoted commit does not fix anything and resulted in a bogus
-CVE-2019-19076.
+The symptom of this is compile errors like the following:
 
-If match is NULL then it is known there is no matching entry in
-list, hence, calling nfp_abm_u32_knode_delete() is pointless.
+error: <unknown>:0:0: in function bpf_prog1 i32 (%struct.__sk_buff*): A call to built-in function '__stack_chk_fail' is not supported.
 
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: John Hurley <john.hurley@netronome.com>
+[0] https://www.spinics.net/lists/netdev/msg556400.html
+
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191216103819.359535-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/netronome/nfp/abm/cls.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ samples/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/abm/cls.c b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-index 9f8a1f69c0c4c..23ebddfb95325 100644
---- a/drivers/net/ethernet/netronome/nfp/abm/cls.c
-+++ b/drivers/net/ethernet/netronome/nfp/abm/cls.c
-@@ -176,10 +176,8 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
- 	u8 mask, val;
- 	int err;
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index e7ad48c605e0f..6d1df7117e117 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -219,6 +219,7 @@ BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
+ 			  readelf -S ./llvm_btf_verify.o | grep BTF; \
+ 			  /bin/rm -f ./llvm_btf_verify.o)
  
--	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack)) {
--		err = -EOPNOTSUPP;
-+	if (!nfp_abm_u32_check_knode(alink->abm, knode, proto, extack))
- 		goto err_delete;
--	}
- 
- 	tos_off = proto == htons(ETH_P_IP) ? 16 : 20;
- 
-@@ -200,18 +198,14 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
- 		if ((iter->val & cmask) == (val & cmask) &&
- 		    iter->band != knode->res->classid) {
- 			NL_SET_ERR_MSG_MOD(extack, "conflict with already offloaded filter");
--			err = -EOPNOTSUPP;
- 			goto err_delete;
- 		}
- 	}
- 
- 	if (!match) {
- 		match = kzalloc(sizeof(*match), GFP_KERNEL);
--		if (!match) {
--			err = -ENOMEM;
--			goto err_delete;
--		}
--
-+		if (!match)
-+			return -ENOMEM;
- 		list_add(&match->list, &alink->dscp_map);
- 	}
- 	match->handle = knode->handle;
-@@ -227,7 +221,7 @@ nfp_abm_u32_knode_replace(struct nfp_abm_link *alink,
- 
- err_delete:
- 	nfp_abm_u32_knode_delete(alink, knode);
--	return err;
-+	return -EOPNOTSUPP;
- }
- 
- static int nfp_abm_setup_tc_block_cb(enum tc_setup_type type,
++BPF_EXTRA_CFLAGS += -fno-stack-protector
+ ifneq ($(BTF_LLVM_PROBE),)
+ 	EXTRA_CFLAGS += -g
+ else
 -- 
 2.20.1
 
