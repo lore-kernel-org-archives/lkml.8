@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F043AC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F638C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C779420637
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E017920637
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273637;
-	bh=UpZvJzYBeiSR3mvF3VSpvjTTs9IvGaU4AIbik5XnVTo=;
+	s=default; t=1582273644;
+	bh=a19AocT5OwzaL6SK3b8YY7n+RaCFIPhwOtHuy0P9eXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MITt7S6ghJpLDmHMq4RSfJDM549bvuiJ1CKRVBr29LeNRnwlQnR9asCegbtBzWlu+
-	 YqvlmhpteSXiIFF8+Eu7dDYNc1WSU0UV8WBhp0wATxgon/vbR6N+/GaVmwDK/JB46q
-	 I8jU5OFwBBCTBH918lcP8JyEL6HR6EKJiqNv7X3k=
+	b=PSu1NWwpEKstAp0pmiaU2yPr80LJxz2zAO/f4P9VOxfN4JRKUWdT/27aoLpWAwyzg
+	 CzBR3lJ3w8vKyuAu6kjC+1qm2NoFBkuksdj626AuH+Q18Id+EnwDGgvivvIfOl4TLc
+	 PIWegMH0+36xkPTO01YDMm9tgwceTz0Z82WNhaWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388512AbgBUI1Q (ORCPT
+        id S2388518AbgBUI1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:27:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732311AbgBUIWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:22:10 -0500
+        id S1730768AbgBUIWC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:22:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC94724673;
-        Fri, 21 Feb 2020 08:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8AE2465D;
+        Fri, 21 Feb 2020 08:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273330;
-        bh=UpZvJzYBeiSR3mvF3VSpvjTTs9IvGaU4AIbik5XnVTo=;
+        s=default; t=1582273322;
+        bh=a19AocT5OwzaL6SK3b8YY7n+RaCFIPhwOtHuy0P9eXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OzNevrBizFGpT9gQfFciBA9ChL5oPxRRSfp11Kl5B5q31Bm7wsJqYVzRVXDgHPRWg
-         Lv33nbfMOe78DJvuQY9dvBrMGEIWwlmOvYPUDeV4h4H2ADUn3kVMaE8jrmqfvBriX5
-         I0Mq61Wn9ih2Mt8mUHvNzldsdvrZfPsmZ6rLAIYQ=
+        b=aeYf4CrKIW2lMv9pC7OPn107n4EVi5Z+MwoYQSLMlmNl6SzF4uNbmGMW/bEw7hubM
+         nF6+c3Itz84t4PxGoeGjG1z1oLK08X3QkfPqniVXny6GTYRQjBejCzFfrQcaLXVikH
+         lyZYvgg11fTmVwXfWqlomA3C/DP1nqFDIGF8pnlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/191] reset: uniphier: Add SCSSI reset control for each channel
-Date:   Fri, 21 Feb 2020 08:41:05 +0100
-Message-Id: <20200221072302.071631536@linuxfoundation.org>
+Subject: [PATCH 4.19 125/191] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+Date:   Fri, 21 Feb 2020 08:41:38 +0100
+Message-Id: <20200221072305.802158760@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,61 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit f4aec227e985e31d2fdc5608daf48e3de19157b7 ]
+[ Upstream commit 1eb013473bff5f95b6fe1ca4dd7deda47257b9c2 ]
 
-SCSSI has reset controls for each channel in the SoCs newer than Pro4,
-so this adds missing reset controls for channel 1, 2 and 3. And more, this
-moves MCSSI reset ID after SCSSI.
+Like other cases, it should use rcu protected 'chan' rather
+than 'fence->channel' in nouveau_fence_wait_uevent_handler.
 
-Fixes: 6b39fd590aeb ("reset: uniphier: add reset control support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/reset/reset-uniphier.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
-index 5605745663ae0..adbecb2c7cd3a 100644
---- a/drivers/reset/reset-uniphier.c
-+++ b/drivers/reset/reset-uniphier.c
-@@ -202,8 +202,8 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
- #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
- 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+index 412d49bc6e560..ba3883aed4567 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fence.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+@@ -157,7 +157,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
  
--#define UNIPHIER_PERI_RESET_SCSSI(id)			\
--	UNIPHIER_RESETX((id), 0x110, 17)
-+#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
-+	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
- 
- #define UNIPHIER_PERI_RESET_MCSSI(id)			\
- 	UNIPHIER_RESETX((id), 0x114, 14)
-@@ -218,7 +218,7 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_I2C(6, 2),
- 	UNIPHIER_PERI_RESET_I2C(7, 3),
- 	UNIPHIER_PERI_RESET_I2C(8, 4),
--	UNIPHIER_PERI_RESET_SCSSI(11),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
- 	UNIPHIER_RESET_END,
- };
- 
-@@ -234,8 +234,11 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
- 	UNIPHIER_PERI_RESET_FI2C(8, 4),
- 	UNIPHIER_PERI_RESET_FI2C(9, 5),
- 	UNIPHIER_PERI_RESET_FI2C(10, 6),
--	UNIPHIER_PERI_RESET_SCSSI(11),
--	UNIPHIER_PERI_RESET_MCSSI(12),
-+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
-+	UNIPHIER_PERI_RESET_SCSSI(12, 1),
-+	UNIPHIER_PERI_RESET_SCSSI(13, 2),
-+	UNIPHIER_PERI_RESET_SCSSI(14, 3),
-+	UNIPHIER_PERI_RESET_MCSSI(15),
- 	UNIPHIER_RESET_END,
- };
- 
+ 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
+ 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
+-		if (nouveau_fence_update(fence->channel, fctx))
++		if (nouveau_fence_update(chan, fctx))
+ 			ret = NVIF_NOTIFY_DROP;
+ 	}
+ 	spin_unlock_irqrestore(&fctx->lock, flags);
 -- 
 2.20.1
 
