@@ -2,217 +2,114 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD245C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2203C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16DC208E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582302299;
-	bh=3fw8Z+13XXcXQdUbHBpVHdnEy61aCCDAIOza8cOqswg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n8q8wS9+kYY0u69uxzFB1jcOzsoAiW83acxfBnLub8/WHoSiguesNi48ys76Hqr6/
-	 8v5SWt2Suk6m/tgxJN8iTChe0hj555I2vaDh2IFU7GpWhzxowqobCjRimQ/FiYo/4s
-	 rFQ+s6R39cYavGTIPRM7kumU8kJ8f+dGD2KcL8cU=
+	by mail.kernel.org (Postfix) with ESMTP id 894A420578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tl+Wcnr0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbgBUQY6 (ORCPT
+        id S1726691AbgBUQ0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbgBUQY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:24:58 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D44AC20578;
-        Fri, 21 Feb 2020 16:24:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582302297;
-        bh=3fw8Z+13XXcXQdUbHBpVHdnEy61aCCDAIOza8cOqswg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=swYWU67SROlL4WRC3Ck2gqT/A/dG09f8N3UiYYTfFhYpoWNcC1zL1KxJ0bYTKUeh0
-         BdhEZv0AnvNIw4LOF6KKU991WyGfm8VKVzqTg0j0RQSPRB3hN5Fdejk2JmZKAlUYPN
-         SrLM5mMA6fvwtQGe1t2Kp50QtDdF1k/ExsYPBqmo=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j5B6l-0074uC-61; Fri, 21 Feb 2020 16:24:55 +0000
+        Fri, 21 Feb 2020 11:26:03 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36291 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgBUQ0D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:26:03 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so2545341wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2BdX92xgRchLZuvXrE5DZZXcR5Fu/6x6cjykr2bzRwI=;
+        b=Tl+Wcnr0riRLBzKhr/XZ6K0ULSRj25/7iZ8DHKd9FX+3LliCzYSarv+/SgKHOQt+4K
+         gPK+hPheEGvwkCtoJbFK/70K0516UgQt3dahuEmVkPI3Wf8+B8twXnzBq9DJXiAtxrcS
+         Ou+cg0vouJ+VoIFwYl8hpzZcz3umOgHHiVUhKe+Fc1EE//zQ/OBkEcGxOZDMoVjoSUyU
+         qwX7UH/lo2cJ1Cc+PApw4McwpEo3dxOylecu/9h7X14e09fygUEBKkFRPw1E41nq1niQ
+         NOPDAzP7gLEL2sTxSaYp2gz5AM5YXsgkpV9x3pg3QljcIzW/mN7AUYSdKd/QZC6nnXk5
+         bytw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2BdX92xgRchLZuvXrE5DZZXcR5Fu/6x6cjykr2bzRwI=;
+        b=RgKrrCdTmmUH2lKaza30E4uPy+tqMx4K/IoUjU/BDQ7LeYqGmEMuA4mneXMOqCRvL5
+         whsoLe0vsWg9IVU+tqNF2CrnTuFoeMg5iTXmFRH390wdBjbYc502ytPFIXOBtMPMSrek
+         5+KLSqAh9RCBV778CTnoJCWnDDZkF69DD0c/0Cxuik8fV8+95oQA1aLWLjMgf4ELpXI9
+         3EKWSs8M4ohOqaB20iri/kI0Jza4t2t3h6bQg4x5FEZ3VpDc+jGsVnVRTuYSqNA1iP7X
+         b655TIo2QJ2+MHIXOG2Q1p55JbGQt8CaSFlVxUeqIG9A4GgVifP9Pu8spCATyyxmSpzh
+         N6Kw==
+X-Gm-Message-State: APjAAAX6q48yKs79PiNZw2b/OAuzDkOMXOSyLsG1TJoD0qZbr9d4pRMG
+        HKtvV3k3xcAZN3AcxuW4o86gcw1WkCY=
+X-Google-Smtp-Source: APXvYqyvBUBZTjvzYHftJDf7R7zgHYhntNVAbh0GAbga+SU4mu4JdymttGxOe8i7pn6oh2wv6IBZEw==
+X-Received: by 2002:a1c:451:: with SMTP id 78mr4456446wme.125.1582302359764;
+        Fri, 21 Feb 2020 08:25:59 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id w15sm4587017wrs.80.2020.02.21.08.25.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 08:25:59 -0800 (PST)
+Date:   Fri, 21 Feb 2020 16:25:55 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Will Deacon' <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+Message-ID: <20200221162555.GA81612@google.com>
+References: <20200221114404.14641-1-will@kernel.org>
+ <d31bc2e2718247a7b1db38593564262e@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 21 Feb 2020 16:24:55 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, linux@armlinux.org.uk, luto@kernel.org,
-        tglx@linutronix.de, m.szyprowski@samsung.com, mark.rutland@arm.com
-Subject: Re: [PATCH] clocksource: Fix arm_arch_timer clockmode when vDSO
- disabled
-In-Reply-To: <ccc457a4-dfc2-dedb-06a4-3ffb11a3c587@arm.com>
-References: <20200221130355.21373-1-vincenzo.frascino@arm.com>
- <a81251e813d54caddd56b9aac4b55e85@kernel.org>
- <c438aa7e-2c96-8c11-bb87-204929a01a20@arm.com>
- <6df28d31cf6d4dd6109415fbd73a9c48@kernel.org>
- <ccc457a4-dfc2-dedb-06a4-3ffb11a3c587@arm.com>
-Message-ID: <076d13fd01ca5e17f278cdb1db53b9ff@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: vincenzo.frascino@arm.com, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, luto@kernel.org, tglx@linutronix.de, m.szyprowski@samsung.com, mark.rutland@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d31bc2e2718247a7b1db38593564262e@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-21 15:56, Vincenzo Frascino wrote:
-> Hi Marc,
+On Friday 21 Feb 2020 at 15:41:35 (+0000), David Laight wrote:
+> From: Will Deacon
+> > Sent: 21 February 2020 11:44
+> > Hi folks,
+> > 
+> > Despite having just a single modular in-tree user that I could spot,
+> > kallsyms_lookup_name() is exported to modules and provides a mechanism
+> > for out-of-tree modules to access and invoke arbitrary, non-exported
+> > kernel symbols when kallsyms is enabled.
 > 
-> On 21/02/2020 15:28, Marc Zyngier wrote:
-> 
-> [...]
-> 
->> 
->> This isn't what I'm saying. What I'm suggesting here is that there is
->> possibly a missing indirection, which defaults to ARCH_TIMER when the
->> VDSO is selected, and NONE when it isn't.
->> 
->> Overloading a known symbol feels like papering over the issue.
->> 
->> Ideally, this default symbol would be provided by asm/clocksource.h, 
->> but
->> that may not even be the right thing to do.
->> 
-> 
-> I must admit I really like this idea :), how about:
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 03bbfc312fe7..97864aabc2a6 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -3,6 +3,7 @@ config ARM
->         bool
->         default y
->         select ARCH_32BIT_OFF_T
-> +       select ARCH_CLOCKSOURCE_DATA
->         select ARCH_HAS_BINFMT_FLAT
->         select ARCH_HAS_DEBUG_VIRTUAL if MMU
->         select ARCH_HAS_DEVMEM_IS_ALLOWED
-> diff --git a/arch/arm/include/asm/clocksource.h
-> b/arch/arm/include/asm/clocksource.h
-> index 73beb7f131de..e37f6d74ba49 100644
-> --- a/arch/arm/include/asm/clocksource.h
-> +++ b/arch/arm/include/asm/clocksource.h
-> @@ -1,7 +1,18 @@
->  #ifndef _ASM_CLOCKSOURCE_H
->  #define _ASM_CLOCKSOURCE_H
-> 
-> +/*
-> + * Unused required for compilation only
-> + */
-> +struct arch_clocksource_data {
-> +       bool __reserved;
-> +};
-> +
-> +#ifdef CONFIG_GENERIC_GETTIMEOFDAY
->  #define VDSO_ARCH_CLOCKMODES   \
->         VDSO_CLOCKMODE_ARCHTIMER
-> +#else
-> +#define VDSO_CLOCKMODE_ARCHTIMER       VDSO_CLOCKMODE_NONE
-> +#endif
+> Now where did I put that kernel code that opens /proc/kallsyms and
+> then reads it to find the addresses of symbols ...
 
-Which is exactly the same thing as before. It's not an indirection,
-it is just another overloading of an existing symbol.
+Sure, but the point of this patch IIUC is not to make it totally
+impossible to find the address of symbols in the kernel. It is just to
+not make it utterly trivial for out-of-tree modules to bypass entirely
+the upstream infrastructure for exported symbols.
 
->> Fair enough. But don't override the symbol locally. Create a new one:
->> 
-> 
-> I see what you mean now, you mean to not overload the semantical 
-> meaning of the
-> symbol. The symbol (VDSO_CLOCKMODE_ARCHTIMER) at this point is never 
-> defined
-> when VDSO=n, but I agree with you it can cause confusion.
+All in all, I really don't see what is the benefit of keeping
+kallsyms_lookup_name exported upstream. Especially since we don't have a
+good use-case for it.
 
-Exactly. It breaks the expectation that if VDSO_CLOCKMODE_ARCHTIMER 
-exists,
-it has a unique, known value. Yes, the outcome is the same. That doesn't
-make it acceptable though.
+So, for the whole series:
 
-So building on your above example, here's what I'd like to see:
+  Reviewed-by: Quentin Perret <qperret@google.com>
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 1dcc64bd3621..202b41dae05b 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -3,6 +3,7 @@ config ARM
-         bool
-         default y
-         select ARCH_32BIT_OFF_T
-+       select ARCH_CLOCKSOURCE_DATA
-         select ARCH_HAS_BINFMT_FLAT
-         select ARCH_HAS_DEBUG_VIRTUAL if MMU
-         select ARCH_HAS_DEVMEM_IS_ALLOWED
-diff --git a/arch/arm/include/asm/clocksource.h 
-b/arch/arm/include/asm/clocksource.h
-index 73beb7f131de..bd4347865f6d 100644
---- a/arch/arm/include/asm/clocksource.h
-+++ b/arch/arm/include/asm/clocksource.h
-@@ -1,7 +1,17 @@
-  #ifndef _ASM_CLOCKSOURCE_H
-  #define _ASM_CLOCKSOURCE_H
-
-+struct arch_clocksource_data {
-+       /* Empty on purpose */
-+};
-+
-+#ifdef CONFIG_GENERIC_GETTIMEOFDAY
-  #define VDSO_ARCH_CLOCKMODES   \
-         VDSO_CLOCKMODE_ARCHTIMER
-
-+#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_ARCHTIMER
-+#else
-+#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_NONE
-+#endif
-+
-  #endif
-diff --git a/arch/arm64/include/asm/clocksource.h 
-b/arch/arm64/include/asm/clocksource.h
-index eb82e9d95c5d..de706362fa81 100644
---- a/arch/arm64/include/asm/clocksource.h
-+++ b/arch/arm64/include/asm/clocksource.h
-@@ -5,4 +5,6 @@
-  #define VDSO_ARCH_CLOCKMODES   \
-         VDSO_CLOCKMODE_ARCHTIMER
-
-+#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_ARCHTIMER
-+
-  #endif
-diff --git a/drivers/clocksource/arm_arch_timer.c 
-b/drivers/clocksource/arm_arch_timer.c
-index ee2420d56f67..8b7081583eeb 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -69,7 +69,7 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = 
-ARCH_TIMER_VIRT_PPI;
-  static bool arch_timer_c3stop;
-  static bool arch_timer_mem_use_virtual;
-  static bool arch_counter_suspend_stop;
--static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
-+static enum vdso_clock_mode vdso_default = ARCH_VDSO_DEFAULT_CLOCKMODE;
-
-  static cpumask_t evtstrm_available = CPU_MASK_NONE;
-  static bool evtstrm_enable = 
-IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Thanks,
+Quentin
