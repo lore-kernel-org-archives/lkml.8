@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1675CC35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7003AC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9DD2468A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:17:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DEA2468E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273078;
-	bh=HSfHtUdMFWc6CS5XaUONf1lMrkLQkHO5y1TvGHsvi9A=;
+	s=default; t=1582273080;
+	bh=F672RVWkMDEt8vi7MVek29Hb5puoF4NyMi6GODJWWfs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtfLgO9y6+U97GsREjAGUHDG2cu6WV7Y6/A/mUs/ZDX8A0Fal8WltOT3ZeuLSAxyO
-	 l/l6gFN5+zIT53hCNoD1xWgeeLCCxPqkU+UCo+bYS5/M9NcmKqqTzpp4pKKphDYCMX
-	 2VGr7XHmRp8GGB5csg5DNm63g99gGM2FHPlm/or4=
+	b=hc+F2JQvcwQse6OrdTiROty12agQmWEG+gQ+PSIJvlohfx5G5bSrX1YzAaPJfO9AD
+	 xi2Vd47paiK5lgRtQy3mmRcJW9uhxLF/gqWB4l9tROUU+1QRKY70hNmCW/jf85uHpE
+	 pTqAti7rQ1pXRX3vyFIYZeCy76ro28q9GtEVo7dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733288AbgBUIR4 (ORCPT
+        id S2387759AbgBUIR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:17:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387725AbgBUIRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:17:49 -0500
+        id S2387739AbgBUIRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:17:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0690024682;
-        Fri, 21 Feb 2020 08:17:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B66B524689;
+        Fri, 21 Feb 2020 08:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273068;
-        bh=HSfHtUdMFWc6CS5XaUONf1lMrkLQkHO5y1TvGHsvi9A=;
+        s=default; t=1582273071;
+        bh=F672RVWkMDEt8vi7MVek29Hb5puoF4NyMi6GODJWWfs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNnJh1QIVBimDuRFg9IdL22ip7WTF3R3Gs3/jkowUFc3y9rjuHADyXJcH3dDa62B/
-         hC56MnN/88zfkxhnT2FhAJ3X8cM/AUznA+K9mAuZmfT1NjaOrZdDavSNRH/2r6GHjT
-         fbkcgTnJ0HUfBaSUGVd2xfKq1p/c3KikJGdC7FXQ=
+        b=t3KIBNccsHlAOlWes9lcwlfWPD9IWo6cgNtbldxJfIRxVL5wUo418xJBlU7EzfiE7
+         8Q4qgF078+dHvtNN45o+XqFKyPJkVnPMzzqTPyuUztBvkYQn7wnjKWVL4sT6I5G/GF
+         nmO7KnliYsDlDeBFaOVUtvVXitxDRoYJBulXqD88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Tim Bird <tim.bird@sony.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/191] kselftest: Minimise dependency of get_size on C library interfaces
-Date:   Fri, 21 Feb 2020 08:40:08 +0100
-Message-Id: <20200221072255.747648602@linuxfoundation.org>
+Subject: [PATCH 4.19 009/191] KVM: nVMX: Use correct root level for nested EPT shadow page tables
+Date:   Fri, 21 Feb 2020 08:39:42 +0100
+Message-Id: <20200221072252.173149129@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -62,111 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Siddhesh Poyarekar <siddhesh@gotplt.org>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 6b64a650f0b2ae3940698f401732988699eecf7a ]
+[ Upstream commit 148d735eb55d32848c3379e460ce365f2c1cbe4b ]
 
-It was observed[1] on arm64 that __builtin_strlen led to an infinite
-loop in the get_size selftest.  This is because __builtin_strlen (and
-other builtins) may sometimes result in a call to the C library
-function.  The C library implementation of strlen uses an IFUNC
-resolver to load the most efficient strlen implementation for the
-underlying machine and hence has a PLT indirection even for static
-binaries.  Because this binary avoids the C library startup routines,
-the PLT initialization never happens and hence the program gets stuck
-in an infinite loop.
+Hardcode the EPT page-walk level for L2 to be 4 levels, as KVM's MMU
+currently also hardcodes the page walk level for nested EPT to be 4
+levels.  The L2 guest is all but guaranteed to soft hang on its first
+instruction when L1 is using EPT, as KVM will construct 4-level page
+tables and then tell hardware to use 5-level page tables.
 
-On x86_64 the __builtin_strlen just happens to expand inline and avoid
-the call but that is not always guaranteed.
-
-Further, while testing on x86_64 (Fedora 31), it was observed that the
-test also failed with a segfault inside write() because the generated
-code for the write function in glibc seems to access TLS before the
-syscall (probably due to the cancellation point check) and fails
-because TLS is not initialised.
-
-To mitigate these problems, this patch reduces the interface with the
-C library to just the syscall function.  The syscall function still
-sets errno on failure, which is undesirable but for now it only
-affects cases where syscalls fail.
-
-[1] https://bugs.linaro.org/show_bug.cgi?id=5479
-
-Signed-off-by: Siddhesh Poyarekar <siddhesh@gotplt.org>
-Reported-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Tested-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
-Reviewed-by: Tim Bird <tim.bird@sony.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 855feb673640 ("KVM: MMU: Add 5 level EPT & Shadow page table support.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/size/get_size.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ arch/x86/kvm/vmx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/size/get_size.c b/tools/testing/selftests/size/get_size.c
-index d4b59ab979a09..f55943b6d1e2a 100644
---- a/tools/testing/selftests/size/get_size.c
-+++ b/tools/testing/selftests/size/get_size.c
-@@ -12,23 +12,35 @@
-  * own execution.  It also attempts to have as few dependencies
-  * on kernel features as possible.
-  *
-- * It should be statically linked, with startup libs avoided.
-- * It uses no library calls, and only the following 3 syscalls:
-+ * It should be statically linked, with startup libs avoided.  It uses
-+ * no library calls except the syscall() function for the following 3
-+ * syscalls:
-  *   sysinfo(), write(), and _exit()
-  *
-  * For output, it avoids printf (which in some C libraries
-  * has large external dependencies) by  implementing it's own
-  * number output and print routines, and using __builtin_strlen()
-+ *
-+ * The test may crash if any of the above syscalls fails because in some
-+ * libc implementations (e.g. the GNU C Library) errno is saved in
-+ * thread-local storage, which does not get initialized due to avoiding
-+ * startup libs.
-  */
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 2660c01eadaeb..aead984d89ad6 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -5302,6 +5302,9 @@ static void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
  
- #include <sys/sysinfo.h>
- #include <unistd.h>
-+#include <sys/syscall.h>
- 
- #define STDOUT_FILENO 1
- 
- static int print(const char *s)
+ static int get_ept_level(struct kvm_vcpu *vcpu)
  {
--	return write(STDOUT_FILENO, s, __builtin_strlen(s));
-+	size_t len = 0;
-+
-+	while (s[len] != '\0')
-+		len++;
-+
-+	return syscall(SYS_write, STDOUT_FILENO, s, len);
- }
- 
- static inline char *num_to_str(unsigned long num, char *buf, int len)
-@@ -80,12 +92,12 @@ void _start(void)
- 	print("TAP version 13\n");
- 	print("# Testing system size.\n");
- 
--	ccode = sysinfo(&info);
-+	ccode = syscall(SYS_sysinfo, &info);
- 	if (ccode < 0) {
- 		print("not ok 1");
- 		print(test_name);
- 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
--		_exit(ccode);
-+		syscall(SYS_exit, ccode);
- 	}
- 	print("ok 1");
- 	print(test_name);
-@@ -101,5 +113,5 @@ void _start(void)
- 	print(" ...\n");
- 	print("1..1\n");
- 
--	_exit(0);
-+	syscall(SYS_exit, 0);
- }
++	/* Nested EPT currently only supports 4-level walks. */
++	if (is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)))
++		return 4;
+ 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
+ 		return 5;
+ 	return 4;
 -- 
 2.20.1
 
