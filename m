@@ -2,125 +2,96 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD9FC35657
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5217EC35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B91720722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16FB420722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 17:19:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="To6Lkkfp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RHnwH3vk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728095AbgBURSj (ORCPT
+        id S1728236AbgBURTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 12:18:39 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:38752 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbgBURSj (ORCPT
+        Fri, 21 Feb 2020 12:19:15 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40519 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgBURTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 12:18:39 -0500
-Received: by mail-yb1-f196.google.com with SMTP id v12so1449199ybi.5;
-        Fri, 21 Feb 2020 09:18:37 -0800 (PST)
+        Fri, 21 Feb 2020 12:19:15 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b185so1557292pfb.7;
+        Fri, 21 Feb 2020 09:19:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
-        b=To6LkkfpvlqJHmYlRMozaiXtoGHLEAmYsU3E6heV4YAFR7/YKMi7pE8v1JXTlEa2O6
-         R+Hw9OPdOIMGk4DkCT34AmHveXtDgJURe3gPHl0gUAAajrMNmxSsdsUIdBNtg3OgseBZ
-         tcH0zfBNri6UF+VWaD7gBcGnbtSVGPeO4Oho+qSnZ8Mlt+PZtATpnSDDXCPFE2JqT9mL
-         lBfGEt3d+lDnm1ePque0hRtrK7ZlI5ooEG6kgHBv+w8rcxwYfuZ8O9vth1UAJxcXpq0L
-         pdMi9zm7YvVDH7iml5SXV0q1w+bDTDgWuWZCaBavtOM+j9Bg8GfAZ3qjv9oRRAGhEKXI
-         t9iA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yx5cvOCD+sFEjUGtVe6ZzZuJSF9/cKxMq4KSKO5fnIc=;
+        b=RHnwH3vkrMasjLmsq/dFiAdjxc6psmxNHJk3QKr6tv8FnI94mqT9vQQ+pbRgeI7PuY
+         r2kB2Vemr72V+pxeykUsAPf3F8QoVv/hNhWQ5wRiUWru9z16vqYArknEKotJfqJb3H9b
+         22K1gUh5i1ntFJ2hChsfPdOZhnLOFZbP8I9uM41Vmv1TgSHcCSiEFgZ2O8fyJ50LxtOz
+         w1NU3eDRKGRz3+x77yV9mAvK033yRVuLXMz+5LW5MySs8tzjnHzZ3Uonad4lyEfDYaCj
+         wI/opOoq1bv4ZJSzzyvVzMf73q2FTi5RlJ/LSpxsf4kdhealESL1NEO3ElAZJJzxNid/
+         LMLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=UsIdexAiALxzKyQifSysIO1fJyf0aP+aAU2c/dx1Ago=;
-        b=cqBUR4tftQEBYyrBXazgKXQExAGxvYSfSmVQBl/WUH0wFh2rMS6gjlTrHq+Euei2di
-         tXbttUmG2hDtRQyHfjDxh/wrbGefMhSCRUAF6MKnnaffdir8u6w7KsmlSW5OUaqhw4yh
-         Rdol6iM4gLqA/6UWVY0cesYVM2JCtu1I2yiXn5hcQoNzmeSCiRkkccPhzzB7H7N/v8sM
-         OF/PlabmlyiKIftVxr4TesvC52uXM06zVrwEharRGnupk5pgt90GRu8D8EyNDk0pxasm
-         fCLTmDmRoU3hIzAgaV0o5SENCWviOqqV57tUJ9vVVPSDqgAMVkjy2LvctlT/B8wCzAKg
-         hpUg==
-X-Gm-Message-State: APjAAAVIugGA0l08Dl2ehPIP4PHwRm5hpGyBREKrFKKtjMBtFJvBOiLw
-        juU6qVD1Kp/tV+JxnnEW5y5kv0+n
-X-Google-Smtp-Source: APXvYqzYl4tIDKLb+5Vh4OEpx2jOybgaIKpG0e6x+kgfOHhXyezWBSp7YVo6A6FOfYjvVDd8nnxsJA==
-X-Received: by 2002:a25:9d92:: with SMTP id v18mr13049893ybp.176.1582305516271;
-        Fri, 21 Feb 2020 09:18:36 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id 71sm1496317ywd.59.2020.02.21.09.18.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Feb 2020 09:18:34 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200220130149.26283-1-geert+renesas@glider.be>
- <20200220130149.26283-2-geert+renesas@glider.be>
- <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <d2b87102-fdf3-f22f-8477-5b2105d9583b@gmail.com>
-Date:   Fri, 21 Feb 2020 11:18:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yx5cvOCD+sFEjUGtVe6ZzZuJSF9/cKxMq4KSKO5fnIc=;
+        b=bM1C86zEzmzBMdssVVdTQNVCNW+RSM1K5TC0Zrp0VVq1TImTqUNdjRGuWsNlRyjCC+
+         7fiVq1tHvAQBMH/Tqg5AaqMub19UYSz2bm4Ym0GF/6KjbXF2EEA8NEyYKaVz8w9HI51k
+         P9qwDngmhs6oa0fLSJZzR9wCQarp5fQNSplGjgGBdNARRryeELq5ZCWQCtZ3GvsrKrM+
+         /q2MFFABPjFzPe+takxs8MwhSxhFKFzUJ8rDBUiDFp9OBxA1aJtJJBU4hosrqciFp9Ho
+         E/6dS5DnLpbKTSnM2W8CJaUs+HSo3UZwsZVnjLOABniIndH8Ezj/GpCCarUlimAz6Gaq
+         BrOA==
+X-Gm-Message-State: APjAAAWKQcfL5aHeFNT9bOPgwt1bneWbVk+VlOSo0cGR38XJXfG6oVbM
+        bTnGyKw5iqyEuWRnZ237cSk=
+X-Google-Smtp-Source: APXvYqxFSjsosSs8k94a9qesHL+3OUA3U+e/rBGoGglmXK80/N939pWZP6PhhL7SlGzEoJIbXdqUug==
+X-Received: by 2002:a63:2541:: with SMTP id l62mr10409153pgl.98.1582305554920;
+        Fri, 21 Feb 2020 09:19:14 -0800 (PST)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id w18sm3087417pge.4.2020.02.21.09.19.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 09:19:14 -0800 (PST)
+Date:   Fri, 21 Feb 2020 09:19:12 -0800
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     min.li.xe@renesas.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 2/2] ptp: Add a ptp clock driver for IDT
+ 82P33 SMU.
+Message-ID: <20200221171912.GA5673@localhost>
+References: <1582234109-6296-1-git-send-email-min.li.xe@renesas.com>
+ <20200221115128.GA1692@localhost>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221115128.GA1692@localhost>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus, Rob,
-
-On 2/21/20 10:08 AM, Linus Walleij wrote:
-> On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
+On Fri, Feb 21, 2020 at 03:51:28AM -0800, Richard Cochran wrote:
+> > +	channel->ptp_clock = ptp_clock_register(&channel->caps, NULL);
+> > +
+> > +	if (IS_ERR(channel->ptp_clock)) {
+> > +		err = PTR_ERR(channel->ptp_clock);
+> > +		channel->ptp_clock = NULL;
+> > +		return err;
+> > +	}
 > 
->> Extract the code to add all GPIO hogs of a gpio-hog node into its own
->> function, so it can be reused.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v2:
->>   - No changes.
+> The function, ptp_clock_register(), can also return NULL.  Please
+> handle that case as well.
 > 
-> Patch applied with Frank's Review tag.
+> > +
+> > +	if (!channel->ptp_clock)
+> > +		return -ENOTSUPP;
 
-I created a devicetree unittest to show the problem that Geert's patches
-fix.
+Duh!  Never mind that last comment!
 
-I would prefer to have my unittest patch series applied somewhere,
-immediately followed by Geert's patch series.  This way, after
-applying my series, a test fail is reported, then after Geert's
-series is applied, the test fail becomes a test pass.
-
-Can you coordinate with Rob to accept both series either via
-your tree or Rob's tree?
-
--Frank
-
-> 
-> Yours,
-> Linus Walleij
-> 
-
+Thanks,
+Richard
