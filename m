@@ -2,128 +2,130 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01755C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74131C35657
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6442073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582301673;
-	bh=03mmMubZATC978zRnpoRzUK0gpBr8Z2CKI6eBfkoRsU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ppXSBifASPRkOOdBoUqzzbfgmRwowW2ya5UV+hGoEfXu+3tNkCSsYb5cJgadpiiMQ
-	 FiWzptzdHlroXVYFKRMBrD73UzvWlPu2K83U20G4mkfetxI0O2tbGCrzls5AzRQcqG
-	 XqaOBrs7o0anPEBrY8wG0Eu1VuzCBX2bPJrNE7Lc=
+	by mail.kernel.org (Postfix) with ESMTP id 4B9B62073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iy9fYeyD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgBUQOc (ORCPT
+        id S1729355AbgBUQOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:14:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbgBUQOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:14:32 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D3002073A;
-        Fri, 21 Feb 2020 16:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582301671;
-        bh=03mmMubZATC978zRnpoRzUK0gpBr8Z2CKI6eBfkoRsU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JTd/BjDIrsSWFurv3McozyobZoT1LcEUVmlVPSByEbVlF1z2YTEiQTZgAKkTNn753
-         uswo/xfAvCVaR6S3JdtTQo6tkDOqQSLiBlIjo17fkzGKMxFkwJaL5ENteMzg5N7Hir
-         nc7Rh7bIqG6ctKs7d+lS2RH+6ZR4tL3JpQx7NiTk=
-Date:   Fri, 21 Feb 2020 16:14:28 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 1/3] iio: imu: adis: add doc-string for 'adis' struct
-Message-ID: <20200221161428.188e1532@archlinux>
-In-Reply-To: <414d7e293b75e556ce857e0ce985a0f89fb24ffd.camel@analog.com>
-References: <20200221114943.2056-1-alexandru.ardelean@analog.com>
-        <20200221131146.2213e8e1@archlinux>
-        <414d7e293b75e556ce857e0ce985a0f89fb24ffd.camel@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 21 Feb 2020 11:14:41 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:54935 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727095AbgBUQOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:14:40 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LGEEKH013470;
+        Fri, 21 Feb 2020 17:14:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=84l2b91e/di7VUflYudfHEI8dwDeDuErqQcawADT30M=;
+ b=iy9fYeyD4J84NGAZwItOo4iPy9fHwru5Mzt1bG1ActChIhT78uBE1aX9PDjpjpPqb7Di
+ sixhgAeW+WQM6ewcozXc7Yh6mt54AQ/oDO3cF64Ic6CZLagfy84PTOmum0bzbrDtxJak
+ SErQh6iZNMm/arKDTwrcWFDg4RKhaXu9fqHCnp/wYbYdsJ14fUgdkweApX9SuDu/RcLH
+ LchG2ggrKAHxjhtF2L4p4ZW6jtym6WjyD7XOZ3mSz17qcMV5D1KkqO4eg/nX5S205W0O
+ I/87+kcBjeyxVKp+ffdutE7qDuwbAeVw5hwT7l+lxuLacXdbC6GYUyuqnHne6KPCXqID 1Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y8ub1r6du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Feb 2020 17:14:26 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 768D0100034;
+        Fri, 21 Feb 2020 17:14:21 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5FE552BE259;
+        Fri, 21 Feb 2020 17:14:21 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 21 Feb 2020 17:14:20
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        <david@gibson.dropbear.id.au>, <sjg@chromium.org>
+CC:     <devicetree@vger.kernel.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <devicetree-compiler@vger.kernel.org>, Ian Lepore <ian@freebsd.org>
+Subject: [RFC PATCH v2 1/4] scripts: Add script to generate dtb build information
+Date:   Fri, 21 Feb 2020 17:14:15 +0100
+Message-ID: <20200221161418.20225-2-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200221161418.20225-1-alexandre.torgue@st.com>
+References: <20200221161418.20225-1-alexandre.torgue@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_05:2020-02-21,2020-02-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2020 15:59:35 +0000
-"Ardelean, Alexandru" <alexandru.Ardelean@analog.com> wrote:
+This commit adds a new script to create a file (in dts file directory) with
+some information (date, Linux version, user). This file could then be used
+to populate "build-info" property in every dts file that would use this
+build information:
 
-> On Fri, 2020-02-21 at 13:11 +0000, Jonathan Cameron wrote:
-> > On Fri, 21 Feb 2020 13:49:41 +0200
-> > Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
-> >   
-> > > This change adds a doc-string for the 'adis' struct. It details the fields
-> > > and their roles.
-> > > 
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > >  include/linux/iio/imu/adis.h | 14 ++++++++++++++
-> > >  1 file changed, 14 insertions(+)
-> > > 
-> > > diff --git a/include/linux/iio/imu/adis.h b/include/linux/iio/imu/adis.h
-> > > index ac7cfd073804..0787a3aabd05 100644
-> > > --- a/include/linux/iio/imu/adis.h
-> > > +++ b/include/linux/iio/imu/adis.h
-> > > @@ -73,6 +73,20 @@ struct adis_data {
-> > >  	bool has_paging;
-> > >  };
-> > >  
-> > > +/**
-> > > + * struct adis - ADIS device instance data
-> > > + * @spi: Reference to SPI device which owns this ADIS IIO device
-> > > + * @trig: IIO trigger object data
-> > > + * @data: ADIS chip variant specific data
-> > > + * @burst: ADIS burst transfer information
-> > > + * @state_lock: Lock used by the device to protect state
-> > > + * @msg: SPI message object
-> > > + * @xfer: SPI transfer objects to be used for a @msg
-> > > + * @current_page: Some ADIS devices have registers, this selects current
-> > > page
-> > > + * @buffer: Data buffer for information read from the device
-> > > + * @tx: Cacheline aligned TX buffer for SPI transfers
-> > > + * @rx: Cacheline aligned RX buffer for SPI transfers  
-> > 
-> > This last one isn't true..   
-> 
-> Oh right.
-> I noticed this at some point, then forgot about it.
-> [ The "joys" of multi-tasking; sorry about it :) ]
-> I guess I should also add a patch in this series making it cacheline-aligned.
-> I don't see a reason why not-to [unless I am misunderstanging something]
-No.  The code is fine.  The purpose of the cacheline stuff is to ensure
-no other data ends up in the same cacheline and might be changed in parallel
-with the spi dma taking place.   You only need to force it for the first
-element when you have 2 buffers like this.
+Example:
 
-So you need to update the comment in this patch to say something less specific.
-Perhaps
+/ {
+	...
+	build-info = /incbin/("dtb-build.txt");
+	...
+};
 
-@tx: DMA safe TX buffer for SPI transfers
-@rx: DMA safe RX buffer for SPI transfers.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
-Thanks,
-
-Jonathan
-
-> 
-> 
-> >   
-> > > + */
-> > >  struct adis {
-> > >  	struct spi_device	*spi;
-> > >  	struct iio_trigger	*trig;  
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index bae62549e3d2..a5af84ef4ffc 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -246,6 +246,7 @@ quiet_cmd_gzip = GZIP    $@
+ # DTC
+ # ---------------------------------------------------------------------------
+ DTC ?= $(objtree)/scripts/dtc/dtc
++DTB_GEN_INFO ?= $(objtree)/scripts/gen_dtb_build_info.sh
+ 
+ # Disable noisy checks by default
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+@@ -286,6 +287,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+ 
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
++	$(DTB_GEN_INFO) $(src) ; \
+ 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+ 	$(DTC) -O $(2) -o $@ -b 0 \
+ 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+diff --git a/scripts/gen_dtb_build_info.sh b/scripts/gen_dtb_build_info.sh
+new file mode 100755
+index 000000000000..0cd8bd98e410
+--- /dev/null
++++ b/scripts/gen_dtb_build_info.sh
+@@ -0,0 +1,10 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++
++set -o nounset
++
++DTB_DIR=$1
++DTB_COMPILE_BY=$(whoami | sed 's/\\/\\\\/')
++DTB_INFO="From Linux $KERNELRELEASE by $DTB_COMPILE_BY the $(date).\0"
++
++printf "$DTB_INFO" > "$DTB_DIR/dtb-build.txt"
+-- 
+2.17.1
 
