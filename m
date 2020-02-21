@@ -2,115 +2,100 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D875C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75BB1C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320E624680
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A804222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VDGmJFut"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4v+gTQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728314AbgBUJtB (ORCPT
+        id S1728330AbgBUJt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:49:01 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:34039 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728085AbgBUJtB (ORCPT
+        Fri, 21 Feb 2020 04:49:27 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:41396 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbgBUJt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:49:01 -0500
-Received: by mail-vs1-f67.google.com with SMTP id g15so852962vsf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:49:00 -0800 (PST)
+        Fri, 21 Feb 2020 04:49:26 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r27so1457269otc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:49:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NiubFi99EPYJ/n2rj3yTrsNaDIZ6xoOQx9Jr6SvpoR4=;
-        b=VDGmJFutt04VedpvKWAZ6kMFeFwm6k4hIHn0h4jsA5Ke3Nr81Ifna4QyMk/xMZNqHu
-         9JJVbtDerM3lWcLd6Zfusk1fq9Zt4pLQg16o4mE3ATox5uakBQS/gK6ci3/GuoyErE7A
-         dmfanSLS9WV8TpbC8JZp44r11OLIk444gHgv30w1F7oCtBUisMLTXObrbTcX0znv7V4r
-         g7YuneHNVRkw1fIlPZXx8sY6DVWKEjOytK8d4TLDZcXOBjG0cSbxdQCsmOJrzJiEgrvx
-         PSxYw3OAYUrlbKnHEtDgRjcqoTKsI1FNXxUQQ0Ye8NFdA2t44jpoOx/a7KTeM8ilMjr9
-         AbtA==
+        bh=UjU3wpqCAQUp1JJhVa/3iKyUwSIH2w6WIpuUa9MXo7A=;
+        b=Y4v+gTQ0PrEwUHtM8C+xTUe3XAknh3mb35LEvuit63Pp7tC39/HbTuSnFYdEEkbkho
+         1TC6ePnd98uNgZtB8imGWhOeUygUGLzA9IfSDrYc7FQ3mzEqMK1Ut2pwHECDzufp7wci
+         KzPVIFYpB/tBw2dCm3Xh9eQFTYI3Xq94osvDJRZ5YP3MGOc9qyg6UR0/GSnPnuoeWcfr
+         UAQp/CvB2VKBmakSWvdl5z9eyBBK6rk2PN8vtvyT0v5ZJrUg/2cp00qXWLWBr2qmaZJQ
+         N2DLRre2ikylSJqbEkRUzYzPn2otLxupFcW611E4FovmbuLG3XtUAZfqSUnkE6WolMVY
+         //JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NiubFi99EPYJ/n2rj3yTrsNaDIZ6xoOQx9Jr6SvpoR4=;
-        b=YfWNNkywXu+0n+/6SRj1LnLNJxaEo3o37iOC04hxxpnBZ2wXkc2TTeIVMMgQBdqEB2
-         ST3W5XWfKX3E3twGqm9sCMVlwoHCYG4TCTjYycFxCI26ChMfMP5gNoCCnZUGRvi9uwku
-         tpyiymbcgA3xsSg6HsuOj6+8myd8FspcxkqF2kN8lL2c1ZuaD112ZxQhWJFHOP1SZHhH
-         sNT/kp6hNJ6/i4Kyatfc1sK3xVwh3wsUXtI8iubmjo3pYnTXmL4ksCF4E0b613heFMHm
-         AIKpJwuhTISIurWRnJGr0R9jN7iY/sRKcQGJbGRXnFMC6ilzJk6cGGnBQpGgcX+BBcWE
-         NvMw==
-X-Gm-Message-State: APjAAAXixdRC9o+RAMiYf3ja0LR9WfmIW3r6XDDQ0fvwUtRfd242qZfQ
-        Rkm/fs5KjVGIavL79ezC+7Gb/pLUNKOZXJ0FzoUSBw==
-X-Google-Smtp-Source: APXvYqxIRRKXnARX9u6btKQ3O9gJaec7WIe9eCcj9XZJ870sXHNxs5I8Z8nwuzduLJgoO7/z/UNDEdOwwm1N++0cxlU=
-X-Received: by 2002:a67:5e45:: with SMTP id s66mr19891897vsb.200.1582278539428;
- Fri, 21 Feb 2020 01:48:59 -0800 (PST)
+        bh=UjU3wpqCAQUp1JJhVa/3iKyUwSIH2w6WIpuUa9MXo7A=;
+        b=Y+/Vp0WySAc5AdC0PbmjQuMQV6XhnFPXJMQY+3Wl3q96JABrAyv5N8oDNiN4F2eGf0
+         ZIP6ONg5iNrwc7+WE3h0DFhzyGYYetk335VNcJm0GCYM9cjPkBaClp4occnNu8fB9Jqq
+         Rwv7QzSXIj/prS+8ShUKPUXHGQMpJc7ZVNSKfA5jmg9rbNposSO5Cm61jCOeVdJkUsrE
+         RXjPkqEo2ZCmIKGk/r3js9Sc8TPZv77//ezUG0rI9GuAlHC4vbpwjbYFdMknLYyA+Wnm
+         /BbzED+bjSnvzXkpR4oFpoYAdH+hp9JPdUo5QYHF9WGBoIIyXO91dYn704ZdX5IHMHIK
+         9EGA==
+X-Gm-Message-State: APjAAAVkTXCRYqEpZUKb2I8MoYcjDjciqCEg58BHe73eT4M6DtmB7oe7
+        hS/4b1Vg9vg89puDmUvKSmSbVdqMB0gdUJ20nsgePQxg
+X-Google-Smtp-Source: APXvYqzzihlA7LDlkcni2l26UodMtNxYn5TS7X3HGj79Ggz46iuBS/zFfn7Y8dbvRMAKw1EPb4ijbhYkLw/vQXdA4vM=
+X-Received: by 2002:a9d:6a85:: with SMTP id l5mr28747980otq.231.1582278565490;
+ Fri, 21 Feb 2020 01:49:25 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com> <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Feb 2020 10:48:23 +0100
-Message-ID: <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>
+References: <20200221080510.197337-1-saravanak@google.com> <20200221080510.197337-2-saravanak@google.com>
+ <20200221092540.GA71325@kroah.com>
+In-Reply-To: <20200221092540.GA71325@kroah.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Fri, 21 Feb 2020 01:48:49 -0800
+Message-ID: <CAGETcx_yQZtU4O2KgMxVt-hSJCBtNsOpyWsSXc+OZcjjJ91M3g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Call sync_state() even if supplier
+ has no consumers
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 18:54, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Fri, Feb 21, 2020 at 1:25 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Wed, 19 Feb 2020 at 21:54, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On Fri, Feb 21, 2020 at 12:05:08AM -0800, Saravana Kannan wrote:
+> > The initial patch that added sync_state() support didn't handle the case
+> > where a supplier has no consumers. This was because when a device is
+> > successfully bound with a driver, only its suppliers were checked to see
+> > if they are eligible to get a sync_state(). This is not sufficient for
+> > devices that have no consumers but still need to do device state clean
+> > up. So fix this.
 > >
-> > On Thu, 13 Feb 2020 at 16:43, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> >
-> > Try to restore the value for the cache flush timeout, by updating the
-> > define MMC_CACHE_FLUSH_TIMEOUT_MS to 10 * 60 * 1000".
+> > Fixes: fc5a251d0fd7ca90 (driver core: Add sync_state driver/bus callback)
 >
-> I have increased the timeout to 10 minutes but it did not help.
-> Same error found.
-> [  608.679353] mmc1: Card stuck being busy! mmc_poll_for_busy
-> [  608.684964] mmc1: cache flush error -110
-> [  608.689005] blk_update_request: I/O error, dev mmcblk1, sector
-> 4302400 op 0x1:(WRITE) flags 0x20800 phys_seg 1 prio class 0
->
-> OTOH, What best i could do for my own experiment to revert all three patches and
-> now the reported error gone and device mount successfully [1].
->
-> List of patches reverted,
->   mmc: core: Specify timeouts for BKOPS and CACHE_FLUSH for eMMC
->   mmc: block: Use generic_cmd6_time when modifying
->     INAND_CMD38_ARG_EXT_CSD
->   mmc: core: Default to generic_cmd6_time as timeout in __mmc_switch()
->
-> [1] https://lkft.validation.linaro.org/scheduler/job/1238275#L4346
->
-> - Naresh
+> Should be:
+> Fixes: fc5a251d0fd7 ("driver core: Add sync_state driver/bus callback")
 
-Thanks for testing!
+Sorry, late night sleepy patches are never good!
+Btw I thought the sha should be only 12 characters but then saw
+another instance where you used 16 chars. What's the right one?
 
-This sounds a bit weird, I must say. Also, while looking into the
-logs, it seems like you are comparing a v5.5 kernel with v5.6-rc2, but
-maybe I didn't read the logs carefully enough.
+>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+>
+> So this needs to go to 5.5 also, right?
 
- In any case, I am looking into creating a debug patch so we can
-narrow down the problem a bit further.
+Did you mean 5.4? Yes.
 
-Kind regards
-Uffe
+-Saravana
