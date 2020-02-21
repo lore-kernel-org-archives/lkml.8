@@ -2,87 +2,80 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23D5C35663
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A71BC35665
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83898208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582314719;
-	bh=5GVO4BWWYkqAbWt/9/lmxhI4c0yr8DWwAfymhCasL/E=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=mHT51Gtlj/GBGHlMjHILM/Lsqq5m8pw8sFNvpCDpkzUYv00SjocNf4KEpq2/OX7NO
-	 U2+MSGH0ADOLMmJQQeOPrIO2wOPENVFGMbBepIP5mftDxzu24f85shvO48ZGcNIozr
-	 eJD3jhKFiDMAc85ZODKL7sAKFPQIBCg0cGiRKhmo=
+	by mail.kernel.org (Postfix) with ESMTP id 1C3D120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgBUTv6 (ORCPT
+        id S1726989AbgBUTxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:51:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43744 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 14:53:08 -0500
+Received: from muru.com ([72.249.23.125]:56834 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgBUTv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:51:58 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03644207FD;
-        Fri, 21 Feb 2020 19:51:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582314717;
-        bh=5GVO4BWWYkqAbWt/9/lmxhI4c0yr8DWwAfymhCasL/E=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=u5uFT3TtqWVZeZk75hoICMkFcUlxZDYOF0LR66Ge5Aup9mhYlwmP6TiBTArhh89Pl
-         lw0M3Mg90ss10fdk8tLeqt5BMJtnLZP8IH5f3tL4iXQVucZOjXk629t2v1kvCba9Un
-         bWeu8eHJdNph55alathA6wP81CuCGm4qeNfhJD0k=
-Subject: Re: [PATCH 5.4 000/344] 5.4.22-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200221072349.335551332@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <96422b04-aed2-cc9b-1fb8-23dded328e59@kernel.org>
-Date:   Fri, 21 Feb 2020 12:51:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726160AbgBUTxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:53:07 -0500
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id EB03B807E;
+        Fri, 21 Feb 2020 19:53:50 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     linux-omap@vger.kernel.org
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?q?Andr=C3=A9=20Hentschel?= <nerv@dawncrow.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH 0/7] ti-sysc driver fix for hdq1w and few improvments
+Date:   Fri, 21 Feb 2020 11:52:49 -0800
+Message-Id: <20200221195256.54016-1-tony@atomide.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/21/20 12:36 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.22 release.
-> There are 344 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.22-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi all,
 
-Compiled and booted on test system. No dmesg regressions.
+Here are some ti-sysc interconnect target module driver fixes and
+improvments.
 
-thanks,
--- Shuah
+There's a fix for 1-wire reset, the rest can wait for v5.7 merge
+window.
+
+Regards,
+
+Tony
+
+
+
+Tony Lindgren (7):
+  bus: ti-sysc: Fix 1-wire reset quirk
+  bus: ti-sysc: Rename clk related quirks to pre_reset and post_reset
+    quirks
+  ti-sysc: Improve reset to work with modules with no sysconfig
+  bus: ti-sysc: Consider non-existing registers too when matching quirks
+  bus: ti-sysc: Don't warn about legacy property for nested ti-sysc
+    devices
+  bus: ti-sysc: Implement SoC revision handling
+  bus: ti-sysc: Handle module unlock quirk needed for some RTC
+
+ arch/arm/mach-omap2/pdata-quirks.c    |   6 +
+ drivers/bus/ti-sysc.c                 | 430 ++++++++++++++++++++------
+ include/linux/platform_data/ti-sysc.h |   2 +
+ 3 files changed, 348 insertions(+), 90 deletions(-)
+
+-- 
+2.25.1
