@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC344C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEFDC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C0E20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BCC82465D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274455;
-	bh=twJQEWCQ37vDII3xieELM8sc2WqfXhyOgkp6OAROLMA=;
+	s=default; t=1582274464;
+	bh=1DR/GWaW9CSgGTPT5u/Hw+nrWr3h63KmxvHEXN9F2Tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B1Vtbm5of37xL9PutwP1CXc8MoxydOd1p2NLdObfyz+Kz4N/MAniaYHwCO9blNbEW
-	 jrB+Whuip1X2JeCaUdTmdHIRDmyseM3WKXkB1z/cPvpoLFGFCtp8ETTPXedGfiVx9A
-	 pK6gd8ndgUI6sdgD8BHrejiYNxbAXTZoRr0KFMuA=
+	b=LcOAt/FF0/ikvdhyXKrq1+n20fOqQs4ERGypumTWDtO1QM4wRy333Rxh/4UJa4ku+
+	 Po+x15G//ov1kGVXmFurOtEksNxItVp9GM6GzOKbVKCnkcI26QenbI2+bHNbpLiJgQ
+	 LgyVsMOvdjxWjIXUb/xl/gDCn1ki0Wvgs3DXFCdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbgBUIky (ORCPT
+        id S1730524AbgBUH55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:40:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58118 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:57:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730454AbgBUH6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:20 -0500
+        id S1730687AbgBUH5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:57:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D08206ED;
-        Fri, 21 Feb 2020 07:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AE66206ED;
+        Fri, 21 Feb 2020 07:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271900;
-        bh=twJQEWCQ37vDII3xieELM8sc2WqfXhyOgkp6OAROLMA=;
+        s=default; t=1582271873;
+        bh=1DR/GWaW9CSgGTPT5u/Hw+nrWr3h63KmxvHEXN9F2Tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRoarab2fr8j6iRAM+B91nenDV4ktA7ArMWE3/8uxg1JZk1RDQ3fnD/mkEbiNq+S7
-         p7KjmsWWOBM0hh7oyp2TjJvhqcwq3eNR9dY+CRmCoHVW8a6g3cuj6ieSu7HMc0svOW
-         BupFw4DIh8RxDI/0VBUsuIc4KLN9KLFuQz+WW3jc=
+        b=1PcbxLsK5KyuMKnLviNDaD/8vHny821YTRExw0/B5/uHO7Fzg8ytkJy3dueaukJOb
+         0Kl9ppaSOmAgtGouNFK/aytaEDlzgiB2eJzFtmzDe5PrsU4zibOLTDzavKR07PchLl
+         +QPApIBhZqcXa7OWJz+AYA7w0aX2Js2ZqlYdF57c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Su Yue <Damenly_Su@gmx.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 340/399] jbd2: make sure ESHUTDOWN to be recorded in the journal superblock
-Date:   Fri, 21 Feb 2020 08:41:05 +0100
-Message-Id: <20200221072433.940512555@linuxfoundation.org>
+Subject: [PATCH 5.5 331/399] btrfs: Fix split-brain handling when changing FSID to metadata uuid
+Date:   Fri, 21 Feb 2020 08:40:56 +0100
+Message-Id: <20200221072433.300552579@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,41 +62,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 0e98c084a21177ef136149c6a293b3d1eb33ff92 ]
+[ Upstream commit 1362089d2ad7e20d16371b39d3c11990d4ec23e4 ]
 
-Commit fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer") want
-to allow jbd2 layer to distinguish shutdown journal abort from other
-error cases. So the ESHUTDOWN should be taken precedence over any other
-errno which has already been recoded after EXT4_FLAGS_SHUTDOWN is set,
-but it only update errno in the journal suoerblock now if the old errno
-is 0.
+Current code doesn't correctly handle the situation which arises when
+a file system that has METADATA_UUID_INCOMPAT flag set and has its FSID
+changed to the one in metadata uuid. This causes the incompat flag to
+disappear.
 
-Fixes: fb7c02445c49 ("ext4: pass -ESHUTDOWN code to jbd2 layer")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-4-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+In case of a power failure we could end up in a situation where part of
+the disks in a multi-disk filesystem are correctly reverted to
+METADATA_UUID_INCOMPAT flag unset state, while others have
+METADATA_UUID_INCOMPAT set and CHANGING_FSID_V2_IN_PROGRESS.
+
+This patch corrects the behavior required to handle the case where a
+disk of the second type is scanned first, creating the necessary
+btrfs_fs_devices. Subsequently, when a disk which has already completed
+the transition is scanned it should overwrite the data in
+btrfs_fs_devices.
+
+Reported-by: Su Yue <Damenly_Su@gmx.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/journal.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/btrfs/volumes.c | 42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 8479e84159675..0b4280fcad91d 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2147,8 +2147,7 @@ static void __journal_abort_soft (journal_t *journal, int errno)
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index c5c0dc0cbf517..a8b71ded4d212 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -723,6 +723,32 @@ static struct btrfs_fs_devices *find_fsid_changed(
  
- 	if (journal->j_flags & JBD2_ABORT) {
- 		write_unlock(&journal->j_state_lock);
--		if (!old_errno && old_errno != -ESHUTDOWN &&
--		    errno == -ESHUTDOWN)
-+		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
- 			jbd2_journal_update_sb_errno(journal);
- 		return;
+ 	return NULL;
+ }
++
++static struct btrfs_fs_devices *find_fsid_reverted_metadata(
++				struct btrfs_super_block *disk_super)
++{
++	struct btrfs_fs_devices *fs_devices;
++
++	/*
++	 * Handle the case where the scanned device is part of an fs whose last
++	 * metadata UUID change reverted it to the original FSID. At the same
++	 * time * fs_devices was first created by another constitutent device
++	 * which didn't fully observe the operation. This results in an
++	 * btrfs_fs_devices created with metadata/fsid different AND
++	 * btrfs_fs_devices::fsid_change set AND the metadata_uuid of the
++	 * fs_devices equal to the FSID of the disk.
++	 */
++	list_for_each_entry(fs_devices, &fs_uuids, fs_list) {
++		if (memcmp(fs_devices->fsid, fs_devices->metadata_uuid,
++			   BTRFS_FSID_SIZE) != 0 &&
++		    memcmp(fs_devices->metadata_uuid, disk_super->fsid,
++			   BTRFS_FSID_SIZE) == 0 &&
++		    fs_devices->fsid_change)
++			return fs_devices;
++	}
++
++	return NULL;
++}
+ /*
+  * Add new device to list of registered devices
+  *
+@@ -762,7 +788,9 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		fs_devices = find_fsid(disk_super->fsid,
+ 				       disk_super->metadata_uuid);
+ 	} else {
+-		fs_devices = find_fsid(disk_super->fsid, NULL);
++		fs_devices = find_fsid_reverted_metadata(disk_super);
++		if (!fs_devices)
++			fs_devices = find_fsid(disk_super->fsid, NULL);
  	}
+ 
+ 
+@@ -792,12 +820,18 @@ static noinline struct btrfs_device *device_list_add(const char *path,
+ 		 * a device which had the CHANGING_FSID_V2 flag then replace the
+ 		 * metadata_uuid/fsid values of the fs_devices.
+ 		 */
+-		if (has_metadata_uuid && fs_devices->fsid_change &&
++		if (fs_devices->fsid_change &&
+ 		    found_transid > fs_devices->latest_generation) {
+ 			memcpy(fs_devices->fsid, disk_super->fsid,
+ 					BTRFS_FSID_SIZE);
+-			memcpy(fs_devices->metadata_uuid,
+-					disk_super->metadata_uuid, BTRFS_FSID_SIZE);
++
++			if (has_metadata_uuid)
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->metadata_uuid,
++				       BTRFS_FSID_SIZE);
++			else
++				memcpy(fs_devices->metadata_uuid,
++				       disk_super->fsid, BTRFS_FSID_SIZE);
+ 
+ 			fs_devices->fsid_change = false;
+ 		}
 -- 
 2.20.1
 
