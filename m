@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E91C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B7C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EE5222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E039D2467D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272601;
-	bh=7FMsyWcS1dwfyUSPF3+9JWESGJIhRRVt1a5N6xGkfDs=;
+	s=default; t=1582272604;
+	bh=IDpon7Kel+MjWfOUEwoMjIHhIYdi6Oyu2TpugZYs3X0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V+6YVpgI/UdjXITSigOHHtqnmvEuUXNmdULVQnq6/yJ9UP9FAJio1qg/T9yQ9Ix0G
-	 PqFFqhtEfI+HZa457sakI7GtrpQCCJC9aqIhA0G1DZgjpHrtoCnImZHUg+6VfL9XLV
-	 pNCQmGhifO2IkVfXtzdnLqcNblAh9rKEKREZb0Mc=
+	b=dIuHNzAYmn+j9JFlzSON75H1T+q4uYVDGZFT5i72EhiAmFk2FEgvZXC28bJm3crZp
+	 3XIYs4t9Yuk28kv1NAj0QZcDy7Wq54TPdDzr7emBQ2Pb6476ieqCRl9xVg+S2In5/N
+	 x+8APO0WBer7iXK5ERiNUPArRRFqVaYuyA4oo+6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732267AbgBUIKA (ORCPT
+        id S1732471AbgBUIKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732248AbgBUIJ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:09:56 -0500
+        id S1732453AbgBUIJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:09:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DED9320578;
-        Fri, 21 Feb 2020 08:09:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67C33222C4;
+        Fri, 21 Feb 2020 08:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272596;
-        bh=7FMsyWcS1dwfyUSPF3+9JWESGJIhRRVt1a5N6xGkfDs=;
+        s=default; t=1582272598;
+        bh=IDpon7Kel+MjWfOUEwoMjIHhIYdi6Oyu2TpugZYs3X0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpvCi5NU0gjKThVxvzaFbzXI9uevdtBZiRk2hEvpHJb7eegQdMxzuB3l28jyn6Z+v
-         NnRnyUQfYyDKf/gyZdfvZImXSbwK5w7RNQ9lBbs8A0u7y9AwlQO84T+WRiDHJIy9GE
-         IPIIvlGPaPzNMVFnyom028/NvVyxp9lLmmvOBUXA=
+        b=bJC4cOKag59tbtLTXlpvPs9bMY2wtb7k4kWomT4Qbd6X6zN982uKDSUtoe0AIZgWh
+         GPnCUBLV8DZI4w18CeEw5iXPmjn6AXAVa06SmHyrBAr9hRJ7gNp37hwO/bh7u7CRY6
+         GrCsjqfaEWPqnS4ZkOAjkoSJ2F5rUFgWZ/awoByk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
+        Andy Gospodarek <gospo@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 202/344] Input: edt-ft5x06 - work around first register access error
-Date:   Fri, 21 Feb 2020 08:40:01 +0100
-Message-Id: <20200221072407.425903135@linuxfoundation.org>
+Subject: [PATCH 5.4 203/344] bnxt: Detach page from page pool before sending up the stack
+Date:   Fri, 21 Feb 2020 08:40:02 +0100
+Message-Id: <20200221072407.533078487@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,53 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Jonathan Lemon <jonathan.lemon@gmail.com>
 
-[ Upstream commit e112324cc0422c046f1cf54c56f333d34fa20885 ]
+[ Upstream commit 3071c51783b39d6a676d02a9256c3b3f87804285 ]
 
-The EP0700MLP1 returns bogus data on the first register read access
-(reading the threshold parameter from register 0x00):
+When running in XDP mode, pages come from the page pool, and should
+be freed back to the same pool or specifically detached.  Currently,
+when the driver re-initializes, the page pool destruction is delayed
+forever since it thinks there are oustanding pages.
 
-    edt_ft5x06 2-0038: crc error: 0xfc expected, got 0x40
-
-It ignores writes until then. This patch adds a dummy read after which
-the number of sensors and parameter read/writes work correctly.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: 322b87ca55f2 ("bnxt_en: add page_pool support")
+Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
+Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 5525f1fb1526e..240e8de24cd24 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -1041,6 +1041,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- {
- 	const struct edt_i2c_chip_data *chip_data;
- 	struct edt_ft5x06_ts_data *tsdata;
-+	u8 buf[2] = { 0xfc, 0x00 };
- 	struct input_dev *input;
- 	unsigned long irq_flags;
- 	int error;
-@@ -1110,6 +1111,12 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 		return error;
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 41297533b4a86..68618891b0e42 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -942,6 +942,7 @@ static struct sk_buff *bnxt_rx_page_skb(struct bnxt *bp,
+ 	dma_addr -= bp->rx_dma_offset;
+ 	dma_unmap_page_attrs(&bp->pdev->dev, dma_addr, PAGE_SIZE, bp->rx_dir,
+ 			     DMA_ATTR_WEAK_ORDERING);
++	page_pool_release_page(rxr->page_pool, page);
  
-+	/*
-+	 * Dummy read access. EP0700MLP1 returns bogus data on the first
-+	 * register read access and ignores writes.
-+	 */
-+	edt_ft5x06_ts_readwrite(tsdata->client, 2, buf, 2, buf);
-+
- 	edt_ft5x06_ts_set_regs(tsdata);
- 	edt_ft5x06_ts_get_defaults(&client->dev, tsdata);
- 	edt_ft5x06_ts_get_parameters(tsdata);
+ 	if (unlikely(!payload))
+ 		payload = eth_get_headlen(bp->dev, data_ptr, len);
 -- 
 2.20.1
 
