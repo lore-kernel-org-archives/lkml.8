@@ -2,109 +2,117 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1018CC3565B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B4C3565B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D599D222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hO+B1xyx"
+	by mail.kernel.org (Postfix) with ESMTP id 9BC67208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBUSJ4 (ORCPT
+        id S1729288AbgBUSKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:09:56 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:56242 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbgBUSJ4 (ORCPT
+        Fri, 21 Feb 2020 13:10:48 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46075 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbgBUSKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:09:56 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so1086657pjz.5;
-        Fri, 21 Feb 2020 10:09:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YnVHKaoJO1HX1P3NwrYh2l54OzBJ4vkSrlh4+CAHtGg=;
-        b=hO+B1xyxXHmcprcyOZM3Cy0x+2O3VQsdZjPTe+ekQC7GFiaiWjd8FyaNONdKkg3T/t
-         +2NAXkZ6mbo4wtvB8xBdIV4NrJs8TgXNSfzBUAAH2A9ZOR0gyFmB8mk+R4bGgM/sRkkT
-         KF3fmjik6hIhZFmPnqUH9EhRaJFnTE08Xg13MVZzcLSJCbEZq8KPvt59pr6NLkMfMj2y
-         IWgl1BCkSi7UPCaEdwwSkCyef472NQWEcpc/VBIZ1fKdf/m0/x1J3a7QsHCKZ19beETK
-         ZKAjShshl2w5hRyoJS2BZ6GFLemmWtsnNQzsQ91/yMUmQtK21LLt7FECYeEWnVqgwGk0
-         7e9g==
+        Fri, 21 Feb 2020 13:10:47 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 59so2780971otp.12;
+        Fri, 21 Feb 2020 10:10:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YnVHKaoJO1HX1P3NwrYh2l54OzBJ4vkSrlh4+CAHtGg=;
-        b=ryDgeQ7fjWudArEwSD4UJ27ssQ/ONAkD3S3SBBMLOYuuJwb6vdkNphFEj6AalqzpHp
-         CbftHzT2XBwp3LiKijSoxZ/NlTNDlB/2AO7U0mFV3NyhqYDMujms0TE8G6u9+Q7h10rF
-         fkRVI+aVkmwH1u4VtmEC2kUAodDh549GqCJSgnpVGz50YZBykXgy7z5FnWA8A+Mht/35
-         oHzRWgXPPFiL3zHsSyVGqFB1u1exwVz0Rj7WhoTtavy/GEiGfNx+WVMeJCSmRF25B2XT
-         +2z2SLrk5S+nxAdej7DE5JDkof3FAzLACqR017DSvHsbe7R873oaEKDHACRnkbIbSkLG
-         9bNg==
-X-Gm-Message-State: APjAAAV2Hl+tr0LGzI+T3/d5CKCErzRsHCPCbpwjdJaUdPjwU8mXhl3h
-        MKZZvi4sEwvfD4wbhPuo2uhISV8=
-X-Google-Smtp-Source: APXvYqwJhe7ghkmt0lMpu8J3qCpPScB3kKurmtqaq6raB9yrlGmcE021hxheks/b4wl7pzkD7yAQYg==
-X-Received: by 2002:a17:902:ab81:: with SMTP id f1mr38545653plr.5.1582308594745;
-        Fri, 21 Feb 2020 10:09:54 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee0:fe5e:d03d:769b:c838:c146])
-        by smtp.gmail.com with ESMTPSA id x65sm3639043pfb.171.2020.02.21.10.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 10:09:54 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     jiri@mellanox.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH] net: core: devlink.c: Hold devlink->lock from the beginning of devlink_dpipe_table_register()
-Date:   Fri, 21 Feb 2020 23:39:43 +0530
-Message-Id: <20200221180943.17415-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qELWbZ3OME+eawe8woS99jFnT/ZWJQ9RWB1O2eshdZI=;
+        b=D0jVYgTJoNaNoh1mzedHxmFllaxGztLRgy/MAXKGcIB3bo0RjTflVa5SjRywnr1kDX
+         oMWNuNqpcL1GiuDg9yQ9HBQa+7405BMCf/nweBlMRwrEFjzCZFwOgmIG/0OtVBT1x6xQ
+         jKXCSrtU7EkiuSRCB5YtURWXLBOleNpP/DL15Fw5zRm3e+i98EwlxIJiyslHWwVlBqCK
+         xY0txbIPdg09rQ8fMtb+VfdyoySRSSpr0SSyZV/vDJb/X48XQEQ9W/ZEctHEfWpdzOJQ
+         j9z5IGaP866h9DGZzIVFbJr9AUTPSrzcECYw8Sdc2xLIzAerqExSTMRtC+DjcZeV9aXk
+         CdHQ==
+X-Gm-Message-State: APjAAAUqCgmLWZ10rkUgbKqpVi8u0KK9qIhhFsYaYiTojSDMwtuDeaAw
+        DKOfFsQUhaD97paX0J8vsGLlPEsnz5pxGZ79IPw=
+X-Google-Smtp-Source: APXvYqxb9cV0wG/g8cyygeZEQ7pZMeU5TFO075xmmuOHqr2e/W1z8hmDsMW9M4REXAbbE3WfdgCvPdrCl0BGKC6R8Ro=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr29710943otm.297.1582308646955;
+ Fri, 21 Feb 2020 10:10:46 -0800 (PST)
+MIME-Version: 1.0
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204551308.3299825.11782813238111590104.stgit@warthog.procyon.org.uk> <20200221145114.satmwy7u6mqfluzs@wittgenstein>
+In-Reply-To: <20200221145114.satmwy7u6mqfluzs@wittgenstein>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Feb 2020 19:10:35 +0100
+Message-ID: <CAMuHMdX2zjj6CXm9j-+ORAQfLb=VBM_dOsb4wNDzPECzqiXzYQ@mail.gmail.com>
+Subject: Re: [PATCH 02/19] fsinfo: Add syscalls to other arches [ver #16]
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        mszeredi@redhat.com, Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+On Fri, Feb 21, 2020 at 3:52 PM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+> On Tue, Feb 18, 2020 at 05:05:13PM +0000, David Howells wrote:
+> > Add the fsinfo syscall to the other arches.
+>
+> Over the last couple of kernel releases we have established the
+> convention that we wire-up a syscall for all arches at the same time and
+> not e.g. x86 and then the other separately.
 
-devlink_dpipe_table_find() should be called under either
-rcu_read_lock() or devlink->lock. devlink_dpipe_table_register()
-calls devlink_dpipe_table_find() without holding the lock
-and acquires it later. Therefore hold the devlink->lock
-from the beginning of devlink_dpipe_table_register().
+Indeed.
 
-Suggested-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- net/core/devlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > ---
+> >
+> >  arch/alpha/kernel/syscalls/syscall.tbl      |    1 +
+> >  arch/arm/tools/syscall.tbl                  |    1 +
+> >  arch/arm64/include/asm/unistd.h             |    2 +-
+> >  arch/arm64/include/asm/unistd32.h           |    2 +-
+> >  arch/ia64/kernel/syscalls/syscall.tbl       |    1 +
+> >  arch/m68k/kernel/syscalls/syscall.tbl       |    2 ++
 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index 3e8c94155d93..d54e1f156b6f 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -6840,6 +6840,8 @@ int devlink_dpipe_table_register(struct devlink *devlink,
- {
- 	struct devlink_dpipe_table *table;
- 
-+	mutex_lock(&devlink->lock);
-+
- 	if (devlink_dpipe_table_find(&devlink->dpipe_table_list, table_name))
- 		return -EEXIST;
- 
-@@ -6855,7 +6857,6 @@ int devlink_dpipe_table_register(struct devlink *devlink,
- 	table->priv = priv;
- 	table->counter_control_extern = counter_control_extern;
- 
--	mutex_lock(&devlink->lock);
- 	list_add_tail_rcu(&table->list, &devlink->dpipe_table_list);
- 	mutex_unlock(&devlink->lock);
- 	return 0;
+Suspicious diffstat...
+
+> >  arch/microblaze/kernel/syscalls/syscall.tbl |    1 +
+> >  arch/mips/kernel/syscalls/syscall_n32.tbl   |    1 +
+> >  arch/mips/kernel/syscalls/syscall_n64.tbl   |    1 +
+> >  arch/mips/kernel/syscalls/syscall_o32.tbl   |    1 +
+> >  arch/parisc/kernel/syscalls/syscall.tbl     |    1 +
+> >  arch/powerpc/kernel/syscalls/syscall.tbl    |    1 +
+> >  arch/s390/kernel/syscalls/syscall.tbl       |    1 +
+> >  arch/sh/kernel/syscalls/syscall.tbl         |    1 +
+> >  arch/sparc/kernel/syscalls/syscall.tbl      |    1 +
+> >  arch/xtensa/kernel/syscalls/syscall.tbl     |    1 +
+> >  16 files changed, 17 insertions(+), 2 deletions(-)
+
+> > --- a/arch/m68k/kernel/syscalls/syscall.tbl
+> > +++ b/arch/m68k/kernel/syscalls/syscall.tbl
+> > @@ -437,3 +437,5 @@
+> >  435  common  clone3                          __sys_clone3
+> >  437  common  openat2                         sys_openat2
+> >  438  common  pidfd_getfd                     sys_pidfd_getfd
+> > +# 435 reserved for clone3
+
+Indeed, bogus line above (bad rebase?).
+
+> > +439  common  fsinfo                          sys_fsinfo
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
