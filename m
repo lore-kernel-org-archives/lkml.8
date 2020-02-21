@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5C0C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0431EC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8489E222C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC77F2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271699;
-	bh=DvXZmOsU9KBX6JwijiEl/HVjG43XLWa66DURpCTRJys=;
+	s=default; t=1582271704;
+	bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prU7OQ5vlRamye57SZuqV3/X4h9UNdQhEa0elam7lZ07TRVLsWUfQ2UDO+ghMbEFp
-	 w5Gg37Pw53ONEuQYdEywH+3HwpYosOK4/LGAfZgLq//Ws0T2ChIM1GMfg8isqr0O+u
-	 mBeETcqYYaR/etM6aUSqhWVPsuKPeUSwHL2CHSrw=
+	b=ovmxHNq14qRg2D+9VfjsF3AgDtzmtBNZZohSlR4gqDLmnQkQiC3rgdU8MxNBP8d0U
+	 pfrh7l+8ZB7VOWho1KjHEAisIU3q4UtIqrsGAWnDYlUfBPoU+Jl35jZ1ADcpbqfTEV
+	 cEztOAmu4qan7HZHu4k56dUhfSUXrxSWwl2njtg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729935AbgBUHy6 (ORCPT
+        id S1729600AbgBUHzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53544 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:55:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgBUHyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:53 -0500
+        id S1728481AbgBUHzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:55:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B9320801;
-        Fri, 21 Feb 2020 07:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270F120801;
+        Fri, 21 Feb 2020 07:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271691;
-        bh=DvXZmOsU9KBX6JwijiEl/HVjG43XLWa66DURpCTRJys=;
+        s=default; t=1582271699;
+        bh=Oq3imaSnvk3qp2sKFwj8TW2fh3DxiGumyaDniiv4fZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFACAePUN9NbYhC/Glg/7trel/B8qpS+RxOTaXVoLD/MrOy0jlCXq3plP92XiimrY
-         j7trFdyTABaGWPEVjcZcMhF0mGhRpMdwzY3MitdoeEffk5n6Ms3mgBOhHmFFmVkCVT
-         7Z7zGpf3I1ft2UhEsdIVr1/HXo56fUn8I/qtIgSw=
+        b=PuEQXcSxml92JdRlkoyGXqXPVEwG04a8WLLvoe6/8kBBNF/6MjtW6C5LkFFzM6aPP
+         A+g4hpUei4XYvL8sUorvgOHO0cOEdg65ggKMDaxXpsjVuw6W3WBH9Su1N/3clKPuuB
+         W/xgk1PDp9N9uhkTgBF+echw5wsPdwb+ncJxfwFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 262/399] gpiolib: Set lockdep class for hierarchical irq domains
-Date:   Fri, 21 Feb 2020 08:39:47 +0100
-Message-Id: <20200221072427.864803918@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 264/399] perf/imx_ddr: Fix cpu hotplug state cleanup
+Date:   Fri, 21 Feb 2020 08:39:49 +0100
+Message-Id: <20200221072428.021218139@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -65,118 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit c34f6dc8c9e6bbe9fba1d53acd6d9a3889599da3 ]
+[ Upstream commit 9ee68b314e9aa63ed11b98beb8a68810b8234dcf ]
 
-I see the following lockdep splat in the qcom pinctrl driver when
-attempting to suspend the device.
+This driver allocates a dynamic cpu hotplug state but never releases it.
+If reloaded in a loop it will quickly trigger a WARN message:
 
- ============================================
- WARNING: possible recursive locking detected
- 5.4.2 #2 Tainted: G S
- --------------------------------------------
- cat/6536 is trying to acquire lock:
- ffffff814787ccc0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+	"No more dynamic states available for CPU hotplug"
 
- but task is already holding lock:
- ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
+Fix by calling cpuhp_remove_multi_state on remove like several other
+perf pmu drivers.
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+Also fix the cleanup logic on probe error paths: add the missing
+cpuhp_remove_multi_state call and properly check the return value from
+cpuhp_state_add_instant_nocalls.
 
-        CPU0
-        ----
-   lock(&irq_desc_lock_class);
-   lock(&irq_desc_lock_class);
-
-  *** DEADLOCK ***
-
-  May be due to missing lock nesting notation
-
- 7 locks held by cat/6536:
-  #0: ffffff8140e0c420 (sb_writers#7){.+.+}, at: vfs_write+0xc8/0x19c
-  #1: ffffff8121eec480 (&of->mutex){+.+.}, at: kernfs_fop_write+0x128/0x1f4
-  #2: ffffff8147cad668 (kn->count#263){.+.+}, at: kernfs_fop_write+0x130/0x1f4
-  #3: ffffffd011446000 (system_transition_mutex){+.+.}, at: pm_suspend+0x108/0x354
-  #4: ffffff814302b970 (&dev->mutex){....}, at: __device_suspend+0x16c/0x420
-  #5: ffffff81436740c0 (&irq_desc_lock_class){-.-.}, at: __irq_get_desc_lock+0x64/0x94
-  #6: ffffff81479b8c10 (&pctrl->lock){....}, at: msm_gpio_irq_set_wake+0x48/0x7c
-
- stack backtrace:
- CPU: 4 PID: 6536 Comm: cat Tainted: G S                5.4.2 #2
- Call trace:
-  dump_backtrace+0x0/0x174
-  show_stack+0x20/0x2c
-  dump_stack+0xdc/0x144
-  __lock_acquire+0x52c/0x2268
-  lock_acquire+0x1dc/0x220
-  _raw_spin_lock_irqsave+0x64/0x80
-  __irq_get_desc_lock+0x64/0x94
-  irq_set_irq_wake+0x40/0x144
-  msm_gpio_irq_set_wake+0x5c/0x7c
-  set_irq_wake_real+0x40/0x5c
-  irq_set_irq_wake+0x70/0x144
-  cros_ec_rtc_suspend+0x38/0x4c
-  platform_pm_suspend+0x34/0x60
-  dpm_run_callback+0x64/0xcc
-  __device_suspend+0x314/0x420
-  dpm_suspend+0xf8/0x298
-  dpm_suspend_start+0x84/0xb4
-  suspend_devices_and_enter+0xbc/0x628
-  pm_suspend+0x214/0x354
-  state_store+0xb0/0x108
-  kobj_attr_store+0x14/0x24
-  sysfs_kf_write+0x4c/0x64
-  kernfs_fop_write+0x158/0x1f4
-  __vfs_write+0x54/0x18c
-  vfs_write+0xdc/0x19c
-  ksys_write+0x7c/0xe4
-  __arm64_sys_write+0x20/0x2c
-  el0_svc_common+0xa8/0x160
-  el0_svc_compat_handler+0x2c/0x38
-  el0_svc_compat+0x8/0x10
-
-This is because the msm_gpio_irq_set_wake() function calls
-irq_set_irq_wake() as a backup in case the irq comes in during the path
-to idle. Given that we're calling irqchip functions from within an
-irqchip we need to set the lockdep class to be different for this child
-controller vs. the default one that the parent irqchip gets.
-
-This used to be done before this driver was converted to hierarchical
-irq domains in commit e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in
-hierarchy") via the gpiochip_irq_map() function. With hierarchical irq
-domains this function has been replaced by
-gpiochip_hierarchy_irq_domain_alloc(). Therefore, set the lockdep class
-like was done previously in the irq domain path so we can avoid this
-lockdep warning.
-
-Fixes: fdd61a013a24 ("gpio: Add support for hierarchical IRQ domains")
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Maulik Shah <mkshah@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/20200114231103.85641-1-swboyd@chromium.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 9a66d36cc7ac ("drivers/perf: imx_ddr: Add DDR performance counter support to perf")
+Acked-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/perf/fsl_imx8_ddr_perf.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index bcfbfded9ba3f..175c6363cf611 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -2053,6 +2053,7 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
- 				     parent_type);
- 	chip_info(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
- 		  irq, parent_hwirq);
-+	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
- 	ret = irq_domain_alloc_irqs_parent(d, irq, 1, &parent_fwspec);
- 	if (ret)
- 		chip_err(gc,
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 55083c67b2bb0..95dca2cb52650 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -633,13 +633,17 @@ static int ddr_perf_probe(struct platform_device *pdev)
+ 
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "cpuhp_setup_state_multi failed\n");
+-		goto ddr_perf_err;
++		goto cpuhp_state_err;
+ 	}
+ 
+ 	pmu->cpuhp_state = ret;
+ 
+ 	/* Register the pmu instance for cpu hotplug */
+-	cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	ret = cpuhp_state_add_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	if (ret) {
++		dev_err(&pdev->dev, "Error %d registering hotplug\n", ret);
++		goto cpuhp_instance_err;
++	}
+ 
+ 	/* Request irq */
+ 	irq = of_irq_get(np, 0);
+@@ -673,9 +677,10 @@ static int ddr_perf_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ ddr_perf_err:
+-	if (pmu->cpuhp_state)
+-		cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
+-
++	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++cpuhp_instance_err:
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
++cpuhp_state_err:
+ 	ida_simple_remove(&ddr_ida, pmu->id);
+ 	dev_warn(&pdev->dev, "i.MX8 DDR Perf PMU failed (%d), disabled\n", ret);
+ 	return ret;
+@@ -686,6 +691,7 @@ static int ddr_perf_remove(struct platform_device *pdev)
+ 	struct ddr_pmu *pmu = platform_get_drvdata(pdev);
+ 
+ 	cpuhp_state_remove_instance_nocalls(pmu->cpuhp_state, &pmu->node);
++	cpuhp_remove_multi_state(pmu->cpuhp_state);
+ 	irq_set_affinity_hint(pmu->irq, NULL);
+ 
+ 	perf_pmu_unregister(&pmu->pmu);
 -- 
 2.20.1
 
