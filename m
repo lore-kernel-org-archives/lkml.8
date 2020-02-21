@@ -2,100 +2,87 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8B3C35661
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA7C35665
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F1924650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:50:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WtkNbFF+"
+	by mail.kernel.org (Postfix) with ESMTP id 588C5207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 19:51:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582314674;
+	bh=dj3CunnCp6cBgmquorl/y4Cqs0ZJNLl7zdr0vzTTpfM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=0D0CUPEW2BOrjq8hM9ZcOUFQ+mLL9emKJhVCdMwSeS8MYbfLyJuiQxjYbL903SOyt
+	 Wp7w+xWkiAebskDWrfn0Uzf41GhCH2TcNz0CU/52hsQjLneQjB7r9fnVDuM9hqO8Uq
+	 wAuuOXGIPv7Y0gFJolkmv2q2/MjwFZ8c+QcJyAek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgBUTuy (ORCPT
+        id S1727781AbgBUTvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 14:50:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31112 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726160AbgBUTux (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 14:50:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582314651;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Unie+N+CR+ixt+b/4tM+0L7Mc0IBXa5zja9FG566mHU=;
-        b=WtkNbFF+ylcTUIVSPlpgLeOa9G5PgBTqX4RqkK68YIYaDhyTqe3hCBYrmT/4X42Z0Ss/3I
-        8nXa2Ca4oBw2fZ2GVDGqYJKafDCEWPLB8jeTNImWG9dTnGBltB9+1W13zfSZ+uhe/h8LlG
-        PtTRrrWYStZU+i1zlbUXnaEtV7RaG7o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281--uOvEtZqPMmhiOqSvYd13A-1; Fri, 21 Feb 2020 14:50:47 -0500
-X-MC-Unique: -uOvEtZqPMmhiOqSvYd13A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 21 Feb 2020 14:51:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726160AbgBUTvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 14:51:13 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4BBA800D48;
-        Fri, 21 Feb 2020 19:50:44 +0000 (UTC)
-Received: from treble (ovpn-125-126.rdu2.redhat.com [10.10.125.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D637E5C28E;
-        Fri, 21 Feb 2020 19:50:41 +0000 (UTC)
-Date:   Fri, 21 Feb 2020 13:50:39 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Arjan van de Ven <arjan@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        rick.p.edgecombe@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function
- sections
-Message-ID: <20200221195039.dptvoerfez4r76ay@treble>
-References: <75f0bd0365857ba4442ee69016b63764a8d2ad68.camel@linux.intel.com>
- <B413445A-F1F0-4FB7-AA9F-C5FF4CEFF5F5@amacapital.net>
- <20200207092423.GC14914@hirez.programming.kicks-ass.net>
- <202002091742.7B1E6BF19@keescook>
- <20200210105117.GE14879@hirez.programming.kicks-ass.net>
- <43b7ba31-6dca-488b-8a0e-72d9fdfd1a6b@linux.intel.com>
- <20200210163627.GA1829035@rani.riverdale.lan>
+        by mail.kernel.org (Postfix) with ESMTPSA id 124292072C;
+        Fri, 21 Feb 2020 19:51:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582314672;
+        bh=dj3CunnCp6cBgmquorl/y4Cqs0ZJNLl7zdr0vzTTpfM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BLcqBstyBXN9Rk0OVrHvx7DoUDUMEPwnr5arWl14FdvQTdF/8lWH8L7O5913YDgk5
+         7AFK/TiUMSpsMcnSRjuihbrZmjQE1VnITBYqk2iIZYgojd2fFQM1ifAXOZlU50y9Kk
+         cUmAAfVD5u8IZx/ZcKSSsDzoTmH05i9AEqGXYcNY=
+Subject: Re: [PATCH 4.19 000/191] 4.19.106-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200221072250.732482588@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <a4ffe98f-4e99-a562-c0ec-4a8ac5abb7c0@kernel.org>
+Date:   Fri, 21 Feb 2020 12:51:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200210163627.GA1829035@rani.riverdale.lan>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 11:36:29AM -0500, Arvind Sankar wrote:
-> On Mon, Feb 10, 2020 at 07:54:58AM -0800, Arjan van de Ven wrote:
-> > > 
-> > > I'll leave it to others to figure out the exact details. But afaict it
-> > > should be possible to have fine-grained-randomization and preserve the
-> > > workaround in the end.
-> > > 
-> > 
-> > the most obvious "solution" is to compile with an alignment of 4 bytes (so tight packing)
-> > and then in the randomizer preserve the offset within 32 bytes, no matter what it is
-> > 
-> > that would get you an average padding of 16 bytes which is a bit more than now but not too insane
-> > (queue Kees' argument that tiny bits of padding are actually good)
-> > 
+On 2/21/20 12:39 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.106 release.
+> There are 191 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> With the patchset for adding the mbranches-within-32B-boundaries option,
-> the section alignment gets forced to 32. With function-sections that
-> means function alignment has to be 32 too.
+> Responses should be made by Sun, 23 Feb 2020 07:19:49 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.106-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-We should be careful about enabling -mbranches-within-32B-boundaries.
-It will hurt AMD, and presumably future Intel CPUs which don't need it.
+Compiled and booted on test system. No dmesg regressions.
 
--- 
-Josh
-
+thanks,
+-- Shuah
