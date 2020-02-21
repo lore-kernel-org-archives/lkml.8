@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B23C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5422AC35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684EF24691
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1830724691
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582273179;
-	bh=fLdj1bfTpZ/AoJbVRl8A14jHH7ap3xGhu/sgu2jrqhE=;
+	s=default; t=1582273182;
+	bh=sgwlTZtHceOcXQlBCBMlRKJUHnRjwhhrQxZY8HOsp7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uiDO9dMP5mCsgaSt30rs8Pq85krHAKwfcND8LJNrGXRj0bikWdRIMuLfEdwqsNnkh
-	 jcf21F25WTkwWjNQ5in7tHA789W6PdTJCHHoSCGtBNu4gj0aCmkIxEt4xSaOwf1g1M
-	 /TtTAxOj/veJWAiMGfuKeH4tbDTXKAGrwLkoQi4w=
+	b=O7MLST8jU2Yr9c618K18UnBSGtbFBgVfwWz1QGvJ0fu7QC+NkokBznpE4t6Kyfzpr
+	 EFH6mEOejO3b6WdtseOPKtcrOHSo/SnNZS1QxoOiFYzMPRUrC8qXIToTbKjZop/9if
+	 lQV/iZiXShq/efHJoteAS4IkkQcNIJsQSGGadjh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388043AbgBUITg (ORCPT
+        id S2388054AbgBUITk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:19:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58226 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:19:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388034AbgBUITe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:19:34 -0500
+        id S2388045AbgBUITi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:19:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0CE24694;
-        Fri, 21 Feb 2020 08:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD96F24694;
+        Fri, 21 Feb 2020 08:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582273174;
-        bh=fLdj1bfTpZ/AoJbVRl8A14jHH7ap3xGhu/sgu2jrqhE=;
+        s=default; t=1582273177;
+        bh=sgwlTZtHceOcXQlBCBMlRKJUHnRjwhhrQxZY8HOsp7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2pCCEC9tU2vZuYDgtLnvB5va4sloF6HBslGXlMH01ay2pF1R7l8lKqVeg3v9I+gg
-         CG9JKLcldf6ed6yZKY5nw7aBBBH5wt+b9YQj5PGJIYOWgKS20ujVDY4R7LMAK+gsdj
-         EVLnDq+kkqrSzOCtsvYwbNbj0wRj9wbLYeAa4IX8=
+        b=WUyoQuaPRrrrx+E/0bVXYsPC7P8Nnh1wcFRff0on1UhFOT0mZbNxfFswDcbmIz0GF
+         rU/VqyVl3xiSZ/61ULgQkYbma683eYAOAvZM3I1h97P2jJfn/hw9eJ6oJ9dU14Y6qn
+         cZY1x/O9HHFFjci6EcOCf+BK+rCvst9xy9Qysav8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/191] netfilter: nft_tunnel: add the missing ERSPAN_VERSION nla_policy
-Date:   Fri, 21 Feb 2020 08:40:46 +0100
-Message-Id: <20200221072300.084518814@linuxfoundation.org>
+        stable@vger.kernel.org, Sun Ke <sunke32@huawei.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 047/191] nbd: add a flush_workqueue in nbd_start_device
+Date:   Fri, 21 Feb 2020 08:40:20 +0100
+Message-Id: <20200221072257.378789807@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072250.732482588@linuxfoundation.org>
 References: <20200221072250.732482588@linuxfoundation.org>
@@ -61,37 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Sun Ke <sunke32@huawei.com>
 
-[ Upstream commit 0705f95c332081036d85f26691e9d3cd7d901c31 ]
+[ Upstream commit 5c0dd228b5fc30a3b732c7ae2657e0161ec7ed80 ]
 
-ERSPAN_VERSION is an attribute parsed in kernel side, nla_policy
-type should be added for it, like other attributes.
+When kzalloc fail, may cause trying to destroy the
+workqueue from inside the workqueue.
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+If num_connections is m (2 < m), and NO.1 ~ NO.n
+(1 < n < m) kzalloc are successful. The NO.(n + 1)
+failed. Then, nbd_start_device will return ENOMEM
+to nbd_start_device_ioctl, and nbd_start_device_ioctl
+will return immediately without running flush_workqueue.
+However, we still have n recv threads. If nbd_release
+run first, recv threads may have to drop the last
+config_refs and try to destroy the workqueue from
+inside the workqueue.
+
+To fix it, add a flush_workqueue in nbd_start_device.
+
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Signed-off-by: Sun Ke <sunke32@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_tunnel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/nbd.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/net/netfilter/nft_tunnel.c b/net/netfilter/nft_tunnel.c
-index e5444f3ff43fc..5e66042ac3466 100644
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -218,8 +218,9 @@ static int nft_tunnel_obj_vxlan_init(const struct nlattr *attr,
- }
- 
- static const struct nla_policy nft_tunnel_opts_erspan_policy[NFTA_TUNNEL_KEY_ERSPAN_MAX + 1] = {
-+	[NFTA_TUNNEL_KEY_ERSPAN_VERSION]	= { .type = NLA_U32 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V1_INDEX]	= { .type = NLA_U32 },
--	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]	= { .type = NLA_U8 },
-+	[NFTA_TUNNEL_KEY_ERSPAN_V2_DIR]		= { .type = NLA_U8 },
- 	[NFTA_TUNNEL_KEY_ERSPAN_V2_HWID]	= { .type = NLA_U8 },
- };
- 
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index b9d321bdaa8a7..226103af30f05 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -1216,6 +1216,16 @@ static int nbd_start_device(struct nbd_device *nbd)
+ 		args = kzalloc(sizeof(*args), GFP_KERNEL);
+ 		if (!args) {
+ 			sock_shutdown(nbd);
++			/*
++			 * If num_connections is m (2 < m),
++			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
++			 * But NO.(n + 1) failed. We still have n recv threads.
++			 * So, add flush_workqueue here to prevent recv threads
++			 * dropping the last config_refs and trying to destroy
++			 * the workqueue from inside the workqueue.
++			 */
++			if (i)
++				flush_workqueue(nbd->recv_workq);
+ 			return -ENOMEM;
+ 		}
+ 		sk_set_memalloc(config->socks[i]->sock->sk);
 -- 
 2.20.1
 
