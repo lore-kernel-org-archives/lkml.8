@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42C2C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EC0C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8352467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E8C20801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272344;
-	bh=j6vTk5xwIZQxMl0N+87vCz7J+K5hKkkEZIizq5rdXXc=;
+	s=default; t=1582272350;
+	bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1A8wPcxirWLmqyUYc9zfmKeOhHxF5f1LlpvFVLuVpd3AEJ2F6G54dFKxZPa4fOU0U
-	 tV1/4GgR929VKfNgHKr6MD2+Oxy+EZsTQY8OQZAGNDL97/c0JIUZI80rOGae9SzVVX
-	 R35Bu2LUwcdAWpCEyyIKmmjkxU30S/yaGJaymLlw=
+	b=qp8A1XciFRWzpBfrNzh+wJ/lVGdgP7p9YTc8SZOCuAsS2lui8jySqLZPNn4jcMbOD
+	 5Ufz1I2bYb69gQkP8sCE81qQ60ajee6GU4+PC7zu0ycHNG09vocy0+X9BK4oOLT2tP
+	 qafn5KKTqF50euwssuP0Ml5BGbYgj+gqikKjrL40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbgBUIFn (ORCPT
+        id S1731501AbgBUIFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:05:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39120 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:05:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731834AbgBUIFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:05:34 -0500
+        id S1731845AbgBUIFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:05:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F14CF20801;
-        Fri, 21 Feb 2020 08:05:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF92222C4;
+        Fri, 21 Feb 2020 08:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272333;
-        bh=j6vTk5xwIZQxMl0N+87vCz7J+K5hKkkEZIizq5rdXXc=;
+        s=default; t=1582272338;
+        bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGVf+wmipJgxtEfZUHGox91rvAzpW4bitpfG6LwyVxAV0+RW9+5hf9A02gSXkNv+L
-         X5mb9yXjMQqu0/63Q5KRDcvRow6NW3fOPgg1Umu5ieuq1cl4Ale+WIhHObjOzAOcf1
-         MIlvPovuHIx/QccjWYuLpOwG5T4ug7l93faZXIZo=
+        b=aGj4lty5ufKxA1XYmT40vHoQ2GvOtUHJMde98JIkb1ubLUfvswVbJo3gIqRFpSaGp
+         2AWmR4PFKWtlnckRpLkJo/SCQ0xZ/2BR+F5lnY/l5Fn+Dvy0tuM3Ny/CuUQwCA5qM7
+         BhG4bYBc1EUilbUJXz30Zdnp4hU1n7ZUk7VMxrPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>,
-        Jairaj Arava <jairaj.arava@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/344] ASoC: intel: sof_rt5682: Add support for tgl-max98357a-rt5682
-Date:   Fri, 21 Feb 2020 08:38:21 +0100
-Message-Id: <20200221072358.195116953@linuxfoundation.org>
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 069/344] udf: Allow writing to Rewritable partitions
+Date:   Fri, 21 Feb 2020 08:37:48 +0100
+Message-Id: <20200221072355.267881947@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -63,72 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 6605f0ca3af3b964635287ec7c9dadc812b78eb0 ]
+[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
 
-This patch adds the driver data and updates quirk info
-for tgl with max98357a speaker amp and ALC5682 headset codec.
+UDF 2.60 standard states in section 2.2.14.2:
 
-Signed-off-by: Sathyanarayana Nujella <sathyanarayana.nujella@intel.com>
-Signed-off-by: Jairaj Arava <jairaj.arava@intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20191126143205.21987-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+    A partition with Access Type 3 (rewritable) shall define a Freed
+    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
+    shall not define a Freed Space Bitmap or a Freed Space Table.
+
+    Rewritable partitions are used on media that require some form of
+    preprocessing before re-writing data (for example legacy MO). Such
+    partitions shall use Access Type 3.
+
+    Overwritable partitions are used on media that do not require
+    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
+    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
+    use Access Type 4.
+
+however older versions of the standard didn't have this wording and
+there are tools out there that create UDF filesystems with rewritable
+partitions but that don't contain a Freed Space Bitmap or a Freed Space
+Table on media that does not require pre-processing before overwriting a
+block. So instead of forcing media with rewritable partition read-only,
+base this decision on presence of a Freed Space Bitmap or a Freed Space
+Table.
+
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
+Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_rt5682.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ fs/udf/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/sof_rt5682.c b/sound/soc/intel/boards/sof_rt5682.c
-index 377ff17dedb98..9441ddfeea5e6 100644
---- a/sound/soc/intel/boards/sof_rt5682.c
-+++ b/sound/soc/intel/boards/sof_rt5682.c
-@@ -589,6 +589,9 @@ static int sof_audio_probe(struct platform_device *pdev)
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	if (pdev->id_entry && pdev->id_entry->driver_data)
-+		sof_rt5682_quirk = (unsigned long)pdev->id_entry->driver_data;
-+
- 	dmi_check_system(sof_rt5682_quirk_table);
- 
- 	if (soc_intel_is_byt() || soc_intel_is_cht()) {
-@@ -680,6 +683,21 @@ static int sof_rt5682_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct platform_device_id board_ids[] = {
-+	{
-+		.name = "sof_rt5682",
-+	},
-+	{
-+		.name = "tgl_max98357a_rt5682",
-+		.driver_data = (kernel_ulong_t)(SOF_RT5682_MCLK_EN |
-+					SOF_RT5682_SSP_CODEC(0) |
-+					SOF_SPEAKER_AMP_PRESENT |
-+					SOF_RT5682_SSP_AMP(1) |
-+					SOF_RT5682_NUM_HDMIDEV(4)),
-+	},
-+	{ }
-+};
-+
- static struct platform_driver sof_audio = {
- 	.probe = sof_audio_probe,
- 	.remove = sof_rt5682_remove,
-@@ -687,6 +705,7 @@ static struct platform_driver sof_audio = {
- 		.name = "sof_rt5682",
- 		.pm = &snd_soc_pm_ops,
- 	},
-+	.id_table = board_ids,
- };
- module_platform_driver(sof_audio)
- 
-@@ -696,3 +715,4 @@ MODULE_AUTHOR("Bard Liao <bard.liao@intel.com>");
- MODULE_AUTHOR("Sathya Prakash M R <sathya.prakash.m.r@intel.com>");
- MODULE_LICENSE("GPL v2");
- MODULE_ALIAS("platform:sof_rt5682");
-+MODULE_ALIAS("platform:tgl_max98357a_rt5682");
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 8c28e93e9b730..008bf96b1732d 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -1035,7 +1035,6 @@ static int check_partition_desc(struct super_block *sb,
+ 	switch (le32_to_cpu(p->accessType)) {
+ 	case PD_ACCESS_TYPE_READ_ONLY:
+ 	case PD_ACCESS_TYPE_WRITE_ONCE:
+-	case PD_ACCESS_TYPE_REWRITABLE:
+ 	case PD_ACCESS_TYPE_NONE:
+ 		goto force_ro;
+ 	}
 -- 
 2.20.1
 
