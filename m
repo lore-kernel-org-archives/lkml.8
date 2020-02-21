@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E341C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38EFC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BC624670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FAD24676
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272256;
-	bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
+	s=default; t=1582272258;
+	bh=J6ZA5zhmLHjSnqGLjJAepvomCyU6cfVMPbDp9X4Wd9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TT5SCXQgpwDd0Pc4uqzRCtAxIudkExSfEU078A0pvw6WpwF1IyBikpA6By7EqVd+E
-	 5uB/Td/QmjrMoW39KJy09n+qbZiETNvWh5bh8y+/0N4f7cUpf31RBSlJgwBdRLVaQ7
-	 hckvZNPiZz2oRB+Cqu8I1bxbuoNNdwYGmRA7P6NU=
+	b=tDGl8o3rfpabHxfgYa8kHW9X06cDaBETvIV/8acp3VsKka+86gHox66V/1lqVr7o/
+	 4Sn6BwuJo9X+VVFWjkcvJuB6KpECB/h6UONx9GDiMKcftHNmQPGHpJLe3K7qoRNWLo
+	 hE4weBppfY5DX1ytZAkZWTbFJhJFNb0OPTo/vTG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbgBUIEO (ORCPT
+        id S1731208AbgBUIER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731588AbgBUIEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:12 -0500
+        id S1731588AbgBUIEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E99620801;
-        Fri, 21 Feb 2020 08:04:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9ECF222C4;
+        Fri, 21 Feb 2020 08:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272251;
-        bh=jwaeIp2MEMtqr9PJUVmeKPM5rbDAUa0EDOJ3hWpd4tw=;
+        s=default; t=1582272254;
+        bh=J6ZA5zhmLHjSnqGLjJAepvomCyU6cfVMPbDp9X4Wd9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QuxzJrWIWV1pXUzBjENVM3YSzpO6Y9jMsVC97o9mostEOSV6Mr5wr+9FoDIZjBmw9
-         WyyC/RkzJI2eKCJcy+y8wb5zOU/zgrxasT+TNgB8eMFJeX7NaUJL0Ey6+ynM4AZDV+
-         jwmaz9F7Mver2zEgGOCdBl2LjlqWe7IWRpI/bfCc=
+        b=TNPIU845KRNMHL0SE6X9Fwp5cFY8Q7fydRM8e2zzL2vB3ZgPmp1SSIrgEQXUvnkew
+         2jPMilzV1/POAVGNoRY371BKUSq/pXCbnLHt/jAz5DeEpI5gLAtE8onIurs8M4ssw7
+         Blum5K0s4KuK/0hfFdv7zuzVN4bf6Fl/wiKfLdLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/344] ext4: fix deadlock allocating bio_post_read_ctx from mempool
-Date:   Fri, 21 Feb 2020 08:37:44 +0100
-Message-Id: <20200221072354.916782225@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Luis Henriques <luis.henriques@canonical.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 074/344] tracing: Fix tracing_stat return values in error handling paths
+Date:   Fri, 21 Feb 2020 08:37:53 +0100
+Message-Id: <20200221072355.716162238@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,79 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Luis Henriques <luis.henriques@canonical.com>
 
-[ Upstream commit 68e45330e341dad2d3a0a3f8ef2ec46a2a0a3bbc ]
+[ Upstream commit afccc00f75bbbee4e4ae833a96c2d29a7259c693 ]
 
-Without any form of coordination, any case where multiple allocations
-from the same mempool are needed at a time to make forward progress can
-deadlock under memory pressure.
+tracing_stat_init() was always returning '0', even on the error paths.  It
+now returns -ENODEV if tracing_init_dentry() fails or -ENOMEM if it fails
+to created the 'trace_stat' debugfs directory.
 
-This is the case for struct bio_post_read_ctx, as one can be allocated
-to decrypt a Merkle tree page during fsverity_verify_bio(), which itself
-is running from a post-read callback for a data bio which has its own
-struct bio_post_read_ctx.
+Link: http://lkml.kernel.org/r/1410299381-20108-1-git-send-email-luis.henriques@canonical.com
 
-Fix this by freeing the first bio_post_read_ctx before calling
-fsverity_verify_bio().  This works because verity (if enabled) is always
-the last post-read step.
-
-This deadlock can be reproduced by trying to read from an encrypted
-verity file after reducing NUM_PREALLOC_POST_READ_CTXS to 1 and patching
-mempool_alloc() to pretend that pool->alloc() always fails.
-
-Note that since NUM_PREALLOC_POST_READ_CTXS is actually 128, to actually
-hit this bug in practice would require reading from lots of encrypted
-verity files at the same time.  But it's theoretically possible, as N
-available objects isn't enough to guarantee forward progress when > N/2
-threads each need 2 objects at a time.
-
-Fixes: 22cfe4b48ccb ("ext4: add fs-verity read support")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20191231181222.47684-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: ed6f1c996bfe4 ("tracing: Check return value of tracing_init_dentry()")
+Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
+[ Pulled from the archeological digging of my INBOX ]
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/readpage.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ kernel/trace/trace_stat.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ext4/readpage.c b/fs/ext4/readpage.c
-index a30b203fa461c..a5f55fece9b04 100644
---- a/fs/ext4/readpage.c
-+++ b/fs/ext4/readpage.c
-@@ -57,6 +57,7 @@ enum bio_post_read_step {
- 	STEP_INITIAL = 0,
- 	STEP_DECRYPT,
- 	STEP_VERITY,
-+	STEP_MAX,
- };
+diff --git a/kernel/trace/trace_stat.c b/kernel/trace/trace_stat.c
+index 9ab0a1a7ad5ee..1257dc6c07796 100644
+--- a/kernel/trace/trace_stat.c
++++ b/kernel/trace/trace_stat.c
+@@ -282,18 +282,22 @@ static int tracing_stat_init(void)
  
- struct bio_post_read_ctx {
-@@ -106,10 +107,22 @@ static void verity_work(struct work_struct *work)
- {
- 	struct bio_post_read_ctx *ctx =
- 		container_of(work, struct bio_post_read_ctx, work);
-+	struct bio *bio = ctx->bio;
+ 	d_tracing = tracing_init_dentry();
+ 	if (IS_ERR(d_tracing))
+-		return 0;
++		return -ENODEV;
  
--	fsverity_verify_bio(ctx->bio);
-+	/*
-+	 * fsverity_verify_bio() may call readpages() again, and although verity
-+	 * will be disabled for that, decryption may still be needed, causing
-+	 * another bio_post_read_ctx to be allocated.  So to guarantee that
-+	 * mempool_alloc() never deadlocks we must free the current ctx first.
-+	 * This is safe because verity is the last post-read step.
-+	 */
-+	BUILD_BUG_ON(STEP_VERITY + 1 != STEP_MAX);
-+	mempool_free(ctx, bio_post_read_ctx_pool);
-+	bio->bi_private = NULL;
- 
--	bio_post_read_processing(ctx);
-+	fsverity_verify_bio(bio);
-+
-+	__read_end_io(bio);
+ 	stat_dir = tracefs_create_dir("trace_stat", d_tracing);
+-	if (!stat_dir)
++	if (!stat_dir) {
+ 		pr_warn("Could not create tracefs 'trace_stat' entry\n");
++		return -ENOMEM;
++	}
+ 	return 0;
  }
  
- static void bio_post_read_processing(struct bio_post_read_ctx *ctx)
+ static int init_stat_file(struct stat_session *session)
+ {
+-	if (!stat_dir && tracing_stat_init())
+-		return -ENODEV;
++	int ret;
++
++	if (!stat_dir && (ret = tracing_stat_init()))
++		return ret;
+ 
+ 	session->file = tracefs_create_file(session->ts->name, 0644,
+ 					    stat_dir,
 -- 
 2.20.1
 
