@@ -2,184 +2,133 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03337C35653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D43C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7921207FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D795C207FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 11:11:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ipz3LQxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgBULLe (ORCPT
+        id S1727946AbgBULLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 06:11:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46068 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbgBULLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:11:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9205CAD9F;
-        Fri, 21 Feb 2020 11:11:31 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v4] leds: add SGI IP30 led support
-Date:   Fri, 21 Feb 2020 12:11:20 +0100
-Message-Id: <20200221111120.28799-1-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.25.0
+        Fri, 21 Feb 2020 06:11:44 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44234 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgBULLo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 06:11:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=SVjfyIXphMvz+0mMh2uVsdtbFsbq7Vh0uLErS6TwfLs=; b=ipz3LQxmil6VBbX0LjxdZNhiF5
+        v38HWarRPxD1CofLKUZxD5lS3+lDbjcq+GC7UOmOoTt0W+PnyGRuqbU6nxV2xXuDG40IbX8Co1cLx
+        zwdL/d2zAE3KhbmLhTIWsiIQaK+srz4oJx+CGOprfIdPdAUoNTOIXuoDzwI3C9FoNQMSZNbTZyEVK
+        Z7e21zLAxB8xvWOQRfqxWwbQG2idydm3HZcNHz0sDibMYuvrwJ8jTU2YnHIpkW1luU+6T21L503gs
+        pcpeL5VoNB+1PydwXZtam8v9BD4VF8b06qhSCWlcMaBHQj/jxUfqUr9vQsXQTqCkiip/SPrNNvJTJ
+        Lb/b8tRw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j56Dc-00032d-IN; Fri, 21 Feb 2020 11:11:40 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 87A7730220B;
+        Fri, 21 Feb 2020 12:09:45 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A735620254E68; Fri, 21 Feb 2020 12:11:38 +0100 (CET)
+Date:   Fri, 21 Feb 2020 12:11:38 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
+        keescook@chromium.org, torvalds@linux-foundation.org,
+        jannh@google.com, will@kernel.org
+Subject: [PATCH] mm/tlb: Fix use_mm() vs TLB invalidate
+Message-ID: <20200221111138.GX14897@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implemenets a driver to support the front panel LEDs of
-SGI Octane (IP30) workstations.
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+For SMP systems using IPI based TLB invalidation, looking at
+current->active_mm is entirely reasonable. This then presents the
+following race condition:
+
+
+  CPU0			CPU1
+
+  flush_tlb_mm(mm)	use_mm(mm)
+    <send-IPI>
+			  tsk->active_mm = mm;
+			  <IPI>
+			    if (tsk->active_mm == mm)
+			      // flush TLBs
+			  </IPI>
+			  switch_mm(old_mm,mm,tsk);
+
+
+Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+because the IPI lands before we actually switched.
+
+Avoid this by disabling IRQs across changing ->active_mm and
+switch_mm().
+
+[ There are all sorts of reasons this might be harmless for various
+architecture specific reasons, but best not leave the door open at
+all. ]
+
+Cc: stable@kernel.org
+Reported-by: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
-Changes in v4:
-  - simplified ip30led_set by using gated value from led framework
-
-Changes in v3:
-  - rebased to 5.6-rc2
-
-Changes in v2:
-  - use led names conforming to include/dt-bindings/leds/common.h
-  - read LED state from firmware
-  - leave setting up to user
-
- drivers/leds/Kconfig     | 11 ++++++
- drivers/leds/Makefile    |  1 +
- drivers/leds/leds-ip30.c | 77 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 89 insertions(+)
- create mode 100644 drivers/leds/leds-ip30.c
-
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index d82f1dea3711..c664d84e1667 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -846,6 +846,17 @@ config LEDS_TPS6105X
- 	  It is a single boost converter primarily for white LEDs and
- 	  audio amplifiers.
+Index: linux-2.6/mm/mmu_context.c
+===================================================================
+--- linux-2.6.orig/mm/mmu_context.c
++++ linux-2.6/mm/mmu_context.c
+@@ -24,14 +24,19 @@ void use_mm(struct mm_struct *mm)
+ 	struct mm_struct *active_mm;
+ 	struct task_struct *tsk = current;
  
-+config LEDS_IP30
-+	tristate "LED support for SGI Octane machines"
-+	depends on LEDS_CLASS
-+	depends on SGI_MFD_IOC3
-+	help
-+	  This option enables support for the Red and White LEDs of
-+	  SGI Octane machines.
++	BUG_ON(!(tsk->flags & PF_KTHREAD));
++	BUG_ON(tsk->mm != NULL);
 +
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-ip30.
-+
- comment "LED Triggers"
- source "drivers/leds/trigger/Kconfig"
+ 	task_lock(tsk);
++	local_irq_disable();
+ 	active_mm = tsk->active_mm;
+ 	if (active_mm != mm) {
+ 		mmgrab(mm);
+ 		tsk->active_mm = mm;
+ 	}
+ 	tsk->mm = mm;
+-	switch_mm(active_mm, mm, tsk);
++	switch_mm_irqs_off(active_mm, mm, tsk);
++	local_irq_enable();
+ 	task_unlock(tsk);
+ #ifdef finish_arch_post_lock_switch
+ 	finish_arch_post_lock_switch();
+@@ -54,11 +59,15 @@ void unuse_mm(struct mm_struct *mm)
+ {
+ 	struct task_struct *tsk = current;
  
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index d7e1107753fb..46bd611a03a9 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -86,6 +86,7 @@ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
- obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
- obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
- obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
-+obj-$(CONFIG_LEDS_IP30)			+= leds-ip30.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-diff --git a/drivers/leds/leds-ip30.c b/drivers/leds/leds-ip30.c
-new file mode 100644
-index 000000000000..c5853780a31a
---- /dev/null
-+++ b/drivers/leds/leds-ip30.c
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * LED Driver for SGI Octane machines
-+ */
++	BUG_ON(!(tsk->flags & PF_KTHREAD));
 +
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/leds.h>
-+
-+struct ip30_led {
-+	struct led_classdev cdev;
-+	u32 __iomem *reg;
-+};
-+
-+static void ip30led_set(struct led_classdev *led_cdev,
-+			enum led_brightness value)
-+{
-+	struct ip30_led *led = container_of(led_cdev, struct ip30_led, cdev);
-+
-+	writel(value, led->reg);
-+}
-+
-+static int ip30led_create(struct platform_device *pdev, int num)
-+{
-+	struct resource *res;
-+	struct ip30_led *data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, num);
-+	if (!res)
-+		return -EBUSY;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->reg = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->reg))
-+		return PTR_ERR(data->reg);
-+
-+
-+	if (num == 0)
-+		data->cdev.name = "white:indicator";
-+	else
-+		data->cdev.name = "red:indicator";
-+
-+	data->cdev.brightness = readl(data->reg);
-+	data->cdev.max_brightness = 1;
-+	data->cdev.brightness_set = ip30led_set;
-+
-+	return devm_led_classdev_register(&pdev->dev, &data->cdev);
-+}
-+
-+static int ip30led_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = ip30led_create(pdev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ip30led_create(pdev, 1);
-+}
-+
-+static struct platform_driver ip30led_driver = {
-+	.probe		= ip30led_probe,
-+	.driver		= {
-+		.name		= "ip30-leds",
-+	},
-+};
-+
-+module_platform_driver(ip30led_driver);
-+
-+MODULE_AUTHOR("Thomas Bogendoerfer <tbogendoerfer@suse.de>");
-+MODULE_DESCRIPTION("SGI Octane LED driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:ip30-leds");
--- 
-2.25.0
-
+ 	task_lock(tsk);
+ 	sync_mm_rss(mm);
++	local_irq_disable();
+ 	tsk->mm = NULL;
+ 	/* active_mm is still 'mm' */
+ 	enter_lazy_tlb(mm, tsk);
++	local_irq_enable();
+ 	task_unlock(tsk);
+ }
+ EXPORT_SYMBOL_GPL(unuse_mm);
