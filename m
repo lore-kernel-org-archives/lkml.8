@@ -2,94 +2,123 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A011BC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:02:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF04BC3565A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727AE20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582308152;
-	bh=2iqlsfCU2xzdvKiMFOxsJfrFK/WCC507GMR5NHeQJ/g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W7f5qqgv5xxyPd38ywip3srdKgjbxWAJlxNkRSTaVr/mEHs7Nk4YNZVxVoHiJubex
-	 lbgMwtoYYOtM4Z0GegZuZT5btSO358wqiEle5CVUnQRjFn5JqJxb57Ej/PvhF9m0X5
-	 WoiimD7rcc15+zSjQUOiPkWoIXAJOUooVYnEdRzM=
+	by mail.kernel.org (Postfix) with ESMTP id C71DB20722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 18:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQjdrHTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgBUSCb (ORCPT
+        id S1729521AbgBUSCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 13:02:31 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34572 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729438AbgBUSC3 (ORCPT
+        Fri, 21 Feb 2020 13:02:38 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41789 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729438AbgBUSCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:02:29 -0500
-Received: by mail-lj1-f196.google.com with SMTP id x7so3128475ljc.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:02:27 -0800 (PST)
+        Fri, 21 Feb 2020 13:02:37 -0500
+Received: by mail-oi1-f196.google.com with SMTP id i1so2422343oie.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:02:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AG9TJKXnTeZzyHlgjHVGK5jDlYOlKtakbHNOYDpKW9E=;
-        b=LtuqrNdxX93Kes55M7/V1nmMoOY/Am5rxlDligc40iz1+GEbCmeM7TuGyB0tTEcegn
-         UDZiT2MxYZWEAGTE0LovTMS1jqfnFBkPD3xPTU2e30E6da/H/mQbYfgawXH18yg2Guvv
-         l3o1EYHUu3z2m8B4mLtmpaElvsWWhBoRfpDBs=
+        bh=YwDEdueNqiLiTZn2fh4bRMDgxjPniW53g8xmvHACU8Q=;
+        b=xQjdrHTyiXy4turHzDZawU33aP36M8C7jfcRPKkpZOWK4V8Zng8Z6f+ZgYj7VxJaFK
+         5Spfrxkvpfi24B5ZMNSQ4zijH9oXUi0TjkRHlZy4p+o+GHFj7sQp91f/yhA706x1ZWMy
+         QI/h2BnyyFjtA2nPfmhrZidKwkesQDhIpNPE5Rq3JTzmWpzItKvuV7pFIm/r2ZDha7co
+         9f+SB7uplc1s7HwIkY6KPwsRdjrP3Q9n9R9o/2r5hb5l4YFol9quvryDblWiKQ2ERHY6
+         wHqrdXaOo/w+WgWBTejcc8efA2jIXWb8INL/HXIVLxDLOM7zPH3L/wwe9r8ECi41E5HS
+         TBCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AG9TJKXnTeZzyHlgjHVGK5jDlYOlKtakbHNOYDpKW9E=;
-        b=ujGNF4QJHiWRm2VfZoIMoQg4z3ekG2R59Pjy7Q8SqVhOr7SBIDG0EZuO1xtrGHpfaO
-         BOX+LrourEToDlbtz46p21ZbdMaMBUQcYt8bihkMTtvcloYNrDE+Nd4XO7kJ5r6gwOck
-         U4uVoDaZyTatO7/n3bEzsYZkuVq7lWz7PPhjLrb0VcpjWVxIIyH5Lt/SocF7P7BCjN7z
-         a1yl4nEHfpyhRE36vW9FpW3dRxnY+vp/iJq75Ele0+xZeEo/CXUE5f2S4w3UrsgcmweT
-         wVkrL8a79hP+dy1/HKhXrvgBzO8ri7YPTvKbyZ/7dzJFiYsJ99xYQr8ldCV/zn9CMF0u
-         Qkcg==
-X-Gm-Message-State: APjAAAUtBtwxLV1pinLWFCRCXVcJnh2dm6kqADLsiKWcHVjFIpsn1KJB
-        xTHoyeaVlIzY49o205MTLKrkPgCq52o=
-X-Google-Smtp-Source: APXvYqzpSWDn5exKyPOp/4CXthYCIyrEXEUF6B3wvC08LHu1eh9vnuwEywfLOLbPbIyC7d4bM8ePeg==
-X-Received: by 2002:a2e:5056:: with SMTP id v22mr22759110ljd.164.1582308146152;
-        Fri, 21 Feb 2020 10:02:26 -0800 (PST)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id w1sm2009937lfe.96.2020.02.21.10.02.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 10:02:24 -0800 (PST)
-Received: by mail-lj1-f180.google.com with SMTP id r19so3113941ljg.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 10:02:24 -0800 (PST)
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr22906965ljb.150.1582308144004;
- Fri, 21 Feb 2020 10:02:24 -0800 (PST)
+        bh=YwDEdueNqiLiTZn2fh4bRMDgxjPniW53g8xmvHACU8Q=;
+        b=G7yZbrckz6WpgzSOX4Mqgx6WHQ/j2Eo81EeczuWfCzl4MtBuCFqX7kVqIi+0Tw9Q/x
+         Q2QQE20/XjC/mVqATn1RYtY3t4b0wHZfss12/v9kKHMg66Ju0zCcRBSJ+qluT1XLkKVj
+         uOg9rKCPOB4XRc5ZkGSXLuDSBISGNfNYsm3u9ldLz7KrBu7p9gjOjJd7pZbiypPPSUTS
+         1ON82M6a5t96QkyySCR97w1KVVOxzUGVsGTVFt6Txp4YDXAWjarSKpNkvNl3Lt3YvtTK
+         bbo+VTqcHw0ywn/AIOYYtcHGYe/5fhVeuEKox84ks1g6D0+betFmBZ4ImbX6Gvhax5I/
+         i1aQ==
+X-Gm-Message-State: APjAAAWyuo+ueSmG9NAoZxq5vd9rf4aajH6Gc5Fa6ZrGh97reOd+5vBJ
+        CikWar4Ijq+O0teUE3J7oNUfosj2Y5M8Ncd14BWneg==
+X-Google-Smtp-Source: APXvYqyEtv2oGXx37l0a2b85lAJA3ombqXpMi4TeaNhtI8rq6+iJk+G5kX12275qe2nvDThK6H9LGH1udU668SSz7Zo=
+X-Received: by 2002:aca:c551:: with SMTP id v78mr3003192oif.161.1582308156744;
+ Fri, 21 Feb 2020 10:02:36 -0800 (PST)
 MIME-Version: 1.0
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
- <158197497594.2449.9692451182044632969@skylake-alporthouse-com>
- <10791544.HYfhKnFLvn@kreacher> <4974198.mf5Me8BlfX@kreacher>
- <158227678951.3099.15076882205129643027@skylake-alporthouse-com> <CAJZ5v0h07em8y5bXcnUTBcjie8pCttADK9QX9W_cB0WQRcDfGQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h07em8y5bXcnUTBcjie8pCttADK9QX9W_cB0WQRcDfGQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Feb 2020 10:02:07 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wihfx015Rr-nrMmBtN--357cFRbS4rjXeKXvEfB=GYT5g@mail.gmail.com>
-Message-ID: <CAHk-=wihfx015Rr-nrMmBtN--357cFRbS4rjXeKXvEfB=GYT5g@mail.gmail.com>
-Subject: Re: Linux 5.6-rc2
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>
+References: <158204549488.3299825.3783690177353088425.stgit@warthog.procyon.org.uk>
+ <158204559631.3299825.5358385352169781990.stgit@warthog.procyon.org.uk>
+ <CAG48ez3ZMg4O5US3n=p1CYK-2AAgLRY+pjnUXp2p5hdwbjCRSA@mail.gmail.com>
+ <1808070.1582287889@warthog.procyon.org.uk> <CAG48ez0+_kO_YL6iO9uA+HjjnHRVHVD-bFq0C=ZLeaGtTMss5A@mail.gmail.com>
+ <2113718.1582304782@warthog.procyon.org.uk> <CAG48ez14CHMjZS8vCp6h6FnLvcFQq8oy_9JPCd=5qZ52X6w12Q@mail.gmail.com>
+In-Reply-To: <CAG48ez14CHMjZS8vCp6h6FnLvcFQq8oy_9JPCd=5qZ52X6w12Q@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Fri, 21 Feb 2020 10:02:25 -0800
+Message-ID: <CALAqxLWxpkZMrJEHgYjtZnRtYtT7zY8=igKQ3rNPpqNV8FmLhg@mail.gmail.com>
+Subject: Re: seq_lock and lockdep_is_held() assertions
+To:     Jann Horn <jannh@google.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 2:54 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Fri, Feb 21, 2020 at 9:36 AM Jann Horn <jannh@google.com> wrote:
 >
-> Please pick up this patch directly if you can.
+> adding some locking folks to the thread...
+>
+> On Fri, Feb 21, 2020 at 6:06 PM David Howells <dhowells@redhat.com> wrote:
+> > Jann Horn <jannh@google.com> wrote:
+> > > On Fri, Feb 21, 2020 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
+> > > > What's the best way to write a lockdep assertion?
+> > > >
+> > > >         BUG_ON(!lockdep_is_held(lock));
+> > >
+> > > lockdep_assert_held(lock) is the normal way, I think - that will
+> > > WARN() if lockdep is enabled and the lock is not held.
+> >
+> > Okay.  But what's the best way with a seqlock_t?  It has two dep maps in it.
+> > Do I just ignore the one attached to the spinlock?
+>
+> Uuuh... very good question. Looking at how the seqlock_t helpers use
+> the dep map of the seqlock, I don't think lockdep asserts work for
+> asserting that you're in the read side of a seqlock?
+>
+> read_seqbegin_or_lock() -> read_seqbegin() -> read_seqcount_begin() ->
+> seqcount_lockdep_reader_access() does seqcount_acquire_read() (which
+> maps to lock_acquire_shared_recursive()), but immediately following
+> that calls seqcount_release() (which maps to lock_release())?
+>
+> So I think lockdep won't consider you to be holding any locks after
+> read_seqbegin_or_lock() if the lock wasn't taken?
 
-Done. Added Chris' tested-by too.
+Yea. It's a bit foggy now, but the main concern at the time was
+wanting to catch seqlock readers that happened under a writer which
+was a common cause of deadlocks between the timekeeping core and stuff
+like printks (or anything we called out that might try to read the
+time).
 
-            Linus
+I think it was because writers can properly interrupt readers, we
+couldn't hold the depmap across the read critical section? That's why
+we just take and release the depmap, since that will still catch any
+reads made while holding the write, which would deadlock.
+
+But take that with a grain of salt, as its been awhile.
+
+thanks
+-john
