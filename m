@@ -2,174 +2,254 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F33C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBC8C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BDF20679
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8B820679
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 09:11:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nitPb5hY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z2T3cugD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBUJLE (ORCPT
+        id S1728014AbgBUJLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 04:11:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52065 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgBUJLD (ORCPT
+        Fri, 21 Feb 2020 04:11:19 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55471 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgBUJLS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 04:11:03 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t23so868508wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:11:02 -0800 (PST)
+        Fri, 21 Feb 2020 04:11:18 -0500
+Received: by mail-wm1-f67.google.com with SMTP id q9so856140wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 01:11:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lC2Ok05wDBJ11Mc+7XUHky9ZjVue0L36+JAbszAfxLM=;
-        b=nitPb5hY8JFvy36A15Vy2ZNcfH2vIQLKpCa9o97VvY+nLx1A5fr8PkdsPflphtORSp
-         t54HsjYCc0zoXbu5sC/2qwW9+Yj4gbdN7ZoPKJuicxkhz1tv1TCGZcbyhI5kWG1Dn/Bt
-         Fq8bqIouteP/5SuVrB3YVm+8pqUvR+dz1bDl06pTL9qWfnasz7flQ5Pu2qorpwJ0bKCc
-         JsX0XqsQcQv8PQNpdvZIC1VzRErxIu+tPstIRiuU7fMJfQsjY+Wu7iT5aCkJI2ne662b
-         o3vfGzOmsjso1ikg8zHPxqckRuw/jLhPcsy+0zpNfx1Pp80DUoVzSi2FuruoYUtgFE47
-         mv4w==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=azk1Q7pvujWav83kMuWej4FskuG4+RLdHCFFEc4Heqw=;
+        b=z2T3cugDBfcE9X09MGRjd1QXuGNe3k89XEsa3u0eDeWOjb3aCWK7Ft/FfZK/LaBp5S
+         mzIVECOghk4NpHUsInWmKqapwZC/g4y0SeeaJRHeXOhBNDJbuLJz+Nyc7jvkzsLPKiii
+         FuFaEvWrnG8eDMWl3EKLJrSY2eoIeqEaDiZzR5HMvECjyYnN1bjVGuTMPjIJWvypDWH6
+         8M+ghap0Yu9P8fqWKEC2v3RavqEHHLRV4CxBb3p8tpN7PblBBfBHF/qC89Xr1rU3UZjk
+         7cXlSzm2/U6bWYXYtYr/47MqGjJlaD9W/zyzzhgE5xO3NSUNm1WRL8SwIFIH8V6tAsZ1
+         O1bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=lC2Ok05wDBJ11Mc+7XUHky9ZjVue0L36+JAbszAfxLM=;
-        b=L9odTgjSe3p8mrmGAwl2SFYb/Ks7dfNYaCEPYI7p0gEY86a/gK1H98TjfssjN5fv1a
-         +rTziOSjzSriy/4Sdql61Z2KQMtwbN5wczfsJAehhnNV9RPLt4qgFfdSlvEZ5L7WYMfI
-         +iu6uvYwD5JskDLyO0Y77UMys3sWPcKed87D1AQPupac/xLcXCHKducRLZ0D1S0hPpc9
-         py+N+/rcCoub8btxi+5J1E06dDyOmkijZSfpimWR6LM3DrSqWubbS5n7zYRY4b4YWtnM
-         9PP1pzdf5fmeMXdl1Zz0W+ud+wu2Dnm9oCxYwzdiN4dHej+hqmAot6+2N8Y/JJaFlEYz
-         8lFw==
-X-Gm-Message-State: APjAAAXD0PViN1IelIwRP+7vu41lxUETO0QZdNWYh0AZ72PoB5uUplL5
-        PdGutzfFk7bWd28k0qlE8LJNaw==
-X-Google-Smtp-Source: APXvYqzW+erZHPEVYlb4cjR9TwZjlpd5fW07F9ngwXZnZ9+r5FiohTmukOgiek6LvZ+Pt5tBb+VSpw==
-X-Received: by 2002:a1c:4b0f:: with SMTP id y15mr2478639wma.87.1582276261828;
-        Fri, 21 Feb 2020 01:11:01 -0800 (PST)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858? ([2a01:e35:2ec0:82b0:4ca8:b25b:98e4:858])
-        by smtp.gmail.com with ESMTPSA id a22sm3025856wmd.20.2020.02.21.01.11.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2020 01:11:01 -0800 (PST)
-Subject: Re: [PATCH v3 2/3] usb: dwc3: gadget: Add support for disabling SS
- instances in park mode
-To:     Jun Li <lijun.kernel@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>, khilman@baylibre.com,
-        linux-usb@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dongjin Kim <tobetter@gmail.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Thinh Nguyen <thinhn@synopsys.com>, Tim <elatllat@gmail.com>
-References: <20200219141817.24521-1-narmstrong@baylibre.com>
- <20200219141817.24521-3-narmstrong@baylibre.com>
- <CAKgpwJXVo_Psyu45+KfRKsTRBc6LRWSvUw2CWdUQseAoKd2p9g@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <b2439923-5590-349e-754b-6b047d4becaf@baylibre.com>
-Date:   Fri, 21 Feb 2020 10:10:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=azk1Q7pvujWav83kMuWej4FskuG4+RLdHCFFEc4Heqw=;
+        b=uefF1bYzkP49qdr6y2wMKbrDAWpqogB6d7mq3MQtfXcA+enAIlNFUr//OVN6oTqz5N
+         HZwCRjvIFpETsWl6YmQ8UVNEZPKhpCBv2B8obtHn1x/b2K4h84n5KNEn5nTgfCqGRul6
+         DjE329keOsXHmzAVTacmAjx1fpVPUkHFrIbS1CVcfll8PeG4n281/A88TkoWPMRfdISb
+         d+B9tbxHMenRqWVNWzPq7jsLrh29LEbA/IiZqHKX9GJ5iEonH2GwuCDF4vLXdLNitCn6
+         TxgkN2lSuTQPMs/5MPXUHhgnvokswqv7fQolTAcBsBu7khiBco47w0TzY3XdAYBPD/ge
+         sNDQ==
+X-Gm-Message-State: APjAAAU731Wr6ybVymWucImEjgalOqwY2Cp82Vp92+hyZ4eFPn9/bVV9
+        RNBvTUMUSafKew7jy247xGIR3Q==
+X-Google-Smtp-Source: APXvYqyS0hUOw4p2ui00nsj3c5MOAkh4BV79wy3Sn7j7GPpD+1H3vzOFdO/cs7FwCSTWi1sGit46/w==
+X-Received: by 2002:a7b:c14d:: with SMTP id z13mr2534616wmi.71.1582276276286;
+        Fri, 21 Feb 2020 01:11:16 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:2dfb:b5ce:9043:4adb])
+        by smtp.gmail.com with ESMTPSA id u23sm3032858wmu.14.2020.02.21.01.11.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 01:11:15 -0800 (PST)
+Date:   Fri, 21 Feb 2020 10:11:12 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, rui.zhang@intel.com,
+        amit.kucheria@verdurent.com, aisheng.dong@nxp.com,
+        linux@roeck-us.net, srinivas.kandagatla@linaro.org,
+        krzk@kernel.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        daniel.baluta@nxp.com, bjorn.andersson@linaro.org, olof@lixom.net,
+        dinguyen@kernel.org, leonard.crestez@nxp.com,
+        marcin.juszkiewicz@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pm@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V15 RESEND 2/5] thermal: of-thermal: add API for getting
+ sensor ID from DT
+Message-ID: <20200221091112.GA10516@linaro.org>
+References: <1582161028-2844-1-git-send-email-Anson.Huang@nxp.com>
+ <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKgpwJXVo_Psyu45+KfRKsTRBc6LRWSvUw2CWdUQseAoKd2p9g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582161028-2844-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/02/2020 02:59, Jun Li wrote:
-> Neil Armstrong <narmstrong@baylibre.com> 于2020年2月19日周三 下午10:18写道：
->>
->> In certain circumstances, the XHCI SuperSpeed instance in park mode
->> can fail to recover, thus on Amlogic G12A/G12B/SM1 SoCs when there is high
->> load on the single XHCI SuperSpeed instance, the controller can crash like:
->>  xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
->>  xhci-hcd xhci-hcd.0.auto: Host halt failed, -110
->>  xhci-hcd xhci-hcd.0.auto: xHCI host controller not responding, assume dead
->>  xhci-hcd xhci-hcd.0.auto: xHCI host not responding to stop endpoint command.
->>  hub 2-1.1:1.0: hub_ext_port_status failed (err = -22)
->>  xhci-hcd xhci-hcd.0.auto: HC died; cleaning up
->>  usb 2-1.1-port1: cannot reset (err = -22)
->>
->> Setting the PARKMODE_DISABLE_SS bit in the DWC3_USB3_GUCTL1 mitigates
->> the issue. The bit is described as :
->> "When this bit is set to '1' all SS bus instances in park mode are disabled"
->>
->> Synopsys explains in [1]:
->> The GUCTL1.PARKMODE_DISABLE_SS is only available in
->> dwc_usb3 controller running in host mode.
->> This should not be set for other IPs.
->> This can be disabled by default based on IP, but I recommend to have a
->> property to enable this feature for devices that need this.
->>
->> [1] https://lore.kernel.org/linux-usb/45212db9-e366-2669-5c0a-3c5bd06287f6@synopsys.com
+Hi,
+
+On Thu, Feb 20, 2020 at 09:10:25AM +0800, Anson Huang wrote:
+> This patch adds new API thermal_zone_of_get_sensor_id() to
+> provide the feature of getting sensor ID from DT thermal
+> zone's node. It's useful for thermal driver to register the
+> specific thermal zone devices from DT in a common way.
 > 
-> This is not for gadget, patch title should be:
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+> Changes since V14:
+> 	- improve the commit message and comment, no code change.
+> ---
+>  drivers/thermal/of-thermal.c | 65 +++++++++++++++++++++++++++++++++-----------
+>  include/linux/thermal.h      | 10 +++++++
+>  2 files changed, 59 insertions(+), 16 deletions(-)
 > 
-> usb: dwc3: core: add support...
-> 
-> Li Jun
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index ef0baa9..0f57108 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -449,6 +449,53 @@ thermal_zone_of_add_sensor(struct device_node *zone,
+>  }
+>  
+>  /**
+> + * thermal_zone_of_get_sensor_id - get sensor ID from a DT thermal zone
+> + * @tz_np: a valid thermal zone device node.
+> + * @sensor_np: a sensor node of a valid sensor device.
+> + * @id: the sensor ID returned if success.
+> + *
+> + * This function will get sensor ID from a given thermal zone node and
+> + * the sensor node must match the temperature provider @sensor_np.
+> + *
+> + * Return: 0 on success, proper error code otherwise.
+> + */
+> +
+> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +				  struct device_node *sensor_np,
+> +				  u32 *id)
+> +{
+> +	struct of_phandle_args sensor_specs;
+> +	int ret;
+> +
+> +	ret = of_parse_phandle_with_args(tz_np,
+> +					 "thermal-sensors",
+> +					 "#thermal-sensor-cells",
+> +					 0,
+> +					 &sensor_specs);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (sensor_specs.np != sensor_np) {
+> +		of_node_put(sensor_specs.np);
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (sensor_specs.args_count >= 1) {
+
+For the sake of clarity, move the sanity tests before:
+
+	if (sensor_specs.args_count > 1)
+		pr_warn("...");
+
+	*id = sensor_specs.args_count ? sensor_specs.args[0] : 0;
+
+> +		*id = sensor_specs.args[0];
+> +		WARN(sensor_specs.args_count > 1,
+> +		     "%pOFn: too many cells in sensor specifier %d\n",
+> +		     sensor_specs.np, sensor_specs.args_count);
+> +	} else {
+> +		*id = 0;
+> +	}
+> +
+> +	of_node_put(sensor_specs.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(thermal_zone_of_get_sensor_id);
+> +
+> +/**
+>   * thermal_zone_of_sensor_register - registers a sensor to a DT thermal zone
+>   * @dev: a valid struct device pointer of a sensor device. Must contain
+>   *       a valid .of_node, for the sensor node.
+> @@ -499,36 +546,22 @@ thermal_zone_of_sensor_register(struct device *dev, int sensor_id, void *data,
+>  	sensor_np = of_node_get(dev->of_node);
+>  
+>  	for_each_available_child_of_node(np, child) {
+> -		struct of_phandle_args sensor_specs;
+>  		int ret, id;
+>  
+>  		/* For now, thermal framework supports only 1 sensor per zone */
+> -		ret = of_parse_phandle_with_args(child, "thermal-sensors",
+> -						 "#thermal-sensor-cells",
+> -						 0, &sensor_specs);
+> +		ret = thermal_zone_of_get_sensor_id(child, sensor_np, &id);
+>  		if (ret)
+>  			continue;
+>  
+> -		if (sensor_specs.args_count >= 1) {
+> -			id = sensor_specs.args[0];
+> -			WARN(sensor_specs.args_count > 1,
+> -			     "%pOFn: too many cells in sensor specifier %d\n",
+> -			     sensor_specs.np, sensor_specs.args_count);
+> -		} else {
+> -			id = 0;
+> -		}
+
+Please take also the opportunity to factor out the function
+thermal_zone_of_sensor_register().
+
+> -		if (sensor_specs.np == sensor_np && id == sensor_id) {
+> +		if (id == sensor_id) {
+>  			tzd = thermal_zone_of_add_sensor(child, sensor_np,
+>  							 data, ops);
+>  			if (!IS_ERR(tzd))
+>  				tzd->ops->set_mode(tzd, THERMAL_DEVICE_ENABLED);
+>  
+> -			of_node_put(sensor_specs.np);
+>  			of_node_put(child);
+>  			goto exit;
+>  		}
+> -		of_node_put(sensor_specs.np);
+>  	}
+>  exit:
+>  	of_node_put(sensor_np);
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index 126913c6..53e6f67 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -364,6 +364,9 @@ struct thermal_trip {
+>  
+>  /* Function declarations */
+>  #ifdef CONFIG_THERMAL_OF
+> +int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +				  struct device_node *sensor_np,
+> +				  u32 *id);
+>  struct thermal_zone_device *
+>  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+>  				const struct thermal_zone_of_device_ops *ops);
+> @@ -375,6 +378,13 @@ struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
+>  void devm_thermal_zone_of_sensor_unregister(struct device *dev,
+>  					    struct thermal_zone_device *tz);
+>  #else
+> +
+> +static int thermal_zone_of_get_sensor_id(struct device_node *tz_np,
+> +					 struct device_node *sensor_np,
+> +					 u32 *id)
+> +{
+> +	return -ENOENT;
+> +}
+>  static inline struct thermal_zone_device *
+>  thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
+>  				const struct thermal_zone_of_device_ops *ops)
+> -- 
+> 2.7.4
 > 
 
-Indeed... time for a v4.
+-- 
 
-Thanks,
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Neil
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
