@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98866C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F6FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E342073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05C6C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271904;
-	bh=cEQMdcc8WTOTem/Ek9qVt8CLr46UoNPH3C+4E/CD0ss=;
+	s=default; t=1582271907;
+	bh=VxGyWnEba5VNmYC+QZbrZ1DU0OE8ldnVhLLrAP06RRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=05XM0la8LBscTlnKLmCPHmX6w5oSgqbczDm36PZWj51pd8X1SfibWNQO5U//bsXTj
-	 9OM3/U/I8Fqyo+SuxmtkeI6Q/L5U7/qBVthaK510yLIqczyiB2nJP2H6eSsF5f4tMo
-	 3koYUdMU+e93NCz/TLe7JnShhaIyau5kV4sG+YJs=
+	b=alfzY0G6gmzZAABeclqPnivPndZJjPWmlay3tIcxbmAWH52Hpc0cYQ43vcD6oDqnA
+	 GxlwqAXKu5N1QeSiqi0Co7OvWiB/NlD0tMRhMfulHZkVnUp6hTXjrDj3sGKWUXhe5l
+	 x8sVbhdk3PEZLNvn2+F5VHTmaxBNn+Ti1jdvQMlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730764AbgBUH6W (ORCPT
+        id S1730771AbgBUH60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730749AbgBUH6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:17 -0500
+        id S1730765AbgBUH6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E71AB20801;
-        Fri, 21 Feb 2020 07:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F09842465D;
+        Fri, 21 Feb 2020 07:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271897;
-        bh=cEQMdcc8WTOTem/Ek9qVt8CLr46UoNPH3C+4E/CD0ss=;
+        s=default; t=1582271902;
+        bh=VxGyWnEba5VNmYC+QZbrZ1DU0OE8ldnVhLLrAP06RRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ok/g9YTN6JARWN9h8nUKLgPk+ut3VGO9UakRf6rHLIJxxE4zDHzDURFgFT4eGFyWQ
-         HSYX4+XPYEslRghHFZWJOAI6vbD1+BaOrh+Uyz+Y1hWjd27EYinOhumm2TuPnN489p
-         20mTv/xqUFtrcab0NWrh0q+1SBSGHxFQePxX/ReE=
+        b=QJ8Pjgv7FEhqNu57O1hkFDlounQg1b2IMP+gDTsX2pZALhMRipLBmCIUTEo7GiY/n
+         lyw5RCHbctCue8MJPHh8+sLg6PZqUcLmZVLWSVwLdyBaxaptx7LabWteYc0q7A1Teq
+         K1NKUM0byEpwMPXyG2lhUrAGs0qDb8qDKrQqj4ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Michael Bringmann <mwb@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 339/399] jbd2: switch to use jbd2_journal_abort() when failed to submit the commit record
-Date:   Fri, 21 Feb 2020 08:41:04 +0100
-Message-Id: <20200221072433.869843546@linuxfoundation.org>
+Subject: [PATCH 5.5 341/399] powerpc/pseries/lparcfg: Fix display of Maximum Memory
+Date:   Fri, 21 Feb 2020 08:41:06 +0100
+Message-Id: <20200221072434.013134363@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Michael Bringmann <mwb@linux.ibm.com>
 
-[ Upstream commit d0a186e0d3e7ac05cc77da7c157dae5aa59f95d9 ]
+[ Upstream commit f1dbc1c5c70d0d4c60b5d467ba941fba167c12f6 ]
 
-We invoke jbd2_journal_abort() to abort the journal and record errno
-in the jbd2 superblock when committing journal transaction besides the
-failure on submitting the commit record. But there is no need for the
-case and we can also invoke jbd2_journal_abort() instead of
-__jbd2_journal_abort_hard().
+Correct overflow problem in calculation and display of Maximum Memory
+value to syscfg.
 
-Fixes: 818d276ceb83a ("ext4: Add the journal checksum feature")
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191204124614.45424-2-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Michael Bringmann <mwb@linux.ibm.com>
+[mpe: Only n_lmbs needs casting to unsigned long]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/5577aef8-1d5a-ca95-ff0a-9c7b5977e5bf@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/commit.c | 4 ++--
+ arch/powerpc/platforms/pseries/lparcfg.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index 3845750f70ec8..27373f5792a4f 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -782,7 +782,7 @@ start_journal_io:
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						 &cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
+diff --git a/arch/powerpc/platforms/pseries/lparcfg.c b/arch/powerpc/platforms/pseries/lparcfg.c
+index e33e8bc4b69bd..38c306551f76b 100644
+--- a/arch/powerpc/platforms/pseries/lparcfg.c
++++ b/arch/powerpc/platforms/pseries/lparcfg.c
+@@ -435,10 +435,10 @@ static void maxmem_data(struct seq_file *m)
+ {
+ 	unsigned long maxmem = 0;
  
- 	blk_finish_plug(&plug);
-@@ -875,7 +875,7 @@ start_journal_io:
- 		err = journal_submit_commit_record(journal, commit_transaction,
- 						&cbh, crc32_sum);
- 		if (err)
--			__jbd2_journal_abort_hard(journal);
-+			jbd2_journal_abort(journal, err);
- 	}
- 	if (cbh)
- 		err = journal_wait_on_commit_record(journal, cbh);
+-	maxmem += drmem_info->n_lmbs * drmem_info->lmb_size;
++	maxmem += (unsigned long)drmem_info->n_lmbs * drmem_info->lmb_size;
+ 	maxmem += hugetlb_total_pages() * PAGE_SIZE;
+ 
+-	seq_printf(m, "MaxMem=%ld\n", maxmem);
++	seq_printf(m, "MaxMem=%lu\n", maxmem);
+ }
+ 
+ static int pseries_lparcfg_data(struct seq_file *m, void *v)
 -- 
 2.20.1
 
