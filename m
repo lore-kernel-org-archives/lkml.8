@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9401CC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECBEC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB0920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB7E20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 13:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gGDzdv1R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hfjtFN05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgBUNvq (ORCPT
+        id S1728780AbgBUNvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 08:51:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56324 "EHLO
+        Fri, 21 Feb 2020 08:51:49 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56318 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbgBUNu1 (ORCPT
+        with ESMTP id S1728639AbgBUNu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 08:50:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=xEZO8jQiUjD6Cw8Z5SrFWAbKXhwmoT9wPCbHC88J+aM=; b=gGDzdv1RSKknX1ahOL0kXPrLnb
-        gWRG2EjxmL/P2gX/LfZvuwpaejSjtwb7i+wUQ0j5AcOhVS855Zq2f4xxPhx3dbzrDNSL1MnJFOB7P
-        E+WHebeagImiiuv5bLdiZyxm1ItrLGlTzLCne74p6zwsDL9S+Z5Bbl6XWjNGk/EXZGljx/+u6eHVk
-        8dubqAz+tDc5b6Cxgtr+7H2qAPZfjobvXKTq7UcsYFXKiUNNdcrvQScdMtpc+NCn4JIuF/UW/GFwl
-        0sIWKN4dhtdKj5JzF678lXHPjm/UH9+VFMu0e+MdukeiAJkwJsx9/iIQV0j2DC9HLX6XJnN40cQpv
-        9sTsxtwA==;
+        bh=hSu90YkExU+GY6s1yDHokNBrPYH7JUpisO2iRBcfO2g=; b=hfjtFN05ZGGp3NTWtVJmN3X9kp
+        WsGd2Ddf0d7WOyLAqzvp4VDDKtZ1wjxlGgU1wdKWgDzfPdPS/AuskXmVGE/2RusTjN1nusCNHbQEA
+        AFl1qLIH1Gr/mnFdzNkx+MUsxYnoBSDLHvcGK6xDpfjLWGi5Glf0evq8XtLa5+66SJ5LPNW54RJzb
+        4+VIub9NaoZ10i0xvxIXuupaAXvjkcjZW3UeVIM937kOZ2O9Qwwmv6zSlH+7eXFYyYPYcsAgzlTCD
+        ecGvnzwwDvnXyvKtmbJwNRwrU3EYGoQWyixDhcB4dMr3rqQTj/LSUCIfYCmSK8JPu6MCQ0bCOOnyY
+        0usq4+Bg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j58gv-0000q9-Ku; Fri, 21 Feb 2020 13:50:05 +0000
+        id 1j58gw-00013M-U8; Fri, 21 Feb 2020 13:50:07 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 796DB3077C4;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 88FBC30782A;
         Fri, 21 Feb 2020 14:48:08 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E37AE29D740AE; Fri, 21 Feb 2020 14:50:00 +0100 (CET)
-Message-Id: <20200221134215.951340533@infradead.org>
+        id 2BD7729D740AC; Fri, 21 Feb 2020 14:50:01 +0100 (CET)
+Message-Id: <20200221134216.573806438@infradead.org>
 User-Agent: quilt/0.65
-Date:   Fri, 21 Feb 2020 14:34:31 +0100
+Date:   Fri, 21 Feb 2020 14:34:38 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         rostedt@goodmis.org
@@ -54,7 +54,7 @@ Cc:     peterz@infradead.org, mingo@kernel.org, joel@joelfernandes.org,
         mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
         luto@kernel.org, tony.luck@intel.com, frederic@kernel.org,
         dan.carpenter@oracle.com, mhiramat@kernel.org
-Subject: [PATCH v4 15/27] tracing: Employ trace_rcu_{enter,exit}()
+Subject: [PATCH v4 22/27] compiler: Simple READ/WRITE_ONCE() implementations
 References: <20200221133416.777099322@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,45 +63,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the opencoded (and incomplete) RCU manipulations with the new
-helpers to ensure a regular RCU context when calling into
-__ftrace_trace_stack().
+Because I need WRITE_ONCE_NOCHECK() and in anticipation of Will's
+READ_ONCE rewrite, provide __{READ,WRITE}_ONCE_SCALAR().
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c |   19 +++----------------
- 1 file changed, 3 insertions(+), 16 deletions(-)
+ include/linux/compiler.h |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2989,24 +2989,11 @@ void __trace_stack(struct trace_array *t
- 		   int pc)
- {
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
-+	int rcu_flags;
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -289,6 +289,14 @@ unsigned long read_word_at_a_time(const
+ 	__u.__val;					\
+ })
  
--	if (rcu_is_watching()) {
--		__ftrace_trace_stack(buffer, flags, skip, pc, NULL);
--		return;
--	}
--
--	/*
--	 * When an NMI triggers, RCU is enabled via rcu_nmi_enter(),
--	 * but if the above rcu_is_watching() failed, then the NMI
--	 * triggered someplace critical, and rcu_irq_enter() should
--	 * not be called from NMI.
--	 */
--	if (unlikely(in_nmi()))
--		return;
--
--	rcu_irq_enter_irqsave();
-+	rcu_flags = trace_rcu_enter();
- 	__ftrace_trace_stack(buffer, flags, skip, pc, NULL);
--	rcu_irq_exit_irqsave();
-+	trace_rcu_exit(rcu_flags);
- }
++#define __READ_ONCE_SCALAR(x)			\
++	(*(const volatile typeof(x) *)&(x))
++
++#define __WRITE_ONCE_SCALAR(x, val)		\
++do {						\
++	*(volatile typeof(x) *)&(x) = val;	\
++} while (0)
++
+ #endif /* __KERNEL__ */
  
- /**
+ /*
 
 
