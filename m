@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E68F7C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F37FC35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B98E620722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74D120722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272533;
-	bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+	s=default; t=1582272537;
+	bh=cZWF5B+oqnadoyrCckaRV5YoXWc4Oiv38tJwjPMVSmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjCcks9O4Dwe6YhMkfxToFHu60+2/h9KHqaXwcA2wi7OfhUbWWlm4oHzqSCLSVwzM
-	 LeyJfuYlfayHp753sz3CwxCqjvAdsPNJWIvU49b7bG2wozXqYnMzA0pXAXdEVJtnqh
-	 lhYeMdzybepDoA3OG6dCHs/fPCpNytYS4xHCbjek=
+	b=zo11xsDVXBXKlaS3Tie9RhmZnaj2aT2sRS0m7R2znCpuReLeb89fhSQ+EXYij3fQG
+	 iVQJHT4nd2cH6UBHyA/5SgXidQ/p7c/EyU/cbT+vHuhRjzvJXKQD7cKv5+882v3i50
+	 jdPNok/MYNyDwihu0777iz2126EwlZSLzcpUw9fU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732270AbgBUIIw (ORCPT
+        id S1732276AbgBUIIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43494 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:08:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732102AbgBUIIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:50 -0500
+        id S1732265AbgBUIIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F09720801;
-        Fri, 21 Feb 2020 08:08:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9C7420722;
+        Fri, 21 Feb 2020 08:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272529;
-        bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
+        s=default; t=1582272532;
+        bh=cZWF5B+oqnadoyrCckaRV5YoXWc4Oiv38tJwjPMVSmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JXQX0qazNXA4vpUM9c3/4A+xUVEngdoaWNY1RMHLWVx15pL5f38RgzVQHBUkZaOhj
-         9E3ziBqZzKKmAyymD7DKjUqTTD+FAbM4d0zzWL/qLilIM8cO3ywhAAUk7WXTLUfJnX
-         H26PoQjWxiDDfyIx39ADBPCY82H2Kzvtb++4vLxg=
+        b=bNO2TZNjik01NfESDSa1YkrCgHlUnJsPxpn3t/oK8AiBIFSZutIfdu0tN/yB7vDVb
+         PoeUuxFQdHtFJ1DLgen/zCrwxVijLowYCTFsI3uplsuaymvluDnwShn2xYk3KQ6wCS
+         gul4MBhOz20j5Xx9qDpP1zaBqEXMY5Ee8aNsk4zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 176/344] clk: uniphier: Add SCSSI clock gate for each channel
-Date:   Fri, 21 Feb 2020 08:39:35 +0100
-Message-Id: <20200221072404.963994507@linuxfoundation.org>
+Subject: [PATCH 5.4 177/344] ALSA: hda/realtek - Apply mic mute LED quirk for Dell E7xx laptops, too
+Date:   Fri, 21 Feb 2020 08:39:36 +0100
+Message-Id: <20200221072405.051898397@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -62,61 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
+[ Upstream commit 5fab5829674c279839a7408ab30c71c6dfe726b9 ]
 
-SCSSI has clock gates for each channel in the SoCs newer than Pro4,
-so this adds missing clock gates for channel 1, 2 and 3. And more, this
-moves MCSSI clock ID after SCSSI.
+Dell E7xx laptops have also mic mute LED that is driven by the
+dell-laptop platform driver.  Bind it with the capture control as
+already done for other models.
 
-Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+A caveat is that the fixup hook for the mic mute LED has to be applied
+at last, otherwise it results in the invalid override of the callback.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=205529
+Link: https://lore.kernel.org/r/20200105081119.21396-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ sound/pci/hda/patch_realtek.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
-index 9caa52944b1c5..3e32db9dad815 100644
---- a/drivers/clk/uniphier/clk-uniphier-peri.c
-+++ b/drivers/clk/uniphier/clk-uniphier-peri.c
-@@ -18,8 +18,8 @@
- #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
- 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
- 
--#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
--	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
-+#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
-+	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
- 
- #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
- 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
-@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_I2C(6, 2),
- 	UNIPHIER_PERI_CLK_I2C(7, 3),
- 	UNIPHIER_PERI_CLK_I2C(8, 4),
--	UNIPHIER_PERI_CLK_SCSSI(11),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
- 	{ /* sentinel */ }
- };
- 
-@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
- 	UNIPHIER_PERI_CLK_FI2C(8, 4),
- 	UNIPHIER_PERI_CLK_FI2C(9, 5),
- 	UNIPHIER_PERI_CLK_FI2C(10, 6),
--	UNIPHIER_PERI_CLK_SCSSI(11),
--	UNIPHIER_PERI_CLK_MCSSI(12),
-+	UNIPHIER_PERI_CLK_SCSSI(11, 0),
-+	UNIPHIER_PERI_CLK_SCSSI(12, 1),
-+	UNIPHIER_PERI_CLK_SCSSI(13, 2),
-+	UNIPHIER_PERI_CLK_SCSSI(14, 3),
-+	UNIPHIER_PERI_CLK_MCSSI(15),
- 	{ /* sentinel */ }
- };
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index a66d4be3516e6..f162e607fc6c3 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5852,6 +5852,7 @@ enum {
+ 	ALC288_FIXUP_DELL1_MIC_NO_PRESENCE,
+ 	ALC288_FIXUP_DELL_XPS_13,
+ 	ALC288_FIXUP_DISABLE_AAMIX,
++	ALC292_FIXUP_DELL_E7X_AAMIX,
+ 	ALC292_FIXUP_DELL_E7X,
+ 	ALC292_FIXUP_DISABLE_AAMIX,
+ 	ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK,
+@@ -6547,12 +6548,19 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC293_FIXUP_DELL1_MIC_NO_PRESENCE
+ 	},
+-	[ALC292_FIXUP_DELL_E7X] = {
++	[ALC292_FIXUP_DELL_E7X_AAMIX] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_dell_xps13,
+ 		.chained = true,
+ 		.chain_id = ALC292_FIXUP_DISABLE_AAMIX
+ 	},
++	[ALC292_FIXUP_DELL_E7X] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = snd_hda_gen_fixup_micmute_led,
++		/* micmute fixup must be applied at last */
++		.chained_before = true,
++		.chain_id = ALC292_FIXUP_DELL_E7X_AAMIX,
++	},
+ 	[ALC298_FIXUP_ALIENWARE_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
 -- 
 2.20.1
 
