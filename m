@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524FFC35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB25C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB0920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242AE24656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271571;
-	bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+	s=default; t=1582271575;
+	bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E+HFelhTxpNhibzHJP0HjQZWTbeayYXtPvHYc5jOUss7vN7VSXenyBraEfYVneyD4
-	 bW+UKuU9/dzImwhKdY5NPDEVQWQVxmBEOnYrq9LO98+lCBtyldNsqa4WWERWXq0kaM
-	 kHq+YjbUPJTz6HKvBuS7DD1zzUuOSwwR6FpfNcaM=
+	b=VLVdjNuSPQd3DnRpZsHE5FAzIUKgeuJxI+5uITai2Tq9hLXLbsWgXpJ8jEyLQqlrC
+	 ztxpC/GrZOULAaTTpKivyrB6ihoeowwgGocqhwGwZLmeMxmKvQ6o2Aalk3Mrvrr81/
+	 FqJYaJuXMfuJHOWo20QUAfEWQcJEQ7gDG2JAdWxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgBUHwt (ORCPT
+        id S1729987AbgBUHwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:52:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50650 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:52:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbgBUHwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:52:42 -0500
+        id S1728953AbgBUHws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:52:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5130220801;
-        Fri, 21 Feb 2020 07:52:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA1520578;
+        Fri, 21 Feb 2020 07:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271561;
-        bh=bxhyd2uGL6csS55UfWR1JBrMopyybW97a+Q4pm8a5Do=;
+        s=default; t=1582271567;
+        bh=wIqsMrdKLb+D/TuHlWfbWthZCsYzOhhbmcyKf/OfsBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eii1hgNbbscrI7kf1A9Yr8hqkQlTiXt2XLDKnat8R+vt8oAAza7AQii9427IzqlN0
-         NfNiNf2OJbpzYpIhkq0xUQcwezjDJD9oM9+YWKSap4tzdEhOuVI0dusf7G2iXvIGCb
-         DZ0raSNFDVm5xhMMYQT8lwwstXz6EpuzuB0BV0Jw=
+        b=XxtxnbKRaTchZ+GT+iyTOrykgJxoGu13kszGDX6+N9CQY7iPmixZc3Utsy/P0+gH7
+         YiIW0T2glPiotyJaU4WbNfXo0zHUEcHM6iRJqgpCV8q1lT+t2ch620rgS1AmEA35ZM
+         DN4aAPQBPnqEX8yVOlSV/R1+eVwewoAGBX4hrND8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 213/399] iommu/vt-d: Avoid sending invalid page response
-Date:   Fri, 21 Feb 2020 08:38:58 +0100
-Message-Id: <20200221072423.704224194@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 215/399] mlx5: work around high stack usage with gcc
+Date:   Fri, 21 Feb 2020 08:39:00 +0100
+Message-Id: <20200221072423.900172139@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,43 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 5f75585e19cc7018bf2016aa771632081ee2f313 ]
+[ Upstream commit 42ae1a5c76691928ed217c7e40269db27f5225e9 ]
 
-Page responses should only be sent when last page in group (LPIG) or
-private data is present in the page request. This patch avoids sending
-invalid descriptors.
+In some configurations, gcc tries too hard to optimize this code:
 
-Fixes: 5d308fc1ecf53 ("iommu/vt-d: Add 256-bit invalidation descriptor support")
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c: In function 'mlx5e_grp_sw_update_stats':
+drivers/net/ethernet/mellanox/mlx5/core/en_stats.c:302:1: error: the frame size of 1336 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+
+As was stated in the bug report, the reason is that gcc runs into a corner
+case in the register allocator that is rather hard to fix in a good way.
+
+As there is an easy way to work around it, just add a comment and the
+barrier that stops gcc from trying to overoptimize the function.
+
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657
+Cc: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-svm.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index ff7a3f9add325..518d0b2d12afd 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -654,11 +654,10 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 			if (req->priv_data_present)
- 				memcpy(&resp.qw2, req->priv_data,
- 				       sizeof(req->priv_data));
-+			resp.qw2 = 0;
-+			resp.qw3 = 0;
-+			qi_submit_sync(&resp, iommu);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+index 9f09253f9f466..a05158472ed11 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_stats.c
+@@ -297,6 +297,9 @@ static void mlx5e_grp_sw_update_stats(struct mlx5e_priv *priv)
+ 			s->tx_tls_drop_bypass_req   += sq_stats->tls_drop_bypass_req;
+ #endif
+ 			s->tx_cqes		+= sq_stats->cqes;
++
++			/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92657 */
++			barrier();
  		}
--		resp.qw2 = 0;
--		resp.qw3 = 0;
--		qi_submit_sync(&resp, iommu);
--
- 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
  	}
- 
+ }
 -- 
 2.20.1
 
