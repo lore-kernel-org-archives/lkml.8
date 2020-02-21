@@ -2,158 +2,212 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4358C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7437EC35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A08206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6E5206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:58:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FhvXqQUt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hUthrwSC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbgBUP5X (ORCPT
+        id S1729314AbgBUP57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:57:23 -0500
-Received: from gateway21.websitewelcome.com ([192.185.45.38]:22857 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728643AbgBUP5X (ORCPT
+        Fri, 21 Feb 2020 10:57:59 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:35260 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728364AbgBUP56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:57:23 -0500
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 22FFE400CE3A1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:57:22 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 5Ag6jQx8ORP4z5Ag6jqn16; Fri, 21 Feb 2020 09:57:22 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WtMzr2gjoX6df0EoQz24CcYsj+i/bg0u7qsVYdxv5ak=; b=FhvXqQUtu/kbV+Vrnk71BG8yZl
-        0TSU2YZiZPuLm929TonrbWh+9w4cqnRMB47gz6qXSDLBweYpn9jQ+EjXxYW/M5bcxnogAtcQqyQcT
-        d9YOOfhiTjG1h/fi3IibqqqRun0NUq+ZHlwKQZa8WF1W2O438fbUpOSn0SFF5xQGz3i5HQoQ0UFmX
-        1o4m7QN23g9FgLM7f75UPYJm5fMx6rIzxCe4Df7P2QFM8aOXA9Ml7jH9RJH7sBkjxlO1tdJ73WDIu
-        G/2bBwvnZdm9s6uI2vLVmlN8cuWvlEiicixYHyVO2UPgWMqlvYp+ALBiFytrjN6JVHyz9MPmuV3z3
-        EJXGFXrQ==;
-Received: from [200.68.140.54] (port=6638 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j5Ag4-003vD4-K4; Fri, 21 Feb 2020 09:57:20 -0600
-Date:   Fri, 21 Feb 2020 10:00:05 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] video: Replace zero-length array with flexible-array member
-Message-ID: <20200221160005.GA13552@embeddedor>
+        Fri, 21 Feb 2020 10:57:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582300677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=df9ScOEFwTTls6r9Zf0yGfvIdb7PXr3kzlNYfvbsYsg=;
+        b=hUthrwSCxBvQHcbh+UCII9HIaYQiMwAQmyCfIbUR1O8Tm4/v9Q3b+R9Ypa2Z4apQp8N1O+
+        JZzmpJj8Ad1fFgudMG4CbMNTqQlfrkf7s98aNbXQG+TY5qCxNq24OpKwDEEBhIYEzySYle
+        PyIduGPf+QD9qpDqBnmRwLD6SVT2wGk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-GZXIO8rIOh---kb7eT3cRg-1; Fri, 21 Feb 2020 10:57:55 -0500
+X-MC-Unique: GZXIO8rIOh---kb7eT3cRg-1
+Received: by mail-wm1-f70.google.com with SMTP id t17so787324wmi.7
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:57:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=df9ScOEFwTTls6r9Zf0yGfvIdb7PXr3kzlNYfvbsYsg=;
+        b=sBAXZGCeqsFA7XuroKi5/uDW2DWZKKqqs9tEWOtj4JcReVZPfPo2mB7THBYs3qcWG8
+         0ZLUhtnO7C8d6xpMeoAZQpYZ88tfG9i0x+y64Elu2OLjYO7HUHvPQjM6uGB+E/ka8Ydy
+         6T/tDvrA5Ob+iYU/QBYHWp4C5XlqU96j+H4XLG/v/MSnMoAGByMk7dRo0I3QlUBxvv4d
+         8LbGrWbVIYktsmlbMax+0kDA8VoOtYj9zhHamUQonMxiZPGgDm12qOa9Hq7icIxu+Nvc
+         jYkG9X1QuJ9V6EePy0fruNFoS+LNIjIPdGKeP4TjKvSW0/iPdLfQnuF7UarriB6dO1Yv
+         mlXg==
+X-Gm-Message-State: APjAAAVjQ8mKjJfEvClDkFfky27pORvYnIG5xhwY7V13PlS/kqWu8npz
+        k7bnrZ5GNJ96xMW9f+npMaACiLjHIROELn21oAV+gajmGRbHSRvZA0l8RbB0lUFD9bZqmBDfiMC
+        Xzpaf8/433+TZEwkLp6MRez2U
+X-Received: by 2002:adf:fa50:: with SMTP id y16mr47217038wrr.183.1582300674041;
+        Fri, 21 Feb 2020 07:57:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzDlkP5kKiX/apK/fdyvg4Z7dElRY33EXdeQ2VUj7qgatSBg7QtIiXPLhmh5NVFfYIkSZTSbQ==
+X-Received: by 2002:adf:fa50:: with SMTP id y16mr47217010wrr.183.1582300673719;
+        Fri, 21 Feb 2020 07:57:53 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id f8sm4240284wru.12.2020.02.21.07.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2020 07:57:53 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 26/61] KVM: x86: Introduce cpuid_entry_{get,has}() accessors
+In-Reply-To: <20200201185218.24473-27-sean.j.christopherson@intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-27-sean.j.christopherson@intel.com>
+Date:   Fri, 21 Feb 2020 16:57:52 +0100
+Message-ID: <875zg0q6f3.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.68.140.54
-X-Source-L: No
-X-Exim-ID: 1j5Ag4-003vD4-K4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [200.68.140.54]:6638
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 32
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+> Introduce accessors to retrieve feature bits from CPUID entries and use
+> the new accessors where applicable.  Using the accessors eliminates the
+> need to manually specify the register to be queried at no extra cost
+> (binary output is identical) and will allow adding runtime consistency
+> checks on the function and index in a future patch.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/cpuid.c |  9 +++++----
+>  arch/x86/kvm/cpuid.h | 46 +++++++++++++++++++++++++++++++++++---------
+>  2 files changed, 42 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index e3026fe638aa..3316963dad3d 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -68,7 +68,7 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  		best->edx |= F(APIC);
+>  
+>  	if (apic) {
+> -		if (best->ecx & F(TSC_DEADLINE_TIMER))
+> +		if (cpuid_entry_has(best, X86_FEATURE_TSC_DEADLINE_TIMER))
+>  			apic->lapic_timer.timer_mode_mask = 3 << 17;
+>  		else
+>  			apic->lapic_timer.timer_mode_mask = 1 << 17;
+> @@ -96,7 +96,8 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+>  	}
+>  
+>  	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+> -	if (best && (best->eax & (F(XSAVES) | F(XSAVEC))))
+> +	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+> +		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+>  		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
+>  
+>  	/*
+> @@ -155,7 +156,7 @@ static void cpuid_fix_nx_cap(struct kvm_vcpu *vcpu)
+>  			break;
+>  		}
+>  	}
+> -	if (entry && (entry->edx & F(NX)) && !is_efer_nx()) {
+> +	if (entry && cpuid_entry_has(entry, X86_FEATURE_NX) && !is_efer_nx()) {
+>  		entry->edx &= ~F(NX);
+>  		printk(KERN_INFO "kvm: guest NX capability removed\n");
+>  	}
+> @@ -387,7 +388,7 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry)
+>  		entry->ebx |= F(TSC_ADJUST);
+>  
+>  		entry->ecx &= kvm_cpuid_7_0_ecx_x86_features;
+> -		f_la57 = entry->ecx & F(LA57);
+> +		f_la57 = cpuid_entry_get(entry, X86_FEATURE_LA57);
+>  		cpuid_mask(&entry->ecx, CPUID_7_ECX);
+>  		/* Set LA57 based on hardware capability. */
+>  		entry->ecx |= f_la57;
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 72a79bdfed6b..64e96e4086e2 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -95,16 +95,10 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+>  	return reverse_cpuid[x86_leaf];
+>  }
+>  
+> -static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+> +static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> +						  const struct cpuid_reg *cpuid)
+>  {
+> -	struct kvm_cpuid_entry2 *entry;
+> -	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> -
+> -	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> -	if (!entry)
+> -		return NULL;
+> -
+> -	switch (cpuid.reg) {
+> +	switch (cpuid->reg) {
+>  	case CPUID_EAX:
+>  		return &entry->eax;
+>  	case CPUID_EBX:
+> @@ -119,6 +113,40 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsi
+>  	}
+>  }
+>  
+> +static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+> +						unsigned x86_feature)
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+It is just me who dislikes bare 'unsigned'?
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
+> +{
+> +	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> +
+> +	return __cpuid_entry_get_reg(entry, &cpuid);
+> +}
+> +
+> +static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
+> +					   unsigned x86_feature)
+> +{
+> +	u32 *reg = cpuid_entry_get_reg(entry, x86_feature);
+> +
+> +	return *reg & __feature_bit(x86_feature);
+> +}
+> +
+> +static __always_inline bool cpuid_entry_has(struct kvm_cpuid_entry2 *entry,
+> +					    unsigned x86_feature)
+> +{
+> +	return cpuid_entry_get(entry, x86_feature);
+> +}
+> +
+> +static __always_inline int *guest_cpuid_get_register(struct kvm_vcpu *vcpu, unsigned x86_feature)
+> +{
+> +	struct kvm_cpuid_entry2 *entry;
+> +	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+> +
+> +	entry = kvm_find_cpuid_entry(vcpu, cpuid.function, cpuid.index);
+> +	if (!entry)
+> +		return NULL;
+> +
+> +	return __cpuid_entry_get_reg(entry, &cpuid);
+> +}
+> +
+>  static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu, unsigned x86_feature)
+>  {
+>  	u32 *reg;
 
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/video/fbdev/mmp/hw/mmp_ctrl.h | 2 +-
- drivers/video/fbdev/ssd1307fb.c       | 2 +-
- include/video/mmp_disp.h              | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-index 335d4983dc52..167585a889d3 100644
---- a/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-+++ b/drivers/video/fbdev/mmp/hw/mmp_ctrl.h
-@@ -1406,7 +1406,7 @@ struct mmphw_ctrl {
- 
- 	/*pathes*/
- 	int path_num;
--	struct mmphw_path_plat path_plats[0];
-+	struct mmphw_path_plat path_plats[];
- };
- 
- static inline int overlay_is_vid(struct mmp_overlay *overlay)
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index 142535267fec..fb2640fe575a 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -89,7 +89,7 @@ struct ssd1307fb_par {
- 
- struct ssd1307fb_array {
- 	u8	type;
--	u8	data[0];
-+	u8	data[];
- };
- 
- static const struct fb_fix_screeninfo ssd1307fb_fix = {
-diff --git a/include/video/mmp_disp.h b/include/video/mmp_disp.h
-index 1f9bc133e230..77252cb46361 100644
---- a/include/video/mmp_disp.h
-+++ b/include/video/mmp_disp.h
-@@ -231,7 +231,7 @@ struct mmp_path {
- 
- 	/* layers */
- 	int overlay_num;
--	struct mmp_overlay overlays[0];
-+	struct mmp_overlay overlays[];
- };
- 
- extern struct mmp_path *mmp_get_path(const char *name);
 -- 
-2.25.0
+Vitaly
 
