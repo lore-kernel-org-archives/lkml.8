@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C132C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07933C35642
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E73B24670
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68AC24670
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271396;
-	bh=udPBDdvdYkxFiN4/6jnqwJPzNWTrlv9XsXtSLkNELoA=;
+	s=default; t=1582271397;
+	bh=PQOkeAtDCq+cjqGZA9ta64157BXnd9PeZOgV32vNY80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dhQR/cyFRfMF61z+KQg0GuC8W7tUqDMMQ85z00oyXnVXgHwLqI6QeuemSJ3u8BtB5
-	 BClzTKXRP3CQfp5qhlqs0x+dl/dHmhJCLalg04kxqoCVu8UaINdmHEagIf0GVgikM2
-	 sbuH+kJEmu9WojspqOMndTVRd2nQVQd+akas3oDI=
+	b=qzGNAKv9ra5GYBlTEQcYFFNUg9bPTvYGffEjIiIzhWJ72EXnh0k+yNRSKWyRrS3hV
+	 e+oVTgHcFkRaWExc6l6tbe0LRrxHVZrYxrkMV+dLPkpFpMQletegUKPyPpJcOFyMsH
+	 ZwbMRlgyNQKgK+kIoHGk17scgt5CUXprzVsPo0eQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgBUHty (ORCPT
+        id S1729461AbgBUHt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:49:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46528 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:49:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbgBUHtw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:49:52 -0500
+        id S1729020AbgBUHty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:49:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A16A222C4;
-        Fri, 21 Feb 2020 07:49:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F375C20801;
+        Fri, 21 Feb 2020 07:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271391;
-        bh=udPBDdvdYkxFiN4/6jnqwJPzNWTrlv9XsXtSLkNELoA=;
+        s=default; t=1582271394;
+        bh=PQOkeAtDCq+cjqGZA9ta64157BXnd9PeZOgV32vNY80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RRlTphl/ugZbLaYTVMmjCWRBg8+8EL+cemH0kY3O7Uq79HxottvEXVgqOT7Jx3BIA
-         0mn25CtzwTAQiPaF+9PbQM0HOMqsA6rE0UyjJRTx8XiWnqDI3yRRoy3pcIt1F9VDDa
-         KPYWu8oubASY9/8DC9qmfFGbsRqBbEc1WMkbFBxI=
+        b=TviFIc4i4y1t/mu7QV7DEezgoCOd4faFfjw4Npja9qvZi2Ft8BDt3FNosMlUCrzk+
+         iT9LUrzDtGgHY9xHK7SRk1hojIQyjqUs3cRtBdlXhhWpyKb3xiTEthU5yCirxNIOja
+         7VqWQIEt8XgDxDqp7yKuDnP8b1b4g/TqGw9bFrjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@suse.de>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        bberg@redhat.com, ckellner@redhat.com, hdegoede@redhat.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 147/399] x86/mce/therm_throt: Mark throttle_active_work() as __maybe_unused
-Date:   Fri, 21 Feb 2020 08:37:52 +0100
-Message-Id: <20200221072416.791486452@linuxfoundation.org>
+Subject: [PATCH 5.5 148/399] ARM: OMAP2+: pdata-quirks: add PRM data for reset support
+Date:   Fri, 21 Feb 2020 08:37:53 +0100
+Message-Id: <20200221072416.888295455@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -66,51 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit db1ae0314f47e88ae06679270adf17ffa245afd4 ]
+[ Upstream commit 8de44fb70659a5bc0c53a443e6129ea1bf00fd8b ]
 
-throttle_active_work() is only called if CONFIG_SYSFS is set, otherwise
-we get a harmless warning:
+The parent clockdomain for reset must be in force wakeup mode, otherwise
+the reset may never complete. Add pdata quirks for this purpose for PRM
+driver.
 
-  arch/x86/kernel/cpu/mce/therm_throt.c:238:13: error: 'throttle_active_work' \
-	  defined but not used [-Werror=unused-function]
-
-Mark the function as __maybe_unused to avoid the warning.
-
-Fixes: f6656208f04e ("x86/mce/therm_throt: Optimize notifications of thermal throttle")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: bberg@redhat.com
-Cc: ckellner@redhat.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: hdegoede@redhat.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20191210203925.3119091-1-arnd@arndb.de
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/mce/therm_throt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-omap2/pdata-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/therm_throt.c b/arch/x86/kernel/cpu/mce/therm_throt.c
-index 6c3e1c92f1835..58b4ee3cda777 100644
---- a/arch/x86/kernel/cpu/mce/therm_throt.c
-+++ b/arch/x86/kernel/cpu/mce/therm_throt.c
-@@ -235,7 +235,7 @@ static void get_therm_status(int level, bool *proc_hot, u8 *temp)
- 	*temp = (msr_val >> 16) & 0x7F;
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index e95c224ffc4d8..7a79bcc02a11b 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -23,6 +23,7 @@
+ #include <linux/platform_data/ti-sysc.h>
+ #include <linux/platform_data/wkup_m3.h>
+ #include <linux/platform_data/asoc-ti-mcbsp.h>
++#include <linux/platform_data/ti-prm.h>
+ 
+ #include "clockdomain.h"
+ #include "common.h"
+@@ -412,6 +413,12 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
+ 	pcs_pdata.rearm = rearm;
  }
  
--static void throttle_active_work(struct work_struct *work)
-+static void __maybe_unused throttle_active_work(struct work_struct *work)
- {
- 	struct _thermal_state *state = container_of(to_delayed_work(work),
- 						struct _thermal_state, therm_work);
++static struct ti_prm_platform_data ti_prm_pdata = {
++	.clkdm_deny_idle = clkdm_deny_idle,
++	.clkdm_allow_idle = clkdm_allow_idle,
++	.clkdm_lookup = clkdm_lookup,
++};
++
+ /*
+  * GPIOs for TWL are initialized by the I2C bus and need custom
+  * handing until DSS has device tree bindings.
+@@ -514,6 +521,7 @@ static struct of_dev_auxdata omap_auxdata_lookup[] = {
+ 	/* Common auxdata */
+ 	OF_DEV_AUXDATA("ti,sysc", 0, NULL, &ti_sysc_pdata),
+ 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
++	OF_DEV_AUXDATA("ti,omap-prm-inst", 0, NULL, &ti_prm_pdata),
+ 	{ /* sentinel */ },
+ };
+ 
 -- 
 2.20.1
 
