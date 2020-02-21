@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2B4C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 061A5C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8E320578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BED6320578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271663;
-	bh=aoYt103LAXkSgzeNDmfe0681CWASNG0wJiOscC/U/Bg=;
+	s=default; t=1582271665;
+	bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V//cXheM0SOMkCXbDoqQsQfRj37pTSGvOnv7lR2a7UFOZUl0j5D9KUiIyBE0A5PFW
-	 AXSrxOnB89Uck/s2Bsd+YMqEdycgfcJWIwtSlpOf3f4zSZZkbF54gD2dQL/Oh5g9bw
-	 eo1BNCe/pe4rNoqIWuxemKugBiwTkznCAbiF/5Bs=
+	b=gk/ozub1BV68n1oJU6iNEmrdHTHp+j6m4Ps6SD/RZw+GO82y4AmpCg9r/9I1f5d8I
+	 7sqRFprEjVfsHOd9aH3vV0iLhPdscCzxfc8EknePyMSjlHDqSUdjKcGnqLGScTc2FS
+	 dMGw7NOu6XdKWilf8II9PYetLk2g4X9m7OWnkP1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgBUHyV (ORCPT
+        id S1730242AbgBUHyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:54:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52848 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:54:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbgBUHyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:54:17 -0500
+        id S1729725AbgBUHyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:54:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8EBF2073A;
-        Fri, 21 Feb 2020 07:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF0802073A;
+        Fri, 21 Feb 2020 07:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271657;
-        bh=aoYt103LAXkSgzeNDmfe0681CWASNG0wJiOscC/U/Bg=;
+        s=default; t=1582271662;
+        bh=cBFPbr8CVvdMgTjBagQOmxmbeGJeF3llcrP0PGr67TY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghRsiTGVEf954if8XB6wMllQNhPN3a/OF8wJRRvyxGdFbvK73jm4h1pE24jseMWBr
-         uiJ8usFLOglrU0ofLirDON6AeBSIGWp1Ztp2yqklWAbuv1aQzjlZ6TOaiCkaYf2AUS
-         ssXhIrBW8Rkck2V0q4xbKJNR/Lg1pMcZuJiS4t2A=
+        b=KQtFPhhKbwqFXy7m32kF8lUhjVqhftDlkW3welMiQF/SXI/EEsomF/uYKrzokZsWb
+         fDJU808jYrqHwmIzsfGCqpNyHiTwle6o9MGfKnuzb/yFkGbOSAkFNtrIGChGJune/E
+         tplbAlvv7olM8FRUuNeeUT9xjL8zQhwRdeZ4J24g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Simon Schwartz <kern.simon@theschwartz.xyz>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 250/399] driver core: platform: Prevent resouce overflow from causing infinite loops
-Date:   Fri, 21 Feb 2020 08:39:35 +0100
-Message-Id: <20200221072426.748341283@linuxfoundation.org>
+Subject: [PATCH 5.5 252/399] ASoC: SOF: Intel: hda-dai: fix compilation warning in pcm_prepare
+Date:   Fri, 21 Feb 2020 08:39:37 +0100
+Message-Id: <20200221072426.928315328@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,72 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Schwartz <kern.simon@theschwartz.xyz>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 39cc539f90d035a293240c9443af50be55ee81b8 ]
+[ Upstream commit d873997192ddcacb5333575502be2f91ea4b47b8 ]
 
-num_resources in the platform_device struct is declared as a u32.  The
-for loops that iterate over num_resources use an int as the counter,
-which can cause infinite loops on architectures with smaller ints.
-Change the loop counters to u32.
+Fix GCC warning with W=1, previous cleanup did not remove unnecessary
+variable.
 
-Signed-off-by: Simon Schwartz <kern.simon@theschwartz.xyz>
-Link: https://lore.kernel.org/r/2201ce63a2a171ffd2ed14e867875316efcf71db.camel@theschwartz.xyz
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+sound/soc/sof/intel/hda-dai.c: In function ‘hda_link_pcm_prepare’:
+
+sound/soc/sof/intel/hda-dai.c:265:31: warning: variable ‘hda_stream’
+set but not used [-Wunused-but-set-variable]
+  265 |  struct sof_intel_hda_stream *hda_stream;
+      |                               ^~~~~~~~~~
+
+Fixes: a3ebccb52efdf ("ASoC: SOF: Intel: hda: reset link DMA state in prepare")
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20200113205620.27285-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/platform.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ sound/soc/sof/intel/hda-dai.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index cf6b6b722e5c9..864b53b3d5980 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -27,6 +27,7 @@
- #include <linux/limits.h>
- #include <linux/property.h>
- #include <linux/kmemleak.h>
-+#include <linux/types.h>
- 
- #include "base.h"
- #include "power/power.h"
-@@ -48,7 +49,7 @@ EXPORT_SYMBOL_GPL(platform_bus);
- struct resource *platform_get_resource(struct platform_device *dev,
- 				       unsigned int type, unsigned int num)
+diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
+index 896d21984b735..1923b0c36bcef 100644
+--- a/sound/soc/sof/intel/hda-dai.c
++++ b/sound/soc/sof/intel/hda-dai.c
+@@ -261,14 +261,11 @@ static int hda_link_pcm_prepare(struct snd_pcm_substream *substream,
  {
--	int i;
-+	u32 i;
+ 	struct hdac_ext_stream *link_dev =
+ 				snd_soc_dai_get_dma_data(dai, substream);
+-	struct sof_intel_hda_stream *hda_stream;
+ 	struct snd_sof_dev *sdev =
+ 				snd_soc_component_get_drvdata(dai->component);
+ 	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
+ 	int stream = substream->stream;
  
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -255,7 +256,7 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
- 					      unsigned int type,
- 					      const char *name)
- {
--	int i;
-+	u32 i;
+-	hda_stream = hstream_to_sof_hda_stream(link_dev);
+-
+ 	if (link_dev->link_prepared)
+ 		return 0;
  
- 	for (i = 0; i < dev->num_resources; i++) {
- 		struct resource *r = &dev->resource[i];
-@@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
-  */
- int platform_device_add(struct platform_device *pdev)
- {
--	int i, ret;
-+	u32 i;
-+	int ret;
- 
- 	if (!pdev)
- 		return -EINVAL;
-@@ -590,7 +592,7 @@ EXPORT_SYMBOL_GPL(platform_device_add);
-  */
- void platform_device_del(struct platform_device *pdev)
- {
--	int i;
-+	u32 i;
- 
- 	if (!IS_ERR_OR_NULL(pdev)) {
- 		device_del(&pdev->dev);
 -- 
 2.20.1
 
