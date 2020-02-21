@@ -2,121 +2,217 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5C1C35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD245C35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C122E20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="cBEVhpXs"
+	by mail.kernel.org (Postfix) with ESMTP id B16DC208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1582302299;
+	bh=3fw8Z+13XXcXQdUbHBpVHdnEy61aCCDAIOza8cOqswg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n8q8wS9+kYY0u69uxzFB1jcOzsoAiW83acxfBnLub8/WHoSiguesNi48ys76Hqr6/
+	 8v5SWt2Suk6m/tgxJN8iTChe0hj555I2vaDh2IFU7GpWhzxowqobCjRimQ/FiYo/4s
+	 rFQ+s6R39cYavGTIPRM7kumU8kJ8f+dGD2KcL8cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbgBUQYb (ORCPT
+        id S1726494AbgBUQY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:24:31 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:44167 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgBUQYb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:24:31 -0500
-Received: by mail-ot1-f65.google.com with SMTP id h9so2463697otj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:24:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2necOtKPRGOvCKSmF/mkYAKx6vUj3EgsCgdFv1SUhI0=;
-        b=cBEVhpXst0AzntwHO7MAAC8tPgH/lHhw3JRg1tiTU84YvfHSiop6h5HEb7dD7ijKuo
-         Tkw/ZNf20go4KH7TnldYOoZEAs0/HjhdC6mtapS6+Q3y/I7Q+YrEMV84Zr3jKw37sWpE
-         U9Jl8f/7cOVM1MQYH54S4Vp6WSWKpzS2B9dUJOJpX4zoeMiFs4UP17D4CccHDAg8ZFR1
-         vCZ/8RYSCxh9NQiUxEt36OEadxPUC7ds7oA0vIxw+TkYSm380z9btYwB+23YYwbo8b8g
-         7XRdvaaGovLDozll686+2N7fCxFPusnOHgUUDjTiUfiXQ3pTNjxbkIR85nNqgJmQT6GQ
-         8i+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2necOtKPRGOvCKSmF/mkYAKx6vUj3EgsCgdFv1SUhI0=;
-        b=SpZ6nnb8XIDwVq3qdra1rbGoIN3YFKAB9odgVmxnofusRRu4XBRl14ubyOtSkVjQi6
-         qz2CTEdrksd4/02k2PW1Cq8ewSP3jF7XAhdTF/qliDU5wrjikyEQDr0H5B7kg6O0ZuCN
-         SImmrbvByWH3ofxFw4r+mQPqTprDpW5TJ/cocVkPAvEVbxnJMSE31doseOMUS1e4HF2s
-         AdwQVob+9X6+8MZs42udgORLwNnv8D2ey6LhU+Un01qpJlKIzdhTpQ6O0KL5TY48PFSz
-         Se7ZNw+1izhQdRNQOSpYqQOqfxJn5Kg4tJO7VVIqnbuzFi5N9WHPw8ocKUSRPakCkgXE
-         DATg==
-X-Gm-Message-State: APjAAAVW0l9UhCc33QGJB6nJkU/NkbfTZa7URZ64wXkhbWk/OMA0WQdW
-        C03tDyUjrjcQO3iA+YKdgHWbaY2To0/Cp7nG6HMO7XMx
-X-Google-Smtp-Source: APXvYqxaf5u3WFzaIFaCrcTuxeBbhT11NwRGTSO9X8QeSchk7dKOD/6D3Clq0uqWRzW41IL9WLcTtDJa9yoQ436XJig=
-X-Received: by 2002:a9d:64d8:: with SMTP id n24mr27053866otl.71.1582302269868;
- Fri, 21 Feb 2020 08:24:29 -0800 (PST)
+        Fri, 21 Feb 2020 11:24:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbgBUQY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 11:24:58 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D44AC20578;
+        Fri, 21 Feb 2020 16:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1582302297;
+        bh=3fw8Z+13XXcXQdUbHBpVHdnEy61aCCDAIOza8cOqswg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=swYWU67SROlL4WRC3Ck2gqT/A/dG09f8N3UiYYTfFhYpoWNcC1zL1KxJ0bYTKUeh0
+         BdhEZv0AnvNIw4LOF6KKU991WyGfm8VKVzqTg0j0RQSPRB3hN5Fdejk2JmZKAlUYPN
+         SrLM5mMA6fvwtQGe1t2Kp50QtDdF1k/ExsYPBqmo=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j5B6l-0074uC-61; Fri, 21 Feb 2020 16:24:55 +0000
 MIME-Version: 1.0
-References: <20200221032720.33893-1-alastair@au1.ibm.com> <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
-In-Reply-To: <CAPcyv4j2hut1YDrotC=QkcM+S0SZwpd9_4hD2aChn+cKD+62oA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 21 Feb 2020 08:24:18 -0800
-Message-ID: <CAPcyv4hzZt0oqWN8y_K70h3C1S1jNw6jfNF3jPujCFmLW+MSvw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/27] Add support for OpenCAPI Persistent Memory devices
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 21 Feb 2020 16:24:55 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, linux@armlinux.org.uk, luto@kernel.org,
+        tglx@linutronix.de, m.szyprowski@samsung.com, mark.rutland@arm.com
+Subject: Re: [PATCH] clocksource: Fix arm_arch_timer clockmode when vDSO
+ disabled
+In-Reply-To: <ccc457a4-dfc2-dedb-06a4-3ffb11a3c587@arm.com>
+References: <20200221130355.21373-1-vincenzo.frascino@arm.com>
+ <a81251e813d54caddd56b9aac4b55e85@kernel.org>
+ <c438aa7e-2c96-8c11-bb87-204929a01a20@arm.com>
+ <6df28d31cf6d4dd6109415fbd73a9c48@kernel.org>
+ <ccc457a4-dfc2-dedb-06a4-3ffb11a3c587@arm.com>
+Message-ID: <076d13fd01ca5e17f278cdb1db53b9ff@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: vincenzo.frascino@arm.com, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, luto@kernel.org, tglx@linutronix.de, m.szyprowski@samsung.com, mark.rutland@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 8:21 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Feb 20, 2020 at 7:28 PM Alastair D'Silva <alastair@au1.ibm.com> wrote:
-> >
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> >
-> > This series adds support for OpenCAPI Persistent Memory devices, exposing
-> > them as nvdimms so that we can make use of the existing infrastructure.
->
-> A single sentence to introduce:
->
-> 24 files changed, 3029 insertions(+), 97 deletions(-)
->
-> ...is inadequate. What are OpenCAPI Persistent Memory devices? How do
-> they compare, in terms relevant to libnvdimm, to other persistent
-> memory devices? What challenges do they pose to the existing enabling?
-> What is the overall approach taken with this 27 patch break down? What
-> are the changes since v2, v1? If you incorporated someone's review
-> feedback note it in the cover letter changelog, if you didn't
+On 2020-02-21 15:56, Vincenzo Frascino wrote:
+> Hi Marc,
+> 
+> On 21/02/2020 15:28, Marc Zyngier wrote:
+> 
+> [...]
+> 
+>> 
+>> This isn't what I'm saying. What I'm suggesting here is that there is
+>> possibly a missing indirection, which defaults to ARCH_TIMER when the
+>> VDSO is selected, and NONE when it isn't.
+>> 
+>> Overloading a known symbol feels like papering over the issue.
+>> 
+>> Ideally, this default symbol would be provided by asm/clocksource.h, 
+>> but
+>> that may not even be the right thing to do.
+>> 
+> 
+> I must admit I really like this idea :), how about:
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 03bbfc312fe7..97864aabc2a6 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -3,6 +3,7 @@ config ARM
+>         bool
+>         default y
+>         select ARCH_32BIT_OFF_T
+> +       select ARCH_CLOCKSOURCE_DATA
+>         select ARCH_HAS_BINFMT_FLAT
+>         select ARCH_HAS_DEBUG_VIRTUAL if MMU
+>         select ARCH_HAS_DEVMEM_IS_ALLOWED
+> diff --git a/arch/arm/include/asm/clocksource.h
+> b/arch/arm/include/asm/clocksource.h
+> index 73beb7f131de..e37f6d74ba49 100644
+> --- a/arch/arm/include/asm/clocksource.h
+> +++ b/arch/arm/include/asm/clocksource.h
+> @@ -1,7 +1,18 @@
+>  #ifndef _ASM_CLOCKSOURCE_H
+>  #define _ASM_CLOCKSOURCE_H
+> 
+> +/*
+> + * Unused required for compilation only
+> + */
+> +struct arch_clocksource_data {
+> +       bool __reserved;
+> +};
+> +
+> +#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+>  #define VDSO_ARCH_CLOCKMODES   \
+>         VDSO_CLOCKMODE_ARCHTIMER
+> +#else
+> +#define VDSO_CLOCKMODE_ARCHTIMER       VDSO_CLOCKMODE_NONE
+> +#endif
 
-Assumptions and tradeoffs the implementation considered are also
-critical for reviewing the approach.
+Which is exactly the same thing as before. It's not an indirection,
+it is just another overloading of an existing symbol.
+
+>> Fair enough. But don't override the symbol locally. Create a new one:
+>> 
+> 
+> I see what you mean now, you mean to not overload the semantical 
+> meaning of the
+> symbol. The symbol (VDSO_CLOCKMODE_ARCHTIMER) at this point is never 
+> defined
+> when VDSO=n, but I agree with you it can cause confusion.
+
+Exactly. It breaks the expectation that if VDSO_CLOCKMODE_ARCHTIMER 
+exists,
+it has a unique, known value. Yes, the outcome is the same. That doesn't
+make it acceptable though.
+
+So building on your above example, here's what I'd like to see:
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 1dcc64bd3621..202b41dae05b 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -3,6 +3,7 @@ config ARM
+         bool
+         default y
+         select ARCH_32BIT_OFF_T
++       select ARCH_CLOCKSOURCE_DATA
+         select ARCH_HAS_BINFMT_FLAT
+         select ARCH_HAS_DEBUG_VIRTUAL if MMU
+         select ARCH_HAS_DEVMEM_IS_ALLOWED
+diff --git a/arch/arm/include/asm/clocksource.h 
+b/arch/arm/include/asm/clocksource.h
+index 73beb7f131de..bd4347865f6d 100644
+--- a/arch/arm/include/asm/clocksource.h
++++ b/arch/arm/include/asm/clocksource.h
+@@ -1,7 +1,17 @@
+  #ifndef _ASM_CLOCKSOURCE_H
+  #define _ASM_CLOCKSOURCE_H
+
++struct arch_clocksource_data {
++       /* Empty on purpose */
++};
++
++#ifdef CONFIG_GENERIC_GETTIMEOFDAY
+  #define VDSO_ARCH_CLOCKMODES   \
+         VDSO_CLOCKMODE_ARCHTIMER
+
++#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_ARCHTIMER
++#else
++#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_NONE
++#endif
++
+  #endif
+diff --git a/arch/arm64/include/asm/clocksource.h 
+b/arch/arm64/include/asm/clocksource.h
+index eb82e9d95c5d..de706362fa81 100644
+--- a/arch/arm64/include/asm/clocksource.h
++++ b/arch/arm64/include/asm/clocksource.h
+@@ -5,4 +5,6 @@
+  #define VDSO_ARCH_CLOCKMODES   \
+         VDSO_CLOCKMODE_ARCHTIMER
+
++#define ARCH_VDSO_DEFAULT_CLOCKMODE    VDSO_CLOCKMODE_ARCHTIMER
++
+  #endif
+diff --git a/drivers/clocksource/arm_arch_timer.c 
+b/drivers/clocksource/arm_arch_timer.c
+index ee2420d56f67..8b7081583eeb 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -69,7 +69,7 @@ static enum arch_timer_ppi_nr arch_timer_uses_ppi = 
+ARCH_TIMER_VIRT_PPI;
+  static bool arch_timer_c3stop;
+  static bool arch_timer_mem_use_virtual;
+  static bool arch_counter_suspend_stop;
+-static enum vdso_clock_mode vdso_default = VDSO_CLOCKMODE_ARCHTIMER;
++static enum vdso_clock_mode vdso_default = ARCH_VDSO_DEFAULT_CLOCKMODE;
+
+  static cpumask_t evtstrm_available = CPU_MASK_NONE;
+  static bool evtstrm_enable = 
+IS_ENABLED(CONFIG_ARM_ARCH_TIMER_EVTSTREAM);
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
