@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52996C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7191C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF97206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD552206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274514;
-	bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
+	s=default; t=1582274521;
+	bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dqp9keqZogFnUrhxYhzJg3Yzf0AzxASqPg4ZY5uLXxY7p6anl60e8jzwaka3W2rZP
-	 yCy+2C3fAN70Yk5WU63F+6FTjlmQZYTSDkraAJukXErnR0Mxa6QqOs3xe7N6yOaWDF
-	 +O/Rn7q74eT3rJ+sRFT0E+qw2/1K7Wy5MpWjavKw=
+	b=JKxuP4sFfggPFQCM3qeD89box8QhMKOEd0eaZNLIueazapkDSB5Hdr4A9ktEjcRA6
+	 HnBULudoA4wdqsNWdvgcTpsFFEflo+5M0md96PR7sBPN2KZujzc+GJ7gHTSrIlJeqU
+	 byBYk9WqS0YTCPqDQYNGl8piiGx8Nk6SZx+gm8DQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbgBUIlw (ORCPT
+        id S1731905AbgBUImA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:41:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:42:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbgBUH4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:30 -0500
+        id S1730426AbgBUH4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9720324656;
-        Fri, 21 Feb 2020 07:56:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A551220658;
+        Fri, 21 Feb 2020 07:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271790;
-        bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
+        s=default; t=1582271766;
+        bh=ipx4Td6141LujbD+iqs7ftTylfFP+MA6LuFhN97F7WA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANkch0Ae0zjx2IHZ8o9HL1eDOZT7tLAFMHpGLYIBXrLOU0GebjOXpD++33oBdhsKh
-         2Cmug3sikbD6sl/0uoCmSTO14QuNkigZgi0/WSg665X0Tc+r5/GXa/Hoo7nV9DV3SB
-         tdsxt45MbRr01fCJHXAnuqOjGWfmbqJmgKgcEk1g=
+        b=V9/KPDWw6imE+o89L73B4P7qg7JkiYztMRVdmqACbAElz6yeI6gsj/XB2068h5FYv
+         YiCJZ0Bw9bChohzNqFx1nIV+Hem2yjddVR1DfNPGvaH4of1U+zIsJeeX1YaYoJtCWz
+         fEu3tlNTA0lPf9u3q3uL1+eOvgrYWCZrOI4lGzjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Robert Richter <rrichter@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 299/399] f2fs: fix memleak of kobject
-Date:   Fri, 21 Feb 2020 08:40:24 +0100
-Message-Id: <20200221072430.804876482@linuxfoundation.org>
+Subject: [PATCH 5.5 291/399] watchdog/softlockup: Enforce that timestamp is valid on boot
+Date:   Fri, 21 Feb 2020 08:40:16 +0100
+Message-Id: <20200221072430.092296274@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,52 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
+[ Upstream commit 11e31f608b499f044f24b20be73f1dcab3e43f8a ]
 
-If kobject_init_and_add() failed, caller needs to invoke kobject_put()
-to release kobject explicitly.
+Robert reported that during boot the watchdog timestamp is set to 0 for one
+second which is the indicator for a watchdog reset.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+The reason for this is that the timestamp is in seconds and the time is
+taken from sched clock and divided by ~1e9. sched clock starts at 0 which
+means that for the first second during boot the watchdog timestamp is 0,
+i.e. reset.
+
+Use ULONG_MAX as the reset indicator value so the watchdog works correctly
+right from the start. ULONG_MAX would only conflict with a real timestamp
+if the system reaches an uptime of 136 years on 32bit and almost eternity
+on 64bit.
+
+Reported-by: Robert Richter <rrichter@marvell.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/87o8v3uuzl.fsf@nanos.tec.linutronix.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/sysfs.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/watchdog.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 5963316f391a5..e79c86b8553a5 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -733,10 +733,12 @@ int __init f2fs_init_sysfs(void)
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index f41334ef09713..cbd3cf503c904 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -161,6 +161,8 @@ static void lockup_detector_update_enable(void)
  
- 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
- 				   NULL, "features");
--	if (ret)
-+	if (ret) {
-+		kobject_put(&f2fs_feat);
- 		kset_unregister(&f2fs_kset);
--	else
-+	} else {
- 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
-+	}
- 	return ret;
+ #ifdef CONFIG_SOFTLOCKUP_DETECTOR
+ 
++#define SOFTLOCKUP_RESET	ULONG_MAX
++
+ /* Global variables, exported for sysctl */
+ unsigned int __read_mostly softlockup_panic =
+ 			CONFIG_BOOTPARAM_SOFTLOCKUP_PANIC_VALUE;
+@@ -274,7 +276,7 @@ notrace void touch_softlockup_watchdog_sched(void)
+ 	 * Preemption can be enabled.  It doesn't matter which CPU's timestamp
+ 	 * gets zeroed here, so use the raw_ operation.
+ 	 */
+-	raw_cpu_write(watchdog_touch_ts, 0);
++	raw_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
  }
  
-@@ -757,8 +759,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
- 	init_completion(&sbi->s_kobj_unregister);
- 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
- 				"%s", sb->s_id);
--	if (err)
-+	if (err) {
-+		kobject_put(&sbi->s_kobj);
-+		wait_for_completion(&sbi->s_kobj_unregister);
- 		return err;
-+	}
+ notrace void touch_softlockup_watchdog(void)
+@@ -298,14 +300,14 @@ void touch_all_softlockup_watchdogs(void)
+ 	 * the softlockup check.
+ 	 */
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+-		per_cpu(watchdog_touch_ts, cpu) = 0;
++		per_cpu(watchdog_touch_ts, cpu) = SOFTLOCKUP_RESET;
+ 	wq_watchdog_touch(-1);
+ }
  
- 	if (f2fs_proc_root)
- 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
+ void touch_softlockup_watchdog_sync(void)
+ {
+ 	__this_cpu_write(softlockup_touch_sync, true);
+-	__this_cpu_write(watchdog_touch_ts, 0);
++	__this_cpu_write(watchdog_touch_ts, SOFTLOCKUP_RESET);
+ }
+ 
+ static int is_softlockup(unsigned long touch_ts)
+@@ -383,7 +385,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	/* .. and repeat */
+ 	hrtimer_forward_now(hrtimer, ns_to_ktime(sample_period));
+ 
+-	if (touch_ts == 0) {
++	if (touch_ts == SOFTLOCKUP_RESET) {
+ 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
+ 			/*
+ 			 * If the time stamp was touched atomically
 -- 
 2.20.1
 
