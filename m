@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4C3C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68F7C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E20F20722
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98E620722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272530;
-	bh=u3pylgW4mohWKVhQF3QxbtrbaX/Et8oD+zpRMptAa8U=;
+	s=default; t=1582272533;
+	bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GxOzWawj7Ulo5SxxSWpaA0kHzcGmuV73XIQtRrZ9ZjW90Wj9bhK2GDb+lVKNVe+IU
-	 QKHOrt25KoYJA1RPPM6Rkl/3iYJ12AeHwxp+ipSu8w5g9hWkTpWMMv9Zs65/eo5QI7
-	 xKNfI9dGFPt1B9EZhXi8QNkac8OumCle3joCRa84=
+	b=rjCcks9O4Dwe6YhMkfxToFHu60+2/h9KHqaXwcA2wi7OfhUbWWlm4oHzqSCLSVwzM
+	 LeyJfuYlfayHp753sz3CwxCqjvAdsPNJWIvU49b7bG2wozXqYnMzA0pXAXdEVJtnqh
+	 lhYeMdzybepDoA3OG6dCHs/fPCpNytYS4xHCbjek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732255AbgBUIIt (ORCPT
+        id S1732270AbgBUIIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:08:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43390 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:08:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729805AbgBUIIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:08:45 -0500
+        id S1732102AbgBUIIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:08:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20A9F20801;
-        Fri, 21 Feb 2020 08:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F09720801;
+        Fri, 21 Feb 2020 08:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272524;
-        bh=u3pylgW4mohWKVhQF3QxbtrbaX/Et8oD+zpRMptAa8U=;
+        s=default; t=1582272529;
+        bh=VR/tYj5donPID9f9La1GAChsuMa4kOjV/ethBBqSGqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fz8aZaH2OoWTIv4ceNm9En9fIA1twEPICUmfe5eG3qOXhQ7SnvxKefOXm/JglrP84
-         Lg8A3TpYRp6KwyKaGggoZiGDZL9sbM+UJXv5/J6aP4Zh98idKsBdT7FNdh1pXK2IgD
-         J+Slq/XFCHZzCNUzJCt7kVMQ2R+K4OOXrJV2iXyw=
+        b=JXQX0qazNXA4vpUM9c3/4A+xUVEngdoaWNY1RMHLWVx15pL5f38RgzVQHBUkZaOhj
+         9E3ziBqZzKKmAyymD7DKjUqTTD+FAbM4d0zzWL/qLilIM8cO3ywhAAUk7WXTLUfJnX
+         H26PoQjWxiDDfyIx39ADBPCY82H2Kzvtb++4vLxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 174/344] ALSA: sh: Fix unused variable warnings
-Date:   Fri, 21 Feb 2020 08:39:33 +0100
-Message-Id: <20200221072404.762456277@linuxfoundation.org>
+Subject: [PATCH 5.4 176/344] clk: uniphier: Add SCSSI clock gate for each channel
+Date:   Fri, 21 Feb 2020 08:39:35 +0100
+Message-Id: <20200221072404.963994507@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -59,52 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-[ Upstream commit 5da116f164ce265e397b8f59af5c39e4a61d61a5 ]
+[ Upstream commit 1ec09a2ec67a0baa46a3ccac041dbcdbc6db2cb9 ]
 
-Remove unused variables that are left over after the conversion of new
-PCM ops:
-  sound/sh/sh_dac_audio.c:166:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:186:26: warning: unused variable 'runtime'
-  sound/sh/sh_dac_audio.c:205:26: warning: unused variable 'runtime'
+SCSSI has clock gates for each channel in the SoCs newer than Pro4,
+so this adds missing clock gates for channel 1, 2 and 3. And more, this
+moves MCSSI clock ID after SCSSI.
 
-Fixes: 1cc2f8ba0b3e ("ALSA: sh: Convert to the new PCM ops")
-Link: https://lore.kernel.org/r/20200104110057.13875-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: ff388ee36516 ("clk: uniphier: add clock frequency support for SPI")
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Link: https://lkml.kernel.org/r/1577410925-22021-1-git-send-email-hayashi.kunihiko@socionext.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/sh/sh_dac_audio.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/clk/uniphier/clk-uniphier-peri.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/sound/sh/sh_dac_audio.c b/sound/sh/sh_dac_audio.c
-index ed877a138965d..7c46494466ff1 100644
---- a/sound/sh/sh_dac_audio.c
-+++ b/sound/sh/sh_dac_audio.c
-@@ -175,7 +175,6 @@ static int snd_sh_dac_pcm_copy(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+diff --git a/drivers/clk/uniphier/clk-uniphier-peri.c b/drivers/clk/uniphier/clk-uniphier-peri.c
+index 9caa52944b1c5..3e32db9dad815 100644
+--- a/drivers/clk/uniphier/clk-uniphier-peri.c
++++ b/drivers/clk/uniphier/clk-uniphier-peri.c
+@@ -18,8 +18,8 @@
+ #define UNIPHIER_PERI_CLK_FI2C(idx, ch)					\
+ 	UNIPHIER_CLK_GATE("i2c" #ch, (idx), "i2c", 0x24, 24 + (ch))
  
- 	if (copy_from_user_toio(chip->data_buffer + pos, src, count))
- 		return -EFAULT;
-@@ -195,7 +194,6 @@ static int snd_sh_dac_pcm_copy_kernel(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+-#define UNIPHIER_PERI_CLK_SCSSI(idx)					\
+-	UNIPHIER_CLK_GATE("scssi", (idx), "spi", 0x20, 17)
++#define UNIPHIER_PERI_CLK_SCSSI(idx, ch)				\
++	UNIPHIER_CLK_GATE("scssi" #ch, (idx), "spi", 0x20, 17 + (ch))
  
- 	memcpy_toio(chip->data_buffer + pos, src, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
-@@ -214,7 +212,6 @@ static int snd_sh_dac_pcm_silence(struct snd_pcm_substream *substream,
- {
- 	/* channel is not used (interleaved data) */
- 	struct snd_sh_dac *chip = snd_pcm_substream_chip(substream);
--	struct snd_pcm_runtime *runtime = substream->runtime;
+ #define UNIPHIER_PERI_CLK_MCSSI(idx)					\
+ 	UNIPHIER_CLK_GATE("mcssi", (idx), "spi", 0x24, 14)
+@@ -35,7 +35,7 @@ const struct uniphier_clk_data uniphier_ld4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_I2C(6, 2),
+ 	UNIPHIER_PERI_CLK_I2C(7, 3),
+ 	UNIPHIER_PERI_CLK_I2C(8, 4),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
+ 	{ /* sentinel */ }
+ };
  
- 	memset_io(chip->data_buffer + pos, 0, count);
- 	chip->buffer_end = chip->data_buffer + pos + count;
+@@ -51,7 +51,10 @@ const struct uniphier_clk_data uniphier_pro4_peri_clk_data[] = {
+ 	UNIPHIER_PERI_CLK_FI2C(8, 4),
+ 	UNIPHIER_PERI_CLK_FI2C(9, 5),
+ 	UNIPHIER_PERI_CLK_FI2C(10, 6),
+-	UNIPHIER_PERI_CLK_SCSSI(11),
+-	UNIPHIER_PERI_CLK_MCSSI(12),
++	UNIPHIER_PERI_CLK_SCSSI(11, 0),
++	UNIPHIER_PERI_CLK_SCSSI(12, 1),
++	UNIPHIER_PERI_CLK_SCSSI(13, 2),
++	UNIPHIER_PERI_CLK_SCSSI(14, 3),
++	UNIPHIER_PERI_CLK_MCSSI(15),
+ 	{ /* sentinel */ }
+ };
 -- 
 2.20.1
 
