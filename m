@@ -2,54 +2,52 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE22C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F31C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164C720801
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0838524650
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271456;
-	bh=JjKT3jkmYWo+VH1cMi7pE58cT6ZhUpPjOMoPMHW4uHA=;
+	s=default; t=1582271458;
+	bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGPzB/DMbwuiL2daM4HMdKhfErhRKOFAGc7NQgncCiKVVnyuXB8+NkmQBluIMcFDZ
-	 1TLG1T4FbcagWu+vhwmuhh5SeZ+p2JFhx/Mnu4Q76MXxH86D+BxLX+4tEk3gOrnJys
-	 o4wco5IS9uQwQakNU5/+imUkyk/Y6D+YkKFqQ2Sg=
+	b=zrgwwHUXAdP/kEvfLkRZVmeUG0GcHTo1G7G66AVURtwgHZk0xsrRo5hchn6yFhS99
+	 xXXluiPaAYKQQiXCbyXznHt2npKb1Bj9/obmilMVLTeVLBvKtmr16o5kNC6ZDWA0cw
+	 nHJ/0k6itX6LwGqZgbj3ZtHytIJj4M4WCstf38o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgBUHuz (ORCPT
+        id S1729651AbgBUHu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:50:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47956 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:50:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729615AbgBUHuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:50:52 -0500
+        id S1729638AbgBUHuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:50:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C4E24656;
-        Fri, 21 Feb 2020 07:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9B0C20801;
+        Fri, 21 Feb 2020 07:50:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271451;
-        bh=JjKT3jkmYWo+VH1cMi7pE58cT6ZhUpPjOMoPMHW4uHA=;
+        s=default; t=1582271454;
+        bh=HnagLcugEPxKRMVeDKW3PpwSXLKSbWNBKXlVLtNoHMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SaJM+6j8jr3/D474C2ucfEZWSI0ZQyJygUMSmieR5vbfCOIgGvLUy3+PizGCjASIn
-         zoZjwR4iOP7M0Np6zSPfiVaOZDOb4SJFQo1Rl2BmraZ3uD2f9MaWmOl5nesy6cgGPj
-         zykikNJSISOKNl59A62f0CoD1qrQUokaWVvT7wDo=
+        b=WYNEMq9+yXUjb4ckZAZ6PERlXoSaZeoJV+UOr0ivicf7ccILZElz0sNxxtxlvioeJ
+         ckeeuvzmKRMN++I5Y16ejtaorsCT/92Hsh4P1zeHInwlsANOr4TfPjUnXRb2DawhFO
+         yHfqe067AoburiuU1u6k/CkfXPpbbqj/bjtmG0mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Phong Tran <tranmanphong@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 154/399] b43legacy: Fix -Wcast-function-type
-Date:   Fri, 21 Feb 2020 08:37:59 +0100
-Message-Id: <20200221072417.491387466@linuxfoundation.org>
+Subject: [PATCH 5.5 172/399] ARM: dts: r8a7779: Add device node for ARM global timer
+Date:   Fri, 21 Feb 2020 08:38:17 +0100
+Message-Id: <20200221072419.371199406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -62,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phong Tran <tranmanphong@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 475eec112e4267232d10f4afe2f939a241692b6c ]
+[ Upstream commit 8443ffd1bbd5be74e9b12db234746d12e8ea93e2 ]
 
-correct usage prototype of callback in tasklet_init().
-Report by https://github.com/KSPP/linux/issues/20
+Add a device node for the global timer, which is part of the Cortex-A9
+MPCore.
 
-Tested-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The global timer can serve as an accurate (4 ns) clock source for
+scheduling and delay loops.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20191211135222.26770-4-geert+renesas@glider.be
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/b43legacy/main.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7779.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/b43legacy/main.c b/drivers/net/wireless/broadcom/b43legacy/main.c
-index 4325e91736eb3..8b6b657c4b85b 100644
---- a/drivers/net/wireless/broadcom/b43legacy/main.c
-+++ b/drivers/net/wireless/broadcom/b43legacy/main.c
-@@ -1275,8 +1275,9 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
- }
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index ebf5b7cfe2159..63341635bddf8 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -68,6 +68,14 @@
+ 		      <0xf0000100 0x100>;
+ 	};
  
- /* Interrupt handler bottom-half */
--static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
-+static void b43legacy_interrupt_tasklet(unsigned long data)
- {
-+	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
- 	u32 reason;
- 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
- 	u32 merged_dma_reason = 0;
-@@ -3741,7 +3742,7 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
- 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
- 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
- 	tasklet_init(&wldev->isr_tasklet,
--		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
-+		     b43legacy_interrupt_tasklet,
- 		     (unsigned long)wldev);
- 	if (modparam_pio)
- 		wldev->__using_pio = true;
++	timer@f0000200 {
++		compatible = "arm,cortex-a9-global-timer";
++		reg = <0xf0000200 0x100>;
++		interrupts = <GIC_PPI 11
++			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++		clocks = <&cpg_clocks R8A7779_CLK_ZS>;
++	};
++
+ 	timer@f0000600 {
+ 		compatible = "arm,cortex-a9-twd-timer";
+ 		reg = <0xf0000600 0x20>;
 -- 
 2.20.1
 
