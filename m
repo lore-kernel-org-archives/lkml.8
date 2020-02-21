@@ -2,113 +2,169 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF6C35656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270D8C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D3424650
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:32:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DWp3YZG8"
+	by mail.kernel.org (Postfix) with ESMTP id ED88F222C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgBUOcZ (ORCPT
+        id S1728754AbgBUOdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:32:25 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:33214 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728436AbgBUOcZ (ORCPT
+        Fri, 21 Feb 2020 09:33:52 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47330 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728068AbgBUOdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:32:25 -0500
-Received: by mail-vs1-f68.google.com with SMTP id n27so1338008vsa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:32:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+T/nTWLVypJORJXCwa4ga2EPqUEuusIhThd5QwEDQx8=;
-        b=DWp3YZG8XfF7W2prVBJFn5HThD5MWoDpKktRNcwWcpCqIKD8lelQAFToMLxIa0olSE
-         vBsASDg+j005oqdt0G1etW5BGqLH3l2UgNQFOsZ4XfNzgkNg5g1bQZznAjREwP4wmsig
-         m8tjoAiLNpMK9CFQzF42YuwT1D93Xk+aGBztwPDfmWPwYuLge7pNAOzhzx3N6v/+tpqu
-         +2LRnCCXR8DrRCRJH6BhBT0zX0Zn4lFjD4EOteoj0lMY7s4fsaAv6dCxHYnfPp9He/kp
-         zwStf447IOANO9O15VrzRk0q+8GIHFppzGinr0DEUgrNxJnj+3VgHax1qA4N13D/vR5j
-         ttTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+T/nTWLVypJORJXCwa4ga2EPqUEuusIhThd5QwEDQx8=;
-        b=c5G8ovqkvt8on4s68FGmE13N33PsFcCWlf2RfiegBhjm9nsQ4lySI8GyoLFxGpb9IE
-         nkEHvoZtnEcWBAbQhtQnSKx0WD/Pj1uX871UV1gktpQIcuH0JS/yqVXcsyBrYN8A1Do7
-         VuAtP6f4ZeSNuJNMGaVandbw+N1IpAxBHG+w0Ym3KcxgLozfsXiD/Eu2pNstN60CclqH
-         znTnqCSMxuDGHtZSR0HU0/texDf0BHkqXy5lql6CAg7W66YX6w2xnIDsWgygVG6POn1H
-         OWy9dCyOKC3wLc8DwDv20GJ5WuurKFbHis9C4hiZ03etOXE0NwfB7vhuCl0M1Q21qrH3
-         6avQ==
-X-Gm-Message-State: APjAAAVMIZNbCVoI6wOdPih+IVqu/Mnt3AAR7Rt2joKJo1+0nHXv9BHW
-        14rxFYQCmMjaONMlwpRY2BSaDHxGYNdmaG/qDfHlsrDa
-X-Google-Smtp-Source: APXvYqwLbEtXvUZZ7ZM9CPw45EAOE34hAzqT0GbPWeSsCuzxil/wD30auUF1dvD2oftm+PT4KM4ou9K4GK6TZgakSws=
-X-Received: by 2002:a67:5e45:: with SMTP id s66mr20602876vsb.200.1582295543699;
- Fri, 21 Feb 2020 06:32:23 -0800 (PST)
+        Fri, 21 Feb 2020 09:33:52 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LETHET005738
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:33:51 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yac0u2db6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 09:33:50 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 14:33:49 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 14:33:44 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LEXgXd41484322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 14:33:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7CADC11C050;
+        Fri, 21 Feb 2020 14:33:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EEAF411C04A;
+        Fri, 21 Feb 2020 14:33:41 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 14:33:41 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 15:33:40 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200220161309.GB12709@lst.de>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220161309.GB12709@lst.de>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <98ce471185f037fce57520763621590588766381.1582161803.git.baolin.wang7@gmail.com>
-In-Reply-To: <98ce471185f037fce57520763621590588766381.1582161803.git.baolin.wang7@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 21 Feb 2020 15:31:47 +0100
-Message-ID: <CAPDyKFrKe9vRpx6mKze98oM50Ux3JnHa-_2GL3PXdU=c_M1uZg@mail.gmail.com>
-Subject: Re: [PATCH] mmc: host: hsq: Add missing MODULE_LICENSE() and MODULE_DESCRIPTION()
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022114-0012-0000-0000-00000389057C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022114-0013-0000-0000-000021C59F71
+Message-Id: <20200221153340.4cdcde81.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_04:2020-02-21,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002210111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Feb 2020 at 02:31, Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> Add missing MODULE_LICENSE() and MODULE_DESCRIPTION() in hsq driver to
-> fix below warning when compiling the hsq as a module.
->
-> "WARNING: modpost: missing MODULE_LICENSE() in drivers/mmc/host/mmc_hsq.o".
->
-> Fixes: eb1814dd49d5 ("mmc: Add MMC host software queue support")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+On Thu, 20 Feb 2020 17:13:09 +0100
+Christoph Hellwig <hch@lst.de> wrote:
 
-Applied for next, thanks!
+> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index 867c7ebd3f10..fafc8f924955 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> >  	if (!virtio_has_iommu_quirk(vdev))
+> >  		return true;
+> >  
+> > +	if (force_dma_unencrypted(&vdev->dev))
+> > +		return true;
+> 
+> Hell no.  This is a detail of the platform DMA direct implementation.
 
-Kind regards
-Uffe
+I beg to differ. If it was a detail of the DMA direct implementation, it
+should have/would have been private to kernel/dma/direct.c. 
 
-> ---
->  drivers/mmc/host/mmc_hsq.c |    4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/mmc/host/mmc_hsq.c b/drivers/mmc/host/mmc_hsq.c
-> index 2011988..59d2776 100644
-> --- a/drivers/mmc/host/mmc_hsq.c
-> +++ b/drivers/mmc/host/mmc_hsq.c
-> @@ -8,6 +8,7 @@
->
->  #include <linux/mmc/card.h>
->  #include <linux/mmc/host.h>
-> +#include <linux/module.h>
->
->  #include "mmc_hsq.h"
->
-> @@ -341,3 +342,6 @@ int mmc_hsq_resume(struct mmc_host *mmc)
->         return mmc_hsq_enable(mmc, NULL);
->  }
->  EXPORT_SYMBOL_GPL(mmc_hsq_resume);
-> +
-> +MODULE_DESCRIPTION("MMC Host Software Queue support");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 1.7.9.5
->
+A look at 
+
+$ git grep -e force_dma_unencrypted
+arch/powerpc/include/asm/mem_encrypt.h:static inline bool force_dma_unencrypted(struct device *dev)
+arch/s390/mm/init.c:bool force_dma_unencrypted(struct device *dev)
+arch/x86/mm/mem_encrypt.c:bool force_dma_unencrypted(struct device *dev)
+include/linux/dma-direct.h:bool force_dma_unencrypted(struct device *dev);
+include/linux/dma-direct.h:static inline bool force_dma_unencrypted(struct device *dev)
+kernel/dma/direct.c:    if (force_dma_unencrypted(dev))
+kernel/dma/direct.c:    if (force_dma_unencrypted(dev))
+kernel/dma/direct.c:        !force_dma_unencrypted(dev)) {
+kernel/dma/direct.c:    if (force_dma_unencrypted(dev))
+kernel/dma/direct.c:    if (force_dma_unencrypted(dev))
+kernel/dma/direct.c:        !force_dma_unencrypted(dev)) {
+kernel/dma/direct.c:    if (force_dma_unencrypted(dev))
+
+tells you, that force_dma_unencrypted() is *consumed* by dma direct, but
+*provided* by the memory encryption or memory management code.
+I.e. platform code tells the dma (direct) code what decisions to make
+under certain circumstances.
+
+Consider what would we have to do to make PCI devices do I/O trough
+pages that were shared when the guest is running in a protected VM. The
+s390_pci_dma_ops would also need to know whether to 'force dma uencrypted'
+or not, and it's the exact same logic. I doubt simply using DMA direct
+for zPCI would do, because we still have to do all the Z specific IOMMU
+management.
+
+> Drivers have no business looking at this flag, and virtio finally needs
+> to be fixed to use the DMA API properly for everything but legacy devices.
+
+See the follow on discussion with David Gibson. In short: I'm in favor
+of always using DMA API iff we keep conformance with the VIRTIO spec and
+if it does not imply any degradations for s390 (virtio-ccw), or any
+other regressions.
+
+> 
+> No amount of desparate hacks is going to fix that fundamental problem,
+> and I'm starting to get really sick and tired of all the crap patches
+> published in this area.
+
+I don't think I deserve the offensive language.
+
+AFAIU you have a positive attitude towards the idea, that 
+!F_VIRTIO_PLATFORM implies 'no DMA API is used by virtio' 
+should be scrapped. 
+
+I would like to accomplish that without adverse effects to virtio-ccw
+(because caring for virtio-ccw is a part of job description).
+
+Regards,
+Halil
+
