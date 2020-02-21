@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79977C35642
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBA6C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478832073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41D420801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:58:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271931;
-	bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+	s=default; t=1582271935;
+	bh=Hf/16TbuAklWN24uDDTB5Z6VsfMwR+LS1Vq1MR6sBP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBiksGGWRRaVCvzeYCYMyNCiuTzF3tB0eDXDuU6CPV/GYX60zAh1LorWVLPA4fPvq
-	 8ODiPMX03cbJbKawJlBAatf82lVYAW4g8DzKkUfrUnZe+VJtNd1+jvaK8nuZCbEMEF
-	 Fmmtj9AQE2oVhPf4+hNA6D1CdFKGB7m8RR8a+hjY=
+	b=mtDpxnal8uTYZKHeAf7lAxQKn1pncH+HFUCqcPWptmmanQoBbqPYGCbW22XzZ9/s/
+	 pz0HHEDKReJdsCymxhg8KkEbjhkK0kfLkFIn9fVKyPkQwxAvv62DPfltdGJSIsx+Uv
+	 q6mny65HlzY9usTbk5eUxHFFqpC9gNE3U6L9stBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbgBUH6u (ORCPT
+        id S1730841AbgBUH6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:58:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:58:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730817AbgBUH6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:58:46 -0500
+        id S1730526AbgBUH6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:58:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67DFA206ED;
-        Fri, 21 Feb 2020 07:58:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57BA1206ED;
+        Fri, 21 Feb 2020 07:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271925;
-        bh=dfkQTTlWdh9yeBtr6FQzHpZfrJDgKsq5R03253NZN1g=;
+        s=default; t=1582271930;
+        bh=Hf/16TbuAklWN24uDDTB5Z6VsfMwR+LS1Vq1MR6sBP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGS2+Gixn/fedI2Gyx2c6CX0uSyQfK/GqHP5K4vPTZZZV5EwvYZ2kaOTkzU0/HfPG
-         6eZAPNRNquiUqU7JNZlZHm8heLq8d9LiR4miHoCh7CbUwN+Eh6jWZEm/Wx6vompDTN
-         cT4UmxfAI/n+dsK+3Bhgl+Dd3G4FKa7L/5GgE6Tc=
+        b=BmHs3Yl/ahYhAoYPWZwsTzEZQHoalqE89naHQOKGOahVnVzcswnJcUq3yujkdq2xn
+         eEGjiQqnJIdCkoEOLiVxyI7smgeQzL131WDtNBdrAECoUmBx+7PNzGM+ga1Mqd+G2w
+         wFWGcatWP+IgsyGjC0dRxNrc1WqGOpN2A2MopkT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
         Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 349/399] cifs: fix unitialized variable poential problem with network I/O cache lock patch
-Date:   Fri, 21 Feb 2020 08:41:14 +0100
-Message-Id: <20200221072435.057352137@linuxfoundation.org>
+Subject: [PATCH 5.5 351/399] cifs: fix NULL dereference in match_prepath
+Date:   Fri, 21 Feb 2020 08:41:16 +0100
+Message-Id: <20200221072435.165073948@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,40 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-[ Upstream commit 463a7b457c02250a84faa1d23c52da9e3364aed2 ]
+[ Upstream commit fe1292686333d1dadaf84091f585ee903b9ddb84 ]
 
-static analysis with Coverity detected an issue with the following
-commit:
+RHBZ: 1760879
 
- Author: Paulo Alcantara (SUSE) <pc@cjr.nz>
- Date:   Wed Dec 4 17:38:03 2019 -0300
+Fix an oops in match_prepath() by making sure that the prepath string is not
+NULL before we pass it into strcmp().
 
-    cifs: Avoid doing network I/O while holding cache lock
+This is similar to other checks we make for example in cifs_root_iget()
 
-Addresses-Coverity: ("Uninitialized pointer read")
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Paulo Alcantara (SUSE) <pc@cjr.nz>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/dfs_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/connect.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
-index 2faa05860a483..cf6cec59696c2 100644
---- a/fs/cifs/dfs_cache.c
-+++ b/fs/cifs/dfs_cache.c
-@@ -1319,7 +1319,7 @@ static struct cifs_ses *find_root_ses(struct dfs_cache_vol_info *vi,
- 	char *mdata = NULL, *devname = NULL;
- 	struct TCP_Server_Info *server;
- 	struct cifs_ses *ses;
--	struct smb_vol vol;
-+	struct smb_vol vol = {NULL};
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 05ea0e2b7e0e8..0aa3623ae0e16 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -3709,8 +3709,10 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
+ {
+ 	struct cifs_sb_info *old = CIFS_SB(sb);
+ 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+-	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+-	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
++	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		old->prepath;
++	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
++		new->prepath;
  
- 	rpath = get_dfs_root(path);
- 	if (IS_ERR(rpath))
+ 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
+ 		return 1;
 -- 
 2.20.1
 
