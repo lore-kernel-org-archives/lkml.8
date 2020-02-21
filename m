@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C4AC35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52996C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F28206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF97206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274509;
-	bh=qkr6acl5AOx9HxzNSn2Ffkl5YYxSy9LryyRo9RewjuA=;
+	s=default; t=1582274514;
+	bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aDwyeixbuh/Y0uxy5Mt20Cm6Cc9CXhQHrK7pcJESQ9wkErr5P2JjupQRoX3Ej4Gw/
-	 ZGy4rfX8J0LlGbIGMt88vDbExdvK0GQx0ZekmCy2RQVIUmQX/d30AJMeoddryBRqu7
-	 V90DHwR1l91qbou+RDBRIgKg/uZPwSafg4bn9m34=
+	b=Dqp9keqZogFnUrhxYhzJg3Yzf0AzxASqPg4ZY5uLXxY7p6anl60e8jzwaka3W2rZP
+	 yCy+2C3fAN70Yk5WU63F+6FTjlmQZYTSDkraAJukXErnR0Mxa6QqOs3xe7N6yOaWDF
+	 +O/Rn7q74eT3rJ+sRFT0E+qw2/1K7Wy5MpWjavKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbgBUIls (ORCPT
+        id S1731754AbgBUIlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:41:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56120 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:41:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgBUH4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:56:40 -0500
+        id S1730328AbgBUH4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:56:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0ED820578;
-        Fri, 21 Feb 2020 07:56:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9720324656;
+        Fri, 21 Feb 2020 07:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271800;
-        bh=qkr6acl5AOx9HxzNSn2Ffkl5YYxSy9LryyRo9RewjuA=;
+        s=default; t=1582271790;
+        bh=Fu3+zaxSeTBbuporxA72n1l1vChr5Fc1WMlbXQ7PtWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmzB5hL3xkLVZ3nAxA65I7L94eI3pmDBLAWE9Xt1VhcZj7gOez0DgsiGuEnbE6Hc4
-         lAYd8g24Eayvbo1a6lbVh91lUN1aP1HG1oR0qjo8bBo3r5VuXSNfH43qAo7MeV841D
-         R9PXPM03PDFBGttTVWrbb5XH7xwYzecRytU2yF40=
+        b=ANkch0Ae0zjx2IHZ8o9HL1eDOZT7tLAFMHpGLYIBXrLOU0GebjOXpD++33oBdhsKh
+         2Cmug3sikbD6sl/0uoCmSTO14QuNkigZgi0/WSg665X0Tc+r5/GXa/Hoo7nV9DV3SB
+         tdsxt45MbRr01fCJHXAnuqOjGWfmbqJmgKgcEk1g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 276/399] crypto: essiv - fix AEAD capitalization and preposition use in help text
-Date:   Fri, 21 Feb 2020 08:40:01 +0100
-Message-Id: <20200221072428.921963176@linuxfoundation.org>
+Subject: [PATCH 5.5 299/399] f2fs: fix memleak of kobject
+Date:   Fri, 21 Feb 2020 08:40:24 +0100
+Message-Id: <20200221072430.804876482@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,38 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit ab3d436bf3e9d05f58ceaa85ff7475bfcd6e45af ]
+[ Upstream commit fe396ad8e7526f059f7b8c7290d33a1b84adacab ]
 
-"AEAD" is capitalized everywhere else.
-Use "an" when followed by a written or spoken vowel.
+If kobject_init_and_add() failed, caller needs to invoke kobject_put()
+to release kobject explicitly.
 
-Fixes: be1eb7f78aa8fbe3 ("crypto: essiv - create wrapper template for ESSIV generation")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/sysfs.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/crypto/Kconfig b/crypto/Kconfig
-index 5575d48473bd4..cdb51d4272d0c 100644
---- a/crypto/Kconfig
-+++ b/crypto/Kconfig
-@@ -511,10 +511,10 @@ config CRYPTO_ESSIV
- 	  encryption.
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index 5963316f391a5..e79c86b8553a5 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -733,10 +733,12 @@ int __init f2fs_init_sysfs(void)
  
- 	  This driver implements a crypto API template that can be
--	  instantiated either as a skcipher or as a aead (depending on the
-+	  instantiated either as an skcipher or as an AEAD (depending on the
- 	  type of the first template argument), and which defers encryption
- 	  and decryption requests to the encapsulated cipher after applying
--	  ESSIV to the input IV. Note that in the aead case, it is assumed
-+	  ESSIV to the input IV. Note that in the AEAD case, it is assumed
- 	  that the keys are presented in the same format used by the authenc
- 	  template, and that the IV appears at the end of the authenticated
- 	  associated data (AAD) region (which is how dm-crypt uses it.)
+ 	ret = kobject_init_and_add(&f2fs_feat, &f2fs_feat_ktype,
+ 				   NULL, "features");
+-	if (ret)
++	if (ret) {
++		kobject_put(&f2fs_feat);
+ 		kset_unregister(&f2fs_kset);
+-	else
++	} else {
+ 		f2fs_proc_root = proc_mkdir("fs/f2fs", NULL);
++	}
+ 	return ret;
+ }
+ 
+@@ -757,8 +759,11 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+ 	init_completion(&sbi->s_kobj_unregister);
+ 	err = kobject_init_and_add(&sbi->s_kobj, &f2fs_sb_ktype, NULL,
+ 				"%s", sb->s_id);
+-	if (err)
++	if (err) {
++		kobject_put(&sbi->s_kobj);
++		wait_for_completion(&sbi->s_kobj_unregister);
+ 		return err;
++	}
+ 
+ 	if (f2fs_proc_root)
+ 		sbi->s_proc = proc_mkdir(sb->s_id, f2fs_proc_root);
 -- 
 2.20.1
 
