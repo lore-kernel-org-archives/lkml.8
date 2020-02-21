@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CA2C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9915C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59A924653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9325B24672
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271174;
-	bh=m4jyVE18pfZq4qi+TJEPKig9Dd0guUKdRgNJXmVZibI=;
+	s=default; t=1582271178;
+	bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sdXjY9eNwR71GKwChOKYFj/zq7IFDcUNZacQzGMCD+bvyOb5Dj1IlUfOSH2MtBA9H
-	 F0nj5F4k3IREg4G73tXCkt/FAJRMAVRVLQANdrPZ883NIzeQa/4OeMXCDEUIcwQNAD
-	 5KZp2LWE1lhDwxU4F5bxMb5HwrHg6Eigyp+B7VrQ=
+	b=juIw4mMsYMiExIL5AKYWDkmn+hl5YfMBgISmGDbrjIRj8cW8HUOxQGpmd/GH3IQwv
+	 txHDXNdhhAVtf9mJisATMrj9CyBh9ctCRv0nqiAipFE/f3QODvrfI7iqBHKYH2F2fg
+	 T5ETwUq7BP373n91/OZtgeDib+BsNpBft+EuojuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgBUHqN (ORCPT
+        id S1728656AbgBUHqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:46:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41590 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:46:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbgBUHqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:46:11 -0500
+        id S1728643AbgBUHqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:46:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDC824673;
-        Fri, 21 Feb 2020 07:46:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20EB520801;
+        Fri, 21 Feb 2020 07:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271170;
-        bh=m4jyVE18pfZq4qi+TJEPKig9Dd0guUKdRgNJXmVZibI=;
+        s=default; t=1582271172;
+        bh=dfBe6pGOa3MtzNF/br7Jv7bQkVvBqp+VpqCIZVOiRto=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBJox8ve3LEncH7UMCcme+d2ZHnrGc05i0zdInZbH21APtJ3ucnXfnW3NbnZU+LkA
-         sX9QYW75n6eEqPhe0hT3ARg+GL+J+jsnwfEQe/yradoZpKc7H8sGO4dPQbYkcT3Q/s
-         QM9dSQsNxIJbMFWolbg+L19vbGtQU4f2+pgKvtB0=
+        b=epDM5FP0RNrZnK/16ChQ498+VG9JG5tAYyFTYvOWypaZuXEiKIWBwz5AgIhmcVQwX
+         w+48GxIUd1vH6j9nExfYgYMeyd9bYsor5464HcEMvMDdS07au9BskxpKWUSGdo9Wu7
+         UBF7fyw3x9yOF/wlpcaBmrb2peunPAmRlbfuLPbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 064/399] spi: fsl-lpspi: fix only one cs-gpio working
-Date:   Fri, 21 Feb 2020 08:36:29 +0100
-Message-Id: <20200221072408.604738913@linuxfoundation.org>
+Subject: [PATCH 5.5 065/399] drm/nouveau/nouveau: fix incorrect sizeof on args.src an args.dst
+Date:   Fri, 21 Feb 2020 08:36:30 +0100
+Message-Id: <20200221072408.690884153@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,88 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Schenker <philippe.schenker@toradex.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit bc3a8b295e5bca9d1ec2622a6ba38289f9fd3d8a ]
+[ Upstream commit f42e4b337b327b1336c978c4b5174990a25f68a0 ]
 
-Why it does not work at the moment:
-- num_chipselect sets the number of cs-gpios that are in the DT.
-  This comes from drivers/spi/spi.c
-- num_chipselect gets set with devm_spi_register_controller, that is
-  called in drivers/spi/spi.c
-- devm_spi_register_controller got called after num_chipselect has
-  been used.
+The sizeof is currently on args.src and args.dst and should be on
+*args.src and *args.dst. Fortunately these sizes just so happen
+to be the same size so it worked, however, this should be fixed
+and it also cleans up static analysis warnings
 
-How this commit fixes the issue:
-- devm_spi_register_controller gets called before num_chipselect is
-  being used.
-
-Fixes: c7a402599504 ("spi: lpspi: use the core way to implement cs-gpio function")
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Link: https://lore.kernel.org/r/20191204141312.1411251-1-philippe.schenker@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Addresses-Coverity: ("sizeof not portable")
+Fixes: f268307ec7c7 ("nouveau: simplify nouveau_dmem_migrate_vma")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-lpspi.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index 2cc0ddb4a9889..1375bdfc587bf 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -862,6 +862,22 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
- 	fsl_lpspi->dev = &pdev->dev;
- 	fsl_lpspi->is_slave = is_slave;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index fa14399415965..0ad5d87b5a8e5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -635,10 +635,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	unsigned long c, i;
+ 	int ret = -ENOMEM;
  
-+	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
-+	controller->transfer_one = fsl_lpspi_transfer_one;
-+	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
-+	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
-+	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
-+	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
-+	controller->dev.of_node = pdev->dev.of_node;
-+	controller->bus_num = pdev->id;
-+	controller->slave_abort = fsl_lpspi_slave_abort;
-+
-+	ret = devm_spi_register_controller(&pdev->dev, controller);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "spi_register_controller error.\n");
-+		goto out_controller_put;
-+	}
-+
- 	if (!fsl_lpspi->is_slave) {
- 		for (i = 0; i < controller->num_chipselect; i++) {
- 			int cs_gpio = of_get_named_gpio(np, "cs-gpios", i);
-@@ -885,16 +901,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
- 		controller->prepare_message = fsl_lpspi_prepare_message;
- 	}
+-	args.src = kcalloc(max, sizeof(args.src), GFP_KERNEL);
++	args.src = kcalloc(max, sizeof(*args.src), GFP_KERNEL);
+ 	if (!args.src)
+ 		goto out;
+-	args.dst = kcalloc(max, sizeof(args.dst), GFP_KERNEL);
++	args.dst = kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
+ 	if (!args.dst)
+ 		goto out_free_src;
  
--	controller->bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32);
--	controller->transfer_one = fsl_lpspi_transfer_one;
--	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
--	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
--	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
--	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
--	controller->dev.of_node = pdev->dev.of_node;
--	controller->bus_num = pdev->id;
--	controller->slave_abort = fsl_lpspi_slave_abort;
--
- 	init_completion(&fsl_lpspi->xfer_done);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -952,12 +958,6 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		dev_err(&pdev->dev, "dma setup error %d, use pio\n", ret);
- 
--	ret = devm_spi_register_controller(&pdev->dev, controller);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "spi_register_controller error.\n");
--		goto out_controller_put;
--	}
--
- 	return 0;
- 
- out_controller_put:
 -- 
 2.20.1
 
