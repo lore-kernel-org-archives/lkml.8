@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D74C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3FCC35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4EC5206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B6820722
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274798;
-	bh=88HK1gOY1FHSYpLNTI+/uJaGR/7f7jW7TlUIoj3OmtE=;
+	s=default; t=1582274801;
+	bh=pisCp0L8OYluLdVr5lRE1PQQni0pQHeVSXt5Ghx26zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rZ+ySXHcqukCKU/MJxAS8qsn306tUfgjddHHregQ32WHIbGHPQbV0M4yIvzUzSoso
-	 TO+qypVzC6JO5mdw4jw2S6hdseGkibrxuianIJx2mRp7NG8FKFyQXqaa2TuUidviom
-	 vpLR2wtSNA/wYHseYTqdgeZg24YNMMooqADcs9jg=
+	b=FDxfESxq9+laP/NivdYyz6N2nFMmiJaKB1hsm3m5jNPK6VQopVLiPw9KuG/KHr/iL
+	 JVcbPyyVV8FnmD9Rm5uaxIVI1RCRXEDw8d5eneyZSUwPwQzU7Eve7fo5sHRjDkvG+g
+	 KmlITEtrGVlYnJo6VEK5Npgkh2uvMAo1eXVOqRys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732463AbgBUIqh (ORCPT
+        id S1728856AbgBUHtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:46:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728761AbgBUHtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Feb 2020 02:49:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728359AbgBUHtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:49:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F46208C4;
-        Fri, 21 Feb 2020 07:49:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50CE3208C4;
+        Fri, 21 Feb 2020 07:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271371;
-        bh=88HK1gOY1FHSYpLNTI+/uJaGR/7f7jW7TlUIoj3OmtE=;
+        s=default; t=1582271357;
+        bh=pisCp0L8OYluLdVr5lRE1PQQni0pQHeVSXt5Ghx26zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7AJViBqB4Py6msE4FfJht0LZ1vUT9h1fURiuJelDg95e0noN40cyDrdtT61t904x
-         kx/tdCNxeFk8C7vpeDE4vF4099lf8i+5Yhuu0PrSS8lg0S6o5bqZo2Bg9/dV+Xk2cy
-         zETbL2JdXEzOrBpZsmzgAS9fR8Mlxa9eAjVvZ0AU=
+        b=0O7l+owIid4Qzte1YQ1gmPbeL+MLWKDjygw/oukblxeaqIwc41pxOQxU0f51evA/w
+         EKm/mPyszso5lxIBizrZ61jOeMjhxsxQ2Zo7++msPtEuIvG7piB95TV9lHD1SxTOZa
+         8JtK+Klgw8/3ThnypbaoiT2tDj+5uCAAnAFKVRdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Forest Crossman <cyrozap@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 140/399] selftests/net: make so_txtime more robust to timer variance
-Date:   Fri, 21 Feb 2020 08:37:45 +0100
-Message-Id: <20200221072416.072603731@linuxfoundation.org>
+Subject: [PATCH 5.5 135/399] media: cx23885: Add support for AVerMedia CE310B
+Date:   Fri, 21 Feb 2020 08:37:40 +0100
+Message-Id: <20200221072415.585833854@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -61,224 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Forest Crossman <cyrozap@gmail.com>
 
-[ Upstream commit ea6a547669b37453f2b1a5d85188d75b3613dfaa ]
+[ Upstream commit dc4cac67e13515835ed8081d510aa507aacb013b ]
 
-The SO_TXTIME test depends on accurate timers. In some virtualized
-environments the test has been reported to be flaky. This is easily
-reproduced by disabling kvm acceleration in Qemu.
+The AVerMedia CE310B is a simple composite + S-Video + stereo audio
+capture card, and uses only the CX23888 to perform all of these
+functions.
 
-Allow greater variance in a run and retry to further reduce flakiness.
+I've tested both video inputs and the audio interface and confirmed that
+they're all working. However, there are some issues:
 
-Observed errors are one of two kinds: either the packet arrives too
-early or late at recv(), or it was dropped in the qdisc itself and the
-recv() call times out.
+* Sometimes when I switch inputs the video signal turns black and can't
+  be recovered until the system is rebooted. I haven't been able to
+  determine the cause of this behavior, nor have I found a solution to
+  fix it or any workarounds other than rebooting.
+* The card sometimes seems to have trouble syncing to the video signal,
+  and some of the VBI data appears as noise at the top of the frame, but
+  I assume that to be a result of my very noisy RF environment and the
+  card's unshielded input traces rather than a configuration issue.
 
-In the latter case, the qdisc queues a notification to the error
-queue of the send socket. Also explicitly report this cause.
-
-Link: https://lore.kernel.org/netdev/CA+FuTSdYOnJCsGuj43xwV1jxvYsaoa_LzHQF9qMyhrkLrivxKw@mail.gmail.com
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/so_txtime.c  | 84 +++++++++++++++++++++++-
- tools/testing/selftests/net/so_txtime.sh |  9 ++-
- 2 files changed, 88 insertions(+), 5 deletions(-)
+ drivers/media/pci/cx23885/cx23885-cards.c | 24 +++++++++++++++++++++++
+ drivers/media/pci/cx23885/cx23885-video.c |  3 ++-
+ drivers/media/pci/cx23885/cx23885.h       |  1 +
+ 3 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
-index 34df4c8882afb..383bac05ac324 100644
---- a/tools/testing/selftests/net/so_txtime.c
-+++ b/tools/testing/selftests/net/so_txtime.c
-@@ -12,7 +12,11 @@
- #include <arpa/inet.h>
- #include <error.h>
- #include <errno.h>
-+#include <inttypes.h>
- #include <linux/net_tstamp.h>
-+#include <linux/errqueue.h>
-+#include <linux/ipv6.h>
-+#include <linux/tcp.h>
- #include <stdbool.h>
- #include <stdlib.h>
- #include <stdio.h>
-@@ -28,7 +32,7 @@ static int	cfg_clockid	= CLOCK_TAI;
- static bool	cfg_do_ipv4;
- static bool	cfg_do_ipv6;
- static uint16_t	cfg_port	= 8000;
--static int	cfg_variance_us	= 2000;
-+static int	cfg_variance_us	= 4000;
+diff --git a/drivers/media/pci/cx23885/cx23885-cards.c b/drivers/media/pci/cx23885/cx23885-cards.c
+index 8644205d3cd33..8e5a2c580821e 100644
+--- a/drivers/media/pci/cx23885/cx23885-cards.c
++++ b/drivers/media/pci/cx23885/cx23885-cards.c
+@@ -801,6 +801,25 @@ struct cx23885_board cx23885_boards[] = {
+ 		.name		= "Hauppauge WinTV-Starburst2",
+ 		.portb		= CX23885_MPEG_DVB,
+ 	},
++	[CX23885_BOARD_AVERMEDIA_CE310B] = {
++		.name		= "AVerMedia CE310B",
++		.porta		= CX23885_ANALOG_VIDEO,
++		.force_bff	= 1,
++		.input          = {{
++			.type   = CX23885_VMUX_COMPOSITE1,
++			.vmux   = CX25840_VIN1_CH1 |
++				  CX25840_NONE_CH2 |
++				  CX25840_NONE0_CH3,
++			.amux   = CX25840_AUDIO7,
++		}, {
++			.type   = CX23885_VMUX_SVIDEO,
++			.vmux   = CX25840_VIN8_CH1 |
++				  CX25840_NONE_CH2 |
++				  CX25840_VIN7_CH3 |
++				  CX25840_SVIDEO_ON,
++			.amux   = CX25840_AUDIO7,
++		} },
++	},
+ };
+ const unsigned int cx23885_bcount = ARRAY_SIZE(cx23885_boards);
  
- static uint64_t glob_tstart;
+@@ -1124,6 +1143,10 @@ struct cx23885_subid cx23885_subids[] = {
+ 		.subvendor = 0x0070,
+ 		.subdevice = 0xf02a,
+ 		.card      = CX23885_BOARD_HAUPPAUGE_STARBURST2,
++	}, {
++		.subvendor = 0x1461,
++		.subdevice = 0x3100,
++		.card      = CX23885_BOARD_AVERMEDIA_CE310B,
+ 	},
+ };
+ const unsigned int cx23885_idcount = ARRAY_SIZE(cx23885_subids);
+@@ -2348,6 +2371,7 @@ void cx23885_card_setup(struct cx23885_dev *dev)
+ 	case CX23885_BOARD_DVBSKY_T982:
+ 	case CX23885_BOARD_VIEWCAST_260E:
+ 	case CX23885_BOARD_VIEWCAST_460E:
++	case CX23885_BOARD_AVERMEDIA_CE310B:
+ 		dev->sd_cx25840 = v4l2_i2c_new_subdev(&dev->v4l2_dev,
+ 				&dev->i2c_bus[2].i2c_adap,
+ 				"cx25840", 0x88 >> 1, NULL);
+diff --git a/drivers/media/pci/cx23885/cx23885-video.c b/drivers/media/pci/cx23885/cx23885-video.c
+index 8098b15493de9..7fc408ee4934f 100644
+--- a/drivers/media/pci/cx23885/cx23885-video.c
++++ b/drivers/media/pci/cx23885/cx23885-video.c
+@@ -257,7 +257,8 @@ static int cx23885_video_mux(struct cx23885_dev *dev, unsigned int input)
+ 		(dev->board == CX23885_BOARD_MYGICA_X8507) ||
+ 		(dev->board == CX23885_BOARD_AVERMEDIA_HC81R) ||
+ 		(dev->board == CX23885_BOARD_VIEWCAST_260E) ||
+-		(dev->board == CX23885_BOARD_VIEWCAST_460E)) {
++		(dev->board == CX23885_BOARD_VIEWCAST_460E) ||
++		(dev->board == CX23885_BOARD_AVERMEDIA_CE310B)) {
+ 		/* Configure audio routing */
+ 		v4l2_subdev_call(dev->sd_cx25840, audio, s_routing,
+ 			INPUT(input)->amux, 0, 0);
+diff --git a/drivers/media/pci/cx23885/cx23885.h b/drivers/media/pci/cx23885/cx23885.h
+index a95a2e4c6a0d3..c472498e57c4e 100644
+--- a/drivers/media/pci/cx23885/cx23885.h
++++ b/drivers/media/pci/cx23885/cx23885.h
+@@ -101,6 +101,7 @@
+ #define CX23885_BOARD_HAUPPAUGE_STARBURST2     59
+ #define CX23885_BOARD_HAUPPAUGE_QUADHD_DVB_885 60
+ #define CX23885_BOARD_HAUPPAUGE_QUADHD_ATSC_885 61
++#define CX23885_BOARD_AVERMEDIA_CE310B         62
  
-@@ -43,6 +47,9 @@ static struct timed_send cfg_in[MAX_NUM_PKT];
- static struct timed_send cfg_out[MAX_NUM_PKT];
- static int cfg_num_pkt;
- 
-+static int cfg_errq_level;
-+static int cfg_errq_type;
-+
- static uint64_t gettime_ns(void)
- {
- 	struct timespec ts;
-@@ -90,13 +97,15 @@ static void do_send_one(int fdt, struct timed_send *ts)
- 
- }
- 
--static void do_recv_one(int fdr, struct timed_send *ts)
-+static bool do_recv_one(int fdr, struct timed_send *ts)
- {
- 	int64_t tstop, texpect;
- 	char rbuf[2];
- 	int ret;
- 
- 	ret = recv(fdr, rbuf, sizeof(rbuf), 0);
-+	if (ret == -1 && errno == EAGAIN)
-+		return true;
- 	if (ret == -1)
- 		error(1, errno, "read");
- 	if (ret != 1)
-@@ -113,6 +122,8 @@ static void do_recv_one(int fdr, struct timed_send *ts)
- 
- 	if (labs(tstop - texpect) > cfg_variance_us)
- 		error(1, 0, "exceeds variance (%d us)", cfg_variance_us);
-+
-+	return false;
- }
- 
- static void do_recv_verify_empty(int fdr)
-@@ -125,12 +136,70 @@ static void do_recv_verify_empty(int fdr)
- 		error(1, 0, "recv: not empty as expected (%d, %d)", ret, errno);
- }
- 
-+static void do_recv_errqueue_timeout(int fdt)
-+{
-+	char control[CMSG_SPACE(sizeof(struct sock_extended_err)) +
-+		     CMSG_SPACE(sizeof(struct sockaddr_in6))] = {0};
-+	char data[sizeof(struct ipv6hdr) +
-+		  sizeof(struct tcphdr) + 1];
-+	struct sock_extended_err *err;
-+	struct msghdr msg = {0};
-+	struct iovec iov = {0};
-+	struct cmsghdr *cm;
-+	int64_t tstamp = 0;
-+	int ret;
-+
-+	iov.iov_base = data;
-+	iov.iov_len = sizeof(data);
-+
-+	msg.msg_iov = &iov;
-+	msg.msg_iovlen = 1;
-+
-+	msg.msg_control = control;
-+	msg.msg_controllen = sizeof(control);
-+
-+	while (1) {
-+		ret = recvmsg(fdt, &msg, MSG_ERRQUEUE);
-+		if (ret == -1 && errno == EAGAIN)
-+			break;
-+		if (ret == -1)
-+			error(1, errno, "errqueue");
-+		if (msg.msg_flags != MSG_ERRQUEUE)
-+			error(1, 0, "errqueue: flags 0x%x\n", msg.msg_flags);
-+
-+		cm = CMSG_FIRSTHDR(&msg);
-+		if (cm->cmsg_level != cfg_errq_level ||
-+		    cm->cmsg_type != cfg_errq_type)
-+			error(1, 0, "errqueue: type 0x%x.0x%x\n",
-+				    cm->cmsg_level, cm->cmsg_type);
-+
-+		err = (struct sock_extended_err *)CMSG_DATA(cm);
-+		if (err->ee_origin != SO_EE_ORIGIN_TXTIME)
-+			error(1, 0, "errqueue: origin 0x%x\n", err->ee_origin);
-+		if (err->ee_code != ECANCELED)
-+			error(1, 0, "errqueue: code 0x%x\n", err->ee_code);
-+
-+		tstamp = ((int64_t) err->ee_data) << 32 | err->ee_info;
-+		tstamp -= (int64_t) glob_tstart;
-+		tstamp /= 1000 * 1000;
-+		fprintf(stderr, "send: pkt %c at %" PRId64 "ms dropped\n",
-+				data[ret - 1], tstamp);
-+
-+		msg.msg_flags = 0;
-+		msg.msg_controllen = sizeof(control);
-+	}
-+
-+	error(1, 0, "recv: timeout");
-+}
-+
- static void setsockopt_txtime(int fd)
- {
- 	struct sock_txtime so_txtime_val = { .clockid = cfg_clockid };
- 	struct sock_txtime so_txtime_val_read = { 0 };
- 	socklen_t vallen = sizeof(so_txtime_val);
- 
-+	so_txtime_val.flags = SOF_TXTIME_REPORT_ERRORS;
-+
- 	if (setsockopt(fd, SOL_SOCKET, SO_TXTIME,
- 		       &so_txtime_val, sizeof(so_txtime_val)))
- 		error(1, errno, "setsockopt txtime");
-@@ -194,7 +263,8 @@ static void do_test(struct sockaddr *addr, socklen_t alen)
- 	for (i = 0; i < cfg_num_pkt; i++)
- 		do_send_one(fdt, &cfg_in[i]);
- 	for (i = 0; i < cfg_num_pkt; i++)
--		do_recv_one(fdr, &cfg_out[i]);
-+		if (do_recv_one(fdr, &cfg_out[i]))
-+			do_recv_errqueue_timeout(fdt);
- 
- 	do_recv_verify_empty(fdr);
- 
-@@ -280,6 +350,10 @@ int main(int argc, char **argv)
- 		addr6.sin6_family = AF_INET6;
- 		addr6.sin6_port = htons(cfg_port);
- 		addr6.sin6_addr = in6addr_loopback;
-+
-+		cfg_errq_level = SOL_IPV6;
-+		cfg_errq_type = IPV6_RECVERR;
-+
- 		do_test((void *)&addr6, sizeof(addr6));
- 	}
- 
-@@ -289,6 +363,10 @@ int main(int argc, char **argv)
- 		addr4.sin_family = AF_INET;
- 		addr4.sin_port = htons(cfg_port);
- 		addr4.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-+
-+		cfg_errq_level = SOL_IP;
-+		cfg_errq_type = IP_RECVERR;
-+
- 		do_test((void *)&addr4, sizeof(addr4));
- 	}
- 
-diff --git a/tools/testing/selftests/net/so_txtime.sh b/tools/testing/selftests/net/so_txtime.sh
-index 5aa519328a5b5..3f7800eaecb1e 100755
---- a/tools/testing/selftests/net/so_txtime.sh
-+++ b/tools/testing/selftests/net/so_txtime.sh
-@@ -5,7 +5,12 @@
- 
- # Run in network namespace
- if [[ $# -eq 0 ]]; then
--	./in_netns.sh $0 __subprocess
-+	if ! ./in_netns.sh $0 __subprocess; then
-+		# test is time sensitive, can be flaky
-+		echo "test failed: retry once"
-+		./in_netns.sh $0 __subprocess
-+	fi
-+
- 	exit $?
- fi
- 
-@@ -18,7 +23,7 @@ tc qdisc add dev lo root fq
- ./so_txtime -4 -6 -c mono a,10,b,20 a,10,b,20
- ./so_txtime -4 -6 -c mono a,20,b,10 b,20,a,20
- 
--if tc qdisc replace dev lo root etf clockid CLOCK_TAI delta 200000; then
-+if tc qdisc replace dev lo root etf clockid CLOCK_TAI delta 400000; then
- 	! ./so_txtime -4 -6 -c tai a,-1 a,-1
- 	! ./so_txtime -4 -6 -c tai a,0 a,0
- 	./so_txtime -4 -6 -c tai a,10 a,10
+ #define GPIO_0 0x00000001
+ #define GPIO_1 0x00000002
 -- 
 2.20.1
 
