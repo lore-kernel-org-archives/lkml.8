@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A4C35641
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3012C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDBD22467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC6924656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272267;
-	bh=9DNciYPHzmTAb0suRZ1bKJM0a/Lj+lrMt65xfQTFY2M=;
+	s=default; t=1582272270;
+	bh=mhrvYHx10N0wbmHbF+nYPvCSAlLYueoEr/8yc7/phfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VOTFatJ6fsbwMfoWd0wbOaoEs29LBkj8COiV7qmgByY5FYhfRWW80E758PAkGiHuc
-	 seqm/QMqH1EhA/9fh6ynanLvg6B4MayWE0SZjX3RCCrbNBQzL7AQ2EVfylQ/eLNShP
-	 D/GF/hZld94a1ioZU2R5uGu+qAS4eBvEGO2SBsM8=
+	b=MwDfYaTkHIvM7ckV7aHkNGnA6LF6siR8//SgqCet8zc5kXPvUcTaVnvgibY8ivjdq
+	 99RZLbOnCgJK68tqTTQdCVwMbqd1dHOljUxkan5DRFSrKdRHBfI8/ZYfF18s/j7J/9
+	 Ru38N+ihcuV/JNIoE+ZB9Q3rwm2DWIB3dWjNxD/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731647AbgBUIE0 (ORCPT
+        id S1731655AbgBUIE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:04:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:04:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731639AbgBUIEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:04:25 -0500
+        id S1731649AbgBUIE2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:04:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 518E42467A;
-        Fri, 21 Feb 2020 08:04:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC67D24656;
+        Fri, 21 Feb 2020 08:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272264;
-        bh=9DNciYPHzmTAb0suRZ1bKJM0a/Lj+lrMt65xfQTFY2M=;
+        s=default; t=1582272267;
+        bh=mhrvYHx10N0wbmHbF+nYPvCSAlLYueoEr/8yc7/phfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqJbZDOq0exwfzjBLUnQ4Q13FVZM8Nbbh94WCNKFbjKBd+ck1mExL6V/0TLQalzEc
-         GkYKuehoMDFf8h6e7DSq5zNbl8fLLubG5sdoEHPhTHLZpAQbw/uqIVuV8nmy/TXqGo
-         66DiWSkHTN/z8Yb83xXy5jTwxdAjxPTMmFIQiwSU=
+        b=GISUmqnnFDcd3bLm09Twr/3NcGCelm9P6CYkiJk+BPRhTBAYDJEX8n5KJb+preOVy
+         1naE6I4y2xe6iVi+QJjcyiyAbNXi3jD6FMAkzEwVJScjw0WrFnNopa02WUR9XcBZYK
+         J0A8Eeg8RlxZEM/oMcy5QShj+IYfwDhgMiyeRgD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
+        stable@vger.kernel.org, Ping-Ke Shih <pkshih@realtek.com>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Chris Chiu <chiu@endlessm.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/344] ath10k: Correct the DMA direction for management tx buffers
-Date:   Fri, 21 Feb 2020 08:37:57 +0100
-Message-Id: <20200221072356.061387082@linuxfoundation.org>
+Subject: [PATCH 5.4 079/344] rtw88: fix rate mask for 1SS chip
+Date:   Fri, 21 Feb 2020 08:37:58 +0100
+Message-Id: <20200221072356.149435301@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -60,55 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Ping-Ke Shih <pkshih@realtek.com>
 
-[ Upstream commit 6ba8b3b6bd772f575f7736c8fd893c6981fcce16 ]
+[ Upstream commit 35a68fa5f96a80797e11b6952a47c5a84939a7bf ]
 
-The management packets, send to firmware via WMI, are
-mapped using the direction DMA_TO_DEVICE. Currently in
-case of wmi cleanup, these buffers are being unmapped
-using an incorrect DMA direction. This can cause unwanted
-behavior when the host driver is handling a restart
-of the wlan firmware.
+The rate mask is used to tell firmware the supported rate depends on
+negotiation. We loop 2 times for all VHT/HT 2SS rate mask first, and then
+only keep the part according to chip's NSS.
 
-We might see a trace like below
+This commit fixes the logic error of '&' operations for VHT/HT rate, and
+we should run this logic before adding legacy rate.
 
-[<ffffff8008098b18>] __dma_inv_area+0x28/0x58
-[<ffffff8001176734>] ath10k_wmi_mgmt_tx_clean_up_pending+0x60/0xb0 [ath10k_core]
-[<ffffff80088c7c50>] idr_for_each+0x78/0xe4
-[<ffffff80011766a4>] ath10k_wmi_detach+0x4c/0x7c [ath10k_core]
-[<ffffff8001163d7c>] ath10k_core_stop+0x58/0x68 [ath10k_core]
-[<ffffff800114fb74>] ath10k_halt+0xec/0x13c [ath10k_core]
-[<ffffff8001165110>] ath10k_core_restart+0x11c/0x1a8 [ath10k_core]
-[<ffffff80080c36bc>] process_one_work+0x16c/0x31c
+To access HT MCS map, index 0/1 represent MCS 0-7/8-15 respectively. Use
+NL80211_BAND_xxx is incorrect, so fix it as well.
 
-Fix the incorrect DMA direction during the wmi
-management tx buffer cleanup.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.3.1-00784-QCAHLSWMTPLZ-1
-
-Fixes: dc405152bb6 ("ath10k: handle mgmt tx completion event")
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+Signed-off-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Reviewed-by: Chris Chiu <chiu@endlessm.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/wmi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtw88/main.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
-index 4f707c6394bba..90f1197a6ad84 100644
---- a/drivers/net/wireless/ath/ath10k/wmi.c
-+++ b/drivers/net/wireless/ath/ath10k/wmi.c
-@@ -9422,7 +9422,7 @@ static int ath10k_wmi_mgmt_tx_clean_up_pending(int msdu_id, void *ptr,
+diff --git a/drivers/net/wireless/realtek/rtw88/main.c b/drivers/net/wireless/realtek/rtw88/main.c
+index 806af37192bc2..88e2252bf8a2b 100644
+--- a/drivers/net/wireless/realtek/rtw88/main.c
++++ b/drivers/net/wireless/realtek/rtw88/main.c
+@@ -556,8 +556,8 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 		if (sta->vht_cap.cap & IEEE80211_VHT_CAP_SHORT_GI_80)
+ 			is_support_sgi = true;
+ 	} else if (sta->ht_cap.ht_supported) {
+-		ra_mask |= (sta->ht_cap.mcs.rx_mask[NL80211_BAND_5GHZ] << 20) |
+-			   (sta->ht_cap.mcs.rx_mask[NL80211_BAND_2GHZ] << 12);
++		ra_mask |= (sta->ht_cap.mcs.rx_mask[1] << 20) |
++			   (sta->ht_cap.mcs.rx_mask[0] << 12);
+ 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_RX_STBC)
+ 			stbc_en = HT_STBC_EN;
+ 		if (sta->ht_cap.cap & IEEE80211_HT_CAP_LDPC_CODING)
+@@ -567,6 +567,9 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 			is_support_sgi = true;
+ 	}
  
- 	msdu = pkt_addr->vaddr;
- 	dma_unmap_single(ar->dev, pkt_addr->paddr,
--			 msdu->len, DMA_FROM_DEVICE);
-+			 msdu->len, DMA_TO_DEVICE);
- 	ieee80211_free_txskb(ar->hw, msdu);
++	if (efuse->hw_cap.nss == 1)
++		ra_mask &= RA_MASK_VHT_RATES_1SS | RA_MASK_HT_RATES_1SS;
++
+ 	if (hal->current_band_type == RTW_BAND_5G) {
+ 		ra_mask |= (u64)sta->supp_rates[NL80211_BAND_5GHZ] << 4;
+ 		if (sta->vht_cap.vht_supported) {
+@@ -600,11 +603,6 @@ void rtw_update_sta_info(struct rtw_dev *rtwdev, struct rtw_sta_info *si)
+ 		wireless_set = 0;
+ 	}
  
- 	return 0;
+-	if (efuse->hw_cap.nss == 1) {
+-		ra_mask &= RA_MASK_VHT_RATES_1SS;
+-		ra_mask &= RA_MASK_HT_RATES_1SS;
+-	}
+-
+ 	switch (sta->bandwidth) {
+ 	case IEEE80211_STA_RX_BW_80:
+ 		bw_mode = RTW_CHANNEL_WIDTH_80;
 -- 
 2.20.1
 
