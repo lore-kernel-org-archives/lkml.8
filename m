@@ -2,116 +2,118 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED14C35666
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2A0C35666
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E46924684
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:27:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582320421;
-	bh=uHCUX8XBDJdEPhvPI5BGTgSTzCMMQv9TwfPe4ivWfRs=;
-	h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=mJnxC29/W+t3DlSVkemDAHE2d6PANeQh4MTjSpD32w4rRDpThzd/BbS7pw2BYxe0k
-	 /GzY8+ZXdbMjdR9iwRpQSKdWMXGdjVROGJJUYEGrwX2FXoR/sx9fzHDLOvBBB/EnC0
-	 nYwTP2BYZ/CJW9YWhca2eISp4OjEiSbGBgIey66M=
+	by mail.kernel.org (Postfix) with ESMTP id 6515A206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 21:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729864AbgBUV07 (ORCPT
+        id S1728588AbgBUV2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 16:26:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgBUVZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 16:25:18 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C32724656;
-        Fri, 21 Feb 2020 21:25:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582320318;
-        bh=uHCUX8XBDJdEPhvPI5BGTgSTzCMMQv9TwfPe4ivWfRs=;
-        h=From:To:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=bzGE6TBD685FDCwhUiWC+dQlS7NbMcmMrnDIVUDiKXGfq0C2mxzOlpFlrzwal1x5H
-         uqFzo2dS62x1VRWazPktYhvHrE+o9jXdCyBLJjW1aP8nCcN8o8CurwN6II99a3+4ed
-         KVkt8eYc3u4fNUd26I/SSsh2d0xbWh4e6nKlKvIM=
-From:   zanussi@kernel.org
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH RT 03/25] sched/deadline: Ensure inactive_timer runs in hardirq context
-Date:   Fri, 21 Feb 2020 15:24:31 -0600
-Message-Id: <11a532007a600928e64e761722da7100e19a0c5f.1582320278.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
-References: <cover.1582320278.git.zanussi@kernel.org>
-In-Reply-To: <cover.1582320278.git.zanussi@kernel.org>
-References: <cover.1582320278.git.zanussi@kernel.org>
+        Fri, 21 Feb 2020 16:28:05 -0500
+Received: from lists.gateworks.com ([108.161.130.12]:52666 "EHLO
+        lists.gateworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgBUV2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 16:28:04 -0500
+Received: from 68-189-91-139.static.snlo.ca.charter.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
+        by lists.gateworks.com with esmtp (Exim 4.82)
+        (envelope-from <tharvey@gateworks.com>)
+        id 1j5Fqy-00018b-Eo; Fri, 21 Feb 2020 21:28:56 +0000
+From:   Tim Harvey <tharvey@gateworks.com>
+To:     Lee Jones <lee.jones@linaro.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-hwmon@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Jones <rjones@gateworks.com>
+Cc:     Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v4 0/3] Add support for the Gateworks System Controller
+Date:   Fri, 21 Feb 2020 13:27:53 -0800
+Message-Id: <1582320476-1098-1-git-send-email-tharvey@gateworks.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+This series adds support for the Gateworks System Controller used on Gateworks
+Laguna, Ventana, and Newport product families.
 
-v4.14.170-rt75-rc1 stable review patch.
-If anyone has any objections, please let me know.
+The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+features:
+ - I/O expander (16 GPIO's emulating a PCA955x)
+ - EEPROM (enumating AT24)
+ - RTC (enumating DS1672)
+ - HWMON
+ - Interrupt controller with tamper detect, user pushbotton
+ - Watchdog controller capable of full board power-cycle
+ - Power Control capable of full board power-cycle
 
------------
-
-
-[ Upstream commit ba94e7aed7405c58251b1380e6e7d73aa8284b41 ]
-
-SCHED_DEADLINE inactive timer needs to run in hardirq context (as
-dl_task_timer already does) on PREEMPT_RT
-
-Change the mode to HRTIMER_MODE_REL_HARD.
-
-[ tglx: Fixed up the start site, so mode debugging works ]
-
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190731103715.4047-1-juri.lelli@redhat.com
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+see http://trac.gateworks.com/wiki/gsc for more details
 ---
- kernel/sched/deadline.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v4:
+ - hwmon: move to using pwm<n>_auto_point<m>_{pwm,temp} for FAN PWM
+ - hwmon: remove unncessary resolution/scaling properties for ADCs
+ - bindings: update to yaml Documentation 
+ - removed watchdog driver
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index eb68f7fb8a36..7b04e54bea01 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -252,7 +252,7 @@ static void task_non_contending(struct task_struct *p)
- 
- 	dl_se->dl_non_contending = 1;
- 	get_task_struct(p);
--	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL);
-+	hrtimer_start(timer, ns_to_ktime(zerolag_time), HRTIMER_MODE_REL_HARD);
- }
- 
- static void task_contending(struct sched_dl_entity *dl_se, int flags)
-@@ -1234,7 +1234,7 @@ void init_dl_inactive_task_timer(struct sched_dl_entity *dl_se)
- {
- 	struct hrtimer *timer = &dl_se->inactive_timer;
- 
--	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_init(timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	timer->function = inactive_task_timer;
- }
- 
+v3:
+ - removed unnecessary input driver
+ - added wdt driver
+ - bindings: encorporated feedback from mailng list
+ - hwmon:
+ - encoroprated feedback from mailng list
+ - added support for raw ADC voltage input used in newer GSC firmware
+
+v2:
+ - change license comment block style
+ - remove COMPILE_TEST
+ - fixed whitespace issues
+ - replaced a printk with dev_err
+ - remove DEBUG
+ - simplify regmap_bulk_read err check
+ - remove break after returns in switch statement
+ - fix fan setpoint buffer address
+ - remove unnecessary parens
+ - consistently use struct device *dev pointer
+ - add validation for hwmon child node props
+ - move parsing of of to own function
+ - use strlcpy to ensure null termination
+ - fix static array sizes and removed unnecessary initializers
+ - dynamically allocate channels
+ - fix fan input label
+ - support platform data
+
+Tim Harvey (3):
+  dt-bindings: mfd: Add Gateworks System Controller bindings
+  mfd: add Gateworks System Controller core driver
+  hwmon: add Gateworks System Controller support
+
+ .../devicetree/bindings/mfd/gateworks-gsc.yaml     | 156 +++++++++
+ Documentation/hwmon/gsc-hwmon.rst                  |  51 +++
+ Documentation/hwmon/index.rst                      |   1 +
+ MAINTAINERS                                        |  11 +
+ drivers/hwmon/Kconfig                              |   9 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/gsc-hwmon.c                          | 387 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/gateworks-gsc.c                        | 294 ++++++++++++++++
+ include/linux/mfd/gsc.h                            |  72 ++++
+ include/linux/platform_data/gsc_hwmon.h            |  45 +++
+ 12 files changed, 1038 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+ create mode 100644 Documentation/hwmon/gsc-hwmon.rst
+ create mode 100644 drivers/hwmon/gsc-hwmon.c
+ create mode 100644 drivers/mfd/gateworks-gsc.c
+ create mode 100644 include/linux/mfd/gsc.h
+ create mode 100644 include/linux/platform_data/gsc_hwmon.h
+
 -- 
-2.14.1
+2.7.4
 
