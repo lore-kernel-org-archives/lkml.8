@@ -2,98 +2,179 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBEBC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0354C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A9E206EF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:54:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582296879;
-	bh=G4uoI6dvX3xr+aBRpwhQPxpuOp02TZ5SCzvj3XzCwZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WkzBb4iXpIP1rqCHlDJXsd4Kv3O17Vw37bpZScmAemwRLyFkIAXH06QhS03PjAb4I
-	 x2MNG9ov270H7b9Y4cXWefN9cqlUxiYVafXlkPIATkpvoqzBNYg0DKlI64JZaB30ZF
-	 DZ5FsXYwypsAMGBwYO82hCCuJFhE4yJ0M4vxpb/s=
+	by mail.kernel.org (Postfix) with ESMTP id A88CD206EF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 14:55:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBGjfqKq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbgBUOyi (ORCPT
+        id S1729032AbgBUOz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 09:54:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728436AbgBUOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:54:37 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FE35206DB;
-        Fri, 21 Feb 2020 14:54:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582296877;
-        bh=G4uoI6dvX3xr+aBRpwhQPxpuOp02TZ5SCzvj3XzCwZ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S0ZPFoKEsKBEwzyW1yri/0CS2t8tN6h7EZSAQy7RFM2kbaMeF7S/IT83/3OHSXvmk
-         d1w51tCR6xvOb4bYU1nfJFvIItt65sXdriyQKwptPV4Ut5RAzmSFU840PPTX7e9xD/
-         E6IdwtgBspNF2e5awD6kI6hUGJTrDGTvEhItwjhk=
-Date:   Fri, 21 Feb 2020 23:54:32 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: Re: [PATCH] nvme-multipath: Fix memory leak with ana_log_buf
-Message-ID: <20200221145432.GA15144@redsun51.ssa.fujisawa.hgst.com>
-References: <20200220202953.26139-1-logang@deltatee.com>
+        Fri, 21 Feb 2020 09:55:27 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43376 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbgBUOz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 09:55:27 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r11so2385384wrq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 06:55:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VYFmZABuXC2P3mL+XBtC87Ki2RRj3t8jFY9o3T5ockc=;
+        b=qBGjfqKqIhfELazUq1yKbqpD8Qsj8UMuqu+4fmKwHveSJwobSUDrCJSwBVhwu5Bmqb
+         zczv4ydTB2cI4GPaZHJ8y+8pyGp8k0mqXRP7gSWa/TpKv6/dz8zHuMx+mTveJg0J6NvZ
+         XqCHm1itlNuZUmRMyEhinBjSq5Y0CUI3dEBKdvf0MHRyWF4dr3I0o3A1OC08L3fCke1S
+         OyBNtxGpeY9iSG7/x5UiyRaPj+ELuKtOE9bTFgf0QN6YkoBgHUPT1nIMkdIZlvgoRLpr
+         MMlc2BfR3jqw9Dal4aEiMhXrLMAY9zFjFqViSfEPFu1/Ps+HN4zZ+kmWloC5ownsmxyR
+         pnuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VYFmZABuXC2P3mL+XBtC87Ki2RRj3t8jFY9o3T5ockc=;
+        b=HuJbnRVvLvoS6DiPvy6hNvEoLtQiGCwwx8ut+n3hkHtVOI9qEqEcNz/eomkvI/zbzr
+         svr8gOzDK14bwOMOe2sF+fHO5wiQciy3i+N55JxDW5FgOiG+wdtNF27aZB1ZKfGdoV3Q
+         jm5IepdLgxd3cCb19q+RDsO6QNymhdNmgvioakUH1WJ/yNr7IZk6NuABDgTPr+npALfs
+         BMJNuQGht9IOJTfWf/88C3IMNyDHMkeTWMmEKKN0DLW1aFpo3y6pmpsVuyJt+h16jYSF
+         vMWwxyqiLYHrNRrl7C5BnsaXvZbkXdKIVNVVOKppx3vHX1hY/nNBRrm4lnrmuHEA2exT
+         /Cmg==
+X-Gm-Message-State: APjAAAXSMUoSVcd2kaOcmIZfQO82qNwi6KuGkUQjd7gM30eeEaewjlpK
+        lfCGRKru3kO5DTser5iBcByINw==
+X-Google-Smtp-Source: APXvYqxlQBHBtXVdKb8UmXuzt1Ss70Lfj6fxpQ5QfcMhGxHSh56TW6+M7a7t4xCU95n8tS/8m1lw9g==
+X-Received: by 2002:a5d:6703:: with SMTP id o3mr47003721wru.235.1582296925319;
+        Fri, 21 Feb 2020 06:55:25 -0800 (PST)
+Received: from linaro.org ([2a01:e34:ed2f:f020:903b:a048:f296:e3ae])
+        by smtp.gmail.com with ESMTPSA id o9sm4320439wrw.20.2020.02.21.06.55.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 21 Feb 2020 06:55:24 -0800 (PST)
+Date:   Fri, 21 Feb 2020 15:55:22 +0100
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>, linux-pm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 09/17] arm: tegra20: cpuidle: Handle case where
+ secondary CPU hangs on entering LP2
+Message-ID: <20200221145522.GG10516@linaro.org>
+References: <20200212235134.12638-1-digetx@gmail.com>
+ <20200212235134.12638-10-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200220202953.26139-1-logang@deltatee.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200212235134.12638-10-digetx@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 01:29:53PM -0700, Logan Gunthorpe wrote:
-> kmemleak reports a memory leak with the ana_log_buf allocated by
-> nvme_mpath_init():
+On Thu, Feb 13, 2020 at 02:51:26AM +0300, Dmitry Osipenko wrote:
+> It is possible that something may go wrong with the secondary CPU, in that
+> case it is much nicer to get a dump of the flow-controller state before
+> hanging machine.
 > 
-> unreferenced object 0xffff888120e94000 (size 8208):
->   comm "nvme", pid 6884, jiffies 4295020435 (age 78786.312s)
->     hex dump (first 32 bytes):
->       00 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
->       01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
->     backtrace:
->       [<00000000e2360188>] kmalloc_order+0x97/0xc0
->       [<0000000079b18dd4>] kmalloc_order_trace+0x24/0x100
->       [<00000000f50c0406>] __kmalloc+0x24c/0x2d0
->       [<00000000f31a10b9>] nvme_mpath_init+0x23c/0x2b0
->       [<000000005802589e>] nvme_init_identify+0x75f/0x1600
->       [<0000000058ef911b>] nvme_loop_configure_admin_queue+0x26d/0x280
->       [<00000000673774b9>] nvme_loop_create_ctrl+0x2a7/0x710
->       [<00000000f1c7a233>] nvmf_dev_write+0xc66/0x10b9
->       [<000000004199f8d0>] __vfs_write+0x50/0xa0
->       [<0000000065466fef>] vfs_write+0xf3/0x280
->       [<00000000b0db9a8b>] ksys_write+0xc6/0x160
->       [<0000000082156b91>] __x64_sys_write+0x43/0x50
->       [<00000000c34fbb6d>] do_syscall_64+0x77/0x2f0
->       [<00000000bbc574c9>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> nvme_mpath_init() is called by nvme_init_identify() which is called in
-> multiple places (nvme_reset_work(), nvme_passthru_end(), etc). This
-> means nvme_mpath_init() may be called multiple times before
-> nvme_mpath_uninit() (which is only called on nvme_free_ctrl()).
-> 
-> When nvme_mpath_init() is called multiple times, it overwrites the
-> ana_log_buf pointer with a new allocation, thus leaking the previous
-> allocation.
-> 
-> To fix this, free ana_log_buf before allocating a new one.
-> 
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Tested-by: Peter Geis <pgwipeout@gmail.com>
+> Tested-by: Jasper Korten <jja2000@gmail.com>
+> Tested-by: David Heidelberg <david@ixit.cz>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 
-Thanks, applied to 5.6-rc3 with the reviews and the fixes tag.
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+> ---
+>  arch/arm/mach-tegra/cpuidle-tegra20.c | 47 +++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-tegra/cpuidle-tegra20.c b/arch/arm/mach-tegra/cpuidle-tegra20.c
+> index 9672c619f4bc..bcc158b72e67 100644
+> --- a/arch/arm/mach-tegra/cpuidle-tegra20.c
+> +++ b/arch/arm/mach-tegra/cpuidle-tegra20.c
+> @@ -83,14 +83,57 @@ static inline void tegra20_wake_cpu1_from_reset(void)
+>  }
+>  #endif
+>  
+> +static void tegra20_report_cpus_state(void)
+> +{
+> +	unsigned long cpu, lcpu, csr;
+> +
+> +	for_each_cpu(lcpu, cpu_possible_mask) {
+> +		cpu = cpu_logical_map(lcpu);
+> +		csr = flowctrl_read_cpu_csr(cpu);
+> +
+> +		pr_err("cpu%lu: online=%d flowctrl_csr=0x%08lx\n",
+> +		       cpu, cpu_online(lcpu), csr);
+> +	}
+> +}
+> +
+> +static int tegra20_wait_for_secondary_cpu_parking(void)
+> +{
+> +	unsigned int retries = 3;
+> +
+> +	while (retries--) {
+> +		ktime_t timeout = ktime_add_ms(ktime_get(), 500);
+> +
+> +		/*
+> +		 * The primary CPU0 core shall wait for the secondaries
+> +		 * shutdown in order to power-off CPU's cluster safely.
+> +		 * The timeout value depends on the current CPU frequency,
+> +		 * it takes about 40-150us  in average and over 1000us in
+> +		 * a worst case scenario.
+> +		 */
+> +		do {
+> +			if (tegra_cpu_rail_off_ready())
+> +				return 0;
+> +
+> +		} while (ktime_before(ktime_get(), timeout));
+> +
+> +		pr_err("secondary CPU taking too long to park\n");
+> +
+> +		tegra20_report_cpus_state();
+> +	}
+> +
+> +	pr_err("timed out waiting secondaries to park\n");
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+>  static bool tegra20_cpu_cluster_power_down(struct cpuidle_device *dev,
+>  					   struct cpuidle_driver *drv,
+>  					   int index)
+>  {
+>  	bool ret;
+>  
+> -	while (!tegra_cpu_rail_off_ready())
+> -		cpu_relax();
+> +	if (tegra20_wait_for_secondary_cpu_parking())
+> +		return false;
+>  
+>  	ret = !tegra_pm_enter_lp2();
+>  
+> -- 
+> 2.24.0
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
