@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02D0C35645
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF62C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C686B208C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E1824676
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 07:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582271039;
-	bh=H3LKj47Yqut0p8cQXZtywNFL074vZu1UaiH+k7PfGpE=;
+	s=default; t=1582271044;
+	bh=NcGh06knfGLcfuN1zseb3JhRUmzE9S2q+eze5sqOnB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXlfpWIJSMfIk8yH6TCTuPQyXKmtvogh8RxPXIuuNHThmE3aK3uAyGpdaqB3zuxJO
-	 PXSVDdlVH+Emx47AZAoaK92lo5fPzYlvHG1BKH/FSYc1/ntTKv5FrqNNEMhCNeZ/zq
-	 1xeNDQZ6e5+E5E6eHMlNnhL2klB83wm+1Q13ASyA=
+	b=mZrL8fP0o+BnQ38EjfFGBmvdzyImk+gisSKuxER7PSkJDcIrocMAflj535guSrZll
+	 ji2kr5VX7iUYwUFXMYHTmLu06DaTD8x9fNc+Qn28oiVg/0WcmrT2mRYlcSNfqHCd63
+	 I4h8UwWbitD+QyghD+q9uUD8r8rT04P1va+YaCio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgBUHnx (ORCPT
+        id S1727629AbgBUHoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 02:43:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38318 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:44:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbgBUHnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:43:52 -0500
+        id S1727460AbgBUHn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:43:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF4F208C4;
-        Fri, 21 Feb 2020 07:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24161207FD;
+        Fri, 21 Feb 2020 07:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271031;
-        bh=H3LKj47Yqut0p8cQXZtywNFL074vZu1UaiH+k7PfGpE=;
+        s=default; t=1582271036;
+        bh=NcGh06knfGLcfuN1zseb3JhRUmzE9S2q+eze5sqOnB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVRIjac3Ru7CU9n+m2eSRJXS8n8b+OEDgRKIpyE6aGb83LCl6nIRPpjZg5W48zRES
-         quubKnB27AlvoqE2qkUiQFqYY2Jy7zXSH0YZtFlxYlDoljokJd7x4NIj4lSVEE5hg1
-         exXxninqCjEfn9ms6SLxIvau4gJao9sQK1+5tLX8=
+        b=dwY1Tmj0ptOmPTVJAovSfeeOarpsxjMSrjjiMhkTC5aUsD3Q4KIzAtxkjRfAKWoah
+         jqqX7Qrb3Pv5Jlqrxw7tpARAcnseEkBVyWH4pwY/lm8spFd3gXWOOhQjjfe4RCCKyu
+         nGUumueVFeaIozY1GBnd9k1gZdIn79uQO7GJC4wM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Reiter <stefan@pimaker.at>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 014/399] rcu/nocb: Fix dump_tree hierarchy print always active
-Date:   Fri, 21 Feb 2020 08:35:39 +0100
-Message-Id: <20200221072403.709536413@linuxfoundation.org>
+        stable@vger.kernel.org, Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Li Yang <leoyang.li@nxp.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 016/399] soc: fsl: qe: change return type of cpm_muram_alloc() to s32
+Date:   Fri, 21 Feb 2020 08:35:41 +0100
+Message-Id: <20200221072403.897637352@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,79 +60,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Reiter <stefan@pimaker.at>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 
-[ Upstream commit 610dea36d3083a977e4f156206cbe1eaa2a532f0 ]
+[ Upstream commit 800cd6fb76f0ec7711deb72a86c924db1ae42648 ]
 
-Commit 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if
-dump_tree") added print statements to rcu_organize_nocb_kthreads for
-debugging, but incorrectly guarded them, causing the function to always
-spew out its message.
+There are a number of problems with cpm_muram_alloc() and its
+callers. Most callers assign the return value to some variable and
+then use IS_ERR_VALUE to check for allocation failure. However, when
+that variable is not sizeof(long), this leads to warnings - and it is
+indeed broken to do e.g.
 
-This patch fixes it by guarding both pr_alert statements with dump_tree,
-while also changing the second pr_alert to a pr_cont, to print the
-hierarchy in a single line (assuming that's how it was supposed to
-work).
+  u32 foo = cpm_muram_alloc();
+  if (IS_ERR_VALUE(foo))
 
-Fixes: 18cd8c93e69e ("rcu/nocb: Print gp/cb kthread hierarchy if dump_tree")
-Signed-off-by: Stefan Reiter <stefan@pimaker.at>
-[ paulmck: Make single-nocbs-CPU GP kthreads look less erroneous. ]
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+on a 64-bit platform, since the condition
+
+  foo >= (unsigned long)-ENOMEM
+
+is tautologically false. There are also callers that ignore the
+possibility of error, and then there are those that check for error by
+comparing the return value to 0...
+
+One could fix that by changing all callers to store the return value
+temporarily in an "unsigned long" and test that. However, use of
+IS_ERR_VALUE() is error-prone and should be restricted to things which
+are inherently long-sized (stuff in pt_regs etc.). Instead, let's aim
+for changing to the standard kernel style
+
+  int foo = cpm_muram_alloc();
+  if (foo < 0)
+    deal_with_it()
+  some->where = foo;
+
+Changing the return type from unsigned long to s32 (aka signed int)
+doesn't change the value that gets stored into any of the callers'
+variables except if the caller was storing the result in a u64 _and_
+the allocation failed, so in itself this patch should be a no-op.
+
+Another problem with cpm_muram_alloc() is that it can certainly
+validly return 0 - and except if some cpm_muram_alloc_fixed() call
+interferes, the very first cpm_muram_alloc() call will return just
+that. But that shows that both ucc_slow_free() and ucc_fast_free() are
+buggy, since they assume that a value of 0 means "that field was never
+allocated". We'll later change cpm_muram_free() to accept (and ignore)
+a negative offset, so callers can use a sentinel of -1 instead of 0
+and just unconditionally call cpm_muram_free().
+
+Reviewed-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/rcu/tree_plugin.h | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/soc/fsl/qe/qe_common.c | 29 ++++++++++++++++-------------
+ include/soc/fsl/qe/qe.h        | 16 ++++++++--------
+ 2 files changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index f849e7429816f..f7118842a2b88 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -2322,6 +2322,8 @@ static void __init rcu_organize_nocb_kthreads(void)
+diff --git a/drivers/soc/fsl/qe/qe_common.c b/drivers/soc/fsl/qe/qe_common.c
+index 83e85e61669f5..84c90105e588b 100644
+--- a/drivers/soc/fsl/qe/qe_common.c
++++ b/drivers/soc/fsl/qe/qe_common.c
+@@ -32,7 +32,7 @@ static phys_addr_t muram_pbase;
+ 
+ struct muram_block {
+ 	struct list_head head;
+-	unsigned long start;
++	s32 start;
+ 	int size;
+ };
+ 
+@@ -110,13 +110,14 @@ out_muram:
+  * @algo: algorithm for alloc.
+  * @data: data for genalloc's algorithm.
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  */
+-static unsigned long cpm_muram_alloc_common(unsigned long size,
+-		genpool_algo_t algo, void *data)
++static s32 cpm_muram_alloc_common(unsigned long size,
++				  genpool_algo_t algo, void *data)
  {
- 	int cpu;
- 	bool firsttime = true;
-+	bool gotnocbs = false;
-+	bool gotnocbscbs = true;
- 	int ls = rcu_nocb_gp_stride;
- 	int nl = 0;  /* Next GP kthread. */
- 	struct rcu_data *rdp;
-@@ -2344,21 +2346,31 @@ static void __init rcu_organize_nocb_kthreads(void)
- 		rdp = per_cpu_ptr(&rcu_data, cpu);
- 		if (rdp->cpu >= nl) {
- 			/* New GP kthread, set up for CBs & next GP. */
-+			gotnocbs = true;
- 			nl = DIV_ROUND_UP(rdp->cpu + 1, ls) * ls;
- 			rdp->nocb_gp_rdp = rdp;
- 			rdp_gp = rdp;
--			if (!firsttime && dump_tree)
--				pr_cont("\n");
--			firsttime = false;
--			pr_alert("%s: No-CB GP kthread CPU %d:", __func__, cpu);
-+			if (dump_tree) {
-+				if (!firsttime)
-+					pr_cont("%s\n", gotnocbscbs
-+							? "" : " (self only)");
-+				gotnocbscbs = false;
-+				firsttime = false;
-+				pr_alert("%s: No-CB GP kthread CPU %d:",
-+					 __func__, cpu);
-+			}
- 		} else {
- 			/* Another CB kthread, link to previous GP kthread. */
-+			gotnocbscbs = true;
- 			rdp->nocb_gp_rdp = rdp_gp;
- 			rdp_prev->nocb_next_cb_rdp = rdp;
--			pr_alert(" %d", cpu);
-+			if (dump_tree)
-+				pr_cont(" %d", cpu);
- 		}
- 		rdp_prev = rdp;
- 	}
-+	if (gotnocbs && dump_tree)
-+		pr_cont("%s\n", gotnocbscbs ? "" : " (self only)");
+ 	struct muram_block *entry;
+-	unsigned long start;
++	s32 start;
+ 
+ 	if (!muram_pool && cpm_muram_init())
+ 		goto out2;
+@@ -137,7 +138,7 @@ static unsigned long cpm_muram_alloc_common(unsigned long size,
+ out1:
+ 	gen_pool_free(muram_pool, start, size);
+ out2:
+-	return (unsigned long)-ENOMEM;
++	return -ENOMEM;
  }
  
  /*
+@@ -145,13 +146,14 @@ out2:
+  * @size: number of bytes to allocate
+  * @align: requested alignment, in bytes
+  *
+- * This function returns an offset into the muram area.
++ * This function returns a non-negative offset into the muram area, or
++ * a negative errno on failure.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align)
++s32 cpm_muram_alloc(unsigned long size, unsigned long align)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_align muram_pool_data;
+ 
+@@ -168,7 +170,7 @@ EXPORT_SYMBOL(cpm_muram_alloc);
+  * cpm_muram_free - free a chunk of multi-user ram
+  * @offset: The beginning of the chunk as returned by cpm_muram_alloc().
+  */
+-int cpm_muram_free(unsigned long offset)
++int cpm_muram_free(s32 offset)
+ {
+ 	unsigned long flags;
+ 	int size;
+@@ -194,13 +196,14 @@ EXPORT_SYMBOL(cpm_muram_free);
+  * cpm_muram_alloc_fixed - reserve a specific region of multi-user ram
+  * @offset: offset of allocation start address
+  * @size: number of bytes to allocate
+- * This function returns an offset into the muram area
++ * This function returns @offset if the area was available, a negative
++ * errno otherwise.
+  * Use cpm_dpram_addr() to get the virtual address of the area.
+  * Use cpm_muram_free() to free the allocation.
+  */
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size)
+ {
+-	unsigned long start;
++	s32 start;
+ 	unsigned long flags;
+ 	struct genpool_data_fixed muram_pool_data_fixed;
+ 
+diff --git a/include/soc/fsl/qe/qe.h b/include/soc/fsl/qe/qe.h
+index c1036d16ed03b..2d35d5db16231 100644
+--- a/include/soc/fsl/qe/qe.h
++++ b/include/soc/fsl/qe/qe.h
+@@ -98,26 +98,26 @@ static inline void qe_reset(void) {}
+ int cpm_muram_init(void);
+ 
+ #if defined(CONFIG_CPM) || defined(CONFIG_QUICC_ENGINE)
+-unsigned long cpm_muram_alloc(unsigned long size, unsigned long align);
+-int cpm_muram_free(unsigned long offset);
+-unsigned long cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
++s32 cpm_muram_alloc(unsigned long size, unsigned long align);
++int cpm_muram_free(s32 offset);
++s32 cpm_muram_alloc_fixed(unsigned long offset, unsigned long size);
+ void __iomem *cpm_muram_addr(unsigned long offset);
+ unsigned long cpm_muram_offset(void __iomem *addr);
+ dma_addr_t cpm_muram_dma(void __iomem *addr);
+ #else
+-static inline unsigned long cpm_muram_alloc(unsigned long size,
+-					    unsigned long align)
++static inline s32 cpm_muram_alloc(unsigned long size,
++				  unsigned long align)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int cpm_muram_free(unsigned long offset)
++static inline int cpm_muram_free(s32 offset)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline unsigned long cpm_muram_alloc_fixed(unsigned long offset,
+-						  unsigned long size)
++static inline s32 cpm_muram_alloc_fixed(unsigned long offset,
++					unsigned long size)
+ {
+ 	return -ENOSYS;
+ }
 -- 
 2.20.1
 
