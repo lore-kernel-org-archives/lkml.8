@@ -2,59 +2,62 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526C6C11D24
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE853C11D24
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203CD24653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B380E208E4
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 01:53:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582250032;
-	bh=TmD2QnRxazk1C/XUjKvcFmvr9YFMmIyG5sHFJTl8XGY=;
+	s=default; t=1582250036;
+	bh=Z3Io93RMyZjx9er7hNSV+YXVieGSX4hDxd7jJRnuQwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOVl+9fjeYn2QinXtjVg1D1ZsaU0a1bhpITPzprOlB4AqCX1eTUymLBgOC+gNh6zc
-	 RudRzFJHOLHU3KIiGIi2AWbV8rfPfSv7MrStzvIII932EMQpZKi7WztngSK3XXULMT
-	 l1FBZ0pZbxf+XKporq3ZBpBZinqbqrAyl1/Cmuu8=
+	b=eLtz41KkHiH25HEBJwpeEdt425nzENNbYB6wOgW75uGiKu6VqFkIwl3gpm5UIun8v
+	 dzDymwlR46cSZHu47+4DD2jxCSKu6MzIM7hOPD1IeLyaW3WVnsLP8qzRhrLzr4J4N4
+	 dQG1F2HtU3zb1ahn+B4BLdUJzB/ul8/dtAmT+/bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgBUBxv (ORCPT
+        id S1729741AbgBUBxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Feb 2020 20:53:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57634 "EHLO mail.kernel.org"
+        Thu, 20 Feb 2020 20:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729693AbgBUBxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Feb 2020 20:53:48 -0500
+        id S1729727AbgBUBxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Feb 2020 20:53:53 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8F1424676;
-        Fri, 21 Feb 2020 01:53:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C90EC206E2;
+        Fri, 21 Feb 2020 01:53:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582250027;
-        bh=TmD2QnRxazk1C/XUjKvcFmvr9YFMmIyG5sHFJTl8XGY=;
+        s=default; t=1582250032;
+        bh=Z3Io93RMyZjx9er7hNSV+YXVieGSX4hDxd7jJRnuQwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zG2vyUsm1T32O/xKlCml/fLZTjntw3TnETBG8G1F+GKL9c1NQ1qaRWOTAQsXJhEx1
-         mIzjumkn4NRebdXQUKAiDFPQEyuILj7110Iwz46qQd97Vzl+pC0um/2bQT8KAIa8U3
-         mIe5WKkEjcu2zO5a4a7IncUMgSSWSI7pj5/vBzvc=
+        b=vVBVmLLaWHTcffiGGAkFQ0aL1CbXn8fDBwBJLlvD9fZJGsuURNQH+qtEQl4qNhfNL
+         LI7/bE3Ymzo218bIHMDHaGCKeT2MS51FYaVMiokOvlpmpD8jruSrP4J0fHSuwTzJvZ
+         +5DbhmAu98NDmp3ZDfQUZBQp/FGclMhUz63PLs8k=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 7/8] perf auxtrace: Add auxtrace_record__read_finish()
-Date:   Thu, 20 Feb 2020 22:53:09 -0300
-Message-Id: <20200221015310.16914-8-acme@kernel.org>
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Sargun Dhillon <sargun@sargun.me>
+Subject: [PATCH 8/8] perf arch powerpc: Sync powerpc syscall.tbl with the kernel sources
+Date:   Thu, 20 Feb 2020 22:53:10 -0300
+Message-Id: <20200221015310.16914-9-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200221015310.16914-1-acme@kernel.org>
 References: <20200221015310.16914-1-acme@kernel.org>
@@ -65,287 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-All ->read_finish() implementations are doing the same thing. Add a
-helper function so that they can share the same implementation.
+Copy over powerpc syscall.tbl to grab changes from the below commits
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Wei Li <liwei391@huawei.com>
-Link: http://lore.kernel.org/lkml/20200217082300.6301-1-adrian.hunter@intel.com
+  fddb5d430ad9 ("open: introduce openat2(2) syscall")
+  9a2cef09c801 ("arch: wire up pidfd_getfd syscall")
+
+Now 'perf trace' on powerpc will be able to map from those syscall
+strings to the right syscall numbers, i.e.
+
+  perf trace -e pidfd*
+
+Will include 'pidfd_getfd' as well as:
+
+  perf trace open*
+
+Will cover all 'open' variants.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Sargun Dhillon <sargun@sargun.me>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/util/cs-etm.c    | 21 ++-------------------
- tools/perf/arch/arm64/util/arm-spe.c | 20 ++------------------
- tools/perf/arch/x86/util/intel-bts.c | 20 ++------------------
- tools/perf/arch/x86/util/intel-pt.c  | 20 ++------------------
- tools/perf/util/auxtrace.c           | 22 +++++++++++++++++++++-
- tools/perf/util/auxtrace.h           |  6 ++++++
- 6 files changed, 35 insertions(+), 74 deletions(-)
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 60141c3007a9..941f814820b8 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -858,24 +858,6 @@ static void cs_etm_recording_free(struct auxtrace_record *itr)
- 	free(ptr);
- }
- 
--static int cs_etm_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct cs_etm_recording *ptr =
--			container_of(itr, struct cs_etm_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->cs_etm_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(ptr->evlist,
--							     evsel, idx);
--		}
--	}
--
--	return -EINVAL;
--}
--
- struct auxtrace_record *cs_etm_record_init(int *err)
- {
- 	struct perf_pmu *cs_etm_pmu;
-@@ -895,6 +877,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	}
- 
- 	ptr->cs_etm_pmu			= cs_etm_pmu;
-+	ptr->itr.pmu			= cs_etm_pmu;
- 	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
- 	ptr->itr.recording_options	= cs_etm_recording_options;
- 	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
-@@ -904,7 +887,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
- 	ptr->itr.reference		= cs_etm_reference;
- 	ptr->itr.free			= cs_etm_recording_free;
--	ptr->itr.read_finish		= cs_etm_read_finish;
-+	ptr->itr.read_finish		= auxtrace_record__read_finish;
- 
- 	*err = 0;
- 	return &ptr->itr;
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 1d993c27242b..8d6821d9c3f6 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -158,23 +158,6 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
- 	free(sper);
- }
- 
--static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct arm_spe_recording *sper =
--			container_of(itr, struct arm_spe_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(sper->evlist, evsel) {
--		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(sper->evlist,
--							     evsel, idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu)
- {
-@@ -192,12 +175,13 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 	}
- 
- 	sper->arm_spe_pmu = arm_spe_pmu;
-+	sper->itr.pmu = arm_spe_pmu;
- 	sper->itr.recording_options = arm_spe_recording_options;
- 	sper->itr.info_priv_size = arm_spe_info_priv_size;
- 	sper->itr.info_fill = arm_spe_info_fill;
- 	sper->itr.free = arm_spe_recording_free;
- 	sper->itr.reference = arm_spe_reference;
--	sper->itr.read_finish = arm_spe_read_finish;
-+	sper->itr.read_finish = auxtrace_record__read_finish;
- 	sper->itr.alignment = 0;
- 
- 	*err = 0;
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index 39e363151ad7..26cee1052179 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -413,23 +413,6 @@ static int intel_bts_find_snapshot(struct auxtrace_record *itr, int idx,
- 	return err;
- }
- 
--static int intel_bts_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_bts_recording *btsr =
--			container_of(itr, struct intel_bts_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(btsr->evlist, evsel) {
--		if (evsel->core.attr.type == btsr->intel_bts_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(btsr->evlist,
--							     evsel, idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_bts_recording_init(int *err)
- {
- 	struct perf_pmu *intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-@@ -450,6 +433,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	}
- 
- 	btsr->intel_bts_pmu = intel_bts_pmu;
-+	btsr->itr.pmu = intel_bts_pmu;
- 	btsr->itr.recording_options = intel_bts_recording_options;
- 	btsr->itr.info_priv_size = intel_bts_info_priv_size;
- 	btsr->itr.info_fill = intel_bts_info_fill;
-@@ -459,7 +443,7 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
- 	btsr->itr.find_snapshot = intel_bts_find_snapshot;
- 	btsr->itr.parse_snapshot_options = intel_bts_parse_snapshot_options;
- 	btsr->itr.reference = intel_bts_reference;
--	btsr->itr.read_finish = intel_bts_read_finish;
-+	btsr->itr.read_finish = auxtrace_record__read_finish;
- 	btsr->itr.alignment = sizeof(struct branch);
- 	return &btsr->itr;
- }
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index be07d6886256..7eea4fd7ce58 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -1166,23 +1166,6 @@ static u64 intel_pt_reference(struct auxtrace_record *itr __maybe_unused)
- 	return rdtsc();
- }
- 
--static int intel_pt_read_finish(struct auxtrace_record *itr, int idx)
--{
--	struct intel_pt_recording *ptr =
--			container_of(itr, struct intel_pt_recording, itr);
--	struct evsel *evsel;
--
--	evlist__for_each_entry(ptr->evlist, evsel) {
--		if (evsel->core.attr.type == ptr->intel_pt_pmu->type) {
--			if (evsel->disabled)
--				return 0;
--			return perf_evlist__enable_event_idx(ptr->evlist, evsel,
--							     idx);
--		}
--	}
--	return -EINVAL;
--}
--
- struct auxtrace_record *intel_pt_recording_init(int *err)
- {
- 	struct perf_pmu *intel_pt_pmu = perf_pmu__find(INTEL_PT_PMU_NAME);
-@@ -1203,6 +1186,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	}
- 
- 	ptr->intel_pt_pmu = intel_pt_pmu;
-+	ptr->itr.pmu = intel_pt_pmu;
- 	ptr->itr.recording_options = intel_pt_recording_options;
- 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
- 	ptr->itr.info_fill = intel_pt_info_fill;
-@@ -1212,7 +1196,7 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
- 	ptr->itr.find_snapshot = intel_pt_find_snapshot;
- 	ptr->itr.parse_snapshot_options = intel_pt_parse_snapshot_options;
- 	ptr->itr.reference = intel_pt_reference;
--	ptr->itr.read_finish = intel_pt_read_finish;
-+	ptr->itr.read_finish = auxtrace_record__read_finish;
- 	/*
- 	 * Decoding starts at a PSB packet. Minimum PSB period is 2K so 4K
- 	 * should give at least 1 PSB per sample.
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index eb087e7df6f4..3571ce72ca28 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -629,8 +629,10 @@ int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts)
- {
--	if (itr)
-+	if (itr) {
-+		itr->evlist = evlist;
- 		return itr->recording_options(itr, evlist, opts);
-+	}
- 	return 0;
- }
- 
-@@ -664,6 +666,24 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 	return -EINVAL;
- }
- 
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
-+{
-+	struct evsel *evsel;
-+
-+	if (!itr->evlist || !itr->pmu)
-+		return -EINVAL;
-+
-+	evlist__for_each_entry(itr->evlist, evsel) {
-+		if (evsel->core.attr.type == itr->pmu->type) {
-+			if (evsel->disabled)
-+				return 0;
-+			return perf_evlist__enable_event_idx(itr->evlist, evsel,
-+							     idx);
-+		}
-+	}
-+	return -EINVAL;
-+}
-+
- /*
-  * Event record size is 16-bit which results in a maximum size of about 64KiB.
-  * Allow about 4KiB for the rest of the sample record, to give a maximum
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 749d72cd9c7b..e58ef160b599 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -29,6 +29,7 @@ struct record_opts;
- struct perf_record_auxtrace_error;
- struct perf_record_auxtrace_info;
- struct events_stats;
-+struct perf_pmu;
- 
- enum auxtrace_error_type {
-        PERF_AUXTRACE_ERROR_ITRACE  = 1,
-@@ -322,6 +323,8 @@ struct auxtrace_mmap_params {
-  * @read_finish: called after reading from an auxtrace mmap
-  * @alignment: alignment (if any) for AUX area data
-  * @default_aux_sample_size: default sample size for --aux sample option
-+ * @pmu: associated pmu
-+ * @evlist: selected events list
-  */
- struct auxtrace_record {
- 	int (*recording_options)(struct auxtrace_record *itr,
-@@ -346,6 +349,8 @@ struct auxtrace_record {
- 	int (*read_finish)(struct auxtrace_record *itr, int idx);
- 	unsigned int alignment;
- 	unsigned int default_aux_sample_size;
-+	struct perf_pmu *pmu;
-+	struct evlist *evlist;
- };
- 
- /**
-@@ -537,6 +542,7 @@ int auxtrace_record__find_snapshot(struct auxtrace_record *itr, int idx,
- 				   struct auxtrace_mmap *mm,
- 				   unsigned char *data, u64 *head, u64 *old);
- u64 auxtrace_record__reference(struct auxtrace_record *itr);
-+int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx);
- 
- int auxtrace_index__auxtrace_event(struct list_head *head, union perf_event *event,
- 				   off_t file_offset);
+diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+index 43f736ed47f2..35b61bfc1b1a 100644
+--- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
++++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
+@@ -517,3 +517,5 @@
+ 433	common	fspick				sys_fspick
+ 434	common	pidfd_open			sys_pidfd_open
+ 435	nospu	clone3				ppc_clone3
++437	common	openat2				sys_openat2
++438	common	pidfd_getfd			sys_pidfd_getfd
 -- 
 2.21.1
 
