@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B7C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 925D9C35641
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E039D2467D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DD620801
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:10:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582272604;
-	bh=IDpon7Kel+MjWfOUEwoMjIHhIYdi6Oyu2TpugZYs3X0=;
+	s=default; t=1582272607;
+	bh=etUzyDHmfexgQRO1XOxPZqnTAoosJKCBo372Wqi6lBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dIuHNzAYmn+j9JFlzSON75H1T+q4uYVDGZFT5i72EhiAmFk2FEgvZXC28bJm3crZp
-	 3XIYs4t9Yuk28kv1NAj0QZcDy7Wq54TPdDzr7emBQ2Pb6476ieqCRl9xVg+S2In5/N
-	 x+8APO0WBer7iXK5ERiNUPArRRFqVaYuyA4oo+6Y=
+	b=RaZIjRMG4s6pjMZqrTgCIAUVzhGgTp9RYWWPDh0UNTSCyUq3KI9c/UPYBPxWhXVME
+	 8LCKKEHRUEqKSb9RiLc1WtFJ3nnloJT6pa5/yz3pAKzakxd99lXyVl0vhnfmc3LzZi
+	 hiDnABbJaS7B3r581BKWe7UEbqgmc9oX+Hi89zoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732471AbgBUIKD (ORCPT
+        id S1732482AbgBUIKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:10:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 03:10:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732453AbgBUIJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 03:09:59 -0500
+        id S1732453AbgBUIKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 03:10:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67C33222C4;
-        Fri, 21 Feb 2020 08:09:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6672820801;
+        Fri, 21 Feb 2020 08:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582272598;
-        bh=IDpon7Kel+MjWfOUEwoMjIHhIYdi6Oyu2TpugZYs3X0=;
+        s=default; t=1582272603;
+        bh=etUzyDHmfexgQRO1XOxPZqnTAoosJKCBo372Wqi6lBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJC4cOKag59tbtLTXlpvPs9bMY2wtb7k4kWomT4Qbd6X6zN982uKDSUtoe0AIZgWh
-         GPnCUBLV8DZI4w18CeEw5iXPmjn6AXAVa06SmHyrBAr9hRJ7gNp37hwO/bh7u7CRY6
-         GrCsjqfaEWPqnS4ZkOAjkoSJ2F5rUFgWZ/awoByk=
+        b=QQ4sLTbmnZBjS0q5kGl/e4dabHPeSo/7UcX5xf71rtCTN7gz7g4c2Wp1Mm7mJIOxX
+         5vctcFujsuqyyyvgM+oDpNgSZbPRcYKe1/TQQvcYf5Bt5YM5Zfzi+zAP1GU2GAo6dj
+         IZ1sFjt+VVu2x51kzL+eI+pI5UaWsiYEClRbxIzA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>,
-        Andy Gospodarek <gospo@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 203/344] bnxt: Detach page from page pool before sending up the stack
-Date:   Fri, 21 Feb 2020 08:40:02 +0100
-Message-Id: <20200221072407.533078487@linuxfoundation.org>
+Subject: [PATCH 5.4 205/344] wan: ixp4xx_hss: fix compile-testing on 64-bit
+Date:   Fri, 21 Feb 2020 08:40:04 +0100
+Message-Id: <20200221072407.731335482@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072349.335551332@linuxfoundation.org>
 References: <20200221072349.335551332@linuxfoundation.org>
@@ -61,36 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Lemon <jonathan.lemon@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 3071c51783b39d6a676d02a9256c3b3f87804285 ]
+[ Upstream commit 504c28c853ec5c626900b914b5833daf0581a344 ]
 
-When running in XDP mode, pages come from the page pool, and should
-be freed back to the same pool or specifically detached.  Currently,
-when the driver re-initializes, the page pool destruction is delayed
-forever since it thinks there are oustanding pages.
+Change the driver to use portable integer types to avoid
+warnings during compile testing:
 
-Fixes: 322b87ca55f2 ("bnxt_en: add page_pool support")
-Signed-off-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Reviewed-by: Andy Gospodarek <gospo@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+drivers/net/wan/ixp4xx_hss.c:863:21: error: cast to 'u32 *' (aka 'unsigned int *') from smaller integer type 'int' [-Werror,-Wint-to-pointer-cast]
+        memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
+                           ^
+drivers/net/wan/ixp4xx_hss.c:979:12: error: incompatible pointer types passing 'u32 *' (aka 'unsigned int *') to parameter of type 'dma_addr_t *' (aka 'unsigned long long *') [-Werror,-Wincompatible-pointer-types]
+                                              &port->desc_tab_phys)))
+                                              ^~~~~~~~~~~~~~~~~~~~
+include/linux/dmapool.h:27:20: note: passing argument to parameter 'handle' here
+                     dma_addr_t *handle);
+                                 ^
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wan/ixp4xx_hss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 41297533b4a86..68618891b0e42 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -942,6 +942,7 @@ static struct sk_buff *bnxt_rx_page_skb(struct bnxt *bp,
- 	dma_addr -= bp->rx_dma_offset;
- 	dma_unmap_page_attrs(&bp->pdev->dev, dma_addr, PAGE_SIZE, bp->rx_dir,
- 			     DMA_ATTR_WEAK_ORDERING);
-+	page_pool_release_page(rxr->page_pool, page);
+diff --git a/drivers/net/wan/ixp4xx_hss.c b/drivers/net/wan/ixp4xx_hss.c
+index ea6ee6a608ce3..e7619cec978a8 100644
+--- a/drivers/net/wan/ixp4xx_hss.c
++++ b/drivers/net/wan/ixp4xx_hss.c
+@@ -258,7 +258,7 @@ struct port {
+ 	struct hss_plat_info *plat;
+ 	buffer_t *rx_buff_tab[RX_DESCS], *tx_buff_tab[TX_DESCS];
+ 	struct desc *desc_tab;	/* coherent */
+-	u32 desc_tab_phys;
++	dma_addr_t desc_tab_phys;
+ 	unsigned int id;
+ 	unsigned int clock_type, clock_rate, loopback;
+ 	unsigned int initialized, carrier;
+@@ -858,7 +858,7 @@ static int hss_hdlc_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		dev->stats.tx_dropped++;
+ 		return NETDEV_TX_OK;
+ 	}
+-	memcpy_swab32(mem, (u32 *)((int)skb->data & ~3), bytes / 4);
++	memcpy_swab32(mem, (u32 *)((uintptr_t)skb->data & ~3), bytes / 4);
+ 	dev_kfree_skb(skb);
+ #endif
  
- 	if (unlikely(!payload))
- 		payload = eth_get_headlen(bp->dev, data_ptr, len);
 -- 
 2.20.1
 
