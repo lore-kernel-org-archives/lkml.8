@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74EF2C35640
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23332C35640
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DD8206DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6904206DB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 08:47:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1582274866;
-	bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
+	s=default; t=1582274869;
+	bh=5wSt0wIPpairgOjqX2Ote1SXc2lETYQtdfc1fuGY1FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h9pwObhgUMdik0sygnygfnGfv/eT1vRVukdv5yibx7tFqusaq3AkEyik4wQ/fJpOG
-	 0YWfBiwMceZL30c6ug3PUM2Fs9pELzB58dyGTmhu6DTC9OllZ6MVKiu/eCRu1sZ2hk
-	 P9iCm8mXCLgaHhqsLuh93k4QTuvoQHkhgSGix7WM=
+	b=eOTSVsB+Jw1zcZ8DhOW39AB5r6xzV+0BOAM1j+6GAL9jK6/DfLW+65Sy9TwKY19NJ
+	 2USUMFPWI3FarwPJ4X09eFGCVDqL4FfuLhgno47fyV2W/u3zO4IJdJl00m/YYDW0E9
+	 Shl2jDwDFnUeDE751wNkwWSQnKB1/YvVHgoX7e54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732352AbgBUIro (ORCPT
+        id S1729028AbgBUHsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 03:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
+        Fri, 21 Feb 2020 02:48:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728730AbgBUHsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 02:48:19 -0500
+        id S1727903AbgBUHsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Feb 2020 02:48:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87DEF207FD;
-        Fri, 21 Feb 2020 07:48:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 734C9207FD;
+        Fri, 21 Feb 2020 07:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582271299;
-        bh=idBDqzu2y3o0QPiMY39TEUWKHEZlHWZnr1qSgzMQ1lU=;
+        s=default; t=1582271283;
+        bh=5wSt0wIPpairgOjqX2Ote1SXc2lETYQtdfc1fuGY1FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+424neCDuDf2ioVFH4l83NwuTi4xoh3D65F0aZ2BwWlxnJPSkkATvbwBuSyuHy8N
-         sh/Ccxcn5qTpdcLOPt6AD+IDn4xOnNhLnrZ4PdFBTPNKmgT2dXUTAbCPStM+q9RkBX
-         zwFN7d6q4y0kcOTQdn90xlWWfXFXq9+dv2o7hcoI=
+        b=GgWnqk/HdkO67T6hWPov9TAZEul4f5pzop8ACg2x1BtdCxJ24Al5NnCXtjp1Fc3ZN
+         0WYgTGsZNWxikdPBMuBcq/tNgsjA1ujRCrOn4iJbcpW6C05T+JiEuRML+hTwdCabJ1
+         LcqrbknFMl+f7sF6rrQXZ46XOYRtu7GJHCL2fmGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 076/399] udf: Allow writing to Rewritable partitions
-Date:   Fri, 21 Feb 2020 08:36:41 +0100
-Message-Id: <20200221072409.731406618@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 106/399] drm/amdgpu/dm: Do not throw an error for a display with no audio
+Date:   Fri, 21 Feb 2020 08:37:11 +0100
+Message-Id: <20200221072412.729892969@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200221072402.315346745@linuxfoundation.org>
 References: <20200221072402.315346745@linuxfoundation.org>
@@ -60,55 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
+[ Upstream commit 852a91d627e9ce849d68df9d3f5336689003bdc7 ]
 
-UDF 2.60 standard states in section 2.2.14.2:
+An old display with no audio may not have an EDID with a CEA block, or
+it may simply be too old to support audio. This is not a driver error,
+so don't flag it as such.
 
-    A partition with Access Type 3 (rewritable) shall define a Freed
-    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
-    shall not define a Freed Space Bitmap or a Freed Space Table.
-
-    Rewritable partitions are used on media that require some form of
-    preprocessing before re-writing data (for example legacy MO). Such
-    partitions shall use Access Type 3.
-
-    Overwritable partitions are used on media that do not require
-    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
-    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
-    use Access Type 4.
-
-however older versions of the standard didn't have this wording and
-there are tools out there that create UDF filesystems with rewritable
-partitions but that don't contain a Freed Space Bitmap or a Freed Space
-Table on media that does not require pre-processing before overwriting a
-block. So instead of forcing media with rewritable partition read-only,
-base this decision on presence of a Freed Space Bitmap or a Freed Space
-Table.
-
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
-Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
-Signed-off-by: Jan Kara <jack@suse.cz>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112140
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Harry Wentland <harry.wentland@amd.com>
+Cc: Jean Delvare <jdelvare@suse.de>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 8c28e93e9b730..008bf96b1732d 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -1035,7 +1035,6 @@ static int check_partition_desc(struct super_block *sb,
- 	switch (le32_to_cpu(p->accessType)) {
- 	case PD_ACCESS_TYPE_READ_ONLY:
- 	case PD_ACCESS_TYPE_WRITE_ONCE:
--	case PD_ACCESS_TYPE_REWRITABLE:
- 	case PD_ACCESS_TYPE_NONE:
- 		goto force_ro;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+index 0b401dfbe98a9..34f483ac36ca4 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -97,8 +97,6 @@ enum dc_edid_status dm_helpers_parse_edid_caps(
+ 			(struct edid *) edid->raw_edid);
+ 
+ 	sad_count = drm_edid_to_sad((struct edid *) edid->raw_edid, &sads);
+-	if (sad_count < 0)
+-		DRM_ERROR("Couldn't read SADs: %d\n", sad_count);
+ 	if (sad_count <= 0)
+ 		return result;
+ 
 -- 
 2.20.1
 
