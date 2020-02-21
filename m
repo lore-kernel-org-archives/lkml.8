@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B567C35658
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AE9C35656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419D624653
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AB02073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 16:10:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yl4rYrff"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fVdWb+3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgBUQIl (ORCPT
+        id S1728465AbgBUQKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 11:08:41 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42741 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727720AbgBUQIk (ORCPT
+        Fri, 21 Feb 2020 11:10:39 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35905 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbgBUQKj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 11:08:40 -0500
-Received: by mail-lj1-f196.google.com with SMTP id d10so2712104ljl.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:08:39 -0800 (PST)
+        Fri, 21 Feb 2020 11:10:39 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f24so1894493lfh.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 08:10:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RkTsQTvfjgOEGdlDXKGCeeZxoa04rIy9ygJ3R4JduGw=;
-        b=Yl4rYrff+zKVIc9yoeCBgHu0Hr6Lxdr2Dk+weltYHKGkpqyZwgJl2IO1NgO2i0vT/E
-         99a5A1dgaz45Pjo84/pcasIWbjqjIkhY03aq+EbKkljQaPvu53PSnv8MEzWd5lTXHMO6
-         ILy1pKyOIN8MEJYzd46PlFensSAb/peD4Pyzc4ZoFZxBo5atPVjDya8qF0JhhOx/I9uH
-         H4VTjhsow4h49cwt3AvmwmV5/jMHvdy9OPRNCwK3mPh3pTOogHt5J/wFCgkfN4Z6so40
-         qDYMC5mecGJY7L2h7znzdfQ3Jzp5HE4zgleSo1s22yfX5NZQo5mSlGfgtS+JqaLjPGOy
-         +whQ==
+        bh=1fzmdPVewt4poXC+/NMgaFWzacayCygYoOgCnUFqrFA=;
+        b=fVdWb+3x5OJjWjTS8JQOQcRTidOkvjo2ir5U7PGAMVw5WxJMB39mldwFJOaGJBpPUy
+         TygGJ4Dh2eYuVpqhNmTy3A+mpVuIa2KKYLFA3KwEZW7wHuF9sM0lfQDUBvctfKY5m1/w
+         pO0dTq0SLvot91o2JkazTn4LiuQ4fl4I5uYWo0e5ArrD3w5jCckR3bFlT9HGTa+m8PiK
+         8VAPpY7zeJn+UMraJSLg7HWnf8dY0AdiTCeorPVYG50crBQzgoxJZ4GIyr4FyKjRhKom
+         FwWdL94yUF4/ORBxgq/aGEs+gPSJnwmTca7vaVtED+YyMLd2N70TOhnvv4WIVVP46psz
+         EG0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RkTsQTvfjgOEGdlDXKGCeeZxoa04rIy9ygJ3R4JduGw=;
-        b=W1544rspUcwi7P8qCWpt1iaatfA18SLiYQeyQrBrk54vh90adB7yW6z9RlEbUVcxsi
-         LTAbVgin4pzD64P0RYh4/1Nb5+njWO6oMpfiF0W++KaJ47FuItFtS83dmKP79m5z3WOD
-         +g02thYg5/atRiNmrZ3my10vlgSMCAGC/NyByMWbfmuOmgwBysFnTL9+IjE4KrhkTLaF
-         g9vdMxahG0Mawmw7Dl0buMIiapYcA0AC7oWtJKLN+ZsIKqbb+y7kXxQ7/1uNeoxrsmBM
-         Q3Chz7PoFp9Ts17rswZ7Pfg4Uo6T4Nb6m6TZgW/Q4iDjXOmqiPlfLSKDq54oqbn4k12L
-         aXRw==
-X-Gm-Message-State: APjAAAWIcZo3A3HPfIv8Z/btTK/2G9kDPvl0xeaJofjl5IF4umzq1Lo1
-        6Gd/wFON6z8ZGJYjt82J3HIFFLO4wubEje3/a5vVRA==
-X-Google-Smtp-Source: APXvYqzjBTruiUzyd12hI2oewAEFW5wvp0x48B+Xz9xN6AHcyQ7rQQbPBXV6MVxQYYXX7uV28p+joU8wSXIlz+RTL/U=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr23390889ljc.39.1582301318561;
- Fri, 21 Feb 2020 08:08:38 -0800 (PST)
+        bh=1fzmdPVewt4poXC+/NMgaFWzacayCygYoOgCnUFqrFA=;
+        b=r2JBuTomV32nv1CZzof/oUeuEPcnjVoRhUjbK5TLBX9/zqO77x4d1rwPxUPjJjGnpC
+         KMwKSsxupCrLY5GvqKeVe/daY1c0xzRWPTwKMiygJa455n4OL81F1W7wNH3Qqu1mHwoi
+         uGm++XFn/xcimjaHEed+ubGAh/lGI3aLhSQ8C6cdaYXdxPh6/tfEPzke9wIJDKW2/lRM
+         6/CoJvl+FRIfT2qS38gl3GDlG41LOYu4o3gxzIgH5W3+9zsOsET79RtPDcShjBl4PFOp
+         FOTgpMUML6sNW4IzKvij3ITbqIYmai9PSDrOjjl2I9+/bSSFaEKCy2IB/XKiftntGhdA
+         NMug==
+X-Gm-Message-State: APjAAAWniG3qT6B4FE0S6nOVFzE3mOY6vBpla7i+/nYNPzBWzhOz7n0n
+        c9cH3izPeaQtISu2tDpF5KNf6VeeCiVVYthRY/brRw==
+X-Google-Smtp-Source: APXvYqzfFpHz+WEEPdfY1KvmrQ7fJ+JA1hBH/qsYBoXtX0Ad1P1ZdxZA5yWVXCM5V2QXzRc1KsrSTBXhNXruk6AbO4k=
+X-Received: by 2002:a19:5e1d:: with SMTP id s29mr20384167lfb.21.1582301436869;
+ Fri, 21 Feb 2020 08:10:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20200220130149.26283-1-geert+renesas@glider.be> <20200220130149.26283-2-geert+renesas@glider.be>
-In-Reply-To: <20200220130149.26283-2-geert+renesas@glider.be>
+References: <20200220130149.26283-1-geert+renesas@glider.be> <20200220130149.26283-3-geert+renesas@glider.be>
+In-Reply-To: <20200220130149.26283-3-geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 21 Feb 2020 17:08:27 +0100
-Message-ID: <CACRpkdbgsR1n1qj3HmQWcEjeDdN85N1Mw8kLOUAeDjESW36MDg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpio: of: Extract of_gpiochip_add_hog()
+Date:   Fri, 21 Feb 2020 17:10:25 +0100
+Message-ID: <CACRpkdbFRv2ab-fa3htiLBTmW4kCuB6Rmxb0Afj=eP4hH0W7BA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpio: of: Add DT overlay support for GPIO hogs
 To:     Geert Uytterhoeven <geert+renesas@glider.be>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Pantelis Antoniou <pantelis.antoniou@konsulko.com>,
@@ -81,15 +81,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Thu, Feb 20, 2020 at 2:01 PM Geert Uytterhoeven
 <geert+renesas@glider.be> wrote:
 
-> Extract the code to add all GPIO hogs of a gpio-hog node into its own
-> function, so it can be reused.
+> As GPIO hogs are configured at GPIO controller initialization time,
+> adding/removing GPIO hogs in DT overlays does not work.
+>
+> Add support for GPIO hogs described in DT overlays by registering an OF
+> reconfiguration notifier, to handle the addition and removal of GPIO hog
+> subnodes to/from a GPIO controller device node.
+>
+> Note that when a GPIO hog device node is being removed, its "gpios"
+> properties is no longer available, so we have to keep track of which
+> node a hog belongs to, which is done by adding a pointer to the hog's
+> device node to struct gpio_desc.
 >
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
 > v2:
->   - No changes.
+>   - Drop RFC state,
+>   - Document that modifying existing gpio-hog nodes is not supported.
 
-Patch applied with Frank's Review tag.
+Clean and well separated code, patch applied
+with Frank's review tag!
 
 Yours,
 Linus Walleij
