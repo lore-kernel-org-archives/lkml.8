@@ -2,146 +2,91 @@ Return-Path: <SRS0=1210=4J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC15FC35646
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C39DC35646
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02AA2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263052073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Feb 2020 15:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GpJ3okpK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="e19h/tTJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbgBUPeC (ORCPT
+        id S1728643AbgBUPfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Feb 2020 10:34:02 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27537 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728344AbgBUPd7 (ORCPT
+        Fri, 21 Feb 2020 10:35:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42160 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbgBUPfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Feb 2020 10:33:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582299239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=E+guHrGhfox0uGOVfKWJjH3Qg42hXDUOFTb9rh1W6rw=;
-        b=GpJ3okpKr0UvRueKdKm6NhOBS7ixkecCr9aWMZ9/p8K2De4kqQN1/FqMzViehnxUFH24nJ
-        Rs6BxZny0wUzVWqXYPIiwjVOi4hbd2GaOe0lweD5q/LDFGj6ylatGtuQ8MyWHvm9ySUyLh
-        kX1omrcQIwSqzdzZ2j2LW7vw6wckpiQ=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-NwIklvIRPE6OgLg_Ib_gKg-1; Fri, 21 Feb 2020 10:33:57 -0500
-X-MC-Unique: NwIklvIRPE6OgLg_Ib_gKg-1
-Received: by mail-wr1-f71.google.com with SMTP id n23so1162829wra.20
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2020 07:33:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=E+guHrGhfox0uGOVfKWJjH3Qg42hXDUOFTb9rh1W6rw=;
-        b=A/3k+CK1tbPya3OWn+HSeAHx2aem0rD6i4wnS3nG+tUKiZi9+e0rj+uRdid3ljCsjR
-         EeWMIHXPfQV6aubwlSyntZQ7x/gB55sfX49uxWx63QkhjccvMnBbp1uW9IJPrKPKPG5M
-         nuBMcLxSxmRGLVF7j1oIGG6ediUhku6lBqU/qIGOuARajc+hqmnEVnCxMUqIfULUKYaj
-         HiTDYxskW8mGs6fAhFD7W0/ED4k6/P53NJD9LshQGnDkEpEmeDXhWLJRQIpTht81Kbqi
-         Bx5NRljlf59Jby/fLMLvFbAoVwfUnJmV9B/7UDwwj3PwXxIwaaPAxrTr+k8X3b4BO2Iy
-         Dgvg==
-X-Gm-Message-State: APjAAAWl3fSwShAgfAKk9B18mDd5Wv4dqdy6ukU4QrOBwOC7lm5zc6ED
-        CCVOrIinG3/cGvRy/sKAde5lYaelhu09yJ5YKZcAns3XJ4pHzwigQ2/4NpIK3e7410WkBSbYd8g
-        zPC8MZAz7cRl43dOSJdCa/XfB
-X-Received: by 2002:adf:a3ca:: with SMTP id m10mr9979649wrb.148.1582299236463;
-        Fri, 21 Feb 2020 07:33:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxOaNg350262rKP8Ewbykavm9FIuTsZJiYbkJJJHkubI4PyxMb+9IoeLOXh2iX99PyPzJ4Yhw==
-X-Received: by 2002:adf:a3ca:: with SMTP id m10mr9979628wrb.148.1582299236252;
-        Fri, 21 Feb 2020 07:33:56 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c9sm4209920wme.41.2020.02.21.07.33.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2020 07:33:55 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 22/61] KVM: x86: Make kvm_mpx_supported() an inline function
-In-Reply-To: <20200201185218.24473-23-sean.j.christopherson@intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com> <20200201185218.24473-23-sean.j.christopherson@intel.com>
-Date:   Fri, 21 Feb 2020 16:33:55 +0100
-Message-ID: <87h7zkq7j0.fsf@vitty.brq.redhat.com>
+        Fri, 21 Feb 2020 10:35:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+ZsaQJllFuL8jpNObDQrHmpdC/B73n9RqMvE0qPHxaM=; b=e19h/tTJERLUFpOL5Gva3Nh5/X
+        wd0VH9aVgKh+1Blgs+9Q15ijaVkaoTLAy7WypYckq6maI2+/Qpa5TYpUzL45zkwW6/rKVd4gOa/Q3
+        37XTTlJ3n85F+yMLVB8w0BnbSlS+Y+mVNSOJqRCX3b4kHG/mSGnd+/RHhL7LSbdq0PycpO3gHljyg
+        1ePLpWP66QKkQwSW3hqI4AmWyW4KZvprzI+VqeFwh8xfQgZxihaUIj3MuUi6DWndVunwNc8HfQSPa
+        cJzgSNpVLmszdlcuXvTGALnsMeU2uXmuwM6kJU9UgfbmbAX46oAsryhNENVSPO0btKS8JfbqGc1YR
+        ErE1c+gA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j5AL3-00062c-43; Fri, 21 Feb 2020 15:35:37 +0000
+Date:   Fri, 21 Feb 2020 07:35:37 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 11/24] mm: Move end_index check out of readahead loop
+Message-ID: <20200221153537.GE24185@bombadil.infradead.org>
+References: <20200219210103.32400-1-willy@infradead.org>
+ <20200219210103.32400-12-willy@infradead.org>
+ <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e6ef2075-b849-299e-0f11-c6ee82b0a3c7@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Thu, Feb 20, 2020 at 07:50:39PM -0800, John Hubbard wrote:
+> This tiny patch made me pause, because I wasn't sure at first of the exact
+> intent of the lines above. Once I worked it out, it seemed like it might
+> be helpful (or overkill??) to add a few hints for the reader, especially since
+> there are no hints in the function's (minimal) documentation header. What
+> do you think of this?
+> 
+> 	/*
+> 	 * If we can't read *any* pages without going past the inodes's isize
+> 	 * limit, give up entirely:
+> 	 */
+> 	if (index > end_index)
+> 		return;
+> 
+> 	/* Cap nr_to_read, in order to avoid overflowing the ULONG type: */
+> 	if (index + nr_to_read < index)
+> 		nr_to_read = ULONG_MAX - index + 1;
+> 
+> 	/* Cap nr_to_read, to avoid reading past the inode's isize limit: */
+> 	if (index + nr_to_read >= end_index)
+> 		nr_to_read = end_index - index + 1;
 
-> Expose kvm_mpx_supported() as a static inline so that it can be inlined
-> in kvm_intel.ko.
->
-> No functional change intended.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/cpuid.c | 6 ------
->  arch/x86/kvm/cpuid.h | 1 -
->  arch/x86/kvm/x86.h   | 5 +++++
->  3 files changed, 5 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 84006cc4007c..d3c93b94abc3 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -45,12 +45,6 @@ static u32 xstate_required_size(u64 xstate_bv, bool compacted)
->  	return ret;
->  }
->  
-> -bool kvm_mpx_supported(void)
-> -{
-> -	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
-> -}
-> -EXPORT_SYMBOL_GPL(kvm_mpx_supported);
-> -
->  #define F feature_bit
->  
->  int kvm_update_cpuid(struct kvm_vcpu *vcpu)
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 7366c618aa04..c1ac0995843d 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -7,7 +7,6 @@
->  #include <asm/processor.h>
->  
->  int kvm_update_cpuid(struct kvm_vcpu *vcpu);
-> -bool kvm_mpx_supported(void);
->  struct kvm_cpuid_entry2 *kvm_find_cpuid_entry(struct kvm_vcpu *vcpu,
->  					      u32 function, u32 index);
->  int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 02b49ee49e24..bfac4a80956c 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -283,6 +283,11 @@ enum exit_fastpath_completion handle_fastpath_set_msr_irqoff(struct kvm_vcpu *vc
->  extern u64 host_xcr0;
->  extern u64 supported_xcr0;
->  
-> +static inline bool kvm_mpx_supported(void)
-> +{
-> +	return supported_xcr0 & (XFEATURE_MASK_BNDREGS | XFEATURE_MASK_BNDCSR);
-> +}
-> +
->  extern unsigned int min_timer_period_us;
->  
->  extern bool enable_vmware_backdoor;
+A little verbose for my taste ... How about this?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
--- 
-Vitaly
+        end_index = (isize - 1) >> PAGE_SHIFT;
+        if (index > end_index)
+                return;
+        /* Avoid wrapping to the beginning of the file */
+        if (index + nr_to_read < index)
+                nr_to_read = ULONG_MAX - index + 1;
+        /* Don't read past the page containing the last byte of the file */
+        if (index + nr_to_read >= end_index)
+                nr_to_read = end_index - index + 1;
 
